@@ -2350,16 +2350,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPostsNotPositioned) {
-    	console.log("findPostsNotPositioned");
+    if (that.findPostsAndPostsPromoted) {
+    	console.log("findPostsAndPostsPromoted");
     }
-    that.findPostsNotPositioned = function(stationId, termsIds, idsToExclude, page, size, sort, _success, _error, _complete, projection) {
+    that.findPostsAndPostsPromoted = function(stationId, termsIds, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/posts/search/findPostsNotPositioned",
+            url: _url + "/api/posts/search/findPostsAndPostsPromoted",
             data: {
             	stationId: stationId,
             	termsIds: termsIds,
-            	idsToExclude: idsToExclude,
             	page: page,
             	size: size,
             	sort: sort,
@@ -2376,15 +2375,16 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPostsAndPostsPromoted) {
-    	console.log("findPostsAndPostsPromoted");
+    if (that.findPostsNotPositioned) {
+    	console.log("findPostsNotPositioned");
     }
-    that.findPostsAndPostsPromoted = function(stationId, termsIds, page, size, sort, _success, _error, _complete, projection) {
+    that.findPostsNotPositioned = function(stationId, termsIds, idsToExclude, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/posts/search/findPostsAndPostsPromoted",
+            url: _url + "/api/posts/search/findPostsNotPositioned",
             data: {
             	stationId: stationId,
             	termsIds: termsIds,
+            	idsToExclude: idsToExclude,
             	page: page,
             	size: size,
             	sort: sort,
@@ -4186,15 +4186,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByTypeAndName) {
-    	console.log("findByTypeAndName");
+    if (that.findByStationId) {
+    	console.log("findByStationId");
     }
-    that.findByTypeAndName = function(type, name, _success, _error, _complete, projection) {
+    that.findByStationId = function(stationId, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/taxonomies/search/findByTypeAndName",
+            url: _url + "/api/taxonomies/search/findByStationId",
             data: {
-            	type: type,
-            	name: name,
+            	stationId: stationId,
 
             	projection: projection
             },
@@ -4208,14 +4207,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByStationId) {
-    	console.log("findByStationId");
+    if (that.findByTypeAndName) {
+    	console.log("findByTypeAndName");
     }
-    that.findByStationId = function(stationId, _success, _error, _complete, projection) {
+    that.findByTypeAndName = function(type, name, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/taxonomies/search/findByStationId",
+            url: _url + "/api/taxonomies/search/findByTypeAndName",
             data: {
-            	stationId: stationId,
+            	type: type,
+            	name: name,
 
             	projection: projection
             },
@@ -4507,17 +4507,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findRootsPage) {
-    	console.log("findRootsPage");
+    if (that.findRoots) {
+    	console.log("findRoots");
     }
-    that.findRootsPage = function(taxonomyId, page, size, sort, _success, _error, _complete, projection) {
+    that.findRoots = function(taxonomyId, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/terms/search/findRootsPage",
+            url: _url + "/api/terms/search/findRoots",
             data: {
             	taxonomyId: taxonomyId,
-            	page: page,
-            	size: size,
-            	sort: sort,
 
             	projection: projection
             },
@@ -4531,14 +4528,17 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findRoots) {
-    	console.log("findRoots");
+    if (that.findRootsPage) {
+    	console.log("findRootsPage");
     }
-    that.findRoots = function(taxonomyId, _success, _error, _complete, projection) {
+    that.findRootsPage = function(taxonomyId, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/terms/search/findRoots",
+            url: _url + "/api/terms/search/findRootsPage",
             data: {
             	taxonomyId: taxonomyId,
+            	page: page,
+            	size: size,
+            	sort: sort,
 
             	projection: projection
             },
