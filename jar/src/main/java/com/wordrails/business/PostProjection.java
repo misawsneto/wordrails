@@ -17,7 +17,7 @@ public interface PostProjection {
 	String getTitle();
 	String getTopper();
 	String getBody();
-	SponsorProjection getSponsor();
+	Sponsor getSponsor();
 	Person getAuthor();
 	Station getStation();
 	List<Term> getTerms();
