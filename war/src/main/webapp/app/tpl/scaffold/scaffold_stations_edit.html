@@ -1,0 +1,105 @@
+<div class="bg-light lter b-b wrapper-md">
+  <h1 class="m-n font-thin h3">Estações</h1>
+</div>
+<div class="wrapper-md">
+  <div class="row">
+  <div class="col-lg-8 col-lg-offset-2">
+
+      <div class="panel panel-default">
+        <div class="panel-heading font-bold">
+          {{editingStation.name}}
+        </div>
+        <div class="panel-body">
+          <form class="form-horizontal" ng-submit="submitEditStation()">
+        <!-- <div class="form-group">
+          <label class="col-sm-3 control-label">Rede</label>
+          <div class="col-sm-9">
+            <div class="m-t-xs">
+              <strong>{{app.network.name}}</strong>
+            </div>
+          </div>
+        </div> -->
+        <!-- <div class="line line-dashed b-b line-lg pull-in"></div> -->
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Visibilidade</label>
+          <div class="col-sm-9">
+            <div class="btn-group m-r" >
+              <label class="btn btn-default" ng-model="editingStation.newVisibility" btn-radio="visibilities[0].name">{{visibilities[0].label}}</label>
+
+              <label class="btn btn-default" ng-model="editingStation.newVisibility" btn-radio="visibilities[1].name">{{visibilities[1].label}}</label>
+              
+              <label class="btn btn-default" ng-model="editingStation.newVisibility" btn-radio="visibilities[2].name">{{visibilities[2].label}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Escrita/Leitura</label>
+          <div class="col-sm-9">
+            <div class="btn-group m-r" >
+              <label class="btn btn-default" ng-model="readWrite" btn-radio="'write'">Escrita</label>
+
+              <label class="btn btn-default" ng-model="readWrite" btn-radio="'read'">Somente Leitura</label>
+            </div>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Nome</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control w-md" ng-model="editingStation.name" id="station-name" placeholder="Nome da estação" required>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Comprimento do título de notícias</label>
+          <div class="col-sm-9">
+            <div class="w-xs">
+              <input ui-jq="TouchSpin" ng-model="editingStation.postsTitleSize" type="text" value="0" class="form-control" data-min='0' data-max="1000"  data-verticalbuttons="true" data-verticalupclass="fa fa-caret-up"  data-verticaldownclass="fa fa-caret-down">
+            </div>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Chapéu</label>
+          <div class="col-sm-9">
+            <label class="i-switch i-switch-md bg-info m-t-xs m-r">
+              <input type="checkbox" ng-model="editingStation.topper">
+              <i></i>
+            </label>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Conteúdo patrocinado</label>
+          <div class="col-sm-9">
+            <label class="i-switch i-switch-md bg-info m-t-xs m-r">
+              <input type="checkbox" ng-model="editingStation.sponsored">
+              <i></i>
+            </label>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Compartilhamento em redes sociais</label>
+          <div class="col-sm-9">
+            <label class="i-switch i-switch-md bg-info m-t-xs m-r">
+              <input type="checkbox" ng-model="editingStation.social">
+              <i></i>
+            </label>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="form-group">
+          <div class="col-sm-4 col-sm-offset-2">
+            <a class="btn btn-default" ui-sref="app.scaffold.stations">Cancelar</a>
+            <button type="submit" class="btn btn-success">Atualizar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>

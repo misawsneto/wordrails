@@ -1,0 +1,133 @@
+<div class="app-content-body app-content-full bg-000">
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-show="app.network.currentStation && app.network.currentStation.currentTermPerspectiveView"
+ng-init="
+  app.settings.asideFixed = true;
+  app.settings.asideDock = false;
+  app.settings.container = false;
+  app.hideAside = false;
+  app.hideFooter = true;">
+  <div class="col" ng-controller="AppPerspectiveCtrl">
+    <div class="bg-light lter b-b wrapper-md hide">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1 col-xs-12">
+          <div class="m-n font-thin h3 text-black h1">
+            <!-- <a ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: 0})">
+             <span class="m-r-xs">Início</span>
+            </a> -->
+            <div class="dropdown pull-left m-r-xs"> 
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" tooltip-placement="left" tooltip-popup-delay="400">
+                <span>{{app.network.currentStation.name}}</span>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu text-md" role="menu">
+                <li ng-repeat="station in app.network.stations">
+                  <a ng-if="station.visible" ui-sref="app.stations({stationId: station.id})" ui-sref-opts="{ reload: true }">{{station.name}}</a>
+                </li>
+              </ul>
+            </div>
+            <!-- | <a ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: 0})">
+             <span class="m-r-xs m-l-xs">Início</span>
+            </a> -->
+            <span ng-repeat="term in breadcrumbs.slice().reverse()">
+              | <a ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: term.id != 0 ? term.id : 0})">
+                  <span class="m-r-xs m-l-xs">{{term.name}}</span>
+                </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wrapper-md" >
+        <div class="row m-b-md" ng-show="termPerspectiveView.featuredRow">
+          <div class="col-lg-10 col-lg-offset-1 col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0">
+            <div class="row perspective-headlines animated fadeIn">
+            <div class="" ng-class="{'col-sm-12': termPerspectiveView.featuredRow.cells.length == 1, 'col-sm-6': termPerspectiveView.featuredRow.cells.length > 1}">
+              <a ui-sref="app.post({postId: termPerspectiveView.featuredRow.cells[0].postView.postId})">
+                <div class="item m-l-n-xxs m-r-n-xxs headline-item lg m-b-md">
+                  <div class="news-item" ng-style="backgroundImage(termPerspectiveView.featuredRow.cells[0].postView, 'lg')">
+                    <div class="bottom wrapper bg-stripe bg-gd-dk text-white title-wrapper-bg">            
+                      <div class="text-white h3 m-b-sm text-primary-lter">
+                        {{termPerspectiveView.featuredRow.cells[0].postView.title}}
+                      </div>
+                      <!-- <div><span ng-if="termPerspectiveView.featuredRow.cells[0].postView.date" data-livestamp="{{termPerspectiveView.featuredRow.cells[0].postView.date / 1000}}"><i class="fa fa-fw"></i></span></div> -->
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-sm-6" ng-show="termPerspectiveView.featuredRow.cells.length > 1">
+              <div class="row">
+                <div class="col-sm-12">
+                  <a ui-sref="app.post({postId: termPerspectiveView.featuredRow.cells[1].postView.postId})">
+                    <div class="item m-l-n-xxs m-r-n-xxs headline-item m-b-md" ng-class="{'lg': termPerspectiveView.featuredRow.cells.length == 2, 'sm': termPerspectiveView.featuredRow.cells.length > 2}">
+                      <div class="news-item" ng-style="backgroundImage(termPerspectiveView.featuredRow.cells[1].postView, 'lg')">
+                        <div class="bottom wrapper bg-stripe bg-gd-dk text-white title-wrapper-bg">            
+                          <div class="text-white text-primary-lter" ng-class="{'h3 m-b-sm': termPerspectiveView.featuredRow.cells.length == 2, 'h4': termPerspectiveView.featuredRow.cells.length == 3}">
+                            {{termPerspectiveView.featuredRow.cells[1].postView.title}}
+                          </div>
+                          <!-- <div ng-if="termPerspectiveView.featuredRow.cells.length == 2">
+                          <span ng-if="termPerspectiveView.featuredRow.cells[0].postView.date" data-livestamp="{{termPerspectiveView.featuredRow.cells[0].postView.date / 1000}}"><i class="fa fa-fw"></i></span></div> -->
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                <div class="col-sm-12" ng-show="termPerspectiveView.featuredRow.cells.length > 2">
+                  <a ui-sref="app.post({postId: termPerspectiveView.featuredRow.cells[2].postView.postId})">
+                    <div class="item m-l-n-xxs m-r-n-xxs headline-item sm m-b-md">
+                      <div class="news-item" ng-style="backgroundImage(termPerspectiveView.featuredRow.cells[2].postView, 'lg')">
+                        <div class="bottom wrapper bg-stripe bg-gd-dk text-white title-wrapper-bg">            
+                          <div class="text-white h4 text-primary-lter">{{termPerspectiveView.featuredRow.cells[2].postView.title}}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-lg-10 col-lg-offset-1 col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0">
+        
+      <div id="perspective-info-flows">
+        <div ng-repeat="ordinaryRow in termPerspectiveView.ordinaryRows" class="ordinary-row">
+          <button ng-show="ordinaryRow.cells" class="backward"><i class="fa fa-angle-left"></i></button>
+          <button ng-show="ordinaryRow.cells" class="forward"><i class="fa fa-angle-right"></i></button>
+          <div ng-show="ordinaryRow.cells" data-term-id="{{ordinaryRow.termId}}" class="wrap info-flow-wrap" sly-scroll>
+            <div class="h3">
+              <a ng-show="ordinaryRow.term.name" class="animated fadeIn" 
+                ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
+                <span class="m-l-xs">{{ordinaryRow.term.name}}</span>
+              </a>
+            </div>
+            <div class="frame info-flow" style="overflow: hidden;">
+              <ul class="sly-clearfix info-flow-list" data-term-id="{{ordinaryRow.termId}}">
+                <li class="sly-stub" style="display: none"></li>
+                <li class="animated fadeIn" ng-repeat="cell in ordinaryRow.cells">
+                  <div class="" data-ng-include=" 'tpl/perspectives/news-item.html' "></div>
+                </li>
+              </ul>
+            </div>
+            <div class="scrollbar info-flow-scroll">
+              <div class="handle">
+                <div class="mousearea"></div>
+              </div>
+            </div>
+            <!-- <div class="controls center">
+              <button class="btn prev disabled" disabled=""><i class="icon-chevron-left"></i> prev</button>
+              <button class="btn next">next <i class="icon-chevron-right"></i></button>
+            </div> -->
+          </div>
+        </div>
+      <!-- </div> -->
+
+     </div>
+     </div>
+
+    </div>
+  </div>
+</div>
+</div>

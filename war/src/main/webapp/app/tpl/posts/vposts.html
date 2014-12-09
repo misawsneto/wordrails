@@ -1,0 +1,14 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-show="postsViews && app.network.currentStation" ng-controller="PostsVListCtrl" ng-cloak>
+  <div class="bg-white b-b wrapper-md">
+    <div class="row">
+    </div>
+  </div>
+  <div class="" infinite-scroll="scrollPaginate()">
+    <div class="row m-n" ng-repeat="postView in postsViews">
+      <div class="">
+        <div ng-include=" 'tpl/posts/post_view.html' "></div>
+      </div>
+    </div>
+  </div>
+
+</div>

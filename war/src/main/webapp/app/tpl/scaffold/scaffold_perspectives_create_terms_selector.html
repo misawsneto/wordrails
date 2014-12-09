@@ -1,0 +1,77 @@
+<div ng-controller="TermsSelectorCtrl">
+	<div class="col-sm-6" ng-show="p.termTree != null">
+		<span class="help-block m-b ng-scope">Termos da perspectiva.</span>
+		<div class="term-tree-heading panel m-b-none" ng-show="p.termTree.length > 0">
+			<a href="" class="" ng-click="selectTopLevelTerm()" tooltip="clique para definir a perspectiva da estação">
+				<i class="fa fa-lg fa-sitemap text-success m-r-xs"></i>
+			</a>
+			<span class="pull-right">
+				<a href="" class="m-r-xs text-grey" tooltip="colapsar" ng-click="collapseAll()" ng-show="p.termTree && p.termTree.length > 0"><i class="fa fa-lg fa-minus-square-o"></i></a>
+				<a href="" class="text-grey" tooltip="expandir" ng-click="expandAll()" ng-show="p.termTree && p.termTree.length > 0"><i class="fa fa-lg fa-plus-square-o"></i></a>
+			</span>
+		</div>
+		<div ui-tree id="tree-root" class="tree-root bg-light lter" ng-show="p.termTree">
+			<ol ui-tree-nodes="" ng-model="p.termTree">
+				<li class="top-level-list-item" collapsed="true" ng-repeat="node in p.termTree" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+			</ol>
+		</div>
+		<div ng-show="p.termTree.length == 0" class="m-t-xs">
+			<strong class="h3">A taxonomia selecionada não possui termos.</strong>
+		</div>
+		<span class="help-block m-b-none ng-scope" ng-show="p.termTree.length > 0">
+			Clique no termo para o qual deseja definir uma perspectiva. Para definir a perspectiva da estação clique no icone
+			<a href="" class="" ng-click="selectTopLevelTerm()" tooltip="clique para definir a perspectiva da estação">
+				<i class="m-l-xs fa fa-sitemap text-success m-r-xs"></i>
+			</a>
+		</span>
+	</div>
+	<div class="col-sm-6" ng-show="p.selectedTerm">
+		<div class="m-b-md" ng-if="p.selectedTerm.station">
+			<h4>Perspectiva da estação <strong>{{p.currentStation.name}}</strong></h4>
+		</div>
+		<div class="m-b-md" ng-show="p.selectedTerm.station == null">
+			<h4>Perspectiva do termo <strong>{{p.selectedTerm.name}}</strong></h4>
+		</div>
+		<div id="term-table-list" ng-show="p.termPerspectiveView.ordinaryRows && p.termPerspectiveView.ordinaryRows.length > 0">
+	      <section class="panel panel-default">
+	        <table class="table table-striped m-b-none">
+	          <thead>
+	            <tr>
+	              <th>Termos</th>
+	            </tr>
+	          </thead>
+	          <tbody>
+	            <tr ng-repeat="row in p.termPerspectiveView.ordinaryRows">
+	              <td>
+	                {{row.term.name}} 
+	              </td>
+	            </tr>
+	          </tbody>
+	        </table>
+	      </section>
+		</div>
+		<div ng-show="p.termPerspectiveView.ordinaryRows && p.termPerspectiveView.ordinaryRows.length == 0">
+			<h5>O termo <strong>{{p.selectedTerm.name}}</strong> não possui descendentes. A perspectiva não terá termos.</h5>
+		</div>
+		<span class="help-block m-b-none ng-scope">Termos são definidos pelos termos descendentes do termo escolhido para a perspectiva e são compostos por notícias. Clique aqui para saber mais.</span>
+	</div>
+</div>
+
+  <script type="text/ng-template" id="nodes_renderer.html">
+    <div data-nodrag class="m-l-xs tree-node tree-node-content">
+      <span class="tree-item" ng-class="{'node-selected': node.active}">
+        <a class="pointer collapse-term" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggle(this)">
+          <span class="fa" ng-class="{'fa-chevron-right': collapsed, 'fa-chevron-down': !collapsed}"></span>
+        </a>
+        <a class="collapse-term" ng-if="node.nodes && node.nodes.length == 0" data-nodrag>
+          <span class="fa text-grey"></span>
+        </a>
+        <span class="term-name pointer m-r-sm" tooltip="clique para definir uma perspectiva para este termo" ng-click="selectTerm(this)">
+          {{node.name}}</span>
+      </span>
+    </div>
+    <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+      <li collapsed="true" ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'">
+      </li>
+    </ol>
+  </script>

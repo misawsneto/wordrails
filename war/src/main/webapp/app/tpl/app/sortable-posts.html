@@ -1,0 +1,27 @@
+<div class="sortable-posts-flows" ui-sortable="flowOptions" ng-model="p.termPerspectiveView.ordinaryRows" style="overflow: auto;">
+  <div ng-repeat="row in p.termPerspectiveView.ordinaryRows" class="flow-block" data-flow-id="" data-flow-name="">
+  	<div class="clearfix m-b-sm m-t m-l-lg h4"><strong class="m-l-sm">{{row.term.name}}</strong></div>
+  	<div class="posts-flows-handle pull-left">
+  		<div><i class="fa fa-sort text-muted fa-sm"></i></div>
+  	</div>
+	<div class="flow-posts wheelScroll">
+	  <ul class="sortable-posts-list droppable-post-position" data-term-id="{{row.termId}}" data-term-name="{{row.term.name}}"
+	   ng-model="row.cells" ui-sortable="itemOptions">
+	    <!-- ngRepeat: post in posts -->
+	    <li class="post-li" ng-class="{'new-item animated fadeIn': cell.postView.new || cell.id, 'old-item' : !(cell.postView.new || cell.id)}" data-id="" ng-repeat="cell in row.cells">
+	      <div  class="flow-post no-image-stub" data-post-id="{{cell.postView.postId}}">
+	      	<div class="dropped-post" ng-style="backgroundImage(cell.postView, 'md')">
+              <div class="title-wrapper">
+                <span class="text-white text-ellipsis">{{cell.postView.title}}</span>
+              </div>
+            </div>
+            <button class="showcase-remove btn btn-danger btn-xs" ng-show="cell.postView.new || cell.id" 
+            	ng-click="removeFixedPost(this)">
+            	<i class="fa fa-times"></i>
+            </button>
+	      </div>
+	    </li><!-- end ngRepeat: post in posts -->
+	  </ul>
+	</div>
+  </div>
+</div>

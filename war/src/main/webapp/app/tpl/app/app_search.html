@@ -1,0 +1,42 @@
+<div class="app-content-body app-content-full bg-000">
+  <div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+  app.settings.asideFixed = true;
+  app.settings.asideDock = false;
+  app.settings.container = false;
+  app.hideAside = false;
+  app.hideFooter = true;">
+  <div class="wrapper-xl">
+    <div class="m-w-1100 center-block search-items" ng-show="search.hits">
+      <p class="m-b-md h3 font-thin" ng-show="app.searchQuery"><strong>{{search.hits}}</strong> Resultados para: <strong>{{app.searchQuery}}</strong></p>
+      <div class="">
+        <ul class="no-borders no-padding m-b-none">
+          <li class="" ng-repeat="postView in search.result.posts">
+           <div class="line search-divider"></div>
+            <!-- <a class="thumb-lg pull-left m-r" ui-sref="app.post({postId: postView.postId})" ng-if="postView.smallId">
+              <img ng-src="{{postView.smallId | imageLink}}">
+            </a> -->
+            <div class="pull-right text-sm text-muted m-t-sm">
+              <a class="thumb-xl w-150 pull-left m-l" ui-sref="app.post({postId: postView.postId})" ng-if="postView.smallId">
+                <img ng-src="{{postView.smallId | imageLink}}">
+              </a>
+              <!-- <span class="hidden-xs ng-binding">{{postView.date | myLongTimeFormat}}</span> -->
+            </div>
+            <div class="clear min-h-150 p-t-sm">
+              <div class="m-t-sm">
+                <span class="label no-radius normal wrapper-xs topper text-lg" ng-if="postView.topper">{{postView.topper}}</span>
+                <a ui-sref="app.post({postId: postView.postId})" class="h2 m-b-sm m-t-sm block">
+                  {{postView.title}}
+                </a>
+                <div class="m-t-xs text-lg font-thin" bind-html-unsafe="postView.snippet">
+                </div>
+              </div>
+            </div>    
+          </li>
+        </ul>
+      </div>
+      <pagination total-items="search.hits" ng-model="search.page" max-size="maxSize"
+      class="pagination-sm m-t-sm m-b" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" ></pagination>
+    </div>
+  </div>
+</div>
+</div>

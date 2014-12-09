@@ -1,0 +1,104 @@
+<div class="bg-light lter b-b wrapper-md">
+  <h1 class="m-n font-thin h3">Perspectivas</h1>
+</div>
+<div class="wrapper-md" ng-controller="ScaffoldCreatePerspectivesCtrl">
+  <div class="row">
+    <div class="col-lg-10 col-lg-offset-1">
+      <div class="panel panel-default">
+        <div class="panel-heading animated fadeIn" ng-show="p.editing">
+          Edição da perspectiva <strong>{{p.name}}</strong>
+        </div>
+        <div class="panel-heading animated fadeIn" ng-show="!p.editing">
+          Nova perspectiva <strong>{{p.name}}</strong>
+        </div>
+        <div class="panel-body">
+          <div class="form-horizontal">
+
+            <div class="form-group">
+              <div class="col-sm-4 col-sm-offset-8">
+                <div class="pull-right">
+                  <a class="btn btn-default" ui-sref="app.scaffold.perspectives">Cancelar</a>
+                  <button ng-click="submitPerspective()" type="submit" class="btn btn-success m-r" ng-class="{'disabled': !(p.currentStation && p.currentTaxonomy && p.name)}">Confirmar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Nome da perspectiva</label>
+              <div class="col-sm-10">
+                <input type="text" ng-model="p.name" class="form-control w-md">
+                <span class="help-block m-b-none">Escolha um nome para a sua perspectiva</span>
+              </div>
+            </div>
+            
+            <div class="line line-dashed b-b line-lg animated fadeIn" ng-show="p.name"></div>
+            <div class="form-group animated fadeIn" ng-show="p.name">
+              <label class="col-sm-2 control-label">Estação</label>
+              <div class="col-sm-10 animated fadeIn" ng-show="!p.editing">
+                <div ui-module="select2">
+                  <select ui-select2 ng-model="stationId" class="form-control w-md">
+                    <option ng-repeat="station in stations" value="{{station.id}}">{{station.name}}</option>
+                  </select>
+                  <span class="help-block m-b-none">Escolha uma estação para definir sua perspectiva</span>
+                </div>
+              </div>
+              <div class="col-lg-10 m-t-xs animated fadeIn" ng-show="p.editing">
+                <strong>{{p.currentStation.name}}</strong>
+              </div>
+            </div>
+            
+            <div class="line line-dashed b-b line-lg animated fadeIn" ng-show="p.currentStation"></div>
+            <div class="form-group animated fadeIn" ng-show="p.currentStation">
+              <label class="col-sm-2 control-label">Taxonomia</label>
+              <div class="col-sm-10 animated fadeIn" ng-show="!p.editing">
+                <div ui-module="select2">
+                  <select ui-select2 ng-model="taxonomyId" class="form-control w-md">
+                    <option ng-repeat="taxonomy in p.currentStation.taxonomies" value="{{taxonomy.id}}">{{taxonomy.name}}</option>
+                  </select>
+              <!-- <select ui-select2 class="form-control w-md" ng-model="taxonomyId" ng-options="taxonomy.id as taxonomy.name for taxonomy in taxonomies">
+            </select> -->
+            <span class="help-block m-b-none">Escolha uma taxonomia para definir sua perspectiva</span>
+          </div>
+        </div>
+        <div class="col-lg-10 m-t-xs animated fadeIn" ng-show="p.editing">
+          <strong>{{p.currentTaxonomy.name}}</strong>
+        </div>
+      </div>
+      
+      <div class="line line-dashed b-b line-lg animated fadeIn" ng-show="p.currentStation && p.currentTaxonomy && p.name"></div>
+      <div class="form-group animated fadeIn" ng-show="p.currentStation && p.currentTaxonomy && p.name">
+        <div data-ng-include=" 'tpl/scaffold/scaffold_perspectives_create_terms_selector.html' "></div>
+      </div>
+      
+      <div class="line line-dashed b-b line-lg animated fadeIn" ng-show="p.currentStation && p.currentTaxonomy && p.name"></div>
+      <div class="form-group animated fadeIn" ng-show="p.currentStation && p.currentTaxonomy && p.name">
+        <div data-ng-include=" 'tpl/scaffold/scaffold_perspectives_create_perspective_builder.html' "></div>
+      </div>
+
+      <div class="line line-dashed b-b line-lg animated fadeIn" ng-show="p.currentStation && p.currentTaxonomy && p.name"></div>
+      <div class="form-group">
+        <div class="col-sm-4 col-sm-offset-2">
+          <a class="btn btn-default" ui-sref="app.scaffold.perspectives">Cancelar</a>
+          <button ng-click="submitPerspective()" type="submit" class="btn btn-success" ng-class="{'disabled': !(p.currentStation && p.currentTaxonomy && p.name)}">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+
+<script type="text/ng-template" id="confirm_perspective.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Atualizar perspectiva</h3>
+  </div>
+  <div class="modal-body h4">
+    Tem certeza que deseja atualizar a perspectiva para este tópico?
+  </div>
+  <div class="modal-footer">                  
+    <a class="btn btn-default" ng-click="cancelModal()">Cancelar</a>
+    <button type="submit" class="btn btn-success" ng-click="confirmCreatePerspective()">Confirmar</button>
+  </div>
+</script>

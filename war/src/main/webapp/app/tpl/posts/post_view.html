@@ -1,0 +1,203 @@
+<div ng-controller="PostViewCtrl">
+  <div class="blog-post m-t m-b-lg" ng-show="post"> 
+
+
+    <!-- Post -->
+    <div class="panel no-shadow news-block" ng-cloak>
+      <div class="m-t">
+        <div class="col-sm-10 col-sm-offset-1 padder-lg">
+          <span class="label no-radius normal wrapper-xs topper text-lg" ng-if="post.topper">{{post.topper}}</span>
+          <h1 class="m-b-lg news-title">{{post.title}}</h1>
+        </div>
+      </div>
+      <div ng-show="postView.largeId">
+        <img ng-src="{{postView.largeId | imageLink}}" class="img-full animated fadeIn" ng-show="postView.largeId">
+      </div>
+      <div class="">
+        <div class="col-sm-10 col-sm-offset-1">
+
+          <div class="">
+            <div class="col-sm-3">
+              <div class="text-muted text-lg m-t-lg pt-serif">
+                <span class="m-r-xxs">Por</span>
+                <strong><a tooltip="ver todas as notícias de {{post.author.name}}" ui-sref="app.user({username: post.author.username})" class="blue"> {{post.author.name}}</a></strong>
+                <br>
+                <a class="blue"> {{post.author.email}}</a>
+                <br>
+                <i class="fa fa-clock-o text-muted" tooltip="{{post.date | myLongTimeFormat}}"></i>
+                <span ng-if="post.date" data-livestamp="{{post.date / 1000}}"></span> 
+                <div class="social-share m-t-lg" ng-if="app.network.currentStation.social">
+                  <div class="text-u-c text-md oswald">Compartilhe:</div>
+                  <br>
+                  <a><i class="fa fa-2x fa-fw fa-facebook"></i>
+                  <a><i class="fa fa-2x fa-fw fa-linkedin"></i>
+                  <a><i class="fa fa-2x fa-fw fa-twitter"></i>
+                  <a><i class="fa fa-2x fa-fw fa-google-plus"></i>
+                </div>
+                <div class="m-t-lg news-item-options list-group">
+                  <a class="list-group-item" ng-click="openModal('promote_news.html', 'sm', post.id)" ng-show="(app.network.stations | filter: {canWrite: true}).length > 0 && app.authenticated">
+                    <i class="pointer text-muted fa-fw glyphicon glyphicon-star"></i>
+                    <span>
+                      Promover
+                    </span>
+                  </a>
+                  <a class="list-group-item" ui-sref="app.stations.editor({stationId: app.network.currentStation.id ? app.network.currentStation.id : 0, postId: post.id})" ng-if="app.person.id == post.author.id">
+                    <i class="pointer text-muted fa-fw glyphicon glyphicon-pencil"></i>
+                    <span>
+                      Editar
+                    </span>
+                  </a>
+                  <a class="list-group-item" ng-click="openModal('delete_post.html', null, post.id)" ng-if="app.person.id == post.author.id">
+                    <i class="pointer text-muted fa-fw glyphicon glyphicon-trash"></i>
+                    <span>
+                      Excluir
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-9">
+              <div class="wrapper-lg text-lg">
+                <div class="text-black pt-serif blue froala-element" bind-html-unsafe="post.body"></div>
+                <div class="line line-dashed line-lg b-b" ng-show="post.terms"></div>
+                <div id="term-list" ng-show="post.terms">
+                  <span ng-repeat="term in post.terms track by term.id"class="wrapper-sm m-r text-lg text-white badge bg-dark lter">
+                    <a href class="text-white" ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: term.id})">
+                      {{term.name}}
+                    </a>
+                  </span>
+                </div>
+                <!-- <div class="line line-dashed line-lg b-b" ng-if="app.network.currentStation.canWrite"></div> -->
+                <!-- Comments -->
+                <div class="line line-dashed line-lg b-b" ng-show="comments.length > 0"></div> 
+                <div class="panel text-md" ng-show="comments.length > 0">
+                  <h4 class="m-b">{{comments.length}} Comentário(s)</h4>      
+                  <!-- Comment loop -->
+                  <div class="m-b-md comment-block" ng-repeat="comment in comments">
+                    <a class="pull-left thumb-sm">
+                      <span class="pull-left thumb-sm avatar m-r">
+                        <div style="{{app.person.imageMedium | bgimg}}" class="img-circular-xs"></div>
+                      </span>
+                    </a>
+                    <div class="m-l-xxl m-b">
+                      <div>
+                        <a href><strong>{{comment.author.name}}</strong></a>
+                        <span class="text-muted text-xs m-l-sm m-t-xs">
+                          {{comment.date | myLongTimeFormat}}
+                        </span>
+                        <span class="hover-show text-normal m-l" ng-if="app.person.id == comment.author.id">
+                          <a ng-click="startEditing(comment)" tooltip="editar" href><i class="fa fa-fw fa-pencil"></i></a>
+                          <a ng-click="openModal('delete_comment.html', null, comment.id)" tooltip="remover" class="text-danger m-l-xm" href ><i class="fa fa-fw fa-trash-o"></i></a>
+                        </span>
+                      </div>
+                      <div ng-click="startEditing(comment)" class="m-t-sm text-lg font-thin" ng-show="!comment.editing">{{comment.body}}</div>
+                      <form class="m-t" ng-show="comment.editing">
+                        <div class="form-group">
+                          <textarea class="form-control text-md" rows="2" placeholder="Comentário" ng-model="comment.newBody"></textarea>
+                        </div>
+                        <div class="form-group text-right">
+                          <button ng-show="comment.editing" ng-click="startEditing(comment)" class="btn btn-default text-u-c">Descartar</button>
+                          <button ng-show="comment.editing" ng-click="updateComment(comment)" class="btn btn-full-black text-u-c">Atualizar</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <a ng-click="moreComments()" ng-show="commentsShow"><strong>Mostrar comentários anteriores</strong></a>            
+                </div>
+
+                <!-- Comment Form -->
+                <div ng-if="app.network.currentStation.canWrite">
+                  <form ng-submit="submitComment()">
+                    <div class="form-group pull-in clearfix">
+                    </div>
+                    <div class="form-group">
+                      <textarea id="comment" class="form-control text-md" rows="3" placeholder="Comentário" ng-model="comment.body"></textarea>
+                    </div>
+                    <div class="form-group text-right">
+                      <button type="submit" class="btn btn-full-black text-u-c">Enviar</button>
+                    </div>
+                  </form>
+                </div>    
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="text/ng-template" id="delete_comment.html">
+    <form ng-submit="deleteComment()">
+      <div class="modal-header">
+        <h3 class="modal-title">Remover comentário</h3>
+      </div>
+      <div class="modal-body text-md">
+        Tem certeza que deseja remover o comentário?
+      </div>
+      <div class="modal-footer">                  
+        <a class="btn btn-default" ng-click="cancelModal()">Cancelar</a>
+        <button type="submit" class="btn btn-danger">Remover</button>
+      </div>
+    </form>
+  </script>
+
+  <script type="text/ng-template" id="delete_post.html">
+    <form ng-submit="deletePost()">
+      <div class="modal-header">
+        <h3 class="modal-title">Remover notícia</h3>
+      </div>
+      <div class="modal-body text-md">
+        Tem certeza que deseja remover a notícia?
+      </div>
+      <div class="modal-footer">                  
+        <a class="btn btn-default" ng-click="cancelModal()">Cancelar</a>
+        <button type="submit" class="btn btn-danger">Remover</button>
+      </div>
+    </form>
+  </script>
+
+
+  <script type="text/ng-template" id="promote_news.html">
+    <div class="modal-body wrapper-lg" ng-cloak>
+      <div class="row">
+        <div class="col-sm-12">
+          <h3 class="m-t-none m-b font-thin text-center">Promover</h3>
+          <form ng-submit="promoteNews()" role="form">
+
+            <div class="form-group">
+              <label class="text-md">Estação</label>
+              <div class="">
+                <div ui-module="select2">
+                  <select ui-select2 data-placeholder="Escolha uma estação" ng-change="selectStation()" ng-model="promote.stationId" class="form-control w-md text-md">
+                    <option ng-repeat="station in (app.network.stations | filter: {canWrite: true})" value="{{station.id}}">{{station.name}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group" ng-class="{'hide': !promote.taxonomies}">
+              <div  class="animated fadeIn">
+                <div ui-module="select2">
+                  <select ui-select2 data-placeholder="Escolha termo" multiple="multiple" ng-change="selectTerms()" ng-model="promote.termsToPromote" class="form-control w-md text-md" ng-cloak>
+                    <optgroup ng-repeat="taxonomy in promote.taxonomies" label="{{taxonomy.name}}">
+                      <option ng-repeat="term in taxonomy.terms" value="{{term}}">{{term.name}}</option>
+                    </optgroup>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center m-t-lg">
+              <a class="btn btn-default" ng-click="cancelModal()">Cancelar</a>
+              <button type="submit" class="btn btn-full-black">Promover</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </script>
+
+</div>

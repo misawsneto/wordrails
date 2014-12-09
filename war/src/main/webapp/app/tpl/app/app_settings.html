@@ -1,0 +1,82 @@
+<div class="bg-light lter b-b wrapper-md">
+  <h1 class="m-n font-thin h3">Configurações da rede</h1>
+</div>
+<div class="wrapper-md" ng-controller="SettingsCtrl">
+  <div class="row">
+    <div class="col-lg-offset-2 col-lg-8" filters="customFilter">
+      <div class="panel panel-default">
+        <div class="panel-heading font-bold">
+          Detalhes da rede
+        </div>
+        <div class="panel-body">
+          <form class="form-horizontal" method="get" ng-submit="submitSimple(network)">
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Nome</label>
+              <div class="col-sm-9">
+                <input type="text" ng-model="network.name" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Endereço padrão</label>
+              <div class="col-sm-9">
+                <!-- <input type="text" ng-model="network.subdomain" class="form-control"> -->
+                <div class="input-group m-b">
+                  <input type="text" class="form-control" ng-model="network.subdomain">
+                  <span class="input-group-addon">.xarx.co</span>
+                </div>
+                <span class="help-block m-b-none">O endereço padrão da sua rede.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Endereço personalizado</label>
+              <div class="col-sm-9">
+                <input type="text" ng-model="network.domain" class="form-control">
+                <span class="help-block m-b-none">Se desejar, sua rede pode utilizar um domínio próprio. Clique aqui para saber como configurar seu próprio endereço web.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Google Analytics ID</label>
+              <div class="col-sm-9">
+                <input type="text" ng-model="network.trackingId" class="form-control">
+                <span class="help-block m-b-none">Acompanhe e analise a movimentação em sua rede através da integração com o Google Analytics. Para começar, insira o <i>tracking ID</i> do Google Analytics.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Logotipo da Rede</label>
+              <div class="col-sm-9">
+                <span ng-hide="uploader.progress > 0 || networkImg" id="image-button" class="m-t-xs btn btn-success fileinput-button" style="">
+                  <i class="fa fa-image"></i>
+                  <span>Escolha uma imagem...</span>
+                  <input type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+                </span>
+                <div class="inline-block wrapper-xs b b-a" ng-if="networkImg">
+                  <img class="logo-selector wrapper-xs bg-full-black img-responsive" ng-src="{{networkImg.link}}">
+                </div>
+                <div ng-if="uploader.progress > 0 && !networkImg">
+                  <div class="progress-striped progress-sm progress m-t">
+                      <div class="progress-bar progress-bar-success" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                  </div>
+                </div>
+                <span class="remove-logo">
+                  <a class="text-lg" ng-if="networkImg" ng-click="clearUpload()">
+                    <i class="fa fa-remove"></i>
+                  </a>
+                </span>
+                 <div class="help-block m-b-none">A imagem não pode ter altura maior que 100 pixels e mais que 200Kb.</div>
+              </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="form-group">
+              <div>
+                <button type="submit" class="btn btn-success pull-right m-r-lg">Salvar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end of row -->
+  <div class="row">
+  </div>
+</div>

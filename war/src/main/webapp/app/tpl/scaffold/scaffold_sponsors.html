@@ -1,0 +1,44 @@
+<div class="bg-light lter b-b wrapper-md">
+  <h1 class="m-n font-thin h3">Patrocinadores</h1>
+</div>
+<div class="wrapper-md">
+  <div class="row">
+    <div class="col-lg-10 col-lg-offset-1">
+      <p>
+        <a ui-sref="app.scaffold.sponsors_create" class="btn m-b-xs btn-lg btn-default btn-addon">
+          <i class="fa fa-plus"></i>Adicionar patrocinador
+        </a>
+      </p>
+      <div class="panel panel-default text-md">
+        <div class="panel-body b-b b-light">
+          Pesquisar: <input id="filter" type="text" class="form-control w-lg inline m-r m-l-sm"/>
+        </div>
+        <div>
+          <table class="table m-b-none" ui-jq="footable" data-filter="#filter" data-page-size="100">
+            <thead>
+              <tr>
+                <th data-toggle="true">
+                  Nome
+                </th>
+                <th data-toggle="true">
+                  Palavras-chave
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat = "perspective in perspectives">
+                <td>{{perspective.name}}</td>
+                <td>{{perspective.station.name}}</td>
+                <td data-value="1" class="text-center">
+                  <a href tooltip="gerenciar a perspectiva" ui-sref="app.scaffold.perspectives_edit({perspectiveId: perspective.id})"><i class="fa fa-fw fa-sitemap text-grey"></i></a>
+                  <a href tooltip="renomear" ng-click="openModal('edit_perspective.html', null, taxonomy.id)" class="m-l-sm"><i class="fa fa-fw fa-pencil text-grey"></i></a>
+                  <a href tooltip="remover" ng-click="openModal('delete_perspective.html', null, taxonomy.id)" class="m-l-sm"><i class="fa fa-fw fa-trash-o text-danger"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
