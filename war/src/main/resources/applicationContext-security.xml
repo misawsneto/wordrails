@@ -10,6 +10,13 @@
 	<http pattern="/logIn.jsp" security="none"/>
 	<http pattern="/index.jsp" security="none"/>
 	<http pattern="/app/**" security="none"/>
+	<http pattern="/css/**" security="none"/>
+	<http pattern="/js/**" security="none"/>
+	<http pattern="/img/**" security="none"/>
+	<http pattern="/tpl/**" security="none"/>
+	<http pattern="/offcanvas/**" security="none"/>
+	<http pattern="/l10n/**" security="none"/>
+	<http pattern="/fonts/**" security="none"/>
 	<http pattern="/api/persons/search/findByUsername/**" security="none"/>
 
 	<http entry-point-ref="authenticationEntryPoint">
