@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+		 version="3.0"
+		 metadata-complete="true">		 
+<!-- CORS Filter -->
+<!-- 	<filter>
+  		<filter-name>CorsFilter </filter-name>
+  		<filter-class>org.apache.catalina.filters.CorsFilter</filter-class>  		
+  		<init-param>
+  			<param-name>cors.allowed.headers</param-name>
+  			<param-value>Accept,Access-Control-Request-Headers,Access-Control-Request-Method,Authorization,Content-Description,Content-Disposition,Content-Range,Content-Type,Location,Origin,X-Requested-With</param-value>
+  		</init-param>
+  		<init-param>
+  			<param-name>cors.allowed.methods</param-name>
+  			<param-value>DELETE,GET,HEAD,OPTIONS,POST,PUT,PATCH</param-value>
+  		</init-param>
+  		<init-param>
+    		<param-name>cors.allowed.origins</param-name>
+    		<param-value>*</param-value>
+  		</init-param>  		
+  		<init-param>
+  			<param-name>cors.exposed.headers</param-name>
+  			<param-value>Access-Control-Allow-Credentials,Access-Control-Allow-Origin,Location</param-value>
+		</init-param>
+		<init-param>
+			<param-name>cors.support.credentials</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter> -->
+	
+	<session-config>
+        <session-timeout>10080</session-timeout>
+    </session-config>
+	
+<!-- CORS Filter -->
+
+	<listener>
+      	<listener-class>com.wordrails.ContextServletListener</listener-class>
+   	</listener>   	
+
+
+<!-- RESTEasy -->
+	<listener>
+      	<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+   	</listener>   	
+
+	<context-param>
+   		<param-name>resteasy.servlet.mapping.prefix</param-name>
+   		<param-value>/api</param-value>
+	</context-param>
+   	
+	<filter>
+		<filter-name>FilterDispatcher</filter-name>
+		<filter-class>org.jboss.resteasy.plugins.server.servlet.FilterDispatcher</filter-class>
+	</filter>
+<!-- RESTEasy -->
+
+
+
+<!-- Spring -->
+<!--  
+   	<listener>
+      	<listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>      	
+   	</listener>
+-->   	
+   	<listener>
+      	<listener-class>com.wordrails.api.WordRailsContextLoaderListener</listener-class>      	
+   	</listener>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:applicationContext.xml
+			classpath:applicationContext-integration.xml
+			classpath:applicationContext-security.xml
+		</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+   	</listener>
+<!-- Spring -->
+
+
+
+<!-- Spring Data REST -->
+    <servlet>
+    	<servlet-name>DispatcherServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value></param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+    <servlet-mapping>
+    	<servlet-name>DispatcherServlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+<!-- Spring Data REST -->
+
+
+
+<!-- Spring ORM -->
+	<filter>
+		<filter-name>OpenEntityManagerInViewFilter</filter-name>
+		<filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+		<init-param>
+			<param-name>entityManagerFactoryBeanName</param-name>
+			<param-value>entityManagerFactory</param-value>
+		</init-param>
+	</filter>
+<!-- Spring ORM -->
+
+
+
+<!-- Spring Security -->
+	<listener>
+    	<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
+
+	<filter>
+  		<filter-name>springSecurityFilterChain</filter-name>
+  		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>	
+<!-- Spring Security -->
+
+
+
+<!-- Cache -->
+	<filter>
+		<filter-name>CacheFilter</filter-name>
+		<filter-class>com.wordrails.api.CacheFilter</filter-class>
+	</filter>
+<!-- Cache -->
+
+
+
+<!-- 	<filter-mapping>
+		<filter-name>CorsFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping> -->
+	
+	<filter>
+	    <filter-name>NetworkDomainFilter</filter-name>
+	   <!--  <filter-class>
+	        com.wordrails.api.NetworkDomainFilter
+	    </filter-class> -->
+	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	    <init-param>
+	        <param-name>targetBeanName</param-name>
+	        <param-value>networkDomainFilter</param-value>
+	    </init-param>
+	</filter>
+
+	<filter-mapping>
+  		<filter-name>springSecurityFilterChain</filter-name>
+  		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+	    <filter-name>NetworkDomainFilter</filter-name>
+	    <url-pattern>/index.jsp</url-pattern>
+	    <url-pattern>/app/index.jsp</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>OpenEntityManagerInViewFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>FilterDispatcher</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>CacheFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>	
+</web-app>

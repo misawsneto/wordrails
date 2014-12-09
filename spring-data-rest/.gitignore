@@ -1,0 +1,12 @@
+.DS_Store
+.gradle/
+bin/
+build/
+target/
+*.i*
+.classpath
+.project
+.settings
+*.log
+vf.gf.*
+out/

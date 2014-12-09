@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+			 					 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+			 version="2.1">
+	<persistence-unit name="wordrails" transaction-type="RESOURCE_LOCAL">
+		<class>com.wordrails.business.Cell</class>
+		<class>com.wordrails.business.Comment</class>
+		<class>com.wordrails.business.File</class>
+		<class>com.wordrails.business.FileContents</class>
+		<class>com.wordrails.business.Image</class>
+		<class>com.wordrails.business.Network</class>
+		<class>com.wordrails.business.NetworkRole</class>		
+		<class>com.wordrails.business.Person</class>		
+		<class>com.wordrails.business.Post</class>
+		<class>com.wordrails.business.Promotion</class>
+		<class>com.wordrails.business.Row</class>
+		<class>com.wordrails.business.Station</class>
+		<class>com.wordrails.business.StationPerspective</class>
+		<class>com.wordrails.business.StationRole</class>		
+		<class>com.wordrails.business.Taxonomy</class>
+		<class>com.wordrails.business.Term</class>
+		<class>com.wordrails.business.TermPerspective</class>
+		<class>com.wordrails.business.User</class>
+		<class>com.wordrails.business.Sponsor</class>
+
+      	<properties>
+      		<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+      		<property name="hibernate.hbm2ddl.auto" value="update"/>      		      		
+			<property name="hibernate.show_sql" value="false"/>
+			<property name="hibernate.format_sql" value="true"/>	
+			
+			<property name="hibernate.search.default.directory_provider"
+                value="filesystem" />
+            <property name="hibernate.search.default.indexBase" 
+          		value="indexes"/>          		 		
+		</properties>
+	</persistence-unit>	
+</persistence>

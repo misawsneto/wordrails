@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+         				   http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+		<property name="driverClass" value="org.h2.Driver"/>
+		<property name="jdbcUrl" value="jdbc:h2:mem:wordrails2"/>
+   		<property name="username" value="sa"/>
+		<property name="password" value=""/>
+	</bean>
+	
+	<bean class="org.springframework.mock.web.MockHttpServletRequest"/>
+</beans>
