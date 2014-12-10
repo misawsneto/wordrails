@@ -238,7 +238,7 @@
 					from
 						Post p join p.terms t
 					where
-						p.station.id = :stationId and t.id in (:termsIds)
+						p.station.id = :stationId and t.id in (:termsIds) and p.state != 'DRAFT'
 				) or post.id in (
 					select
 						p.id
@@ -248,7 +248,7 @@
 						join promotion.post p
 						join p.terms t
 					where
-						station.id = :stationId and t.id in (:termsIds)
+						station.id = :stationId and t.id in (:termsIds) and p.state != 'DRAFT'
 				)
 			order by
 				post.date desc
@@ -291,7 +291,7 @@
 			from
 				Post p 
 			where
-				p.station.id = :stationId and p.state = :state and p.author.id = :stationId
+				p.station.id = :stationId and p.state = :state and p.author.id = :authorId
 			order by
 				p.date desc
 		</query>

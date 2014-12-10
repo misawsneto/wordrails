@@ -73,8 +73,20 @@ var app = angular.module('app', [
             .state('app.user', {
                 url: '/@:username',
                 templateUrl: 'tpl/posts/user_page.html',
+                controller: 'UserPageCtrl',
                 // use resolve to load other dependences
                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load('angularFileUpload')
+                    }]
+                }
+            })
+            //my posts
+            .state('app.user.drafts', {
+                url: '/drafts',
+                templateUrl: 'tpl/posts/user_page_drafts.html',
+                resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
                         return $ocLazyLoad.load('angularFileUpload')
@@ -90,11 +102,6 @@ var app = angular.module('app', [
                 url: '/search?q&page',
                 templateUrl: 'tpl/app/app_search.html',
                 controller: 'SearchCtrl'
-            })
-            //my posts
-            .state('app.user.drafts', {
-                url: '/drafts',
-                templateUrl: 'tpl/posts/user_page_drafts.html'
             })
             // new post
             .state('app.stations.editor', {

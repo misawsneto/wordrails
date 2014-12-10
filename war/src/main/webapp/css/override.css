@@ -5,6 +5,7 @@
   font-style: italic;
   color: #aaa
 } */
+.l-s-n{list-style: none;}
 .contenteditable.placeholder{min-width:20px!important; max-width: 140px!important;}
 .absolute{position: absolute;}
 /*cronica*/

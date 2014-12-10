@@ -62,7 +62,7 @@
                 <div class="text-black pt-serif blue froala-element" bind-html-unsafe="post.body"></div>
                 <div class="line line-dashed line-lg b-b" ng-show="post.terms"></div>
                 <div id="term-list" ng-show="post.terms">
-                  <span ng-repeat="term in post.terms track by term.id"class="wrapper-sm m-r text-lg text-white badge bg-dark lter">
+                  <span ng-repeat="term in post.terms track by term.id"class="m-t-xs m-b-xs wrapper-sm m-r text-lg text-white badge bg-dark lter">
                     <a href class="text-white" ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: term.id})">
                       {{term.name}}
                     </a>

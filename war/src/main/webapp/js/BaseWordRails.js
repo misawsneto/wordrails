@@ -240,6 +240,26 @@ function BaseWordRails(_url, _username, _password) {
         return $.ajax(settings);
     };
 
+    that.findPostsByStationIdAndAuthorIdAndState = function(stationId, authorId, state, _page, _size, _sort, _success, _error, _complete) {
+        return that._ajax({
+            url: _url + "/api/posts/" + stationId + "/findPostsByStationIdAndAuthorIdAndState",
+            data: {
+                page: _page,
+                size: _size,
+                sort: _sort,
+                authorId: authorId,
+                state: state
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
     that.findPostsAndPostsPromotedByAuthorId = function(stationId, authorId, _page, _size, _sort, _success, _error, _complete) {
 		return that._ajax({
             url: _url + "/api/posts/" + stationId + "/findPostsAndPostsPromotedByAuthorId",

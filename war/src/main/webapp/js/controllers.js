@@ -976,12 +976,6 @@ $scope.options = {
         });
     };
     headshot.onErrorItem = function(fileItem, response, status, headers) {
-        //console.info('onErrorItem', fileItem, response, status, headers);
-        // if(response.message && response.message.indexOf("height") > -1){
-        //   toastr.error("A imagem não pode ter mais que 50 pixels de altura");
-        // }else if(response.message && response.message.indexOf("maximun") > -1){
-        //   toastr.error("A imagem não pode ser maior que 100 Kb.");
-        // }
     };
 
     var cover = $scope.cover = new FileUploader({
@@ -1009,28 +1003,24 @@ $scope.options = {
         });
     };
     cover.onErrorItem = function(fileItem, response, status, headers) {
-        //console.info('onErrorItem', fileItem, response, status, headers);
-        // if(response.message && response.message.indexOf("height") > -1){
-        //   toastr.error("A imagem não pode ter mais que 50 pixels de altura");
-        // }else if(response.message && response.message.indexOf("maximun") > -1){
-        //   toastr.error("A imagem não pode ser maior que 100 Kb.");
-        // }
     };
 
   var wr = authService.getWR();
 
-  $scope.page = 0  
+  $scope.postPage = 0;
+  $scope.draftPage = 0;
   $scope.postsViews = [];
+  $scope.draftsViews = [];
   var authorId;
 
-  if($state.params.username){
+  if($state.params.username && !$scope.person){
     wr.findByUsername($state.params.username, function(persons){
       var person = $scope.person = persons[0];
       authorId = person.id;
 
-      wr.getPersonFollowing(authorId, function(followers){
+      /*wr.getPersonFollowing(authorId, function(followers){
         console.log(followers);
-      })
+      })*/
 
       wr.getPersonImage(person.id, function(personImage){
           safeApply($scope, function(){
@@ -1046,35 +1036,29 @@ $scope.options = {
           person.cover = $filter('imageLink')(personCover.large.id);;
         })
       }, null, null, "imageProjection")
+
+      station = $scope.app.network.currentStation;
+      loadData();
     });
   }
 
   var station = null
   var postsLoaded = false;
 
-  $scope.$watch('app.network.currentStation', function(newVal){
-    if(newVal && !postsLoaded){
-      station = $scope.app.network.currentStation;
-      loadPosts();
-    }
-  })
 
-  $scope.$watch('person', function(newVal){
-    if(newVal && !postsLoaded){
-      station = $scope.app.network.currentStation;
-      loadPosts();
-    }
-  })
+    //username
+  function loadData(){
+      $scope.loadPosts();
+      $scope.loadDrafts();
+  }
 
-  function loadPosts(){
+  $scope.loadPosts = function(){
     if(station){
       if(authorId > 0){
-        wr.findPostsAndPostsPromotedByAuthorId(station.id, authorId, $scope.page, WORDRAILS.pageSize, null, function(data){
+        wr.findPostsAndPostsPromotedByAuthorId(station.id, authorId, $scope.postPage, WORDRAILS.pageSize, null, function(data){
           postsLoaded = true;
           safeApply($scope, function(){
-            data.forEach(function(post){
-              $scope.postsViews.push(post);
-            });
+            $scope.postsViews = data;
           });
         }, null, function(){
           safeApply($scope, function(){
@@ -1084,6 +1068,21 @@ $scope.options = {
       }
     }// end if station
   }//end function
+
+  $scope.loadDrafts = function(){
+    if(station){
+      wr.findPostsByStationIdAndAuthorIdAndState(station.id, authorId, "DRAFT", $scope.draftPage, WORDRAILS.pageSize, null, function(data){
+        postsLoaded = true;
+        safeApply($scope, function(){
+            $scope.draftsViews = data;
+        });
+      }, null, function(){
+        safeApply($scope, function(){
+          $scope.app.loading = false;
+        });
+      });
+    }
+  }
 
 })
 

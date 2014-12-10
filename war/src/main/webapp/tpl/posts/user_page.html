@@ -1,4 +1,4 @@
-<div class="hbox hbox-auto-xs hbox-auto-sm" ng-show="postsViews && app.network.currentStation" ng-controller="UserPageCtrl" ng-cloak>
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-show="postsViews && app.network.currentStation" ng-cloak>
 	<div class="row">
 		<div class="col-sm-8 col-sm-offset-2">
 			<div class="">
@@ -50,14 +50,21 @@
 	<div class="wrapper-md">
 		<div class="m-w-850 center-block" >
 			<div class="bg-white profile-menu hidden-xs" ng-if="person.id == app.person.id">
-				<ul class="nav nav-pills text-u-c">
-					<li class="active"><a ui-sref="app.user({username: username})">Notícias</a></li>
-					<li><a ui-sref="app.user.drafts({username: username})">Rascunhos</a></li>
-					<li><a href>Estaísticas</a></li>
-				</ul>
+				<!-- <div class="pull-left">
+					<span class="active">
+						<a ui-sref="app.user({username: username})" ui-sref-opts="{ reload: true }">Notícias</a>
+					</span>
+					<span>
+						<a ui-sref="app.user.drafts({username: username})" ui-sref-opts="{ reload: true }">Rascunhos</a>
+					</span>
+				</div> -->
+			<ul class="nav nav-pills nav-sm">
+		        <li ui-sref-active="active"><a ui-sref="app.user({username: username})" ng-click="changeTab('app.user')" style="padding: 10px; background: #fff;" class="h4 text-u-c">Notícias</a></li>
+		        <li ui-sref-active="active"><a ui-sref="app.user.drafts({username: username})" ng-click="changeTab('app.user.drafts')" style="background: #fff; padding: 10px;" class="h4 text-u-c">Rascunhos</a></li>
+		    </ul>
 			</div>
-			<div ui-view>
-				<ul class="no-borders no-padding m-b-none">
+			<div ui-view autoscroll="false">
+				<ul class="no-borders no-padding m-b-none l-s-n animated fadeIn">
 					<li class="" ng-repeat="postView in postsViews">
 						<div class="line thin-line bg-light"></div>
 						<div class="pull-right text-sm text-muted m-t-sm">
@@ -77,7 +84,7 @@
 								<p class="m-t">
 									<i class="fa fa-clock-o text-muted" tooltip="{{post.date | myLongTimeFormat}}"></i>
 									<span ng-if="postView.date" data-livestamp="{{postView.date / 1000}}"></span>
-									<a class="m-l-sm"><i class="fa fw m-r-xs fa-bookmark"></i>Ler depois</a>
+									<!-- <a class="m-l-sm"><i class="fa fw m-r-xs fa-bookmark"></i>Ler depois</a> -->
 								</p>
 							</div>
 						</div>    
