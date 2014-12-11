@@ -19,11 +19,10 @@ client/.classpath
 parent/.settings/*
 jar/bin/*
 war/bin/*
+war/target/**
 war/indexes/**
 war/index/*
 war/src/main/webapp/app/js/BaseWordRails.js
 .project
-
-
 war/src/main/webapp/wrtomcat.sublime-project
 war/src/main/webapp/webapp.7z
