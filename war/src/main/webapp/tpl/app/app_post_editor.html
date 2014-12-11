@@ -4,12 +4,13 @@
     <button ng-click="toggleTermSelector()" id="term-selector-toggler" class="btn btn-default">
       <i class="icon icon-list"></i>
     </button>
-    <div id="post-editor-top-buttons" class="btn-group m-r-sm">
+    <div id="post-editor-top-buttons" class="btn-group pull-right">
       <!-- <a href class="m-b-xs btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Arquivar"><i class="fa fa-save"></i></a> -->
       <a ui-sref="app.stations" ui-sref-opts="{ reload: true }" class="m-b-xs btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Descartar" tooltip-placement="bottom">
         <i class="glyphicon glyphicon-trash"></i>
       </a>
-      <a ui-sref="app.stations" ui-sref-opts="{ reload: true }" class="m-b-xs btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Salvar como racunho" tooltip-placement="bottom">
+      <a class="m-b-xs btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Salvar como racunho" tooltip-placement="bottom"
+      ng-click="submitDraft()">
         <i class="fa fa-save"></i>
       </a>
       <a href class="m-b-xs btn btn-sm m-r btn-default w-xxs w-auto-xs" ng-click="submit()" tooltip="Publicar" tooltip-placement="bottom"><i class="fa fa-send"></i></a>
@@ -17,11 +18,7 @@
         <a tooltip="remover" ng-click="removeTerm(selectedTerm)" ng-repeat="selectedTerm in p.termList" class="m-l-sm m-b-xs h-u">{{selectedTerm.name}}</a>
       </span> -->
     </div>
-    <div id="custom-toolbar" class="froala-element">
-      <div class="froala-editor">
-        <div id="froala-custoom-toolbar" class="froala-box">
-        </div>
-      </div>
+    <div id="custom-toolbar">
     </div>
   </div>
   <!-- / header -->
@@ -74,12 +71,8 @@
 
                 </div>
                 <div class="wrapper-lg text-lg pull-in">
-                  <div class="froala-element text-black pt-serif">
-                    <!-- <div ng-model="content" medium-editor-- options='{"addons": { "images": {} }, "buttonLabels": "fontawesome", "placeholder": "Texto...", "buttons": ["bold", "italic", "underline", "anchor", "header1", "header2", "quote", "orderedlist", "unorderedlist"]}'></div> -->
-                    
-                    <textarea froala="froalaOptions" ng-model="content">
-                    </textarea>
-
+                  <div class="text-black pt-serif">
+                    <textarea ng-model="content" redactor style="opacity: 0"></textarea>
                   </div>
                 </div>
               </div>
@@ -92,7 +85,7 @@
           </div>
         </div>
 
-        <div class="text-center">
+        <!-- <div class="text-center">
           <a class="btn m-l btn-default text-u-c btn-addon" ui-sref="app.stations" ui-sref-opts="{ reload: true }">
             <i class="glyphicon glyphicon-trash"></i>
             Descartar
@@ -107,7 +100,7 @@
           <button ng-if="editing && published" class="btn m-l m-r btn-dark btn-addon text-u-c" ng-click="submit()">
             <i class="fa fa-send"></i>Atualizar
           </button>
-        </div>
+        </div> -->
 
       </div>
     </div>

@@ -17,6 +17,7 @@ var app = angular.module('app', [
     'app.directives',
     'app.controllers',
     'froala',
+    'angular-redactor',
     'infinite-scroll',
     'ui.splash',
     'ngSanitize',
@@ -345,6 +346,18 @@ var app = angular.module('app', [
     baseUrl: location.protocol + '//' + location.host,
     pageSize: 15,
     commentPageSize: 5
+})
+
+.config(function(redactorOptions, WORDRAILS){
+    redactorOptions.lang = 'pt_br';
+    redactorOptions.imageUpload = WORDRAILS.baseUrl + "/api/files/contents/simple";
+    redactorOptions.toolbarExternal = "#custom-toolbar"
+    redactorOptions.plugins = ['fontsize', 'fontcolor', 'video', 'counter']
+    redactorOptions.minHeight = 300
+    redactorOptions.focus = true
+    redactorOptions.buttons = ['html', 'formatting', 'bold', 'italic', 'underline', 'deleted', 
+                                'fontsize', 'fontcolor', 'unorderedlist', 'orderedlist', 'outdent', 'indent',
+                                'link', 'image', 'video', 'alignment', 'horizontalrule'];
 })
 
 .run(function($rootScope, $location, authService, connectionService){

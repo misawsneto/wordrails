@@ -131,7 +131,7 @@ public class FilesResource {
 						contentsRepository.save(contents);
 
 						URI location = UriBuilder.fromResource(FilesResource.class).path(id.toString()).path("contents").build();
-						return Response.status(Status.OK).entity("{\"link\":\"/api" +location+ "\", \"id\":" + id + "}").build();					
+						return Response.status(Status.OK).entity("{\"filelink\":\"/api" +location+ "\", \"id\":" + id + "}").build();					
 					}
 				}else{
 					return Response.status(Status.BAD_REQUEST).entity("{\"message\":\"File`s maximun size is 200Kb.\"}").build();						
@@ -172,7 +172,7 @@ public class FilesResource {
 						contentsRepository.save(contents);
 
 						URI location = UriBuilder.fromResource(FilesResource.class).path(id.toString()).path("contents").build();
-						return Response.status(Status.OK).entity("{\"link\":\"/api" +location+ "\", \"id\":" + id + "}").build();					
+						return Response.status(Status.OK).entity("{\"filelink\":\"/api" +location+ "\", \"id\":" + id + "}").build();					
 					}
 				}else{
 					return Response.status(Status.BAD_REQUEST).entity("{\"message\":\"File`s maximun size is 4194304 bytes\"}").build();						

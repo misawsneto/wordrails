@@ -39,6 +39,7 @@
 
   <link href="css/froala_content.min.css" rel="stylesheet" type="text/css" />
   <link href="css/froala_style.min.css" rel="stylesheet" type="text/css" />
+  <link href="js/libs/redactor/redactor.css" rel="stylesheet" type="text/css" />
 
   <style>
     [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -66,6 +67,12 @@
   <script src="js/libs/medium-editor-plugins.js?${buildNumber}"></script> -->
   <!-- moment, livestamp, locales-->
   <!-- froala. -->
+  <script src="js/libs/redactor/redactor.js"></script>
+  <script src="js/libs/redactor/video.js"></script>
+  <script src="js/libs/redactor/fontsize.js"></script>
+  <script src="js/libs/redactor/counter.js"></script>
+  <script src="js/libs/redactor/fontcolor.js"></script>
+  <script src="js/libs/redactor/pt_br.js"></script>
   <script src="js/libs/froala/froala_editor.min.js"></script>
   <script src="js/libs/froala/plugins/font_size.min.js"></script>
   <script src="js/libs/froala/plugins/video.min.js"></script>
@@ -102,6 +109,7 @@
   <!-- angular-summernote -->
   <script src="js/angular/angular-froala.js?${buildNumber}"></script>
   <script src="js/angular/froala-sanitize.js?${buildNumber}"></script>
+  <script src="js/angular/angular-redactor.js?${buildNumber}"></script>
   <!-- Wordrails -->
   <script src="js/BaseWordRails.js?${buildNumber}"></script>
   <!-- App -->

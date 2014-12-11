@@ -21,6 +21,7 @@ jar/bin/*
 war/bin/*
 war/index/*
 war/indexes/*
+war/src/main/webapp/app/js/BaseWordRails.js
 .project
 
-war/src/main/webapp/app/js/BaseWordRails.js
+

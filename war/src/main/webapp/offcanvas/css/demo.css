@@ -10,9 +10,8 @@
 		url('../fonts/codropsicons/codropsicons.svg#codropsicons') format('svg');
 }
 
-*, *:after, *:before { -webkit-box-sizing: border-box; box-sizing: border-box; }
-.clearfix:before, .clearfix:after { content: ''; display: table; }
-.clearfix:after { clear: both; }
+/* .clearfix:before, .clearfix:after { content: ''; display: table; }
+.clearfix:after { clear: both; } */
 
 /* body {
 	background: #b4bad2;

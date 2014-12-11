@@ -5,6 +5,10 @@
   font-style: italic;
   color: #aaa
 } */
+#redactor-droparea input[type="file"]{display: inline}
+#post-editor-top-buttons {margin-right: 60px;}
+.redactor-toolbar {border: none!important;}
+.redactor-toolbar a{font-size: 18px;}
 .l-s-n{list-style: none;}
 .contenteditable.placeholder{min-width:20px!important; max-width: 140px!important;}
 .absolute{position: absolute;}
@@ -14,11 +18,8 @@
 .fr-placeholder{color: #aaa!important; top: 15px!important;}
 .top-toolbar {position: fixed; top:50px; width: 100%; z-index: 100}
 .f-basic{border: none!important;}
-.top-toolbar .froala-editor{border:none!important;}
-#custom-toolbar{position: fixed;top: 64px;left: 210px;overflow: visible;}
+#custom-toolbar{position: fixed;top: 64px;left: 20px;overflow: visible;}
 #custom-toolbar .f-sep{display: none;}
-.froala-editor:not(.froala-modal):before{display: none!important;}
-#post-editor .froala-editor .bttn-wrapper{display: none!important;}
 .f-inline{width: 30%!important;position: fixed!important;left: 70%!important;margin: 0 0 0 -37.5%!important;border: 1px solid;top: 33%!important;}
 .news-editor{margin-top: 66px}
 .bg-white-opacity {background-color: rgba(255, 255, 255, 0.3);}
