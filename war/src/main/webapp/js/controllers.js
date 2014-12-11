@@ -288,6 +288,7 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
   $scope.tagTaxonomy = {};
 
   $scope.submitCreateTerm = function(newName, postId){
+    console.log(newName);
     if(!newName){
       toastr.error("Termo inválido.")
       return;
@@ -309,64 +310,25 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
     }
   } 
 
-/*  var filterTag = function(){
-    for (var i = $scope.stringTerms.length - 1; i >= 0; i--) {
-      $scope.tagTerms.forEach(function(tagTerm){
-        if(tagTerm === $scope.stringTerms[i]){
-          array.splice(i, 1);
-        }
-      });
-    };
-  }*/
-  $scope.stringTagTerms = []
+  $scope.tagTerms = [];
+  $scope.select2Options = {
+    tags: $scope.tagTerms,
+    simple_tags: true,
+    multiple: true
+  };
+
   function getTaxonomyTerms(){
-    /*if($state.params.postId){
-      wr.getPostTerms($state.params.postId, function(postTerms){
-
-      })
-    }*/
     wr.getTaxonomyTerms($scope.tagTaxonomy.id, function(response){
-
-      if(response){
+      if(response)
         safeApply($scope, function(){
-          response.forEach(function(term){
-            for (var i = $scope.p.termList.length - 1; i >= 0; i--) {
-              if($scope.p.termList[i].id == term.id){
-                //$scope.stringTagTerms.push($scope.p.termList[i].name)
-                $scope.p.termList.splice(i, 1)
-              }
-            };
-            $scope.tagTerms.push(term.name)
+          response.forEach(function(tag, index){
+            tag.text = tag.name
+            $scope.tagTerms.push(tag)
           });
         })
-        console.log($scope.tagTerms);
-        $scope.select2Options = {
-        'multiple': true,
-        'simple_tags': true,
-        'tags': $scope.tagTerms
-        };
-      }
+    }).complete(function(){
     })
   }
-
-  // $scope.$watch("tagTerms", function(newVal){
-  //   console.log(newVal);
-  // })
-
-  $scope.froalaOptions = {
-    buttons : ["bold", "italic", "underline", "fontSize","sep", "align", "insertOrderedList", "insertUnorderedList", "sep", "createLink", "insertImage", "insertVideo", "table"],
-    placeholder: 'Texto',
-    inlineMode: false,
-    imageUploadURL: WORDRAILS.baseUrl + "/api/files/contents/simple",
-    imageUploadParam: "contents",
-    language: 'pt_br',
-    minHeight: 150,
-    toolbarFixed: true
-  }
-
-  window.setTimeout(function() {
-    angular.element("#post-editor .froala-editor .bttn-wrapper").clone(true, true).appendTo("#froala-custoom-toolbar");
-  }, 300);
 
   $scope.$watch('title', function(newVal){
     if(newVal && $scope.app.network.currentStation.postsTitleSize > 0){
@@ -419,7 +381,6 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
         });
         // get image large
         wr.getImageLarge(image.id, function(large){
-          console.log(image);
           safeApply($scope, function(){
             $scope.uploadedImage.link = WORDRAILS.baseUrl + "/api/files/" + large.id + "/contents";
             $scope.uploadedImage.id = image.id
@@ -430,10 +391,7 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
       // get post terms
       wr.getPostTerms($state.params.postId, function(terms){
         safeApply($scope, function(){
-          $scope.p.termList = []
-          terms.forEach(function(term){
-            $scope.p.termList.push(term)
-          });
+          $scope.p.termList = terms
         })
       });
     }, null, null, "postProjection");
@@ -466,7 +424,6 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
             $scope.taxonomies = [];
             taxonomies.forEach(function(taxonomy){
               if(taxonomy.type == "T"){
-                $scope.tagTerms = [];
                 $scope.tagTaxonomy = taxonomy
                 getTaxonomyTerms();
               }else if(taxonomy.type == "S" || taxonomy.type == "G" || taxonomy.type == "N"){
@@ -494,7 +451,20 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
       $scope.submit("DRAFT")
     }
 
+    function getTagsFromString(){
+      var stringTags = $("#post-tags").val();
+      var tags = []
+      if(stringTags){
+        var tags = stringTags.split(',')
+        for (var i = tags.length - 1; i >= 0; i--) {
+          tags[i] = tags[i].trim();
+        };
+      }
+      return tags;
+    }
+
     $scope.submit = function(state) {
+      console.log();
       if(!state)
         state = "PUBLISHED";
       else
@@ -529,8 +499,6 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
         if($scope.topper)
           post.topper = $scope.topper;
 
-        console.log(post);
-
         $scope.postChanged = false;
         isPublished(post);
         if($scope.editing){
@@ -547,16 +515,13 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
     };
 
     function updatePost(post){
+
       var postId = post.id;
       wr.putPost(post, function(){ // post post... crea a post
         toastr.success(msgSuccess2); // if not editing show post created message
 
         $scope.editing = true; // switch to editing mode
         var data = "";
-
-        $scope.stringTagTerms.forEach(function(stringTerm){
-          $scope.submitCreateTerm(stringTerm, postId);
-        });
 
         // ------------ update post terms
         $scope.p.termList.forEach(function(term){
@@ -598,19 +563,18 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
       }); //End Create Post//
 }
 
-$scope.$watch('stringTagTerms', function(newVal){
-  console.log(newVal);
-})
-
 function createPost(post){
   wr.postPost(post, function(postId){ // post post... crea a post
     toastr.success(msgSuccess); // if not editing show post created message
 
-    wr.getPost(postId, function(newPost){
-
-      $scope.stringTagTerms.forEach(function(stringTerm){
-        $scope.submitCreateTerm(stringTerm, postId);
+    var tags = getTagsFromString();
+    if(tags){
+      tags.forEach(function(tag, index){
+        if(tag) $scope.submitCreateTerm(tag,postId)
       });
+    }
+
+    wr.getPost(postId, function(newPost){
 
       // safe aply post content
       safeApply($scope, function(){
@@ -659,27 +623,14 @@ function createPost(post){
   }); //End Create Post//
 }
 
-$scope.options = {
-  height: 200,
-  focus: true,
-          toolbar: [//[groupname, [button list]]
-          ['style', ['bold', 'italic', 'underline', 'clear', 'link']],
-          ['font', ['strikethrough']],
-          ['fontsize', ['fontsize']],
-          ['color', ['color']],
-          ['height', ['height']],
-          ['misc', ['codeview']]
-          ]
-        }
+    $scope.today = function() {
+      $scope.date = new Date();
+    };
+    $scope.today();
 
-        $scope.today = function() {
-          $scope.date = new Date();
-        };
-        $scope.today();
-
-        $scope.clear = function () {
-          $scope.date = null;
-        };
+    $scope.clear = function () {
+      $scope.date = null;
+    };
 
     // Disable weekend selection
     $scope.disabled = function(date, mode) {

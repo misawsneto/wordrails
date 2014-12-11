@@ -318,6 +318,8 @@ angular.module('app').service('wordrailsService', function wordrailsService($q, 
 					iStation.permissions = permissions;
 					if(permissions.writable || permissions.writer){
 						iStation.canWrite = true;
+					}else{
+						iStation.canWrite = false;
 					}
 					if(permissions.editor){
 						iStation.editor = true;
