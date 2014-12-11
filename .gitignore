@@ -19,7 +19,7 @@ client/.classpath
 parent/.settings/*
 jar/bin/*
 war/bin/*
-war/indexes/*
+war/indexes/**
 war/index/*
 war/src/main/webapp/app/js/BaseWordRails.js
 .project
