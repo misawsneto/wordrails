@@ -47,7 +47,7 @@ interface I$facade$ {
 			@Query("page") int page, @Query("size") int size);
 		
 	@GET("/post/{stationId}/findPostsByStationIdAndAuthorIdAndState")
-	ContentResponse<List<PostView\>\> findPostsByStationIdAndAuthorIdAndState(@Path("stationId") Integer stationId, @Query("authorId") Integer authorId, @Query("state") String state, 
+	void findPostsByStationIdAndAuthorIdAndState(@Path("stationId") Integer stationId, @Query("authorId") Integer authorId, @Query("state") String state, 
 			@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 
 	@GET("/posts/{stationId}/findPostsAndPostsPromotedByAuthorId")
