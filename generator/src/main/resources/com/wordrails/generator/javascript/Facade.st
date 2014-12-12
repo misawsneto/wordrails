@@ -66,7 +66,7 @@ function Base$facade$(_url, _username, _password) {
 
 	that.updatePostTerms = function(postId, terms) {
 		return that._ajax({
-            url: _url + "/api/posts/" + postId + /updatePostTerms",
+            url: _url + "/api/posts/" + postId + "/updatePostTerms",
             data: terms,
             success: function(_data, _textStatus, _jqXHR) {
                 if (_success) {
