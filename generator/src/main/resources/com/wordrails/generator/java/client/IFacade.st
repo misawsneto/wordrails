@@ -42,11 +42,11 @@ interface I$facade$ {
 	void findPostsAndPostsPromotedByTermId(@Path("stationId")Integer stationId, @Query("termId") Integer termId, 
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 		
-	@GET("/post/{stationId}/findPostsByStationIdAndAuthorIdAndState")
+	@GET("/posts/{stationId}/findPostsByStationIdAndAuthorIdAndState")
 	ContentResponse<List<PostView\>\> findPostsByStationIdAndAuthorIdAndState(@Path("stationId") Integer stationId, @Query("authorId") Integer authorId, @Query("state") String state, 
 			@Query("page") int page, @Query("size") int size);
 		
-	@GET("/post/{stationId}/findPostsByStationIdAndAuthorIdAndState")
+	@GET("/posts/{stationId}/findPostsByStationIdAndAuthorIdAndState")
 	void findPostsByStationIdAndAuthorIdAndState(@Path("stationId") Integer stationId, @Query("authorId") Integer authorId, @Query("state") String state, 
 			@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 

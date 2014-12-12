@@ -240,6 +240,20 @@ function BaseWordRails(_url, _username, _password) {
         return $.ajax(settings);
     };
 
+	that.updatePostTerms = function(postId, terms) {
+		return that._ajax({
+            url: _url + "/api/posts/" + postId + "/updatePostTerms",
+            data: terms,
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+	}    
+
     that.findPostsByStationIdAndAuthorIdAndState = function(stationId, authorId, state, _page, _size, _sort, _success, _error, _complete) {
     	return that._ajax({
             url: _url + "/api/posts/" + stationId + "/findPostsByStationIdAndAuthorIdAndState",
@@ -2370,15 +2384,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPosts) {
-    	console.log("findPosts");
+    if (that.findPostsFromOrPromotedToStation) {
+    	console.log("findPostsFromOrPromotedToStation");
     }
-    that.findPosts = function(stationId, termId, page, size, sort, _success, _error, _complete, projection) {
+    that.findPostsFromOrPromotedToStation = function(stationId, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/posts/search/findPosts",
+            url: _url + "/api/posts/search/findPostsFromOrPromotedToStation",
             data: {
             	stationId: stationId,
-            	termId: termId,
             	page: page,
             	size: size,
             	sort: sort,
@@ -2446,14 +2459,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPostsFromOrPromotedToStation) {
-    	console.log("findPostsFromOrPromotedToStation");
+    if (that.findPosts) {
+    	console.log("findPosts");
     }
-    that.findPostsFromOrPromotedToStation = function(stationId, page, size, sort, _success, _error, _complete, projection) {
+    that.findPosts = function(stationId, termId, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/posts/search/findPostsFromOrPromotedToStation",
+            url: _url + "/api/posts/search/findPosts",
             data: {
             	stationId: stationId,
+            	termId: termId,
             	page: page,
             	size: size,
             	sort: sort,
@@ -4482,6 +4496,30 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
+    if (that.findTermsByParentId) {
+    	console.log("findTermsByParentId");
+    }
+    that.findTermsByParentId = function(termId, page, size, sort, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/terms/search/findTermsByParentId",
+            data: {
+            	termId: termId,
+            	page: page,
+            	size: size,
+            	sort: sort,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
     if (that.countTerms) {
     	console.log("countTerms");
     }
@@ -4535,30 +4573,6 @@ function BaseWordRails(_url, _username, _password) {
             url: _url + "/api/terms/search/findRoots",
             data: {
             	taxonomyId: taxonomyId,
-
-            	projection: projection
-            },
-            success: function(_data, _textStatus, _jqXHR) {
-                if (_success) {
-                    _success(_data.content, _textStatus, _jqXHR);
-                }
-            },
-            error: _error,
-            complete: _complete
-        });
-    };
-
-    if (that.findTermsByParentId) {
-    	console.log("findTermsByParentId");
-    }
-    that.findTermsByParentId = function(termId, page, size, sort, _success, _error, _complete, projection) {
-        return that._ajax({
-            url: _url + "/api/terms/search/findTermsByParentId",
-            data: {
-            	termId: termId,
-            	page: page,
-            	size: size,
-            	sort: sort,
 
             	projection: projection
             },
