@@ -311,10 +311,13 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
   } 
 
   $scope.tagTerms = [];
+  $scope.tagTermObjects = [];
   $scope.select2Options = {
     tags: $scope.tagTerms,
     simple_tags: true,
-    multiple: true
+    multiple: true,
+    allowClear: true,
+    tokenSeparators: [',']
   };
 
   function getTaxonomyTerms(){
@@ -322,11 +325,28 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
       if(response)
         safeApply($scope, function(){
           response.forEach(function(tag, index){
-            tag.text = tag.name
-            $scope.tagTerms.push(tag)
+            $scope.tagTerms.push(tag.name)
+            $scope.tagTermObjects.push(tag.name)
           });
+          findSelectedTags();
         })
     }).complete(function(){
+    })
+  }
+
+  function findSelectedTags(tag){
+    $scope.selectedTags = []
+    $scope.$watch('p.termList', function(newVal){
+      if(newVal){
+        console.log(newVal);
+        $scope.p.termList.forEach(function(term, index){
+          if($scope.tagTerms)
+            $scope.tagTerms.forEach(function(tag, index){
+              if(term.id == tag.id)
+                $scope.selectedTags.push(tag.name)
+            });
+        });
+      }
     })
   }
 

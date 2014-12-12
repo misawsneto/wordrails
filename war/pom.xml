@@ -47,7 +47,7 @@
 						<configuration>
 							<mainClass>com.wordrails.generator.JavaScriptClientGenerator</mainClass>
 							<arguments>
-								<argument>${basedir}/src/main/webapp/app/js</argument>						
+								<argument>${basedir}/src/main/webapp/js</argument>						
 							</arguments>
 							<includePluginDependencies>true</includePluginDependencies>
 						</configuration>						

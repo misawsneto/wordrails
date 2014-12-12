@@ -94,6 +94,11 @@ var app = angular.module('app', [
                     }]
                 }
             })
+            .state('app.signup', {
+                url: '/signup',
+                templateUrl: 'tpl/signup.html',
+                controller: 'SignupCtrl'
+            })
             .state('app.post', {
                 url: '/{postId}',
                 templateUrl: 'tpl/posts/single_post.html'
@@ -235,6 +240,7 @@ var app = angular.module('app', [
                 templateUrl: 'tpl/signup.html',
                 controller: 'SignupCtrl'
             })
+
             .state('access.404', {
                 url: '/404',
                 templateUrl: 'tpl/page_404.html'

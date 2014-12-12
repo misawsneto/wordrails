@@ -43,6 +43,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.business.Post;
 import com.wordrails.converter.PostConverter;
@@ -66,6 +67,24 @@ public class PostsResource {
 	private void foward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();		
 		request.getServletContext().getRequestDispatcher(path).forward(request, response);
+	}
+	
+
+	@PUT
+	@Path("/{postId}/updatePostTags")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
+	public ContentResponse<PostView> updatePostTerms(@PathParam("postId") Integer postId, List<TermDto> terms) throws ServletException, IOException {
+		
+		Post post = postRepository.findOne(postId);
+		if(post == null){
+			
+		}
+		
+		ContentResponse<PostView> response = new ContentResponse<PostView>();
+		response.content = postConverter.convertToView(post); 
+		return response;
 	}
 	
 	@GET
