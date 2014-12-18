@@ -13,3 +13,9 @@ insert into network (name, trackingId, defaultTaxonomy_id) values ('wordRAILS', 
 insert into person_network_role (admin, network_id, person_id) values (1, 1, 1);
 update taxonomy set owningNetwork_id = 1 where id = 1;
 insert into network_taxonomy (networks_id, taxonomies_id) values (1, 1);
+
+-- insert into taxonomy (name, type) values ('Categoria', 'N');
+-- insert into network (name, subdomain, defaultTaxonomy_id) values ('portodigital', 'portodigital', 34);
+-- insert into person_network_role (admin, network_id, person_id) values (1, 19, 82);
+-- update taxonomy set owningNetwork_id = 19 where id = 34;
+-- insert into network_taxonomy (networks_id, taxonomies_id) values (19, 34);

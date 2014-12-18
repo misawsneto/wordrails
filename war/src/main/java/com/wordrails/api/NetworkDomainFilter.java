@@ -39,6 +39,12 @@ public class NetworkDomainFilter implements Filter {
 		String host = request.getHeader("Host");
 
 		List<Network> networks = null;
+		
+		if(host.equals("xarx.co")){
+			((HttpServletResponse) res).sendRedirect("/home");
+			return;
+		}
+		
 		if(host.contains(".xarx.co")){
 			String subdomain = host.split(".xarx.co")[0];
 			networks = networkRepository.findBySubdomain(subdomain);
@@ -57,6 +63,10 @@ public class NetworkDomainFilter implements Filter {
 		resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
 		resp.setHeader("Pragma", "no-cache");
 		resp.setDateHeader ("Expires", 0);
+		
+		if(host.equals("xarx.co") || network == null){
+			((HttpServletResponse) res).sendRedirect("/home");
+		}
 
 		chain.doFilter(req, res);
 	}
