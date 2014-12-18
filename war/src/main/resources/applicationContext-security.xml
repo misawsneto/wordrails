@@ -10,6 +10,7 @@
 	<http pattern="/logIn.jsp" security="none"/>
 	<http pattern="/index.jsp" security="none"/>
 	<http pattern="/app/**" security="none"/>
+	<http pattern="/home/**" security="none"/>
 	<http pattern="/css/**" security="none"/>
 	<http pattern="/js/**" security="none"/>
 	<http pattern="/img/**" security="none"/>
