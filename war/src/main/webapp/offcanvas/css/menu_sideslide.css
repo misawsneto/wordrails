@@ -132,6 +132,7 @@
 /* Menu */
 .menu-wrap {
 	position: fixed;
+	overflow: hidden;
 	z-index: 1038;
 	width: 300px;
 	height: 100%;
