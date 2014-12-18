@@ -366,16 +366,11 @@ var app = angular.module('app', [
                                 'link', 'image', 'video', 'alignment', 'horizontalrule'];
 })
 
-.run(function($rootScope, $location, authService, connectionService){
-
+.run(function($rootScope, $location, authService, connectionService, $state, $stateParams) {
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams; 
 
     moment.locale('pt');
-
-    /*$rootScope.$on('$stateChangeStart', function(a,b,c){
-        console.log(a);
-        console.log(b);
-        console.log(c);
-    })*/
 
     $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
         console.log(toState);

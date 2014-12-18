@@ -10,19 +10,24 @@
 									Configurações
 								</div>
 								<div class="list-group no-bg no-radius no-border alt">
-									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.perspectives()">
+									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.perspectives()"
+									ng-class="{'active-settings': $state.current.name.indexOf('perspectives') > -1 }">
 										Perspectivas
 									</a>
-									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.users()">
+									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.users()"
+									ng-class="{'active-settings': $state.current.name.indexOf('users') > -1 }">
 										Usuários
 									</a>
-									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.stations()">
+									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.stations()"
+									ng-class="{'active-settings': $state.current.name.indexOf('stations') > -1 }">
 										Estações
 									</a>
-									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.taxonomies">
+									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.taxonomies"
+									ng-class="{'active-settings': $state.current.name.indexOf('taxonomies') > -1 }">
 										Taxonomias
 									</a>
-									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.settings">
+									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.settings"
+									ng-class="{'active-settings': $state.current.name.indexOf('settings') > -1 }">
 										Geral
 									</a>
 								</div>
