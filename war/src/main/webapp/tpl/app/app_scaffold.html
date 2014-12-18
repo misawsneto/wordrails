@@ -1,0 +1,47 @@
+<div class="fade-in">
+	<div class="app-content-body app-content-full">
+		<div class="hbox hbox-auto-xs hbox-auto-sm">
+			<div class="col w-md text-lg b-r bg-light lter">
+				<div class="row-row">
+					<div class="cell">
+						<div class="cell-inner">
+							<div class="bg-light lter">
+								<div class="wrapper text-center text-u-c">
+									Configurações
+								</div>
+								<div class="list-group no-bg no-radius no-border alt">
+									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.perspectives()">
+										Perspectivas
+									</a>
+									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.users()">
+										Usuários
+									</a>
+									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.stations()">
+										Estações
+									</a>
+									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.taxonomies">
+										Taxonomias
+									</a>
+									<a class="list-group-item" ui-sref-active="select" ui-sref="app.scaffold.settings">
+										Geral
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="vbox">
+					<div class="row-row">
+						<div class="cell">
+							<div class="cell-inner">
+								<div ui-view></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

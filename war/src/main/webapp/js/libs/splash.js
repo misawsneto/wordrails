@@ -22,7 +22,6 @@ angular.module('ui.splash', ['ui.bootstrap'])
         }
         opts.backdrop = false,
         opts.windowTemplateUrl = 'splash/index.html';
-        console.log(opts);
         return $modal.open(opts);
       }
     };

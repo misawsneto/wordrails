@@ -3,6 +3,8 @@ angular.module('app')
 
 .controller('ScaffoldCtrl', function ScaffoldCtrl($scope, $state, authService){
   $scope.app.authenticated = authService.isAuth();
+  if($state.current.name == "app.scaffold")
+    $state.go('app.scaffold.perspectives')
 })
 
 // ---------------------- ScaffoldCreateNetworksCtrl

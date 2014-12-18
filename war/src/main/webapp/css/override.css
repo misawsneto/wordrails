@@ -5,6 +5,14 @@
   font-style: italic;
   color: #aaa
 } */
+
+.border-grey{border-color: #505050}
+.border-l-grey{border-color: #999999}
+.font-l-grey{color: #999999}
+.padding-top-none{padding-top: 0;}
+.menu-wrap .selected a{color: #fff;}
+.top-0{top: 0;}
+
 #redactor-droparea input[type="file"]{display: inline}
 #post-editor-top-buttons {margin-right: 60px;}
 .redactor-editor div, .redactor-editor p, .redactor-editor ul, .redactor-editor ol, .redactor-editor table, .redactor-editor dl, .redactor-editor figure, .redactor-editor blockquote, .redactor-editor pre{margin-bottom: 10px!important;}

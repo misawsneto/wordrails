@@ -1,22 +1,15 @@
 <!-- hbox layout -->
-<div class="app-content-body app-content-full fade-in">
+<div class="app-content-full fade-in top-0">
     
-<div class="hbox hbox-auto-xs hbox-auto-sm bg-light " ng-init="
-  app.settings.asideFixed = true;
-  app.settings.asideDock = false;
-  app.settings.container = false;
-  app.hideAside = false;
-  app.hideFooter = true;
-  " ng-controller="UsersStationsCtrl">
-
+<div class="hbox hbox-auto-xs hbox-auto-sm bg-light " ng-controller="UsersStationsCtrl">
   <!-- column -->
-  <div class="col w-xl b-r">
+  <div class="col w-md b-r">
     <div class="vbox">
       <div class="row-row">
         <div class="cell scrollable hover">
           <div class="cell-inner">
             <div class="list-group no-radius no-border no-bg m-b-none">
-              <a class="list-group-item b-b" ng-class="{'focus': (station.name == '')}" ng-click="selectStation({name:'', id:0})">Todos</a>
+              <a class="list-group-item b-b" ng-class="{'focus': (station.name == '')}" ng-click="selectStation({name:'', id:0})">Estações</a>
               <a ng-repeat="station in stations" class="list-group-item m-l hover-anchor b-a no-select" ng-class="{'focus m-l-none': station.selected}" ng-click="selectStation(station)">
                 <span class="block m-l-n" ng-class="{'m-n': station.selected }">{{ station.name ? station.name : 'Sem nome' }}</span>
               </a>
@@ -32,7 +25,7 @@
   </div>
   <!-- /column -->
   <!-- column -->
-  <div class="col w-xl lter b-r">
+  <div class="col w-md lter b-r">
     <div class="vbox">
       <div class="wrapper-xs b-b">
         <div class="input-group m-b-xxs">

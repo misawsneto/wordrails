@@ -53,6 +53,13 @@ public class Network {
 	
 	public String domain;
 	
+	public String navbarColor = "#242424";
+	public String backgroundColor = "#F3F5F9";
+	public String font = "Lato";
+	public String primaryColor = "";
+	public String headerFontSize = "";
+	public String textFontSize = "";
+	
 	@NotNull
 	@Column(unique = true)
 	public String subdomain;

@@ -133,9 +133,9 @@ var app = angular.module('app', [
             })
             // scaffold
             .state('app.scaffold', {
-                abstract: true,
-                url: '/scaffold',
-                template: '<div ui-view class="fade-in"></div>',
+                url: '/settings',
+                //template: '<div ui-view class="fade-in"></div>',
+                templateUrl: 'tpl/app/app_scaffold.html',
                 controller: 'ScaffoldCtrl'
             })
             .state('app.scaffold.sponsors', {
