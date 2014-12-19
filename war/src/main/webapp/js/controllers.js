@@ -132,6 +132,7 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
         $state.go("app.stations", null, {reload: true});
         //location.reload();
         $scope.cancelModal();
+        $scope.toggleMenu();
         $scope.app.authenticated = authService.isAuth();
       },
       
@@ -1576,8 +1577,7 @@ $scope.moreComments = function(){
             $scope.confirm_password = null;
           });
 
-          authService.signIn(username, password,
-            function(){
+          authService.signIn(username, password, function(){
               var person = authService.getPerson()
               safeApply($scope, function(){
                 $scope.app.person = person
@@ -1585,6 +1585,7 @@ $scope.moreComments = function(){
               $state.go("app.stations", {stationId: 0}, {reload: true});
               //location.reload();
               $scope.cancelModal();
+              $scope.toggleMenu();
               $scope.app.authenticated = authService.isAuth();
             },
             

@@ -19,6 +19,8 @@ z-index: 1;
 background-color: #dbeef9 !important;
 border-color: #c5e4f5;
 }
+.b-t-none{border-top: none;}
+#settings-panel {position: absolute;bottom: 20px;top: 20px;right: 20px;left: 20px;margin-bottom: 0;overflow: hidden;}
 
 #redactor-droparea input[type="file"]{display: inline}
 #post-editor-top-buttons {margin-right: 60px;}
