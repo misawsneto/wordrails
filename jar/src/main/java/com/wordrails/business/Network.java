@@ -53,12 +53,23 @@ public class Network {
 	
 	public String domain;
 	
-	public String navbarColor = "#242424";
+	
+//	@Column(columnDefinition="TEXT default '#F3F5F9'")
 	public String backgroundColor = "#F3F5F9";
-	public String font = "Lato";
-	public String primaryColor = "";
-	public String headerFontSize = "";
-	public String textFontSize = "";
+//	@Column(columnDefinition="TEXT default '#242424'")
+	public String navbarColor = "#242424";
+//	@Column(columnDefinition="TEXT default '#505050'")
+	public String navbarSecondaryColor  = "#505050";
+//	@Column(columnDefinition="TEXT default '#040404'")
+	public String primaryColor = "#111111";
+//	@Column(columnDefinition="TEXT default 'Lato'")
+	public String primaryFont = "Lato";
+//	@Column(columnDefinition="TEXT default 'PT Serif'")
+	public String secondaryFont = "PT Serif";
+	@Column(columnDefinition="Decimal(10,2) default '4.0'")
+	public Double titleFontSize = 4.0;
+	@Column(columnDefinition="Decimal(10,2) default '1.0'")
+	public Double newsFontSize = 1.0;
 	
 	@NotNull
 	@Column(unique = true)
@@ -201,4 +212,77 @@ public class Network {
 	public void setLogo(Image logo) {
 		this.logo = logo;
 	}
+
+	public Set<Sponsor> getSponsors() {
+		return sponsors;
+	}
+
+	public void setSponsors(Set<Sponsor> sponsors) {
+		this.sponsors = sponsors;
+	}
+
+	public String getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public void setBackgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
+
+	public String getNavbarColor() {
+		return navbarColor;
+	}
+
+	public void setNavbarColor(String navbarColor) {
+		this.navbarColor = navbarColor;
+	}
+
+	public String getNavbarSecondaryColor() {
+		return navbarSecondaryColor;
+	}
+
+	public void setNavbarSecondaryColor(String navbarSecondaryColor) {
+		this.navbarSecondaryColor = navbarSecondaryColor;
+	}
+
+	public String getPrimaryColor() {
+		return primaryColor;
+	}
+
+	public void setPrimaryColor(String primaryColor) {
+		this.primaryColor = primaryColor;
+	}
+
+	public String getPrimaryFont() {
+		return primaryFont;
+	}
+
+	public void setPrimaryFont(String primaryFont) {
+		this.primaryFont = primaryFont;
+	}
+
+	public String getSecondaryFont() {
+		return secondaryFont;
+	}
+
+	public void setSecondaryFont(String secondaryFont) {
+		this.secondaryFont = secondaryFont;
+	}
+
+	public Double getTitleFontSize() {
+		return titleFontSize;
+	}
+
+	public void setTitleFontSize(Double titleFontSize) {
+		this.titleFontSize = titleFontSize;
+	}
+
+	public Double getNewsFontSize() {
+		return newsFontSize;
+	}
+
+	public void setNewsFontSize(Double newsFontSize) {
+		this.newsFontSize = newsFontSize;
+	}
+
 }

@@ -11,6 +11,7 @@ var app = angular.module('app', [
     'ui.validate',
     'ui.tree',
     'ui.sortable',
+    'colorpicker.module',
     'pascalprecht.translate',
     'app.filters',
     'app.services',

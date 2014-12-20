@@ -1,9 +1,9 @@
 <div class="wrapper-md" ng-controller="SettingsCtrl">
-<div id="settings-panel" class="panel panel-default">
+<div id="settings-panel" class="panel panel-default p-b-20">
     <div class="panel-heading text-md">
       Configurações da rede
     </div>
-    <div class="panel-body no-padder vbox">
+    <div class="panel-body no-padder vbox p-b-20">
       <div class="vbox bg-white min-400-h">
         <div class="col lter b-r w">
           <div class="vbox">
@@ -20,6 +20,9 @@
                     <a class="list-group-item b-t-none" ng-class="{select: settingsTab == 'socialnetwork'}" ng-click="setSettingsTab('socialnetwork')">
                       Redes Sociais
                     </a>
+                    <a class="list-group-item b-t-none" ng-class="{select: settingsTab == 'email'}" ng-click="setSettingsTab('email')">
+                      Email
+                    </a>
                   </div>
                 </div>
               </div>
@@ -31,7 +34,7 @@
             <div class="row-row">
               <div class="cell">
                 <div class="cell-inner bg-white">
-                  <div class="wrapper-md">
+                  <div class="wrapper-md" ng-if="settingsTab == 'details'">
                     <form class="form-horizontal" method="get" ng-submit="submitSimple(network)">
                       <div class="form-group">
                         <label class="col-sm-3 control-label">Nome</label>
@@ -73,7 +76,7 @@
                             <input type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
                           </span>
                           <div class="inline-block wrapper-xs b b-a" ng-if="networkImg">
-                            <img class="logo-selector wrapper-xs bg-full-black img-responsive" ng-src="{{networkImg.link}}">
+                            <img class="logo-selector wrapper-xs bg-full-black img-responsive" ng-src="{{networkImg.link}}" ng-style="app.customStyle.navbarColor">
                           </div>
                           <div ng-if="uploader.progress > 0 && !networkImg">
                             <div class="progress-striped progress-sm progress m-t">
@@ -95,6 +98,78 @@
                         </div>
                       </div>
                     </form>
+                  </div>
+                  <div ng-if="settingsTab == 'appearance'">
+                    <div class="wrapper-md">
+                      <form class="bs-example form-horizontal">
+                        <div class="form-group">
+                          <label class="col-sm-5 control-label">Pano de fundo</label>
+                          <div class="col-sm-7">
+                            <input class="w-md form-control" colorpicker ng-model="customStyle.backgroundColor" type="text">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-5 control-label">Barra superior</label>
+                          <div class="col-sm-7">
+                            <input class="w-md form-control" colorpicker ng-model="customStyle.navbarColor" ng-change="changeStyle(customStyle)" type="text">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-5 control-label">Barra superior (cor secundária)</label>
+                          <div class="col-sm-7">
+                            <input class="w-md form-control" colorpicker ng-model="customStyle.navbarSecondaryColor" ng-change="changeStyle(customStyle)" type="text">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-5 control-label">Cor principal</label>
+                          <div class="col-sm-7">
+                            <input class="w-md form-control" colorpicker ng-model="customStyle.mainColor" ng-change="changeStyle(customStyle)" type="text">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-5 control-label">Fonte principal</label>
+                          <div class="col-sm-7">
+                            <select ng-model="customStyle.primaryFonte" ng-change="changeStyle(customStyle)" name="account" class="form-control w-md" ng-options="font.value as font.name for font in fonts">
+                            </select>
+                          </div> 
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-5 control-label">Fonte secundária</label>
+                          <div class="col-sm-7">
+                            <select name="account" class="form-control w-md">
+                              <option>option 1</option>
+                              <option>option 2</option>
+                              <option>option 3</option>
+                              <option>option 4</option>
+                            </select>
+                          </div> 
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-5 control-label">Tamanho da fonte do título</label>
+                          <div class="col-sm-7">
+                            <div class="w-xs pull-left">
+                              <input ui-jq="TouchSpin" ng-model="customStyle.titleFontSize" type="text" value="0" class="form-control" data-min='0' data-max="5" data-decimals="1" data-step="0.1" data-verticalbuttons="true" data-verticalupclass="fa fa-caret-up"  data-verticaldownclass="fa fa-caret-down">
+                            </div>
+                            <div class="m-l m-t-xs pull-left">em</div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-5 control-label">Tamanho da fonte da notícia</label>
+                          <div class="col-sm-7">
+                            <div class="w-xs pull-left">
+                              <input ui-jq="TouchSpin" ng-model="customStyle.newsFontSize" type="text" value="0" class="form-control" data-min='0' data-max="5" data-decimals="1" data-step="0.1" data-verticalbuttons="true" data-verticalupclass="fa fa-caret-up"  data-verticaldownclass="fa fa-caret-down">
+                            </div>
+                            <div class="m-l m-t-xs pull-left">em</div>
+                          </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg pull-in"></div>
+                        <div class="form-group">
+                          <div>
+                            <button type="submit" class="btn btn-success pull-right m-r-lg">Salvar</button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>

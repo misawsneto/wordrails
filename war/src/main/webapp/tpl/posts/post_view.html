@@ -7,7 +7,7 @@
       <div class="m-t">
         <div class="col-sm-10 col-sm-offset-1 padder-lg">
           <span class="label no-radius normal wrapper-xs topper text-lg" ng-if="post.topper">{{post.topper}}</span>
-          <h1 class="m-b-lg news-title">{{post.title}}</h1>
+          <h1 class="m-b-lg news-title" ng-style="app.customStyle.titleFontSize">{{post.title}}</h1>
         </div>
       </div>
       <div ng-show="postView.largeId">
@@ -59,7 +59,7 @@
 
             <div class="col-sm-9">
               <div class="wrapper-lg text-lg">
-                <div class="text-black pt-serif blue" bind-html-unsafe="post.body"></div>
+                <div class="text-black pt-serif blue" ng-style="app.customStyle.newsFontSize" bind-html-unsafe="post.body"></div>
                 <div class="line line-dashed line-lg b-b" ng-show="post.terms"></div>
                 <div id="term-list" ng-show="post.terms">
                   <span ng-repeat="term in post.terms track by term.id"class="m-t-xs m-b-xs wrapper-sm m-r text-lg text-white badge bg-dark lter">

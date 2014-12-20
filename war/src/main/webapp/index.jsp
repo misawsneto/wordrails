@@ -25,6 +25,7 @@
   <link href="css/splash.css" rel="stylesheet" type="text/css">
 
   <link rel="stylesheet" href="css/bootstrap.css?${buildNumber}" type="text/css" />
+  <link rel="stylesheet" href="css/colorpicker.css?${buildNumber}">
   <link rel="stylesheet" href="css/ui-tree.min.css?${buildNumber}" type="text/css" />
   <link rel="stylesheet" href="css/animate.css?${buildNumber}" type="text/css" />
   <link rel="stylesheet" href="css/font-awesome.min.css?${buildNumber}" type="text/css" />
@@ -40,10 +41,15 @@
   <link href="css/froala_content.min.css" rel="stylesheet" type="text/css" />
   <link href="css/froala_style.min.css" rel="stylesheet" type="text/css" />
   <link href="js/libs/redactor/redactor.css" rel="stylesheet" type="text/css" />
-
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,100,100italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <style>
     [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
       display: none !important;
+      /* font-family: {{!network.primaryFont ? "'Oswald', sans-serif" : network.primaryFont;}}!important */
     }
   </style>
   <script type="text/javascript">
@@ -51,7 +57,7 @@
     var NETWORK_ID = <%=((Network)request.getSession().getAttribute("network")).getId()%>;
   </script>
 </head>
-<body ng-controller="AppCtrl">
+<body ng-controller="AppCtrl" ng-style="app.customStyle.primaryFonte">
   <offcanvas></offcanvas>
   <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed} " ui-view></div>
   <!-- jQuery -->
@@ -95,6 +101,7 @@
   <script src="js/angular/angular-ui-router.min.js?${buildNumber}"></script>
   <script src="js/angular/angular-translate.js?${buildNumber}"></script>
   <script src="js/angular/angular-infinite-scroll.min.js?${buildNumber}"></script>
+  <script src="js/angular/angular-colorpicker.js?${buildNumber}"></script>
   <script src="js/angular/ngStorage.min.js?${buildNumber}"></script>
   <script src="js/angular/ui-load.js?${buildNumber}"></script>
   <script src="js/angular/ui-jq.js?${buildNumber}"></script>

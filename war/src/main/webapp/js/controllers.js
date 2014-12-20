@@ -64,6 +64,64 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
       })
     })
 
+    $scope.fonts = [{value: "Arial, sans-serif", name: "Arial"},
+    {value: "'Lato', sans-serif", name: "Lato"},{value: "'Roboto', sans-serif", name: "Roboto"},
+    {value: "'PT Serif', sans-serif", name: "PT Serif"}, {value:"'Ubuntu', sans-serif", name: "Ubuntu"},
+    {value: "'Oswald', sans-serif", name: "Oswald"},{value: "'Open Sans', sans-serif", name: "Open Sans"},
+    {value: "'PT Sans', sans-serif", name: "PT Sans"}];
+    $scope.customStyle = {}
+    $scope.$watch('customStyle', function(customStyle){
+
+      var darkFonts = false;
+      if(customStyle){
+        if($scope.app.customStyle && $scope.app.customStyle.navbarColor && customStyle.navbarColor)
+          darkFonts = fontCalculator(customStyle.navbarColor);
+
+        var style = {}; style.primaryFonte = {}; style.navbarColor = {}; style.backgroundColor = {};
+        style.navbarSecondaryColor = {}; style.titleFontSize = {}; style.newsFontSize = {}; style.mainColor = {};
+
+        style.primaryFonte['font-family'] = customStyle.primaryFonte;
+        style.navbarColor['background-color'] = customStyle.navbarColor;
+        style.backgroundColor['background-color'] = customStyle.backgroundColor;
+        style.navbarSecondaryColor['border-color'] = customStyle.navbarSecondaryColor
+        style.mainColor['border-color'] = customStyle.mainColor;
+        style.titleFontSize['font-size'] = customStyle.titleFontSize + "em";
+        style.newsFontSize['font-size'] = customStyle.newsFontSize + "em";
+
+        $scope.app.customStyle = style;
+        $scope.app.customStyle.darkFonts = darkFonts;
+      }
+    }, true)
+
+    function rgbToHex(r, g, b) {
+      return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
+    function fontCalculator(hex){
+      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      var rgb = result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+
+      var colors = {} 
+      colors.font = 0;
+      // Counting the perceptive luminance - human eye favors green color... 
+      var a = 1 - ( 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b)/255;
+      if (a < 0.5)
+        return true;
+      else
+        return false;
+    }
+
+    $scope.changeStyle = function(customStyle){
+      $scope.customStyle = customStyle;
+    }
+
+    $scope.$watch('app.customStyle', function(newVal){
+      console.log(newVal);
+    })
+
     /**
      * Global submit search function
      * @param  String searchQuery the search string
@@ -816,11 +874,24 @@ function createPost(post){
 
   }) // end of PostEditor
 
-.controller('SettingsCtrl', function SettingsCtrl($scope, $state, authService, $filter, FileUploader, WORDRAILS) {
+.controller('SettingsCtrl', function SettingsCtrl($scope, $rootScope, $state, authService, $filter, FileUploader, WORDRAILS, $localStorage) {
 
     FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
       return true; // true|false
     };
+
+    if ( angular.isDefined($localStorage.settingsTab) ) {
+      $scope.settingsTab = $localStorage.settingsTab.tabName;
+    }else{
+      var settingsTab = {tabName: 'details'}
+      $scope.settingsTab = settingsTab.tabName;
+      $localStorage.settingsTab = settingsTab;
+    }
+
+    $scope.setSettingsTab = function(tab){
+      $scope.settingsTab = tab;
+      $localStorage.settingsTab.tabName = tab;
+    }
 
     var uploader = $scope.uploader = new FileUploader({
         url: WORDRAILS.baseUrl + "/api/files/contents/network"
@@ -912,6 +983,8 @@ function createPost(post){
         })
       })
     }
+
+   
 })
 
 .controller('UserPageCtrl', function UserPageCtrl($scope, $state, $filter, authService, FileUploader, WORDRAILS) {

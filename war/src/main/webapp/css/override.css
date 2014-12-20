@@ -6,6 +6,7 @@
   color: #aaa
 } */
 
+/* .b-light{border-left-color: #edf1f2!important} */
 .border-grey{border-color: #505050}
 .border-l-grey{border-color: #999999}
 .font-l-grey{color: #999999}
@@ -13,14 +14,24 @@
 .menu-wrap .selected a{color: #fff;}
 .top-0{top: 0;}
 .scroll-wrap{position: relative;width: 317px;height: 100%;overflow-x: hidden;overflow-y: scroll;}
-.list-group-item.active-settings {
-position: relative;
-z-index: 1;
-background-color: #dbeef9 !important;
-border-color: #c5e4f5;
-}
+.list-group-item.active-settings {position: relative;z-index: 1;background-color: #dbeef9 !important;border-color: #c5e4f5;}
+.p-b-20{padding-bottom: 20px!important;}
 .b-t-none{border-top: none;}
 #settings-panel {position: absolute;bottom: 20px;top: 20px;right: 20px;left: 20px;margin-bottom: 0;overflow: hidden;}
+#search-input.text-white::-webkit-input-placeholder {
+    color: #dedede;
+}
+#search-input.text-white:-moz-placeholder { /* Firefox 18- */
+   color: #dedede;
+}
+
+#search-input.text-white::-moz-placeholder {  /* Firefox 19+ */
+   color: #dedede;
+}
+
+#search-input.text-white:-ms-input-placeholder {  
+   color: #dedede;
+}
 
 #redactor-droparea input[type="file"]{display: inline}
 #post-editor-top-buttons {margin-right: 60px;}
