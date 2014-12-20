@@ -17,18 +17,18 @@
       <!-- / navbar header -->
 
       <!-- navbar collapse -->
-      <div class="navbar-collapse box-shadow bg-full-black color-white">
+      <div class="navbar-collapse box-shadow bg-full-black" ng-class="{'color-white': !app.customStyle.darkFonts}" ng-style="app.customStyle.navbarColor">
         <!-- buttons -->
         <div class="nav navbar-nav m-l-sm hidden-xs">
           <!-- ng - click="app.settings.asideFolded = !app.settings.asideFolded" -->
-          <a href class="btn no-shadow text-lg m-t-xs menu-button color-white" id="open-button" ng-click="toggleMenu(); $event.stopPropagation();">
+          <a href class="btn no-shadow text-lg m-t-xs menu-button" id="open-button" ng-click="toggleMenu(); $event.stopPropagation();" ng-class="{'color-white': !app.customStyle.darkFonts}">
             <i class="fa {{app.settings.asideFolded ? 'fa-bars' : 'fa-bars'}} fa-fw"></i>
           </a>
           <!-- <a href class="btn no-shadow navbar-btn" ui-toggle-class="show" target="#aside-user">
             <i class="icon-user fa-fw"></i>
           </a> -->
         </div>
-        <a href class="menu-button m-t-sm no-shadow text-lg visible-xs w-xxs pull-left color-white" id="open-button" ng-click="toggleMenu(); $event.stopPropagation();">
+        <a href class="menu-button m-t-sm no-shadow text-lg visible-xs w-xxs pull-left" ng-class="{'color-white': !app.customStyle.darkFonts}" id="open-button" ng-click="toggleMenu(); $event.stopPropagation();">
           <i class="fa {{app.settings.asideFolded ? 'fa-bars' : 'fa-bars'}} fa-fw"></i>
         </a>
         <div class="m-r-lg nav navbar-nav m-l-xs link-logo text-center">
@@ -42,35 +42,35 @@
         <!-- nabar right -->
         <ul class="nav navbar-nav navbar-right hidden-xs m-r-n">
           <li class="animated fadeIn" ng-if="app.network.currentStation">
-            <a ng-if="app.authenticated && app.network.currentStation.canWrite" class="text-u-c color-white transparent text-lg" ui-sref="app.stations.editor({stationId:app.network.currentStation.id})" ui-sref-opts="{ reload: true }">
+            <a ng-if="app.authenticated && app.network.currentStation.canWrite" class="text-u-c transparent text-lg" ui-sref="app.stations.editor({stationId:app.network.currentStation.id})" ng-class="{'color-white': !app.customStyle.darkFonts}" ui-sref-opts="{ reload: true }">
               <i class="v-bottom fa fa-plus m-r-sm"></i>Notícia
             </a>
-            <a ng-if="!app.authenticated" class="text-u-c color-white transparent text-lg" ng-click="openSplash('signin_splash.html');">ENTRAR
+            <a ng-if="!app.authenticated" class="text-u-c transparent text-lg" ng-class="{'color-white': !app.customStyle.darkFonts}" ng-click="openSplash('signin_splash.html');">ENTRAR
             </a>
           </li>
         </ul>
 
-        <div class="nav-v-divider b-l navbar-right hidden-xs"></div>
+        <div class="nav-v-divider b-l navbar-right hidden-xs" ng-style="app.customStyle.navbarSecondaryColor"></div>
 
-        <a href="mailto:contato@croni.ca" class="navbar-right hidden-xs color-white padder m-t-sm">
+        <a href="mailto:contato@croni.ca" class="navbar-right hidden-xs padder m-t-sm" ng-class="{'color-white': !app.customStyle.darkFonts}">
           <i class="fa fa-2x fa-envelope-o"></i>
         </a>
         <!-- / navbar right -->
-        <div class="nav-v-divider b-l navbar-right hidden-xs"></div>
+        <div class="nav-v-divider b-l navbar-right hidden-xs" ng-style="app.customStyle.navbarSecondaryColor"></div>
 
         <!-- search form -->
         <form class="navbar-form navbar-right hidden-xs padder" ng-submit="app.submitSearch(app.searchQuery)" role="search">
           <div class="form-group">
             <div class="input-group w-lg">
               <span class="input-group-btn inner-btn pointer search-btn pull-right">
-                <button type="submit" class="btn transparent" ng-click="app.submitSearch(app.searchQuery)"><i class="fa fa-lg fa-search"></i></button>
+                <button type="submit" class="btn btn-default no-borders transparent" ng-click="app.submitSearch(app.searchQuery)"><i class="fa fa-lg fa-search" ng-class="{'text-white': !app.customStyle.darkFonts}"></i></button>
               </span>
-              <input type="text" ng-model="app.searchQuery" class="text-white form-control bg-light no-border padder inline-input border-light input-p-r" placeholder="Pesquisar">
+              <input id="search-input" type="text" ng-model="app.searchQuery" class="form-control bg-light no-border padder inline-input border-light input-p-r" placeholder="Pesquisar" ng-class="{'text-white': !app.customStyle.darkFonts}" ng-style="app.customStyle.navbarSecondaryColor">
             </div>
           </div>
         </form>
         <!-- / search form -->
-        <div class="nav-v-divider b-l navbar-right hidden-xs"></div>
+        <div class="nav-v-divider b-l navbar-right hidden-xs" ng-style="app.customStyle.navbarSecondaryColor"></div>
 
       </div>
       <!-- / navbar collapse -->
