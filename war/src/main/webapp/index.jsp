@@ -57,7 +57,7 @@
     var NETWORK_ID = <%=((Network)request.getSession().getAttribute("network")).getId()%>;
   </script>
 </head>
-<body ng-controller="AppCtrl" ng-style="app.customStyle.primaryFonte">
+<body ng-controller="AppCtrl" ng-style="app.customStyle.primaryFont">
   <offcanvas></offcanvas>
   <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed} " ui-view></div>
   <!-- jQuery -->

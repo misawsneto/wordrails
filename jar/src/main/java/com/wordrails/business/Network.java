@@ -61,7 +61,7 @@ public class Network {
 //	@Column(columnDefinition="TEXT default '#505050'")
 	public String navbarSecondaryColor  = "#505050";
 //	@Column(columnDefinition="TEXT default '#040404'")
-	public String primaryColor = "#111111";
+	public String mainColor = "#111111";
 //	@Column(columnDefinition="TEXT default 'Lato'")
 	public String primaryFont = "Lato";
 //	@Column(columnDefinition="TEXT default 'PT Serif'")
@@ -245,12 +245,12 @@ public class Network {
 		this.navbarSecondaryColor = navbarSecondaryColor;
 	}
 
-	public String getPrimaryColor() {
-		return primaryColor;
+	public String getMainColor() {
+		return mainColor;
 	}
 
-	public void setPrimaryColor(String primaryColor) {
-		this.primaryColor = primaryColor;
+	public void setMainColor(String mainColor) {
+		this.mainColor = mainColor;
 	}
 
 	public String getPrimaryFont() {

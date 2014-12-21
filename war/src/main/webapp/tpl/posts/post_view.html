@@ -18,7 +18,7 @@
 
           <div class="">
             <div class="col-sm-3">
-              <div class="text-muted text-lg m-t-lg pt-serif">
+              <div class="text-muted text-lg m-t-lg pt-serif" ng-style="app.customStyle.secondaryFont">
                 <span class="m-r-xxs">Por</span>
                 <strong><a tooltip="ver todas as notícias de {{post.author.name}}" ui-sref="app.user({username: post.author.username})" class="blue"> {{post.author.name}}</a></strong>
                 <br>
@@ -27,7 +27,7 @@
                 <i class="fa fa-clock-o text-muted" tooltip="{{post.date | myLongTimeFormat}}"></i>
                 <span ng-if="post.date" data-livestamp="{{post.date / 1000}}"></span> 
                 <div class="social-share m-t-lg" ng-if="app.network.currentStation.social">
-                  <div class="text-u-c text-md oswald">Compartilhe:</div>
+                  <div class="text-u-c text-md oswald" ng-style="app.customStyle.primaryFont">Compartilhe:</div>
                   <br>
                   <a><i class="fa fa-2x fa-fw fa-facebook"></i>
                   <a><i class="fa fa-2x fa-fw fa-linkedin"></i>
@@ -59,7 +59,7 @@
 
             <div class="col-sm-9">
               <div class="wrapper-lg text-lg">
-                <div class="text-black pt-serif blue" ng-style="app.customStyle.newsFontSize" bind-html-unsafe="post.body"></div>
+                <div class="text-black pt-serif blue" ng-style="app.customStyle.secondaryFont" bind-html-unsafe="post.body"></div>
                 <div class="line line-dashed line-lg b-b" ng-show="post.terms"></div>
                 <div id="term-list" ng-show="post.terms">
                   <span ng-repeat="term in post.terms track by term.id"class="m-t-xs m-b-xs wrapper-sm m-r text-lg text-white badge bg-dark lter">

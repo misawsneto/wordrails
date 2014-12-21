@@ -170,6 +170,22 @@ angular.module('app').service('wordrailsService', function wordrailsService($q, 
 		return ret;
 	}
 
+	var customStyle = {}
+	var setInitialStyle = function(network){
+		customStyle.backgroundColor = network.backgroundColor ? network.backgroundColor : "#F3F5F9";
+		customStyle.navbarColor = network.navbarColor ? network.navbarColor : "#242424";
+		customStyle.navbarSecondaryColor = network.navbarSecondaryColor ? network.navbarSecondaryColor : "#505050";
+		customStyle.mainColor = network.mainColor ? network.mainColor : "#111111";
+		customStyle.primaryFont = network.primaryFont ? network.primaryFont : "'Lato', sans-serif";
+		customStyle.secondaryFont = network.secondaryFont ? network.secondaryFont : "'PT Serif', sans-serif";
+		customStyle.titleFontSize = network.titleFontSize ? network.titleFontSize : 4.0;
+		customStyle.newsFontSize = network.newsFontSize ? network.newsFontSize : 1.0;
+	}
+
+	this.getCustomStyle = function(){
+		return customStyle;
+	}
+
 	var personLoaded = function(){
 		var networkId = NETWORK_ID;
 
@@ -190,6 +206,7 @@ angular.module('app').service('wordrailsService', function wordrailsService($q, 
 
 		var network = wr.getNetwork(networkId, function(response){
 			instance.setNetwork(response);
+			setInitialStyle(response);
 			wr.getNetworkLogo(networkId, function(networkLogo){
 				var net = instance.getNetwork()
 				net.image = $filter('imageLink')(networkLogo.small.id);

@@ -43,6 +43,7 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
     }
 
     $scope.$on('NETWORK_LOADED', function(event, network){
+      $scope.customStyle = wordrailsService.getCustomStyle();
       safeApply($scope, function(){
         $scope.app.name = network.name;
         $scope.app.network = network;
@@ -77,10 +78,11 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
         if($scope.app.customStyle && $scope.app.customStyle.navbarColor && customStyle.navbarColor)
           darkFonts = fontCalculator(customStyle.navbarColor);
 
-        var style = {}; style.primaryFonte = {}; style.navbarColor = {}; style.backgroundColor = {};
+        var style = {}; style.primaryFont = {}; style.secondaryFont = {}; style.navbarColor = {}; style.backgroundColor = {};
         style.navbarSecondaryColor = {}; style.titleFontSize = {}; style.newsFontSize = {}; style.mainColor = {};
 
-        style.primaryFonte['font-family'] = customStyle.primaryFonte;
+        style.primaryFont['font-family'] = customStyle.primaryFont;
+        style.secondaryFont['font-family'] = customStyle.secondaryFont;
         style.navbarColor['background-color'] = customStyle.navbarColor;
         style.backgroundColor['background-color'] = customStyle.backgroundColor;
         style.navbarSecondaryColor['border-color'] = customStyle.navbarSecondaryColor
@@ -190,7 +192,7 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
         $state.go("app.stations", null, {reload: true});
         //location.reload();
         $scope.cancelModal();
-        $scope.toggleMenu();
+        $scope.toggleMenu(true);
         $scope.app.authenticated = authService.isAuth();
       },
       
@@ -959,6 +961,12 @@ function createPost(post){
             $scope.app.network = angular.extend($scope.app.network, network);
           })
 
+          wr.getNetworkTaxonomies($scope.network.id, function(taxonomies){
+          var taxRefs = []
+            taxonomies && taxonomies.forEach(function(tax, index){
+              taxRefs.push(extractSelf(tax))
+            });
+          });
           wr.putNetwork(network, function(){
             var netLogo = null;
             if($scope.networkImg){
@@ -969,13 +977,19 @@ function createPost(post){
                  wr.putNetworkLogo(currentNetwork.id, WORDRAILS.baseUrl + "/api/images/" + imgId)
                });
 
+               wr.putNetworkTaxonomies(network.id, taxRefs).complete(function(){
+                safeApply($scope, function(){
+                  $scope.app.loading = false;
+                })
+              })  
+
                wr.getNetworkLogo(networkId, function(networkLogo){
                   safeApply($scope, function(){
                     $scope.app.network.image = $filter('imageLink')(networkLogo.small.id);
                   })
                 }, null, null, "imageProjection");
             }
-            toastr.success("Código atualizado com sucesso.");
+            toastr.success("Configurações ataulizadas.");
           }, function(){
             toastr.error("Houve um erro inesperado.");
           }, function(){})
@@ -984,7 +998,29 @@ function createPost(post){
       })
     }
 
-   
+  $scope.submitStyle = function(customStyle){
+    $scope.app.loading = true;
+    wr.getNetwork($scope.network.id, function(network){
+      angular.extend(network, customStyle)
+      wr.getNetworkDefaultTaxonomy($scope.network.id, function(taxonomy){
+        network.defaultTaxonomy = extractSelf(taxonomy);
+        wr.getNetworkTaxonomies($scope.network.id, function(taxonomies){
+          var taxRefs = []
+          taxonomies && taxonomies.forEach(function(tax, index){
+            taxRefs.push(extractSelf(tax))
+          });
+          wr.putNetwork(network, function(){
+            wr.putNetworkTaxonomies(network.id, taxRefs).complete(function(){
+              safeApply($scope, function(){
+                toastr.success("Configurações ataulizadas.");
+                $scope.app.loading = false;
+              })
+            })  
+          })
+        })
+      })
+    });
+  }
 })
 
 .controller('UserPageCtrl', function UserPageCtrl($scope, $state, $filter, authService, FileUploader, WORDRAILS) {
@@ -1658,7 +1694,7 @@ $scope.moreComments = function(){
               $state.go("app.stations", {stationId: 0}, {reload: true});
               //location.reload();
               $scope.cancelModal();
-              $scope.toggleMenu();
+              $scope.toggleMenu(true);
               $scope.app.authenticated = authService.isAuth();
             },
             

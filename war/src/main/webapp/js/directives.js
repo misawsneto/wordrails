@@ -305,8 +305,8 @@ angular.module('app.directives', ['ui.load'])
         } );
       }
 
-      scope.toggleMenu = function(){
-          toggleMenu();
+      scope.toggleMenu = function(close){
+          toggleMenu(close);
       }
 
       scope.contentClick = function(){
@@ -314,13 +314,19 @@ angular.module('app.directives', ['ui.load'])
           toggleMenu(); 
       };
 
-      function toggleMenu() {
+      function toggleMenu(close) {
+        if(close){
+          classie.remove( bodyEl, 'show-menu' );
+          isOpen = false;
+          return;
+        }
         if( isOpen ) {
           classie.remove( bodyEl, 'show-menu' );
         }
         else {
           classie.add( bodyEl, 'show-menu' );
         }
+
         isOpen = !isOpen;
       }
 
