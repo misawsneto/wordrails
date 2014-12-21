@@ -311,10 +311,10 @@ width: 200px;
 	#perspective-info-flows .info-flow-wrap {margin-bottom: 20px;}
 	#perspective-info-flows .info-flow-wrap .scrollbar {margin-top: 5px; margin-bottom: 0; background: transparent;}
   #perspective-info-flows .info-flow-wrap .scrollbar .handle {background: #ccc;}
-  #perspective-info-flows .info-flow-wrap .h3 a {color: #ccc}
-  #perspective-info-flows .info-flow-wrap .h3 a:hover {color: #fff}
+  /* #perspective-info-flows .info-flow-wrap .h3 a {color: #ccc}
+  #perspective-info-flows .info-flow-wrap .h3 a:hover {color: #fff} */
 
-.ordinary-row button, .ordinary-row button { background: transparent; border: 0; color: #fff; margin-top: 35px }
+.ordinary-row button, .ordinary-row button { background: transparent; border: 0; margin-top: 35px }
 
 .ordinary-row button, .ordinary-row button{
   opacity: 0;

@@ -74,9 +74,12 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
     $scope.$watch('customStyle', function(customStyle){
 
       var darkFonts = false;
+      var darkFonts2 = false;
       if(customStyle){
         if($scope.app.customStyle && $scope.app.customStyle.navbarColor && customStyle.navbarColor)
           darkFonts = fontCalculator(customStyle.navbarColor);
+        if($scope.app.customStyle && $scope.app.customStyle.backgroundColor && customStyle.backgroundColor)
+          darkFonts2 = fontCalculator(customStyle.backgroundColor);
 
         var style = {}; style.primaryFont = {}; style.secondaryFont = {}; style.navbarColor = {}; style.backgroundColor = {};
         style.navbarSecondaryColor = {}; style.titleFontSize = {}; style.newsFontSize = {}; style.mainColor = {};
@@ -92,6 +95,10 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
 
         $scope.app.customStyle = style;
         $scope.app.customStyle.darkFonts = darkFonts;
+        $scope.app.customStyle.darkFonts2 = darkFonts2;
+
+        //console.log(fontCalculator(customStyle.backgroundColor));
+        console.log(darkFonts2);
       }
     }, true)
 

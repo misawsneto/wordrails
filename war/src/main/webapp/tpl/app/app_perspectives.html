@@ -94,13 +94,13 @@ ng-init="
         
       <div id="perspective-info-flows">
         <div ng-repeat="ordinaryRow in termPerspectiveView.ordinaryRows" class="ordinary-row">
-          <button ng-show="ordinaryRow.cells" class="backward"><i class="fa fa-angle-left"></i></button>
-          <button ng-show="ordinaryRow.cells" class="forward"><i class="fa fa-angle-right"></i></button>
+          <button ng-show="ordinaryRow.cells" ng-class="{'text-white': !app.customStyle.darkFonts2}" class="backward"><i class="fa fa-angle-left"></i></button>
+          <button ng-show="ordinaryRow.cells" ng-class="{'text-white': !app.customStyle.darkFonts2}" class="forward"><i class="fa fa-angle-right"></i></button>
           <div ng-show="ordinaryRow.cells" data-term-id="{{ordinaryRow.termId}}" class="wrap info-flow-wrap" sly-scroll>
             <div class="h3">
               <a ng-show="ordinaryRow.term.name" class="animated fadeIn" 
                 ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
-                <span class="m-l-xs">{{ordinaryRow.term.name}}</span>
+                <span class="m-l-xs" ng-class="{'text-white': !app.customStyle.darkFonts2}">{{ordinaryRow.term.name}}</span>
               </a>
             </div>
             <div class="frame info-flow" style="overflow: hidden;">
