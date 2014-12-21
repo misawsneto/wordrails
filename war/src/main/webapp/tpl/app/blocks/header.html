@@ -32,7 +32,7 @@
           <i class="fa {{app.settings.asideFolded ? 'fa-bars' : 'fa-bars'}} fa-fw"></i>
         </a>
         <div class="m-r-lg nav navbar-nav m-l-xs link-logo text-center">
-          <a ui-sref="app.stations({stationId:app.network.currentStation.id})" ui-sref-opts="{ reload: true }" class="text-lg network-logo pull-left">
+          <a ui-sref="app.stations({stationId:app.network.currentStation.id})" ui-sref-opts="{ reload: true }" class="text-lg network-logo pull-left" ng-class="{'color-white': !app.customStyle.darkFonts}">
             <img ng-if="app.network.image" ng-src="{{app.network.image}}" class="img-logo" alt=".">
             <span ng-if="!app.network.image">{{app.network.name}}</span>
           </a>
