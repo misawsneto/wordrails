@@ -80,10 +80,11 @@
 .profile-avatar{max-width: 400px;}
 .cover{height: 160px;}
 .search-divider{background-color: #fff;}
+.search-divider-dark{background-color: #555;}
 .search-items img {width: 150px}
-.search-items {color: #eee}
+/* .search-items {color: #eee}
 .search-items b{color: #fff}
-.search-items a:hover{color: #fff}
+.search-items a:hover{color: #fff} */
 .w-150{width: 150px;}
 .min-h-150{min-height: 150px;}
 .input-p-r{padding-right: 40px}
@@ -310,7 +311,7 @@ width: 200px;
 	#perspective-info-flows .info-flow {margin-top: 0; margin-bottom: 0;}
 	#perspective-info-flows .info-flow-wrap {margin-bottom: 20px;}
 	#perspective-info-flows .info-flow-wrap .scrollbar {margin-top: 5px; margin-bottom: 0; background: transparent;}
-  #perspective-info-flows .info-flow-wrap .scrollbar .handle {background: #ccc;}
+  #perspective-info-flows .info-flow-wrap .scrollbar .handle {background: #555;}
   /* #perspective-info-flows .info-flow-wrap .h3 a {color: #ccc}
   #perspective-info-flows .info-flow-wrap .h3 a:hover {color: #fff} */
 

@@ -1,4 +1,4 @@
-<div class="app-content-body app-content-full bg-000">
+<div class="app-content-body app-content-full bg-000" ng-style="app.customStyle.backgroundColor">
   <div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
   app.settings.asideFixed = true;
   app.settings.asideDock = false;
@@ -6,12 +6,12 @@
   app.hideAside = false;
   app.hideFooter = true;">
   <div class="wrapper-xl">
-    <div class="m-w-1100 center-block search-items" ng-show="search.hits">
+    <div class="m-w-1100 center-block" ng-class="{'text-white': !app.customStyle.darkFonts2}" ng-show="search.hits">
       <p class="m-b-md h3 font-thin" ng-show="app.searchQuery"><strong>{{search.hits}}</strong> Resultados para: <strong>{{app.searchQuery}}</strong></p>
       <div class="">
         <ul class="no-borders no-padding m-b-none">
           <li class="" ng-repeat="postView in search.result.posts">
-           <div class="line search-divider"></div>
+           <div class="line search-divider" ng-class="{'search-divider-dark': app.customStyle.darkFonts2}"></div>
             <!-- <a class="thumb-lg pull-left m-r" ui-sref="app.post({postId: postView.postId})" ng-if="postView.smallId">
               <img ng-src="{{postView.smallId | imageLink}}">
             </a> -->
