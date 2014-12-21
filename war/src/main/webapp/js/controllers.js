@@ -969,38 +969,37 @@ function createPost(post){
           })
 
           wr.getNetworkTaxonomies($scope.network.id, function(taxonomies){
-          var taxRefs = []
+            var taxRefs = []
             taxonomies && taxonomies.forEach(function(tax, index){
               taxRefs.push(extractSelf(tax))
             });
-          });
-          wr.putNetwork(network, function(){
-            var netLogo = null;
-            if($scope.networkImg){
-               netLogo = WORDRAILS.baseUrl + "/api/files/" + $scope.networkImg.id;
+            wr.putNetwork(network, function(){
+              var netLogo = null;
+              if($scope.networkImg){
+                 netLogo = WORDRAILS.baseUrl + "/api/files/" + $scope.networkImg.id;
 
-               var img = {original: netLogo, title: $scope.network.name}
-               wr.postImage(img, function(imgId){
-                 wr.putNetworkLogo(currentNetwork.id, WORDRAILS.baseUrl + "/api/images/" + imgId)
-               });
+                 var img = {original: netLogo, title: $scope.network.name}
+                 wr.postImage(img, function(imgId){
+                   wr.putNetworkLogo(currentNetwork.id, WORDRAILS.baseUrl + "/api/images/" + imgId)
+                 });
 
-               wr.putNetworkTaxonomies(network.id, taxRefs).complete(function(){
-                safeApply($scope, function(){
-                  $scope.app.loading = false;
-                })
-              })  
-
-               wr.getNetworkLogo(networkId, function(networkLogo){
+                 wr.putNetworkTaxonomies(network.id, taxRefs).complete(function(){
                   safeApply($scope, function(){
-                    $scope.app.network.image = $filter('imageLink')(networkLogo.small.id);
+                    $scope.app.loading = false;
                   })
-                }, null, null, "imageProjection");
-            }
-            toastr.success("Configurações ataulizadas.");
-          }, function(){
-            toastr.error("Houve um erro inesperado.");
-          }, function(){})
+                })  
 
+                 wr.getNetworkLogo(networkId, function(networkLogo){
+                    safeApply($scope, function(){
+                      $scope.app.network.image = $filter('imageLink')(networkLogo.small.id);
+                    })
+                  }, null, null, "imageProjection");
+              }
+              toastr.success("Configurações ataulizadas.");
+            }, function(){
+              toastr.error("Houve um erro inesperado.");
+            }, function(){})
+          });
         })
       })
     }
