@@ -28,11 +28,11 @@
             <i class="icon-user fa-fw"></i>
           </a> -->
         </div>
-        <a href class="menu-button m-t-sm no-shadow text-lg visible-xs w-xxs pull-left" ng-class="{'color-white': !app.customStyle.darkFonts}" id="open-button" ng-click="toggleMenu(); $event.stopPropagation();">
+        <a href class="menu-button m-t-sm no-shadow text-lg visible-xs m-r pull-left" ng-class="{'color-white': !app.customStyle.darkFonts}" id="open-button" ng-click="toggleMenu(); $event.stopPropagation();">
           <i class="fa {{app.settings.asideFolded ? 'fa-bars' : 'fa-bars'}} fa-fw"></i>
         </a>
         <div class="m-r-lg nav navbar-nav m-l-xs link-logo text-center">
-          <a ui-sref="app.stations({stationId:app.network.currentStation.id})" ui-sref-opts="{ reload: true }" class="text-lg network-logo">
+          <a ui-sref="app.stations({stationId:app.network.currentStation.id})" ui-sref-opts="{ reload: true }" class="text-lg network-logo network-logo">
             <img ng-if="app.network.image" ng-src="{{app.network.image}}" class="img-logo" alt=".">
             <span ng-if="!app.network.image">{{app.network.name}}</span>
           </a>

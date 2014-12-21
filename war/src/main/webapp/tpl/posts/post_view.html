@@ -41,7 +41,7 @@
                       Promover
                     </span>
                   </a>
-                  <a class="list-group-item" ui-sref="app.stations.editor({stationId: app.network.currentStation.id ? app.network.currentStation.id : 0, postId: post.id})" ng-if="app.person.id == post.author.id || (app.network.stations | filter: {admin: true}).length > 0">
+                  <a class="list-group-item hidden-xs" ui-sref="app.stations.editor({stationId: app.network.currentStation.id ? app.network.currentStation.id : 0, postId: post.id})" ng-if="app.person.id == post.author.id || (app.network.stations | filter: {admin: true}).length > 0">
                     <i class="pointer text-muted fa-fw glyphicon glyphicon-pencil"></i>
                     <span>
                       Editar
