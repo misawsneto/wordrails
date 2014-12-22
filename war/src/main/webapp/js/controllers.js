@@ -1737,6 +1737,8 @@ $scope.moreComments = function(){
   $scope.search.page = 0;
   $scope.maxSize = WORDRAILS.pageSize;
 
+  console.log($scope.maxSize);
+
   $scope.$watch('app.searchQuery', function(newVal){
     if(newVal){
       $scope.search.page = 0;
@@ -1746,14 +1748,16 @@ $scope.moreComments = function(){
   });
 
   $scope.$watch('search.page', function(newVal){
+    console.log(newVal);
     if($scope.app.searchQuery && newVal){
       runSearch($scope.app.searchQuery);
     }
   });
 
   var runSearch = function(query){
+    var page = $scope.search.page > 0 ? $scope.search.page-1 : $scope.search.page;
     wr.searchPostsFromOrPromotedToStation($scope.app.network.currentStation.id,
-      query, $scope.search.page, WORDRAILS.pageSize, 
+      query, page, WORDRAILS.pageSize, 
       function(result){
         safeApply($scope, function(){
           $scope.search.hits = result.hits;
