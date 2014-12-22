@@ -96,9 +96,6 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
         $scope.app.customStyle = style;
         $scope.app.customStyle.darkFonts = darkFonts;
         $scope.app.customStyle.darkFonts2 = darkFonts2;
-
-        //console.log(fontCalculator(customStyle.backgroundColor));
-        console.log(darkFonts2);
       }
     }, true)
 
@@ -128,7 +125,7 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
     }
 
     $scope.$watch('app.customStyle', function(newVal){
-      console.log(newVal);
+      //console.log(newVal);
     })
 
     /**
@@ -205,7 +202,6 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
       
       function(){
         safeApply($scope, function(){
-          console.log('fafa');
           $scope.signInError = true;
         });
       });
@@ -356,7 +352,6 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
   $scope.tagTaxonomy = {};
 
   $scope.submitCreateTerm = function(newName, postId){
-    console.log(newName);
     if(!newName){
       toastr.error("Termo inválido.")
       return;
@@ -1606,9 +1601,6 @@ $scope.moreComments = function(){
     }
   };
 
-  console.log(station)
-  console.log($scope.stations)
-
   var promotion = {}
   promotion.post = extractSelf($scope.post);
   promotion.date = $scope.post.date;
@@ -1737,8 +1729,6 @@ $scope.moreComments = function(){
   $scope.search.page = 0;
   $scope.maxSize = WORDRAILS.pageSize;
 
-  console.log($scope.maxSize);
-
   $scope.$watch('app.searchQuery', function(newVal){
     if(newVal){
       $scope.search.page = 0;
@@ -1748,7 +1738,6 @@ $scope.moreComments = function(){
   });
 
   $scope.$watch('search.page', function(newVal){
-    console.log(newVal);
     if($scope.app.searchQuery && newVal){
       runSearch($scope.app.searchQuery);
     }
