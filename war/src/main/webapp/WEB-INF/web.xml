@@ -58,8 +58,6 @@
 	</filter>
 <!-- RESTEasy -->
 
-
-
 <!-- Spring -->
 <!--  
    	<listener>
@@ -84,8 +82,6 @@
    	</listener>
 <!-- Spring -->
 
-
-
 <!-- Spring Data REST -->
     <servlet>
     	<servlet-name>DispatcherServlet</servlet-name>
@@ -103,8 +99,6 @@
     </servlet-mapping>
 <!-- Spring Data REST -->
 
-
-
 <!-- Spring ORM -->
 	<filter>
 		<filter-name>OpenEntityManagerInViewFilter</filter-name>
@@ -115,8 +109,6 @@
 		</init-param>
 	</filter>
 <!-- Spring ORM -->
-
-
 
 <!-- Spring Security -->
 	<listener>
@@ -129,16 +121,12 @@
 	</filter>	
 <!-- Spring Security -->
 
-
-
 <!-- Cache -->
 	<filter>
 		<filter-name>CacheFilter</filter-name>
 		<filter-class>com.wordrails.api.CacheFilter</filter-class>
 	</filter>
 <!-- Cache -->
-
-
 
 <!-- 	<filter-mapping>
 		<filter-name>CorsFilter</filter-name>
@@ -147,15 +135,26 @@
 	
 	<filter>
 	    <filter-name>NetworkDomainFilter</filter-name>
-	   <!--  <filter-class>
-	        com.wordrails.api.NetworkDomainFilter
-	    </filter-class> -->
 	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	    <init-param>
 	        <param-name>targetBeanName</param-name>
 	        <param-value>networkDomainFilter</param-value>
 	    </init-param>
 	</filter>
+	
+	<filter>
+	    <filter-name>CORSCustomFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	    <init-param>
+	        <param-name>targetBeanName</param-name>
+	        <param-value>corsCustomFilter</param-value>
+	    </init-param>
+	</filter>
+
+	<filter-mapping>
+	    <filter-name>CORSCustomFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<filter-mapping>
   		<filter-name>springSecurityFilterChain</filter-name>
@@ -167,7 +166,7 @@
 	    <url-pattern>/index.jsp</url-pattern>
 	    <url-pattern>/app/index.jsp</url-pattern>
 	</filter-mapping>
-
+	
 	<filter-mapping>
 		<filter-name>OpenEntityManagerInViewFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>

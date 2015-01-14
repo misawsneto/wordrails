@@ -62,9 +62,9 @@ angular.module('app.filters', []).filter('fromNow', function() {
 .filter('pvimageLink', function pvimageLink(WORDRAILS) {
 	return function(postView, size) {
 		if(postView && postView.largeId && size == "lg"){
-	  		return {"background-image": "url(" + WORDRAILS.baseUrl + "/api/files/"+ postView.largeId +"/contents)"};
+	  	return {"background-image": "url(" + WORDRAILS.baseUrl + "/api/files/"+ postView.largeId +"/contents)"};
 		}else if(postView && postView.mediumId && size == "md"){
-	  		return {"background-image": "url(" + WORDRAILS.baseUrl + "/api/files/"+ postView.mediumId +"/contents)"};
+	  	return {"background-image": "url(" + WORDRAILS.baseUrl + "/api/files/"+ postView.mediumId +"/contents)"};
 		}else{
 			return {"background-image": "url(img/p0.jpg)"};
 		}

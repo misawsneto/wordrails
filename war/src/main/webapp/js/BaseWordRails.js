@@ -41,7 +41,7 @@ function ImageDto(id, title, caption, original, small, medium, large) {
 	};
 }
 
-function NetworkDto(id, name, trackingId, defaultTaxonomy, allowSignup, allowComments, domain, subdomain, configured) {
+function NetworkDto(id, name, trackingId, defaultTaxonomy, allowSignup, allowComments, domain, backgroundColor, navbarColor, navbarSecondaryColor, mainColor, primaryFont, secondaryFont, titleFontSize, newsFontSize, subdomain, configured) {
 	return {
 		id: id,
 		name: name,
@@ -50,6 +50,14 @@ function NetworkDto(id, name, trackingId, defaultTaxonomy, allowSignup, allowCom
 		allowSignup: allowSignup,
 		allowComments: allowComments,
 		domain: domain,
+		backgroundColor: backgroundColor,
+		navbarColor: navbarColor,
+		navbarSecondaryColor: navbarSecondaryColor,
+		mainColor: mainColor,
+		primaryFont: primaryFont,
+		secondaryFont: secondaryFont,
+		titleFontSize: titleFontSize,
+		newsFontSize: newsFontSize,
 		subdomain: subdomain,
 		configured: configured
 	};
@@ -4520,27 +4528,6 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.countTerms) {
-    	console.log("countTerms");
-    }
-    that.countTerms = function(termsIds, _success, _error, _complete, projection) {
-        return that._ajax({
-            url: _url + "/api/terms/search/countTerms",
-            data: {
-            	termsIds: termsIds,
-
-            	projection: projection
-            },
-            success: function(_data, _textStatus, _jqXHR) {
-                if (_success) {
-                    _success(_data.content, _textStatus, _jqXHR);
-                }
-            },
-            error: _error,
-            complete: _complete
-        });
-    };
-
     if (that.findRootsPage) {
     	console.log("findRootsPage");
     }
@@ -4573,6 +4560,27 @@ function BaseWordRails(_url, _username, _password) {
             url: _url + "/api/terms/search/findRoots",
             data: {
             	taxonomyId: taxonomyId,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.countTerms) {
+    	console.log("countTerms");
+    }
+    that.countTerms = function(termsIds, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/terms/search/countTerms",
+            data: {
+            	termsIds: termsIds,
 
             	projection: projection
             },

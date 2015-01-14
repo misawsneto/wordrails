@@ -1,7 +1,6 @@
 package com.wordrails.api;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.Filter;
@@ -54,7 +53,7 @@ public class NetworkDomainFilter implements Filter {
 			networks = networkRepository.findByDomain(host);
 		}
 
-		Network network = (networks != null && networks.size() > 0) ? networks.get(0) : null;
+		Network network = (networks != null && networks.size() > 0) ? networks.get(0) : networkRepository.findOne(1);
 		HttpSession session = request.getSession();
 		if(network!=null)
 			session.setAttribute("network", network);

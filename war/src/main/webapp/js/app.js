@@ -351,6 +351,7 @@ var app = angular.module('app', [
 
 .constant('WORDRAILS', {
     baseUrl: location.protocol + '//' + location.host,
+    //baseUrl: 'http://master.com',
     pageSize: 15,
     commentPageSize: 5
 })
