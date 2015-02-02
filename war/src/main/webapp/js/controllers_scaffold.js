@@ -252,6 +252,7 @@ angular.module('app')
         updateStations();// end getStations
         $scope.modalInstance.dismiss('cancel');
         toastr.success("Estação removida.");
+        wordrailsService.updateStations();
       }).error(function(response){
         if(response.status == 500){
           toastr.error(errorMsg);
@@ -338,7 +339,7 @@ angular.module('app')
 // ---------------------- end of ScaffoldCreateStationsCtrl
 
  // ---------------------- ScaffoldCreateStationsCtrl
- .controller('ScaffoldCreateStationsCtrl', function ScaffoldCreateStationsCtrl($scope, $state, authService){
+ .controller('ScaffoldCreateStationsCtrl', function ScaffoldCreateStationsCtrl($scope, $state, authService, wordrailsService){
   // vars
   var errorMsg = "Houve um erro ao criar a estação. Verifique os dados e tente novamente."
   var successMsg = "Sua estação foi criada."
@@ -396,6 +397,7 @@ angular.module('app')
     wr.postStation($scope.station, function(response){
       toastr.success(successMsg)
       $state.go("app.scaffold.stations", null, {reload: true});
+      wordrailsService.updateStations();
     }).error(function(response){ // on error callback
       console.log(response)
       if(response.status == 500){

@@ -111,7 +111,7 @@ angular.module('app').service('connectionService', function connectionService($r
 		$(document).ajaxComplete(function(event, jqXHR, ajaxOptions){
         	if(jqXHR.status == 403){
             	$rootScope.$broadcast("UNATHORIZED", jqXHR);
-	            window.console && console.log("UNATHORIZED");
+	            window.console && console.warn("UNATHORIZED");
 	            toastr.info("Você não tem privilégios para executar esta operação.")
 	        }else if (jqXHR.status === 0) {
 	        	if(!showingConnectionMessage){
@@ -204,7 +204,7 @@ angular.module('app').service('wordrailsService', function wordrailsService($q, 
 			person.networkRoles = networkRoles;
 		});
 
-		var network = wr.getNetwork(networkId, function(response){
+		var networkReq = wr.getNetwork(networkId, function(response){
 			instance.setNetwork(response);
 			setInitialStyle(response);
 			wr.getNetworkLogo(networkId, function(networkLogo){
@@ -213,11 +213,11 @@ angular.module('app').service('wordrailsService', function wordrailsService($q, 
 			}, null, null, "imageProjection");
 		});
 
-		var stations = wr.getNetworkStations(networkId, function(response){
+		var stationsReq = wr.getNetworkStations(networkId, function(response){
 			stations = response;
 		});
 
-		var requestMap = $.when(stationPermissions, personPermissions, personRoles, network, stations)
+		var requestMap = $.when(stationPermissions, personPermissions, personRoles, networkReq, stationsReq)
 
 		requestMap.done(function(){
 			var myNetwork = instance.getNetwork();
@@ -236,6 +236,14 @@ angular.module('app').service('wordrailsService', function wordrailsService($q, 
 			$state.go("app.stations", {stationId: 0}, {reload: true});
 			deferred.reject(); // error
 		})
+	};
+
+	this.updateStations = function(){
+		wr.getNetworkStations(networkId, function(response){
+			stations = response;
+			instance.checkAllStationPermissions();
+			instance.isNetworkAdmin();
+		});
 	};
 
 	this.getInitialData = function(force){

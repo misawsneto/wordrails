@@ -119,10 +119,11 @@ public class StationEventHandler {
 			
 			List<Post> posts = postRepository.findByStation(station);
 			if(posts != null && posts.size() > 0){
-				for (Post post : posts) {
-					postEventHandler.handleBeforeDelete(post);
-					postRepository.delete(posts);
-				}
+//				for (Post post : posts) {
+//					postEventHandler.handleBeforeDelete(post);
+//					postRepository.delete(posts);
+//				}
+				postRepository.delete(posts);
 			}
 		}else{
 			throw new UnauthorizedException();
