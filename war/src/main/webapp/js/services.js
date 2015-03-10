@@ -292,7 +292,7 @@ angular.module('app').service('wordrailsService', function wordrailsService($q, 
 					$rootScope.$broadcast("PERSON_LOADED", response[0]);
 				}).success(personLoaded);
 			}).error(function(){
-				$rootScope.$broadcast("AUTHENTICATION_ERROR", myNetwork);
+				$rootScope.$broadcast("AUTHENTICATION_ERROR", instance.getNetwork());
 				window.console && console.error("login error")
 			});
 		}
@@ -354,7 +354,7 @@ angular.module('app').service('wordrailsService', function wordrailsService($q, 
 					}
 					iStation.visible = true;
   				}
-  				window.console && console.log(iStation);
+  				//window.console && console.log(iStation);
 			});
 		});
   	}
