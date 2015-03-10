@@ -460,13 +460,13 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindByNameAuthorized(String name) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetStationNetworksAuthorized(Integer stationId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
@@ -575,7 +575,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetTaxonomyAuthorized(Integer taxonomyId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
@@ -586,7 +586,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindByTypeAndNameAuthorized(String type, String name) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
@@ -603,19 +603,19 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetTaxonomyTermsAuthorized(Integer taxonomyId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetTaxonomyOwningNetworkAuthorized(Integer taxonomyId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetTaxonomyOwningStationAuthorized(Integer taxonomyId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
@@ -626,75 +626,75 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetTermAuthorized(Integer termId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isCountTermsAuthorized(List<Integer> termsIds) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isFindTermsByParentIdAuthorized(Integer termId,
 			Integer page, Integer size, List<String> sort) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isFindRootsAuthorized(Integer taxonomyId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isFindRootsPageAuthorized(Integer taxonomyId,
 			Integer page, Integer size, List<String> sort) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetTermCellsAuthorized(Integer termId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetTermPostsAuthorized(Integer termId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetTermRowsAuthorized(Integer termId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetTermTaxonomyAuthorized(Integer termId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetTermParentAuthorized(Integer termId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetTermChildrenAuthorized(Integer termId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetTermTermPerspectivesAuthorized(Integer termId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
@@ -846,13 +846,13 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPersonImageAuthorized(Integer personId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetImagePersonAuthorized(Integer imageId) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
@@ -879,61 +879,61 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPersonCoverAuthorized(Integer personId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetPersonFollowingAuthorized(Integer personId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetSponsorsAuthorized() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	@Override
 	protected boolean isGetSponsorAuthorized(Integer sponsorId) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	@Override
 	protected boolean isGetImagePublicitySponsorAuthorized(Integer imageId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetNetworkSponsorsAuthorized(Integer networkId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetSponsorLogoAuthorized(Integer sponsorId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetSponsorNetworkAuthorized(Integer sponsorId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetSponsorImagesAuthorized(Integer sponsorId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
 	@Override
 	protected boolean isGetImageLogoSponsorAuthorized(Integer imageId) {
-		// TODO Auto-generated method stub
+		
 		return true;
 	}
 
@@ -945,6 +945,36 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetPostSponsorAuthorized(Integer postId) {
 		return true;
+	}
+
+	@Override
+	protected boolean isGetPasswordResetsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPasswordResetAuthorized(Integer passwordResetId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUsersAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserAuthorized(String userUsername) {
+		return false;
+	}
+
+	@Override
+	protected boolean isFindByEmailAuthorized(String email) {
+		return false;
+	}
+
+	@Override
+	protected boolean isFindByUsernameAndPasswordAuthorized(String username, String password) {
+		return false;
 	}
 
 }

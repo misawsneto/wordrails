@@ -23,7 +23,7 @@ class JavaScriptClientGenerator {
 	
 	private void generate() throws IOException {
 		directory.mkdirs();
-
+		
 		generateJavaScript();
 	}
 

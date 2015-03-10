@@ -47,6 +47,7 @@ public class CORSCustomFilter implements Filter{
 		resp.setHeader("Access-Control-Allow-Credentials", "true");
 		resp.setHeader("Access-Control-Allow-Headers", "Authorization,Content-Type,Content-Range,Content-Disposition,Content-Description,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers");
 		resp.setHeader("Access-Control-Allow-Methods", "GET,POST,HEAD,OPTIONS,PUT");
+		resp.setHeader("P3P", "CP=\"CAO PSA CONi OTR OUR DEM ONL\"");
 	}
 
 	@Override

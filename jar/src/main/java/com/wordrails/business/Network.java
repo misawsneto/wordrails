@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,8 +14,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Network {
@@ -283,6 +290,25 @@ public class Network {
 
 	public void setNewsFontSize(Double newsFontSize) {
 		this.newsFontSize = newsFontSize;
+	}
+	
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable=false)
+	public Date createdAt;
+
+	@PrePersist
+	void onCreate() {
+		createdAt = new Date();
+	}
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date updatedAt;
+
+	@PreUpdate
+	void onUpdate() {
+		updatedAt = new Date();
 	}
 
 }

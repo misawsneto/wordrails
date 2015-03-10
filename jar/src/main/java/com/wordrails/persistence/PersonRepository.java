@@ -7,5 +7,8 @@ import org.springframework.data.repository.query.Param;
 import com.wordrails.business.Person;
 
 public interface PersonRepository extends JpaRepository<Person, Integer>, QueryDslPredicateExecutor<Person> {
+
 	Person findByUsername(@Param("username") String username);
+	
+	Person findByEmail(@Param("email") String email);
 }

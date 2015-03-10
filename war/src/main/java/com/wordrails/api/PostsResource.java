@@ -64,7 +64,7 @@ public class PostsResource {
 
 	private @PersistenceContext EntityManager manager;
 
-	private void foward() throws ServletException, IOException {
+	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();		
 		request.getServletContext().getRequestDispatcher(path).forward(request, response);
 	}
@@ -93,19 +93,19 @@ public class PostsResource {
 		String userIp = request.getRemoteAddr();
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		analytics.postViewed(username, userIp, postId);
-		foward();
+		forward();
 	}
 
 	@PUT
 	@Path("/{id}")
 	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
-		foward();
+		forward();
 	}	
 
 	@DELETE
 	@Path("/{id}")
 	public void deletePost(@PathParam("id") Integer id) throws ServletException, IOException {
-		foward();
+		forward();
 	}		
 
 	@GET

@@ -25,6 +25,7 @@
 		<class>com.wordrails.business.TermPerspective</class>
 		<class>com.wordrails.business.User</class>
 		<class>com.wordrails.business.Sponsor</class>
+		<class>com.wordrails.business.PasswordReset</class>
 
       	<properties>
       		<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>

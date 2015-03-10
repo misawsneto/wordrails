@@ -41,7 +41,7 @@ function ImageDto(id, title, caption, original, small, medium, large) {
 	};
 }
 
-function NetworkDto(id, name, trackingId, defaultTaxonomy, allowSignup, allowComments, domain, backgroundColor, navbarColor, navbarSecondaryColor, mainColor, primaryFont, secondaryFont, titleFontSize, newsFontSize, subdomain, configured) {
+function NetworkDto(id, name, trackingId, defaultTaxonomy, allowSignup, allowComments, domain, backgroundColor, navbarColor, navbarSecondaryColor, mainColor, primaryFont, secondaryFont, titleFontSize, newsFontSize, subdomain, configured, createdAt, updatedAt) {
 	return {
 		id: id,
 		name: name,
@@ -59,7 +59,9 @@ function NetworkDto(id, name, trackingId, defaultTaxonomy, allowSignup, allowCom
 		titleFontSize: titleFontSize,
 		newsFontSize: newsFontSize,
 		subdomain: subdomain,
-		configured: configured
+		configured: configured,
+		createdAt: createdAt,
+		updatedAt: updatedAt
 	};
 }
 
@@ -72,13 +74,27 @@ function NetworkRoleDto(id, network, person, admin) {
 	};
 }
 
-function PersonDto(id, name, username, bio, email, passwordReseted, twitterHandle) {
+function PasswordResetDto(id, hash, email, active, networkSubdomain, createdAt, updatedAt) {
+	return {
+		id: id,
+		hash: hash,
+		email: email,
+		active: active,
+		networkSubdomain: networkSubdomain,
+		createdAt: createdAt,
+		updatedAt: updatedAt
+	};
+}
+
+function PersonDto(id, name, username, bio, email, createdAt, updatedAt, passwordReseted, twitterHandle) {
 	return {
 		id: id,
 		name: name,
 		username: username,
 		bio: bio,
 		email: email,
+		createdAt: createdAt,
+		updatedAt: updatedAt,
 		passwordReseted: passwordReseted,
 		twitterHandle: twitterHandle
 	};
@@ -183,6 +199,15 @@ function TermPerspectiveDto(id, perspective) {
 	return {
 		id: id,
 		perspective: perspective
+	};
+}
+
+function UserDto(username, password, enabled, authorities) {
+	return {
+		username: username,
+		password: password,
+		enabled: enabled,
+		authorities: authorities
 	};
 }
 
@@ -1951,6 +1976,100 @@ function BaseWordRails(_url, _username, _password) {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
+	if (that.getPasswordResets) {
+		console.log("getPasswordResets");
+	}
+    that.getPasswordResets = function(_page, _size, _sort, _success, _error, _complete, projection) {
+		return that._ajax({
+            url: _url + "/api/passwordResets",
+            data: {
+                page: _page,
+                size: _size,
+                sort: _sort,
+                projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.postPasswordReset) {
+		console.log("postPasswordReset");
+	}
+    that.postPasswordReset = function(passwordReset, _success, _error, _complete) {
+        return that._ajax({
+            type: "POST",
+            url: _url + "/api/passwordResets",
+            contentType: "application/json",
+            data: JSON.stringify(passwordReset),
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    var _value = _jqXHR.getResponseHeader("Location");
+                    if (_value) {
+                        var _index = _value.lastIndexOf("/");
+                        var _suffix = _value.substring(_index + 1);
+                        var id = _suffix;
+                        _success(id, _textStatus, _jqXHR);
+                    }
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.getPasswordReset) {
+		console.log("getPasswordReset");
+	}
+    that.getPasswordReset = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/passwordResets/" + id,
+            data: {
+                projection: projection
+            },            
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.putPasswordReset) {
+		console.log("putPasswordReset");
+	}
+    that.putPasswordReset = function(passwordReset, _success, _error, _complete) {
+        return that._ajax({
+            type: "PUT",
+            url: _url + "/api/passwordResets/" + passwordReset.id,
+            contentType: "application/json",
+            data: JSON.stringify(passwordReset),
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.deletePasswordReset) {
+		console.log("deletePasswordReset");
+	}
+    that.deletePasswordReset = function(id, _success, _error, _complete) {
+        return that._ajax({
+            type: "DELETE",
+            url: _url + "/api/passwordResets/" + id,
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
 	if (that.getPersons) {
 		console.log("getPersons");
 	}
@@ -2049,6 +2168,27 @@ function BaseWordRails(_url, _username, _password) {
             url: _url + "/api/persons/search/findByUsername",
             data: {
             	username: username,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.findByEmail) {
+    	console.log("findByEmail");
+    }
+    that.findByEmail = function(email, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/persons/search/findByEmail",
+            data: {
+            	email: email,
 
             	projection: projection
             },
@@ -2392,30 +2532,6 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPostsFromOrPromotedToStation) {
-    	console.log("findPostsFromOrPromotedToStation");
-    }
-    that.findPostsFromOrPromotedToStation = function(stationId, page, size, sort, _success, _error, _complete, projection) {
-        return that._ajax({
-            url: _url + "/api/posts/search/findPostsFromOrPromotedToStation",
-            data: {
-            	stationId: stationId,
-            	page: page,
-            	size: size,
-            	sort: sort,
-
-            	projection: projection
-            },
-            success: function(_data, _textStatus, _jqXHR) {
-                if (_success) {
-                    _success(_data.content, _textStatus, _jqXHR);
-                }
-            },
-            error: _error,
-            complete: _complete
-        });
-    };
-
     if (that.findPostsAndPostsPromoted) {
     	console.log("findPostsAndPostsPromoted");
     }
@@ -2451,6 +2567,30 @@ function BaseWordRails(_url, _username, _password) {
             	stationId: stationId,
             	termsIds: termsIds,
             	idsToExclude: idsToExclude,
+            	page: page,
+            	size: size,
+            	sort: sort,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.findPostsFromOrPromotedToStation) {
+    	console.log("findPostsFromOrPromotedToStation");
+    }
+    that.findPostsFromOrPromotedToStation = function(stationId, page, size, sort, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/posts/search/findPostsFromOrPromotedToStation",
+            data: {
+            	stationId: stationId,
             	page: page,
             	size: size,
             	sort: sort,
@@ -4228,14 +4368,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByStationId) {
-    	console.log("findByStationId");
+    if (that.findByTypeAndName) {
+    	console.log("findByTypeAndName");
     }
-    that.findByStationId = function(stationId, _success, _error, _complete, projection) {
+    that.findByTypeAndName = function(type, name, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/taxonomies/search/findByStationId",
+            url: _url + "/api/taxonomies/search/findByTypeAndName",
             data: {
-            	stationId: stationId,
+            	type: type,
+            	name: name,
 
             	projection: projection
             },
@@ -4249,15 +4390,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByTypeAndName) {
-    	console.log("findByTypeAndName");
+    if (that.findByStationId) {
+    	console.log("findByStationId");
     }
-    that.findByTypeAndName = function(type, name, _success, _error, _complete, projection) {
+    that.findByStationId = function(stationId, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/taxonomies/search/findByTypeAndName",
+            url: _url + "/api/taxonomies/search/findByStationId",
             data: {
-            	type: type,
-            	name: name,
+            	stationId: stationId,
 
             	projection: projection
             },
@@ -4528,17 +4668,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findRootsPage) {
-    	console.log("findRootsPage");
+    if (that.countTerms) {
+    	console.log("countTerms");
     }
-    that.findRootsPage = function(taxonomyId, page, size, sort, _success, _error, _complete, projection) {
+    that.countTerms = function(termsIds, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/terms/search/findRootsPage",
+            url: _url + "/api/terms/search/countTerms",
             data: {
-            	taxonomyId: taxonomyId,
-            	page: page,
-            	size: size,
-            	sort: sort,
+            	termsIds: termsIds,
 
             	projection: projection
             },
@@ -4573,14 +4710,17 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.countTerms) {
-    	console.log("countTerms");
+    if (that.findRootsPage) {
+    	console.log("findRootsPage");
     }
-    that.countTerms = function(termsIds, _success, _error, _complete, projection) {
+    that.findRootsPage = function(taxonomyId, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/terms/search/countTerms",
+            url: _url + "/api/terms/search/findRootsPage",
             data: {
-            	termsIds: termsIds,
+            	taxonomyId: taxonomyId,
+            	page: page,
+            	size: size,
+            	sort: sort,
 
             	projection: projection
             },
@@ -5050,6 +5190,121 @@ function BaseWordRails(_url, _username, _password) {
     	    });	
     	}
     };
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+	if (that.getUsers) {
+		console.log("getUsers");
+	}
+    that.getUsers = function(_page, _size, _sort, _success, _error, _complete, projection) {
+		return that._ajax({
+            url: _url + "/api/users",
+            data: {
+                page: _page,
+                size: _size,
+                sort: _sort,
+                projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.postUser) {
+		console.log("postUser");
+	}
+    that.postUser = function(user, _success, _error, _complete) {
+        return that._ajax({
+            type: "POST",
+            url: _url + "/api/users",
+            contentType: "application/json",
+            data: JSON.stringify(user),
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    var _value = _jqXHR.getResponseHeader("Location");
+                    if (_value) {
+                        var _index = _value.lastIndexOf("/");
+                        var _suffix = _value.substring(_index + 1);
+                        var id = _suffix;
+                        _success(id, _textStatus, _jqXHR);
+                    }
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.getUser) {
+		console.log("getUser");
+	}
+    that.getUser = function(username, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/users/" + username,
+            data: {
+                projection: projection
+            },            
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.putUser) {
+		console.log("putUser");
+	}
+    that.putUser = function(user, _success, _error, _complete) {
+        return that._ajax({
+            type: "PUT",
+            url: _url + "/api/users/" + user.username,
+            contentType: "application/json",
+            data: JSON.stringify(user),
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.deleteUser) {
+		console.log("deleteUser");
+	}
+    that.deleteUser = function(username, _success, _error, _complete) {
+        return that._ajax({
+            type: "DELETE",
+            url: _url + "/api/users/" + username,
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.findByUsernameAndPassword) {
+    	console.log("findByUsernameAndPassword");
+    }
+    that.findByUsernameAndPassword = function(username, password, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/users/search/findByUsernameAndPassword",
+            data: {
+            	username: username,
+            	password: password,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
 /*---------------------------------------------------------------------------*/
 
     return that;

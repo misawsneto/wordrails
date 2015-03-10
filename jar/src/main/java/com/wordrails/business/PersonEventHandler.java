@@ -3,6 +3,9 @@ package com.wordrails.business;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
@@ -22,6 +25,8 @@ public class PersonEventHandler {
 	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired PersonRepository personRepository;
 	private @Autowired TermRepository termRepository;
+	private @PersistenceContext EntityManager manager;
+	private @Autowired EmailService passwordResetService;
 
 	@HandleBeforeSave
 	@Transactional
@@ -64,4 +69,5 @@ public class PersonEventHandler {
 
 		return result;
 	}
+	
 }

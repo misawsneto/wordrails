@@ -33,7 +33,10 @@ public class PersonsResource {
 	@Path("/me/password")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
-		userDetailsManager.changePassword(oldPassword, newPassword);
+		org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = user.getUsername();
+		if(!username.equalsIgnoreCase("wordrails")) // don't allow users to change wordrails password
+			userDetailsManager.changePassword(oldPassword, newPassword);
 	}
 	
 	@GET

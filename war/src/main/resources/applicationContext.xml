@@ -4,6 +4,8 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"       
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
          				   http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -12,12 +14,20 @@
          				   http://www.springframework.org/schema/data/jpa
          				   http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
          				   http://www.springframework.org/schema/tx
-       					   http://www.springframework.org/schema/tx/spring-tx.xsd">
+       					   http://www.springframework.org/schema/tx/spring-tx.xsd
+       					   http://www.springframework.org/schema/util 
+       					   http://www.springframework.org/schema/util/spring-util.xsd
+       					   http://www.springframework.org/schema/task
+       					   http://www.springframework.org/schema/task/spring-task.xsd">
 	<context:component-scan base-package="com.wordrails"/>
 
 	<jpa:repositories base-package="com.wordrails.persistence" transaction-manager-ref="transactionManager" entity-manager-factory-ref="entityManagerFactory"/>	
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
+	<task:executor id="myExecutor" pool-size="5"/>
+	<task:scheduler id="myScheduler" pool-size="10"/>
 
   	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
   		<property name="entityManagerFactory" ref="entityManagerFactory"/>
@@ -39,4 +49,5 @@
 	
 	<bean id="networkDomainFilter" class="com.wordrails.api.NetworkDomainFilter"></bean>
 	<bean id="corsCustomFilter" class="com.wordrails.api.CORSCustomFilter"></bean>
+	
 </beans>

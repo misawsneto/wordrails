@@ -354,6 +354,7 @@ angular.module('app').service('wordrailsService', function wordrailsService($q, 
 					}
 					iStation.visible = true;
   				}
+  				window.console && console.log(iStation);
 			});
 		});
   	}

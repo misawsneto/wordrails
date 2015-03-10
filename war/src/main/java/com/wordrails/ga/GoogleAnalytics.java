@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.GenericMessage;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,6 +63,7 @@ public class GoogleAnalytics {
 		}			
 	}
 
+	@Async
 	public void postViewed(String username, String userIp, int postId) {
 		try {
 			Post post = postRepository.findOne(postId);

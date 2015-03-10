@@ -1853,36 +1853,58 @@ $scope.submitDeleteTerm = function(){
 
     $scope.app.loading = true;
 
-    promise.then(function(personId){
+    promise.then(function(personId){ // sucess function
       wr.getPerson(personId, function(personResponse){
-        
-        var networkRole = {
-          network: extractSelf(wordrailsService.getNetwork()),
-          person: extractSelf(personResponse),
-          admin: false
-        } 
+        addPersonToNetwork(personResponse);
+      }).error(function(){
+        toastr.error("Houve um erro inesperado, entre em contato com a equipe de suporte.")
+        safeApply($scope, function(){
+          $scope.app.loading = false;
+        })
+      });
+    }, function(jqXHR){ // reject function
+      safeApply($scope, function(){
+        $scope.app.loading = false;
+      })
+      if(jqXHR.status == 409){
+        if(jqXHR.responseText.indexOf(person.username) > -1)
+          toastr.error("Já existe um usuário cadastrado com este username.") // perguntar se esse usuário deve ser convidado a participar da rede.
+        else if(jqXHR.responseText.indexOf(person.email) > -1)
+          toastr.error("Já existe um usuário cadastrado com este email.") // perguntar se esse usuário deve ser convidado a participar da rede.
+        else
+          toastr.error("Já existe um usuário cadastrado com esses dados.")
+      }else if(jqXHR.status == 500){
+        if(jqXHR.responseText.indexOf('propertyPath=email') > -1)
+          toastr.error("Email inválido.")
+        else if(jqXHR.responseText.indexOf('propertyPath=username') > -1)
+          toastr.error("Username inválido.")
+        else  
+          toastr.error("Houve um erro inesperado, entre em contato com a equipe de suporte.")
+      }
+    });
 
-        wr.postNetworkRole(networkRole, function(networkRoleId){
-          wr.getNetworkRole(networkRoleId, function(networkRole){
-              personRole = personResponse;
-              personRole.networkRole
-              toastr.success("O usuário receberá um email com a senha de cadastro da rede")
-              $scope.personRoles.push(personRole);
-              $scope.personRole.id = personRole.id;
+    function addPersonToNetwork(personResponse){
+      var networkRole = {
+        network: extractSelf(wordrailsService.getNetwork()),
+        person: extractSelf(personResponse),
+        admin: false
+      } 
 
-            safeApply($scope, function(){
-              $scope.personRole = personRole;
-              personRole.editing = false;
-            })
-          }).error(function(){
-            toastr.error("Houve um erro inesperado, entre em contato com a equipe de suporte.")
-          }).complete(function(){
-            safeApply($scope, function(){
-              $scope.app.loading = false;
-            })
-          });
+      wr.postNetworkRole(networkRole, function(networkRoleId){
+        wr.getNetworkRole(networkRoleId, function(networkRole){
+          personRole = personResponse;
+          personRole.networkRole
+          toastr.success("O usuário receberá um email com a senha de cadastro da rede")
+          $scope.personRoles.push(personRole);
+          $scope.personRole.id = personRole.id;
+
+          safeApply($scope, function(){
+            $scope.personRole = personRole;
+            personRole.editing = false;
+          })
         }).error(function(){
           toastr.error("Houve um erro inesperado, entre em contato com a equipe de suporte.")
+        }).complete(function(){
           safeApply($scope, function(){
             $scope.app.loading = false;
           })
@@ -1893,18 +1915,9 @@ $scope.submitDeleteTerm = function(){
           $scope.app.loading = false;
         })
       });
-    }, function(jqXHR){
-      safeApply($scope, function(){
-        $scope.app.loading = false;
-      })
-      if(jqXHR.status == 409){
-        toastr.error("Já existe um usuário cadastrado com esses dados.")
-      }else if(jqXHR.status == 500){
-        toastr.error("Houve um erro inesperado, entre em contato com a equipe de suporte.")
-      }
-    });
-  }
-})
+    } // end of addPersonToNetwork internal function
+  }// end of createPerson
+})// end of controller
 
 .controller('ScaffoldSponsorCtrl', function ScaffoldSponsorCtrl($scope, $state, authService, FileUploader, WORDRAILS) {
     $scope.p = {}
