@@ -455,22 +455,8 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
         $scope.content = post.body
         $scope.topper = post.topper
       });
-      // get featured image
-      wr.getPostFeaturedImage(post.id, function(image){
-        safeApply($scope, function(){
-          var parts = extractSelf(image).split("/");
-          if(!$scope.uploadedImage)
-            $scope.uploadedImage = {};
-        });
-        // get image large
-        wr.getImageLarge(image.id, function(large){
-          safeApply($scope, function(){
-            $scope.uploadedImage.link = WORDRAILS.baseUrl + "/api/files/" + large.id + "/contents";
-            $scope.uploadedImage.id = image.id
-            $scope.uploadedImage.old = true;
-          });
-        })
-      });
+
+      $scope.uploadedImage.link = WORDRAILS.baseUrl + "/api/files/" + post.featuredImage.large + "/contents";
       // get post terms
       wr.getPostTerms($state.params.postId, function(terms){
         safeApply($scope, function(){

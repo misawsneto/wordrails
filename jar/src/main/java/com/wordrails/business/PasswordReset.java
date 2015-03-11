@@ -35,6 +35,8 @@ public class PasswordReset {
 	
 	public boolean active = true;
 	
+	public boolean invite = false;
+	
 	public String networkSubdomain;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
