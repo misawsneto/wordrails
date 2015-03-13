@@ -1159,7 +1159,6 @@ function createPost(post){
 
   var postId = $state.params.postId;
   var post = null;
-  var featuredImage = null;
   $scope.postView = {};
   $scope.postView.postId = postId;
 
@@ -1173,19 +1172,7 @@ function createPost(post){
         })
       })
     }
-
-    wr.getPostFeaturedImage(post.id, function(image){
-      safeApply($scope, function(){
-        featuredImage = image;
-      });
-
-      wr.getImageLarge(featuredImage.id, function(large){
-        safeApply($scope, function(){
-          $scope.postView.largeId = large.id
-        });
-      });
-
-    });
+    $scope.postView.largeId = post.featuredImage.large
   }, function(){
     $state.go("access.404", null, {location:'replace'});
   });

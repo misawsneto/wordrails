@@ -64,6 +64,7 @@ public class GoogleAnalytics {
 	}
 
 	@Async
+	@Transactional
 	public void postViewed(String username, String userIp, int postId) {
 		try {
 			Post post = postRepository.findOne(postId);
