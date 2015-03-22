@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -26,6 +27,9 @@ public class NetworkDomainFilter implements Filter {
 	private NetworkRepository networkRepository;
 
 	private @Autowired HttpServletRequest request;
+	
+	@Autowired
+	private ServletContext ctx;
 
 	@Override
 	public void destroy() {
@@ -39,8 +43,10 @@ public class NetworkDomainFilter implements Filter {
 
 		List<Network> networks = null;
 		
+		String build = (ctx != null ? ctx.getAttribute("buildNumber") : "") + "";
+		
 		if(host.equals("xarx.co")){
-			((HttpServletResponse) res).sendRedirect("/home");
+			((HttpServletResponse) res).sendRedirect("/home?" + build);
 			return;
 		}
 		
