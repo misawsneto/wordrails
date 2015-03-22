@@ -47,8 +47,6 @@ public class NetworkDomainFilter implements Filter {
 		if(host.contains(".xarx.co")){
 			String subdomain = host.split(".xarx.co")[0];
 			networks = networkRepository.findBySubdomain(subdomain);
-		} else if(host.contains("trix.portodigital.org")) {
-			networks = networkRepository.findBySubdomain("pd");
 		}else if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			networks = networkRepository.findAll();
 		}else{
