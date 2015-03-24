@@ -977,4 +977,17 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return false;
 	}
 
+	@Override
+	protected boolean isFindByUsernameAndEnabledAuthorized(String username,
+			boolean enabled) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isFindByHashAuthorized(String hash) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

@@ -67,6 +67,17 @@ var app = angular.module('app', [
                     }
                 }
             })
+            .state('passwordReset', {
+                url: '/pass?hash',
+                templateUrl: 'tpl/app/user_pass_reset.html',
+                controller: 'PasswordResetCtrl',
+                resolve: { // resolve waits for the data to be loaded and for the resolve signal form the defered object
+                    wordrailsService: 'wordrailsService', // get service
+                    network: function(wordrailsService){ // injects network in all child controllers
+                        return wordrailsService.getInitialData(); // get initial data from the API.
+                    }
+                }
+            })
             .state('app.stations', {
                 url: '/s?stationId',
                 template: '<div ui-view class="fade-in"></div>',

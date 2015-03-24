@@ -9,4 +9,6 @@ import com.wordrails.business.User;
 public interface UserRepository extends JpaRepository<User, Integer>, QueryDslPredicateExecutor<User> {
 
 	User findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
+
+	User findByUsernameAndEnabled(@Param("username") String username, @Param("enabled") boolean b);
 }

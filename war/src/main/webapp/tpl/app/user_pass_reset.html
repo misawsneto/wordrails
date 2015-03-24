@@ -1,0 +1,20 @@
+  <div class="container w-xl w-auto-xs ">
+    <div ng-show="!showLoader" class="m-b-lg">
+      <div class="wrapper text-center">
+        <strong class="navbar-brand">Defina sua senha</strong>
+      </div>
+      <form name="reset" ng-submit="definePassword()">
+        <div class="list-group list-group-sm">
+          <div class="list-group-item">
+            <input type="password" ng-model="password" placeholder="Senha" class="form-control no-border" required="">
+          </div>
+          <div class="list-group-item">
+            <input type="password" ng-model="passwordRepeat" placeholder="Repita a senha" class="form-control no-border" required="">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-lg btn-success btn-block">Enviar</button>
+      </form>
+    </div>
+    <div ng-show="showLoader" class="loader">Loading...</div>
+  </div>
+

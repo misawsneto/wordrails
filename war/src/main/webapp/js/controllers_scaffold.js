@@ -1894,7 +1894,7 @@ $scope.submitDeleteTerm = function(){
         wr.getNetworkRole(networkRoleId, function(networkRole){
           personRole = personResponse;
           personRole.networkRole
-          toastr.success("O usuário receberá um email com a senha de cadastro da rede")
+          toastr.success("O link de confirmação de cadastro foi enviado ao usuário <strong>" + personResponse.username + "</strong>.")
           $scope.personRoles.push(personRole);
           $scope.personRole.id = personRole.id;
 
@@ -1902,6 +1902,21 @@ $scope.submitDeleteTerm = function(){
             $scope.personRole = personRole;
             personRole.editing = false;
           })
+
+          var passReset = {
+            email: personResponse.email,
+            personName: personResponse.name,
+            invite: true,
+            active: true,
+            hash: "",
+            networkSubdomain: wordrailsService.getNetwork().subdomain,
+            networkName: wordrailsService.getNetwork().name
+          }
+
+          wr.postPasswordReset(passReset, function(){
+            console.log("created");
+          })
+
         }).error(function(){
           toastr.error("Houve um erro inesperado, entre em contato com a equipe de suporte.")
         }).complete(function(){

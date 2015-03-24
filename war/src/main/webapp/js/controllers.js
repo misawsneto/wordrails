@@ -219,6 +219,67 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
 
 })
 
+.controller('PasswordResetCtrl', function PasswordResetCtrl($scope, $modal, $state, authService, WORDRAILS, wordrailsService){
+  //console.log($state.params.hash);
+  $scope.showLoader = true;
+  $scope.password = "";
+  $scope.passwordRepeat = "";
+  var wr = authService.getWR();
+  if(!$state.params.hash){
+    toastr.error("Código inválido")
+    $state.go("app.stations", {stationId: 0}, {reload: false});
+  }else{
+    wr.findByHash($state.params.hash, function(){
+      safeApply($scope, function(){
+        $scope.showLoader = false;
+      });
+    },function(){
+      safeApply($scope, function(){
+        toastr.error("Código inválido")
+        $state.go("app.stations", {stationId: 0}, {reload: false});
+      });
+    })
+  }
+
+  function checkPassword(str){
+    // at least one number, one lowercase and one uppercase letter
+    // at least six characters
+    var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+    return re.test(str);
+  }
+
+  $scope.definePassword = function(){
+    //console.log($scope.password);
+    //console.log($scope.passwordRepeat);
+    console.log($scope.password);
+    if(!checkPassword($scope.password)){
+      toastr.error("Sua senha deve ter ao menos seis caracteres, um número, uma letra minúscula e uma letra maiúscula.");
+      return
+    }
+
+    if($scope.password === $scope.passwordRepeat){
+        wr.updatePassword($state.params.hash, $scope.password, function(){
+          safeApply($scope, function(){
+            toastr.success("Sua senha foi atualizada com sucesso")
+            $state.go("app.stations", {stationId: 0}, {reload: true});
+          })
+        }, function(jqXHR,textStatus,errorThrown){
+          safeApply($scope, function(){
+            if(jqXHR.status == 410){
+              toastr.error("Este código não pode mais ser usado.")
+            }
+            if(jqXHR.status == 404){
+              toastr.error("Código inválido.")
+            }
+            $state.go("app.stations", {stationId: 0}, {reload: false});
+          });
+        })
+    }else{
+      toastr.error("As senhas precisam ser iguais para que você possa continuar.");
+    }
+  }
+})
+
    // ---------------------- StationsCtrl
    .controller('StationsCtrl', function StationsCtrl($scope, $modal, $state, authService, WORDRAILS, wordrailsService){
     var wr = authService.getWR();

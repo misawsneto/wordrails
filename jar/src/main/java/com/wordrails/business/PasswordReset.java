@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
@@ -31,13 +30,17 @@ public class PasswordReset {
 	
 	@NotNull
 	@Email
-	public String email; 
+	public String email;
+	
+	public String personName;
 	
 	public boolean active = true;
 	
 	public boolean invite = false;
 	
 	public String networkSubdomain;
+	
+	public String networkName;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)

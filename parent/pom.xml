@@ -330,7 +330,19 @@
 				<artifactId>wordrails2-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-
+			
+			<dependency>
+					<groupId>org.apache.commons</groupId>
+				<artifactId>commons-email</artifactId>
+				<version>1.3.3</version>
+			</dependency>
+			
+			<dependency>
+			  <groupId>com.github.spullara.mustache.java</groupId>
+			  <artifactId>compiler</artifactId>
+			  <version>0.8.17</version>
+			</dependency>
+						
 			<dependency>
 				<groupId>com.wordrails</groupId>
 				<artifactId>wordrails2-jar</artifactId>

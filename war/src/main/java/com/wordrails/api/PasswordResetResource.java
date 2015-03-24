@@ -1,8 +1,18 @@
 package com.wordrails.api;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.UUID;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.ServletException;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -11,17 +21,26 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.EmailService;
+import com.wordrails.business.Network;
 import com.wordrails.business.PasswordReset;
 import com.wordrails.business.Person;
 import com.wordrails.business.User;
+import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.PasswordResetRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserRepository;
@@ -33,13 +52,18 @@ import com.wordrails.security.NetworkSecurityChecker;
 public class PasswordResetResource {
 	@Autowired private NetworkSecurityChecker networkSecurityChecker;
 	@Autowired private PasswordResetRepository passwordResetRepository;
-	@Autowired private PersonRepository personRepository; 
+	@Autowired private PersonRepository personRepository;
+	@Autowired private NetworkRepository networkRepository; 
 	private @Autowired UserDetailsManager userDetailsManager;
-	private @Autowired UserRepository userRepository; 
+	private @Autowired UserRepository userRepository;
+	private @Autowired EmailService emailService;
+	private @Autowired AccessControllerUtil accessControllerUtil;
 
 	@POST
 	@Path("/")
 	@Transactional
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response postPasswordReset(PasswordReset passwordReset) throws ServletException, IOException{
 
 		if(passwordReset.email == null || personRepository.findByEmail(passwordReset.email) == null)
@@ -48,45 +72,90 @@ public class PasswordResetResource {
 		if(passwordReset.invite && passwordReset.networkSubdomain == null){
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-			
+
 		// TODO: check how many request for password has been sent for a given email in the last minute, passwordReset.createdAt and add 
 		passwordReset.hash = UUID.randomUUID().toString();
 		passwordResetRepository.save(passwordReset);
-		
-		if(passwordReset.invite) 
+
+		if(passwordReset.invite) // if passwordReset is of type user invitation, send invitation email
 			sendInviteEmail(passwordReset);
-		else
+		else // if not invitation, send a simple user reset email.
 			sendResetEmail(passwordReset);
-		
+
 		return Response.status(Status.CREATED).build();
-//		throw new UnauthorizedException();
+		//		throw new UnauthorizedException();
 	}
 
+	@Async
+	@org.springframework.transaction.annotation.Transactional(readOnly=true)
 	private void sendResetEmail(PasswordReset passwordReset) {
-		// TODO create and send Reset email only
+		
 	}
 
 	private void sendInviteEmail(PasswordReset passwordReset) {
-		// TODO create and send invite and reset email
+		try {
+			String filePath = getClass().getClassLoader().getResource("tpl/invitation-email.html").getFile();
+			
+			filePath = System.getProperty( "os.name" ).contains( "indow" ) ? filePath.substring(1) : filePath;
+			
+			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+			String template = new String (bytes, Charset.forName("UTF-8"));
+
+			HashMap<String, Object> scopes = new HashMap<String, Object>();
+			scopes.put("name", passwordReset.personName + "");
+			scopes.put("networkName", passwordReset.networkName + "");
+			scopes.put("link", "http://" + passwordReset.networkSubdomain + "xarx.co/#/pass?hash=" + passwordReset.hash);
+			scopes.put("networkSubdomain", passwordReset.networkSubdomain);
+			scopes.put("passwordReset", passwordReset);
+			
+			Person person = accessControllerUtil.getLoggedPerson();
+			if(person != null)
+				scopes.put("inviterName", person.name);
+			else
+				scopes.put("inviterName", "");
+			
+			StringWriter writer = new StringWriter();
+			
+			MustacheFactory mf = new DefaultMustacheFactory();
+
+			Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
+			mustache.execute(writer, scopes);
+			writer.flush();
+			
+			String emailBody = writer.toString();
+			String subject = "[" + passwordReset.networkName + "]" + " Cadastro de senha";
+			
+			emailService.sendSimpleMail(passwordReset.email, subject , emailBody);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
+	/**
+	 * For a given hash sent by email, find the hash, check if it is active, change the password and set the {@link PasswordReset.active} to false in Database.
+	 * @param hash
+	 * @param password
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	@PUT
 	@Path("/{hash}")
 	@Transactional
-	public Response putPasswordReset(@PathParam("hash") String hash, @FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) throws ServletException, IOException{
+	public Response updatePassword(@PathParam("hash") String hash, @FormParam("password") String password) throws ServletException, IOException{
 		PasswordReset pr = passwordResetRepository.findByHash(hash);
-		if(pr ==null ){
+		if(pr == null ){ // if no password reset was found for this hash, return 
 			return Response.status(Status.NOT_FOUND).build();
-		}else if(!pr.active){
+		}else if(!pr.active){ // if hash is not active, return the 410 http code
 			return Response.status(Status.GONE).build();
 		}
 
 		Person person = personRepository.findByEmail(pr.email);
 		person.passwordReseted = true;
-		if(!person.username.equalsIgnoreCase("wordrails")){ // don't allow users to change wordrails pas
-			User user = userRepository.findByUsernameAndPassword(person.username, oldPassword);
+		if(!person.username.equals("wordrails")){ // don't allow users to change wordrails pas
+			User user = userRepository.findByUsernameAndEnabled(person.username, true);
 			if(user != null){
-				user.password = newPassword;
+				user.password = password;
 				userRepository.save(user);
 
 				personRepository.save(person);

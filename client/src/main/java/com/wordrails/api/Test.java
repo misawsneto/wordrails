@@ -2,6 +2,8 @@ package com.wordrails.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,11 +15,21 @@ import org.apache.commons.lang.StringUtils;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.RetrofitError;
 
+import com.wordrails.business.EmailService;
 import com.wordrails.business.Network;
 import com.wordrails.business.Station;
 
 public class Test {
-	public static void main(String[] args) throws IOException {		
+	public static void main(String[] args) throws IOException {	
+		
+//		EmailService emailService = new EmailService();
+//		emailService.sendSimpleMail("misawsneto@gmail.com", "asdf", "Enviando email reset");
+		
+		
+		byte[] bytes = Files.readAllBytes(Paths.get(Test.class.getClassLoader().getResource("tpl/invitation-email.html").getFile()));
+		
+		if(true)
+			return;
 		
 //		String host = "dev.xarx.co";
 //		

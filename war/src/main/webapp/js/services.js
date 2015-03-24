@@ -34,7 +34,6 @@ angular.module('app').service('authService', function authService($q, $http, $lo
 	this.signIn = function(username, password, success, error){
 		wr = BaseWordRails(WORDRAILS.baseUrl, username, password);
 		wr.logIn(function(jqXHQ, text){
-			console.log('aqui!');
 			if(text == "success"){
 				wr.findByUsername(username, function(response){
 					person = response[0];

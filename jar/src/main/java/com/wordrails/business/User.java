@@ -12,6 +12,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * This class is used by spring-security for authorizing users based on username and password.
+ * For a functional representation of a user object for this system, check the {@link Person} class.  
+ * @author misael
+ */
 @Entity
 @Table(name="users")
 public class User {

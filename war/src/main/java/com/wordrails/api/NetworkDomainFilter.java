@@ -28,8 +28,8 @@ public class NetworkDomainFilter implements Filter {
 
 	private @Autowired HttpServletRequest request;
 	
-	@Autowired
-	private ServletContext ctx;
+//	@Autowired
+//	private ServletContext ctx;
 
 	@Override
 	public void destroy() {
@@ -43,12 +43,12 @@ public class NetworkDomainFilter implements Filter {
 
 		List<Network> networks = null;
 		
-		String build = (ctx != null ? ctx.getAttribute("buildNumber") : "") + "";
-		
-		if(host.equals("xarx.co")){
-			((HttpServletResponse) res).sendRedirect("/home?" + build);
-			return;
-		}
+//		String build = (ctx != null ? ctx.getAttribute("buildNumber") : "") + "";
+//		
+//		if(host.equals("xarx.co")){
+//			((HttpServletResponse) res).sendRedirect("/home?" + build);
+//			return;
+//		}
 		
 		if(host.contains(".xarx.co")){
 			String subdomain = host.split(".xarx.co")[0];
