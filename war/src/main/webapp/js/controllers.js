@@ -231,7 +231,7 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
   }else{
     wr.findByHash($state.params.hash, function(response){
       safeApply($scope, function(){
-        if(response && response.length > 0 && response.active){
+        if(response && response.length > 0 && response[0].active){
             $scope.showLoader = false;
             console.log('hideLoader');
         }else{
