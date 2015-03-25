@@ -1,5 +1,6 @@
   <div class="container w-xl w-auto-xs ">
-    <div ng-show="!showLoader" class="m-b-lg">
+    <!-- <div ng-if="showLoader == true" class="loader">Loading...</div> -->
+    <div ng-show="showLoader == false" class="m-b-lg">
       <div class="wrapper text-center">
         <strong class="navbar-brand">Defina sua senha</strong>
       </div>
@@ -15,6 +16,5 @@
         <button type="submit" class="btn btn-lg btn-success btn-block">Enviar</button>
       </form>
     </div>
-    <div ng-show="showLoader" class="loader">Loading...</div>
   </div>
 

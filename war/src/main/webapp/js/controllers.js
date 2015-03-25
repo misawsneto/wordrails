@@ -231,8 +231,9 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
   }else{
     wr.findByHash($state.params.hash, function(response){
       safeApply($scope, function(){
-        if(response && response.length > 0){
+        if(response && response.length > 0 && response.active){
             $scope.showLoader = false;
+            console.log('hideLoader');
         }else{
           toastr.error("Código inválido")
           $state.go("app.stations", {stationId: 0}, {reload: false});
@@ -255,8 +256,8 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
   }
 
   $scope.definePassword = function(){
-    //console.log($scope.password);
-    //console.log($scope.passwordRepeat);
+    console.log($scope.password);
+    console.log($scope.passwordRepeat);
     console.log($scope.password);
     if(!checkPassword($scope.password)){
       toastr.error("Sua senha deve ter ao menos seis caracteres, um número, uma letra minúscula e uma letra maiúscula.");
