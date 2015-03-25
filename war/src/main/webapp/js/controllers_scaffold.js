@@ -1867,10 +1867,12 @@ $scope.submitDeleteTerm = function(){
         $scope.app.loading = false;
       })
       if(jqXHR.status == 409){
-        if(jqXHR.responseText.indexOf(person.username) > -1)
-          toastr.error("Já existe um usuário cadastrado com este username.") // perguntar se esse usuário deve ser convidado a participar da rede.
-        else if(jqXHR.responseText.indexOf(person.email) > -1)
-          toastr.error("Já existe um usuário cadastrado com este email.") // perguntar se esse usuário deve ser convidado a participar da rede.
+        if(jqXHR.responseText.indexOf(person.username) > -1){
+          addPersonToNetworkByUsername(person.username)
+        }
+        else if(jqXHR.responseText.indexOf(person.email) > -1){
+          addPersonToNetworkByEmail(person.email)
+        }
         else
           toastr.error("Já existe um usuário cadastrado com esses dados.")
       }else if(jqXHR.status == 500){
@@ -1883,7 +1885,37 @@ $scope.submitDeleteTerm = function(){
       }
     });
 
-    function addPersonToNetwork(personResponse){
+    function addPersonToNetworkByUsername(username){
+      wr.findByUsername(username, function(persons){
+        var person = persons[0];
+        addPersonToNetwork(person, true)
+      });
+    }
+
+    function addPersonToNetworkByEmail(email){
+      wr.findByEmail(email, function(persons){
+        var person = persons[0];
+        addPersonToNetwork(person, true)
+      });
+    }
+
+    function sendInviteToPerson(person){
+      var passReset = {
+        email: person.email,
+        personName: person.name,
+        invite: true,
+        active: true,
+        hash: "",
+        networkSubdomain: wordrailsService.getNetwork().subdomain,
+        networkName: wordrailsService.getNetwork().name
+      }
+
+      wr.postPasswordReset(passReset, function(){
+        console.log("created");
+      })
+    }
+
+    function addPersonToNetwork(personResponse, sendInvite){
       var networkRole = {
         network: extractSelf(wordrailsService.getNetwork()),
         person: extractSelf(personResponse),
@@ -1903,19 +1935,7 @@ $scope.submitDeleteTerm = function(){
             personRole.editing = false;
           })
 
-          var passReset = {
-            email: personResponse.email,
-            personName: personResponse.name,
-            invite: true,
-            active: true,
-            hash: "",
-            networkSubdomain: wordrailsService.getNetwork().subdomain,
-            networkName: wordrailsService.getNetwork().name
-          }
-
-          wr.postPasswordReset(passReset, function(){
-            console.log("created");
-          })
+          sendInviteToPerson(personResponse)
 
         }).error(function(){
           toastr.error("Houve um erro inesperado, entre em contato com a equipe de suporte.")
@@ -1924,8 +1944,13 @@ $scope.submitDeleteTerm = function(){
             $scope.app.loading = false;
           })
         });
-      }).error(function(){
-        toastr.error("Houve um erro inesperado, entre em contato com a equipe de suporte.")
+      }).error(function(jqXHR){
+
+        if(jqXHR.status == 409 && sendInvite){
+          sendInviteToPerson(personResponse)
+        }else
+          toastr.error("Houve um erro inesperado, entre em contato com a equipe de suporte.")
+        
         safeApply($scope, function(){
           $scope.app.loading = false;
         })
