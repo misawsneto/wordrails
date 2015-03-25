@@ -229,11 +229,17 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
     toastr.error("Código inválido")
     $state.go("app.stations", {stationId: 0}, {reload: false});
   }else{
-    wr.findByHash($state.params.hash, function(){
+    wr.findByHash($state.params.hash, function(response){
       safeApply($scope, function(){
-        $scope.showLoader = false;
+        if(response && response.length > 0){
+            $scope.showLoader = false;
+        }else{
+          toastr.error("Código inválido")
+          $state.go("app.stations", {stationId: 0}, {reload: false});
+        }
       });
     },function(){
+      console.log('xzxcvzxcv');
       safeApply($scope, function(){
         toastr.error("Código inválido")
         $state.go("app.stations", {stationId: 0}, {reload: false});

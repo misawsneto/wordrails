@@ -104,7 +104,7 @@ public class PasswordResetResource {
 			HashMap<String, Object> scopes = new HashMap<String, Object>();
 			scopes.put("name", passwordReset.personName + "");
 			scopes.put("networkName", passwordReset.networkName + "");
-			scopes.put("link", "http://" + passwordReset.networkSubdomain + "xarx.co/#/pass?hash=" + passwordReset.hash);
+			scopes.put("link", "http://" + passwordReset.networkSubdomain + ".xarx.co/#/pass?hash=" + passwordReset.hash);
 			scopes.put("networkSubdomain", passwordReset.networkSubdomain);
 			scopes.put("passwordReset", passwordReset);
 			
@@ -123,7 +123,7 @@ public class PasswordResetResource {
 			writer.flush();
 			
 			String emailBody = writer.toString();
-			String subject = "[" + passwordReset.networkName + "]" + " Cadastro de senha";
+			String subject =  "[" + passwordReset.networkName + "]"  + " Cadastro de senha";
 			
 			emailService.sendSimpleMail(passwordReset.email, subject , emailBody);
 		} catch (Exception e) {
