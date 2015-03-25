@@ -35,7 +35,7 @@ public class Person {
 	@Size(max=50)
 	@NotNull
 	@Column(unique=true)
-	@Pattern(regexp="^[a-z0-9_-]{3,50}$", message="Invalid username")
+	@Pattern(regexp="^[a-z0-9\\._-]{3,50}$", message="Invalid username")
 	public String username;
 
 	@OneToMany(mappedBy="author")
