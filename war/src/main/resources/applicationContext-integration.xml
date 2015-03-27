@@ -14,13 +14,13 @@
          				   http://www.springframework.org/schema/integration/jdbc
          				   http://www.springframework.org/schema/integration/jdbc/spring-integration.xsd">
 <!-- ###################################################################### -->
-	<int:channel id="sendHitChannel">
+<!-- 	<int:channel id="sendHitChannel">
 		<int:queue capacity="1000"/>		
 	</int:channel>
-	
-	<int:service-activator input-channel="sendHitChannel">
+	 -->
+	<!-- <int:service-activator input-channel="sendHitChannel">
 		<bean class="com.wordrails.ga.SendHitService"/>
-	</int:service-activator>
+	</int:service-activator> -->
 <!-- ###################################################################### -->
 
 	<int:poller default="true" receive-timeout="30000" fixed-rate="10"/>
