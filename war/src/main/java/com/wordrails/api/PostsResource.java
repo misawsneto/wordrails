@@ -58,7 +58,7 @@ public class PostsResource {
 	private @Context UriInfo uriInfo;
 	private @Context HttpServletResponse response;
 
-	private @Autowired GoogleAnalytics analytics;
+//	private @Autowired GoogleAnalytics analytics;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
 
@@ -92,7 +92,7 @@ public class PostsResource {
 	public void getPost(@PathParam("postId") int postId) throws ServletException, IOException {
 		String userIp = request.getRemoteAddr();
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		analytics.postViewed(username, userIp, postId);
+//		analytics.postViewed(username, userIp, postId);
 		forward();
 	}
 

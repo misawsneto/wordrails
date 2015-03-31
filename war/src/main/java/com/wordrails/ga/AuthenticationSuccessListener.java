@@ -13,7 +13,7 @@ class AuthenticationSuccessListener implements ApplicationListener<Authenticatio
 	static final String USER_IP =  AuthenticationSuccessListener.class.getName() + ".USER_IP";
 	
 	private @Autowired HttpServletRequest request;
-	private @Autowired GoogleAnalytics analytics;	
+//	private @Autowired GoogleAnalytics analytics;	
 	
 	@Override
 	public void onApplicationEvent(AuthenticationSuccessEvent event) {
@@ -22,6 +22,6 @@ class AuthenticationSuccessListener implements ApplicationListener<Authenticatio
 		session.setAttribute(USER_IP, userIp);
 
 		String username = event.getAuthentication().getName();
-		analytics.sessionStarted(username, userIp);
+//		analytics.sessionStarted(username, userIp);
 	}
 }

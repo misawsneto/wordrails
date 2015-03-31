@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 class SessionDestroyedListener implements ApplicationListener<SessionDestroyedEvent> {
-	private @Autowired GoogleAnalytics analytics;
+//	private @Autowired GoogleAnalytics analytics;
 
 	@Override
 	public void onApplicationEvent(SessionDestroyedEvent event) {
@@ -19,7 +19,7 @@ class SessionDestroyedListener implements ApplicationListener<SessionDestroyedEv
 		if (userIp != null) {
 			for (SecurityContext context : event.getSecurityContexts()) {
 				String username = context.getAuthentication().getName();
-				analytics.sessionEnded(username, userIp);
+//				analytics.sessionEnded(username, userIp);
 			}
 		}
 	}
