@@ -37,7 +37,7 @@ public class PostEventHandler {
 			post.originalSlug = originalSlug;
 			int count = postRepository.countSlugPost(originalSlug);
 			if(count > 0){
-				post.slug = originalSlug + "-" + count + 1;
+				post.slug = originalSlug + "-" + count;
 			}else{
 				post.slug = originalSlug;
 			}
