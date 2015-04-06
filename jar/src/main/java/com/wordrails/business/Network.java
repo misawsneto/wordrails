@@ -310,8 +310,9 @@ public class Network {
 	void onCreate() {
 		createdAt = new Date();
 		if(defaultReadMode == null || defaultReadMode.isEmpty())
-			
+			defaultReadMode = DAY_READ_MODE + "";
 		if(defaultOrientationMode == null || defaultOrientationMode.isEmpty())
+			defaultOrientationMode = HORIZONTAL_ORIENTATION_MODE + "";
 	}
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
