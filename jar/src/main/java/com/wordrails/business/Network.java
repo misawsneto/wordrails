@@ -25,6 +25,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Network {
+	
+	public String NIGHT_READ_MODE = "N";
+	public String DAY_READ_MODE = "D";
+	public String VERTICAL_ORIENTATION_MODE = "V";
+	public String HORIZONTAL_ORIENTATION_MODE = "H";
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)				
 	public Integer id;
@@ -86,6 +92,9 @@ public class Network {
 	
 	@OneToOne
 	public Image logo;
+	
+	public String defaultReadMode;
+	public String defaultOrientationMode;
 
 	@Override
 	public String toString() {
@@ -300,6 +309,9 @@ public class Network {
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
+		if(defaultReadMode == null || defaultReadMode.isEmpty())
+			
+		if(defaultOrientationMode == null || defaultOrientationMode.isEmpty())
 	}
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
