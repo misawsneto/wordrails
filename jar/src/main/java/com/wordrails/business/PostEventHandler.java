@@ -18,9 +18,6 @@ import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.PromotionRepository;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.Slugfy;
-import org.springframework.data.rest.core.annotation.HandleAfterCreate;
-import org.springframework.data.rest.core.annotation.HandleAfterDelete;
-import org.springframework.data.rest.core.annotation.HandleAfterSave;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -38,8 +35,6 @@ public class PostEventHandler {
     PromotionRepository promotionRepository;
     private @Autowired
     PostAndCommentSecurityChecker postAndCommentSecurityChecker;
-	private @Autowired 
-    WordpressService wordpressService;
 
     @HandleBeforeCreate
     public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {        
@@ -72,24 +67,6 @@ public class PostEventHandler {
         } else {
             throw new UnauthorizedException();
         }
-    }
-    
-    @HandleAfterCreate
-    public void handleAfterCreate(Post post) {
-        WordpressPost wpPost = wordpressService.createPost(post);
-        post.wordpressId = wpPost.id;
-        
-        postRepository.save(post);
-    }
-    
-    @HandleAfterSave
-    public void handleAfterSave(Post post) {
-        WordpressPost wpPost = wordpressService.updatePost(post);
-    }
-    
-    @HandleAfterDelete
-    public void handleAfterDelete(Post post) {
-        wordpressService.deletePost(post);
     }
 
     @HandleBeforeDelete
