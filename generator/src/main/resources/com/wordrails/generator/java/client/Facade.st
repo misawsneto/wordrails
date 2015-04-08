@@ -232,6 +232,14 @@ public class $facade$ {
 	public void putPassword(String oldPassword, String newPassword, Callback<Response> _callback){
 		_facade.putPassword(oldPassword, newPassword, _callback);
 	}
+	
+	public Response putRegId(String regId){
+		return _facade.putRegId(regId);
+	}
+	
+	public void putRegId(String regId, Callback<Response> _callback){
+		_facade.putRegId(regId, _callback);
+	}
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

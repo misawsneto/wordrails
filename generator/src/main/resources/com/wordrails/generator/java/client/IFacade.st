@@ -120,6 +120,14 @@ interface I$facade$ {
 	@PUT("/persons/me/password")
 	@FormUrlEncoded
 	void putPassword(@Field("oldPassword") String oldPassword, @Field("newPassword") String newPassword, Callback<Response> _callback);
+	
+	@PUT("/persons/me/password")
+	@FormUrlEncoded
+	Response putRegId(@Field("regId") String regId);
+	
+	@PUT("/persons/me/password")
+	@FormUrlEncoded
+	void putRegId(@Field("regId") String regId, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

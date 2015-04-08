@@ -44,7 +44,7 @@
     </li>
   </ul>
   <div class="stations-list" ng-if="app.network.stations.length > 1">
-    <div class="b-2x b-b border-l-grey text-u-c h4 font-l-grey wrapper-sm padder-v">Estaçõs</div>
+    <div class="b-2x b-b border-l-grey text-u-c h4 font-l-grey wrapper-sm padder-v">Estações</div>
     <ul class="l-s-n padder text-lg">
       <li class="b-b border-grey wrapper-sm padder-v" ng-repeat="station in (app.network.stations | filter: {visible: true})" ui-sref-active="selected">
         <a class="h4" ui-sref="app.stations({stationId: station.id})" ng-click="toggleMenu()">

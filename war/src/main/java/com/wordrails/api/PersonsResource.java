@@ -28,6 +28,11 @@ public class PersonsResource {
 	
 	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired PersonRepository personRepository;
+	
+	@PUT
+	@Path("/me/regId")
+	public void putRegId(@FormParam("regId") String regId) {
+	}
 		
 	@PUT
 	@Path("/me/password")
