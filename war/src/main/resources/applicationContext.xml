@@ -47,6 +47,7 @@
 	
 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 	
+	<bean id="postFilter" class="com.wordrails.api.PostFilter"></bean>
 	<bean id="networkDomainFilter" class="com.wordrails.api.NetworkDomainFilter"></bean>
 	<bean id="corsCustomFilter" class="com.wordrails.api.CORSCustomFilter"></bean>
 	
