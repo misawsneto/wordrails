@@ -91,7 +91,7 @@
 		</pluginManagement>
 	</build>
 	
-	<dependencies>			
+	<dependencies>		
 		<dependency>
     		<groupId>com.github.tasubo</groupId>
     		<artifactId>jgmp</artifactId>

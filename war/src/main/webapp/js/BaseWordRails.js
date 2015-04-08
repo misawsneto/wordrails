@@ -41,7 +41,7 @@ function ImageDto(id, title, caption, original, small, medium, large) {
 	};
 }
 
-function NetworkDto(id, name, trackingId, defaultTaxonomy, allowSignup, allowComments, domain, backgroundColor, navbarColor, navbarSecondaryColor, mainColor, primaryFont, secondaryFont, titleFontSize, newsFontSize, subdomain, configured, createdAt, updatedAt) {
+function NetworkDto(id, name, trackingId, defaultTaxonomy, allowSignup, allowComments, domain, backgroundColor, navbarColor, navbarSecondaryColor, mainColor, primaryFont, secondaryFont, titleFontSize, newsFontSize, subdomain, configured, wordpressDomain, wordpressUsername, wordpressPassword, wordpressToken, createdAt, updatedAt) {
 	return {
 		id: id,
 		name: name,
@@ -60,6 +60,10 @@ function NetworkDto(id, name, trackingId, defaultTaxonomy, allowSignup, allowCom
 		newsFontSize: newsFontSize,
 		subdomain: subdomain,
 		configured: configured,
+		wordpressDomain: wordpressDomain,
+		wordpressUsername: wordpressUsername,
+		wordpressPassword: wordpressPassword,
+		wordpressToken: wordpressToken,
 		createdAt: createdAt,
 		updatedAt: updatedAt
 	};
@@ -74,14 +78,16 @@ function NetworkRoleDto(id, network, person, admin) {
 	};
 }
 
-function PasswordResetDto(id, hash, email, active, invite, networkSubdomain, createdAt, updatedAt) {
+function PasswordResetDto(id, hash, email, personName, active, invite, networkSubdomain, networkName, createdAt, updatedAt) {
 	return {
 		id: id,
 		hash: hash,
 		email: email,
+		personName: personName,
 		active: active,
 		invite: invite,
 		networkSubdomain: networkSubdomain,
+		networkName: networkName,
 		createdAt: createdAt,
 		updatedAt: updatedAt
 	};
@@ -101,9 +107,10 @@ function PersonDto(id, name, username, bio, email, createdAt, updatedAt, passwor
 	};
 }
 
-function PostDto(id, date, lastModificationDate, title, body, topper, state, originalSlug, slug, author, station) {
+function PostDto(id, wordpressId, date, lastModificationDate, title, body, topper, state, originalSlug, slug, author, station) {
 	return {
 		id: id,
+		wordpressId: wordpressId,
 		date: date,
 		lastModificationDate: lastModificationDate,
 		title: title,
@@ -422,20 +429,6 @@ function BaseWordRails(_url, _username, _password) {
             complete: _complete
         });
     }
-
-    that.updatePassword = function(hash, password, _success, _error, _complete){
-		var data = {password: password};
-    	return that._ajax({
-    		type: "PUT",
-            url: _url + "/api/passwordResets/" + hash,
-            data: data,
-            contentType: "application/x-www-form-urlencoded",
-            success: _success,
-            error: _error,
-            complete: _complete
-        });
-   	}
-
 
 /*---------------------------------------------------------------------------*/
 	if (that.getCells) {
@@ -2567,6 +2560,30 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
+    if (that.findPostsFromOrPromotedToStation) {
+    	console.log("findPostsFromOrPromotedToStation");
+    }
+    that.findPostsFromOrPromotedToStation = function(stationId, page, size, sort, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/posts/search/findPostsFromOrPromotedToStation",
+            data: {
+            	stationId: stationId,
+            	page: page,
+            	size: size,
+            	sort: sort,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
     if (that.findPostsAndPostsPromoted) {
     	console.log("findPostsAndPostsPromoted");
     }
@@ -2602,30 +2619,6 @@ function BaseWordRails(_url, _username, _password) {
             	stationId: stationId,
             	termsIds: termsIds,
             	idsToExclude: idsToExclude,
-            	page: page,
-            	size: size,
-            	sort: sort,
-
-            	projection: projection
-            },
-            success: function(_data, _textStatus, _jqXHR) {
-                if (_success) {
-                    _success(_data.content, _textStatus, _jqXHR);
-                }
-            },
-            error: _error,
-            complete: _complete
-        });
-    };
-
-    if (that.findPostsFromOrPromotedToStation) {
-    	console.log("findPostsFromOrPromotedToStation");
-    }
-    that.findPostsFromOrPromotedToStation = function(stationId, page, size, sort, _success, _error, _complete, projection) {
-        return that._ajax({
-            url: _url + "/api/posts/search/findPostsFromOrPromotedToStation",
-            data: {
-            	stationId: stationId,
             	page: page,
             	size: size,
             	sort: sort,
@@ -3724,14 +3717,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByName) {
-    	console.log("findByName");
+    if (that.findByPersonIdAndNetworkId) {
+    	console.log("findByPersonIdAndNetworkId");
     }
-    that.findByName = function(name, _success, _error, _complete, projection) {
+    that.findByPersonIdAndNetworkId = function(personId, networkId, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/stations/search/findByName",
+            url: _url + "/api/stations/search/findByPersonIdAndNetworkId",
             data: {
-            	name: name,
+            	personId: personId,
+            	networkId: networkId,
 
             	projection: projection
             },
@@ -3745,15 +3739,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByPersonIdAndNetworkId) {
-    	console.log("findByPersonIdAndNetworkId");
+    if (that.findByName) {
+    	console.log("findByName");
     }
-    that.findByPersonIdAndNetworkId = function(personId, networkId, _success, _error, _complete, projection) {
+    that.findByName = function(name, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/stations/search/findByPersonIdAndNetworkId",
+            url: _url + "/api/stations/search/findByName",
             data: {
-            	personId: personId,
-            	networkId: networkId,
+            	name: name,
 
             	projection: projection
             },
@@ -4679,17 +4672,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findTermsByParentId) {
-    	console.log("findTermsByParentId");
+    if (that.countTerms) {
+    	console.log("countTerms");
     }
-    that.findTermsByParentId = function(termId, page, size, sort, _success, _error, _complete, projection) {
+    that.countTerms = function(termsIds, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/terms/search/findTermsByParentId",
+            url: _url + "/api/terms/search/countTerms",
             data: {
-            	termId: termId,
-            	page: page,
-            	size: size,
-            	sort: sort,
+            	termsIds: termsIds,
 
             	projection: projection
             },
@@ -4703,14 +4693,17 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.countTerms) {
-    	console.log("countTerms");
+    if (that.findTermsByParentId) {
+    	console.log("findTermsByParentId");
     }
-    that.countTerms = function(termsIds, _success, _error, _complete, projection) {
+    that.findTermsByParentId = function(termId, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/terms/search/countTerms",
+            url: _url + "/api/terms/search/findTermsByParentId",
             data: {
-            	termsIds: termsIds,
+            	termId: termId,
+            	page: page,
+            	size: size,
+            	sort: sort,
 
             	projection: projection
             },

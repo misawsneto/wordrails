@@ -46,6 +46,7 @@ import org.hibernate.search.annotations.TokenFilterDef;
 import org.hibernate.search.annotations.TokenizerDef;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Indexed
@@ -117,6 +118,9 @@ public class Post {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@DocumentId
 	public Integer id;
+    
+    @JsonIgnore
+    public Integer wordpressId;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@NotNull

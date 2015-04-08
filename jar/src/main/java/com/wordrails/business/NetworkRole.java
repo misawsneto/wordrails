@@ -22,6 +22,7 @@ public class NetworkRole {
 	@JoinColumn(name="network_id")
 	public Network network;
 	
+    
 	@ManyToOne
 	@NotNull
 	@JoinColumn(name="person_id")

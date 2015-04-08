@@ -26,6 +26,18 @@
 	</build>
 	
 	<dependencies>
+            
+                <dependency>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                    <version>2.3.1</version>
+                </dependency>	
+                
+                <dependency>
+                    <groupId>com.squareup.retrofit</groupId>
+                    <artifactId>retrofit</artifactId>
+                </dependency>
+                
 		<dependency>
 			<groupId>com.mysema.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
@@ -99,7 +111,7 @@
 		<dependency>
 		  <groupId>com.github.spullara.mustache.java</groupId>
 		  <artifactId>compiler</artifactId>
-		</dependency>					
+		</dependency>				
 		
 	</dependencies>		
 </project>
