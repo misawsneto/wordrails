@@ -54,33 +54,21 @@ public class PostFilter implements Filter {
         fc.doFilter(req, resp);
         // after filters are applied
         HttpServletRequest rq = (HttpServletRequest) req;
-        if (rq.getMethod().toLowerCase().equals("post")) {
-            HttpServletResponse res = (HttpServletResponse) resp;
-            Integer postId;
-            try {
+        HttpServletResponse res = (HttpServletResponse) resp;
+        Integer postId;
+        try {
+            if (rq.getMethod().toLowerCase().equals("post")) {
                 postId = getPostId(res.getHeader("Location"));
                 handleAfterCreate(postId, req);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (rq.getMethod().toLowerCase().equals("put")) {
-            HttpServletResponse res = (HttpServletResponse) resp;
-            Integer postId;
-            try {
+            } else if (rq.getMethod().toLowerCase().equals("put")) {
                 postId = getPostId(res.getHeader("Location"));
                 handleAfterUpdate(postId, req);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (rq.getMethod().toLowerCase().equals("delete")) {
-            HttpServletResponse res = (HttpServletResponse) resp;
-            Integer postId;
-            try {
+            } else if (rq.getMethod().toLowerCase().equals("delete")) {
                 postId = getPostId(res.getHeader("Location"));
                 handleAfterDelete(postId, req);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -99,12 +87,19 @@ public class PostFilter implements Filter {
     private void handleAfterCreate(Integer postId, ServletRequest req) throws Exception {
         Post post = postRepository.findOne(postId);
         Network network = wordrailsUtil.getNetworkFromHost(req);
-        WordpressApi api = ServiceGenerator.createService(WordpressApi.class, network.wordpressDomain, network.wordpressUsername, network.wordpressPassword);
 
-        WordpressPost wpPost = wordpressService.createPost(post, api);
+        if (network.wordpressDomain != null && network.wordpressUsername != null && network.wordpressPassword != null) {
+            WordpressApi api = ServiceGenerator.createService(WordpressApi.class, network.wordpressDomain, network.wordpressUsername, network.wordpressPassword);
 
-        post.wordpressId = wpPost.id;
-        postRepository.save(post);
+            try {
+                WordpressPost wpPost = wordpressService.createPost(post, api);
+
+                post.wordpressId = wpPost.id;
+                postRepository.save(post);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Async
@@ -112,18 +107,33 @@ public class PostFilter implements Filter {
     private void handleAfterUpdate(Integer postId, ServletRequest req) throws Exception {
         Post post = postRepository.findOne(postId);
         Network network = wordrailsUtil.getNetworkFromHost(req);
-        WordpressApi api = ServiceGenerator.createService(WordpressApi.class, network.wordpressDomain, network.wordpressUsername, network.wordpressPassword);
 
-        wordpressService.updatePost(post, api);
+        if (network.wordpressDomain != null && network.wordpressUsername != null && network.wordpressPassword != null) {
+            WordpressApi api = ServiceGenerator.createService(WordpressApi.class, network.wordpressDomain, network.wordpressUsername, network.wordpressPassword);
+
+            try {
+                wordpressService.updatePost(post, api);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     @Async
     @Transactional
     private void handleAfterDelete(Integer postId, ServletRequest req) throws Exception {
         Network network = wordrailsUtil.getNetworkFromHost(req);
-        WordpressApi api = ServiceGenerator.createService(WordpressApi.class, network.wordpressDomain, network.wordpressUsername, network.wordpressPassword);
 
-        wordpressService.deletePost(postId, api);
+        if (network.wordpressDomain != null && network.wordpressUsername != null && network.wordpressPassword != null) {
+            WordpressApi api = ServiceGenerator.createService(WordpressApi.class, network.wordpressDomain, network.wordpressUsername, network.wordpressPassword);
+
+            try {
+                wordpressService.deletePost(postId, api);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
