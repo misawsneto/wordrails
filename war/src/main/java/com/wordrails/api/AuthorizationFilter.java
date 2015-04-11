@@ -990,4 +990,64 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
+	@Override
+	protected boolean isGetFavoritesAuthorized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetFavoriteAuthorized(Integer favoriteId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetFavoritePostAuthorized(Integer favoriteId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetFavoritePersonAuthorized(Integer favoriteId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetNotificationsAuthorized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetNotificationAuthorized(Integer notificationId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetNotificationPersonAuthorized(Integer notificationId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetNotificationNetworkAuthorized(Integer notificationId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetNotificationStationAuthorized(Integer notificationId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetNotificationPostAuthorized(Integer notificationId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

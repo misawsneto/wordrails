@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -49,12 +50,15 @@ public class Person {
 
 	@OneToMany(mappedBy="author")
 	public Set<Post> posts;
-
+	
 	@OneToMany(mappedBy="promoter")
 	public Set<Promotion> promotions;
 
 	@OneToMany
 	public Set<Person> following;
+	
+	@OneToMany(mappedBy="person")
+	private Set<Favorite> favorites;
 
 	@Size(max=2048)
 	public String bio;
