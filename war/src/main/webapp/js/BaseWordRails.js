@@ -2661,14 +2661,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByUsername) {
-    	console.log("findByUsername");
+    if (that.findByEmail) {
+    	console.log("findByEmail");
     }
-    that.findByUsername = function(username, _success, _error, _complete, projection) {
+    that.findByEmail = function(email, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/persons/search/findByUsername",
+            url: _url + "/api/persons/search/findByEmail",
             data: {
-            	username: username,
+            	email: email,
 
             	projection: projection
             },
@@ -2682,14 +2682,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByEmail) {
-    	console.log("findByEmail");
+    if (that.findByUsername) {
+    	console.log("findByUsername");
     }
-    that.findByEmail = function(email, _success, _error, _complete, projection) {
+    that.findByUsername = function(username, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/persons/search/findByEmail",
+            url: _url + "/api/persons/search/findByUsername",
             data: {
-            	email: email,
+            	username: username,
 
             	projection: projection
             },
@@ -3057,16 +3057,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPostsNotPositioned) {
-    	console.log("findPostsNotPositioned");
+    if (that.findPosts) {
+    	console.log("findPosts");
     }
-    that.findPostsNotPositioned = function(stationId, termsIds, idsToExclude, page, size, sort, _success, _error, _complete, projection) {
+    that.findPosts = function(stationId, termId, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/posts/search/findPostsNotPositioned",
+            url: _url + "/api/posts/search/findPosts",
             data: {
             	stationId: stationId,
-            	termsIds: termsIds,
-            	idsToExclude: idsToExclude,
+            	termId: termId,
             	page: page,
             	size: size,
             	sort: sort,
@@ -3108,15 +3107,16 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPosts) {
-    	console.log("findPosts");
+    if (that.findPostsNotPositioned) {
+    	console.log("findPostsNotPositioned");
     }
-    that.findPosts = function(stationId, termId, page, size, sort, _success, _error, _complete, projection) {
+    that.findPostsNotPositioned = function(stationId, termsIds, idsToExclude, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/posts/search/findPosts",
+            url: _url + "/api/posts/search/findPostsNotPositioned",
             data: {
             	stationId: stationId,
-            	termId: termId,
+            	termsIds: termsIds,
+            	idsToExclude: idsToExclude,
             	page: page,
             	size: size,
             	sort: sort,
@@ -4869,14 +4869,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByStationId) {
-    	console.log("findByStationId");
+    if (that.findByTypeAndName) {
+    	console.log("findByTypeAndName");
     }
-    that.findByStationId = function(stationId, _success, _error, _complete, projection) {
+    that.findByTypeAndName = function(type, name, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/taxonomies/search/findByStationId",
+            url: _url + "/api/taxonomies/search/findByTypeAndName",
             data: {
-            	stationId: stationId,
+            	type: type,
+            	name: name,
 
             	projection: projection
             },
@@ -4890,15 +4891,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByTypeAndName) {
-    	console.log("findByTypeAndName");
+    if (that.findByStationId) {
+    	console.log("findByStationId");
     }
-    that.findByTypeAndName = function(type, name, _success, _error, _complete, projection) {
+    that.findByStationId = function(stationId, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/taxonomies/search/findByTypeAndName",
+            url: _url + "/api/taxonomies/search/findByStationId",
             data: {
-            	type: type,
-            	name: name,
+            	stationId: stationId,
 
             	projection: projection
             },
@@ -5145,30 +5145,6 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findTermsByParentId) {
-    	console.log("findTermsByParentId");
-    }
-    that.findTermsByParentId = function(termId, page, size, sort, _success, _error, _complete, projection) {
-        return that._ajax({
-            url: _url + "/api/terms/search/findTermsByParentId",
-            data: {
-            	termId: termId,
-            	page: page,
-            	size: size,
-            	sort: sort,
-
-            	projection: projection
-            },
-            success: function(_data, _textStatus, _jqXHR) {
-                if (_success) {
-                    _success(_data.content, _textStatus, _jqXHR);
-                }
-            },
-            error: _error,
-            complete: _complete
-        });
-    };
-
     if (that.findRootsPage) {
     	console.log("findRootsPage");
     }
@@ -5222,6 +5198,30 @@ function BaseWordRails(_url, _username, _password) {
             url: _url + "/api/terms/search/countTerms",
             data: {
             	termsIds: termsIds,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.findTermsByParentId) {
+    	console.log("findTermsByParentId");
+    }
+    that.findTermsByParentId = function(termId, page, size, sort, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/terms/search/findTermsByParentId",
+            data: {
+            	termId: termId,
+            	page: page,
+            	size: size,
+            	sort: sort,
 
             	projection: projection
             },
@@ -5784,15 +5784,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByUsernameAndPassword) {
-    	console.log("findByUsernameAndPassword");
+    if (that.findByUsernameAndEnabled) {
+    	console.log("findByUsernameAndEnabled");
     }
-    that.findByUsernameAndPassword = function(username, password, _success, _error, _complete, projection) {
+    that.findByUsernameAndEnabled = function(username, enabled, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/users/search/findByUsernameAndPassword",
+            url: _url + "/api/users/search/findByUsernameAndEnabled",
             data: {
             	username: username,
-            	password: password,
+            	enabled: enabled,
 
             	projection: projection
             },
@@ -5806,15 +5806,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByUsernameAndEnabled) {
-    	console.log("findByUsernameAndEnabled");
+    if (that.findByUsernameAndPassword) {
+    	console.log("findByUsernameAndPassword");
     }
-    that.findByUsernameAndEnabled = function(username, enabled, _success, _error, _complete, projection) {
+    that.findByUsernameAndPassword = function(username, password, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/users/search/findByUsernameAndEnabled",
+            url: _url + "/api/users/search/findByUsernameAndPassword",
             data: {
             	username: username,
-            	enabled: enabled,
+            	password: password,
 
             	projection: projection
             },

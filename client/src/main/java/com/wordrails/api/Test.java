@@ -25,16 +25,22 @@ public class Test {
 				LogLevel.NONE
 			);
 		
-//		NetworkDto network = wordRails.getNetwork(1);
+		NetworkDto network = wordRails.getNetwork(1);
 
 		PersonDto person = wordRails.getPerson(3);
 		PostDto postDto = wordRails.getPost(465);
 		
-		FavoriteDto favorite = new FavoriteDto();
-		favorite.post = postDto.getSelf();
-		favorite.person = person.getSelf();
+//		FavoriteDto favorite = new FavoriteDto();
+//		favorite.post = postDto.getSelf();
+//		favorite.person = person.getSelf();
+//		
+//		wordRails.postFavorite(favorite);
 		
-		wordRails.postFavorite(favorite);
+//		wordRails.getFa
+		
+		NotificationDto notification = new NotificationDto();
+		notification.network = network.getSelf();
+		wordRails.postNotification(notification);
 		
 		if(true)
 			return;
