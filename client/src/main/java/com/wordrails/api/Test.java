@@ -2,8 +2,6 @@ package com.wordrails.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,35 +11,33 @@ import java.util.Random;
 import org.apache.commons.lang.StringUtils;
 
 import retrofit.RestAdapter.LogLevel;
-import retrofit.RetrofitError;
-
-import com.wordrails.business.EmailService;
-import com.wordrails.business.Network;
-import com.wordrails.business.Station;
 
 public class Test {
 	public static void main(String[] args) throws IOException {	
 		
-//		EmailService emailService = new EmailService();
-//		emailService.sendSimpleMail("misawsneto@gmail.com", "asdf", "Enviando email reset");
+		WordRails wordRails = new WordRails(
+				new MockConnectivityManager(true),
+				new File("."), 
+				1024 * 1024, 
+				"http://localhost:8080", 
+				"silvio", 
+				"silvio", 
+				LogLevel.NONE
+			);
 		
+//		NetworkDto network = wordRails.getNetwork(1);
+
+		PersonDto person = wordRails.getPerson(3);
+		PostDto postDto = wordRails.getPost(465);
 		
-		byte[] bytes = Files.readAllBytes(Paths.get(Test.class.getClassLoader().getResource("tpl/invitation-email.html").getFile()));
+		FavoriteDto favorite = new FavoriteDto();
+		favorite.post = postDto.getSelf();
+		favorite.person = person.getSelf();
+		
+		wordRails.postFavorite(favorite);
 		
 		if(true)
 			return;
-		
-//		String host = "dev.xarx.co";
-//		
-//		host = "cronica.xarx.co";
-//		
-//		if(host.contains(".xarx.co")){
-//			System.out.println(host.split(".xarx.co")[0]);
-//		}
-		
-//		String mime = "image/png";
-//		String[] s = mime.split("image\\/");
-//		System.out.println(s);
 		
 		String phrase = "This is a phrase";
 		
@@ -56,34 +52,34 @@ public class Test {
 		if(true)
 			return;
 		
-		WordRails wordRails = new WordRails(
-			new MockConnectivityManager(true),
-			new File("."), 
-			1024 * 1024, 
-			"http://localhost:8080", 
-			"wordrails", 
-			"wordrails", 
-			LogLevel.NONE
-		);
-
-		PersonDto person = wordRails.getPerson(1);
-		System.out.println(person);
-		
-		NetworkDto network = wordRails.getNetwork(1);
-		
-		try{
-		StationDto station = new StationDto();
-		station.name = "Station 1";
-		station.networks = new HashSet<String>();
-		station.networks.add(wordRails.getSelf(network));
-		station.visibility = Station.RESTRICTED_TO_NETWORKS;
-		station.writable = true;
-		wordRails.postStation(station);
-		station = wordRails.getStation(station.id);
-		System.out.println(station);
-		}catch(RetrofitError e){
-			System.out.println(e.getBodyAs(String.class));
-		}
+//		WordRails wordRails = new WordRails(
+//			new MockConnectivityManager(true),
+//			new File("."), 
+//			1024 * 1024, 
+//			"http://localhost:8080", 
+//			"wordrails", 
+//			"wordrails", 
+//			LogLevel.NONE
+//		);
+//
+//		PersonDto person = wordRails.getPerson(1);
+//		System.out.println(person);
+//		
+//		NetworkDto network = wordRails.getNetwork(1);
+//		
+//		try{
+//		StationDto station = new StationDto();
+//		station.name = "Station 1";
+//		station.networks = new HashSet<String>();
+//		station.networks.add(wordRails.getSelf(network));
+//		station.visibility = Station.RESTRICTED_TO_NETWORKS;
+//		station.writable = true;
+//		wordRails.postStation(station);
+//		station = wordRails.getStation(station.id);
+//		System.out.println(station);
+//		}catch(RetrofitError e){
+//			System.out.println(e.getBodyAs(String.class));
+//		}
 		
 //		NetworkDto network = new NetworkDto();
 //		network.name = "Network 1";

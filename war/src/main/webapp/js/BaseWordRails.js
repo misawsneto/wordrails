@@ -19,6 +19,16 @@ function CommentDto(id, date, lastModificationDate, title, body, author, post) {
 	};
 }
 
+function FavoriteDto(id, post, person, createdAt, updatedAt) {
+	return {
+		id: id,
+		post: post,
+		person: person,
+		createdAt: createdAt,
+		updatedAt: updatedAt
+	};
+}
+
 function FileDto(id, type, mime, name, url) {
 	return {
 		id: id,
@@ -81,6 +91,19 @@ function NetworkRoleDto(id, network, person, admin) {
 		network: network,
 		person: person,
 		admin: admin
+	};
+}
+
+function NotificationDto(id, person, network, seen, message, type, createdAt, updatedAt) {
+	return {
+		id: id,
+		person: person,
+		network: network,
+		seen: seen,
+		message: message,
+		type: type,
+		createdAt: createdAt,
+		updatedAt: updatedAt
 	};
 }
 
@@ -874,6 +897,180 @@ function BaseWordRails(_url, _username, _password) {
     	        url: _url + "/api/comments/" + id + "/post",
     	        contentType: "text/uri-list",
     	        data: post,
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });	
+    	}
+    };
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+	if (that.getFavorites) {
+		console.log("getFavorites");
+	}
+    that.getFavorites = function(_page, _size, _sort, _success, _error, _complete, projection) {
+		return that._ajax({
+            url: _url + "/api/favorites",
+            data: {
+                page: _page,
+                size: _size,
+                sort: _sort,
+                projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.postFavorite) {
+		console.log("postFavorite");
+	}
+    that.postFavorite = function(favorite, _success, _error, _complete) {
+        return that._ajax({
+            type: "POST",
+            url: _url + "/api/favorites",
+            contentType: "application/json",
+            data: JSON.stringify(favorite),
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    var _value = _jqXHR.getResponseHeader("Location");
+                    if (_value) {
+                        var _index = _value.lastIndexOf("/");
+                        var _suffix = _value.substring(_index + 1);
+                        var id = _suffix;
+                        _success(id, _textStatus, _jqXHR);
+                    }
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.getFavorite) {
+		console.log("getFavorite");
+	}
+    that.getFavorite = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/favorites/" + id,
+            data: {
+                projection: projection
+            },            
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.putFavorite) {
+		console.log("putFavorite");
+	}
+    that.putFavorite = function(favorite, _success, _error, _complete) {
+        return that._ajax({
+            type: "PUT",
+            url: _url + "/api/favorites/" + favorite.id,
+            contentType: "application/json",
+            data: JSON.stringify(favorite),
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.deleteFavorite) {
+		console.log("deleteFavorite");
+	}
+    that.deleteFavorite = function(id, _success, _error, _complete) {
+        return that._ajax({
+            type: "DELETE",
+            url: _url + "/api/favorites/" + id,
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+
+    if (that.getFavoritePost) {
+    	console.log("getFavoritePost");
+    }
+    that.getFavoritePost = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/favorites/" + id + "/post",
+            data: {
+            	projection: projection
+            },
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.putFavoritePost) {
+    	console.log("putFavoritePost");
+    }
+    that.putFavoritePost = function(id, post, _success, _error, _complete) {
+    	if (post === null) {
+    	    return that._ajax({
+    	    	type: "DELETE",
+    	    	url: _url + "/api/favorites/" + id + "/post",
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });		
+    	} else {
+    	    return that._ajax({
+    	    	type: "PUT",
+    	        url: _url + "/api/favorites/" + id + "/post",
+    	        contentType: "text/uri-list",
+    	        data: post,
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });	
+    	}
+    };
+
+
+    if (that.getFavoritePerson) {
+    	console.log("getFavoritePerson");
+    }
+    that.getFavoritePerson = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/favorites/" + id + "/person",
+            data: {
+            	projection: projection
+            },
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.putFavoritePerson) {
+    	console.log("putFavoritePerson");
+    }
+    that.putFavoritePerson = function(id, person, _success, _error, _complete) {
+    	if (person === null) {
+    	    return that._ajax({
+    	    	type: "DELETE",
+    	    	url: _url + "/api/favorites/" + id + "/person",
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });		
+    	} else {
+    	    return that._ajax({
+    	    	type: "PUT",
+    	        url: _url + "/api/favorites/" + id + "/person",
+    	        contentType: "text/uri-list",
+    	        data: person,
     	        success: _success,
     	        error: _error,
     	        complete: _complete
@@ -2004,6 +2201,262 @@ function BaseWordRails(_url, _username, _password) {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
+	if (that.getNotifications) {
+		console.log("getNotifications");
+	}
+    that.getNotifications = function(_page, _size, _sort, _success, _error, _complete, projection) {
+		return that._ajax({
+            url: _url + "/api/notifications",
+            data: {
+                page: _page,
+                size: _size,
+                sort: _sort,
+                projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.postNotification) {
+		console.log("postNotification");
+	}
+    that.postNotification = function(notification, _success, _error, _complete) {
+        return that._ajax({
+            type: "POST",
+            url: _url + "/api/notifications",
+            contentType: "application/json",
+            data: JSON.stringify(notification),
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    var _value = _jqXHR.getResponseHeader("Location");
+                    if (_value) {
+                        var _index = _value.lastIndexOf("/");
+                        var _suffix = _value.substring(_index + 1);
+                        var id = _suffix;
+                        _success(id, _textStatus, _jqXHR);
+                    }
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.getNotification) {
+		console.log("getNotification");
+	}
+    that.getNotification = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/notifications/" + id,
+            data: {
+                projection: projection
+            },            
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.putNotification) {
+		console.log("putNotification");
+	}
+    that.putNotification = function(notification, _success, _error, _complete) {
+        return that._ajax({
+            type: "PUT",
+            url: _url + "/api/notifications/" + notification.id,
+            contentType: "application/json",
+            data: JSON.stringify(notification),
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.deleteNotification) {
+		console.log("deleteNotification");
+	}
+    that.deleteNotification = function(id, _success, _error, _complete) {
+        return that._ajax({
+            type: "DELETE",
+            url: _url + "/api/notifications/" + id,
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+
+    if (that.getNotificationPerson) {
+    	console.log("getNotificationPerson");
+    }
+    that.getNotificationPerson = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/notifications/" + id + "/person",
+            data: {
+            	projection: projection
+            },
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.putNotificationPerson) {
+    	console.log("putNotificationPerson");
+    }
+    that.putNotificationPerson = function(id, person, _success, _error, _complete) {
+    	if (person === null) {
+    	    return that._ajax({
+    	    	type: "DELETE",
+    	    	url: _url + "/api/notifications/" + id + "/person",
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });		
+    	} else {
+    	    return that._ajax({
+    	    	type: "PUT",
+    	        url: _url + "/api/notifications/" + id + "/person",
+    	        contentType: "text/uri-list",
+    	        data: person,
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });	
+    	}
+    };
+
+
+    if (that.getNotificationNetwork) {
+    	console.log("getNotificationNetwork");
+    }
+    that.getNotificationNetwork = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/notifications/" + id + "/network",
+            data: {
+            	projection: projection
+            },
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.putNotificationNetwork) {
+    	console.log("putNotificationNetwork");
+    }
+    that.putNotificationNetwork = function(id, network, _success, _error, _complete) {
+    	if (network === null) {
+    	    return that._ajax({
+    	    	type: "DELETE",
+    	    	url: _url + "/api/notifications/" + id + "/network",
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });		
+    	} else {
+    	    return that._ajax({
+    	    	type: "PUT",
+    	        url: _url + "/api/notifications/" + id + "/network",
+    	        contentType: "text/uri-list",
+    	        data: network,
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });	
+    	}
+    };
+
+
+    if (that.getNotificationStation) {
+    	console.log("getNotificationStation");
+    }
+    that.getNotificationStation = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/notifications/" + id + "/station",
+            data: {
+            	projection: projection
+            },
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.putNotificationStation) {
+    	console.log("putNotificationStation");
+    }
+    that.putNotificationStation = function(id, station, _success, _error, _complete) {
+    	if (station === null) {
+    	    return that._ajax({
+    	    	type: "DELETE",
+    	    	url: _url + "/api/notifications/" + id + "/station",
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });		
+    	} else {
+    	    return that._ajax({
+    	    	type: "PUT",
+    	        url: _url + "/api/notifications/" + id + "/station",
+    	        contentType: "text/uri-list",
+    	        data: station,
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });	
+    	}
+    };
+
+
+    if (that.getNotificationPost) {
+    	console.log("getNotificationPost");
+    }
+    that.getNotificationPost = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/notifications/" + id + "/post",
+            data: {
+            	projection: projection
+            },
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.putNotificationPost) {
+    	console.log("putNotificationPost");
+    }
+    that.putNotificationPost = function(id, post, _success, _error, _complete) {
+    	if (post === null) {
+    	    return that._ajax({
+    	    	type: "DELETE",
+    	    	url: _url + "/api/notifications/" + id + "/post",
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });		
+    	} else {
+    	    return that._ajax({
+    	    	type: "PUT",
+    	        url: _url + "/api/notifications/" + id + "/post",
+    	        contentType: "text/uri-list",
+    	        data: post,
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });	
+    	}
+    };
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
 	if (that.getPasswordResets) {
 		console.log("getPasswordResets");
 	}
@@ -2208,14 +2661,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByEmail) {
-    	console.log("findByEmail");
+    if (that.findByUsername) {
+    	console.log("findByUsername");
     }
-    that.findByEmail = function(email, _success, _error, _complete, projection) {
+    that.findByUsername = function(username, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/persons/search/findByEmail",
+            url: _url + "/api/persons/search/findByUsername",
             data: {
-            	email: email,
+            	username: username,
 
             	projection: projection
             },
@@ -2229,14 +2682,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByUsername) {
-    	console.log("findByUsername");
+    if (that.findByEmail) {
+    	console.log("findByEmail");
     }
-    that.findByUsername = function(username, _success, _error, _complete, projection) {
+    that.findByEmail = function(email, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/persons/search/findByUsername",
+            url: _url + "/api/persons/search/findByEmail",
             data: {
-            	username: username,
+            	email: email,
 
             	projection: projection
             },
@@ -2604,15 +3057,16 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPostsAndPostsPromoted) {
-    	console.log("findPostsAndPostsPromoted");
+    if (that.findPostsNotPositioned) {
+    	console.log("findPostsNotPositioned");
     }
-    that.findPostsAndPostsPromoted = function(stationId, termsIds, page, size, sort, _success, _error, _complete, projection) {
+    that.findPostsNotPositioned = function(stationId, termsIds, idsToExclude, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/posts/search/findPostsAndPostsPromoted",
+            url: _url + "/api/posts/search/findPostsNotPositioned",
             data: {
             	stationId: stationId,
             	termsIds: termsIds,
+            	idsToExclude: idsToExclude,
             	page: page,
             	size: size,
             	sort: sort,
@@ -2629,16 +3083,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPostsNotPositioned) {
-    	console.log("findPostsNotPositioned");
+    if (that.findPostsAndPostsPromoted) {
+    	console.log("findPostsAndPostsPromoted");
     }
-    that.findPostsNotPositioned = function(stationId, termsIds, idsToExclude, page, size, sort, _success, _error, _complete, projection) {
+    that.findPostsAndPostsPromoted = function(stationId, termsIds, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/posts/search/findPostsNotPositioned",
+            url: _url + "/api/posts/search/findPostsAndPostsPromoted",
             data: {
             	stationId: stationId,
             	termsIds: termsIds,
-            	idsToExclude: idsToExclude,
             	page: page,
             	size: size,
             	sort: sort,
@@ -3737,15 +4190,14 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByPersonIdAndNetworkId) {
-    	console.log("findByPersonIdAndNetworkId");
+    if (that.findByName) {
+    	console.log("findByName");
     }
-    that.findByPersonIdAndNetworkId = function(personId, networkId, _success, _error, _complete, projection) {
+    that.findByName = function(name, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/stations/search/findByPersonIdAndNetworkId",
+            url: _url + "/api/stations/search/findByName",
             data: {
-            	personId: personId,
-            	networkId: networkId,
+            	name: name,
 
             	projection: projection
             },
@@ -3759,14 +4211,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByName) {
-    	console.log("findByName");
+    if (that.findByPersonIdAndNetworkId) {
+    	console.log("findByPersonIdAndNetworkId");
     }
-    that.findByName = function(name, _success, _error, _complete, projection) {
+    that.findByPersonIdAndNetworkId = function(personId, networkId, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/stations/search/findByName",
+            url: _url + "/api/stations/search/findByPersonIdAndNetworkId",
             data: {
-            	name: name,
+            	personId: personId,
+            	networkId: networkId,
 
             	projection: projection
             },
@@ -4692,6 +5145,30 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
+    if (that.findTermsByParentId) {
+    	console.log("findTermsByParentId");
+    }
+    that.findTermsByParentId = function(termId, page, size, sort, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/terms/search/findTermsByParentId",
+            data: {
+            	termId: termId,
+            	page: page,
+            	size: size,
+            	sort: sort,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
     if (that.findRootsPage) {
     	console.log("findRootsPage");
     }
@@ -4745,30 +5222,6 @@ function BaseWordRails(_url, _username, _password) {
             url: _url + "/api/terms/search/countTerms",
             data: {
             	termsIds: termsIds,
-
-            	projection: projection
-            },
-            success: function(_data, _textStatus, _jqXHR) {
-                if (_success) {
-                    _success(_data.content, _textStatus, _jqXHR);
-                }
-            },
-            error: _error,
-            complete: _complete
-        });
-    };
-
-    if (that.findTermsByParentId) {
-    	console.log("findTermsByParentId");
-    }
-    that.findTermsByParentId = function(termId, page, size, sort, _success, _error, _complete, projection) {
-        return that._ajax({
-            url: _url + "/api/terms/search/findTermsByParentId",
-            data: {
-            	termId: termId,
-            	page: page,
-            	size: size,
-            	sort: sort,
 
             	projection: projection
             },

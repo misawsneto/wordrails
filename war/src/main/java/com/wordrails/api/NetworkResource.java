@@ -9,19 +9,25 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.Network;
+import com.wordrails.business.NetworkCreate;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationRole;
+import com.wordrails.business.Taxonomy;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
+import com.wordrails.persistence.TaxonomyRepository;
 
 @Path("/networks")
 @Component
@@ -34,6 +40,8 @@ public class NetworkResource {
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired NetworkRepository networkRepository;
+	
+	private @Autowired TaxonomyRepository taxonomyRepository;
 	
 
 	@Path("/{id}/permissions")
@@ -81,4 +89,28 @@ public class NetworkResource {
 		}
 		return personPermissions;
 	}
+	
+	@Path("/create")
+	@GET
+	public Response createNetwork (NetworkCreate networkCreate){
+		Person person = accessControllerUtil.getLoggedPerson();
+		
+		Network network = networkCreate.network;
+		Taxonomy taxonomy = networkCreate.taxonomy;
+		
+		taxonomyRepository.save(taxonomy);
+		
+		network.defaultTaxonomy = taxonomy;
+		
+		networkRepository.save(network);
+		
+		NetworkRole networkRole = new NetworkRole();
+		networkRole.admin = true;
+		networkRole.person = person;
+		networkRole.network = network;
+		
+		networkRolesRepository.save(networkRole);
+		
+		return Response.status(Status.CREATED).build();
+	} 
 }

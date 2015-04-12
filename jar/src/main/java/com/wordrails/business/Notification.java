@@ -1,19 +1,28 @@
 package com.wordrails.business;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Notification {
 	
 	enum Type{
-		STATION_ADD, STATION_REMOVE, POST_COMMENT, POST_DELETED,
+		ADDED_TO_STATION, REMOVED_FROM_STATION, POST_COMMENTED, POST_DELETED,
 	}
 	
 	@Id
@@ -44,4 +53,37 @@ public class Notification {
 	@NotNull
 	@Pattern(regexp="\\S", message="Empty string validation")
 	public String type;
+	
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable=false)
+	public Date createdAt;
+
+	@PrePersist
+	void onCreate() {
+		createdAt = new Date();
+		if(!contains(type)){
+			throw new BadRequestException("Invalid notification type");
+		}
+	}
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date updatedAt;
+
+	@PreUpdate
+	void onUpdate() {
+		updatedAt = new Date();
+	}
+	
+	private boolean contains(String test) {
+
+	    for (Type t : Type.values()) {
+	        if (t.name().equals(test)) {
+	            return true;
+	        }
+	    }
+
+	    return false;
+	}
 }

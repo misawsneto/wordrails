@@ -21,6 +21,7 @@
 	<http pattern="/l10n/**" security="none"/>
 	<http pattern="/fonts/**" security="none"/>
 	<http pattern="/api/persons/search/findByUsername/**" security="none"/>
+	<http pattern="/api/persons/create" security="none"/>
 	<http pattern="/api/wp/login" security="none"/>
 
 	<http entry-point-ref="authenticationEntryPoint">

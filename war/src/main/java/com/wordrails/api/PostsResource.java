@@ -47,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.business.Post;
 import com.wordrails.converter.PostConverter;
-import com.wordrails.ga.GoogleAnalytics;
+//import com.wordrails.ga.GoogleAnalytics;
 import com.wordrails.persistence.PostRepository;
 
 @Path("/posts")
