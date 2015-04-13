@@ -59,7 +59,7 @@ public class Person {
 	
 	@OneToMany(mappedBy="person")
 	private Set<Favorite> favorites;
-
+	
 	@Size(max=2048)
 	public String bio;
 

@@ -8,12 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import com.wordrails.business.Notification;
+import com.wordrails.business.PostRead;
 
-public interface NotificationRepository extends JpaRepository<Notification, Integer>, QueryDslPredicateExecutor<Notification> {
+public interface PostReadRepository extends JpaRepository<PostRead, Integer>, QueryDslPredicateExecutor<PostRead> {
 
 	@Override
 	@RestResource(exported = false)
-	public <S extends Notification> S save(S arg0);
+	public <S extends PostRead> S save(S arg0);
 	
-	public List<Notification> findNotificationsOrderByDate(@Param("personId") Integer personId);
+	public List<Notification> findPostReadOrderByDate(@Param("personId") Integer personId);
 }

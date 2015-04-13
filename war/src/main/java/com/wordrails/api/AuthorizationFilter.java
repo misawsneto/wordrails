@@ -1050,4 +1050,53 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return false;
 	}
 
+	@Override
+	protected boolean isFindFavoritesOrderByDateAuthorized(Integer personId,
+			Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isFindFavoritesAuthorized(Integer personId) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isFindNotificationsOrderByDateAuthorized(Integer personId) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isGetPostReadsAuthorized() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPostReadAuthorized(Integer postReadId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isFindPostReadOrderByDateAuthorized(Integer personId) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isGetPostReadPersonAuthorized(Integer postReadId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPostReadPostAuthorized(Integer postReadId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

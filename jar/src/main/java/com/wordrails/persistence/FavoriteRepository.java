@@ -12,4 +12,7 @@ import com.wordrails.business.Favorite;
 public interface FavoriteRepository extends JpaRepository<Favorite, Integer>, QueryDslPredicateExecutor<Favorite> {
 
 //	List<Favorite> findByPersonUsername(@Param("username") String username, Pageable pageable);
+	
+	List<Favorite> findFavorites(@Param("personId") Integer personId);
+	List<Favorite> findFavoritesOrderByDate(@Param("personId") Integer personId, Pageable pageable);
 }

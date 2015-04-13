@@ -11,4 +11,5 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	Person findByUsername(@Param("username") String username);
 	
 	Person findByEmail(@Param("email") String email);
+	
 }

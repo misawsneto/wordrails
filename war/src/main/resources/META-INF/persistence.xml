@@ -28,6 +28,7 @@
 		<class>com.wordrails.business.PasswordReset</class>
 		<class>com.wordrails.business.Notification</class>
 		<class>com.wordrails.business.Favorite</class>
+		<class>com.wordrails.business.PostRead</class>
 
       	<properties>
       		<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>

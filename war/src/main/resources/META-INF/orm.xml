@@ -478,4 +478,50 @@
 				large.id = :fileId
 		</query>
 	</named-query>
+	
+	<named-query name="Favorite.findFavorites">
+		<query>
+			select
+				favorite
+			from
+				Favorite favorite join favorite.person person
+			where
+				person.id = :personId
+		</query>
+	</named-query>
+	
+	<named-query name="Favorite.findFavoritesOrderByDate">
+		<query>
+			select
+				favorite
+			from
+				Favorite favorite join favorite.person person
+			where
+				person.id = :personId
+			order by favorite.createdAt desc
+		</query>
+	</named-query>
+	
+	<named-query name="Notification.findNotificationsOrderByDate">
+	    <query>
+			select
+				notification
+			from
+				Notification notification join notification.person person
+			where
+				person.id = :personId
+			order by notification.createdAt desc
+		</query>
+	</named-query>
+	<named-query name="PostRead.findPostReadOrderByDate">
+	    <query>
+			select
+				postRead
+			from
+				PostRead postRead join postRead.person person
+			where
+				person.id = :personId
+			order by postRead.createdAt desc
+		</query>
+	</named-query>
 </entity-mappings>
