@@ -36,11 +36,9 @@ public class Test {
 //		
 //		wordRails.postFavorite(favorite);
 		
-//		wordRails.getFa
+		List<FavoriteProjectionDto> favoriteDtos = wordRails.findFavorites_FavoriteProjection(person.id);
 		
-		NotificationDto notification = new NotificationDto();
-		notification.network = network.getSelf();
-		wordRails.postNotification(notification);
+		System.out.println(favoriteDtos.get(0).post);
 		
 		if(true)
 			return;
