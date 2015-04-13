@@ -153,6 +153,15 @@ function PostDto(id, wordpressId, date, lastModificationDate, title, body, toppe
 	};
 }
 
+function PostReadDto(id, person, createdAt, updatedAt) {
+	return {
+		id: id,
+		person: person,
+		createdAt: createdAt,
+		updatedAt: updatedAt
+	};
+}
+
 function PromotionDto(id, date, post, promoter, station, comment) {
 	return {
 		id: id,
@@ -996,6 +1005,71 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
+    if (that.findFavoritesByPersonIdOrderByDate) {
+    	console.log("findFavoritesByPersonIdOrderByDate");
+    }
+    that.findFavoritesByPersonIdOrderByDate = function(personId, page, size, sort, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/favorites/search/findFavoritesByPersonIdOrderByDate",
+            data: {
+            	personId: personId,
+            	page: page,
+            	size: size,
+            	sort: sort,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.findFavoritesByPersonId) {
+    	console.log("findFavoritesByPersonId");
+    }
+    that.findFavoritesByPersonId = function(personId, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/favorites/search/findFavoritesByPersonId",
+            data: {
+            	personId: personId,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.findFavoritesByPostId) {
+    	console.log("findFavoritesByPostId");
+    }
+    that.findFavoritesByPostId = function(postId, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/favorites/search/findFavoritesByPostId",
+            data: {
+            	postId: postId,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
 
     if (that.getFavoritePost) {
     	console.log("getFavoritePost");
@@ -2291,6 +2365,29 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
+    if (that.findNotificationsByPersonIdOrderByDate) {
+    	console.log("findNotificationsByPersonIdOrderByDate");
+    }
+    that.findNotificationsByPersonIdOrderByDate = function(personId, page, size, sort, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/notifications/search/findNotificationsByPersonIdOrderByDate",
+            data: {
+            	personId: personId,
+            	page: page,
+            	size: size,
+            	sort: sort,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
 
     if (that.getNotificationPerson) {
     	console.log("getNotificationPerson");
@@ -3082,15 +3179,16 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPostsAndPostsPromoted) {
-    	console.log("findPostsAndPostsPromoted");
+    if (that.findPostsNotPositioned) {
+    	console.log("findPostsNotPositioned");
     }
-    that.findPostsAndPostsPromoted = function(stationId, termsIds, page, size, sort, _success, _error, _complete, projection) {
+    that.findPostsNotPositioned = function(stationId, termsIds, idsToExclude, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/posts/search/findPostsAndPostsPromoted",
+            url: _url + "/api/posts/search/findPostsNotPositioned",
             data: {
             	stationId: stationId,
             	termsIds: termsIds,
+            	idsToExclude: idsToExclude,
             	page: page,
             	size: size,
             	sort: sort,
@@ -3107,16 +3205,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findPostsNotPositioned) {
-    	console.log("findPostsNotPositioned");
+    if (that.findPostsAndPostsPromoted) {
+    	console.log("findPostsAndPostsPromoted");
     }
-    that.findPostsNotPositioned = function(stationId, termsIds, idsToExclude, page, size, sort, _success, _error, _complete, projection) {
+    that.findPostsAndPostsPromoted = function(stationId, termsIds, page, size, sort, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/posts/search/findPostsNotPositioned",
+            url: _url + "/api/posts/search/findPostsAndPostsPromoted",
             data: {
             	stationId: stationId,
             	termsIds: termsIds,
-            	idsToExclude: idsToExclude,
             	page: page,
             	size: size,
             	sort: sort,
@@ -3411,6 +3508,200 @@ function BaseWordRails(_url, _username, _password) {
             error: _error,
             complete: _complete
         });
+    };
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+	if (that.getPostReads) {
+		console.log("getPostReads");
+	}
+    that.getPostReads = function(_page, _size, _sort, _success, _error, _complete, projection) {
+		return that._ajax({
+            url: _url + "/api/postReads",
+            data: {
+                page: _page,
+                size: _size,
+                sort: _sort,
+                projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.postPostRead) {
+		console.log("postPostRead");
+	}
+    that.postPostRead = function(postRead, _success, _error, _complete) {
+        return that._ajax({
+            type: "POST",
+            url: _url + "/api/postReads",
+            contentType: "application/json",
+            data: JSON.stringify(postRead),
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    var _value = _jqXHR.getResponseHeader("Location");
+                    if (_value) {
+                        var _index = _value.lastIndexOf("/");
+                        var _suffix = _value.substring(_index + 1);
+                        var id = _suffix;
+                        _success(id, _textStatus, _jqXHR);
+                    }
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.getPostRead) {
+		console.log("getPostRead");
+	}
+    that.getPostRead = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/postReads/" + id,
+            data: {
+                projection: projection
+            },            
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.putPostRead) {
+		console.log("putPostRead");
+	}
+    that.putPostRead = function(postRead, _success, _error, _complete) {
+        return that._ajax({
+            type: "PUT",
+            url: _url + "/api/postReads/" + postRead.id,
+            contentType: "application/json",
+            data: JSON.stringify(postRead),
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+	if (that.deletePostRead) {
+		console.log("deletePostRead");
+	}
+    that.deletePostRead = function(id, _success, _error, _complete) {
+        return that._ajax({
+            type: "DELETE",
+            url: _url + "/api/postReads/" + id,
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.findPostReadByPersonIdOrderByDate) {
+    	console.log("findPostReadByPersonIdOrderByDate");
+    }
+    that.findPostReadByPersonIdOrderByDate = function(personId, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/postReads/search/findPostReadByPersonIdOrderByDate",
+            data: {
+            	personId: personId,
+
+            	projection: projection
+            },
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data.content, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.getPostReadPerson) {
+    	console.log("getPostReadPerson");
+    }
+    that.getPostReadPerson = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/postReads/" + id + "/person",
+            data: {
+            	projection: projection
+            },
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.putPostReadPerson) {
+    	console.log("putPostReadPerson");
+    }
+    that.putPostReadPerson = function(id, person, _success, _error, _complete) {
+    	if (person === null) {
+    	    return that._ajax({
+    	    	type: "DELETE",
+    	    	url: _url + "/api/postReads/" + id + "/person",
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });		
+    	} else {
+    	    return that._ajax({
+    	    	type: "PUT",
+    	        url: _url + "/api/postReads/" + id + "/person",
+    	        contentType: "text/uri-list",
+    	        data: person,
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });	
+    	}
+    };
+
+
+    if (that.getPostReadPost) {
+    	console.log("getPostReadPost");
+    }
+    that.getPostReadPost = function(id, _success, _error, _complete, projection) {
+        return that._ajax({
+            url: _url + "/api/postReads/" + id + "/post",
+            data: {
+            	projection: projection
+            },
+            success: _success,
+            error: _error,
+            complete: _complete
+        });
+    };
+
+    if (that.putPostReadPost) {
+    	console.log("putPostReadPost");
+    }
+    that.putPostReadPost = function(id, post, _success, _error, _complete) {
+    	if (post === null) {
+    	    return that._ajax({
+    	    	type: "DELETE",
+    	    	url: _url + "/api/postReads/" + id + "/post",
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });		
+    	} else {
+    	    return that._ajax({
+    	    	type: "PUT",
+    	        url: _url + "/api/postReads/" + id + "/post",
+    	        contentType: "text/uri-list",
+    	        data: post,
+    	        success: _success,
+    	        error: _error,
+    	        complete: _complete
+    	    });	
+    	}
     };
 /*---------------------------------------------------------------------------*/
 
@@ -5784,15 +6075,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByUsernameAndEnabled) {
-    	console.log("findByUsernameAndEnabled");
+    if (that.findByUsernameAndPassword) {
+    	console.log("findByUsernameAndPassword");
     }
-    that.findByUsernameAndEnabled = function(username, enabled, _success, _error, _complete, projection) {
+    that.findByUsernameAndPassword = function(username, password, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/users/search/findByUsernameAndEnabled",
+            url: _url + "/api/users/search/findByUsernameAndPassword",
             data: {
             	username: username,
-            	enabled: enabled,
+            	password: password,
 
             	projection: projection
             },
@@ -5806,15 +6097,15 @@ function BaseWordRails(_url, _username, _password) {
         });
     };
 
-    if (that.findByUsernameAndPassword) {
-    	console.log("findByUsernameAndPassword");
+    if (that.findByUsernameAndEnabled) {
+    	console.log("findByUsernameAndEnabled");
     }
-    that.findByUsernameAndPassword = function(username, password, _success, _error, _complete, projection) {
+    that.findByUsernameAndEnabled = function(username, enabled, _success, _error, _complete, projection) {
         return that._ajax({
-            url: _url + "/api/users/search/findByUsernameAndPassword",
+            url: _url + "/api/users/search/findByUsernameAndEnabled",
             data: {
             	username: username,
-            	password: password,
+            	enabled: enabled,
 
             	projection: projection
             },

@@ -479,7 +479,7 @@
 		</query>
 	</named-query>
 	
-	<named-query name="Favorite.findFavorites">
+	<named-query name="Favorite.findFavoritesByPersonId">
 		<query>
 			select
 				favorite
@@ -490,7 +490,18 @@
 		</query>
 	</named-query>
 	
-	<named-query name="Favorite.findFavoritesOrderByDate">
+	<named-query name="Favorite.findFavoritesByPostId">
+		<query>
+			select
+				favorite
+			from
+				Favorite favorite join favorite.post post
+			where
+				post.id = :postId
+		</query>
+	</named-query>
+	
+	<named-query name="Favorite.findFavoritesByPersonIdOrderByDate">
 		<query>
 			select
 				favorite
@@ -502,7 +513,7 @@
 		</query>
 	</named-query>
 	
-	<named-query name="Notification.findNotificationsOrderByDate">
+	<named-query name="Notification.findNotificationsByPersonIdOrderByDate">
 	    <query>
 			select
 				notification
@@ -513,7 +524,7 @@
 			order by notification.createdAt desc
 		</query>
 	</named-query>
-	<named-query name="PostRead.findPostReadOrderByDate">
+	<named-query name="PostRead.findPostReadByPersonIdOrderByDate">
 	    <query>
 			select
 				postRead

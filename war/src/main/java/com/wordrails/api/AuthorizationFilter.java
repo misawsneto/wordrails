@@ -1051,25 +1051,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindFavoritesOrderByDateAuthorized(Integer personId,
-			Integer page, Integer size, List<String> sort) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	protected boolean isFindFavoritesAuthorized(Integer personId) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	protected boolean isFindNotificationsOrderByDateAuthorized(Integer personId) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
 	protected boolean isGetPostReadsAuthorized() {
 		// TODO Auto-generated method stub
 		return false;
@@ -1082,12 +1063,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindPostReadOrderByDateAuthorized(Integer personId) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
 	protected boolean isGetPostReadPersonAuthorized(Integer postReadId) {
 		// TODO Auto-generated method stub
 		return false;
@@ -1097,6 +1072,38 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetPostReadPostAuthorized(Integer postReadId) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected boolean isFindFavoritesByPersonIdOrderByDateAuthorized(
+			Integer personId, Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isFindFavoritesByPersonIdAuthorized(Integer personId) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isFindFavoritesByPostIdAuthorized(Integer postId) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isFindPostReadByPersonIdOrderByDateAuthorized(
+			Integer personId) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isFindNotificationsByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }

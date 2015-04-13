@@ -2,6 +2,7 @@ package com.wordrails.persistence;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -15,5 +16,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	@RestResource(exported = false)
 	public <S extends Notification> S save(S arg0);
 	
-	public List<Notification> findNotificationsOrderByDate(@Param("personId") Integer personId);
+	public List<Notification> findNotificationsByPersonIdOrderByDate(@Param("personId") Integer personId, Pageable pageable);
 }

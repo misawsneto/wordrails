@@ -16,5 +16,5 @@ public interface PostReadRepository extends JpaRepository<PostRead, Integer>, Qu
 	@RestResource(exported = false)
 	public <S extends PostRead> S save(S arg0);
 	
-	public List<Notification> findPostReadOrderByDate(@Param("personId") Integer personId);
+	public List<PostRead> findPostReadByPersonIdOrderByDate(@Param("personId") Integer personId);
 }
