@@ -6,7 +6,6 @@
   app.settings.container = false;
   app.hideAside = false;
   app.hideFooter = true;
-  app.hideLeftAside = true;
   ">
   <!-- column
   <div class="col w lter b-r" ng-controller="CustomTabController">
@@ -73,37 +72,7 @@
   <!-- /column -->
 
   <!-- column -->
-  <div class="col w-lg lter b-l" ng-class="{'hide': app.hideLeftAside }">
-    <div class="vbox">
-      <div class="wrapper b-b b-light">
-        <div id="post-editor-top-buttons" class="btn-group">
-          <!-- <a href class="m-b-xs btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Arquivar"><i class="fa fa-save"></i></a> -->
-          <a class="m-b-xs btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Descartar" tooltip-placement="bottom" tooltip-popup-delay="700">
-            <i class="glyphicon glyphicon-trash"></i>
-          </a>
-          <a class="m-b-xs btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Salvar como racunho" tooltip-placement="bottom" tooltip-popup-delay="700">
-            <i class="fa fa-save"></i>
-          </a>
-          <a href class="m-b-xs btn btn-sm m-r btn-default w-xxs w-auto-xs" tooltip="Publicar" tooltip-placement="bottom" tooltip-popup-delay="700">
-            <i class="fa fa-send"></i>
-          </a>
-          <!-- <span class="term-tags">
-            <a tooltip="remover" ng-click="removeTerm(selectedTerm)" ng-repeat="selectedTerm in p.termList" class="m-l-sm m-b-xs h-u">{{selectedTerm.name}}</a>
-          </span> -->
-        </div>
-      </div>
-      <div class="row-row">
-        <div class="cell">
-          <div class="cell-inner">
-            <div class="wrapper-md">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="padder b-t b-light text-center">
-        <div class="m-xs">Footer with fluid height</div>
-      </div>
-    </div>
+  <div class="col w-lg lter" data-ng-include=" 'tpl/post_options.html' " ng-class="{'hide': app.hideLeftAside }">
   </div>
   <!-- /column -->
 </div>

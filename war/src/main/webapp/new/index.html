@@ -18,6 +18,18 @@
       background-color: #f9f9f9;
     }
   </style>
+  <script type="text/javascript">
+    function safeApply(scope, fn) {
+      var phase = null
+      if(scope.$root && scope.$root.$$phase)
+        phase = scope.$root.$$phase;
+
+      if(phase == '$apply' || phase == '$digest')
+        scope.$eval(fn);
+      else
+        scope.$apply(fn);
+    }
+  </script>
 </head>
 <body ng-controller="AppCtrl">
   <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>

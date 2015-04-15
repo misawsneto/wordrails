@@ -17,7 +17,7 @@
       <!-- / navbar header -->
 
       <!-- navbar collapse -->
-      <div class="collapse pos-rlt navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}" ng-class="{'hide': app.hideActionBar}">
+      <div class="collapse pos-rlt navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}" ng-if="!app.hideActionBar">
         <!-- buttons -->
         <div class="nav navbar-nav hidden-xs m-t-sm text-lg">
           CRONICA 
@@ -31,6 +31,25 @@
           <div class="m-t-sm">
             <!-- <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw"></i> -->
             ESTAÇÃO
+          </div>
+        </div>
+      </div>
+      <div class="hbox hbox-auto-xs" ng-if="$state.current.name == 'app.stations.post' && app.hideActionBar">
+        <div class="col w-lg lter pull-right">
+          <div id="post-editor-top-buttons" class="btn-group">
+            <!-- <a href class="m-b-xs btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Arquivar"><i class="fa fa-save"></i></a> -->
+            <a class="m-b-xs btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Descartar" tooltip-placement="bottom" tooltip-popup-delay="700" tooltip-append-to-body="true" ng-click="app.hideLeftAside = !app.hideLeftAside">
+              <i class="glyphicon glyphicon-trash"></i>
+            </a>
+            <a class="m-b-xs btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Salvar como racunho" tooltip-placement="bottom" tooltip-popup-delay="700" tooltip-append-to-body="true">
+              <i class="fa fa-save"></i>
+            </a>
+            <a href class="m-b-xs btn btn-sm m-r btn-default w-xxs w-auto-xs" tooltip="Publicar" tooltip-placement="bottom" tooltip-popup-delay="700" tooltip-append-to-body="true">
+              <i class="fa fa-send"></i>
+            </a>
+            <!-- <span class="term-tags">
+              <a tooltip="remover" ng-click="removeTerm(selectedTerm)" ng-repeat="selectedTerm in p.termList" class="m-l-sm m-b-xs h-u">{{selectedTerm.name}}</a>
+            </span> -->
           </div>
         </div>
       </div>
