@@ -25,16 +25,12 @@ angular.module('app')
                   templateUrl: 'tpl/layout.html'
               })
               .state('app.stations', {
-                url: '/s?stationId',
-                views: {
-                      '': {
-                          templateUrl: 'tpl/layout_app.html'
-                      }
-                  },
+                  url: '/s?stationId',
+                  templateUrl: 'tpl/layout_app.html',
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['js/controllers/stations.js', 'js/controllers/tab.js']);
+                          return $ocLazyLoad.load(['js/controllers/stations.js']);
                       }]
                   },
                   controller: 'StationsCtrl'

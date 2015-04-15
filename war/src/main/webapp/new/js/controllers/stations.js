@@ -1,5 +1,5 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', function($scope, $log) {
+app.controller('StationsCtrl', ['$scope', '$log', '$state', function($scope, $log, $state) {
 	//$scope.app.hideLeftAside = false;
-	$log.info('teste')
+	console.log('asdfs');
 }]);
