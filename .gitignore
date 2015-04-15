@@ -22,6 +22,7 @@ war/target/**
 war/indexes/**
 war/index/*
 war/src/main/webapp/app/js/BaseWordRails.js
+war/src/main/webapp/js/BaseWordRails.js
 client/.settings/*
 client/.project
 client/.classpath
@@ -31,7 +32,6 @@ parent/.settings/*
 war/src/main/webapp/wrtomcat.sublime-project
 war/src/main/webapp/webapp.7z
 war/src/main/webapp/node_modules/**
-war/src/main/webapp/new/*
 war/src/main/webapp/js/BaseWordRails.js
 war/src/main/webapp/bower_components/*
 war/src/main/webapp/wrtomcat.sublime-workspace

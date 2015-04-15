@@ -66,7 +66,6 @@ public class Network {
 	
 	public String domain;
 	
-	
 //	@Column(columnDefinition="TEXT default '#F3F5F9'")
 	public String backgroundColor = "#F3F5F9";
 //	@Column(columnDefinition="TEXT default '#242424'")

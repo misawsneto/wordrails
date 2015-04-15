@@ -36,9 +36,7 @@ public class Test {
 //		
 //		wordRails.postFavorite(favorite);
 		
-		List<FavoriteProjectionDto> favoriteDtos = wordRails.findFavorites_FavoriteProjection(person.id);
-		
-		System.out.println(favoriteDtos.get(0).post);
+//		wordRails.findPostReadByPersonIdOrderByDate(personId)
 		
 		if(true)
 			return;
