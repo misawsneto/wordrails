@@ -43,7 +43,6 @@ angular.module('app')
     redactorOptions.toolbarExternal = "#external-toolbar"
     redactorOptions.plugins = ['fontsize', 'fontcolor', 'video', 'counter']
     redactorOptions.minHeight = 300
-    redactorOptions.focus = true
     redactorOptions.buttons = ['html', 'formatting', 'bold', 'italic', 'underline', 'deleted', 
                                   'fontsize', 'fontcolor', 'unorderedlist', 'orderedlist', 'outdent', 'indent',
                                   'link', 'image', 'video', 'alignment', 'horizontalrule'];

@@ -12,12 +12,22 @@ app.hideFooter = true;
 <div class="col">
   <div class="vbox">
     <div class="row-row">
-      <div class="cell">
+      <div class="cell" id="post-cell">
         <div class="cell-inner">
           <div class="wrapper-md">
-            <div id="external-toolbar" class="m-b-xs"></div>
+            <div id="post-title-box" class="new-post-body m-b">
+              <input type="text" class="b-none text-2x w-full back-none" placeholder="Título">
+            </div>
+            <div id="post-media-box" class="new-post-body m-b">
+              <img src="img/c0.jpg" class="img-full">
+            </div>
+            <div class="tool-wrap">
+              <div id="external-toolbar-container" class="new-post-body">
+                <div id="external-toolbar" class="m-b-xs w-full"></div>
+              </div>
+            </div>
             <div class="box-shadow bg-white-only new-post-body b-t b-light">
-              <textarea ng-model="content" redactor="{inlineMode: true}" redactor style="opacity: 0"></textarea>
+              <textarea ng-model="content" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
           </div>
         </div>
@@ -34,8 +44,8 @@ app.hideFooter = true;
 </div>
 <!-- /hbox layout -->
 <!-- header navbar -->
-<div class="new-post-navbar navbar">
-  <ul class="nav navbar-nav">
+<div class="new-post-navbar navbar" ng-class="{'box-shadow': postCtrl.showHeaderShadow || !app.hidePostOptions}">
+  <ul class="nav navbar-nav m-l-xs">
     <li class="hidden-xs">
       <a ui-fullscreen></a>
     </li>

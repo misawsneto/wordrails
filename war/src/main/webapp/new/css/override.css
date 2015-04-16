@@ -1,5 +1,4 @@
 /* general */
-
 .app:before {
 	background-color: inherit!important;	
 }
@@ -28,9 +27,27 @@ a.text-lgrey:hover {
   color: #ddd;
 }
 
+.b-none{
+  border: none !important
+}
+
+.back-none{
+  background: transparent;
+}
+
 /* end of general */
 
 /* post */
+
+.fixed-tools{
+  position: fixed;
+  top: 50px;
+}
+
+#external-toolbar{
+  z-index: 10;
+}
+
 .new-post-body, #external-toolbar{
   max-width: 800px;
   margin-right: auto;
@@ -56,7 +73,7 @@ a.text-lgrey:hover {
     top: 0;
     height: 50px;
     right: 0;
-    left: 84px;
+    left: 78px;
     z-index: 1054
   }
   .new-post-navbar .navbar-right{
@@ -217,6 +234,10 @@ a.text-lgrey:hover {
 /* end of aside.html */
 
 /* post.html */
+
+.post-max-width{
+  max-width: 800px;
+}
 
 .redactor-toolbar>li>a.re-icon {
   font-size: 16px;
