@@ -57,6 +57,7 @@ angular.module('app')
       $scope.app.settings.navbarHeaderColor = 'bg-dg';
       $scope.app.settings.navbarCollapseColor = 'bg-white-only';
       $scope.app.settings.asideColor = 'bg-dg';
+      $scope.app.hidePostOptions = true;
       /* end of added */
 
       // angular translate
@@ -81,11 +82,6 @@ angular.module('app')
 
       $rootScope.$on('$stateChangeSuccess', 
         function(event, toState, toParams, fromState, fromParams){
-          $scope.app.hideLeftAside = true;
-          if(toState.name === "app.stations")
-            $scope.app.hideActionBar = false;
-          else
-            $scope.app.hideActionBar = true;
       });
 
   }]);

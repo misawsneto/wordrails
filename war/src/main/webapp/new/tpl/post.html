@@ -1,4 +1,85 @@
-<div >
-	
-post.html
+<!-- hbox layout -->
+<div class="hbox hbox-auto-xs " ng-init="
+app.settings.asideFolded = true; 
+app.settings.asideFixed = true;
+app.settings.asideDock = false;
+app.settings.container = false;
+app.hideAside = false;
+app.hideFooter = true;
+">
+
+<!-- column -->
+<div class="col">
+  <div class="vbox">
+    <div class="row-row">
+      <div class="cell">
+        <div class="cell-inner">
+          <div class="wrapper-md">
+            <div id="external-toolbar" class="m-b-xs"></div>
+            <div class="box-shadow bg-white-only new-post-body b-t b-light">
+              <textarea ng-model="content" redactor="{inlineMode: true}" redactor style="opacity: 0"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+<!-- /column -->
+
+<!-- column -->
+<div class="col w-lg lter" data-ng-include=" 'tpl/post_options.html' " ng-class="{'hide': app.hidePostOptions}">
+</div>
+<!-- /column -->
+</div>
+<!-- /hbox layout -->
+<!-- header navbar -->
+<div class="new-post-navbar navbar">
+  <ul class="nav navbar-nav">
+    <li class="hidden-xs">
+      <a ui-fullscreen></a>
+    </li>
+  </ul>
+  <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
+      <a href class="dropdown-toggle text-md" dropdown-toggle>
+        <i class="icon icon-directions m-r-xs"></i>
+        Estação 1 <b class="m-l-xs caret"></b>
+      </a>
+      <!-- dropdown -->
+      <ul class="dropdown-menu w">
+        <li >
+          <a href>Estação 2</a>
+        </li>
+        <li >
+          <a href>Estação 3</a>
+        </li>
+        <li >
+          <a href>Estação 4</a>
+        </li>
+        <li >
+          <a href>Estação 5</a>
+        </li>
+      </ul>
+      <!-- / dropdown -->
+    </li>
+    <li>
+      <button class="btn btn-default btn-xs text-md m-t-sm m-r-sm" ng-click="app.hidePostOptions = !app.hidePostOptions">
+        <i class="icon" ng-class="{'icon-arrow-right': !app.hidePostOptions, 'icon-arrow-left': app.hidePostOptions}"></i>
+      </butoon>
+    </li>
+    <li>
+      <div class="btn-group dropdown" dropdown>
+        <button class="m-t-sm btn btn-default btn-xs text-md btn-default" dropdown-toggle>Action <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a href>Action</a></li>
+          <li><a href>Another action</a></li>
+          <li><a href>Something else here</a></li>
+          <li class="divider"></li>
+          <li><a href>Separated link</a></li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>
+<!-- /header navbar -->
