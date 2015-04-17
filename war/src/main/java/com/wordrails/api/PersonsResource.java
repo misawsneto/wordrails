@@ -1,6 +1,12 @@
 package com.wordrails.api;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -15,12 +21,28 @@ import javax.ws.rs.core.Response.Status;
 
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.Network;
+import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
+import com.wordrails.business.Station;
+import com.wordrails.business.StationRole;
+import com.wordrails.business.UnauthorizedException;
+import com.wordrails.persistence.NetworkRepository;
+import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.StationRepository;
+import com.wordrails.persistence.StationRolesRepository;
+import com.wordrails.persistence.TaxonomyRepository;
 
 @Path("/persons")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -32,6 +54,16 @@ public class PersonsResource {
 	
 	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired PersonRepository personRepository;
+	
+	private @Autowired NetworkRolesRepository networkRolesRepository;
+	private @Autowired StationRepository stationRepository;
+	private @Autowired StationRolesRepository stationRolesRepository;
+	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired NetworkRepository networkRepository;
+	
+	private @Autowired TaxonomyRepository taxonomyRepository;
+	
+	private @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	
 	@PUT
 	@Path("/me/regId")
@@ -64,4 +96,88 @@ public class PersonsResource {
 		// TODO create user
 		return Response.status(Status.CREATED).build();
 	}
+	
+	@Path("/init")
+	@GET
+	public PersonData getInitialData (@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+		HttpSession session = request.getSession();
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		
+		Person person = accessControllerUtil.getLoggedPerson();
+		
+		if(person == null){
+			throw new UnauthorizedException("User is not authorized");
+		}
+		
+		Network network = (Network) session.getAttribute("network");
+		PersonPermissions personPermissions = new PersonPermissions();
+		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
+		List<Station> stations;
+		List<StationDto> stationDtos = new ArrayList<StationDto>();
+		
+		if(networkRole != null){
+			//Network Permissions
+			NetworkPermission networkPermissionDto = new NetworkPermission();
+			networkPermissionDto.networkId = networkRole.id;
+			networkPermissionDto.admin = networkRole.admin;
+			
+			//Stations Permissions
+			stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
+			List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>(stations.size());
+			for (Station station : stations) {
+				StationPermission stationPermissionDto = new StationPermission();
+				StationDto stationDto = new StationDto();
+				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
+				
+				//Station Fields
+				stationPermissionDto.stationId = stationDto.id = station.id;
+				stationPermissionDto.stationName = stationDto.name = station.name;
+				stationPermissionDto.writable = stationDto.writable = station.writable;
+				stationPermissionDto.main = stationDto.main = station.main;
+				stationPermissionDto.visibility = stationDto.visibility = station.visibility;
+				
+				//StationRoles Fields
+				StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
+				if(stationRole != null){
+					stationPermissionDto.admin = stationRole.admin;
+					stationPermissionDto.editor = stationRole.editor;
+					stationPermissionDto.writer = stationRole.writer;
+				}
+				
+				stationPermissionDtos.add(stationPermissionDto);
+				stationDtos.add(stationDto);
+			}
+			personPermissions.networkPermission = networkPermissionDto;
+			personPermissions.stationPermissions = stationPermissionDtos;
+			personPermissions.personId = person.id;
+			personPermissions.username = person.username;
+			personPermissions.personName = person.name;
+			
+		}
+		
+		PersonData initData = new PersonData();
+		
+		PersonDto personDto = new PersonDto();
+		NetworkDto networkDto = new NetworkDto();
+		NetworkRoleDto networkRoleDto = new NetworkRoleDto();
+		
+		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes(), PersonDto.class);
+		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes(), NetworkDto.class); 
+		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes(), NetworkRoleDto.class);
+		initData.stations = stationDtos;
+		initData.personPermissions = personPermissions;
+		
+		initData.person.links = generateSelfLinks(baseUrl + "/api/persons/" + person.id);
+		initData.network.links = generateSelfLinks(baseUrl + "/api/stations/" + network.id);
+		initData.networkRole.links = generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id);
+		
+		return initData;
+	}
+	
+	private List<Link> generateSelfLinks(String self){
+		Link link = new Link();
+		link.href = self;
+		link.rel = "self";
+		return Arrays.asList(link);
+	} 
 }

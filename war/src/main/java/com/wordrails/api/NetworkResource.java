@@ -13,8 +13,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Network;
 import com.wordrails.business.NetworkCreate;
@@ -40,9 +42,7 @@ public class NetworkResource {
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired NetworkRepository networkRepository;
-	
 	private @Autowired TaxonomyRepository taxonomyRepository;
-	
 
 	@Path("/{id}/permissions")
 	@GET
@@ -113,4 +113,5 @@ public class NetworkResource {
 		
 		return Response.status(Status.CREATED).build();
 	} 
+	
 }
