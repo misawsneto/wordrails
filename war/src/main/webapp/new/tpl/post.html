@@ -1,12 +1,5 @@
 <!-- hbox layout -->
-<div class="hbox hbox-auto-xs " ng-init="
-app.settings.asideFolded = true; 
-app.settings.asideFixed = true;
-app.settings.asideDock = false;
-app.settings.container = false;
-app.hideAside = false;
-app.hideFooter = true;
-">
+<div class="hbox hbox-auto-xs">
 
 <!-- column -->
 <div class="col">
@@ -15,18 +8,16 @@ app.hideFooter = true;
       <div class="cell" id="post-cell">
         <div class="cell-inner">
           <div class="wrapper-md">
-            <div id="post-title-box" class="new-post-body m-b">
+            <div id="post-title-box" class="new-post-block m-b">
               <input type="text" class="b-none text-2x w-full back-none" placeholder="Título">
             </div>
-            <div id="post-media-box" class="new-post-body m-b">
+            <div id="post-media-box" class="new-post-block m-b">
               <img src="img/c0.jpg" class="img-full">
             </div>
-            <div class="tool-wrap">
-              <div id="external-toolbar-container" class="new-post-body">
-                <div id="external-toolbar" class="m-b-xs w-full"></div>
-              </div>
+            <div id="external-toolbar-container" class="new-post-block">
+              <div id="external-toolbar" class="w-full m-b-n-xxs"></div>
             </div>
-            <div class="box-shadow bg-white-only new-post-body b-t b-light">
+            <div class="box-shadow bg-white-only new-post-block">
               <textarea ng-model="content" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
           </div>

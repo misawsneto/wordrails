@@ -12,7 +12,9 @@
   </div>
   <div class="padder b-l b-t bg-white text-center">
     <div class="m-xs">
-      <a href ng-click="app.hidePostMoreOptions = !app.hidePostMoreOptions">Mais opções</a>
+      <a href ng-click="app.hidePostMoreOptions = !app.hidePostMoreOptions">
+        {{app.hidePostMoreOptions? 'Mais opções' : 'Menos opções'}}
+      </a>
     </div>
   </div>
 </div>

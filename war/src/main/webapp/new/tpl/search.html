@@ -1,0 +1,27 @@
+<!-- hbox layout -->
+<div class="hbox hbox-auto-xs">
+  
+  <div class="w-full search-results" ng-class="{'hide': !app.searchResults, 'animated fadeIn': app.searchResults}">
+    <div class="m-auto block-800 b-none" ng-include=" 'tpl/posts_list_cards.html' ">
+    </div>
+  </div>
+
+  <!-- search-display -->
+  <div class="search-display wrapper-sm search-block block-600 b-b" ng-class="{'hide': !app.searchResults, 'animated fadeIn': app.searchResults}">
+    <p class="m-t m-b-xxs"><strong>23</strong> Resultados</p>
+  </div>
+  <!-- /search-display -->
+
+   <!-- search box -->
+  <div class="search-box" ng-class="{'nonempty-search': app.searchResults && !searchCtrl.nonemptySearch, 'nonempty-search2': searchCtrl.nonemptySearch}">
+    <div class="b-b wrapper-md">
+      <div class="m-n font-thin h3">
+        <form ng-submit="submitSearch()">
+          <input type="text" class="b-none text-2x w-full back-none" placeholder="Busque por histórias...">
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- /search box -->
+
+</div>

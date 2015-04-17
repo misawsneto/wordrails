@@ -13,6 +13,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -181,4 +182,21 @@ public class Post {
 	@ManyToMany
 	@IndexedEmbedded
 	public Set<Term> terms;
+	
+	public boolean imageLandscape;
+	
+	@PreUpdate
+	public void onUpdate() {
+		if(featuredImage != null && featuredImage.original != null){
+			imageId = featuredImage.original.id;
+			imageSmallId = featuredImage.small.id;
+			imageMediumId = featuredImage.medium.id;
+			imageLargeId= featuredImage.large.id;
+		}
+	}
+	
+	public Integer imageId;
+	public Integer imageSmallId;
+	public Integer imageMediumId;
+	public Integer imageLargeId;
 }

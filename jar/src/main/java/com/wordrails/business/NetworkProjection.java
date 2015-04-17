@@ -6,4 +6,5 @@ import org.springframework.data.rest.core.config.Projection;
 public interface NetworkProjection {
 	Integer getId();
 	String getName();
+	Integer getLogoId();
 }

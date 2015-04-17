@@ -17,7 +17,7 @@ angular.module('app')
       function ($stateProvider,   $urlRouterProvider, JQ_CONFIG) {
           
           $urlRouterProvider
-              .otherwise('/s');
+              .otherwise('/');
           $stateProvider
               .state('app', {
                   abstract: true,
@@ -25,7 +25,7 @@ angular.module('app')
                   templateUrl: 'tpl/layout.html'
               })
               .state('app.stations', {
-                  url: '/s?stationId',
+                  url: '/?stationId',
                   templateUrl: 'tpl/layout_app.html',
                   resolve: {
                       deps: ['$ocLazyLoad',
@@ -45,6 +45,17 @@ angular.module('app')
                     }]
                   },
                   controller:'PostCtrl'
+              })
+              .state('app.search', {
+                  url: '/search',
+                  templateUrl: 'tpl/search.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/search.js']);
+                    }]
+                  },
+                  controller:'SearchCtrl'
               })
               .state('app.dashboard-v1', {
                   url: '/dashboard-v1',

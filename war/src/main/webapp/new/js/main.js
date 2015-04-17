@@ -59,6 +59,12 @@ angular.module('app')
       $scope.app.settings.asideColor = 'bg-dg';
       $scope.app.hidePostOptions = true;
       $scope.app.hidePostMoreOptions = true;
+      $scope.app.settings.asideFolded = true; 
+      $scope.app.settings.asideFixed = true;
+      $scope.app.settings.asideDock = false;
+      $scope.app.settings.container = false;
+      $scope.app.hideAside = false;
+      $scope.app.hideFooter = true;
       /* end of added */
 
       // angular translate

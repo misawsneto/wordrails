@@ -100,6 +100,8 @@ public class Network {
 	@OneToOne
 	public Image logo;
 	
+	public Integer logoId;
+	
 	public String defaultReadMode;
 	public String defaultOrientationMode;
 
@@ -320,8 +322,12 @@ public class Network {
 			defaultReadMode = DAY_READ_MODE + "";
 		if(defaultOrientationMode == null || defaultOrientationMode.isEmpty())
 			defaultOrientationMode = HORIZONTAL_ORIENTATION_MODE + "";
+		
+		if(logo != null && logo.original != null){
+			logoId = logo.original.id;
+		}
 	}
-
+	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date updatedAt;
@@ -329,6 +335,9 @@ public class Network {
 	@PreUpdate
 	void onUpdate() {
 		updatedAt = new Date();
+		if(logo != null && logo.original != null){
+			logoId = logo.original.id;
+		}
 	}
 
 }
