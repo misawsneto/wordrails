@@ -33,7 +33,6 @@ war/src/main/webapp/wrtomcat.sublime-project
 war/src/main/webapp/webapp.7z
 war/src/main/webapp/node_modules/**
 war/src/main/webapp/js/BaseWordRails.js
-war/src/main/webapp/bower_components/*
 war/src/main/webapp/wrtomcat.sublime-workspace
 war/.gitignore
 jar/.gitignore

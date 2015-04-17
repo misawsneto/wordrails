@@ -1,0 +1,28 @@
+{
+  "name": "angular-scroll-watch",
+  "version": "0.5.4",
+  "description": "Basic scroll-aware directives for AngularJS.",
+  "main": "build/angular-scroll-watch.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "gulpfile.js",
+    "package.json",
+    "test",
+    "tests",
+    "index.html"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "homepage": "https://github.com/pc035860/angular-scroll-watch",
+  "_release": "0.5.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.5.4",
+    "commit": "3af2fac83b08474a53adc3794351a541a2e1036a"
+  },
+  "_source": "git://github.com/pc035860/angular-scroll-watch.git",
+  "_target": "~0.5.4",
+  "_originalSource": "angular-scroll-watch",
+  "_direct": true
+}

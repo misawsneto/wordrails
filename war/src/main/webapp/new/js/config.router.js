@@ -35,7 +35,7 @@ angular.module('app')
                   },
                   controller: 'StationsCtrl'
               })
-              .state('app.stations.post', {
+              .state('app.post', {
                   url: '/post',
                   templateUrl: 'tpl/post.html',
                   resolve: {

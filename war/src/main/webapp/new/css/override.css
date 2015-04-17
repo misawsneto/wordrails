@@ -1,5 +1,4 @@
 /* general */
-
 .app:before {
 	background-color: inherit!important;	
 }
@@ -17,7 +16,7 @@ a.text-lgrey:hover {
 }
 
 .text-lgrey-lter {
-  color: #f9f9f9;
+  color: #f5f5f5;
 }
 
 .text-lgrey-dk {
@@ -28,7 +27,60 @@ a.text-lgrey:hover {
   color: #ddd;
 }
 
+.b-none{
+  border: none !important
+}
+
+.back-none{
+  background: transparent;
+}
+
 /* end of general */
+
+/* post */
+
+.fixed-tools{
+  position: fixed;
+  top: 50px;
+}
+
+#external-toolbar{
+  z-index: 10;
+}
+
+.new-post-body, #external-toolbar{
+  max-width: 800px;
+  margin-right: auto;
+  margin-left: auto;
+}
+/* end post*/
+
+/* header */
+.navbar-brand img {
+  max-height: 40px;
+}
+
+.new-post-navbar ul li a{
+  background: inherit!important;
+}
+
+@media (min-width: 768px) {
+  .app-header-fixed .app-header{
+    width: 78px;
+  }
+  .new-post-navbar{
+    position: fixed;
+    top: 0;
+    height: 50px;
+    right: 0;
+    left: 78px;
+    z-index: 1054
+  }
+  .new-post-navbar .navbar-right{
+    margin-right: 10px;
+  }
+}
+/* header top */
 
 /* aside.html */
 
@@ -39,24 +91,24 @@ a.text-lgrey:hover {
 	}
 
  .app-aside-fixed.app-aside-folded .aside-wrap {
-    width: 77px!important;
-  }
-  .app-aside-fixed.app-aside-folded .aside-wrap .navi-wrap {
-    width: 95px!important;
-  }
-  .app-aside-fixed.app-aside-folded .aside-wrap .navi-wrap > * {
-    width: 78px!important;
-  }
+  width: 77px!important;
+}
+.app-aside-fixed.app-aside-folded .aside-wrap .navi-wrap {
+  width: 95px!important;
+}
+.app-aside-fixed.app-aside-folded .aside-wrap .navi-wrap > * {
+  width: 78px!important;
+}
 
-  .app-aside-folded .app-aside,
-  .app-aside-folded .navbar-header {
-    width: 78px!important;
-  }
-  .app-aside-folded .navbar-collapse,
-  .app-aside-folded .app-content,
-  .app-aside-folded .app-footer {
-    margin-left: 78px!important;
-  }
+.app-aside-folded .app-aside,
+.app-aside-folded .navbar-header {
+  width: 78px!important;
+}
+.app-aside-folded .navbar-collapse,
+.app-aside-folded .app-content,
+.app-aside-folded .app-footer {
+  margin-left: 78px!important;
+}
 }
 
 .bg-dg {
@@ -171,13 +223,24 @@ a.text-lgrey:hover {
   .app-aside-folded.app-aside-fixed .app-aside > ul.nav:before {
     width: 78px;
   }
-	.app-aside-folded .navi > ul > li > a i {
-		font-size: 25px;
-	}
-	.app-aside-folded .navi > ul > li > a {
-	  height: 55px;
-	}
+  .app-aside-folded .navi > ul > li > a i {
+    font-size: 25px;
+  }
+  .app-aside-folded .navi > ul > li > a {
+   height: 55px;
+ }
 }
 
 /* end of aside.html */
 
+/* post.html */
+
+.post-max-width{
+  max-width: 800px;
+}
+
+.redactor-toolbar>li>a.re-icon {
+  font-size: 16px;
+}
+
+/* end of post.html */
