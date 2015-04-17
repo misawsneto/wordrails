@@ -250,6 +250,14 @@ public class $facade$ {
 	public void getNetworkPersonPermissions(Integer id, Callback<PersonPermissions> _callback){
 		_facade.getNetworkPersonPermissions(id, _callback);
 	}
+	
+	public PersonData getInitialData(Integer id){
+		return _facade.getInitialData(id);
+	}
+	
+	public void getInitialData(Integer id, Callback<PersonData> _callback){
+		_facade.getInitialData(id, _callback);
+	}
 /*---------------------------------------------------------------------------*/
 
 $entities:FacadeMethods(); separator="\n\n"$

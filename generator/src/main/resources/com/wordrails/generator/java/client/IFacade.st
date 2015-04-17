@@ -136,6 +136,12 @@ interface I$facade$ {
 	
 	@GET("/networks/{id}/permissions")
 	void getNetworkPersonPermissions(@Path("id") Integer id, Callback<PersonPermissions> _callback);
+	
+	@GET("/persons/init")
+	PersonData getInitialData(@Path("id") Integer id);
+	
+	@GET("/persons/init")
+	void getInitialData(@Path("id") Integer id, Callback<PersonData> _callback);
 /*---------------------------------------------------------------------------*/
 
 $entities:IFacadeMethods(); separator="\n\n"$

@@ -157,10 +157,6 @@ public class PersonsResource {
 		
 		PersonData initData = new PersonData();
 		
-		PersonDto personDto = new PersonDto();
-		NetworkDto networkDto = new NetworkDto();
-		NetworkRoleDto networkRoleDto = new NetworkRoleDto();
-		
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes(), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes(), NetworkDto.class); 
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes(), NetworkRoleDto.class);
