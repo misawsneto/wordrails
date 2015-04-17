@@ -1,8 +1,10 @@
 package com.wordrails.business;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,10 +12,16 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.search.annotations.ContainedIn;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Station {
@@ -71,6 +79,36 @@ public class Station {
 	
 	@OneToOne
 	public Wordpress wordpress;
+	
+	@OneToOne
+	public Image logo;
+	
+	public Integer logoId;
+	
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable=false)
+	public Date createdAt;
+
+	@PrePersist
+	void onCreate() {
+		createdAt = new Date();
+		if(logo != null && logo.original != null){
+			logoId = logo.original.id;
+		}
+	}
+	
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date updatedAt;
+
+	@PreUpdate
+	void onUpdate() {
+		updatedAt = new Date();
+		if(logo != null && logo.original != null){
+			logoId = logo.original.id;
+		}
+	}
 
 	@Override
 	public int hashCode() {

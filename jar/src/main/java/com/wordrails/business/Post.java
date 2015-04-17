@@ -188,7 +188,6 @@ public class Post {
 	public boolean imageLandscape;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	@Field(analyze = Analyze.NO)
     @DateBridge(resolution = Resolution.SECOND)

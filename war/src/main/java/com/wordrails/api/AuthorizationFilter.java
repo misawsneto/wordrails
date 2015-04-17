@@ -1103,4 +1103,9 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return false;
 	}
 
+	@Override
+	protected boolean isGetStationLogoAuthorized(Integer stationId) {
+		return true;
+	}
+
 }
