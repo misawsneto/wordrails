@@ -1,8 +1,10 @@
 package com.wordrails.api;
 
-import com.wordrails.business.Network;
+import com.wordrails.business.Station;
+import com.wordrails.business.Wordpress;
 import com.wordrails.business.WordpressConfig;
-import com.wordrails.persistence.NetworkRepository;
+import com.wordrails.persistence.StationRepository;
+import com.wordrails.persistence.WordpressRepository;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -25,36 +27,51 @@ import org.springframework.transaction.annotation.Transactional;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class WordpressResource {
-    
-	private @Autowired NetworkRepository networkRepository;
-    
-    @POST
-    @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Response postWordpressConfig(WordpressConfig config) throws ServletException, IOException {
-        
-        try {
-            List<Network> networks = networkRepository.findAll();
-                if(!networks.isEmpty()){
-                    Network network = networks.get(0);
-                    
-                    if(!config.token.equals(network.wordpressToken)) {
-                        return Response.status(Response.Status.UNAUTHORIZED).build();
-                    }
-                    
-                    network.wordpressDomain = config.domain;
-                    network.wordpressUsername = config.user;
-                    network.wordpressPassword = config.password;
-                    networkRepository.save(network);
-                }
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
 
-        
-        return Response.status(Response.Status.OK).build();
-    }
-    
+    private @Autowired
+    StationRepository stationRepository;
+    private @Autowired
+    WordpressRepository wordpressRepository;
+
+	@POST
+	@Path("/login")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
+	public Response postWordpressConfig(WordpressConfig config) throws ServletException, IOException {
+
+		try {
+			List<Station> stations = stationRepository.findAll();
+			Station station = null;
+            Wordpress wordpress = null;
+			if (!stations.isEmpty()) {
+				for (Station st : stations) {
+					if (st.wordpress != null) {
+						if (st.wordpress.token.equals(config.token)) {
+							station = st;
+							wordpress = st.wordpress;
+							break;
+						}
+					}
+				}
+
+                if (wordpress == null) {
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Token is not created for this station").build();
+                }
+
+				wordpress.domain = config.domain;
+				wordpress.username = config.user;
+                wordpress.password = config.password;
+                wordpress.station = station;
+				
+				station.wordpress = wordpress;
+                wordpressRepository.save(wordpress);
+			}
+		} catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
+		}
+
+		return Response.status(Response.Status.OK).build();
+	}
+
 }

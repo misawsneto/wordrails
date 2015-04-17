@@ -2,7 +2,6 @@ package com.wordrails.business;
 
 import java.util.Date;
 import org.springframework.stereotype.Service;
-import retrofit.client.Response;
 
 @Service
 public class WordpressService {

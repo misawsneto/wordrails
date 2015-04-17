@@ -28,12 +28,12 @@ import com.wordrails.persistence.FileRepository;
 import com.wordrails.persistence.ImageRepository;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.PromotionRepository;
 import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.StationRepository;
+import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.security.NetworkSecurityChecker;
@@ -1003,6 +1003,24 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindFavoritesByPersonIdAuthorized(Integer personId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isFindFavoritesByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isFindFavoritesByPostIdAuthorized(Integer postId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
 	protected boolean isGetFavoritePostAuthorized(Integer favoriteId) {
 		// TODO Auto-generated method stub
 		return false;
@@ -1022,6 +1040,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetNotificationAuthorized(Integer notificationId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isFindNotificationsByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -1063,6 +1087,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindPostReadByPersonIdOrderByDateAuthorized(Integer personId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
 	protected boolean isGetPostReadPersonAuthorized(Integer postReadId) {
 		// TODO Auto-generated method stub
 		return false;
@@ -1075,35 +1105,9 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindFavoritesByPersonIdOrderByDateAuthorized(
-			Integer personId, Integer page, Integer size, List<String> sort) {
+	protected boolean isGetStationWordpressAuthorized(Integer stationId) {
 		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	protected boolean isFindFavoritesByPersonIdAuthorized(Integer personId) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	protected boolean isFindFavoritesByPostIdAuthorized(Integer postId) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	protected boolean isFindPostReadByPersonIdOrderByDateAuthorized(
-			Integer personId) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	protected boolean isFindNotificationsByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 }

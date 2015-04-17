@@ -88,14 +88,6 @@ public class Network {
 	public String subdomain;
 	
 	public boolean configured;
-    
-    public String wordpressDomain;
-    
-    public String wordpressUsername;
-    
-    public String wordpressPassword;
-    
-    public String wordpressToken;
 	
 	@OneToOne
 	public Image logo;

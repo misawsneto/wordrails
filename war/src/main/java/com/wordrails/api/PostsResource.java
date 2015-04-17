@@ -1,9 +1,11 @@
 package com.wordrails.api;
 
+import com.wordrails.business.Post;
+import com.wordrails.converter.PostConverter;
+import com.wordrails.persistence.PostRepository;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
@@ -20,7 +22,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.highlight.Encoder;
@@ -44,11 +45,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.wordrails.business.Post;
-import com.wordrails.converter.PostConverter;
-//import com.wordrails.ga.GoogleAnalytics;
-import com.wordrails.persistence.PostRepository;
 
 @Path("/posts")
 @Consumes(MediaType.WILDCARD)
@@ -99,14 +95,14 @@ public class PostsResource {
 	@PUT
 	@Path("/{id}")
 	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
-		forward();
+//		forward();
 	}	
 
 	@DELETE
 	@Path("/{id}")
 	public void deletePost(@PathParam("id") Integer id) throws ServletException, IOException {
-		forward();
-	}		
+//		forward();
+	}
 
 	@GET
 	@Path("/{stationId}/findPostsAndPostsPromotedByBody")
