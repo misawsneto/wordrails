@@ -15,4 +15,11 @@ public class PostView implements Serializable {
 	public String snippet;
 	public String topper;
 	public String state;
+	
+	public Integer imageId;
+	public Integer imageSmallId;
+	public Integer imageMediumId;
+	public Integer imageLargeId;
+
+	public boolean imageLandscape;
 }

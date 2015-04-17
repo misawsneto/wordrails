@@ -980,133 +980,126 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindByUsernameAndEnabledAuthorized(String username,
 			boolean enabled) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	protected boolean isFindByHashAuthorized(String hash) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	protected boolean isGetFavoritesAuthorized() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetFavoriteAuthorized(Integer favoriteId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isFindFavoritesByPersonIdAuthorized(Integer personId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isFindFavoritesByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isFindFavoritesByPostIdAuthorized(Integer postId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetFavoritePostAuthorized(Integer favoriteId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetFavoritePersonAuthorized(Integer favoriteId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetNotificationsAuthorized() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetNotificationAuthorized(Integer notificationId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isFindNotificationsByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetNotificationPersonAuthorized(Integer notificationId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetNotificationNetworkAuthorized(Integer notificationId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetNotificationStationAuthorized(Integer notificationId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetNotificationPostAuthorized(Integer notificationId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetPostReadsAuthorized() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetPostReadAuthorized(Integer postReadId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isFindPostReadByPersonIdOrderByDateAuthorized(Integer personId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetPostReadPersonAuthorized(Integer postReadId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetPostReadPostAuthorized(Integer postReadId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected boolean isGetStationWordpressAuthorized(Integer stationId) {
-		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetWordpressAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetWordpressAuthorized(Integer wordpressId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetWordpressStationAuthorized(Integer wordpressId) {
 		return false;
 	}
 

@@ -13,6 +13,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -183,7 +184,25 @@ public class Post {
 	@IndexedEmbedded
 	public Set<Term> terms;
 	
+	@Field(analyze = Analyze.NO)
 	public boolean imageLandscape;
+	
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	@Field(analyze = Analyze.NO)
+    @DateBridge(resolution = Resolution.SECOND)
+	public Date updatedAt;
+	
+	@PrePersist
+	public void onCreate() {
+		if(featuredImage != null && featuredImage.original != null){
+			imageId = featuredImage.original.id;
+			imageSmallId = featuredImage.small.id;
+			imageMediumId = featuredImage.medium.id;
+			imageLargeId= featuredImage.large.id;
+		}
+	}
 	
 	@PreUpdate
 	public void onUpdate() {
@@ -193,6 +212,8 @@ public class Post {
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId= featuredImage.large.id;
 		}
+		
+		updatedAt = new Date();
 	}
 	
 	public Integer imageId;
