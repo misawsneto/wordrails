@@ -11,15 +11,16 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wordrails.WordrailsUtil;
-import com.wordrails.business.Network;
 import com.wordrails.business.Post;
 import com.wordrails.business.ServiceGenerator;
+import com.wordrails.business.Wordpress;
 import com.wordrails.business.WordpressApi;
 import com.wordrails.business.WordpressPost;
 import com.wordrails.business.WordpressService;
@@ -28,112 +29,112 @@ import com.wordrails.persistence.PostRepository;
 @Component
 public class PostFilter implements Filter {
 
-    @Autowired
-    private PostRepository postRepository;
+	static Logger log = Logger.getLogger(PostFilter.class.getName());
 
-    @Autowired
-    private WordrailsUtil wordrailsUtil;
+	@Autowired
+	private PostRepository postRepository;
 
-    @Autowired
-    private WordpressService wordpressService;
+	@Autowired
+	private WordpressService wordpressService;
 
-    @Override
-    public void destroy() {/*not implemented*/
+	@Override
+	public void destroy() {/* not implemented */
 
-    }
+	}
 
-    @Override
-    public void init(FilterConfig arg0) throws ServletException {/*not implemented*/
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {/*
+																 * not
+																 * implemented
+																 */
 
-    }
+	}
 
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse resp,
-        FilterChain fc) throws IOException, ServletException {
-        // before filter are applied
-        fc.doFilter(req, resp);
-        // after filters are applied
-        HttpServletRequest rq = (HttpServletRequest) req;
-        HttpServletResponse res = (HttpServletResponse) resp;
-        Integer postId;
-        try {
-            if (rq.getMethod().toLowerCase().equals("post")) {
-                postId = getPostId(res.getHeader("Location"));
-                handleAfterCreate(postId, req);
-            } else if (rq.getMethod().toLowerCase().equals("put")) {
-                postId = getPostId(res.getHeader("Location"));
-                handleAfterUpdate(postId, req);
-            } else if (rq.getMethod().toLowerCase().equals("delete")) {
-                postId = getPostId(res.getHeader("Location"));
-                handleAfterDelete(postId, req);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain fc) throws IOException, ServletException {
+		// before filter are applied
+		fc.doFilter(req, resp);
+		// after filters are applied
+		HttpServletRequest rq = (HttpServletRequest) req;
+		HttpServletResponse res = (HttpServletResponse) resp;
+		Integer postId;
+		try {
+			String[] urlParts = rq.getRequestURI().split("/");
+			log.info("POSTFILTER URL: " + rq.getRequestURI());
 
-    /**
-     * Spring data rest adds a Location header with hyperlink representation of the newly created post
-     *
-     * @param location
-     */
-    private Integer getPostId(String location) throws Exception {
-        String[] strings = location.split("/");
-        return Integer.parseInt(strings[strings.length - 1]);
-    }
+			if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
+				postId = getPostId(res.getHeader("Location"));
+				Post post = postRepository.findOne(postId);
+				Wordpress wp = post.station.wordpress;
 
-    @Async
-    @Transactional
-    private void handleAfterCreate(Integer postId, ServletRequest req) throws Exception {
-        Post post = postRepository.findOne(postId);
-        Network network = wordrailsUtil.getNetworkFromHost(req);
+				if (wp.domain != null && wp.username != null && wp.password != null) {
+					WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
+					handleAfterCreate(post, api);
+				}
+			} else if (NumberUtils.isNumber(urlParts[urlParts.length - 1])) {
+				postId = getPostId(rq.getRequestURI());
+				Post post = postRepository.findOne(postId);
+				Wordpress wp = post.station.wordpress;
 
-        if (network.wordpressDomain != null && network.wordpressUsername != null && network.wordpressPassword != null) {
-            WordpressApi api = ServiceGenerator.createService(WordpressApi.class, network.wordpressDomain, network.wordpressUsername, network.wordpressPassword);
+				if (wp.domain != null && wp.username != null && wp.password != null) {
+					WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
+					switch (rq.getMethod().toLowerCase()) {
+					case "put":
+						handleAfterUpdate(post, api);
+						break;
+					case "delete":
+						handleAfterDelete(postId, api);
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-            try {
-                WordpressPost wpPost = wordpressService.createPost(post, api);
+	/**
+	 * Spring data rest adds a Location header with hyperlink representation of
+	 * the newly created post
+	 *
+	 * @param location
+	 */
+	private Integer getPostId(String location) throws Exception {
+		String[] strings = location.split("/");
+		return Integer.parseInt(strings[strings.length - 1]);
+	}
 
-                post.wordpressId = wpPost.id;
-                postRepository.save(post);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+	@Async
+	@Transactional
+	private void handleAfterCreate(Post post, WordpressApi api) throws Exception {
+		try {
+			WordpressPost wpPost = wordpressService.createPost(post, api);
 
-    @Async
-    @Transactional
-    private void handleAfterUpdate(Integer postId, ServletRequest req) throws Exception {
-        Post post = postRepository.findOne(postId);
-        Network network = wordrailsUtil.getNetworkFromHost(req);
+			post.wordpressId = wpPost.id;
+			postRepository.save(post);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-        if (network.wordpressDomain != null && network.wordpressUsername != null && network.wordpressPassword != null) {
-            WordpressApi api = ServiceGenerator.createService(WordpressApi.class, network.wordpressDomain, network.wordpressUsername, network.wordpressPassword);
+	@Async
+	@Transactional
+	private void handleAfterUpdate(Post post, WordpressApi api) throws Exception {
+		try {
+			wordpressService.updatePost(post, api);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-            try {
-                wordpressService.updatePost(post, api);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    @Async
-    @Transactional
-    private void handleAfterDelete(Integer postId, ServletRequest req) throws Exception {
-        Network network = wordrailsUtil.getNetworkFromHost(req);
-
-        if (network.wordpressDomain != null && network.wordpressUsername != null && network.wordpressPassword != null) {
-            WordpressApi api = ServiceGenerator.createService(WordpressApi.class, network.wordpressDomain, network.wordpressUsername, network.wordpressPassword);
-
-            try {
-                wordpressService.deletePost(postId, api);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+	@Async
+	@Transactional
+	private void handleAfterDelete(Integer postId, WordpressApi api) throws Exception {
+		try {
+			wordpressService.deletePost(postId, api);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }
