@@ -38,7 +38,12 @@ app.hideFooter = true;
 <!-- /column -->
 
 <!-- column -->
-<div class="col w-lg lter" data-ng-include=" 'tpl/post_options.html' " ng-class="{'hide': app.hidePostOptions}">
+<div class="col w-lg" data-ng-include=" 'tpl/post_more_options.html' " ng-class="{'hide': app.hidePostOptions || app.hidePostMoreOptions}">
+</div>
+<!-- /column -->
+
+<!-- column -->
+<div class="col w-lg" data-ng-include=" 'tpl/post_options.html' " ng-class="{'hide': app.hidePostOptions}">
 </div>
 <!-- /column -->
 </div>

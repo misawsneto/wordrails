@@ -58,6 +58,7 @@ angular.module('app')
       $scope.app.settings.navbarCollapseColor = 'bg-white-only';
       $scope.app.settings.asideColor = 'bg-dg';
       $scope.app.hidePostOptions = true;
+      $scope.app.hidePostMoreOptions = true;
       /* end of added */
 
       // angular translate

@@ -8,5 +8,3 @@ function safeApply(scope, fn) {
   else
     scope.$apply(fn);
 }
-
-console.log($('body'));
