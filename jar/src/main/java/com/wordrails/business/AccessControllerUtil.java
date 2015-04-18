@@ -18,7 +18,7 @@ public class AccessControllerUtil {
 	public Person getLoggedPerson() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		org.springframework.security.core.userdetails.User user;
-		if(authentication == null){
+		if(authentication == null || (authentication != null && authentication.getPrincipal() instanceof String) && authentication.getPrincipal().equals("anonymousUser")){
 			user = new org.springframework.security.core.userdetails.User("wordrails", "wordrails", true, true, true, true, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))); 
 			authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
 		}else{

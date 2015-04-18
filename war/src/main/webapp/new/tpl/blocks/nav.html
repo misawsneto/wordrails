@@ -28,7 +28,7 @@
       <span class="font-bold">Notificações</span>
     </a>
   </li>
-  <li ui-sref-active="active" tooltip="Estações" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
+  <li ui-sref-active="active" tooltip="Estações" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700" ng-show="app.initData.stations && app.initData.stations.length > 0">
     <a ui-sref="app.mail.list">
       <i class="icon-directions icon text-lgrey"></i>
       <span class="font-bold">Estações</span>
