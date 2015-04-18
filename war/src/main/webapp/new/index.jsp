@@ -1,3 +1,4 @@
+<%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en" data-ng-app="app">
 <head>
@@ -14,8 +15,10 @@
   <link rel="stylesheet" href="css/font.css" type="text/css" />
   <link rel="stylesheet" href="css/app.css" type="text/css" />
   <link rel="stylesheet" href="css/override.css" type="text/css" />
-  <style type="text/css">
-  </style>
+  <script type="text/javascript">
+  	var GLOBAL_URL_HASH = "${buildNumber}"
+    var initData = <%=request.getSession().getAttribute("personData")%>;
+  </script>
 </head>
 <body ng-controller="AppCtrl">
   <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'bg-white': $state.current.name == 'app.search' || $state.current.name == 'app.post'}" ui-view></div>

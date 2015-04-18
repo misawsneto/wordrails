@@ -22,7 +22,13 @@ angular.module('app')
               .state('app', {
                   abstract: true,
                   url: '',
-                  templateUrl: 'tpl/layout.html'
+                  templateUrl: 'tpl/layout.html',
+                  resolve: {
+                      deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                          return $ocLazyLoad.load(['js/services/trix.js']);
+                      }]
+                  }
               })
               .state('app.stations', {
                   url: '/?stationId',

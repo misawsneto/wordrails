@@ -30,6 +30,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.WordrailsUtil;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Network;
 import com.wordrails.business.NetworkRole;
@@ -60,10 +61,10 @@ public class PersonsResource {
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired NetworkRepository networkRepository;
-	
+	private @Autowired WordrailsUtil wordrailsUtil;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	
-	private @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
+	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	
 	@PUT
 	@Path("/me/regId")
@@ -100,7 +101,6 @@ public class PersonsResource {
 	@Path("/init")
 	@GET
 	public PersonData getInitialData (@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
-		HttpSession session = request.getSession();
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		
 		Person person = accessControllerUtil.getLoggedPerson();
@@ -109,7 +109,8 @@ public class PersonsResource {
 			throw new UnauthorizedException("User is not authorized");
 		}
 		
-		Network network = (Network) session.getAttribute("network");
+		Network network = wordrailsUtil.getNetworkFromHost(request);
+		
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
 		List<Station> stations;

@@ -121,6 +121,15 @@
 	</filter>
 	
 	<filter>
+	    <filter-name>PersonDataFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	    <init-param>
+	        <param-name>targetBeanName</param-name>
+	        <param-value>personDataFilter</param-value>
+	    </init-param>
+	</filter>
+	
+	<filter>
 	    <filter-name>CORSCustomFilter</filter-name>
 	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	    <init-param>
@@ -143,6 +152,11 @@
 	    <filter-name>NetworkDomainFilter</filter-name>
 	    <url-pattern>/index.jsp</url-pattern>
 	    <url-pattern>/app/index.jsp</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+	    <filter-name>PersonDataFilter</filter-name>
+	    <url-pattern>/new/index.jsp</url-pattern>
 	</filter-mapping>
 	
 	<filter-mapping>

@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-  .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 
-    function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ) {
+  .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService',
+    function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -65,6 +65,7 @@ angular.module('app')
       $scope.app.settings.container = false;
       $scope.app.hideAside = false;
       $scope.app.hideFooter = true;
+      $scope.app.initData = angular.copy(initData);
       /* end of added */
 
       // angular translate
