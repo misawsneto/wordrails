@@ -65,6 +65,7 @@
   <script src="js/config.router.js"></script>
   <script src="js/main.js"></script>
   <script src="js/services/ui-load.js"></script>
+  <script src="js/services/trix.js"></script>
   <script src="js/filters/fromNow.js"></script>
   <script src="js/directives/setnganimate.js"></script>
   <script src="js/directives/ui-butterbar.js"></script>

@@ -65,7 +65,11 @@ angular.module('app')
       $scope.app.settings.container = false;
       $scope.app.hideAside = false;
       $scope.app.hideFooter = true;
+      // ---------------------
+      
       $scope.app.initData = angular.copy(initData);
+      $scope.app.currentStation = trixService.selectCurrentStation($scope.app.initData.stations);
+
       /* end of added */
 
       // angular translate
