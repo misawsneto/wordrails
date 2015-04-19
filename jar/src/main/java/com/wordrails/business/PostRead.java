@@ -27,6 +27,7 @@ public class PostRead {
 	public Person person;
 	
 	@ManyToOne
+	@NotNull
 	public Post post;
 	
 	public Date createdAt;
