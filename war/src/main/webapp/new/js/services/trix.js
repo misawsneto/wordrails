@@ -25,4 +25,26 @@ angular.module('app').service('trixService', function(){
 		}
 		return ret;
 	}
+
+	tris.getWritableStations = function(){
+
+		stationPermissions.forEach(function(permissions, index){
+			if(iStation.id == permissions.stationId){
+				iStation.permissions = permissions;
+				if(permissions.writable || permissions.writer){
+					iStation.canWrite = true;
+				}else{
+					iStation.canWrite = false;
+				}
+				if(permissions.editor){
+					iStation.editor = true;
+				}
+				if(permissions.admin){
+					iStation.admin = true;
+				}
+				iStation.visible = true;
+				}
+				//window.console && console.log(iStation);
+		});
+	}
 });

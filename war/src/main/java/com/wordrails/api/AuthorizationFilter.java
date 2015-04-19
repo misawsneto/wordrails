@@ -995,32 +995,32 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetFavoriteAuthorized(Integer favoriteId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isFindFavoritesByPersonIdAuthorized(Integer personId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isFindFavoritesByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isFindFavoritesByPostIdAuthorized(Integer postId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isGetFavoritePostAuthorized(Integer favoriteId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isGetFavoritePersonAuthorized(Integer favoriteId) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -1030,32 +1030,32 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetNotificationAuthorized(Integer notificationId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isFindNotificationsByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isGetNotificationPersonAuthorized(Integer notificationId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isGetNotificationNetworkAuthorized(Integer notificationId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isGetNotificationStationAuthorized(Integer notificationId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isGetNotificationPostAuthorized(Integer notificationId) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -1065,27 +1065,27 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPostReadAuthorized(Integer postReadId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isFindPostReadByPersonIdOrderByDateAuthorized(Integer personId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isGetPostReadPersonAuthorized(Integer postReadId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isGetPostReadPostAuthorized(Integer postReadId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isGetStationWordpressAuthorized(Integer stationId) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -1095,12 +1095,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetWordpressAuthorized(Integer wordpressId) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isGetWordpressStationAuthorized(Integer wordpressId) {
-		return false;
+		return true;
 	}
 
 	@Override

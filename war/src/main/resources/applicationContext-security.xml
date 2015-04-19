@@ -10,6 +10,13 @@
 	<http pattern="/logIn.jsp" security="none"/>
 	<http pattern="/index.jsp" security="none"/>
 	<http pattern="/app/**" security="none"/>
+	<http pattern="/new/js/**" security="none"/>
+	<http pattern="/new/fonts/**" security="none"/>
+	<http pattern="/new/css/**" security="none"/>
+	<http pattern="/new/api/**" security="none"/>
+	<http pattern="/new/l10n/**" security="none"/>
+	<http pattern="/new/tpl/**" security="none"/>
+	<http pattern="/new/img/**" security="none"/>
 	<http pattern="/home/**" security="none"/>
 	<http pattern="/bower_components/**" security="none"/>
 	<http pattern="/css/**" security="none"/>
