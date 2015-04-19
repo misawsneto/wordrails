@@ -141,6 +141,12 @@ public class UtilResource {
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Post> posts = postRepository.findAll();
 			for (Post post : posts) {
+				if(post.featuredImage != null && post.featuredImage.original != null){
+					post.imageId = post.featuredImage.original.id;
+					post.imageSmallId = post.featuredImage.small.id;
+					post.imageMediumId = post.featuredImage.medium.id;
+					post.imageLargeId= post.featuredImage.large.id;
+				}
 				postRepository.save(post);
 			}
 		}
