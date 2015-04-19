@@ -999,17 +999,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindFavoritesByPersonIdAuthorized(Integer personId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isFindFavoritesByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindFavoritesByPostIdAuthorized(Integer postId) {
 		return true;
 	}
 
@@ -1105,6 +1095,20 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetStationLogoAuthorized(Integer stationId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindFavoritesByPostIdAuthorized(Integer postId,
+			Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isFindFavoritesByPersonIdAuthorized(Integer personId,
+			Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
 		return true;
 	}
 

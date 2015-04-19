@@ -13,7 +13,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Integer>, Qu
 
 //	List<Favorite> findByPersonUsername(@Param("username") String username, Pageable pageable);
 	
-	List<Favorite> findFavoritesByPersonId(@Param("personId") Integer personId);
+	List<Favorite> findFavoritesByPersonId(@Param("personId") Integer personId, Pageable pageable);
 	List<Favorite> findFavoritesByPersonIdOrderByDate(@Param("personId") Integer personId, Pageable pageable);
-	List<Favorite> findFavoritesByPostId(@Param("postId") Integer postId);
+	List<Favorite> findFavoritesByPostId(@Param("postId") Integer postId, Pageable pageable);
 }
