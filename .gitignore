@@ -43,3 +43,4 @@ spring-data-rest/spring-data-rest-core/.gitignore
 spring-data-rest/spring-data-rest-webmvc/.gitignore
 war/com.wordrails.business.Post/segments.gen
 war/com.wordrails.business.Post/*
+client/journal
