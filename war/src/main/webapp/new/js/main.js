@@ -69,16 +69,7 @@ angular.module('app')
       
       $scope.app.initData = angular.copy(initData);
       $scope.app.currentStation = trixService.selectCurrentStation($scope.app.initData.stations);
-      $scope.app.stationIsWritable = function(stationId){
-        return trixService.stationIsWritable(stationId)
-      }
-      $scope.app.stationIsAdmin = function(stationId){
-        return trixService.stationIsAdmin(stationId)
-      }
-
-      $scope.app.getWritableStations = function(){
-        return trixService.getWritableStations();
-      }
+      $scope.app.writableStations = trixService.getWritableStations();
 
       /* end of added */
 

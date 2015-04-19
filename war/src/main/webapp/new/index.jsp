@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="css/override.css" type="text/css" />
   <script type="text/javascript">
   	var GLOBAL_URL_HASH = "${buildNumber}"
-    var initData = <%=request.getSession().getAttribute("personData")%>;
+    var initData = ${personData};
   </script>
 </head>
 <body ng-controller="AppCtrl">
