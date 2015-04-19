@@ -66,7 +66,7 @@
   <script src="js/main.js"></script>
   <script src="js/services/ui-load.js"></script>
   <script src="js/services/trix.js"></script>
-  <script src="js/filters/fromNow.js"></script>
+  <script src="js/filters/filters.js"></script>
   <script src="js/directives/setnganimate.js"></script>
   <script src="js/directives/ui-butterbar.js"></script>
   <script src="js/directives/ui-focus.js"></script>

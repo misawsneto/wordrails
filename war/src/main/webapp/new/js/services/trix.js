@@ -43,7 +43,7 @@ angular.module('app').service('trixService', function(){
 					iStation.admin = true;
 				}
 				iStation.visible = true;
-				}
+			}
 				//window.console && console.log(iStation);
 		});
 	}
