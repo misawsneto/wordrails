@@ -18,12 +18,16 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.Person;
 import com.wordrails.business.Post;
+import com.wordrails.business.PostRead;
 import com.wordrails.business.ServiceGenerator;
 import com.wordrails.business.Wordpress;
 import com.wordrails.business.WordpressApi;
 import com.wordrails.business.WordpressPost;
 import com.wordrails.business.WordpressService;
+import com.wordrails.persistence.PostReadRepository;
 import com.wordrails.persistence.PostRepository;
 
 @Component
@@ -36,6 +40,12 @@ public class PostFilter implements Filter {
 
 	@Autowired
 	private WordpressService wordpressService;
+	
+	@Autowired
+	private AccessControllerUtil accessControllerUtil; 
+	
+	@Autowired
+	private PostReadRepository postReadRepository; 
 
 	@Override
 	public void destroy() {/* not implemented */
@@ -61,6 +71,12 @@ public class PostFilter implements Filter {
 		try {
 			String[] urlParts = rq.getRequestURI().split("/");
 			log.info("POSTFILTER URL: " + rq.getRequestURI());
+			
+			if (rq.getMethod().toLowerCase().equals("get")){
+				postId = getPostId(rq.getRequestURI());
+				Post post = postRepository.findOne(postId);
+				handleAfterRead(post);
+			}
 
 			if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
 				postId = getPostId(res.getHeader("Location"));
@@ -91,6 +107,17 @@ public class PostFilter implements Filter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Async
+	@Transactional
+	private void handleAfterRead(Post post) throws Exception {
+		Person person = accessControllerUtil.getLoggedPerson();
+
+		PostRead postRead = new PostRead();
+		postRead.person = person;
+		postRead.post = post;
+		postReadRepository.save(postRead);
 	}
 
 	/**
