@@ -54,17 +54,8 @@
       </a>
       <!-- dropdown -->
       <ul class="dropdown-menu w">
-        <li >
-          <a href>Estação 2</a>
-        </li>
-        <li >
-          <a href>Estação 3</a>
-        </li>
-        <li >
-          <a href>Estação 4</a>
-        </li>
-        <li >
-          <a href>Estação 5</a>
+        <li ng-repeat="wStation in app.getWritableStations()">
+          <a href>{{wStation.stationName}}</a>
         </li>
       </ul>
       <!-- / dropdown -->

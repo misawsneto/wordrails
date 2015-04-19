@@ -38,4 +38,5 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', function($scope, $log,
 			checkScrollVisible(this.scrollTop);
 		})
 	}
+
 }]);

@@ -1,4 +1,9 @@
 angular.module('app').service('trixService', function(){
+	var that = this;
+
+	/**
+	 * select a station based on the properties or the id of a stations
+	 */
 	this.selectCurrentStation = function(stations, changeToStationId){
 		var ret = null;
 		if(stations){
@@ -26,25 +31,41 @@ angular.module('app').service('trixService', function(){
 		return ret;
 	}
 
-	tris.getWritableStations = function(){
-
-		stationPermissions.forEach(function(permissions, index){
-			if(iStation.id == permissions.stationId){
-				iStation.permissions = permissions;
-				if(permissions.writable || permissions.writer){
-					iStation.canWrite = true;
-				}else{
-					iStation.canWrite = false;
-				}
-				if(permissions.editor){
-					iStation.editor = true;
-				}
-				if(permissions.admin){
-					iStation.admin = true;
-				}
-				iStation.visible = true;
-			}
-				//window.console && console.log(iStation);
+	/**
+	 * check if user is station admin
+	 */
+	this.stationIsWritable = function(stationId){
+		if (!stationId) {return false};
+		var writable = false;
+		initData.personPermissions.stationPermissions.forEach(function(permissions, index){
+			if(permissions.stationId == stationId && (permissions.writable || permissions.writer))
+				writable = true;
 		});
+		return writable;
+	}
+
+	/**
+	 * check if user is station admin
+	 */
+	this.stationIsAdmin = function(stationId){
+		if (!stationId) {return false};
+		var isAdmin = false;
+		initData.personPermissions.stationPermissions.forEach(function(permissions, index){
+			if(permissions.stationId == stationId && permission.admin)
+				isAdmin = true;
+		});
+		return isAdmin;
+	}
+
+	/**
+	 * get a list of all stations that the user has permission to write
+	 */
+	this.getWritableStations = function(){
+		var stations = [];
+		initData.personPermissions.stationPermissions.forEach(function(permissions, index){
+			if(permissions.writable || permissions.writer)
+				stations.push(permissions)
+		});
+		return stations;
 	}
 });
