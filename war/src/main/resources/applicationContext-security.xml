@@ -29,8 +29,10 @@
 	<http pattern="/api/persons/search/findByUsername/**" security="none"/>
 	<http pattern="/api/persons/create" security="none"/>
 	<http pattern="/api/wp/login" security="none"/>
+	<http pattern="/api/util/**" security="none"/>
 
 	<http entry-point-ref="authenticationEntryPoint">
+	    <intercept-url pattern="/api/persons/init" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/new" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/new/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    

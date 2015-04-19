@@ -27,9 +27,8 @@ public class Test {
 		
 		NetworkDto network = wordRails.getNetwork(1);
 
-		PersonDto person = wordRails.getPerson(3);
-		PostDto postDto = wordRails.getPost(465);
-		
+//		PersonDto person = wordRails.getPerson(3);
+//		PostDto postDto = wordRails.getPost(465);
 //		FavoriteDto favorite = new FavoriteDto();
 //		favorite.post = postDto.getSelf();
 //		favorite.person = person.getSelf();
@@ -37,6 +36,8 @@ public class Test {
 //		wordRails.postFavorite(favorite);
 		
 //		wordRails.findPostReadByPersonIdOrderByDate(personId)
+		
+		PersonData data = wordRails.getInitialData();
 		
 		if(true)
 			return;

@@ -85,6 +85,8 @@ public class Station {
 	
 	public Integer logoId;
 	
+	public Integer defaultPerspectiveId;
+	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable=false)

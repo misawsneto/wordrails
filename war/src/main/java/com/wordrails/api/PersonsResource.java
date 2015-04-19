@@ -97,8 +97,8 @@ public class PersonsResource {
 		return Response.status(Status.CREATED).build();
 	}
 	
-	@Path("/init")
 	@GET
+	@Path("/init")
 	public PersonData getInitialData (@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		

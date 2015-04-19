@@ -16,11 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.business.Station;
+import com.wordrails.persistence.TermPerspectiveRepository;
 
 @Component
 public class PersonDataFilter implements Filter{
 	
 	private @Autowired PersonsResource personsResource;
+	
+	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
+	
+	private @Autowired PerspectiveResource perspectiveResource;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -76,34 +81,40 @@ public class PersonDataFilter implements Filter{
 	
 	private TermPerspectiveView selectDefaultStation(PersonData personData){
 		
-		/*List<StationPermission> stationPermissions = personData.personPermissions.stationPermissions;
+		List<StationPermission> stationPermissions = personData.personPermissions.stationPermissions;
 		
 		TermPerspectiveView termPerspectiveView;
-		Station station;
-		station.
+		Integer stationId;
+		
 		
 		if(stationPermissions == null)
 			return null;
 			
 		for (StationPermission stationPermission : stationPermissions) {
 			if(stationPermission.main)
-				return stationPermission.stationId;
+				stationId = stationPermission.stationId;
 		}
 		
 		for (StationPermission stationPermission : stationPermissions) {
 			if(stationPermission.visibility.equals(Station.UNRESTRICTED))
-				return stationPermission.stationId;
+				stationId = stationPermission.stationId;
 		}
 		
 		for (StationPermission stationPermission : stationPermissions) {
 			if(stationPermission.visibility.equals(Station.RESTRICTED_TO_NETWORKS))
-				return stationPermission.stationId;
+				stationId = stationPermission.stationId;
 		}
 		
 		for (StationPermission stationPermission : stationPermissions) {
 			if(stationPermission.visibility.equals(Station.RESTRICTED))
-				return stationPermission.stationId;
-		}*/
+				stationId = stationPermission.stationId;
+		}
+		
+		for (StationDto station : personData.stations) {
+//			station.
+		}
+		
+//		perspectiveResource.getTermPerspectiveView(null, null, stationPerspectiveId, 0, 15);
 		
 		return null;
 	}
