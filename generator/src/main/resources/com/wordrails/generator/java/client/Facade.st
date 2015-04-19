@@ -251,12 +251,12 @@ public class $facade$ {
 		_facade.getNetworkPersonPermissions(id, _callback);
 	}
 	
-	public PersonData getInitialData(Integer id){
-		return _facade.getInitialData(id);
+	public PersonData getInitialData(){
+		return _facade.getInitialData();
 	}
 	
-	public void getInitialData(Integer id, Callback<PersonData> _callback){
-		_facade.getInitialData(id, _callback);
+	public void getInitialData(Callback<PersonData> _callback){
+		_facade.getInitialData(_callback);
 	}
 /*---------------------------------------------------------------------------*/
 

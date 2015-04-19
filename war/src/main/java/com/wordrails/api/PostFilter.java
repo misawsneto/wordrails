@@ -70,15 +70,11 @@ public class PostFilter implements Filter {
 		Integer postId;
 		try {
 			String[] urlParts = rq.getRequestURI().split("/");
-			log.info("POSTFILTER URL: " + rq.getRequestURI());
+			log.debug("POSTFILTER URL: " + rq.getRequestURI());
 			
 			if (rq.getMethod().toLowerCase().equals("get")){
-				postId = getPostId(rq.getRequestURI());
-				Post post = postRepository.findOne(postId);
-				handleAfterRead(post);
-			}
-
-			if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
+				handleAfterRead(rq.getRequestURI());
+			} else if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
 				postId = getPostId(res.getHeader("Location"));
 				Post post = postRepository.findOne(postId);
 				Wordpress wp = post.station.wordpress;
@@ -111,13 +107,16 @@ public class PostFilter implements Filter {
 	
 	@Async
 	@Transactional
-	private void handleAfterRead(Post post) throws Exception {
-		Person person = accessControllerUtil.getLoggedPerson();
-
-		PostRead postRead = new PostRead();
-		postRead.person = person;
-		postRead.post = post;
-		postReadRepository.save(postRead);
+	private void handleAfterRead(String url) throws Exception {
+		if(url.matches("(.*)[/posts/[0-9]]$")){
+			Person person = accessControllerUtil.getLoggedPerson();
+			Integer postId = getPostId(url);
+			Post post = postRepository.findOne(postId);
+			PostRead postRead = new PostRead();
+			postRead.person = person;
+			postRead.post = post;
+			postReadRepository.save(postRead);
+		}
 	}
 
 	/**

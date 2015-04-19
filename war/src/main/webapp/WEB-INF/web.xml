@@ -173,6 +173,8 @@
 	    <filter-name>PostFilter</filter-name>
 	    <url-pattern>/api/posts</url-pattern>
 	    <url-pattern>/api/posts/*</url-pattern>
+	    <dispatcher>FORWARD</dispatcher>
+   		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
 	
 	<filter-mapping>

@@ -138,10 +138,10 @@ interface I$facade$ {
 	void getNetworkPersonPermissions(@Path("id") Integer id, Callback<PersonPermissions> _callback);
 	
 	@GET("/persons/init")
-	PersonData getInitialData(@Path("id") Integer id);
+	PersonData getInitialData();
 	
 	@GET("/persons/init")
-	void getInitialData(@Path("id") Integer id, Callback<PersonData> _callback);
+	void getInitialData(Callback<PersonData> _callback);
 /*---------------------------------------------------------------------------*/
 
 $entities:IFacadeMethods(); separator="\n\n"$
