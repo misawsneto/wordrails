@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import retrofit.RestAdapter.LogLevel;
 
 public class Test {
+
 	public static void main(String[] args) throws IOException {	
 		
 		WordRails wordRails = new WordRails(
@@ -27,8 +28,7 @@ public class Test {
 		
 		NetworkDto network = wordRails.getNetwork(1);
 
-//		PersonDto person = wordRails.getPerson(3);
-//		PostDto postDto = wordRails.getPost(465);
+		PersonDto person = wordRails.getPerson(3);
 //		FavoriteDto favorite = new FavoriteDto();
 //		favorite.post = postDto.getSelf();
 //		favorite.person = person.getSelf();
@@ -39,6 +39,7 @@ public class Test {
 		
 		PersonData data = wordRails.getInitialData();
 		
+		PostDto postDto = wordRails.getPost(465);
 		if(true)
 			return;
 		
