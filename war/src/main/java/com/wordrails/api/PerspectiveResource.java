@@ -163,7 +163,8 @@ public class PerspectiveResource {
 				
 				List<Row> rows = rowRepository.findByPerspective(termPerspective);
 				termView = convertRowsToTermView(termPerspective, rows, page, size, lowerLimit, upperLimit);
-				termView.stationPerspectiveId = termPerspective.perspective.id; 
+				termView.stationPerspectiveId = termPerspective.perspective.id;
+				termView.stationId = termPerspective.stationId;
 			}else{
 				List<Term> terms = null;
 				Term term = null;
@@ -176,7 +177,8 @@ public class PerspectiveResource {
 					terms = termRepository.findRoots(stationPerspective.taxonomy.id);
 				}
 				termView = convertRowsToTermViewDefault(term, stationPerspective.station.id, terms, page, size);
-				termView.stationPerspectiveId = stationPerspective.id; 
+				termView.stationPerspectiveId = stationPerspective.id;
+				termView.stationId = stationPerspective.stationId;
 			}
 		}
 		return termView;
@@ -301,7 +303,8 @@ public class PerspectiveResource {
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null);
 		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertToView(termPerspective.featuredRow) : null);
 		termView.ordinaryRows = fillPostsNotPositionedInRow(termPerspective.term ,rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
-		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);;
+		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
+		termView.stationId = termPerspective.stationId;
 
 		return termView;
 	}
@@ -388,6 +391,7 @@ public class PerspectiveResource {
 		termView.ordinaryRows = (List<RowView>) rowConverter.convertToViews(rowRepository.findByPerspective(termPerspective));
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null); 
 		termView.termId = termPerspective.term.id;
+		termView.stationId = termPerspective.stationId;
 
 		return termView;
 	}

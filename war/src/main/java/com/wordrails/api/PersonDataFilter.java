@@ -9,8 +9,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,8 +39,10 @@ public class PersonDataFilter implements Filter{
 		
 		HttpServletRequest request = (HttpServletRequest) req;
 		
+		Integer stationPerspectiveId = getPerspectiveFromCookie(request);
+		
 		PersonData personData = personsResource.getInitialData(request);
-		TermPerspectiveView termPerspectiveView = getDefaultPerspective(personData);
+		TermPerspectiveView termPerspectiveView = stationPerspectiveId != null ? getDefaultPerspective(stationPerspectiveId) : getDefaultPerspective(personData);
 		
 		req.setAttribute("personData", personsResource.mapper.writeValueAsString(personData));
 		req.setAttribute("termPerspectiveView", personsResource.mapper.writeValueAsString(termPerspectiveView));
@@ -94,5 +96,17 @@ public class PersonDataFilter implements Filter{
 		return null;
 	}
 	
+	private TermPerspectiveView getDefaultPerspective(Integer stationPerspectiveId) {
+		return perspectiveResource.getTermPerspectiveView(null, null, stationPerspectiveId, 0, 15);
+	}
 	
+	private Integer getPerspectiveFromCookie(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		for (Cookie cookie : cookies) {
+			if(cookie.getName().equals("stationPerspectiveId")){
+				return Integer.parseInt(cookie.getValue());
+			}
+		}
+		return null;
+	}
 }

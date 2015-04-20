@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -39,4 +41,20 @@ public class TermPerspective {
 	@ManyToOne
 	@JoinColumn(name="term_id")
 	public Term term;
+	
+	public Integer stationId;
+	
+	@PreUpdate
+	private void onUpdate() {
+		if(perspective != null && perspective.station != null){
+			stationId = perspective.station.id;
+		}
+	}
+	
+	@PrePersist
+	private void onCreate() {
+		if(perspective != null && perspective.station != null){
+			stationId = perspective.station.id;
+		}
+	}
 }

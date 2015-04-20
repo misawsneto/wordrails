@@ -31,14 +31,17 @@ import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Post;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationPerspective;
+import com.wordrails.business.TermPerspective;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.PostRepository;
+import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
+import com.wordrails.persistence.TermPerspectiveRepository;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -59,6 +62,9 @@ public class UtilResource {
 	private @Autowired WordrailsUtil wordrailsUtil;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired PostRepository postRepository;
+	
+	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
+	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
 	
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 
@@ -127,9 +133,9 @@ public class UtilResource {
 				Set	<StationPerspective> perspectives = station.stationPerspectives != null ? station.stationPerspectives : new HashSet<StationPerspective>();
 				if(perspectives.size() > 0){
 					station.defaultPerspectiveId = ((StationPerspective)perspectives.toArray()[0]).id;
-					stationRepository.save(station);
 				}
 			}
+			stationRepository.save(stations);
 		}
 	}
 	
@@ -147,8 +153,28 @@ public class UtilResource {
 					post.imageMediumId = post.featuredImage.medium.id;
 					post.imageLargeId= post.featuredImage.large.id;
 				}
-				postRepository.save(post);
 			}
+			postRepository.save(posts);
+		}
+	}
+	
+	@GET
+	@Path("/setStationIds")
+	public void setStationIds(@Context HttpServletRequest request) {
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<TermPerspective> termPerspectives = termPerspectiveRepository.findAll();
+			for (TermPerspective termPerspective : termPerspectives) {
+				termPerspective.stationId = termPerspective.perspective.station.id;
+			}
+			termPerspectiveRepository.save(termPerspectives);
+			
+			List<StationPerspective> stationPerspectives = stationPerspectiveRepository.findAll();
+			for (StationPerspective stationPerspective : stationPerspectives) {
+				stationPerspective.stationId = stationPerspective.station.id;
+			}
+			stationPerspectiveRepository.save(stationPerspectives);
 		}
 	}
 }

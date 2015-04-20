@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -32,6 +34,22 @@ public class StationPerspective {
 	
 	@OneToMany(mappedBy="perspective", cascade=CascadeType.REMOVE)
 	public Set<TermPerspective> perspectives;
+	
+	public Integer stationId;
+	
+	@PreUpdate
+	private void onUpdate() {
+		if(station != null){
+			stationId = station.id;
+		}
+	}
+	
+	@PrePersist
+	private void onCreate() {
+		if(station != null){
+			stationId = station.id;
+		}
+	}
 
 	// TODO guardar o dono da perspectiva da estação
 }
