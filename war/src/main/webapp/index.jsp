@@ -131,9 +131,9 @@
   <script src="js/controllers_scaffold.js?${buildNumber}"></script>
   <script src="js/controllers_perspectives.js?${buildNumber}"></script>
   <!-- Sly -->
-  <script src="/js/sly/sly.plugins.js?${buildNumber}"></script>
-  <script src="/js/sly/sly.min.js?${buildNumber}"></script>
-  <script src="/js/sly/horizontal.js?${buildNumber}"></script>
+  <script src="js/sly/sly.plugins.js?${buildNumber}"></script>
+  <script src="js/sly/sly.min.js?${buildNumber}"></script>
+  <script src="js/sly/horizontal.js?${buildNumber}"></script>
   
   <!-- util -->
   <script src="js/toastr.min.js?${buildNumber}"></script>

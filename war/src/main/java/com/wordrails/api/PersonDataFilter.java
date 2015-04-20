@@ -21,11 +21,11 @@ import com.wordrails.persistence.TermPerspectiveRepository;
 
 @Component
 public class PersonDataFilter implements Filter{
-	
+
 	private @Autowired PersonsResource personsResource;
-	
+
 	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
-	
+
 	private @Autowired PerspectiveResource perspectiveResource;
 
 	@Override
@@ -36,14 +36,14 @@ public class PersonDataFilter implements Filter{
 	@Transactional(readOnly=true)
 	public void doFilter(ServletRequest req, ServletResponse res,
 			FilterChain chain) throws IOException, ServletException {
-		
+
 		HttpServletRequest request = (HttpServletRequest) req;
-		
+
 		Integer stationPerspectiveId = getPerspectiveFromCookie(request);
-		
+
 		PersonData personData = personsResource.getInitialData(request);
 		TermPerspectiveView termPerspectiveView = stationPerspectiveId != null ? getDefaultPerspective(stationPerspectiveId) : getDefaultPerspective(personData);
-		
+
 		req.setAttribute("personData", personsResource.mapper.writeValueAsString(personData));
 		req.setAttribute("termPerspectiveView", personsResource.mapper.writeValueAsString(termPerspectiveView));
 		getDefaultPerspective(personData);
@@ -53,60 +53,61 @@ public class PersonDataFilter implements Filter{
 	@Override
 	public void destroy() {
 	}
-	
+
 	private TermPerspectiveView getDefaultPerspective(PersonData personData){
-		
+
 		List<StationPermission> stationPermissions = personData.personPermissions.stationPermissions;
-		
+
 		Integer stationId = 0;
-		
+
 		if(stationPermissions == null)
 			return null;
-			
+
 		for (StationPermission stationPermission : stationPermissions) {
 			if(stationPermission.main)
 				stationId = stationPermission.stationId;
 		}
-		
+
 		if(stationId == 0)
-		for (StationPermission stationPermission : stationPermissions) {
-			if(stationPermission.visibility.equals(Station.UNRESTRICTED))
-				stationId = stationPermission.stationId;
-		}
-		
+			for (StationPermission stationPermission : stationPermissions) {
+				if(stationPermission.visibility.equals(Station.UNRESTRICTED))
+					stationId = stationPermission.stationId;
+			}
+
 		if(stationId == 0)
-		for (StationPermission stationPermission : stationPermissions) {
-			if(stationPermission.visibility.equals(Station.RESTRICTED_TO_NETWORKS))
-				stationId = stationPermission.stationId;
-		}
-		
+			for (StationPermission stationPermission : stationPermissions) {
+				if(stationPermission.visibility.equals(Station.RESTRICTED_TO_NETWORKS))
+					stationId = stationPermission.stationId;
+			}
+
 		if(stationId == 0)
-		for (StationPermission stationPermission : stationPermissions) {
-			if(stationPermission.visibility.equals(Station.RESTRICTED))
-				stationId = stationPermission.stationId;
-		}
-		
+			for (StationPermission stationPermission : stationPermissions) {
+				if(stationPermission.visibility.equals(Station.RESTRICTED))
+					stationId = stationPermission.stationId;
+			}
+
 		for (StationDto station : personData.stations) {
 			if(stationId == station.id){
 				TermPerspectiveView tpv = perspectiveResource.getTermPerspectiveView(null, null, station.defaultPerspectiveId, 0, 15);
 				return tpv;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	private TermPerspectiveView getDefaultPerspective(Integer stationPerspectiveId) {
 		return perspectiveResource.getTermPerspectiveView(null, null, stationPerspectiveId, 0, 15);
 	}
-	
+
 	private Integer getPerspectiveFromCookie(HttpServletRequest request){
 		Cookie[] cookies = request.getCookies();
-		for (Cookie cookie : cookies) {
-			if(cookie.getName().equals("stationPerspectiveId")){
-				return Integer.parseInt(cookie.getValue());
+		if(cookies != null)
+			for (Cookie cookie : cookies) {
+				if(cookie.getName().equals("stationPerspectiveId")){
+					return Integer.parseInt(cookie.getValue());
+				}
 			}
-		}
 		return null;
 	}
 }
