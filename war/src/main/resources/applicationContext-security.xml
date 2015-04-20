@@ -41,6 +41,8 @@
 		<form-login always-use-default-target="true"
 					default-target-url="/loggedIn.jsp"									
 					authentication-failure-url="/logIn.jsp"/>
+		
+		<logout/>
 	</http>
 
 	<beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
