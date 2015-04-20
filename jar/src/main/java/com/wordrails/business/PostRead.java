@@ -31,17 +31,19 @@ public class PostRead {
 	
 	@ManyToOne
 	public Post post;
-	
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date createdAt;
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date updatedAt;
 
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
 	}
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
 
 	@PreUpdate
 	void onUpdate() {
