@@ -8,7 +8,7 @@
         <div class="cell">
           <div class="cell-inner">
             <div class="wrapper-md">
-              <div id="perspective-info-flows">
+              <div id="perspective-info-flows" class="m-auto">
                 <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-show="ordinaryRow.cells && ordinaryRow.cells.length">
                   <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
                   <button ng-show="ordinaryRow.cells"  class="backward"><i class="fa fa-angle-left"></i></button>
@@ -41,6 +41,8 @@
                   </div>
                 </div>
             </div>
+            <!-- perspective view vertical/horizontal -->
+            <!-- <div id="perspective-sidebar" class="wrapper-md bg-dkmask"></div> -->
           </div>
         </div>
       </div>
