@@ -17,7 +17,7 @@ class AuthenticationInvocationHandler implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, final Method method, final Object[] args) throws Throwable {
 		try {
-			if (args.length \> 0) {
+			if (args != null && args.length \> 0) {
 				Object arg = args[args.length - 1];
 				if (arg != null && arg instanceof Callback<?\>) {
 					final Callback callback  = (Callback) arg;
