@@ -19,16 +19,16 @@ public class Test {
 		WordRails wordRails = new WordRails(
 				new MockConnectivityManager(true),
 				new File("."), 
-				1024 * 1024, 
+				0, 
 				"http://localhost:8080", 
 				"silvio", 
 				"silvio", 
 				LogLevel.NONE
 			);
-		
-		NetworkDto network = wordRails.getNetwork(1);
-
-		PersonDto person = wordRails.getPerson(3);
+//		
+//		NetworkDto network = wordRails.getNetwork(1);
+//
+//		PersonDto person = wordRails.getPerson(3);
 //		FavoriteDto favorite = new FavoriteDto();
 //		favorite.post = postDto.getSelf();
 //		favorite.person = person.getSelf();
@@ -38,8 +38,8 @@ public class Test {
 //		wordRails.findPostReadByPersonIdOrderByDate(personId)
 		
 		PersonData data = wordRails.getInitialData();
+		System.out.println(data.network.name);
 		
-		PostDto postDto = wordRails.getPost(465);
 		if(true)
 			return;
 		
