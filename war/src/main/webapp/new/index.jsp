@@ -18,6 +18,7 @@
   <script type="text/javascript">
   	var GLOBAL_URL_HASH = "${buildNumber}"
     var initData = ${personData};
+    var initTermPerspective = ${termPerspectiveView};
   </script>
 </head>
 <body ng-controller="AppCtrl">

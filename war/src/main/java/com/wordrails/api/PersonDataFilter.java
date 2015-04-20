@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.business.Station;
 import com.wordrails.persistence.TermPerspectiveRepository;
@@ -32,18 +33,18 @@ public class PersonDataFilter implements Filter{
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public void doFilter(ServletRequest req, ServletResponse res,
 			FilterChain chain) throws IOException, ServletException {
 		
 		HttpServletRequest request = (HttpServletRequest) req;
 		
-		String requestUrl = request.getRequestURI();
-		
 		PersonData personData = personsResource.getInitialData(request);
-		HttpSession session = request.getSession();
+		TermPerspectiveView termPerspectiveView = getDefaultPerspective(personData);
 		
 		req.setAttribute("personData", personsResource.mapper.writeValueAsString(personData));
-		selectDefaultStation(personData);
+		req.setAttribute("termPerspectiveView", personsResource.mapper.writeValueAsString(termPerspectiveView));
+		getDefaultPerspective(personData);
 		chain.doFilter(req, res);
 	}
 
@@ -51,41 +52,11 @@ public class PersonDataFilter implements Filter{
 	public void destroy() {
 	}
 	
-
-//	this.selectCurrentStation = function(stations, changeToStationId){
-//		var ret = null;
-//		if(stations){
-//			stations.forEach(function(station){
-//				if(station.main && !changeToStationId){
-//					ret = station;
-//					return;
-//				}
-//			});
-//
-//			if(!ret){
-//				for (var i = 0; i < stations.length; i++) {
-//					var station = stations[i]
-//					if(changeToStationId){
-//						if(station.id == changeToStationId){
-//							ret = station;
-//						break; // exit foreach
-//					}
-//				}else{
-//					ret = station;
-//					break;
-//				}
-//			};}
-//		}
-//		return ret;
-//	}
-	
-	private TermPerspectiveView selectDefaultStation(PersonData personData){
+	private TermPerspectiveView getDefaultPerspective(PersonData personData){
 		
 		List<StationPermission> stationPermissions = personData.personPermissions.stationPermissions;
 		
-		TermPerspectiveView termPerspectiveView;
-		Integer stationId;
-		
+		Integer stationId = 0;
 		
 		if(stationPermissions == null)
 			return null;
@@ -95,26 +66,30 @@ public class PersonDataFilter implements Filter{
 				stationId = stationPermission.stationId;
 		}
 		
+		if(stationId == 0)
 		for (StationPermission stationPermission : stationPermissions) {
 			if(stationPermission.visibility.equals(Station.UNRESTRICTED))
 				stationId = stationPermission.stationId;
 		}
 		
+		if(stationId == 0)
 		for (StationPermission stationPermission : stationPermissions) {
 			if(stationPermission.visibility.equals(Station.RESTRICTED_TO_NETWORKS))
 				stationId = stationPermission.stationId;
 		}
 		
+		if(stationId == 0)
 		for (StationPermission stationPermission : stationPermissions) {
 			if(stationPermission.visibility.equals(Station.RESTRICTED))
 				stationId = stationPermission.stationId;
 		}
 		
 		for (StationDto station : personData.stations) {
-//			station.
+			if(stationId == station.id){
+				TermPerspectiveView tpv = perspectiveResource.getTermPerspectiveView(null, null, station.defaultPerspectiveId, 0, 15);
+				return tpv;
+			}
 		}
-		
-//		perspectiveResource.getTermPerspectiveView(null, null, stationPerspectiveId, 0, 15);
 		
 		return null;
 	}

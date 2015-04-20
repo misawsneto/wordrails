@@ -130,12 +130,14 @@ public class PersonsResource {
 				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
 				
 				//Station Fields
-				stationPermissionDto.stationId = stationDto.id = station.id;
-				stationPermissionDto.stationName = stationDto.name = station.name;
-				stationPermissionDto.writable = stationDto.writable = station.writable;
-				stationPermissionDto.main = stationDto.main = station.main;
-				stationPermissionDto.visibility = stationDto.visibility = station.visibility;
+				stationPermissionDto.stationId = station.id;
+				stationPermissionDto.stationName = station.name;
+				stationPermissionDto.writable = station.writable;
+				stationPermissionDto.main = station.main;
+				stationPermissionDto.visibility = station.visibility;
 				
+				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes(), StationDto.class);
+				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
 				//StationRoles Fields
 				StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
 				if(stationRole != null){
