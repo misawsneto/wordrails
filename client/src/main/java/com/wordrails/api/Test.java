@@ -26,7 +26,7 @@ public class Test {
 				LogLevel.NONE
 			);
 		
-//		wordRails.
+		wordRails.login();
 //		
 //		NetworkDto network = wordRails.getNetwork(1);
 //
@@ -41,7 +41,10 @@ public class Test {
 		
 		PersonData data = wordRails.getInitialData();
 		System.out.println(data.person.name);
+		wordRails.logout();
 		
+		data = wordRails.getInitialData();
+		System.out.println(data.person.name);
 		if(true)
 			return;
 		

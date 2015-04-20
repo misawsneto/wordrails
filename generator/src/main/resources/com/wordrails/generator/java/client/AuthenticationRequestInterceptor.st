@@ -46,12 +46,14 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 		HttpGet request = new HttpGet(url + "/j_spring_security_logout");
 		DefaultHttpClient client = new DefaultHttpClient();
 		BasicHttpContext context = new BasicHttpContext();
-		
+				
 		try {
 			client.execute(request, context).getEntity().consumeContent();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		
+		cookie = null;
 	}
 	
 	synchronized void logIn() {
