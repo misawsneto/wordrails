@@ -79,7 +79,13 @@
   <script src="js/directives/ui-shift.js"></script>
   <script src="js/directives/ui-toggleclass.js"></script>
   <script src="js/directives/custom.js"></script>
+  <script src="js/directives/directives.js"></script>
   <script src="js/controllers/bootstrap.js"></script>
+  <!-- Sly -->
+  <script src="/js/sly/sly.plugins.js?${buildNumber}"></script>
+  <script src="/js/sly/sly.min.js?${buildNumber}"></script>
+  <script src="/js/sly/horizontal.js?${buildNumber}"></script>
+  <!-- Sly end -->
   <script src="js/util.js"></script>
   <!-- Lazy loading -->
 </body>

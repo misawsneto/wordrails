@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-  .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService',
-    function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService) {
+  .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter',
+    function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService,   $filter) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -96,5 +96,10 @@ angular.module('app')
       $rootScope.$on('$stateChangeSuccess', 
         function(event, toState, toParams, fromState, fromParams){
       });
+
+      $scope.backgroundImage = function(postView, size){
+        var img = $filter('pvimageLink')(postView, size);
+        return img;
+      }
 
   }]);

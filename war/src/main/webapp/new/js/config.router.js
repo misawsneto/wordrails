@@ -26,7 +26,7 @@ angular.module('app')
               })
               .state('app.stations', {
                   url: '/?stationId',
-                  templateUrl: 'tpl/layout_app.html',
+                  templateUrl: 'tpl/stations.html',
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
