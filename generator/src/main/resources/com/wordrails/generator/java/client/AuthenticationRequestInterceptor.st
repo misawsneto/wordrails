@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -38,6 +39,18 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 		} else {
 			int maxStale = Integer.MAX_VALUE;
             request.addHeader("Cache-Control", "only-if-cached, max-stale=" + maxStale);				
+		}
+	}
+	
+	synchronized void logOut() {
+		HttpGet request = new HttpGet(url + "/j_spring_security_logout");
+		DefaultHttpClient client = new DefaultHttpClient();
+		BasicHttpContext context = new BasicHttpContext();
+		
+		try {
+			client.execute(request, context).getEntity().consumeContent();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 	

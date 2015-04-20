@@ -25,6 +25,8 @@ public class Test {
 				"silvio", 
 				LogLevel.NONE
 			);
+		
+//		wordRails.
 //		
 //		NetworkDto network = wordRails.getNetwork(1);
 //
@@ -38,7 +40,7 @@ public class Test {
 //		wordRails.findPostReadByPersonIdOrderByDate(personId)
 		
 		PersonData data = wordRails.getInitialData();
-		System.out.println(data.network.name);
+		System.out.println(data.person.name);
 		
 		if(true)
 			return;

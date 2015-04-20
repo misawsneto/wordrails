@@ -21,7 +21,7 @@ function Base$facade$(_url, _username, _password) {
 
     function logOut(complete) {
         return \$.ajax({
-            type: "POST",
+            type: "GET",
             url: _url + "/j_spring_security_logout",
             crossDomain: true, 
             complete: complete

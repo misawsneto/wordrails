@@ -32,6 +32,7 @@ import com.wordrails.api.RowView;
 public class $facade$ {
 	private String _url;
 	private I$facade$ _facade;
+	AuthenticationRequestInterceptor _interceptor;
 	
 	public $facade$(IConnectivityManager _manager,
 					 File _cacheDirectory, 
@@ -46,17 +47,19 @@ public class $facade$ {
 			.create();		
 		Converter _converter = new GsonConverter(_gson);
 	
-		AuthenticationRequestInterceptor _interceptor = new AuthenticationRequestInterceptor();
+		_interceptor = new AuthenticationRequestInterceptor();
 		_interceptor.manager = _manager;
 		_interceptor.url = _url;
 		_interceptor.username = _username;
 		_interceptor.password = _password;
 		
-		Cache _cache = new Cache(_cacheDirectory, _cacheMaxSize);
-
 		OkHttpClient _okHttpClient = new OkHttpClient();
-		_okHttpClient.setCache(_cache);
 
+		if(_cacheMaxSize > 0){
+			Cache _cache = new Cache(_cacheDirectory, _cacheMaxSize);
+			_okHttpClient.setCache(_cache);
+		}
+		
 		Client _client = new OkClient(_okHttpClient);
 		
 		RestAdapter _builder = new RestAdapter.Builder()
@@ -81,6 +84,14 @@ public class $facade$ {
 	
 	public Batch createBatch() {
 		return new Batch(_facade);
+	}
+	
+	public void login(){
+		_interceptor.logIn();
+	}
+	
+	public void logout(){
+		_interceptor.logOut();
 	}
 	
 /*---------------------------------------------------------------------------*/
