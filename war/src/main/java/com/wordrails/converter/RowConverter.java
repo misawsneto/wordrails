@@ -49,6 +49,7 @@ public class RowConverter extends AbstractConverter<Row, RowView>{
 		RowView rowView = new RowView();
 		rowView.id = row.id;
 		rowView.termId = (row.term != null ? row.term.id : null);
+		rowView.termName = (row.term != null ? row.term.name : null);
 		rowView.type = row.type;
 		rowView.index = row.index;
 		if(row.type.equals(Row.FEATURED_ROW)){

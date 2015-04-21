@@ -317,6 +317,8 @@ public class Network {
 		
 		if(logo != null && logo.original != null){
 			logoId = logo.original.id;
+		}else{
+			logoId = null;
 		}
 	}
 	
@@ -329,6 +331,8 @@ public class Network {
 		updatedAt = new Date();
 		if(logo != null && logo.original != null){
 			logoId = logo.original.id;
+		}else{
+			logoId = null;
 		}
 	}
 

@@ -26,6 +26,9 @@ public class Image {
 	@Lob
 	public String caption;
 	
+	@Lob
+	public String credits;
+	
 	@ManyToOne
 	public Comment comment;
 

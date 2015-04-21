@@ -1,24 +1,32 @@
 <!-- hbox layout -->
-<div class="hbox hbox-auto-xs ">
 
   <!-- column -->
-  <div class="col">
-    <div class="vbox">
-      <div class="row-row">
-        <div class="cell">
-          <div class="cell-inner">
+
+            <div class="collapse pos-rlt navbar-collapse box-shadow station-header {{app.settings.navbarCollapseColor}}">
+              <div class="nav navbar-nav hidden-xs">
+                <a href class="btn no-shadow navbar-btn">
+                  <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw"></i>
+                </a>
+                <a href class="btn no-shadow navbar-btn">
+                  <i class="icon-user fa-fw"></i>
+                </a>
+              </div>
+            </div>
+
             <div class="wrapper-md">
-              <div id="perspective-info-flows" class="m-auto">
+              <div id="perspective-info-flows" >
                 <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-show="ordinaryRow.cells && ordinaryRow.cells.length">
+
                   <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
                   <button ng-show="ordinaryRow.cells"  class="backward"><i class="fa fa-angle-left"></i></button>
                   <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}"  -->
                   <button ng-show="ordinaryRow.cells"  class="forward"><i class="fa fa-angle-right"></i></button>
                   <div ng-show="ordinaryRow.cells" data-term-id="{{ordinaryRow.termId}}" class="wrap info-flow-wrap" sly-scroll>
                     <div class="h3">
-                      <a ng-show="ordinaryRow.term.name" class="animated fadeIn" 
+                      <a ng-show="ordinaryRow.termName" class="animated fadeIn" 
                         ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
-                        <span class="m-l-xs" ng-class="{'text-white': !app.customStyle.darkFonts2}">{{ordinaryRow.term.name}}</span>
+                        <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
+                        <span class="m-l-xs" >{{ordinaryRow.termName}}</span>
                       </a>
                     </div>
                     <div class="frame info-flow" style="overflow: hidden;">
@@ -44,10 +52,3 @@
             <!-- perspective view vertical/horizontal -->
             <!-- <div id="perspective-sidebar" class="wrapper-md bg-dkmask"></div> -->
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- /column -->
-</div>
-<!-- /hbox layout -->

@@ -79,19 +79,48 @@ public class Person {
 	@Column(updatable=false)
 	public Date createdAt;
 
-	@PrePersist
-	void onCreate() {
-		createdAt = new Date();
-	}
-
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date updatedAt;
 
+	@PrePersist
+	public void onCreate() {
+		if(image != null && image.original != null){
+			imageId = image.original.id;
+			imageSmallId = image.small.id;
+			imageMediumId = image.medium.id;
+			imageLargeId= image.large.id;
+		}else{
+			imageId = null;
+			imageSmallId = null;
+			imageMediumId = null;
+			imageLargeId = null;
+		}
+		
+		createdAt = new Date();
+	}
+	
 	@PreUpdate
-	void onUpdate() {
+	public void onUpdate() {
+		if(image != null && image.original != null){
+			imageId = image.original.id;
+			imageSmallId = image.small.id;
+			imageMediumId = image.medium.id;
+			imageLargeId= image.large.id;
+		}else{
+			imageId = null;
+			imageSmallId = null;
+			imageMediumId = null;
+			imageLargeId = null;
+		}
+		
 		updatedAt = new Date();
 	}
+	
+	public Integer imageId;
+	public Integer imageSmallId;
+	public Integer imageMediumId;
+	public Integer imageLargeId;
 
 	@Transient
 	public String password;

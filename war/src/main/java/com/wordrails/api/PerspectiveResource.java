@@ -221,6 +221,7 @@ public class PerspectiveResource {
 				rowView.id = row.id;
 				rowView.cells = cellConverter.convertToViews(cells);
 				rowView.termId = term.id;
+				rowView.termName = term.name;
 				rowView.type = Row.ORDINARY_ROW;
 			}else{
 				StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
@@ -391,6 +392,7 @@ public class PerspectiveResource {
 		termView.ordinaryRows = (List<RowView>) rowConverter.convertToViews(rowRepository.findByPerspective(termPerspective));
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null); 
 		termView.termId = termPerspective.term.id;
+		termView.termName = termPerspective.term.name;
 		termView.stationId = termPerspective.stationId;
 
 		return termView;
@@ -452,6 +454,7 @@ public class PerspectiveResource {
 		RowView rowView = new RowView();
 		rowView.cells = cellConverter.convertToViews(convertPostsToCells(row, posts)); 
 		rowView.termId = term.id;
+		rowView.termName = term.name;
 		rowView.type = rowType;
 		rowView.id = row.id;
 

@@ -8,6 +8,7 @@ public class RowView implements Serializable {
 	
 	public Integer id;
 	public Integer termId;
+	public String termName;
 	public String type;
 	public Integer index;
 	public Integer termPerspectiveId;

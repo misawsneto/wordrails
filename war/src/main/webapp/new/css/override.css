@@ -489,11 +489,38 @@ a.text-lgrey:hover {
 /* perspective */
 
 /* ------------ stations.html info-flows ------------ */
+
+.station-header{position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;}
+
 #perspective-info-flows {max-width: 1000px;}
 #perspective-info-flows .info-flow {margin-top: 0; margin-bottom: 0;}
 #perspective-info-flows .info-flow-wrap {margin-bottom: 20px;}
 #perspective-info-flows .info-flow-wrap .scrollbar {margin-top: 5px; margin-bottom: 0; background: transparent;}
 #perspective-info-flows .info-flow-wrap .scrollbar .handle {background: #555;}
+#perspective-info-flows {margin-right: 300px}
+.info-flow-wrap .scrollbar{
+    opacity: 0;
+    filter:alpha(opacity=0);/*position where      
+    enlarged image should offset horizontally */
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+  }
+  .info-flow-wrap:hover .scrollbar { /*CSS for enlarged image on hover*/
+    opacity:1.0;
+    filter:alpha(opacity=100);/*position where      
+    enlarged image should offset horizontally */
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+
+
 /* #perspective-info-flows .info-flow-wrap .h3 a {color: #ccc}
 #perspective-info-flows .info-flow-wrap .h3 a:hover {color: #fff} */
 
@@ -575,7 +602,7 @@ li.sly-stub{width: 1px;height: 100px;background: none;}
 #perspective-info-flows div.h3:hover{color: #141719}
 
 .title-wrapper-bg {/*background: rgba(0,0,0,0.65);*/
-background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0,0,0,0.9)));
+background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0,0,0,1)));
 background-image: -moz-linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%);
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endColorstr=#000000FF);
 }

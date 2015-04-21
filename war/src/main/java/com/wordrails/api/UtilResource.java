@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsUtil;
 import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationPerspective;
@@ -152,6 +153,11 @@ public class UtilResource {
 					post.imageSmallId = post.featuredImage.small.id;
 					post.imageMediumId = post.featuredImage.medium.id;
 					post.imageLargeId= post.featuredImage.large.id;
+				}else{
+					post.imageId = null;
+					post.imageSmallId = null;
+					post.imageMediumId = null;
+					post.imageLargeId = null;
 				}
 			}
 			postRepository.save(posts);
@@ -175,6 +181,31 @@ public class UtilResource {
 				stationPerspective.stationId = stationPerspective.station.id;
 			}
 			stationPerspectiveRepository.save(stationPerspectives);
+		}
+	}
+	
+	@GET
+	@Path("/updatePersonImage")
+	public void updatePersonImage(@Context HttpServletRequest request) {
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<Person> persons = personRepository.findAll();
+			for (Person person : persons) {
+				if(person.image != null && person.image.original != null){
+					person.imageId = person.image.original.id;
+					person.imageSmallId = person.image.small.id;
+					person.imageMediumId = person.image.medium.id;
+					person.imageLargeId = person.image.large.id;
+				}else{
+					person.imageId = null;
+					person.imageSmallId = null;
+					person.imageMediumId = null;
+					person.imageLargeId = null;
+				}
+			}
+			
+			personRepository.save(persons);
 		}
 	}
 }

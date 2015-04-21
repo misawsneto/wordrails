@@ -98,7 +98,6 @@ angular.module('app')
       });
 
       $scope.backgroundImage = function(postView, size){
-        console.log(postView);
         var img = $filter('pvimageLink')(postView, size);
         return img;
       }

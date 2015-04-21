@@ -200,6 +200,11 @@ public class Post {
 			imageSmallId = featuredImage.small.id;
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId= featuredImage.large.id;
+		}else{
+			imageId = null;
+			imageSmallId = null;
+			imageMediumId = null;
+			imageLargeId = null;
 		}
 	}
 	
@@ -210,6 +215,11 @@ public class Post {
 			imageSmallId = featuredImage.small.id;
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId= featuredImage.large.id;
+		}else{
+			imageId = null;
+			imageSmallId = null;
+			imageMediumId = null;
+			imageLargeId = null;
 		}
 		
 		updatedAt = new Date();
