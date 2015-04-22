@@ -490,10 +490,33 @@ a.text-lgrey:hover {
 
 /* ------------ stations.html info-flows ------------ */
 
-.station-header{position: fixed;
-  width: 100%;
+.station-header{position: fixed; width: 100%; top: 0; left: -78px;}
+
+.nav-down{
   top: 0;
-  left: 0;}
+  -webkit-transition: all 0.1s ease-in-out;
+  -moz-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+}
+.nav-up {
+    top: -50px;
+    -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    -o-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+
+.header-font{font-size: 21px}
+
+#station-sidebar{
+  background:rgba(48, 48, 48, 0.05)!important; 
+  width: 300px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  position: fixed;
+}
 
 #perspective-info-flows {max-width: 1000px;}
 #perspective-info-flows .info-flow {margin-top: 0; margin-bottom: 0;}

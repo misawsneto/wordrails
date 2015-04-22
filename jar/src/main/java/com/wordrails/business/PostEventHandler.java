@@ -17,7 +17,7 @@ import com.wordrails.persistence.ImageRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.PromotionRepository;
 import com.wordrails.security.PostAndCommentSecurityChecker;
-import com.wordrails.util.Slugfy;
+import com.wordrails.util.Util;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -40,7 +40,7 @@ public class PostEventHandler {
     public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {        
 
         if (postAndCommentSecurityChecker.canWrite(post)) {
-            String originalSlug = Slugfy.toSlug(post.title);
+            String originalSlug = Util.toSlug(post.title);
             post.originalSlug = originalSlug;
             int count = postRepository.countSlugPost(originalSlug);
             if (count > 0) {

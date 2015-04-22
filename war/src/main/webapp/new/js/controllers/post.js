@@ -8,27 +8,25 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', function($scope, $log,
 
 	function checkPostToolsWidth () {
 		$timeout(function(){
- 			$("#external-toolbar").width($("#external-toolbar").parent().width())
+			$("#external-toolbar").width($("#external-toolbar").parent().width())
 		}, 50);
 	}
 
 	function checkScrollVisible(scrollTop){
+		safeApply($scope, function(){
+			if(scrollTop == 0)
+				$scope.postCtrl.showHeaderShadow = false;
+			else
+				$scope.postCtrl.showHeaderShadow = true;
+		});
 
+		if(scrollTop > 530){
+			$("#external-toolbar").addClass('fixed-tools')
+		}else{
+			$("#external-toolbar").removeClass('fixed-tools')
+		}
 
-			safeApply($scope, function(){
-				if(scrollTop == 0)
-					$scope.postCtrl.showHeaderShadow = false;
-				else
-					$scope.postCtrl.showHeaderShadow = true;
-			});
-
-			if(scrollTop > 530){
-				$("#external-toolbar").addClass('fixed-tools')
-			}else{
-				$("#external-toolbar").removeClass('fixed-tools')
-			}
-
-			checkPostToolsWidth();
+		checkPostToolsWidth();
 
 	}
 
