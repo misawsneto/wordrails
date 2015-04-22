@@ -23,4 +23,19 @@ public class Util {
 		slug = slug.trim().replaceAll("-+", "-");
 		return slug.toLowerCase(Locale.ENGLISH);
 	}
+	
+	public static String generateRandomString(int length, String chars) {
+		String mask = "";
+		if (chars.contains("a")) mask += "abcdefghijklmnopqrstuvwxyz";
+		if (chars.contains("A")) mask += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		if (chars.contains("#")) mask += "0123456789";
+		if (chars.contains("!")) mask += "~`!@#$%^&*()_+-={}[]:\";\'<>?,./|\\";
+		String result = "";
+		for (int i = length; i > 0; --i){
+			int index = (int) Math.round(Math.random() * (mask.length() - 1));
+			result += mask.charAt(index);
+		}
+
+		return result;
+	}
 }

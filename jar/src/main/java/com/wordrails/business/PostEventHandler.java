@@ -9,6 +9,7 @@ import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.persistence.CellRepository;
@@ -42,18 +43,28 @@ public class PostEventHandler {
         if (postAndCommentSecurityChecker.canWrite(post)) {
             String originalSlug = Util.toSlug(post.title);
             post.originalSlug = originalSlug;
-            int count = postRepository.countSlugPost(originalSlug);
-            if (count > 0) {
-                post.slug = originalSlug + "-" + count;
-            } else {
-                post.slug = originalSlug;
-            }
+//            int count = postRepository.countSlugPost(originalSlug);
+//            if (count > 0) {
+//                post.slug = originalSlug + "-" + count;
+//            } else {
+//                post.slug = originalSlug;
+//            }
             Date now = new Date();
             if (post.date == null) {
                 post.date = now;
             } else if (post.date.after(now)) {
                 throw new NotImplementedException("Agendamento de publicações não estão disponíveis.");
             }
+            
+            try{
+            	post.slug = originalSlug;
+            	postRepository.save(post);
+            }catch(UnexpectedRollbackException ex){
+            	String hash = Util.generateRandomString(5, "!Aa#");
+            	post.slug = post.slug + hash;
+            	handleBeforeCreate(post);
+            }
+            
 
         } else {
             throw new UnauthorizedException();
