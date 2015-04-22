@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wordrails.WordrailsUtil;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
@@ -45,7 +46,9 @@ public class PostFilter implements Filter {
 	private AccessControllerUtil accessControllerUtil; 
 	
 	@Autowired
-	private PostReadRepository postReadRepository; 
+	private PostReadRepository postReadRepository;
+	@Autowired
+	private WordrailsUtil wordrailsUtil;
 
 	@Override
 	public void destroy() {/* not implemented */
@@ -117,6 +120,7 @@ public class PostFilter implements Filter {
 			postRead.post = post;
 			try{
 				postReadRepository.save(postRead);
+				wordrailsUtil.incrementReadsCount(post.id);
 			}catch(org.springframework.dao.DataIntegrityViolationException ex){
 				log.debug("DataIntegrityViolationException " + post.id + " " + person.id + " - PostRead already exists... ");
 			}

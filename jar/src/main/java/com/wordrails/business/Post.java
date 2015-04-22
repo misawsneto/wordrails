@@ -179,6 +179,12 @@ public class Post {
 	@IndexedEmbedded
 	@JoinColumn(updatable=false)
 	public Station station;
+	
+	@Field
+	public int readsCount = 0;
+	
+	@Field
+	public int favoritesCount = 0;
 
 	@ManyToMany
 	@IndexedEmbedded

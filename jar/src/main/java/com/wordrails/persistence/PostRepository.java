@@ -2,6 +2,8 @@ package com.wordrails.persistence;
 
 import java.util.List;
 
+import javax.persistence.NamedNativeQuery;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -29,4 +29,6 @@ public interface PostProjection {
 	Integer getImageSmallId();
 	Integer getImageMediumId();
 	Integer getImageLargeId();
+	Integer getReadCounts();
+	Integer getFavoritesCounts();
 }
