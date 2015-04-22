@@ -65,6 +65,20 @@ interface I$facade$ {
 	@GET("/posts/{stationId}/searchPostsFromOrPromotedToStation")
 	void searchPostsFromOrPromotedToStation(@Path("stationId")Integer stationId, @Query("query")String query,
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<SearchView\>\> _callback);
+		
+	@GET("/posts/{stationId}/allUnread")
+	ContentResponse<List<PostView\>\> getAllUnreadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId,
+		@Query("page") int page, @Query("size") int size);
+	
+	@GET("/posts/{stationId}/allUnread")
+	void getAllUnreadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId,
+		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+		
+	@GET("/posts/{stationId}/unread")
+	ContentResponse<List<PostView\>\> getUnreadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId);
+	
+	@GET("/posts/{stationId}/unread")
+	void getUnreadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 /*---------------------------------------------------------------------------*/
 

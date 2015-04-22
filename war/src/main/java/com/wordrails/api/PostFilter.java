@@ -115,7 +115,11 @@ public class PostFilter implements Filter {
 			PostRead postRead = new PostRead();
 			postRead.person = person;
 			postRead.post = post;
-			postReadRepository.save(postRead);
+			try{
+				postReadRepository.save(postRead);
+			}catch(org.springframework.dao.DataIntegrityViolationException ex){
+				log.debug("DataIntegrityViolationException " + post.id + " " + person.id + " - PostRead already exists... ");
+			}
 		}
 	}
 

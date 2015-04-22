@@ -535,4 +535,24 @@
 			order by postRead.createdAt desc
 		</query>
 	</named-query>
+	<!--
+		select count(*) from post p join station s on p.station_id = s.id where s.id=:stationId and p.id not in (select pr.id from postread pr join person pe on pr.id = pe.id where pe.id=:personId); 
+	 --> 
+	
+	<named-query name="Post.findUnreadByStationAndPerson">
+	    <query>
+			select 
+				post  
+			from 
+				Post post join post.station station
+			where 
+				station.id = :stationId and post.id not in 
+				
+				(select 
+					pr.id from PostRead pr join pr.person person
+				where 
+					person.id=:personId)
+		</query>
+	</named-query>
+	
 </entity-mappings>

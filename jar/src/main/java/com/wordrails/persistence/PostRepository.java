@@ -41,4 +41,8 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	
 	@RestResource(exported=false)
 	List<Post> findPostsByStationIdAndAuthorIdAndState(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, @Param("state") String state, Pageable pageable);
+	
+	@RestResource(exported=false)
+	public List<Post> findUnreadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId, Pageable pageable);
+	public List<Post> findUnreadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 }

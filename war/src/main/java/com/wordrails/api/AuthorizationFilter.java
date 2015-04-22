@@ -1108,4 +1108,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
+	@Override
+	protected boolean isFindUnreadByStationAndPersonAuthorized(
+			Integer stationId, Integer personId) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

@@ -1,11 +1,16 @@
 package com.wordrails.api;
 
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.BadRequestException;
+import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.PostRepository;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
@@ -22,6 +27,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.highlight.Encoder;
@@ -59,6 +65,8 @@ public class PostsResource {
 	private @Autowired PostConverter postConverter;
 
 	private @PersistenceContext EntityManager manager;
+	
+	private @Autowired AccessControllerUtil accessControllerUtil;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();		
@@ -240,6 +248,37 @@ public class PostsResource {
 		return response;
 	}
 	
+	@GET
+	@Path("/{stationId}/unread")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ContentResponse<List<PostView>> getUnread(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+		
+		if(stationId == null || page == null || size == null){
+			throw new BadRequestException("Invalid null parameter(s).");
+		}
+		
+		Person person = accessControllerUtil.getLoggedPerson();
+		Pageable pageable = new PageRequest(page, size);
+		List<Post> posts = postRepository.findUnreadByStationAndPerson(stationId, person.id, pageable);
+		 
+		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
+	}
+	
+	@GET
+	@Path("/{stationId}/allUnread")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ContentResponse<List<PostView>> getAllUnread(@PathParam("stationId") Integer stationId){
+		
+		Person person = accessControllerUtil.getLoggedPerson();
+		List<Post> posts = postRepository.findUnreadByStationAndPerson(stationId, person.id);
+		 
+		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
+	}
+	
 	public static String simpleSnippet(String body){
 		String[] splitPhrase = body.split("\\s+");
 		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
@@ -247,5 +286,4 @@ public class PostsResource {
 		Document doc = Jsoup.parse(string);
 		return doc.text();
 	}
-
 }

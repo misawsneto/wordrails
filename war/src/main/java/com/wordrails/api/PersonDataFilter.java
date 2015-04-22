@@ -13,10 +13,15 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wordrails.business.Post;
 import com.wordrails.business.Station;
+import com.wordrails.converter.PostConverter;
+import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 
 @Component
@@ -27,6 +32,10 @@ public class PersonDataFilter implements Filter{
 	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
 
 	private @Autowired PerspectiveResource perspectiveResource;
+	
+	private @Autowired PostRepository postRepository;
+	
+	private @Autowired PostConverter postConverter;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -46,6 +55,10 @@ public class PersonDataFilter implements Filter{
 
 		req.setAttribute("personData", personsResource.mapper.writeValueAsString(personData));
 		req.setAttribute("termPerspectiveView", personsResource.mapper.writeValueAsString(termPerspectiveView));
+		
+		Pageable pageable = new PageRequest(0, 15);
+		List<Post> posts = postRepository.findUnreadByStationAndPerson(1, 1, pageable);
+		
 		getDefaultPerspective(personData);
 		chain.doFilter(req, res);
 	}
