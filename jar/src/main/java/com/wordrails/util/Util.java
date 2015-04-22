@@ -5,7 +5,7 @@ import java.text.Normalizer.Form;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class Slugfy {
+public class Util {
 
 	private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
 	private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
