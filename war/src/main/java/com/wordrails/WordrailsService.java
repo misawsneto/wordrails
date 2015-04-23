@@ -19,7 +19,7 @@ import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
 
 @Component
-public class WordrailsUtil {
+public class WordrailsService {
 
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
