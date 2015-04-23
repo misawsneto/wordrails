@@ -1,11 +1,9 @@
 package com.wordrails.business;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.data.rest.core.config.Projection;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Projection(types=Post.class)
 public interface PostProjection {
@@ -29,6 +27,6 @@ public interface PostProjection {
 	Integer getImageSmallId();
 	Integer getImageMediumId();
 	Integer getImageLargeId();
-	Integer getReadCounts();
-	Integer getFavoritesCounts();
+    Integer getReadsCount();
+	Integer getFavoritesCount();
 }

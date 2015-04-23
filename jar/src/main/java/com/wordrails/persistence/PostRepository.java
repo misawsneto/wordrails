@@ -1,9 +1,9 @@
 package com.wordrails.persistence;
 
+import com.wordrails.business.Image;
+import com.wordrails.business.Post;
+import com.wordrails.business.Station;
 import java.util.List;
-
-import javax.persistence.NamedNativeQuery;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,10 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
-
-import com.wordrails.business.Image;
-import com.wordrails.business.Post;
-import com.wordrails.business.Station;
 
 public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPredicateExecutor<Post> {
 	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);
@@ -24,9 +20,11 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 			@Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);
 
 	@RestResource(exported=false)
-	List<Post> findByFeaturedImages(@Param("featuredImages") List<Image> featuredImage);
-	@RestResource(exported=false)
-	List<Post> findByStation(Station station);
+    List<Post> findByFeaturedImages(@Param("featuredImages") List<Image> featuredImage);
+    @RestResource(exported = false)
+    List<Post> findByStation(Station station);
+    @RestResource(exported = false)
+    Post findByWordpressId(Integer wordpressId);
 	@RestResource(exported=false)
 	List<Post> findPostsAndPostsPromotedByBody(@Param("stationId") Integer stationId, @Param("body") String body, Pageable pageable);
 	@RestResource(exported=false)

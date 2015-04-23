@@ -1,24 +1,6 @@
 package com.wordrails.api;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.math.NumberUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.wordrails.WordrailsUtil;
+import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
@@ -30,6 +12,21 @@ import com.wordrails.business.WordpressPost;
 import com.wordrails.business.WordpressService;
 import com.wordrails.persistence.PostReadRepository;
 import com.wordrails.persistence.PostRepository;
+import java.io.IOException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class PostFilter implements Filter {
@@ -48,7 +45,7 @@ public class PostFilter implements Filter {
 	@Autowired
 	private PostReadRepository postReadRepository;
 	@Autowired
-	private WordrailsUtil wordrailsUtil;
+	private WordrailsService wordrailsUtil;
 
 	@Override
 	public void destroy() {/* not implemented */
@@ -73,7 +70,7 @@ public class PostFilter implements Filter {
 		Integer postId;
 		try {
 			String[] urlParts = rq.getRequestURI().split("/");
-			log.debug("POSTFILTER URL: " + rq.getRequestURI());
+            log.info("POSTFILTER URL: " + rq.getMethod().toUpperCase() + " " + rq.getRequestURI());
 			
 			if (rq.getMethod().toLowerCase().equals("get")){
 				handleAfterRead(rq.getRequestURI());
