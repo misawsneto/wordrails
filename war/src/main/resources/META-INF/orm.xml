@@ -555,4 +555,15 @@
 		</query>
 	</named-query>
 	
+	<named-query name="StationPerspective.findByStationId">
+	    <query>
+			select 
+				stationPerspective 
+			from 
+				StationPerspective stationPerspective 
+			where 
+				stationPerspective.id = :stationId 
+		</query>
+	</named-query>
+	
 </entity-mappings>
