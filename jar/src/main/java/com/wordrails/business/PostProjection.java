@@ -18,6 +18,9 @@ public interface PostProjection {
 	Sponsor getSponsor();
 	Person getAuthor();
 	Station getStation();
+	Integer getWordpressId();
+	String getSlug();
+	String getOriginalSlug();
 	List<Term> getTerms();
 	ImageProjection getFeaturedImage();
 	List<ImageProjection> getImages();

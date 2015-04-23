@@ -1,8 +1,15 @@
 package com.wordrails.business;
 
+import com.wordrails.persistence.CellRepository;
+import com.wordrails.persistence.CommentRepository;
+import com.wordrails.persistence.ImageRepository;
+import com.wordrails.persistence.PostReadRepository;
+import com.wordrails.persistence.PostRepository;
+import com.wordrails.persistence.PromotionRepository;
+import com.wordrails.security.PostAndCommentSecurityChecker;
+import com.wordrails.util.WordrailsUtil;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
@@ -11,20 +18,14 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wordrails.persistence.CellRepository;
-import com.wordrails.persistence.CommentRepository;
-import com.wordrails.persistence.ImageRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.PromotionRepository;
-import com.wordrails.security.PostAndCommentSecurityChecker;
-import com.wordrails.util.WordrailsUtil;
-
 @RepositoryEventHandler(Post.class)
 @Component
 public class PostEventHandler {
 
 	private @Autowired
 	PostRepository postRepository;
+	private @Autowired
+	PostReadRepository postReadRepository;
 	private @Autowired
 	CellRepository cellRepository;
 	private @Autowired
@@ -90,6 +91,7 @@ public class PostEventHandler {
 			cellRepository.delete(cellRepository.findByPost(post));
 			commentRepository.delete(post.comments);
 			promotionRepository.delete(post.promotions);
+            postReadRepository.deleteByPost(post);
 		} else {
 			throw new UnauthorizedException();
 		}
