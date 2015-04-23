@@ -60,7 +60,7 @@ public class UtilResource {
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired NetworkRepository networkRepository;
-	private @Autowired WordrailsService wordrailsUtil;
+	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired PostRepository postRepository;
 	

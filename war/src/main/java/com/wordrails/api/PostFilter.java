@@ -45,7 +45,7 @@ public class PostFilter implements Filter {
 	@Autowired
 	private PostReadRepository postReadRepository;
 	@Autowired
-	private WordrailsService wordrailsUtil;
+	private WordrailsService wordrailsService;
 
 	@Override
 	public void destroy() {/* not implemented */
@@ -117,7 +117,7 @@ public class PostFilter implements Filter {
 			postRead.post = post;
 			try{
 				postReadRepository.save(postRead);
-				wordrailsUtil.incrementReadsCount(post.id);
+				wordrailsService.incrementReadsCount(post.id);
 			}catch(org.springframework.dao.DataIntegrityViolationException ex){
 				log.debug("DataIntegrityViolationException " + post.id + " " + person.id + " - PostRead already exists... ");
 			}
