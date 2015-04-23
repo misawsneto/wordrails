@@ -522,6 +522,8 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
         $scope.title = post.title
         $scope.content = post.body
         $scope.topper = post.topper
+        $scope.wordpressId = post.wordpressId
+        $scope.originalSlug = post.originalSlug
       });
 
       $scope.uploadedImage.link = WORDRAILS.baseUrl + "/api/files/" + post.featuredImage.large + "/contents";
@@ -625,6 +627,8 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
         var post = {
           body: $scope.content,
           title: $scope.title,
+          originalSlug: $scope.originalSlug,
+          wordpressId: $scope.wordpressId,
           author: extractSelf($scope.app.person),
           station: extractSelf($scope.app.network.currentStation),
           state: state

@@ -29,7 +29,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.WordrailsUtil;
+import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Network;
 import com.wordrails.business.NetworkRole;
