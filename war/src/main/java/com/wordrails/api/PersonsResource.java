@@ -60,7 +60,7 @@ public class PersonsResource {
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired NetworkRepository networkRepository;
-	private @Autowired WordrailsUtil wordrailsUtil;
+	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
@@ -108,7 +108,7 @@ public class PersonsResource {
 			throw new UnauthorizedException("User is not authorized");
 		}
 		
-		Network network = wordrailsUtil.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request);
 		
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);

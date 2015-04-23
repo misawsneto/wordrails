@@ -18,7 +18,7 @@ import com.wordrails.persistence.ImageRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.PromotionRepository;
 import com.wordrails.security.PostAndCommentSecurityChecker;
-import com.wordrails.util.Util;
+import com.wordrails.util.WordrailsUtil;;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -41,7 +41,7 @@ public class PostEventHandler {
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {        
 
 		if (postAndCommentSecurityChecker.canWrite(post)) {
-			String originalSlug = Util.toSlug(post.title);
+			String originalSlug = WordrailsUtil.toSlug(post.title);
 			post.originalSlug = originalSlug;
 			//            int count = postRepository.countSlugPost(originalSlug);
 			//            if (count > 0) {
@@ -60,7 +60,7 @@ public class PostEventHandler {
 				post.slug = originalSlug;
 				postRepository.save(post);
 			}catch(org.springframework.dao.DataIntegrityViolationException ex){
-				String hash = Util.generateRandomString(5, "!Aa#");
+				String hash = WordrailsUtil.generateRandomString(5, "!Aa#");
 				post.slug = post.slug + "-" +  hash;
 			}
 

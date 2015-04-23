@@ -26,7 +26,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.WordrailsUtil;
+import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
@@ -60,7 +60,7 @@ public class UtilResource {
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired NetworkRepository networkRepository;
-	private @Autowired WordrailsUtil wordrailsUtil;
+	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired PostRepository postRepository;
 	
