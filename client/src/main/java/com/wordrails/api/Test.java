@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.lang.StringUtils;
-
 import retrofit.RestAdapter.LogLevel;
 
 public class Test {
@@ -53,10 +51,6 @@ public class Test {
 		String[] splitPhrase = phrase.split("\\s+");
 		
 		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
-		
-		String string = StringUtils.join(Arrays.copyOfRange(splitPhrase, 0, limit), " ");
-		
-		System.out.println(string + " done");
 		
 		if(true)
 			return;

@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -50,4 +52,20 @@ public class Term {
 	
 	@OneToMany(mappedBy="term")
 	public Set<TermPerspective> termPerspectives;
+	
+	public Integer taxonomyId;
+	
+	public String taxonomyName;
+	
+	@PrePersist
+	void onCreate(){
+		taxonomyId = taxonomy.id;
+		taxonomyName = taxonomy.name;
+	}
+	
+	@PreUpdate
+	void onUpdate(){
+		taxonomyId = taxonomy.id;
+		taxonomyName = taxonomy.name;
+	}
 }
