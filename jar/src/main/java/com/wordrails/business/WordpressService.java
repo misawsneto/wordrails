@@ -27,13 +27,25 @@ public class WordpressService {
                 break;
         }
 
-        WordpressPost returnPost = api.createPost(wp);
+        WordpressPost returnPost = null;
+        try {
+            returnPost = api.createPost(wp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return returnPost;
     }
 
     public Integer deletePost(Integer wordpressId, WordpressApi api) {
-        return api.deletePost(wordpressId).getStatus();
+        Integer status = null;
+        try {
+            status = api.deletePost(wordpressId).getStatus();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return status;
     }
 
     public WordpressPost updatePost(Post post, WordpressApi api) {
@@ -52,7 +64,12 @@ public class WordpressService {
                 break;
         }
 
-        WordpressPost returnPost = api.editPost(post.wordpressId, wp);
+        WordpressPost returnPost = null;
+        try {
+            returnPost = api.editPost(post.wordpressId, wp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return returnPost;
     }
