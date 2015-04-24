@@ -144,7 +144,7 @@
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
-				<version>3.4</version>
+				<version>3.3.2</version>
 			</dependency>
 
 			<dependency>
@@ -186,7 +186,7 @@
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
-				<version>4.3.5.Final</version>
+				<version>4.3.8.Final</version>
 			</dependency>
 	
 			<dependency>
@@ -310,20 +310,19 @@
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-search</artifactId>
-				<version>5.1.1.Final</version>
+				<version>4.5.3.Final</version>
 			</dependency>
 			
-			<dependency>
+			<!-- <dependency>
 				<groupId>org.apache.lucene</groupId>
 				<artifactId>lucene-highlighter</artifactId>
 				<version>5.1.0</version>
-			</dependency>
-						
+			</dependency> -->
 			
 			<dependency>
 			   <groupId>org.hibernate</groupId>
 			   <artifactId>hibernate-search-infinispan</artifactId>
-			   <version>5.1.1.Final</version>
+			   <version>4.5.3.Final</version>
 			</dependency>
 			
 			<dependency>

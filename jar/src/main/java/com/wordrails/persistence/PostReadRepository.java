@@ -16,5 +16,6 @@ public interface PostReadRepository extends JpaRepository<PostRead, Integer>, Qu
 	
 	public List<PostRead> findPostReadByPersonIdOrderByDate(@Param("personId") Integer personId);
     
+	@RestResource(exported = false)
     public void deleteByPost(Post post);
 }
