@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-  .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter',
-    function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService,   $filter) {
+  .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash',
+    function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService,   $filter ,  $splash) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -101,5 +101,24 @@ angular.module('app')
         var img = $filter('pvimageLink')(postView, size);
         return img;
       }
+
+    $scope.openModal = function(templateId, size){
+      $scope.modalInstance = $modal.open({
+        templateUrl: templateId, // the id of the <script> template
+        size: size,
+        scope: $scope, // pass the current scope. no need for a new controller
+      });
+    }
+
+    $scope.openSplash = function(templateId, size){
+      $scope.modalInstance = $splash.open({
+        templateUrl: templateId,
+        scope: $scope
+      });
+    }
+
+    $scope.cancelModal = function () {
+      $scope.modalInstance.dismiss('cancel');
+    };
 
   }]);

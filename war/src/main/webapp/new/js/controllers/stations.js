@@ -33,7 +33,6 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 	        }
       }
       lastScrollTop = scrollTop;
-      console.log(lastScrollTop);
     }
 
     $timeout(function(){
