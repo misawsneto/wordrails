@@ -82,7 +82,7 @@ public class PostFilter implements Filter {
                 Post post = postRepository.findOne(postId);
                 Wordpress wp = post.station.wordpress;
 
-                if (wp.domain != null && wp.username != null && wp.password != null) {
+                if (wp != null && wp.domain != null && wp.username != null && wp.password != null) {
                     WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
                     handleAfterCreate(post, api);
                 }
