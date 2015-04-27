@@ -36,12 +36,17 @@ public class WordrailsService {
 
 		List<Network> networks = null;
 
-		if(host.contains(".xarx.co")){
-			String subdomain = host.split(".xarx.co")[0];
-			networks = networkRepository.findBySubdomain(subdomain);
-		}else if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			networks = networkRepository.findAll();
 		}else{
+			String[] names = host.split("\\.");
+			String topDomain = names[names.length - 2] + "." + names[names.length - 1];
+			String subdomain = !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
+			if(subdomain != null && !subdomain.isEmpty())
+				networks = networkRepository.findBySubdomain(subdomain);
+		}
+		
+		if(networks == null || networks.size() == 0){
 			networks = networkRepository.findByDomain(host);
 		}
 

@@ -562,7 +562,7 @@
 			from 
 				StationPerspective stationPerspective 
 			where 
-				stationPerspective.id = :stationId 
+				stationPerspective.station.id = :stationId 
 		</query>
 	</named-query>
 	

@@ -46,5 +46,6 @@ angular.module('app')
     redactorOptions.buttons = ['html', 'formatting', 'bold', 'italic', 'underline', 'deleted', 
                                   'fontsize', 'fontcolor', 'unorderedlist', 'orderedlist', 'outdent', 'indent',
                                   'link', 'image', 'video', 'alignment', 'horizontalrule'];
+    redactorOptions.placeholder = 'Texto...'
   })
   ;
