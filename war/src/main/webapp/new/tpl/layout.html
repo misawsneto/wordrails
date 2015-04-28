@@ -22,6 +22,7 @@
 
 <script type="text/ng-template" id="signin_splash.html">
   <a class="splash-close-button" ng-click="cancelModal()">×</a>
+  <!--
   <div class="splash-content text-center" ng-cloak>
     <div class="row">
       <div class="col-xs-6 col-xs-offset-3">
@@ -45,6 +46,26 @@
         </div>
         </form>
       </div>
+    </div>
+  </div>
+  -->
+    <div class="splash-content text-center" ng-cloak>
+    <div class="row">
+      <div class="col-xs-6 col-xs-offset-3">
+      <div class="p-lg text-color wrapper-lg">
+      <form name="form">
+        <div class="md-form-group float-label">
+          <input class="md-input" ng-model="user.email" required>
+          <label>Username</label>
+        </div>
+        <div class="md-form-group float-label m-b-md">
+          <input type="password" class="md-input" ng-model="user.password" required>
+          <label>Senha</label>
+        </div>      
+        <button md-ink-ripple type="submit" class="btn-custom btn text-lg text-u-c btn-block p-h-md">Entrar</button>
+      </form>
+    </div>
+    </div>
     </div>
   </div>
 </script>
