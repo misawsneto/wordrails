@@ -3,6 +3,9 @@
 html{
   background: #fff;
 }
+body {
+  color: #333
+}
 
 .bg-default{
   background: #f9f9f9;
@@ -556,6 +559,8 @@ a.text-lgrey:hover {
     transition: all 0.4s ease-in-out;
 }
 
+#perspective-vertical md-tab-label {font-size: 20px}
+.content-block{margin-right: 160px;}
 
 /* #perspective-horizontal .info-flow-wrap .h3 a {color: #ccc}
 #perspective-horizontal .info-flow-wrap .h3 a:hover {color: #fff} */

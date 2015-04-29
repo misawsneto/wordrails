@@ -2,23 +2,21 @@
   <md-tabs md-selected="selectedIndex" flex>
 
     <md-tab ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
-      <div class="b-t block-800 m-auto" flex>
+      <div class="b-t" flex>
         <div class="p" layout="column" layout-align="space-around">
           <div class="m-b-lg wrapper-md">
             <ul class="b-none no-padding m-b-none">
               <!-- post card -->
-              <li class="" ng-repeat="cell in ordinaryRow.cells">
+              <li ng-repeat="cell in ordinaryRow.cells">
                <div class="search-divider" ng-class="{'search-divider-dark': app.customStyle.darkFonts2, 'b-t': !$first}"></div>
-                <div class="pull-right text-sm text-muted m-t-sm">
-                  <a class="r r-3x block-image pull-left m-l" ui-sref="app.post({postId: cell.postView.postId})" ng-if="cell.postView.mediumId" style="background-image: url( {{WORDRAILS.baseUrl + '/api/files/'+ cell.postView.mediumId +'/contents'}} )"> </a>
-                </div>
-                <div class="clear min-h-150 p-t-sm">
-                  <div class="m-t-sm">
+                <div class="clear p-t-sm m-b-lg m-t-lg">
+                  <a class="r r-2x block-image m-l" ui-sref="app.post({postId: cell.postView.postId})" ng-if="cell.postView.mediumId" style="background-image: url( {{WORDRAILS.baseUrl + '/api/files/'+ cell.postView.mediumId +'/contents'}} )"> </a>
+                  <div class="content-block m-t-sm">
                     <span class="label no-radius normal wrapper-xs topper text-lg" ng-if="cell.postView.topper">{{cell.postView.topper}}</span>
-                    <a ui-sref="app.post({postId: cell.postView.postId})" class="h3 font-bold m-b-sm m-t-sm block">
+                    <a ui-sref="app.post({postId: cell.postView.postId})" class="h2 font-bold m-b-md m-t-sm block">
                       {{cell.postView.title}}
                     </a>
-                    <div class="m-t-xs text-lg font-thin" bind-html-unsafe="cell.postView.snippet">
+                    <div class="m-t-xs text-lg font-thin" clamp="3" bind-html-unsafe="cell.postView.snippet">
                     </div>
                   </div>
                 </div>    

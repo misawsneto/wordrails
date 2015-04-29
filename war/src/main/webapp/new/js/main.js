@@ -120,7 +120,7 @@ angular.module('app')
       };
 
       var sheet = document.createElement('style')
-      sheet.innerHTML = getCustomButtonStyle("#7266ba");
+      sheet.innerHTML = getCustomButtonStyle("#cc3300");
       document.body.appendChild(sheet);
 
   }]); 
