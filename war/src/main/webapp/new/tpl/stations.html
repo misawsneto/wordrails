@@ -1,96 +1,53 @@
 <div class="wrapper-md">
-  <div id="perspective-info-flows" >
-    <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-show="ordinaryRow.cells && ordinaryRow.cells.length">
 
-      <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
-      <button ng-show="ordinaryRow.cells"  class="backward"><i class="fa fa-angle-left"></i></button>
-      <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}"  -->
-      <button ng-show="ordinaryRow.cells"  class="forward"><i class="fa fa-angle-right"></i></button>
-      <div ng-show="ordinaryRow.cells" data-term-id="{{ordinaryRow.termId}}" class="wrap info-flow-wrap" sly-scroll>
-        <div class="h3">
-          <a ng-show="ordinaryRow.termName" class="animated fadeIn" 
-            ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
-            <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
-            <span class="m-l-xs font-thin text-u-c" >{{ordinaryRow.termName}}</span>
-          </a>
-      </div>
-      <div class="frame info-flow" style="overflow: hidden;">
-        <ul class="sly-clearfix info-flow-list" data-term-id="{{ordinaryRow.termId}}">
-          <li class="sly-stub" style="display: none"></li>
-          <li class="animated fadeIn" ng-repeat="cell in ordinaryRow.cells">
-            <div class="" data-ng-include=" 'tpl/station_horizontal_cells.html' "></div>
-          </li>
-        </ul>
-      </div>
-      <div class="scrollbar info-flow-scroll">
-        <div class="handle">
-          <div class="mousearea"></div>
-        </div>
-      </div>
-        <!-- <div class="controls center">
-          <button class="btn prev disabled" disabled=""><i class="icon-chevron-left"></i> prev</button>
-          <button class="btn next">next <i class="icon-chevron-right"></i></button>
-        </div> -->
-      </div>
-    </div>
-  </div>
+  <div ng-include=" 'tpl/stations_horizontal.html' "></div>
+
+  <div ng-include=" 'tpl/stations_vertical.html' "></div>
+
   <!-- perspective view vertical/horizontal -->
   <div id="station-sidebar">
     <div class="vbox">
       <div class="wrapper b-b">
         <div class="font-thin h4">&nbsp;</div>
       </div>
-      <div class="nav-tabs-alt">
-        <ul class="nav nav-tabs nav-justified">
-          <li ng-class="{'active': tabs[0]}">
-            <a href ng-click="tab(0)">Populares</a>
-          </li>
-          <li ng-class="{'active': tabs[1]}">
-            <a href ng-click="tab(1)">Recentes</a>
-          </li>
-        </ul>
-      </div>
-      <div class="row-row">
-        <div class="cell scrollable hover">
-          <div class="cell-inner">
-            <div class="tab-content">
-              <div class="tab-pane" ng-class="{'active': tabs[0]}">
-                <div class="wrapper-md">
-                </div>
-              </div>
-              <div class="tab-pane" ng-class="{'active': tabs[1]}">
-                <div class="wrapper-md">
-                </div>
-              </div>
-            </div>
+      <md-tabs>
+        <md-tab class="bg-custom" label="Populares">
+          <div class="b-t" flex>
           </div>
-        </div>
-      </div>
+        </md-tab>
+        <md-tab class="bg-custom" label="Recentes">
+          <div class="b-t" flex>
+          </div>
+        </md-tab>
+        <!-- /tab -->
+      </md-tabs>
     </div>
   </div>
 </div>
 
+<!-- header bar -->
 <div class="collapse pos-rlt navbar-collapse box-shadow nav-down station-header bg-white {{app.settings.navbarCollapseColor}}">
   <div class="nav navbar-nav hidden-xs text-center text-lg w-full wrapper-sm header-font font-thin pos-abt">
     {{app.currentStation.name}}
   </div>
   <!-- nabar right -->
-        <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
-            <a href class="dropdown-toggle" dropdown-toggle>
-              <i class="icon icon-settings"></i>
-            </a>
-            <!-- dropdown -->
-            <ul class="dropdown-menu animated w-sm">
-              <li>
-                <a  href>Horizontal</a>
-                <a  href>Vertical</a>
-              </li>
-            </ul>
-            <!-- / dropdown -->
-          </li>
-          <li>
-            <a href class="text-u-c text-center" ng-click="openSplash('signin_splash.html');">ENTRAR / Cadastrar</a>
-          </li>
-        </ul>
+  <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
+      <a href class="dropdown-toggle" dropdown-toggle>
+        <i class="icon icon-settings"></i>
+      </a>
+      <!-- dropdown -->
+      <ul class="dropdown-menu animated w-sm">
+        <li>
+          <a ng-click="changeView('horizontal')" href>Horizontal</a>
+          <a ng-click="changeView('vertical')" href>Vertical</a>
+        </li>
+      </ul>
+      <!-- / dropdown -->
+    </li>
+    <li>
+      <a href class="text-u-c text-center" ng-click="openSplash('signin_splash.html');">ENTRAR / Cadastrar</a>
+    </li>
+  </ul>
 </div>
+<!-- /header bar-->

@@ -1,4 +1,4 @@
-<div class="news-item" ng-style="backgroundImage(cell.postView, 'md')" data-post-id="{{cell.postView.postId}}" ng-class="{'bg-dkmask': !cell.postView.mediumId}">
+<div class="news-item" ng-style="backgroundImage(cell.postView, 'md')" data-post-id="{{cell.postView.postId}}" ng-class="{'bg-dkmask': !cell.postView.mediumId}" ng-click="loadPost(cell.postView.id)">
 	<div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-show="cell.postView.mediumId">
 		<div class="text-md font-thin text-white">{{cell.postView.title}}</div>
 	</div>

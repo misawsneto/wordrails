@@ -25,25 +25,19 @@
   <div class="splash-content text-center" ng-cloak>
     <div class="row">
       <div class="col-xs-6 col-xs-offset-3">
-        <form ng-submit="signIn(username, password)">
-        <div class="text-danger animated fadeInLeft" ng-if="signInError">
-          Usuário ou senha inválidos
+        <div class="p-lg text-color wrapper-lg">
+          <form name="form">
+            <div class="md-form-group float-label">
+              <input class="md-input" ng-model="user.email" required>
+              <label>Username</label>
+            </div>
+            <div class="md-form-group float-label m-b-md">
+              <input type="password" class="md-input" ng-model="user.password" required>
+              <label>Senha</label>
+            </div>      
+            <button md-ink-ripple type="submit" class="btn-custom btn text-lg text-u-c btn-block p-h-md">Entrar</button>
+          </form>
         </div>
-        <div class="form-group m-t-md">
-          <input type="text" ng-model="username" class="inline-input form-control input-lg" placeholder="Usuário">
-        </div>
-        <div class="form-group">
-          <input type="password" ng-model="password" class="inline-input form-control input-lg" placeholder="Senha">
-        </div>
-        <div class="checkbox m-t-lg text-center">
-          <button type="submit" class="btn btn-success w-sm btn-rounded text-uc m-t">
-            ENTRAR
-          </button>
-          <a class="btn btn-default w-sm btn-rounded text-uc m-t" ng-click="cancelModal()">
-            CANCELAR
-          </a>
-        </div>
-        </form>
       </div>
     </div>
   </div>

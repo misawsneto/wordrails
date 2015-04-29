@@ -83,4 +83,72 @@ angular.module('app')
           }// execute finished
         }// end of link
      } // end of object to return
- }); // end of sly directive
+ }) // end of sly directive
+
+.directive('clamp', function ($timeout) {
+
+  function resetElement(element, type) {
+    element.css({
+      position: 'inherit',
+      overflow: 'hidden',
+      display: 'block',
+      textOverflow: (type ? 'ellipsis' : 'clip'),
+      visibility: 'inherit',
+      whiteSpace: 'nowrap',
+      width: '100%'
+    });
+  }
+
+  function createElement() {
+    var tagDiv = document.createElement('div');
+    (function(s) {
+      s.position = 'absolute';
+      s.whiteSpace = 'pre';
+      s.visibility = 'hidden';
+      s.display = 'inline-block';
+    })(tagDiv.style);
+
+    return angular.element(tagDiv);
+  }
+
+  return{
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        $timeout(function() {
+          var lineCount = 1, lineMax = +attrs.clamp;
+          var lineStart = 0, lineEnd = 0;
+          var text = element.html().replace(/\n/g, ' ');
+          var maxWidth = element[0].offsetWidth;
+          var estimateTag = createElement();
+
+          element.empty();
+          element.append(estimateTag);
+
+          text.replace(/ /g, function(m, pos) {
+            if (lineCount >= lineMax) {
+              return;
+            } else {
+              estimateTag.html(text.slice(lineStart, pos));
+              if (estimateTag[0].offsetWidth > maxWidth) {
+                estimateTag.html(text.slice(lineStart, lineEnd));
+                resetElement(estimateTag);
+                lineCount++;
+                lineStart = lineEnd + 1;
+                estimateTag = createElement();
+                element.append(estimateTag);
+              }
+              lineEnd = pos;
+            }
+          });
+          estimateTag.html(text.slice(lineStart));
+          resetElement(estimateTag, true);
+
+          scope.$emit('clampCallback', element, attrs);
+        });
+    }
+  }
+});
+
+  
+
+

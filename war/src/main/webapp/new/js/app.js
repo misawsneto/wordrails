@@ -3,10 +3,13 @@
 
 angular.module('app', [
     'ngAnimate',
+    'ngAria',
     'ngCookies',
+    'ngMessages',
     'ngResource',
     'ngSanitize',
     'ngTouch',
+    'ngMaterial',
     'ngStorage',
     'ui.router',
     'ui.bootstrap',

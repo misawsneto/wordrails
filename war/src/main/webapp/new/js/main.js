@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-  .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash',
-    function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService,   $filter ,  $splash) {
+.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash',
+  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService,   $filter ,  $splash) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -85,16 +85,14 @@ angular.module('app')
         $scope.lang.isopen = !$scope.lang.isopen;
       };
 
-      function isSmartDevice( $window )
-      {
-          // Adapted from http://www.detectmobilebrowsers.com
-          var ua = $window['navigator']['userAgent'] || $window['navigator']['vendor'] || $window['opera'];
-          // Checks for iOs, Android, Blackberry, Opera Mini, and Windows mobile devices
-          return (/iPhone|iPod|iPad|Silk|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
+      function isSmartDevice( $window ){
+        // Adapted from http://www.detectmobilebrowsers.com
+        var ua = $window['navigator']['userAgent'] || $window['navigator']['vendor'] || $window['opera'];
+        // Checks for iOs, Android, Blackberry, Opera Mini, and Windows mobile devices
+        return (/iPhone|iPod|iPad|Silk|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
       }
 
-      $rootScope.$on('$stateChangeSuccess', 
-        function(event, toState, toParams, fromState, fromParams){
+      $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
       });
 
       $scope.backgroundImage = function(postView, size){
@@ -102,23 +100,32 @@ angular.module('app')
         return img;
       }
 
-    $scope.openModal = function(templateId, size){
-      $scope.modalInstance = $modal.open({
-        templateUrl: templateId, // the id of the <script> template
-        size: size,
-        scope: $scope, // pass the current scope. no need for a new controller
-      });
-    }
+      $scope.openModal = function(templateId, size){
+        $scope.modalInstance = $modal.open({
+          templateUrl: templateId, // the id of the <script> template
+          size: size,
+          scope: $scope, // pass the current scope. no need for a new controller
+        });
+      }
 
-    $scope.openSplash = function(templateId, size){
-      $scope.modalInstance = $splash.open({
-        templateUrl: templateId,
-        scope: $scope
-      });
-    }
+      $scope.openSplash = function(templateId, size){
+        $scope.modalInstance = $splash.open({
+          templateUrl: templateId,
+          scope: $scope
+        });
+      }
 
-    $scope.cancelModal = function () {
-      $scope.modalInstance.dismiss('cancel');
-    };
+      $scope.cancelModal = function () {
+        $scope.modalInstance.dismiss('cancel');
+      };
 
-  }]);
+      var sheet = document.createElement('style')
+      sheet.innerHTML = getCustomButtonStyle("#cc3300", "#ffffff");
+      document.body.appendChild(sheet);
+
+      $scope.app.viewMode = 'vertical';
+      $scope.changeView = function(view){
+        $scope.app.viewMode = view;
+      }
+
+  }]); 

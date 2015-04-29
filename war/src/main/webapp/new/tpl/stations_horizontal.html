@@ -1,0 +1,35 @@
+<div id="perspective-horizontal" ng-if="app.viewMode === 'horizontal'" class="">
+  <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-show="ordinaryRow.cells && ordinaryRow.cells.length">
+
+    <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
+    <button ng-show="ordinaryRow.cells"  class="backward"><i class="fa fa-angle-left"></i></button>
+    <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}"  -->
+    <button ng-show="ordinaryRow.cells"  class="forward"><i class="fa fa-angle-right"></i></button>
+    <div ng-show="ordinaryRow.cells" data-term-id="{{ordinaryRow.termId}}" class="wrap info-flow-wrap" sly-scroll>
+      <div class="h3">
+        <a ng-show="ordinaryRow.termName" class="animated fadeIn" 
+          ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
+          <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
+          <span class="m-l-xs font-thin text-u-c" >{{ordinaryRow.termName}}</span>
+        </a>
+    </div>
+    <div class="frame info-flow" style="overflow: hidden;">
+      <ul class="sly-clearfix info-flow-list" data-term-id="{{ordinaryRow.termId}}">
+        <li class="sly-stub" style="display: none"></li>
+        <li class="animated fadeIn" ng-repeat="cell in ordinaryRow.cells">
+          <div class="" data-ng-include=" 'tpl/stations_horizontal_cells.html' "></div>
+        </li>
+      </ul>
+    </div>
+    <div class="scrollbar info-flow-scroll">
+      <div class="handle">
+        <div class="mousearea"></div>
+      </div>
+    </div>
+      <!-- <div class="controls center">
+        <button class="btn prev disabled" disabled=""><i class="icon-chevron-left"></i> prev</button>
+        <button class="btn next">next <i class="icon-chevron-right"></i></button>
+      </div> -->
+    </div>
+  </div>
+</div>
