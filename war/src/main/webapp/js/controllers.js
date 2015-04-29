@@ -721,6 +721,9 @@ function createPost(post){
       safeApply($scope, function(){
         $scope.post = newPost;
         $scope.title = newPost.title
+        $scope.slug = newPost.slug
+        $scope.originalSlug = newPost.originalSlug
+        $scope.wordpressId = newPost.wordpressId
         $scope.topper = newPost.topper
         $scope.content = newPost.body
       });
