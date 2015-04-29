@@ -51,6 +51,20 @@
 							</arguments>
 							<includePluginDependencies>true</includePluginDependencies>
 						</configuration>						
+					</execution>
+					<execution>
+						<id>AngularClientGenerator</id>
+						<phase>generate-sources</phase>					
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>com.wordrails.generator.AngularClientGenerator</mainClass>
+							<arguments>
+								<argument>${basedir}/src/main/webapp/js</argument>
+							</arguments>
+							<includePluginDependencies>true</includePluginDependencies>
+						</configuration>						
 					</execution>        									        				
 				</executions>
 			</plugin>			

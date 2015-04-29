@@ -214,6 +214,8 @@ angular.module('app.controllers', ['pascalprecht.translate', 'ngCookies'])
       //location.reload();
       $rootScope.hidePersonInfo = true;
       $scope.app.authenticated = authService.isAuth();
+      var wr = authService.getWR();
+      wr.logOut();
       safeApply($rootScope, function(){})
     }
 

@@ -1,5 +1,5 @@
 <div id="perspective-vertical" class="p-l-xxl p-r-xxl animated fadeIn" ng-if="app.viewMode === 'vertical'">
-  <md-tabs md-selected="selectedIndex" flex>
+  <md-tabs md-selected="selectedIndex" flex class="block-800 m-auto">
     <!-- tab -->
     <md-tab ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="bg-custom" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
       <div class="b-t" flex>
