@@ -523,6 +523,7 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
         $scope.content = post.body
         $scope.topper = post.topper
         $scope.wordpressId = post.wordpressId
+        $scope.slug = post.slug
         $scope.originalSlug = post.originalSlug
       });
 
@@ -628,6 +629,7 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
           body: $scope.content,
           title: $scope.title,
           originalSlug: $scope.originalSlug,
+          slug: $scope.slug,
           wordpressId: $scope.wordpressId,
           author: extractSelf($scope.app.person),
           station: extractSelf($scope.app.network.currentStation),
@@ -723,6 +725,9 @@ function createPost(post){
         $scope.title = newPost.title
         $scope.topper = newPost.topper
         $scope.content = newPost.body
+        $scope.wordpressId = newPost.wordpressId;
+        $scope.slug = newPost.slug;
+        $scope.originalSlug = newPost.originalSlug;
       });
     });    
 
