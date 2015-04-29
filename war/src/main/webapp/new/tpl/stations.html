@@ -10,32 +10,17 @@
       <div class="wrapper b-b">
         <div class="font-thin h4">&nbsp;</div>
       </div>
-      <div class="nav-tabs-alt">
-        <ul class="nav nav-tabs nav-justified">
-          <li ng-class="{'active': tabs[0]}">
-            <a href ng-click="tab(0)">Populares</a>
-          </li>
-          <li ng-class="{'active': tabs[1]}">
-            <a href ng-click="tab(1)">Recentes</a>
-          </li>
-        </ul>
-      </div>
-      <div class="row-row">
-        <div class="cell scrollable hover">
-          <div class="cell-inner">
-            <div class="tab-content">
-              <div class="tab-pane" ng-class="{'active': tabs[0]}">
-                <div class="wrapper-md">
-                </div>
-              </div>
-              <div class="tab-pane" ng-class="{'active': tabs[1]}">
-                <div class="wrapper-md">
-                </div>
-              </div>
-            </div>
+      <md-tabs>
+        <md-tab class="bg-custom" label="Populares">
+          <div class="b-t" flex>
           </div>
-        </div>
-      </div>
+        </md-tab>
+        <md-tab class="bg-custom" label="Recentes">
+          <div class="b-t" flex>
+          </div>
+        </md-tab>
+        <!-- /tab -->
+      </md-tabs>
     </div>
   </div>
 </div>
@@ -54,8 +39,8 @@
       <!-- dropdown -->
       <ul class="dropdown-menu animated w-sm">
         <li>
-          <a  href>Horizontal</a>
-          <a  href>Vertical</a>
+          <a ng-click="changeView('horizontal')" href>Horizontal</a>
+          <a ng-click="changeView('vertical')" href>Vertical</a>
         </li>
       </ul>
       <!-- / dropdown -->

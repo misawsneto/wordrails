@@ -1,31 +1,51 @@
-<div id="perspective-vertical" class="padder-lg" ng-if="app.viewMode === 'vertical'">
+<div id="perspective-vertical" class="p-l-xxl p-r-xxl animated fadeIn" ng-if="app.viewMode === 'vertical'">
   <md-tabs md-selected="selectedIndex" flex>
-
-    <md-tab ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
+    <!-- tab -->
+    <md-tab ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="bg-custom" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
       <div class="b-t" flex>
-        <div class="p" layout="column" layout-align="space-around">
-          <div class="m-b-lg wrapper-md">
-            <ul class="b-none no-padding m-b-none">
-              <!-- post card -->
-              <li ng-repeat="cell in ordinaryRow.cells">
-               <div class="search-divider" ng-class="{'search-divider-dark': app.customStyle.darkFonts2, 'b-t': !$first}"></div>
-                <div class="clear p-t-sm m-b-lg m-t-lg">
-                  <a class="r r-2x block-image m-l" ui-sref="app.post({postId: cell.postView.postId})" ng-if="cell.postView.mediumId" style="background-image: url( {{WORDRAILS.baseUrl + '/api/files/'+ cell.postView.mediumId +'/contents'}} )"> </a>
-                  <div class="content-block m-t-sm">
-                    <span class="label no-radius normal wrapper-xs topper text-lg" ng-if="cell.postView.topper">{{cell.postView.topper}}</span>
-                    <a ui-sref="app.post({postId: cell.postView.postId})" class="h2 font-bold m-b-md m-t-sm block">
-                      {{cell.postView.title}}
-                    </a>
-                    <div class="m-t-xs text-lg font-thin" clamp="3" bind-html-unsafe="cell.postView.snippet">
+        <div class="m-b-lg p-l-xxl p-r-xxl">
+            <!-- posts -->
+          <ul class="b-none no-padding m-b-none">
+            <li ng-repeat="cell in ordinaryRow.cells">
+             <div class="search-divider" ng-class="{'search-divider-dark': app.customStyle.darkFonts2, 'b-t': !$first}"></div>
+              <div class="clear p-t-sm padder-v">
+                <!-- image -->
+                <a class="r r-2x block-image m-l m-t" ui-sref="app.post({postId: cell.postView.postId})" ng-if="cell.postView.mediumId" style="background-image: url( {{WORDRAILS.baseUrl + '/api/files/'+ cell.postView.mediumId +'/contents'}} )"> </a>
+                <!-- /image -->
+                <!-- /content -->
+                <div class="content-block m-t-sm">
+                  <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{cell.postView.topper}}</span>
+                  <a ui-sref="app.post({postId: cell.postView.postId})" class="h2 font-bold m-b-md m-t-sm block">
+                    {{cell.postView.title}}
+                  </a>
+                  <div class="m-t-xs text-lg font-thin" clamp="3" bind-html-unsafe="cell.postView.snippet"></div>
+                  <div class="m-t">
+                    <div class="display-t-c">
+                      <a href="https://medium.com/@hughmcguire" class="" title="Go to the profile of Hugh McGuire">
+                        <img src="https://d262ilb51hltx0.cloudfront.net/fit/c/36/36/0*IEP3z0HdLYAjHBvk.jpg" class="" title="Hugh McGuire">
+                      </a>
+                    </div>
+                    <div class="display-t-c p-l">
+                      <a class="link link link--accent link--darken" title="Go to the profile of Hugh McGuire" href="https://medium.com/@hughmcguire" dir="auto">
+                        Hugh McGuire
+                      </a>
+                      <span class="postMetaInline postMetaInline--supplemental">
+                        Apr 22 
+                        <span class="postMetaInline postMetaInline--bookmark">
+                          <span class="readingTime">11 min read</span>
+                        </span>
+                      </span>
                     </div>
                   </div>
-                </div>    
-              </li>
-            </ul>
-
-          </div>
+                </div>
+                <!-- /content -->
+              </div>    
+            </li>
+          </ul>
+            <!-- /posts -->
         </div>
       </div>
     </md-tab>
+    <!-- /tab -->
   </md-tabs>
 </div>

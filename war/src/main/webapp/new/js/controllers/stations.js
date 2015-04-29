@@ -52,6 +52,4 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
     $scope.loadPost = function(postId){
     } 
 
-    $scope.app.viewMode = 'vertical';
-
   }]);

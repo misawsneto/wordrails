@@ -120,7 +120,12 @@ angular.module('app')
       };
 
       var sheet = document.createElement('style')
-      sheet.innerHTML = getCustomButtonStyle("#cc3300");
+      sheet.innerHTML = getCustomButtonStyle("#cc3300", "#ffffff");
       document.body.appendChild(sheet);
+
+      $scope.app.viewMode = 'vertical';
+      $scope.changeView = function(view){
+        $scope.app.viewMode = view;
+      }
 
   }]); 

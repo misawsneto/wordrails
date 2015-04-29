@@ -39,7 +39,7 @@ function textColorEval (hex){
   	return "#ffffff";
 }
 
-function getCustomButtonStyle(color) {
+function getCustomButtonStyle(color, perspective) {
 	var style = "" +
 	".btn-custom {\n"+
 	"  color: "+textColorEval(color)+" !important;\n"+
@@ -93,13 +93,26 @@ function getCustomButtonStyle(color) {
 	"}\n"+
 
 	"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
-	  "color: "+ color +";\n"+
-	  "background: "+ color +";\n"+
+	  "color: "+ textColorEval(perspective) +";\n"+
+	  "background: "+ textColorEval(perspective) +";\n"+
 	"}\n"+
 
 	"md-tabs.md-default-theme md-tab .md-ripple-container {"+
 	  "color: "+shadeBlend(0.8, color)+";"+
-	"}"+
+	"}\n"+
+
+	".bg-perspective{\n"+
+		"background: "+perspective+";\n"+
+	"}\n"+
+
+	".bg-custom {\n"+
+	"  color: "+textColorEval(perspective)+" !important;\n"+
+	"}\n"+
+
+	".bg-custom-primary {\n"+
+	"  background-color: "+color+" !important;\n"+
+	"  color: "+textColorEval(color)+" !important;\n"+
+	"}\n"+
 
 	+"";
 	return style
