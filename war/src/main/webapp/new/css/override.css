@@ -742,7 +742,9 @@ a.text-lgrey:hover {
 }
 
 #perspective-vertical md-tab-label {font-size: 20px}
-#perspective-vertical md-tabs .md-ripple-container {display: none;}
+#perspective-vertical md-tabs .md-ripple-container,
+#station-sidebar md-tabs .md-ripple-container 
+{display: none;}
 #perspective-vertical ul{list-style-type: none;}
 
 .content-block{margin-right: 160px;}

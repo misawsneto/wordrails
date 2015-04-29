@@ -93,12 +93,13 @@ function getCustomButtonStyle(color, perspective) {
 	"}\n"+
 
 	"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
-	  "color: "+ textColorEval(perspective) +";\n"+
-	  "background: "+ textColorEval(perspective) +";\n"+
+	  "color: "+ color +";\n"+
+	  "background: "+ color +";\n"+
 	"}\n"+
 
-	"md-tabs.md-default-theme md-tab .md-ripple-container {"+
-	  "color: "+shadeBlend(0.8, color)+";"+
+	"#station-sidebar md-tabs.md-default-theme md-tabs-ink-bar {\n"+
+	  "color: "+ textColorEval(perspective) +";\n"+
+	  "background: "+ textColorEval(perspective) +";\n"+
 	"}\n"+
 
 	".bg-perspective{\n"+
@@ -112,6 +113,10 @@ function getCustomButtonStyle(color, perspective) {
 	".bg-custom-primary {\n"+
 	"  background-color: "+color+" !important;\n"+
 	"  color: "+textColorEval(color)+" !important;\n"+
+	"}\n"+
+
+	".a-custom-primary {\n"+
+	"  color: "+color+" !important;\n"+
 	"}\n"+
 
 	+"";
