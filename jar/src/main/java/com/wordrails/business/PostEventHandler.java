@@ -22,78 +22,89 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class PostEventHandler {
 
-	private @Autowired
-	PostRepository postRepository;
-	private @Autowired
-	PostReadRepository postReadRepository;
-	private @Autowired
-	CellRepository cellRepository;
-	private @Autowired
-	CommentRepository commentRepository;
-	private @Autowired
-	ImageRepository imageRepository;
-	private @Autowired
-	PromotionRepository promotionRepository;
-	private @Autowired
-	PostAndCommentSecurityChecker postAndCommentSecurityChecker;
+    private @Autowired
+    PostRepository postRepository;
+    @Autowired
+    private WordpressService wordpressService;
+    private @Autowired
+    PostReadRepository postReadRepository;
+    private @Autowired
+    CellRepository cellRepository;
+    private @Autowired
+    CommentRepository commentRepository;
+    private @Autowired
+    ImageRepository imageRepository;
+    private @Autowired
+    PromotionRepository promotionRepository;
+    private @Autowired
+    PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 
-	@HandleBeforeCreate
-	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {        
+    @HandleBeforeCreate
+    public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {
+        System.out.println("HANDLE BEFORE CREATE");
 
-		if (postAndCommentSecurityChecker.canWrite(post)) {
-			String originalSlug = WordrailsUtil.toSlug(post.title);
-			post.originalSlug = originalSlug;
-			//            int count = postRepository.countSlugPost(originalSlug);
-			//            if (count > 0) {
-			//                post.slug = originalSlug + "-" + count;
-			//            } else {
-			//                post.slug = originalSlug;
-			//            }
-			Date now = new Date();
-			if (post.date == null) {
-				post.date = now;
-			} else if (post.date.after(now)) {
-				throw new NotImplementedException("Agendamento de publicações não estão disponíveis.");
-			}
+        if (postAndCommentSecurityChecker.canWrite(post)) {
+            String originalSlug = WordrailsUtil.toSlug(post.title);
+            post.originalSlug = originalSlug;
+            //            int count = postRepository.countSlugPost(originalSlug);
+            //            if (count > 0) {
+            //                post.slug = originalSlug + "-" + count;
+            //            } else {
+            //                post.slug = originalSlug;
+            //            }
+            Date now = new Date();
+            if (post.date == null) {
+                post.date = now;
+            } else if (post.date.after(now)) {
+                throw new NotImplementedException("Agendamento de publicações não estão disponíveis.");
+            }
 
-			try{
-				post.slug = originalSlug;
-				postRepository.save(post);
-			}catch(org.springframework.dao.DataIntegrityViolationException ex){
-				String hash = WordrailsUtil.generateRandomString(5, "!Aa#");
-				post.slug = post.slug + "-" +  hash;
-			}
+            try {
+                post.slug = originalSlug;
+                postRepository.save(post);
+            } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+                String hash = WordrailsUtil.generateRandomString(5, "!Aa#");
+                post.slug = post.slug + "-" + hash;
+            }
 
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
 
-		} else {
-			throw new UnauthorizedException();
-		}
-	}
+    @HandleBeforeSave
+    public void handleBeforeSave(Post post) throws UnauthorizedException {
+        System.out.println("HANDLE BEFORE SAVE");
+        if (postAndCommentSecurityChecker.canEdit(post)) {
+            post.lastModificationDate = new Date();
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
 
-	@HandleBeforeSave
-	public void handleBeforeSave(Post post) throws UnauthorizedException {
-		if (postAndCommentSecurityChecker.canEdit(post)) {
-			post.lastModificationDate = new Date();
-		} else {
-			throw new UnauthorizedException();
-		}
-	}
+    @HandleBeforeDelete
+    @Transactional
+    public void handleBeforeDelete(Post post) throws UnauthorizedException {
+        System.out.println("HANDLE BEFORE DELETE");
+        if (postAndCommentSecurityChecker.canRemove(post)) {
+            Wordpress wp = post.station.wordpress;
 
-	@HandleBeforeDelete
-	@Transactional
-	public void handleBeforeDelete(Post post) throws UnauthorizedException {
-		if (postAndCommentSecurityChecker.canRemove(post)) {
-			List<Image> images = imageRepository.findByPost(post);
-			if (images != null && images.size() > 0) {
-				postRepository.updateFeaturedImagesToNull(images);
-			}
-			imageRepository.delete(images);
-			cellRepository.delete(cellRepository.findByPost(post));
-			commentRepository.delete(post.comments);
-			promotionRepository.delete(post.promotions);
+            if (wp != null && wp.domain != null && wp.username != null && wp.password != null) {
+                WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
+                wordpressService.deletePost(post.wordpressId, api);
+            }
+
+            List<Image> images = imageRepository.findByPost(post);
+            if (images != null && images.size() > 0) {
+                postRepository.updateFeaturedImagesToNull(images);
+            }
+            imageRepository.delete(images);
+            cellRepository.delete(cellRepository.findByPost(post));
+            commentRepository.delete(post.comments);
+            promotionRepository.delete(post.promotions);
             postReadRepository.deleteByPost(post);
-		} else {
-			throw new UnauthorizedException();
-		}
-	}
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
 }

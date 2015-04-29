@@ -2,7 +2,6 @@ package com.wordrails.api;
 
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.business.PostRead;
 import com.wordrails.business.ServiceGenerator;
@@ -12,9 +11,7 @@ import com.wordrails.business.WordpressPost;
 import com.wordrails.business.WordpressService;
 import com.wordrails.persistence.PostReadRepository;
 import com.wordrails.persistence.PostRepository;
-
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -23,11 +20,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,7 +71,12 @@ public class PostFilter implements Filter {
             log.info("POSTFILTER URL: " + rq.getMethod().toUpperCase() + " " + rq.getRequestURI());
 
             if (rq.getMethod().toLowerCase().equals("get")) {
-                handleAfterRead(rq.getRequestURI());
+                String url = rq.getRequestURI();
+                if (url.matches("(.*)[/posts/[0-9]]$")) {                    
+                    postId = getPostId(url);
+                    Post post = postRepository.findOne(postId);
+                    handleAfterRead(post);
+                }
             } else if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
                 postId = getPostId(res.getHeader("Location"));
                 Post post = postRepository.findOne(postId);
@@ -99,9 +99,6 @@ public class PostFilter implements Filter {
                             case "put":
                                 handleAfterUpdate(post, api);
                                 break;
-                            case "delete":
-                                handleAfterDelete(post.wordpressId, api);
-                                break;
                         }
                     }
                 }
@@ -111,23 +108,17 @@ public class PostFilter implements Filter {
         }
     }
 
-    @Async
     @Transactional
-    private void handleAfterRead(String url) throws Exception {
-        if (url.matches("(.*)[/posts/[0-9]]$")) {
-            Person person = accessControllerUtil.getLoggedPerson();
-            Integer postId = getPostId(url);
-            Post post = postRepository.findOne(postId);
+    private void handleAfterRead(Post post) throws Exception {
             PostRead postRead = new PostRead();
-            postRead.person = person;
+            postRead.person = accessControllerUtil.getLoggedPerson();
             postRead.post = post;
             try {
                 postReadRepository.save(postRead);
                 wordrailsService.incrementReadsCount(post.id);
             } catch (org.springframework.dao.DataIntegrityViolationException ex) {
-                log.debug("DataIntegrityViolationException " + post.id + " " + person.id + " - PostRead already exists... ");
+                log.debug("DataIntegrityViolationException " + post.id + " " + postRead.person.id + " - PostRead already exists... ");
             }
-        }
     }
 
     /**
@@ -140,7 +131,6 @@ public class PostFilter implements Filter {
         return Integer.parseInt(strings[strings.length - 1]);
     }
 
-    @Async
     @Transactional
     private void handleAfterCreate(Post post, WordpressApi api) throws Exception {
         try {
@@ -153,21 +143,10 @@ public class PostFilter implements Filter {
         }
     }
 
-    @Async
     @Transactional
     private void handleAfterUpdate(Post post, WordpressApi api) throws Exception {
         try {
             wordpressService.updatePost(post, api);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Async
-    @Transactional
-    private void handleAfterDelete(Integer postId, WordpressApi api) throws Exception {
-        try {
-            wordpressService.deletePost(postId, api);
         } catch (Exception e) {
             e.printStackTrace();
         }
