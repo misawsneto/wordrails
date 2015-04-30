@@ -845,20 +845,25 @@ a.text-lgrey:hover {
   max-height: 40px;
 }
 
+.custom-header{
+  font-size: 25px;
+  vertical-align: sub;
+}
+
 .new-post-navbar ul li a{
   background: inherit!important;
 }
 
 @media (min-width: 768px) {
   .app-header-fixed .app-header{
-    width: 78px;
+    width: 70px;
   }
   .new-post-navbar{
     position: fixed;
     top: 0;
     height: 50px;
     right: 0;
-    left: 78px;
+    left: 70px;
     z-index: 1054
   }
   .new-post-navbar .navbar-right{
@@ -876,23 +881,23 @@ a.text-lgrey:hover {
 	}
 
  .app-aside-fixed.app-aside-folded .aside-wrap {
-  width: 77px!important;
+  width: 69px!important;
 }
 .app-aside-fixed.app-aside-folded .aside-wrap .navi-wrap {
-  width: 95px!important;
+  width: 88px!important;
 }
 .app-aside-fixed.app-aside-folded .aside-wrap .navi-wrap > * {
-  width: 78px!important;
+  width: 70px!important;
 }
 
 .app-aside-folded .app-aside,
 .app-aside-folded .navbar-header {
-  width: 78px!important;
+  width: 70px!important;
 }
 .app-aside-folded .navbar-collapse,
 .app-aside-folded .app-content,
 .app-aside-folded .app-footer {
-  margin-left: 78px!important;
+  margin-left: 70px!important;
 }
 }
 
@@ -1006,10 +1011,10 @@ a.text-lgrey:hover {
 
 @media (min-width: 768px) {
   .app-aside-folded.app-aside-fixed .app-aside > ul.nav:before {
-    width: 78px;
+    width: 70px;
   }
   .app-aside-folded .navi > ul > li > a i {
-    font-size: 25px;
+    font-size: 30px;
   }
   .app-aside-folded .navi > ul > li > a {
    height: 55px;
@@ -1046,13 +1051,13 @@ a.text-lgrey:hover {
 
 .nonempty-search2 {
   width: inherit;
-  left: 78px;
+  left: 70px;
   top:0;
 }
 
 .nonempty-search {
   width: inherit;
-  left: 78px;
+  left: 70px;
   top:0;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
@@ -1207,7 +1212,7 @@ a.text-lgrey:hover {
 
 /* ------------ stations.html info-flows ------------ */
 
-.station-header{position: fixed; width: 100%; top: 0; left: -78px;}
+.station-header{position: fixed; width: 100%; top: 0; left: -70px; padding: 0px; padding-right: 15px;}
 
 .nav-down{
   top: 0;

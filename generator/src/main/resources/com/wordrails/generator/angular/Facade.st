@@ -4,26 +4,13 @@ Facade(facade, entities) ::=
 var trix = angular.module('trix', [])
 
 .config(function(\$httpProvider) { 
-	\$httpProvider.interceptors.push('$facade$_httpInterceptor'); 
+	\$httpProvider.defaults.useXDomain = true;
+	\$httpProvider.defaults.withCredentials = true;
+  delete \$httpProvider.defaults.headers.common['X-Requested-With'];
 })
 
-.factory('$facade$_httpInterceptor', function $facade$_httpInterceptor(\$q, \$rootScope) {
-	var requestInterceptor = {
-    // optional method
-    response: function(response) {
-    // do something on success
-    	if(token){
-    		if(!$rootScope.$facade$) $rootScope.$facade$ = {}
-    		$rootScope.$facade$.token = token;
-    	}
-     	return response;
-  	},
-  	request: function(config) {
-      if($rootScope.$facade$ && $rootScope.$facade$.token)
-      	config.headers["X-OMEGA-TOKEN"] = $rootScope.$facade$.token;
-      return config;
-    }
-	};
-	return requestInterceptor;
+.service('trix', function PulseClient(\$http) {
+
+	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
 })
 >>

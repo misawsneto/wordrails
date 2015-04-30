@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="../bower_components/redactor/redactor.css" />
   <link rel="stylesheet" href="../bower_components/angular-material/angular-material.css" type="text/css" />
 
-  <link rel="stylesheet" href="css/material-design-icons.css" type="text/css" />
+  <link rel="stylesheet" href="css/materialdesignicons.css" type="text/css" />
 
   <link rel="stylesheet" href="css/font.css" type="text/css" />
   <link rel="stylesheet" href="css/app.css" type="text/css" />
@@ -87,6 +87,9 @@
   <script src="js/directives/custom.js"></script>
   <script src="js/directives/directives.js"></script>
   <script src="js/controllers/bootstrap.js"></script>
+
+  <script src="/js/BaseTrix.js"></script>
+
   <!-- Sly -->
   <script src="/js/sly/sly.plugins.js?${buildNumber}"></script>
   <script src="/js/sly/sly.min.js?${buildNumber}"></script>
