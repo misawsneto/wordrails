@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash',
-  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService,   $filter ,  $splash) {
+.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', 'trix',
+  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  trix) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -119,13 +119,15 @@ angular.module('app')
         $scope.modalInstance.dismiss('cancel');
       };
 
-      var sheet = document.createElement('style')
-      sheet.innerHTML = getCustomButtonStyle("#cc3300", "#ffffff");
-      document.body.appendChild(sheet);
+      var $style = $('style#custom-style').length ? $('style#style#custom-style') : $('<style id="custom-style">').appendTo('body');
+      $style.html(getCustomButtonStyle("#cc3300", "#ffffff"));
 
       $scope.app.viewMode = 'vertical';
       $scope.changeView = function(view){
         $scope.app.viewMode = view;
       }
 
+      trix.login('silvio', 'silvio').success(function(){
+        trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
+      });
   }]); 

@@ -39,6 +39,24 @@ function textColorEval (hex){
   	return "#ffffff";
 }
 
+function textColorEval2 (hex){
+	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	var rgb = result ? {
+		r: parseInt(result[1], 16),
+		g: parseInt(result[2], 16),
+		b: parseInt(result[3], 16)
+	} : null;
+
+	var colors = {} 
+	colors.font = 0;
+  // Counting the perceptive luminance - human eye favors green color... 
+  var a = 1 - ( 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b)/255;
+  if (a < 0.5)
+  	return true;
+  else
+  	return false;
+}
+
 function getCustomButtonStyle(color, perspective) {
 	var style = "" +
 	".btn-custom {\n"+
@@ -104,14 +122,34 @@ function getCustomButtonStyle(color, perspective) {
 
 	".bg-perspective{\n"+
 		"background: "+perspective+";\n"+
+		"color: "+ textColorEval(perspective) +";\n"+
 	"}\n"+
 
-	".bg-custom {\n"+
+	(textColorEval2(perspective) ? "" :
+	".bg-perspective .station-perspectives a{\n"+
+	  "color: #f1f1f1 ;\n"+
+	"}\n"+
+	".bg-perspective .station-perspectives a:hover,\n"+
+	".bg-perspective .station-perspectives a:focus {\n"+
+	  "color: #f1f1f1 ;\n"+
+	  "text-decoration: none;\n"+
+	"}\n"+
+	".bg-perspective .md-tab-content > div.b-t {"+
+	"border: none;"+
+	"}\n"+
+	"\n"
+	)+
+
+	".bg-custom, md-tabs.md-default-theme .md-paginator md-icon {\n"+
 	"  color: "+textColorEval(perspective)+" !important;\n"+
 	"}\n"+
 
 	".bg-custom-primary {\n"+
 	"  background-color: "+color+" !important;\n"+
+	"  color: "+textColorEval(color)+" !important;\n"+
+	"}\n"+
+
+	".text-custom-primary {\n"+
 	"  color: "+textColorEval(color)+" !important;\n"+
 	"}\n"+
 

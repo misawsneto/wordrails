@@ -11,7 +11,7 @@ FacadeMethods(entity) ::=
         config.params["size"] = size;
         config.params["sort"] = sort;
         config.params["projection"] = projection;
-		return \$http.get(_url + "/api/$entity.pluralLowercase$",  config)
+		return \$http.get(_config.url + "/api/$entity.pluralLowercase$",  config)
     }
 
     if (this.post$entity.name$) {
@@ -21,7 +21,7 @@ FacadeMethods(entity) ::=
         var config = {};
         config.headers = {};
         config.headers["Content-Type"] = "application/json"
-        return \$http.post(_url + "/api/$entity.pluralLowercase$/", $entity.nameLowercase$, config)
+        return \$http.post(_config.url + "/api/$entity.pluralLowercase$/", $entity.nameLowercase$, config)
     }
 
     if (this.get$entity.name$) {
@@ -31,7 +31,7 @@ FacadeMethods(entity) ::=
         var config = {};
         config.params = {};
         config.params["projection"] = projection;
-        return \$http.get(_url + "/api/$entity.pluralLowercase$/" + $entity.id.name$,  config)
+        return \$http.get(_config.url + "/api/$entity.pluralLowercase$/" + $entity.id.name$,  config)
     }
 
     if (this.put$entity.name$) {
@@ -41,7 +41,7 @@ FacadeMethods(entity) ::=
         var config = {};
         config.headers = {};
         config.headers["Content-Type"] = "application/json"
-        return \$http.put(_url + "/api/$entity.pluralLowercase$/" + $entity.nameLowercase$.$entity.id.name$, $entity.nameLowercase$, config)
+        return \$http.put(_config.url + "/api/$entity.pluralLowercase$/" + $entity.nameLowercase$.$entity.id.name$, $entity.nameLowercase$, config)
     }
 
     if (this.delete$entity.name$) {

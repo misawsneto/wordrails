@@ -37,7 +37,7 @@ angular.module('app')
     commentPageSize: 5
   })
 
-  .config(function(redactorOptions, WORDRAILS){
+  .config(function(trixProvider, redactorOptions, WORDRAILS){
     redactorOptions.lang = 'pt_br';
     redactorOptions.imageUpload = WORDRAILS.baseUrl + "/api/files/contents/simple";
     redactorOptions.toolbarExternal = "#external-toolbar"
@@ -47,5 +47,6 @@ angular.module('app')
                                   'fontsize', 'fontcolor', 'unorderedlist', 'orderedlist', 'outdent', 'indent',
                                   'link', 'image', 'video', 'alignment', 'horizontalrule'];
     redactorOptions.placeholder = 'Texto...'
+    trixProvider.setConfig({ url: location.protocol + '//' + location.host });
   })
   ;
