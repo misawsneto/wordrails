@@ -12,42 +12,42 @@ import org.springframework.stereotype.Component;
 import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.security.FavoriteSecurityChecker;
 
-@RepositoryEventHandler(Favorite.class)
+@RepositoryEventHandler(Recommend.class)
 @Component
-public class FavoriteEventHandler {
+public class RecommendEventHandler {
 	
-	private @Autowired FavoriteSecurityChecker favoriteSecurityChecker;
+	private @Autowired FavoriteSecurityChecker recommendSecurityChecker;
 	private @Autowired QueryPersistence queryPersistence;
 	
 	@HandleBeforeCreate
-	public void handleBeforeCreate(Favorite favorite) throws UnauthorizedException {
-		if(!favoriteSecurityChecker.canWrite(favorite)){
+	public void handleBeforeCreate(Recommend recommend) throws UnauthorizedException {
+		if(!recommendSecurityChecker.canWriteRecommend(recommend)){
 			throw new UnauthorizedException();
 		}
 	}
 
 	@HandleBeforeSave
-	public void handleBeforeSave(Favorite favorite) throws UnauthorizedException {
-		if(!favoriteSecurityChecker.canWrite(favorite)){
+	public void handleBeforeSave(Recommend recommend) throws UnauthorizedException {
+		if(!recommendSecurityChecker.canWriteRecommend(recommend)){
 			throw new UnauthorizedException();
 		}
 	}
 
 	@HandleBeforeDelete
-	public void handleBeforeDelete(Favorite favorite) throws UnauthorizedException {
-		if(!favoriteSecurityChecker.canWrite(favorite)){
+	public void handleBeforeDelete(Recommend recommend) throws UnauthorizedException {
+		if(!recommendSecurityChecker.canWriteRecommend(recommend)){
 			throw new UnauthorizedException();
 		}
 	}
 	
 	@HandleAfterCreate
-	public void handleAfterCreate(Favorite favorite){
-		queryPersistence.incrementFavoritesCount(favorite.post.id);
+	public void handleAfterCreate(Recommend recommend){
+		queryPersistence.incrementRecommendsCount(recommend.post.id);
 	}
 	
 	@HandleAfterDelete
-	public void handleAfterDelete(Favorite favorite){
-		queryPersistence.decrementFavoritesCount(favorite.post.id);
+	public void handleAfterDelete(Recommend recommend){
+		queryPersistence.decrementRecommendsCount(recommend.post.id);
 	}
 	
 }

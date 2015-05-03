@@ -182,6 +182,9 @@ public class Post {
 	
 	@Field
 	public int favoritesCount = 0;
+	
+	@Field
+	public int recommendsCount = 0;
 
 	@ManyToMany
 	@IndexedEmbedded

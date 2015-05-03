@@ -54,24 +54,4 @@ public class WordrailsService {
 		return network;
 	}
 
-	@Transactional
-	public void incrementReadsCount(Integer id) {
-		manager.createNativeQuery("UPDATE Post post SET post.readsCount = post.readsCount + 1 WHERE post.id = :postId").setParameter("postId", id).executeUpdate();
-	}
-	
-	@Transactional
-	public void decrementReadsCount(Integer id) {
-		manager.createNativeQuery("UPDATE Post post SET post.readsCount = post.readsCount - 1 WHERE post.id = :postId and post.readsCount > 0").setParameter("postId", id).executeUpdate();
-	}
-	
-	@Transactional
-	public void incrementFavoritesCount(Integer id) {
-		manager.createNativeQuery("UPDATE Post post SET post.favoritesCount = post.favoritesCount + 1 WHERE post.id = :postId").setParameter("postId", id).executeUpdate();
-	}
-	
-	@Transactional
-	public void decrementFavoritesCount(Integer id) {
-		manager.createNativeQuery("UPDATE Post post SET post.favoritesCount = post.favoritesCount - 1 WHERE post.id = :postId and post.favoritesCount > 0").setParameter("postId", id).executeUpdate();
-	}
-
 }

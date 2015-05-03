@@ -1110,9 +1110,9 @@ a.text-lgrey:hover {
   /* text-align: center; */
   cursor: pointer;
 }
-.frame ul li.active {
+/* .frame ul li.active {
   color: #fff;
-}
+} */
 
 /* Scrollbar */
 .scrollbar {
@@ -1247,6 +1247,8 @@ a.text-lgrey:hover {
 
 #station-sidebar md-tabs{margin-top: 2px;}
 
+#perspective-vertical .md-header {max-width: 800px; margin-right: auto; margin-left: auto; border-bottom: 1px solid #dee5e7}
+
 #perspective-horizontal, #perspective-vertical {margin-right: 300px}
 #perspective-horizontal .info-flow {margin-top: 0; margin-bottom: 0;}
 #perspective-horizontal .info-flow-wrap {margin-bottom: 20px;}
@@ -1271,7 +1273,7 @@ a.text-lgrey:hover {
     transition: all 0.4s ease-in-out;
 }
 
-#perspective-vertical md-tab-label {font-size: 20px}
+#perspective-vertical md-tab-label {font-size: 24px; font-weight: 300;}
 #perspective-vertical md-tabs .md-ripple-container,
 #station-sidebar md-tabs .md-ripple-container 
 {display: none;}

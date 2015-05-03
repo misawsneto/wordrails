@@ -172,7 +172,7 @@ public class PostsResource {
 		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
 		// create native Lucene query unsing the query DSL
 		// alternatively you can write the Lucene query using the Lucene query parser
-		// or the Lucene programmatic API. The Hibernate Search DSL is recommended though
+		// or the Lucene programmatic API. The Hibernate Search DSL is recommend though
 		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Post.class).get();
 
 		org.apache.lucene.search.Query text = qb.keyword()

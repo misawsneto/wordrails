@@ -58,7 +58,13 @@ public class Person {
 	public Set<Person> following;
 	
 	@OneToMany(mappedBy="person")
-	private Set<Favorite> favorites;
+	public Set<Favorite> favorites;
+	
+	@OneToMany(mappedBy="person")
+	public Set<Bookmark> bookmarks;
+	
+	@OneToMany(mappedBy="person")
+	public Set<Recommend> recommends;
 	
 	@Size(max=2048)
 	public String bio;

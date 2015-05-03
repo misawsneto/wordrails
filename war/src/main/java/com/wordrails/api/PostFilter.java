@@ -1,6 +1,22 @@
 package com.wordrails.api;
 
-import com.wordrails.WordrailsService;
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Post;
 import com.wordrails.business.PostRead;
@@ -11,20 +27,7 @@ import com.wordrails.business.WordpressPost;
 import com.wordrails.business.WordpressService;
 import com.wordrails.persistence.PostReadRepository;
 import com.wordrails.persistence.PostRepository;
-import java.io.IOException;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import com.wordrails.persistence.QueryPersistence;
 
 @Component
 public class PostFilter implements Filter {
@@ -43,7 +46,7 @@ public class PostFilter implements Filter {
     @Autowired
     private PostReadRepository postReadRepository;
     @Autowired
-    private WordrailsService wordrailsService;
+    private QueryPersistence queryPersistence;
 
     @Override
     public void destroy() {/* not implemented */
@@ -115,7 +118,7 @@ public class PostFilter implements Filter {
             postRead.post = post;
             try {
                 postReadRepository.save(postRead);
-                wordrailsService.incrementReadsCount(post.id);
+                queryPersistence.incrementReadsCount(post.id);
             } catch (org.springframework.dao.DataIntegrityViolationException ex) {
                 log.debug("DataIntegrityViolationException " + post.id + " " + postRead.person.id + " - PostRead already exists... ");
             }

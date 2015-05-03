@@ -1111,7 +1111,93 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindUnreadByStationAndPersonAuthorized(
 			Integer stationId, Integer personId) {
-		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isFindRecommendsByPersonIdOrderByDateAuthorized(
+			Integer personId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindRecommendsByPostIdAuthorized(Integer postId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindRecommendsByPersonIdAuthorized(Integer personId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetPersonFavoritesAuthorized(Integer personId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetBookmarksAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetBookmarkAuthorized(Integer bookmarkId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindBookmarksByPersonIdOrderByDateAuthorized(
+			Integer personId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindBookmarksByPersonIdAuthorized(Integer personId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindBookmarksByPostIdAuthorized(Integer postId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetBookmarkPostAuthorized(Integer bookmarkId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetBookmarkPersonAuthorized(Integer bookmarkId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetRecommendsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetRecommendAuthorized(Integer recommendId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetRecommendPostAuthorized(Integer recommendId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetRecommendPersonAuthorized(Integer recommendId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetPersonBookmarksAuthorized(Integer personId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetPersonRecommendsAuthorized(Integer personId) {
 		return true;
 	}
 

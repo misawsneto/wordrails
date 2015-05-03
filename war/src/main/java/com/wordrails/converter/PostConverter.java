@@ -39,6 +39,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.state = post.state;
 		postView.readsCount = post.readsCount;
 		postView.favoritesCount = post.favoritesCount;
+		postView.recommendsCount = post.recommendsCount;
 		postView.snippet = PostsResource.simpleSnippet(post.body);
 		return postView;
 	}

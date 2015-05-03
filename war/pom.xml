@@ -52,7 +52,7 @@
 							<includePluginDependencies>true</includePluginDependencies>
 						</configuration>						
 					</execution>
-					<execution>
+					<!-- <execution>
 						<id>AngularClientGenerator</id>
 						<phase>generate-sources</phase>					
 						<goals>
@@ -65,7 +65,7 @@
 							</arguments>
 							<includePluginDependencies>true</includePluginDependencies>
 						</configuration>						
-					</execution>        									        				
+					</execution>     -->    									        				
 				</executions>
 			</plugin>			
 			

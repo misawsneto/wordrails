@@ -1,3 +1,13 @@
+function BookmarkDto(id, post, person, createdAt, updatedAt) {
+	return {
+		id: id,
+		post: post,
+		person: person,
+		createdAt: createdAt,
+		updatedAt: updatedAt
+	};
+}
+
 function CellDto(id, index, row, post) {
 	return {
 		id: id,
@@ -138,7 +148,7 @@ function PersonDto(id, name, username, bio, email, createdAt, updatedAt, imageId
 	};
 }
 
-function PostDto(id, wordpressId, date, lastModificationDate, title, body, topper, state, originalSlug, slug, author, station, readsCount, favoritesCount, imageLandscape, updatedAt, imageId, imageSmallId, imageMediumId, imageLargeId) {
+function PostDto(id, wordpressId, date, lastModificationDate, title, body, topper, state, originalSlug, slug, author, station, readsCount, favoritesCount, recommendsCount, imageLandscape, updatedAt, imageId, imageSmallId, imageMediumId, imageLargeId) {
 	return {
 		id: id,
 		wordpressId: wordpressId,
@@ -154,6 +164,7 @@ function PostDto(id, wordpressId, date, lastModificationDate, title, body, toppe
 		station: station,
 		readsCount: readsCount,
 		favoritesCount: favoritesCount,
+		recommendsCount: recommendsCount,
 		imageLandscape: imageLandscape,
 		updatedAt: updatedAt,
 		imageId: imageId,
@@ -180,6 +191,16 @@ function PromotionDto(id, date, post, promoter, station, comment) {
 		promoter: promoter,
 		station: station,
 		comment: comment
+	};
+}
+
+function RecommendDto(id, post, person, createdAt, updatedAt) {
+	return {
+		id: id,
+		post: post,
+		person: person,
+		createdAt: createdAt,
+		updatedAt: updatedAt
 	};
 }
 
@@ -376,6 +397,101 @@ var trix = angular.module('trix', [])
 			}
 			return $http.get(_config.url + "/api/posts/" + stationId + "/findPostsByStationIdAndAuthorIdAndState", config)
 		}
+
+  	/*---------------------------------------------------------------------------*/
+  		if (this.getBookmarks) {
+  			window.console && console.log("getBookmarks");
+  		}
+  	    this.getBookmarks = function(_page, _size, _sort, projection) {
+  	        var config = {};
+  	        config.params = {};
+  	        config.params["page"] = page;
+  	        config.params["size"] = size;
+  	        config.params["sort"] = sort;
+  	        config.params["projection"] = projection;
+  			return $http.get(_config.url + "/api/bookmarks",  config)
+  	    }
+
+  	    if (this.postBookmark) {
+  	        window.console && console.log("postBookmark");
+  	    }
+  	    this.postBookmark = function(bookmark) {
+  	        var config = {};
+  	        config.headers = {};
+  	        config.headers["Content-Type"] = "application/json"
+  	        return $http.post(_config.url + "/api/bookmarks/", bookmark, config)
+  	    }
+
+  	    if (this.getBookmark) {
+  	        window.console && console.log("getBookmark");
+  	    }
+  	    this.getBookmark = function(id, projection) {
+  	        var config = {};
+  	        config.params = {};
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/bookmarks/" + id,  config)
+  	    }
+
+  	    if (this.putBookmark) {
+  	        console.log("putBookmark");
+  	    }
+  	    this.putBookmark = function(bookmark) {
+  	        var config = {};
+  	        config.headers = {};
+  	        config.headers["Content-Type"] = "application/json"
+  	        return $http.put(_config.url + "/api/bookmarks/" + bookmark.id, bookmark, config)
+  	    }
+
+  	    if (this.deleteBookmark) {
+  	        console.log("deleteBookmark");
+  	    }
+  	    this.deleteBookmark = function(id) {
+  	        return $http.delete("/api/bookmarks/" + id);
+  	    }
+
+  	    if (this.findBookmarksByPersonIdOrderByDate) {
+  	    	window.console && console.log("findBookmarksByPersonIdOrderByDate");
+  	    }
+  	    this.findBookmarksByPersonIdOrderByDate = function(personId, page, size, sort, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            personId: personId,
+  	            page: page,
+  	            size: size,
+  	            sort: sort,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/bookmarks/search/findBookmarksByPersonIdOrderByDate",  config)
+  	    };
+
+  	    if (this.findBookmarksByPersonId) {
+  	    	window.console && console.log("findBookmarksByPersonId");
+  	    }
+  	    this.findBookmarksByPersonId = function(personId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            personId: personId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/bookmarks/search/findBookmarksByPersonId",  config)
+  	    };
+
+  	    if (this.findBookmarksByPostId) {
+  	    	window.console && console.log("findBookmarksByPostId");
+  	    }
+  	    this.findBookmarksByPostId = function(postId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            postId: postId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/bookmarks/search/findBookmarksByPostId",  config)
+  	    };
+
+  	/*---------------------------------------------------------------------------*/
 
   	/*---------------------------------------------------------------------------*/
   		if (this.getCells) {
@@ -1293,6 +1409,101 @@ var trix = angular.module('trix', [])
   	/*---------------------------------------------------------------------------*/
 
   	/*---------------------------------------------------------------------------*/
+  		if (this.getRecommends) {
+  			window.console && console.log("getRecommends");
+  		}
+  	    this.getRecommends = function(_page, _size, _sort, projection) {
+  	        var config = {};
+  	        config.params = {};
+  	        config.params["page"] = page;
+  	        config.params["size"] = size;
+  	        config.params["sort"] = sort;
+  	        config.params["projection"] = projection;
+  			return $http.get(_config.url + "/api/recommends",  config)
+  	    }
+
+  	    if (this.postRecommend) {
+  	        window.console && console.log("postRecommend");
+  	    }
+  	    this.postRecommend = function(recommend) {
+  	        var config = {};
+  	        config.headers = {};
+  	        config.headers["Content-Type"] = "application/json"
+  	        return $http.post(_config.url + "/api/recommends/", recommend, config)
+  	    }
+
+  	    if (this.getRecommend) {
+  	        window.console && console.log("getRecommend");
+  	    }
+  	    this.getRecommend = function(id, projection) {
+  	        var config = {};
+  	        config.params = {};
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/recommends/" + id,  config)
+  	    }
+
+  	    if (this.putRecommend) {
+  	        console.log("putRecommend");
+  	    }
+  	    this.putRecommend = function(recommend) {
+  	        var config = {};
+  	        config.headers = {};
+  	        config.headers["Content-Type"] = "application/json"
+  	        return $http.put(_config.url + "/api/recommends/" + recommend.id, recommend, config)
+  	    }
+
+  	    if (this.deleteRecommend) {
+  	        console.log("deleteRecommend");
+  	    }
+  	    this.deleteRecommend = function(id) {
+  	        return $http.delete("/api/recommends/" + id);
+  	    }
+
+  	    if (this.findRecommendsByPersonIdOrderByDate) {
+  	    	window.console && console.log("findRecommendsByPersonIdOrderByDate");
+  	    }
+  	    this.findRecommendsByPersonIdOrderByDate = function(personId, page, size, sort, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            personId: personId,
+  	            page: page,
+  	            size: size,
+  	            sort: sort,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/recommends/search/findRecommendsByPersonIdOrderByDate",  config)
+  	    };
+
+  	    if (this.findRecommendsByPersonId) {
+  	    	window.console && console.log("findRecommendsByPersonId");
+  	    }
+  	    this.findRecommendsByPersonId = function(personId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            personId: personId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/recommends/search/findRecommendsByPersonId",  config)
+  	    };
+
+  	    if (this.findRecommendsByPostId) {
+  	    	window.console && console.log("findRecommendsByPostId");
+  	    }
+  	    this.findRecommendsByPostId = function(postId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            postId: postId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/recommends/search/findRecommendsByPostId",  config)
+  	    };
+
+  	/*---------------------------------------------------------------------------*/
+
+  	/*---------------------------------------------------------------------------*/
   		if (this.getRows) {
   			window.console && console.log("getRows");
   		}
@@ -1651,19 +1862,6 @@ var trix = angular.module('trix', [])
   	        return $http.delete("/api/taxonomies/" + id);
   	    }
 
-  	    if (this.findByStationId) {
-  	    	window.console && console.log("findByStationId");
-  	    }
-  	    this.findByStationId = function(stationId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            stationId: stationId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/taxonomies/search/findByStationId",  config)
-  	    };
-
   	    if (this.findByTypeAndName) {
   	    	window.console && console.log("findByTypeAndName");
   	    }
@@ -1676,6 +1874,19 @@ var trix = angular.module('trix', [])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/taxonomies/search/findByTypeAndName",  config)
+  	    };
+
+  	    if (this.findByStationId) {
+  	    	window.console && console.log("findByStationId");
+  	    }
+  	    this.findByStationId = function(stationId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            stationId: stationId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/taxonomies/search/findByStationId",  config)
   	    };
 
   	/*---------------------------------------------------------------------------*/

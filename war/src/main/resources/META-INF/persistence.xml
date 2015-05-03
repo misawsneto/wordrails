@@ -29,6 +29,8 @@
 		<class>com.wordrails.business.PasswordReset</class>
 		<class>com.wordrails.business.Notification</class>
 		<class>com.wordrails.business.Favorite</class>
+		<class>com.wordrails.business.Recommend</class>
+		<class>com.wordrails.business.Bookmark</class>
 		<class>com.wordrails.business.PostRead</class>
 
       	<properties>

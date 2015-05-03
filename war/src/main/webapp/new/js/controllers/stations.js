@@ -3,12 +3,12 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 	function($scope, $log, $state, $filter, $timeout, $interval) {
 
 		$scope.tabs = [true, false];
-	  $scope.tab = function(index){
+		$scope.tab = function(index){
 	    angular.forEach($scope.tabs, function(i, v) {
-	      $scope.tabs[v] = false;
+      	$scope.tabs[v] = false;
 	    });
 	    $scope.tabs[index] = true;
-	  }
+		}
 
 		$scope.app.termPerspectiveView = initTermPerspective;
 		var lastScrollTop = 0
@@ -52,4 +52,4 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
     $scope.loadPost = function(postId){
     } 
 
-  }]);
+}]);
