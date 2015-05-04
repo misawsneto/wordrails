@@ -34,9 +34,9 @@ function textColorEval (hex){
   // Counting the perceptive luminance - human eye favors green color... 
   var a = 1 - ( 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b)/255;
   if (a < 0.5)
-  	return "#444444";
+  	return "#333333";
   else
-  	return "#ffffff";
+  	return "#f9f9f9";
 }
 
 function textColorEval2 (hex){
