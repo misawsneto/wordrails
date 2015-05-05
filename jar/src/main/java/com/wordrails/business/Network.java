@@ -26,10 +26,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class Network {
 	
-	public String NIGHT_READ_MODE = "N";
-	public String DAY_READ_MODE = "D";
-	public String VERTICAL_ORIENTATION_MODE = "V";
-	public String HORIZONTAL_ORIENTATION_MODE = "H";
+//	public String NIGHT_READ_MODE = "N";
+//	public String DAY_READ_MODE = "D";
+//	public String VERTICAL_ORIENTATION_MODE = "V";
+//	public String HORIZONTAL_ORIENTATION_MODE = "H";
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)				
@@ -311,9 +311,9 @@ public class Network {
 	void onCreate() {
 		createdAt = new Date();
 		if(defaultReadMode == null || defaultReadMode.isEmpty())
-			defaultReadMode = DAY_READ_MODE + "";
+			defaultReadMode = "D";
 		if(defaultOrientationMode == null || defaultOrientationMode.isEmpty())
-			defaultOrientationMode = HORIZONTAL_ORIENTATION_MODE + "";
+			defaultOrientationMode = "H";
 		
 		if(logo != null && logo.original != null){
 			logoId = logo.original.id;

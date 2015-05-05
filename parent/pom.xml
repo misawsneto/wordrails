@@ -370,6 +370,13 @@
 				<artifactId>wordrails2-jar</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>2.5.3</version>
+			</dependency>
+						
 		</dependencies>
 	</dependencyManagement>
 </project>

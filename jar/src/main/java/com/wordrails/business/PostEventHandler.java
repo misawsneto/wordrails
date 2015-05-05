@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
@@ -69,11 +70,14 @@ public class PostEventHandler {
 				post.slug = originalSlug + "-" + hash;
 			}
 
-			buildNotification(post);
-
 		} else {
 			throw new UnauthorizedException();
 		}
+	}
+	
+	@HandleAfterCreate
+	public void handleAfterCreate(Post post){
+		buildNotification(post);
 	}
 
 	@Async

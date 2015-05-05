@@ -122,5 +122,10 @@
 			<artifactId>gcm-server</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>

@@ -1,5 +1,6 @@
 package com.wordrails.util;
 
+import java.lang.reflect.Field;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Locale;
@@ -30,7 +31,7 @@ public class WordrailsUtil {
 		if (chars.contains("A")) mask += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		if (chars.contains("#")) mask += "0123456789";
 		if (chars.contains("!")) mask += "~`!@#$%^&*()_+-={}[]:\";\'<>?,./|\\";
-		if (chars.contains("u")) mask += "$-.+!'(),";
+		if (chars.contains("u")) mask += "~`!@#$%^*()_+-={}[]:\";\'<>,.|";
 		String result = "";
 		for (int i = length; i > 0; --i){
 			int index = (int) Math.round(Math.random() * (mask.length() - 1));
@@ -38,5 +39,17 @@ public class WordrailsUtil {
 		}
 
 		return result;
+	}
+	
+	public static void nullifyProperties( Object o ) {
+	    for ( Field f : o.getClass().getDeclaredFields() ) {
+	        f.setAccessible(true);
+	        try {
+	        	if(!java.lang.reflect.Modifier.isStatic(f.getModifiers()) && !f.getType().isPrimitive())
+	        		f.set( o , null);
+	        } catch ( Exception e ) { 
+	            throw new RuntimeException(e);
+	        }
+	    }
 	}
 }

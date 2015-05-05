@@ -43,6 +43,8 @@ public class Notification {
 	@ManyToOne
 	public Post post;
 	
+	public Integer postId;
+	
 	public boolean seen = false;
 	
 	@NotNull
@@ -64,6 +66,9 @@ public class Notification {
 		createdAt = new Date();
 		if(!contains(type)){
 			throw new BadRequestException("Invalid notification type");
+		}
+		if(post!=null){
+			postId = post.id;
 		}
 	}
 
