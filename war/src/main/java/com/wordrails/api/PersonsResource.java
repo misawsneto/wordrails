@@ -64,7 +64,10 @@ public class PersonsResource {
 	
 	@PUT
 	@Path("/me/regId")
-	public void putRegId(@FormParam("regId") String regId) {
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public void putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId) {
+		Network network = networkRepository.findOne(networkId);
+		Person person = accessControllerUtil.getLoggedPerson();
 	}
 		
 	@PUT

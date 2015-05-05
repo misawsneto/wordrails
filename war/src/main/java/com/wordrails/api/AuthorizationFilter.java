@@ -1201,4 +1201,27 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
+	@Override
+	protected boolean isGetPersonNetworkRegIdsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkRegIdAuthorized(
+			Integer personNetworkRegIdId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkRegIdPersonAuthorized(
+			Integer personNetworkRegIdId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkRegIdNetworkAuthorized(
+			Integer personNetworkRegIdId) {
+		return true;
+	}
+
 }

@@ -1,5 +1,20 @@
 package com.wordrails.api;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+
+import org.jboss.resteasy.spi.HttpRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
@@ -9,19 +24,6 @@ import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import org.jboss.resteasy.spi.HttpRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.stereotype.Component;
 
 @Path("/terms")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -46,6 +48,6 @@ public class TermResource {
 	
 	@GET
 	@Path("/termTree")
-	public void putTermTree(@FormParam("regId") String regId) {
+	public void getTermTree(@PathParam("termId") String termId) {
 	} 
 }

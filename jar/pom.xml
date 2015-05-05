@@ -1,127 +1,126 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-    	<groupId>com.wordrails</groupId>
-    	<artifactId>wordrails2-parent</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    	<relativePath>../parent/pom.xml</relativePath>
-    </parent>
+	<parent>
+		<groupId>com.wordrails</groupId>
+		<artifactId>wordrails2-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../parent/pom.xml</relativePath>
+	</parent>
 
-    <artifactId>wordrails2-jar</artifactId>
+	<artifactId>wordrails2-jar</artifactId>
 
 	<packaging>jar</packaging>
-	
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
 				<artifactId>apt-maven-plugin</artifactId>
-   			</plugin>			
+			</plugin>
 		</plugins>
 	</build>
-	
+
 	<dependencies>
-            
-                <dependency>
-                    <groupId>com.google.code.gson</groupId>
-                    <artifactId>gson</artifactId>
-                    <version>2.3.1</version>
-                </dependency>	
-                
-                <dependency>
-                    <groupId>com.squareup.retrofit</groupId>
-                    <artifactId>retrofit</artifactId>
-                </dependency>
-                
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.squareup.retrofit</groupId>
+			<artifactId>retrofit</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>com.mysema.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.coobird</groupId>
-			<artifactId>thumbnailator</artifactId>		
-		</dependency>		
-	
+			<artifactId>thumbnailator</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>org.eclipse.persistence.jpa</artifactId>
-		</dependency>		
-				
+		</dependency>
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
-						
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jackson2-provider</artifactId>
 		</dependency>
-				
+
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
-		</dependency>		
-		
+		</dependency>
+
 		<dependency>
 			<groupId>com.wordrails</groupId>
 			<artifactId>spring-data-rest-webmvc</artifactId>
 		</dependency>
-		
-  		<dependency>
-    		<groupId>org.springframework.security</groupId>
-    		<artifactId>spring-security-config</artifactId>
-  		</dependency>
-  		
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search</artifactId>
 		</dependency>
-		
-		<!-- <dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-highlighter</artifactId>
-		</dependency> -->
-		
+
+		<!-- <dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-highlighter</artifactId> 
+			</dependency> -->
+
 		<dependency>
-		   <groupId>org.hibernate</groupId>
-		   <artifactId>hibernate-search-infinispan</artifactId>
-	   </dependency>
-		
-		<dependency>
-		  <groupId>org.jsoup</groupId>
-		  <artifactId>jsoup</artifactId>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-search-infinispan</artifactId>
 		</dependency>
-<!-- 	
+
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-email</artifactId>
-		</dependency> -->
-		
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+		</dependency>
+		<!-- <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-email</artifactId> 
+			</dependency> -->
+
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
 		</dependency>
-		
+
 		<dependency>
-		  <groupId>com.github.spullara.mustache.java</groupId>
-		  <artifactId>compiler</artifactId>
-		</dependency>				
-		
-	</dependencies>		
+			<groupId>com.github.spullara.mustache.java</groupId>
+			<artifactId>compiler</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.android.gcm</groupId>
+			<artifactId>gcm-server</artifactId>
+		</dependency>
+
+	</dependencies>
 </project>
