@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class Notification {
 	
 	enum Type{
-		ADDED_TO_STATION, REMOVED_FROM_STATION, POST_COMMENTED, POST_DELETED,
+		ADDED_TO_STATION, REMOVED_FROM_STATION, POST_COMMENTED, POST_DELETED, POST_ADDED, BREAKING_NEWS,
 	}
 	
 	@Id
