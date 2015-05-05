@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.GCMService;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Network;
@@ -14,14 +15,17 @@ import com.wordrails.business.StationRole;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NetworkRolesRepository;
+import com.wordrails.persistence.PersonNetworkRegIdRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -34,6 +38,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -59,6 +64,8 @@ public class PersonsResource {
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
+	private @Autowired PersonNetworkRegIdRepository pnrRepository;
+	private @Autowired GCMService gcmService;
 	
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	
@@ -68,6 +75,7 @@ public class PersonsResource {
 	public void putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId) {
 		Network network = networkRepository.findOne(networkId);
 		Person person = accessControllerUtil.getLoggedPerson();
+		gcmService.updateRegId(network, person, regId);
 	}
 		
 	@PUT

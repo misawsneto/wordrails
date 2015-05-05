@@ -281,12 +281,12 @@ public class $facade$ {
 		_facade.putPassword(oldPassword, newPassword, _callback);
 	}
 	
-	public Response putRegId(String regId){
-		return _facade.putRegId(regId);
+	public Response putRegId(String regId, Integer networkId){
+		return _facade.putRegId(regId, networkId);
 	}
 	
-	public void putRegId(String regId, Callback<Response> _callback){
-		_facade.putRegId(regId, _callback);
+	public void putRegId(String regId, Integer networkId, Callback<Response> _callback){
+		_facade.putRegId(regId, networkId, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 

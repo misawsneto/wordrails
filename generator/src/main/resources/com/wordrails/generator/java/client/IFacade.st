@@ -135,13 +135,13 @@ interface I$facade$ {
 	@FormUrlEncoded
 	void putPassword(@Field("oldPassword") String oldPassword, @Field("newPassword") String newPassword, Callback<Response> _callback);
 	
-	@PUT("/persons/me/password")
+	@PUT("/persons/me/regId")
 	@FormUrlEncoded
-	Response putRegId(@Field("regId") String regId);
+	Response putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId);
 	
-	@PUT("/persons/me/password")
+	@PUT("/persons/me/regId")
 	@FormUrlEncoded
-	void putRegId(@Field("regId") String regId, Callback<Response> _callback);
+	void putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
