@@ -69,8 +69,10 @@ public class GCMService {
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
 			devices.add(pnRegId.regId);
 		}
+		
+		String notificationJson = mapper.writeValueAsString(notification);
 
-		Message message = new Message.Builder().addData("message", mapper.writeValueAsString(notification)).build();
+		Message message = new Message.Builder().addData("message", notificationJson).build();
 		MulticastResult multicastResult;
 		try {
 			multicastResult = sender.send(message, devices, 5);

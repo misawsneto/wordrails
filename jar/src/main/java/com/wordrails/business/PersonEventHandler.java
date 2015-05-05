@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.TermRepository;
+import com.wordrails.util.WordrailsUtil;
 
 @RepositoryEventHandler(Person.class)
 @Component
@@ -47,23 +48,8 @@ public class PersonEventHandler {
 		}
 		
 		org.springframework.security.core.userdetails.User user = 
-				new org.springframework.security.core.userdetails.User(person.username, password == null ? generateRandomString(8, "a#") : password, authority);
+				new org.springframework.security.core.userdetails.User(person.username, password == null ? WordrailsUtil.generateRandomString(8, "a#") : password, authority);
 		userDetailsManager.createUser(user);
 	}
 
-	private String generateRandomString(int length, String chars){
-		String mask = "";
-		if (chars.contains("a")) mask += "abcdefghijklmnopqrstuvwxyz";
-		if (chars.contains("A")) mask += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		if (chars.contains("#")) mask += "0123456789";
-		if (chars.contains("!")) mask += "~`!@#$%^&*()_+-={}[]:\";\'<>?,./|\\";
-		String result = "";
-		for (int i = length; i > 0; --i){
-			int index = (int) Math.round(Math.random() * (mask.length() - 1));
-			result += mask.charAt(index);
-		}
-
-		return result;
-	}
-	
 }

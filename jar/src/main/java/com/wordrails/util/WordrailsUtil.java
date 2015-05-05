@@ -30,6 +30,7 @@ public class WordrailsUtil {
 		if (chars.contains("A")) mask += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		if (chars.contains("#")) mask += "0123456789";
 		if (chars.contains("!")) mask += "~`!@#$%^&*()_+-={}[]:\";\'<>?,./|\\";
+		if (chars.contains("u")) mask += "$-.+!'(),";
 		String result = "";
 		for (int i = length; i > 0; --i){
 			int index = (int) Math.round(Math.random() * (mask.length() - 1));

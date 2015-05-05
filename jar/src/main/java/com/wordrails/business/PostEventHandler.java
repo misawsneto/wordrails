@@ -54,12 +54,6 @@ public class PostEventHandler {
 		if (postAndCommentSecurityChecker.canWrite(post)) {
 			String originalSlug = WordrailsUtil.toSlug(post.title);
 			post.originalSlug = originalSlug;
-			//            int count = postRepository.countSlugPost(originalSlug);
-			//            if (count > 0) {
-			//                post.slug = originalSlug + "-" + count;
-			//            } else {
-			//                post.slug = originalSlug;
-			//            }
 			Date now = new Date();
 			if (post.date == null) {
 				post.date = now;
@@ -71,8 +65,8 @@ public class PostEventHandler {
 				post.slug = originalSlug;
 				postRepository.save(post);
 			} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-				String hash = WordrailsUtil.generateRandomString(5, "!Aa#");
-				post.slug = post.slug + "-" + hash;
+				String hash = WordrailsUtil.generateRandomString(5, "!Aau");
+				post.slug = originalSlug + "-" + hash;
 			}
 
 			buildNotification(post);
