@@ -7,6 +7,7 @@ import com.wordrails.persistence.ImageRepository;
 import com.wordrails.persistence.PostReadRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.PromotionRepository;
+import com.wordrails.persistence.StationRepository;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
 
@@ -43,6 +44,8 @@ public class PostEventHandler {
 	private @Autowired
 	PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	private @Autowired GCMService gcmService;
+	
+	private @Autowired StationRepository stationRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {
@@ -89,7 +92,8 @@ public class PostEventHandler {
 		notification.post = post;
 
 		if(post.station != null && post.station.networks != null){
-			for (Network network : post.station.networks) {
+			Station station = stationRepository.findOne(post.station.id);
+			for (Network network : station.networks) {
 				notification.network = network;
 				gcmService.sendToNetwork(network, notification);
 			}

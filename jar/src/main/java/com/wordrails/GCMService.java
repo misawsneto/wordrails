@@ -75,7 +75,7 @@ public class GCMService {
 		try {
 			multicastResult = sender.send(message, devices, 5);
 		} catch (IOException e) {
-			//			logger.log(Level.SEVERE, "Error posting messages", e);
+			e.printStackTrace();
 			return;
 		}
 		List<Result> results = multicastResult.getResults();
@@ -89,17 +89,14 @@ public class GCMService {
 				String canonicalRegId = result.getCanonicalRegistrationId();
 				if (canonicalRegId != null) {
 					// same device has more than on registration id: update it
-					//					logger.info("canonicalRegId " + canonicalRegId);
-					//					Datastore.updateRegistration(regId, canonicalRegId);
+					System.out.println("same device has more than on registration id: update it");
 				}
 			} else {
 				String error = result.getErrorCodeName();
 				if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
-					// application has been removed from device - unregister it
-					//					logger.info("Unregistered device: " + regId);
-					//					Datastore.unregister(regId);
+					System.out.println("Unregistered device: " + regId);
 				} else {
-					//					logger.severe("Error sending message to " + regId + ": " + error);
+					System.out.println("Error sending message to " + regId + ": " + error);
 				}
 			}
 		}
