@@ -74,7 +74,7 @@ public class GCMService {
 		MulticastResult multicastResult;
 		try {
 			multicastResult = sender.send(message, devices, 5);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
