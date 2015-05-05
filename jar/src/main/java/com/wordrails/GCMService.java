@@ -29,6 +29,7 @@ import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
 import com.wordrails.persistence.PersonRepository;
+import com.wordrails.util.NotificationDto;
 import com.wordrails.util.WordrailsUtil;
 
 @Component
@@ -64,47 +65,52 @@ public class GCMService {
 		if(sender == null){
 			sender = new Sender(GCM_KEY);
 		}
-		
+
 		if(mapper == null){
 			mapper = new ObjectMapper();
-			mapper.setSerializationInclusion(Inclusion.NON_DEFAULT)
-				  .setSerializationInclusion(Inclusion.NON_NULL)
-				  .setSerializationInclusion(Inclusion.NON_EMPTY);
+			mapper.setSerializationInclusion(Inclusion.NON_EMPTY);
+			mapper.setSerializationInclusion(Inclusion.NON_DEFAULT);
 		}
 	}
-	
-	public void gcmNotify(List<PersonNetworkRegId> personNetworkRegIds, Notification notification) throws Exception{
+
+	public void gcmNotify(List<PersonNetworkRegId> personNetworkRegIds, final Notification notification) throws Exception{
 		init();
 		// make a copy
 		List<String> devices = new ArrayList<String>();
 
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
+			Notification noti = new Notification();
+			noti.message = notification.message + "";
+			noti.network = pnRegId.network;
+			noti.seen = notification.seen;
+			noti.station = notification.station;
+			noti.person = pnRegId.person;
+			noti.post = notification.post;
+			noti.type = notification.type + "";
+
 			devices.add(pnRegId.regId);
+			notification.person = pnRegId.person;
+			notificationRepository.save(noti);
 		}
-		
-		Post post = new Post();
-		WordrailsUtil.nullifyProperties(post);
-		post.title = notification.post.title;
-		post.body = notification.post.body;
-		notification.post = post;
-		
-		Network network = new Network();
-		WordrailsUtil.nullifyProperties(network);
-		network.id = notification.network.id;
-		network.name = notification.network.name;
-		notification.network = network;
-		
-		Station station = new Station();
-		WordrailsUtil.nullifyProperties(station);
-		station.id = notification.station.id;
-		station.name = notification.station.name;
-		notification.station = station;
-		
-		String notificationJson = mapper.valueToTree(notification).toString();
-		
+
+		NotificationDto notificationDto = new NotificationDto(); 
+		notificationDto.seen = notification.seen;
+		notificationDto.type = notification.type + "";
+		notificationDto.message = notification.message + "";
+		notificationDto.personId = notification.person != null ? notification.person.id : null;
+		notificationDto.personName = notification.person != null ? notification.person.name : null;
+		notificationDto.networkId = notification.network != null ? notification.network.id : null;
+		notificationDto.networkName = notification.network != null ? notification.network.name : null;;
+		notificationDto.stationId = notification.station != null ? notification.station.id : null;
+		notificationDto.stationName = notification.station != null ? notification.station.name : null;
+		notificationDto.postId = notification.post != null ? notification.post.id : null;
+		notificationDto.postTitle = notification.post != null ? notification.post.title : null;;
+
+		String notificationJson = mapper.valueToTree(notificationDto).toString();
+
 		Message message = new Message.Builder().addData("message", notificationJson).build();
 		MulticastResult multicastResult;
-		
+
 		try {
 			multicastResult = sender.send(message, devices, 5);
 		} catch (Exception e) {
@@ -136,7 +142,7 @@ public class GCMService {
 			}
 		}
 	}
-	
+
 
 	public void updateRegId(Network network, Person person, String regId) {
 		PersonNetworkRegId pnregId;

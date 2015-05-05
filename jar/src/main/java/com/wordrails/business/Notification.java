@@ -16,6 +16,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
@@ -48,12 +50,12 @@ public class Notification {
 	public boolean seen = false;
 	
 	@NotNull
+	@NotEmpty
 	@Size(min=1,max=500)
-	@Pattern(regexp="\\S", message="Empty string validation")
 	public String message;
 	
 	@NotNull
-	@Pattern(regexp="\\S", message="Empty string validation")
+	@NotEmpty
 	public String type;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)

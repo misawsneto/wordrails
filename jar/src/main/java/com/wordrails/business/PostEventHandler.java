@@ -88,6 +88,7 @@ public class PostEventHandler {
 		notification.type = Notification.Type.POST_ADDED.toString();
 		notification.station = post.station;
 		notification.post = post;
+		notification.message = post.title;
 
 		if(post.station != null && post.station.networks != null){
 			Station station = stationRepository.findOne(post.station.id);
