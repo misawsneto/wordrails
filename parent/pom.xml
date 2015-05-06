@@ -4,8 +4,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.wordrails</groupId>
-	<artifactId>wordrails2-parent</artifactId>
+	<groupId>co.xarx</groupId>
+	<artifactId>trix-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
@@ -24,6 +24,7 @@
 					<configuration>
 						<source>1.7</source>
 						<target>1.7</target>
+                                                <debug>true</debug>
 					</configuration>
 				</plugin>
 
@@ -197,7 +198,13 @@
 				<artifactId>hibernate-validator</artifactId>
 				<version>5.1.1.Final</version>
 			</dependency>
-
+                
+                        <dependency>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-search-infinispan</artifactId>
+                            <version>4.5.3.Final</version>
+                        </dependency>
+										
 			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
 				<artifactId>resteasy-jackson2-provider</artifactId>
@@ -229,8 +236,10 @@
 			</dependency>
 
 			<dependency>
-				<!-- <groupId>org.springframework.data</groupId> -->
-				<groupId>com.wordrails</groupId>
+<!--  			
+				<groupId>org.springframework.data</groupId>
+-->				
+				<groupId>co.xarx</groupId>
 				<artifactId>spring-data-rest-webmvc</artifactId>
 				<version>2.2.0.RELEASE</version>
 				<!-- <version>2.3.0.BUILD-SNAPSHOT</version> -->
@@ -334,8 +343,8 @@
 			</dependency>
 
 			<dependency>
-				<groupId>com.wordrails</groupId>
-				<artifactId>wordrails2-api</artifactId>
+				<groupId>co.xarx</groupId>
+				<artifactId>trix-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -366,8 +375,8 @@
 			</dependency>
 
 			<dependency>
-				<groupId>com.wordrails</groupId>
-				<artifactId>wordrails2-jar</artifactId>
+				<groupId>co.xarx</groupId>
+				<artifactId>trix-jar</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			

@@ -1,6 +1,7 @@
 package com.wordrails.api;
 
 import com.wordrails.business.Post;
+import com.wordrails.business.ServiceGenerator;
 import com.wordrails.business.Station;
 import com.wordrails.business.Wordpress;
 import com.wordrails.business.WordpressApi;
@@ -112,8 +113,8 @@ public class WordpressResource {
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Token is not created for this station").build();
                 } else if (newWordpress) {
                     //TODO manage taxonomy to enable this
-//                    WordpressApi api = ServiceGenerator.createService(WordpressApi.class, config.domain, config.user, config.password);
-//                    saveWordpressPosts(api);
+                    WordpressApi api = ServiceGenerator.createService(WordpressApi.class, config.domain, config.user, config.password);
+                    saveWordpressPosts(api);
                 }
 
 				wordpress.domain = config.domain;

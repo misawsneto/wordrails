@@ -29,6 +29,7 @@ public class ServiceGenerator {
     public static <S> S createService(Class<S> serviceClass, String baseUrl, String username, String password) {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .registerTypeAdapter(WordpressPost.class, new WordpressDeserializer())
                 .create();
         
         RestAdapter.Builder builder = new RestAdapter.Builder()

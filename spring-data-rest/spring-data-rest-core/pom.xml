@@ -9,7 +9,7 @@
 	<description>Spring Data REST - Core</description>
 
 	<parent>
-		<groupId>com.wordrails</groupId>
+		<groupId>co.xarx</groupId>
 		<artifactId>spring-data-rest-parent</artifactId>
 		<version>2.2.0.RELEASE</version>
 		<relativePath>../pom.xml</relativePath>
