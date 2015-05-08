@@ -21,6 +21,15 @@ function shadeBlend (p,c0,c1) {
 	}
 }
 
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
 function textColorEval (hex){
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	var rgb = result ? {
@@ -34,9 +43,9 @@ function textColorEval (hex){
   // Counting the perceptive luminance - human eye favors green color... 
   var a = 1 - ( 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b)/255;
   if (a < 0.5)
-  	return "#333333";
+  	return "rgba(0,0,0, 0.85)";
   else
-  	return "#f9f9f9";
+  	return "rgba(255,255,255, 0.92)";
 }
 
 function textColorEval2 (hex){
@@ -147,6 +156,11 @@ function getCustomButtonStyle(color, perspective) {
 	".bg-custom-primary {\n"+
 	"  background-color: "+color+" !important;\n"+
 	"  color: "+textColorEval(color)+" !important;\n"+
+	"}\n"+
+
+	".bg-custom-primary-no-image{\n"+
+		"background: rgba("+hexToRgb(color).r+", " + hexToRgb(color).g + ", "+ hexToRgb(color).b +", 0.75);\n"+
+		"color: "+ textColorEval(color) +";\n"+
 	"}\n"+
 
 	".text-custom-primary {\n"+

@@ -1736,7 +1736,7 @@ body #cdawrap {
   position: relative;
   background: #b4bad2;
 } */
-
+/* 
 .content::before {
   position: absolute;
   top: 0;
@@ -1754,7 +1754,7 @@ body #cdawrap {
   -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
   transition-timing-function: cubic-bezier(0.7,0,0.3,1);
 }
-
+ */
 /* Menu Button */
 /* .menu-button {
   position: fixed;

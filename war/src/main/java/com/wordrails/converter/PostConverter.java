@@ -41,6 +41,11 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.favoritesCount = post.favoritesCount;
 		postView.recommendsCount = post.recommendsCount;
 		postView.snippet = PostsResource.simpleSnippet(post.body);
+		postView.authorName = post.author != null ? post.author.name : null;
+		postView.authorId = post.author != null ? post.author.id : null;
+		postView.authorEmail = post.author != null ? post.author.email : null;
+		postView.authorTwitter = post.author != null ? post.author.twitterHandle : null;
+		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
 		return postView;
 	}
 }
