@@ -156,7 +156,7 @@ angular.module('app')
             $scope.app.initData = angular.copy(initData);
             $scope.app.checkIfLogged();
             $scope.app.profilepopover.open = false;
-            if($scope.$state.current.name != "app.stations" || $scope.$state.current.name != "app.search"){
+            if($scope.$state.current.name != "app.stations" && $scope.$state.current.name != "app.search"){
               $state.go("app.stations");
             }
           })

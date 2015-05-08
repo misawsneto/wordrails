@@ -15,6 +15,71 @@
   };
 });
 
+angular.module('app').directive("offcanvas", function(){
+  return{
+    restrict: 'E',
+    link: function(scope, element, attrs){
+        var bodyEl = document.body,
+        content = document.querySelector( '.content-wrap' ),
+        openbtn = document.getElementById( 'open-button' ),
+        closebtn = document.getElementById( 'close-button' ),
+        isOpen = false;
+
+      function init() {
+        initEvents();
+      }
+
+      function initEvents() {
+        /*openbtn.addEventListener( 'click', toggleMenu );
+        if( closebtn ) {
+          closebtn.addEventListener( 'click', toggleMenu );
+        }*/
+
+        // close the menu element if the target it´s not the menu element or one of its descendants..
+        content.addEventListener( 'click', function(ev) {
+          var target = ev.target;
+          if( isOpen && target !== openbtn ) {
+            toggleMenu();
+          }
+        } );
+      }
+
+      scope.toggleMenu = function(event, close){
+        toggleMenu(close);
+        if(event)
+          event.stopPropagation();
+        console.log('togle');
+      }
+
+      scope.contentClick = function(){
+        if(isOpen)
+          toggleMenu(); 
+        console.log('close');
+      };
+
+      function toggleMenu(close) {
+        if(close){
+          // classie.remove( bodyEl, 'show-menu' );
+          $('body').removeClass('show-menu')
+          isOpen = false;
+          return;
+        }
+        if( isOpen ) {
+          $('body').removeClass('show-menu')
+        }
+        else {
+          $('body').addClass('show-menu')
+        }
+
+        isOpen = !isOpen;
+      }
+
+      init();
+    },
+    templateUrl: 'tpl/blocks/offcanvas.html'
+  }// end of return 
+})
+
 
 // Module for the demo
 angular.module('splash', ['ui.splash']);

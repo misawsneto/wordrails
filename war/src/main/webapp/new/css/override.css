@@ -883,7 +883,7 @@ a.text-lgrey:hover {
     height: 50px;
     right: 0;
     left: 70px;
-    z-index: 1054
+    z-index: 9
   }
   .new-post-navbar .navbar-right{
     margin-right: 10px;
@@ -1527,10 +1527,6 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 /* /splash */
 
 /* offcanvas */
-section {
-  /* padding: 1em; */
-  /* text-align: center; */
-}
 
 /* Header */
 .codrops-header {
@@ -1715,7 +1711,7 @@ body #cdawrap {
   z-index: 10;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.3);
+  background: rgba(255,255,255,0.88)!important;
   content: '';
   opacity: 0;
   -webkit-transform: translate3d(100%,0,0);
@@ -1736,10 +1732,10 @@ body #cdawrap {
   transform: translate3d(0,0,0);
 }
 
-.content {
+/* .content {
   position: relative;
   background: #b4bad2;
-}
+} */
 
 .content::before {
   position: absolute;
@@ -1828,14 +1824,14 @@ body #cdawrap {
 .menu-wrap {
   position: fixed;
   overflow: hidden;
-  z-index: 1038;
+  z-index: 11;
   width: 300px;
   height: 100%;
-  background: #333;
+  background: #fff;
   padding: 0 0 .5em;
   font-size: 16px;
-  -webkit-transform: translate3d(-320px,0,0);
-  transform: translate3d(-320px,0,0);
+  -webkit-transform: translate3d(-300px,0,0);
+  transform: translate3d(-300px,0,0);
   -webkit-transition: -webkit-transform 0.4s;
   transition: transform 0.4s;
   -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
@@ -1899,8 +1895,8 @@ body #cdawrap {
 
 /* Shown menu */
 .show-menu .menu-wrap {
-  -webkit-transform: translate3d(0,0,0);
-  transform: translate3d(0,0,0);
+  -webkit-transform: translate3d(70px,0,0);
+  transform: translate3d(70px,0,0);
   -webkit-transition: -webkit-transform 0.4s;
   transition: transform 0.4s;
   -webkit-transition-timing-function: cubic-bezier(0.3,0,0.3,1);
@@ -1931,4 +1927,6 @@ body #cdawrap {
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
 }
+
+.scroll-wrap{position: relative;width: 317px;height: 100%;overflow-x: hidden;overflow-y: scroll;}
 /* /offcanvas */
