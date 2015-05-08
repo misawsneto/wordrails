@@ -1224,4 +1224,20 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
+	@Override
+	protected boolean isGetInvitationsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetInvitationAuthorized(Integer invitationId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isFindByInvitationHashAuthorized(String hash) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

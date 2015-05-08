@@ -26,6 +26,7 @@
   </script>
 </head>
 <body ng-controller="AppCtrl">
+  <offcanvas></offcanvas>
   <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'bg-white': $state.current.name == 'app.search' || $state.current.name == 'app.post', 'bg-perspective': $state.current.name == 'app.stations'}" ui-view></div>
 
 

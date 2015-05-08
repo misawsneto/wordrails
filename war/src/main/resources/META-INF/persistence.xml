@@ -33,6 +33,7 @@
 		<class>com.wordrails.business.Bookmark</class>
 		<class>com.wordrails.business.PostRead</class>
 		<class>com.wordrails.business.PersonNetworkRegId</class>
+		<class>com.wordrails.business.Invitation</class>
 
       	<properties>
       		<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>

@@ -21,24 +21,24 @@ angular.module('app')
 	}
 })
 
-.filter('pvimageLink', function pvimageLink(WORDRAILS) {
+.filter('pvimageLink', function pvimageLink(TRIX) {
 	return function(postView, size) {
 		if(postView && postView.largeId && size == "lg"){
-	  		return {"background-image": "url(" + WORDRAILS.baseUrl + "/api/files/"+ postView.largeId +"/contents)"};
+	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.largeId +"/contents)"};
 		}else if(postView && postView.mediumId && size == "md"){
-	  		return {"background-image": "url(" + WORDRAILS.baseUrl + "/api/files/"+ postView.mediumId +"/contents)"};
+	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.mediumId +"/contents)"};
 	  	}else if(postView && postView.mediumId && size == "sm"){
-	  		return {"background-image": "url(" + WORDRAILS.baseUrl + "/api/files/"+ postView.smallId +"/contents)"};
+	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.smallId +"/contents)"};
 		}else{
 			return {"background-image": "url(img/p0.jpg)"};
 		}
 	}
 })
 
-.filter('imageLink', function imageLink(authService, WORDRAILS) {
+.filter('imageLink', function imageLink(authService, TRIX) {
 	return function(imgId) {
 		if(imgId)
- 			return WORDRAILS.baseUrl + "/api/files/"+ imgId +"/contents";
+ 			return TRIX.baseUrl + "/api/files/"+ imgId +"/contents";
 
  		return "";
 	}

@@ -4,22 +4,22 @@ angular.module('app').service('trixService', function(){
 	/**
 	 * select a station based on the properties or the id of a stations
 	 */
-	this.selectCurrentStation = function(stations, changeToStationId){
-		var ret = null;
-		if(stations){
-			stations.forEach(function(station){
-				if(station.main && !changeToStationId){
-					ret = station;
-					return;
-				}
-			});
+	 this.selectDefaultStation = function(stations, changeToStationId){
+	 	var ret = null;
+	 	if(stations){
+	 		stations.forEach(function(station){
+	 			if(station.main && !changeToStationId){
+	 				ret = station;
+	 				return;
+	 			}
+	 		});
 
-			if(!ret){
-				for (var i = 0; i < stations.length; i++) {
-					var station = stations[i]
-					if(changeToStationId){
-						if(station.id == changeToStationId){
-							ret = station;
+	 		if(!ret){
+	 			for (var i = 0; i < stations.length; i++) {
+	 				var station = stations[i]
+	 				if(changeToStationId){
+	 					if(station.id == changeToStationId){
+	 						ret = station;
 						break; // exit foreach
 					}
 				}else{
@@ -34,38 +34,44 @@ angular.module('app').service('trixService', function(){
 	/**
 	 * check if user is station admin
 	 */
-	this.stationIsWritable = function(stationId){
-		if (!stationId) {return false};
-		var writable = false;
-		initData.personPermissions.stationPermissions.forEach(function(permissions, index){
-			if(permissions.stationId == stationId && (permissions.writable || permissions.writer))
-				writable = true;
-		});
-		return writable;
-	}
+	 this.stationIsWritable = function(stationId){
+	 	if (!stationId) {return false};
+	 	var writable = false;
+	 	initData.personPermissions.stationPermissions.forEach(function(permissions, index){
+	 		if(permissions.stationId == stationId && (permissions.writable || permissions.writer))
+	 			writable = true;
+	 	});
+	 	return writable;
+	 }
 
 	/**
 	 * check if user is station admin
 	 */
-	this.stationIsAdmin = function(stationId){
-		if (!stationId) {return false};
-		var isAdmin = false;
-		initData.personPermissions.stationPermissions.forEach(function(permissions, index){
-			if(permissions.stationId == stationId && permission.admin)
-				isAdmin = true;
-		});
-		return isAdmin;
-	}
+	 this.stationIsAdmin = function(stationId){
+	 	if (!stationId) {return false};
+	 	var isAdmin = false;
+	 	initData.personPermissions.stationPermissions.forEach(function(permissions, index){
+	 		if(permissions.stationId == stationId && permission.admin)
+	 			isAdmin = true;
+	 	});
+	 	return isAdmin;
+	 }
+
+	 this.isLoggedIn = function(){
+	 	if (initData.person && initData.person.username != "wordrails")
+	 		return true;
+	 	return false;
+	 }
 
 	/**
 	 * get a list of all stations that the user has permission to write
 	 */
-	this.getWritableStations = function(){
-		var stations = [];
-		initData.personPermissions.stationPermissions.forEach(function(permissions, index){
-			if(permissions.writable || permissions.writer)
-				stations.push(permissions)
-		});
-		return stations;
-	}
-});
+	 this.getWritableStations = function(){
+	 	var stations = [];
+	 	initData.personPermissions.stationPermissions.forEach(function(permissions, index){
+	 		if(permissions.writable || permissions.writer)
+	 			stations.push(permissions)
+	 	});
+	 	return stations;
+	 }
+	});

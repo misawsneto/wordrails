@@ -5,10 +5,16 @@
  */
 angular.module('app')
   .run(
-    [          '$rootScope', '$state', '$stateParams',
+    [          '$rootScope', '$state', '$stateParams', 
       function ($rootScope,   $state,   $stateParams) {
           $rootScope.$state = $state;
           $rootScope.$stateParams = $stateParams;
+
+          $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
+            window.console && console.log(toState);
+            window.console && console.log(fromState);
+            window.console && console.error(event)
+          });
       }
     ]
   )

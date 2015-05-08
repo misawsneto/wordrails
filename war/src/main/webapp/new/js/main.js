@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', 'trix',
-  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  trix) {
+.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state',
+  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -53,26 +53,6 @@ angular.module('app')
         $localStorage.settings = $scope.app.settings;
       }, true);
 
-      /* added */
-      $scope.app.settings.navbarHeaderColor = 'bg-dg';
-      $scope.app.settings.navbarCollapseColor = 'bg-white-only';
-      $scope.app.settings.asideColor = 'bg-dg';
-      $scope.app.hidePostOptions = true;
-      $scope.app.hidePostMoreOptions = true;
-      $scope.app.settings.asideFolded = true; 
-      $scope.app.settings.asideFixed = true;
-      $scope.app.settings.asideDock = false;
-      $scope.app.settings.container = false;
-      $scope.app.hideAside = false;
-      $scope.app.hideFooter = true;
-      // ---------------------
-      
-      $scope.app.initData = angular.copy(initData);
-      $scope.app.currentStation = trixService.selectCurrentStation($scope.app.initData.stations);
-      $scope.app.writableStations = trixService.getWritableStations();
-
-      /* end of added */
-
       // angular translate
       $scope.lang = { isopen: false };
       $scope.langs = {en:'English', de_DE:'German', it_IT:'Italian'};
@@ -92,10 +72,33 @@ angular.module('app')
         return (/iPhone|iPod|iPad|Silk|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
       }
 
+      /* added */
+      $scope.app.settings.navbarHeaderColor = 'bg-dg';
+      $scope.app.settings.navbarCollapseColor = 'bg-white-only';
+      $scope.app.settings.asideColor = 'bg-dg';
+      $scope.app.hidePostOptions = true;
+      $scope.app.hidePostMoreOptions = true;
+      $scope.app.settings.asideFolded = true; 
+      $scope.app.settings.asideFixed = true;
+      $scope.app.settings.asideDock = false;
+      $scope.app.settings.container = false;
+      $scope.app.hideAside = false;
+      $scope.app.hideFooter = true;
+      // ---------------------
+      
+      $scope.app.initData = angular.copy(initData);
+      $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
+
+      $scope.app.checkIfLogged = function(){
+        $scope.app.isLogged = trixService.isLoggedIn();
+        $scope.app.writableStations = trixService.getWritableStations();
+      }
+      $scope.app.checkIfLogged();
+
       $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
       });
 
-      $scope.backgroundImage = function(postView, size){
+      $scope.getBackgroundImage = function(postView, size){
         var img = $filter('pvimageLink')(postView, size);
         return img;
       }
@@ -119,6 +122,7 @@ angular.module('app')
         $scope.modalInstance.dismiss('cancel');
       };
 
+      /* define application's custom style based on the network's configuration */
       var $style = $('style#custom-style').length ? $('style#style#custom-style') : $('<style id="custom-style">').appendTo('body');
       $style.html(getCustomButtonStyle("#cc3300", "#ffffff"));
 
@@ -127,7 +131,37 @@ angular.module('app')
         $scope.app.viewMode = view;
       }
 
-      trix.login('silvio', 'silvio').success(function(){
-        trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
-      });
+      $scope.app.getInitData = function(){
+        trix.initData().success(function(response){
+          initData = response;
+          $scope.app.initData = angular.copy(initData);
+        })
+      }
+
+      $scope.app.signIn = function(username, password){
+        trix.login(username, password).success(function(){
+          trix.initData().success(function(response){
+            initData = response;
+            $scope.app.initData = angular.copy(initData);
+            $scope.cancelModal();
+            $scope.app.checkIfLogged()
+          })
+        })
+      };
+
+      $scope.app.signOut = function(username, password){
+        trix.logout().success(function(){
+          trix.initData().success(function(response){
+            initData = response;
+            $scope.app.initData = angular.copy(initData);
+            $scope.app.checkIfLogged();
+            $scope.app.profilepopover.open = false;
+            if($scope.$state.current.name != "app.stations" || $scope.$state.current.name != "app.search"){
+              $state.go("app.stations");
+            }
+          })
+        })
+      };
+
+      /* end of added */
   }]); 

@@ -30,16 +30,16 @@ angular.module('app')
     $translateProvider.useLocalStorage();
   }])
 
-  .constant('WORDRAILS', {
+  .constant('TRIX', {
     baseUrl: location.protocol + '//' + location.host,
     //baseUrl: 'http://master.com',
     pageSize: 15,
     commentPageSize: 5
   })
 
-  .config(function(trixProvider, redactorOptions, WORDRAILS){
+  .config(function(trixProvider, redactorOptions, TRIX){
     redactorOptions.lang = 'pt_br';
-    redactorOptions.imageUpload = WORDRAILS.baseUrl + "/api/files/contents/simple";
+    redactorOptions.imageUpload = TRIX.baseUrl + "/api/files/contents/simple";
     redactorOptions.toolbarExternal = "#external-toolbar"
     redactorOptions.plugins = ['fontsize', 'fontcolor', 'video', 'counter']
     redactorOptions.minHeight = 300

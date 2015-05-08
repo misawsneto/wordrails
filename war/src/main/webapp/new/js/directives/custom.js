@@ -17,15 +17,7 @@
 
 
 // Module for the demo
-angular.module('splash', ['ui.splash'])
-.controller('MainCtrl', ['$splash', function ($splash) {
-  this.openSplash = function () {
-    $splash.open({
-      title: 'Hi there!',
-      message: "This sure is a fine modal, isn't it?"
-    });
-  };
-}]);
+angular.module('splash', ['ui.splash']);
 
 // Re-usable $splash module
 angular.module('ui.splash', ['ui.bootstrap'])
@@ -38,8 +30,8 @@ angular.module('ui.splash', ['ui.bootstrap'])
         if(!opts){
           opts = {};
         }
-        opts.backdrop = false,
-        opts.windowTemplateUrl = 'splash/index.html';
+        opts.backdrop = false;
+        opts.windowTemplateUrl = 'splash_index.html';
         return $modal.open(opts);
       }
     };
@@ -48,17 +40,13 @@ angular.module('ui.splash', ['ui.bootstrap'])
 .run([
   '$templateCache',
   function ($templateCache) {
-    $templateCache.put('splash/index.html',
-      '<section class="splash" ng-class="{\'splash-open\': animate}" ng-style="{\'z-index\': 1040, display: \'block\'}" ng-click="close($event)">' +
-      '  <div class="splash-inner" ng-transclude></div>' +
-      '</section>'
-    );
-    $templateCache.put('splash/content.html',
-      '<div class="splash-content text-center">' +
-      '  <h1 ng-bind="title"></h1>' +
-      '  <p class="lead" ng-bind="message"></p>' +
-      '  <button class="btn btn-lg btn-outline" ng-bind="btnText || \'Ok, cool\'" ng-click="$close()"></button>' +
-      '</div>'
+    $templateCache.put('splash_index.html',
+      "<div modal-render=\"{{$isRendered}}\" tabindex=\"-1\" role=\"dialog\" class=\"splash\"\n" +
+      "    modal-animation-class=\"fade\"\n" +
+      " ng-class=\"{'splash-open': animate}\" ng-style=\"{'z-index': 1050 + index*10, display: 'block'}\" ng-click=\"close($event)\">\n" +
+      "    <div class='splash-inner' modal-transclude></div>\n" +
+      "</div>\n" +
+      ""
     );
   }
 ]);

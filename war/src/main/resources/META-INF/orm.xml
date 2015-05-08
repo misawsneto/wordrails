@@ -634,4 +634,15 @@
 		</query>
 	</named-query>
 	
+	<named-query name="Invitation.findByInvitationHash">
+	    <query>
+			select 
+				invitation 
+			from 
+				Invitation invitation
+			where 
+				invitation.hash = :hash
+		</query>
+	</named-query>
+	
 </entity-mappings>

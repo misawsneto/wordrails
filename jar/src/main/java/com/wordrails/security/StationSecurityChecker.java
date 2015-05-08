@@ -88,7 +88,7 @@ public class StationSecurityChecker {
 		boolean isAdmin = false;
 		for (Network network : station.networks) {
 			NetworkRole networkRole = networkRolesRepository.findByNetworkAndPerson(network, person);
-			if(networkRole.admin){
+			if(networkRole != null && networkRole.admin){
 				isAdmin = true;
 				break;
 			}

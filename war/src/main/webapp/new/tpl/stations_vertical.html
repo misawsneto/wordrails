@@ -12,7 +12,7 @@
                 <!-- image -->
                 <a class="block-image m-l m-t" ui-sref="app.post({postId: cell.postView.postId})" ng-if="cell.postView.mediumId" >
                   <div class="cell-wrap r r-2x" ng-class="{'hide': !cell.postView.mediumId}">
-                    <div ng-style="backgroundImage(cell.postView, 'md')"></div>
+                    <div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
                   </div>
                 </a>
                 <!-- /image -->

@@ -1,6 +1,6 @@
 <div class="news-item" data-post-id="{{cell.postView.postId}}" ng-class="{'bg-dkmask': !cell.postView.mediumId}" ng-click="loadPost(cell.postView.id)">
 	<div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-show="cell.postView.mediumId">
-		<div class="text-md font-thin text-white">{{cell.postView.title}}</div>
+		<div class="text-md font-thin text-white ls-sm" clamp="3">{{cell.postView.title}}</div>
 	</div>
 	<div class="wrapper-sm text-lg font-bold" ng-hide="cell.postView.mediumId">
 		{{cell.postView.title}}
@@ -9,6 +9,6 @@
 		{{cell.postView.snippet}}
 	</div>
 	<div class="cell-wrap" ng-class="{'hide': !cell.postView.mediumId}">
-		<div ng-style="backgroundImage(cell.postView, 'md')"></div>
+		<div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
 	</div>
 </div>
