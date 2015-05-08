@@ -26,12 +26,12 @@
                   <div class="m-t">
                     <div class="display-t-c">
                       <a href="https://medium.com/@hughmcguire" class="" title="Go to the profile of Hugh McGuire">
-                        <img src="https://d262ilb51hltx0.cloudfront.net/fit/c/36/36/0*IEP3z0HdLYAjHBvk.jpg" class="" title="Hugh McGuire">
+                          <div style="background-image: url('{{cell.postView.authorSmallImageId | imageLink}}')" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
                       </a>
                     </div>
                     <div class="display-t-c p-l-sm v-middle">
                       <a class="a-custom-primary link link link--accent link--darken" title="Go to the profile of Hugh McGuire" href="https://medium.com/@hughmcguire" dir="auto">
-                        Hugh McGuire
+                        {{cell.postView.authorName}}
                       </a>
                       <br>
                       <span class="postMetaInline text-sm">

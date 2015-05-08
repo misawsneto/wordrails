@@ -569,6 +569,56 @@ a.text-lgrey:hover {
   padding: 0px;
 }
 
+.bg-cover{
+  background-size: cover;
+}
+
+.bg-cover-round{
+  border-radius: 500px;
+}
+
+.bg-img-xxs{
+  height: 24px;
+  width: 24px;
+}
+
+.bg-img-xs{
+  height: 30px;
+  width: 30px;
+}
+
+.bg-img-sm{
+  height: 36px;
+  width: 36px;
+}
+
+.bg-img{
+  height: 40px;
+  width: 40px;
+}
+
+.bg-img-md{
+  height: 60px;
+  width: 60px;
+}
+
+.bg-img-lg{
+  height: 80px;
+  width: 80px;
+}
+
+.bg-img-xl{
+  height: 120px;
+  width: 120px;
+}
+
+.bg-img-xxl{
+  height: 200px;
+  width: 200px;
+}
+
+.bg-box{}
+
 .text-lgrey-dk {
   color: #e0e0e0;
 }

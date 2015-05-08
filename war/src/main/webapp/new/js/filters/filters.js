@@ -35,7 +35,7 @@ angular.module('app')
 	}
 })
 
-.filter('imageLink', function imageLink(authService, TRIX) {
+.filter('imageLink', function imageLink(TRIX) {
 	return function(imgId) {
 		if(imgId)
  			return TRIX.baseUrl + "/api/files/"+ imgId +"/contents";

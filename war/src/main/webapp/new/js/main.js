@@ -103,6 +103,12 @@ angular.module('app')
         return img;
       }
 
+      $scope.getImageLink = function(id){
+        var img = $filter('imageLink')(id);
+        return img;
+      }
+
+
       $scope.openModal = function(templateId, size){
         $scope.modalInstance = $modal.open({
           templateUrl: templateId, // the id of the <script> template
