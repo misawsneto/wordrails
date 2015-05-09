@@ -17,9 +17,9 @@
                 </a>
                 <!-- /image -->
                 <!-- /content -->
-                <div class="content-block m-t-sm">
+                <div class="m-t-sm" ng-class="{'content-block': cell.postView.mediumId}">
                   <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{cell.postView.topper}}</span>
-                  <a ui-sref="app.post({postId: cell.postView.postId})" class="h3 font-bold m-b m-t-sm block">
+                  <a ui-sref="app.post({postId: cell.postView.postId})" clamp="3" class="h3 font-bold m-b m-t-sm block">
                     {{cell.postView.title}}
                   </a>
                   <div class="text-lg font-thin" clamp="3" bind-html-unsafe="cell.postView.snippet"></div>
