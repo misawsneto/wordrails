@@ -1,5 +1,6 @@
 package com.wordrails.api;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.NotImplementedException;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.business.Station;
@@ -43,6 +45,7 @@ import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
+import com.wordrails.util.WordrailsUtil;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -206,6 +209,53 @@ public class UtilResource {
 			}
 			
 			personRepository.save(persons);
+		}
+	}
+	
+	@GET
+	@Path("/recalculateSlug")
+	public void recalculateSlug(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<Post> posts = postRepository.findAll();
+			for (Post post : posts) {
+				doSlug(post);
+			}
+		}
+	}
+	
+	private void doSlug(Post post){
+		String originalSlug = WordrailsUtil.toSlug(post.title);
+		post.originalSlug = originalSlug;
+		Date now = new Date();
+		if (post.date == null) {
+			post.date = now;
+		} else if (post.date.after(now)) {
+			throw new NotImplementedException("Agendamento de publicações não estão disponíveis.");
+		}
+
+		try {
+			post.slug = originalSlug;
+			postRepository.save(post);
+		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
+			String hash = WordrailsUtil.generateRandomString(5, "!Aau");
+			post.slug = originalSlug + "-" + hash;
+		}
+	}
+	
+	@GET
+	@Path("/updateAllResources")
+	public void updateAllResources(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			reindexAll(request);
+			setDefaultStationPerspective(request);
+			setPostImageIds(request);
+			setStationIds(request);
+			updatePersonImage(request);
+			recalculateSlug(request);
 		}
 	}
 }

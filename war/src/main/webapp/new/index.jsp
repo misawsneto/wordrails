@@ -24,6 +24,7 @@
     var initData = ${personData};
     var initTermPerspective = ${termPerspectiveView};
   </script>
+  <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 </head>
 <body ng-controller="AppCtrl">
   <offcanvas></offcanvas>
@@ -65,6 +66,7 @@
   <script src="../bower_components/redactor/fontcolor.js"></script>
   <script src="../bower_components/redactor/pt_br.js"></script>
   <script src="../bower_components/redactor/angular-redactor.js"></script>
+  <script src="../../bower_components/moment/min/moment-with-locales.min.js"></script>
 
   <!-- App -->
   <script src="js/app.js"></script>

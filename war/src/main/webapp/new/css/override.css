@@ -910,6 +910,7 @@ a.text-lgrey:hover {
 /* end post*/
 
 /* header */
+
 .navbar-brand img {
   max-height: 40px;
 }
@@ -1299,6 +1300,14 @@ a.text-lgrey:hover {
 /* ------------ stations.html info-flows ------------ */
 
 .station-header{position: fixed; width: 100%; top: 0; left: 0; margin-left: 0px!important; padding: 0px; padding-right: 15px;}
+
+.station-header .nav > li > a:hover,
+.station-header .nav > li > a:focus,
+.station-header .nav .open > a,
+.station-header .nav .open > a:hover,
+.station-header .nav .open > a:focus{
+  background: inherit;
+}
 
 .nav-down{
   top: 0;

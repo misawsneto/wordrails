@@ -48,13 +48,11 @@ angular.module('app').directive("offcanvas", function(){
         toggleMenu(close);
         if(event)
           event.stopPropagation();
-        console.log('togle');
       }
 
       scope.contentClick = function(){
         if(isOpen)
           toggleMenu(); 
-        console.log('close');
       };
 
       function toggleMenu(close) {

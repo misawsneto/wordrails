@@ -169,5 +169,6 @@ angular.module('app')
         })
       };
 
+      moment.locale('pt')
       /* end of added */
   }]); 
