@@ -136,11 +136,11 @@ function getCustomButtonStyle(color, perspective) {
 
 	(textColorEval2(perspective) ? "" :
 	".bg-perspective .station-perspectives a{\n"+
-	  "color: #f1f1f1 ;\n"+
+	  "color: rgba(255,255,255, 0.92) ;\n"+
 	"}\n"+
 	".bg-perspective .station-perspectives a:hover,\n"+
 	".bg-perspective .station-perspectives a:focus {\n"+
-	  "color: #f1f1f1 ;\n"+
+	  "color: rgba(255,255,255, 0.92) ;\n"+
 	  "text-decoration: none;\n"+
 	"}\n"+
 	".bg-perspective .md-tab-content > div.b-t {"+

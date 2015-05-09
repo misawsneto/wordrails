@@ -1,13 +1,53 @@
 <div class="news-item" data-post-id="{{cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="loadPost(cell.postView.id)">
 	<div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-show="cell.postView.mediumId">
 		<div class="text-md font-thin text-white ls-sm" clamp="3">{{cell.postView.title}}</div>
+		<div class="m-t-md" ng-show="cell.postView.mediumId">
+			<div class="display-t-c">
+				<a href="https://medium.com/@hughmcguire" class="" title="Go to the profile of Hugh McGuire">
+					<div style="{{cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+				</a>
+			</div>
+			<div class="display-t-c p-l-sm v-middle">
+				<a class="text-white" title="Go to the profile of Hugh McGuire" href="https://medium.com/@hughmcguire" dir="auto">
+					{{cell.postView.authorName}}
+				</a>
+				<br>
+				<span class="postMetaInline text-sm">
+					<span class="postMetaInline postMetaInline--bookmark">
+						<span class="readingTime">{{cell.postView.date | fromNow}}</span>
+					</span>
+				</span>
+			</div>
+		</div>
 	</div>
+
+
 	<div class="wrapper-sm text-lg font-bold" ng-hide="cell.postView.mediumId">
 		{{cell.postView.title}}
 	</div>
 	<div class="wrapper-sm" ng-hide="cell.postView.mediumId" clamp="3">
 		{{cell.postView.snippet}}
 	</div>
+
+	<div class="pos-abt bottom-0 wrapper-sm" ng-hide="cell.postView.mediumId">
+		<div class="display-t-c">
+			<a href="https://medium.com/@hughmcguire" class="" title="Go to the profile of Hugh McGuire">
+				<div style="{{cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+			</a>
+		</div>
+		<div class="display-t-c p-l-sm v-middle">
+			<a class="text-custom-primary link" title="Go to the profile of Hugh McGuire" href="https://medium.com/@hughmcguire" dir="auto">
+				{{cell.postView.authorName}}
+			</a>
+			<br>
+			<span class="postMetaInline text-sm">
+				<span class="postMetaInline postMetaInline--bookmark">
+					<span class="readingTime">{{cell.postView.date | fromNow}}</span>
+				</span>
+			</span>
+		</div>
+	</div>
+
 	<div class="cell-wrap" ng-class="{'hide': !cell.postView.mediumId}">
 		<div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
 	</div>

@@ -58,7 +58,7 @@ angular.module('app')
     if(img){
       return "background-image: url(" + img + ")";
     }else{
-      return "background-image: url(img/default-user.jpg)";
+      return "background-image: url(img/default-user.png)";
     }
   }
 });
