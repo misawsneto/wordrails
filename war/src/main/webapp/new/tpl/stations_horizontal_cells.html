@@ -5,7 +5,7 @@
 	<div class="wrapper-sm text-lg font-bold" ng-hide="cell.postView.mediumId">
 		{{cell.postView.title}}
 	</div>
-	<div class="wrapper-sm" ng-hide="cell.postView.mediumId">
+	<div class="wrapper-sm" ng-hide="cell.postView.mediumId" clamp="3">
 		{{cell.postView.snippet}}
 	</div>
 	<div class="cell-wrap" ng-class="{'hide': !cell.postView.mediumId}">

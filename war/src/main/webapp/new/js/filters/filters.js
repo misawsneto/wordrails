@@ -43,13 +43,22 @@ angular.module('app')
  		return "";
 	}
 })
+
+.filter('default_user_image', function imageLink(TRIX) {
+	return function(imgId) {
+		if(imgId)
+ 			return TRIX.baseUrl + "/api/files/"+ imgId +"/contents";
+
+ 		return "";
+	}
+})
  
 .filter('bgimg', function bgimg(){
   return function(img){
     if(img){
       return "background-image: url(" + img + ")";
     }else{
-      return "background-image: url(img/default_user_image.jpg)";
+      return "background-image: url(img/default-user.jpg)";
     }
   }
 });
