@@ -228,13 +228,6 @@ public class UtilResource {
 	private void doSlug(Post post){
 		String originalSlug = WordrailsUtil.toSlug(post.title);
 		post.originalSlug = originalSlug;
-		Date now = new Date();
-		if (post.date == null) {
-			post.date = now;
-		} else if (post.date.after(now)) {
-			throw new NotImplementedException("Agendamento de publicações não estão disponíveis.");
-		}
-
 		try {
 			post.slug = originalSlug;
 			postRepository.save(post);

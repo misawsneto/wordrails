@@ -23,6 +23,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		PostView postView = new PostView();
 		postView.postId = post.id;
 		postView.title = post.title;
+		postView.slug = post.slug;
 		if (post.featuredImage != null) {
 			postView.smallId = post.featuredImage.small.id;
 			postView.mediumId = post.featuredImage.medium.id;
@@ -46,6 +47,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.authorEmail = post.author != null ? post.author.email : null;
 		postView.authorTwitter = post.author != null ? post.author.twitterHandle : null;
 		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
+		
 		return postView;
 	}
 }
