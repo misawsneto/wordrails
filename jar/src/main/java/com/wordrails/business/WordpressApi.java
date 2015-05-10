@@ -15,6 +15,12 @@ public interface WordpressApi {
     @GET("/posts")
     List<WordpressPost> getPosts();
 
+    @GET("/taxonomies/post_tag/terms")
+    List<WordpressTerm> getTags();
+
+    @GET("/taxonomies/category/terms")
+    List<WordpressTerm> getCategories();
+
     @POST("/posts")
     WordpressPost createPost(@Body WordpressPost task);
 
