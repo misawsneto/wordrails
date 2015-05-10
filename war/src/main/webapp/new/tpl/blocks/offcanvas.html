@@ -1,4 +1,17 @@
-<div class="menu-wrap md-whiteframe-z2">
-  <div class="scroll-wrap">
+<div class="menu-wrap md-whiteframe-z2 bg-dg">
+  <div class="p p-h-md">
+    <a class="pull-right text-muted-lt text-2x m-t-n inline p-sm" ng-click="toggleMenu()">×</a>
+    <div class="wrapper-lg text-center">
+      <strong class="text-u-c">Estações</strong>
+    </div>
   </div>
+  <!-- <div class="scroll-wrap"> -->
+  <nav class="menu">
+    <div class="offcanvas-icon-list">
+      <a href ng-repeat="station in app.initData.stations" ng-class="{'bg-custom-primary': station.id == app.currentStation.id}">
+        <span class="">{{station.name}}</span>
+      </a>
+    </div>
+  </nav>
+  <!-- </div> -->
 </div>
