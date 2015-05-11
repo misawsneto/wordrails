@@ -2,6 +2,7 @@ package com.wordrails.persistence;
 
 import com.wordrails.business.Station;
 import com.wordrails.business.Taxonomy;
+import com.wordrails.business.Wordpress;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,10 +29,10 @@ public interface TaxonomyRepository extends JpaRepository<Taxonomy, Integer>, Qu
 	Taxonomy findByTermsId(Integer termId);
 
 	@RestResource(exported=false)
-	Taxonomy findTypeTByWordpressDomain(@Param("wordpressDomain") String wordpressDomain); //taxonomy of type T
+	Taxonomy findTypeTByWordpress(@Param("wordpress") Wordpress wordpress); //taxonomy of type T
 
 	@RestResource(exported=false)
-	Taxonomy findByWordpressDomain(@Param("wordpressDomain") String wordpressDomain); //taxonomy of all types except T or A
+	Taxonomy findByWordpress(@Param("wordpress") Wordpress wordpress); //taxonomy of all types except T or A
 
 	@RestResource(exported=false)
 	Taxonomy findTypeTByStation(@Param("station") Station station); //taxonomy of type T

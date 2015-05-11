@@ -55,6 +55,8 @@ public class Term {
 	public Integer taxonomyId;
 	
 	public String taxonomyName;
+	
+	public String slug;
     
     @Column(unique=true)
     public Integer wordpressId;

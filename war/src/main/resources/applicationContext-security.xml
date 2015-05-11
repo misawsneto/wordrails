@@ -29,6 +29,8 @@
 	<http pattern="/api/persons/search/findByUsername/**" security="none"/>
 	<http pattern="/api/persons/create" security="none"/>
 	<http pattern="/api/wp/login" security="none"/>
+	<http pattern="/api/wp/createPost" security="none"/>
+	<http pattern="/api/wp/createPosts" security="none"/>
 	<http pattern="/api/util/**" security="none"/>
 
 	<http entry-point-ref="authenticationEntryPoint">

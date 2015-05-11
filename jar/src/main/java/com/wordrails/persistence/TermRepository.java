@@ -2,6 +2,7 @@ package com.wordrails.persistence;
 
 import com.wordrails.business.Taxonomy;
 import com.wordrails.business.Term;
+import com.wordrails.business.Wordpress;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,10 +36,10 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	List<Term> findByTaxonomy(@Param("taxonomy") Taxonomy taxonomy);
 
 	@RestResource(exported=false)
-	List<Term> findTagsByWordpressDomain(@Param("wordpressDomain") String wordpressDomain);
+	List<Term> findTagsByWordpress(@Param("wordpress") Wordpress wordpress);
 
 	@RestResource(exported=false)
-	List<Term> findCategoriesByWordpressDomain(@Param("wordpressDomain") String wordpressDomain);
+	List<Term> findCategoriesByWordpress(@Param("wordpress") Wordpress wordpress);
 
 	@RestResource(exported=false)
 	Term findByWordpressId(@Param("wordpressId") Integer wordpressId);

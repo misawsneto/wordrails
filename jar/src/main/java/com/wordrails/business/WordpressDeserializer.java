@@ -39,7 +39,7 @@ public class WordpressDeserializer implements JsonDeserializer<WordpressPost> {
         WordpressPost wp = new WordpressPost(title, body, status, date);
         wp.modified = modified;
         wp.id = id;
-        wp.tags = new HashSet<>();
+        wp.terms.tags = new HashSet<>();
         
          try {
             JsonArray postTag = json.getAsJsonObject().get("terms").getAsJsonObject().getAsJsonArray("post_tag");
@@ -49,15 +49,16 @@ public class WordpressDeserializer implements JsonDeserializer<WordpressPost> {
                 WordpressTerm t = new WordpressTerm();
                 t.id = tag.get("ID").getAsInt();
                 t.name = tag.get("name").getAsString();
+                t.slug = tag.get("slug").getAsString();
                 t.parent = tag.get("parent").getAsInt();
                 t.type = WordpressTerm.TAG;
                 
-                wp.tags.add(t);
+                wp.terms.tags.add(t);
             }
          } catch (Exception e) {
          }
          
-        wp.categories = new HashSet<>();
+        wp.terms.categories = new HashSet<>();
          try {
             JsonArray postCategories = json.getAsJsonObject().get("terms").getAsJsonObject().getAsJsonArray("category");
             for (Iterator<JsonElement> it = postCategories.iterator(); it.hasNext();) {
@@ -66,10 +67,11 @@ public class WordpressDeserializer implements JsonDeserializer<WordpressPost> {
                 WordpressTerm t = new WordpressTerm();
                 t.id = category.get("ID").getAsInt();
                 t.name = category.get("name").getAsString();
+                t.slug = category.get("slug").getAsString();
                 t.parent = category.get("parent").getAsInt();
                 t.type = WordpressTerm.CATEGORY;
                 
-                wp.categories.add(t);
+                wp.terms.categories.add(t);
             }
          } catch (Exception e) {
          }
