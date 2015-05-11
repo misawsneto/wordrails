@@ -13,5 +13,6 @@ public class NotificationDto {
 	public String stationName;
 	public Integer postId;
 	public String postTitle;
-
+	public String postSnippet;
+	public Integer imageSmallId;
 }

@@ -3,8 +3,13 @@ package com.wordrails.util;
 import java.lang.reflect.Field;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 public class WordrailsUtil {
 
@@ -51,5 +56,13 @@ public class WordrailsUtil {
 	            throw new RuntimeException(e);
 	        }
 	    }
+	}
+	
+	public static String simpleSnippet(String body){
+		String[] splitPhrase = body.split("\\s+");
+		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
+		String string = StringUtils.join(Arrays.copyOfRange(splitPhrase, 0, limit), " ");
+		Document doc = Jsoup.parse(string);
+		return doc.text();
 	}
 }
