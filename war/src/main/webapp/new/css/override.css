@@ -1019,7 +1019,11 @@ a.text-lgrey:hover {
   display: inherit;
 }
 
-#my-profile-popover .arrow{top: 80%;}
+#app[role="button"]{
+  cursor: auto;
+}
+
+#my-profile-popover .arrow{top: 60%;}
 /* /layout.html*/
 
 /* aside.html */
@@ -1977,7 +1981,7 @@ body #cdawrap {
     z-index: 11;
     width: 300px;
     height: 100%;
-    font-size: 16px;
+    /* font-size: 16px; */
     -webkit-transform: translate3d(-300px,0,0);
     transform: translate3d(-300px,0,0);
     -webkit-transition: -webkit-transform 0.4s;

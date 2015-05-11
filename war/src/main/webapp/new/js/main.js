@@ -169,6 +169,10 @@ angular.module('app')
         })
       };
 
+      $scope.app.changeStation = function(stationId){
+
+      }
+
       moment.locale('pt')
       /* end of added */
   }]); 
