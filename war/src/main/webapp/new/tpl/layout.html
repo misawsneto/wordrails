@@ -20,7 +20,7 @@
 <!-- /navbar -->
 
     <!-- profile-popover -->
-  <div id="my-profile-popover" class="popover right animated hide" ng-class="{ fadeIn: app.profilepopover.open, fadeOut: !app.profilepopover.open, hide:!app.profilepopover }">
+  <div id="my-profile-popover" class="popover right animated hide" ng-class="{ fadeIn: app.profilepopover.open, fadeOut: !app.profilepopover.open, hide:!app.profilepopover }" click-outside="app.profilepopover.open = false; console.log('teste')" outside-if-not="profile-popover-toggle ">
     <div class="arrow"></div>
     <div class="popover-inner">
       <div class="popover-content">
