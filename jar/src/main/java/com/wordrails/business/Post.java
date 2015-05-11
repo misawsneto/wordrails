@@ -187,7 +187,7 @@ public class Post {
 	public int recommendsCount = 0;
 
 	@Field
-	public Integer commentsCount = 0;
+	public int commentsCount = 0;
 
 	@ManyToMany
 	@IndexedEmbedded
