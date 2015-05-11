@@ -26,6 +26,7 @@ import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.util.NotificationDto;
+import com.wordrails.util.WordrailsUtil;
 
 @Component
 public class GCMService {
@@ -100,6 +101,8 @@ public class GCMService {
 		notificationDto.stationName = notification.station != null ? notification.station.name : null;
 		notificationDto.postId = notification.post != null ? notification.post.id : null;
 		notificationDto.postTitle = notification.post != null ? notification.post.title : null;;
+		notificationDto.postSnippet = notification.post != null ? WordrailsUtil.simpleSnippet(notification.post.body) : null;
+		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallId : null;
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 
