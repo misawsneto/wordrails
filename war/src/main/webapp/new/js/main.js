@@ -173,6 +173,11 @@ angular.module('app')
 
       }
 
+      $scope.blabla = function(){
+        console.log($scope.app.profilepopover.open);
+      }
+
       moment.locale('pt')
+
       /* end of added */
   }]); 
