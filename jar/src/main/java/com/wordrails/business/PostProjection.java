@@ -32,4 +32,5 @@ public interface PostProjection {
 	Integer getImageLargeId();
     Integer getReadsCount();
 	Integer getRecommendsCount();
+	Integer getCommentsCount();
 }

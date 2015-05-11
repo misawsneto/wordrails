@@ -127,8 +127,8 @@ public class UtilResource {
 	}
 
 	@GET
-	@Path("/setDefaultStationPerspective")
-	public void setDefaultStationPerspective(@Context HttpServletRequest request) {
+	@Path("/updateDefaultStationPerspective")
+	public void updateDefaultStationPerspective(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -144,8 +144,8 @@ public class UtilResource {
 	}
 	
 	@GET
-	@Path("/setPostImageIds")
-	public void setPostImageIds(@Context HttpServletRequest request) {
+	@Path("/updatePostFields")
+	public void updatePostFields(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -162,14 +162,17 @@ public class UtilResource {
 					post.imageMediumId = null;
 					post.imageLargeId = null;
 				}
+				if(post.comments != null){
+					post.commentsCount = post.comments.size();
+				}
 			}
 			postRepository.save(posts);
 		}
 	}
 	
 	@GET
-	@Path("/setStationIds")
-	public void setStationIds(@Context HttpServletRequest request) {
+	@Path("/updateTermPerspectivesStationIds")
+	public void updateTermPerspectivesStationIds(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -188,8 +191,8 @@ public class UtilResource {
 	}
 	
 	@GET
-	@Path("/updatePersonImage")
-	public void updatePersonImage(@Context HttpServletRequest request) {
+	@Path("/updatePersonFields")
+	public void updatePersonFields(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -244,10 +247,10 @@ public class UtilResource {
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			reindexAll(request);
-			setDefaultStationPerspective(request);
-			setPostImageIds(request);
-			setStationIds(request);
-			updatePersonImage(request);
+			updateDefaultStationPerspective(request);
+			updatePostFields(request);
+			updateTermPerspectivesStationIds(request);
+			updatePersonFields(request);
 			recalculateSlug(request);
 		}
 	}
