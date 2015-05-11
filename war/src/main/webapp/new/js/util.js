@@ -171,6 +171,10 @@ function getCustomButtonStyle(color, perspective) {
 	"  color: "+color+" !important;\n"+
 	"}\n"+
 
+	".cover-abstract-mask{"+
+	"  background-color: rgba("+hexToRgb(color).r+", " + hexToRgb(color).g + ", "+ hexToRgb(color).b +", 0.7);"
+	"}\n"+
+
 	+"";
 	return style
 }

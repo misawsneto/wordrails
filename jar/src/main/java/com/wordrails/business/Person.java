@@ -103,6 +103,14 @@ public class Person {
 			imageLargeId = null;
 		}
 		
+		if(cover != null && cover.original != null){
+			coverId = cover.original.id;
+			coverLargeId= cover.large.id;
+		}else{
+			coverId = null;
+			coverLargeId = null;
+		}
+		
 		createdAt = new Date();
 	}
 	
@@ -120,6 +128,14 @@ public class Person {
 			imageLargeId = null;
 		}
 		
+		if(cover != null && cover.original != null){
+			coverId = cover.original.id;
+			coverLargeId= cover.large.id;
+		}else{
+			coverId = null;
+			coverLargeId = null;
+		}
+		
 		updatedAt = new Date();
 	}
 	
@@ -127,6 +143,9 @@ public class Person {
 	public Integer imageSmallId;
 	public Integer imageMediumId;
 	public Integer imageLargeId;
+	
+	public Integer coverLargeId;
+	public Integer coverId;
 
 	@Transient
 	public String password;
