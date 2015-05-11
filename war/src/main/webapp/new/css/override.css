@@ -1411,6 +1411,18 @@ a.text-lgrey:hover {
     background: inherit;
   }
 
+  .station-header .dropdown-menu{
+    width: 175px;
+  }
+
+  .station-header .dropdown-menu li a:hover,
+  .station-header .dropdown-menu li a:focus{
+    background: inherit!important;
+  }
+
+  .station-header .dropdown-menu li a.mark-as-read:hover{
+    text-decoration: underline;
+  }
   .nav-down{
     top: 0;
     -webkit-transition: all 0.1s ease-in-out;
