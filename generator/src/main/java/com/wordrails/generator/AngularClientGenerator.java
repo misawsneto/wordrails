@@ -2,7 +2,6 @@ package com.wordrails.generator;
 
 import java.io.File;
 import java.io.IOException;
-
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupDir;
 
@@ -36,9 +35,9 @@ class AngularClientGenerator {
 
 	public static void main(String[] args) throws IOException {
 //		"C:/Users/misael/PROJECTs/WORDRAILS2_TRUNK/wordrails2/war/src/main/webapp/js"
-		AngularClientGenerator generator = new AngularClientGenerator("C:/Users/misael/PROJECTs/WORDRAILS2_TRUNK/wordrails2/war/src/main/webapp/js", "Trix", "com.wordrails"); 
-		generator.generate();
-//		AngularClientGenerator generator = new AngularClientGenerator(args[0], "Trix", "com.wordrails"); 
+//		AngularClientGenerator generator = new AngularClientGenerator("C:/Users/misael/PROJECTs/WORDRAILS2_TRUNK/wordrails2/war/src/main/webapp/js", "Trix", "com.wordrails"); 
 //		generator.generate();
+		AngularClientGenerator generator = new AngularClientGenerator(args[0], "Trix", "com.wordrails"); 
+		generator.generate();
 	}		
 }
