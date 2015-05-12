@@ -60,43 +60,67 @@ var trix = angular.module('trix', [])
     this.initData = function() {
       return \$http.get(_config.url + "/api/persons/init");
     }
+    
+    this.getCurrentPerson = function(){
+    	return \$http.get(_config.url + "/api/persons/me")
+    }
 
     this.updatePostTerms = function(postId, terms) {
     	var config = {"headers": {"Content-Type": "application/json"}}
-			return \$http.put(_config.url + "/api/posts/" + postId + "/updatePostTerms", terms, config)
-		}
+		return \$http.put(_config.url + "/api/posts/" + postId + "/updatePostTerms", terms, config)
+	}
 
-		this.findPerspectiveView = function(stationPerspectiveId, termPerspectiveId, termId, _page, _size, _sort) {
-			var config = {
-				"params": {
-					"stationPerspectiveId": stationPerspectiveId,
-					"termPerspectiveId": termPerspectiveId,
-					"termId": termId,
-					"page": _page,
-					"size": _size,
-					"sort": _sort
-				}
+	this.findPerspectiveView = function(stationPerspectiveId, termPerspectiveId, termId, _page, _size, _sort) {
+		var config = {
+			"params": {
+				"stationPerspectiveId": stationPerspectiveId,
+				"termPerspectiveId": termPerspectiveId,
+				"termId": termId,
+				"page": _page,
+				"size": _size,
+				"sort": _sort
 			}
-      \$http.get(_config.url + "/api/perspectives/termPerspectiveViews", config)
+		}
+      return \$http.get(_config.url + "/api/perspectives/termPerspectiveViews", config)
+    }
+    
+    this.findPopularPosts = function(stationId, _page, _size) {
+		var config = {
+			"params": {
+				"page": _page,
+				"size": _size,
+			}
+		}
+      return \$http.get(_config.url + "/api/posts/" + stationId + "/popular", config)
+    }
+    
+    this.findRecentPosts = function(stationId, _page, _size) {
+		var config = {
+			"params": {
+				"page": _page,
+				"size": _size
+			}
+		}
+      return \$http.get(_config.url + "/api/posts/" + stationId + "/recent", config)
     }
 
     this.putPassword = function(oldPassword, newPassword, _success, _error, _complete) {
-    	\$http.put(_config.url + "/api/persons/me/password", \$.param({"oldPassword": oldPassword, "newPassword": newPassword}), config)
+    	return \$http.put(_config.url + "/api/persons/me/password", \$.param({"oldPassword": oldPassword, "newPassword": newPassword}), config)
     };
 
-		this.findPostsByStationIdAndAuthorIdAndState = function(stationId, authorId, state, _page, _size, _sort) {
-			var config = {
-				params: {
-					"stationId": stationId,
-					"authorId": authorId,
-					"state": state,
-					"page": _page,
-					"size": _size,
-					"sort": _sort
-				}
+	this.findPostsByStationIdAndAuthorIdAndState = function(stationId, authorId, state, _page, _size, _sort) {
+		var config = {
+			params: {
+				"stationId": stationId,
+				"authorId": authorId,
+				"state": state,
+				"page": _page,
+				"size": _size,
+				"sort": _sort
 			}
-			return \$http.get(_config.url + "/api/posts/" + stationId + "/findPostsByStationIdAndAuthorIdAndState", config)
 		}
+		return \$http.get(_config.url + "/api/posts/" + stationId + "/findPostsByStationIdAndAuthorIdAndState", config)
+	}
 
   	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
   }

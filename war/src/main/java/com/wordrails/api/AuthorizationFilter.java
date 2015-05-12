@@ -15,7 +15,6 @@ import com.wordrails.business.StationPerspective;
 import com.wordrails.business.StationRole;
 import com.wordrails.business.Taxonomy;
 import com.wordrails.business.TermPerspective;
-import com.wordrails.business.Wordpress;
 import com.wordrails.persistence.CellRepository;
 import com.wordrails.persistence.CommentRepository;
 import com.wordrails.persistence.FileRepository;
@@ -1248,17 +1247,20 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindOrderByDateDescAuthorized(Integer stationId, Integer page, Integer size, List<String> sort) {
+	protected boolean isFindOrderByDateDescAuthorized(Integer stationId,
+			Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
+	@Override
+	protected boolean isFindPopularPostsAuthorized(Integer stationId,
+			Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
+		return true;
+	}
     @Override
     protected boolean isFindByWordpressIdAuthorized(Integer wordpressId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected boolean isFindByWordpressAuthorized(Wordpress wordpress) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -1269,6 +1271,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
     @Override
     protected boolean isFindByTokenAuthorized(String token) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected boolean isFindByWordpressAuthorized(Integer wordpressId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

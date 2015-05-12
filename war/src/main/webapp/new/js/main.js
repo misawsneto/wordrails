@@ -85,6 +85,20 @@ angular.module('app')
       $scope.app.hideAside = false;
       $scope.app.hideFooter = true;
       // ---------------------
+       
+      function loadPopular(){
+        trix.findPopularPosts($scope.app.currentStation.id, 0, 10)
+        .success(function(response){
+          console.log(response);
+        })
+      }
+
+      function loadRecent(){
+        trix.findRecentPosts($scope.app.currentStation.id, 0, 10)
+        .success(function(response){
+          console.log(response);
+        })
+      }
       
       $scope.app.initData = angular.copy(initData);
       $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
@@ -178,6 +192,13 @@ angular.module('app')
       }
 
       moment.locale('pt')
+
+      loadPopular();
+      loadRecent();
+      trix.getCurrentPerson().success(function(){
+
+      })
+     
 
       /* end of added */
   }]); 

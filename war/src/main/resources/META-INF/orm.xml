@@ -710,4 +710,17 @@
 		</query>
 	</named-query>
 	
+	<named-query name="Post.findPopularPosts">
+	    <query>
+			select 
+				post 
+			from 
+				Post post
+			where 
+				post.station.id = :stationId
+			order by
+				post.date desc, post.recommendsCount desc 
+		</query>
+	</named-query>
+	
 </entity-mappings>

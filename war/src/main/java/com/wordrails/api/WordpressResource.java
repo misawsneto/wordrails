@@ -97,7 +97,7 @@ public class WordpressResource {
             dbTerms.putAll(getTerms(categoryTaxonomy));
 
             Person author = personRepository.findByWordpressId(1); //temporary
-            Station station = stationRepository.findByWordpress(wp);
+            Station station = stationRepository.findByWordpressId(wp.id);
 
             Post post = getPost(wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
             post.station = station;
@@ -134,7 +134,7 @@ public class WordpressResource {
             dbTerms.putAll(getTerms(categoryTaxonomy));
 
             Person author = personRepository.findByWordpressId(1); //temporary
-            Station station = stationRepository.findByWordpress(wp);
+            Station station = stationRepository.findByWordpressId(wp.id);
 
             List<Post> posts = new ArrayList<>();
             for (WordpressPost wpPost : wpPosts) {
