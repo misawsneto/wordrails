@@ -23,6 +23,7 @@ war/indexes/**
 war/index/*
 war/src/main/webapp/app/js/BaseWordRails.js
 war/src/main/webapp/js/BaseWordRails.js
+war/src/main/webapp/js/BaseTrix.js
 client/.settings/*
 client/.project
 client/.classpath
