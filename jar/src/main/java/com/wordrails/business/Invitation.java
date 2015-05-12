@@ -11,8 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
@@ -20,6 +22,7 @@ import org.hibernate.validator.constraints.Email;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"hash", "network_id"}))
 public class Invitation {
 	
 	@Id
@@ -30,11 +33,12 @@ public class Invitation {
 	@Column(unique=true)
 	public String hash;
 	
-	@NotNull
 	@Email
 	public String email;
 	
 	public String personName;
+	
+	public String invitationUrl;
 	
 	public boolean active = true;
 	
@@ -54,6 +58,7 @@ public class Invitation {
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
+		invitationUrl = "http://" + network.subdomain + ".xarx.co/" + "invitation?hash=" + hash; 
 	}
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)

@@ -30,6 +30,7 @@
 	<http pattern="/api/persons/create" security="none"/>
 	<http pattern="/api/wp/login" security="none"/>
 	<http pattern="/api/util/**" security="none"/>
+	<http pattern="/invitation/**" security="none"/>
 
 	<http entry-point-ref="authenticationEntryPoint">
 	    <intercept-url pattern="/api/persons/init" access="IS_AUTHENTICATED_ANONYMOUSLY"/>

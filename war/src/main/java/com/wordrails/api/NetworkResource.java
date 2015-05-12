@@ -29,7 +29,7 @@ import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
-import com.wordrails.util.NetworkCreate;
+import com.wordrails.util.NetworkCreateDto;
 
 @Path("/networks")
 @Component
@@ -92,7 +92,7 @@ public class NetworkResource {
 	
 	@Path("/create")
 	@GET
-	public Response createNetwork (NetworkCreate networkCreate){
+	public Response createNetwork (NetworkCreateDto networkCreate){
 		Person person = accessControllerUtil.getLoggedPerson();
 		
 		Network network = networkCreate.network;

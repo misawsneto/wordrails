@@ -1262,4 +1262,10 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		// TODO Auto-generated method stub
 		return true;
 	}
+
+	@Override
+	protected boolean isFindOneBySubdomainAuthorized(String subdomain) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

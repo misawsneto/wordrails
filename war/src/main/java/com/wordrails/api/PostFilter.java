@@ -75,7 +75,7 @@ public class PostFilter implements Filter {
 
             if (rq.getMethod().toLowerCase().equals("get")) {
                 String url = rq.getRequestURI();
-                if (url.contains("post") && url.matches("(.*)\\d+$")) {                    
+                if (url.contains("/posts/") && url.matches("(.*)\\d+$")) {                    
                     postId = getPostId(url);
                     Post post = postRepository.findOne(postId);
                     handleAfterRead(post);

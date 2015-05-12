@@ -1,5 +1,6 @@
 package com.wordrails.api;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -9,7 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -29,6 +32,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.Invitation;
+import com.wordrails.business.Network;
 import com.wordrails.business.NotImplementedException;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
@@ -36,6 +41,7 @@ import com.wordrails.business.Station;
 import com.wordrails.business.StationPerspective;
 import com.wordrails.business.TermPerspective;
 import com.wordrails.business.UnauthorizedException;
+import com.wordrails.persistence.InvitationRepository;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.PersonRepository;
@@ -69,6 +75,8 @@ public class UtilResource {
 	
 	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
 	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
+	
+	private @Autowired InvitationRepository invitationRepository;
 	
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 
@@ -226,6 +234,28 @@ public class UtilResource {
 				doSlug(post);
 			}
 		}
+	}
+	
+	@POST
+	@Path("/generateInvitations")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public void generate(@FormParam("subdomain") String subdomain, @FormParam("stationId") Integer stationId, @FormParam("count") Integer count){
+		
+		Network network = networkRepository.findOneBySubdomain(subdomain);
+		Station station = stationId != null ? stationRepository.findOne(stationId) : null;
+		
+		List<Invitation> invites = new ArrayList<Invitation>();
+		
+		for (int i = 0; i < count; i++) {
+			Invitation invitation =  new Invitation();
+			invitation.network = network;
+			invitation.station = station;
+			invitation.active = true;
+			invitation.hash = WordrailsUtil.generateRandomString(8, "aA#");
+			invites.add(invitation);
+		}
+		
+		invitationRepository.save(invites);
 	}
 	
 	private void doSlug(Post post){
