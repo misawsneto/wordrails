@@ -1,12 +1,5 @@
 package com.wordrails.api;
 
-import java.util.List;
-
-import javax.ws.rs.Path;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Cell;
 import com.wordrails.business.Comment;
@@ -22,6 +15,7 @@ import com.wordrails.business.StationPerspective;
 import com.wordrails.business.StationRole;
 import com.wordrails.business.Taxonomy;
 import com.wordrails.business.TermPerspective;
+import com.wordrails.business.Wordpress;
 import com.wordrails.persistence.CellRepository;
 import com.wordrails.persistence.CommentRepository;
 import com.wordrails.persistence.FileRepository;
@@ -39,6 +33,10 @@ import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
+import java.util.List;
+import javax.ws.rs.Path;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Path("/")
 @Component
@@ -1253,5 +1251,25 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindOrderByDateDescAuthorized(Integer stationId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
+
+    @Override
+    protected boolean isFindByWordpressIdAuthorized(Integer wordpressId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected boolean isFindByWordpressAuthorized(Wordpress wordpress) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected boolean isGetStationRoleWordpressAuthorized(Integer stationRoleId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected boolean isFindByTokenAuthorized(String token) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }
