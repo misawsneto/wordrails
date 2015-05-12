@@ -386,42 +386,66 @@ var trix = angular.module('trix', [])
       return $http.get(_config.url + "/api/persons/init");
     }
 
+    this.getCurrentPerson = function(){
+    	return $http.get(_config.url + "/api/persons/me")
+    }
+
     this.updatePostTerms = function(postId, terms) {
     	var config = {"headers": {"Content-Type": "application/json"}}
-			return $http.put(_config.url + "/api/posts/" + postId + "/updatePostTerms", terms, config)
-		}
+		return $http.put(_config.url + "/api/posts/" + postId + "/updatePostTerms", terms, config)
+	}
 
-		this.findPerspectiveView = function(stationPerspectiveId, termPerspectiveId, termId, _page, _size, _sort) {
-			var config = {
-				"params": {
-					"stationPerspectiveId": stationPerspectiveId,
-					"termPerspectiveId": termPerspectiveId,
-					"termId": termId,
-					"page": _page,
-					"size": _size,
-					"sort": _sort
-				}
+	this.findPerspectiveView = function(stationPerspectiveId, termPerspectiveId, termId, _page, _size, _sort) {
+		var config = {
+			"params": {
+				"stationPerspectiveId": stationPerspectiveId,
+				"termPerspectiveId": termPerspectiveId,
+				"termId": termId,
+				"page": _page,
+				"size": _size,
+				"sort": _sort
 			}
-      $http.get(_config.url + "/api/perspectives/termPerspectiveViews", config)
+		}
+      return $http.get(_config.url + "/api/perspectives/termPerspectiveViews", config)
+    }
+
+    this.findPopularPosts = function(stationId, _page, _size) {
+		var config = {
+			"params": {
+				"page": _page,
+				"size": _size,
+			}
+		}
+      return $http.get(_config.url + "/api/posts/" + stationId + "/popular", config)
+    }
+
+    this.findRecentPosts = function(stationId, _page, _size) {
+		var config = {
+			"params": {
+				"page": _page,
+				"size": _size
+			}
+		}
+      return $http.get(_config.url + "/api/posts/" + stationId + "/recent", config)
     }
 
     this.putPassword = function(oldPassword, newPassword, _success, _error, _complete) {
-    	$http.put(_config.url + "/api/persons/me/password", $.param({"oldPassword": oldPassword, "newPassword": newPassword}), config)
+    	return $http.put(_config.url + "/api/persons/me/password", $.param({"oldPassword": oldPassword, "newPassword": newPassword}), config)
     };
 
-		this.findPostsByStationIdAndAuthorIdAndState = function(stationId, authorId, state, _page, _size, _sort) {
-			var config = {
-				params: {
-					"stationId": stationId,
-					"authorId": authorId,
-					"state": state,
-					"page": _page,
-					"size": _size,
-					"sort": _sort
-				}
+	this.findPostsByStationIdAndAuthorIdAndState = function(stationId, authorId, state, _page, _size, _sort) {
+		var config = {
+			params: {
+				"stationId": stationId,
+				"authorId": authorId,
+				"state": state,
+				"page": _page,
+				"size": _size,
+				"sort": _sort
 			}
-			return $http.get(_config.url + "/api/posts/" + stationId + "/findPostsByStationIdAndAuthorIdAndState", config)
 		}
+		return $http.get(_config.url + "/api/posts/" + stationId + "/findPostsByStationIdAndAuthorIdAndState", config)
+	}
 
   	/*---------------------------------------------------------------------------*/
   		if (this.getBookmarks) {
@@ -474,6 +498,22 @@ var trix = angular.module('trix', [])
   	        return $http.delete("/api/bookmarks/" + id);
   	    }
 
+  	    if (this.findBookmarksByPersonIdOrderByDate) {
+  	    	window.console && console.log("findBookmarksByPersonIdOrderByDate");
+  	    }
+  	    this.findBookmarksByPersonIdOrderByDate = function(personId, page, size, sort, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            personId: personId,
+  	            page: page,
+  	            size: size,
+  	            sort: sort,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/bookmarks/search/findBookmarksByPersonIdOrderByDate",  config)
+  	    };
+
   	    if (this.findBookmarksByPersonId) {
   	    	window.console && console.log("findBookmarksByPersonId");
   	    }
@@ -498,22 +538,6 @@ var trix = angular.module('trix', [])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/bookmarks/search/findBookmarksByPostId",  config)
-  	    };
-
-  	    if (this.findBookmarksByPersonIdOrderByDate) {
-  	    	window.console && console.log("findBookmarksByPersonIdOrderByDate");
-  	    }
-  	    this.findBookmarksByPersonIdOrderByDate = function(personId, page, size, sort, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            personId: personId,
-  	            page: page,
-  	            size: size,
-  	            sort: sort,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/bookmarks/search/findBookmarksByPersonIdOrderByDate",  config)
   	    };
 
   	/*---------------------------------------------------------------------------*/
@@ -692,17 +716,20 @@ var trix = angular.module('trix', [])
   	        return $http.delete("/api/favorites/" + id);
   	    }
 
-  	    if (this.findFavoritesByPostId) {
-  	    	window.console && console.log("findFavoritesByPostId");
+  	    if (this.findFavoritesByPersonIdOrderByDate) {
+  	    	window.console && console.log("findFavoritesByPersonIdOrderByDate");
   	    }
-  	    this.findFavoritesByPostId = function(postId, projection) {
+  	    this.findFavoritesByPersonIdOrderByDate = function(personId, page, size, sort, projection) {
   	        var config = {};
   	        config.params = {
-  	            postId: postId,
+  	            personId: personId,
+  	            page: page,
+  	            size: size,
+  	            sort: sort,
 
   	        }
   	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/favorites/search/findFavoritesByPostId",  config)
+  	        return $http.get(_config.url + "/api/favorites/search/findFavoritesByPersonIdOrderByDate",  config)
   	    };
 
   	    if (this.findFavoritesByPersonId) {
@@ -718,20 +745,17 @@ var trix = angular.module('trix', [])
   	        return $http.get(_config.url + "/api/favorites/search/findFavoritesByPersonId",  config)
   	    };
 
-  	    if (this.findFavoritesByPersonIdOrderByDate) {
-  	    	window.console && console.log("findFavoritesByPersonIdOrderByDate");
+  	    if (this.findFavoritesByPostId) {
+  	    	window.console && console.log("findFavoritesByPostId");
   	    }
-  	    this.findFavoritesByPersonIdOrderByDate = function(personId, page, size, sort, projection) {
+  	    this.findFavoritesByPostId = function(postId, projection) {
   	        var config = {};
   	        config.params = {
-  	            personId: personId,
-  	            page: page,
-  	            size: size,
-  	            sort: sort,
+  	            postId: postId,
 
   	        }
   	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/favorites/search/findFavoritesByPersonIdOrderByDate",  config)
+  	        return $http.get(_config.url + "/api/favorites/search/findFavoritesByPostId",  config)
   	    };
 
   	/*---------------------------------------------------------------------------*/
@@ -1349,6 +1373,22 @@ var trix = angular.module('trix', [])
   	        return $http.delete("/api/posts/" + id);
   	    }
 
+  	    if (this.findPostsFromOrPromotedToStation) {
+  	    	window.console && console.log("findPostsFromOrPromotedToStation");
+  	    }
+  	    this.findPostsFromOrPromotedToStation = function(stationId, page, size, sort, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            stationId: stationId,
+  	            page: page,
+  	            size: size,
+  	            sort: sort,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/posts/search/findPostsFromOrPromotedToStation",  config)
+  	    };
+
   	    if (this.findPosts) {
   	    	window.console && console.log("findPosts");
   	    }
@@ -1431,10 +1471,10 @@ var trix = angular.module('trix', [])
   	        return $http.get(_config.url + "/api/posts/search/findOrderByDateDesc",  config)
   	    };
 
-  	    if (this.findPostsFromOrPromotedToStation) {
-  	    	window.console && console.log("findPostsFromOrPromotedToStation");
+  	    if (this.findPopularPosts) {
+  	    	window.console && console.log("findPopularPosts");
   	    }
-  	    this.findPostsFromOrPromotedToStation = function(stationId, page, size, sort, projection) {
+  	    this.findPopularPosts = function(stationId, page, size, sort, projection) {
   	        var config = {};
   	        config.params = {
   	            stationId: stationId,
@@ -1444,7 +1484,7 @@ var trix = angular.module('trix', [])
 
   	        }
   	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/posts/search/findPostsFromOrPromotedToStation",  config)
+  	        return $http.get(_config.url + "/api/posts/search/findPopularPosts",  config)
   	    };
 
   	/*---------------------------------------------------------------------------*/
@@ -1620,19 +1660,6 @@ var trix = angular.module('trix', [])
   	        return $http.delete("/api/recommends/" + id);
   	    }
 
-  	    if (this.findRecommendsByPostId) {
-  	    	window.console && console.log("findRecommendsByPostId");
-  	    }
-  	    this.findRecommendsByPostId = function(postId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            postId: postId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/recommends/search/findRecommendsByPostId",  config)
-  	    };
-
   	    if (this.findRecommendsByPersonId) {
   	    	window.console && console.log("findRecommendsByPersonId");
   	    }
@@ -1644,6 +1671,19 @@ var trix = angular.module('trix', [])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/recommends/search/findRecommendsByPersonId",  config)
+  	    };
+
+  	    if (this.findRecommendsByPostId) {
+  	    	window.console && console.log("findRecommendsByPostId");
+  	    }
+  	    this.findRecommendsByPostId = function(postId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            postId: postId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/recommends/search/findRecommendsByPostId",  config)
   	    };
 
   	    if (this.findRecommendsByPersonIdOrderByDate) {

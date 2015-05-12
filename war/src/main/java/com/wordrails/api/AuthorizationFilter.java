@@ -1250,8 +1250,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindOrderByDateDescAuthorized(Integer stationId, Integer page, Integer size, List<String> sort) {
+	protected boolean isFindOrderByDateDescAuthorized(Integer stationId,
+			Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
+	@Override
+	protected boolean isFindPopularPostsAuthorized(Integer stationId,
+			Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

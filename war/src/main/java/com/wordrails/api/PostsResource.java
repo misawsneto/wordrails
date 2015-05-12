@@ -283,10 +283,10 @@ public class PostsResource {
 	@GET
 	@Path("/{stationId}/popular")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId){
-		
-		Person person = accessControllerUtil.getLoggedPerson();
-		List<Post> posts = postRepository.findUnreadByStationAndPerson(stationId, person.id);
+	public ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+
+		Pageable pageable = new PageRequest(page, size);
+		List<Post> posts = postRepository.findPopularPosts(stationId, pageable);
 		 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
 		response.content = postConverter.convertToViews(posts);
