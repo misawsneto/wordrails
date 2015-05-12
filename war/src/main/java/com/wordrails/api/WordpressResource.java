@@ -22,7 +22,6 @@ import com.wordrails.persistence.WordpressRepository;
 import com.wordrails.util.WordrailsUtil;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,6 +39,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -102,13 +102,13 @@ public class WordpressResource {
             Post post = getPost(wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
             post.station = station;
             post.author = author;
-            
+
             int countSlug = postRepository.countSlugPost(post.slug);
-            if(countSlug > 0) {
+            if (countSlug > 0) {
                 String hash = WordrailsUtil.generateRandomString(5, "!Aau");
-				post.slug = post.slug + "-" + hash;
+                post.slug = post.slug + "-" + hash;
             }
-            
+
             postRepository.save(post);
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
@@ -136,22 +136,23 @@ public class WordpressResource {
             Person author = personRepository.findByWordpressId(1); //temporary
             Station station = stationRepository.findByWordpressId(wp.id);
 
-            List<Post> posts = new ArrayList<>();
             for (WordpressPost wpPost : wpPosts) {
                 Post post = getPost(wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
                 post.station = station;
                 post.author = author;
-                
+
                 int countSlug = postRepository.countSlugPost(post.slug);
-                if(countSlug > 0) {
+                if (countSlug > 0) {
                     String hash = WordrailsUtil.generateRandomString(5, "!Aau");
                     post.slug = post.slug + "-" + hash;
                 }
 
-                posts.add(post);
+                try{
+                    postRepository.save(post);
+                } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+                    //already exists
+                }
             }
-
-            postRepository.save(posts);
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
         }
@@ -162,13 +163,16 @@ public class WordpressResource {
     private Post getPost(WordpressPost wpPost, Map<Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy) {
         Post post = new Post();
         post.body = wpPost.body;
-        switch(wpPost.status) {
+        switch (wpPost.status) {
             case "publish":
-                post.state = Post.STATE_PUBLISHED; break;
+                post.state = Post.STATE_PUBLISHED;
+                break;
             case "draft":
-                post.state = Post.STATE_DRAFT; break;
+                post.state = Post.STATE_DRAFT;
+                break;
             case "future":
-                post.state = Post.STATE_SCHEDULED; break;                
+                post.state = Post.STATE_SCHEDULED;
+                break;
         }
         post.date = wpPost.date;
         post.slug = wpPost.slug;
@@ -209,8 +213,12 @@ public class WordpressResource {
                 }
                 t.wordpressSlug = term.slug;
                 t.parent = parent;
-
-                termRepository.save(t);
+                
+                try {
+                    termRepository.save(t);
+                } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+                    //already exists
+                }
             }
 
             terms.add(t);
@@ -255,18 +263,18 @@ public class WordpressResource {
                 if (newWordpress) {
                     //TODO manage taxonomy to enable this                    
                     Set<WordpressTerm> terms = new HashSet<>();
-                    
-                    if(config.terms != null) {
+
+                    if (config.terms != null) {
                         terms.addAll(config.terms.tags);
                         terms.addAll(config.terms.categories);
                     }
-                    
-                    if(terms.isEmpty()) {                    
+
+                    if (terms.isEmpty()) {
                         WordpressApi api = ServiceGenerator.createService(WordpressApi.class, config.domain, config.user, config.password);
                         terms.addAll(api.getTags());
                         terms.addAll(api.getCategories());
                     }
-                    
+
                     saveTerms(terms, station);
 
                     //temporary
@@ -284,8 +292,13 @@ public class WordpressResource {
                     stRole.wordpress = wordpress;
                     person.personsStationPermissions.add(stRole);
 
-                    personRepository.save(person);
-                    stationRolesRepository.save(stRole);
+                    try {
+                        personRepository.save(person);
+                        stationRolesRepository.save(stRole);
+                    } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+                        //already exists
+                    }
+                    
 
                 }
             }
@@ -303,14 +316,14 @@ public class WordpressResource {
         Map<Integer, Term> dbTerms = getTerms(tagTaxonomy);
         dbTerms.putAll(getTerms(categoryTaxonomy));
         //TODO enviar terms
-            
+
         Set<Term> newTerms = getTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
         for (Term newTerm : newTerms) {
             try {
                 termRepository.save(newTerm);
-            } catch (ConstraintViolationException e1) {
+            } catch (ConstraintViolationException | DataIntegrityViolationException e) {
                 //already exists
-            }
+            }            
         }
     }
 }
