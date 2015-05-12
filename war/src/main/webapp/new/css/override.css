@@ -957,6 +957,14 @@ a.text-lgrey:hover {
   text-shadow: rgba(0, 0, 0, 0.8) 0px 1px 0px;
 }
 
+.text-dg{
+  color: #333333;
+}
+
+.opacity-0{
+  opacity: 0;
+}
+
 /* /general */
 
 /* animate */
@@ -1401,7 +1409,7 @@ a.text-lgrey:hover {
 
   /* ------------ stations.html info-flows ------------ */
 
-  .station-header{position: fixed; width: 100%; top: 0; left: 0; margin-left: 0px!important; padding: 0px; padding-right: 15px;}
+  .station-header{position: fixed; width: 100%; top: 0; left: 0; margin-left: 0px!important; padding: 0px; padding-right: 15px; z-index: 3;}
 
   .station-header .nav > li > a:hover,
   .station-header .nav > li > a:focus,

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
@@ -35,6 +37,14 @@ public class Invitation {
 	public String personName;
 	
 	public boolean active = true;
+	
+	@ManyToOne
+	@JoinColumn(name = "station_id")
+	public Station station;
+	
+	@ManyToOne
+	@JoinColumn(name = "network_id")
+	public Network network;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)

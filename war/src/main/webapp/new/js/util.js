@@ -30,7 +30,7 @@ function hexToRgb(hex) {
     } : null;
 }
 
-function textColorEval (hex){
+function textColorEval (hex, hover){
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	var rgb = result ? {
 		r: parseInt(result[1], 16),
@@ -43,9 +43,9 @@ function textColorEval (hex){
   // Counting the perceptive luminance - human eye favors green color... 
   var a = 1 - ( 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b)/255;
   if (a < 0.5)
-  	return "rgba(0,0,0, 0.85)";
+  	return hover ? "rgba(0,0,0, 0.95)" : "rgba(0,0,0, 0.85)";
   else
-  	return "rgba(255,255,255, 0.92)";
+  	return hover ? "rgba(255,255,255, 1)" : "rgba(255,255,255, 0.92)";
 }
 
 function textColorEval2 (hex){
@@ -66,7 +66,7 @@ function textColorEval2 (hex){
   	return false;
 }
 
-function getCustomButtonStyle(color, perspective) {
+function getCustomButtonStyle(color, perspective, header) {
 	var style = "" +
 	".btn-custom {\n"+
 	"  color: "+textColorEval(color)+" !important;\n"+
@@ -171,11 +171,34 @@ function getCustomButtonStyle(color, perspective) {
 	"  color: "+color+" !important;\n"+
 	"}\n"+
 
-	".cover-abstract-mask{"+
-	"  background-color: rgba("+hexToRgb(color).r+", " + hexToRgb(color).g + ", "+ hexToRgb(color).b +", 0.7);"
+	".cover-abstract-mask{\n"+
+	"  background-color: rgba("+hexToRgb(color).r+", " + hexToRgb(color).g + ", "+ hexToRgb(color).b +", 0.7);\n"+
 	"}\n"+
 
-	+"";
+	".station-header {\n"+
+	"  background-color: rgba("+hexToRgb(header).r+", " + hexToRgb(header).g + ", "+ hexToRgb(header).b +", 0.96);\n"+
+	"  color: " + textColorEval(header) + ";\n"+
+	"}\n"+
+
+	".station-header {\n"+
+	"  background-color: rgba("+hexToRgb(header).r+", " + hexToRgb(header).g + ", "+ hexToRgb(header).b +", 0.96);\n"+
+	"  color: " + textColorEval(header) + ";\n"+
+	"}\n"+
+
+	".station-header .nav > li > a{\n"+
+	"  color: " + textColorEval(header) + ";\n"+
+	"}\n"+
+
+	".station-header .nav > li > a:focus,\n"+
+	".station-header .nav > li > a:hover{\n"+
+	"  color: " + (textColorEval(header, true)) + ";\n"+
+	"}\n"+
+
+	/*".station-header .nav li .dropdown-menu {\n"+
+	" background-color:" + header + ";\n"+
+	"}"+*/
+
+	"";
 	return style
 }
 

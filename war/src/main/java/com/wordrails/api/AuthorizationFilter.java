@@ -1236,7 +1236,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindByInvitationHashAuthorized(String hash) {
-		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isGetInvitationStationAuthorized(Integer invitationId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetInvitationNetworkAuthorized(Integer invitationId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isFindOrderByDateDescAuthorized(Integer stationId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
 

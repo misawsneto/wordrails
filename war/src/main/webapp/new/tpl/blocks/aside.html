@@ -11,7 +11,7 @@
     <div class="clearfix hidden-xs text-center" id="aside-user" ng-if="app.isLogged">
       <div class="wrapper">
         <a ng-click="app.profilepopover.open = !app.profilepopover.open;" id="profile-popover-toggle">
-          <div style="{{initData.peson.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+          <div style="{{initData.peson.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="{{cell.postView.authorName}}"></div>
         </a>
       </div>
       <div class="line dk hidden-folded"></div>

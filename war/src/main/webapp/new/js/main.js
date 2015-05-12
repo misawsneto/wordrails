@@ -130,7 +130,7 @@ angular.module('app')
 
       /* define application's custom style based on the network's configuration */
       var $style = $('style#custom-style').length ? $('style#style#custom-style') : $('<style id="custom-style">').appendTo('body');
-      $style.html(getCustomButtonStyle("#cc3300", "#ffffff"));
+      $style.html(getCustomButtonStyle("#cc3300", "#ffffff", "#ffffff"));
 
       $scope.app.viewMode = 'vertical';
       $scope.changeView = function(view){

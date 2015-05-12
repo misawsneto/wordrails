@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Network;
-import com.wordrails.business.NetworkCreate;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
 import com.wordrails.business.Station;
@@ -30,6 +29,7 @@ import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
+import com.wordrails.util.NetworkCreate;
 
 @Path("/networks")
 @Component
