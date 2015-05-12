@@ -3,8 +3,13 @@ package com.wordrails.util;
 import java.lang.reflect.Field;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 public class WordrailsUtil {
 
@@ -31,7 +36,7 @@ public class WordrailsUtil {
 		if (chars.contains("A")) mask += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		if (chars.contains("#")) mask += "0123456789";
 		if (chars.contains("!")) mask += "~`!@#$%^&*()_+-={}[]:\";\'<>?,./|\\";
-		if (chars.contains("u")) mask += "~`!@#$%^*()_+-={}[]:\";\'<>,.|";
+		if (chars.contains("u")) mask += "~!@$^*()_+-=:\";\',.|"; //unsafe -> < > # % { } | \ ^ ~ [ ] `
 		String result = "";
 		for (int i = length; i > 0; --i){
 			int index = (int) Math.round(Math.random() * (mask.length() - 1));
@@ -51,5 +56,13 @@ public class WordrailsUtil {
 	            throw new RuntimeException(e);
 	        }
 	    }
+	}
+	
+	public static String simpleSnippet(String body){
+		String[] splitPhrase = body.split("\\s+");
+		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
+		String string = StringUtils.join(Arrays.copyOfRange(splitPhrase, 0, limit), " ");
+		Document doc = Jsoup.parse(string);
+		return doc.text();
 	}
 }

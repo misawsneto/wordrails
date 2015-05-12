@@ -1,0 +1,23 @@
+<div class="profile-popover">
+	<div class="text-center profile-cover pos-rlt abstract-bg bg-cover clear">
+		<div class="cover-abstract-mask">
+		</div>
+		<div style="{{initData.peson.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="cell.postView.authorName"></div>
+		<div class="text-u-c m-t-sm text-lg font-thin wrapper-xs text-center title-wrapper-bg text-white pos-abt bottom-0 w-full">
+			{{app.initData.person.name}}
+		</div>
+	</div>
+	<div class="wrapper">
+		<div class="">
+			<!-- <ul class="ls-style-none m-b-none p-l-none text-lg">
+				<li class="inline"><a ng-click="app.signOut()"><i class="mdi mdi-account"></i> Perfil</a></li>
+				<li class="inline m-l-sm m-r-sm"> | </li>
+				<li class="inline"><a ng-click="app.signOut()"><i class="mdi mdi-logout"></i> Sair</a></li>
+			</ul> -->
+			<div class="text-lg">
+				<a ng-click="app.signOut()"><i class="mdi mdi-account"></i> Perfil</a></li>
+				<a ng-click="app.signOut()" class="pull-right m-r-xs"><i class="mdi mdi-logout "></i> Sair</a>
+			</div>
+		</div>
+	</div>
+</div>

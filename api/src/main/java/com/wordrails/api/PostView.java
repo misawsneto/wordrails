@@ -18,6 +18,7 @@ public class PostView implements Serializable {
 	public int readsCount;
 	public int favoritesCount;
 	public int recommendsCount;
+	public int commentsCount;
 	
 	public Integer imageId;
 	public Integer imageSmallId;
@@ -25,5 +26,14 @@ public class PostView implements Serializable {
 	public Integer imageLargeId;
 
 	public boolean imageLandscape;
+
+	public String authorName;
+	public Integer authorId;
+
+	public String authorEmail;
+	public String authorTwitter;
+	public Integer authorSmallImageId;
+
+	public String slug;
 
 }

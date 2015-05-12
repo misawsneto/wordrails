@@ -185,6 +185,9 @@ public class Post {
 	@Field
 	public int recommendsCount = 0;
 
+	@Field
+	public int commentsCount = 0;
+
 	@ManyToMany
 	@IndexedEmbedded
 	public Set<Term> terms;
@@ -211,6 +214,10 @@ public class Post {
 			imageMediumId = null;
 			imageLargeId = null;
 		}
+		
+		if(comments != null){
+			commentsCount = comments.size();
+		}
 	}
 	
 	@PreUpdate
@@ -225,6 +232,10 @@ public class Post {
 			imageSmallId = null;
 			imageMediumId = null;
 			imageLargeId = null;
+		}
+		
+		if(comments != null){
+			commentsCount = comments.size();
 		}
 		
 		updatedAt = new Date();

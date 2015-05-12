@@ -31,5 +31,6 @@ public interface PostProjection {
 	Integer getImageMediumId();
 	Integer getImageLargeId();
     Integer getReadsCount();
-	Integer getFavoritesCount();
+	Integer getRecommendsCount();
+	Integer getCommentsCount();
 }

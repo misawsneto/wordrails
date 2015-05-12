@@ -1,10 +1,10 @@
   <!-- navbar -->
-  <div data-ng-include=" 'tpl/blocks/header.html' " class="app-header navbar">
+  <div data-ng-include=" 'tpl/blocks/header.html' " class="app-header navbar animated slideInLeft">
   </div>
   <!-- / navbar -->
 
   <!-- menu -->
-  <div data-ng-include=" 'tpl/blocks/aside.html' " class="app-aside hidden-xs {{app.settings.asideColor}}" ng-class="{'hide': app.hideAside }">
+  <div data-ng-include=" 'tpl/blocks/aside.html' " class="app-aside hidden-xs {{app.settings.asideColor}} animated slideInLeft" ng-class="{'hide': app.hideAside }">
   </div>
   <!-- / menu -->
 
@@ -15,10 +15,21 @@
   </div>
   <!-- / view -->
   <!-- navbar -->
-  <!-- <div class="app-footer navbar navbar-fixed-bottom bg-light lt b-t" ng-class="{'m-n': app.hideAside, 'hide': app.hideFooter}" ui-view="footer"> -->
-    
+  <!-- <div class="app-footer navbar navbar-fixed-bottom bg-light lt b-t" ng-class="{'m-n': app.hideAside, 'hide': app.hideFooter}" ui-view="footer"></div> -->
+
+<!-- /navbar -->
+
+    <!-- profile-popover -->
+  <div id="my-profile-popover" class="popover right animated" ng-class="{ show: app.profilepopover.open, hide: !app.profilepopover.open}" click-outside="app.profilepopover.open = false; console.log('teste')" outside-if-not="profile-popover-toggle">
+    <div class="arrow"></div>
+    <div class="popover-inner">
+      <div class="popover-content">
+        <div data-ng-include=" 'tpl/profile_popover.html' "></div>
+      </div>
+    </div>
   </div>
-  <!-- /navbar -->
+  <!-- /profile-popover -->
+  
 
 <script type="text/ng-template" id="signin_splash.html">
   <a class="splash-close-button" ng-click="cancelModal()">×</a>
@@ -26,19 +37,23 @@
     <div class="row">
       <div class="col-xs-6 col-xs-offset-3">
         <div class="p-lg text-color wrapper-lg">
-          <form name="form">
+          <form name="form" ng-submit="app.signIn(username, password)">
             <div class="md-form-group float-label p-b-sm">
-              <input class="md-input" ng-model="user.email" required>
+              <input class="md-input" ng-model="username" required>
               <label>Username</label>
             </div>
             <div class="md-form-group float-label p-b-sm">
-              <input type="password" class="md-input" ng-model="user.password" required>
+              <input type="password" class="md-input" ng-model="password" required>
               <label>Senha</label>
             </div>      
             <button md-ink-ripple type="submit" class="m-t-md btn-custom btn text-lg text-u-c btn-block p-h-md">Entrar</button>
           </form>
+          <button md-ink-ripple type="submit" class="m-t-md btn-info btn text-lg text-u-c btn-block p-h-md">
+            <i class="mdi mdi-twitter m-r-sm"></i> Twitter</button>
+            <button md-ink-ripple type="submit" class="m-t-md btn-blue btn text-lg text-u-c btn-block p-h-md">
+              <i class="mdi mdi-facebook m-r-sm"></i> Facebook</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</script>
+    </script>

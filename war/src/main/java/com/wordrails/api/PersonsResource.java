@@ -175,7 +175,8 @@ public class PersonsResource {
 		
 		initData.person.links = generateSelfLinks(baseUrl + "/api/persons/" + person.id);
 		initData.network.links = generateSelfLinks(baseUrl + "/api/stations/" + network.id);
-		initData.networkRole.links = generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id);
+		if(initData.networkRole != null)
+			initData.networkRole.links = networkRole != null ? generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id) : Arrays.asList(new Link());
 		
 		return initData;
 	}

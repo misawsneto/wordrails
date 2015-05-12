@@ -21,7 +21,16 @@ function shadeBlend (p,c0,c1) {
 	}
 }
 
-function textColorEval (hex){
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+function textColorEval (hex, hover){
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	var rgb = result ? {
 		r: parseInt(result[1], 16),
@@ -34,9 +43,9 @@ function textColorEval (hex){
   // Counting the perceptive luminance - human eye favors green color... 
   var a = 1 - ( 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b)/255;
   if (a < 0.5)
-  	return "#333333";
+  	return hover ? "rgba(0,0,0, 0.95)" : "rgba(0,0,0, 0.85)";
   else
-  	return "#f9f9f9";
+  	return hover ? "rgba(255,255,255, 1)" : "rgba(255,255,255, 0.92)";
 }
 
 function textColorEval2 (hex){
@@ -57,7 +66,7 @@ function textColorEval2 (hex){
   	return false;
 }
 
-function getCustomButtonStyle(color, perspective) {
+function getCustomButtonStyle(color, perspective, header) {
 	var style = "" +
 	".btn-custom {\n"+
 	"  color: "+textColorEval(color)+" !important;\n"+
@@ -127,11 +136,11 @@ function getCustomButtonStyle(color, perspective) {
 
 	(textColorEval2(perspective) ? "" :
 	".bg-perspective .station-perspectives a{\n"+
-	  "color: #f1f1f1 ;\n"+
+	  "color: rgba(255,255,255, 0.92) ;\n"+
 	"}\n"+
 	".bg-perspective .station-perspectives a:hover,\n"+
 	".bg-perspective .station-perspectives a:focus {\n"+
-	  "color: #f1f1f1 ;\n"+
+	  "color: rgba(255,255,255, 0.92) ;\n"+
 	  "text-decoration: none;\n"+
 	"}\n"+
 	".bg-perspective .md-tab-content > div.b-t {"+
@@ -149,6 +158,11 @@ function getCustomButtonStyle(color, perspective) {
 	"  color: "+textColorEval(color)+" !important;\n"+
 	"}\n"+
 
+	".bg-custom-primary-no-image{\n"+
+		"background: rgba("+hexToRgb(color).r+", " + hexToRgb(color).g + ", "+ hexToRgb(color).b +", 0.75);\n"+
+		"color: "+ textColorEval(color) +";\n"+
+	"}\n"+
+
 	".text-custom-primary {\n"+
 	"  color: "+textColorEval(color)+" !important;\n"+
 	"}\n"+
@@ -157,6 +171,114 @@ function getCustomButtonStyle(color, perspective) {
 	"  color: "+color+" !important;\n"+
 	"}\n"+
 
-	+"";
+	".cover-abstract-mask{\n"+
+	"  background-color: rgba("+hexToRgb(color).r+", " + hexToRgb(color).g + ", "+ hexToRgb(color).b +", 0.7);\n"+
+	"}\n"+
+
+	".station-header {\n"+
+	"  background-color: rgba("+hexToRgb(header).r+", " + hexToRgb(header).g + ", "+ hexToRgb(header).b +", 0.96);\n"+
+	"  color: " + textColorEval(header) + ";\n"+
+	"}\n"+
+
+	".station-header {\n"+
+	"  background-color: rgba("+hexToRgb(header).r+", " + hexToRgb(header).g + ", "+ hexToRgb(header).b +", 0.96);\n"+
+	"  color: " + textColorEval(header) + ";\n"+
+	"}\n"+
+
+	".station-header .nav > li > a{\n"+
+	"  color: " + textColorEval(header) + ";\n"+
+	"}\n"+
+
+	".station-header .nav > li > a:focus,\n"+
+	".station-header .nav > li > a:hover{\n"+
+	"  color: " + (textColorEval(header, true)) + ";\n"+
+	"}\n"+
+
+	/*".station-header .nav li .dropdown-menu {\n"+
+	" background-color:" + header + ";\n"+
+	"}"+*/
+
+	"";
 	return style
 }
+
+/*!
+ * classie - class helper functions
+ * from bonzo https://github.com/ded/bonzo
+ * 
+ * classie.has( elem, 'my-class' ) -> true/false
+ * classie.add( elem, 'my-new-class' )
+ * classie.remove( elem, 'my-unwanted-class' )
+ * classie.toggle( elem, 'my-class' )
+ */
+
+/*jshint browser: true, strict: true, undef: true */
+/*global define: false */
+
+/*( function( window ) {
+
+'use strict';
+
+// class helper functions from bonzo https://github.com/ded/bonzo
+
+function classReg( className ) {
+  return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
+}
+
+// classList support for class management
+// altho to be fair, the api sucks because it won't accept multiple classes at once
+var hasClass, addClass, removeClass;
+
+if ( 'classList' in document.documentElement ) {
+  hasClass = function( elem, c ) {
+    return elem.classList.contains( c );
+  };
+  addClass = function( elem, c ) {
+    elem.classList.add( c );
+  };
+  removeClass = function( elem, c ) {
+    elem.classList.remove( c );
+  };
+}
+else {
+  hasClass = function( elem, c ) {
+    return classReg( c ).test( elem.className );
+  };
+  addClass = function( elem, c ) {
+    if ( !hasClass( elem, c ) ) {
+      elem.className = elem.className + ' ' + c;
+    }
+  };
+  removeClass = function( elem, c ) {
+    elem.className = elem.className.replace( classReg( c ), ' ' );
+  };
+}
+
+function toggleClass( elem, c ) {
+  var fn = hasClass( elem, c ) ? removeClass : addClass;
+  fn( elem, c );
+}
+
+var classie = {
+  // full names
+  hasClass: hasClass,
+  addClass: addClass,
+  removeClass: removeClass,
+  toggleClass: toggleClass,
+  // short names
+  has: hasClass,
+  add: addClass,
+  remove: removeClass,
+  toggle: toggleClass
+};
+
+// transport
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( classie );
+} else {
+  // browser global
+  window.classie = classie;
+}
+
+})( window );*/

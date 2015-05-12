@@ -24,9 +24,11 @@
     var initData = ${personData};
     var initTermPerspective = ${termPerspectiveView};
   </script>
+  <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 </head>
 <body ng-controller="AppCtrl">
-  <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'bg-white': $state.current.name == 'app.search' || $state.current.name == 'app.post', 'bg-perspective': $state.current.name == 'app.stations'}" ui-view></div>
+  <offcanvas></offcanvas>
+  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'bg-white': $state.current.name == 'app.search' || $state.current.name == 'app.post', 'bg-perspective': $state.current.name == 'app.stations'}" ui-view></div>
 
 
   <!-- jQuery -->
@@ -64,6 +66,7 @@
   <script src="../bower_components/redactor/fontcolor.js"></script>
   <script src="../bower_components/redactor/pt_br.js"></script>
   <script src="../bower_components/redactor/angular-redactor.js"></script>
+  <script src="../../bower_components/moment/min/moment-with-locales.min.js"></script>
 
   <!-- App -->
   <script src="js/app.js"></script>

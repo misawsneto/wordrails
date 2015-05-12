@@ -26,7 +26,7 @@
 </div>
 
 <!-- header bar -->
-<div class="collapse pos-rlt navbar-collapse box-shadow nav-down station-header bg-white {{app.settings.navbarCollapseColor}}">
+<div class="collapse pos-rlt navbar-collapse box-shadow nav-down station-header {{app.settings.navbarCollapseColor}}">
   <div class="nav navbar-nav hidden-xs text-center text-lg w-full wrapper-sm header-font font-thin pos-abt">
     {{app.currentStation.name}}
   </div>
@@ -38,14 +38,21 @@
       </a>
       <!-- dropdown -->
       <ul class="dropdown-menu animated w-sm">
-        <li>
-          <a ng-click="changeView('horizontal')" href>Horizontal</a>
-          <a ng-click="changeView('vertical')" href>Vertical</a>
+        <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Marcar como lida</span></li>
+        <li> <a ng-click="changeView('horizontal')" href class="mark-as-read"> Todas</a> </li>
+        <li> <a ng-click="changeView('horizontal')" href class="mark-as-read"> Mais antigas que um dia</a> </li>
+        <li class="divider"></li>
+        <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">modo de exibição</span></li>
+        <li> <a ng-click="changeView('horizontal')" href> <i class="mdi mdi-swap-horizontal m-r-sm"></i> 
+          Horizontal <i class="mdi mdi-checkbox-marked-circle-outline pull-right m-t-xxs" ng-show="app.viewMode == 'horizontal'"></i></a> 
+        </li>
+        <li> <a ng-click="changeView('vertical')" href> <i class="mdi mdi-swap-vertical m-r-sm"></i>
+          Vertical <i class="mdi mdi-checkbox-marked-circle-outline pull-right m-t-xxs" ng-show="app.viewMode == 'vertical'"></i></a> 
         </li>
       </ul>
       <!-- / dropdown -->
     </li>
-    <li>
+    <li ng-if="!app.isLogged">
       <a href class="text-u-c text-center" ng-click="openSplash('signin_splash.html');">ENTRAR / Cadastrar</a>
     </li>
   </ul>

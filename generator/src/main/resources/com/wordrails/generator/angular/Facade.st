@@ -56,6 +56,10 @@ var trix = angular.module('trix', [])
     this.logout = function() {
     	return \$http.get(_config.url + "/j_spring_security_logout")
     }
+    
+    this.initData = function() {
+      return \$http.get(_config.url + "/api/persons/init");
+    }
 
     this.updatePostTerms = function(postId, terms) {
     	var config = {"headers": {"Content-Type": "application/json"}}

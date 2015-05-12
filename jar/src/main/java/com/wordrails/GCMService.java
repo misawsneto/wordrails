@@ -1,13 +1,11 @@
 package com.wordrails;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig.Feature;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,8 +21,6 @@ import com.wordrails.business.Network;
 import com.wordrails.business.Notification;
 import com.wordrails.business.Person;
 import com.wordrails.business.PersonNetworkRegId;
-import com.wordrails.business.Post;
-import com.wordrails.business.Station;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
@@ -105,6 +101,8 @@ public class GCMService {
 		notificationDto.stationName = notification.station != null ? notification.station.name : null;
 		notificationDto.postId = notification.post != null ? notification.post.id : null;
 		notificationDto.postTitle = notification.post != null ? notification.post.title : null;;
+		notificationDto.postSnippet = notification.post != null ? WordrailsUtil.simpleSnippet(notification.post.body) : null;
+		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallId : null;
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 

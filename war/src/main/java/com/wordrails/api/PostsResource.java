@@ -6,9 +6,12 @@ import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.PostRepository;
+import com.wordrails.util.WordrailsUtil;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
@@ -25,6 +28,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.highlight.Encoder;
@@ -228,7 +232,7 @@ public class PostsResource {
 					}
 					postsViews.get(i).snippet = snippet;
 				}else{
-					postsViews.get(i).snippet = simpleSnippet(body);
+					postsViews.get(i).snippet = WordrailsUtil.simpleSnippet(body);
 				}
 			}
 		} catch (IOException e) {
@@ -276,11 +280,29 @@ public class PostsResource {
 		return response;
 	}
 	
-	public static String simpleSnippet(String body){
-		String[] splitPhrase = body.split("\\s+");
-		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
-		String string = StringUtils.join(Arrays.copyOfRange(splitPhrase, 0, limit), " ");
-		Document doc = Jsoup.parse(string);
-		return doc.text();
+	@GET
+	@Path("/{stationId}/popular")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId){
+		
+		Person person = accessControllerUtil.getLoggedPerson();
+		List<Post> posts = postRepository.findUnreadByStationAndPerson(stationId, person.id);
+		 
+		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
 	}
+	
+	@GET
+	@Path("/{stationId}/recent")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ContentResponse<List<PostView>> getRecent(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+		Pageable pageable = new PageRequest(page, size);
+		List<Post> posts = postRepository.findOrderByDateDesc(stationId, pageable);
+		 
+		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
+	}
+
 }
