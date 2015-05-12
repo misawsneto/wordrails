@@ -1,6 +1,7 @@
 package com.wordrails.api;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -26,6 +27,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
@@ -185,7 +187,7 @@ public class FilesResource {
 	@GET
 	@Path("{id}/contents")
 	@Cache(isPrivate=false,maxAge=31536000)
-	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response) throws SQLException {
+	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response) throws SQLException, IOException {
 		com.wordrails.business.File file = fileRepository.findOne(id);
 		if (file == null) {
 			return Response.status(Status.NOT_FOUND).build();
@@ -204,7 +206,20 @@ public class FilesResource {
 	            String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format( c.getTime() );            
 	            response.setHeader( "Expires", o );
 	            
-				return Response.ok(contents.contents.getBinaryStream(), file.mime).build();
+	            final InputStream in = contents.contents.getBinaryStream();
+	            
+	            ByteArrayOutputStream out = new ByteArrayOutputStream();
+	            int data = in.read();
+	            while (data >= 0) {
+	              out.write((char) data);
+	              data = in.read();
+	            }
+	            out.flush();
+	                 
+	            ResponseBuilder builder = Response.ok(out.toByteArray());
+	            builder.header("Content-Disposition", "attachment; filename=" + file.name);
+	            
+				return builder.build();
 			}
 		}
 	}
