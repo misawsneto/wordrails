@@ -501,6 +501,19 @@ var trix = angular.module('trix', [])
   	        return $http.delete("/api/bookmarks/" + id);
   	    }
 
+  	    if (this.findBookmarksByPersonId) {
+  	    	window.console && console.log("findBookmarksByPersonId");
+  	    }
+  	    this.findBookmarksByPersonId = function(personId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            personId: personId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/bookmarks/search/findBookmarksByPersonId",  config)
+  	    };
+
   	    if (this.findBookmarksByPersonIdOrderByDate) {
   	    	window.console && console.log("findBookmarksByPersonIdOrderByDate");
   	    }
@@ -515,19 +528,6 @@ var trix = angular.module('trix', [])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/bookmarks/search/findBookmarksByPersonIdOrderByDate",  config)
-  	    };
-
-  	    if (this.findBookmarksByPersonId) {
-  	    	window.console && console.log("findBookmarksByPersonId");
-  	    }
-  	    this.findBookmarksByPersonId = function(personId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            personId: personId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/bookmarks/search/findBookmarksByPersonId",  config)
   	    };
 
   	    if (this.findBookmarksByPostId) {
@@ -719,6 +719,19 @@ var trix = angular.module('trix', [])
   	        return $http.delete("/api/favorites/" + id);
   	    }
 
+  	    if (this.findFavoritesByPersonId) {
+  	    	window.console && console.log("findFavoritesByPersonId");
+  	    }
+  	    this.findFavoritesByPersonId = function(personId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            personId: personId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/favorites/search/findFavoritesByPersonId",  config)
+  	    };
+
   	    if (this.findFavoritesByPersonIdOrderByDate) {
   	    	window.console && console.log("findFavoritesByPersonIdOrderByDate");
   	    }
@@ -733,32 +746,6 @@ var trix = angular.module('trix', [])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/favorites/search/findFavoritesByPersonIdOrderByDate",  config)
-  	    };
-
-  	    if (this.findFavoritesByPersonId) {
-  	    	window.console && console.log("findFavoritesByPersonId");
-  	    }
-  	    this.findFavoritesByPersonId = function(personId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            personId: personId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/favorites/search/findFavoritesByPersonId",  config)
-  	    };
-
-  	    if (this.findFavoritesByPostId) {
-  	    	window.console && console.log("findFavoritesByPostId");
-  	    }
-  	    this.findFavoritesByPostId = function(postId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            postId: postId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/favorites/search/findFavoritesByPostId",  config)
   	    };
 
   	    if (this.findFavoritesByPostId) {
@@ -1256,17 +1243,17 @@ var trix = angular.module('trix', [])
   	        return $http.delete("/api/persons/" + id);
   	    }
 
-  	    if (this.findByWordpressId) {
-  	    	window.console && console.log("findByWordpressId");
+  	    if (this.findByEmail) {
+  	    	window.console && console.log("findByEmail");
   	    }
-  	    this.findByWordpressId = function(wordpressId, projection) {
+  	    this.findByEmail = function(email, projection) {
   	        var config = {};
   	        config.params = {
-  	            wordpressId: wordpressId,
+  	            email: email,
 
   	        }
   	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/persons/search/findByWordpressId",  config)
+  	        return $http.get(_config.url + "/api/persons/search/findByEmail",  config)
   	    };
 
   	    if (this.findByUsername) {
@@ -1280,19 +1267,6 @@ var trix = angular.module('trix', [])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/persons/search/findByUsername",  config)
-  	    };
-
-  	    if (this.findByEmail) {
-  	    	window.console && console.log("findByEmail");
-  	    }
-  	    this.findByEmail = function(email, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            email: email,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/persons/search/findByEmail",  config)
   	    };
 
   	/*---------------------------------------------------------------------------*/
@@ -1702,19 +1676,6 @@ var trix = angular.module('trix', [])
   	        return $http.get(_config.url + "/api/recommends/search/findRecommendsByPersonId",  config)
   	    };
 
-  	    if (this.findRecommendsByPostId) {
-  	    	window.console && console.log("findRecommendsByPostId");
-  	    }
-  	    this.findRecommendsByPostId = function(postId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            postId: postId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/recommends/search/findRecommendsByPostId",  config)
-  	    };
-
   	    if (this.findRecommendsByPersonIdOrderByDate) {
   	    	window.console && console.log("findRecommendsByPersonIdOrderByDate");
   	    }
@@ -1904,19 +1865,6 @@ var trix = angular.module('trix', [])
   	    this.deleteStation = function(id) {
   	        return $http.delete("/api/stations/" + id);
   	    }
-
-  	    if (this.findByWordpress) {
-  	    	window.console && console.log("findByWordpress");
-  	    }
-  	    this.findByWordpress = function(wordpress, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            wordpress: wordpress,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/stations/search/findByWordpress",  config)
-  	    };
 
   	    if (this.findByPersonIdAndNetworkId) {
   	    	window.console && console.log("findByPersonIdAndNetworkId");

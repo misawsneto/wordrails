@@ -1259,10 +1259,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		// TODO Auto-generated method stub
 		return true;
 	}
-    @Override
-    protected boolean isFindByWordpressIdAuthorized(Integer wordpressId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     protected boolean isGetStationRoleWordpressAuthorized(Integer stationRoleId) {
@@ -1271,11 +1267,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
     @Override
     protected boolean isFindByTokenAuthorized(String token) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected boolean isFindByWordpressAuthorized(Integer wordpressId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
