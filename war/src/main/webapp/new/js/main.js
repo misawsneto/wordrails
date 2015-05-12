@@ -89,14 +89,12 @@ angular.module('app')
       function loadPopular(){
         trix.findPopularPosts($scope.app.currentStation.id, 0, 10)
         .success(function(response){
-          console.log(response);
         })
       }
 
       function loadRecent(){
         trix.findRecentPosts($scope.app.currentStation.id, 0, 10)
         .success(function(response){
-          console.log(response);
         })
       }
       
@@ -195,10 +193,6 @@ angular.module('app')
 
       loadPopular();
       loadRecent();
-      trix.getCurrentPerson().success(function(){
-
-      })
-     
 
       /* end of added */
   }]); 
