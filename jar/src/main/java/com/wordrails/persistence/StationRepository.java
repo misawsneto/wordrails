@@ -12,6 +12,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 public interface StationRepository extends JpaRepository<Station, Integer>, QueryDslPredicateExecutor<Station> {
 	List<Station> findByName(@Param("name") String name);
     
+	@RestResource(exported=false)
 	Station findByWordpressId(@Param("wordpressId") Integer wordpressId);
 
 	List<Station> findByPersonIdAndNetworkId(@Param("personId") Integer personId, @Param("networkId") Integer networkId);
