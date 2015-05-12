@@ -1,8 +1,8 @@
 package com.wordrails.business;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,10 +18,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
 import org.hibernate.validator.constraints.Email;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Person {
@@ -79,7 +76,7 @@ public class Person {
 	@OneToOne
 	public Image cover;
     
-    public Wordpress wordpress;
+    public Integer wordpressId;
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)

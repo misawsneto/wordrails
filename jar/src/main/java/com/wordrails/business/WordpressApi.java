@@ -1,6 +1,6 @@
 package com.wordrails.business;
 
-import java.util.List;
+import java.util.Set;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -13,13 +13,13 @@ import retrofit.http.Path;
 public interface WordpressApi {
 
     @GET("/posts")
-    List<WordpressPost> getPosts();
+    Set<WordpressPost> getPosts();
 
     @GET("/taxonomies/post_tag/terms")
-    List<WordpressTerm> getTags();
+    Set<WordpressTerm> getTags();
 
     @GET("/taxonomies/category/terms")
-    List<WordpressTerm> getCategories();
+    Set<WordpressTerm> getCategories();
 
     @POST("/posts")
     WordpressPost createPost(@Body WordpressPost task);

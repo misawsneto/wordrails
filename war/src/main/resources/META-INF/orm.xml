@@ -206,7 +206,7 @@
 		<query>
 			select count(1)
 			from Post post
-			where post.originalSlug = :slug
+			where post.slug = :slug
 		</query>
 	</named-query>
 	

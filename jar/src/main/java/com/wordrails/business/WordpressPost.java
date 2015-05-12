@@ -15,10 +15,10 @@ public class WordpressPost {
     @SerializedName("content")
     public String body;
     public String status;
+    public String slug;
     public Date date;
     public Date modified;
     
-    @JsonProperty("terms")
     public WordpressTerms terms;
 
     public WordpressPost() {

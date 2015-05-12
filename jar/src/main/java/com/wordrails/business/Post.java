@@ -1,8 +1,8 @@
 package com.wordrails.business;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -45,8 +45,6 @@ import org.hibernate.search.annotations.Resolution;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.search.annotations.TokenFilterDef;
 import org.hibernate.search.annotations.TokenizerDef;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Indexed
@@ -119,6 +117,7 @@ public class Post {
 	@DocumentId
 	public Integer id;
     
+    @Column(unique=true)
     public Integer wordpressId;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
