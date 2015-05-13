@@ -48,9 +48,9 @@ public class PostEventHandler {
 	private @Autowired
 	PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	private @Autowired GCMService gcmService;
-	
+
 	private @Autowired StationRepository stationRepository;
-	
+
 	private @Autowired FavoriteRepository favoriteRepository;
 	private @Autowired BookmarkRepository bookmarkRepository;
 	private @Autowired NotificationRepository notificationRepository;
@@ -81,28 +81,31 @@ public class PostEventHandler {
 			throw new UnauthorizedException();
 		}
 	}
-	
+
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post){
 		buildNotification(post);
 	}
 
-	@Async
-	@Transactional
+		@Async
+		@Transactional
 	private void buildNotification(Post post){
-		
+
 		Notification notification = new Notification();
 		notification.type = Notification.Type.POST_ADDED.toString();
 		notification.station = post.station;
 		notification.post = post;
 		notification.message = post.title;
-
-		if(post.station != null && post.station.networks != null){
-			Station station = stationRepository.findOne(post.station.id);
-			for (Network network : station.networks) {
-				notification.network = network;
-				gcmService.sendToNetwork(network, notification);
+		try{
+			if(post.station != null && post.station.networks != null){
+				Station station = stationRepository.findOne(post.station.id);
+				for (Network network : station.networks) {
+					notification.network = network;
+					gcmService.sendToNetwork(network, notification);
+				}
 			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
