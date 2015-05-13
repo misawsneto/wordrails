@@ -206,20 +206,21 @@ public class FilesResource {
 	            String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format( c.getTime() );            
 	            response.setHeader( "Expires", o );
 	            
-	            final InputStream in = contents.contents.getBinaryStream();
-	            
-	            ByteArrayOutputStream out = new ByteArrayOutputStream();
-	            int data = in.read();
-	            while (data >= 0) {
-	              out.write((char) data);
-	              data = in.read();
-	            }
-	            out.flush();
-	                 
-	            ResponseBuilder builder = Response.ok(out.toByteArray());
-	            builder.header("Content-Disposition", "attachment; filename=" + file.name);
-	            
-				return builder.build();
+	            return Response.ok(contents.contents.getBinaryStream(), file.mime).build();
+//	            final InputStream in = contents.contents.getBinaryStream();
+//	            
+//	            ByteArrayOutputStream out = new ByteArrayOutputStream();
+//	            int data = in.read();
+//	            while (data >= 0) {
+//	              out.write((char) data);
+//	              data = in.read();
+//	            }
+//	            out.flush();
+//	                 
+//	            ResponseBuilder builder = Response.ok(out.toByteArray());
+//	            builder.header("Content-Disposition", "attachment; filename=" + file.name);
+//	            
+//				return builder.build();
 			}
 		}
 	}
