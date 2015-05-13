@@ -3,9 +3,8 @@ package com.wordrails.persistence;
 import com.wordrails.business.Image;
 import com.wordrails.business.Post;
 import com.wordrails.business.Station;
-
 import java.util.List;
-
+import java.util.Set;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -51,4 +50,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
 	public List<Post> findOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 	public List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
+    
+    @Query("SELECT slug FROM Post")
+    public Set<String> findSlugs();
 }

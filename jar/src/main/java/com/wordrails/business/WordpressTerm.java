@@ -19,6 +19,10 @@ public class WordpressTerm {
     public String slug;
     public Integer parent;
     
+    @JsonProperty("trix_id")
+    @SerializedName("trix_id")
+    public Integer trixId;
+    
     @JsonProperty("taxonomy")
     @SerializedName("taxonomy")
     public String type;

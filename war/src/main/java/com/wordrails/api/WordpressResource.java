@@ -7,11 +7,13 @@ import com.wordrails.business.Station;
 import com.wordrails.business.StationRole;
 import com.wordrails.business.Taxonomy;
 import com.wordrails.business.Term;
+import com.wordrails.business.UnauthorizedException;
 import com.wordrails.business.Wordpress;
 import com.wordrails.business.WordpressApi;
 import com.wordrails.business.WordpressConfig;
 import com.wordrails.business.WordpressPost;
 import com.wordrails.business.WordpressTerm;
+import com.wordrails.business.WordpressTerms;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.StationRepository;
@@ -32,6 +34,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -79,14 +82,26 @@ public class WordpressResource {
 
         return dbTerms;
     }
-
-    @POST
-    @Path("/createPost")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createPost(WordpressPost wpPost) throws ServletException, IOException, URISyntaxException {
+    
+    private Wordpress getWordpressByToken() throws UnauthorizedException {
         String token = request.getHeader("token");
         Wordpress wp = wordpressRepository.findByToken(token);
         if (wp == null) {
+            throw new UnauthorizedException("Token invalido");
+        }
+        
+        return wp;
+    }
+
+    @PUT
+    @POST
+    @Path("/post")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response post(WordpressPost wpPost) throws ServletException, IOException, URISyntaxException {
+        Wordpress wp;
+        try { 
+            wp = getWordpressByToken();
+        } catch(UnauthorizedException e) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
@@ -96,62 +111,32 @@ public class WordpressResource {
             Map<Integer, Term> dbTerms = getTerms(tagTaxonomy);
             dbTerms.putAll(getTerms(categoryTaxonomy));
 
-            Person author = personRepository.findByWordpressId(1); //temporary
-            Station station = stationRepository.findByWordpressId(wp.id);
+            Post post;
+            Set<String> slugs = postRepository.findSlugs();
+            if (request.getMethod().equals("PUT")) {
+                post = postRepository.getOne(wpPost.id);
 
-            Post post = getPost(wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
-            post.station = station;
-            post.author = author;
+                if (post == null) {
+                    return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Post of id " + wpPost.id + " does not exist").build();
+                }
 
-            int countSlug = postRepository.countSlugPost(post.slug);
-            if (countSlug > 0) {
+                post = getPost(post, wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
+            } else {
+                Person author = personRepository.findByWordpressId(1); //temporary
+                Station station = stationRepository.findByWordpressId(wp.id);
+
+                post = getPost(new Post(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
+                post.station = station;
+                post.author = author;
+            }
+            
+            if(!slugs.add(post.slug)) { //if slug already exists in db
                 String hash = WordrailsUtil.generateRandomString(5, "!Aau");
                 post.slug = post.slug + "-" + hash;
             }
 
-            postRepository.save(post);
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
-        }
-
-        return Response.status(Response.Status.OK).build();
-    }
-
-    @POST
-    @Path("/createPosts")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createPosts(List<WordpressPost> wpPosts) throws ServletException, IOException, URISyntaxException {
-        String token = request.getHeader("token");
-        Wordpress wp = wordpressRepository.findByToken(token);
-        if (wp == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-
-        try {
-            Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
-            Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
-            Map<Integer, Term> dbTerms = getTerms(tagTaxonomy);
-            dbTerms.putAll(getTerms(categoryTaxonomy));
-
-            Person author = personRepository.findByWordpressId(1); //temporary
-            Station station = stationRepository.findByWordpressId(wp.id);
-
-            for (WordpressPost wpPost : wpPosts) {
-                Post post = getPost(wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
-                post.station = station;
-                post.author = author;
-
-                int countSlug = postRepository.countSlugPost(post.slug);
-                if (countSlug > 0) {
-                    String hash = WordrailsUtil.generateRandomString(5, "!Aau");
-                    post.slug = post.slug + "-" + hash;
-                }
-
-                try{
-                    postRepository.save(post);
-                } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-                    //already exists
-                }
+            if (post != null) {
+                postRepository.save(post);
             }
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
@@ -160,8 +145,65 @@ public class WordpressResource {
         return Response.status(Response.Status.OK).build();
     }
 
-    private Post getPost(WordpressPost wpPost, Map<Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy) {
-        Post post = new Post();
+    @PUT
+    @POST
+    @Path("/posts")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response posts(List<WordpressPost> wpPosts) throws ServletException, IOException, URISyntaxException {
+        Wordpress wp;
+        try { 
+            wp = getWordpressByToken();
+        } catch(UnauthorizedException e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        Post post = null;
+        try {
+            Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
+            Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
+            Map<Integer, Term> dbTerms = getTerms(tagTaxonomy);
+            dbTerms.putAll(getTerms(categoryTaxonomy));
+
+            Set<Post> posts = new HashSet<>();
+            Set<String> slugs = postRepository.findSlugs();
+            for (WordpressPost wpPost : wpPosts) {
+                if (request.getMethod().equals("PUT")) {
+                    post = postRepository.getOne(wpPost.id);
+
+                    if (post == null) {
+                        return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Post of id " + wpPost.id + " does not exist").build();
+                    }
+
+                    post = getPost(post, wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
+                } else {
+                    Person author = personRepository.findByWordpressId(1); //temporary
+                    Station station = stationRepository.findByWordpressId(wp.id);
+                    
+                    post = getPost(new Post(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
+                    post.station = station;
+                    post.author = author;
+                }
+                
+                if(!slugs.add(post.slug)) { //if slug already exists in db
+                    String hash = WordrailsUtil.generateRandomString(5, "!Aau");
+                    post.slug = post.slug + "-" + hash;
+                }
+
+                posts.add(post);
+            }
+            
+            postRepository.save(posts);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String msg = "";
+            if(post != null) msg = "Post id=" + post.wordpressId + " ";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(msg + e.getMessage()).build();
+        }
+
+        return Response.status(Response.Status.OK).build();
+    }
+
+    private Post getPost(Post post, WordpressPost wpPost, Map<Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy) {
         post.body = wpPost.body;
         switch (wpPost.status) {
             case "publish":
@@ -182,8 +224,8 @@ public class WordpressResource {
 
         if (wpPost.terms != null && (wpPost.terms.tags != null || wpPost.terms.categories != null)) {
             Set<WordpressTerm> terms = new HashSet<>();
-            terms.addAll(wpPost.terms.tags);
-            terms.addAll(wpPost.terms.categories);
+            if(wpPost.terms.tags != null) terms.addAll(wpPost.terms.tags);
+            if(wpPost.terms.categories != null) terms.addAll(wpPost.terms.categories);
 
             post.terms = getTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
         }
@@ -213,7 +255,7 @@ public class WordpressResource {
                 }
                 t.wordpressSlug = term.slug;
                 t.parent = parent;
-                
+
                 try {
                     termRepository.save(t);
                 } catch (ConstraintViolationException | DataIntegrityViolationException e) {
@@ -298,13 +340,58 @@ public class WordpressResource {
                     } catch (ConstraintViolationException | DataIntegrityViolationException e) {
                         //already exists
                     }
-                    
 
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
+        }
+
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @PUT
+    @Path("/terms")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response terms(WordpressTerms terms) throws ServletException, IOException {
+        Wordpress wp;
+        try { 
+            wp = getWordpressByToken();
+        } catch(UnauthorizedException e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
+        Set<WordpressTerm> tags = terms.tags;
+        Set<WordpressTerm> categories = terms.categories;
+                
+        Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
+        Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
+        Map<Integer, Term> dbTags = getTerms(tagTaxonomy);
+        Map<Integer, Term> dbCategories = getTerms(categoryTaxonomy);
+        
+        for (WordpressTerm tag : tags) {
+            Term t = dbTags.get(tag.trixId);
+            t.wordpressId = tag.id;
+            t.wordpressSlug = tag.slug;
+            
+            try {
+                termRepository.save(t);
+            } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+                //should never happen
+            }
+        }
+        
+        for (WordpressTerm cat : categories) {
+            Term t = dbCategories.get(cat.trixId);
+            t.wordpressId = cat.id;
+            t.wordpressSlug = cat.slug;
+            
+            try {
+                termRepository.save(t);
+            } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+                //should never happen
+            }
         }
 
         return Response.status(Response.Status.OK).build();
@@ -323,7 +410,7 @@ public class WordpressResource {
                 termRepository.save(newTerm);
             } catch (ConstraintViolationException | DataIntegrityViolationException e) {
                 //already exists
-            }            
+            }
         }
     }
 }
