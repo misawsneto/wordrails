@@ -221,6 +221,7 @@ public class WordpressResource {
         post.originalSlug = wpPost.slug;
         post.title = wpPost.title;
         post.wordpressId = wpPost.id;
+        post.lastModificationDate = wpPost.modified;
 
         if (wpPost.terms != null && (wpPost.terms.tags != null || wpPost.terms.categories != null)) {
             Set<WordpressTerm> terms = new HashSet<>();
