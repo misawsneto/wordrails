@@ -87,8 +87,8 @@ public class PostEventHandler {
 		buildNotification(post);
 	}
 
-	//	@Async
-	//	@Transactional
+		@Async
+		@Transactional
 	private void buildNotification(Post post){
 
 		Notification notification = new Notification();

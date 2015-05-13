@@ -27,9 +27,9 @@
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
-<!-- 	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
+	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
 	<task:executor id="myExecutor" pool-size="10"/>
-	<task:scheduler id="myScheduler" pool-size="20"/> -->
+	<task:scheduler id="myScheduler" pool-size="20"/>
 
   	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
   		<property name="entityManagerFactory" ref="entityManagerFactory"/>
