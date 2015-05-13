@@ -40,6 +40,65 @@
 			where term.parent is null and perspective.id = :stationPerspectiveId	
 		</query>
 	</named-query>
+        
+	<named-query name="Term.findTagsByWordpress">
+		<query>
+                    select term
+                    from Term term
+                        join term.taxonomy taxonomy
+                        join taxonomy.owningStation station
+                        join station.wordpress wordpress
+                    where wordpress = :wordpress and taxonomy.type = 'T'
+		</query>
+	</named-query>
+        
+	<named-query name="Term.findCategoriesByWordpress">
+		<query>
+                    select term
+                    from Term term, StationPerspective p
+                        join term.taxonomy t1
+                        join p.taxonomy t2
+                        join p.station station
+                        join station.wordpress wordpress
+                    where wordpress = :wordpress and t1.type != 'T' and t1.type != 'A' and t1 = t2
+		</query>
+	</named-query>
+        
+	<named-query name="Taxonomy.findTypeTByWordpress">
+		<query>
+                    select t
+                    from Taxonomy t 
+                        join t.owningStation station
+                    where station.wordpress = :wordpress and t.type = 'T'
+		</query>
+	</named-query>
+        
+	<named-query name="Taxonomy.findByWordpress">
+		<query>
+                    select t
+                    from Taxonomy t, StationPerspective p
+                        join p.station station
+                    where station.wordpress = :wordpress and t.type != 'T' and t.type != 'A' and t = p.taxonomy
+		</query>
+	</named-query>
+        
+	<named-query name="Taxonomy.findTypeTByStation">
+		<query>
+                    select t
+                    from Taxonomy t 
+                        join t.owningStation station
+                    where station = :station and t.type = 'T'
+		</query>
+	</named-query>
+        
+	<named-query name="Taxonomy.findByStation">
+		<query>
+                    select t
+                    from Taxonomy t, StationPerspective p
+                        join p.station station
+                    where station = :station and t.type != 'T' and t.type != 'A' and t = p.taxonomy
+		</query>
+	</named-query>
 	
 	<named-query name="Taxonomy.findNetworkOrStationTaxonomiesByNetworkIdExcludeType">
 		<query>
@@ -125,6 +184,12 @@
 		</query>
 	</named-query>
 	
+	<named-query name="findTreeByTaxonomyId">
+		<query>
+			select t from Term t left join fetch t.children where t.taxonomy.id = :taxonomyId
+		</query>
+	</named-query>
+	
 	<named-query name="Term.countTerms">
 		<query>
 			select count(1) from Term term where term.id IN (:termsIds)	
@@ -141,7 +206,7 @@
 		<query>
 			select count(1)
 			from Post post
-			where post.originalSlug = :slug
+			where post.slug = :slug
 		</query>
 	</named-query>
 	

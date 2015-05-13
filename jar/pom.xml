@@ -4,14 +4,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.wordrails</groupId>
-		<artifactId>wordrails2-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../parent/pom.xml</relativePath>
-	</parent>
-
-	<artifactId>wordrails2-jar</artifactId>
+    <parent>
+    	<groupId>co.xarx</groupId>
+    	<artifactId>trix-parent</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    	<relativePath>../parent/pom.xml</relativePath>
+    </parent>
+    
+    <artifactId>trix-jar</artifactId>
 
 	<packaging>jar</packaging>
 
@@ -73,7 +73,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.wordrails</groupId>
+			<groupId>co.xarx</groupId>
 			<artifactId>spring-data-rest-webmvc</artifactId>
 		</dependency>
 
@@ -93,14 +93,12 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search-infinispan</artifactId>
-		</dependency>
+                </dependency>
 
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-email</artifactId> 
-			</dependency> -->
 
 		<dependency>
 			<groupId>javax.mail</groupId>

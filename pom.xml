@@ -5,8 +5,8 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.wordrails</groupId>
-	<artifactId>wordrails2-modules</artifactId>
+	<groupId>co.xarx</groupId>
+	<artifactId>trix</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
@@ -16,12 +16,12 @@
 	</properties>	
 
     <modules>
+	<module>spring-data-rest</module>
+        <module>parent</module>
         <module>api</module>
         <module>client</module>
         <module>generator</module>
 	<module>jar</module>		
-        <module>parent</module>
-	<module>spring-data-rest</module>
         <module>war</module>
     </modules>
 </project>

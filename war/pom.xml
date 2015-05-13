@@ -6,13 +6,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
     <parent>
-    	<groupId>com.wordrails</groupId>
-    	<artifactId>wordrails2-parent</artifactId>
+    	<groupId>co.xarx</groupId>
+    	<artifactId>trix-parent</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     	<relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>wordrails2-war</artifactId>
+    <artifactId>trix-war</artifactId>
 
 	<packaging>war</packaging>
 
@@ -213,13 +213,13 @@
 		
 						
 		<dependency>
-			<groupId>com.wordrails</groupId>
-			<artifactId>wordrails2-api</artifactId>
+			<groupId>co.xarx</groupId>
+			<artifactId>trix-api</artifactId>
 		</dependency>
 		
 		<dependency>
-			<groupId>com.wordrails</groupId>
-			<artifactId>wordrails2-generator</artifactId>
+			<groupId>co.xarx</groupId>
+			<artifactId>trix-generator</artifactId>
 			<version>${project.version}</version>
 		</dependency>				
 	</dependencies>

@@ -1,16 +1,15 @@
 package com.wordrails.persistence;
 
+import com.wordrails.business.Station;
+import com.wordrails.business.Taxonomy;
+import com.wordrails.business.Wordpress;
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
-
-import com.wordrails.business.Station;
-import com.wordrails.business.Taxonomy;
 
 public interface TaxonomyRepository extends JpaRepository<Taxonomy, Integer>, QueryDslPredicateExecutor<Taxonomy> {
 	Taxonomy findByTypeAndName(@Param("type") String type, @Param("name") String name);
@@ -28,6 +27,18 @@ public interface TaxonomyRepository extends JpaRepository<Taxonomy, Integer>, Qu
 	
 	@RestResource(exported=false)
 	Taxonomy findByTermsId(Integer termId);
+
+	@RestResource(exported=false)
+	Taxonomy findTypeTByWordpress(@Param("wordpress") Wordpress wordpress); //taxonomy of type T
+
+	@RestResource(exported=false)
+	Taxonomy findByWordpress(@Param("wordpress") Wordpress wordpress); //taxonomy of all types except T or A
+
+	@RestResource(exported=false)
+	Taxonomy findTypeTByStation(@Param("station") Station station); //taxonomy of type T
+
+	@RestResource(exported=false)
+	Taxonomy findByStation(@Param("station") Station station); //taxonomy of all types except T or A
 	
 	@RestResource(exported=false)
 	Taxonomy findAuthorTaxonomyByStationId(@Param("station") Station station, @Param("taxonomyType") String taxonomyType);

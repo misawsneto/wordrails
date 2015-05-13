@@ -27,6 +27,10 @@ public class StationRole {
 	@JoinColumn(name="person_id")
 	public Person person;
 	
+	@ManyToOne
+	@JoinColumn(name="wordpress_id")
+	public Wordpress wordpress;
+	
 	@NotNull
 	public boolean editor;
 	

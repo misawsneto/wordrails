@@ -1,14 +1,13 @@
 package com.wordrails.business;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -19,10 +18,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
 import org.hibernate.validator.constraints.Email;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Person {
@@ -79,6 +75,8 @@ public class Person {
 
 	@OneToOne
 	public Image cover;
+    
+    public Integer wordpressId;
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)

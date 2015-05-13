@@ -2,7 +2,6 @@ package com.wordrails.generator;
 
 import java.io.File;
 import java.io.IOException;
-
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupDir;
 

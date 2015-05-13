@@ -1,18 +1,28 @@
 package com.wordrails.business;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 public class WordpressPost {
 
+    @JsonProperty("ID")
     @SerializedName("ID")
     public Integer id;
     public String title;
     
-    @SerializedName("content_raw")
+    @JsonProperty("content")
+    @SerializedName("content")
     public String body;
     public String status;
+    public String slug;
     public Date date;
+    public Date modified;
+    
+    public WordpressTerms terms;
+
+    public WordpressPost() {
+    }
 
     public WordpressPost(String title, String body, String status, Date date) {
         this.title = title;

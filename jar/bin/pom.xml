@@ -6,13 +6,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
     <parent>
-    	<groupId>com.wordrails</groupId>
-    	<artifactId>wordrails2-parent</artifactId>
+    	<groupId>co.xarx</groupId>
+    	<artifactId>trix-parent</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     	<relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>wordrails2-jar</artifactId>
+    <artifactId>trix-jar</artifactId>
 
 	<packaging>jar</packaging>
 	
@@ -64,6 +64,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-rest-webmvc</artifactId>
+                        <version>2.2.0.RELEASE</version>
 		</dependency>								            					
 	</dependencies>		
 </project>

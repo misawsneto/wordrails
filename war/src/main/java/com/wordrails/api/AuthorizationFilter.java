@@ -1,12 +1,5 @@
 package com.wordrails.api;
 
-import java.util.List;
-
-import javax.ws.rs.Path;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Cell;
 import com.wordrails.business.Comment;
@@ -39,6 +32,10 @@ import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
+import java.util.List;
+import javax.ws.rs.Path;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Path("/")
 @Component
@@ -1263,9 +1260,18 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
-	@Override
-	protected boolean isFindOneBySubdomainAuthorized(String subdomain) {
-		// TODO Auto-generated method stub
+    @Override
+    protected boolean isGetStationRoleWordpressAuthorized(Integer stationRoleId) {
 		return true;
-	}
+    }
+
+    @Override
+    protected boolean isFindByTokenAuthorized(String token) {
+		return true;
+    }
+
+    @Override
+    protected boolean isFindOneBySubdomainAuthorized(String subdomain) {
+		return true;
+    }
 }
