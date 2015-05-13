@@ -113,15 +113,15 @@ public class PostFilter implements Filter {
 
     @Transactional
     private void handleAfterRead(Post post) throws Exception {
-            PostRead postRead = new PostRead();
-            postRead.person = accessControllerUtil.getLoggedPerson();
-            postRead.post = post;
-            try {
-                postReadRepository.save(postRead);
-                queryPersistence.incrementReadsCount(post.id);
-            } catch (org.springframework.dao.DataIntegrityViolationException ex) {
-                log.debug("DataIntegrityViolationException " + post.id + " " + postRead.person.id + " - PostRead already exists... ");
-            }
+//            PostRead postRead = new PostRead();
+//            postRead.person = accessControllerUtil.getLoggedPerson();
+//            postRead.post = post;
+//            try {
+//                postReadRepository.save(postRead);
+//                queryPersistence.incrementReadsCount(post.id);
+//            } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+//                log.debug("DataIntegrityViolationException " + post.id + " " + postRead.person.id + " - PostRead already exists... ");
+//            }
     }
 
     /**

@@ -25,7 +25,7 @@ public class EmailService {
 	private final String PASSWORD = "2knHnAfeG5uVXmCXcLjquUUiNnxyWjJcIuCp2mxg";
 //	private final String HOST = "email-smtp.us-east-1.amazonaws.com";
 
-	@Async
+//	@Async
 	public void sendSimpleMail(String emailTo, String subject, String emailBody) {
 
 		//		apache commons email
