@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response.Status;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
@@ -83,8 +84,12 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response login(@FormParam("username") String username, @FormParam("password") String password){
-		accessControllerUtil.authenticate(username, password);
-		return Response.status(Status.OK).build();
+		try{
+			accessControllerUtil.authenticate(username, password);
+			return Response.status(Status.OK).build();
+		}catch(BadCredentialsException e){
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
 	}
 	
 	@GET
