@@ -99,7 +99,9 @@ public class PostEventHandler {
 		try{
 			if(post.station != null && post.station.networks != null){
 				Station station = stationRepository.findOne(post.station.id);
-				gcmService.sendToStation(post.station.id, notification);
+				for (Network network : station.networks) {
+					gcmService.sendToNetwork(network.id, notification);
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
