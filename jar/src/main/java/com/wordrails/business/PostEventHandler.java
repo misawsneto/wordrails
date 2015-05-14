@@ -87,8 +87,8 @@ public class PostEventHandler {
 		buildNotification(post);
 	}
 
-		@Async
-		@Transactional
+	@Async
+	@Transactional
 	private void buildNotification(Post post){
 
 		Notification notification = new Notification();
@@ -99,10 +99,7 @@ public class PostEventHandler {
 		try{
 			if(post.station != null && post.station.networks != null){
 				Station station = stationRepository.findOne(post.station.id);
-				for (Network network : station.networks) {
-					notification.network = network;
-					gcmService.sendToNetwork(network, notification);
-				}
+				gcmService.sendToStation(post.station.id, notification);
 			}
 		}catch(Exception e){
 			e.printStackTrace();

@@ -11,6 +11,7 @@ public class StationPermission implements Serializable {
 	public boolean writable;
 	public boolean main;
 	public String visibility;
+	public Integer defaultPerspectiveId;
 
 	//Person
 	public boolean admin;

@@ -143,6 +143,7 @@ public class PersonsResource {
 				stationPermissionDto.writable = station.writable;
 				stationPermissionDto.main = station.main;
 				stationPermissionDto.visibility = station.visibility;
+				stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
 				
 				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes(), StationDto.class);
 				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);

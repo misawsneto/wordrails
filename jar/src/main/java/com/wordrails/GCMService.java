@@ -21,10 +21,12 @@ import com.wordrails.business.Network;
 import com.wordrails.business.Notification;
 import com.wordrails.business.Person;
 import com.wordrails.business.PersonNetworkRegId;
+import com.wordrails.business.Station;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
 import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.StationRepository;
 import com.wordrails.util.NotificationDto;
 import com.wordrails.util.WordrailsUtil;
 
@@ -37,9 +39,21 @@ public class GCMService {
 
 	@Autowired private PersonRepository personRepository;
 	@Autowired private NetworkRepository networkRepository;
+	@Autowired private StationRepository stationRepository;
 	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository;
 	@Autowired private NotificationRepository notificationRepository; 
 	private ObjectMapper mapper;
+	
+	@Async
+	@Transactional
+	public void sendToStation(Integer stationId, Notification notification){
+		List<PersonNetworkRegId> personNetworkRegIds = personNetworkRegIdRepository.findRegIdByStationId(stationId);
+		try {
+			gcmNotify(personNetworkRegIds, notification);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void sendToNetwork(Integer networkId, Notification notification){
 		Network network = networkRepository.findOne(networkId);
