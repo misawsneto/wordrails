@@ -143,18 +143,15 @@ public class GCMService {
 
 
 	public void updateRegId(Network network, Person person, String regId) {
-		PersonNetworkRegId pnregId;
-		List<PersonNetworkRegId> ids = personNetworkRegIdRepository.findByPersonAndNetwork(person, network);
-		if(ids != null && ids.size() > 0){
-			pnregId = ids.get(0);
-			pnregId.regId = regId;
-			personNetworkRegIdRepository.save(pnregId);
-		}else{
+		try{
+			PersonNetworkRegId pnregId;
 			pnregId = new PersonNetworkRegId();
 			pnregId.network = network;
 			pnregId.person = person;
 			pnregId.regId = regId;
 			personNetworkRegIdRepository.save(pnregId);
+		}catch(Exception e){
+			System.out.println(e.getLocalizedMessage());
 		}
 	}
 }

@@ -176,12 +176,7 @@ function getCustomButtonStyle(color, perspective, header) {
 	"}\n"+
 
 	".station-header {\n"+
-	"  background-color: rgba("+hexToRgb(header).r+", " + hexToRgb(header).g + ", "+ hexToRgb(header).b +", 0.96);\n"+
-	"  color: " + textColorEval(header) + ";\n"+
-	"}\n"+
-
-	".station-header {\n"+
-	"  background-color: rgba("+hexToRgb(header).r+", " + hexToRgb(header).g + ", "+ hexToRgb(header).b +", 0.96);\n"+
+	"  background-color: rgba("+hexToRgb(header).r+", " + hexToRgb(header).g + ", "+ hexToRgb(header).b +", 0.95);\n"+
 	"  color: " + textColorEval(header) + ";\n"+
 	"}\n"+
 

@@ -19,9 +19,14 @@ angular.module('app')
     ]
   )
   .config(
-    [          '$stateProvider', '$urlRouterProvider', 'JQ_CONFIG', 
-      function ($stateProvider,   $urlRouterProvider, JQ_CONFIG) {
+    [          '$stateProvider', '$urlRouterProvider', '$locationProvider', 'JQ_CONFIG', 
+      function ($stateProvider ,  $urlRouterProvider ,  $locationProvider , JQ_CONFIG) {
           
+          /*$locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false
+          });*/
+                    
           $urlRouterProvider
               .otherwise('/');
           $stateProvider

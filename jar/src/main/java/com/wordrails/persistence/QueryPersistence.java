@@ -37,7 +37,7 @@ public class QueryPersistence {
 	
 	@Transactional
 	public void decrementRecommendsCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post post SET post.recommendsCount = post.favoritesCount - 1 WHERE post.id = :postId and post.recommendsCount > 0").setParameter("postId", postId).executeUpdate();
+		manager.createNativeQuery("UPDATE Post post SET post.recommendsCount = post.recommendsCount - 1 WHERE post.id = :postId and post.recommendsCount > 0").setParameter("postId", postId).executeUpdate();
 	}
 
 }

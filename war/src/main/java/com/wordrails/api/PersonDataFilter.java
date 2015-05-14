@@ -55,6 +55,7 @@ public class PersonDataFilter implements Filter{
 
 		req.setAttribute("personData", personsResource.mapper.writeValueAsString(personData));
 		req.setAttribute("termPerspectiveView", personsResource.mapper.writeValueAsString(termPerspectiveView));
+		req.setAttribute("networkName", personData.network.name);
 		
 		Pageable pageable = new PageRequest(0, 15);
 		List<Post> posts = postRepository.findUnreadByStationAndPerson(1, 1, pageable);

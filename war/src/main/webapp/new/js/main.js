@@ -100,6 +100,7 @@ angular.module('app')
       
       $scope.app.initData = angular.copy(initData);
       $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
+      $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
 
       $scope.app.checkIfLogged = function(){
         $scope.app.isLogged = trixService.isLoggedIn();
@@ -108,6 +109,7 @@ angular.module('app')
       $scope.app.checkIfLogged();
 
       $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+
       });
 
       $scope.getBackgroundImage = function(postView, size){

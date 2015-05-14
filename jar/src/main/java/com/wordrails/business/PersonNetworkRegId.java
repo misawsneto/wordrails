@@ -11,7 +11,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"person_id", "network_id"}))
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"person_id", "network_id", "regId"}))
 public class PersonNetworkRegId {
 	
 	@Id

@@ -15,7 +15,6 @@
       	<listener-class>com.wordrails.ContextServletListener</listener-class>
    	</listener>   	
 
-
 <!-- RESTEasy -->
 	<listener>
       	<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
@@ -72,6 +71,15 @@
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 <!-- Spring Data REST -->
+
+	<servlet>
+      <servlet-name>myindex</servlet-name>
+      <jsp-file>/index.jsp</jsp-file>
+ 	</servlet>
+ 	<servlet-mapping>
+      <servlet-name>myindex</servlet-name>
+      <url-pattern>/station</url-pattern>
+ 	</servlet-mapping>
 
 <!-- Spring ORM -->
 	<filter>
