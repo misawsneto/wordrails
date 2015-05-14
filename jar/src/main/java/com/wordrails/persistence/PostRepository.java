@@ -53,4 +53,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
     
     @Query("SELECT slug FROM Post")
     public Set<String> findSlugs();
+    
+    @Query("SELECT wordpressId FROM Post")
+    public Set<Integer> findWordpressIds();
 }

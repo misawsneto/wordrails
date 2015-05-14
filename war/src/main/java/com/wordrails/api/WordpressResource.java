@@ -122,6 +122,10 @@ public class WordpressResource {
 
                 post = getPost(post, wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
             } else {
+                if(postRepository.findByWordpressId(wpPost.id) != null) {
+                    return Response.status(Response.Status.PRECONDITION_FAILED).type("text/plain").entity("Post already exists").build();
+                }
+                
                 Person author = personRepository.findByWordpressId(1); //temporary
                 Station station = stationRepository.findByWordpressId(wp.id);
 
@@ -166,6 +170,7 @@ public class WordpressResource {
 
             Set<Post> posts = new HashSet<>();
             Set<String> slugs = postRepository.findSlugs();
+            Set<Integer> wordpressIds = postRepository.findWordpressIds();
             for (WordpressPost wpPost : wpPosts) {
                 if (request.getMethod().equals("PUT")) {
                     post = postRepository.getOne(wpPost.id);
@@ -176,6 +181,10 @@ public class WordpressResource {
 
                     post = getPost(post, wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
                 } else {
+                    if(!wordpressIds.add(wpPost.id)) { //if wordpressId already exists in db
+                        continue;
+                    }
+                    
                     Person author = personRepository.findByWordpressId(1); //temporary
                     Station station = stationRepository.findByWordpressId(wp.id);
                     
