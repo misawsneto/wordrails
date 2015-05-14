@@ -1257,19 +1257,6 @@ var trix = angular.module('trix', [])
   	        return $http.delete("/api/persons/" + id);
   	    }
 
-  	    if (this.findByEmail) {
-  	    	window.console && console.log("findByEmail");
-  	    }
-  	    this.findByEmail = function(email, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            email: email,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/persons/search/findByEmail",  config)
-  	    };
-
   	    if (this.findByUsername) {
   	    	window.console && console.log("findByUsername");
   	    }
@@ -1281,6 +1268,19 @@ var trix = angular.module('trix', [])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/persons/search/findByUsername",  config)
+  	    };
+
+  	    if (this.findByEmail) {
+  	    	window.console && console.log("findByEmail");
+  	    }
+  	    this.findByEmail = function(email, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            email: email,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/persons/search/findByEmail",  config)
   	    };
 
   	/*---------------------------------------------------------------------------*/

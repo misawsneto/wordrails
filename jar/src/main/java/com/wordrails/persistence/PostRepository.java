@@ -51,9 +51,11 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	public List<Post> findOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 	public List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
     
+	@RestResource(exported=false)
     @Query("SELECT slug FROM Post")
     public Set<String> findSlugs();
     
+	@RestResource(exported=false)
     @Query("SELECT wordpressId FROM Post")
     public Set<Integer> findWordpressIds();
 }
