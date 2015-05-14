@@ -1,26 +1,5 @@
 package com.wordrails.api;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.GCMService;
-import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.Network;
-import com.wordrails.business.NetworkRole;
-import com.wordrails.business.Person;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationRole;
-import com.wordrails.business.UnauthorizedException;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.PersonNetworkRegIdRepository;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.TaxonomyRepository;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +24,27 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.GCMService;
+import com.wordrails.WordrailsService;
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.Network;
+import com.wordrails.business.NetworkRole;
+import com.wordrails.business.Person;
+import com.wordrails.business.Station;
+import com.wordrails.business.StationRole;
+import com.wordrails.business.UnauthorizedException;
+import com.wordrails.persistence.NetworkRepository;
+import com.wordrails.persistence.NetworkRolesRepository;
+import com.wordrails.persistence.PersonNetworkRegIdRepository;
+import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.StationRepository;
+import com.wordrails.persistence.StationRolesRepository;
+import com.wordrails.persistence.TaxonomyRepository;
 
 @Path("/persons")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -77,11 +77,28 @@ public class PersonsResource {
 		Person person = accessControllerUtil.getLoggedPerson();
 		gcmService.updateRegId(network, person, regId);
 	}
+	
+	@POST
+	@Path("/login")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response login(@FormParam("username") String username, @FormParam("password") String password){
+		accessControllerUtil.authenticate(username, password);
+		return Response.status(Status.OK).build();
+	}
+	
+	@GET
+	@Path("/logout")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response logout(){
+		return Response.status(Status.OK).build();
+	}
 		
 	@PUT
 	@Path("/me/password")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
+		
 		org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String username = user.getUsername();
 		if(!username.equalsIgnoreCase("wordrails")) // don't allow users to change wordrails password

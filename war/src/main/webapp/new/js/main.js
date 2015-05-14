@@ -196,5 +196,7 @@ angular.module('app')
       loadPopular();
       loadRecent();
 
+      trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
+
       /* end of added */
   }]); 

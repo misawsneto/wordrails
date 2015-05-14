@@ -37,14 +37,14 @@
 
 	<http entry-point-ref="authenticationEntryPoint">
 	    <intercept-url pattern="/api/persons/init" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+	    <intercept-url pattern="/api/persons/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/api/files/*/contents" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-	    <intercept-url pattern="/api/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/new" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/new/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    
 		<intercept-url pattern="/**" access="ROLE_USER"/>
 
-		<form-login always-use-default-target="true"
+		<form-login always-use-default-target="true" 
 					default-target-url="/loggedIn.jsp"									
 					authentication-failure-url="/logIn.jsp"/>
 		
@@ -56,7 +56,7 @@
 		<beans:property name="useForward" value="true"/>
 	</beans:bean>
 
-	<authentication-manager>
+	<authentication-manager alias="myAuthenticationManager">
 		<authentication-provider>
 			<jdbc-user-service data-source-ref="dataSource" />
   		</authentication-provider>
