@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state',
-  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state) {
+.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http',
+  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -197,6 +197,17 @@ angular.module('app')
       loadRecent();
 
       trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
+
+      var config = {};
+
+      config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
+      $http.post("http://localhost:8080" + "/api/persons/login", $.param({"username": "silvio", "password": "silvio"}), config).success(function(){
+        trix.initData();
+      })
+
+      trix.login("silvio", "silvio").success(function(){
+        trix.initData();
+      })
 
       /* end of added */
   }]); 
