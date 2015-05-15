@@ -36,6 +36,7 @@
 	<http pattern="/invitation/**" security="none"/>
 
 	<http entry-point-ref="authenticationEntryPoint">
+	    <intercept-url pattern="/api/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/api/persons/init" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/api/persons/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/api/files/*/contents" access="IS_AUTHENTICATED_ANONYMOUSLY"/>

@@ -22,4 +22,7 @@ public interface PersonNetworkRegIdRepository extends JpaRepository<PersonNetwor
 	@Query("select pnr from PersonNetworkRegId pnr join pnr.person person where person in (select pst.id from StationRole pst where pst.station.id = :stationId )")
 	@RestResource(exported=false)
 	public List<PersonNetworkRegId> findRegIdByStationId(@Param("stationId") Integer stationId);
+
+	@RestResource(exported=false)
+	public void deleteByRegId(String canonicalRegistrationId);
 }

@@ -147,7 +147,7 @@ public class GCMService {
 			} else {
 				String error = result.getErrorCodeName();
 				if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
-					System.out.println("Unregistered device: " + regId);
+					personNetworkRegIdRepository.deleteByRegId(result.getCanonicalRegistrationId());
 				} else {
 					System.out.println("Error sending message to " + regId + ": " + error);
 				}
