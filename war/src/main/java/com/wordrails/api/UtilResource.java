@@ -217,6 +217,11 @@ public class UtilResource {
 					person.imageMediumId = null;
 					person.imageLargeId = null;
 				}
+				
+				if(person.cover != null && person.cover.original != null){
+					person.coverMediumId = person.cover.medium.id;
+					person.coverLargeId = person.cover.large.id;
+				}
 			}
 			
 			personRepository.save(persons);

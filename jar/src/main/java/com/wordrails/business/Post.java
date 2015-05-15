@@ -201,6 +201,9 @@ public class Post {
     @DateBridge(resolution = Resolution.SECOND)
 	public Date updatedAt;
 	
+	@Column(length = 1024)
+	public String externalFeaturedImgUrl;
+	
 	@PrePersist
 	public void onCreate() {
 		if(featuredImage != null && featuredImage.original != null){

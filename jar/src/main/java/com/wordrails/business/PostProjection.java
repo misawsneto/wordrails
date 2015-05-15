@@ -33,4 +33,5 @@ public interface PostProjection {
     Integer getReadsCount();
 	Integer getRecommendsCount();
 	Integer getCommentsCount();
+	String getExternalFeaturedImgUrl();
 }

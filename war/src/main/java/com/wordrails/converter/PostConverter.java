@@ -49,6 +49,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.authorEmail = post.author != null ? post.author.email : null;
 		postView.authorTwitter = post.author != null ? post.author.twitterHandle : null;
 		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
+		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
 		
 		return postView;
 	}

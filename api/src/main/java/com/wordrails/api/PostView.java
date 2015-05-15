@@ -35,5 +35,5 @@ public class PostView implements Serializable {
 	public Integer authorSmallImageId;
 
 	public String slug;
-
+	public String externalFeaturedImgUrl;
 }
