@@ -298,7 +298,7 @@ public class PostsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getRecent(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		Pageable pageable = new PageRequest(page, size);
-		List<Post> posts = postRepository.findOrderByDateDesc(stationId, pageable);
+		List<Post> posts = postRepository.findPostsOrderByDateDesc(stationId, pageable);
 		 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
 		response.content = postConverter.convertToViews(posts);

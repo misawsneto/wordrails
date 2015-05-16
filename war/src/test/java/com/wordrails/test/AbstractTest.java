@@ -26,7 +26,7 @@ public abstract class AbstractTest {
 	
 	@Test
 	public  void doTest() {
-		Station station = stationRepository.findOne(1);
-		System.out.println(station.stationPerspectives.toString());
+//		Station station = stationRepository.findOne(1);
+//		System.out.println(station.stationPerspectives.toString());
 	}
 }

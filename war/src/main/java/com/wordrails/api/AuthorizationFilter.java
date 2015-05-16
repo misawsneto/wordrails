@@ -32,8 +32,11 @@ import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
+
 import java.util.List;
+
 import javax.ws.rs.Path;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1247,16 +1250,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindOrderByDateDescAuthorized(Integer stationId,
-			Integer page, Integer size, List<String> sort) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	protected boolean isFindPopularPostsAuthorized(Integer stationId,
-			Integer page, Integer size, List<String> sort) {
-		// TODO Auto-generated method stub
+	protected boolean isFindPopularPostsAuthorized(Integer stationId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
 
@@ -1274,4 +1268,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
     protected boolean isFindOneBySubdomainAuthorized(String subdomain) {
 		return true;
     }
+
+	@Override
+	protected boolean isFindPostReadByPersonIdOrderByDatePaginatedAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindPostsOrderByDateDescAuthorized(Integer stationId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+
 }

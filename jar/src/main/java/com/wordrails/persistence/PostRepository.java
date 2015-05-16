@@ -48,7 +48,9 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	public List<Post> findUnreadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 	
 	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
-	public List<Post> findOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
+	public List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
+	
+	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC")
 	public List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
     
 	@RestResource(exported=false)

@@ -198,16 +198,5 @@ angular.module('app')
 
       trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
 
-      var config = {};
-
-      config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
-      $http.post("http://localhost:8080" + "/api/persons/login", $.param({"username": "silvio", "password": "silvio"}), config).success(function(){
-        trix.initData();
-      })
-
-      trix.login("silvio", "silvio").success(function(){
-        trix.initData();
-      })
-
       /* end of added */
   }]); 

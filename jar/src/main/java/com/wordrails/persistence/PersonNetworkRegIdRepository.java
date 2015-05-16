@@ -19,10 +19,25 @@ public interface PersonNetworkRegIdRepository extends JpaRepository<PersonNetwor
 	@RestResource(exported=false)
 	public List<PersonNetworkRegId> findByNetwork(@Param("network") Network network);
 
-	@Query("select pnr from PersonNetworkRegId pnr join pnr.person person where person in (select pst.id from StationRole pst where pst.station.id = :stationId )")
+//	 SELECT * FROM 
+//	 personnetworkregid reg join person p on reg.person_id = p.id
+//	 where p.id in 
+//	 (select psr.person_id 
+//	 from person_station_role psr 
+//	 where psr.station_id = :stationId) OR 
+//	 (reg.person_id = 1 and reg.network_id in 
+//	 (select sn.networks_id from station_network sn 
+//	 join network n on sn.networks_id = n.id 
+//	 join station s on sn.stations_id = s.id 
+//	 where s.visibility = "UNRESTRICTED"))
+
 	@RestResource(exported=false)
+	@Query("SELECT reg FROM PersonNetworkRegId reg join reg.person p where p in ( select psr.person from StationRole psr where psr.station.id = :stationId AND psr.person.id != 1 ) OR ( reg.person.id = 1 and reg.network in ( select network from Network network join network.stations s where s.id = :stationId AND s.visibility = 'UNRESTRICTED') )")
 	public List<PersonNetworkRegId> findRegIdByStationId(@Param("stationId") Integer stationId);
 
 	@RestResource(exported=false)
 	public void deleteByRegId(String canonicalRegistrationId);
+
+	@RestResource(exported=false)
+	public PersonNetworkRegId findOneByRegId(String regId);
 }

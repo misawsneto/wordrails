@@ -1,6 +1,7 @@
 package com.wordrails;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -21,7 +22,6 @@ import com.wordrails.business.Network;
 import com.wordrails.business.Notification;
 import com.wordrails.business.Person;
 import com.wordrails.business.PersonNetworkRegId;
-import com.wordrails.business.Station;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
@@ -87,7 +87,7 @@ public class GCMService {
 		init();
 		// make a copy
 		List<String> devices = new ArrayList<String>();
-
+		
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
 			Notification noti = new Notification();
 			noti.message = notification.message + "";
@@ -155,14 +155,17 @@ public class GCMService {
 		}
 	}
 
-
 	public void updateRegId(Network network, Person person, String regId) {
 		try{
-			PersonNetworkRegId pnregId;
-			pnregId = new PersonNetworkRegId();
+			
+			PersonNetworkRegId pnregId = personNetworkRegIdRepository.findOneByRegId(regId);
+			if(pnregId == null || pnregId.regId == null){
+				pnregId = new PersonNetworkRegId();
+				pnregId.regId = regId;
+			}
+			
 			pnregId.network = network;
 			pnregId.person = person;
-			pnregId.regId = regId;
 			personNetworkRegIdRepository.save(pnregId);
 		}catch(Exception e){
 			System.out.println(e.getLocalizedMessage());
