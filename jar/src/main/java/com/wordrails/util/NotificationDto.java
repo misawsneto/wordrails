@@ -15,4 +15,5 @@ public class NotificationDto {
 	public String postTitle;
 	public String postSnippet;
 	public Integer imageSmallId;
+	public Integer imageMediumId;
 }
