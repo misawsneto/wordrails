@@ -1,17 +1,26 @@
 package com.wordrails.business;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"regId"}))
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"network_id", "regId"}))
 public class PersonNetworkRegId {
 	
 	@Id
@@ -29,4 +38,25 @@ public class PersonNetworkRegId {
 	@ManyToOne
 	@JoinColumn(name = "network_id")
 	public Network network;
+	
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable=false)
+	public Date createdAt;
+
+	@PrePersist
+	void onCreate() {
+		createdAt = new Date();
+		updatedAt = new Date();
+	}
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date updatedAt;
+
+	@PreUpdate
+	void onUpdate() {
+		updatedAt = new Date();
+	}
 }
+

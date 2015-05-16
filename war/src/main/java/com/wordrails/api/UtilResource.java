@@ -292,9 +292,20 @@ public class UtilResource {
 			updateTermPerspectivesStationIds(request);
 			updatePersonFields(request);
 			recalculateSlug(request);
+			updateRegDate(request);
 		}
 	}
 	
+	@GET
+	@Path("/updateRegDate")
+	private void updateRegDate(HttpServletRequest request) {
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			
+		}
+	}
+
 	@Autowired private QueryPersistence qp;
 	@Autowired private PersonNetworkRegIdRepository reg;
 	@Autowired private PostReadRepository postReadRepository;
@@ -304,6 +315,7 @@ public class UtilResource {
 	public void test(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			reg.findRegIdByStationId(2);
 		}
 	}
 }

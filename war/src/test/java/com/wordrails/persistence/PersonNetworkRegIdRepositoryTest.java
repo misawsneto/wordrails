@@ -20,6 +20,6 @@ public class PersonNetworkRegIdRepositoryTest extends AbstractTest {
 	public void test() {
 //		Sort sort = new Sort(Direction.DESC, "date");
 //		Pageable pageable = new PageRequest(0, 10, sort);
-//		System.out.println(ids.size());
+		System.out.println(repository.findRegIdByStationId(2));
 	}	
 }
