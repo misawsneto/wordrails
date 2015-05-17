@@ -655,7 +655,16 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
         }
         //Begin Create Post//
         $scope.app.loading = true;
-        createPost(post)
+        if($scope.uploadedImage){
+          var file = WORDRAILS.baseUrl + "/api/files/" + $scope.uploadedImage.id;
+          var img = {original: file}
+          if($scope.imageCaption) img.title = $scope.imageCaption;
+          wr.postImage(img, function(imgId){
+            createPost(post, imgId)
+          });
+        }else{
+          createPost(post)
+        }
       }
     };
 
@@ -708,7 +717,8 @@ app.controller('PostEditorCtrl', function PostEditorCtrl($scope, $state, authSer
       }); //End Create Post//
 }
 
-function createPost(post){
+function createPost(post, imgId){
+  if(imgId) post.featuredImage = WORDRAILS.baseUrl + "/api/images/" + imgId;
   wr.postPost(post, function(postId){ // post post... crea a post
     toastr.success(msgSuccess); // if not editing show post created message
 
@@ -752,15 +762,6 @@ function createPost(post){
     }
     // ------------ end of update terms
     
-    if($scope.uploadedImage){
-      var file = WORDRAILS.baseUrl + "/api/files/" + $scope.uploadedImage.id;
-      var img = {original: file}
-      if($scope.imageCaption) img.title = $scope.imageCaption;
-      wr.postImage(img, function(imgId){
-        wr.putPostFeaturedImage(postId, WORDRAILS.baseUrl + "/api/images/" + imgId)
-      });
-    }
-
   }, function(xhr){
     if(xhr.status == 501){
       toastr.error("Agendamento de notícias ainda não é permitido. Modifique a data e hora da notícia e tente novamente.");  

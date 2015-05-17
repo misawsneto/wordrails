@@ -296,13 +296,20 @@ public class UtilResource {
 		}
 	}
 	
+	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository; 
+	
 	@GET
 	@Path("/updateRegDate")
 	private void updateRegDate(HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			
+			List<PersonNetworkRegId> ids = personNetworkRegIdRepository.findAll();
+			for (PersonNetworkRegId personNetworkRegId : ids) {
+				personNetworkRegId.createdAt = new Date();
+				personNetworkRegId.updatedAt = new Date();
+			}
+			personNetworkRegIdRepository.save(ids);
 		}
 	}
 

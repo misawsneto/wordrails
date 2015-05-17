@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
+import org.springframework.data.rest.core.annotation.HandleAfterLinkSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
@@ -23,6 +24,7 @@ import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PostReadRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.PromotionRepository;
+import com.wordrails.persistence.RecommendRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
@@ -53,6 +55,7 @@ public class PostEventHandler {
 
 	private @Autowired FavoriteRepository favoriteRepository;
 	private @Autowired BookmarkRepository bookmarkRepository;
+	private @Autowired RecommendRepository recommendRepository;
 	private @Autowired NotificationRepository notificationRepository;
 
 	@HandleBeforeCreate
@@ -83,37 +86,9 @@ public class PostEventHandler {
 	}
 
 	@HandleAfterCreate
+	@Transactional
 	public void handleAfterCreate(Post post){
 		buildNotification(post);
-	}
-
-	@Async
-	@Transactional
-	private void buildNotification(Post post){
-
-		Notification notification = new Notification();
-		notification.type = Notification.Type.POST_ADDED.toString();
-		notification.station = post.station;
-		notification.post = post;
-		notification.message = post.title;
-		try{
-			if(post.station != null && post.station.networks != null){
-				Station station = stationRepository.findOne(post.station.id);
-				gcmService.sendToStation(station.id, notification);
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-
-	@HandleBeforeSave
-	public void handleBeforeSave(Post post) throws UnauthorizedException {
-		System.out.println("HANDLE BEFORE SAVE");
-		if (postAndCommentSecurityChecker.canEdit(post)) {
-			post.lastModificationDate = new Date();
-		} else {
-			throw new UnauthorizedException();
-		}
 	}
 
 	@HandleBeforeDelete
@@ -139,8 +114,27 @@ public class PostEventHandler {
 			postReadRepository.deleteByPost(post);
 			notificationRepository.deleteByPost(post);
 			favoriteRepository.deleteByPost(post);
+			bookmarkRepository.deleteByPost(post);
+			recommendRepository.deleteByPost(post);
 		} else {
 			throw new UnauthorizedException();
 		}
 	}
+	
+	private void buildNotification(Post post){
+		Notification notification = new Notification();
+		notification.type = Notification.Type.POST_ADDED.toString();
+		notification.station = post.station;
+		notification.post = post;
+		notification.message = post.title;
+		try{
+			if(post.station != null && post.station.networks != null){
+				Station station = stationRepository.findOne(post.station.id);
+				gcmService.sendToStation(station.id, notification);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 }

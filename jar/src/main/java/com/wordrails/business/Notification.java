@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class Notification {
 	
-	enum Type{
+	public enum Type{
 		ADDED_TO_STATION, REMOVED_FROM_STATION, POST_COMMENTED, POST_DELETED, POST_ADDED, BREAKING_NEWS,
 	}
 	

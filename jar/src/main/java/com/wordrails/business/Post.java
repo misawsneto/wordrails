@@ -221,6 +221,7 @@ public class Post {
 		if(comments != null){
 			commentsCount = comments.size();
 		}
+		date = new Date();
 	}
 	
 	@PreUpdate
@@ -242,6 +243,7 @@ public class Post {
 		}
 		
 		updatedAt = new Date();
+		lastModificationDate = updatedAt;
 	}
 	
 	public Integer imageId;
