@@ -304,6 +304,8 @@ public class UtilResource {
 	public void updateWordpressPosts(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
+		int count = 0;
+		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Post> posts = postRepository.findAll();
 			for (Post post : posts) {
@@ -311,7 +313,11 @@ public class UtilResource {
 					WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(post.body);
 					post.body = wpc.content;
 					post.externalFeaturedImgUrl = wpc.featuredImage;
+					System.out.println(post.externalFeaturedImgUrl);
+					count++;
 				}
+				if(count > 100)
+					break;
 			}
 			
 			postRepository.save(posts);
