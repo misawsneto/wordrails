@@ -314,7 +314,8 @@ public class UtilResource {
 					post.body = wpc.content;
 					post.externalFeaturedImgUrl = wpc.featuredImage;
 					System.out.println(post.externalFeaturedImgUrl);
-					count++;
+					if(post.externalFeaturedImgUrl != null)
+						count++;
 				}
 				if(count > 100)
 					break;
