@@ -1,6 +1,5 @@
 package com.wordrails.util;
 
-import java.awt.Dimension;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -129,7 +128,7 @@ public class WordrailsUtil {
 		wpc.featuredImage = featuredImage;
 		
 		wpc.content = wpc.content.replaceAll("\\[(.*?)\\](.*?)\\[/(.*?)\\]", "");
-		wpc.content.trim();
+		wpc.content = wpc.content.trim();
 
 		return wpc;
 	}
