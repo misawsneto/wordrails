@@ -203,7 +203,12 @@ public class WordpressResource {
             }
             
             postRepository.save(posts);
-        } catch (Exception e) {
+        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+            e.printStackTrace();
+            String msg = "";
+            if(post != null) msg = "Post id=" + post.wordpressId + " ";
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(msg + e.getMessage()).build();
+        }catch (Exception e) {
             e.printStackTrace();
             String msg = "";
             if(post != null) msg = "Post id=" + post.wordpressId + " ";
@@ -213,7 +218,7 @@ public class WordpressResource {
         return Response.status(Response.Status.OK).build();
     }
 
-    private Post getPost(Post post, WordpressPost wpPost, Map<Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy) {
+    private Post getPost(Post post, WordpressPost wpPost, Map<Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy) throws ConstraintViolationException, DataIntegrityViolationException  {
         WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(wpPost.body);
         post.body = wpc.content;
         post.externalFeaturedImgUrl = wpc.featuredImage;
@@ -246,7 +251,7 @@ public class WordpressResource {
         return post;
     }
 
-    private Set<Term> getTerms(Collection<WordpressTerm> wsTerms, Map<Integer, Term> dbTerms, Taxonomy taxTag, Taxonomy taxCat) {
+    private Set<Term> getTerms(Collection<WordpressTerm> wsTerms, Map<Integer, Term> dbTerms, Taxonomy taxTag, Taxonomy taxCat) throws ConstraintViolationException, DataIntegrityViolationException {
         Set<Term> terms = new HashSet();
         for (WordpressTerm term : wsTerms) {
             Term parent = null;
@@ -269,11 +274,7 @@ public class WordpressResource {
                 t.wordpressSlug = term.slug;
                 t.parent = parent;
 
-                try {
-                    termRepository.save(t);
-                } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-                    //already exists
-                }
+                termRepository.save(t);
             }
 
             terms.add(t);
@@ -307,15 +308,15 @@ public class WordpressResource {
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Token is not created for this station").build();
                 }
 
-                wordpress.domain = config.domain;
-                wordpress.username = config.user;
-                wordpress.password = config.password;
-                wordpress.station = station;
-
-                station.wordpress = wordpress;
-                wordpressRepository.save(wordpress);
-
                 if (newWordpress) {
+                    wordpress.domain = config.domain;
+                    wordpress.username = config.user;
+                    wordpress.password = config.password;
+                    wordpress.station = station;
+
+                    station.wordpress = wordpress;
+                    wordpressRepository.save(wordpress);
+                    
                     //TODO manage taxonomy to enable this                    
                     Set<WordpressTerm> terms = new HashSet<>();
 
