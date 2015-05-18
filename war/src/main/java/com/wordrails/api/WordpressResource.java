@@ -21,6 +21,7 @@ import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermRepository;
 import com.wordrails.persistence.WordpressRepository;
+import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -213,7 +214,9 @@ public class WordpressResource {
     }
 
     private Post getPost(Post post, WordpressPost wpPost, Map<Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy) {
-        post.body = wpPost.body;
+        WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(wpPost.body);
+        post.body = wpc.content;
+        post.externalFeaturedImgUrl = wpc.featuredImage;
         switch (wpPost.status) {
             case "publish":
                 post.state = Post.STATE_PUBLISHED;

@@ -58,6 +58,7 @@ import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.util.AsyncService;
+import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
 
 @Path("/util")
@@ -295,6 +296,32 @@ public class UtilResource {
 			updatePersonFields(request);
 			recalculateSlug(request);
 			updateRegDate(request);
+		}
+	}
+	
+	@GET
+	@Path("/updateWordpressPosts")
+	public void updateWordpressPosts(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+
+		int count = 0;
+		
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<Post> posts = postRepository.findAllPostsOrderByIdDesc();
+			for (Post post : posts) {
+				if(post.wordpressId != null && post.externalFeaturedImgUrl == null){
+					WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(post.body);
+					post.body = wpc.content;
+					post.externalFeaturedImgUrl = wpc.featuredImage;
+					System.out.println(post.externalFeaturedImgUrl);
+					if(post.externalFeaturedImgUrl != null)
+						count++;
+				}
+				if(count > 100)
+					break;
+			}
+			
+			postRepository.save(posts);
 		}
 	}
 	
