@@ -296,7 +296,6 @@ public class UtilResource {
 			updatePersonFields(request);
 			recalculateSlug(request);
 			updateRegDate(request);
-			updateWordpressPosts(request);
 		}
 	}
 	
