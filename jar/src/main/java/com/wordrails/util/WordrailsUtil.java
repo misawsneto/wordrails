@@ -85,42 +85,47 @@ public class WordrailsUtil {
 		// Get all img tags
 		String featuredImage = null;
 		Elements imgs = doc.getElementsByTag("img");
-		for (Element element : imgs) {
-			String imageURL = element.attr("src");
-			if(imageURL != null && !imageURL.isEmpty()){
-				URL url;
-				try {
-					url = new URL(imageURL);
-					try(InputStream is = url.openStream()){
-						try(ImageInputStream in = ImageIO.createImageInputStream(is)){
-							final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
-							if (readers.hasNext()) {
-								ImageReader reader = readers.next();
-								try {
-									reader.setInput(in);
-									int dimensions = reader.getWidth(0) * reader.getHeight(0);
-									if(dimensions > 250000){
-										Element parent = element.parent();
-										if(parent != null && parent.tagName().equals("a")){
-											parent.remove();
+		
+		try{
+			for (Element element : imgs) {
+				String imageURL = element.attr("src");
+				if(imageURL != null && !imageURL.isEmpty()){
+					URL url;
+					try {
+						url = new URL(imageURL);
+						try(InputStream is = url.openStream()){
+							try(ImageInputStream in = ImageIO.createImageInputStream(is)){
+								final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
+								if (readers.hasNext()) {
+									ImageReader reader = readers.next();
+									try {
+										reader.setInput(in);
+										int dimensions = reader.getWidth(0) * reader.getHeight(0);
+										if(dimensions > 250000){
+											Element parent = element.parent();
+											if(parent != null && parent.tagName().equals("a")){
+												parent.remove();
+											}
+											featuredImage = imageURL;
 										}
-										featuredImage = imageURL;
+									} finally {
+										reader.dispose();
 									}
-								} finally {
-									reader.dispose();
 								}
+							} catch (IOException e) {
+								e.printStackTrace();
 							}
-						} catch (IOException e) {
+						}catch (IOException e) {
 							e.printStackTrace();
 						}
-					}catch (IOException e) {
-						e.printStackTrace();
+					} catch (MalformedURLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-				} catch (MalformedURLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
 			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 		
 		WordpressParsedContent wpc = new WordpressParsedContent();
