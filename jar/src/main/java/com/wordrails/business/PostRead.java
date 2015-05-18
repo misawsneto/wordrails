@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"post_id", "person_id"}))
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"post_id", "person_id", "sessionid"}))
 public class PostRead {
 	
 	@Id
@@ -39,6 +39,8 @@ public class PostRead {
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date updatedAt;
+	
+	public String sessionid;
 
 	@PrePersist
 	void onCreate() {

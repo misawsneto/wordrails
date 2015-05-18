@@ -9,12 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
-@EnableAsync
-@EnableScheduling
 public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 	@Override
 	protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {

@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.EmailService;
 import com.wordrails.business.Network;
@@ -58,6 +59,7 @@ public class PasswordResetResource {
 	private @Autowired UserRepository userRepository;
 	private @Autowired EmailService emailService;
 	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired WordrailsService wordrailsService;
 
 	@POST
 	@Path("/")
@@ -80,16 +82,10 @@ public class PasswordResetResource {
 		if(passwordReset.invite) // if passwordReset is of type user invitation, send invitation email
 			sendInviteEmail(passwordReset);
 		else // if not invitation, send a simple user reset email.
-			sendResetEmail(passwordReset);
+			wordrailsService.sendResetEmail(passwordReset);
 
 		return Response.status(Status.CREATED).build();
 		//		throw new UnauthorizedException();
-	}
-
-	@Async
-	@org.springframework.transaction.annotation.Transactional(readOnly=true)
-	private void sendResetEmail(PasswordReset passwordReset) {
-		
 	}
 
 	private void sendInviteEmail(PasswordReset passwordReset) {

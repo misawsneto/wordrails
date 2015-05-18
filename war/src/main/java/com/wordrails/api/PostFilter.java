@@ -19,12 +19,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.GCMService;
+import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.Notification;
 import com.wordrails.business.Post;
 import com.wordrails.business.PostRead;
 import com.wordrails.business.ServiceGenerator;
-import com.wordrails.business.Station;
 import com.wordrails.business.Wordpress;
 import com.wordrails.business.WordpressApi;
 import com.wordrails.business.WordpressPost;
@@ -58,7 +57,10 @@ public class PostFilter implements Filter {
 
 	@Autowired
 	private GCMService gcmService;
-
+	
+	@Autowired
+	private WordrailsService wordrailsService;
+	
 	@Override
 	public void destroy() {/* not implemented */
 
@@ -68,9 +70,7 @@ public class PostFilter implements Filter {
 	public void init(FilterConfig arg0) throws ServletException {/*
 	 * not
 	 * implemented
-	 */
-
-	}
+	 */}
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain fc) throws IOException, ServletException {
@@ -90,6 +90,7 @@ public class PostFilter implements Filter {
 					postId = getPostId(url);
 					Post post = postRepository.findOne(postId);
 					handleAfterRead(post);
+					wordrailsService.countPostRead(post, rq.getRequestedSessionId());
 				}
 			} else if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
 				postId = getPostId(res.getHeader("Location"));
@@ -105,17 +106,8 @@ public class PostFilter implements Filter {
 		}
 	}
 
-	@Transactional
 	private void handleAfterRead(Post post) throws Exception {
-		PostRead postRead = new PostRead();
-		postRead.person = accessControllerUtil.getLoggedPerson();
-		postRead.post = post;
-		try {
-			postReadRepository.save(postRead);
-			queryPersistence.incrementReadsCount(post.id);
-		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-			log.debug("DataIntegrityViolationException " + post.id + " " + postRead.person.id + " - PostRead already exists... ");
-		}
+		
 	}
 
 	/**

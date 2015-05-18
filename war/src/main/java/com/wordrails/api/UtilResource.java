@@ -26,6 +26,7 @@ import org.hibernate.search.jpa.Search;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
@@ -56,6 +57,7 @@ import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
+import com.wordrails.util.AsyncService;
 import com.wordrails.util.WordrailsUtil;
 
 @Path("/util")
@@ -316,13 +318,15 @@ public class UtilResource {
 	@Autowired private QueryPersistence qp;
 	@Autowired private PersonNetworkRegIdRepository reg;
 	@Autowired private PostReadRepository postReadRepository;
+	@Autowired private AsyncService asyncService; 
 	
 	@GET
 	@Path("/test")
 	public void test(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			reg.findRegIdByStationId(2);
+			//reg.findRegIdByStationId(2);
+			asyncService.test();
 		}
 	}
 }
