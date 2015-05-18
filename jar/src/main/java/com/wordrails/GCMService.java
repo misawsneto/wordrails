@@ -119,10 +119,6 @@ public class GCMService {
 		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumId : null;
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
-		
-		System.out.println(notificationJson);
-		if(true)
-			return;
 
 		Message message = new Message.Builder().addData("message", notificationJson).build();
 		MulticastResult multicastResult;
