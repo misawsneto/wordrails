@@ -68,6 +68,17 @@ angular.module('app')
                   },
                   controller:'SearchCtrl'
               })
+              .state('app.settings', {
+                  url: '/settings',
+                  templateUrl: 'tpl/settings.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/settings.js']);
+                    }]
+                  }
+                  // , controller:'SearchCtrl'
+              })
               .state('app.dashboard-v1', {
                   url: '/dashboard-v1',
                   templateUrl: 'tpl/app_dashboard_v1.html',

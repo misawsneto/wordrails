@@ -965,6 +965,10 @@ a.text-lgrey:hover {
   opacity: 0;
 }
 
+.bg-admin{
+  background: #f5f5f5;
+}
+
 /* /general */
 
 /* animate */

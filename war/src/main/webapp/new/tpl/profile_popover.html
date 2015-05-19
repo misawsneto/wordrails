@@ -2,7 +2,7 @@
 	<div class="text-center profile-cover pos-rlt abstract-bg bg-cover clear">
 		<div class="cover-abstract-mask">
 		</div>
-		<div style="{{initData.peson.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="cell.postView.authorName"></div>
+		<div style="{{app.initData.person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{app.initData.person.name}}"></div>
 		<div class="text-u-c m-t-sm text-lg font-thin wrapper-xs text-center title-wrapper-bg text-white pos-abt bottom-0 w-full">
 			{{app.initData.person.name}}
 		</div>

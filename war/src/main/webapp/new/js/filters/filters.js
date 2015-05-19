@@ -24,13 +24,14 @@ angular.module('app')
 .filter('pvimageLink', function pvimageLink(TRIX) {
 	return function(postView, size) {
 		if(postView && postView.largeId && size == "lg"){
-	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.largeId +"/contents)"};
+	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.largeId +"/contents)", "background-position": "50% 20%"};
 		}else if(postView && postView.mediumId && size == "md"){
-	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.mediumId +"/contents)"};
+	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.mediumId +"/contents)", "background-position": "50% 20%"};
 	  	}else if(postView && postView.mediumId && size == "sm"){
-	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.smallId +"/contents)"};
+	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.smallId +"/contents)", "background-position": "50% 20%"};
 		}else{
-			return {"background-image": "url(img/p0.jpg)"};
+			//return {"background-image": "url(img/p0.jpg)"};
+			return {};
 		}
 	}
 })
