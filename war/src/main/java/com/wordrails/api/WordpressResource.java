@@ -311,15 +311,7 @@ public class WordpressResource {
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Token is not created for this station").build();
                 }
 
-                if (newWordpress) {
-                    wordpress.domain = config.domain;
-                    wordpress.username = config.user;
-                    wordpress.password = config.password;
-                    wordpress.station = station;
-
-                    station.wordpress = wordpress;
-                    wordpressRepository.save(wordpress);
-                    
+                if (newWordpress) {                    
                     //TODO manage taxonomy to enable this                    
                     Set<WordpressTerm> terms = new HashSet<>();
 
@@ -333,6 +325,14 @@ public class WordpressResource {
                         terms.addAll(api.getTags());
                         terms.addAll(api.getCategories());
                     }
+                    
+                    wordpress.domain = config.domain;
+                    wordpress.username = config.user;
+                    wordpress.password = config.password;
+                    wordpress.station = station;
+
+                    station.wordpress = wordpress;
+                    wordpressRepository.save(wordpress);
 
                     saveTerms(terms, station);
 
