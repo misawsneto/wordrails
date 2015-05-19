@@ -257,8 +257,8 @@ public class WordpressResource {
             Term parent = null;
             Term t = dbTerms.get(term.id);
             if (t == null) {
-                if (term.parent != null && term.parent > 0) {
-                    parent = dbTerms.get(term.parent);
+                if (term.parent != null) {
+                    parent = dbTerms.get(term.parent.id);
                     if (parent == null) {
                         //TODO find parent somewhere
                     }
@@ -273,8 +273,11 @@ public class WordpressResource {
                 }
                 t.wordpressSlug = term.slug;
                 t.parent = parent;
-
-                termRepository.save(t);
+                try{
+                	termRepository.save(t);
+                }catch(Exception e){
+                	e.printStackTrace();
+                }
             }
 
             terms.add(t);

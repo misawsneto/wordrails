@@ -17,7 +17,7 @@ public class WordpressTerm {
     public Integer id;
     public String name;
     public String slug;
-    public Integer parent;
+    public WordpressTerm parent;
     
     @JsonProperty("trix_id")
     @SerializedName("trix_id")

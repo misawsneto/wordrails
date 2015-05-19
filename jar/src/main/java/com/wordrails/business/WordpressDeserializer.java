@@ -50,7 +50,7 @@ public class WordpressDeserializer implements JsonDeserializer<WordpressPost> {
                 t.id = tag.get("ID").getAsInt();
                 t.name = tag.get("name").getAsString();
                 t.slug = tag.get("slug").getAsString();
-                t.parent = tag.get("parent").getAsInt();
+                //t.parent = tag.get("parent").getAsJsonObject();
                 t.type = WordpressTerm.TAG;
                 
                 wp.terms.tags.add(t);
@@ -68,7 +68,7 @@ public class WordpressDeserializer implements JsonDeserializer<WordpressPost> {
                 t.id = category.get("ID").getAsInt();
                 t.name = category.get("name").getAsString();
                 t.slug = category.get("slug").getAsString();
-                t.parent = category.get("parent").getAsInt();
+                //t.parent = category.get("parent").getAsInt();
                 t.type = WordpressTerm.CATEGORY;
                 
                 wp.terms.categories.add(t);
