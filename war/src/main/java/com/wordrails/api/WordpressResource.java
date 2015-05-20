@@ -257,8 +257,8 @@ public class WordpressResource {
             Term parent = null;
             Term t = dbTerms.get(term.id);
             if (t == null) {
-                if (term.parent != null) {
-                    parent = dbTerms.get(term.parent.id);
+                if (term.parent > 0) {
+                    parent = dbTerms.get(term.parent);
                     if (parent == null) {
                         //TODO find parent somewhere
                     }
