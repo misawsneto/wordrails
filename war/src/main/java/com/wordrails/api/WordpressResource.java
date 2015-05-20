@@ -1,5 +1,7 @@
 package com.wordrails.api;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Lists;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.business.ServiceGenerator;
@@ -25,7 +27,6 @@ import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -76,11 +77,13 @@ public class WordpressResource {
     private @Autowired
     StationRolesRepository stationRolesRepository;
 
-    private Map<Integer, Term> getTermsByTaxonomy(Taxonomy taxonomy) {
-        Map<Integer, Term> dbTerms = new HashMap<>();
+    private HashBasedTable<String, Integer, Term> getTermsByTaxonomy(Taxonomy taxonomy) {
+        HashBasedTable<String, Integer, Term> dbTerms = HashBasedTable.create();
         List<Term> ts = termRepository.findByTaxonomy(taxonomy);
         for (Term term : ts) {
-            dbTerms.put(term.wordpressId, term);
+            if(term.wordpressSlug == null) term.wordpressSlug = "";
+            if(term.wordpressId == null) term.wordpressId = 0;
+            dbTerms.put(term.wordpressSlug, term.wordpressId, term);
         }
 
         return dbTerms;
@@ -111,7 +114,7 @@ public class WordpressResource {
         try {
             Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
             Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
-            Map<Integer, Term> dbTerms = getTermsByTaxonomy(tagTaxonomy);
+            HashBasedTable<String, Integer, Term> dbTerms = getTermsByTaxonomy(tagTaxonomy);
             dbTerms.putAll(getTermsByTaxonomy(categoryTaxonomy));
 
             Post post;
@@ -165,16 +168,18 @@ public class WordpressResource {
         }
 
         Post post = null;
+        WordpressPost wpp = null;
         try {
             Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
             Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
-            Map<Integer, Term> dbTerms = getTermsByTaxonomy(tagTaxonomy);
+            HashBasedTable<String, Integer, Term> dbTerms = getTermsByTaxonomy(tagTaxonomy);
             dbTerms.putAll(getTermsByTaxonomy(categoryTaxonomy));
 
             Set<Post> posts = new HashSet<>();
             Set<String> slugs = postRepository.findSlugs();
             Set<Integer> wordpressIds = postRepository.findWordpressIds();
             for (WordpressPost wpPost : wpPosts) {
+                wpp = wpPost;
                 if (request.getMethod().equals("PUT")) {
                     post = postRepository.getOne(wpPost.id);
 
@@ -208,16 +213,16 @@ public class WordpressResource {
         } catch (Exception e) {
             e.printStackTrace();
             String msg = "";
-            if (post != null) {
-                msg = "Post id=" + post.wordpressId + " ";
+            if (wpp != null) {
+                msg = "Post id=" + wpp.id + " ";
             }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(msg + e.getMessage()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getClass().getSimpleName() + ": " + msg + e.getMessage()).build();
         }
 
         return Response.status(Response.Status.OK).build();
     }
 
-    private Post getPost(Post post, WordpressPost wpPost, Map<Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy)
+    private Post getPost(Post post, WordpressPost wpPost, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy)
         throws ConstraintViolationException, DataIntegrityViolationException, Exception {
         WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(wpPost.body);
         post.body = wpc.content;
@@ -241,12 +246,16 @@ public class WordpressResource {
         post.lastModificationDate = wpPost.modified;
 
         if (wpPost.terms != null && (wpPost.terms.tags != null || wpPost.terms.categories != null)) {
-            Set<WordpressTerm> terms = new HashSet<>();
+            Map<Integer, WordpressTerm> terms = new HashMap<>();
             if (wpPost.terms.tags != null) {
-                terms.addAll(wpPost.terms.tags);
+                for (WordpressTerm tag : wpPost.terms.tags) {
+                    terms.put(tag.id, tag);
+                }
             }
             if (wpPost.terms.categories != null) {
-                terms.addAll(wpPost.terms.categories);
+                for (WordpressTerm category : wpPost.terms.categories) {
+                    terms.put(category.id, category);
+                }
             }
 
             post.terms = getTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
@@ -254,20 +263,81 @@ public class WordpressResource {
 
         return post;
     }
+    
+    private Term selectTerm(HashBasedTable<String, Integer, Term> terms, Integer wordpressId, String slug, boolean isTag, Integer taxTagId) throws SecurityException {
+        Term term = null;
+        
+        if(terms.containsColumn(wordpressId)) { //does it exist a term with this wordpressId?
+            if(terms.contains(slug,wordpressId)) { //does this term have the same slug?
+                term = terms.get(slug, wordpressId);
+            } else if(terms.contains("",wordpressId)) { //is the slug of this term null?
+                term = terms.get("", wordpressId);
+                term.wordpressSlug = slug;
+                
+                termRepository.save(term);
+            } else {//another wordpressId is using this slug. Data is fucked up somewhere. should never happen
+                throw new SecurityException("Data stored in database is different from the terms sent in the request");
+            }
+        } else if(terms.containsRow(slug)) { //does it exist a term with this slug?
+            if(terms.contains(slug,0)) { //is the wordpressId of this term null?
+                term = terms.get(slug, 0);
+                term.wordpressId = wordpressId;
+                
+                termRepository.save(term);
+            } else {
+                //in this case, there is another term using this slug but the wordpressId is neither null or the same. so the data is inconsistent if 
+                //they belong to the same taxonomy. if they do, throw a exception
+                
+                Integer taxId = Lists.newArrayList(terms.rowMap().get(slug).values()).get(0).taxonomy.id;
+                if((isTag && taxId == taxTagId) || (!isTag && taxId != taxTagId)) { //if they are part of same taxonomy, it should not have the same slug. otherwise no prob
+                    //another wordpressId is using this slug. Data is fucked up somewhere. should never happen
+                    throw new SecurityException("Data stored in database is different from the terms sent in the request");
+                }
+            }
+        } else {
+            return null;
+        }
+        
+        return term;
+    }
+    
+    private Term newTerm(WordpressTerm term, Taxonomy tax, Map<Integer, WordpressTerm> wpTerms, HashBasedTable<String, Integer, Term> dbTerms) {
+        Term t = new Term();
+        t.wordpressId = term.id;
+        t.name = term.name;
+        t.taxonomy = tax;
+        t.wordpressSlug = term.slug;
+        
+        if(term.parent != null && term.parent > 0) {
+            Term termParent = null;
+            if(dbTerms.containsColumn(term.parent)) {
+                termParent = Lists.newArrayList(dbTerms.columnMap().get(term.parent).values()).get(0);
+            } else if(wpTerms.containsKey(term.parent)) {
+                termParent = newTerm(wpTerms.get(term.parent), tax, wpTerms, dbTerms); //it's recursive bitch
+                termRepository.save(termParent);
+            }
+            t.parent = termParent;
+        }
+        
+        termRepository.save(t);
+                    
+        return t;
+    }
 
-    private Set<Term> getTerms(Collection<WordpressTerm> wsTerms, Map<Integer, Term> dbTerms, Taxonomy taxTag, Taxonomy taxCat)
+    private Set<Term> getTerms(Map<Integer, WordpressTerm> wpTerms, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy taxTag, Taxonomy taxCat)
         throws ConstraintViolationException, DataIntegrityViolationException, Exception {
         Set<Term> terms = new HashSet();
-        for (WordpressTerm term : wsTerms) {
-            Term t = dbTerms.get(term.id);
-            if (t == null) {
-                if (term.parent > 0) {
-                    parent = dbTerms.get(term.parent);
-                    if (parent == null) {
-                        //TODO find parent somewhere
+        for (WordpressTerm term : wpTerms.values()) {
+            Term t = selectTerm(dbTerms, term.id, term.slug, term.isTag(), taxTag.id);
+            if(t == null) { //does not exist. create new
+                t = new Term();
+                if (term.parent != null && term.parent > 0) {
+                    if(dbTerms.containsColumn(term.parent)) { //if parent is in db, get from db map
+                        t.parent = Lists.newArrayList(dbTerms.columnMap().get(term.parent).values()).get(0);
+                    } else if(wpTerms.containsKey(term.parent)) { //if not in db, makes new and save it to db
+                        t.parent = newTerm(wpTerms.get(term.parent), taxCat, wpTerms, dbTerms);
                     }
                 }
-                t = new Term();
                 t.wordpressId = term.id;
                 t.name = term.name;
                 if (term.isTag()) {
@@ -275,12 +345,13 @@ public class WordpressResource {
                 } else {
                     t.taxonomy = taxCat;
                 }
-                t.wordpressSlug = term.slug;
-                t.parent = parent;
+                t.wordpressSlug = term.slug;                
+                
                 try {
                     termRepository.save(t);
+                    dbTerms.put(t.wordpressSlug, t.wordpressId, t);
                 } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-                    t = termRepository.findBySlug(term.slug);
+                    t = termRepository.findByWordpressSlug(term.slug);
                     if(t != null) {
                         t.wordpressId = term.id;
                         try {
@@ -290,10 +361,6 @@ public class WordpressResource {
                         }
                     }
                 }
-                
-                t = newTerm(term, tax, dbTerms);
-                
-                termRepository.save(t);
             }
 
             terms.add(t);
@@ -329,17 +396,35 @@ public class WordpressResource {
 
                 if (newWordpress) {
                     //TODO manage taxonomy to enable this                    
-                    Set<WordpressTerm> terms = new HashSet<>();
+                    Map<Integer, WordpressTerm> terms = new HashMap<>();
 
                     if (config.terms != null) {
-                        terms.addAll(config.terms.tags);
-                        terms.addAll(config.terms.categories);
+                        if (config.terms.tags != null) {
+                            for (WordpressTerm tag : config.terms.tags) {
+                                terms.put(tag.id, tag);
+                            }
+                        }
+                        if (config.terms.categories != null) {
+                            for (WordpressTerm category : config.terms.categories) {
+                                terms.put(category.id, category);
+                            }
+                        }
                     }
 
                     if (terms.isEmpty()) {
                         WordpressApi api = ServiceGenerator.createService(WordpressApi.class, config.domain, config.user, config.password);
-                        terms.addAll(api.getTags());
-                        terms.addAll(api.getCategories());
+                        Set<WordpressTerm> tags = api.getTags();
+                        Set<WordpressTerm> cats = api.getCategories();
+                        if (tags != null) {
+                            for (WordpressTerm tag : tags) {
+                                terms.put(tag.id, tag);
+                            }
+                        }
+                        if (cats != null) {
+                            for (WordpressTerm category : cats) {
+                                terms.put(category.id, category);
+                            }
+                        }
                     }
 
                     wordpress.domain = config.domain;
@@ -400,11 +485,11 @@ public class WordpressResource {
 
         Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
         Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
-        Map<Integer, Term> dbTags = getTerms(tagTaxonomy);
-        Map<Integer, Term> dbCategories = getTerms(categoryTaxonomy);
+        HashBasedTable<String, Integer, Term> dbTags = getTermsByTaxonomy(tagTaxonomy);
+        HashBasedTable<String, Integer, Term> dbCategories = getTermsByTaxonomy(categoryTaxonomy);
 
         for (WordpressTerm tag : tags) {
-            Term t = dbTags.get(tag.trixId);
+            Term t = dbTags.get(tag.slug, tag.trixId);
             t.wordpressId = tag.id;
             t.wordpressSlug = tag.slug;
 
@@ -416,7 +501,7 @@ public class WordpressResource {
         }
 
         for (WordpressTerm cat : categories) {
-            Term t = dbCategories.get(cat.trixId);
+            Term t = dbCategories.get(cat.slug, cat.trixId);
             t.wordpressId = cat.id;
             t.wordpressSlug = cat.slug;
 
@@ -430,10 +515,10 @@ public class WordpressResource {
         return Response.status(Response.Status.OK).build();
     }
 
-    private void saveTerms(Set<WordpressTerm> terms, Station station) throws Exception {
+    private void saveTerms(Map<Integer, WordpressTerm> terms, Station station) throws Exception {
         Taxonomy categoryTaxonomy = taxonomyRepository.findByStation(station);
         Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByStation(station);
-        Map<Integer, Term> dbTerms = getTermsByTaxonomy(tagTaxonomy);
+        HashBasedTable<String, Integer, Term> dbTerms = getTermsByTaxonomy(tagTaxonomy);
         dbTerms.putAll(getTermsByTaxonomy(categoryTaxonomy));
         //TODO enviar terms
 
