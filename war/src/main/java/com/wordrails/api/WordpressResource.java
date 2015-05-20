@@ -273,11 +273,7 @@ public class WordpressResource {
                 }
                 t.wordpressSlug = term.slug;
                 t.parent = parent;
-                try{
-                	termRepository.save(t);
-                }catch(Exception e){
-                	e.printStackTrace();
-                }
+                termRepository.save(t);
             }
 
             terms.add(t);
