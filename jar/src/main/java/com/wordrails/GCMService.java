@@ -95,8 +95,8 @@ public class GCMService {
 		init();
 		// make a copy
 		HashSet<String> devices = new HashSet<String>();
-		List<Notification> notifications = new ArrayList<Notification>();
 
+		ArrayList<Notification> notis = new ArrayList<Notification>();
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
 			Notification noti = new Notification();
 			noti.message = notification.message + "";
@@ -109,9 +109,10 @@ public class GCMService {
 
 			devices.add(pnRegId.regId);
 			notification.person = pnRegId.person;
-			notifications.add(notification);
+			notis.add(noti);
 		}
-		notificationRepository.save(notifications);
+		
+		notificationRepository.save(notis);
 
 		NotificationDto notificationDto = new NotificationDto(); 
 		notificationDto.seen = notification.seen;

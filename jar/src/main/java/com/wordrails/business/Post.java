@@ -204,6 +204,9 @@ public class Post {
 	@Column(length = 1024)
 	public String externalFeaturedImgUrl;
 	
+	@Column(length = 1024)
+	public String externalVideoUrl;
+	
 	@PrePersist
 	public void onCreate() {
 		if(featuredImage != null && featuredImage.original != null){

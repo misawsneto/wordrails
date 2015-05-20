@@ -525,6 +525,7 @@ html{
 }
 body {
   color: #333
+  -webkit-font-smoothing: antialiased;
 }
 
 .bg-default{
@@ -677,6 +678,7 @@ a.text-lgrey:hover {
   height: 120px;
   float: right;
   border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 4px;
   background-origin: border-box;
   background-size: cover;
   background-position: center;
@@ -967,6 +969,15 @@ a.text-lgrey:hover {
 
 .bg-admin{
   background: #f5f5f5;
+}
+
+ul.no-style{
+list-style: none; margin: 0; padding: 0;
+}
+
+
+.post-content-font{
+  font-family: georgia, serif;
 }
 
 /* /general */
@@ -1453,8 +1464,8 @@ a.text-lgrey:hover {
   .header-font{font-size: 21px}
 
   #station-sidebar{
-    background:rgba(48, 48, 48, 0.05)!important; 
-    width: 300px;
+    background:rgba(48, 48, 48, 0.04)!important; 
+    width: 340px;
     top: 0px;
     right: 0px;
     bottom: 0px;
@@ -1465,7 +1476,7 @@ a.text-lgrey:hover {
 
   #perspective-vertical .md-header {max-width: 800px; margin-right: auto; margin-left: auto; border-bottom: 1px solid #dee5e7}
 
-  #perspective-horizontal, #perspective-vertical {margin-right: 300px}
+  #perspective-horizontal, #perspective-vertical {margin-right: 340px}
   #perspective-horizontal .info-flow {margin-top: 0; margin-bottom: 0;}
   #perspective-horizontal .info-flow-wrap {margin-bottom: 20px;}
   #perspective-horizontal .info-flow-wrap .scrollbar {margin-top: 5px; margin-bottom: 0; background: transparent;}

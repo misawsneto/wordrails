@@ -49,27 +49,37 @@ public class PersonDataFilter implements Filter{
 		HttpServletRequest request = (HttpServletRequest) req;
 
 		Integer stationPerspectiveId = getPerspectiveFromCookie(request);
-
 		PersonData personData = personsResource.getInitialData(request);
-		TermPerspectiveView termPerspectiveView = stationPerspectiveId != null ? getDefaultPerspective(stationPerspectiveId) : getDefaultPerspective(personData);
+		
+		StationDto defaultStation = getDefaultStation(personData);
+		if(stationPerspectiveId == null){
+			stationPerspectiveId = defaultStation.defaultPerspectiveId;
+		}
+
+		TermPerspectiveView termPerspectiveView = getDefaultPerspective(stationPerspectiveId);
+		
+		Pageable pageable = new PageRequest(0, 15);
+
+		List<Post> unread = postRepository.findUnreadByStationAndPerson(1, 1, pageable);
+		List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
+		List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
+		
+		personData.unread = postConverter.convertToViews(unread);
+		personData.popular = postConverter.convertToViews(popular);
+		personData.recent = postConverter.convertToViews(recent);
 
 		req.setAttribute("personData", personsResource.mapper.writeValueAsString(personData));
 		req.setAttribute("termPerspectiveView", personsResource.mapper.writeValueAsString(termPerspectiveView));
 		req.setAttribute("networkName", personData.network.name);
 		
-		Pageable pageable = new PageRequest(0, 15);
-		List<Post> posts = postRepository.findUnreadByStationAndPerson(1, 1, pageable);
-		
-		getDefaultPerspective(personData);
 		chain.doFilter(req, res);
 	}
 
 	@Override
 	public void destroy() {
 	}
-
-	private TermPerspectiveView getDefaultPerspective(PersonData personData){
-
+	
+	private StationDto getDefaultStation(PersonData personData){
 		List<StationPermission> stationPermissions = personData.personPermissions.stationPermissions;
 
 		Integer stationId = 0;
@@ -102,11 +112,10 @@ public class PersonDataFilter implements Filter{
 
 		for (StationDto station : personData.stations) {
 			if(stationId == station.id){
-				TermPerspectiveView tpv = perspectiveResource.getTermPerspectiveView(null, null, station.defaultPerspectiveId, 0, 15);
-				return tpv;
+				return station;
 			}
 		}
-
+		
 		return null;
 	}
 

@@ -18,7 +18,6 @@ public class ServiceGenerator {
 
     public static <S> S createService(Class<S> serviceClass, String baseUrl) {
         RestAdapter.Builder builder = new RestAdapter.Builder()            
-                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(baseUrl);
 
         RestAdapter adapter = builder.build();
