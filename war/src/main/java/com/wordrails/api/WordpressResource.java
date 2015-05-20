@@ -279,7 +279,15 @@ public class WordpressResource {
                 try {
                     termRepository.save(t);
                 } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-                    throw new Exception("Term ID=" + term.id + " " + e.getMessage(), e);
+                    t = termRepository.findBySlug(term.slug);
+                    if(t != null) {
+                        t.wordpressId = term.id;
+                        try {
+                            termRepository.save(t);
+                        } catch (ConstraintViolationException | DataIntegrityViolationException e2) {
+                            throw new Exception("Term ID=" + term.id + " " + e.getMessage(), e2);
+                        }
+                    }
                 }
             }
 
