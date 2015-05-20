@@ -279,7 +279,7 @@ public class WordpressResource {
                 try {
                     termRepository.save(t);
                 } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-                    throw new Exception("Term ID=" + t.id, e);
+                    throw new Exception("Term ID=" + term.id, e);
                 }
             }
 
