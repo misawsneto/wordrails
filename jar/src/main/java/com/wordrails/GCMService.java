@@ -2,6 +2,7 @@ package com.wordrails;
 
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -93,7 +94,8 @@ public class GCMService {
 
 		init();
 		// make a copy
-		List<String> devices = new ArrayList<String>();
+		HashSet<String> devices = new HashSet<String>();
+		List<Notification> notifications = new ArrayList<Notification>();
 
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
 			Notification noti = new Notification();
@@ -107,8 +109,9 @@ public class GCMService {
 
 			devices.add(pnRegId.regId);
 			notification.person = pnRegId.person;
-			notificationRepository.save(noti);
+			notifications.add(notification);
 		}
+		notificationRepository.save(notifications);
 
 		NotificationDto notificationDto = new NotificationDto(); 
 		notificationDto.seen = notification.seen;
@@ -130,7 +133,7 @@ public class GCMService {
 
 		try{
 			Message message = new Message.Builder().addData("message", notificationJson).build();
-			List<List<String>> parts = WordrailsUtil.partition(devices, GCM_WINDOW_SIZE);
+			List<List<String>> parts = WordrailsUtil.partition(new ArrayList<String>(devices), GCM_WINDOW_SIZE);
 			for (List<String> part : parts) {
 				sendBulkMessages(message, part, notification);
 				Thread.sleep(1000);
