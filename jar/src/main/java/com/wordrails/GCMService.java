@@ -1,6 +1,8 @@
 package com.wordrails;
 
+import java.rmi.UnexpectedException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -35,6 +37,7 @@ public class GCMService {
 	@Value("${gcm.key}")
 	private String GCM_KEY;
 	private Sender sender;
+	private final int GCM_WINDOW_SIZE = 1000;
 
 	@Autowired private PersonRepository personRepository;
 	@Autowired private NetworkRepository networkRepository;
@@ -42,7 +45,7 @@ public class GCMService {
 	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository;
 	@Autowired private NotificationRepository notificationRepository; 
 	private ObjectMapper mapper;
-	
+
 	@Async
 	@Transactional
 	public void sendToStation(Integer stationId, Notification notification){
@@ -83,10 +86,17 @@ public class GCMService {
 	}
 
 	public void gcmNotify(List<PersonNetworkRegId> personNetworkRegIds, final Notification notification) throws Exception{
+
+		if(personNetworkRegIds == null || notification == null)
+			throw new UnexpectedException("Erro inesperado...");
+		if(personNetworkRegIds.size() == 0)
+			return;
+
 		init();
 		// make a copy
-		List<String> devices = new ArrayList<String>();
-		
+		HashSet<String> devices = new HashSet<String>();
+
+		ArrayList<Notification> notis = new ArrayList<Notification>();
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
 			Notification noti = new Notification();
 			noti.message = notification.message + "";
@@ -99,8 +109,10 @@ public class GCMService {
 
 			devices.add(pnRegId.regId);
 			notification.person = pnRegId.person;
-			notificationRepository.save(noti);
+			notis.add(noti);
 		}
+		
+		notificationRepository.save(notis);
 
 		NotificationDto notificationDto = new NotificationDto(); 
 		notificationDto.seen = notification.seen;
@@ -120,9 +132,21 @@ public class GCMService {
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 
-		Message message = new Message.Builder().addData("message", notificationJson).build();
-		MulticastResult multicastResult;
+		try{
+			Message message = new Message.Builder().addData("message", notificationJson).build();
+			List<List<String>> parts = WordrailsUtil.partition(new ArrayList<String>(devices), GCM_WINDOW_SIZE);
+			for (List<String> part : parts) {
+				sendBulkMessages(message, part, notification);
+				Thread.sleep(1000);
+			}
+		}catch(Throwable e){
+			System.err.println(notificationJson + " \n RegIds: " + personNetworkRegIds.size());
+			e.printStackTrace();
+		}
+	}
 
+	private void sendBulkMessages(Message message, List<String> devices, Notification notification){
+		MulticastResult multicastResult;
 		try {
 			multicastResult = sender.send(message, devices, 5);
 		} catch (Exception e) {
@@ -157,13 +181,13 @@ public class GCMService {
 
 	public void updateRegId(Network network, Person person, String regId) {
 		try{
-			
+
 			PersonNetworkRegId pnregId = personNetworkRegIdRepository.findOneByRegId(regId);
 			if(pnregId == null || pnregId.regId == null){
 				pnregId = new PersonNetworkRegId();
 				pnregId.regId = regId;
 			}
-			
+
 			pnregId.network = network;
 			pnregId.person = person;
 			personNetworkRegIdRepository.save(pnregId);

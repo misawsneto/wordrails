@@ -28,7 +28,7 @@ import com.wordrails.persistence.FileRepository;
 public class ImageEventHandler {
 	private static final String MIME = "image/jpeg";
 	private static final String FORMAT = "jpg";
-	private static final double QUALITY = 0.9;
+	private static final double QUALITY = 1;
 	
 	private @PersistenceContext EntityManager manager;
 	private @Autowired FileRepository fileRepository; 

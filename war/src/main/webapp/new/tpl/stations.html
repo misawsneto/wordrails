@@ -6,17 +6,41 @@
 
   <!-- perspective view vertical/horizontal -->
   <div id="station-sidebar">
-    <div class="vbox">
+    <!-- <div class="vbox"> -->
+    <div class="">
       <div class="wrapper">
         <div class="font-thin h4">&nbsp;</div>
       </div>
       <md-tabs>
         <md-tab class="bg-custom" label="Populares">
-          <div class="b-t" flex>
+          <div class="b-t wrapper-sm" flex>
+            <ul class="no-style">
+              <li ng-repeat="post in app.initData.popular | limitTo: 5">
+                <div class="pull-left m-t-sm m-r-md m-l-sm">
+                  <h2>{{$index + 1}}</h2>
+                </div>
+                <div class="b-b p-b-md p-t m-r m-l clear" style="max-height: 80px; overflow: hidden;">
+                  <a ui-sref="app.post({postId: post.postId})" clamp="1" class="text-md block">
+                    {{post.title}}
+                  </a>
+                  <div class="font-thin" clamp="1" bind-html-unsafe="post.snippet"></div>
+                </div>
+              </li>
+            </ul>
           </div>
         </md-tab>
         <md-tab class="bg-custom" label="Recentes">
-          <div class="b-t" flex>
+          <div class="b-t wrapper-sm" flex>
+            <ul class="no-style">
+              <li ng-repeat="post in app.initData.recent | limitTo: 5">
+                <div class="b-b p-b-md p-t m-r m-l">
+                  <a ui-sref="app.post({postId: post.postId})" clamp="1" class="text-md block">
+                    {{post.title}}
+                  </a>
+                  <div class="font-thin" clamp="1" bind-html-unsafe="post.snippet"></div>
+                </div>
+              </li>
+            </ul>
           </div>
         </md-tab>
         <!-- /tab -->

@@ -309,7 +309,7 @@ public class UtilResource {
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Post> posts = postRepository.findAllPostsOrderByIdDesc();
 			for (Post post : posts) {
-				if(post.wordpressId != null && post.externalFeaturedImgUrl == null){
+				if(post.wordpressId != null && post.featuredImage == null){
 					WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(post.body);
 					post.body = wpc.content;
 					post.externalFeaturedImgUrl = wpc.featuredImage;
