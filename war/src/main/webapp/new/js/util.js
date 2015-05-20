@@ -126,7 +126,7 @@ function getCustomButtonStyle(color, perspective, header) {
 
 	"#station-sidebar md-tabs.md-default-theme md-tabs-ink-bar {\n"+
 	  "color: "+ textColorEval(perspective) +";\n"+
-	  "background: "+ textColorEval(perspective) +";\n"+
+	  "background: "+ (textColorEval2(perspective) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)") +";\n"+
 	"}\n"+
 
 	".bg-perspective{\n"+
@@ -134,7 +134,22 @@ function getCustomButtonStyle(color, perspective, header) {
 		"color: "+ textColorEval(perspective) +";\n"+
 	"}\n"+
 
-	(textColorEval2(perspective) ? "" :
+	(textColorEval2(perspective) ? "" +
+	// perspective is bright
+	"#station-sidebar{\n" + 
+	 "background:rgba(0, 0, 0, 0.04)!important;\n"+
+	"}\n"
+	:
+	// perspective is dark
+	"#station-sidebar{\n" + 
+	 "background:rgba(255,255,255, 0.04)!important;"+
+	"}\n"+
+	"#perspective-vertical .md-header {\n"+
+	 "border-bottom: 1px solid rgba(255,255,255,0.5);\n"+
+	"}\n"+
+	".b-t, .b-r, .b-b, .b-l{\n"+
+	 "border-color:rgba(255,255,255, 0.5)\n"+
+	"}\n"+
 	".bg-perspective .station-perspectives a{\n"+
 	  "color: rgba(255,255,255, 0.92) ;\n"+
 	"}\n"+

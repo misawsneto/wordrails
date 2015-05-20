@@ -1464,7 +1464,6 @@ list-style: none; margin: 0; padding: 0;
   .header-font{font-size: 21px}
 
   #station-sidebar{
-    background:rgba(48, 48, 48, 0.04)!important; 
     width: 340px;
     top: 0px;
     right: 0px;
