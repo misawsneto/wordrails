@@ -31,6 +31,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -74,7 +76,7 @@ public class WordpressResource {
     private @Autowired
     StationRolesRepository stationRolesRepository;
 
-    private Map<Integer, Term> getTerms(Taxonomy taxonomy) {
+    private Map<Integer, Term> getTermsByTaxonomy(Taxonomy taxonomy) {
         Map<Integer, Term> dbTerms = new HashMap<>();
         List<Term> ts = termRepository.findByTaxonomy(taxonomy);
         for (Term term : ts) {
@@ -109,8 +111,8 @@ public class WordpressResource {
         try {
             Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
             Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
-            Map<Integer, Term> dbTerms = getTerms(tagTaxonomy);
-            dbTerms.putAll(getTerms(categoryTaxonomy));
+            Map<Integer, Term> dbTerms = getTermsByTaxonomy(tagTaxonomy);
+            dbTerms.putAll(getTermsByTaxonomy(categoryTaxonomy));
 
             Post post;
             Set<String> slugs = postRepository.findSlugs();
@@ -166,8 +168,8 @@ public class WordpressResource {
         try {
             Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
             Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
-            Map<Integer, Term> dbTerms = getTerms(tagTaxonomy);
-            dbTerms.putAll(getTerms(categoryTaxonomy));
+            Map<Integer, Term> dbTerms = getTermsByTaxonomy(tagTaxonomy);
+            dbTerms.putAll(getTermsByTaxonomy(categoryTaxonomy));
 
             Set<Post> posts = new HashSet<>();
             Set<String> slugs = postRepository.findSlugs();
@@ -257,7 +259,6 @@ public class WordpressResource {
         throws ConstraintViolationException, DataIntegrityViolationException, Exception {
         Set<Term> terms = new HashSet();
         for (WordpressTerm term : wsTerms) {
-            Term parent = null;
             Term t = dbTerms.get(term.id);
             if (t == null) {
                 if (term.parent > 0) {
@@ -289,6 +290,10 @@ public class WordpressResource {
                         }
                     }
                 }
+                
+                t = newTerm(term, tax, dbTerms);
+                
+                termRepository.save(t);
             }
 
             terms.add(t);
@@ -372,7 +377,7 @@ public class WordpressResource {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.getLogger(WordpressResource.class.getName()).log(Level.SEVERE, null, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
         }
 
@@ -428,17 +433,18 @@ public class WordpressResource {
     private void saveTerms(Set<WordpressTerm> terms, Station station) throws Exception {
         Taxonomy categoryTaxonomy = taxonomyRepository.findByStation(station);
         Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByStation(station);
-        Map<Integer, Term> dbTerms = getTerms(tagTaxonomy);
-        dbTerms.putAll(getTerms(categoryTaxonomy));
+        Map<Integer, Term> dbTerms = getTermsByTaxonomy(tagTaxonomy);
+        dbTerms.putAll(getTermsByTaxonomy(categoryTaxonomy));
         //TODO enviar terms
 
-        Set<Term> newTerms = getTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
-        for (Term newTerm : newTerms) {
-            try {
-                termRepository.save(newTerm);
-            } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-                //already exists
-            }
+        Set<Term> newTerms;
+        try {
+            newTerms = getTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
+            termRepository.save(newTerms);
+        } catch (DataIntegrityViolationException ex) {
+            Logger.getLogger(WordpressResource.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(WordpressResource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
