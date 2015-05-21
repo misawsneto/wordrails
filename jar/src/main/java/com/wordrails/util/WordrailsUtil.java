@@ -71,7 +71,8 @@ public class WordrailsUtil {
 		}
 	}
 
-	public static String simpleSnippet(String body){
+	public static String simpleSnippet(String body, int max){
+		max = max > 0 ? max : 100; 
 		String[] splitPhrase = body.split("\\s+");
 		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
 		String string = StringUtils.join(Arrays.copyOfRange(splitPhrase, 0, limit), " ");
@@ -197,7 +198,7 @@ public class WordrailsUtil {
 
 		WordpressParsedContent wpc = new WordpressParsedContent();
 		wpc.content = doc.text();
-		wpc.featuredImage = featuredImage;
+		wpc.externalImageUrl = featuredImage;
 
 		wpc.content = wpc.content.replaceAll("\\[(.*?)\\](.*?)\\[/(.*?)\\]", "");
 		wpc.content = wpc.content.trim();

@@ -1,22 +1,56 @@
 package com.wordrails;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
+import net.coobird.thumbnailator.Thumbnails;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.tika.Tika;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.engine.jdbc.LobCreator;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.File;
+import com.wordrails.business.FileContents;
+import com.wordrails.business.Image;
+import com.wordrails.business.ImageEventHandler;
 import com.wordrails.business.Network;
 import com.wordrails.business.PasswordReset;
 import com.wordrails.business.Post;
 import com.wordrails.business.PostRead;
+import com.wordrails.persistence.FileContentsRepository;
+import com.wordrails.persistence.FileRepository;
+import com.wordrails.persistence.ImageRepository;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.PostReadRepository;
 import com.wordrails.persistence.QueryPersistence;
@@ -24,6 +58,9 @@ import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
+import com.wordrails.util.AsyncService;
+import com.wordrails.util.WordpressParsedContent;
+import com.wordrails.util.WordrailsUtil;
 
 @Component
 public class WordrailsService {
@@ -37,6 +74,11 @@ public class WordrailsService {
 	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired PostReadRepository postReadRepository;
 	private @Autowired QueryPersistence queryPersistence;
+	private @Autowired FileContentsRepository contentsRepository;
+	private @Autowired FileRepository fileRepository;
+	private @Autowired ImageRepository imageRepository;
+	private @Autowired ImageEventHandler imageEventHandler;
+	private @Autowired AsyncService asyncService;
 
 	/**
 	 * This method should be used with caution because it accesses the database.
@@ -55,7 +97,7 @@ public class WordrailsService {
 			if(subdomain != null && !subdomain.isEmpty())
 				networks = networkRepository.findBySubdomain(subdomain);
 		}
-		
+
 		if(networks == null || networks.size() == 0){
 			networks = networkRepository.findByDomain(host);
 		}
@@ -63,7 +105,7 @@ public class WordrailsService {
 		Network network = (networks != null && networks.size() > 0) ? networks.get(0) : networkRepository.findOne(1);
 		return network;
 	}
-	
+
 	@Async
 	public void countPostRead(Post post, String sessionId){
 		PostRead postRead = new PostRead();
@@ -80,7 +122,175 @@ public class WordrailsService {
 	@Async
 	@org.springframework.transaction.annotation.Transactional(readOnly=true)
 	public void sendResetEmail(PasswordReset passwordReset) {
-		
+
 	}
 
+	@Transactional
+	public WordpressParsedContent extractImageFromContent(String content){
+		if(content == null || content.isEmpty()){
+			return null;
+		}
+		Document doc = Jsoup.parse(content);
+		// Get all img tags
+		String featuredImage = null;
+		Elements imgs = doc.getElementsByTag("img");
+
+		WordpressParsedContent wpc = new WordpressParsedContent();
+
+		com.wordrails.business.File file = null;
+
+		try{
+			for (Element element : imgs) {
+				String imageURL = element.attr("src");
+				if(imageURL != null && !imageURL.isEmpty()){
+					URL url;
+					try {
+						url = new URL(imageURL);
+						try(InputStream is = url.openStream()){
+							try(ImageInputStream in = ImageIO.createImageInputStream(is)){
+								final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
+								if (readers.hasNext()) {
+									ImageReader reader = readers.next();
+									try {
+										reader.setInput(in);
+										int dimensions = reader.getWidth(0) * reader.getHeight(0);
+										if(dimensions > 250000){
+											Element parent = element.parent();
+											if(parent != null && parent.tagName().equals("a")){
+												parent.remove();
+											}
+											featuredImage = imageURL;
+											break;
+										}
+									} finally {
+										reader.dispose();
+									}
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}catch (IOException e) {
+							e.printStackTrace();
+						}
+					} catch (MalformedURLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+			if(featuredImage != null){
+				URL url = new URL(featuredImage);
+
+				String fileName = FilenameUtils.getBaseName(featuredImage);
+				String fileFormat = FilenameUtils.getExtension(featuredImage);
+				String tempFileName = fileName + WordrailsUtil.generateRandomString(5, "Aa#") + "." + fileFormat;
+
+				try(InputStream is = url.openStream()){
+					try(ByteArrayOutputStream out = new ByteArrayOutputStream()){
+						byte[] buf = new byte[1024];
+						int n = 0;
+						while (-1!=(n=is.read(buf))) { out.write(buf, 0, n); }
+						byte[] response = out.toByteArray();
+						FileOutputStream fos = new FileOutputStream(tempFileName);
+						fos.write(response);
+						fos.close();
+					}
+				}
+
+				java.io.File dataFile = new java.io.File(tempFileName);
+				
+				try(InputStream is = new FileInputStream(dataFile)){
+					file = new File();
+					file.type = File.INTERNAL_FILE;
+					file.mime = file.mime == null || file.mime.isEmpty() ? new Tika().detect(is) : file.mime;    
+					file.name = FilenameUtils.getBaseName(featuredImage) + "." + FilenameUtils.getExtension(featuredImage);
+					fileRepository.save(file);
+					Integer id = file.id;
+
+					Session session = (Session) manager.getDelegate();
+					LobCreator creator = Hibernate.getLobCreator(session);
+					FileContents contents = contentsRepository.findOne(id);
+
+					contents.contents = creator.createBlob(FileUtils.readFileToByteArray(dataFile));
+					contentsRepository.save(contents);
+				};
+				
+				dataFile = new java.io.File(tempFileName);
+				
+				Image img = new Image();
+				img.original = file;
+				createImages(img, dataFile);
+//					imageRepository.save(img);
+
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		//		wpc.content = doc.text();
+		//		wpc.externalImageUrl = featuredImage;
+		//		wpc.content = wpc.content.replaceAll("\\[(.*?)\\](.*?)\\[/(.*?)\\]", "");
+		//		wpc.content = wpc.content.trim();
+
+		return wpc;
+	}
+	
+	public void createImages(Image image, java.io.File dataFile) throws SQLException, IOException {
+		com.wordrails.business.File original = image.original;
+		
+		String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
+		
+		if (original != null) {
+			com.wordrails.business.File small = new File();
+			small.type = File.INTERNAL_FILE; 
+			small.mime = image.original.mime != null ? image.original.mime : MIME;
+			small.name = original.name;			
+			fileRepository.save(small);
+			
+			com.wordrails.business.File medium = new File();
+			medium.type = File.INTERNAL_FILE;
+			medium.mime = image.original.mime != null ? image.original.mime : MIME;
+			medium.name = original.name;			
+			fileRepository.save(medium);
+			
+			com.wordrails.business.File large = new File();
+			large.type = File.INTERNAL_FILE;
+			large.mime = image.original.mime != null ? image.original.mime : MIME;
+			large.name = original.name;
+			fileRepository.save(large);
+
+			image.small = small;
+			image.medium = medium;
+			image.large = large;
+
+			BufferedImage bufferedImage;
+			try (InputStream input = new FileInputStream(dataFile)) {
+				bufferedImage = ImageIO.read(input);
+			}
+			updateContents(small.id, bufferedImage, 150, format);
+			updateContents(medium.id, bufferedImage, 300, format);
+			updateContents(large.id, bufferedImage, 1024, format);
+		}
+	}
+	
+	private static final String MIME = "image/jpeg";
+	private static final String FORMAT = "jpg";
+	private static final double QUALITY = 1;
+
+	private void updateContents(Integer id, BufferedImage image, int size, String format) throws IOException {
+		format = (format != null  ? format : FORMAT);
+		java.io.File file = java.io.File.createTempFile("image", "." + format);
+		try {
+			Thumbnails.of(image).size(size, size).outputFormat(format).outputQuality(QUALITY).toFile(file);			
+			try (InputStream input = new FileInputStream(file)) {
+				Session session = (Session) manager.getDelegate();
+				LobCreator creator = Hibernate.getLobCreator(session);
+				FileContents contents = contentsRepository.findOne(id);
+				contents.contents = creator.createBlob(input, file.length());
+				contentsRepository.save(contents);
+			}					
+		} finally {
+			file.delete();
+		}
+	}
 }

@@ -221,7 +221,7 @@ public class WordpressResource {
         throws ConstraintViolationException, DataIntegrityViolationException, Exception {
         WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(wpPost.body);
         post.body = wpc.content;
-        post.externalFeaturedImgUrl = wpc.featuredImage;
+        post.externalFeaturedImgUrl = wpc.externalImageUrl;
         switch (wpPost.status) {
             case "publish":
                 post.state = Post.STATE_PUBLISHED;

@@ -43,7 +43,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.favoritesCount = post.favoritesCount;
 		postView.recommendsCount = post.recommendsCount;
 		postView.commentsCount = post.commentsCount;
-		postView.snippet = WordrailsUtil.simpleSnippet(post.body);
+		postView.snippet = WordrailsUtil.simpleSnippet(post.body, 100);
 		postView.authorName = post.author != null ? post.author.name : null;
 		postView.authorId = post.author != null ? post.author.id : null;
 		postView.authorEmail = post.author != null ? post.author.email : null;

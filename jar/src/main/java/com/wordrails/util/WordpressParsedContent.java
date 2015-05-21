@@ -1,7 +1,10 @@
 package com.wordrails.util;
 
+import com.wordrails.business.Image;
+
 public class WordpressParsedContent {
 
 	public String content;
-	public String featuredImage;
+	public String externalImageUrl;
+	public Image image;
 }

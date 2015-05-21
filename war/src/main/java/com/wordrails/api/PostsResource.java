@@ -232,7 +232,7 @@ public class PostsResource {
 					}
 					postsViews.get(i).snippet = snippet;
 				}else{
-					postsViews.get(i).snippet = WordrailsUtil.simpleSnippet(body);
+					postsViews.get(i).snippet = WordrailsUtil.simpleSnippet(body, 100);
 				}
 			}
 		} catch (IOException e) {
