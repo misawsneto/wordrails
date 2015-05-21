@@ -13,11 +13,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
-
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -146,8 +144,9 @@ public class WordrailsUtil {
 	}
 
 	public static WordpressParsedContent extractImageFromContent(String content){
+        WordpressParsedContent wpc = new WordpressParsedContent();
 		if(content == null || content.isEmpty()){
-			return null;
+			return wpc;
 		}
 		Document doc = Jsoup.parse(content);
 		// Get all img tags
@@ -195,8 +194,7 @@ public class WordrailsUtil {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-
-		WordpressParsedContent wpc = new WordpressParsedContent();
+        
 		wpc.content = doc.text();
 		wpc.externalImageUrl = featuredImage;
 
