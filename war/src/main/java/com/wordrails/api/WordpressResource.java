@@ -2,6 +2,7 @@ package com.wordrails.api;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
+import com.wordrails.WordrailsService;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.business.ServiceGenerator;
@@ -23,7 +24,6 @@ import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermRepository;
 import com.wordrails.persistence.WordpressRepository;
-import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -61,6 +61,9 @@ public class WordpressResource {
 
     private @Context
     HttpServletRequest request;
+
+    private @Autowired
+    WordrailsService wordrailsService;
 
     private @Autowired
     TermRepository termRepository;
@@ -147,6 +150,7 @@ public class WordpressResource {
 
             if (post != null) {
                 postRepository.save(post);
+                wordrailsService.processWordpressPost(post);
             }
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
@@ -210,6 +214,7 @@ public class WordpressResource {
             }
 
             postRepository.save(posts);
+            wordrailsService.processWordpressPost(posts);
         } catch (Exception e) {
             e.printStackTrace();
             String msg = "";
@@ -224,9 +229,7 @@ public class WordpressResource {
 
     private Post getPost(Post post, WordpressPost wpPost, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy)
         throws ConstraintViolationException, DataIntegrityViolationException, Exception {
-        WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(wpPost.body);
-        post.body = wpc.content;
-        post.externalFeaturedImgUrl = wpc.externalImageUrl;
+        post.body = wpPost.body;
         switch (wpPost.status) {
             case "publish":
                 post.state = Post.STATE_PUBLISHED;

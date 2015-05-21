@@ -1,44 +1,5 @@
 package com.wordrails;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-
-import net.coobird.thumbnailator.Thumbnails;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.tika.Tika;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.engine.jdbc.LobCreator;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
-
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.File;
 import com.wordrails.business.FileContents;
@@ -62,6 +23,38 @@ import com.wordrails.persistence.TermRepository;
 import com.wordrails.util.AsyncService;
 import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
+import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.tika.Tika;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.engine.jdbc.LobCreator;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
 @Component
 public class WordrailsService {
@@ -129,7 +122,18 @@ public class WordrailsService {
 
 	@Async
 	@Transactional
-	public void processWordpressPost(List<Post> posts){
+	public void processWordpressPost(Post post){
+        WordpressParsedContent wcp = extractImageFromContent(post.body);
+        post.body = wcp.content;
+        post.featuredImage = wcp.image;
+        post.externalFeaturedImgUrl = wcp.externalImageUrl;
+		
+		postRepository.save(post);
+	}
+
+	@Async
+	@Transactional
+	public void processWordpressPost(Collection<Post> posts){
 		for (Post post : posts) {
 			WordpressParsedContent wcp = extractImageFromContent(post.body);
 			post.body = wcp.content;
