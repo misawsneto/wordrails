@@ -126,7 +126,7 @@ public class WordrailsService {
 	}
 
 	@Transactional
-	public WordpressParsedContent extractImageFromContent(String content){
+	public WordpressParsedContent extractImageFromContent(String content) throws SQLException{
 		if(content == null || content.isEmpty()){
 			return null;
 		}
@@ -139,120 +139,102 @@ public class WordrailsService {
 
 		com.wordrails.business.File file = null;
 
-		try{
-			for (Element element : imgs) {
-				String imageURL = element.attr("src");
-				if(imageURL != null && !imageURL.isEmpty()){
-					URL url;
-					try {
-						url = new URL(imageURL);
-						try(InputStream is = url.openStream()){
-							try(ImageInputStream in = ImageIO.createImageInputStream(is)){
-								final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
-								if (readers.hasNext()) {
-									ImageReader reader = readers.next();
-									try {
-										reader.setInput(in);
-										int dimensions = reader.getWidth(0) * reader.getHeight(0);
-										if(dimensions > 250000){
-											Element parent = element.parent();
-											if(parent != null && parent.tagName().equals("a")){
-												parent.remove();
-											}
-											featuredImage = imageURL;
-											break;
+		for (Element element : imgs) {
+			String imageURL = element.attr("src");
+			if(imageURL != null && !imageURL.isEmpty()){
+				URL url;
+				try {
+					url = new URL(imageURL);
+					try(InputStream is = url.openStream()){
+						try(ImageInputStream in = ImageIO.createImageInputStream(is)){
+							final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
+							if (readers.hasNext()) {
+								ImageReader reader = readers.next();
+								try {
+									reader.setInput(in);
+									int dimensions = reader.getWidth(0) * reader.getHeight(0);
+									if(dimensions > 250000){
+										Element parent = element.parent();
+										if(parent != null && parent.tagName().equals("a")){
+											parent.remove();
 										}
-									} finally {
-										reader.dispose();
+										featuredImage = imageURL;
+
+										String fileName = FilenameUtils.getBaseName(featuredImage);
+										String fileFormat = FilenameUtils.getExtension(featuredImage);
+										String tempFileName = fileName + WordrailsUtil.generateRandomString(5, "Aa#") + "." + fileFormat;
+
+										BufferedImage image = null;
+										image = ImageIO.read(url);
+										java.io.File dataFile = java.io.File.createTempFile(tempFileName, "." + fileFormat);
+										ImageIO.write(image, fileFormat, dataFile);
+
+										try(InputStream fileIS = new FileInputStream(dataFile)){
+											file = new File();
+											file.type = File.INTERNAL_FILE;
+											file.mime = file.mime == null || file.mime.isEmpty() ? new Tika().detect(fileIS) : file.mime;    
+											file.name = FilenameUtils.getBaseName(featuredImage) + "." + FilenameUtils.getExtension(featuredImage);
+											fileRepository.save(file);
+											Integer id = file.id;
+
+											Session session = (Session) manager.getDelegate();
+											LobCreator creator = Hibernate.getLobCreator(session);
+											FileContents contents = contentsRepository.findOne(id);
+
+											contents.contents = creator.createBlob(FileUtils.readFileToByteArray(dataFile));
+											contentsRepository.save(contents);
+
+											Image img = new Image();
+											img.original = file;
+											createImages(img);
+											imageRepository.save(img);
+										};
+
+										break;
 									}
+								} finally {
+									reader.dispose();
 								}
-							} catch (IOException e) {
-								e.printStackTrace();
 							}
-						}catch (IOException e) {
+						} catch (IOException e) {
 							e.printStackTrace();
 						}
-					} catch (MalformedURLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					}catch (IOException e) {
+						e.printStackTrace();
 					}
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			}
-			if(featuredImage != null){
-				URL url = new URL(featuredImage);
-
-				String fileName = FilenameUtils.getBaseName(featuredImage);
-				String fileFormat = FilenameUtils.getExtension(featuredImage);
-				String tempFileName = fileName + WordrailsUtil.generateRandomString(5, "Aa#") + "." + fileFormat;
-
-				try(InputStream is = url.openStream()){
-					try(ByteArrayOutputStream out = new ByteArrayOutputStream()){
-						byte[] buf = new byte[1024];
-						int n = 0;
-						while (-1!=(n=is.read(buf))) { out.write(buf, 0, n); }
-						byte[] response = out.toByteArray();
-						FileOutputStream fos = new FileOutputStream(tempFileName);
-						fos.write(response);
-						fos.close();
-					}
-				}
-
-				java.io.File dataFile = new java.io.File(tempFileName);
-				
-				try(InputStream is = new FileInputStream(dataFile)){
-					file = new File();
-					file.type = File.INTERNAL_FILE;
-					file.mime = file.mime == null || file.mime.isEmpty() ? new Tika().detect(is) : file.mime;    
-					file.name = FilenameUtils.getBaseName(featuredImage) + "." + FilenameUtils.getExtension(featuredImage);
-					fileRepository.save(file);
-					Integer id = file.id;
-
-					Session session = (Session) manager.getDelegate();
-					LobCreator creator = Hibernate.getLobCreator(session);
-					FileContents contents = contentsRepository.findOne(id);
-
-					contents.contents = creator.createBlob(FileUtils.readFileToByteArray(dataFile));
-					contentsRepository.save(contents);
-				};
-				
-				dataFile = new java.io.File(tempFileName);
-				
-				Image img = new Image();
-				img.original = file;
-				createImages(img, dataFile);
-//					imageRepository.save(img);
-
-			}
-		}catch(Exception e){
-			e.printStackTrace();
 		}
 
-		//		wpc.content = doc.text();
-		//		wpc.externalImageUrl = featuredImage;
-		//		wpc.content = wpc.content.replaceAll("\\[(.*?)\\](.*?)\\[/(.*?)\\]", "");
-		//		wpc.content = wpc.content.trim();
+		wpc.content = doc.text();
+		wpc.externalImageUrl = featuredImage;
+		wpc.content = wpc.content.replaceAll("\\[(.*?)\\](.*?)\\[/(.*?)\\]", "");
+		wpc.content = wpc.content.trim();
 
 		return wpc;
 	}
-	
-	public void createImages(Image image, java.io.File dataFile) throws SQLException, IOException {
+
+	private void createImages(Image image) throws SQLException, IOException {
 		com.wordrails.business.File original = image.original;
-		
+
 		String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
-		
+
 		if (original != null) {
 			com.wordrails.business.File small = new File();
 			small.type = File.INTERNAL_FILE; 
 			small.mime = image.original.mime != null ? image.original.mime : MIME;
 			small.name = original.name;			
 			fileRepository.save(small);
-			
+
 			com.wordrails.business.File medium = new File();
 			medium.type = File.INTERNAL_FILE;
 			medium.mime = image.original.mime != null ? image.original.mime : MIME;
 			medium.name = original.name;			
 			fileRepository.save(medium);
-			
+
 			com.wordrails.business.File large = new File();
 			large.type = File.INTERNAL_FILE;
 			large.mime = image.original.mime != null ? image.original.mime : MIME;
@@ -264,7 +246,8 @@ public class WordrailsService {
 			image.large = large;
 
 			BufferedImage bufferedImage;
-			try (InputStream input = new FileInputStream(dataFile)) {
+			FileContents contents = contentsRepository.findOne(original.id);
+			try (InputStream input = contents.contents.getBinaryStream()) {
 				bufferedImage = ImageIO.read(input);
 			}
 			updateContents(small.id, bufferedImage, 150, format);
@@ -272,7 +255,7 @@ public class WordrailsService {
 			updateContents(large.id, bufferedImage, 1024, format);
 		}
 	}
-	
+
 	private static final String MIME = "image/jpeg";
 	private static final String FORMAT = "jpg";
 	private static final double QUALITY = 1;
@@ -282,13 +265,11 @@ public class WordrailsService {
 		java.io.File file = java.io.File.createTempFile("image", "." + format);
 		try {
 			Thumbnails.of(image).size(size, size).outputFormat(format).outputQuality(QUALITY).toFile(file);			
-			try (InputStream input = new FileInputStream(file)) {
-				Session session = (Session) manager.getDelegate();
-				LobCreator creator = Hibernate.getLobCreator(session);
-				FileContents contents = contentsRepository.findOne(id);
-				contents.contents = creator.createBlob(input, file.length());
-				contentsRepository.save(contents);
-			}					
+			Session session = (Session) manager.getDelegate();
+			LobCreator creator = Hibernate.getLobCreator(session);
+			FileContents contents = contentsRepository.findOne(id);
+			contents.contents = creator.createBlob(FileUtils.readFileToByteArray(file));
+			contentsRepository.save(contents);
 		} finally {
 			file.delete();
 		}
