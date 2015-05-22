@@ -23,6 +23,7 @@ import com.wordrails.persistence.TermRepository;
 import com.wordrails.util.AsyncService;
 import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
+
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,6 +34,8 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -41,7 +44,9 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+
 import net.coobird.thumbnailator.Thumbnails;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
@@ -297,5 +302,13 @@ public class WordrailsService {
 		} finally {
 			file.delete();
 		}
+	}
+
+	public WordpressParsedContent extractImageFromContent(String body, String externalFeaturedImgUrl) {
+		Pattern urlPattern = Pattern.compile("[^(http\\:\\/\\/[a-zA-Z0-9_\\-]+(?:\\.[a-zA-Z0-9_\\-]+)*\\.[a-zA-Z]{2,4}(?:\\/[a-zA-Z0-9_]+)*(?:\\/[a-zA-Z0-9_]+\\.[a-zA-Z]{2,4}(?:\\?[a-zA-Z0-9_]+\\=[a-zA-Z0-9_]+)?)?(?:\\&[a-zA-Z0-9_]+\\=[a-zA-Z0-9_]+)*)$]", Pattern.CASE_INSENSITIVE);
+		if(externalFeaturedImgUrl != null && urlPattern.matcher(externalFeaturedImgUrl).matches()){
+			body = "<img src=\" + "+ externalFeaturedImgUrl +"\">" + body;
+		}
+		return extractImageFromContent(body);
 	}
 }

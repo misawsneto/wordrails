@@ -314,11 +314,11 @@ public class UtilResource {
 			List<Post> posts = new ArrayList<Post>();
 			for (Post post : all) {
 				if(post.wordpressId != null && post.featuredImage == null){
-					WordpressParsedContent wpc = wordrailsService.extractImageFromContent(post.body);
+					WordpressParsedContent wpc = wordrailsService.extractImageFromContent(post.body, post.externalFeaturedImgUrl);
 					post.body = wpc.content;
 					post.featuredImage = wpc.image;
 					post.externalFeaturedImgUrl = wpc.externalImageUrl;
-					System.out.println(post.id + " " + post.externalFeaturedImgUrl);
+					System.out.println(post.id + " " + (wpc.image != null ? wpc.image.id : "") + " " + post.externalFeaturedImgUrl);
 					if(post.externalFeaturedImgUrl != null){
 						count++;
 						posts.add(post);
