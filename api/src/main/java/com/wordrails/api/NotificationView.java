@@ -14,6 +14,7 @@ public class NotificationView implements Serializable {
 	public String message;
 	public int personId;
 	public String personName;
+	public String hash;
 	public int networkId;
 	public String networkName;
 	public int stationId;

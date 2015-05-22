@@ -7,6 +7,7 @@ public class NotificationDto {
 	public String message;
 	public Integer personId;
 	public String personName;
+	public String hash;
 	public Integer networkId;
 	public String networkName;
 	public Integer stationId;
