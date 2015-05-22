@@ -147,7 +147,7 @@ public class WordrailsService {
 	@Transactional
 	public WordpressParsedContent extractImageFromContent(String content){
 		if(content == null || content.isEmpty()){
-			return null;
+			content = "";
 		}
 		Document doc = Jsoup.parse(content);
 		// Get all img tags
