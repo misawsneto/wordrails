@@ -1,11 +1,47 @@
 package com.wordrails.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.WordrailsService;
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.Image;
+import com.wordrails.business.Invitation;
+import com.wordrails.business.Network;
+import com.wordrails.business.Person;
+import com.wordrails.business.PersonNetworkRegId;
+import com.wordrails.business.Post;
+import com.wordrails.business.Station;
+import com.wordrails.business.StationPerspective;
+import com.wordrails.business.TermPerspective;
+import com.wordrails.business.UnauthorizedException;
+import com.wordrails.persistence.BookmarkRepository;
+import com.wordrails.persistence.CellRepository;
+import com.wordrails.persistence.CommentRepository;
+import com.wordrails.persistence.FavoriteRepository;
+import com.wordrails.persistence.ImageRepository;
+import com.wordrails.persistence.InvitationRepository;
+import com.wordrails.persistence.NetworkRepository;
+import com.wordrails.persistence.NetworkRolesRepository;
+import com.wordrails.persistence.NotificationRepository;
+import com.wordrails.persistence.PersonNetworkRegIdRepository;
+import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.PostReadRepository;
+import com.wordrails.persistence.PostRepository;
+import com.wordrails.persistence.PromotionRepository;
+import com.wordrails.persistence.QueryPersistence;
+import com.wordrails.persistence.RecommendRepository;
+import com.wordrails.persistence.StationPerspectiveRepository;
+import com.wordrails.persistence.StationRepository;
+import com.wordrails.persistence.StationRolesRepository;
+import com.wordrails.persistence.TaxonomyRepository;
+import com.wordrails.persistence.TermPerspectiveRepository;
+import com.wordrails.util.AsyncService;
+import com.wordrails.util.WordpressParsedContent;
+import com.wordrails.util.WordrailsUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
@@ -19,47 +55,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.Invitation;
-import com.wordrails.business.Network;
-import com.wordrails.business.NotImplementedException;
-import com.wordrails.business.Person;
-import com.wordrails.business.PersonNetworkRegId;
-import com.wordrails.business.Post;
-import com.wordrails.business.PostRead;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationPerspective;
-import com.wordrails.business.TermPerspective;
-import com.wordrails.business.UnauthorizedException;
-import com.wordrails.persistence.InvitationRepository;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.PersonNetworkRegIdRepository;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.PostReadRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.StationPerspectiveRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.TaxonomyRepository;
-import com.wordrails.persistence.TermPerspectiveRepository;
-import com.wordrails.util.AsyncService;
-import com.wordrails.util.WordpressParsedContent;
-import com.wordrails.util.WordrailsUtil;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -325,6 +328,44 @@ public class UtilResource {
 			postRepository.save(posts);
 		}
 	}
+    
+	private @Autowired PostReadRepository postReadRepository;
+	private @Autowired CellRepository cellRepository;
+	private @Autowired CommentRepository commentRepository;
+	private @Autowired ImageRepository imageRepository;
+	private @Autowired PromotionRepository promotionRepository;
+	private @Autowired FavoriteRepository favoriteRepository;
+	private @Autowired BookmarkRepository bookmarkRepository;
+	private @Autowired RecommendRepository recommendRepository;
+	private @Autowired NotificationRepository notificationRepository;
+	
+	@GET
+	@Path("/removeWordpressPosts")
+	public void removeWordpressPosts(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+		
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<Post> posts = postRepository.findAll();
+			for (Post post : posts) {
+				if(post.wordpressId != null){
+                    List<Image> images = imageRepository.findByPost(post);
+                    if (images != null && images.size() > 0) {
+                        postRepository.updateFeaturedImagesToNull(images);
+                    }
+					imageRepository.delete(images);
+                    cellRepository.delete(cellRepository.findByPost(post));
+                    commentRepository.delete(post.comments);
+                    promotionRepository.delete(post.promotions);
+                    postReadRepository.deleteByPost(post);
+                    notificationRepository.deleteByPost(post);
+                    favoriteRepository.deleteByPost(post);
+                    bookmarkRepository.deleteByPost(post);
+                    recommendRepository.deleteByPost(post);
+                    postRepository.delete(post);
+				}
+			}
+		}
+	}
 	
 	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository; 
 	
@@ -345,7 +386,6 @@ public class UtilResource {
 
 	@Autowired private QueryPersistence qp;
 	@Autowired private PersonNetworkRegIdRepository reg;
-	@Autowired private PostReadRepository postReadRepository;
 	@Autowired private AsyncService asyncService; 
 	
 	@GET
