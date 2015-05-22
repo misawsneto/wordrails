@@ -39,6 +39,9 @@ public class Notification {
 	@NotNull
 	public Network network;
 	
+	@NotNull
+	public String hash;
+	
 	@ManyToOne
 	public Station station;
 	

@@ -106,7 +106,7 @@ public class GCMService {
 			noti.person = pnRegId.person;
 			noti.post = notification.post;
 			noti.type = notification.type + "";
-
+			noti.hash = notification.hash = WordrailsUtil.generateRandomString(10, "Aa#") + "";
 			devices.add(pnRegId.regId);
 			notification.person = pnRegId.person;
 			notis.add(noti);
@@ -118,6 +118,7 @@ public class GCMService {
 		notificationDto.seen = notification.seen;
 		notificationDto.type = notification.type + "";
 		notificationDto.message = notification.message + "";
+		notificationDto.hash = notification.hash + "";
 		notificationDto.personId = notification.person != null ? notification.person.id : null;
 		notificationDto.personName = notification.person != null ? notification.person.name : null;
 		notificationDto.networkId = notification.network != null ? notification.network.id : null;
@@ -167,11 +168,16 @@ public class GCMService {
 				if (canonicalRegId != null) {
 					// same device has more than on registration id: update it
 					System.out.println("same device has more than on registration id: update it");
+					try{
+						personNetworkRegIdRepository.deleteByRegId(devices.get(i));
+					}catch(Exception e){
+						e.printStackTrace();
+					}
 				}
 			} else {
 				String error = result.getErrorCodeName();
 				if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
-					personNetworkRegIdRepository.deleteByRegId(result.getCanonicalRegistrationId());
+					personNetworkRegIdRepository.deleteByRegId(devices.get(i));
 				} else {
 					System.out.println("Error sending message to " + regId + ": " + error);
 				}

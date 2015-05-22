@@ -198,5 +198,7 @@ angular.module('app')
 
       trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
 
+      trix.findPostReadByPersonIdOrderByDate(2)
+
       /* end of added */
   }]); 

@@ -315,15 +315,19 @@ public class UtilResource {
 		int count = 0;
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Post> posts = postRepository.findAllPostsOrderByIdDesc();
-			for (Post post : posts) {
+			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
+			List<Post> posts = new ArrayList<Post>();
+			for (Post post : all) {
 				if(post.wordpressId != null && post.featuredImage == null){
-					WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(post.body);
+					WordpressParsedContent wpc = wordrailsService.extractImageFromContent(post.body, post.externalFeaturedImgUrl);
 					post.body = wpc.content;
+					post.featuredImage = wpc.image;
 					post.externalFeaturedImgUrl = wpc.externalImageUrl;
-					System.out.println(post.externalFeaturedImgUrl);
-					if(post.externalFeaturedImgUrl != null)
+					System.out.println(post.id + " " + (wpc.image != null ? wpc.image.id : "") + " " + post.externalFeaturedImgUrl);
+					if(post.externalFeaturedImgUrl != null){
 						count++;
+						posts.add(post);
+					}
 				}
 				if(count > 100)
 					break;
