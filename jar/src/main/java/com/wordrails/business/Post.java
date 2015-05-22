@@ -117,7 +117,6 @@ public class Post {
 	@DocumentId
 	public Integer id;
     
-    @Column(unique=true)
     public Integer wordpressId;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)

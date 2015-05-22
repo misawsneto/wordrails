@@ -18,7 +18,7 @@ import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressSlug"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressSlug"}), @UniqueConstraint(columnNames={"taxonomy_id","name","wordpressId"})})
 public class Term {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
