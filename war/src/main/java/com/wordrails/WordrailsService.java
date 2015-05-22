@@ -151,7 +151,7 @@ public class WordrailsService {
 		}
 		Document doc = Jsoup.parse(content);
 		// Get all img tags
-		String featuredImage = null;
+		String featuredImageUrl = null;
 		Elements imgs = doc.getElementsByTag("img");
 
 		WordpressParsedContent wpc = new WordpressParsedContent();
@@ -178,10 +178,10 @@ public class WordrailsService {
 											if(parent != null && parent.tagName().equals("a")){
 												parent.remove();
 											}
-											featuredImage = imageURL;
+											featuredImageUrl = imageURL;
 
-											String fileName = FilenameUtils.getBaseName(featuredImage);
-											String fileFormat = FilenameUtils.getExtension(featuredImage);
+											String fileName = FilenameUtils.getBaseName(featuredImageUrl);
+											String fileFormat = FilenameUtils.getExtension(featuredImageUrl);
 											String tempFileName = fileName + WordrailsUtil.generateRandomString(5, "Aa#") + "." + fileFormat;
 
 											BufferedImage image = null;
@@ -193,7 +193,7 @@ public class WordrailsService {
 												file = new File();
 												file.type = File.INTERNAL_FILE;
 												file.mime = file.mime == null || file.mime.isEmpty() ? new Tika().detect(fileIS) : file.mime;    
-												file.name = FilenameUtils.getBaseName(featuredImage) + "." + FilenameUtils.getExtension(featuredImage);
+												file.name = FilenameUtils.getBaseName(featuredImageUrl) + "." + FilenameUtils.getExtension(featuredImageUrl);
 												fileRepository.save(file);
 												Integer id = file.id;
 
@@ -208,6 +208,7 @@ public class WordrailsService {
 												img.original = file;
 												createImages(img);
 												imageRepository.save(img);
+												wpc.image = img;
 											};
 
 											break;
@@ -233,7 +234,7 @@ public class WordrailsService {
 		}
 
 		wpc.content = doc.text();
-		wpc.externalImageUrl = featuredImage;
+		wpc.externalImageUrl = featuredImageUrl;
 		wpc.content = wpc.content.replaceAll("\\[(.*?)\\](.*?)\\[/(.*?)\\]", "");
 		wpc.content = wpc.content.trim();
 
