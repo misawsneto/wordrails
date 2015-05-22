@@ -1,7 +1,6 @@
 package com.wordrails.business;
 
 import java.util.Set;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -58,7 +57,6 @@ public class Term {
 	
 	public String wordpressSlug;
     
-    @Column(unique=true)
     public Integer wordpressId;
 	
 	@PrePersist
