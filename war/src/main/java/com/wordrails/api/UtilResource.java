@@ -313,7 +313,7 @@ public class UtilResource {
 			List<Post> posts = postRepository.findAllPostsOrderByIdDesc();
 			for (Post post : posts) {
 				if(post.wordpressId != null && post.featuredImage == null){
-					WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(post.body);
+					WordpressParsedContent wpc = wordrailsService.extractImageFromContent(post.body);
 					post.body = wpc.content;
 					post.featuredImage = wpc.image;
 					post.externalFeaturedImgUrl = wpc.externalImageUrl;
