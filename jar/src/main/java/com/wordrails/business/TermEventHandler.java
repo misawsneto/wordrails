@@ -1,8 +1,13 @@
 package com.wordrails.business;
 
+import com.wordrails.persistence.CellRepository;
+import com.wordrails.persistence.RowRepository;
+import com.wordrails.persistence.StationPerspectiveRepository;
+import com.wordrails.persistence.TermPerspectiveRepository;
+import com.wordrails.persistence.TermRepository;
+import com.wordrails.security.TaxonomySecurityChecker;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
@@ -10,13 +15,6 @@ import org.springframework.data.rest.core.annotation.HandleBeforeLinkSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.wordrails.persistence.CellRepository;
-import com.wordrails.persistence.RowRepository;
-import com.wordrails.persistence.StationPerspectiveRepository;
-import com.wordrails.persistence.TermPerspectiveRepository;
-import com.wordrails.persistence.TermRepository;
-import com.wordrails.security.TaxonomySecurityChecker;
 
 @RepositoryEventHandler(Term.class)
 @Component
@@ -81,7 +79,7 @@ public class TermEventHandler {
 		}
 	}
 	
-	private void deleteCascade(Term termToDelete, Term term){
+	public void deleteCascade(Term termToDelete, Term term){
 		if(term.termPerspectives != null && term.termPerspectives.size() > 0){
 			termPerspectiveRepository.delete(term.termPerspectives);
 		}

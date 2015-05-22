@@ -153,7 +153,7 @@ public class WordpressResource {
                 wordrailsService.processWordpressPost(post);
             }
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(ExceptionUtils.getStackTrace(e)).build();
         }
 
         return Response.status(Response.Status.OK).build();
@@ -221,7 +221,7 @@ public class WordpressResource {
             if (wpp != null) {
                 msg = "Post id=" + wpp.id + " ";
             }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getClass().getSimpleName() + ": " + msg + e.getMessage()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getClass().getSimpleName() + ": " + msg + ExceptionUtils.getStackTrace(e)).build();
         }
 
         return Response.status(Response.Status.OK).build();
@@ -360,7 +360,7 @@ public class WordpressResource {
                         try {
                             termRepository.save(t);
                         } catch (ConstraintViolationException | DataIntegrityViolationException e2) {
-                            throw new Exception("Term ID=" + term.id + " " + e.getMessage(), e2);
+                            throw new Exception("Term ID=" + term.id + " " + ExceptionUtils.getStackTrace(e), e2);
                         }
                     }
                 }

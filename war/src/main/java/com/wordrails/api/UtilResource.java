@@ -9,8 +9,10 @@ import com.wordrails.business.Network;
 import com.wordrails.business.Person;
 import com.wordrails.business.PersonNetworkRegId;
 import com.wordrails.business.Post;
+import com.wordrails.business.Row;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationPerspective;
+import com.wordrails.business.Term;
 import com.wordrails.business.TermPerspective;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.persistence.BookmarkRepository;
@@ -29,11 +31,13 @@ import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.PromotionRepository;
 import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.persistence.RecommendRepository;
+import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
+import com.wordrails.persistence.TermRepository;
 import com.wordrails.util.AsyncService;
 import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
@@ -63,6 +67,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -363,6 +368,53 @@ public class UtilResource {
                     postRepository.delete(post);
 				}
 			}
+		}
+	
+    }
+	private @Autowired TermRepository termRepository;
+	private @Autowired RowRepository rowRepository; 
+	
+	@GET
+	@Path("/removeWordpressTerms")
+	public void removeWordpressTerms(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+		
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<Term> terms = termRepository.findAll();
+			for (Term term : terms) {
+				if(term.wordpressId != null){
+                    deleteCascade(term, term);
+                    termRepository.delete(term);
+				}
+			}
+		}
+	}
+    
+    @Transactional
+    public void deleteCascade(Term termToDelete, Term term){
+		if(term.termPerspectives != null && term.termPerspectives.size() > 0){
+			termPerspectiveRepository.delete(term.termPerspectives);
+		}
+		
+		List<Row> rows = rowRepository.findByTerm(term);
+		if(rows != null && rows.size() > 0){
+			rowRepository.delete(rows);
+		}
+
+		List<Term> terms = termRepository.findByParent(term);
+		if(terms != null && terms.size() > 0){
+			deleteCascade(termToDelete, terms);
+		}
+		termRepository.deletePostsTerms(term.id);
+		if(!termToDelete.equals(term)){
+			termRepository.delete(term);
+		}
+	}
+	
+    @Transactional
+	private void deleteCascade(Term termToDelete, List<Term> terms){
+		for (Term term : terms) {
+			deleteCascade(termToDelete, term);
 		}
 	}
 	
