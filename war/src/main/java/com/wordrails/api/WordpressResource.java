@@ -279,7 +279,8 @@ public class WordpressResource {
                 
                 termRepository.save(term);
             } else {//another wordpressId is using this slug. Data is fucked up somewhere. should never happen
-                throw new SecurityException("Data stored in database is different from the terms sent in the request");
+                throw new SecurityException("Data stored in database is different from the terms sent in the request. Wordpress ID: "  +
+                    wordpressId + ", Slug: " + slug + ", is tag: " + isTag);
             }
         } else if(terms.containsRow(slug)) { //does it exist a term with this slug?
             if(terms.contains(slug,0)) { //is the wordpressId of this term null?
@@ -294,7 +295,8 @@ public class WordpressResource {
                 Integer taxId = Lists.newArrayList(terms.rowMap().get(slug).values()).get(0).taxonomy.id;
                 if((isTag && taxId == taxTagId) || (!isTag && taxId != taxTagId)) { //if they are part of same taxonomy, it should not have the same slug. otherwise no prob
                     //another wordpressId is using this slug. Data is fucked up somewhere. should never happen
-                    throw new SecurityException("Data stored in database is different from the terms sent in the request");
+                    throw new SecurityException("Data stored in database is different from the terms sent in the request. Wordpress ID: "  +
+                    wordpressId + ", Slug: " + slug + ", is tag: " + isTag);
                 }
             }
         } else {
