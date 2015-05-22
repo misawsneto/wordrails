@@ -1,15 +1,6 @@
 package com.wordrails.api;
 
-import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.BadRequestException;
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
-import com.wordrails.converter.PostConverter;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.util.WordrailsUtil;
-
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -29,7 +20,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.highlight.Encoder;
 import org.apache.lucene.search.highlight.Formatter;
@@ -45,13 +35,20 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.BadRequestException;
+import com.wordrails.business.Person;
+import com.wordrails.business.Post;
+import com.wordrails.converter.PostConverter;
+import com.wordrails.persistence.PostRepository;
+import com.wordrails.util.WordrailsUtil;
 
 @Path("/posts")
 @Consumes(MediaType.WILDCARD)
@@ -61,7 +58,6 @@ public class PostsResource {
 	private @Context UriInfo uriInfo;
 	private @Context HttpServletResponse response;
 
-//	private @Autowired GoogleAnalytics analytics;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
 

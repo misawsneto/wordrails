@@ -312,6 +312,7 @@ public class UtilResource {
 				if(post.wordpressId != null && post.featuredImage == null){
 					WordpressParsedContent wpc = WordrailsUtil.extractImageFromContent(post.body);
 					post.body = wpc.content;
+					post.featuredImage = wpc.image;
 					post.externalFeaturedImgUrl = wpc.externalImageUrl;
 					System.out.println(post.externalFeaturedImgUrl);
 					if(post.externalFeaturedImgUrl != null)
