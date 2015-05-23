@@ -42,11 +42,10 @@ angular.module('app')
     redactorOptions.imageUpload = TRIX.baseUrl + "/api/files/contents/simple";
     redactorOptions.toolbarExternal = "#external-toolbar"
     redactorOptions.plugins = ['fontsize', 'fontcolor', 'video', 'counter']
-    redactorOptions.minHeight = 300
+    redactorOptions.minHeight = 300,
     redactorOptions.buttons = ['html', 'formatting', 'bold', 'italic', 'underline', 'deleted', 
                                   'fontsize', 'fontcolor', 'unorderedlist', 'orderedlist', 'outdent', 'indent',
                                   'link', 'image', 'video', 'alignment', 'horizontalrule'];
-    redactorOptions.placeholder = 'Texto...'
     trixProvider.setConfig({ url: location.protocol + '//' + location.host });
   })
   ;

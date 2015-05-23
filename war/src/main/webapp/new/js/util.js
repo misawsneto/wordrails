@@ -124,6 +124,8 @@ function getCustomButtonStyle(color, perspective, header) {
 	  "background: "+ color +";\n"+
 	"}\n"+
 
+	"#perspective-vertical .md-header{ border: 1px solid "+color+"; box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05) }\n"+
+
 	"#station-sidebar md-tabs.md-default-theme md-tabs-ink-bar {\n"+
 	  "color: "+ textColorEval(perspective) +";\n"+
 	  "background: "+ (textColorEval2(perspective) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)") +";\n"+
@@ -147,7 +149,7 @@ function getCustomButtonStyle(color, perspective, header) {
 	"#perspective-vertical .md-header {\n"+
 	 "border-bottom: 1px solid rgba(255,255,255,0.5);\n"+
 	"}\n"+
-	".b-t, .b-r, .b-b, .b-l{\n"+
+	".bg-perspective .b-t, .bg-perspective .b-r, .bg-perspective .b-b, .bg-perspective .b-l{\n"+
 	 "border-color:rgba(255,255,255, 0.5)\n"+
 	"}\n"+
 	".bg-perspective .station-perspectives a{\n"+
@@ -203,6 +205,12 @@ function getCustomButtonStyle(color, perspective, header) {
 	".station-header .nav > li > a:hover{\n"+
 	"  color: " + (textColorEval(header, true)) + ";\n"+
 	"}\n"+
+
+	".redactor-toolbar li a:hover {\n"+
+	  "outline: none;\n"+
+	  "background-color:" + color + ";\n"+
+	  "color: " + (textColorEval(color, true)) + ";\n"+
+	"}\n"
 
 	/*".station-header .nav li .dropdown-menu {\n"+
 	" background-color:" + header + ";\n"+

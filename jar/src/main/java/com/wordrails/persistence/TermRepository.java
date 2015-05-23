@@ -33,7 +33,7 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	Term findByWordpressSlug(@Param("wordpressSlug") String wordpressSlug);
 
 	@RestResource(exported=false)
-	Term findTreeByTaxonomyId(@Param("taxonomyId") Integer taxonomyId);
+	List<Term> findTreeByTaxonomyId(@Param("taxonomyId") Integer taxonomyId);
 
 	@RestResource(exported=false)
 	List<Term> findByTaxonomy(@Param("taxonomy") Taxonomy taxonomy);

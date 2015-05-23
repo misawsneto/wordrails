@@ -36,4 +36,5 @@ public class PostView implements Serializable {
 
 	public String slug;
 	public String externalFeaturedImgUrl;
+	public String externalVideoUrl;
 }
