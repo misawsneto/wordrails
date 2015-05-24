@@ -111,9 +111,10 @@ angular.module('app')
       uiLoad.load(JQ_CONFIG.screenfull)
       $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
         if(typeof screenfull !== 'undefined' && screenfull){ screenfull.exit(); }
-        if(toState.name == "app.read"){
+        if(toState.name == "app.stations.read"){
           $("body").addClass("show-post")
         }else{
+          $('.station-header').removeClass('nav-up').addClass('nav-down');
           $("body").removeClass("show-post")
         }
       });
@@ -199,6 +200,11 @@ angular.module('app')
       loadRecent();
 
       trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
+
+      $scope.app.zing = function(){
+        console.log('asdf');
+        $state.go('^')
+      }
 
       /* end of added */
   }]); 

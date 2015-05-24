@@ -26,11 +26,11 @@ angular.module('app')
           $stateProvider
               .state('app', {
                   abstract: true,
-                  url: '',
+                  url: '/',
                   templateUrl: 'tpl/layout.html',
               })
               .state('app.stations', {
-                  url: '/?stationId',
+                  url: '?stationId',
                   templateUrl: 'tpl/stations.html',
                   resolve: {
                       deps: ['$ocLazyLoad',
@@ -51,9 +51,15 @@ angular.module('app')
                   },
                   controller:'PostCtrl'
               })
-              .state('app.read', {
-                url: '/asdf',
-                controller: 'ReadCtrl'
+              .state('app.stations.read', {
+                url: 'asdf',
+                controller: 'ReadCtrl',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/read.js']);
+                    }]
+                  },
               })
               .state('app.search', {
                   url: '/search',

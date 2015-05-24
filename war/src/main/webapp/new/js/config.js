@@ -49,9 +49,11 @@ angular.module('app')
     trixProvider.setConfig({ url: location.protocol + '//' + location.host });
   })
   .run(function($rootScope){
+      var backgroundColor = initData.network.backgroundColor
+      var navbarColor = initData.network.navbarColor
     /* define application's custom style based on the network's configuration */
       var $style = $('style#custom-style').length ? $('style#style#custom-style') : $('<style id="custom-style">').appendTo('body');
-      $style.html(getCustomStyle("#cc3300", "#222222", "#111111"));
+      $style.html(getCustomStyle("#cc3300", backgroundColor, navbarColor));
 
       $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
             window.console && console.log(toState);
