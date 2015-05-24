@@ -142,7 +142,10 @@ function getCustomStyle(color, perspective, header) {
 	"#station-sidebar{\n" + 
 	 "background:rgba(0, 0, 0, 0.04)!important;\n"+
 	"}\n"+
-	"#perspective-vertical .md-header{border-bottom: 1px solid #dee5e7}\n"+
+	"#perspective-vertical .md-header{border-bottom: 1px solid rgba(0,0,0,0.1)}\n"+
+	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l{\n"+
+	  "border-color:rgba(0,0,0,0.1)\n"+
+	"}\n"+
 	"\n"
 	:
 	// perspective is dark
@@ -164,11 +167,11 @@ function getCustomStyle(color, perspective, header) {
 	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l{\n"+
 	 "border-color:rgba(255,255,255, 0.3)\n"+
 	"}\n"+
-	".bg-perspective .station-perspectives .station-perspectives a{\n"+
-	  "color: rgba(255,255,255, 0.92) ;\n"+
+	".bg-perspective .station-perspectives a{\n"+
+	  "color: rgba(255,255,255, 0.84) ;\n"+
 	"}\n"+
-	".bg-perspective .station-perspectives .station-perspectives a:hover,\n"+
-	".bg-perspective .station-perspectives .station-perspectives a:focus {\n"+
+	".bg-perspective .station-perspectives a:hover,\n"+
+	".bg-perspective .station-perspectives a:focus {\n"+
 	  "color: rgba(255,255,255, 0.92) ;\n"+
 	  "text-decoration: none;\n"+
 	"}\n"+

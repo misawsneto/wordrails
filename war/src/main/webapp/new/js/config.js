@@ -51,7 +51,7 @@ angular.module('app')
   .run(function($rootScope){
     /* define application's custom style based on the network's configuration */
       var $style = $('style#custom-style').length ? $('style#style#custom-style') : $('<style id="custom-style">').appendTo('body');
-      $style.html(getCustomStyle("#cc3300", "#ffffff", "#ffffff"));
+      $style.html(getCustomStyle("#cc3300", "#222222", "#111111"));
 
       $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
             window.console && console.log(toState);
