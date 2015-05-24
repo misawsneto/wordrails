@@ -48,4 +48,15 @@ angular.module('app')
                                   'link', 'image', 'video', 'alignment', 'horizontalrule'];
     trixProvider.setConfig({ url: location.protocol + '//' + location.host });
   })
+  .run(function($rootScope){
+    /* define application's custom style based on the network's configuration */
+      var $style = $('style#custom-style').length ? $('style#style#custom-style') : $('<style id="custom-style">').appendTo('body');
+      $style.html(getCustomStyle("#cc3300", "#ffffff", "#ffffff"));
+
+      $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
+            window.console && console.log(toState);
+            window.console && console.log(fromState);
+            window.console && console.error(event)
+          });
+  })
   ;

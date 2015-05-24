@@ -66,7 +66,7 @@ function textColorEval2 (hex){
   	return false;
 }
 
-function getCustomButtonStyle(color, perspective, header) {
+function getCustomStyle(color, perspective, header) {
 	var style = "" +
 	".btn-custom {\n"+
 	"  color: "+textColorEval(color)+" !important;\n"+
@@ -119,17 +119,15 @@ function getCustomButtonStyle(color, perspective, header) {
 	  "color: "+ color +";\n"+
 	"}\n"+
 
-	"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
+	/*"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
 	  "color: "+ color +";\n"+
 	  "background: "+ color +";\n"+
-	"}\n"+
+	"}\n"+*/
 
-	".redactor-editor a:hover {color: inherit }\n"+
-	".redactor-editor a {color:"+ color +"}\n"+
+	".redactor-editor a, .redactor-editor a:hover {color:"+ color +"}\n"+
 
-	"#perspective-vertical .md-header{ border: 1px solid "+color+"; box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05) }\n"+
 
-	"#station-sidebar md-tabs.md-default-theme md-tabs-ink-bar {\n"+
+	"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
 	  "color: "+ textColorEval(perspective) +";\n"+
 	  "background: "+ (textColorEval2(perspective) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)") +";\n"+
 	"}\n"+
@@ -143,28 +141,36 @@ function getCustomButtonStyle(color, perspective, header) {
 	// perspective is bright
 	"#station-sidebar{\n" + 
 	 "background:rgba(0, 0, 0, 0.04)!important;\n"+
-	"}\n"
+	"}\n"+
+	"#perspective-vertical .md-header{border-bottom: 1px solid #dee5e7}\n"+
+	"\n"
 	:
 	// perspective is dark
 	"#station-sidebar{\n" + 
 	 "background:rgba(255,255,255, 0.04)!important;"+
+	 "box-shadow: -7px 0 9px -7px rgba(0,0,0,0.4);"+
+	 "border-left: 0px;"+
 	"}\n"+
+	"#station-sidebar .md-header{\n" + 
+	"box-shadow: 0 5px 5px -5px rgba(0,0,0,0.4);"+
+	"}\n"+
+	"#station-sidebar .md-tab-content > .b-t{\n"+
+	"border-top: 0px"+
+	"}"+
 	"#perspective-vertical .md-header {\n"+
-	 "border-bottom: 1px solid rgba(255,255,255,0.5);\n"+
+	 //"border-bottom: 1px solid rgba(255,255,255,0.5);\n"+
+	 "box-shadow: 0 5px 5px -5px rgba(0,0,0,0.4);"+
 	"}\n"+
-	".bg-perspective .b-t, .bg-perspective .b-r, .bg-perspective .b-b, .bg-perspective .b-l{\n"+
-	 "border-color:rgba(255,255,255, 0.5)\n"+
+	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l{\n"+
+	 "border-color:rgba(255,255,255, 0.3)\n"+
 	"}\n"+
-	".bg-perspective .station-perspectives a{\n"+
+	".bg-perspective .station-perspectives .station-perspectives a{\n"+
 	  "color: rgba(255,255,255, 0.92) ;\n"+
 	"}\n"+
-	".bg-perspective .station-perspectives a:hover,\n"+
-	".bg-perspective .station-perspectives a:focus {\n"+
+	".bg-perspective .station-perspectives .station-perspectives a:hover,\n"+
+	".bg-perspective .station-perspectives .station-perspectives a:focus {\n"+
 	  "color: rgba(255,255,255, 0.92) ;\n"+
 	  "text-decoration: none;\n"+
-	"}\n"+
-	".bg-perspective .md-tab-content > div.b-t {"+
-	"border: none;"+
 	"}\n"+
 	"\n"
 	)+
