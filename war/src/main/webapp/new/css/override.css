@@ -1058,14 +1058,71 @@ list-style: none; margin: 0; padding: 0;
   font-size: 16px;
 }
 
-.redactor-editor{padding: 0 0 20px 0;}
-#post-placeholder{font-size: 22px; position: absolute; z-index: 2}
+.redactor-editor{padding: 0 0 20px 0; }
+#post-placeholder{font-size: 18px; position: absolute; z-index: 2}
+.post-media-buttons{box-shadow: none; border: 1px solid rgba(0, 0, 0, 0.1);}
 /* /post */
+
+#post-left-content{
+  background: #333;
+  width: 280px;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  position: absolute;
+  z-index: 9998;
+  margin-left: -280px;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+.show-post #post-left-content{
+  margin-left: 0;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+#post-right-content{
+  background: #fff;
+  height: 100vh;
+  position: absolute;
+  margin-left: 2000px;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  right: 0;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+#post-right-content .scroll-wrap{position: relative;height: 100%;overflow-x: hidden;overflow-y: scroll;}
+
+.show-post #post-right-content{
+  margin-left: 280px;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+.show-post{
+  overflow: hidden;
+}
 
 /* redactor */
 
 .redactor-placeholder:after{
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .redactor-editor code,
@@ -1080,7 +1137,7 @@ list-style: none; margin: 0; padding: 0;
 .redactor-editor dl,
 .redactor-editor blockquote,
 .redactor-editor pre {
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1.6em;
 }
 .redactor-editor a {
@@ -1675,7 +1732,7 @@ list-style: none; margin: 0; padding: 0;
     position: fixed;
   }
 
-  #station-sidebar md-tabs{margin-top: 2px;}
+  /* #station-sidebar md-tabs{margin-top: 2px;} */
 
   #perspective-vertical .md-header {max-width: 800px; margin-right: auto; margin-left: auto;}
 
@@ -2368,5 +2425,5 @@ body #cdawrap {
     transform: translate3d(0,0,0);
   }
 
-  .scroll-wrap{position: relative;width: 317px;height: 100%;overflow-x: hidden;overflow-y: scroll;}
+  /* .scroll-wrap{position: relative;width: 317px;height: 100%;overflow-x: hidden;overflow-y: scroll;} */
 /* /offcanvas */

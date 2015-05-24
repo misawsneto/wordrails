@@ -124,6 +124,9 @@ function getCustomButtonStyle(color, perspective, header) {
 	  "background: "+ color +";\n"+
 	"}\n"+
 
+	".redactor-editor a:hover {color: inherit }\n"+
+	".redactor-editor a {color:"+ color +"}\n"+
+
 	"#perspective-vertical .md-header{ border: 1px solid "+color+"; box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05) }\n"+
 
 	"#station-sidebar md-tabs.md-default-theme md-tabs-ink-bar {\n"+

@@ -17,6 +17,53 @@
   <!-- navbar -->
   <!-- <div class="app-footer navbar navbar-fixed-bottom bg-light lt b-t" ng-class="{'m-n': app.hideAside, 'hide': app.hideFooter}" ui-view="footer"></div> -->
 
+  <div id="post-left-content"></div>
+  <div id="post-right-content">
+    <div class="hbox">
+      <div class="col">
+        <div class="vbox">
+          <div class="row-row">
+            <div class="cell">
+              <div class="cell-inner">
+                <div class="wrapper-md p-r-xxl p-l-xxl">
+                  <div id="post-media-box" class="new-post-block">
+                    <button class="post-stroke-btn btn text-md btn-sm m-t-xxs btn-icon btn-rounded btn-stroke btn-muted" tooltip="adicionar mídia" tooltip-append-to-body="true" ng-click="showMediaButtons = !showMediaButtons" tabindex="0">
+                      <i class="mdi-dots-horizontal mdi"></i>
+                    </button>
+                    <div class="pull-left hide" ng-class="{'hide': !showMediaButtons}">
+                      <ul class="redactor-toolbar post-media-buttons">
+                        <li><a href="#" class="mdi mdi-image-filter-hdr"></a></li>
+                        <li><a href="#" class="mdi mdi-image-filter"></a></li>
+                        <li><a href="#" class="mdi mdi-play"></a></li>
+                      </ul>
+                    </div>
+                    <img src="img/c0.jpg" class="img-full">
+                  </div>
+                  <div id="post-title-box" class="new-post-block m-t">
+                    <span type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">Título</span>
+                  </div>
+                  <div id="external-toolbar-container" class="new-post-block bg-white">
+                    <button id="toggle-toolbars" class="post-stroke-btn btn text-md btn-sm m-t btn-icon btn-rounded btn-stroke btn-muted" tooltip="barra de ferramentas" tooltip-append-to-body="true" ng-click="app.showPostToolbar = !app.showPostToolbar" tabindex="0">
+                      <i class="mdi-format-italic mdi"></i>
+                    </button>
+                    <div id="external-toolbar" class="w-full m-b-n-xxs p-t p-b bg-white hide" ng-class="{'hide': !app.showPostToolbar}" style="width: 800px;"><ul class="redactor-toolbar redactor-toolbar-external" id="redactor-toolbar-0"><li><a href="#" class="re-icon re-html" rel="html" tabindex="-1"></a></li><li><a href="#" class="re-icon re-formatting" rel="formatting" tabindex="-1"></a></li><li><a href="#" class="re-icon re-bold" rel="bold" tabindex="-1"></a></li><li><a href="#" class="re-icon re-italic" rel="italic" tabindex="-1"></a></li><li><a href="#" class="re-icon re-underline" rel="underline" tabindex="-1"></a></li><li><a href="#" class="re-icon re-deleted" rel="deleted" tabindex="-1"></a></li><li><a href="#" class="re-icon re-unorderedlist" rel="unorderedlist" tabindex="-1"></a></li><li><a href="#" class="re-icon re-orderedlist" rel="orderedlist" tabindex="-1"></a></li><li><a href="#" class="re-icon re-outdent" rel="outdent" tabindex="-1"></a></li><li><a href="#" class="re-icon re-indent" rel="indent" tabindex="-1"></a></li><li><a href="#" class="re-icon re-link" rel="link" tabindex="-1"></a></li><li><a href="#" class="re-icon re-image" rel="image" tabindex="-1"></a></li><li><a href="#" class="re-icon re-video redactor-btn-image" rel="video" tabindex="-1"></a></li><li><a href="#" class="re-icon re-alignment" rel="alignment" tabindex="-1"></a></li><li><a href="#" class="re-icon re-horizontalrule" rel="horizontalrule" tabindex="-1"></a></li><li><a href="#" class="re-icon re-fontsize redactor-btn-image" rel="fontsize" tabindex="-1"></a></li><li><a href="#" class="re-icon re-fontcolor redactor-btn-image" rel="fontcolor" tabindex="-1"></a></li><li><a href="#" class="re-icon re-backcolor redactor-btn-image" rel="backcolor" tabindex="-1"></a></li></ul></div>
+                  </div>
+                  <div class="bg-white-only new-post-block">
+                    <div id="post-placeholder" class="post-content-font text-muted m-t-xxs hide" ng-class="{'hide': content}">Texto...</div>
+                    <div class="redactor-box">
+                    <div class="redactor-editor" style="min-height: 300px;"><p><span class="anno-span" data-redactor-tag="span" data-redactor-class="anno-span" data-verified="redactor">Ireland has overwhelmingly voted to approve same-sex marriage in a constitutional referendum. It is the first nation to legalize gay marriage by a popular vote.</span></p><p><span class="anno-span" data-redactor-tag="span" data-redactor-class="anno-span" data-verified="redactor">With very high turnout in the majority-Catholic nation, more than 62% voted to legalize gay marriage, <a href="http://www.bbc.com/news/world-europe-32858501" target="_blank">according to the BBC</a>.</span></p><p><span class="anno-span" data-redactor-tag="span" data-redactor-class="anno-span" data-verified="redactor">“More people voted in the same-sex marriage referendum than in any other since the foundation of the State,” the <a href="http://www.rte.ie/news/2015/0523/703207-live-count/" target="_blank">Irish news agency RTE reported</a>. More than 1.9 million people turned out, “compared with over 1.8 million who voted in 2004 in the poll to restrict Irish citizenship,” RTE noted. (Ireland’s population is approximately 4.6 million, <a href="http://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank">according to the World Bank</a>.)</span></p><h3>Read this next: <a href="http://qz.com/410739/there-might-soon-be-only-one-country-left-in-western-europe-that-doesnt-recognize-same-sex-unions/" target="_blank">There might soon be only one country left in Western Europe that doesn’t recognize same-sex unions</a></h3>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <!-- /navbar -->
 
     <!-- profile-popover -->

@@ -111,6 +111,11 @@ angular.module('app')
       uiLoad.load(JQ_CONFIG.screenfull)
       $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
         if(typeof screenfull !== 'undefined' && screenfull){ screenfull.exit(); }
+        if(toState.name == "app.read"){
+          $("body").addClass("show-post")
+        }else{
+          $("body").removeClass("show-post")
+        }
       });
 
       $scope.getBackgroundImage = function(postView, size){

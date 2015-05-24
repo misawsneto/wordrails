@@ -6,6 +6,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', function($scope, $log,
 	$scope.$watch('app.hidePostOptions', checkPostToolsWidth)
 
 	$scope.app.showPostToolbar = false;
+	$scope.showMediaButtons = false;
 
 	function checkPostToolsWidth () {
 		$timeout(function(){

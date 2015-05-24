@@ -57,6 +57,10 @@ angular.module('app')
                   },
                   controller:'PostCtrl'
               })
+              .state('app.read', {
+                url: '/asdf',
+                controller: 'ReadCtrl'
+              })
               .state('app.search', {
                   url: '/search',
                   templateUrl: 'tpl/search.html',
