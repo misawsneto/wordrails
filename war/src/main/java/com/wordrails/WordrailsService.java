@@ -253,7 +253,7 @@ public class WordrailsService {
 			e.printStackTrace();
 		}
 
-		wpc.content = doc.text();
+		wpc.content = doc.select("body").html();
 		wpc.externalImageUrl = featuredImageUrl;
 		wpc.content = wpc.content.replaceAll("\\[(.*?)\\](.*?)\\[/(.*?)\\]", "");
 		wpc.content = wpc.content.trim();
