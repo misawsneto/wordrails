@@ -1,0 +1,28 @@
+<div class="hbox scroll-y">
+  <div class="col">
+    <div class="vbox">
+      <div class="row-row">
+        <div class="cell left-content-wrap">
+          <div class="cell-inner">
+            <div id="post-media-box" class="new-post-block m-t-md" ng-if="!app.nowReading.imageLandscape && app.nowReading.imageLargeId">
+              <img src="getImageLink(app.nowReading.imageLargeId)" class="img-full">
+            </div>
+            <div class="post-image-conver" ng-style="getBackgroundImage(app.nowReading, 'lg')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
+            </div>
+            <div class="p-r-xxl p-l-xxl">
+              <div id="post-title-box" class="new-post-block m-t m-b">
+                <span type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
+                  {{app.nowReading.title}}
+                </span>
+              </div>
+              <div class="bg-white-only new-post-block">
+                <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

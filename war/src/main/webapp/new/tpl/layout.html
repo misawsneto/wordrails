@@ -17,69 +17,8 @@
   <!-- navbar -->
   <!-- <div class="app-footer navbar navbar-fixed-bottom bg-light lt b-t" ng-class="{'m-n': app.hideAside, 'hide': app.hideFooter}" ui-view="footer"></div> -->
 
-  <div id="post-left-content"></div>
-  <div id="post-right-content">
-    <div class="hbox">
-      <div class="col">
-        <div class="vbox">
-          <div class="row-row">
-            <div class="collapse post-read-header pos-rlt navbar-collapse box-shadow nav-down bg-white-only post-nav">
-            <!-- nabar left -->
-              <ul class="nav navbar-nav navbar-left">
-                <li><a href class="text-center text-lg">
-                    <i class="mdi mdi-google-plus"></i>
-                </a></li>
-                <li><a href class="text-center text-lg">
-                    <i class="mdi mdi-twitter"></i>
-                </a></li>
-                <li><a href class="text-center text-lg">
-                    <i class="mdi mdi-facebook"></i>
-                </a></li>
-                <li>
-                  <div class="divider-v"></div>
-                </li>
-                <li><a href class="text-center text-lg">
-                    <i class="mdi mdi-heart-outline"></i>
-                </a></li>
-                <li><a href class="text-center text-lg">
-                    <i class="mdi mdi-bookmark-outline"></i>
-                </a></li>
-              </ul>
-              <!-- nabar right -->
-              <ul class="nav navbar-nav navbar-right">
-                <li>
-                  <div class="divider-v"></div>
-                </li>
-                <li>
-                  <a href class="text-u-c text-center splash-close-button" ng-click="app.clodePostRead()">
-                  ×</a>
-                </li>
-              </ul>
-            </div>
-            <div class="cell">
-              <div class="cell-inner">
-                <div id="post-media-box" class="new-post-block m-t-md" ng-if="!app.nowReading.imageLandscape && app.nowReading.imageLargeId">
-                  <img src="getImageLink(app.nowReading.imageLargeId)" class="img-full">
-                </div>
-                <div class="post-image-conver" ng-style="getBackgroundImage(app.nowReading, 'lg')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
-                </div>
-                <div class="p-r-xxl p-l-xxl">
-                  <div id="post-title-box" class="new-post-block m-t m-b">
-                    <span type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
-                      {{app.nowReading.title}}
-                    </span>
-                  </div>
-                  <div class="bg-white-only new-post-block">
-                    <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div id="post-left-content" data-ng-include=" 'tpl/read-post-left-content.html' "></div>
+  <div id="post-right-content" data-ng-include=" 'tpl/read-post-right-content.html' ">
   </div>
 
 <!-- /navbar -->

@@ -201,6 +201,7 @@ angular.module('app')
       }
 
       $scope.app.setNowReading = function(postView){
+        $scope.app.nowReading = null;
         $scope.app.nowReading = postView;
         $state.go('app.stations.read',{slug: postView.slug}); 
       }
