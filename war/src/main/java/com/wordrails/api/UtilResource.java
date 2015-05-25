@@ -184,6 +184,8 @@ public class UtilResource {
 					post.imageMediumId = post.featuredImage.medium.id;
 					post.imageLargeId= post.featuredImage.large.id;
 					post.imageLandscape= !post.featuredImage.vertical;
+					post.imageCaptionText = post.featuredImage.caption;
+					post.imageCreditsText = post.featuredImage.credits;
 				}else{
 					post.imageId = null;
 					post.imageSmallId = null;

@@ -1,8 +1,10 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.data.rest.core.config.Projection;
 
 @Projection(types=Post.class)
@@ -36,4 +38,6 @@ public interface PostProjection {
 	String getExternalFeaturedImgUrl();
 	String getExternalVideoUrl();
 	Integer getReadTime();
+	String getImageCaptionText();
+	String getImageCreditsText();
 }

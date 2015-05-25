@@ -213,6 +213,12 @@ public class Post {
 	
 	public int readTime;
 	
+	@Lob
+	public String imageCaptionText;
+	
+	@Lob
+	public String imageCreditsText;
+	
 	@PrePersist
 	public void onCreate() {
 		if(featuredImage != null && featuredImage.original != null){
@@ -220,7 +226,9 @@ public class Post {
 			imageSmallId = featuredImage.small.id;
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId= featuredImage.large.id;
-			imageLandscape = !featuredImage.vertical; 
+			imageLandscape = !featuredImage.vertical;
+			imageCaptionText = featuredImage.caption;
+			imageCreditsText = featuredImage.credits;
 		}else{
 			imageId = null;
 			imageSmallId = null;
