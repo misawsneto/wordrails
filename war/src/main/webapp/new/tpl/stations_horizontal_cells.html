@@ -1,4 +1,4 @@
-<div class="news-item" data-post-id="{{cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="loadPost(cell.postView.id)">
+<div class="news-item" data-post-id="{{cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setNowReading(cell.postView)">
 	<div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-show="cell.postView.mediumId">
 		<div class="text-md font-thin text-white ls-sm" clamp="3">{{cell.postView.title}}</div>
 		<div class="m-t-md" ng-show="cell.postView.mediumId">

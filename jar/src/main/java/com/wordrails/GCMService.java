@@ -95,7 +95,8 @@ public class GCMService {
 		init();
 		// make a copy
 		HashSet<String> devices = new HashSet<String>();
-
+		
+		notification.hash = WordrailsUtil.generateRandomString(10, "Aa#");
 		ArrayList<Notification> notis = new ArrayList<Notification>();
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
 			Notification noti = new Notification();
@@ -106,7 +107,7 @@ public class GCMService {
 			noti.person = pnRegId.person;
 			noti.post = notification.post;
 			noti.type = notification.type + "";
-			noti.hash = notification.hash = WordrailsUtil.generateRandomString(10, "Aa#") + "";
+			noti.hash = notification.hash + "";
 			devices.add(pnRegId.regId);
 			notification.person = pnRegId.person;
 			notis.add(noti);

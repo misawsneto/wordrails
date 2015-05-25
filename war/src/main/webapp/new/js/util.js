@@ -66,7 +66,7 @@ function textColorEval2 (hex){
   	return false;
 }
 
-function getCustomButtonStyle(color, perspective, header) {
+function getCustomStyle(color, perspective, header) {
 	var style = "" +
 	".btn-custom {\n"+
 	"  color: "+textColorEval(color)+" !important;\n"+
@@ -119,12 +119,15 @@ function getCustomButtonStyle(color, perspective, header) {
 	  "color: "+ color +";\n"+
 	"}\n"+
 
-	"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
+	/*"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
 	  "color: "+ color +";\n"+
 	  "background: "+ color +";\n"+
-	"}\n"+
+	"}\n"+*/
 
-	"#station-sidebar md-tabs.md-default-theme md-tabs-ink-bar {\n"+
+	".redactor-editor a, .redactor-editor a:hover {color:"+ color +"}\n"+
+
+
+	"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
 	  "color: "+ textColorEval(perspective) +";\n"+
 	  "background: "+ (textColorEval2(perspective) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)") +";\n"+
 	"}\n"+
@@ -138,28 +141,39 @@ function getCustomButtonStyle(color, perspective, header) {
 	// perspective is bright
 	"#station-sidebar{\n" + 
 	 "background:rgba(0, 0, 0, 0.04)!important;\n"+
-	"}\n"
+	"}\n"+
+	"#perspective-vertical .md-header{border-bottom: 1px solid rgba(0,0,0,0.1)}\n"+
+	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l{\n"+
+	  "border-color:rgba(0,0,0,0.1)\n"+
+	"}\n"+
+	"\n"
 	:
 	// perspective is dark
 	"#station-sidebar{\n" + 
 	 "background:rgba(255,255,255, 0.04)!important;"+
+	 "box-shadow: -7px 0 9px -7px rgba(0,0,0,0.4);"+
+	 "border-left: 0px;"+
 	"}\n"+
+	"#station-sidebar .md-header{\n" + 
+	"box-shadow: 0 5px 5px -5px rgba(0,0,0,0.4);"+
+	"}\n"+
+	"#station-sidebar .md-tab-content > .b-t{\n"+
+	"border-top: 0px"+
+	"}"+
 	"#perspective-vertical .md-header {\n"+
-	 "border-bottom: 1px solid rgba(255,255,255,0.5);\n"+
+	 //"border-bottom: 1px solid rgba(255,255,255,0.5);\n"+
+	 "box-shadow: 0 5px 5px -5px rgba(0,0,0,0.4);"+
 	"}\n"+
-	".b-t, .b-r, .b-b, .b-l{\n"+
-	 "border-color:rgba(255,255,255, 0.5)\n"+
+	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l{\n"+
+	 "border-color:rgba(255,255,255, 0.3)\n"+
 	"}\n"+
 	".bg-perspective .station-perspectives a{\n"+
-	  "color: rgba(255,255,255, 0.92) ;\n"+
+	  "color: rgba(255,255,255, 0.84) ;\n"+
 	"}\n"+
 	".bg-perspective .station-perspectives a:hover,\n"+
 	".bg-perspective .station-perspectives a:focus {\n"+
 	  "color: rgba(255,255,255, 0.92) ;\n"+
 	  "text-decoration: none;\n"+
-	"}\n"+
-	".bg-perspective .md-tab-content > div.b-t {"+
-	"border: none;"+
 	"}\n"+
 	"\n"
 	)+
@@ -203,6 +217,12 @@ function getCustomButtonStyle(color, perspective, header) {
 	".station-header .nav > li > a:hover{\n"+
 	"  color: " + (textColorEval(header, true)) + ";\n"+
 	"}\n"+
+
+	".redactor-toolbar li a:hover {\n"+
+	  "outline: none;\n"+
+	  "background-color:" + color + ";\n"+
+	  "color: " + (textColorEval(color, true)) + ";\n"+
+	"}\n"
 
 	/*".station-header .nav li .dropdown-menu {\n"+
 	" background-color:" + header + ";\n"+

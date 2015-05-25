@@ -24,6 +24,7 @@ public class PostView implements Serializable {
 	public Integer imageSmallId;
 	public Integer imageMediumId;
 	public Integer imageLargeId;
+	public Integer readTime;
 
 	public boolean imageLandscape;
 
@@ -36,4 +37,9 @@ public class PostView implements Serializable {
 
 	public String slug;
 	public String externalFeaturedImgUrl;
+	public String externalVideoUrl;
+	
+	public String imageCaptionText;
+	public String imageCreditsText;
+	
 }

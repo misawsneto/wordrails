@@ -1279,5 +1279,4 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
-
 }

@@ -9,12 +9,6 @@ angular.module('app')
       function ($rootScope,   $state,   $stateParams) {
           $rootScope.$state = $state;
           $rootScope.$stateParams = $stateParams;
-
-          $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
-            window.console && console.log(toState);
-            window.console && console.log(fromState);
-            window.console && console.error(event)
-          });
       }
     ]
   )
@@ -32,11 +26,11 @@ angular.module('app')
           $stateProvider
               .state('app', {
                   abstract: true,
-                  url: '',
+                  url: '/',
                   templateUrl: 'tpl/layout.html',
               })
               .state('app.stations', {
-                  url: '/?stationId',
+                  url: '?stationId',
                   templateUrl: 'tpl/stations.html',
                   resolve: {
                       deps: ['$ocLazyLoad',
@@ -56,6 +50,17 @@ angular.module('app')
                     }]
                   },
                   controller:'PostCtrl'
+              })
+              .state('app.stations.read', {
+                url: ':slug',
+                controller: 'ReadCtrl',
+                template: '',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/read.js']);
+                    }]
+                  },
               })
               .state('app.search', {
                   url: '/search',

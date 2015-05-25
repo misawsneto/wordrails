@@ -1,5 +1,7 @@
 package com.wordrails.api;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -18,12 +20,14 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.Term;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
+import com.wordrails.persistence.TermRepository;
 
 @Path("/terms")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -43,11 +47,17 @@ public class TermResource {
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
+	private @Autowired TermRepository termRepository;
 	
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	
 	@GET
 	@Path("/termTree")
-	public void getTermTree(@PathParam("termId") String termId) {
-	} 
+	public void getTermTree(@PathParam("taxonomyId") Integer taxonomyId) {
+		List<Term> terms = termRepository.findTreeByTaxonomyId(taxonomyId);
+//		List<Term> roots = new ArrayList<Term>();
+//		for (Term term : terms) {
+//			
+//		}
+	}
 }

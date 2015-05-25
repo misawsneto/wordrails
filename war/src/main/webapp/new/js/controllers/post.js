@@ -4,7 +4,9 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', function($scope, $log,
 	$scope.postCtrl.editingExisting = false;
 
 	$scope.$watch('app.hidePostOptions', checkPostToolsWidth)
-	$scope.$watch('app.hidePostMoreOptions', checkPostToolsWidth)
+
+	$scope.app.showPostToolbar = false;
+	$scope.showMediaButtons = false;
 
 	function checkPostToolsWidth () {
 		$timeout(function(){
@@ -20,21 +22,41 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', function($scope, $log,
 				$scope.postCtrl.showHeaderShadow = true;
 		});
 
-		if(scrollTop > 530){
+		var toolbar_m_t = $("#post-title-box").height() + 15 + $("#post-media-box").height()
+
+		if(scrollTop > toolbar_m_t){
 			$("#external-toolbar").addClass('fixed-tools')
+			$("#toggle-toolbars").addClass('fixed-tools-button')
 		}else{
 			$("#external-toolbar").removeClass('fixed-tools')
+			$("#toggle-toolbars").removeClass('fixed-tools-button')
 		}
 
 		checkPostToolsWidth();
 
 	}
 
+	function doResize(){
+		checkPostToolsWidth();
+	}
+
+	var timeoutResize;
+	$(window).resize(function(){
+	  clearTimeout(timeoutResize);
+	  timeoutResize = setTimeout(doResize, 100);
+	})
+
+	$scope.content = null;
 	$scope.postCtrl.redactorInit = function(){
+		$scope.content = null;
 		checkScrollVisible($("#post-cell").scrollTop())
 		$("#post-cell").scroll(function(){
 			checkScrollVisible(this.scrollTop);
 		})
 	}
+
+	$("#post-placeholder").click(function(){
+		$(".redactor-editor").focus();
+	})
 
 }]);

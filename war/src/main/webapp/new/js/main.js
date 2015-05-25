@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http',
-  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http) {
+.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad',
+  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -108,8 +108,15 @@ angular.module('app')
       }
       $scope.app.checkIfLogged();
 
+      uiLoad.load(JQ_CONFIG.screenfull)
       $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-
+        if(typeof screenfull !== 'undefined' && screenfull){ screenfull.exit(); }
+        if(toState.name == "app.stations.read"){
+          $("body").addClass("show-post")
+        }else{
+          $('.station-header').removeClass('nav-up').addClass('nav-down');
+          $("body").removeClass("show-post")
+        }
       });
 
       $scope.getBackgroundImage = function(postView, size){
@@ -141,10 +148,6 @@ angular.module('app')
       $scope.cancelModal = function () {
         $scope.modalInstance.dismiss('cancel');
       };
-
-      /* define application's custom style based on the network's configuration */
-      var $style = $('style#custom-style').length ? $('style#style#custom-style') : $('<style id="custom-style">').appendTo('body');
-      $style.html(getCustomButtonStyle("#cc3300", "#111111", "#333333"));
 
       $scope.app.viewMode = 'vertical';
       $scope.changeView = function(view){
@@ -187,18 +190,21 @@ angular.module('app')
 
       }
 
-      $scope.blabla = function(){
-        console.log($scope.app.profilepopover.open);
-      }
-
       moment.locale('pt')
-
       loadPopular();
       loadRecent();
 
       trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
 
-      trix.findPostReadByPersonIdOrderByDate(2)
+      $scope.app.clodePostRead = function(){
+        $state.go('^')
+      }
+
+      $scope.app.setNowReading = function(postView){
+        $scope.app.nowReading = null;
+        $scope.app.nowReading = postView;
+        $state.go('app.stations.read',{slug: postView.slug}); 
+      }
 
       /* end of added */
   }]); 

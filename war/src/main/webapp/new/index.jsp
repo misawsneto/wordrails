@@ -28,7 +28,7 @@
 </head>
 <body ng-controller="AppCtrl">
   <offcanvas></offcanvas>
-  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'bg-white': $state.current.name == 'app.search' || $state.current.name == 'app.post', 'bg-perspective': $state.current.name == 'app.stations', 'bg-admin': $state.current.name.indexOf('app.settings') > -1}" ui-view></div>
+  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'bg-white': $state.current.name == 'app.search' || $state.current.name == 'app.post', 'bg-perspective': $state.current.name.indexOf('app.stations') > -1, 'bg-admin': $state.current.name.indexOf('app.settings') > -1}" ui-view></div>
 
 
   <!-- jQuery -->

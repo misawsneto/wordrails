@@ -7,17 +7,31 @@
     <div class="row-row">
       <div class="cell" id="post-cell">
         <div class="cell-inner">
-          <div class="wrapper-md">
-            <div id="post-title-box" class="new-post-block m-b">
-              <input type="text" class="b-none text-2x w-full back-none" placeholder="Título">
+          <div class="wrapper-md p-r-xxl p-l-xxl">
+            <div id="post-media-box" class="new-post-block">
+              <button class="post-stroke-btn btn text-md btn-sm m-t-xxs btn-icon btn-rounded btn-stroke btn-muted" tooltip="adicionar mídia" tooltip-append-to-body="true" ng-click="showMediaButtons = !showMediaButtons">
+                <i class="mdi-dots-horizontal mdi"></i>
+              </button>
+              <div class="pull-left" ng-class="{'hide': !showMediaButtons}">
+                <ul class="redactor-toolbar post-media-buttons">
+                  <li><a href="#" class="mdi mdi-image-filter-hdr"></a></li>
+                  <li><a href="#" class="mdi mdi-image-filter"></a></li>
+                  <li><a href="#" class="mdi mdi-play"></a></li>
+                </ul>
+              </div>
+                <img src="img/c0.jpg" class="img-full">
             </div>
-            <div id="post-media-box" class="new-post-block m-b">
-              <img src="img/c0.jpg" class="img-full">
+            <div id="post-title-box" class="new-post-block m-t">
+              <input type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
             </div>
-            <div id="external-toolbar-container" class="new-post-block">
-              <div id="external-toolbar" class="w-full m-b-n-xxs"></div>
+            <div id="external-toolbar-container" class="new-post-block bg-white">
+              <button id="toggle-toolbars" class="post-stroke-btn btn text-md btn-sm m-t btn-icon btn-rounded btn-stroke btn-muted" tooltip="barra de ferramentas" tooltip-append-to-body="true" ng-click="app.showPostToolbar = !app.showPostToolbar">
+                <i class="mdi-format-italic mdi"></i>
+              </button>
+              <div id="external-toolbar" class="w-full m-b-n-xxs p-t p-b bg-white" ng-class="{'hide': !app.showPostToolbar}"></div>
             </div>
-            <div class="box-shadow bg-white-only new-post-block">
+            <div class="bg-white-only new-post-block">
+              <div id="post-placeholder" class="post-content-font text-muted m-t-xxs" ng-class="{'hide': content}">Texto...</div>
               <textarea ng-model="content" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
           </div>
@@ -25,11 +39,6 @@
       </div>
     </div>
   </div>
-</div>
-<!-- /column -->
-
-<!-- column -->
-<div class="col w-lg" data-ng-include=" 'tpl/post_more_options.html' " ng-class="{'hide': app.hidePostOptions || app.hidePostMoreOptions}">
 </div>
 <!-- /column -->
 

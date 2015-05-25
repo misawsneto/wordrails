@@ -2,7 +2,7 @@
   .directive('uiFullscreen', ['uiLoad', 'JQ_CONFIG', '$document', '$window', function(uiLoad, JQ_CONFIG, $document, $window) {
     return {
       restrict: 'AC',
-      template:'<i class="fa fa-expand fa-fw text"></i><i class="fa fa-compress fa-fw text-active"></i>',
+      template:'<i class="mdi mdi-arrow-expand fa-fw text text-lg"></i><i class="mdi mdi-arrow-collapse fa-fw text-lg text-active"></i>',
       link: function(scope, el, attr) {
         el.addClass('hide');
         uiLoad.load(JQ_CONFIG.screenfull).then(function(){

@@ -1,4 +1,4 @@
-<div id="perspective-vertical" class="animated fadeIn m-t-md" ng-if="app.viewMode === 'vertical'">
+<div id="perspective-vertical" class="animated fadeIn" ng-if="app.viewMode === 'vertical'">
   <md-tabs md-selected="selectedIndex" flex class="">
     <!-- tab -->
     <md-tab ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="bg-custom" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
@@ -19,10 +19,10 @@
                 <!-- /content -->
                 <div class="m-t-sm" ng-class="{'content-block': cell.postView.mediumId}">
                   <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{cell.postView.topper}}</span>
-                  <a ui-sref="app.post({postId: cell.postView.postId})" clamp="3" class="h3 font-bold m-b m-t-sm block">
+                  <a ng-click="app.setNowReading(cell.postView)" clamp="3" class="h3 font-bold m-b m-t-sm block">
                     {{cell.postView.title}}
                   </a>
-                  <div class="text-lg font-thin post-content-font" clamp="3" bind-html-unsafe="cell.postView.snippet"></div>
+                  <div class="text-lg font-thin" clamp="3" bind-html-unsafe="cell.postView.snippet"></div>
                   <div class="m-t">
                     <div class="display-t-c">
                       <a >
