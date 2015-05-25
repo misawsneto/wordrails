@@ -196,6 +196,7 @@ public class Post {
 	public Set<Term> terms;
 	
 	@Field(analyze = Analyze.NO)
+	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean imageLandscape;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
@@ -219,6 +220,7 @@ public class Post {
 			imageSmallId = featuredImage.small.id;
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId= featuredImage.large.id;
+			imageLandscape = !featuredImage.vertical; 
 		}else{
 			imageId = null;
 			imageSmallId = null;
@@ -240,6 +242,7 @@ public class Post {
 			imageSmallId = featuredImage.small.id;
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId= featuredImage.large.id;
+			imageLandscape = !featuredImage.vertical;
 		}else{
 			imageId = null;
 			imageSmallId = null;

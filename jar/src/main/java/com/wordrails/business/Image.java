@@ -3,6 +3,7 @@ package com.wordrails.business;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -65,4 +66,7 @@ public class Image {
 	
 	@OneToMany(mappedBy="featuredImage")
 	public Set<Post> featuringPosts;		
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean vertical = false;;
 }

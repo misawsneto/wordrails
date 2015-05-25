@@ -294,6 +294,7 @@ public class WordrailsService {
 			try (InputStream input = contents.contents.getBinaryStream()) {
 				bufferedImage = ImageIO.read(input);
 			}
+			image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
 			updateContents(small.id, bufferedImage, 150, format);
 			updateContents(medium.id, bufferedImage, 300, format);
 			updateContents(large.id, bufferedImage, 1024, format);
