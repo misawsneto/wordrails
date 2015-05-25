@@ -46,6 +46,27 @@ public class Station {
 	@NotNull	
 	public String visibility;
 	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowSignup;
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowComments;
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowSocialLogin;
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowSocialShare;
+	
+	@Column(columnDefinition="varchar(255) default '#ffffff'")
+	public String backgroundColor = "#ffffff";
+	
+	@Column(columnDefinition="varchar(255) default '#ffffff'")
+	public String navbarColor = "#ffffff";
+	
+	@Column(columnDefinition="varchar(255) default '#5C78B0'")
+	public String primaryColor = "#5C78B0";
+	
 	@Size(min=1)
 	@NotNull
 	@ManyToMany	

@@ -51,6 +51,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
 		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
 		postView.externalVideoUrl = post.externalVideoUrl;
+		postView.readTime = post.readTime;
 		
 		return postView;
 	}

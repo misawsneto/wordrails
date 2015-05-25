@@ -64,4 +64,5 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported=false)
     @Query("SELECT wordpressId FROM Post")
     public Set<Integer> findWordpressIds();
+	
 }

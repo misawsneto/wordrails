@@ -107,6 +107,7 @@ public class WordrailsService {
 	}
 
 	@Async
+	@Transactional
 	public void countPostRead(Post post, String sessionId){
 		PostRead postRead = new PostRead();
 		postRead.person = accessControllerUtil.getLoggedPerson();
@@ -116,6 +117,20 @@ public class WordrailsService {
 		try {
 			postReadRepository.save(postRead);
 			queryPersistence.incrementReadsCount(post.id);
+		} catch (org.springframework.dao.DataIntegrityViolationException ex) {}
+	}
+	
+	@Async
+	@Transactional
+	public void countPostRead(Integer postId, String sessionId){
+		PostRead postRead = new PostRead();
+		postRead.person = accessControllerUtil.getLoggedPerson();
+		postRead.post = postRepository.findOne(postId);
+		if(postRead.person != null && postRead.person.id == 1) // if user wordrails, include session to uniquely identify the user.
+			postRead.sessionid = sessionId;
+		try {
+			postReadRepository.save(postRead);
+			queryPersistence.incrementReadsCount(postId);
 		} catch (org.springframework.dao.DataIntegrityViolationException ex) {}
 	}
 

@@ -190,20 +190,19 @@ angular.module('app')
 
       }
 
-      $scope.blabla = function(){
-        console.log($scope.app.profilepopover.open);
-      }
-
       moment.locale('pt')
-
       loadPopular();
       loadRecent();
 
       trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
 
-      $scope.app.zing = function(){
-        console.log('asdf');
+      $scope.app.clodePostRead = function(){
         $state.go('^')
+      }
+
+      $scope.app.setNowReading = function(postView){
+        $scope.app.nowReading = postView;
+        $state.go('app.stations.read',{slug: postView.slug}); 
       }
 
       /* end of added */

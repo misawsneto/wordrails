@@ -24,6 +24,7 @@ public class PostView implements Serializable {
 	public Integer imageSmallId;
 	public Integer imageMediumId;
 	public Integer imageLargeId;
+	public Integer readTime;
 
 	public boolean imageLandscape;
 

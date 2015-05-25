@@ -42,6 +42,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.business.Person;
@@ -58,6 +59,7 @@ public class PostsResource {
 	private @Context UriInfo uriInfo;
 	private @Context HttpServletResponse response;
 
+	private @Autowired WordrailsService wordrailsService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
 
@@ -164,7 +166,7 @@ public class PostsResource {
 		response.content = postConverter.convertToViews(posts); 
 		return response;
 	}
-
+	
 	@GET
 	@Path("/{stationId}/searchPostsFromOrPromotedToStation")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,6 @@ import com.wordrails.GCMService;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Post;
-import com.wordrails.business.PostRead;
 import com.wordrails.business.ServiceGenerator;
 import com.wordrails.business.Wordpress;
 import com.wordrails.business.WordpressApi;

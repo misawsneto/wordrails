@@ -1068,6 +1068,13 @@ list-style: none; margin: 0; padding: 0;
 .redactor-editor{padding: 0 0 20px 0; }
 #post-placeholder{font-size: 18px; position: absolute; z-index: 2}
 .post-media-buttons{box-shadow: none; border: 1px solid rgba(0, 0, 0, 0.1);}
+.post-image-conver{
+  -moz-background-size: cover;
+  -webkit-background-size: cover;
+  background-size: cover;
+  height: 80%;
+  background-position: 50% 30%;
+}
 /* /post */
 
 /* read */
@@ -1146,7 +1153,7 @@ list-style: none; margin: 0; padding: 0;
 /* redactor */
 
 .redactor-placeholder:after{
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .redactor-editor code,
@@ -1708,15 +1715,16 @@ list-style: none; margin: 0; padding: 0;
   /* /perspective.html */
 
   /* stations.html */
+  .navbar-nav .divider-v {border-right: 1px solid #e5e5e5;   height: 34px; margin-top: 8px;}
   .app-content-body {padding-bottom: 0px;}
 
   .station-header{position: fixed; width: 100%; top: 0; left: 0; margin-left: 0px!important; padding: 0px; padding-right: 15px; z-index: 3;}
 
-  .station-header .nav > li > a:hover,
-  .station-header .nav > li > a:focus,
-  .station-header .nav .open > a,
-  .station-header .nav .open > a:hover,
-  .station-header .nav .open > a:focus{
+  .station-header .nav > li > a:hover, .post-read-header .nav > li > a:hover,
+  .station-header .nav > li > a:focus, .post-read-header .nav > li > a:focus,
+  .station-header .nav .open > a, .post-read-header .nav .open > a,
+  .station-header .nav .open > a:hover, .post-read-header .nav .open > a:hover,
+  .station-header .nav .open > a:focus, .post-read-header .nav .open > a:focus {
     background: inherit;
   }
 

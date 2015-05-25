@@ -1,8 +1,11 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wordrails.util.WordrailsUtil;
+
 import java.util.Date;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import org.apache.solr.analysis.EdgeNGramFilterFactory;
 import org.apache.solr.analysis.HTMLStripCharFilterFactory;
 import org.apache.solr.analysis.KeywordTokenizerFactory;
@@ -206,6 +210,8 @@ public class Post {
 	@Column(length = 1024)
 	public String externalVideoUrl;
 	
+	public int readTime;
+	
 	@PrePersist
 	public void onCreate() {
 		if(featuredImage != null && featuredImage.original != null){
@@ -223,6 +229,7 @@ public class Post {
 		if(comments != null){
 			commentsCount = comments.size();
 		}
+		readTime = WordrailsUtil.calculateReadTime(body);
 		date = new Date();
 	}
 	
@@ -246,10 +253,12 @@ public class Post {
 		
 		updatedAt = new Date();
 		lastModificationDate = updatedAt;
+		readTime = WordrailsUtil.calculateReadTime(body);
 	}
 	
 	public Integer imageId;
 	public Integer imageSmallId;
 	public Integer imageMediumId;
 	public Integer imageLargeId;
+	
 }

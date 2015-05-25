@@ -23,29 +23,54 @@
       <div class="col">
         <div class="vbox">
           <div class="row-row">
-            <div class="collapse pos-rlt navbar-collapse box-shadow nav-down bg-white-only post-nav">
+            <div class="collapse post-read-header pos-rlt navbar-collapse box-shadow nav-down bg-white-only post-nav">
+            <!-- nabar left -->
+              <ul class="nav navbar-nav navbar-left">
+                <li><a href class="text-center text-lg">
+                    <i class="mdi mdi-google-plus"></i>
+                </a></li>
+                <li><a href class="text-center text-lg">
+                    <i class="mdi mdi-twitter"></i>
+                </a></li>
+                <li><a href class="text-center text-lg">
+                    <i class="mdi mdi-facebook"></i>
+                </a></li>
+                <li>
+                  <div class="divider-v"></div>
+                </li>
+                <li><a href class="text-center text-lg">
+                    <i class="mdi mdi-heart-outline"></i>
+                </a></li>
+                <li><a href class="text-center text-lg">
+                    <i class="mdi mdi-bookmark-outline"></i>
+                </a></li>
+              </ul>
               <!-- nabar right -->
               <ul class="nav navbar-nav navbar-right">
-                <li class="ng-scope">
-                  <a href class="text-u-c text-center splash-close-button" ng-click="app.zing()">
+                <li>
+                  <div class="divider-v"></div>
+                </li>
+                <li>
+                  <a href class="text-u-c text-center splash-close-button" ng-click="app.clodePostRead()">
                   ×</a>
                 </li>
               </ul>
             </div>
             <div class="cell">
               <div class="cell-inner">
-                <div class="wrapper-lg p-r-xxl p-l-xxl">
-                  <div id="post-media-box" class="new-post-block">
-                    <img src="img/c0.jpg" class="img-full">
-                  </div>
-                  <div id="post-title-box" class="new-post-block m-t">
-                    <span type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">Título</span>
+                <div id="post-media-box" class="new-post-block m-t-md" ng-if="app.nowReading.simpleImageDisplay && app.nowReading.imageLargeId">
+                  <img src="getImageLink(app.nowReading.imageLargeId)" class="img-full">
+                </div>
+                <div class="post-image-conver" ng-style="getBackgroundImage(app.nowReading, 'lg')" ng-if="!app.nowReading.simpleImageDisplay && app.nowReading.imageLargeId">
+                </div>
+                <div class="p-r-xxl p-l-xxl">
+                  <div id="post-title-box" class="new-post-block m-t m-b">
+                    <span type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
+                      {{app.nowReading.title}}
+                    </span>
                   </div>
                   <div class="bg-white-only new-post-block">
-                    <div id="post-placeholder" class="post-content-font text-muted m-t-xxs hide" ng-class="{'hide': content}">Texto...</div>
-                    <div class="redactor-box">
-                    <div class="redactor-editor" style="min-height: 300px;"><p><span class="anno-span" data-redactor-tag="span" data-redactor-class="anno-span" data-verified="redactor">Ireland has overwhelmingly voted to approve same-sex marriage in a constitutional referendum. It is the first nation to legalize gay marriage by a popular vote.</span></p><p><span class="anno-span" data-redactor-tag="span" data-redactor-class="anno-span" data-verified="redactor">With very high turnout in the majority-Catholic nation, more than 62% voted to legalize gay marriage, <a href="http://www.bbc.com/news/world-europe-32858501" target="_blank">according to the BBC</a>.</span></p><p><span class="anno-span" data-redactor-tag="span" data-redactor-class="anno-span" data-verified="redactor">“More people voted in the same-sex marriage referendum than in any other since the foundation of the State,” the <a href="http://www.rte.ie/news/2015/0523/703207-live-count/" target="_blank">Irish news agency RTE reported</a>. More than 1.9 million people turned out, “compared with over 1.8 million who voted in 2004 in the poll to restrict Irish citizenship,” RTE noted. (Ireland’s population is approximately 4.6 million, <a href="http://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank">according to the World Bank</a>.)</span></p><h3>Read this next: <a href="http://qz.com/410739/there-might-soon-be-only-one-country-left-in-western-europe-that-doesnt-recognize-same-sex-unions/" target="_blank">There might soon be only one country left in Western Europe that doesn’t recognize same-sex unions</a></h3>
-                    </div>
+                    <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
                     </div>
                   </div>
                 </div>

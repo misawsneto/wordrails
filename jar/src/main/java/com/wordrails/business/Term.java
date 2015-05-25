@@ -44,6 +44,8 @@ public class Term {
 
 	@ManyToOne
 	public Term parent;
+	
+	public Integer parentTermId;
 			
 	@OneToMany(mappedBy="parent")
 	public Set<Term> children;

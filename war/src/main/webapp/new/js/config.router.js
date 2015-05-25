@@ -52,8 +52,9 @@ angular.module('app')
                   controller:'PostCtrl'
               })
               .state('app.stations.read', {
-                url: 'asdf',
+                url: ':slug',
                 controller: 'ReadCtrl',
+                template: '',
                 resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
