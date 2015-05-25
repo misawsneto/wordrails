@@ -195,6 +195,7 @@ public class UtilResource {
 				if(post.comments != null){
 					post.commentsCount = post.comments.size();
 				}
+				post.readTime = WordrailsUtil.calculateReadTime(post.body);
 			}
 			postRepository.save(posts);
 		}
