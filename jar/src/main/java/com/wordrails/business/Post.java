@@ -197,7 +197,7 @@ public class Post {
 	
 	@Field(analyze = Analyze.NO)
 	@Column(columnDefinition = "boolean default true", nullable = false)
-	public boolean imageLandscape;
+	public boolean imageLandscape = true;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)

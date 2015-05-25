@@ -183,6 +183,7 @@ public class UtilResource {
 					post.imageSmallId = post.featuredImage.small.id;
 					post.imageMediumId = post.featuredImage.medium.id;
 					post.imageLargeId= post.featuredImage.large.id;
+					post.imageLandscape= !post.featuredImage.vertical;
 				}else{
 					post.imageId = null;
 					post.imageSmallId = null;
