@@ -58,6 +58,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -357,7 +358,7 @@ public class UtilResource {
 	
 	@GET
 	@Path("/removeWordpressPosts")
-	public void removeWordpressPosts(@Context HttpServletRequest request, @FormParam("stationId") Integer stationId){
+	public void removeWordpressPosts(@Context HttpServletRequest request, @QueryParam("stationId") Integer stationId){
 		String host = request.getHeader("Host");
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -390,7 +391,7 @@ public class UtilResource {
 	
 	@GET
 	@Path("/removeWordpressTerms")
-	public void removeWordpressTerms(@Context HttpServletRequest request, @FormParam("wpToken") String wpToken){
+	public void removeWordpressTerms(@Context HttpServletRequest request, @QueryParam("wpToken") String wpToken){
 		String host = request.getHeader("Host");
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
