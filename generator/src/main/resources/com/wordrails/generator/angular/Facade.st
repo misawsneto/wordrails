@@ -61,6 +61,10 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/persons/init");
     }
     
+    this.allInitData = function() {
+      return \$http.get(_config.url + "/api/persons/allInit");
+    }
+    
     this.getCurrentPerson = function(){
     	return \$http.get(_config.url + "/api/persons/me")
     }
@@ -82,6 +86,15 @@ var trix = angular.module('trix', [])
 			}
 		}
       return \$http.get(_config.url + "/api/perspectives/termPerspectiveViews", config)
+    }
+    
+    this.getPostView = function(postId, withBody) {
+		var config = {
+			"params": {
+				"withBody": withBody
+			}
+		}
+      return \$http.get(_config.url + "/api/posts/" + postId + "/getPostView", config)
     }
     
     this.findPopularPosts = function(stationId, _page, _size) {

@@ -2,12 +2,12 @@
   <div class="col">
     <div class="vbox">
       <div class="row-row">
-      <div class="profile-cover pos-rlt abstract-bg bg-cover animated slideInRight" style="{{app.nowReading.authorCoverMediumId | imageLink | bgimg}}">
-        <div class="cover-abstract-mask" ng-if="!app.nowReading.authorCoverMediumId">
+      <div class="profile-cover pos-rlt abstract-bg bg-cover animated" ng-class="{'fadeInRight': app.nowReadingAuthor.coverMediumId}" style="{{app.nowReadingAuthor.coverMediumId | imageLink | bgimg2}}">
+        <div class="cover-abstract-mask" ng-if="!app.nowReadingAuthor.coverMediumId">
         </div>
-        <div style="{{app.nowReading.authorImageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{app.initData.person.name}}"></div>
+        <div style="{{app.nowReadingAuthor.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{app.initData.person.name}}"></div>
         <div class="m-t-sm p-l text-md font-thin wrapper-xs title-wrapper-bg-gd pos-abt bottom-0 w-full">
-          por <span class="m-xs font-normal">{{app.nowReading.authorName}}</spna>
+          por <span class="m-xs font-normal">{{app.nowReadingAuthor.authorName}}</spna>
         </div>
       </div>
         <div class="cell left-content-wrap">
@@ -15,10 +15,12 @@
             <div class="list-wrapper">
               <ul class="timeline m-t-md m-b-md">
                 <li class="tl-item" ng-repeat="cell in app.currentCells" ng-if="app.currentCells">
-                  <div class="tl-wrap">
+                  <div class="tl-wrap" ng-click="app.setNowReading(cell.postView)" class="pointer">
                     <div class="">
                       <small class="post-time w-md text-muted">{{cell.postView.date | fromNow}}</small>
-                      <div clamp="2">{{cell.postView.title}}</div>
+                      <div clamp="2">
+                        {{cell.postView.title}}
+                      </div>
                     </div>
                   </div>
                   <div class="divider"></div>

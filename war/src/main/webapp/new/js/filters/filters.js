@@ -53,6 +53,16 @@ angular.module('app')
  		return "";
 	}
 })
+
+.filter('bgimg2', function bgimg(){
+  return function(img){
+    if(img){
+      return "background-image: url(" + img + ")";
+    }else{
+      return "";
+    }
+  }
+})
  
 .filter('bgimg', function bgimg(){
   return function(img){

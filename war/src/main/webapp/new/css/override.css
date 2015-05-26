@@ -1018,11 +1018,15 @@ list-style: none; margin: 0; padding: 0;
 
 .app-header.animated,
 .app-aside.animated, 
-#my-profile-popover.animated,
-#post-left-content .animated,
-#post-right-content .animated{
+#my-profile-popover.animated{
   -webkit-animation-duration: 0.2s;
   animation-duration: 0.2s;
+}
+
+#post-left-content .animated,
+#post-right-content .animated{
+ -webkit-animation-duration: 0.3s;
+  animation-duration: 0.3s; 
 }
 
 /* /animate */
@@ -1165,6 +1169,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 
 #post-right-content .scroll-wrap{position: relative;height: 100%;overflow-x: hidden;overflow-y: scroll;}
+#post-right-content .cell{overflow-x: hidden;}
 
 .show-post #post-right-content{
   margin-left: 280px;

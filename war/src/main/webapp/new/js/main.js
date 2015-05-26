@@ -156,7 +156,7 @@ angular.module('app')
       }
 
       $scope.app.getInitData = function(){
-        trix.initData().success(function(response){
+        trix.initAllData().success(function(response){
           initData = response;
           $scope.app.initData = angular.copy(initData);
         })
@@ -164,7 +164,7 @@ angular.module('app')
 
       $scope.app.signIn = function(username, password){
         trix.login(username, password).success(function(){
-          trix.initData().success(function(response){
+          trix.initAllData().success(function(response){
             initData = response;
             $scope.app.initData = angular.copy(initData);
             $scope.cancelModal();
@@ -175,7 +175,7 @@ angular.module('app')
 
       $scope.app.signOut = function(username, password){
         trix.logout().success(function(){
-          trix.initData().success(function(response){
+          trix.initAllData().success(function(response){
             initData = response;
             $scope.app.initData = angular.copy(initData);
             $scope.app.checkIfLogged();
@@ -199,14 +199,53 @@ angular.module('app')
 
       $scope.app.clodePostRead = function(){
         $state.go('^')
+        $timeout(function(){
+          $scope.app.nowReading = null;
+        }, 300)
       }
 
+      /**
+       * manage the post that is been read and the view behavior
+       * @param {[type]} postView [description]
+       * @param {[type]} cells    [description]
+       */
       $scope.app.setNowReading = function(postView, cells){
+        if($scope.app.nowReading && $scope.app.nowReading.postId == postView.postId)
+          return;
+
         if(cells)
           $scope.app.currentCells = cells;
+
+        if(!$scope.app.nowReading && postView){
+          $scope.app.nowReadingAuthor = {
+            authorId: postView.authorId,
+            imageSmallId: postView.authorImageSmallId,
+            coverMediumId: postView.authorCoverMediumId,
+            authorName: postView.authorName
+          }
+        }else if(postView && $scope.app.nowReading && postView.authorId != $scope.app.nowReading.authorId){
+          $scope.app.nowReadingAuthor = {
+            authorId: postView.authorId,
+            imageSmallId: postView.authorImageSmallId,
+            coverMediumId: postView.authorCoverMediumId,
+            authorName: postView.authorName
+          }
+        }
+
+        var oldId = $scope.app.nowReading ? $scope.app.nowReading.postId : null;
         $scope.app.nowReading = null;
-        $scope.app.nowReading = postView;
-        $state.go('app.stations.read',{slug: postView.slug}); 
+        $scope.app.incomingPostDirection = null;
+
+        $timeout(function() {
+          if($scope.app.currentCells && oldId && oldId > postView.postId)
+            $scope.app.incomingPostDirection = "slideInRight";
+          else
+            $scope.app.incomingPostDirection = "slideInLeft";
+
+          $scope.app.nowReading = postView;
+          $state.go('app.stations.read',{slug: postView.slug}); 
+
+        }, 50);
       }
 
       /* end of added */

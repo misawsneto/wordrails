@@ -4,10 +4,12 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	$("#post-right-content cell").scrollTop();
 
 	$scope.$watch('app.nowReading', function(postView){
-		if(postView)
+		if(postView){
 			trix.getPost($scope.app.nowReading.postId).success(function(response){
 				$scope.app.nowReading.body = response.body;
 			})
+		}
+
 	})
 
 }])
