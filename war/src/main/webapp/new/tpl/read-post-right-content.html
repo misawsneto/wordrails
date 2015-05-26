@@ -27,6 +27,9 @@
           <!-- nabar right -->
           <ul class="nav navbar-nav navbar-right">
             <li>
+              <a class="mdi mdi-brightness-4 text-lg"></a>
+            </li>
+            <li>
               <div class="divider-v"></div>
             </li>
             <li>
@@ -37,17 +40,17 @@
         <div class="cell">
           <div class="cell-inner">
             <div id="post-media-box" class="new-post-block m-t-md" ng-if="!app.nowReading.imageLandscape && app.nowReading.imageLargeId">
-              <img src="{{getImageLink(app.nowReading.imageLargeId)}}" class="img-full">
+              <img ng-src="{{getImageLink(app.nowReading.imageLargeId)}}" class="img-full">
             </div>
             <div class="post-image-cover" ng-style="getBackgroundImage(app.nowReading, 'lg')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
             </div>
             <div class="p-r-xxl p-l-xxl">
-              <div id="post-title-box" class="new-post-block m-t m-b">
+              <div id="post-title-box" class="new-post-block m-t m-b animated fadeInRight">
                 <span type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
                   {{app.nowReading.title}}
                 </span>
               </div>
-              <div class="bg-white-only new-post-block">
+              <div class="bg-white-only new-post-block animated fadeInLeft">
                 <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
                 </div>
               </div>

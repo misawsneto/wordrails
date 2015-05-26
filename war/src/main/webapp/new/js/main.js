@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad',
-  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad) {
+.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout',
+  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -114,6 +114,7 @@ angular.module('app')
         if(toState.name == "app.stations.read"){
           $("body").addClass("show-post")
         }else{
+
           $('.station-header').removeClass('nav-up').addClass('nav-down');
           $("body").removeClass("show-post")
         }
@@ -200,7 +201,9 @@ angular.module('app')
         $state.go('^')
       }
 
-      $scope.app.setNowReading = function(postView){
+      $scope.app.setNowReading = function(postView, cells){
+        if(cells)
+          $scope.app.currentCells = cells;
         $scope.app.nowReading = null;
         $scope.app.nowReading = postView;
         $state.go('app.stations.read',{slug: postView.slug}); 

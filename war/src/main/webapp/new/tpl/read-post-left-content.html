@@ -2,7 +2,7 @@
   <div class="col">
     <div class="vbox">
       <div class="row-row">
-      <div class="profile-cover pos-rlt abstract-bg bg-cover" style="{{app.nowReading.authorCoverMediumId | imageLink | bgimg}}">
+      <div class="profile-cover pos-rlt abstract-bg bg-cover animated slideInRight" style="{{app.nowReading.authorCoverMediumId | imageLink | bgimg}}">
         <div class="cover-abstract-mask" ng-if="!app.nowReading.authorCoverMediumId">
         </div>
         <div style="{{app.nowReading.authorImageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{app.initData.person.name}}"></div>
@@ -13,49 +13,17 @@
         <div class="cell left-content-wrap">
           <div class="cell-inner">
             <div class="list-wrapper">
-            <ul class="timeline m-t-md">
-              <li class="tl-item">
-                <div class="tl-wrap">
-                  <div class="tl-content">
-                    <small class="pos-abt post-time">há 1 hora</small>
-                    Just a title
+              <ul class="timeline m-t-md m-b-md">
+                <li class="tl-item" ng-repeat="cell in app.currentCells" ng-if="app.currentCells">
+                  <div class="tl-wrap">
+                    <div class="">
+                      <small class="post-time w-md text-muted">{{cell.postView.date | fromNow}}</small>
+                      <div clamp="2">{{cell.postView.title}}</div>
+                    </div>
                   </div>
-                </div>
-                <div class="divider"></div>
-              </li>
-              <li class="tl-item">
-                <div class="tl-wrap">
-                  <div class="tl-content">
-                    Just a title
-                  </div>
-                </div>
-                <div class="divider"></div>
-              </li>
-              <li class="tl-item">
-                <div class="tl-wrap">
-                  <div class="tl-content">
-                    Just a title
-                  </div>
-                </div>
-                <div class="divider"></div>
-              </li>
-              <li class="tl-item">
-                <div class="tl-wrap">
-                  <div class="tl-content">
-                    Just a title
-                  </div>
-                </div>
-                <div class="divider"></div>
-              </li>
-              <li class="tl-item">
-                <div class="tl-wrap">
-                  <div class="tl-content">
-                    Just a title
-                  </div>
-                </div>
-                <div class="divider"></div>
-              </li>
-            </ul>
+                  <div class="divider"></div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>

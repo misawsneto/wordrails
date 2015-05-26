@@ -149,6 +149,9 @@ function getCustomStyle(color, perspective, header) {
 	"\n"
 	:
 	// perspective is dark
+	".navbar-nav .divider-v{\n"+
+	"border-right: 1px solid #999\n"+
+	"}\n"+
 	"#station-sidebar{\n" + 
 	 "background:rgba(255,255,255, 0.04)!important;"+
 	 "box-shadow: -7px 0 9px -7px rgba(0,0,0,0.4);"+
