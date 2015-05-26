@@ -23,7 +23,7 @@ angular.module('app')
                   $frame.sly({
                     horizontal: 1,
                     itemNav: 'basic',
-                    smart: 1,
+                    smart: false,
                     activateOn: 'click',
                     mouseDragging: 1,
                     touchDragging: 1,
@@ -32,6 +32,7 @@ angular.module('app')
                     scrollBar: $wrap.find('.scrollbar'),
                     scrollSource: "null",
                     scrollBy: 1,
+                    activatePageOn: 'click',
                     speed: 300,
                     elasticBounds: 1,
                     easing: 'easeOutExpo',

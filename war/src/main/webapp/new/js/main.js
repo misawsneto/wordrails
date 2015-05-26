@@ -150,9 +150,14 @@ angular.module('app')
         $scope.modalInstance.dismiss('cancel');
       };
 
-      $scope.app.viewMode = 'vertical';
+      if ( angular.isDefined($localStorage.viewMode) ) {
+        $scope.app.viewMode = $localStorage.viewMode
+      }else{
+        $scope.app.viewMode = 'vertical';
+      }
+      
       $scope.changeView = function(view){
-        $scope.app.viewMode = view;
+        $localStorage.viewMode = $scope.app.viewMode = view;
       }
 
       $scope.app.getInitData = function(){

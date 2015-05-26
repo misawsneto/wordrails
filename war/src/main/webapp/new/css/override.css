@@ -1090,10 +1090,6 @@ list-style: none; margin: 0; padding: 0;
 
 .post-nav{ margin-left: 0px!important; }
 
-#post-left-content .tl-wrap{margin-left: 14px; border-width: 0 0 0 2px; padding: 15px 15px 15px 20px;}
-#post-left-content .tl-wrap:before{box-shadow: 0 0 0 4px #333; top: 5px; background: #333; margin-left: -26px; border-width: 2px;}
-.tl-wrap:hover:before{border-color:inherit;}
-
 #post-left-content{
   box-shadow: inset -7px 0 9px -7px rgba(0,0,0,0.8);
   background: #333;
@@ -1121,6 +1117,9 @@ list-style: none; margin: 0; padding: 0;
 }
 
 #post-left-content {color: rgba(255,255,255,0.84);}
+
+#post-left-content .scroll-y{overflow-x:hidden;}
+
 #post-left-content .profile-cover{min-height: 155px; margin-right: 18px;  border-bottom: 1px solid #222;}
 #post-left-content .left-content-wrap {width: 298px; padding; overflow-x:hidden; overflow-y:scroll;
  height: calc(100% - 155px);
@@ -1133,6 +1132,9 @@ background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(0, 
 background-image: -moz-linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endColorstr=#000000FF);
 }
+#post-left-content .tl-wrap{margin-left: 14px; border-width: 0 0 0 2px; padding: 15px 15px 15px 20px;}
+#post-left-content .tl-wrap:before{box-shadow: 0 0 0 4px #333; top: 5px; background: #333; margin-left: -26px; border-width: 2px;}
+.tl-wrap:hover:before{border-color:inherit;}
 #post-left-content .left-content-wrap .list-wrapper{width: 280px;}
 #post-left-content .left-content-wrap .list-wrapper .tl-wrap{border-color: rgba(255, 255, 255, 0.7);}
 #post-left-content .divider {
