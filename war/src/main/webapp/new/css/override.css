@@ -1010,6 +1010,7 @@ list-style: none; margin: 0; padding: 0;
 }
 
 .profile-cover{background-position:50% 50%;}
+.text-muted {color: #aaa}
 
 /* /general */
 
@@ -1084,7 +1085,7 @@ list-style: none; margin: 0; padding: 0;
 .post-nav{ margin-left: 0px!important; }
 
 #post-left-content .tl-wrap{margin-left: 14px; border-width: 0 0 0 2px; padding: 15px 15px 15px 20px;}
-#post-left-content .tl-wrap:before{box-shadow: 0 0 0 4px #333; top: 0px; background: #333; margin-left: -26px; border-width: 2px;}
+#post-left-content .tl-wrap:before{box-shadow: 0 0 0 4px #333; top: -5px; background: #333; margin-left: -26px; border-width: 2px;}
 .tl-wrap:hover:before{border-color:inherit;}
 
 #post-left-content{
@@ -1094,23 +1095,23 @@ list-style: none; margin: 0; padding: 0;
   bottom: 0;
   left: 0;
   top: 0;
-  position: absolute;
+  position: fixed;
   z-index: 9998;
-  margin-left: -280px;
-  -webkit-transition: all 0.4s ease-in-out;
-  -moz-transition: all 0.4s ease-in-out;
-  -o-transition: all 0.4s ease-in-out;
-  -ms-transition: all 0.4s ease-in-out;
-  transition: all 0.4s ease-in-out;
+  margin-left: -298px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .show-post #post-left-content{
   margin-left: 0;
-  -webkit-transition: all 0.4s ease-in-out;
-  -moz-transition: all 0.4s ease-in-out;
-  -o-transition: all 0.4s ease-in-out;
-  -ms-transition: all 0.4s ease-in-out;
-  transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 #post-left-content {color: rgba(255,255,255,0.84);}
@@ -1131,6 +1132,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   right: 35px;
 }
 #post-left-content .tl-item:last-child .divider{display: none;}
+#post-left-content .post-time{top: -8px; left: 3px;}
 
 #post-right-content{
   background: #fff;
@@ -1138,17 +1140,17 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   width: -webkit-calc(100% - 280px);
   width: -moz-calc(100% - 280px);
   width: calc(100% - 280px);
-  position: absolute;
+  position: fixed;
   margin-left: 2000px;
   z-index: 9999;
   top: 0;
   left: 0;
   right: 0;
-  -webkit-transition: all 0.4s ease-in-out;
-  -moz-transition: all 0.4s ease-in-out;
-  -o-transition: all 0.4s ease-in-out;
-  -ms-transition: all 0.4s ease-in-out;
-  transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 #post-right-content .hbox{
@@ -1161,11 +1163,11 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 
 .show-post #post-right-content{
   margin-left: 280px;
-  -webkit-transition: all 0.4s ease-in-out;
-  -moz-transition: all 0.4s ease-in-out;
-  -o-transition: all 0.4s ease-in-out;
-  -ms-transition: all 0.4s ease-in-out;
-  transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .show-post, .show-post .app-content-body{
