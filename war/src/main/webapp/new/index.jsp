@@ -94,9 +94,8 @@
   <script src="/js/BaseTrix.js"></script>
 
   <!-- Sly -->
-  <script src="/js/sly/sly.plugins.js?${buildNumber}"></script>
+  <script src="js/sly/sly.plugins.js?${buildNumber}"></script>
   <script src="/js/sly/sly.min.js?${buildNumber}"></script>
-  <script src="/js/sly/horizontal.js?${buildNumber}"></script>
   <!-- Sly end -->
   <script src="js/util.js"></script>
   <!-- Lazy loading -->

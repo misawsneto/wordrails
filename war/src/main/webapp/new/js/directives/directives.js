@@ -44,14 +44,12 @@ angular.module('app')
                     moveBy:1000
                   }).sly('on', 'active', function(eventName, index){
                     var perspectiveId = null
-                    if(scope.app.network.currentStation){
-                      perspectiveId = scope.app.network.currentStation.perspective.id;
-                    }
 
-                    var domElem = this.getPos(index)
-                    var postId = $(domElem.el).find('div.news-item').data('post-id')
-                    var termId = $(elem).data('term-id')
-                    $state.go("^.vposts", {perspectiveId: perspectiveId, termId: termId, postId: postId});
+                    /* see main.js $scope.app.setHorizontalCursor */
+                    scope.app.setNowReading(scope.app.horizontalCursor.postView, scope.app.horizontalCursor.cells)
+                    scope.app.horizontalCursor = null;
+
+
                   }).sly('on', 'move', function(eventName, index){
                     if (this.pos.dest > this.pos.end - 200) {
                       var sly = this;

@@ -12,4 +12,5 @@ public interface TermProjection {
 	Taxonomy getTaxonomy();
 	Term getParent();
 	Set<Term> getChildren();
+	String getColor();
 }

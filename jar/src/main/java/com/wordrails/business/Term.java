@@ -60,6 +60,8 @@ public class Term {
 	public String wordpressSlug;
     
     public Integer wordpressId;
+    
+    public String color;
 	
 	@PrePersist
 	void onCreate(){

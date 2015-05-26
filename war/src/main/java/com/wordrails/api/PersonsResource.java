@@ -152,13 +152,14 @@ public class PersonsResource {
 			
 			Pageable pageable = new PageRequest(0, 15);
 
-			List<Post> unread = postRepository.findUnreadByStationAndPerson(1, 1, pageable);
-			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
-			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
-			
-			personData.unread = postConverter.convertToViews(unread);
-			personData.popular = postConverter.convertToViews(popular);
-			personData.recent = postConverter.convertToViews(recent);
+			if(defaultStation != null){
+				List<Post> unread = postRepository.findUnreadByStationAndPerson(defaultStation.id, personData.person.id, pageable);
+				List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
+				List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
+				personData.unread = postConverter.convertToViews(unread);
+				personData.popular = postConverter.convertToViews(popular);
+				personData.recent = postConverter.convertToViews(recent);
+			}
 
 			if(setAttributes != null && setAttributes){
 				request.setAttribute("personData", mapper.writeValueAsString(personData));

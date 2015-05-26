@@ -156,7 +156,7 @@ angular.module('app')
       }
 
       $scope.app.getInitData = function(){
-        trix.initAllData().success(function(response){
+        trix.allInitData().success(function(response){
           initData = response;
           $scope.app.initData = angular.copy(initData);
         })
@@ -164,7 +164,7 @@ angular.module('app')
 
       $scope.app.signIn = function(username, password){
         trix.login(username, password).success(function(){
-          trix.initAllData().success(function(response){
+          trix.allInitData().success(function(response){
             initData = response;
             $scope.app.initData = angular.copy(initData);
             $scope.cancelModal();
@@ -175,7 +175,7 @@ angular.module('app')
 
       $scope.app.signOut = function(username, password){
         trix.logout().success(function(){
-          trix.initAllData().success(function(response){
+          trix.allInitData().success(function(response){
             initData = response;
             $scope.app.initData = angular.copy(initData);
             $scope.app.checkIfLogged();
@@ -202,6 +202,16 @@ angular.module('app')
         $timeout(function(){
           $scope.app.nowReading = null;
         }, 300)
+      }
+
+      /**
+       * helper function, see sly-scroll directive 
+       */
+      $scope.app.setHorizontalCursor = function(postView, cells){
+        $scope.app.horizontalCursor = {
+          postView: postView,
+          cells: cells
+        }
       }
 
       /**
