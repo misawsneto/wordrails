@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -13,6 +14,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -21,6 +23,8 @@ import javax.ws.rs.core.Response.Status;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -36,13 +40,16 @@ import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Network;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
+import com.wordrails.business.Post;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationRole;
 import com.wordrails.business.UnauthorizedException;
+import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
 import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
@@ -67,6 +74,8 @@ public class PersonsResource {
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired PersonNetworkRegIdRepository pnrRepository;
 	private @Autowired GCMService gcmService;
+	private @Autowired PostRepository postRepository;
+	private @Autowired PostConverter postConverter;
 	
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	
@@ -126,6 +135,39 @@ public class PersonsResource {
 		// TODO create user
 		return Response.status(Status.CREATED).build();
 	}
+	
+	@GET
+	@Path("/allInit")
+	public PersonData getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+
+			Integer stationPerspectiveId = wordrailsService.getPerspectiveFromCookie(request);
+			PersonData personData = getInitialData(request);
+			
+			StationDto defaultStation = wordrailsService.getDefaultStation(personData);
+			if(stationPerspectiveId == null){
+				stationPerspectiveId = defaultStation.defaultPerspectiveId;
+			}
+
+			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId);
+			
+			Pageable pageable = new PageRequest(0, 15);
+
+			List<Post> unread = postRepository.findUnreadByStationAndPerson(1, 1, pageable);
+			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
+			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
+			
+			personData.unread = postConverter.convertToViews(unread);
+			personData.popular = postConverter.convertToViews(popular);
+			personData.recent = postConverter.convertToViews(recent);
+
+			if(setAttributes != null && setAttributes){
+				request.setAttribute("personData", mapper.writeValueAsString(personData));
+				request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView));
+				request.setAttribute("networkName", personData.network.name);
+			}
+			
+			return personData;
+		}
 	
 	@GET
 	@Path("/init")

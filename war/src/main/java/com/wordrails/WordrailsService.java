@@ -1,29 +1,5 @@
 package com.wordrails;
 
-import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.File;
-import com.wordrails.business.FileContents;
-import com.wordrails.business.Image;
-import com.wordrails.business.ImageEventHandler;
-import com.wordrails.business.Network;
-import com.wordrails.business.PasswordReset;
-import com.wordrails.business.Post;
-import com.wordrails.business.PostRead;
-import com.wordrails.persistence.FileContentsRepository;
-import com.wordrails.persistence.FileRepository;
-import com.wordrails.persistence.ImageRepository;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.PostReadRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.RowRepository;
-import com.wordrails.persistence.StationPerspectiveRepository;
-import com.wordrails.persistence.TermPerspectiveRepository;
-import com.wordrails.persistence.TermRepository;
-import com.wordrails.util.AsyncService;
-import com.wordrails.util.WordpressParsedContent;
-import com.wordrails.util.WordrailsUtil;
-
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,6 +18,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
@@ -61,6 +38,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.wordrails.api.PersonData;
+import com.wordrails.api.PerspectiveResource;
+import com.wordrails.api.StationDto;
+import com.wordrails.api.StationPermission;
+import com.wordrails.api.TermPerspectiveView;
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.File;
+import com.wordrails.business.FileContents;
+import com.wordrails.business.Image;
+import com.wordrails.business.ImageEventHandler;
+import com.wordrails.business.Network;
+import com.wordrails.business.PasswordReset;
+import com.wordrails.business.Post;
+import com.wordrails.business.PostRead;
+import com.wordrails.business.Station;
+import com.wordrails.converter.PostConverter;
+import com.wordrails.persistence.FileContentsRepository;
+import com.wordrails.persistence.FileRepository;
+import com.wordrails.persistence.ImageRepository;
+import com.wordrails.persistence.NetworkRepository;
+import com.wordrails.persistence.PostReadRepository;
+import com.wordrails.persistence.PostRepository;
+import com.wordrails.persistence.QueryPersistence;
+import com.wordrails.persistence.RowRepository;
+import com.wordrails.persistence.StationPerspectiveRepository;
+import com.wordrails.persistence.TermPerspectiveRepository;
+import com.wordrails.persistence.TermRepository;
+import com.wordrails.util.AsyncService;
+import com.wordrails.util.WordpressParsedContent;
+import com.wordrails.util.WordrailsUtil;
+
 @Component
 public class WordrailsService {
 
@@ -79,6 +87,8 @@ public class WordrailsService {
 	private @Autowired ImageEventHandler imageEventHandler;
 	private @Autowired AsyncService asyncService;
 	private @Autowired PostRepository postRepository;
+	private @Autowired PerspectiveResource perspectiveResource;
+	private @Autowired PostConverter postConverter;
 
 	/**
 	 * This method should be used with caution because it accesses the database.
@@ -326,5 +336,60 @@ public class WordrailsService {
 			body = "<img src=\" + "+ externalFeaturedImgUrl +"\">" + body;
 		}
 		return extractImageFromContent(body);
+	}
+	
+	public StationDto getDefaultStation(PersonData personData){
+		List<StationPermission> stationPermissions = personData.personPermissions.stationPermissions;
+
+		Integer stationId = 0;
+
+		if(stationPermissions == null)
+			return null;
+
+		for (StationPermission stationPermission : stationPermissions) {
+			if(stationPermission.main)
+				stationId = stationPermission.stationId;
+		}
+
+		if(stationId == 0)
+			for (StationPermission stationPermission : stationPermissions) {
+				if(stationPermission.visibility.equals(Station.UNRESTRICTED))
+					stationId = stationPermission.stationId;
+			}
+
+		if(stationId == 0)
+			for (StationPermission stationPermission : stationPermissions) {
+				if(stationPermission.visibility.equals(Station.RESTRICTED_TO_NETWORKS))
+					stationId = stationPermission.stationId;
+			}
+
+		if(stationId == 0)
+			for (StationPermission stationPermission : stationPermissions) {
+				if(stationPermission.visibility.equals(Station.RESTRICTED))
+					stationId = stationPermission.stationId;
+			}
+
+		for (StationDto station : personData.stations) {
+			if(stationId == station.id){
+				return station;
+			}
+		}
+		
+		return null;
+	}
+
+	public TermPerspectiveView getDefaultPerspective(Integer stationPerspectiveId) {
+		return perspectiveResource.getTermPerspectiveView(null, null, stationPerspectiveId, 0, 15);
+	}
+
+	public Integer getPerspectiveFromCookie(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null)
+			for (Cookie cookie : cookies) {
+				if(cookie.getName().equals("stationPerspectiveId")){
+					return Integer.parseInt(cookie.getValue());
+				}
+			}
+		return null;
 	}
 }
