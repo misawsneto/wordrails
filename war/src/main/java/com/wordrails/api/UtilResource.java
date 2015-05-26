@@ -12,9 +12,11 @@ import com.wordrails.business.Post;
 import com.wordrails.business.Row;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationPerspective;
+import com.wordrails.business.Taxonomy;
 import com.wordrails.business.Term;
 import com.wordrails.business.TermPerspective;
 import com.wordrails.business.UnauthorizedException;
+import com.wordrails.business.Wordpress;
 import com.wordrails.persistence.BookmarkRepository;
 import com.wordrails.persistence.CellRepository;
 import com.wordrails.persistence.CommentRepository;
@@ -38,16 +40,15 @@ import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
+import com.wordrails.persistence.WordpressRepository;
 import com.wordrails.util.AsyncService;
 import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
@@ -61,7 +62,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
@@ -357,11 +357,12 @@ public class UtilResource {
 	
 	@GET
 	@Path("/removeWordpressPosts")
-	public void removeWordpressPosts(@Context HttpServletRequest request){
+	public void removeWordpressPosts(@Context HttpServletRequest request, @FormParam("stationId") Integer stationId){
 		String host = request.getHeader("Host");
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Post> posts = postRepository.findAll();
+            Station station = stationRepository.findOne(stationId);
+			List<Post> posts = postRepository.findByStation(station);
 			for (Post post : posts) {
 				if(post.wordpressId != null){
                     List<Image> images = imageRepository.findByPost(post);
@@ -383,16 +384,22 @@ public class UtilResource {
 		}
 	
     }
-	private @Autowired TermRepository termRepository;
-	private @Autowired RowRepository rowRepository; 
+	@Autowired private TermRepository termRepository;
+	@Autowired private RowRepository rowRepository; 
+    @Autowired private WordpressRepository wordpressRepository;
 	
 	@GET
 	@Path("/removeWordpressTerms")
-	public void removeWordpressTerms(@Context HttpServletRequest request){
+	public void removeWordpressTerms(@Context HttpServletRequest request, @FormParam("wpToken") String wpToken){
 		String host = request.getHeader("Host");
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Term> terms = termRepository.findAll();
+            Wordpress wp = wordpressRepository.findByToken(wpToken);
+            Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
+            Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
+            List<Term> terms = new ArrayList<>();
+			terms.addAll(termRepository.findByTaxonomy(tagTaxonomy));
+			terms.addAll(termRepository.findByTaxonomy(categoryTaxonomy));
 			for (Term term : terms) {
 				if(term.wordpressId != null){
                     deleteCascade(term, term);

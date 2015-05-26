@@ -14,7 +14,9 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WordpressService {
@@ -119,7 +121,7 @@ public class WordpressService {
                 throw new SecurityException("Data stored in database is different from the terms sent in the request. Wordpress ID: "
                     + wordpressId + ", Slug: " + slug + ", is tag: " + isTag);
             }
-        } else if (terms.containsRow(slug)) { //does it exist a term with this slug?
+        } else if (terms.containsRow(slug)) { //if this wp id does not exist, what about a term with the same slug?
             if (terms.contains(slug, 0)) { //is the wordpressId of this term null?
                 term = terms.get(slug, 0);
                 term.wordpressId = wordpressId;
@@ -225,5 +227,11 @@ public class WordpressService {
         }
 
         return dbTerms;
+    }
+    
+    @Async
+    @Transactional
+    public void sync() {
+        
     }
 }

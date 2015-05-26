@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -213,6 +214,15 @@ public class WordpressResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getClass().getSimpleName() + ": " + msg + ExceptionUtils.getStackTrace(e)).build();
         }
 
+        return Response.status(Response.Status.OK).build();
+    }
+    
+    @GET
+    @Path("/sync")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response startSync(WordpressConfig config) throws ServletException, IOException {        
+        wordpressService.sync();
+        
         return Response.status(Response.Status.OK).build();
     }
 
