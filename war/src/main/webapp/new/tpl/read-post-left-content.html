@@ -2,23 +2,60 @@
   <div class="col">
     <div class="vbox">
       <div class="row-row">
+      <div class="profile-cover pos-rlt abstract-bg bg-cover" style="{{app.nowReading.authorCoverMediumId | imageLink | bgimg}}">
+        <div class="cover-abstract-mask" ng-if="!app.nowReading.authorCoverMediumId">
+        </div>
+        <div style="{{app.nowReading.authorImageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{app.initData.person.name}}"></div>
+        <div class="m-t-sm p-l text-md font-thin wrapper-xs title-wrapper-bg-gd pos-abt bottom-0 w-full">
+          por <span class="m-xs font-normal">{{app.nowReading.authorName}}</spna>
+        </div>
+      </div>
         <div class="cell left-content-wrap">
           <div class="cell-inner">
-            <div id="post-media-box" class="new-post-block m-t-md" ng-if="!app.nowReading.imageLandscape && app.nowReading.imageLargeId">
-              <img src="getImageLink(app.nowReading.imageLargeId)" class="img-full">
-            </div>
-            <div class="post-image-conver" ng-style="getBackgroundImage(app.nowReading, 'lg')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
-            </div>
-            <div class="p-r-xxl p-l-xxl">
-              <div id="post-title-box" class="new-post-block m-t m-b">
-                <span type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
-                  {{app.nowReading.title}}
-                </span>
-              </div>
-              <div class="bg-white-only new-post-block">
-                <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
+            <div class="list-wrapper">
+            <ul class="timeline m-t-md">
+              <li class="tl-item">
+                <div class="tl-wrap">
+                  <div class="tl-content">
+                    <small>há 1 hora</small>
+                    Just a title
+                  </div>
                 </div>
-              </div>
+                <div class="divider"></div>
+              </li>
+              <li class="tl-item">
+                <div class="tl-wrap">
+                  <div class="tl-content">
+                    Just a title
+                  </div>
+                </div>
+                <div class="divider"></div>
+              </li>
+              <li class="tl-item">
+                <div class="tl-wrap">
+                  <div class="tl-content">
+                    Just a title
+                  </div>
+                </div>
+                <div class="divider"></div>
+              </li>
+              <li class="tl-item">
+                <div class="tl-wrap">
+                  <div class="tl-content">
+                    Just a title
+                  </div>
+                </div>
+                <div class="divider"></div>
+              </li>
+              <li class="tl-item">
+                <div class="tl-wrap">
+                  <div class="tl-content">
+                    Just a title
+                  </div>
+                </div>
+                <div class="divider"></div>
+              </li>
+            </ul>
             </div>
           </div>
         </div>
