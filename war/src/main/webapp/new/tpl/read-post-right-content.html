@@ -37,7 +37,7 @@
         <div class="cell">
           <div class="cell-inner">
             <div id="post-media-box" class="new-post-block m-t-md" ng-if="!app.nowReading.imageLandscape && app.nowReading.imageLargeId">
-              <img src="getImageLink(app.nowReading.imageLargeId)" class="img-full">
+              <img src="{{getImageLink(app.nowReading.imageLargeId)}}" class="img-full">
             </div>
             <div class="post-image-cover" ng-style="getBackgroundImage(app.nowReading, 'lg')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
             </div>
