@@ -43,9 +43,9 @@ function textColorEval (hex, hover){
   // Counting the perceptive luminance - human eye favors green color... 
   var a = 1 - ( 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b)/255;
   if (a < 0.5)
-  	return hover ? "rgba(0,0,0, 0.95)" : "rgba(0,0,0, 0.85)";
+  	return hover ? "rgba(0,0,0, 0.94)" : "rgba(0,0,0, 0.84)";
   else
-  	return hover ? "rgba(255,255,255, 1)" : "rgba(255,255,255, 0.92)";
+  	return hover ? "rgba(255,255,255, 0.96)" : "rgba(255,255,255, 0.86)";
 }
 
 function textColorEval2 (hex){
@@ -138,6 +138,15 @@ function getCustomStyle(color, perspective, header) {
 		"color: "+ textColorEval(perspective) +";\n"+
 	"}\n"+
 
+	(textColorEval2(header) ? "" +
+	"\n"
+	:
+	// header is dark
+	".bg-perspective .station-header .navbar-nav .divider-v{\n"+
+	"border-right: 1px solid #999;\n"+
+	"}\n"+
+	"\n") + 
+
 	(textColorEval2(perspective) ? "" +
 	// perspective is bright
 	"#station-sidebar{\n" + 
@@ -147,12 +156,13 @@ function getCustomStyle(color, perspective, header) {
 	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l{\n"+
 	  "border-color:rgba(0,0,0,0.1)\n"+
 	"}\n"+
+	"#station-sidebar .divider{"+
+	"border-top: none;"+
+	"border-color:rgba(0,0,0,0.1)\n"+
+	"}"+
 	"\n"
 	:
-	// perspective is dark
-	".bg-perspective .station-header .navbar-nav .divider-v{\n"+
-	"border-right: 1px solid #999\n"+
-	"}\n"+
+	
 	"#station-sidebar{\n" + 
 	 "background:rgba(255,255,255, 0.04)!important;"+
 	 "box-shadow: -7px 0 9px -7px rgba(0,0,0,0.4);"+
@@ -172,11 +182,11 @@ function getCustomStyle(color, perspective, header) {
 	 "border-color:rgba(255,255,255, 0.3)\n"+
 	"}\n"+
 	".bg-perspective .station-perspectives a{\n"+
-	  "color: rgba(255,255,255, 0.84) ;\n"+
+	  "color: rgba(255,255,255, 0.96) ;\n"+
 	"}\n"+
 	".bg-perspective .station-perspectives a:hover,\n"+
 	".bg-perspective .station-perspectives a:focus {\n"+
-	  "color: rgba(255,255,255, 0.92) ;\n"+
+	  "color: rgba(255,255,255, 0.86) ;\n"+
 	  "text-decoration: none;\n"+
 	"}\n"+
 	"\n"

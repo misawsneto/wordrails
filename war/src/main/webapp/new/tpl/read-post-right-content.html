@@ -2,7 +2,7 @@
   <div class="col">
     <div class="vbox">
       <div class="row-row">
-        <div class="collapse post-read-header pos-rlt navbar-collapse box-shadow nav-down bg-white-only post-nav">
+        <div class="collapse post-read-header pos-rlt navbar-collapse box-shadow nav-down post-nav">
           <!-- nabar left -->
           <ul class="nav navbar-nav navbar-left">
             <li><a href class="text-center text-lg">
@@ -27,7 +27,7 @@
           <!-- nabar right -->
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a class="mdi mdi-brightness-4 text-lg"></a>
+              <a ng-click="toggleNightMode(!app.nightMode)" class="mdi mdi-brightness-4 text-lg"></a>
             </li>
             <li>
               <div class="divider-v"></div>
@@ -50,7 +50,7 @@
                   {{app.nowReading.title}}
                 </span>
               </div>
-              <div class="bg-white-only new-post-block">
+              <div class="new-post-block">
                 <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
                 </div>
               </div>

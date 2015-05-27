@@ -160,6 +160,16 @@ angular.module('app')
         $localStorage.viewMode = $scope.app.viewMode = view;
       }
 
+      if ( angular.isDefined($localStorage.nightMode) ) {
+        $scope.app.nightMode = $localStorage.nightMode
+      }else{
+        $scope.app.nightMode = false;
+      }
+      
+      $scope.toggleNightMode = function(bool){
+        $localStorage.nightMode = $scope.app.nightMode = bool;
+      }
+
       $scope.app.getInitData = function(){
         trix.allInitData().success(function(response){
           initData = response;
@@ -267,6 +277,8 @@ angular.module('app')
       $interval(function(){
         $("body").removeAttr("style");
       },2)
+
+      $scope.app.initData.person.coverMediumId = "";
 
       /* end of added */
   }]); 

@@ -13,18 +13,19 @@
       </div>
       <md-tabs>
         <md-tab class="bg-custom" label="Populares">
-          <div class="b-t wrapper-sm" flex>
-            <ul class="no-style">
-              <li ng-repeat="post in app.initData.popular | limitTo: 5">
-                <div class="pull-left m-t-sm m-r-md m-l-sm">
-                  <h2>{{$index + 1}}</h2>
+          <div class="b-t wrapper-sm popular-posts" flex>
+            <ul class="timeline m-t-md m-b-md">
+              <li class="tl-item" ng-repeat="post in app.initData.popular | limitTo: 5">
+                <div class="tl-wrap" ng-click="app.setNowReading(cell.postView)" class="pointer">
+                  <div class="popular-index">{{$index + 1}}</div>
+                  <div class="">
+                    <small style="opacity: 0.7" class="post-time w-md">{{cell.postView.date | fromNow}}</small>
+                    <div clamp="1">
+                      {{post.title}}
+                    </div>
+                  </div>
                 </div>
-                <div class="p-b-md p-t m-r m-l clear" style="max-height: 80px; overflow: hidden;" ng-class="{'b-b': !$last}">
-                  <a ui-sref="app.post({postId: post.postId})" clamp="1" class="text-md block">
-                    {{post.title}}
-                  </a>
-                  <div class="font-thin" clamp="1" bind-html-unsafe="post.snippet"></div>
-                </div>
+                <div class="divider"></div>
               </li>
             </ul>
           </div>
