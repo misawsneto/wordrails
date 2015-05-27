@@ -62,7 +62,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', function(
 	$scope.showAdvanced = function(ev) {
 		$mdDialog.show({
 			controller: DialogController,
-			templateUrl: 'advanced-dialog.html',
+			templateUrl: 'tpl/post_more_options.html',
 			targetEvent: ev
 		})
 		.then(function(answer) {

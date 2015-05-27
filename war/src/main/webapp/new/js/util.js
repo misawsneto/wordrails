@@ -125,7 +125,7 @@ function getCustomStyle(color, perspective, header) {
 	"}\n"+*/
 
 	".redactor-editor a, .redactor-editor a:hover {color:"+ color +"}\n"+
-
+	"#post-fab-button{background-color: " + color + "; color: " + textColorEval(color) + "}"+
 
 	"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
 	  "color: "+ textColorEval(perspective) +";\n"+

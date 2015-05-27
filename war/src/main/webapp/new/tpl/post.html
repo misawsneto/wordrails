@@ -34,7 +34,8 @@
               <div id="post-placeholder" class="post-content-font text-muted m-t-xxs" ng-class="{'hide': content}">Texto...</div>
               <textarea ng-model="content" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
-            <md-button class="md-primary md-fab md-fab-bottom-right text-lg">
+            <md-button id="post-fab-button" class="md-fab md-fab-bottom-right text-lg" ng-click="showAdvanced($event)"
+            tooltip="Enviar" tooltip-popup-delay="700">
               <i class="mdi mdi-send"></i>
             </md-button>
           </div>
