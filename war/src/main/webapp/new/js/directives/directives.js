@@ -44,12 +44,16 @@ angular.module('app')
                     forward: $wrap.siblings('.forward'),
                     moveBy:1000
                   }).sly('on', 'active', function(eventName, index){
-                    var perspectiveId = null
+                    var sly = this;
 
                     /* see main.js $scope.app.setHorizontalCursor */
-                    scope.app.setNowReading(scope.app.horizontalCursor.postView, scope.app.horizontalCursor.cells)
-                    scope.app.horizontalCursor = null;
-
+                    if(scope.app.horizontalCursor){
+                      scope.app.setNowReading(scope.app.horizontalCursor.postView, scope.app.horizontalCursor.cells)
+                      scope.app.horizontalCursor = null;
+                      setTimeout(function(){
+                        sly.next();
+                      }, 400)
+                    }
 
                   }).sly('on', 'move', function(eventName, index){
                     if (this.pos.dest > this.pos.end - 200) {
@@ -83,6 +87,16 @@ angular.module('app')
         }// end of link
      } // end of object to return
  }) // end of sly directive
+
+.directive('scrollIf', function () {
+  return function (scope, element, attributes) {
+    setTimeout(function () {
+      if (scope.$eval(attributes.scrollIf)) {
+        window.scrollTo(0, element[0].offsetTop - 100)
+      }
+    });
+  }
+})
 
 .directive('clamp', function ($timeout) {
 

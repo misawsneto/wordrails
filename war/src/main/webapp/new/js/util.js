@@ -131,9 +131,10 @@ function getCustomStyle(color, perspective, header) {
 	  "color: "+ textColorEval(perspective) +";\n"+
 	  "background: "+ (textColorEval2(perspective) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)") +";\n"+
 	"}\n"+
-
 	".bg-perspective{\n"+
 		"background: "+perspective+";\n"+
+	"}\n"+
+	".bg-perspective .station-perspectives{\n"+
 		"color: "+ textColorEval(perspective) +";\n"+
 	"}\n"+
 
@@ -149,7 +150,7 @@ function getCustomStyle(color, perspective, header) {
 	"\n"
 	:
 	// perspective is dark
-	".navbar-nav .divider-v{\n"+
+	".bg-perspective .station-header .navbar-nav .divider-v{\n"+
 	"border-right: 1px solid #999\n"+
 	"}\n"+
 	"#station-sidebar{\n" + 

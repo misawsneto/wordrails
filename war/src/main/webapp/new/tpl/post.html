@@ -19,7 +19,7 @@
                   <li><a href="#" class="mdi mdi-play"></a></li>
                 </ul>
               </div>
-                <img src="img/c0.jpg" class="img-full">
+                <!-- <img src="img/c0.jpg" class="img-full"> -->
             </div>
             <div id="post-title-box" class="new-post-block m-t">
               <input type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
@@ -34,6 +34,9 @@
               <div id="post-placeholder" class="post-content-font text-muted m-t-xxs" ng-class="{'hide': content}">Texto...</div>
               <textarea ng-model="content" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
+            <md-button class="md-primary md-fab md-fab-bottom-right text-lg">
+              <i class="mdi mdi-send"></i>
+            </md-button>
           </div>
         </div>
       </div>
@@ -57,34 +60,23 @@
   </ul>
   <ul class="nav navbar-nav navbar-right">
     <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
-      <a href class="dropdown-toggle text-md" dropdown-toggle>
-        <i class="mdi-library-books mdi m-r-xs"></i>
-        Estação 1 <b class="m-l-xs caret"></b>
+      <a href class="text-lg" >
+        <i class="mdi-information-outline mdi"></i>
       </a>
-      <!-- dropdown -->
-      <ul class="dropdown-menu w">
-        <li ng-repeat="wStation in app.writableStations">
-          <a href>{{wStation.stationName}}</a>
-        </li>
-      </ul>
-      <!-- / dropdown -->
     </li>
     <li>
-      <button class="btn btn-default btn-xs text-md m-t-sm m-r-sm" ng-click="app.hidePostOptions = !app.hidePostOptions">
-        <i class="icon" ng-class="{'icon-arrow-right': !app.hidePostOptions, 'icon-arrow-left': app.hidePostOptions}"></i>
-      </butoon>
+      <div class="m-t" style="line-height:16px">•</div>
     </li>
     <li>
-      <div class="btn-group dropdown" dropdown>
-        <button class="m-t-sm btn btn-default btn-xs text-md btn-default" dropdown-toggle>Action <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-          <li><a href>Action</a></li>
-          <li><a href>Another action</a></li>
-          <li><a href>Something else here</a></li>
-          <li class="divider"></li>
-          <li><a href>Separated link</a></li>
-        </ul>
-      </div>
+      <a href class="text-lg" ng-click="app.hidePostOptions = !app.hidePostOptions" style="font-size: 19px;">
+        <i class="mdi mdi-menu"></i>
+      </a>
+    </li>
+    <li>
+      <div class="divider-v"></div>
+    </li>
+    <li>
+      <a href class="text-u-c text-center" style="font-size: 30px;" ng-click="app.discardPost()">×</a>
     </li>
   </ul>
 </div>

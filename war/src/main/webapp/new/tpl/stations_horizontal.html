@@ -2,9 +2,9 @@
   <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-show="ordinaryRow.cells && ordinaryRow.cells.length">
 
     <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
-    <button ng-show="ordinaryRow.cells"  class="backward"><i class="fa fa-angle-left"></i></button>
+    <button ng-show="ordinaryRow.cells"  class="backward"><i class="mdi mdi-chevron-left"></i></button>
     <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}"  -->
-    <button ng-show="ordinaryRow.cells"  class="forward"><i class="fa fa-angle-right"></i></button>
+    <button ng-show="ordinaryRow.cells"  class="forward"><i class="mdi mdi-chevron-right"></i></button>
     <div ng-show="ordinaryRow.cells" data-term-id="{{ordinaryRow.termId}}" class="wrap info-flow-wrap" sly-scroll>
       <div class="h3">
         <a ng-show="ordinaryRow.termName" class="animated fadeIn" 
@@ -15,7 +15,7 @@
     </div>
     <div class="frame info-flow" style="overflow: hidden;">
       <ul class="sly-clearfix info-flow-list" data-term-id="{{ordinaryRow.termId}}">
-        <li class="animated fadeIn" ng-repeat="cell in ordinaryRow.cells">
+        <li class="" ng-repeat="cell in ordinaryRow.cells">
           <div class="" data-ng-include=" 'tpl/stations_horizontal_cells.html' "></div>
         </li>
       </ul>

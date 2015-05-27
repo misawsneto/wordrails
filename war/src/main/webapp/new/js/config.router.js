@@ -26,11 +26,11 @@ angular.module('app')
           $stateProvider
               .state('app', {
                   abstract: true,
-                  url: '/',
+                  url: '',
                   templateUrl: 'tpl/layout.html',
               })
               .state('app.stations', {
-                  url: '?stationId',
+                  url: '/?stationId',
                   templateUrl: 'tpl/stations.html',
                   resolve: {
                       deps: ['$ocLazyLoad',

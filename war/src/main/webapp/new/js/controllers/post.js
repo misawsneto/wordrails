@@ -1,5 +1,5 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', function($scope, $log, $timeout) {
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', function($scope, $log, $timeout, $mdDialog) {
 	$scope.postCtrl = {}
 	$scope.postCtrl.editingExisting = false;
 
@@ -42,8 +42,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', function($scope, $log,
 
 	var timeoutResize;
 	$(window).resize(function(){
-	  clearTimeout(timeoutResize);
-	  timeoutResize = setTimeout(doResize, 100);
+		clearTimeout(timeoutResize);
+		timeoutResize = setTimeout(doResize, 100);
 	})
 
 	$scope.content = null;
@@ -58,5 +58,34 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', function($scope, $log,
 	$("#post-placeholder").click(function(){
 		$(".redactor-editor").focus();
 	})
+
+	$scope.showAdvanced = function(ev) {
+		$mdDialog.show({
+			controller: DialogController,
+			templateUrl: 'advanced-dialog.html',
+			targetEvent: ev
+		})
+		.then(function(answer) {
+			$scope.alert = 'You said the information was "' + answer + '".';
+		}, function() {
+			$scope.alert = 'You cancelled the dialog.';
+		});
+	};
+
+	function DialogController($scope, $mdDialog) {
+		
+		
+	  $scope.hide = function() {
+	    $mdDialog.hide();
+	  };
+
+	  $scope.cancel = function() {
+	    $mdDialog.cancel();
+	  };
+
+	  $scope.answer = function(answer) {
+	    $mdDialog.hide(answer);
+	  };
+	};
 
 }]);
