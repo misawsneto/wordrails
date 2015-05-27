@@ -150,7 +150,7 @@ function getCustomStyle(color, perspective, header) {
 	(textColorEval2(perspective) ? "" +
 	// perspective is bright
 	"#station-sidebar .tl-wrap{\n"+
-	"border-color:rgba(0, 0, 0, 0.1)!important;\n"+
+	"border-color:rgba(0, 0, 0, 0.2)!important;\n"+
 	"}"+
 	"#station-sidebar .tl-wrap:before{\n"+
 	"background:rgb("+hexToRgb(perspective).r+", " + hexToRgb(perspective).g + ", "+ hexToRgb(perspective).b +")!important;\n"+
