@@ -143,12 +143,18 @@ function getCustomStyle(color, perspective, header) {
 	:
 	// header is dark
 	".bg-perspective .station-header .navbar-nav .divider-v{\n"+
-	"border-right: 1px solid #999;\n"+
+	"border-right: 1px solid rgba(255,255,255,0.3);\n"+
 	"}\n"+
 	"\n") + 
 
 	(textColorEval2(perspective) ? "" +
 	// perspective is bright
+	"#station-sidebar .tl-wrap{\n"+
+	"border-color:rgba(0, 0, 0, 0.1)!important;\n"+
+	"}"+
+	"#station-sidebar .tl-wrap:before{\n"+
+	"background:rgb("+hexToRgb(perspective).r+", " + hexToRgb(perspective).g + ", "+ hexToRgb(perspective).b +")!important;\n"+
+	"}"+
 	"#station-sidebar{\n" + 
 	 "background:rgba(0, 0, 0, 0.04)!important;\n"+
 	"}\n"+
@@ -162,7 +168,16 @@ function getCustomStyle(color, perspective, header) {
 	"}"+
 	"\n"
 	:
-	
+	// perspective is dark
+	"#station-sidebar .tl-wrap{\n"+
+	"border-color:rgba(255, 255, 255, 0.6)!important;\n"+
+	"}"+
+	"#station-sidebar .popular-posts .popular-index{\n"+
+	"color: rgba(255, 255, 255, 0.86)"+
+	"}"+
+	"#station-sidebar .tl-wrap:before{\n"+
+	"background:rgb("+hexToRgb(perspective).r+", " + hexToRgb(perspective).g + ", "+ hexToRgb(perspective).b +")!important;\n"+
+	"}"+
 	"#station-sidebar{\n" + 
 	 "background:rgba(255,255,255, 0.04)!important;"+
 	 "box-shadow: -7px 0 9px -7px rgba(0,0,0,0.4);"+
@@ -236,7 +251,7 @@ function getCustomStyle(color, perspective, header) {
 	  "outline: none;\n"+
 	  "background-color:" + color + ";\n"+
 	  "color: " + (textColorEval(color, true)) + ";\n"+
-	"}\n"
+	"}\n"+
 
 	/*".station-header .nav li .dropdown-menu {\n"+
 	" background-color:" + header + ";\n"+

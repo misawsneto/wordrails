@@ -1869,7 +1869,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   /* /perspective.html */
 
   /* stations.html */
-  .navbar-nav .divider-v {border-right: 1px solid #e5e5e5;   height: 34px; margin-top: 8px;}
+  .navbar-nav .divider-v {border-right: 1px solid rgba(0,0,0,0.1);   height: 34px; margin-top: 8px;}
   .app-content-body {padding-bottom: 0px;}
 
   .station-header{position: fixed; width: 100%; top: 0; left: 0; margin-left: 0px!important; padding: 0px; padding-right: 15px; z-index: 3;}
@@ -2098,7 +2098,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 #station-sidebar .popular-posts .tl-wrap:before{
   box-shadow: 0 0 0 4px transparent;
-  top: 0px;
+  top: 6px;
   background: #e5e5e5; 
   float: right;
   margin-right: -41px;
@@ -2110,7 +2110,9 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 #station-sidebar .popular-posts .popular-index{  position: absolute;
   right: 24px;
   color: #333;
-  font-size: 20px;}
+  font-size: 20px;
+  margin-top: 6px;
+}
 
 #station-sidebar .divider {
   position: absolute; width: 250px;
@@ -2118,8 +2120,24 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   border-top: 1px solid rgba(0, 0, 0, 0.6); 
   right: 60px;
 }
-/* /stations */
 
+#station-sidebar .recent-posts .tl-wrap{  border-width: 0 2px 0 0;
+  padding: 15px 25px 15px 15px;
+  margin-left: 0;
+  margin-right: 18px;
+}
+#station-sidebar .recent-posts .tl-wrap:before{
+  box-shadow: 0 0 0 4px transparent;
+  top: 15px;
+  background: #e5e5e5; 
+  float: right;
+  margin-right: -31px;
+  border-width: 2px;
+  width: 10px;
+  height: 10px;
+}
+
+/* /stations */
 
 /* splash */
 /* Slideshow style */
