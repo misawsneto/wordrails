@@ -2137,6 +2137,10 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   height: 10px;
 }
 
+#station-sidebar a:hover{
+  text-decoration: underline;
+}
+
 /* /stations */
 
 /* splash */

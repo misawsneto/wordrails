@@ -88,6 +88,15 @@ public class PersonsResource {
 		gcmService.updateRegId(network, person, regId);
 	}
 	
+	@PUT
+	@Path("/me/token")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public void putToken(@FormParam("token") String regId, @FormParam("networkId") Integer networkId) {
+//		Network network = networkRepository.findOne(networkId);
+//		Person person = accessControllerUtil.getLoggedPerson();
+//		gcmService.updateRegId(network, person, regId);
+	}
+	
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)

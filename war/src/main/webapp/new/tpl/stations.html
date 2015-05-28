@@ -20,9 +20,11 @@
                   <div class="popular-index">{{$index + 1}}</div>
                   <div class="">
                     <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
+                    <a>
                     <div clamp="1">
                       {{post.title}}
                     </div>
+                    </a>
                   </div>
                 </div>
                 <div class="divider" ng-hide="$last"></div>
@@ -32,24 +34,16 @@
         </md-tab>
         <md-tab class="bg-custom" label="Recentes">
           <div class="b-t wrapper-sm recent-posts" flex>
-            <!-- <ul class="no-style">
-              <li ng-repeat="post in app.initData.recent | limitTo: 5">
-                <div class="p-b p-t m-r m-l" style="max-height: 80px; overflow: hidden;" ng-class="{'b-b': !$last}">
-                  <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
-                  <a ui-sref="app.post({postId: post.postId})" clamp="1" class="text-md block clear">
-                    {{post.title}}
-                  </a>
-                </div>
-              </li>
-            </ul> -->
             <ul class="timeline m-t-md m-b-md">
               <li class="tl-item" ng-repeat="post in app.initData.recent | limitTo: 5">
                 <div class="tl-wrap" ng-click="app.setNowReading(post)" class="pointer">
                   <div class="">
                     <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
+                    <a>
                     <div clamp="1">
                       {{post.title}}
                     </div>
+                    </a>
                   </div>
                 </div>
                 <div class="divider" ng-hide="$last"></div>

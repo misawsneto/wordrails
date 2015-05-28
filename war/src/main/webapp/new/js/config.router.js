@@ -51,17 +51,6 @@ angular.module('app')
                   },
                   controller:'PostCtrl'
               })
-              .state('app.stations.read', {
-                url: ':slug',
-                controller: 'ReadCtrl',
-                template: '',
-                resolve: {
-                    deps: ['$ocLazyLoad',
-                      function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/read.js']);
-                    }]
-                  },
-              })
               .state('app.search', {
                   url: '/search',
                   templateUrl: 'tpl/search.html',
@@ -83,6 +72,17 @@ angular.module('app')
                     }]
                   }
                   // , controller:'SearchCtrl'
+              })
+              .state('app.stations.read', {
+                url: ':slug',
+                controller: 'ReadCtrl',
+                template: '',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/read.js']);
+                    }]
+                  },
               })
               .state('app.dashboard-v1', {
                   url: '/dashboard-v1',
