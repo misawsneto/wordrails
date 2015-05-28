@@ -57,6 +57,8 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
     @Query("SELECT slug FROM Post")
     public Set<String> findSlugs();
 	
+	public Post findBySlug(@Param("slug") String slug);
+	
 	@RestResource(exported=false)
 	@Query("SELECT post FROM Post post ORDER BY post.id DESC")
 	public List<Post> findAllPostsOrderByIdDesc();

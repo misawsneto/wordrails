@@ -1152,13 +1152,13 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.96); z-i
   z-index: 10;
 }
 
-.new-post-block{
+.post-block{
   max-width: 800px;
   margin-right: auto;
   margin-left: auto;
 }
 
-.new-post-block .redactor-editor{
+.post-block .redactor-editor{
   border: none;
 }
 
@@ -1525,6 +1525,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 #my-profile-popover .abstract-bg{background-image: url(../img/abstract-cover.png);}
 #my-profile-popover .profile-popover .cover-abstract-mask{position: absolute; width: 100%; top: 0; bottom: 35px;}
 
+#login-error{min-height: 25px;}
 /* /layout.html*/
 
 /* aside.html */

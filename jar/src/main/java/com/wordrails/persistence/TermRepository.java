@@ -55,6 +55,12 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	@Query(value="UPDATE Term term SET term.name = :newName WHERE term.name = :oldName")
 	void updateTermsNamesAuthorTaxonomies(@Param("newName") String newName, @Param("oldName") String oldName);
 	
+	@Query(value="SELECT post.terms FROM Post post where post.id = :postId")
+	List<Term> findTermsByPostId(@Param("postId") Integer postId);
+	
+	@Query(value="SELECT post.terms FROM Post post where post.slug = :slug")
+	List<Term> findTermsByPostSlug(@Param("slug") String slug);
+	
 	@RestResource(exported=false)
 	@Modifying
 	@Query(nativeQuery=true, value="DELETE FROM post_term WHERE terms_id = ?")

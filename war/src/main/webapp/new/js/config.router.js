@@ -73,6 +73,26 @@ angular.module('app')
                   }
                   // , controller:'SearchCtrl'
               })
+              .state('app.user', {
+                  url: '/@:username',
+                  templateUrl: 'tpl/user_profile.html',
+                  controller: 'UserProfile',
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load([
+                            'angularFileUpload',
+                            'js/controllers/user-profile.js'
+                            ]).then(
+                              function(){
+                                 return $ocLazyLoad.load('js/controllers/file-upload.js');
+                              }
+                          );
+                      }]
+                  },
+                  controller: 'UserProfile'
+              })
               .state('app.stations.read', {
                 url: ':slug',
                 controller: 'ReadCtrl',

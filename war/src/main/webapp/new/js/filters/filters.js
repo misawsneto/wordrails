@@ -9,6 +9,12 @@ angular.module('app')
     }
   })
 
+  .filter('fromNow2', function() {
+    return function(date) {
+      return moment(date).format('DD [de] MMMM [de] YYYY | HH:mm');
+    }
+  })
+
  .filter('myDateTimeFormat', function myDateTimeFormat() {
 	return function(text) {
 	  return moment.utc(text, "YYYY-MM-DD HH:mm:ss").tz('America/Recife').format("DD/MM/YYYY HH:mm:ss");;
@@ -27,8 +33,23 @@ angular.module('app')
 	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.largeId +"/contents)", "background-position": "50% 20%"};
 		}else if(postView && postView.mediumId && size == "md"){
 	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.mediumId +"/contents)", "background-position": "50% 20%"};
-	  	}else if(postView && postView.mediumId && size == "sm"){
+	  	}else if(postView && postView.smallId && size == "sm"){
 	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.smallId +"/contents)", "background-position": "50% 20%"};
+		}else{
+			//return {"background-image": "url(img/p0.jpg)"};
+			return {};
+		}
+	}
+})
+
+.filter('pvimageLink2', function pvimageLink(TRIX) {
+	return function(post, size) {
+		if(post && post.imageLargeId && size == "lg"){
+	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ post.imageLargeId +"/contents)", "background-position": "50% 20%"};
+		}else if(post && post.imageMediumId && size == "md"){
+	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ post.imageMediumId +"/contents)", "background-position": "50% 20%"};
+	  	}else if(post && post.imageSmallId && size == "sm"){
+	  		return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ post.imageSmallId +"/contents)", "background-position": "50% 20%"};
 		}else{
 			//return {"background-image": "url(img/p0.jpg)"};
 			return {};

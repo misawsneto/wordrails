@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.rest.core.config.Projection;
 
@@ -18,6 +19,7 @@ public interface PostProjection {
 	String getTopper();
 	String getBody();
 	Sponsor getSponsor();
+	Set<Promotion> getPromotions();
 	Person getAuthor();
 	Station getStation();
 	Integer getWordpressId();
@@ -32,9 +34,11 @@ public interface PostProjection {
 	Integer getImageSmallId();
 	Integer getImageMediumId();
 	Integer getImageLargeId();
+	Integer getFavoritesCount();
     Integer getReadsCount();
 	Integer getRecommendsCount();
 	Integer getCommentsCount();
+	Date getUpdatedAt();
 	String getExternalFeaturedImgUrl();
 	String getExternalVideoUrl();
 	Integer getReadTime();

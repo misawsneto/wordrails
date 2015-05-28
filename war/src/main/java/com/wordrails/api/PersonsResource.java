@@ -149,13 +149,11 @@ public class PersonsResource {
 	@Path("/allInit")
 	public PersonData getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
 
-			Integer stationPerspectiveId = wordrailsService.getPerspectiveFromCookie(request);
+			Integer stationId = wordrailsService.getStationIdFromCookie(request);
 			PersonData personData = getInitialData(request);
 			
-			StationDto defaultStation = wordrailsService.getDefaultStation(personData);
-			if(stationPerspectiveId == null){
-				stationPerspectiveId = defaultStation.defaultPerspectiveId;
-			}
+			StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
+			Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
 
 			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId);
 			

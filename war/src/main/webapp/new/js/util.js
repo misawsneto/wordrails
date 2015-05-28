@@ -257,6 +257,14 @@ function getCustomStyle(color, perspective, header) {
 	" background-color:" + header + ";\n"+
 	"}"+*/
 
+	"#post-right-content .post-block a{\n"+
+  	"  color: rgba("+hexToRgb(color).r+", " + hexToRgb(color).g + ", "+ hexToRgb(color).b +", 0.92);\n"+
+	"}\n"+
+	"#post-right-content .post-block a:hover {\n"+
+	  " color: rgba("+hexToRgb(color).r+", " + hexToRgb(color).g + ", "+ hexToRgb(color).b +", 1);\n"+
+	  "text-decoration: underline;"+
+	"}\n"+
+
 	"";
 	return style
 }

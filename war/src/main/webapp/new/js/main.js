@@ -53,6 +53,10 @@ angular.module('app')
         $localStorage.settings = $scope.app.settings;
       }, true);
 
+      if(initTermPerspective){
+
+      }
+
       // angular translate
       $scope.lang = { isopen: false };
       $scope.langs = {en:'English', de_DE:'German', it_IT:'Italian'};
@@ -110,18 +114,25 @@ angular.module('app')
 
       uiLoad.load(JQ_CONFIG.screenfull)
       $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+        // on change state, exit if in fullscreen mode.
         if(typeof screenfull !== 'undefined' && screenfull){ screenfull.exit(); }
-        if(toState.name == "app.stations.read"){
-          $("body").addClass("show-post")
-        }else{
-
+        
+        // check state read
+        if(toState.name != "app.stations.read"){
+          // show to navbar
           $('.station-header').removeClass('nav-up').addClass('nav-down');
-          $("body").removeClass("show-post")
+          $("body").removeClass("show-post") // this class is added to the body element in read.js
         }
+
       });
 
       $scope.getBackgroundImage = function(postView, size){
         var img = $filter('pvimageLink')(postView, size);
+        return img;
+      }
+
+      $scope.getBackgroundImage2 = function(post, size){
+        var img = $filter('pvimageLink2')(post, size);
         return img;
       }
 
@@ -184,7 +195,10 @@ angular.module('app')
             $scope.app.initData = angular.copy(initData);
             $scope.cancelModal();
             $scope.app.checkIfLogged()
+            $scope.app.loginError = false
           })
+        }).error(function(){
+          $scope.app.loginError = true;
         })
       };
 
@@ -207,9 +221,12 @@ angular.module('app')
       }
 
       moment.locale('pt')
+      loadPopular();
+      loadRecent();
 
       trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
 
+      // close post read and go back to previous state
       $scope.app.clodePostRead = function(){
         $state.go('^')
         $timeout(function(){
@@ -268,7 +285,7 @@ angular.module('app')
           $scope.app.nowReading = postView;
           $state.go('app.stations.read',{slug: postView.slug}); 
 
-        }, 20);
+        });
       }
 
       /*  angular-material design temp fix */

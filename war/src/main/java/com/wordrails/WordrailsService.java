@@ -338,7 +338,7 @@ public class WordrailsService {
 		return extractImageFromContent(body);
 	}
 	
-	public StationDto getDefaultStation(PersonData personData){
+	public StationDto getDefaultStation(PersonData personData, Integer currentStationId){
 		List<StationPermission> stationPermissions = personData.personPermissions.stationPermissions;
 
 		Integer stationId = 0;
@@ -347,7 +347,7 @@ public class WordrailsService {
 			return null;
 
 		for (StationPermission stationPermission : stationPermissions) {
-			if(stationPermission.main)
+			if((currentStationId != null && currentStationId == stationPermission.stationId) || stationPermission.main)
 				stationId = stationPermission.stationId;
 		}
 
@@ -382,11 +382,11 @@ public class WordrailsService {
 		return perspectiveResource.getTermPerspectiveView(null, null, stationPerspectiveId, 0, 15);
 	}
 
-	public Integer getPerspectiveFromCookie(HttpServletRequest request){
+	public Integer getStationIdFromCookie(HttpServletRequest request){
 		Cookie[] cookies = request.getCookies();
 		if(cookies != null)
 			for (Cookie cookie : cookies) {
-				if(cookie.getName().equals("stationPerspectiveId")){
+				if(cookie.getName().equals("stationId")){
 					return Integer.parseInt(cookie.getValue());
 				}
 			}

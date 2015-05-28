@@ -39,6 +39,11 @@
     <div class="row">
       <div class="col-xs-6 col-xs-offset-3">
         <div class="p-lg text-color wrapper-lg">
+          <div id="login-error">
+            <span id="login-error" class="text-danger animated" ng-class="{'fadeIn': app.loginError, 'hide': !app.loginError}">
+              Username ou senha inválidos
+            </span>
+          </div>
           <form name="form" ng-submit="app.signIn(username, password)">
             <div class="md-form-group float-label p-b-sm">
               <input class="md-input" ng-model="username" required>

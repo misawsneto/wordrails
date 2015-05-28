@@ -84,9 +84,17 @@ public class PostFilter implements Filter {
 
 			if (rq.getMethod().toLowerCase().equals("get")) {
 				String url = rq.getRequestURI();
+				Post post = null;
 				if (url.contains("/posts/") && url.matches("(.*)\\d+$")) {                    
 					postId = getPostId(url);
-					Post post = postRepository.findOne(postId);
+					if(postId !=null)
+						post = postRepository.findOne(postId);
+				}else if(url.contains("findBySlug")){
+					String slug = rq.getParameter("slug");
+					if(slug != null && !slug.isEmpty());
+						post = postRepository.findBySlug(slug);
+				}
+				if(post != null){
 					handleAfterRead(post);
 					wordrailsService.countPostRead(post, rq.getRequestedSessionId());
 				}
