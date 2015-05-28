@@ -1247,6 +1247,9 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 #post-left-content .tl-item:last-child .divider{display: none;}
 
+#post-left-content .abstract-bg{background-image: url(../img/abstract-cover.png);}
+#post-left-content .cover-abstract-mask{position: absolute; width: 100%; top: 0; bottom: 0px;}
+
 #post-right-content{
   background: #fff;
   height: 100vh;

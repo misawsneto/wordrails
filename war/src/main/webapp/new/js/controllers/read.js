@@ -1,7 +1,8 @@
 app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix',
 					function($scope, $log, $timeout, $rootScope, $state, trix) {
 	
-	$("#post-right-content cell").scrollTop();
+	$("#post-left-content .left-content-wrap").scrollTop();
+	console.log('sadf');
 
 	$scope.$watch('app.nowReading', function(postView){
 		if(postView){

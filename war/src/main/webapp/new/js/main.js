@@ -207,8 +207,6 @@ angular.module('app')
       }
 
       moment.locale('pt')
-      loadPopular();
-      loadRecent();
 
       trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
 
@@ -278,7 +276,7 @@ angular.module('app')
         $("body").removeAttr("style");
       },2)
 
-      $scope.app.initData.person.coverMediumId = "";
+      // $scope.app.initData.person.coverMediumId = "";
 
       /* end of added */
   }]); 
