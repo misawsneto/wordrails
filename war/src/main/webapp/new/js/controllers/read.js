@@ -7,6 +7,7 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 		trix.findBySlug(slug, 'postProjection').success(function(response){
 			if(response && response.posts){
 				$scope.app.nowReading = response.posts[0]
+				$scope.app.nowReading.postId = $scope.app.nowReading.id;
 				$scope.app.nowReadingAuthor = {
             authorId: $scope.app.nowReading.author.id,
             imageSmallId: $scope.app.nowReading.author.imageSmallId,
