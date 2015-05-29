@@ -112,16 +112,6 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/posts/" + postId + "/getPostViewById", config)
     }
     
-    this.findPopularPosts = function(stationId, _page, _size) {
-		var config = {
-			"params": {
-				"page": _page,
-				"size": _size,
-			}
-		}
-      return \$http.get(_config.url + "/api/posts/" + stationId + "/popular", config)
-    }
-    
     this.findRecentPosts = function(stationId, _page, _size) {
 		var config = {
 			"params": {

@@ -1,7 +1,15 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', function($scope, $log, $timeout, $mdDialog) {
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', function($scope, $log, $timeout, $mdDialog, $state, FileUploader, TRIX) {
+
+  FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
+    return true; // true|false
+  };
+
 	$scope.postCtrl = {}
 	$scope.postCtrl.editingExisting = false;
+
+	if(!$scope.app.editingPost)
+		$scope.app.editingPost = {};
 
 	$scope.$watch('app.hidePostOptions', checkPostToolsWidth)
 
@@ -36,6 +44,10 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', function(
 
 	}
 
+	$scope.closeNewPost = function(){
+		$state.go('app.stations')
+	}
+
 	function doResize(){
 		checkPostToolsWidth();
 	}
@@ -46,9 +58,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', function(
 		timeoutResize = setTimeout(doResize, 100);
 	})
 
-	$scope.content = null;
+	// $scope.app.editingPost.body  = null;
 	$scope.postCtrl.redactorInit = function(){
-		$scope.content = null;
 		checkScrollVisible($("#post-cell").scrollTop())
 		$("#post-cell").scroll(function(){
 			checkScrollVisible(this.scrollTop);
@@ -73,19 +84,50 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', function(
 	};
 
 	function DialogController($scope, $mdDialog) {
-		
-		
-	  $scope.hide = function() {
-	    $mdDialog.hide();
-	  };
+		$scope.hide = function() {
+			$mdDialog.hide();
+		};
 
-	  $scope.cancel = function() {
-	    $mdDialog.cancel();
-	  };
+		$scope.cancel = function() {
+			$mdDialog.cancel();
+		};
 
-	  $scope.answer = function(answer) {
-	    $mdDialog.hide(answer);
-	  };
+		$scope.answer = function(answer) {
+			$mdDialog.hide(answer);
+		};
 	};
+
+	$scope.$watch('app.editingPost', function(newValue){
+	}, true)
+
+	$scope.printPost = function(){
+		window.console && console.log($scope.app.editingPost);
+	};
+
+	var uploader = $scope.uploader = new FileUploader({
+    url: TRIX.baseUrl + "/api/files/contents/simple"
+  });
+  // CALLBACKS
+  uploader.onAfterAddingFile = function(fileItem) {
+    $scope.uploadedImage = null;
+    uploader.uploadAll();
+  };
+  uploader.onSuccessItem = function(fileItem, response, status, headers) {
+      $scope.uploadedImage = response;
+  };
+  uploader.onErrorItem = function(fileItem, response, status, headers) {
+    toastr.error("A imagem não pode ser maior que 4MBs.");
+  };
+  $scope.clearImage = function(){ 
+    $scope.uploadedImage = null;
+    uploader.clearQueue();
+    uploader.cancelAll()
+  }
+
+  $scope.openImageUpload = function(){
+  	/*safeApply($scope, function(){
+  		$("#image-upload").click();
+  	})*/
+  }
 
 }]);

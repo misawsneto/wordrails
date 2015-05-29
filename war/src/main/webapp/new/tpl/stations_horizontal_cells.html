@@ -1,6 +1,6 @@
 <div md-ink-ripple class="news-item" data-post-id="{{cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, ordinaryRow.cells)">
 	<div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-show="cell.postView.mediumId">
-		<div class="text-md font-thin text-white ls-sm" clamp="3">{{cell.postView.title}}</div>
+		<div class="text-md font-thin text-white ls-sm">{{cell.postView.title}}</div>
 		<div class="m-t-md" ng-show="cell.postView.mediumId">
 			<div class="display-t-c">
 				<a href="https://medium.com/@hughmcguire" class="" title="Go to the profile of Hugh McGuire">
@@ -22,10 +22,10 @@
 	</div>
 
 
-	<div class="wrapper-sm text-lg font-bold" ng-hide="cell.postView.mediumId" clamp="3">
+	<div class="wrapper-sm text-lg font-bold" ng-hide="cell.postView.mediumId">
 		{{cell.postView.title}}
 	</div>
-	<div class="wrapper-sm" ng-hide="cell.postView.mediumId" clamp="3">
+	<div class="wrapper-sm clamped" ng-hide="cell.postView.mediumId">
 		{{cell.postView.snippet}}
 	</div>
 

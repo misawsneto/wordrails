@@ -227,7 +227,7 @@ angular.module('app')
       trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
 
       // close post read and go back to previous state
-      $scope.app.clodePostRead = function(){
+      $scope.app.closePostRead = function(){
         $state.go('^')
         $timeout(function(){
           $scope.app.nowReading = null;

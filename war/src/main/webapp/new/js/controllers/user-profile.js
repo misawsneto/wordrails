@@ -1,5 +1,5 @@
-app.controller('UserProfile', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix',
-					function($scope, $log, $timeout, $rootScope, $state, trix) {
+app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix',
+					function($scope ,  $log ,  $timeout ,  $rootScope ,  $state ,  trix) {
 	
 	// set left side post list to initial scroll
 	//$("#post-left-content .left-content-wrap").scrollTop(0);

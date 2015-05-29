@@ -247,6 +247,7 @@ function getCustomStyle(color, perspective, header) {
 	"  color: " + (textColorEval(header, true)) + ";\n"+
 	"}\n"+
 
+	".redactor-toolbar li span:hover,"+
 	".redactor-toolbar li a:hover {\n"+
 	  "outline: none;\n"+
 	  "background-color:" + color + ";\n"+

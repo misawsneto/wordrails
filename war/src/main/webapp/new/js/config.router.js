@@ -46,7 +46,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/post.js']);
+                        return $ocLazyLoad.load(['angularFileUpload','js/controllers/post.js']);
                     }]
                   },
                   controller:'PostCtrl'
@@ -76,22 +76,16 @@ angular.module('app')
               .state('app.user', {
                   url: '/@:username',
                   templateUrl: 'tpl/user_profile.html',
-                  controller: 'UserProfile',
                   // use resolve to load other dependences
                    resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad ){
                           return $ocLazyLoad.load([
                             'angularFileUpload',
-                            'js/controllers/user-profile.js'
-                            ]).then(
-                              function(){
-                                 return $ocLazyLoad.load('js/controllers/file-upload.js');
-                              }
-                          );
+                            'js/controllers/user-profile.js'])
                       }]
                   },
-                  controller: 'UserProfile'
+                  controller: 'UserCtrl'
               })
               .state('app.stations.read', {
                 url: ':slug',

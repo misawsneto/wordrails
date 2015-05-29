@@ -1111,6 +1111,7 @@ list-style: none; margin: 0; padding: 0;
 .pointer{cursor: pointer;}
 md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.96); z-index: 1026}
 
+.o-h{overflow: hidden;}
 /* /general */
 
 /* animate */
@@ -1185,6 +1186,32 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.96); z-i
 }
 
 .md-dialog-container{position: fixed; z-index: 1027}
+#post-editor #image-button{position: relative;overflow: hidden;}
+#post-editor #image-upload{
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+  display: block;
+}
+#post-editor .redactor-toolbar li span#image-button  {
+  display: block;
+  text-align: center;
+  padding: 9px 10px;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  zoom: 1;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
 /* /post */
 
 /* read */
@@ -1303,6 +1330,36 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 
 .show-post, .show-post .app-content-body{
   overflow-y: hidden;
+}
+
+#post-right-content .btn-term{
+
+}
+
+#post-right-content .btn-term.btn-stroke:hover,
+#post-right-content .btn-term.btn-stroke:active,
+#post-right-content .btn-term.btn-stroke.active{
+  border-color: #111;
+  color: #111;
+}
+
+#post-right-content .btn-term.btn-stroke {
+  background-color: transparent;
+  color: #333;
+  border-color: #333;
+}
+
+#post-right-content.night-mode .btn-term.btn-stroke:hover,
+#post-right-content.night-mode .btn-term.btn-stroke:active,
+#post-right-content.night-mode .btn-term.btn-stroke.active{
+  border-color: #f9f9f9;
+  color: #f9f9f9;
+}
+
+#post-right-content.night-mode .btn-term.btn-stroke {
+  background-color: transparent;
+  color: #eee;
+  border-color: #eee;
 }
 
 /* /read */
@@ -1896,7 +1953,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
     background: inherit!important;
   }
 
-  .station-header .dropdown-menu li a.mark-as-read:hover{
+  .station-header .dropdown-menu li a:hover{
     text-decoration: underline;
   }
   .nav-down{
@@ -1957,10 +2014,40 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   #station-sidebar md-tabs .md-ripple-container 
   {display: none;} */
 
+ #perspective-vertical .news-item .clamped{
+ /*  display: block;
+ display: -webkit-box;
+ max-width: 500px;
+ -webkit-line-clamp: 3;
+ -webkit-box-orient: vertical;
+ overflow: hidden;
+ text-overflow: ellipsis;
+  */
+  display: block;
+  display: -webkit-box;
+  max-width: 500px;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
   .content-block{margin-right: 160px;}
 
 /* #perspective-horizontal .info-flow-wrap .h3 a {color: #ccc}
 #perspective-horizontal .info-flow-wrap .h3 a:hover {color: #fff} */
+
+#perspective-horizontal .news-item .clamped{
+  display: block;
+  display: -webkit-box;
+  max-width: 360px;
+  height: 73px;
+  margin: 0 auto;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .ordinary-row .forward, .ordinary-row .backward { float: left; width: 70px; height: 200px; font-size: 60px; }
 .ordinary-row .forward { float: right; }
@@ -2088,10 +2175,11 @@ div.cell-wrap:hover > div {
 background-image: -moz-linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%);
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endColorstr=#000000FF); */
 }
-.perspective-headlines .headline-item.lg {height: 350px;}
+/* .perspective-headlines .headline-item.lg {height: 350px;}
 .perspective-headlines .headline-item.sm {height: 165px;}
 .headline-item.sm .title-wrapper-bg.wrapper{padding: 10px!important;}
 .headline-item .news-item{background-position: 50% 20%; width: 100%;height: 100%;position: relative;background-size: cover;-webkit-transition: opacity 0.35s;transition: opacity 0.35s;}
+ */
 
 #perspective-sidebar{width: 200px;}
 
@@ -2144,6 +2232,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 #station-sidebar a:hover{
   text-decoration: underline;
 }
+
+
 
 /* /stations */
 

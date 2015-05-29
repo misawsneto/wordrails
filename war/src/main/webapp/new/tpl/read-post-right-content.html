@@ -33,7 +33,7 @@
               <div class="divider-v"></div>
             </li>
             <li>
-              <a href class="text-u-c text-center splash-close-button" ng-click="app.clodePostRead()">×</a>
+              <a href class="text-u-c text-center splash-close-button" ng-click="app.closePostRead()">×</a>
             </li>
           </ul>
         </div>
@@ -59,8 +59,14 @@
                 <span class="text-md font-bold">Por <a class="m-l-xs">{{app.nowReading.author.name}}</a></span>
                 <span class="m-l-sm text-muted text-u-c">em {{ app.nowReading.date | fromNow2 }}</span>
               </div>
-              <div class="post-block m-t-xl">
+              <div class="post-block m-t-xl m-b-xxl">
                 <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
+                </div>
+                <div class="p-t p-b">
+                  <button ng-repeat="term in app.nowReading.terms"
+                    class="btn btn-rounded btn-stroke btn-term text-md">
+                    {{term.name}}
+                  </button>
                 </div>
               </div>
             </div>

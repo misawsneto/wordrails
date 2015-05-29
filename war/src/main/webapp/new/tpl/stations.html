@@ -21,8 +21,8 @@
                   <div class="">
                     <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
                     <a ng-click="app.setNowReading(post)" class="pointer">
-                    <div clamp="1">
-                      {{post.title}}
+                    <div>
+                      {{post.title | characters:45}}
                     </div>
                     </a>
                   </div>
@@ -41,7 +41,7 @@
                     <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
                     <a ng-click="app.setNowReading(post)" class="pointer">
                     <div clamp="1">
-                      {{post.title}}
+                      {{post.title | characters:45}}
                     </div>
                     </a>
                   </div>
@@ -74,15 +74,21 @@
       <!-- dropdown -->
       <ul class="dropdown-menu animated w-sm">
         <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Marcar como lida</span></li>
-        <li> <a ng-click="changeView('horizontal')" href class="mark-as-read"> Todas</a> </li>
-        <li> <a ng-click="changeView('horizontal')" href class="mark-as-read"> Mais antigas que um dia</a> </li>
+        <li> <a href class="mark-as-read"> Todas</a> </li>
+        <li> <a href class="mark-as-read"> Mais antigas que um dia</a> </li>
         <li class="divider"></li>
         <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">modo de exibição</span></li>
-        <li> <a ng-click="changeView('horizontal')" href> <i class="mdi mdi-swap-horizontal m-r-sm"></i> 
-          Horizontal <i class="mdi mdi-checkbox-marked-circle-outline pull-right m-t-xxs" ng-show="app.viewMode == 'horizontal'"></i></a> 
+        <li> <a ng-click="changeView('horizontal')" href>
+            <span class="mdi mdi-checkbox-marked-circle-outline pull-right m-t-xxs" ng-show="app.viewMode == 'horizontal'"></span>
+            <i class="mdi mdi-swap-horizontal m-r-sm"></i> 
+            Horizontal 
+            </a> 
         </li>
-        <li> <a ng-click="changeView('vertical')" href> <i class="mdi mdi-swap-vertical m-r-sm"></i>
-          Vertical <i class="mdi mdi-checkbox-marked-circle-outline pull-right m-t-xxs" ng-show="app.viewMode == 'vertical'"></i></a> 
+        <li> <a ng-click="changeView('vertical')" href> 
+            <span class="mdi mdi-checkbox-marked-circle-outline pull-right m-t-xxs" ng-show="app.viewMode == 'vertical'"></span>
+            <i class="mdi mdi-swap-vertical m-r-sm"></i>
+            Vertical 
+            </a> 
         </li>
       </ul>
       <!-- / dropdown -->
