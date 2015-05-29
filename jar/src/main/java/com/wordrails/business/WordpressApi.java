@@ -12,8 +12,11 @@ import retrofit.http.Path;
 
 public interface WordpressApi {
 
-    @GET("/posts")
-    Set<WordpressPost> getPosts();
+    @POST("/trix/posts")
+    Set<WordpressPost> posts(@Body WordpressGetPostsParams params);
+
+    @POST("/trix/syncerror")
+    Set<WordpressPost> syncError(@Body String stacktrace);
 
     @GET("/taxonomies/post_tag/terms")
     Set<WordpressTerm> getTags();

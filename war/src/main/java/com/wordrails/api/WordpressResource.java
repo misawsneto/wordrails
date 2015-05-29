@@ -1,9 +1,7 @@
 package com.wordrails.api;
 
 import com.google.common.collect.HashBasedTable;
-import com.wordrails.WordrailsService;
 import com.wordrails.business.Person;
-import com.wordrails.business.Post;
 import com.wordrails.business.ServiceGenerator;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationRole;
@@ -13,20 +11,16 @@ import com.wordrails.business.UnauthorizedException;
 import com.wordrails.business.Wordpress;
 import com.wordrails.business.WordpressApi;
 import com.wordrails.business.WordpressConfig;
-import com.wordrails.business.WordpressPost;
 import com.wordrails.business.WordpressService;
 import com.wordrails.business.WordpressTerm;
 import com.wordrails.business.WordpressTerms;
 import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermRepository;
 import com.wordrails.persistence.WordpressRepository;
-import com.wordrails.util.WordrailsUtil;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -60,18 +54,13 @@ import org.springframework.stereotype.Component;
 @Produces(MediaType.APPLICATION_JSON)
 public class WordpressResource {
 
-    private @Context
-    HttpServletRequest request;
-
-    @Autowired
-    private WordrailsService wordrailsService;
+    @Context
+    private HttpServletRequest request;
     @Autowired
     private WordpressService wordpressService;
 
     @Autowired
     private TermRepository termRepository;
-    @Autowired
-    private PostRepository postRepository;
     @Autowired
     private PersonRepository personRepository;
     @Autowired
@@ -93,143 +82,27 @@ public class WordpressResource {
         return wp;
     }
 
-    @PUT
-    @POST
-    @Path("/post")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response post(WordpressPost wpPost) throws ServletException, IOException, URISyntaxException {
-        Wordpress wp;
-        try {
-            wp = getWordpressByToken();
-        } catch (UnauthorizedException e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-
-        try {
-            Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
-            Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
-            HashBasedTable<String, Integer, Term> dbTerms = wordpressService.getTermsByTaxonomy(tagTaxonomy);
-            dbTerms.putAll(wordpressService.getTermsByTaxonomy(categoryTaxonomy));
-
-            Post post;
-            Set<String> slugs = postRepository.findSlugs();
-            if (request.getMethod().equals("PUT")) {
-                post = postRepository.getOne(wpPost.id);
-
-                if (post == null) {
-                    return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Post of id " + wpPost.id + " does not exist").build();
-                }
-
-                post = wordpressService.getPost(post, wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
-            } else {
-                if (postRepository.findByWordpressId(wpPost.id) != null) {
-                    return Response.status(Response.Status.PRECONDITION_FAILED).type("text/plain").entity("Post already exists").build();
-                }
-
-                Person author = personRepository.findByWordpressId(1); //temporary
-                Station station = stationRepository.findByWordpressId(wp.id);
-
-                post = wordpressService.getPost(new Post(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
-                post.station = station;
-                post.author = author;
-            }
-
-            if (!slugs.add(post.slug)) { //if slug already exists in db
-                String hash = WordrailsUtil.generateRandomString(5, "!Aau");
-                post.slug = post.slug + "-" + hash;
-            }
-
-            if (post != null) {
-                postRepository.save(post);
-                wordrailsService.processWordpressPost(post);
-            }
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(ExceptionUtils.getStackTrace(e)).build();
-        }
-
-        return Response.status(Response.Status.OK).build();
-    }
-
-    @PUT
-    @POST
-    @Path("/posts")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response posts(List<WordpressPost> wpPosts) throws ServletException, IOException, URISyntaxException {
-        Wordpress wp;
-        try {
-            wp = getWordpressByToken();
-        } catch (UnauthorizedException e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-
-        Post post = null;
-        WordpressPost wpp = null;
-        try {
-            Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
-            Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
-            HashBasedTable<String, Integer, Term> dbTerms = wordpressService.getTermsByTaxonomy(tagTaxonomy);
-            dbTerms.putAll(wordpressService.getTermsByTaxonomy(categoryTaxonomy));
-
-            Set<Post> posts = new HashSet<>();
-            Set<String> slugs = postRepository.findSlugs();
-            Set<Integer> wordpressIds = postRepository.findWordpressIdsByStation(tagTaxonomy.owningStation.id);
-            for (WordpressPost wpPost : wpPosts) {
-                wpp = wpPost;
-                if (request.getMethod().equals("PUT")) {
-                    post = postRepository.getOne(wpPost.id);
-
-                    if (post == null) {
-                        return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Post of id " + wpPost.id + " does not exist").build();
-                    }
-
-                    post = wordpressService.getPost(post, wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
-                } else {
-                    if (!wordpressIds.add(wpPost.id)) { //if wordpressId already exists in db
-                        continue;
-                    }
-
-                    Person author = personRepository.findByWordpressId(1); //temporary
-                    Station station = stationRepository.findByWordpressId(wp.id);
-
-                    post = wordpressService.getPost(new Post(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
-                    post.station = station;
-                    post.author = author;
-                }
-
-                if (!slugs.add(post.slug)) { //if slug already exists in db
-                    String hash = WordrailsUtil.generateRandomString(5, "!Aau");
-                    post.slug = post.slug + "-" + hash;
-                }
-
-                posts.add(post);
-            }
-
-            postRepository.save(posts);
-            wordrailsService.processWordpressPost(posts);
-        } catch (Exception e) {
-            String msg = "";
-            if (wpp != null) {
-                msg = "Post id=" + wpp.id + " ";
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getClass().getSimpleName() + ": " + msg + ExceptionUtils.getStackTrace(e)).build();
-        }
-
-        return Response.status(Response.Status.OK).build();
-    }
-    
     @GET
     @Path("/sync")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response startSync(WordpressConfig config) throws ServletException, IOException {        
-        wordpressService.sync();
-        
+    public Response startSync(WordpressConfig config) {
+        Wordpress wp;
+        try {
+            wp = getWordpressByToken();
+        } catch (UnauthorizedException e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
+        wordpressService.sync(wp, api);
+
         return Response.status(Response.Status.OK).build();
     }
 
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response login(WordpressConfig config) throws ServletException, IOException {
+    public Response login(WordpressConfig config) {
         boolean newWordpress = false;
         try {
             List<Station> stations = stationRepository.findAll();

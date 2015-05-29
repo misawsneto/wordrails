@@ -86,9 +86,11 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search</artifactId>
 		</dependency>
-
-		<!-- <dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-highlighter</artifactId> 
-			</dependency> -->
+				
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>		
+		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>

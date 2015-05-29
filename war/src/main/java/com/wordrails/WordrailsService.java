@@ -4,7 +4,6 @@ import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.File;
 import com.wordrails.business.FileContents;
 import com.wordrails.business.Image;
-import com.wordrails.business.ImageEventHandler;
 import com.wordrails.business.Network;
 import com.wordrails.business.PasswordReset;
 import com.wordrails.business.Post;
@@ -16,14 +15,8 @@ import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.PostReadRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.RowRepository;
-import com.wordrails.persistence.StationPerspectiveRepository;
-import com.wordrails.persistence.TermPerspectiveRepository;
-import com.wordrails.persistence.TermRepository;
-import com.wordrails.util.AsyncService;
 import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
-
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,11 +24,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -43,10 +34,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-
 import net.coobird.thumbnailator.Thumbnails;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
@@ -60,15 +48,12 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class WordrailsService {
 
 	private @Autowired NetworkRepository networkRepository;
-	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
-	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
-	private @Autowired RowRepository rowRepository;
-	private @Autowired TermRepository termRepository;
 	private @PersistenceContext EntityManager manager;
 	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired PostReadRepository postReadRepository;
@@ -76,8 +61,6 @@ public class WordrailsService {
 	private @Autowired FileContentsRepository contentsRepository;
 	private @Autowired FileRepository fileRepository;
 	private @Autowired ImageRepository imageRepository;
-	private @Autowired ImageEventHandler imageEventHandler;
-	private @Autowired AsyncService asyncService;
 	private @Autowired PostRepository postRepository;
 
 	/**
@@ -138,30 +121,6 @@ public class WordrailsService {
 	@org.springframework.transaction.annotation.Transactional(readOnly=true)
 	public void sendResetEmail(PasswordReset passwordReset) {
 
-	}
-
-	@Async
-	@Transactional
-	public void processWordpressPost(Post post){
-        WordpressParsedContent wcp = extractImageFromContent(post.body);
-        post.body = wcp.content;
-        post.featuredImage = wcp.image;
-        post.externalFeaturedImgUrl = wcp.externalImageUrl;
-		
-		postRepository.save(post);
-	}
-
-	@Async
-	@Transactional
-	public void processWordpressPost(Collection<Post> posts){
-		for (Post post : posts) {
-			WordpressParsedContent wcp = extractImageFromContent(post.body);
-			post.body = wcp.content;
-			post.featuredImage = wcp.image;
-			post.externalFeaturedImgUrl = wcp.externalImageUrl;
-		}
-		
-		postRepository.save(posts);
 	}
 
 	@Transactional
