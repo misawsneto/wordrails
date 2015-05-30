@@ -274,7 +274,7 @@ public class UtilResource {
 		Network network = networkRepository.findOneBySubdomain(subdomain);
 		Station station = stationId != null ? stationRepository.findOne(stationId) : null;
 		
-		List<Invitation> invites = new ArrayList<Invitation>();
+		List<Invitation> invites = new ArrayList<>();
 		
 		for (int i = 0; i < count; i++) {
 			Invitation invitation =  new Invitation();
@@ -325,7 +325,7 @@ public class UtilResource {
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
-			List<Post> posts = new ArrayList<Post>();
+			List<Post> posts = new ArrayList<>();
 			for (Post post : all) {
 				if(post.wordpressId != null && post.featuredImage == null){
 					WordpressParsedContent wpc = wordrailsService.extractImageFromContent(post.body, post.externalFeaturedImgUrl);
@@ -357,12 +357,15 @@ public class UtilResource {
 	private @Autowired NotificationRepository notificationRepository;
 	
 	@GET
-	@Path("/removeWordpressPosts")
-	public void removeWordpressPosts(@Context HttpServletRequest request, @QueryParam("stationId") Integer stationId){
+	@Path("/removeWordpress")
+	public Response removeWordpress(@Context HttpServletRequest request, @QueryParam("token") String token){
+        int countPost = 0;
+        int countTerm = 0;
 		String host = request.getHeader("Host");
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-            Station station = stationRepository.findOne(stationId);
+            Wordpress wp = wordpressRepository.findByToken(token);
+            Station station = stationRepository.findByWordpressId(wp.id);
 			List<Post> posts = postRepository.findByStation(station);
 			for (Post post : posts) {
 				if(post.wordpressId != null){
@@ -380,22 +383,10 @@ public class UtilResource {
                     bookmarkRepository.deleteByPost(post);
                     recommendRepository.deleteByPost(post);
                     postRepository.delete(post);
+                    
+                    countPost++;
 				}
 			}
-		}
-	
-    }
-	@Autowired private TermRepository termRepository;
-	@Autowired private RowRepository rowRepository; 
-    @Autowired private WordpressRepository wordpressRepository;
-	
-	@GET
-	@Path("/removeWordpressTerms")
-	public void removeWordpressTerms(@Context HttpServletRequest request, @QueryParam("wpToken") String wpToken){
-		String host = request.getHeader("Host");
-		
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-            Wordpress wp = wordpressRepository.findByToken(wpToken);
             Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
             Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
             List<Term> terms = new ArrayList<>();
@@ -403,15 +394,20 @@ public class UtilResource {
 			terms.addAll(termRepository.findByTaxonomy(categoryTaxonomy));
 			for (Term term : terms) {
 				if(term.wordpressId != null){
-                    deleteCascade(term, term);
-                    termRepository.delete(term);
+                    countTerm += deleteCascade(term);
 				}
 			}
 		}
-	}
+	
+        return Response.status(Response.Status.OK).type("text/plain").entity("Posts:"+countPost+" Terms:"+countTerm).build();
+    }
+	@Autowired private TermRepository termRepository;
+	@Autowired private RowRepository rowRepository; 
+    @Autowired private WordpressRepository wordpressRepository;
     
     @Transactional
-    public void deleteCascade(Term termToDelete, Term term){
+    public int deleteCascade(Term term){
+        int countTerm = 0;
 		if(term.termPerspectives != null && term.termPerspectives.size() > 0){
 			termPerspectiveRepository.delete(term.termPerspectives);
 		}
@@ -423,19 +419,15 @@ public class UtilResource {
 
 		List<Term> terms = termRepository.findByParent(term);
 		if(terms != null && terms.size() > 0){
-			deleteCascade(termToDelete, terms);
+			for (Term t : terms) {
+                countTerm += deleteCascade(t);
+            }
 		}
-		termRepository.deletePostsTerms(term.id);
-		if(!termToDelete.equals(term)){
-			termRepository.delete(term);
-		}
-	}
-	
-    @Transactional
-	private void deleteCascade(Term termToDelete, List<Term> terms){
-		for (Term term : terms) {
-			deleteCascade(termToDelete, term);
-		}
+        
+		termRepository.delete(term);
+        countTerm++;
+        
+        return countTerm;
 	}
 	
 	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository; 

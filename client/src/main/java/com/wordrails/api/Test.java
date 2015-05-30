@@ -1,18 +1,27 @@
 package com.wordrails.api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.business.WordpressPost;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-
 import retrofit.RestAdapter.LogLevel;
 
 public class Test {
+    
+    private static void testJackson() throws IOException {
+        String rawJson = "[{\"content\":\"Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!\",\"status\":\"publish\",\"slug\":\"hello-world\",\"date\":\"2015-05-29T23:34:38\",\"title\":\"Hello world!\",\"ID\":\"1\",\"terms\":{\"category\":[{\"ID\":1,\"name\":\"Uncategorized\",\"slug\":\"uncategorized\",\"taxonomy\":\"category\",\"parent\":0}],\"post_tag\":[]}},{\"content\":\"This is an example page. It's different from a blog post because it will stay in one place and will show up in your site navigation (in most themes). Most people start with an About page that introduces them to potential site visitors. It might say something like this:\\n\\n<blockquote>Hi there! I'm a bike messenger by day, aspiring actor by night, and this is my blog. I live in Los Angeles, have a great dog named Jack, and I like pi&#241;a coladas. (And gettin' caught in the rain.)<\\/blockquote>\\n\\n...or something like this:\\n\\n<blockquote>The XYZ Doohickey Company was founded in 1971, and has been providing quality doohickeys to the public ever since. Located in Gotham City, XYZ employs over 2,000 people and does all kinds of awesome things for the Gotham community.<\\/blockquote>\\n\\nAs a new WordPress user, you should go to <a href=\\\"http:\\/\\/localhost\\/wordpress\\/wp-admin\\/\\\">your dashboard<\\/a> to delete this page and create new pages for your content. Have fun!\",\"status\":\"publish\",\"slug\":\"sample-page\",\"date\":\"2015-05-29T23:34:38\",\"title\":\"Sample Page\",\"ID\":\"2\",\"terms\":{\"category\":[],\"post_tag\":[]}},{\"content\":\"\",\"status\":\"auto-draft\",\"slug\":\"\",\"date\":\"2015-05-29T23:34:43\",\"title\":\"Auto Draft\",\"ID\":\"3\",\"terms\":{\"category\":[],\"post_tag\":[]}}]";
+        
+        ObjectMapper mapper = new ObjectMapper();
+        List<WordpressPost> posts = mapper.readValue(rawJson, new TypeReference<List<WordpressPost>>(){});
+    }
 
 	public static void main(String[] args) throws IOException {	
+        testJackson();
 		
 		WordRails wordRails = new WordRails(
 				new MockConnectivityManager(true),

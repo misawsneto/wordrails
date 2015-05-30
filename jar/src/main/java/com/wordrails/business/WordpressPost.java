@@ -19,6 +19,8 @@ public class WordpressPost {
     public Date date;
     public Date modified;
     
+    @JsonProperty("terms")
+    @SerializedName("terms")
     public WordpressTerms terms;
 
     public WordpressPost() {
