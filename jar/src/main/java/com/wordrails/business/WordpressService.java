@@ -283,7 +283,7 @@ public class WordpressService {
     @Async
     @Transactional
     public void sync(Wordpress wp, WordpressApi api) {
-        Integer id = null;
+        Integer id = 0;
         while (true) {
             Set<WordpressPost> wpPosts = null;
 
@@ -310,23 +310,23 @@ public class WordpressService {
                 for (WordpressPost wpPost : wpPosts) {
                     wpp = wpPost;
                     if (!wordpressIds.add(wpPost.id)) { //if wordpressId already exists in db
-                        post = postRepository.getOne(wpPost.id);
+                        post = postRepository.findByWordpressId(wpPost.id);
                         post = getPost(post, wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
+                    } else {
+                        Person author = personRepository.findByWordpressId(1); //temporary
+                        Station station = stationRepository.findByWordpressId(wp.id);
+
+                        post = getPost(new Post(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
+                        post.station = station;
+                        post.author = author;
+
+                        if (!slugs.add(post.slug)) { //if slug already exists in db
+                            String hash = WordrailsUtil.generateRandomString(5, "!Aau");
+                            post.slug = post.slug + "-" + hash;
+                        }
                     }
 
-                    Person author = personRepository.findByWordpressId(1); //temporary
-                    Station station = stationRepository.findByWordpressId(wp.id);
-
-                    post = getPost(new Post(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
-                    post.station = station;
-                    post.author = author;
-
-                    if (!slugs.add(post.slug)) { //if slug already exists in db
-                        String hash = WordrailsUtil.generateRandomString(5, "!Aau");
-                        post.slug = post.slug + "-" + hash;
-                    }
-
-                    id = post.id; //in the end the last id will prevail
+                    id = wpPost.id; //in the end the last id will prevail
 
                     posts.add(post);
                 }

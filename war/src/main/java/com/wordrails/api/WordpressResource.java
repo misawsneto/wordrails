@@ -83,9 +83,9 @@ public class WordpressResource {
     }
 
     @GET
-    @Path("/sync")
+    @Path("/syncposts")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response startSync(WordpressConfig config) {
+    public Response syncPosts() {
         Wordpress wp;
         try {
             wp = getWordpressByToken();

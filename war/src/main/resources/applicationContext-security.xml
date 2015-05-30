@@ -32,6 +32,7 @@
 	<http pattern="/api/wp/post" security="none"/>
 	<http pattern="/api/wp/posts" security="none"/>
 	<http pattern="/api/wp/terms" security="none"/>
+	<http pattern="/api/wp/syncposts" security="none"/>
 	<http pattern="/api/util/**" security="none"/>
 	<http pattern="/invitation/**" security="none"/>
 
