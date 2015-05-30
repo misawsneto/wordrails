@@ -266,6 +266,24 @@ function getCustomStyle(color, perspective, header) {
 	  "text-decoration: underline;"+
 	"}\n"+
 
+	"#loading-bar .bar {"+
+	  "background: "+shadeBlend(0.15,color)+";"+
+	"}"+
+
+	"#loading-bar .peg {"+
+	  "-moz-box-shadow: "+color+" 1px 0 6px 1px;"+
+	  "-ms-box-shadow: "+color+" 1px 0 6px 1px;"+
+	  "-webkit-box-shadow: "+color+" 1px 0 6px 1px;"+
+	  "box-shadow: "+color+" 1px 0 6px 1px;"+
+	  "-moz-border-radius: 100%;"+
+	  "-webkit-border-radius: 100%;"+
+	  "border-radius: 100%;"+
+	"}"+
+
+	"#loading-bar-spinner .spinner-icon {"+
+	  "border-top-color:  "+color+";"+
+	  "border-left-color: "+color+";"+
+	"}"+
 	"";
 	return style
 }

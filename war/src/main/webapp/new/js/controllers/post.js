@@ -1,5 +1,6 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', function($scope, $log, $timeout, $mdDialog, $state, FileUploader, TRIX) {
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar',
+										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar) {
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
@@ -7,7 +8,10 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 	$scope.postCtrl = {}
 	$scope.postCtrl.editingExisting = false;
+	$scope.imageLandscape = true;
+	$scope.discardedMedia = null;
 
+	$scope.uploadedImage = null;
 	if(!$scope.app.editingPost)
 		$scope.app.editingPost = {};
 
@@ -113,21 +117,54 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
     uploader.uploadAll();
   };
   uploader.onSuccessItem = function(fileItem, response, status, headers) {
+  	if(response.filelink){
       $scope.uploadedImage = response;
+      $scope.uploadedImage.filelink = TRIX.baseUrl + $scope.uploadedImage.filelink
+      $scope.showMediaButtons = false;
+      $scope.checkLandscape();
+  	}
   };
+
+  $scope.invertLandscapeSquare = function(){
+  	$scope.imageLandscape = !$scope.imageLandscape; 
+  	$scope.checkLandscape();
+  }
+
+  $scope.checkLandscape = function(){
+  	console.log($scope.imageLandscape);
+  	if($scope.imageLandscape){
+  	  $("#post-media-box").css('background-image', 'url(' + $scope.uploadedImage.filelink + ')');
+      $("#post-media-box").css('max-width', "200%");
+      $("#post-media-box").css('margin', 0);
+      $("#post-media-box").css('height', '500px');
+      $("#post-media-box").css('margin', '-20px -50px 0 -50px')
+      $("#post-media-box").css('background-position', '50% 30%')
+      $("#post-media-box").css('background-size', 'cover')
+  	}else{
+  	  $("#post-media-box").removeAttr('style')
+  	}
+  }
+
   uploader.onErrorItem = function(fileItem, response, status, headers) {
-    toastr.error("A imagem não pode ser maior que 4MBs.");
-  };
+  	//if(status == 413)
+    // toastr.error("A imagem não pode ser maior que 6MBs.");
+  }
+
   $scope.clearImage = function(){ 
     $scope.uploadedImage = null;
     uploader.clearQueue();
     uploader.cancelAll()
   }
 
-  $scope.openImageUpload = function(){
-  	/*safeApply($scope, function(){
-  		$("#image-upload").click();
-  	})*/
+  uploader.onProgressItem = function(fileItem, progress) {
+      window.console && console.log(progress);
+  		cfpLoadingBar.start();
+      cfpLoadingBar.set(progress/10)
+      if(progress == 100)
+      	cfpLoadingBar.complete()
+  };
+
+  $scope.discardImage = function(){
   }
 
 }]);

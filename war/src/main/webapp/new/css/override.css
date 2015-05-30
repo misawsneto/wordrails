@@ -1212,6 +1212,36 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.96); z-i
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
+
+#image-config {
+  position: absolute;
+  width: 800px;
+  text-align: right;
+  padding: 15px;
+  color: #fff;
+  overflow: hidden;
+}
+
+#image-config-items{
+  float: right;
+  background: rgba(0,0,0,0.4);
+  width: 70px;
+  box-shadow: 0 0 8px 8px rgba(0,0,0,0.4);
+  text-align: center;
+  border-radius: 0;
+  border-bottom-left-radius: 2px;
+  margin-top: -10px;
+  margin-right: -10px;
+}
+
+.image-config-full{
+  width: 100%!important;
+}
+
+#image-config a{
+  color: #fff;
+  vertical-align: middle;
+}
 /* /post */
 
 /* read */

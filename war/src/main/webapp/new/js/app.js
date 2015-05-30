@@ -18,6 +18,7 @@ angular.module('app', [
     'ui.jq',
     'ui.splash',
     'oc.lazyLoad',
+    'angular-loading-bar',
     'pascalprecht.translate',
     'angular-redactor',
     'trix'

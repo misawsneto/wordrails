@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css" type="text/css" />
   <link rel="stylesheet" href="../bower_components/simple-line-icons/css/simple-line-icons.css" type="text/css" />
   <link rel="stylesheet" href="../bower_components/redactor/redactor.css" />
+  <link rel="stylesheet" href="..//bower_components/angular-loading-bar/build/loading-bar.min.css">
   <link rel="stylesheet" href="../bower_components/angular-material/angular-material.css" type="text/css" />
 
   <link rel="stylesheet" href="css/materialdesignicons.css" type="text/css" />
@@ -66,7 +67,8 @@
   <script src="../bower_components/redactor/fontcolor.js"></script>
   <script src="../bower_components/redactor/pt_br.js"></script>
   <script src="../bower_components/redactor/angular-redactor.js"></script>
-  <script src="../../bower_components/moment/min/moment-with-locales.min.js"></script>
+  <script src="../bower_components/moment/min/moment-with-locales.min.js"></script>
+  <script src="../bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
 
   <!-- App -->
   <script src="js/app.js"></script>
