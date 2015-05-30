@@ -8,7 +8,7 @@
       <div class="cell" id="post-cell">
         <div class="cell-inner">
           <div id="post-editor" class="wrapper-md p-r-xxl p-l-xxl">
-            <div id="post-media-box" class="post-block" style="background-position: 50% 30%; background-size: cover;">
+            <div id="post-media-box" class="post-block" ng-class="{'image-landscape': imageLandscape && uploadedImage.filelink}">
             <!-- media selection buttons -->
               <button class="post-stroke-btn btn text-md btn-sm m-t-xxs btn-icon btn-rounded btn-stroke btn-muted" ng-class="{'hide': uploadedImage.filelink}" ng-style="landscapeStyle"
                tooltip="Destaque" tooltip-append-to-body="true" ng-click="showMediaButtons = !showMediaButtons">
@@ -40,7 +40,7 @@
                 </div>
               </div>
               <!-- <img src="img/c0.jpg" class="img-full"> -->
-                <img ng-src="{{uploadedImage.filelink}}" class="img-full" ng-if="uploadedImage.filelink && !imageLandscape">
+                <img id="image-box-holder" ng-src="{{uploadedImage.filelink}}" class="img-full" ng-if="uploadedImage.filelink">
             </div>
             <div id="post-title-box" class="post-block m-t">
               <input ng-model="app.editingPost.title" type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
@@ -94,7 +94,7 @@
     </li>
     <li>
       <a href class="text-lg" >
-        <i class="mdi-delete-variant mdi"></i>
+        <i class="mdi-delete mdi"></i>
       </a>
     </li>
     <li>

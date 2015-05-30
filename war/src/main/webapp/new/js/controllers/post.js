@@ -132,14 +132,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
   $scope.checkLandscape = function(){
   	console.log($scope.imageLandscape);
-  	if($scope.imageLandscape){
+  	if($scope.uploadedImage){
   	  $("#post-media-box").css('background-image', 'url(' + $scope.uploadedImage.filelink + ')');
-      $("#post-media-box").css('max-width', "200%");
-      $("#post-media-box").css('margin', 0);
-      $("#post-media-box").css('height', '500px');
-      $("#post-media-box").css('margin', '-20px -50px 0 -50px')
-      $("#post-media-box").css('background-position', '50% 30%')
-      $("#post-media-box").css('background-size', 'cover')
   	}else{
   	  $("#post-media-box").removeAttr('style')
   	}
@@ -154,6 +148,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
     $scope.uploadedImage = null;
     uploader.clearQueue();
     uploader.cancelAll()
+    $scope.checkLandscape();
   }
 
   uploader.onProgressItem = function(fileItem, progress) {

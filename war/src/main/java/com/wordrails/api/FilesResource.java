@@ -168,7 +168,7 @@ public class FilesResource {
 						String tallImage = "";
 						BufferedImage image = ImageIO.read(input);
 						if(image.getHeight() >= image.getWidth()){
-							tallImage = "tallImage: true, ";
+							tallImage = "\"tallImage\": true, ";
 						}
 
 						Session session = (Session) manager.getDelegate();
