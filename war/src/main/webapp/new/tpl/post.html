@@ -55,10 +55,12 @@
               <div id="post-placeholder" class="post-content-font text-muted m-t-xxs" ng-class="{'hide': app.editingPost.body}">Texto...</div>
               <textarea ng-model="app.editingPost.body" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
-            <md-button id="post-fab-button" class="md-fab md-fab-bottom-right text-lg" ng-click="showAdvanced($event)"
-            tooltip="Enviar" tooltip-popup-delay="700">
+            <!-- send button -->
+            <md-button id="post-fab-button" class="md-fab text-lg" ng-click="showAdvanced($event)"
+            tooltip="Enviar" tooltip-popup-delay="700" ng-class="{'sidebar-opened': !app.hidePostOptions}">
               <i class="mdi mdi-send"></i>
             </md-button>
+            <!-- /send button -->
           </div>
         </div>
       </div>

@@ -225,6 +225,7 @@ angular.module('app')
       loadRecent();
 
       trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
+      trix.getTermTree($scope.app.currentStation.defaultPerspectiveId);
 
       // close post read and go back to previous state
       $scope.app.closePostRead = function(){

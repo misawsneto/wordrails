@@ -1185,7 +1185,7 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   background-position: 50% 30%;
 }
 
-.md-dialog-container{position: fixed; z-index: 1027}
+.md-dialog-container{position: fixed; z-index: 1055}
 #post-editor #image-button{position: relative;overflow: hidden;}
 #post-editor #image-upload{
   position: absolute;
@@ -1199,6 +1199,9 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   cursor: pointer;
   display: block;
 }
+
+#post-editor .redactor-toolbar li span,#post-editor .redactor-toolbar li a.mdi {line-height: 16px;}
+
 #post-editor .redactor-toolbar li span#image-button  {
   display: block;
   text-align: center;
@@ -1288,6 +1291,24 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   margin-left: -50px;
   background-position: 50% 30%;
   background-size: cover;
+}
+
+#post-fab-button{
+  position: fixed;
+  right: 30px;
+  bottom: 20px;
+  -webkit-transition: all 0.1s ease-in-out;
+  -moz-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+}
+
+#post-fab-button.sidebar-opened{
+  right: 310px;
+  -webkit-transition: all 0.1s ease-in-out;
+  -moz-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
 }
 
 /* /post */

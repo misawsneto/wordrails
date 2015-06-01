@@ -1,6 +1,11 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar',
-										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar) {
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService',
+										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService){
+
+	// check if user has permisstion to write
+  $scope.writableStations = trixService.getWritableStations();
+
+  console.log($scope.writableStations);
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
@@ -122,6 +127,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
       $scope.uploadedImage.filelink = TRIX.baseUrl + $scope.uploadedImage.filelink
       $scope.showMediaButtons = false;
       $scope.checkLandscape();
+      $("#image-config").removeClass("hide");
   	}
   };
 
@@ -145,6 +151,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   }
 
   $scope.clearImage = function(){ 
+    $("#image-config").addClass("hide");
     $scope.uploadedImage = null;
     uploader.clearQueue();
     uploader.cancelAll()

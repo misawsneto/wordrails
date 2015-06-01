@@ -3,7 +3,9 @@ package com.wordrails.persistence;
 import com.wordrails.business.Taxonomy;
 import com.wordrails.business.Term;
 import com.wordrails.business.Wordpress;
+
 import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -65,4 +67,10 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	@Modifying
 	@Query(nativeQuery=true, value="DELETE FROM post_term WHERE terms_id = ?")
 	void deletePostsTerms(Integer termId);
+
+	@Query(value="SELECT taxonomy.terms FROM StationPerspective sp join sp.taxonomy taxonomy where sp.id = :perspectiveId")
+	List<Term> findByPerspectiveId(@Param("perspectiveId") Integer perspectiveId);
+	
+	@Query(value="SELECT taxonomy.terms FROM Taxonomy taxonomy where taxonomy.id = :taxonomyId")
+	List<Term> findByTaxonomyId(@Param("taxonomyId") Integer perspectiveId);
 }
