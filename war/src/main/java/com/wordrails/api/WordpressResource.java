@@ -2,6 +2,7 @@ package com.wordrails.api;
 
 import com.google.common.collect.HashBasedTable;
 import com.wordrails.business.Person;
+import com.wordrails.business.Post;
 import com.wordrails.business.ServiceGenerator;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationRole;
@@ -11,15 +12,18 @@ import com.wordrails.business.UnauthorizedException;
 import com.wordrails.business.Wordpress;
 import com.wordrails.business.WordpressApi;
 import com.wordrails.business.WordpressConfig;
+import com.wordrails.business.WordpressPost;
 import com.wordrails.business.WordpressService;
 import com.wordrails.business.WordpressTerm;
 import com.wordrails.business.WordpressTerms;
 import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermRepository;
 import com.wordrails.persistence.WordpressRepository;
+import com.wordrails.util.WordrailsUtil;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,6 +43,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -59,6 +64,8 @@ public class WordpressResource {
     @Autowired
     private WordpressService wordpressService;
 
+    @Autowired
+    private PostRepository postRepository;
     @Autowired
     private TermRepository termRepository;
     @Autowired
@@ -95,6 +102,63 @@ public class WordpressResource {
 
         WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
         wordpressService.sync(wp, api);
+
+        return Response.status(Response.Status.OK).build();
+    }
+    
+    @PUT
+    @POST
+    @Path("/post")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response post(WordpressPost wpPost) {
+        Wordpress wp;
+        try {
+            wp = getWordpressByToken();
+        } catch (UnauthorizedException e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        try {
+            Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
+            Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
+            HashBasedTable<String, Integer, Term> dbTerms = wordpressService.getTermsByTaxonomy(tagTaxonomy);
+            dbTerms.putAll(wordpressService.getTermsByTaxonomy(categoryTaxonomy));
+
+            Post post;
+            Set<String> slugs = postRepository.findSlugs();
+            if (request.getMethod().equals("PUT")) {
+                post = postRepository.getOne(wpPost.id);
+
+                if (post == null) {
+                    return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Post of id " + wpPost.id + " does not exist").build();
+                }
+
+                post = wordpressService.getPost(post, wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
+            } else {
+                if (postRepository.findByWordpressId(wpPost.id) != null) {
+                    return Response.status(Response.Status.PRECONDITION_FAILED).type("text/plain").entity("Post already exists").build();
+                }
+
+                Person author = personRepository.findByWordpressId(1); //temporary
+                Station station = stationRepository.findByWordpressId(wp.id);
+
+                post = wordpressService.getPost(new Post(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
+                post.station = station;
+                post.author = author;
+            }
+
+            if (!slugs.add(post.slug)) { //if slug already exists in db
+                String hash = WordrailsUtil.generateRandomString(5, "!Aau");
+                post.slug = post.slug + "-" + hash;
+            }
+
+            if (post != null) {
+                postRepository.save(post);
+                wordpressService.processWordpressPost(post);
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(ExceptionUtils.getStackTrace(e)).build();
+        }
 
         return Response.status(Response.Status.OK).build();
     }

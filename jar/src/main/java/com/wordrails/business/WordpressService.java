@@ -46,6 +46,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.scheduling.annotation.Async;
@@ -54,6 +56,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WordpressService {
+    
+    private static final Logger log = LoggerFactory.getLogger(ResponseErrorHandler.class);
 
     @PersistenceContext
     private EntityManager manager;
@@ -338,7 +342,9 @@ public class WordpressService {
                 if (wpp != null) {
                     msg = "Post id=" + wpp.id + " ";
                 }
-                api.syncError(e.getClass().getSimpleName() + ": " + msg + ExceptionUtils.getStackTrace(e));
+                String error = e.getClass().getSimpleName() + ": " + msg + ExceptionUtils.getStackTrace(e);
+                api.syncError(error);
+                log.error(error);
             }
 
         }
