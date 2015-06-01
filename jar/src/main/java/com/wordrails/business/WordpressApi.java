@@ -12,7 +12,7 @@ import retrofit.http.Path;
 
 public interface WordpressApi {
 
-    @POST("/trix/get_posts")
+    @POST("/trix/posts")
     Set<WordpressPost> posts(@Body WordpressGetPostsParams params);
 
     @POST("/trix/syncerror")
