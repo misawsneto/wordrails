@@ -30,8 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -44,6 +42,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -256,7 +256,7 @@ public class WordpressResource {
                 }
             }
         } catch (Exception e) {
-            Logger.getLogger(WordpressResource.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(WordpressResource.class.getName()).log(Level.ERROR, null, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
         }
 
@@ -321,9 +321,9 @@ public class WordpressResource {
             newTerms = wordpressService.getTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
             termRepository.save(newTerms);
         } catch (DataIntegrityViolationException ex) {
-            Logger.getLogger(WordpressResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WordpressResource.class.getName()).log(Level.ERROR, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(WordpressResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WordpressResource.class.getName()).log(Level.ERROR, null, ex);
         }
     }
 }
