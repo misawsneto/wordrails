@@ -28,7 +28,7 @@
       <span class="font-bold">Notificações</span>
     </a>
   </li>
-  <li ui-sref-active="active" ng-if="app.initData.stations && app.initData.stations.length > 0">
+  <li ui-sref-active="active" ng-if="app.stationsPermissions && app.stationsPermissions > 1">
     <a ng-click="toggleMenu($event);" tooltip="Estações" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
       <i class="mdi-library-books mdi text-lgrey"></i>
       <span class="font-bold">Estações</span>

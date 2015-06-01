@@ -104,6 +104,7 @@ angular.module('app')
       
       $scope.app.initData = angular.copy(initData);
       $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
+      $scope.app.stationsPermissions = trixService.getStationPermissions();
       $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
 
       $scope.app.checkIfLogged = function(){
@@ -224,9 +225,6 @@ angular.module('app')
       loadPopular();
       loadRecent();
 
-      trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId)
-      trix.getTermTree($scope.app.currentStation.defaultPerspectiveId);
-
       // close post read and go back to previous state
       $scope.app.closePostRead = function(){
         $state.go('^')
@@ -294,7 +292,6 @@ angular.module('app')
         $("body").removeAttr("style");
       },2)
 
-      // $scope.app.initData.person.coverMediumId = "";
 
       /* end of added */
   }]); 

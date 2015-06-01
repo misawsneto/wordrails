@@ -2,7 +2,18 @@
   <div class="row-row">
     <div class="cell b-l bg-light lter">
       <div class="cell-inner">
-        <div class="wrapper-md">
+        <div class="wrapper-sm term-tree">
+
+          <div class="span5 article-tree">
+            <div ng-style="{'overflow': 'auto'}">
+              <div class="tree well">
+                <ul>
+                  <node-tree ng-model="termTree"></node-tree>
+                </ul>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

@@ -74,4 +74,9 @@ angular.module('app').service('trixService', function(){
 	 	});
 	 	return stations;
 	 }
+
+	 this.getStationPermissions = function(){
+		 	return initData.personPermissions.stationPermissions;
+	 }
+
 	});

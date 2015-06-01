@@ -284,6 +284,15 @@ function getCustomStyle(color, perspective, header) {
 	  "border-top-color:  "+color+";"+
 	  "border-left-color: "+color+";"+
 	"}"+
+
+	"md-checkbox.md-default-theme.md-checked .md-icon{" +
+		"background-color:" + color +
+	"}"+
+
+	"md-checkbox.md-default-theme.md-checked .md-icon: after{" +
+	"border-color:" + textColorEval(color) +
+	"}"+
+
 	"";
 	return style
 }

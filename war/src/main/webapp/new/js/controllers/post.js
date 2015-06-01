@@ -1,11 +1,9 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService',
-										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService){
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix',
+										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix){
 
 	// check if user has permisstion to write
   $scope.writableStations = trixService.getWritableStations();
-
-  console.log($scope.writableStations);
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
@@ -53,6 +51,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 	}
 
+	$scope.showTree = false;
+
 	$scope.closeNewPost = function(){
 		$state.go('app.stations')
 	}
@@ -83,7 +83,10 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		$mdDialog.show({
 			controller: DialogController,
 			templateUrl: 'tpl/post_more_options.html',
-			targetEvent: ev
+			targetEvent: ev,
+			onComplete: function(){
+				
+			}
 		})
 		.then(function(answer) {
 			$scope.alert = 'You said the information was "' + answer + '".';
@@ -92,16 +95,17 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		});
 	};
 
-	function DialogController($scope, $mdDialog) {
-		$scope.hide = function() {
+	function DialogController(scope, $mdDialog) {
+		scope.termTree = $scope.termTree
+		scope.hide = function() {
 			$mdDialog.hide();
 		};
 
-		$scope.cancel = function() {
+		scope.cancel = function() {
 			$mdDialog.cancel();
 		};
 
-		$scope.answer = function(answer) {
+		scope.answer = function(answer) {
 			$mdDialog.hide(answer);
 		};
 	};
@@ -137,7 +141,6 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   }
 
   $scope.checkLandscape = function(){
-  	console.log($scope.imageLandscape);
   	if($scope.uploadedImage){
   	  $("#post-media-box").css('background-image', 'url(' + $scope.uploadedImage.filelink + ')');
   	}else{
@@ -159,14 +162,28 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   }
 
   uploader.onProgressItem = function(fileItem, progress) {
-      window.console && console.log(progress);
   		cfpLoadingBar.start();
       cfpLoadingBar.set(progress/10)
       if(progress == 100)
       	cfpLoadingBar.complete()
   };
 
-  $scope.discardImage = function(){
-  }
+	trix.getTermTree($scope.app.currentStation.defaultPerspectiveId).success(function(response){
+		$scope.termTree = response;
 
+		//uncheckTerms($scope.termTree)
+	});
+
+	/*function uncheckTerms(terms){
+		terms && terms.forEach(function(term, index){
+			term.checked = false
+
+			if(term.children && term.children.length > 0)
+				uncheckTerms(term.children)
+		});
+	}*/
+
+	$scope.$watch('termTree', function(n,o){
+		console.log(n);
+	}, true)
 }]);
