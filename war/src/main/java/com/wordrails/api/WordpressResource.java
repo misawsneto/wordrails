@@ -170,6 +170,7 @@ public class WordpressResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
+        int termsSaved = 0;
         try {
             Station station = stationRepository.findByWordpressToken(config.token);
             if (station == null || station.wordpress == null) {
@@ -218,7 +219,7 @@ public class WordpressResource {
                 station.wordpress = wordpress;
                 wordpressRepository.save(wordpress);
 
-                saveTerms(terms, station);
+                termsSaved = saveTerms(terms, station);
 
                 //temporary
                 Person person = new Person();
@@ -248,7 +249,7 @@ public class WordpressResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
         }
 
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).type("text/plain").entity("Terms saved: " + termsSaved).build();
     }
 
     @PUT
@@ -297,7 +298,7 @@ public class WordpressResource {
         return Response.status(Response.Status.OK).build();
     }
 
-    private void saveTerms(Map<Integer, WordpressTerm> terms, Station station) throws Exception {
+    private Integer saveTerms(Map<Integer, WordpressTerm> terms, Station station) throws Exception {
         Taxonomy categoryTaxonomy = taxonomyRepository.findByStation(station);
         Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByStation(station);
         HashBasedTable<String, Integer, Term> dbTerms = wordpressService.getTermsByTaxonomy(tagTaxonomy);
@@ -305,13 +306,9 @@ public class WordpressResource {
         //TODO enviar terms
 
         Set<Term> newTerms;
-        try {
-            newTerms = wordpressService.getTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
-            termRepository.save(newTerms);
-        } catch (DataIntegrityViolationException ex) {
-            Logger.getLogger(WordpressResource.class.getName()).log(Level.ERROR, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(WordpressResource.class.getName()).log(Level.ERROR, null, ex);
-        }
+        newTerms = wordpressService.getTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
+        termRepository.save(newTerms);
+        
+        return newTerms.size();
     }
 }
