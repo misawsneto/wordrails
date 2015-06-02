@@ -27,7 +27,6 @@ import com.wordrails.util.WordrailsUtil;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletException;
@@ -105,7 +104,7 @@ public class WordpressResource {
 
         return Response.status(Response.Status.OK).build();
     }
-    
+
     @PUT
     @POST
     @Path("/post")
@@ -167,93 +166,82 @@ public class WordpressResource {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(WordpressConfig config) {
-        boolean newWordpress = false;
+        if (config == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
         try {
-            List<Station> stations = stationRepository.findAll();
-            Station station = null;
-            Wordpress wordpress = null;
-            if (!stations.isEmpty()) {
-                for (Station st : stations) {
-                    if (st.wordpress != null) {
-                        if (st.wordpress.token.equals(config.token)) {
-                            station = st;
-                            wordpress = st.wordpress;
-                            newWordpress = wordpress.domain == null;
-                            break;
+            Station station = stationRepository.findByWordpressToken(config.token);
+            if (station == null || station.wordpress == null) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Token is not created for this station").build();
+            }
+
+            Wordpress wordpress = station.wordpress;
+            if (wordpress.domain == null || wordpress.domain.isEmpty()) { //new login
+                //TODO manage taxonomy to enable this                    
+                Map<Integer, WordpressTerm> terms = new HashMap<>();
+
+                if (config.terms != null) {
+                    if (config.terms.tags != null) {
+                        for (WordpressTerm tag : config.terms.tags) {
+                            terms.put(tag.id, tag);
+                        }
+                    }
+                    if (config.terms.categories != null) {
+                        for (WordpressTerm category : config.terms.categories) {
+                            terms.put(category.id, category);
                         }
                     }
                 }
 
-                if (wordpress == null) {
-                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Token is not created for this station").build();
+                if (terms.isEmpty()) {
+                    WordpressApi api = ServiceGenerator.createService(WordpressApi.class, config.domain, config.user, config.password);
+                    Set<WordpressTerm> tags = api.getTags();
+                    Set<WordpressTerm> cats = api.getCategories();
+                    if (tags != null) {
+                        for (WordpressTerm tag : tags) {
+                            terms.put(tag.id, tag);
+                        }
+                    }
+                    if (cats != null) {
+                        for (WordpressTerm category : cats) {
+                            terms.put(category.id, category);
+                        }
+                    }
                 }
 
-                if (newWordpress) {
-                    //TODO manage taxonomy to enable this                    
-                    Map<Integer, WordpressTerm> terms = new HashMap<>();
+                wordpress.domain = config.domain;
+                wordpress.username = config.user;
+                wordpress.password = config.password;
+                wordpress.station = station;
 
-                    if (config.terms != null) {
-                        if (config.terms.tags != null) {
-                            for (WordpressTerm tag : config.terms.tags) {
-                                terms.put(tag.id, tag);
-                            }
-                        }
-                        if (config.terms.categories != null) {
-                            for (WordpressTerm category : config.terms.categories) {
-                                terms.put(category.id, category);
-                            }
-                        }
-                    }
+                station.wordpress = wordpress;
+                wordpressRepository.save(wordpress);
 
-                    if (terms.isEmpty()) {
-                        WordpressApi api = ServiceGenerator.createService(WordpressApi.class, config.domain, config.user, config.password);
-                        Set<WordpressTerm> tags = api.getTags();
-                        Set<WordpressTerm> cats = api.getCategories();
-                        if (tags != null) {
-                            for (WordpressTerm tag : tags) {
-                                terms.put(tag.id, tag);
-                            }
-                        }
-                        if (cats != null) {
-                            for (WordpressTerm category : cats) {
-                                terms.put(category.id, category);
-                            }
-                        }
-                    }
+                saveTerms(terms, station);
 
-                    wordpress.domain = config.domain;
-                    wordpress.username = config.user;
-                    wordpress.password = config.password;
-                    wordpress.station = station;
+                //temporary
+                Person person = new Person();
+                person.username = "wordpress";
+                person.email = "wordpress@xarx.co";
+                person.wordpressId = 1;
+                person.personsStationPermissions = new HashSet<>();
+                StationRole stRole = new StationRole();
+                stRole.admin = true;
+                stRole.editor = true;
+                stRole.writer = true;
+                stRole.person = person;
+                stRole.station = station;
+                stRole.wordpress = wordpress;
+                person.personsStationPermissions.add(stRole);
 
-                    station.wordpress = wordpress;
-                    wordpressRepository.save(wordpress);
-
-                    saveTerms(terms, station);
-
-                    //temporary
-                    Person person = new Person();
-                    person.username = "wordpress";
-                    person.email = "wordpress@xarx.co";
-                    person.wordpressId = 1;
-                    person.personsStationPermissions = new HashSet<>();
-                    StationRole stRole = new StationRole();
-                    stRole.admin = true;
-                    stRole.editor = true;
-                    stRole.writer = true;
-                    stRole.person = person;
-                    stRole.station = station;
-                    stRole.wordpress = wordpress;
-                    person.personsStationPermissions.add(stRole);
-
-                    try {
-                        personRepository.save(person);
-                        stationRolesRepository.save(stRole);
-                    } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-                        //already exists
-                    }
-
+                try {
+                    personRepository.save(person);
+                    stationRolesRepository.save(stRole);
+                } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+                    //already exists
                 }
+
             }
         } catch (Exception e) {
             Logger.getLogger(WordpressResource.class.getName()).log(Level.ERROR, null, e);

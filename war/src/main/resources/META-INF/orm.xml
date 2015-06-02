@@ -99,6 +99,12 @@
                     where station = :station and t.type != 'T' and t.type != 'A' and t = p.taxonomy
 		</query>
 	</named-query>
+        
+	<named-query name="Station.findByWordpressToken">
+		<query>
+                    select s from Station s join s.wordpress wordpress where wordpress.token = :wordpressToken
+		</query>
+	</named-query>
 	
 	<named-query name="Taxonomy.findNetworkOrStationTaxonomiesByNetworkIdExcludeType">
 		<query>

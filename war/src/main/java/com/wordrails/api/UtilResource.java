@@ -365,6 +365,11 @@ public class UtilResource {
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
             Wordpress wp = wordpressRepository.findByToken(token);
+            
+            if (wp == null) {
+                return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Token invalid:" + token).build();
+            }
+
             Station station = stationRepository.findByWordpressId(wp.id);
 			List<Post> posts = postRepository.findByStation(station);
 			for (Post post : posts) {
