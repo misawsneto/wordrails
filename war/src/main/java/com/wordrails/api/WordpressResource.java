@@ -172,6 +172,7 @@ public class WordpressResource {
         }
 
         int termsSaved = 0;
+        Map<Integer, WordpressTerm> terms = new HashMap<>();
         try {
             Station station = stationRepository.findByWordpressToken(config.token);
             if (station == null || station.wordpress == null) {
@@ -181,7 +182,6 @@ public class WordpressResource {
             Wordpress wordpress = station.wordpress;
             if (wordpress.domain == null || wordpress.domain.isEmpty()) { //new login
                 //TODO manage taxonomy to enable this                    
-                Map<Integer, WordpressTerm> terms = new HashMap<>();
 
                 if (config.terms != null) {
                     if (config.terms.tags != null) {
@@ -250,7 +250,7 @@ public class WordpressResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(e.getMessage()).build();
         }
 
-        return Response.status(Response.Status.OK).type("text/plain").entity("Terms saved: " + termsSaved).build();
+        return Response.status(Response.Status.OK).type("text/plain").entity("Terms received: " + terms.size() + ", Terms saved: " + termsSaved).build();
     }
 
     @PUT
@@ -302,13 +302,12 @@ public class WordpressResource {
     private Integer saveTerms(Map<Integer, WordpressTerm> terms, Station station) throws Exception {
         Taxonomy categoryTaxonomy = taxonomyRepository.findByStation(station);
         Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByStation(station);
-        HashBasedTable<String, Integer, Term> dbTerms = wordpressService.getTermsByTaxonomy(tagTaxonomy);
+        HashBasedTable<String, Integer, Term> dbTerms = HashBasedTable.create();
+        dbTerms.putAll(wordpressService.getTermsByTaxonomy(tagTaxonomy));
         dbTerms.putAll(wordpressService.getTermsByTaxonomy(categoryTaxonomy));
         //TODO enviar terms
 
-        Set<Term> newTerms;
-        newTerms = wordpressService.getTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
-        termRepository.save(newTerms);
+        Set<Term> newTerms = wordpressService.findAndSaveTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
         
         return newTerms.size();
     }

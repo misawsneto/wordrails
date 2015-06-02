@@ -155,7 +155,7 @@ public class WordpressService {
                 }
             }
 
-            post.terms = getTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
+            post.terms = findAndSaveTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
         }
 
         return post;
@@ -223,7 +223,7 @@ public class WordpressService {
         return t;
     }
 
-    public Set<Term> getTerms(Map<Integer, WordpressTerm> wpTerms, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy taxTag, Taxonomy taxCat)
+    public Set<Term> findAndSaveTerms(Map<Integer, WordpressTerm> wpTerms, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy taxTag, Taxonomy taxCat)
         throws ConstraintViolationException, DataIntegrityViolationException, Exception {
         Set<Term> terms = new HashSet();
         for (WordpressTerm term : wpTerms.values()) {
