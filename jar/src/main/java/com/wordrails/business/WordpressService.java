@@ -250,7 +250,7 @@ public class WordpressService {
                     termRepository.save(t);
                     dbTerms.put(t.wordpressSlug, t.wordpressId, t);
                 } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-                    t = termRepository.findByWordpressSlug(term.slug);
+                    t = termRepository.findByWordpressSlugAndTaxonomy(term.slug, t.taxonomy);
                     if (t != null) {
                         t.wordpressId = term.id;
                         try {
