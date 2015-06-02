@@ -365,12 +365,15 @@ public class UtilResource {
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
             Wordpress wp = wordpressRepository.findByToken(token);
-            
-            if (wp == null) {
-                return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Token invalid:" + token).build();
-            }
 
-            Station station = stationRepository.findByWordpressId(wp.id);
+            Station station = stationRepository.findByWordpressToken(token);
+            
+            if(station == null) {
+                return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Something is very wrong:" + token).build();
+            } else if (wp == null) {
+                return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Token invalid:" + token).build();
+            } 
+            
 			List<Post> posts = postRepository.findByStation(station);
 			for (Post post : posts) {
 				if(post.wordpressId != null){
