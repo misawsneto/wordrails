@@ -54,6 +54,8 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
 		postView.externalVideoUrl = post.externalVideoUrl;
 		postView.readTime = post.readTime;
+		postView.lat = post.lat;
+		postView.lng = post.lng;
 		
 		return postView;
 	}

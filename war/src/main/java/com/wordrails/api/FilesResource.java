@@ -70,7 +70,7 @@ public class FilesResource {
 			List<FileItem> items = upload.parseRequest(request);
 			for (FileItem item : items) {
 				if ("contents".equals(item.getFieldName()) || "file".equals(item.getFieldName())) {
-					if(item.getSize() <= 4194304){
+					if(item.getSize() <= 6291456){
 						try (InputStream input = item.getInputStream()) {
 							file.type = File.INTERNAL_FILE;
 							file.mime = item.getContentType();

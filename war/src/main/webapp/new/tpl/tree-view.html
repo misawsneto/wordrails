@@ -1,6 +1,6 @@
 <li class="parent_li">
  <span ng-click="nodeClicked(node)">
-    <md-checkbox ng-model="node.checked" ng-click="node.checked = !node.checked" class="pull-left"></md-checkbox>
+    <md-checkbox aria-label="{{node.name}}" ng-model="node.checked" ng-click="node.checked = !node.checked" class="pull-left"></md-checkbox>
  </span>
  <span class="leaf">
  	{{node.name}}

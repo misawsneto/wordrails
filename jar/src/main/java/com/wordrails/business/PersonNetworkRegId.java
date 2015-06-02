@@ -43,6 +43,10 @@ public class PersonNetworkRegId {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable=false)
 	public Date createdAt;
+	
+	public Double lat;
+	
+	public Double lng;
 
 	@PrePersist
 	void onCreate() {

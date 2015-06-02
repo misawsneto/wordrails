@@ -137,11 +137,11 @@ interface I$facade$ {
 	
 	@PUT("/persons/me/regId")
 	@FormUrlEncoded
-	Response putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId);
+	Response putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId, @Field("lat") Double lat, @Field("lng") Double lng);
 	
 	@PUT("/persons/me/regId")
 	@FormUrlEncoded
-	void putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId, Callback<Response> _callback);
+	void putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId, @Field("lat") Double lat, @Field("lng") Double lng, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

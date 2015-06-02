@@ -82,7 +82,7 @@ public class PersonsResource {
 	@PUT
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId) {
+	public void putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
 		Person person = accessControllerUtil.getLoggedPerson();
 		gcmService.updateRegId(network, person, regId);

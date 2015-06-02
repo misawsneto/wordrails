@@ -127,7 +127,7 @@ function getCustomStyle(color, perspective, header) {
 	".redactor-editor a, .redactor-editor a:hover {color:"+ color +"}\n"+
 	"#post-fab-button{background-color: " + color + "; color: " + textColorEval(color) + "}"+
 
-	"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
+	".bg-perspective md-tabs.md-default-theme md-tabs-ink-bar {\n"+
 	  "color: "+ textColorEval(perspective) +";\n"+
 	  "background: "+ (textColorEval2(perspective) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)") +";\n"+
 	"}\n"+
@@ -207,7 +207,7 @@ function getCustomStyle(color, perspective, header) {
 	"\n"
 	)+
 
-	".bg-custom, md-tabs.md-default-theme .md-paginator md-icon {\n"+
+	".bg-custom, .bg-perspective md-tabs.md-default-theme .md-paginator md-icon {\n"+
 	"  color: "+textColorEval(perspective)+" !important;\n"+
 	"}\n"+
 
@@ -289,12 +289,31 @@ function getCustomStyle(color, perspective, header) {
 		"background-color:" + color +
 	"}"+
 
-	"md-checkbox.md-default-theme.md-checked .md-icon: after{" +
+	"md-checkbox.md-default-theme.md-checked .md-icon:after{" +
 	"border-color:" + textColorEval(color) +
 	"}"+
 
 	"";
 	return style
+}
+
+String.prototype.toSlug = function(){
+	var str = this;
+  str = str.replace(/^\s+|\s+$/g, ''); // trim
+  str = str.toLowerCase();
+
+  // remove accents, swap ñ for n, etc
+  var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+  var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+  for (var i=0, l=from.length ; i<l ; i++) {
+  	str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+  }
+
+  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+    .replace(/\s+/g, '-') // collapse whitespace and replace by -
+    .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
 }
 
 /*!

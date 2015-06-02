@@ -8,13 +8,13 @@
       <div class="cell" id="post-cell">
         <div class="cell-inner">
           <div id="post-editor" class="wrapper-md p-r-xxl p-l-xxl">
-            <div id="post-media-box" class="post-block" ng-class="{'image-landscape': imageLandscape && uploadedImage.filelink}">
+            <div id="post-media-box" class="post-block" ng-class="{'image-landscape': app.editingPost.imageLandscape && app.editingPost.uploadedImage.filelink}">
             <!-- media selection buttons -->
-              <button class="post-stroke-btn btn text-md btn-sm m-t-xxs btn-icon btn-rounded btn-stroke btn-muted" ng-class="{'hide': uploadedImage.filelink}" ng-style="landscapeStyle"
-               tooltip="Destaque" tooltip-append-to-body="true" ng-click="showMediaButtons = !showMediaButtons">
+              <button class="post-stroke-btn btn text-md btn-sm m-t-xxs btn-icon btn-rounded btn-stroke btn-muted" ng-class="{'hide': app.editingPost.uploadedImage.filelink}" ng-style="landscapeStyle"
+               tooltip="Destaque" tooltip-append-to-body="true" ng-click="toggleMediaButtons()">
                 <i class="mdi-dots-horizontal mdi"></i>
               </button>
-              <div class="pull-left" ng-class="{'hide': !showMediaButtons || uploadedImage.filelink}">
+              <div class="pull-left" ng-class="{'hide': !app.editingPost.showMediaButtons || app.editingPost.uploadedImage.filelink}">
                 <ul class="redactor-toolbar post-media-buttons">
                   <!-- <li><a ng-click="openImageUpload()" href="#" class="mdi mdi-image-filter-hdr" tooltip="imagem" tooltip-append-to-body="true"></a>
                   </li> -->
@@ -24,15 +24,18 @@
                       <input tooltip="imagem" tooltip-append-to-body="true" id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
                     </span>
                   </li>
-                  <li tooltip="Slide show" tooltip-append-to-body="true"><a href="#" class="mdi disabled mdi-image-filter"></a></li>
-                  <li tooltip="Vídeo" tooltip-append-to-body="true"><a href="#" class="re-icon re-video"></a></li>
+                  <!-- <li tooltip="Slide show" tooltip-append-to-body="true"><a href="#" class="mdi disabled mdi-image-filter"></a></li> -->
+                  <li tooltip="Vídeo" tooltip-append-to-body="true">
+                    <a href ng-click="toggleVideoUrl()" class="re-icon re-video"></a>
+                  </li>
                 </ul>
               </div>
+              <input class="form-control w-full" ng-hide="$scope.app.editingPost.showMediaButtons || !app.editingPost.showInputVideoUrl" placeholder="url do vídeo"/>
               <!-- /media selection buttons -->
               <!-- <img src="img/c0.jpg" class="img-full"> -->
-              <div id="image-config" class="text-lg" ng-if="uploadedImage.filelink" ng-class="{'image-config-full': imageLandscape}">
+              <div id="image-config" class="text-lg" ng-if="app.editingPost.uploadedImage.filelink" ng-class="{'image-config-full': app.editingPost.imageLandscape}">
                 <div id="image-config-items">
-                  <a ng-click="invertLandscapeSquare();"><i class="m-r-xs mdi" ng-class="{'mdi-crop-square': imageLandscape, 'mdi-crop-landscape': !imageLandscape}">
+                  <a ng-click="invertLandscapeSquare();"><i class="m-r-xs mdi" ng-class="{'mdi-crop-square': app.editingPost.imageLandscape, 'mdi-crop-landscape': !app.editingPost.imageLandscape}">
                   </i></a> | 
                   <a ng-click="clearImage()">
                   <i class="m-l-xs mdi mdi-close">
@@ -40,7 +43,7 @@
                 </div>
               </div>
               <!-- <img src="img/c0.jpg" class="img-full"> -->
-                <img id="image-box-holder" ng-src="{{uploadedImage.filelink}}" class="img-full" ng-if="uploadedImage.filelink">
+                <img id="image-box-holder" ng-src="{{app.editingPost.uploadedImage.filelink}}" class="img-full" ng-if="app.editingPost.uploadedImage.filelink">
             </div>
             <div id="post-title-box" class="post-block m-t">
               <input ng-model="app.editingPost.title" type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
@@ -57,7 +60,7 @@
             </div>
             <!-- send button -->
             <md-button id="post-fab-button" class="md-fab text-lg" ng-click="showAdvanced($event)"
-            tooltip="Enviar" tooltip-popup-delay="700" ng-class="{'sidebar-opened': !app.hidePostOptions}">
+            tooltip="Enviar" tooltip-placement="top" tooltip-popup-delay="700" ng-class="{'sidebar-opened': !app.hidePostOptions}">
               <i class="mdi mdi-send"></i>
             </md-button>
             <!-- /send button -->
@@ -87,7 +90,8 @@
       <a ng-click="printPost();">print</a>
     </li> -->
     <li>
-      <a href class="text-lg" >
+      <a tooltip="Informações" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+       href class="text-lg" >
         <i class="mdi-information-outline mdi"></i>
       </a>
     </li>
@@ -95,7 +99,8 @@
       <div class="m-t" style="line-height:16px">•</div>
     </li>
     <li>
-      <a href class="text-lg" >
+      <a tooltip="Descartar alterações" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      href class="text-lg" >
         <i class="mdi-delete mdi"></i>
       </a>
     </li>
@@ -103,7 +108,8 @@
       <div class="m-t" style="line-height:16px">•</div>
     </li>
     <li>
-      <a href class="text-lg" ng-click="app.hidePostOptions = !app.hidePostOptions" style="font-size: 19px;">
+      <a tooltip="Opções de publicação" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+       href class="text-lg" ng-click="app.hidePostOptions = !app.hidePostOptions" style="font-size: 19px;">
         <i class="mdi mdi-menu"></i>
       </a>
     </li>
@@ -111,7 +117,8 @@
       <div class="divider-v"></div>
     </li>
     <li>
-      <a href class="text-u-c text-center" style="font-size: 30px;" ng-click="closeNewPost()">×</a>
+      <a tooltip="Voltar" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      href class="text-u-c text-center" style="font-size: 30px;" ng-click="closeNewPost()">×</a>
     </li>
   </ul>
 </div>

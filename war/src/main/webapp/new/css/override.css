@@ -1093,14 +1093,13 @@ a.text-lgrey:hover {
   opacity: 0;
 }
 
-.bg-admin{
+.bg-light-grey{
   background: #f5f5f5;
 }
 
 ul.no-style{
 list-style: none; margin: 0; padding: 0;
 }
-
 
 .post-content-font{
   font-family: georgia, serif;
@@ -1112,6 +1111,9 @@ list-style: none; margin: 0; padding: 0;
 md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-index: 1026}
 
 .o-h{overflow: hidden;}
+.white-bg{
+  background: #ffffff;
+}
 /* /general */
 
 /* animate */
@@ -1330,12 +1332,77 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   border-top: 1px solid #ddd;
 }
 
-#more-options-dialog .post-terms-tab{
-  max-height: 350px;
-  overflow: auto;
+#more-options-dialog .md-tab-content > div{
+ max-height: 350px;
+ min-height: 350px;
+ overflow: auto; 
 }
 
+#more-options-dialog .post-general-info{
+  min-height: 350px!important;
+}
+
+#more-options-dialog .post-general-info .timepicker-container{
+  height: 110px;
+}
+
+#more-options-dialog .post-general-info .col-sm-6{
+  min-height: 250px; 
+}
+
+#more-options-dialog .post-general-info .timepicker-container{
+  margin-left: auto;
+  margin-right: auto;
+  width: 200px;
+}
+
+#more-options-dialog md-tabs.md-default-theme md-tabs-ink-bar {
+color: rgba(0,0,0, 0.84);
+background: rgba(0,0,0,0.5);
+}
+
+#more-options-dialog .md-header-items md-tab md-tab-label{
+  color: rgba(0,0,0, 0.84) !important
+}
+
+#more-options-dialog md-input-container.md-default-theme:not(.md-input-invalid).md-input-focused label{
+  color: #555555;
+}
+
+#more-options-dialog md-input-container.md-default-theme:not(.md-input-invalid).md-input-focused .md-input{
+  border-color: #999999; 
+}
+#redactor-image-editter{
+  font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif!important;
+}
+
+#more-options-dialog .notification-settings{
+  padding: 0;
+  margin: 0;
+}
+
+#more-options-dialog .notification-settings li md-checkbox{
+  margin: 0;
+}
+
+#more-options-dialog .notification-settings li div{
+  padding: 3px;
+}
+
+
 /* /post */
+
+/* card */
+.panel-card {
+  border-width: 0;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.panel-card .p{
+  padding: 16px;
+}
+/* cards */
 
 /* post-taxonomy-tree */
 .tree.well{

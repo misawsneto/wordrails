@@ -73,6 +73,18 @@ angular.module('app')
                   }
                   // , controller:'SearchCtrl'
               })
+
+              .state('app.bookmarks', {
+                url: '/bookmarks',
+                  templateUrl: 'tpl/bookmarks.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/bookmarks.js']);
+                    }]
+                  }
+                  // , controller:'SearchCtrl'
+              })
               .state('app.user', {
                   url: '/@:username',
                   templateUrl: 'tpl/user_profile.html',

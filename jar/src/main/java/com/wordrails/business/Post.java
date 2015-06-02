@@ -211,13 +211,21 @@ public class Post {
 	@Column(length = 1024)
 	public String externalVideoUrl;
 	
+	@Column(columnDefinition="int(11) DEFAULT 0")
 	public int readTime;
+	
+	@Column(columnDefinition = "boolean DEFAULT false")
+	public boolean notify = false;
 	
 	@Lob
 	public String imageCaptionText;
 	
 	@Lob
 	public String imageCreditsText;
+	
+	public Double lat;
+	
+	public Double lng;
 	
 	@PrePersist
 	public void onCreate() {

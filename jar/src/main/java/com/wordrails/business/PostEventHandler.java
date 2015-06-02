@@ -55,11 +55,8 @@ public class PostEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {
-		System.out.println("HANDLE BEFORE CREATE");
 
 		if (postAndCommentSecurityChecker.canWrite(post)) {
-			String originalSlug = WordrailsUtil.toSlug(post.title);
-			post.originalSlug = originalSlug;
 			Date now = new Date();
 			if (post.date == null) {
 				post.date = now;
@@ -67,12 +64,18 @@ public class PostEventHandler {
 				throw new NotImplementedException("Agendamento de publicações não estão disponíveis.");
 			}
 
-			try {
-				post.slug = originalSlug;
-				postRepository.save(post);
-			} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-				String hash = WordrailsUtil.generateRandomString(5, "Aa#u");
-				post.slug = originalSlug + "-" + hash;
+			if(post.slug == null || post.slug.isEmpty()){
+				String originalSlug = WordrailsUtil.toSlug(post.title);
+				post.originalSlug = originalSlug;
+				try {
+					post.slug = originalSlug;
+					postRepository.save(post);
+				} catch (org.springframework.dao.DataIntegrityViolationException ex) {
+					String hash = WordrailsUtil.generateRandomString(5, "Aa#u");
+					post.slug = originalSlug + "-" + hash;
+				}
+			}else{
+				post.originalSlug = post.slug; 
 			}
 
 		} else {

@@ -1305,4 +1305,14 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return authorized;
 	}
 
+	@Override
+	protected boolean isFindByTaxonomyIdAuthorized(Integer taxonomyId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindByPerspectiveIdAuthorized(Integer perspectiveId) {
+		return true;
+	}
+
 }

@@ -45,5 +45,9 @@ public class PostView implements Serializable {
 	public Integer authorCoverMediumId;
 
 	public Integer authorImageSmallId;
+
+	public Double lat;
+
+	public Double lng;
 	
 }

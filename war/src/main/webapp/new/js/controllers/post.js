@@ -10,18 +10,25 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   };
 
 	$scope.postCtrl = {}
-	$scope.postCtrl.editingExisting = false;
-	$scope.imageLandscape = true;
-	$scope.discardedMedia = null;
 
-	$scope.uploadedImage = null;
-	if(!$scope.app.editingPost)
+	if(!$scope.app.editingPost){
 		$scope.app.editingPost = {};
+		$scope.app.editingPost.imageLandscape = true;
+		$scope.discardedMedia = null;
+		$scope.app.editingPost.uploadedImage = null;
+		$scope.app.editingPost.showMediaButtons = false;
+		$scope.postCtrl.editingExisting = false;
+	}else{
+		$scope.postCtrl.editingExisting = true;
+		console.log($scope.app.editingPost);
+		$timeout(function() {
+			$scope.invertLandscapeSquare();
+			$scope.invertLandscapeSquare();
+		}, 50);
+	}
 
 	$scope.$watch('app.hidePostOptions', checkPostToolsWidth)
-
 	$scope.app.showPostToolbar = false;
-	$scope.showMediaButtons = false;
 
 	function checkPostToolsWidth () {
 		$timeout(function(){
@@ -52,6 +59,16 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	}
 
 	$scope.showTree = false;
+
+	$scope.toggleMediaButtons = function(){
+		$scope.app.editingPost.showMediaButtons = !$scope.app.editingPost.showMediaButtons
+		if($scope.app.editingPost.showMediaButtons)
+			$scope.app.editingPost.showInputVideoUrl = false;
+	}
+
+	$scope.toggleVideoUrl = function(){
+		$scope.app.editingPost.showInputVideoUrl = !$scope.app.editingPost.showInputVideoUrl;
+	}
 
 	$scope.closeNewPost = function(){
 		$state.go('app.stations')
@@ -96,7 +113,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	};
 
 	function DialogController(scope, $mdDialog) {
-		scope.termTree = $scope.termTree
+		scope.termTree = $scope.termTree;
+		scope.app = $scope.app;
 		scope.hide = function() {
 			$mdDialog.hide();
 		};
@@ -122,27 +140,27 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   });
   // CALLBACKS
   uploader.onAfterAddingFile = function(fileItem) {
-    $scope.uploadedImage = null;
+    $scope.app.editingPost.uploadedImage = null;
     uploader.uploadAll();
   };
   uploader.onSuccessItem = function(fileItem, response, status, headers) {
   	if(response.filelink){
-      $scope.uploadedImage = response;
-      $scope.uploadedImage.filelink = TRIX.baseUrl + $scope.uploadedImage.filelink
-      $scope.showMediaButtons = false;
+      $scope.app.editingPost.uploadedImage = response;
+      $scope.app.editingPost.uploadedImage.filelink = TRIX.baseUrl + $scope.app.editingPost.uploadedImage.filelink
+      $scope.app.editingPost.showMediaButtons = false;
       $scope.checkLandscape();
       $("#image-config").removeClass("hide");
   	}
   };
 
   $scope.invertLandscapeSquare = function(){
-  	$scope.imageLandscape = !$scope.imageLandscape; 
+  	$scope.app.editingPost.imageLandscape = !$scope.app.editingPost.imageLandscape; 
   	$scope.checkLandscape();
   }
 
   $scope.checkLandscape = function(){
-  	if($scope.uploadedImage){
-  	  $("#post-media-box").css('background-image', 'url(' + $scope.uploadedImage.filelink + ')');
+  	if($scope.app.editingPost.uploadedImage){
+  	  $("#post-media-box").css('background-image', 'url(' + $scope.app.editingPost.uploadedImage.filelink + ')');
   	}else{
   	  $("#post-media-box").removeAttr('style')
   	}
@@ -155,7 +173,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
   $scope.clearImage = function(){ 
     $("#image-config").addClass("hide");
-    $scope.uploadedImage = null;
+    $scope.app.editingPost.uploadedImage = null;
     uploader.clearQueue();
     uploader.cancelAll()
     $scope.checkLandscape();
@@ -174,6 +192,14 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		//uncheckTerms($scope.termTree)
 	});
 
+	$scope.$watch('app.editingPost.title', function(newVal){
+		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
+	})
+
+	$scope.$watch('app.editingPost.slug', function(newVal){
+		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
+	})
+
 	/*function uncheckTerms(terms){
 		terms && terms.forEach(function(term, index){
 			term.checked = false
@@ -183,7 +209,79 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		});
 	}*/
 
-	$scope.$watch('termTree', function(n,o){
-		console.log(n);
-	}, true)
+	$scope.app.editingPost.date = new Date();
+	$timeout(function() {
+		$scope.app.editingPost.date = new Date();
+	}, 1000);
+
+	// $scope.$watch('termTree', function(n,o){
+	// 	console.log(n);
+	// }, true)
+
+
+	// --------- post time info
+
+	 $scope.app.editingPost.today = function() {
+      $scope.app.editingPost.date = new Date();
+    };
+    $scope.app.editingPost.today();
+
+    $scope.app.editingPost.clear = function () {
+      $scope.app.editingPost.date = null;
+    };
+
+    // Disable weekend selection
+    $scope.app.editingPost.disabled = function(date, mode) {
+      return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+    };
+
+    $scope.app.editingPost.toggleMin = function() {
+      $scope.app.editingPost.minDate = $scope.app.editingPost.minDate ? null : new Date();
+    };
+    $scope.app.editingPost.toggleMin();
+
+    $scope.app.editingPost.open = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      $scope.app.editingPost.opened = true;
+    };
+
+    $scope.app.editingPost.dateOptions = {
+      formatYear: 'yy',
+      startingDay: 0,
+      class: 'datepicker',
+      showWeeks: false
+    };
+
+    $scope.app.editingPost.initDate = new Date();
+    $scope.app.editingPost.formats = ['dd MMMM yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+    $scope.app.editingPost.format = $scope.app.editingPost.formats[0];
+
+    $scope.app.editingPost.showTimepicker = false;
+    $scope.app.editingPost.mytime = $scope.app.editingPost.date
+
+    $scope.app.editingPost.hstep = 1;
+    $scope.app.editingPost.mstep = 15;
+
+    $scope.app.editingPost.options = {
+      hstep: [1, 2, 3],
+      mstep: [1, 5, 10, 15, 25, 30]
+    };
+
+    $scope.app.editingPost.ismeridian = false;
+    $scope.app.editingPost.toggleMode = function() {
+      $scope.app.editingPost.ismeridian = ! $scope.app.editingPost.ismeridian;
+    };
+
+    $scope.app.editingPost.changed = function () {
+      window.console && console.log('Time changed to: ' + $scope.app.editingPost.mytime);
+    };
+
+    $scope.app.editingPost.clear = function() {
+      $scope.app.editingPost.mytime = null;
+    };
+
+	// --------- /post time info
+
 }]);

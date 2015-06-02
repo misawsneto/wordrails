@@ -292,6 +292,19 @@ angular.module('app')
         $("body").removeAttr("style");
       },2)
 
+      $scope.goToBookmars = function(){
+        if($scope.app.isLogged)
+          $state.go('app.bookmarks')
+        else
+          $scope.openSplash('signin_splash.html')
+      }
+
+      $scope.goToNotifications = function(){
+        if($scope.app.isLogged)
+          $state.go('app.notifications')
+        else
+          $scope.openSplash('signin_splash.html')
+      }
 
       /* end of added */
   }]); 
