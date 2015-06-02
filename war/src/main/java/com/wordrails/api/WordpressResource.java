@@ -165,6 +165,7 @@ public class WordpressResource {
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public Response login(WordpressConfig config) {
         if (config == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
