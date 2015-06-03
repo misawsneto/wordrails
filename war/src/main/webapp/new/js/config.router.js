@@ -35,7 +35,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['js/controllers/stations.js']);
+                          return $ocLazyLoad.load(['toaster','js/controllers/stations.js']);
                       }]
                   },
                   controller: 'StationsCtrl'
@@ -46,7 +46,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload','js/controllers/post.js']);
+                        return $ocLazyLoad.load(['angularFileUpload','videosharing-embed','js/controllers/post.js']);
                     }]
                   },
                   controller:'PostCtrl'
@@ -106,7 +106,7 @@ angular.module('app')
                 resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/read.js']);
+                        return $ocLazyLoad.load(['videosharing-embed','js/controllers/read.js']);
                     }]
                   },
               })

@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <title>${networkName}</title>
-  <meta name="description" content="Angularjs, Html5, Music, Landing, 4 in 1 ui kits package" />
-  <meta name="keywords" content="AngularJS, angular, bootstrap, admin, dashboard, panel, app, charts, components,flat, responsive, layout, kit, ui, route, web, app, widgets" />
+  <meta name="description" content="${networkDesciption}" />
+  <meta name="keywords" content="${networkKeywords}" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" type="text/css" />
   <link rel="stylesheet" href="../bower_components/animate.css/animate.css" type="text/css" />
@@ -29,7 +29,7 @@
 </head>
 <body ng-controller="AppCtrl">
   <offcanvas></offcanvas>
-  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.search' || $state.current.name == 'app.post', 'bg-perspective': $state.current.name.indexOf('app.stations') > -1, 'bg-light-grey': $state.current.name.indexOf('app.settings') > -1 || $state.current.name.indexOf('app.bookmarks') > -1}" ui-view></div>
+  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.post', 'bg-perspective': $state.current.name.indexOf('app.stations') > -1, 'bg-light-grey': $state.current.name.indexOf('app.settings') > -1 || $state.current.name.indexOf('app.bookmarks') > -1 || $state.current.name.indexOf('app.search') > -1}" ui-view></div>
 
 
   <!-- jQuery -->
@@ -101,5 +101,6 @@
   <!-- Sly end -->
   <script src="js/util.js"></script>
   <!-- Lazy loading -->
+  <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>

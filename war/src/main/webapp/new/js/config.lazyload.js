@@ -88,6 +88,12 @@ angular.module('app')
                   ]
               },
               {
+                  name: 'videosharing-embed',
+                  files: [
+                     '../bower_components/ng-videosharing-embed/build/ng-videosharing-embed.min.js',
+                  ]
+              },
+              {
                   name:'ui.calendar',
                   files: ['../bower_components/angular-ui-calendar/src/calendar.js']
               },

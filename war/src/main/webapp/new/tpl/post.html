@@ -10,7 +10,7 @@
           <div id="post-editor" class="wrapper-md p-r-xxl p-l-xxl">
             <div id="post-media-box" class="post-block" ng-class="{'image-landscape': app.editingPost.imageLandscape && app.editingPost.uploadedImage.filelink}">
             <!-- media selection buttons -->
-              <button class="post-stroke-btn btn text-md btn-sm m-t-xxs btn-icon btn-rounded btn-stroke btn-muted" ng-class="{'hide': app.editingPost.uploadedImage.filelink}" ng-style="landscapeStyle"
+              <button class="post-stroke-btn btn text-md btn-sm m-t-xxs btn-icon btn-rounded btn-stroke btn-muted" ng-class="{'hide': app.editingPost.uploadedImage.filelink || app.editingPost.showInputVideoUrl}" ng-style="landscapeStyle"
                tooltip="Destaque" tooltip-append-to-body="true" ng-click="toggleMediaButtons()">
                 <i class="mdi-dots-horizontal mdi"></i>
               </button>
@@ -30,7 +30,13 @@
                   </li>
                 </ul>
               </div>
-              <input class="form-control w-full" ng-hide="$scope.app.editingPost.showMediaButtons || !app.editingPost.showInputVideoUrl" placeholder="url do vídeo"/>
+              <a id="video-remove-button" ng-click="removeVideo()" class="pos-abt h3 m-t-xs" href tooltip="Remover vídeo" tooltip-append-to-body="true" ng-hide="!app.editingPost.showInputVideoUrl">
+                <i class="mdi mdi-close-circle-outline"></i>
+              </a>
+              <input id="video-url-input" ng-model="videoUrl" class="pull-left form-control text-md b-none" ng-hide="!app.editingPost.showInputVideoUrl" placeholder="url do vídeo"/>
+              <div class="video-container" ng-show="app.editingPost.externalVideoUrl">
+                <embed-video href="{{videoUrl}}" width=800 height=460 ></embed-video>
+              </div>
               <!-- /media selection buttons -->
               <!-- <img src="img/c0.jpg" class="img-full"> -->
               <div id="image-config" class="text-lg" ng-if="app.editingPost.uploadedImage.filelink" ng-class="{'image-config-full': app.editingPost.imageLandscape}">
@@ -59,8 +65,8 @@
               <textarea ng-model="app.editingPost.body" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
             <!-- send button -->
-            <md-button id="post-fab-button" class="md-fab text-lg" ng-click="showAdvanced($event)"
-            tooltip="Enviar" tooltip-placement="top" tooltip-popup-delay="700" ng-class="{'sidebar-opened': !app.hidePostOptions}">
+            <md-button id="post-fab-button" class="md-fab text-lg" ng-click="publishPost($event)"
+            ng-class="{'sidebar-opened': !app.hidePostOptions}">
               <i class="mdi mdi-send"></i>
             </md-button>
             <!-- /send button -->

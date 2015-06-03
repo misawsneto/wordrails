@@ -316,6 +316,17 @@ String.prototype.toSlug = function(){
     return str;
 }
 
+String.prototype.getYoutubeCode = function(){
+	var url = this;
+	var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+	var match = url.match(regExp);
+	if (match && match[2].length == 11) {
+	  return match[2];
+	} else {
+	  return null;
+	}
+}
+
 /*!
  * classie - class helper functions
  * from bonzo https://github.com/ded/bonzo

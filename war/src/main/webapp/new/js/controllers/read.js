@@ -9,13 +9,14 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 				$scope.app.nowReading = response.posts[0]
 				$scope.app.nowReading.postId = $scope.app.nowReading.id;
 				$scope.app.nowReadingAuthor = {
-            authorId: $scope.app.nowReading.author.id,
-            imageSmallId: $scope.app.nowReading.author.imageSmallId,
-            coverMediumId: $scope.app.nowReading.author.coverMediumId,
-            authorName: $scope.app.nowReading.author.name
-        }
+		            authorId: $scope.app.nowReading.author.id,
+		            imageSmallId: $scope.app.nowReading.author.imageSmallId,
+		            coverMediumId: $scope.app.nowReading.author.coverMediumId,
+		            authorName: $scope.app.nowReading.author.name
+		        }
 			}
-		})
+			$("title").html($scope.app.nowReading.title);
+		})// end of success
 	}else{
 		// TODO error
 	}

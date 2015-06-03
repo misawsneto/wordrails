@@ -1,6 +1,6 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix',
-										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix){
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http',
+										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http){
 
 	// check if user has permisstion to write
   $scope.writableStations = trixService.getWritableStations();
@@ -20,7 +20,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		$scope.postCtrl.editingExisting = false;
 	}else{
 		$scope.postCtrl.editingExisting = true;
-		console.log($scope.app.editingPost);
+		if($scope.app.editingPost.externalVideoUrl)
+			$scope.videoUrl = $scope.app.editingPost.externalVideoUrl;
 		$timeout(function() {
 			$scope.invertLandscapeSquare();
 			$scope.invertLandscapeSquare();
@@ -66,8 +67,33 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			$scope.app.editingPost.showInputVideoUrl = false;
 	}
 
+	$scope.$watch('videoUrl', function(newVal){
+		if(newVal && newVal.indexOf('youtube') > -1){
+			var youtubeCode = newVal.getYoutubeCode();
+			if(youtubeCode){
+				$scope.app.editingPost.externalVideoUrl = newVal;
+			}else{
+				$scope.app.editingPost.externalVideoUrl = null;
+			}
+		}// end if
+		else{
+			$scope.app.editingPost.externalVideoUrl = null;
+		}
+	})
+
+	$scope.removeVideo = function(){
+		$scope.app.editingPost.externalVideoUrl = null;
+		$scope.videoUrl = null;
+		$scope.app.editingPost.showInputVideoUrl = false
+	}
+
 	$scope.toggleVideoUrl = function(){
 		$scope.app.editingPost.showInputVideoUrl = !$scope.app.editingPost.showInputVideoUrl;
+		if($scope.app.editingPost.showInputVideoUrl)
+			$scope.app.editingPost.showMediaButtons = false;
+
+		if($scope.app.editingPost.showInputVideoUrl)
+			$("#video-url-input").focus();
 	}
 
 	$scope.closeNewPost = function(){
@@ -95,38 +121,6 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	$("#post-placeholder").click(function(){
 		$(".redactor-editor").focus();
 	})
-
-	$scope.showAdvanced = function(ev) {
-		$mdDialog.show({
-			controller: DialogController,
-			templateUrl: 'tpl/post_more_options.html',
-			targetEvent: ev,
-			onComplete: function(){
-				
-			}
-		})
-		.then(function(answer) {
-			$scope.alert = 'You said the information was "' + answer + '".';
-		}, function() {
-			$scope.alert = 'You cancelled the dialog.';
-		});
-	};
-
-	function DialogController(scope, $mdDialog) {
-		scope.termTree = $scope.termTree;
-		scope.app = $scope.app;
-		scope.hide = function() {
-			$mdDialog.hide();
-		};
-
-		scope.cancel = function() {
-			$mdDialog.cancel();
-		};
-
-		scope.answer = function(answer) {
-			$mdDialog.hide(answer);
-		};
-	};
 
 	$scope.$watch('app.editingPost', function(newValue){
 	}, true)
@@ -188,8 +182,6 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 	trix.getTermTree($scope.app.currentStation.defaultPerspectiveId).success(function(response){
 		$scope.termTree = response;
-
-		//uncheckTerms($scope.termTree)
 	});
 
 	$scope.$watch('app.editingPost.title', function(newVal){
@@ -218,6 +210,16 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	// 	console.log(n);
 	// }, true)
 
+	function isTermSelected(terms){
+		var selected = false;
+		terms && terms.forEach(function(term, index){
+			if(term.checked || isTermSelected(term.children)){
+				selected = true;
+				return;
+			}
+		});
+		return selected;
+	}	
 
 	// --------- post time info
 
@@ -283,5 +285,67 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
     };
 
 	// --------- /post time info
+
+	// --------- publish post
+
+	$scope.publishPost = function(ev){
+		if(isTermSelected($scope.termTree)){
+			createPost()
+		}else{
+			$scope.showMoreOptions(ev);
+		}
+	}
+
+	$scope.showMoreOptions = function(ev){
+		// show term alert
+		$mdDialog.show({
+			controller: MoreOptionsController,
+			templateUrl: 'tpl/post_more_options.html',
+			targetEvent: ev,
+			onComplete: function(){
+					
+			}
+		})
+		.then(function(answer) {
+			$scope.alert = 'You said the information was "' + answer + '".';
+		}, function() {
+			$scope.alert = 'You cancelled the dialog.';
+		});
+	}
+
+	function MoreOptionsController(scope, $mdDialog) {
+		scope.termTree = $scope.termTree;
+		scope.app = $scope.app;
+		scope.hide = function() {
+			$mdDialog.hide();
+		};
+
+		scope.cancel = function() {
+			$mdDialog.cancel();
+		};
+
+		scope.publish = function() {
+			if(isTermSelected($scope.termTree)){
+				createPost($mdDialog)
+			}else{
+				// show alert term message
+			}
+			//$mdDialog.hide();
+		};
+	};
+
+	function createPost(){
+		var post = {};
+		// post.title = $scope.app.editingPost.title
+		// post.body = $scope.app.editingPost.body
+		
+		if(!post.title || post.title.trim() === "")
+			$scope.app.showErrorToast('Título inválido');
+		else if(!post.body || post.body.trim() === "")
+			$scope.app.showErrorToast('Texto inválido');
+		else if((!post.body || post.body.trim() === "") && (!post.title || post.title.trim() === ""))
+			$scope.app.showErrorToast('Título e texto inválidos');
+	}
+
 
 }]);

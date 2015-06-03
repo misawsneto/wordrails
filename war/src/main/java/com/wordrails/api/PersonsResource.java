@@ -172,6 +172,8 @@ public class PersonsResource {
 				request.setAttribute("personData", mapper.writeValueAsString(personData));
 				request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView));
 				request.setAttribute("networkName", personData.network.name);
+				request.setAttribute("networkDesciption", "");
+				request.setAttribute("networkKeywords", "");
 			}
 			
 			return personData;

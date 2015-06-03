@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval',
-  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval) {
+.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast',
+  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast) {
       // add 'ie' classes to html
       var isIE = !!navigator.userAgent.match(/MSIE/i);
       isIE && angular.element($window.document.body).addClass('ie');
@@ -105,7 +105,6 @@ angular.module('app')
       $scope.app.initData = angular.copy(initData);
       $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
       $scope.app.stationsPermissions = trixService.getStationPermissions();
-      $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
 
       $scope.app.checkIfLogged = function(){
         $scope.app.isLogged = trixService.isLoggedIn();
@@ -118,6 +117,9 @@ angular.module('app')
         // on change state, exit if in fullscreen mode.
         if(typeof screenfull !== 'undefined' && screenfull){ screenfull.exit(); }
         
+        if(toState.name == "app.stations"){
+          $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
+        }
         // check state read
         if(toState.name != "app.stations.read"){
           // show to navbar
@@ -157,6 +159,52 @@ angular.module('app')
           scope: $scope
         });
       }
+
+      $scope.toastPosition = {
+        bottom: false,
+        top: true,
+        left: false,
+        right: true
+      };
+
+      $scope.getToastPosition = function() {
+        return Object.keys($scope.toastPosition)
+          .filter(function(pos) { return $scope.toastPosition[pos]; })
+          .join(' ');
+      };
+
+      $scope.app.showSimpleToast = function(content) {
+        $mdToast.show(
+          $mdToast.simple()
+            .content(content)
+            .position($scope.getToastPosition())
+            .hideDelay(3000)
+        );
+      };
+
+      $scope.app.showErrorToast = function(content) {
+        $mdToast.show({
+          template: '<md-toast style="background-color: red" ><span flex>'+content+'</span></md-toast>',
+          hideDelay: 3000,
+          position: $scope.getToastPosition()
+        });
+      };
+
+      $scope.app.showSuccessToast = function(content) {
+        $mdToast.show({
+          template: '<md-toast class="toast-success" style="background-color: green" ><span flex>'+content+'</span></md-toast>',
+          hideDelay: 3000,
+          position: $scope.getToastPosition()
+        });
+      };
+
+      $scope.app.showInfoToast = function(content) {
+        $mdToast.show({
+          template: '<md-toast style="background-color: blue" ><span flex>'+content+'</span></md-toast>',
+          hideDelay: 3000,
+          position: $scope.getToastPosition()
+        });
+      };
 
       $scope.cancelModal = function () {
         $scope.modalInstance.dismiss('cancel');
@@ -249,7 +297,7 @@ angular.module('app')
        * @param {[type]} cells    [description]
        */
       $scope.app.setNowReading = function(postView, cells){
-        if($scope.app.nowReading && $scope.app.nowReading.postId == postView.postId)
+        if($state.current.name == "app.stations.read" && $scope.app.nowReading && $scope.app.nowReading.postId == postView.postId)
           return;
 
         if(cells)

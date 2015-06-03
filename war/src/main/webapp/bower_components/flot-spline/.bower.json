@@ -1,5 +1,6 @@
 {
   "name": "flot-spline",
+  "version": "0.0.1",
   "homepage": "https://github.com/JohnPozy/flot-spline",
   "authors": [
     "Alex Bardas < alex.bardas@gmail.com >"
@@ -19,14 +20,13 @@
     "test",
     "tests"
   ],
-  "_release": "56363f8802",
+  "_release": "0.0.1",
   "_resolution": {
-    "type": "branch",
-    "branch": "master",
-    "commit": "56363f8802b73dc2972a77d083ed36233f7869d7"
+    "type": "version",
+    "tag": "0.0.1",
+    "commit": "e2261a31a3d6042969e23a1d12e6daae13e5f798"
   },
   "_source": "git://github.com/JohnPozy/flot-spline.git",
   "_target": "*",
-  "_originalSource": "flot-spline",
-  "_direct": true
+  "_originalSource": "flot-spline"
 }

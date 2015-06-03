@@ -1094,7 +1094,7 @@ a.text-lgrey:hover {
 }
 
 .bg-light-grey{
-  background: #f5f5f5;
+  background: #f9f9f9;
 }
 
 ul.no-style{
@@ -1365,6 +1365,14 @@ background: rgba(0,0,0,0.5);
   color: rgba(0,0,0, 0.84) !important
 }
 
+#more-options-dialog .md-header-items md-tab[disabled]{
+  background-color: #f9f9f9;
+}
+
+#more-options-dialog .md-header-items md-tab[disabled] md-tab-label{
+  color: rgba(0,0,0, 0.40) !important 
+}
+
 #more-options-dialog md-input-container.md-default-theme:not(.md-input-invalid).md-input-focused label{
   color: #555555;
 }
@@ -1389,6 +1397,14 @@ background: rgba(0,0,0,0.5);
   padding: 3px;
 }
 
+#video-url-input{
+  width: 80%;
+  padding-left: 0;
+}
+
+#video-remove-button{
+  margin-left:-43px;
+}
 
 /* /post */
 

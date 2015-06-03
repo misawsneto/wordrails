@@ -41,7 +41,7 @@
 	    <intercept-url pattern="/api/persons/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/api/files/*/contents" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/new" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-	    <intercept-url pattern="/new/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+	    <intercept-url pattern="/new/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER"/>
 	    
 		<intercept-url pattern="/**" access="ROLE_USER"/>
 
