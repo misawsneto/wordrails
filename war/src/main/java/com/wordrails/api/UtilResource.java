@@ -69,6 +69,7 @@ import org.hibernate.search.jpa.Search;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -432,8 +433,12 @@ public class UtilResource {
             }
 		}
         
-		termRepository.delete(term);
-        countTerm++;
+        try{
+            termRepository.delete(term);
+            countTerm++;
+        } catch(JpaObjectRetrievalFailureException e) {
+            
+        }
         
         return countTerm;
 	}

@@ -121,6 +121,7 @@ public class WordpressService {
         return api.editPost(post.wordpressId, wp);
     }
 
+    @Transactional
     public Post getPost(Post post, WordpressPost wpPost, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy)
         throws ConstraintViolationException, DataIntegrityViolationException, Exception {
         post.body = wpPost.body;
@@ -161,6 +162,7 @@ public class WordpressService {
         return post;
     }
 
+    @Transactional
     private Term selectTerm(HashBasedTable<String, Integer, Term> terms, Integer wordpressId, String slug, boolean isTag, Integer taxTagId) throws SecurityException {
         Term term = null;
 
@@ -171,7 +173,7 @@ public class WordpressService {
                 term = terms.get("", wordpressId);
                 term.wordpressSlug = slug;
 
-                termRepository.save(term);
+                manager.persist(term);
             } else {//another wordpressId is using this slug. Data is fucked up somewhere. should never happen
                 throw new SecurityException("Data stored in database is different from the terms sent in the request. Wordpress ID: "
                     + wordpressId + ", Slug: " + slug + ", is tag: " + isTag);
@@ -181,7 +183,7 @@ public class WordpressService {
                 term = terms.get(slug, 0);
                 term.wordpressId = wordpressId;
 
-                term = termRepository.save(term);
+                manager.persist(term);
             } else {
                 //in this case, there is another term using this slug but the wordpressId is neither null or the same. so the data is inconsistent if 
                 //they belong to the same taxonomy. if they do, throw a exception
@@ -200,6 +202,7 @@ public class WordpressService {
         return term;
     }
 
+    @Transactional
     private Term saveNewTermWithParents(WordpressTerm term, Taxonomy tax, Map<Integer, WordpressTerm> wpTerms, HashBasedTable<String, Integer, Term> dbTerms) {
         Term t = new Term();
         t.wordpressId = term.id;
@@ -213,16 +216,17 @@ public class WordpressService {
                 termParent = Lists.newArrayList(dbTerms.columnMap().get(term.parent).values()).get(0);
             } else if (wpTerms.containsKey(term.parent)) {
                 termParent = saveNewTermWithParents(wpTerms.get(term.parent), tax, wpTerms, dbTerms); //it's recursive bitch
-                termRepository.save(termParent);
+                manager.persist(termParent);
             }
             t.parent = termParent;
         }
 
-        t = termRepository.save(t);
+        manager.persist(t);
 
         return t;
     }
 
+    @Transactional
     public Set<Term> findAndSaveTerms(Map<Integer, WordpressTerm> wpTerms, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy taxTag, Taxonomy taxCat)
         throws ConstraintViolationException, DataIntegrityViolationException, Exception {
         Set<Term> terms = new HashSet();
@@ -247,14 +251,14 @@ public class WordpressService {
                 t.wordpressSlug = term.slug;
 
                 try {
-                    termRepository.save(t);
+                    manager.persist(t);
                     dbTerms.put(t.wordpressSlug, t.wordpressId, t);
                 } catch (ConstraintViolationException | DataIntegrityViolationException e) {
                     t = termRepository.findByWordpressSlugAndTaxonomy(term.slug, t.taxonomy);
                     if (t != null) {
                         t.wordpressId = term.id;
                         try {
-                            t = termRepository.save(t);
+                            manager.persist(t);
                         } catch (ConstraintViolationException | DataIntegrityViolationException e2) {
                             throw new Exception("Term ID=" + term.id + " " + ExceptionUtils.getStackTrace(e), e2);
                         }
@@ -312,7 +316,8 @@ public class WordpressService {
                 Set<Integer> wordpressIds = postRepository.findWordpressIdsByStation(tagTaxonomy.owningStation.id);
                 for (WordpressPost wpPost : wpPosts) {
 
-                    id = wpPost.id; //in the end the last id will prevail
+                    if(wpPost.id > id)
+                        id = wpPost.id; //in the end the last id will prevail
                     
                     if (!wordpressIds.add(wpPost.id)) { //if wordpressId already exists in db
                         post = postRepository.findByWordpressId(wpPost.id);
@@ -335,7 +340,10 @@ public class WordpressService {
                 }
 
                 processWordpressPost(posts);
-                postRepository.save(posts);
+                
+                for (Post post1 : posts) {
+                    postRepository.save(post1);
+                }
             } catch (Exception e) {
                 String msg = "Post id=" + id + " ";
                 String error = e.getClass().getSimpleName() + ": " + msg + ExceptionUtils.getStackTrace(e);
