@@ -301,7 +301,6 @@ public class WordpressService {
             }
 
             Post post = null;
-            WordpressPost wpp = null;
             try {
                 Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
                 Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
@@ -312,7 +311,9 @@ public class WordpressService {
                 Set<String> slugs = postRepository.findSlugs();
                 Set<Integer> wordpressIds = postRepository.findWordpressIdsByStation(tagTaxonomy.owningStation.id);
                 for (WordpressPost wpPost : wpPosts) {
-                    wpp = wpPost;
+
+                    id = wpPost.id; //in the end the last id will prevail
+                    
                     if (!wordpressIds.add(wpPost.id)) { //if wordpressId already exists in db
                         post = postRepository.findByWordpressId(wpPost.id);
                         post = getPost(post, wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
@@ -330,18 +331,13 @@ public class WordpressService {
                         }
                     }
 
-                    id = wpPost.id; //in the end the last id will prevail
-
                     posts.add(post);
                 }
 
                 processWordpressPost(posts);
                 postRepository.save(posts);
             } catch (Exception e) {
-                String msg = "";
-                if (wpp != null) {
-                    msg = "Post id=" + wpp.id + " ";
-                }
+                String msg = "Post id=" + id + " ";
                 String error = e.getClass().getSimpleName() + ": " + msg + ExceptionUtils.getStackTrace(e);
                 api.syncError(error);
                 log.error(error);
