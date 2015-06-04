@@ -1,16 +1,15 @@
 package com.wordrails.api;
 
+import com.wordrails.business.ConflictException;
+import com.wordrails.business.OperationNotSupportedException;
+import com.wordrails.business.UnauthorizedException;
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
-
-import com.wordrails.business.ConflictException;
-import com.wordrails.business.OperationNotSupportedException;
-import com.wordrails.business.UnauthorizedException;
 
 @Provider
 @Component

@@ -12,9 +12,11 @@ import com.wordrails.business.Post;
 import com.wordrails.business.Row;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationPerspective;
+import com.wordrails.business.Taxonomy;
 import com.wordrails.business.Term;
 import com.wordrails.business.TermPerspective;
 import com.wordrails.business.UnauthorizedException;
+import com.wordrails.business.Wordpress;
 import com.wordrails.persistence.BookmarkRepository;
 import com.wordrails.persistence.CellRepository;
 import com.wordrails.persistence.CommentRepository;
@@ -38,16 +40,15 @@ import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
+import com.wordrails.persistence.WordpressRepository;
 import com.wordrails.util.AsyncService;
 import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
@@ -57,17 +58,18 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -273,7 +275,7 @@ public class UtilResource {
 		Network network = networkRepository.findOneBySubdomain(subdomain);
 		Station station = stationId != null ? stationRepository.findOne(stationId) : null;
 		
-		List<Invitation> invites = new ArrayList<Invitation>();
+		List<Invitation> invites = new ArrayList<>();
 		
 		for (int i = 0; i < count; i++) {
 			Invitation invitation =  new Invitation();
@@ -324,7 +326,7 @@ public class UtilResource {
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
-			List<Post> posts = new ArrayList<Post>();
+			List<Post> posts = new ArrayList<>();
 			for (Post post : all) {
 				if(post.wordpressId != null && post.featuredImage == null){
 					WordpressParsedContent wpc = wordrailsService.extractImageFromContent(post.body, post.externalFeaturedImgUrl);
@@ -356,12 +358,24 @@ public class UtilResource {
 	private @Autowired NotificationRepository notificationRepository;
 	
 	@GET
-	@Path("/removeWordpressPosts")
-	public void removeWordpressPosts(@Context HttpServletRequest request){
+	@Path("/removeWordpress")
+	public Response removeWordpress(@Context HttpServletRequest request, @QueryParam("token") String token){
+        int countPost = 0;
+        int countTerm = 0;
 		String host = request.getHeader("Host");
 		
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Post> posts = postRepository.findAll();
+            Wordpress wp = wordpressRepository.findByToken(token);
+
+            Station station = stationRepository.findByWordpressToken(token);
+            
+            if(station == null) {
+                return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Something is very wrong:" + token).build();
+            } else if (wp == null) {
+                return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Token invalid:" + token).build();
+            } 
+            
+			List<Post> posts = postRepository.findByStation(station);
 			for (Post post : posts) {
 				if(post.wordpressId != null){
                     List<Image> images = imageRepository.findByPost(post);
@@ -378,32 +392,31 @@ public class UtilResource {
                     bookmarkRepository.deleteByPost(post);
                     recommendRepository.deleteByPost(post);
                     postRepository.delete(post);
+                    
+                    countPost++;
 				}
 			}
-		}
-	
-    }
-	private @Autowired TermRepository termRepository;
-	private @Autowired RowRepository rowRepository; 
-	
-	@GET
-	@Path("/removeWordpressTerms")
-	public void removeWordpressTerms(@Context HttpServletRequest request){
-		String host = request.getHeader("Host");
-		
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Term> terms = termRepository.findAll();
+            Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
+            Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
+            List<Term> terms = new ArrayList<>();
+			terms.addAll(termRepository.findByTaxonomy(tagTaxonomy));
+			terms.addAll(termRepository.findByTaxonomy(categoryTaxonomy));
 			for (Term term : terms) {
 				if(term.wordpressId != null){
-                    deleteCascade(term, term);
-                    termRepository.delete(term);
+                    countTerm += deleteCascade(term);
 				}
 			}
 		}
-	}
+	
+        return Response.status(Response.Status.OK).type("text/plain").entity("Posts:"+countPost+" Terms:"+countTerm).build();
+    }
+	@Autowired private TermRepository termRepository;
+	@Autowired private RowRepository rowRepository; 
+    @Autowired private WordpressRepository wordpressRepository;
     
     @Transactional
-    public void deleteCascade(Term termToDelete, Term term){
+    public int deleteCascade(Term term){
+        int countTerm = 0;
 		if(term.termPerspectives != null && term.termPerspectives.size() > 0){
 			termPerspectiveRepository.delete(term.termPerspectives);
 		}
@@ -415,19 +428,19 @@ public class UtilResource {
 
 		List<Term> terms = termRepository.findByParent(term);
 		if(terms != null && terms.size() > 0){
-			deleteCascade(termToDelete, terms);
+			for (Term t : terms) {
+                countTerm += deleteCascade(t);
+            }
 		}
-		termRepository.deletePostsTerms(term.id);
-		if(!termToDelete.equals(term)){
-			termRepository.delete(term);
-		}
-	}
-	
-    @Transactional
-	private void deleteCascade(Term termToDelete, List<Term> terms){
-		for (Term term : terms) {
-			deleteCascade(termToDelete, term);
-		}
+        
+        try{
+            termRepository.delete(term);
+            countTerm++;
+        } catch(JpaObjectRetrievalFailureException e) {
+            
+        }
+        
+        return countTerm;
 	}
 	
 	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository; 

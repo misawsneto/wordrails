@@ -1,7 +1,14 @@
 package com.wordrails.api;
 
+import com.wordrails.WordrailsService;
+import com.wordrails.business.Post;
+import com.wordrails.business.ServiceGenerator;
+import com.wordrails.business.Wordpress;
+import com.wordrails.business.WordpressApi;
+import com.wordrails.business.WordpressPost;
+import com.wordrails.business.WordpressService;
+import com.wordrails.persistence.PostRepository;
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -10,26 +17,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.wordrails.GCMService;
-import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.Post;
-import com.wordrails.business.ServiceGenerator;
-import com.wordrails.business.Wordpress;
-import com.wordrails.business.WordpressApi;
-import com.wordrails.business.WordpressPost;
-import com.wordrails.business.WordpressService;
-import com.wordrails.persistence.PostReadRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.StationRepository;
 
 @Component
 public class PostFilter implements Filter {
@@ -41,20 +33,6 @@ public class PostFilter implements Filter {
 
 	@Autowired
 	private WordpressService wordpressService;
-
-	@Autowired 
-	private StationRepository stationRepository;
-
-	@Autowired
-	private AccessControllerUtil accessControllerUtil;
-
-	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
-	private QueryPersistence queryPersistence;
-
-	@Autowired
-	private GCMService gcmService;
 	
 	@Autowired
 	private WordrailsService wordrailsService;
@@ -150,7 +128,7 @@ public class PostFilter implements Filter {
 		}
 	}
 
-	private void updateWordpressPost(Post post){
+	private void updateWordpressPost(Post post) throws Exception{
 		if (post != null) {
 			Wordpress wp = post.station.wordpress;
 			if (wp != null && wp.domain != null && wp.username != null && wp.password != null) {

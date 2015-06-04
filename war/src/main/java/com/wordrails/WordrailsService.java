@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -23,10 +22,7 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-
 import net.coobird.thumbnailator.Thumbnails;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
@@ -40,6 +36,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.api.PersonData;
 import com.wordrails.api.PerspectiveResource;
@@ -77,10 +74,6 @@ import com.wordrails.util.WordrailsUtil;
 public class WordrailsService {
 
 	private @Autowired NetworkRepository networkRepository;
-	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
-	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
-	private @Autowired RowRepository rowRepository;
-	private @Autowired TermRepository termRepository;
 	private @PersistenceContext EntityManager manager;
 	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired PostReadRepository postReadRepository;
@@ -88,8 +81,6 @@ public class WordrailsService {
 	private @Autowired FileContentsRepository contentsRepository;
 	private @Autowired FileRepository fileRepository;
 	private @Autowired ImageRepository imageRepository;
-	private @Autowired ImageEventHandler imageEventHandler;
-	private @Autowired AsyncService asyncService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PerspectiveResource perspectiveResource;
 	private @Autowired PostConverter postConverter;
@@ -152,30 +143,6 @@ public class WordrailsService {
 	@org.springframework.transaction.annotation.Transactional(readOnly=true)
 	public void sendResetEmail(PasswordReset passwordReset) {
 
-	}
-
-	@Async
-	@Transactional
-	public void processWordpressPost(Post post){
-        WordpressParsedContent wcp = extractImageFromContent(post.body);
-        post.body = wcp.content;
-        post.featuredImage = wcp.image;
-        post.externalFeaturedImgUrl = wcp.externalImageUrl;
-		
-		postRepository.save(post);
-	}
-
-	@Async
-	@Transactional
-	public void processWordpressPost(Collection<Post> posts){
-		for (Post post : posts) {
-			WordpressParsedContent wcp = extractImageFromContent(post.body);
-			post.body = wcp.content;
-			post.featuredImage = wcp.image;
-			post.externalFeaturedImgUrl = wcp.externalImageUrl;
-		}
-		
-		postRepository.save(posts);
 	}
 
 	@Transactional

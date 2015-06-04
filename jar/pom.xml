@@ -36,6 +36,16 @@
 			<groupId>com.squareup.retrofit</groupId>
 			<artifactId>retrofit</artifactId>
 		</dependency>
+                
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>	
+
+		<dependency>
+			<groupId>com.squareup.retrofit</groupId>
+			<artifactId>converter-jackson</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>com.mysema.querydsl</groupId>
@@ -86,9 +96,11 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search</artifactId>
 		</dependency>
-
-		<!-- <dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-highlighter</artifactId> 
-			</dependency> -->
+				
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>		
+		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>

@@ -14,6 +14,9 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
     
 	@RestResource(exported=false)
 	Station findByWordpressId(@Param("wordpressId") Integer wordpressId);
+    
+	@RestResource(exported=false)
+	Station findByWordpressToken(@Param("wordpressToken") String wordpressToken);
 
 	List<Station> findByPersonIdAndNetworkId(@Param("personId") Integer personId, @Param("networkId") Integer networkId);
 	

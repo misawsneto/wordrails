@@ -3,17 +3,14 @@ package com.wordrails.api;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-
 import retrofit.RestAdapter.LogLevel;
 
 public class Test {
 
-	public static void main(String[] args) throws IOException {	
-		
+	public static void main(String[] args) throws IOException {			
 		WordRails wordRails = new WordRails(
 				new MockConnectivityManager(true),
 				new File("."), 

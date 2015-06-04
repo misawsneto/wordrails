@@ -95,12 +95,6 @@ public class PostEventHandler {
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
 		System.out.println("HANDLE BEFORE DELETE");
 		if (postAndCommentSecurityChecker.canRemove(post)) {
-			Wordpress wp = post.station.wordpress;
-
-			if (wp != null && wp.domain != null && wp.username != null && wp.password != null) {
-				WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
-				wordpressService.deletePost(post.wordpressId, api);
-			}
 
 			List<Image> images = imageRepository.findByPost(post);
 			if (images != null && images.size() > 0) {
