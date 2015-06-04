@@ -16,6 +16,7 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 		        }
 			}
 			$("title").html($scope.app.nowReading.title);
+			console.log($scope.app.nowReading);
 		})// end of success
 	}else{
 		// TODO error

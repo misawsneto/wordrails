@@ -391,10 +391,17 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		var post = {};
 		post.title = $scope.app.editingPost.title
 		post.body = $scope.app.editingPost.body
+
 		if($scope.app.editingPost.externalVideoUrl)
 			post.externalVideoUrl = $scope.app.editingPost.externalVideoUrl
 		if($scope.app.editingPost.notify)
 			post.notify = true
+
+		if($scope.app.editingPost.topper)
+			post.topper = $scope.app.editingPost.topper
+
+		if($scope.app.editingPost.subheading)
+			post.subheading = $scope.app.editingPost.subheading
 
 		if(!post.title || post.title.trim() === "")
 			$scope.app.showErrorToast('Título inválido.');
@@ -411,7 +418,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	    })
 
 	    post.terms = termUris;
-	    post.station = extractSelf($scope.app.editingPost.selectedStation)
+	    post.station = TRIX.baseUrl + "/api/stations/" + $scope.app.editingPost.selectedStation.stationId;
 	    post.author = extractSelf($scope.app.getLoggedPerson())
 
 			trix.postPost(post).success(function(){

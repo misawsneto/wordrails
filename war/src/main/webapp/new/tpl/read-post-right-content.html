@@ -51,21 +51,24 @@
               <embed-video enablejsapi="1" class="video" iframe-id="video1" api="1" player_id="video1" href="{{app.nowReading.externalVideoUrl}}" width=800 height=460 ></embed-video>
             </div>
             <div class="p-r-xxl p-l-xxl">
-              <div ng-if="app.nowReading.topper" class="m-t-lg post-block">
+              <div ng-if="app.nowReading.topper" class="m-t-md post-block">
                 <span class="no-radius normal p-xxs topper text-lg bg-custom-primary ng-binding ng-scope">
                   {{app.nowReading.topper}}
                 </span>
               </div>
-              <div id="post-title-box" class="post-block m-t-sm m-b">
+              <div id="post-title-box" class="post-block m-t">
                 <span type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
                   {{app.nowReading.title}}
                 </span>
               </div>
-              <div class="post-block">
+              <div ng-show="app.nowReading.subheading" class="post-block text-2x font-thin">
+                {{app.nowReading.subheading}}
+              </div>
+              <div class="post-block m-t">
                 <span class="text-md font-bold">Por <a class="m-l-xs">{{app.nowReading.author.name}}</a></span>
                 <span class="m-l-sm text-muted text-u-c">em {{ app.nowReading.date | fromNow2 }}</span>
               </div>
-              <div class="post-block m-t-xl m-b-xxl">
+              <div class="post-block m-t-lg m-b-xxl">
                 <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
                 </div>
                 <div class="p-t p-b">

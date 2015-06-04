@@ -771,8 +771,8 @@ a.text-lgrey:hover {
 
 .block-image{
   display: block;
-  width: 140px;
-  height: 120px;
+  width: 160px;
+  height: 140px;
   float: right;
   border: 1px solid rgba(0,0,0,0.05);
   border-radius: 4px;
@@ -1125,6 +1125,7 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   animation-duration: 0.2s;
 }
 
+#bookmark .animated,
 #post-left-content .animated,
 #post-right-content .animated{
  -webkit-animation-duration: 0.3s;
@@ -2323,7 +2324,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   text-overflow: ellipsis;
 }
 
-  .content-block{margin-right: 160px;}
+  .content-block{margin-right: 170px;}
 
 /* #perspective-horizontal .info-flow-wrap .h3 a {color: #ccc}
 #perspective-horizontal .info-flow-wrap .h3 a:hover {color: #fff} */
