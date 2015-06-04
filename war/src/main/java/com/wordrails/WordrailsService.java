@@ -349,8 +349,8 @@ public class WordrailsService {
 		return null;
 	}
 
-	public TermPerspectiveView getDefaultPerspective(Integer stationPerspectiveId) {
-		return perspectiveResource.getTermPerspectiveView(null, null, stationPerspectiveId, 0, 15);
+	public TermPerspectiveView getDefaultPerspective(Integer stationPerspectiveId, int size) {
+		return perspectiveResource.getTermPerspectiveView(null, null, stationPerspectiveId, 0, size);
 	}
 
 	public Integer getStationIdFromCookie(HttpServletRequest request){

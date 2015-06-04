@@ -2268,6 +2268,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   /* #perspective-vertical .md-header {max-width: 800px; margin-right: auto; margin-left: auto;} */
   #perspective-vertical .md-header-items-container {max-width: 800px;}
 
+  #perspective-vertical md-tabs .md-header{overflow: hidden;}
+
   #perspective-horizontal, #perspective-vertical {margin-right: 340px}
   #perspective-horizontal .info-flow {margin-top: 0; margin-bottom: 0;}
   #perspective-horizontal .info-flow-wrap {margin-bottom: 20px;}
