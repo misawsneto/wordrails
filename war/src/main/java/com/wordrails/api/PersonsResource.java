@@ -197,12 +197,12 @@ public class PersonsResource {
 		List<Station> stations;
 		List<StationDto> stationDtos = new ArrayList<StationDto>();
 		
-		if(networkRole != null){
 			//Network Permissions
 			NetworkPermission networkPermissionDto = new NetworkPermission();
+		if(networkRole != null)
 			networkPermissionDto.networkId = networkRole.id;
-			networkPermissionDto.admin = networkRole.admin;
-			
+		else
+			networkPermissionDto.admin = false;
 			//Stations Permissions
 			stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
 			List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>(stations.size());
@@ -248,8 +248,6 @@ public class PersonsResource {
 			personPermissions.username = person.username;
 			personPermissions.personName = person.name;
 			
-		}
-		
 		PersonData initData = new PersonData();
 		
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes(), PersonDto.class);
