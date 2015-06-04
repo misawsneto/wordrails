@@ -51,7 +51,7 @@
               <!-- <img src="img/c0.jpg" class="img-full"> -->
                 <img id="image-box-holder" ng-src="{{app.editingPost.uploadedImage.filelink}}" class="img-full" ng-if="app.editingPost.uploadedImage.filelink">
             </div>
-            <div ng-show="selectedStation.topper" id="post-topper-box" class="post-block m-t m-b clear" style="min-height:30px;">
+            <div ng-show="app.editingPost.selectedStation.topper" id="post-topper-box" class="post-block m-t m-b clear" style="min-height:30px;">
               <div style="color: transparent!important" ng-show="app.editingPost.topper"
               class="post-block text-lg bg-custom-primary pos-abt p-xxs">{{app.editingPost.topper}}</div>
               <textarea style="resize: none;" ng-model="app.editingPost.topper" type="text" ng-class="{'text-custom-primary': app.editingPost.topper}" 
@@ -60,7 +60,7 @@
             <div id="post-title-box" class="post-block m-t">
               <input ng-model="app.editingPost.title" type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
             </div>
-            <div ng-show="selectedStation.subheading" id="post-subheading-box" class="post-block">
+            <div ng-show="app.editingPost.selectedStation.subheading" id="post-subheading-box" class="post-block">
               <input ng-model="app.editingPost.subtitle" type="text" class="b-none text-2x font-thin w-full back-none" placeholder="Subtítulo">
             </div>
             <div id="external-toolbar-container" class="post-block bg-white">

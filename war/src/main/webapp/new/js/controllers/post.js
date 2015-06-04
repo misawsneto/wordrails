@@ -2,14 +2,6 @@
 app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', 
 										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast){
 
-	// check if user has permisstion to write
-  $scope.writableStations = trixService.getWritableStations();
-
-  $scope.writableStations && $scope.writableStations.forEach(function(station, index){
-  	if(station.stationId == $scope.app.currentStation.id)
-  		$scope.selectedStation = station;
-  });
-
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
   };
@@ -32,6 +24,22 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			$scope.invertLandscapeSquare();
 		}, 50);
 	}
+
+	// check if user has permisstion to write
+  $scope.writableStations = trixService.getWritableStations();
+
+  $scope.writableStations && $scope.writableStations.forEach(function(station, index){
+  	if(station.stationId == $scope.app.currentStation.id)
+  		$scope.app.editingPost.selectedStation = station;
+  });
+
+  $scope.selectStation = function(selectedStation){
+  	$scope.app.editingPost.selectedStation = selectedStation
+  }
+
+	/*  $scope.$watch('app.editingPost.selectedStation', function(newVal){
+	  	console.log(newVal);
+	  }, true)*/
 
 	$scope.$watch('app.hidePostOptions', checkPostToolsWidth)
 	$scope.app.showPostToolbar = false;
@@ -359,6 +367,9 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			}
 			//$mdDialog.hide();
 		};
+
+			// check if user has permisstion to write
+	  scope.writableStations = trixService.getWritableStations();
 	};
 
 	function getTermList(terms, retTerms){
@@ -400,7 +411,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	    })
 
 	    post.terms = termUris;
-	    post.station = extractSelf($scope.app.currentStation)
+	    post.station = extractSelf$scope.app.editingPost.selectedStation)
 	    post.author = extractSelf($scope.app.getLoggedPerson())
 
 			trix.postPost(post).success(function(){
