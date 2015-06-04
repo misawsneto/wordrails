@@ -92,7 +92,7 @@ public class PersonsResource {
 	@PUT
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response putToken(@FormParam("token") String regId, @FormParam("networkId") Integer networkId) {
+	public Response putToken(@FormParam("token") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 //		Network network = networkRepository.findOne(networkId);
 //		Person person = accessControllerUtil.getLoggedPerson();
 //		gcmService.updateRegId(network, person, regId);
@@ -102,7 +102,6 @@ public class PersonsResource {
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.TEXT_PLAIN)
 	public Response login(@FormParam("username") String username, @FormParam("password") String password){
 		try{
 			accessControllerUtil.authenticate(username, password);
