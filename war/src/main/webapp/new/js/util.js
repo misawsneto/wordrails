@@ -297,6 +297,18 @@ function getCustomStyle(color, perspective, header) {
 	return style
 }
 
+function extractSelf(object){
+	var self = null;
+	if(object && object.links){
+		object.links.forEach(function(elem){
+			if(elem.rel && elem.rel == "self")
+				self = elem.href
+		})
+	}
+
+	return self;
+}
+
 String.prototype.toSlug = function(){
 	var str = this;
   str = str.replace(/^\s+|\s+$/g, ''); // trim

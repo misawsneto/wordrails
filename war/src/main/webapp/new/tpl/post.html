@@ -35,7 +35,7 @@
               </a>
               <input id="video-url-input" ng-model="videoUrl" class="pull-left form-control text-md b-none" ng-hide="!app.editingPost.showInputVideoUrl" placeholder="url do vídeo"/>
               <div class="video-container" ng-show="app.editingPost.externalVideoUrl">
-                <embed-video href="{{videoUrl}}" width=800 height=460 ></embed-video>
+                <embed-video enablejsapi="1" class="video" iframe-id="video1" api="1" player_id="video1" href="{{videoUrl}}" width=800 height=460 ></embed-video>
               </div>
               <!-- /media selection buttons -->
               <!-- <img src="img/c0.jpg" class="img-full"> -->

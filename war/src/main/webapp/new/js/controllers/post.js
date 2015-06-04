@@ -83,8 +83,12 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 	$scope.removeVideo = function(){
 		$scope.app.editingPost.externalVideoUrl = null;
-		$scope.videoUrl = null;
+		($scope.videoUrl)
+			$scope.videoUrl = $scope.videoUrl.substring(0, $scope.videoUrl.length - 1) + "0";
 		$scope.app.editingPost.showInputVideoUrl = false
+		$timeout(function() {
+			$scope.videoUrl = null
+		});
 	}
 
 	$scope.toggleVideoUrl = function(){
@@ -123,6 +127,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	})
 
 	$scope.$watch('app.editingPost', function(newValue){
+		// console.log(newValue);
 	}, true)
 
 	$scope.printPost = function(){
@@ -161,8 +166,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   }
 
   uploader.onErrorItem = function(fileItem, response, status, headers) {
-  	//if(status == 413)
-    // toastr.error("A imagem não pode ser maior que 6MBs.");
+  	if(status == 413)
+    	$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
   }
 
   $scope.clearImage = function(){ 
@@ -334,18 +339,53 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		};
 	};
 
+	function getTermList(terms, retTerms){
+		if(!retTerms)
+			retTerms = []
+
+		terms && terms.forEach(function(term, index){
+				if(term.checked)
+					retTerms.push(term)
+				var ts = getTermList(term.children)
+				ts.forEach(function(t){
+					retTerms.push(t)
+				});
+		});
+		return retTerms;
+	}	
+
 	function createPost(){
 		var post = {};
-		// post.title = $scope.app.editingPost.title
-		// post.body = $scope.app.editingPost.body
-		
+		post.title = $scope.app.editingPost.title
+		post.body = $scope.app.editingPost.body
+		if($scope.app.editingPost.externalVideoUrl)
+			post.externalVideoUrl = $scope.app.editingPost.externalVideoUrl
+		if($scope.app.editingPost.notify)
+			post.notify = true
+
 		if(!post.title || post.title.trim() === "")
-			$scope.app.showErrorToast('Título inválido');
+			$scope.app.showErrorToast('Título inválido.');
 		else if(!post.body || post.body.trim() === "")
-			$scope.app.showErrorToast('Texto inválido');
+			$scope.app.showErrorToast('Texto inválido.');
 		else if((!post.body || post.body.trim() === "") && (!post.title || post.title.trim() === ""))
-			$scope.app.showErrorToast('Título e texto inválidos');
-	}
+			$scope.app.showErrorToast('Título e texto inválidos.');
+		else{
+		
+			var termList = getTermList($scope.termTree);
+			var termUris = []
+			termList.forEach(function(term){
+	      termUris.push(TRIX.baseUrl + "/api/terms/" + term.id);
+	    })
+
+	    post.terms = termUris;
+	    post.station = extractSelf($scope.app.currentStation)
+	    post.author = extractSelf($scope.app.getLoggedPerson())
+
+			trix.postPost(post).success(function(){
+				$scope.app.showSuccessToast('História publicada.');
+			})
+		} // end of final else
+	}// end of createPost()
 
 
 }]);

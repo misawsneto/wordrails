@@ -57,6 +57,10 @@ angular.module('app')
 
       }
 
+      $scope.app.getLoggedPerson = function(){
+        return initData.person;
+      }
+
       // angular translate
       $scope.lang = { isopen: false };
       $scope.langs = {en:'English', de_DE:'German', it_IT:'Italian'};
@@ -116,7 +120,13 @@ angular.module('app')
       $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
         // on change state, exit if in fullscreen mode.
         if(typeof screenfull !== 'undefined' && screenfull){ screenfull.exit(); }
-        
+
+        if(fromState.name == "app.stations.read"){
+          console.log($scope.app.nowReading.externalVideoUrl);
+          if($scope.app.nowReading.externalVideoUrl)
+            $scope.app.nowReading.externalVideoUrl.substring(0, $scope.app.nowReading.externalVideoUrl.length - 1) + "0";
+        }
+
         if(toState.name == "app.stations"){
           $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
         }
@@ -184,7 +194,7 @@ angular.module('app')
 
       $scope.app.showErrorToast = function(content) {
         $mdToast.show({
-          template: '<md-toast style="background-color: red" ><span flex>'+content+'</span></md-toast>',
+          template: '<md-toast style="background-color: #dd4411" ><span flex>'+content+'</span></md-toast>',
           hideDelay: 3000,
           position: $scope.getToastPosition()
         });
@@ -192,7 +202,7 @@ angular.module('app')
 
       $scope.app.showSuccessToast = function(content) {
         $mdToast.show({
-          template: '<md-toast class="toast-success" style="background-color: green" ><span flex>'+content+'</span></md-toast>',
+          template: '<md-toast style="background-color: green" ><span flex>'+content+'</span></md-toast>',
           hideDelay: 3000,
           position: $scope.getToastPosition()
         });

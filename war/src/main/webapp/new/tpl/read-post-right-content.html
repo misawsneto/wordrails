@@ -39,10 +39,13 @@
         </div>
         <div class="cell">
           <div class="cell-inner animated {{app.incomingPostDirection}}">
-            <div id="post-media-box" class="post-block m-t-md" ng-if="!app.nowReading.imageLandscape && app.nowReading.imageLargeId">
+            <div id="post-media-box" class="post-block m-t-lg" ng-if="!app.nowReading.imageLandscape && app.nowReading.imageLargeId">
               <img ng-src="{{getImageLink(app.nowReading.imageLargeId)}}" class="img-full">
             </div>
             <div class="post-image-cover" ng-style="getBackgroundImage2(app.nowReading, 'lg')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
+            </div>
+            <div class="post-block m-t-lg" ng-show="app.nowReading.externalVideoUrl">
+              <embed-video enablejsapi="1" class="video" iframe-id="video1" api="1" player_id="video1" href="{{app.nowReading.externalVideoUrl}}" width=800 height=460 ></embed-video>
             </div>
             <div class="p-r-xxl p-l-xxl">
               <div ng-if="app.nowReading.topper" class="m-t-lg post-block">

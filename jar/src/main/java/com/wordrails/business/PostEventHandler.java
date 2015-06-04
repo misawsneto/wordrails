@@ -86,7 +86,8 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	@Transactional
 	public void handleAfterCreate(Post post){
-		buildNotification(post);
+		if(post.notify)
+			buildNotification(post);
 	}
 
 	@HandleBeforeDelete

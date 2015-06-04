@@ -21,7 +21,7 @@ FacadeMethods(entity) ::=
         var config = {};
         config.headers = {};
         config.headers["Content-Type"] = "application/json"
-        return \$http.post(_config.url + "/api/$entity.pluralLowercase$/", $entity.nameLowercase$, config)
+        return \$http.post(_config.url + "/api/$entity.pluralLowercase$", $entity.nameLowercase$, config)
     }
 
     if (this.get$entity.name$) {
@@ -52,5 +52,7 @@ FacadeMethods(entity) ::=
     }
 
     $entity.queries:{query | $FacadeQueries(entity, query)$}; separator="\n\n"$
+    
+    $entity.relationships:{relationship | $FacadeRelationshipMethods(entity, relationship)$}; separator="\n\n"$
 
 /*---------------------------------------------------------------------------*/>>
