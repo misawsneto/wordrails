@@ -411,7 +411,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	    })
 
 	    post.terms = termUris;
-	    post.station = extractSelf$scope.app.editingPost.selectedStation)
+	    post.station = extractSelf($scope.app.editingPost.selectedStation)
 	    post.author = extractSelf($scope.app.getLoggedPerson())
 
 			trix.postPost(post).success(function(){
