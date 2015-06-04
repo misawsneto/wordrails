@@ -193,7 +193,7 @@ angular.module('app')
 
       $scope.app.showErrorToast = function(content) {
         $mdToast.show({
-          template: '<md-toast style="background-color: #dd4411" ><span flex>'+content+'</span></md-toast>',
+          template: '<md-toast style="background-color: rgba(204,34,0,0.95)" ><span flex>'+content+'</span></md-toast>',
           hideDelay: 3000,
           position: $scope.getToastPosition()
         });
@@ -201,7 +201,7 @@ angular.module('app')
 
       $scope.app.showSuccessToast = function(content) {
         $mdToast.show({
-          template: '<md-toast style="background-color: green" ><span flex>'+content+'</span></md-toast>',
+          template: '<md-toast style="background-color: rgba(0,128,0,0.95)" ><span flex>'+content+'</span></md-toast>',
           hideDelay: 3000,
           position: $scope.getToastPosition()
         });
@@ -209,7 +209,7 @@ angular.module('app')
 
       $scope.app.showInfoToast = function(content) {
         $mdToast.show({
-          template: '<md-toast style="background-color: blue" ><span flex>'+content+'</span></md-toast>',
+          template: '<md-toast style="background-color: rgba(0,85,187,0.95)" ><span flex>'+content+'</span></md-toast>',
           hideDelay: 3000,
           position: $scope.getToastPosition()
         });

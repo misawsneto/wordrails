@@ -16,6 +16,7 @@ public interface PostProjection {
 	Date getDate();
 	
 	String getTitle();
+	String getSubheading();
 	String getTopper();
 	String getBody();
 	Sponsor getSponsor();

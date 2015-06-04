@@ -49,5 +49,7 @@ public class PostView implements Serializable {
 	public Double lat;
 
 	public Double lng;
+
+	public String subheading;
 	
 }

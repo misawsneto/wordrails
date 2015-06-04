@@ -1,6 +1,6 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http',
-										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http){
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', 
+										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast){
 
 	// check if user has permisstion to write
   $scope.writableStations = trixService.getWritableStations();
@@ -83,7 +83,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 	$scope.removeVideo = function(){
 		$scope.app.editingPost.externalVideoUrl = null;
-		($scope.videoUrl)
+		if($scope.videoUrl)
 			$scope.videoUrl = $scope.videoUrl.substring(0, $scope.videoUrl.length - 1) + "0";
 		$scope.app.editingPost.showInputVideoUrl = false
 		$timeout(function() {
@@ -126,6 +126,13 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		$(".redactor-editor").focus();
 	})
 
+	$scope.$watch('app.editingPost.topper', function(newVal){
+		if(newVal){
+			$scope.app.editingPost.topper= '' +$scope.app.editingPost.topper.replace(/ +(?= )/g,'')
+			$scope.app.editingPost.topper= $scope.app.editingPost.topper = $scope.app.editingPost.topper.replace(/(?:\r\n|\r|\n)/g, '');
+		}
+	})
+
 	$scope.$watch('app.editingPost', function(newValue){
 		// console.log(newValue);
 	}, true)
@@ -149,6 +156,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
       $scope.app.editingPost.showMediaButtons = false;
       $scope.checkLandscape();
       $("#image-config").removeClass("hide");
+      $mdToast.hide();
   	}
   };
 
@@ -181,8 +189,15 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   uploader.onProgressItem = function(fileItem, progress) {
   		cfpLoadingBar.start();
       cfpLoadingBar.set(progress/10)
-      if(progress == 100)
+      if(progress == 100){
       	cfpLoadingBar.complete()
+      	toastPromise = $mdToast.show(
+          $mdToast.simple()
+            .content('Processando...')
+            .position('top right')
+            .hideDelay(false)
+        );
+      }
   };
 
 	trix.getTermTree($scope.app.currentStation.defaultPerspectiveId).success(function(response){
@@ -297,7 +312,9 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		if(isTermSelected($scope.termTree)){
 			createPost()
 		}else{
-			$scope.showMoreOptions(ev);
+			//$scope.showMoreOptions(ev);
+			$scope.app.hidePostOptions = false;
+			$scope.app.showInfoToast('Escolha uma categoria.')
 		}
 	}
 
@@ -312,9 +329,9 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			}
 		})
 		.then(function(answer) {
-			$scope.alert = 'You said the information was "' + answer + '".';
+			//$scope.alert = 'You said the information was "' + answer + '".';
 		}, function() {
-			$scope.alert = 'You cancelled the dialog.';
+			//$scope.alert = 'You cancelled the dialog.';
 		});
 	}
 
@@ -370,7 +387,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		else if((!post.body || post.body.trim() === "") && (!post.title || post.title.trim() === ""))
 			$scope.app.showErrorToast('Título e texto inválidos.');
 		else{
-		
+			// post is ok to be created
 			var termList = getTermList($scope.termTree);
 			var termUris = []
 			termList.forEach(function(term){

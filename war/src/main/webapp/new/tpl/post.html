@@ -51,8 +51,17 @@
               <!-- <img src="img/c0.jpg" class="img-full"> -->
                 <img id="image-box-holder" ng-src="{{app.editingPost.uploadedImage.filelink}}" class="img-full" ng-if="app.editingPost.uploadedImage.filelink">
             </div>
+            <div id="post-topper-box" class="post-block m-t m-b clear" style="min-height:30px;">
+              <div style="color: transparent!important" ng-show="app.editingPost.topper"
+              class="post-block text-lg bg-custom-primary pos-abt p-xxs">{{app.editingPost.topper}}</div>
+              <textarea style="resize: none;" ng-model="app.editingPost.topper" type="text" ng-class="{'text-custom-primary': app.editingPost.topper}" 
+              class="pos-abt post-block text-lg p-xxs pull-left b-none w-full back-none" placeholder="Chapéu" tabindex="0" aria-invalid="false"></textarea>
+            </div>
             <div id="post-title-box" class="post-block m-t">
               <input ng-model="app.editingPost.title" type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
+            </div>
+            <div id="post-subheading-box" class="post-block">
+              <input ng-model="app.editingPost.subtitle" type="text" class="b-none text-2x font-thin w-full back-none" placeholder="Subtítulo">
             </div>
             <div id="external-toolbar-container" class="post-block bg-white">
               <button id="toggle-toolbars" class="post-stroke-btn btn text-md btn-sm m-t btn-icon btn-rounded btn-stroke btn-muted" tooltip="Ferramentas" tooltip-append-to-body="true" ng-click="app.showPostToolbar = !app.showPostToolbar">

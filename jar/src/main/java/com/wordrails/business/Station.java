@@ -92,10 +92,16 @@ public class Station {
 	
 	public int postsTitleSize;
 	
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean topper;
 	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean subheading;
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean sponsored;
 	
+	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean social;
 	
 	@OneToOne

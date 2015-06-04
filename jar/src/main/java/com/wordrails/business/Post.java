@@ -143,7 +143,17 @@ public class Post {
 	@Analyzer(definition="customPostAnalyzer")
 	public String body;
 	
+	@Lob
+	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
+	@Analyzer(definition="customPostAnalyzer")
+	@Column(length = 1024)
 	public String topper;
+	
+	@Lob
+	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
+	@Analyzer(definition="customPostAnalyzer")
+	@Column(length = 1024)
+	public String subheading;
 	
 	@Size(min=1, max=15)
 	public String state = STATE_PUBLISHED;

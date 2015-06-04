@@ -24,6 +24,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		PostView postView = new PostView();
 		postView.postId = post.id;
 		postView.title = post.title;
+		postView.subheading = post.subheading;
 		postView.slug = post.slug;
 		if (post.featuredImage != null) {
 			postView.smallId = post.featuredImage.small.id;
