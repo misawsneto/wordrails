@@ -1,13 +1,122 @@
-<div class="vbox">
-  <div class="row-row">
-    <div class="cell b-l b-t bg-light lter">
-      <div class="cell-inner">
-        <div class="wrapper-md">
-        </div>
-      </div>
+<md-dialog aria-label="MAIS OPÇÕES" id="more-options-dialog">
+  <md-content>
+    <div id="post-more-options">
+      <md-tabs>
+        <md-tab label="Informações Gerais">
+          <div class="b-t wrapper-md post-general-info" flex>
+            <div class="row">
+              <div class="col-sm-6">
+              </div>
+              <div class="col-sm-6 b-l">
+                <div class="m-t-sm">
+                  <div class="input-group w-md m-auto" ng-click="app.editingPost.dateTouched = true">
+                    <input type="text" class="form-control" datepicker-popup="{{app.editingPost.format}}" ng-model="app.editingPost.date" is-open="app.editingPost.opened" datepicker-options="app.editingPost.dateOptions" ng-required="true" close-text="Fechar" current-text="Hoje" clear-text="Limpar"/>
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="app.editingPost.open($event); app.editingPost.dateTouched = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </div>
+                  <div class="text-center m-t-xs" ng-show="!app.editingPost.showTimepicker">
+                    <a ng-click="app.editingPost.showTimepicker = !app.editingPost.showTimepicker"><i class="fa fa-fw m-r-xs fa-clock-o"></i><small class="">horário da publicação</small></a>
+                  </div>
+                  <div ng-show="app.editingPost.showTimepicker" class="timepicker-container m-l-sm">
+                    <div class="pull-left m-t-xl m-r-sm">horário, </div>
+                    <timepicker class="pull-left" ng-model="app.editingPost.mytime" hour-step="app.editingPost.hstep" minute-step="app.editingPost.mstep" show-meridian="app.editingPost.ismeridian"></timepicker>
+                    <div class="m-t-xl m-l-sm pull-left h3">
+                      <a ng-click="app.editingPost.showTimepicker = !app.editingPost.showTimepicker">
+                      <i class="mdi mdi-close-circle-outline"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="slug-editor">
+                  <span class="pull-left m-t-lg m-r-sm h3">/</span>
+                  <md-input-container flex>
+                    <label>Endereço único</label>
+                    <input ng-model="app.editingPost.slug">
+                  </md-input-container>
+                </div>
+                <!-- <div class="notification">
+                  <md-checkbox aria-label="{{app.editingPost.notify}}" ng-model="app.editingPost.notify" ng-click="app.editingPost.notify = !app.editingPost.notify" class="pull-left"></md-checkbox>
+                  <span>Notificar usuários em dispositivos móveis</span>
+                </div>
+                <div class="notification">
+                  <md-checkbox aria-label="{{app.editingPost.notify}}" ng-model="app.editingPost.notify" ng-click="app.editingPost.notify = !app.editingPost.notify" class="pull-left"></md-checkbox>
+                  <span>Ultimas Notícias</span>
+                </div>
+                              </div> -->
+                <ul class="notification-settings no-style">
+                  <li class="">
+                    <div>
+                      <md-checkbox aria-label="{{app.editingPost.notify}}" ng-model="app.editingPost.notify" class="pull-left"></md-checkbox>
+                      <div>Notificar usuários em seus dispositivos móveis</div>
+                    </div>
+                  </li>
+                  <li class="">
+                    <div>
+                      <md-checkbox aria-label="{{app.editingPost.breakingNews}}" ng-model="app.editingPost.breakingNews" class="pull-left"></md-checkbox>
+                      <div class="font-bold text-u-c">Útilmas Notícias</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </md-tab>
+        <!-- categories & tags -->
+        <md-tab class="bg-custom" label="Categorias & Tags">
+          <div class="b-t wrapper post-terms-tab" flex>
+            <div class="row">
+            <!-- tree view -->
+              <div class="col-sm-6">
+                <div class="term-tree p-l-md" style="">
+                  <div class="span5 article-tree">
+                    <div ng-style="{'overflow': 'auto'}">
+                      <div class="tree well">
+                        <ul>
+                          <node-tree ng-model="termTree"></node-tree>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <!-- /tree view -->
+            <!-- tags -->
+              <div class="col-sm-6">
+                <div class="term-tags wrapper-md">
+                  <input />
+                </div>
+              </div>
+              <!-- /tags -->
+            </div>
+          </div>
+        </md-tab>
+        <!-- /categories & tags
+        notifications tab -->
+        <md-tab class="bg-custom" label="Geo-Notificações" ng-disabled="true">
+          <div class="b-t wrapper-sm" flex>
+          </div>
+        </md-tab>
+        <!-- /notifications tab -->
+        
+        <!-- sponsor tab -->
+        <md-tab class="bg-custom" label="Patrocinadores" ng-disabled="true">
+          <div class="b-t wrapper-sm" flex>
+          </div>
+        </md-tab>
+        <!-- /sponsor tab
+        /tab -->
+      </md-tabs>
     </div>
+  </md-content>
+
+  <div class="md-actions" layout="row">
+    <md-button ng-click="cancel()">
+     Cancelar
+    </md-button>
+    <md-button ng-click="publish()" class="md-primary">
+      Publicar
+    </md-button>
   </div>
-  <div class="wrapper b-t b-l bg-light lter">
-    tags
-  </div>
-</div>
+
+</md-dialog>

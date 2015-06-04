@@ -2,7 +2,7 @@
   <div class="col">
     <div class="vbox">
       <div class="row-row">
-        <div class="collapse post-read-header pos-rlt navbar-collapse box-shadow nav-down bg-white-only post-nav">
+        <div class="collapse post-read-header pos-rlt navbar-collapse box-shadow nav-down post-nav">
           <!-- nabar left -->
           <ul class="nav navbar-nav navbar-left">
             <li><a href class="text-center text-lg">
@@ -27,28 +27,46 @@
           <!-- nabar right -->
           <ul class="nav navbar-nav navbar-right">
             <li>
+              <a ng-click="toggleNightMode(!app.nightMode)" class="mdi mdi-brightness-4 text-lg"></a>
+            </li>
+            <li>
               <div class="divider-v"></div>
             </li>
             <li>
-              <a href class="text-u-c text-center splash-close-button" ng-click="app.clodePostRead()">×</a>
+              <a href class="text-u-c text-center splash-close-button" ng-click="app.closePostRead()">×</a>
             </li>
           </ul>
         </div>
         <div class="cell">
-          <div class="cell-inner">
-            <div id="post-media-box" class="new-post-block m-t-md" ng-if="!app.nowReading.imageLandscape && app.nowReading.imageLargeId">
-              <img src="getImageLink(app.nowReading.imageLargeId)" class="img-full">
+          <div class="cell-inner animated {{app.incomingPostDirection}}">
+            <div id="post-media-box" class="post-block m-t-md" ng-if="!app.nowReading.imageLandscape && app.nowReading.imageLargeId">
+              <img ng-src="{{getImageLink(app.nowReading.imageLargeId)}}" class="img-full">
             </div>
-            <div class="post-image-conver" ng-style="getBackgroundImage(app.nowReading, 'lg')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
+            <div class="post-image-cover" ng-style="getBackgroundImage2(app.nowReading, 'lg')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
             </div>
             <div class="p-r-xxl p-l-xxl">
-              <div id="post-title-box" class="new-post-block m-t m-b">
+              <div ng-if="app.nowReading.topper" class="m-t-lg post-block">
+                <span class="no-radius normal p-xxs topper text-lg bg-custom-primary ng-binding ng-scope">
+                  {{app.nowReading.topper}}
+                </span>
+              </div>
+              <div id="post-title-box" class="post-block m-t-sm m-b">
                 <span type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
                   {{app.nowReading.title}}
                 </span>
               </div>
-              <div class="bg-white-only new-post-block">
+              <div class="post-block">
+                <span class="text-md font-bold">Por <a class="m-l-xs">{{app.nowReading.author.name}}</a></span>
+                <span class="m-l-sm text-muted text-u-c">em {{ app.nowReading.date | fromNow2 }}</span>
+              </div>
+              <div class="post-block m-t-xl m-b-xxl">
                 <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
+                </div>
+                <div class="p-t p-b">
+                  <button ng-repeat="term in app.nowReading.terms"
+                    class="btn btn-rounded btn-stroke btn-term text-md m-r-sm">
+                    {{term.name}}
+                  </button>
                 </div>
               </div>
             </div>

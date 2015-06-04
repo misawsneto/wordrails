@@ -1,23 +1,27 @@
 package com.wordrails.api;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Term;
@@ -36,10 +40,10 @@ import com.wordrails.persistence.TermRepository;
 public class TermResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
-	
+
 	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired PersonRepository personRepository;
-	
+
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
@@ -48,16 +52,22 @@ public class TermResource {
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired TermRepository termRepository;
-	
-	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
-	
+
 	@GET
 	@Path("/termTree")
-	public void getTermTree(@PathParam("taxonomyId") Integer taxonomyId) {
-		List<Term> terms = termRepository.findTreeByTaxonomyId(taxonomyId);
-//		List<Term> roots = new ArrayList<Term>();
-//		for (Term term : terms) {
-//			
-//		}
+	public Response getTermTree(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws JsonGenerationException, JsonMappingException, IOException {
+		org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
+		List<Term> allTerms = new ArrayList<Term>(); 
+		if(perspectiveId != null){
+			allTerms = termRepository.findByPerspectiveId(perspectiveId);
+		}else{
+			allTerms = termRepository.findByTaxonomyId(taxonomyId);
+		}
+
+		List<Term> roots =  wordrailsService.createTermTree(allTerms);
+
+		String json = mapper.writeValueAsString(roots);
+		return Response.status(Status.OK).entity(json).build();
 	}
+
 }

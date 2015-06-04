@@ -1,13 +1,27 @@
 <div class="vbox">
   <div class="row-row">
-    <div class="cell b-l bg-light lter">
+    <div class="cell b-l">
       <div class="cell-inner">
-        <div class="wrapper-md">
+        <div class="wrapper-sm term-tree">
+
+          <div class="span5 article-tree">
+            <div ng-style="{'overflow': 'auto'}">
+              <div class="tree well">
+                <ul>
+                  <node-tree ng-model="termTree"></node-tree>
+                </ul>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
   </div>
-  <div class="wrapper b-t b-l bg-light lter">
+  <!-- <div class="wrapper b-t b-l bg-light lter">
     tags
+  </div> -->
+  <div md-ink-ripple class="pointer wrapper b-t b-l bg-light lter text-center text-u-c font-bold" ng-click="showMoreOptions($event)">
+    mais opções
   </div>
 </div>

@@ -30,6 +30,11 @@ var trix = angular.module('trix', [])
 	    // do something on success
 	    	if (_config.url && response.config.method === "GET" && 
 	    		response.config.url.indexOf(_config.url + "/api") > -1 && 
+	    		response.data && response.data._embedded){
+	    			response.data = response.data._embedded;
+		    		return response
+	    	}else if (_config.url && response.config.method === "GET" && 
+	    		response.config.url.indexOf(_config.url + "/api") > -1 && 
 	    		response.data && response.data.content){
 	    			response.data = response.data.content;
 		    		return response
@@ -61,6 +66,10 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/persons/init");
     }
     
+    this.allInitData = function() {
+      return \$http.get(_config.url + "/api/persons/allInit");
+    }
+    
     this.getCurrentPerson = function(){
     	return \$http.get(_config.url + "/api/persons/me")
     }
@@ -84,14 +93,33 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/perspectives/termPerspectiveViews", config)
     }
     
-    this.findPopularPosts = function(stationId, _page, _size) {
+    this.getTermTree = function(perspectiveId, taxonomyId) {
 		var config = {
 			"params": {
-				"page": _page,
-				"size": _size,
+				"perspectiveId": perspectiveId,
+				"taxonomyId": taxonomyId
 			}
 		}
-      return \$http.get(_config.url + "/api/posts/" + stationId + "/popular", config)
+      return \$http.get(_config.url + "/api/terms/termTree", config)
+    }
+    
+    this.getPostViewBySlug = function(slug, withBody) {
+		var config = {
+			"params": {
+				"slug": slug,
+				"withBody": withBody
+			}
+		}
+      return \$http.get(_config.url + "/api/posts/getPostViewBySlug", config)
+    }
+    
+    this.getPostViewById = function(postId, withBody) {
+		var config = {
+			"params": {
+				"withBody": withBody
+			}
+		}
+      return \$http.get(_config.url + "/api/posts/" + postId + "/getPostViewById", config)
     }
     
     this.findRecentPosts = function(stationId, _page, _size) {

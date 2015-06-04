@@ -1,7 +1,9 @@
 Simple line icons
 ====
 
-Simple line icons with CSS, SAAS & Web-fonts files.
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thesabbir/simple-line-icons?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+Simple line icons with CSS, SAAS, LESS & Web-fonts files.
 
 Installation
 ====
@@ -14,9 +16,10 @@ bower install simple-line-icons --save
 
 ```
 
-Preview
+Preview & Docs
 ===
-![preview](http://graphicburger.com/wp-content/uploads/2013/10/Simple-Line-Icons-Webfont-600.png)
+[https://thesabbir.github.io/simple-line-icons] (https://thesabbir.github.io/simple-line-icons)
+
 
 Credits
 ===
@@ -26,3 +29,9 @@ Contributors
 ====
 * [Sabbir Ahmed](https://twitter.com/alreadysabbir)
 * [Zeshan Ahmed](https://twitter.com/zeshanshani22)
+* [LDSign] (https://github.com/LDSign)
+
+License
+====
+You're free to use the webfont in a template/theme intended for sale on marketplaces like Themeforest.
+CSS, SCSS & LESS files are under [MIT] (http://opensource.org/licenses/MIT) License.

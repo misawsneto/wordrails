@@ -1,6 +1,7 @@
 package com.wordrails.business;
 
 import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +15,9 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 
@@ -42,11 +46,13 @@ public class Term {
 	@ManyToOne	
 	public Taxonomy taxonomy;
 
+	@JsonBackReference
 	@ManyToOne
 	public Term parent;
 	
 	public Integer parentTermId;
 			
+	@JsonManagedReference
 	@OneToMany(mappedBy="parent")
 	public Set<Term> children;
 	
@@ -60,6 +66,8 @@ public class Term {
 	public String wordpressSlug;
     
     public Integer wordpressId;
+    
+    public String color;
 	
 	@PrePersist
 	void onCreate(){

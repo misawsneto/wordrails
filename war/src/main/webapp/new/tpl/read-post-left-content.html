@@ -1,24 +1,31 @@
-<div class="hbox scroll-y">
-  <div class="col">
+<div class="hbox">
+  <div class="col o-h">
     <div class="vbox">
       <div class="row-row">
+      <div class="profile-cover pos-rlt abstract-bg bg-cover animated" ng-class="{'slideInRight': app.nowReadingAuthor.coverMediumId}" style="{{app.nowReadingAuthor.coverMediumId | imageLink | bgimg2}}">
+        <div class="cover-abstract-mask" ng-if="!app.nowReadingAuthor.coverMediumId">
+        </div>
+        <div style="{{app.nowReadingAuthor.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{app.initData.person.name}}"></div>
+        <!-- <div class="m-t-sm p-l text-md font-thin wrapper-xs title-wrapper-bg-gd pos-abt bottom-0 w-full">
+          por <span class="m-xs font-normal">{{app.nowReadingAuthor.authorName}}</spna>
+        </div> -->
+      </div>
         <div class="cell left-content-wrap">
           <div class="cell-inner">
-            <div id="post-media-box" class="new-post-block m-t-md" ng-if="!app.nowReading.imageLandscape && app.nowReading.imageLargeId">
-              <img src="getImageLink(app.nowReading.imageLargeId)" class="img-full">
-            </div>
-            <div class="post-image-conver" ng-style="getBackgroundImage(app.nowReading, 'lg')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
-            </div>
-            <div class="p-r-xxl p-l-xxl">
-              <div id="post-title-box" class="new-post-block m-t m-b">
-                <span type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
-                  {{app.nowReading.title}}
-                </span>
-              </div>
-              <div class="bg-white-only new-post-block">
-                <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
-                </div>
-              </div>
+            <div class="list-wrapper">
+              <ul class="timeline m-t-md m-b-md">
+                <li class="tl-item" ng-repeat="cell in app.currentCells" ng-if="app.currentCells">
+                  <div class="tl-wrap" ng-click="app.setNowReading(cell.postView)" class="pointer">
+                    <div class="">
+                      <small class="post-time w-md text-muted">{{cell.postView.date | fromNow}}</small>
+                      <div>
+                        <a>{{cell.postView.title}}</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="divider"></div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>

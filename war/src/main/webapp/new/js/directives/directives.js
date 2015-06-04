@@ -23,7 +23,7 @@ angular.module('app')
                   $frame.sly({
                     horizontal: 1,
                     itemNav: 'basic',
-                    smart: 1,
+                    smart: false,
                     activateOn: 'click',
                     mouseDragging: 1,
                     touchDragging: 1,
@@ -32,6 +32,7 @@ angular.module('app')
                     scrollBar: $wrap.find('.scrollbar'),
                     scrollSource: "null",
                     scrollBy: 1,
+                    activatePageOn: 'click',
                     speed: 300,
                     elasticBounds: 1,
                     easing: 'easeOutExpo',
@@ -43,15 +44,17 @@ angular.module('app')
                     forward: $wrap.siblings('.forward'),
                     moveBy:1000
                   }).sly('on', 'active', function(eventName, index){
-                    var perspectiveId = null
-                    if(scope.app.network.currentStation){
-                      perspectiveId = scope.app.network.currentStation.perspective.id;
+                    var sly = this;
+
+                    /* see main.js $scope.app.setHorizontalCursor */
+                    if(scope.app.horizontalCursor){
+                      scope.app.setNowReading(scope.app.horizontalCursor.postView, scope.app.horizontalCursor.cells)
+                      scope.app.horizontalCursor = null;
+                      setTimeout(function(){
+                        sly.next();
+                      }, 400)
                     }
 
-                    var domElem = this.getPos(index)
-                    var postId = $(domElem.el).find('div.news-item').data('post-id')
-                    var termId = $(elem).data('term-id')
-                    $state.go("^.vposts", {perspectiveId: perspectiveId, termId: termId, postId: postId});
                   }).sly('on', 'move', function(eventName, index){
                     if (this.pos.dest > this.pos.end - 200) {
                       var sly = this;
@@ -84,6 +87,16 @@ angular.module('app')
         }// end of link
      } // end of object to return
  }) // end of sly directive
+
+.directive('scrollIf', function () {
+  return function (scope, element, attributes) {
+    setTimeout(function () {
+      if (scope.$eval(attributes.scrollIf)) {
+        window.scrollTo(0, element[0].offsetTop - 100)
+      }
+    });
+  }
+})
 
 .directive('clamp', function ($timeout) {
 
@@ -147,6 +160,74 @@ angular.module('app')
         });
     }
   }
+})
+
+.directive('nodeTree', function() {
+      return {
+        template: '<node ng-repeat="node in tree"></node>',
+        replace: true,
+        transclude: true,
+        restrict: 'E',
+        scope: {
+          tree: '=ngModel'
+        }
+      };
+})
+
+.directive('node', function($compile) {
+  return { 
+    restrict: 'E',
+    replace:true,
+     templateUrl: 'tpl/tree-view.html',
+    link: function(scope, elm, attrs) {
+    
+      //$(elm).parent('ul').find('span.leaf').on('click', function (e) {
+       $(elm).find('span.leaf').on('click', function (e) {
+      
+         var children = $(elm).find('li');
+      
+        if (children.is(":visible")) {
+            children.hide('fast');
+            $(elm).find('span.leaf i.icon-minus-sign').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+        }
+        else{
+          
+            children.show('fast');
+            $(elm).find('span.leaf i.icon-plus-sign').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+            }
+                e.stopPropagation();
+            });
+      
+      
+      scope.nodeClicked = function(node) {
+        node.checked = !node.checked;
+        /*function checkChildren(c) {
+          angular.forEach(c.children, function(c) {
+            c.checked = node.checked;
+            checkChildren(c);
+          });
+        }
+        checkChildren(node);*/
+      };
+      
+      scope.switcher = function(booleanExpr, trueValue, falseValue) {
+        return booleanExpr ? trueValue : falseValue;
+    };
+      
+      scope.isLeaf = function(_data) {
+        if (_data.children.length == 0) {
+            return true;
+        }
+        return false;
+    };
+      
+     
+      if (scope.node.children.length > 0) {
+        var childNode = $compile('<ul><node-tree ng-model="node.children"></node-tree></ul>')(scope)
+        elm.append(childNode);
+      }
+    }
+  };
 });
 
   

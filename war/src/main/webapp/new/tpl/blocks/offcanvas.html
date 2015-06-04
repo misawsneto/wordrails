@@ -8,8 +8,8 @@
   <!-- <div class="scroll-wrap"> -->
   <nav class="menu">
     <div class="offcanvas-icon-list">
-      <a href ng-repeat="station in app.initData.stations" ng-class="{'bg-custom-primary': station.id == app.currentStation.id}">
-        <span class="text-lg">{{station.name}}</span>
+      <a href ng-repeat="station in app.stationsPermissions" ng-class="{'bg-custom-primary': stationId == app.currentStation.id}">
+        <span class="text-lg">{{station.stationName}}</span>
       </a>
     </div>
   </nav>

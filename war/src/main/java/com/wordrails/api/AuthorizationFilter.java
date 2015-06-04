@@ -1279,4 +1279,40 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
+	@Override
+	protected boolean isFindTermsByPostIdAuthorized(Integer postId) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected boolean isFindBySlugAuthorized(String slug) {
+		boolean authorized = false;
+		Post post = postRepository.findBySlug(slug);
+		if(post != null){
+			authorized = postAndCommentSecurityChecker.canRead(post);
+		}
+		return authorized;
+	}
+
+	@Override
+	protected boolean isFindTermsByPostSlugAuthorized(String slug) {
+		boolean authorized = false;
+		Post post = postRepository.findBySlug(slug);
+		if(post != null){
+			authorized = postAndCommentSecurityChecker.canRead(post);
+		}
+		return authorized;
+	}
+
+	@Override
+	protected boolean isFindByTaxonomyIdAuthorized(Integer taxonomyId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindByPerspectiveIdAuthorized(Integer perspectiveId) {
+		return true;
+	}
+
 }

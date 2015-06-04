@@ -1,18 +1,14 @@
 package com.wordrails.api;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.UUID;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import javax.servlet.ServletException;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -27,8 +23,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -37,7 +31,6 @@ import com.github.mustachejava.MustacheFactory;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.EmailService;
-import com.wordrails.business.Network;
 import com.wordrails.business.PasswordReset;
 import com.wordrails.business.Person;
 import com.wordrails.business.User;
@@ -55,7 +48,6 @@ public class PasswordResetResource {
 	@Autowired private PasswordResetRepository passwordResetRepository;
 	@Autowired private PersonRepository personRepository;
 	@Autowired private NetworkRepository networkRepository; 
-	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired UserRepository userRepository;
 	private @Autowired EmailService emailService;
 	private @Autowired AccessControllerUtil accessControllerUtil;

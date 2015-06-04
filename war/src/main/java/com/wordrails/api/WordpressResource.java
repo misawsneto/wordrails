@@ -253,6 +253,43 @@ public class WordpressResource {
         return Response.status(Response.Status.OK).type("text/plain").entity("Terms received: " + terms.size() + ", Terms saved: " + termsSaved).build();
     }
 
+    @POST
+    @Path("/term")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response term(WordpressTerm term) throws ServletException, IOException {
+        Wordpress wp;
+        try {
+            wp = getWordpressByToken();
+        } catch (UnauthorizedException e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        Taxonomy taxonomy = null;
+
+        if (term.isTag()) {
+            taxonomy = taxonomyRepository.findTypeTByWordpress(wp);
+        } else {
+            taxonomy = taxonomyRepository.findByWordpress(wp);
+        }
+
+        Term t = new Term();
+        Term parent = termRepository.findByWordpressIdAndTaxonomy(term.parent, taxonomy);
+        t.name = term.name;
+        t.wordpressId = term.id;
+        t.wordpressSlug = term.slug;
+        t.parent = parent;
+        t.taxonomy = taxonomy;
+
+        try {
+            termRepository.save(t);
+        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+            //should never happen
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Term is already created").build();
+        }
+
+        return Response.status(Response.Status.OK).build();
+    }
+
     @PUT
     @Path("/terms")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -273,7 +310,7 @@ public class WordpressResource {
         HashBasedTable<String, Integer, Term> dbCategories = wordpressService.getTermsByTaxonomy(categoryTaxonomy);
 
         for (WordpressTerm tag : tags) {
-            Term t = dbTags.get(tag.slug, tag.trixId);
+            Term t = dbTags.get(tag.slug, tag.id);
             t.wordpressId = tag.id;
             t.wordpressSlug = tag.slug;
 
@@ -285,7 +322,7 @@ public class WordpressResource {
         }
 
         for (WordpressTerm cat : categories) {
-            Term t = dbCategories.get(cat.slug, cat.trixId);
+            Term t = dbCategories.get(cat.slug, cat.id);
             t.wordpressId = cat.id;
             t.wordpressSlug = cat.slug;
 
@@ -308,7 +345,7 @@ public class WordpressResource {
         //TODO enviar terms
 
         Set<Term> newTerms = wordpressService.findAndSaveTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
-        
+
         return newTerms.size();
     }
 }

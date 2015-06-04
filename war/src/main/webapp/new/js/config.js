@@ -3,8 +3,8 @@
 var app =  
 angular.module('app')
   .config(
-    [        '$controllerProvider', '$compileProvider', '$filterProvider', '$provide',
-    function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide) {
+    [        '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', 'cfpLoadingBarProvider',
+    function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide ,  cfpLoadingBarProvider) {
         
         // lazy controller, directive and service
         app.controller = $controllerProvider.register;
@@ -14,6 +14,8 @@ angular.module('app')
         app.service    = $provide.service;
         app.constant   = $provide.constant;
         app.value      = $provide.value;
+
+        cfpLoadingBarProvider.includeSpinner = false;
     }
   ])
   .config(['$translateProvider', function($translateProvider){
@@ -51,9 +53,10 @@ angular.module('app')
   .run(function($rootScope){
       var backgroundColor = initData.network.backgroundColor
       var navbarColor = initData.network.navbarColor
+      var mainColor = initData.network.mainColor
     /* define application's custom style based on the network's configuration */
       var $style = $('style#custom-style').length ? $('style#style#custom-style') : $('<style id="custom-style">').appendTo('body');
-      $style.html(getCustomStyle("#cc3300", backgroundColor, navbarColor));
+      $style.html(getCustomStyle(mainColor, backgroundColor, navbarColor));
 
       $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
             window.console && console.log(toState);

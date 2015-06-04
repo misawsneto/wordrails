@@ -30,6 +30,9 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	Term findTreeByTermId(@Param("termId") Integer termId);
 
 	@RestResource(exported=false)
+	Term findByWordpressIdAndTaxonomy(@Param("wordpressId") Integer wordpressId, @Param("taxonomy") Taxonomy taxonomy);
+
+	@RestResource(exported=false)
 	Term findByWordpressSlugAndTaxonomy(@Param("wordpressSlug") String wordpressSlug, @Param("taxonomy") Taxonomy taxonomy);
 
 	@RestResource(exported=false)
@@ -55,8 +58,20 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	@Query(value="UPDATE Term term SET term.name = :newName WHERE term.name = :oldName")
 	void updateTermsNamesAuthorTaxonomies(@Param("newName") String newName, @Param("oldName") String oldName);
 	
+	@Query(value="SELECT post.terms FROM Post post where post.id = :postId")
+	List<Term> findTermsByPostId(@Param("postId") Integer postId);
+	
+	@Query(value="SELECT post.terms FROM Post post where post.slug = :slug")
+	List<Term> findTermsByPostSlug(@Param("slug") String slug);
+	
 	@RestResource(exported=false)
 	@Modifying
 	@Query(nativeQuery=true, value="DELETE FROM post_term WHERE terms_id = ?")
 	void deletePostsTerms(Integer termId);
+
+	@Query(value="SELECT taxonomy.terms FROM StationPerspective sp join sp.taxonomy taxonomy where sp.id = :perspectiveId")
+	List<Term> findByPerspectiveId(@Param("perspectiveId") Integer perspectiveId);
+	
+	@Query(value="SELECT taxonomy.terms FROM Taxonomy taxonomy where taxonomy.id = :taxonomyId")
+	List<Term> findByTaxonomyId(@Param("taxonomyId") Integer perspectiveId);
 }

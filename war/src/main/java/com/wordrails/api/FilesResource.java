@@ -70,7 +70,7 @@ public class FilesResource {
 			List<FileItem> items = upload.parseRequest(request);
 			for (FileItem item : items) {
 				if ("contents".equals(item.getFieldName()) || "file".equals(item.getFieldName())) {
-					if(item.getSize() <= 4194304){
+					if(item.getSize() <= 6291456){
 						try (InputStream input = item.getInputStream()) {
 							file.type = File.INTERNAL_FILE;
 							file.mime = item.getContentType();
@@ -157,13 +157,19 @@ public class FilesResource {
 		List<FileItem> items = upload.parseRequest(request);
 		for (FileItem item : items) {
 			if ("contents".equals(item.getFieldName()) || "file".equals(item.getFieldName())) {
-				if(item.getSize() <= 4194304){
+				if(item.getSize() <= 6291456){
 					try (InputStream input = item.getInputStream()) {
 						file.type = File.INTERNAL_FILE;
 						file.mime = item.getContentType();
 						file.mime = file.mime == null || file.mime.isEmpty() ? new Tika().detect(input) : file.mime;
 						file.name = item.getName();
 						fileRepository.save(file);
+						
+						String tallImage = "";
+						BufferedImage image = ImageIO.read(input);
+						if(image.getHeight() >= image.getWidth()){
+							tallImage = "\"tallImage\": true, ";
+						}
 
 						Session session = (Session) manager.getDelegate();
 						LobCreator creator = Hibernate.getLobCreator(session);
@@ -172,10 +178,10 @@ public class FilesResource {
 						contentsRepository.save(contents);
 
 						URI location = UriBuilder.fromResource(FilesResource.class).path(id.toString()).path("contents").build();
-						return Response.status(Status.OK).entity("{\"filelink\":\"/api" +location+ "\", \"link\":\"/api" +location+ "\", \"id\":" + id + "}").build();					
+						return Response.status(Status.OK).entity("{\"filelink\":\"/api" +location+ "\", " + tallImage + " \"link\":\"/api" +location+ "\", \"id\":" + id + "}").build();					
 					}
 				}else{
-					return Response.status(Status.BAD_REQUEST).entity("{\"message\":\"File`s maximun size is 4194304 bytes\"}").build();						
+					return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"File's maximun size is 6MB\", maxMb:6}").build();						
 				}
 			}
 		}

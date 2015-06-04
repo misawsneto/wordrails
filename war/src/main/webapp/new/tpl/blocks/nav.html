@@ -4,7 +4,7 @@
     <span translate="aside.nav.HEADER">Navigation</span>
   </li> -->
   <li ui-sref-active="active">
-    <a ui-sref="app.post" tooltip="Nova notícia" ng-if="app.isLogged" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700" ng-if="app.writableStations">      
+    <a ui-sref="app.post" tooltip="Nova história" ng-if="app.isLogged" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700" ng-if="app.writableStations">      
       <i class="mdi-plus mdi text-lgrey"></i>
       <span class="font-bold">Novo</span>
     </a>
@@ -15,21 +15,21 @@
       <span class="font-bold">Procurar</span>
     </a>
   </li>
-  <li ui-sref-active="active" tooltip="Minhas Leituras" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
-    <a ui-sref="app.mail.list">
+  <li ui-sref-active="active">
+    <a href ng-click="goToBookmars()" tooltip="Minhas Leituras" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
       <i class="mdi-bookmark-outline mdi text-lgrey"></i>
       <span class="font-bold">Minhas Leituras</span>
     </a>
   </li>
   <li ui-sref-active="active">
-    <a ui-sref="app.form.elements" tooltip="Notificações" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
-      <b class="badge bg-custom-primary pull-right">9</b>
+    <a href tooltip="Notificações" ng-click="goToNotifications()" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
+      <b class="badge bg-custom-primary pull-right" ng-show="app.isLogged">9</b>
       <i class="mdi-bell-outline mdi text-lgrey"></i>
       <span class="font-bold">Notificações</span>
     </a>
   </li>
-  <li ui-sref-active="active" tooltip="Estações" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700" ng-if="app.initData.stations && app.initData.stations.length > 0">
-    <a ng-click="toggleMenu($event);">
+  <li ui-sref-active="active" ng-if="app.stationsPermissions && app.stationsPermissions > 1">
+    <a ng-click="toggleMenu($event);" tooltip="Estações" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
       <i class="mdi-library-books mdi text-lgrey"></i>
       <span class="font-bold">Estações</span>
     </a>

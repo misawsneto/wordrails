@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-chosen",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/alxlit/bootstrap-chosen",
   "authors": [
     "alxlit <alxlit+github@alxlit.name>"
@@ -22,14 +22,13 @@
   "ignore": [
     "example.*"
   ],
-  "_release": "1.0.0",
+  "_release": "1.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.0",
-    "commit": "61ed40742c2de26c53110955dc5ad0ed40cd417f"
+    "tag": "v1.0.1",
+    "commit": "cf483567783f5d03401b4e3a75ebe46cbee15f24"
   },
   "_source": "git://github.com/alxlit/bootstrap-chosen.git",
   "_target": "~1.0.0",
-  "_originalSource": "bootstrap-chosen",
-  "_direct": true
+  "_originalSource": "bootstrap-chosen"
 }

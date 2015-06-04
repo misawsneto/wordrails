@@ -43,9 +43,9 @@ function textColorEval (hex, hover){
   // Counting the perceptive luminance - human eye favors green color... 
   var a = 1 - ( 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b)/255;
   if (a < 0.5)
-  	return hover ? "rgba(0,0,0, 0.95)" : "rgba(0,0,0, 0.85)";
+  	return hover ? "rgba(0,0,0, 0.94)" : "rgba(0,0,0, 0.84)";
   else
-  	return hover ? "rgba(255,255,255, 1)" : "rgba(255,255,255, 0.92)";
+  	return hover ? "rgba(255,255,255, 0.96)" : "rgba(255,255,255, 0.86)";
 }
 
 function textColorEval2 (hex){
@@ -125,20 +125,36 @@ function getCustomStyle(color, perspective, header) {
 	"}\n"+*/
 
 	".redactor-editor a, .redactor-editor a:hover {color:"+ color +"}\n"+
+	"#post-fab-button{background-color: " + color + "; color: " + textColorEval(color) + "}"+
 
-
-	"md-tabs.md-default-theme md-tabs-ink-bar {\n"+
+	".bg-perspective md-tabs.md-default-theme md-tabs-ink-bar {\n"+
 	  "color: "+ textColorEval(perspective) +";\n"+
 	  "background: "+ (textColorEval2(perspective) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)") +";\n"+
 	"}\n"+
-
 	".bg-perspective{\n"+
 		"background: "+perspective+";\n"+
+	"}\n"+
+	".bg-perspective .station-perspectives{\n"+
 		"color: "+ textColorEval(perspective) +";\n"+
 	"}\n"+
 
+	(textColorEval2(header) ? "" +
+	"\n"
+	:
+	// header is dark
+	".bg-perspective .station-header .navbar-nav .divider-v{\n"+
+	"border-right: 1px solid rgba(255,255,255,0.3);\n"+
+	"}\n"+
+	"\n") + 
+
 	(textColorEval2(perspective) ? "" +
 	// perspective is bright
+	"#station-sidebar .tl-wrap{\n"+
+	"border-color:rgba(0, 0, 0, 0.2)!important;\n"+
+	"}"+
+	"#station-sidebar .tl-wrap:before{\n"+
+	"background:rgb("+hexToRgb(perspective).r+", " + hexToRgb(perspective).g + ", "+ hexToRgb(perspective).b +")!important;\n"+
+	"}"+
 	"#station-sidebar{\n" + 
 	 "background:rgba(0, 0, 0, 0.04)!important;\n"+
 	"}\n"+
@@ -146,9 +162,22 @@ function getCustomStyle(color, perspective, header) {
 	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l{\n"+
 	  "border-color:rgba(0,0,0,0.1)\n"+
 	"}\n"+
+	"#station-sidebar .divider{"+
+	"border-top: none;"+
+	"border-color:rgba(0,0,0,0.1)\n"+
+	"}"+
 	"\n"
 	:
 	// perspective is dark
+	"#station-sidebar .tl-wrap{\n"+
+	"border-color:rgba(255, 255, 255, 0.6)!important;\n"+
+	"}"+
+	"#station-sidebar .popular-posts .popular-index{\n"+
+	"color: rgba(255, 255, 255, 0.86)"+
+	"}"+
+	"#station-sidebar .tl-wrap:before{\n"+
+	"background:rgb("+hexToRgb(perspective).r+", " + hexToRgb(perspective).g + ", "+ hexToRgb(perspective).b +")!important;\n"+
+	"}"+
 	"#station-sidebar{\n" + 
 	 "background:rgba(255,255,255, 0.04)!important;"+
 	 "box-shadow: -7px 0 9px -7px rgba(0,0,0,0.4);"+
@@ -168,17 +197,17 @@ function getCustomStyle(color, perspective, header) {
 	 "border-color:rgba(255,255,255, 0.3)\n"+
 	"}\n"+
 	".bg-perspective .station-perspectives a{\n"+
-	  "color: rgba(255,255,255, 0.84) ;\n"+
+	  "color: rgba(255,255,255, 0.96) ;\n"+
 	"}\n"+
 	".bg-perspective .station-perspectives a:hover,\n"+
 	".bg-perspective .station-perspectives a:focus {\n"+
-	  "color: rgba(255,255,255, 0.92) ;\n"+
+	  "color: rgba(255,255,255, 0.86) ;\n"+
 	  "text-decoration: none;\n"+
 	"}\n"+
 	"\n"
 	)+
 
-	".bg-custom, md-tabs.md-default-theme .md-paginator md-icon {\n"+
+	".bg-custom, .bg-perspective md-tabs.md-default-theme .md-paginator md-icon {\n"+
 	"  color: "+textColorEval(perspective)+" !important;\n"+
 	"}\n"+
 
@@ -218,18 +247,84 @@ function getCustomStyle(color, perspective, header) {
 	"  color: " + (textColorEval(header, true)) + ";\n"+
 	"}\n"+
 
+	".redactor-toolbar li span:hover,"+
 	".redactor-toolbar li a:hover {\n"+
 	  "outline: none;\n"+
 	  "background-color:" + color + ";\n"+
 	  "color: " + (textColorEval(color, true)) + ";\n"+
-	"}\n"
+	"}\n"+
 
 	/*".station-header .nav li .dropdown-menu {\n"+
 	" background-color:" + header + ";\n"+
 	"}"+*/
 
+	"#post-right-content .post-block a{\n"+
+  	"  color: rgba("+hexToRgb(color).r+", " + hexToRgb(color).g + ", "+ hexToRgb(color).b +", 0.92);\n"+
+	"}\n"+
+	"#post-right-content .post-block a:hover {\n"+
+	  " color: rgba("+hexToRgb(color).r+", " + hexToRgb(color).g + ", "+ hexToRgb(color).b +", 1);\n"+
+	  "text-decoration: underline;"+
+	"}\n"+
+
+	"#loading-bar .bar {"+
+	  "background: "+shadeBlend(0.15,color)+";"+
+	"}"+
+
+	"#loading-bar .peg {"+
+	  "-moz-box-shadow: "+color+" 1px 0 6px 1px;"+
+	  "-ms-box-shadow: "+color+" 1px 0 6px 1px;"+
+	  "-webkit-box-shadow: "+color+" 1px 0 6px 1px;"+
+	  "box-shadow: "+color+" 1px 0 6px 1px;"+
+	  "-moz-border-radius: 100%;"+
+	  "-webkit-border-radius: 100%;"+
+	  "border-radius: 100%;"+
+	"}"+
+
+	"#loading-bar-spinner .spinner-icon {"+
+	  "border-top-color:  "+color+";"+
+	  "border-left-color: "+color+";"+
+	"}"+
+
+	"md-checkbox.md-default-theme.md-checked .md-icon{" +
+		"background-color:" + color +
+	"}"+
+
+	"md-checkbox.md-default-theme.md-checked .md-icon:after{" +
+	"border-color:" + textColorEval(color) +
+	"}"+
+
 	"";
 	return style
+}
+
+String.prototype.toSlug = function(){
+	var str = this;
+  str = str.replace(/^\s+|\s+$/g, ''); // trim
+  str = str.toLowerCase();
+
+  // remove accents, swap ñ for n, etc
+  var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+  var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+  for (var i=0, l=from.length ; i<l ; i++) {
+  	str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+  }
+
+  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+    .replace(/\s+/g, '-') // collapse whitespace and replace by -
+    .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
+}
+
+String.prototype.getYoutubeCode = function(){
+	var url = this;
+	var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+	var match = url.match(regExp);
+	if (match && match[2].length == 11) {
+	  return match[2];
+	} else {
+	  return null;
+	}
 }
 
 /*!

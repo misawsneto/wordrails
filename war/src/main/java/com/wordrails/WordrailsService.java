@@ -1,22 +1,5 @@
 package com.wordrails;
 
-import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.File;
-import com.wordrails.business.FileContents;
-import com.wordrails.business.Image;
-import com.wordrails.business.Network;
-import com.wordrails.business.PasswordReset;
-import com.wordrails.business.Post;
-import com.wordrails.business.PostRead;
-import com.wordrails.persistence.FileContentsRepository;
-import com.wordrails.persistence.FileRepository;
-import com.wordrails.persistence.ImageRepository;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.PostReadRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.util.WordpressParsedContent;
-import com.wordrails.util.WordrailsUtil;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,8 +7,12 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -33,6 +20,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
@@ -50,6 +38,38 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wordrails.api.PersonData;
+import com.wordrails.api.PerspectiveResource;
+import com.wordrails.api.StationDto;
+import com.wordrails.api.StationPermission;
+import com.wordrails.api.TermPerspectiveView;
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.File;
+import com.wordrails.business.FileContents;
+import com.wordrails.business.Image;
+import com.wordrails.business.ImageEventHandler;
+import com.wordrails.business.Network;
+import com.wordrails.business.PasswordReset;
+import com.wordrails.business.Post;
+import com.wordrails.business.PostRead;
+import com.wordrails.business.Station;
+import com.wordrails.business.Term;
+import com.wordrails.converter.PostConverter;
+import com.wordrails.persistence.FileContentsRepository;
+import com.wordrails.persistence.FileRepository;
+import com.wordrails.persistence.ImageRepository;
+import com.wordrails.persistence.NetworkRepository;
+import com.wordrails.persistence.PostReadRepository;
+import com.wordrails.persistence.PostRepository;
+import com.wordrails.persistence.QueryPersistence;
+import com.wordrails.persistence.RowRepository;
+import com.wordrails.persistence.StationPerspectiveRepository;
+import com.wordrails.persistence.TermPerspectiveRepository;
+import com.wordrails.persistence.TermRepository;
+import com.wordrails.util.AsyncService;
+import com.wordrails.util.WordpressParsedContent;
+import com.wordrails.util.WordrailsUtil;
+
 @Component
 public class WordrailsService {
 
@@ -62,6 +82,8 @@ public class WordrailsService {
 	private @Autowired FileRepository fileRepository;
 	private @Autowired ImageRepository imageRepository;
 	private @Autowired PostRepository postRepository;
+	private @Autowired PerspectiveResource perspectiveResource;
+	private @Autowired PostConverter postConverter;
 
 	/**
 	 * This method should be used with caution because it accesses the database.
@@ -212,7 +234,7 @@ public class WordrailsService {
 			e.printStackTrace();
 		}
 
-		wpc.content = doc.text();
+		wpc.content = doc.select("body").html();
 		wpc.externalImageUrl = featuredImageUrl;
 		wpc.content = wpc.content.replaceAll("\\[(.*?)\\](.*?)\\[/(.*?)\\]", "");
 		wpc.content = wpc.content.trim();
@@ -285,5 +307,102 @@ public class WordrailsService {
 			body = "<img src=\" + "+ externalFeaturedImgUrl +"\">" + body;
 		}
 		return extractImageFromContent(body);
+	}
+	
+	public StationDto getDefaultStation(PersonData personData, Integer currentStationId){
+		List<StationPermission> stationPermissions = personData.personPermissions.stationPermissions;
+
+		Integer stationId = 0;
+
+		if(stationPermissions == null)
+			return null;
+
+		for (StationPermission stationPermission : stationPermissions) {
+			if((currentStationId != null && currentStationId == stationPermission.stationId) || stationPermission.main)
+				stationId = stationPermission.stationId;
+		}
+
+		if(stationId == 0)
+			for (StationPermission stationPermission : stationPermissions) {
+				if(stationPermission.visibility.equals(Station.UNRESTRICTED))
+					stationId = stationPermission.stationId;
+			}
+
+		if(stationId == 0)
+			for (StationPermission stationPermission : stationPermissions) {
+				if(stationPermission.visibility.equals(Station.RESTRICTED_TO_NETWORKS))
+					stationId = stationPermission.stationId;
+			}
+
+		if(stationId == 0)
+			for (StationPermission stationPermission : stationPermissions) {
+				if(stationPermission.visibility.equals(Station.RESTRICTED))
+					stationId = stationPermission.stationId;
+			}
+
+		for (StationDto station : personData.stations) {
+			if(stationId == station.id){
+				return station;
+			}
+		}
+		
+		return null;
+	}
+
+	public TermPerspectiveView getDefaultPerspective(Integer stationPerspectiveId) {
+		return perspectiveResource.getTermPerspectiveView(null, null, stationPerspectiveId, 0, 15);
+	}
+
+	public Integer getStationIdFromCookie(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null)
+			for (Cookie cookie : cookies) {
+				if(cookie.getName().equals("stationId")){
+					return Integer.parseInt(cookie.getValue());
+				}
+			}
+		return null;
+	}
+	
+	public List<Term> createTermTree(List<Term> allTerms){
+		List<Term> roots = getRootTerms(allTerms);
+		for (Term term : roots) {
+			getChilds(term, allTerms);
+		}
+		return roots;
+	}
+	
+	public Set<Term> getChilds(Term parent, List<Term> allTerms){
+		cleanTerm(parent);
+		parent.children = new HashSet<Term>();
+		for (Term term : allTerms) {
+			if(term.parent != null && parent.id.equals(term.parent.id)){
+				parent.children.add(term);
+			}
+		}
+		
+		for (Term term: parent.children) {
+			getChilds(term, allTerms);
+		}
+		
+		return parent.children;
+	}
+	
+	private List<Term> getRootTerms(List<Term> allTerms){
+		List<Term> roots = new ArrayList<Term>();
+		for (Term term : allTerms) {
+			if(term.parent == null){
+				roots.add(term);
+			}
+		}
+		return roots;
+	}
+	
+	private void cleanTerm(Term term){
+		term.posts = null;
+		term.rows = null;
+		term.termPerspectives = null;
+		term.cells = null;
+		term.taxonomy = null;
 	}
 }

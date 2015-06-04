@@ -93,3 +93,24 @@ function(tableState, tableController){
 ## version 1.4.9
 
 * fix #285
+
+## version 1.4.10
+
+* fix #284
+* fix #290
+
+## version 1.4.11
+
+* fix #296
+* add possibility to bind a callback when page changes
+
+## version 1.4.12
+
+* don't use pagination class twice
+* build improvement
+
+## version 1.4.13
+
+* use a global configuration
+* expose filtered collection result
+

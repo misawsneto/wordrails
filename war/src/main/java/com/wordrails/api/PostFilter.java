@@ -26,107 +26,116 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class PostFilter implements Filter {
 
-    static Logger log = Logger.getLogger(PostFilter.class.getName());
+	static Logger log = Logger.getLogger(PostFilter.class.getName());
 
-    @Autowired
-    private PostRepository postRepository;
+	@Autowired
+	private PostRepository postRepository;
 
-    @Autowired
-    private WordpressService wordpressService;
+	@Autowired
+	private WordpressService wordpressService;
+	
+	@Autowired
+	private WordrailsService wordrailsService;
+	
+	@Override
+	public void destroy() {/* not implemented */
 
-    @Autowired
-    private WordrailsService wordrailsService;
+	}
 
-    @Override
-    public void destroy() {/* not implemented */
+	@Override
+	public void init(FilterConfig arg0) throws ServletException {/*
+	 * not
+	 * implemented
+	 */}
 
-    }
+	@Override
+	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain fc) throws IOException, ServletException {
+		// before filter are applied
+		fc.doFilter(req, resp);
+		// after filters are applied
+		HttpServletRequest rq = (HttpServletRequest) req;
+		HttpServletResponse res = (HttpServletResponse) resp;
+		Integer postId;
+		try {
+			String[] urlParts = rq.getRequestURI().split("/");
+			log.info("POSTFILTER URL: " + rq.getMethod().toUpperCase() + " " + rq.getRequestURI());
 
-    @Override
-    public void init(FilterConfig arg0) throws ServletException {/*
-         * not
-         * implemented
-         */
+			if (rq.getMethod().toLowerCase().equals("get")) {
+				String url = rq.getRequestURI();
+				Post post = null;
+				if (url.contains("/posts/") && url.matches("(.*)\\d+$")) {                    
+					postId = getPostId(url);
+					if(postId !=null)
+						post = postRepository.findOne(postId);
+				}else if(url.contains("findBySlug")){
+					String slug = rq.getParameter("slug");
+					if(slug != null && !slug.isEmpty());
+						post = postRepository.findBySlug(slug);
+				}
+				if(post != null){
+					handleAfterRead(post);
+					wordrailsService.countPostRead(post, rq.getRequestedSessionId());
+				}
+			} else if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
+				postId = getPostId(res.getHeader("Location"));
+				Post post = postRepository.findOne(postId);
+				handleAfterCreate(post);
+			} else if (rq.getMethod().toLowerCase().equals("put") && NumberUtils.isNumber(urlParts[urlParts.length - 1])) {
+				postId = getPostId(rq.getRequestURI());
+				Post post = postRepository.findOne(postId);
+				handleAfterUpdate(post);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    }
+	private void handleAfterRead(Post post) throws Exception {
+		
+	}
 
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain fc) throws IOException, ServletException {
-        // before filter are applied
-        fc.doFilter(req, resp);
-        // after filters are applied
-        HttpServletRequest rq = (HttpServletRequest) req;
-        HttpServletResponse res = (HttpServletResponse) resp;
-        Integer postId;
-        try {
-            String[] urlParts = rq.getRequestURI().split("/");
-            log.info("POSTFILTER URL: " + rq.getMethod().toUpperCase() + " " + rq.getRequestURI());
+	/**
+	 * Spring data rest adds a Location header with hyperlink representation of the newly created post
+	 * @param location
+	 */
+	private Integer getPostId(String location) throws Exception {
+		String[] strings = location.split("/");
+		return Integer.parseInt(strings[strings.length - 1]);
+	}
 
-            if (rq.getMethod().toLowerCase().equals("get")) {
-                String url = rq.getRequestURI();
-                if (url.contains("/posts/") && url.matches("(.*)\\d+$")) {
-                    postId = getPostId(url);
-                    Post post = postRepository.findOne(postId);
-                    handleAfterRead(post);
-                    wordrailsService.countPostRead(post, rq.getRequestedSessionId());
-                }
-            } else if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
-                postId = getPostId(res.getHeader("Location"));
-                Post post = postRepository.findOne(postId);
-                handleAfterCreate(post);
-            } else if (rq.getMethod().toLowerCase().equals("put") && NumberUtils.isNumber(urlParts[urlParts.length - 1])) {
-                postId = getPostId(rq.getRequestURI());
-                Post post = postRepository.findOne(postId);
-                handleAfterUpdate(post);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	@Transactional
+	private void handleAfterCreate(Post post){
+		createWordpressPost(post);
+		
+	}
+	
+	@Transactional
+	private void handleAfterUpdate(Post post) throws Exception {
+		updateWordpressPost(post);
+	}
 
-    private void handleAfterRead(Post post) throws Exception {
+	private void createWordpressPost(Post post) {
+		try {
+			Wordpress wp = post.station.wordpress;
+			if (wp != null && wp.domain != null && wp.username != null && wp.password != null) {
+				WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
+				WordpressPost wpPost = wordpressService.createPost(post, api);
+				post.wordpressId = wpPost.id;
+				postRepository.save(post);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    }
-
-    /**
-     * Spring data rest adds a Location header with hyperlink representation of the newly created post
-     *
-     * @param location
-     */
-    private Integer getPostId(String location) throws Exception {
-        String[] strings = location.split("/");
-        return Integer.parseInt(strings[strings.length - 1]);
-    }
-
-    @Transactional
-    private void handleAfterCreate(Post post) throws Exception {
-        createWordpressPost(post);
-
-    }
-
-    @Transactional
-    private void handleAfterUpdate(Post post) throws Exception {
-        updateWordpressPost(post);
-    }
-
-    private void createWordpressPost(Post post) throws Exception {
-        Wordpress wp = post.station.wordpress;
-        if (wp != null && wp.domain != null && wp.username != null && wp.password != null) {
-            WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
-            WordpressPost wpPost = wordpressService.createPost(post, api);
-            post.wordpressId = wpPost.id;
-            postRepository.save(post);
-        }
-    }
-
-    private void updateWordpressPost(Post post) throws Exception {
-        if (post != null) {
-            Wordpress wp = post.station.wordpress;
-            if (wp != null && wp.domain != null && wp.username != null && wp.password != null) {
-                WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
-                wordpressService.updatePost(post, api);
-            }
-        }
-    }
-
+	private void updateWordpressPost(Post post) throws Exception{
+		if (post != null) {
+			Wordpress wp = post.station.wordpress;
+			if (wp != null && wp.domain != null && wp.username != null && wp.password != null) {
+				WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
+				wordpressService.updatePost(post, api);
+			}
+		}
+	}
+	
 }

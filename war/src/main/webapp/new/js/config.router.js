@@ -26,16 +26,16 @@ angular.module('app')
           $stateProvider
               .state('app', {
                   abstract: true,
-                  url: '/',
+                  url: '',
                   templateUrl: 'tpl/layout.html',
               })
               .state('app.stations', {
-                  url: '?stationId',
+                  url: '/?stationId',
                   templateUrl: 'tpl/stations.html',
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['js/controllers/stations.js']);
+                          return $ocLazyLoad.load(['toaster','js/controllers/stations.js']);
                       }]
                   },
                   controller: 'StationsCtrl'
@@ -46,21 +46,10 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/post.js']);
+                        return $ocLazyLoad.load(['angularFileUpload','videosharing-embed','js/controllers/post.js']);
                     }]
                   },
                   controller:'PostCtrl'
-              })
-              .state('app.stations.read', {
-                url: ':slug',
-                controller: 'ReadCtrl',
-                template: '',
-                resolve: {
-                    deps: ['$ocLazyLoad',
-                      function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/read.js']);
-                    }]
-                  },
               })
               .state('app.search', {
                   url: '/search',
@@ -83,6 +72,43 @@ angular.module('app')
                     }]
                   }
                   // , controller:'SearchCtrl'
+              })
+
+              .state('app.bookmarks', {
+                url: '/bookmarks',
+                  templateUrl: 'tpl/bookmarks.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/bookmarks.js']);
+                    }]
+                  }
+                  // , controller:'SearchCtrl'
+              })
+              .state('app.user', {
+                  url: '/@:username',
+                  templateUrl: 'tpl/user_profile.html',
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load([
+                            'angularFileUpload',
+                            'js/controllers/user-profile.js'])
+                      }]
+                  },
+                  controller: 'UserCtrl'
+              })
+              .state('app.stations.read', {
+                url: ':slug',
+                controller: 'ReadCtrl',
+                template: '',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['videosharing-embed','js/controllers/read.js']);
+                    }]
+                  },
               })
               .state('app.dashboard-v1', {
                   url: '/dashboard-v1',
