@@ -4,7 +4,11 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 	// check if user has permisstion to write
   $scope.writableStations = trixService.getWritableStations();
-  console.log($scope.writableStations);
+
+  $scope.writableStations && $scope.writableStations.forEach(function(station, index){
+  	if(station.stationId == $scope.app.currentStation.id)
+  		$scope.selectedStation = station;
+  });
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false

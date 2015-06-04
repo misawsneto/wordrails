@@ -219,6 +219,16 @@ public class PersonsResource {
 				stationPermissionDto.visibility = station.visibility;
 				stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
 				
+				stationPermissionDto.social = station.social;
+				stationPermissionDto.subheading = station.subheading;
+				stationPermissionDto.sponsored = station.sponsored;
+				stationPermissionDto.topper = station.topper;
+				
+				stationPermissionDto.allowComments = station.allowComments;
+				stationPermissionDto.allowSignup = station.allowSignup;
+				stationPermissionDto.allowSocialLogin = station.allowSocialLogin;
+				stationPermissionDto.allowSocialShare = station.allowSocialShare;
+				
 				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes(), StationDto.class);
 				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
 				//StationRoles Fields

@@ -12,6 +12,16 @@ public class StationPermission implements Serializable {
 	public boolean main;
 	public String visibility;
 	public Integer defaultPerspectiveId;
+	
+	// flags
+	public boolean sponsored;
+	public boolean social;
+	public boolean topper;
+	public boolean subheading;
+	public boolean allowComments;
+	public boolean allowSignup;
+	public boolean allowSocialLogin;
+	public boolean allowSocialShare;
 
 	//Person
 	public boolean admin;

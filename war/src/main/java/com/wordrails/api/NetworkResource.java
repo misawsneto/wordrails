@@ -69,6 +69,17 @@ public class NetworkResource {
 				stationPermissionDto.writable = station.writable;
 				stationPermissionDto.main = station.main;
 				stationPermissionDto.visibility = station.visibility;
+				stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId; 
+				
+				stationPermissionDto.social = station.social;
+				stationPermissionDto.subheading = station.subheading;
+				stationPermissionDto.sponsored = station.sponsored;
+				stationPermissionDto.topper = station.topper;
+				
+				stationPermissionDto.allowComments = station.allowComments;
+				stationPermissionDto.allowSignup = station.allowSignup;
+				stationPermissionDto.allowSocialLogin = station.allowSocialLogin;
+				stationPermissionDto.allowSocialShare = station.allowSocialShare;
 				
 				//StationRoles Fields
 				StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
