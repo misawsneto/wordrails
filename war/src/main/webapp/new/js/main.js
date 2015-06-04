@@ -122,9 +122,8 @@ angular.module('app')
         if(typeof screenfull !== 'undefined' && screenfull){ screenfull.exit(); }
 
         if(fromState.name == "app.stations.read"){
-          console.log($scope.app.nowReading.externalVideoUrl);
           if($scope.app.nowReading.externalVideoUrl)
-            $scope.app.nowReading.externalVideoUrl.substring(0, $scope.app.nowReading.externalVideoUrl.length - 1) + "0";
+            $scope.app.nowReading.externalVideoUrl = $scope.app.nowReading.externalVideoUrl.substring(0, $scope.app.nowReading.externalVideoUrl.length - 1) + "0";
         }
 
         if(toState.name == "app.stations"){
