@@ -157,7 +157,7 @@ public class PersonsResource {
 
 			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId);
 			
-			Pageable pageable = new PageRequest(0, 15);
+			Pageable pageable = new PageRequest(0, 10);
 
 			if(defaultStation != null){
 				List<Post> unread = postRepository.findUnreadByStationAndPerson(defaultStation.id, personData.person.id, pageable);
