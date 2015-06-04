@@ -1319,6 +1319,12 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   max-height: 400px;
 }
 
+#post-more-options .term-tags{
+}
+
+#post-more-options .tag-container{
+}
+
 #more-options-dialog{
   border: 1px solid #eee;
 }

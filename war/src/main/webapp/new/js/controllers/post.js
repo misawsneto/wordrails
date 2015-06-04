@@ -4,6 +4,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 	// check if user has permisstion to write
   $scope.writableStations = trixService.getWritableStations();
+  console.log($scope.writableStations);
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
