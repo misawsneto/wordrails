@@ -85,6 +85,17 @@ angular.module('app')
                   }
                   // , controller:'SearchCtrl'
               })
+              .state('app.notifications', {
+                url: '/notifications',
+                  templateUrl: 'tpl/notifications.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/notifications.js']);
+                    }]
+                  }
+                  // , controller:'SearchCtrl'
+              })
               .state('app.user', {
                   url: '/@:username',
                   templateUrl: 'tpl/user_profile.html',

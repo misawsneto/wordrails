@@ -129,6 +129,18 @@ angular.module('app')
         if(toState.name == "app.stations"){
           $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
         }
+        else if(toState.name == "app.notifications"){
+          $("title").html($scope.app.initData.network.name + " | Notificações");
+        }
+        else if(toState.name == "app.bookmarks"){
+          $("title").html($scope.app.initData.network.name + " | Minhas Leituras");
+        }
+        else if(toState.name == "app.settings"){
+          $("title").html($scope.app.initData.network.name + " | Configurações");
+        }
+        else if(toState.name == "app.search"){
+          $("title").html($scope.app.initData.network.name + " | Busca");
+        }
         // check state read
         if(toState.name != "app.stations.read"){
           // show to navbar
