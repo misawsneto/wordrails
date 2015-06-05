@@ -153,6 +153,7 @@ angular.module('app')
         $event.preventDefault();
         $event.stopPropagation();
         $state.go('app.user', {username: username})
+        $scope.app.profilepopover.open = false;
       }
 
       $scope.getBackgroundImage = function(postView, size){
