@@ -113,6 +113,7 @@ angular.module('app')
       $scope.app.checkIfLogged = function(){
         $scope.app.isLogged = trixService.isLoggedIn();
         $scope.app.writableStations = trixService.getWritableStations();
+        console.log($scope.app.writableStations);
       }
       $scope.app.checkIfLogged();
 
@@ -228,7 +229,7 @@ angular.module('app')
       };
 
       $scope.cancelModal = function () {
-        $scope.modalInstance.dismiss('cancel');
+        $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
       };
 
       if ( angular.isDefined($localStorage.viewMode) ) {
@@ -263,25 +264,32 @@ angular.module('app')
           trix.allInitData().success(function(response){
             initData = response;
             $scope.app.initData = angular.copy(initData);
-            $scope.cancelModal();
-            $scope.app.checkIfLogged()
-            $scope.app.loginError = false
+            $scope.app.loginError = false;
+            $scope.app.refreshData();
           })
         }).error(function(){
           $scope.app.loginError = true;
+          $scope.app.refreshData();
         })
       };
+
+      $scope.app.refreshData = function(){
+        $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
+        $scope.app.stationsPermissions = trixService.getStationPermissions();
+        $scope.cancelModal();
+        $scope.app.checkIfLogged();
+      }
 
       $scope.app.signOut = function(username, password){
         trix.logout().success(function(){
           trix.allInitData().success(function(response){
             initData = response;
             $scope.app.initData = angular.copy(initData);
-            $scope.app.checkIfLogged();
             $scope.app.profilepopover.open = false;
             if($scope.$state.current.name != "app.stations" && $scope.$state.current.name != "app.search"){
               $state.go("app.stations");
             }
+            $scope.app.refreshData();
           })
         })
       };

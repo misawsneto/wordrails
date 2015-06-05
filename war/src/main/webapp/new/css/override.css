@@ -2524,10 +2524,23 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 #station-sidebar a:hover{
   text-decoration: underline;
 }
-
-
-
 /* /stations */
+
+/* notifications */
+
+.notifications-navbar{
+  height: 66px;
+}
+.notifications-navbar .divider-v{
+  border-right:1px solid #ddd;   height: 36px;
+}
+
+.notification-image{
+  width: 200px;
+  height: 167px;
+}
+
+/* /notifications */
 
 /* splash */
 /* Slideshow style */
