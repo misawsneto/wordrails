@@ -107,15 +107,12 @@ angular.module('app')
       }
       
       $scope.app.initData = angular.copy(initData);
-      $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
-      $scope.app.stationsPermissions = trixService.getStationPermissions();
 
       $scope.app.checkIfLogged = function(){
         $scope.app.isLogged = trixService.isLoggedIn();
         $scope.app.writableStations = trixService.getWritableStations();
-        console.log($scope.app.writableStations);
+        $scope.app.adminStations = trixService.getAdminStations();
       }
-      $scope.app.checkIfLogged();
 
       uiLoad.load(JQ_CONFIG.screenfull)
       $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
@@ -150,6 +147,13 @@ angular.module('app')
         }
 
       });
+
+      $scope.app.goToProfile = function($event, username){
+        console.log('asdfasdf');
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.user', {username: username})
+      }
 
       $scope.getBackgroundImage = function(postView, size){
         var img = $filter('pvimageLink')(postView, size);
@@ -278,6 +282,7 @@ angular.module('app')
         $scope.app.stationsPermissions = trixService.getStationPermissions();
         $scope.cancelModal();
         $scope.app.checkIfLogged();
+        window.console && console.log($scope.app.currentStation, $scope.app.stationsPermissions);
       }
 
       $scope.app.signOut = function(username, password){
@@ -297,10 +302,6 @@ angular.module('app')
       $scope.app.changeStation = function(stationId){
 
       }
-
-      moment.locale('pt')
-      loadPopular();
-      loadRecent();
 
       // close post read and go back to previous state
       $scope.app.closePostRead = function(){
@@ -383,5 +384,7 @@ angular.module('app')
           $scope.openSplash('signin_splash.html')
       }
 
+      $scope.app.refreshData();
+      moment.locale('pt')
       /* end of added */
   }]); 

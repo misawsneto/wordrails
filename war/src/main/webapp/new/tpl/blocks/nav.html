@@ -34,9 +34,9 @@
       <span class="font-bold">Estações</span>
     </a>
   </li>
-  <li class="line dk" ng-if="app.isLogged"></li>
+  <li class="line dk" ng-if="app.isLogged && app.adminStations && app.adminStations.length > 0"></li>
   <li ui-sref-active="active">
-    <a ui-sref="app.settings" tooltip="Configurações" ng-if="app.isLogged" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
+    <a ui-sref="app.settings" tooltip="Configurações" ng-if="app.isLogged && app.adminStations && app.adminStations.length > 0" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
       <i class="mdi-settings mdi text-lgrey"></i>
       <span class="font-bold">Configurações</span>
     </a>

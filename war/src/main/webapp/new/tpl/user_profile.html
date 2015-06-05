@@ -1,8 +1,10 @@
-<div class="pos-abt w-full text-center profile-cover pos-rlt abstract-bg bg-cover clear" style="{{person.coverLargeId | imageLink | bgimg2}}">
-	<div class="cover-abstract-mask" ng-if="!person.coverLargeId">
+<div class="hbox hbox-auto-xs">
+	<div class="pos-abt w-full text-center profile-cover pos-rlt abstract-bg bg-cover clear" style="{{person.coverLargeId | imageLink | bgimg2}}">
+		<div class="cover-abstract-mask" ng-if="!person.coverLargeId">
+		</div>
+		<div style="{{person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{person.name}}"></div>
 	</div>
-	<div style="{{person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{person.name}}"></div>
-</div>
-<div class="text-u-c m-t-sm text-lg font-thin wrapper-xs text-center text-white w-full">
-	{{person.name}}
+	<div class="text-u-c m-t-sm text-lg font-thin wrapper-xs text-center text-white w-full">
+		{{person.name}}
+	</div>
 </div>

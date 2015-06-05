@@ -3,12 +3,12 @@
 		<div class="text-md font-thin text-white ls-sm">{{cell.postView.title}}</div>
 		<div class="m-t-md" ng-show="cell.postView.mediumId">
 			<div class="display-t-c">
-				<a class="" title="Ir para o perfil de {{cell.postView.authorName}}">
+				<a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{cell.postView.authorName}}">
 					<div style="{{cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
 				</a>
 			</div>
 			<div class="display-t-c p-l-sm v-middle">
-				<a class="text-white" title="Ir para o perfil de {{cell.postView.authorName}}" dir="auto">
+				<a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="text-white" title="Ir para o perfil de {{cell.postView.authorName}}" dir="auto">
 					{{cell.postView.authorName}}
 				</a>
 				<br>
@@ -31,12 +31,12 @@
 
 	<div class="pos-abt bottom-0 wrapper-sm" ng-hide="cell.postView.mediumId">
 		<div class="display-t-c">
-			<a class="" title="Ir para o perfil de {{cell.postView.authorName}}">
+			<a ng-click="app.goToProfile($event, cell.postView.authorUsername)" title="Ir para o perfil de {{cell.postView.authorName}}">
 				<div style="{{cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
 			</a>
 		</div>
 		<div class="display-t-c p-l-sm v-middle">
-			<a class="text-custom-primary link" title="Ir para o perfil de {{cell.postView.authorName}}" dir="auto">
+			<a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="text-custom-primary link" title="Ir para o perfil de {{cell.postView.authorName}}" dir="auto">
 				{{cell.postView.authorName}}
 			</a>
 			<br>

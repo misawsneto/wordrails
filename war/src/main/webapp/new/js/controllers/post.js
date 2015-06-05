@@ -28,6 +28,10 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	// check if user has permisstion to write
   $scope.writableStations = trixService.getWritableStations();
 
+  if(!$scope.writableStations || $scope.writableStations.length == 0){
+  	// no permission.
+  }
+
   $scope.writableStations && $scope.writableStations.forEach(function(station, index){
   	if(station.stationId == $scope.app.currentStation.id)
   		$scope.app.editingPost.selectedStation = station;

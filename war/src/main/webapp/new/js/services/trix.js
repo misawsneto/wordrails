@@ -32,7 +32,7 @@ angular.module('app').service('trixService', function(){
 	}
 
 	/**
-	 * check if user is station admin
+	 * check if user is station writer
 	 */
 	 this.stationIsWritable = function(stationId){
 	 	if (!stationId) {return false};
@@ -70,6 +70,18 @@ angular.module('app').service('trixService', function(){
 	 	var stations = [];
 	 	initData.personPermissions.stationPermissions.forEach(function(permissions, index){
 	 		if(permissions.writable || permissions.writer)
+	 			stations.push(permissions)
+	 	});
+	 	return stations;
+	 }
+
+	 	/**
+	 * get a list of all stations that the user has permission to write
+	 */
+	 this.getAdminStations = function(){
+	 	var stations = [];
+	 	initData.personPermissions.stationPermissions.forEach(function(permissions, index){
+	 		if(permissions.admin)
 	 			stations.push(permissions)
 	 	});
 	 	return stations;

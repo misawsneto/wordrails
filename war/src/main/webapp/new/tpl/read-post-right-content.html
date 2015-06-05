@@ -65,7 +65,7 @@
                 {{app.nowReading.subheading}}
               </div>
               <div class="post-block m-t">
-                <span class="text-md font-bold">Por <a class="m-l-xs">{{app.nowReading.author.name}}</a></span>
+                <span class="text-md font-bold">Por <a ui-sref="app.user({username: app.nowReading.author.username})" class="m-l-xs">{{app.nowReading.author.name}}</a></span>
                 <span class="m-l-sm text-muted text-u-c">em {{ app.nowReading.date | fromNow2 }}</span>
               </div>
               <div class="post-block m-t-lg m-b-xxl">
