@@ -209,7 +209,7 @@
                         <dependency>
                             <groupId>org.hibernate</groupId>
                             <artifactId>hibernate-search-infinispan</artifactId>
-                            <version>5.2.0.Final</version>
+                            <version>4.5.3.Final</version>
                         </dependency>
 										
 			<dependency>
