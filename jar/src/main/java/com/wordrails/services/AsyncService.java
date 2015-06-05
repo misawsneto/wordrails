@@ -1,4 +1,4 @@
-package com.wordrails.util;
+package com.wordrails.services;
 
 import java.io.IOException;
 import java.sql.SQLException;

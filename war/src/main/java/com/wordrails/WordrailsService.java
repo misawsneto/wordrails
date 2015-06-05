@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -22,7 +23,9 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+
 import net.coobird.thumbnailator.Thumbnails;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
@@ -66,8 +69,8 @@ import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
-import com.wordrails.util.AsyncService;
-import com.wordrails.util.WordpressParsedContent;
+import com.wordrails.services.AsyncService;
+import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
 
 @Component

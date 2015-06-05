@@ -24,7 +24,6 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Latitude;
 import org.hibernate.search.annotations.Longitude;
 import org.hibernate.search.annotations.Spatial;
-import org.hibernate.search.annotations.SpatialMode;
 import org.hibernate.search.annotations.Store;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -32,8 +31,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"network_id", "regId"}))
 @Indexed
-@Spatial(spatialMode=SpatialMode.RANGE)
-public class PersonNetworkRegId {
+@Spatial
+public class PersonNetworkToken {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)				
