@@ -1,5 +1,5 @@
 <div class="vbox">
-  <div class="wrapper b-b b-l" ng-show="writableStations && writableStations.length > 0">
+  <div class="wrapper b-b b-l" ng-show="writableStations && writableStations.length > 1">
     <span>Estação: </span>
     <select class="form-control m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
     ng-options="station as station.stationName for station in writableStations track by station.stationId">

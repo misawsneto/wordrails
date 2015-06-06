@@ -148,6 +148,21 @@ angular.module('app')
 
       });
 
+      // deal with unauthorized access
+      $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+        if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications') && !trixService.isLoggedIn()){
+          event.preventDefault();
+          $scope.app.showInfoToast('Autentique-se para acessar esta função.')
+          if(fromState.abstract)
+            $state.go('app.stations');
+        }else if(toState.name == 'app.post' && (!trixService.getWritableStations() || trixService.getWritableStations().length == 0)){
+          event.preventDefault();
+          $scope.app.showInfoToast('Você não possui permissão para criar histórias.')
+          if(fromState.abstract)
+            $state.go('app.stations');
+        }
+      })
+
       $scope.app.goToProfile = function($event, username){
         console.log('asdfasdf');
         $event.preventDefault();

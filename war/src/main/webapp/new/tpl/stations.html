@@ -64,12 +64,8 @@
   </div>
   <!-- nabar right -->
   <ul class="nav navbar-nav navbar-right">
-    <li ng-if="app.isLogged">
-      <div class="divider-v"></div>
-    </li>
     <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
-      <a href class="dropdown-toggle" dropdown-toggle>
-        <i class="mdi-settings mdi text-lg v-bottom"></i>
+      <a href class="dropdown-toggle i-24 mdi-dots-vertical mdi" dropdown-toggle>
       </a>
       <!-- dropdown -->
       <ul class="dropdown-menu animated w-sm">
@@ -94,7 +90,7 @@
       <!-- / dropdown -->
     </li>
     <li ng-if="!app.isLogged">
-      <div class="divider-v"></div>
+      <div class="divider-v m-r-xs"></div>
     </li>
     <li ng-if="!app.isLogged">
       <a href class="text-u-c text-center" ng-click="openSplash('signin_splash.html');">ENTRAR / Cadastrar</a>

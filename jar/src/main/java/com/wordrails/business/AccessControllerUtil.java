@@ -1,6 +1,7 @@
 package com.wordrails.business;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,12 +15,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.persistence.PersonRepository;
+import com.wordrails.services.CacheService;
 
 @Component
 public class AccessControllerUtil {
 	private @Autowired PersonRepository personRepository;
 	private @Autowired UserDetailsService userDetailsService;
 	private @Autowired @Qualifier("myAuthenticationManager") AuthenticationManager authenticationManager;
+	private @Autowired CacheService cacheService;
 
 	public Person getLoggedPerson() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -35,12 +38,20 @@ public class AccessControllerUtil {
 		}else{
 			user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 		}
-		return personRepository.findByUsername(user.getUsername());
+		try {
+			return cacheService.getPersonByUsername(user.getUsername());
+		} catch (ExecutionException e) {
+			return personRepository.findByUsername(user.getUsername());
+		}
 	}
 
 	public boolean isLogged(){
 		org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return (personRepository.findByUsername(user.getUsername()) != null ? true : false);
+		try {
+			return (cacheService.getPersonByUsername(user.getUsername()) != null ? true : false);
+		} catch (ExecutionException e) {
+			return (personRepository.findByUsername(user.getUsername()) != null ? true : false);
+		}
 	}
 
 	public void authenticate(String username, String password) {

@@ -1114,6 +1114,21 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
 .white-bg{
   background: #ffffff;
 }
+
+.i-16 {
+  font-size: 16px;
+  vertical-align: -15%;
+}
+
+.i-20 {
+  font-size: 20px;
+  vertical-align: -19%;
+}
+
+.i-24 {
+  font-size: 24px;
+  vertical-align: -23%;
+}
 /* /general */
 
 /* animate */
@@ -1125,7 +1140,8 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   animation-duration: 0.2s;
 }
 
-#bookmark .animated,
+#bookmarks .animated,
+#notifications .animated,
 #post-left-content .animated,
 #post-right-content .animated{
  -webkit-animation-duration: 0.3s;
