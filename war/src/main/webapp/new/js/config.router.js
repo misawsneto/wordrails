@@ -28,6 +28,12 @@ angular.module('app')
                   abstract: true,
                   url: '',
                   templateUrl: 'tpl/layout.html',
+                  resolve: {
+                      deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                          return $ocLazyLoad.load(['toaster']);
+                      }]
+                  }
               })
               .state('app.stations', {
                   url: '/?stationId',
@@ -35,7 +41,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['toaster','videosharing-embed','js/controllers/stations.js?' + GLOBAL_URL_HASH]);
+                          return $ocLazyLoad.load(['videosharing-embed','js/controllers/stations.js?' + GLOBAL_URL_HASH]);
                       }]
                   },
                   controller: 'StationsCtrl'
