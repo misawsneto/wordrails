@@ -31,7 +31,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['toaster', 'angularRipple']);
+                          return $ocLazyLoad.load(['toaster', 'angularRipple', 'ngInfiniteScroll']);
                       }]
                   }
               })

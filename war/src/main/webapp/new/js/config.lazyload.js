@@ -187,6 +187,12 @@ angular.module('app')
                     '../bower_components/angular-ripple/angular-ripple.js'
                   ]
               }
+              {
+                  name: 'ngInfiniteScroll',
+                  files: [
+                    '../bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
+                  ]
+              }
           ]
       });
   }])
