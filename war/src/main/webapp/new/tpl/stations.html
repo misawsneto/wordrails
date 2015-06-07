@@ -12,7 +12,7 @@
         <div class="font-thin h4">&nbsp;</div>
       </div>
       <md-tabs>
-        <md-tab class="bg-custom" label="Populares">
+        <md-tab md-no-ink angular-ripple class="bg-custom" label="Populares">
           <div class="b-t wrapper-sm popular-posts" flex>
             <ul class="timeline m-t-sm m-b-md">
               <li class="tl-item" ng-repeat="post in app.initData.popular | limitTo: 5">
@@ -32,7 +32,7 @@
             </ul>
           </div>
         </md-tab>
-        <md-tab class="bg-custom" label="Recentes">
+        <md-tab md-no-ink angular-ripple class="bg-custom" label="Recentes">
           <div class="b-t wrapper-sm recent-posts" flex>
             <ul class="timeline m-t-md m-b-md">
               <li class="tl-item" ng-repeat="post in app.initData.recent | limitTo: 5">

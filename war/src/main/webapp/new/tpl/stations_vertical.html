@@ -1,14 +1,14 @@
 <div id="perspective-vertical" class="animated fadeIn" ng-if="app.viewMode === 'vertical'">
   <md-tabs md-selected="selectedIndex" flex class="">
     <!-- tab -->
-    <md-tab ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="bg-custom" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
+    <md-tab md-no-ink angular-ripple ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="bg-custom" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
       <div flex>
         <div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm">
             <!-- posts -->
           <ul class="b-none no-padding m-b-none ls-style-none">
             <li ng-repeat="cell in ordinaryRow.cells">
              <div class="search-divider" ng-class="{'search-divider-dark': app.customStyle.darkFonts2, 'b-t': !$first}"></div>
-              <div class="clear p-t-sm padder-v padder-md post-list news-item" md-ink-ripple ng-click="app.setNowReading(cell.postView, ordinaryRow.cells)">
+              <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(cell.postView, ordinaryRow.cells)">
                 <!-- image -->
                 <a class="block-image m-l m-t" ng-if="cell.postView.mediumId" >
                   <div class="cell-wrap r r-2x" ng-class="{'hide': !cell.postView.mediumId}">

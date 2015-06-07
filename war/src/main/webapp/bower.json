@@ -66,6 +66,7 @@
     "angular-smart-table": "~1.4.9",
     "angular-scroll-watch": "~0.5.4",
     "angularjs-toaster": "~0.4.8",
+    "angular-ripple": "*",
     "ng-videosharing-embed": "~0.3.2",
     "ng-grid": "~2.0.13",
     "ngImgCrop": "~0.2.0",

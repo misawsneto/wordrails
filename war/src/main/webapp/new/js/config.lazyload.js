@@ -180,6 +180,12 @@ angular.module('app')
                   files: [
                       '../bower_components/angular-smart-table/dist/smart-table.min.js'
                   ]
+              },
+              {
+                  name: 'angularRipple',
+                  files: [
+                    '../bower_components/angular-ripple/angular-ripple.js'
+                  ]
               }
           ]
       });

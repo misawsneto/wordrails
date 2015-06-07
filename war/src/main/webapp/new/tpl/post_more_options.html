@@ -2,7 +2,7 @@
   <md-content>
     <div id="post-more-options">
       <md-tabs>
-        <md-tab label="Informações Gerais">
+        <md-tab md-no-ink angular-ripple label="Informações Gerais">
           <div class="b-t wrapper-md post-general-info" flex>
             <div class="row">
               <div class="col-sm-6">
@@ -69,7 +69,7 @@
           </div>
         </md-tab>
         <!-- categories & tags -->
-        <md-tab class="bg-custom" label="Categorias & Tags">
+        <md-tab md-no-ink angular-ripple class="bg-custom" label="Categorias & Tags">
           <div class="b-t wrapper post-terms-tab" flex>
             <div class="row">
             <!-- tree view -->
@@ -105,14 +105,14 @@
         </md-tab>
         <!-- /categories & tags
         notifications tab -->
-        <md-tab class="bg-custom" label="Geo-Notificações" ng-disabled="true">
+        <md-tab md-no-ink angular-ripple class="bg-custom" label="Geo-Notificações" ng-disabled="true">
           <div class="b-t wrapper-sm" flex>
           </div>
         </md-tab>
         <!-- /notifications tab -->
         
         <!-- sponsor tab -->
-        <md-tab ng-show="app.editingPost.selectedStation.sponsored" class="bg-custom" label="Patrocinadores" ng-disabled="true">
+        <md-tab md-no-ink angular-ripple ng-show="app.editingPost.selectedStation.sponsored" class="bg-custom" label="Patrocinadores" ng-disabled="true">
           <div class="b-t wrapper-sm" flex>
           </div>
         </md-tab>
