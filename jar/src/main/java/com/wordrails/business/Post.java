@@ -44,8 +44,11 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Latitude;
+import org.hibernate.search.annotations.Longitude;
 import org.hibernate.search.annotations.Parameter;
 import org.hibernate.search.annotations.Resolution;
+import org.hibernate.search.annotations.Spatial;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.search.annotations.TokenFilterDef;
 import org.hibernate.search.annotations.TokenizerDef;
@@ -110,6 +113,7 @@ import org.hibernate.search.annotations.TokenizerDef;
 		},
 		charFilters = { @CharFilterDef(factory = HTMLStripCharFilterFactory.class)   })
 })
+@Spatial
 public class Post {
 	
 	public static final String STATE_PUBLISHED = "PUBLISHED";
@@ -233,8 +237,10 @@ public class Post {
 	@Lob
 	public String imageCreditsText;
 	
+	@Latitude
 	public Double lat;
 	
+	@Longitude
 	public Double lng;
 	
 	@PrePersist

@@ -12,23 +12,20 @@
           <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
           <span class="m-l-xs font-thin text-u-c" >{{ordinaryRow.termName}}</span>
         </a>
-    </div>
-    <div class="frame info-flow" style="overflow: hidden;">
-      <ul class="sly-clearfix info-flow-list" data-term-id="{{ordinaryRow.termId}}">
-        <li class="" ng-repeat="cell in ordinaryRow.cells">
-          <div class="" data-ng-include=" 'tpl/stations_horizontal_cells.html' "></div>
-        </li>
-      </ul>
-    </div>
-    <div class="scrollbar info-flow-scroll">
-      <div class="handle">
-        <div class="mousearea"></div>
       </div>
-    </div>
-      <!-- <div class="controls center">
-        <button class="btn prev disabled" disabled=""><i class="icon-chevron-left"></i> prev</button>
-        <button class="btn next">next <i class="icon-chevron-right"></i></button>
-      </div> -->
+      <div class="frame info-flow" style="overflow: hidden;">
+        <ul class="sly-clearfix info-flow-list" data-term-id="{{ordinaryRow.termId}}">
+          <li class="" ng-repeat="cell in ordinaryRow.cells">
+            <div class="" data-ng-include=" 'tpl/stations_horizontal_cells.html' "></div>
+          </li>
+          <li syle="1px"></li>
+        </ul>
+      </div>
+      <div class="scrollbar info-flow-scroll">
+        <div class="handle">
+          <div class="mousearea"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

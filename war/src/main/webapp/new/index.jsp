@@ -18,8 +18,8 @@
   <link rel="stylesheet" href="css/materialdesignicons.css" type="text/css" />
 
   <link rel="stylesheet" href="css/font.css" type="text/css" />
-  <link rel="stylesheet" href="css/app.css" type="text/css" />
-  <link rel="stylesheet" href="css/override.css" type="text/css" />
+  <link rel="stylesheet" href="css/app.css?${buildNumber}" type="text/css" />
+  <link rel="stylesheet" href="css/override.css?${buildNumber}" type="text/css" />
   <script type="text/javascript">
   	var GLOBAL_URL_HASH = "${buildNumber}"
     var initData = ${personData};
@@ -29,7 +29,7 @@
 </head>
 <body ng-controller="AppCtrl">
   <offcanvas></offcanvas>
-  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.post', 'bg-perspective': $state.current.name.indexOf('app.stations') > -1, 'bg-light-grey': $state.current.name.indexOf('app.settings') > -1 || $state.current.name.indexOf('app.bookmarks') > -1 || $state.current.name.indexOf('app.search') > -1 || $state.current.name.indexOf('app.notifications') > -1}" ui-view></div>
+  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.post', 'bg-perspective': $state.current.name.indexOf('app.stations') > -1, 'bg-light-grey': $state.current.name.indexOf('app.settings') > -1 || $state.current.name.indexOf('app.bookmarks') > -1 || $state.current.name.indexOf('app.search') > -1 || $state.current.name.indexOf('app.notifications') > -1|| $state.current.name.indexOf('app.user') > -1}" ui-view></div>
 
 
   <!-- jQuery -->
@@ -71,14 +71,14 @@
   <script src="../bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
 
   <!-- App -->
-  <script src="js/app.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/config.lazyload.js"></script>
-  <script src="js/config.router.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/app.js?${buildNumber}"></script>
+  <script src="js/config.js?${buildNumber}"></script>
+  <script src="js/config.lazyload.js?${buildNumber}"></script>
+  <script src="js/config.router.js?${buildNumber}"></script>
+  <script src="js/main.js?${buildNumber}"></script>
   <script src="js/services/ui-load.js"></script>
-  <script src="js/services/trix.js"></script>
-  <script src="js/filters/filters.js"></script>
+  <script src="js/services/trix.js?${buildNumber}"></script>
+  <script src="js/filters/filters.js?${buildNumber}"></script>
   <script src="js/directives/setnganimate.js"></script>
   <script src="js/directives/ui-butterbar.js"></script>
   <script src="js/directives/ui-focus.js"></script>
@@ -89,8 +89,8 @@
   <script src="js/directives/ui-scroll.js"></script>
   <script src="js/directives/ui-shift.js"></script>
   <script src="js/directives/ui-toggleclass.js"></script>
-  <script src="js/directives/custom.js"></script>
-  <script src="js/directives/directives.js"></script>
+  <script src="js/directives/custom.js?${buildNumber}"></script>
+  <script src="js/directives/directives.js?${buildNumber}"></script>
   <script src="js/controllers/bootstrap.js"></script>
 
   <script src="/js/BaseTrix.js"></script>

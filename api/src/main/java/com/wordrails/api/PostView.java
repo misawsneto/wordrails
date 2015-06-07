@@ -29,6 +29,7 @@ public class PostView implements Serializable {
 	public boolean imageLandscape;
 
 	public String authorName;
+	public String authorUsername;
 	public Integer authorId;
 
 	public String authorEmail;

@@ -28,7 +28,7 @@ angular.module('app')
                     mouseDragging: 1,
                     touchDragging: 1,
                     releaseSwing: 1,
-                    startAt: 0,
+                    startAt: null,
                     scrollBar: $wrap.find('.scrollbar'),
                     scrollSource: "null",
                     scrollBy: 1,
@@ -44,14 +44,20 @@ angular.module('app')
                     forward: $wrap.siblings('.forward'),
                     moveBy:1000
                   }).sly('on', 'active', function(eventName, index){
-                    var sly = this;
 
+                    var sly = this;
+                      
                     /* see main.js $scope.app.setHorizontalCursor */
+
+                    if(sly.items && sly.items.length - 1){
+                      sly.activate(sly.items && sly.items.length - 1);
+                    }
+
                     if(scope.app.horizontalCursor){
                       scope.app.setNowReading(scope.app.horizontalCursor.postView, scope.app.horizontalCursor.cells)
                       scope.app.horizontalCursor = null;
-                      setTimeout(function(){
-                        sly.next();
+                      $timeout(function(){
+                        sly.activate(null);
                       }, 400)
                     }
 

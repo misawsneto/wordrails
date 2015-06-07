@@ -28,6 +28,12 @@ angular.module('app')
                   abstract: true,
                   url: '',
                   templateUrl: 'tpl/layout.html',
+                  resolve: {
+                      deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                          return $ocLazyLoad.load(['toaster', 'angularRipple', 'ngInfiniteScroll']);
+                      }]
+                  }
               })
               .state('app.stations', {
                   url: '/?stationId',
@@ -35,7 +41,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['toaster','videosharing-embed','js/controllers/stations.js']);
+                          return $ocLazyLoad.load(['videosharing-embed','js/controllers/stations.js?' + GLOBAL_URL_HASH]);
                       }]
                   },
                   controller: 'StationsCtrl'
@@ -46,7 +52,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload','videosharing-embed','js/controllers/post.js']);
+                        return $ocLazyLoad.load(['angularFileUpload','videosharing-embed','js/controllers/post.js?' + GLOBAL_URL_HASH]);
                     }]
                   },
                   controller:'PostCtrl'
@@ -57,7 +63,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/search.js']);
+                        return $ocLazyLoad.load(['js/controllers/search.js?' + GLOBAL_URL_HASH]);
                     }]
                   },
                   controller:'SearchCtrl'
@@ -68,7 +74,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/settings.js']);
+                        return $ocLazyLoad.load(['js/controllers/settings.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
                   // , controller:'SearchCtrl'
@@ -80,7 +86,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/bookmarks.js']);
+                        return $ocLazyLoad.load(['js/controllers/bookmarks.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
                   // , controller:'SearchCtrl'
@@ -91,7 +97,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/notifications.js']);
+                        return $ocLazyLoad.load(['js/controllers/notifications.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
                   // , controller:'SearchCtrl'
@@ -105,7 +111,7 @@ angular.module('app')
                         function( $ocLazyLoad ){
                           return $ocLazyLoad.load([
                             'angularFileUpload',
-                            'js/controllers/user-profile.js'])
+                            'js/controllers/user-profile.js?' + GLOBAL_URL_HASH])
                       }]
                   },
                   controller: 'UserCtrl'
@@ -117,7 +123,7 @@ angular.module('app')
                 resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/read.js']);
+                        return $ocLazyLoad.load(['js/controllers/read.js?' + GLOBAL_URL_HASH]);
                     }]
                   },
               })

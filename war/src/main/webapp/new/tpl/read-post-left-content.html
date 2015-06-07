@@ -15,7 +15,7 @@
             <div class="list-wrapper">
               <ul class="timeline m-t-md m-b-md">
                 <li class="tl-item" ng-repeat="cell in app.currentCells" ng-if="app.currentCells">
-                  <div class="tl-wrap" ng-click="app.setNowReading(cell.postView)" class="pointer">
+                  <div class="tl-wrap" ng-class="{'active':app.nowReading.postId == cell.postView.postId}" ng-click="app.setNowReading(cell.postView)" class="pointer">
                     <div class="">
                       <small class="post-time w-md text-muted">{{cell.postView.date | fromNow}}</small>
                       <div>

@@ -82,25 +82,26 @@ public class PersonsResource {
 	@PUT
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
+	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
 		Person person = accessControllerUtil.getLoggedPerson();
 		gcmService.updateRegId(network, person, regId);
+		return Response.status(Status.OK).build();
 	}
 	
 	@PUT
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void putToken(@FormParam("token") String regId, @FormParam("networkId") Integer networkId) {
+	public Response putToken(@FormParam("token") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 //		Network network = networkRepository.findOne(networkId);
 //		Person person = accessControllerUtil.getLoggedPerson();
 //		gcmService.updateRegId(network, person, regId);
+		return Response.status(Status.OK).build();
 	}
 	
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.TEXT_PLAIN)
 	public Response login(@FormParam("username") String username, @FormParam("password") String password){
 		try{
 			accessControllerUtil.authenticate(username, password);
@@ -197,12 +198,12 @@ public class PersonsResource {
 		List<Station> stations;
 		List<StationDto> stationDtos = new ArrayList<StationDto>();
 		
-		if(networkRole != null){
 			//Network Permissions
 			NetworkPermission networkPermissionDto = new NetworkPermission();
+		if(networkRole != null)
 			networkPermissionDto.networkId = networkRole.id;
-			networkPermissionDto.admin = networkRole.admin;
-			
+		else
+			networkPermissionDto.admin = false;
 			//Stations Permissions
 			stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
 			List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>(stations.size());
@@ -248,8 +249,6 @@ public class PersonsResource {
 			personPermissions.username = person.username;
 			personPermissions.personName = person.name;
 			
-		}
-		
 		PersonData initData = new PersonData();
 		
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes(), PersonDto.class);

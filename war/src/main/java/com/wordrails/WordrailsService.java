@@ -13,7 +13,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -22,7 +24,9 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+
 import net.coobird.thumbnailator.Thumbnails;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
@@ -66,8 +70,9 @@ import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
-import com.wordrails.util.AsyncService;
-import com.wordrails.util.WordpressParsedContent;
+import com.wordrails.services.AsyncService;
+import com.wordrails.services.CacheService;
+import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
 
 @Component
@@ -84,6 +89,7 @@ public class WordrailsService {
 	private @Autowired PostRepository postRepository;
 	private @Autowired PerspectiveResource perspectiveResource;
 	private @Autowired PostConverter postConverter;
+	private @Autowired CacheService cacheService;
 
 	/**
 	 * This method should be used with caution because it accesses the database.
@@ -91,7 +97,7 @@ public class WordrailsService {
 	public Network getNetworkFromHost(ServletRequest srq){
 		String host = ((HttpServletRequest) srq).getHeader("Host");
 
-		List<Network> networks = null;
+		List<Network> networks = new ArrayList<Network>();
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			networks = networkRepository.findAll();
@@ -99,8 +105,16 @@ public class WordrailsService {
 			String[] names = host.split("\\.");
 			String topDomain = names[names.length - 2] + "." + names[names.length - 1];
 			String subdomain = !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
-			if(subdomain != null && !subdomain.isEmpty())
-				networks = networkRepository.findBySubdomain(subdomain);
+			if(subdomain != null && !subdomain.isEmpty()){
+				Network network = null;
+				try {
+					network = cacheService.getNetworkBySubdomain(subdomain);
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+				if(network != null)
+					networks.add(network); 
+			}
 		}
 
 		if(networks == null || networks.size() == 0){

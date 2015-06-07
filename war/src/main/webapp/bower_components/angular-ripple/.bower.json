@@ -1,0 +1,33 @@
+{
+  "name": "angular-ripple",
+  "homepage": "http://github.com/nelsoncash/angular-ripple",
+  "authors": [
+    "Nelson Cash"
+  ],
+  "description": "A standalone AngularJS implementation of the Google Material Design ripple effect.",
+  "main": "angular-ripple.js",
+  "dependencies": {
+    "angular": "^1.2.0"
+  },
+  "keywords": [
+    "angularjs",
+    "angular",
+    "ripple",
+    "google",
+    "material"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules"
+  ],
+  "_release": "237083f2db",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "237083f2db539cda831e38ac8dfcde82d4379330"
+  },
+  "_source": "git://github.com/nelsoncash/angular-ripple.git",
+  "_target": "*",
+  "_originalSource": "angular-ripple"
+}

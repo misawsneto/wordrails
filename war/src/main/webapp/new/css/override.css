@@ -771,8 +771,8 @@ a.text-lgrey:hover {
 
 .block-image{
   display: block;
-  width: 140px;
-  height: 120px;
+  width: 160px;
+  height: 140px;
   float: right;
   border: 1px solid rgba(0,0,0,0.05);
   border-radius: 4px;
@@ -1094,7 +1094,7 @@ a.text-lgrey:hover {
 }
 
 .bg-light-grey{
-  background: #f9f9f9;
+  background: #f5f5f5;
 }
 
 ul.no-style{
@@ -1114,6 +1114,46 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
 .white-bg{
   background: #ffffff;
 }
+
+.i-16 {
+  font-size: 16px;
+  vertical-align: -15%;
+}
+
+.i-20 {
+  font-size: 20px;
+  vertical-align: -19%;
+}
+
+.i-24 {
+  font-size: 24px;
+  vertical-align: -23%;
+}
+
+  [angular-ripple] {
+    position: relative;
+    overflow: hidden;
+  }
+  .angular-ripple {
+    display: block;
+    position: absolute;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 50%;
+    transform: scale(0);
+  }
+  .angular-ripple.animate {
+    animation: ripple 0.35s linear;
+  }
+  @keyframes ripple {
+    100% {
+      opacity: 0;
+      transform: scale(2.5);
+    }
+  }
+
+  .md-ripple-container{
+    
+  }
 /* /general */
 
 /* animate */
@@ -1125,6 +1165,8 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   animation-duration: 0.2s;
 }
 
+#bookmarks .animated,
+#notifications .animated,
 #post-left-content .animated,
 #post-right-content .animated{
  -webkit-animation-duration: 0.3s;
@@ -1552,6 +1594,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 #post-left-content .tl-wrap{margin-left: 14px; border-width: 0 0 0 2px; padding: 15px 15px 15px 20px;}
 #post-left-content .tl-wrap:before{box-shadow: 0 0 0 4px #333; top: 5px; background: #333; margin-left: -26px; border-width: 2px;}
+#post-left-content .tl-wrap.active:before{background: #edf1f2;}
 .tl-wrap:hover:before{border-color:inherit;}
 #post-left-content .left-content-wrap .list-wrapper{width: 280px;}
 #post-left-content .left-content-wrap .list-wrapper .tl-wrap{border-color: rgba(255, 255, 255, 0.7);}
@@ -2245,15 +2288,31 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   .station-header .dropdown-menu li a:hover{
     text-decoration: underline;
   }
-  .nav-down{
+  .nav-down .station-header{
     top: 0;
     -webkit-transition: all 0.1s ease-in-out;
     -moz-transition: all 0.1s ease-in-out;
     -o-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out;
   }
-  .nav-up {
+  .nav-up .station-header {
     top: -50px;
+    -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    -o-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+  }
+
+  .nav-down .sidebar-top{
+    height: 49px;
+    -webkit-transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    -o-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+  }
+  .nav-up .sidebar-top {
+    height: 0;
+    padding: 0;
     -webkit-transition: all 0.1s ease-in-out;
     -moz-transition: all 0.1s ease-in-out;
     -o-transition: all 0.1s ease-in-out;
@@ -2323,7 +2382,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   text-overflow: ellipsis;
 }
 
-  .content-block{margin-right: 160px;}
+  .content-block{margin-right: 170px;}
 
 /* #perspective-horizontal .info-flow-wrap .h3 a {color: #ccc}
 #perspective-horizontal .info-flow-wrap .h3 a:hover {color: #fff} */
@@ -2460,8 +2519,9 @@ div.cell-wrap:hover > div {
   -webkit-transform: scale(1.05);
   transform: scale(1.05);    
 }
+.title-wrapper-bg a.text-white:hover{color: #fff}
+.title-wrapper-bg {background: rgba(0,0,0,0.75); z-index: 3;
 
-.title-wrapper-bg {background: rgba(0,0,0,0.75);
 /* background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0,0,0,1)));
 background-image: -moz-linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.9) 100%);
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endColorstr=#000000FF); */
@@ -2523,10 +2583,33 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 #station-sidebar a:hover{
   text-decoration: underline;
 }
-
-
-
 /* /stations */
+
+/* notifications */
+
+.notifications-navbar{
+  height: 66px;
+}
+.notifications-navbar .divider-v{
+  border-right:1px solid #ddd;   height: 36px;
+}
+
+.notification-image{
+  width: 200px;
+  height: 167px;
+}
+
+/* /notifications */
+
+/* bookmarks */
+.bookmarks-navbar{
+  height: 66px;
+}
+
+.bookmarks-navbar .divider-v{
+  border-right:1px solid #ddd;   height: 36px;
+}
+/* /bookmarks */
 
 /* splash */
 /* Slideshow style */

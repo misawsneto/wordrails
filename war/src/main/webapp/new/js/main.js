@@ -107,14 +107,12 @@ angular.module('app')
       }
       
       $scope.app.initData = angular.copy(initData);
-      $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
-      $scope.app.stationsPermissions = trixService.getStationPermissions();
 
       $scope.app.checkIfLogged = function(){
         $scope.app.isLogged = trixService.isLoggedIn();
         $scope.app.writableStations = trixService.getWritableStations();
+        $scope.app.adminStations = trixService.getAdminStations();
       }
-      $scope.app.checkIfLogged();
 
       uiLoad.load(JQ_CONFIG.screenfull)
       $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
@@ -144,11 +142,34 @@ angular.module('app')
         // check state read
         if(toState.name != "app.stations.read"){
           // show to navbar
-          $('.station-header').removeClass('nav-up').addClass('nav-down');
+          $('body').removeClass('nav-up').addClass('nav-down');
           $("body").removeClass("show-post") // this class is added to the body element in read.js
         }
 
       });
+
+      // deal with unauthorized access
+      $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+        if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications') && !trixService.isLoggedIn()){
+          event.preventDefault();
+          $scope.app.showInfoToast('Autentique-se para acessar esta função.')
+          if(fromState.abstract)
+            $state.go('app.stations');
+        }else if(toState.name == 'app.post' && (!trixService.getWritableStations() || trixService.getWritableStations().length == 0)){
+          event.preventDefault();
+          $scope.app.showInfoToast('Você não possui permissão para criar histórias.')
+          if(fromState.abstract)
+            $state.go('app.stations');
+        }
+      })
+
+      $scope.app.goToProfile = function($event, username){
+        console.log('asdfasdf');
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.user', {username: username})
+        $scope.app.profilepopover.open = false;
+      }
 
       $scope.getBackgroundImage = function(postView, size){
         var img = $filter('pvimageLink')(postView, size);
@@ -228,7 +249,7 @@ angular.module('app')
       };
 
       $scope.cancelModal = function () {
-        $scope.modalInstance.dismiss('cancel');
+        $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
       };
 
       if ( angular.isDefined($localStorage.viewMode) ) {
@@ -263,25 +284,33 @@ angular.module('app')
           trix.allInitData().success(function(response){
             initData = response;
             $scope.app.initData = angular.copy(initData);
-            $scope.cancelModal();
-            $scope.app.checkIfLogged()
-            $scope.app.loginError = false
+            $scope.app.loginError = false;
+            $scope.app.refreshData();
           })
         }).error(function(){
           $scope.app.loginError = true;
+          $scope.app.refreshData();
         })
       };
+
+      $scope.app.refreshData = function(){
+        $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
+        $scope.app.stationsPermissions = trixService.getStationPermissions();
+        $scope.cancelModal();
+        $scope.app.checkIfLogged();
+        window.console && console.log($scope.app.currentStation, $scope.app.stationsPermissions);
+      }
 
       $scope.app.signOut = function(username, password){
         trix.logout().success(function(){
           trix.allInitData().success(function(response){
             initData = response;
             $scope.app.initData = angular.copy(initData);
-            $scope.app.checkIfLogged();
             $scope.app.profilepopover.open = false;
             if($scope.$state.current.name != "app.stations" && $scope.$state.current.name != "app.search"){
               $state.go("app.stations");
             }
+            $scope.app.refreshData();
           })
         })
       };
@@ -289,10 +318,6 @@ angular.module('app')
       $scope.app.changeStation = function(stationId){
 
       }
-
-      moment.locale('pt')
-      loadPopular();
-      loadRecent();
 
       // close post read and go back to previous state
       $scope.app.closePostRead = function(){
@@ -375,5 +400,7 @@ angular.module('app')
           $scope.openSplash('signin_splash.html')
       }
 
+      $scope.app.refreshData();
+      moment.locale('pt')
       /* end of added */
   }]); 

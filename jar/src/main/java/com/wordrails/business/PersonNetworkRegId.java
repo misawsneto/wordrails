@@ -17,16 +17,29 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Latitude;
+import org.hibernate.search.annotations.Longitude;
+import org.hibernate.search.annotations.Spatial;
+import org.hibernate.search.annotations.SpatialMode;
+import org.hibernate.search.annotations.Store;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"network_id", "regId"}))
+@Indexed
+@Spatial(spatialMode=SpatialMode.RANGE)
 public class PersonNetworkRegId {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)				
 	public Integer id;
 
+	@Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
 	public String regId;
 	
 	@NotNull
@@ -44,8 +57,10 @@ public class PersonNetworkRegId {
 	@Column(updatable=false)
 	public Date createdAt;
 	
+	@Latitude
 	public Double lat;
 	
+	@Longitude
 	public Double lng;
 
 	@PrePersist

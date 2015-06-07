@@ -180,6 +180,18 @@ angular.module('app')
                   files: [
                       '../bower_components/angular-smart-table/dist/smart-table.min.js'
                   ]
+              },
+              {
+                  name: 'angularRipple',
+                  files: [
+                    '../bower_components/angular-ripple/angular-ripple.js'
+                  ]
+              }
+              {
+                  name: 'ngInfiniteScroll',
+                  files: [
+                    '../bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
+                  ]
               }
           ]
       });

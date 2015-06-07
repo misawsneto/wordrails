@@ -10,7 +10,7 @@
 
   <!-- view -->
   <div class="app-content" ng-class="{'m-n': app.hideAside, 'h-full': app.hideFooter }">
-    <div class="app-content-body fade-in" ng-class="{'h-full': app.hideFooter, 'no-header-space': $state.current.name == 'app.search' || $state.current.name.indexOf('app.stations') > -1, 'app-content-full': $state.current.name.indexOf('app.stations') == -1}" ui-view>
+    <div class="app-content-body fade-in" ng-class="{'h-full': app.hideFooter, 'no-header-space': $state.current.name == 'app.search' || $state.current.name.indexOf('app.stations') > -1 || $state.current.name.indexOf('app.notifications') > -1 || $state.current.name.indexOf('app.bookmarks') > -1 || $state.current.name.indexOf('app.settings') > -1 || $state.current.name.indexOf('app.user') > -1, 'app-content-full': $state.current.name.indexOf('app.stations') == -1}" ui-view>
     </div>
   </div>
   <!-- / view -->
@@ -41,23 +41,23 @@
         <div class="p-lg text-color wrapper-lg">
           <div id="login-error">
             <span id="login-error" class="text-danger animated" ng-class="{'fadeIn': app.loginError, 'hide': !app.loginError}">
-              Username ou senha inválidos
+              Usuário ou senha inválidos
             </span>
           </div>
           <form name="form" ng-submit="app.signIn(username, password)">
             <div class="md-form-group float-label p-b-sm">
               <input class="md-input" ng-model="username" required>
-              <label>Username</label>
+              <label>Usuário</label>
             </div>
             <div class="md-form-group float-label p-b-sm">
               <input type="password" class="md-input" ng-model="password" required>
               <label>Senha</label>
             </div>      
-            <button md-ink-ripple type="submit" class="m-t-md btn-custom btn text-lg text-u-c btn-block p-h-md">Entrar</button>
+            <button angular-ripple type="submit" class="m-t-md btn-custom btn text-lg text-u-c btn-block p-h-md">Entrar</button>
           </form>
-          <button md-ink-ripple type="submit" class="m-t-md btn-info btn text-lg text-u-c btn-block p-h-md">
+          <button angular-ripple type="submit" class="m-t-md btn-info btn text-lg text-u-c btn-block p-h-md">
             <i class="mdi mdi-twitter m-r-sm"></i> Twitter</button>
-            <button md-ink-ripple type="submit" class="m-t-md btn-blue btn text-lg text-u-c btn-block p-h-md">
+            <button angular-ripple type="submit" class="m-t-md btn-blue btn text-lg text-u-c btn-block p-h-md">
               <i class="mdi mdi-facebook m-r-sm"></i> Facebook</button>
             </div>
           </div>

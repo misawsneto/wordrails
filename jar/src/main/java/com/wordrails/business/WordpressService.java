@@ -10,8 +10,9 @@ import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermRepository;
-import com.wordrails.util.WordpressParsedContent;
+import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
+
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,12 +29,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import net.coobird.thumbnailator.Thumbnails;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;

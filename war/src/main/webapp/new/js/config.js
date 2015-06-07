@@ -3,8 +3,8 @@
 var app =  
 angular.module('app')
   .config(
-    [        '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', 'cfpLoadingBarProvider',
-    function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide ,  cfpLoadingBarProvider) {
+    [        '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', 'cfpLoadingBarProvider', '$httpProvider',
+    function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide ,  cfpLoadingBarProvider ,  $httpProvider) {
         
         // lazy controller, directive and service
         app.controller = $controllerProvider.register;
@@ -16,6 +16,17 @@ angular.module('app')
         app.value      = $provide.value;
 
         cfpLoadingBarProvider.includeSpinner = false;
+
+        $httpProvider.interceptors.push(function (){
+            return {
+                'request': function(config) {
+                    if(config.url.indexOf("tpl") > -1 || config.url.indexOf(".css") > -1 || config.url.indexOf(".js") > -1)
+                        config.url = config.url + "?" + GLOBAL_URL_HASH;
+
+                    return config;
+                }
+            };
+        });
     }
   ])
   .config(['$translateProvider', function($translateProvider){
