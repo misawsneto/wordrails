@@ -142,7 +142,7 @@ angular.module('app')
         // check state read
         if(toState.name != "app.stations.read"){
           // show to navbar
-          $('.station-header').removeClass('nav-up').addClass('nav-down');
+          $('body').removeClass('nav-up').addClass('nav-down');
           $("body").removeClass("show-post") // this class is added to the body element in read.js
         }
 

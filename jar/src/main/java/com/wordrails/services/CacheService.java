@@ -30,7 +30,7 @@ public class CacheService {
 	public void init(){
 		// ------------- init person cache
 		persons = CacheBuilder.newBuilder().maximumSize(1000)
-				.expireAfterWrite(5, TimeUnit.MINUTES)
+				.expireAfterWrite(1, TimeUnit.MINUTES)
 				//	       .removalListener(MY_LISTENER)
 				.build(
 						new CacheLoader<Integer, Person>() {
@@ -42,7 +42,7 @@ public class CacheService {
 		// ------------- init network cache
 
 		networks = CacheBuilder.newBuilder().maximumSize(500)
-				.expireAfterWrite(10, TimeUnit.MINUTES)
+				.expireAfterWrite(1, TimeUnit.MINUTES)
 				//	       .removalListener(MY_LISTENER)
 				.build(
 						new CacheLoader<Integer, Network>() {
@@ -52,7 +52,7 @@ public class CacheService {
 						});
 		// ------------- init person cache
 		persons2 = CacheBuilder.newBuilder().maximumSize(10000)
-				.expireAfterWrite(5, TimeUnit.MINUTES)
+				.expireAfterWrite(1, TimeUnit.MINUTES)
 				//	       .removalListener(MY_LISTENER)
 				.build(
 						new CacheLoader<String, Person>() {
@@ -64,7 +64,7 @@ public class CacheService {
 		// ------------- init network cache
 
 		networks2 = CacheBuilder.newBuilder().maximumSize(5000)
-				.expireAfterWrite(10, TimeUnit.MINUTES)
+				.expireAfterWrite(1, TimeUnit.MINUTES)
 				//	       .removalListener(MY_LISTENER)
 				.build(
 						new CacheLoader<String, Network>() {

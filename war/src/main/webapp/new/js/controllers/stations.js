@@ -25,11 +25,11 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 	    // This is necessary so you never see what is "behind" the navbar.
 	    if (scrollTop > lastScrollTop && scrollTop > 50){
 	        // Scroll Down
-	        $('.station-header').removeClass('nav-down').addClass('nav-up');
+	        $('body').removeClass('nav-down').addClass('nav-up');
 	      } else {
 	        // Scroll Up
 	        if(scrollTop + $(window).height() < $(document).height()) {
-	        	$('.station-header').removeClass('nav-up').addClass('nav-down');
+	        	$('body').removeClass('nav-up').addClass('nav-down');
 	        }
       }
       lastScrollTop = scrollTop;
@@ -49,7 +49,6 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
     	}
     }, 250);
 
-    $scope.loadPost = function(postId){
-    } 
+    // $scope.app.viewMode
 
 }]);

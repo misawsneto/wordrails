@@ -48,10 +48,15 @@ angular.module('app')
                     var sly = this;
                       
                     /* see main.js $scope.app.setHorizontalCursor */
+
+                    if(sly.items && sly.items.length - 1){
+                      sly.activate(sly.items && sly.items.length - 1);
+                    }
+
                     if(scope.app.horizontalCursor){
                       scope.app.setNowReading(scope.app.horizontalCursor.postView, scope.app.horizontalCursor.cells)
                       scope.app.horizontalCursor = null;
-                      setTimeout(function(){
+                      $timeout(function(){
                         sly.activate(null);
                       }, 400)
                     }

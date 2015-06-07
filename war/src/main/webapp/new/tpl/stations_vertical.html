@@ -10,7 +10,7 @@
              <div class="search-divider" ng-class="{'search-divider-dark': app.customStyle.darkFonts2, 'b-t': !$first}"></div>
               <div class="clear p-t-sm padder-v padder-md post-list news-item" md-ink-ripple ng-click="app.setNowReading(cell.postView, ordinaryRow.cells)">
                 <!-- image -->
-                <a class="block-image m-l m-t" ui-sref="app.post({postId: cell.postView.postId})" ng-if="cell.postView.mediumId" >
+                <a class="block-image m-l m-t" ng-if="cell.postView.mediumId" >
                   <div class="cell-wrap r r-2x" ng-class="{'hide': !cell.postView.mediumId}">
                     <div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
                   </div>
