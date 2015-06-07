@@ -38,6 +38,9 @@ public class Network {
 	@Size(min=1, max=100)
 	public String name;
 	
+	@Size(min=1, max=100)
+	public String flurryKey;
+	
 	@Size(min=1, max=100)	
 	public String trackingId;
 	
