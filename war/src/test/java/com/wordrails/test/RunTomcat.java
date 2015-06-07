@@ -2,9 +2,7 @@ package com.wordrails.test;
 
 import java.io.File;
 import java.io.IOException;
-
 import javax.servlet.ServletException;
-
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
@@ -13,7 +11,13 @@ public class RunTomcat {
 	public static void main(String args[]) throws ServletException, LifecycleException, IOException {
 		Tomcat tomcat = new Tomcat();
 		tomcat.setBaseDir("target");
-		tomcat.setPort(8080);
+        
+        if(args.length > 0) {
+            tomcat.setPort(Integer.valueOf(args[0]));
+        } else {
+            tomcat.setPort(8080);
+        }
+        
 		
 		Context context = tomcat.addWebapp("/", new File("src/main/webapp").getAbsolutePath());
 
