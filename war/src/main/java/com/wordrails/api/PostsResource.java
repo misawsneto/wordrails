@@ -1,6 +1,7 @@
 package com.wordrails.api;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -202,6 +203,16 @@ public class PostsResource {
 	@Path("/{stationId}/searchPostsFromOrPromotedToStation")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> searchPostsFromOrPromotedToStation(@PathParam("stationId") Integer stationId, @QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+		
+		if(q == null || q.isEmpty()){
+			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
+			response.content = new SearchView();
+			response.content.hits = 0;
+			response.content.posts = new ArrayList<PostView>();
+
+			return response;
+		}
+		
 		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
 		// create native Lucene query unsing the query DSL
 		// alternatively you can write the Lucene query using the Lucene query parser
