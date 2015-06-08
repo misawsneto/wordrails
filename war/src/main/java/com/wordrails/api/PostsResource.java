@@ -204,22 +204,16 @@ public class PostsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> searchPostsFromOrPromotedToStation(@PathParam("stationId") Integer stationId, @QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
-		if(q == null || q.isEmpty()){
-			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
-			response.content = new SearchView();
-			response.content.hits = 0;
-			response.content.posts = new ArrayList<PostView>();
-
-			return response;
-		}
-		
 		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
 		// create native Lucene query unsing the query DSL
 		// alternatively you can write the Lucene query using the Lucene query parser
 		// or the Lucene programmatic API. The Hibernate Search DSL is recommend though
 		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Post.class).get();
 
-		org.apache.lucene.search.Query text = qb.keyword()
+		org.apache.lucene.search.Query text = null;
+		try{
+			
+			text = qb.keyword()
 				.fuzzy()
 				.withThreshold(.8f)
 				.withPrefixLength(1)
@@ -227,6 +221,17 @@ public class PostsResource {
 				.andField("body").boostedTo(2)
 				.andField("terms.name")
 				.matching(q).createQuery();
+		}catch(Exception e){
+			
+			e.printStackTrace();
+			
+			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
+			response.content = new SearchView();
+			response.content.hits = 0;
+			response.content.posts = new ArrayList<PostView>();
+
+			return response;
+		};
 
 		org.apache.lucene.search.Query station = qb.keyword().onField("station.id").ignoreAnalyzer().matching(stationId).createQuery();
 
