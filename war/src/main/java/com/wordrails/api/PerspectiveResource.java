@@ -22,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wordrails.WordrailsService;
 import com.wordrails.business.Cell;
 import com.wordrails.business.ConflictException;
 import com.wordrails.business.Post;
@@ -65,7 +64,6 @@ public class PerspectiveResource {
 	private @Autowired PostRepository postRepository;
 	private @Autowired RowRepository rowRepository;
 	private @Autowired CellRepository cellRepository;
-	private @Autowired WordrailsService wordrailsService;
 
 	@Path("/termPerspectiveDefinitions/{id}")
 	@PUT
@@ -183,9 +181,6 @@ public class PerspectiveResource {
 				termView.stationId = stationPerspective.stationId;
 			}
 		}
-		
-//		termView.ordinaryRows
-		
 		return termView;
 	}
 
