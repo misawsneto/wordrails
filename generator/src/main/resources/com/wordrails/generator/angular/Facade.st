@@ -93,6 +93,19 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/perspectives/termPerspectiveViews", config)
     }
     
+    this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, _page, _size){
+    	var config = {
+			"params": {
+				"stationPerspectiveId": stationPerspectiveId,
+				"termPerspectiveId": termPerspectiveId,
+				"childTermId": childTermId,
+				"page": _page,
+				"size": _size,
+			}
+		}
+      return \$http.get(_config.url + "/api/perspectives/rowViews", config)
+    }
+    
     this.getTermTree = function(perspectiveId, taxonomyId) {
 		var config = {
 			"params": {

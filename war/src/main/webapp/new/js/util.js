@@ -289,6 +289,10 @@ function getCustomStyle(color, perspective, header) {
 		"background-color:" + color +
 	"}"+
 
+	".form-control:focus{\n" +
+		"border-color:" + color +
+	"}"+
+
 	"md-checkbox.md-default-theme.md-checked .md-icon:after{" +
 	"border-color:" + textColorEval(color) +
 	"}"+

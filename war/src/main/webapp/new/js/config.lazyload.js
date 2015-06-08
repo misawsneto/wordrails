@@ -186,11 +186,17 @@ angular.module('app')
                   files: [
                     '../bower_components/angular-ripple/angular-ripple.js'
                   ]
-              }
+              },
               {
-                  name: 'ngInfiniteScroll',
+                  name: 'infinite-scroll',
                   files: [
                     '../bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
+                  ]
+              },
+              {
+                  name: 'leaflet-directive',
+                  files: [
+                    '../bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js',
                   ]
               }
           ]

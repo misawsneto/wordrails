@@ -5,7 +5,8 @@
     <button ng-show="ordinaryRow.cells"  class="backward"><i class="mdi mdi-chevron-left"></i></button>
     <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}"  -->
     <button ng-show="ordinaryRow.cells"  class="forward"><i class="mdi mdi-chevron-right"></i></button>
-    <div ng-show="ordinaryRow.cells" data-term-id="{{ordinaryRow.termId}}" class="wrap info-flow-wrap" sly-scroll>
+    <div ng-show="ordinaryRow.cells" data-term-id="{{ordinaryRow.termId}}" class="wrap info-flow-wrap" 
+    scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" sly-scroll>
       <div class="h3">
         <a ng-show="ordinaryRow.termName" class="animated fadeIn" 
           ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">

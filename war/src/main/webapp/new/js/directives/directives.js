@@ -1,94 +1,81 @@
+var bla = 0;
+
 angular.module('app')
 .directive("slyScroll",function($state, $timeout) {
      return {
        restrict: 'A',
+       scope: {
+        scroll: '&',
+        active: '&'
+       },
        link: function(scope,element,attrs) {
-          if (scope.$last === true) {
-            $timeout(function () {
-                executeSly()
-            });
-          }
+          $timeout(function () {
+              executeSly()
+          });
+
           /**
            * function to be executed after ng-repeat is finished
            */
           function executeSly(){
-            var batch = []
+            var elem = element
+            // var job = function(){
+              var $wrap  = $(elem);
+              var $frame = $(elem).find('.info-flow');
+              // Call Sly on frame
+              $frame.sly({
+                horizontal: 1,
+                itemNav: 'basic',
+                smart: false,
+                activateOn: 'click',
+                mouseDragging: 1,
+                touchDragging: 1,
+                releaseSwing: 1,
+                startAt: null,
+                scrollBar: $wrap.find('.scrollbar'),
+                scrollSource: "null",
+                scrollBy: 1,
+                activatePageOn: 'click',
+                speed: 300,
+                elasticBounds: 1,
+                easing: 'easeOutExpo',
+                dragHandle: 1,
+                dynamicHandle: 1,
+                clickBar: 1,
+                // Buttons
+                backward: $wrap.siblings('.backward'),
+                forward: $wrap.siblings('.forward'),
+                moveBy:1000
+              }).sly('on', 'active', function(eventName, index){
 
-            $(".wrap.info-flow-wrap").each(function(){
-                var elem = this
-                var job = function(){
-                  var $wrap  = $(elem);
-                  var $frame = $(elem).find('.info-flow');
-                  // Call Sly on frame
-                  $frame.sly({
-                    horizontal: 1,
-                    itemNav: 'basic',
-                    smart: false,
-                    activateOn: 'click',
-                    mouseDragging: 1,
-                    touchDragging: 1,
-                    releaseSwing: 1,
-                    startAt: null,
-                    scrollBar: $wrap.find('.scrollbar'),
-                    scrollSource: "null",
-                    scrollBy: 1,
-                    activatePageOn: 'click',
-                    speed: 300,
-                    elasticBounds: 1,
-                    easing: 'easeOutExpo',
-                    dragHandle: 1,
-                    dynamicHandle: 1,
-                    clickBar: 1,
-                    // Buttons
-                    backward: $wrap.siblings('.backward'),
-                    forward: $wrap.siblings('.forward'),
-                    moveBy:1000
-                  }).sly('on', 'active', function(eventName, index){
+                var sly = this;
+                  
+                /* see main.js $scope.app.setHorizontalCursor */
 
-                    var sly = this;
-                      
-                    /* see main.js $scope.app.setHorizontalCursor */
-
-                    if(sly.items && sly.items.length - 1){
-                      sly.activate(sly.items && sly.items.length - 1);
-                    }
-
-                    if(scope.app.horizontalCursor){
-                      scope.app.setNowReading(scope.app.horizontalCursor.postView, scope.app.horizontalCursor.cells)
-                      scope.app.horizontalCursor = null;
-                      $timeout(function(){
-                        sly.activate(null);
-                      }, 400)
-                    }
-
-                  }).sly('on', 'move', function(eventName, index){
-                    if (this.pos.dest > this.pos.end - 200) {
-                      var sly = this;
-                      var termId = $(elem).data('term-id')
-                      // updateRowPage is defined in the parent scope
-                      scope.updateRowPage && scope.updateRowPage(termId, function(){
-                        sly.reload();
-                      });
-                    }
-                  });
-                  }// end of function
-                  batch.push(job)
-              });
-            
-            var count = 0;
-
-            function run(){
-              setTimeout(function() {
-                if(count < batch.length){
-                  batch[count]();
-                  count ++;
-                  run();
-                  $(window).trigger('resize');
+                if(sly.items && sly.items.length - 1){
+                  sly.activate(sly.items && sly.items.length - 1);
                 }
-              }, 300);
-            }
 
-            run();
+                safeApply(scope, function(){
+                  scope.active();
+                })
+
+              }).sly('on', 'move', function(eventName, index){
+                if (this.pos.dest > this.pos.end - 200) {
+                  var sly = this;
+                  safeApply(scope, function(){
+                    var promise = scope.scroll();
+                    if(promise)
+                      promise.then(function(){
+                        sly.reload();
+                      })
+                  })
+                  // var termId = $(elem).data('term-id')
+                  // // updateRowPage is defined in the parent scope
+                  // scope.updateRowPage && scope.updateRowPage(termId, function(){
+                  //   sly.reload();
+                  // });
+                }
+              });
           }// execute finished
         }// end of link
      } // end of object to return

@@ -31,7 +31,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['toaster', 'angularRipple', 'ngInfiniteScroll']);
+                          return $ocLazyLoad.load(['toaster', 'angularRipple', 'infinite-scroll']);
                       }]
                   }
               })
@@ -52,7 +52,19 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload','videosharing-embed','js/controllers/post.js?' + GLOBAL_URL_HASH]);
+                          return $ocLazyLoad.load([
+                            'com.2fdevs.videogular', 
+                            'com.2fdevs.videogular.plugins.controls', 
+                            'com.2fdevs.videogular.plugins.overlayplay',
+                            'com.2fdevs.videogular.plugins.poster',
+                            'com.2fdevs.videogular.plugins.buffering',
+                            'js/app/music/ctrl.js', 
+                            'js/app/music/theme.css',
+                            '../bower_components/leaflet/dist/leaflet.js',
+                            '../bower_components/leaflet/dist/leaflet.css'
+                          ]).then(function(){
+                            return $ocLazyLoad.load(['angularFileUpload','videosharing-embed','js/controllers/post.js?' + GLOBAL_URL_HASH])
+                          });
                     }]
                   },
                   controller:'PostCtrl'

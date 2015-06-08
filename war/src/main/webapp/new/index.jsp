@@ -101,6 +101,6 @@
   <!-- Sly end -->
   <script src="js/util.js"></script>
   <!-- Lazy loading -->
-  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="js/iframe-api.js"></script>
 </body>
 </html>
