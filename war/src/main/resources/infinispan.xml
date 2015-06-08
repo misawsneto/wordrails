@@ -48,15 +48,15 @@
 
     <namedCache name="LuceneIndexesMetadata">
         <persistence passivation="false">
-            <store class="org.infinispan.persistence.file.SingleFileStore" fetchPersistentState="false" preload="true"
-                   shared="false" purgeOnStartup="true" ignoreModifications="false">
-                <async enabled="true" flushLockTimeout="1" shutdownTimeout="25000" modificationQueueSize="1024" threadPoolSize="1"/>
+            <singleFile fetchPersistentState="false" preload="true"
+                   shared="true" purgeOnStartup="false" ignoreModifications="false">
+                <async enabled="true" flushLockTimeout="15000" threadPoolSize="5"/>
                 <properties>
                     <property name="location" value="indexes"/>
                 </properties>
-            </store>
+            </singleFile>
         </persistence>
-        <clustering mode="replication">
+        <clustering mode="distribution">
             <stateTransfer fetchInMemoryState="true" />
             <sync replTimeout="25000" />
         </clustering>
@@ -65,15 +65,15 @@
 
     <namedCache name="LuceneIndexesData">
         <persistence passivation="false">
-            <store class="org.infinispan.persistence.file.SingleFileStore" fetchPersistentState="false" preload="true"
-               shared="false" purgeOnStartup="true" ignoreModifications="false">
-                <async enabled="true" flushLockTimeout="1" shutdownTimeout="25000" modificationQueueSize="1024" threadPoolSize="1"/>
+            <singleFile fetchPersistentState="false" preload="true"
+               shared="true" purgeOnStartup="false" ignoreModifications="false">
+                <async enabled="true" flushLockTimeout="15000" threadPoolSize="5"/>
                 <properties>
                     <property name="location" value="indexes"/>
                 </properties>
-            </store>
+            </singleFile>
         </persistence>
-        <clustering mode="replication">
+        <clustering mode="distribution">
             <stateTransfer fetchInMemoryState="true" />
             <sync replTimeout="25000" />
         </clustering>
