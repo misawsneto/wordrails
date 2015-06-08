@@ -80,6 +80,17 @@ angular.module('app')
                   },
                   controller:'SearchCtrl'
               })
+              .state('app.search.read', {
+                  url: '/s/:slug',
+                  template: '',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/read.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  },
+                  controller:'ReadCtrl'
+              })
               .state('app.settings', {
                   url: '/settings',
                   templateUrl: 'tpl/settings.html',

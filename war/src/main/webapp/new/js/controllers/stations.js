@@ -57,7 +57,7 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 
     $scope.horizontalCallback = function(){
     	if($scope.app.horizontalCursor){
-        $scope.app.setNowReading($scope.app.horizontalCursor.postView, $scope.app.horizontalCursor.cells)
+        $scope.app.setNowReading($scope.app.horizontalCursor.postView, $scope.app.horizontalCursor.list)
         $scope.app.horizontalCursor = null;
       }
     }

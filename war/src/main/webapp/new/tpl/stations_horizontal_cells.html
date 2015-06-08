@@ -1,4 +1,4 @@
-<div angular-ripple class="news-item" data-post-id="{{cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, ordinaryRow.cells)">
+<div angular-ripple class="news-item" data-post-id="{{cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
 	<div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-show="cell.postView.mediumId">
 		<div class="text-md font-thin text-white ls-sm">{{cell.postView.title}}</div>
 		<div class="m-t-md" ng-show="cell.postView.mediumId">

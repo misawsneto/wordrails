@@ -93,6 +93,17 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/perspectives/termPerspectiveViews", config)
     }
     
+    this.searchPostsFromOrPromotedToStation = function(stationId, query, _page, _size) {
+		var config = {
+			"params": {
+				"query": query,
+				"page": _page,
+				"size": _size,
+			}
+		}
+      return \$http.get(_config.url + "/api/posts/"+stationId+"/searchPostsFromOrPromotedToStation", config)
+    }
+    
     this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, _page, _size){
     	var config = {
 			"params": {

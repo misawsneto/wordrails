@@ -93,7 +93,7 @@
   <script src="js/directives/directives.js?${buildNumber}"></script>
   <script src="js/controllers/bootstrap.js"></script>
 
-  <script src="/js/BaseTrix.js"></script>
+  <script src="/js/BaseTrix.js?${buildNumber}"></script>
 
   <!-- Sly -->
   <script src="js/sly/sly.plugins.js?${buildNumber}"></script>

@@ -115,7 +115,14 @@ angular.module('app')
       }
 
       uiLoad.load(JQ_CONFIG.screenfull)
+
+      $rootScope.previousState;
+      $rootScope.currentState;
+
       $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+        $rootScope.previousState = fromState.name;
+        $rootScope.currentState = toState.name;
+
         // on change state, exit if in fullscreen mode.
         if(typeof screenfull !== 'undefined' && screenfull){ screenfull.exit(); }
 
@@ -315,8 +322,12 @@ angular.module('app')
         })
       };
 
-      $scope.app.changeStation = function(stationId){
-
+      // close post read and go back to previous state
+      $scope.app.closePostRead = function(state){
+        $state.go('^')
+        $timeout(function(){
+          $scope.app.nowReading = null;
+        }, 300)
       }
 
       // close post read and go back to previous state
@@ -330,24 +341,28 @@ angular.module('app')
       /**
        * helper function, see sly-scroll directive 
        */
-      $scope.app.setHorizontalCursor = function(postView, cells){
+      $scope.app.setHorizontalCursor = function(postView, list){
         $scope.app.horizontalCursor = {
           postView: postView,
-          cells: cells
+          list: list
         }
+      }
+
+      $scope.app.cellsToPostViews = function(cells){
+        return cells.map(function(cell){ return cell.postView; });
       }
 
       /**
        * manage the post that is been read and the view behavior
        * @param {[type]} postView [description]
-       * @param {[type]} cells    [description]
+       * @param {[type]} list    [description]
        */
-      $scope.app.setNowReading = function(postView, cells){
+      $scope.app.setNowReading = function(postView, list, listMeta, fromSearch){
         if($state.current.name == "app.stations.read" && $scope.app.nowReading && $scope.app.nowReading.postId == postView.postId)
           return;
 
-        if(cells)
-          $scope.app.currentCells = cells;
+        if(list)
+          $scope.app.readList = list;
 
         if(!$scope.app.nowReading && postView){
           $scope.app.nowReadingAuthor = {
@@ -370,13 +385,23 @@ angular.module('app')
         $scope.app.incomingPostDirection = null;
 
         $timeout(function() {
-          if($scope.app.currentCells && oldId && oldId > postView.postId)
+          if(fromSearch)
+            $scope.app.incomingPostDirection = "fadeIn"
+          else if($scope.app.readList && oldId && oldId > postView.postId)
             $scope.app.incomingPostDirection = "slideInRight";
           else
             $scope.app.incomingPostDirection = "slideInLeft";
 
           $scope.app.nowReading = postView;
-          $state.go('app.stations.read',{slug: postView.slug}); 
+          if(!$scope.app.nowReadingMeta)
+            $scope.app.nowReadingMeta = {};
+
+          $scope.app.nowReadingMeta.fromSearch = fromSearch;
+          $scope.app.nowReadingMeta.listMeta = listMeta;
+          if(fromSearch)
+            $state.go('app.search.read',{slug: postView.slug}); 
+          else
+            $state.go('app.stations.read',{slug: postView.slug}); 
 
         });
       }

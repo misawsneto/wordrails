@@ -1,23 +1,67 @@
 <!-- hbox layout -->
 <div class="hbox hbox-auto-xs">
   
-  <div class="w-full search-results" ng-class="{'hide': !app.searchResults, 'animated fadeIn': app.searchResults}">
-    <div class="m-auto block-800 b-none">
+  <div class="w-full search-results" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}">
+
+    <div class="m-b-lg block-800 m-auto m-t-sm" infinite-scroll="verticalPaginate(ordinaryRow)" infinite-scroll-distance="1">
+            <!-- posts -->
+      <ul class="b-none no-padding m-b-none ls-style-none">
+        <li ng-repeat="result in app.searchCtrl.searchResults">
+         <div class="search-divider" ng-class="{'search-divider-dark': app.customStyle.darkFonts2, 'b-t': !$first}"></div>
+          <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(result,app.searchCtrl.searchResults, null, true)">
+            <!-- image -->
+            <a class="block-image m-l m-t" ng-if="result.mediumId" >
+              <div class="cell-wrap r r-2x" ng-class="{'hide': !result.mediumId}">
+                <div ng-style="getBackgroundImage(result, 'md')"></div>
+              </div>
+            </a>
+            <!-- /image -->
+            <!-- /content -->
+            <div class="m-t-sm" ng-class="{'content-block': result.mediumId}">
+              <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="result.topper">{{result.topper}}</span>
+              <a  class="h3 font-bold m-b m-t-sm block">
+                {{result.title}}
+              </a>
+              <div class="text-lg font-thin" bind-html-unsafe="result.snippet"></div>
+              <div class="m-t">
+                <div class="display-t-c">
+                  <a >
+                      <div style="{{result.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="result.authorName"></div>
+                  </a>
+                </div>
+                <div class="display-t-c p-l-sm v-middle">
+                  <a ng-click="app.goToProfile($event, result.authorUsername)" class="a-custom-primary link link link--accent link--darken">
+                    {{result.authorName}}
+                  </a>
+                  <br>
+                  <span class="postMetaInline text-sm">
+                    <span class="postMetaInline postMetaInline--bookmark">
+                      <span class="readingTime">{{result.date | fromNow}}</span>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!-- /content -->
+          </div>    
+        </li>
+      </ul>
+        <!-- /posts -->
     </div>
   </div>
 
   <!-- search-display -->
-  <div class="search-display wrapper-sm search-block block-600 b-b" ng-class="{'hide': !app.searchResults, 'animated fadeIn': app.searchResults}">
-    <p class="m-t m-b-xxs"><strong>23</strong> Resultados</p>
+  <div class="search-display wrapper-sm search-block block-600 b-b" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}">
+    <p class="m-t-sm m-b-xxs"><strong>{{app.searchCtrl.hits}}</strong> Resultados</p>
   </div>
   <!-- /search-display -->
 
    <!-- search box -->
-  <div class="search-box" ng-class="{'nonempty-search': app.searchResults && !searchCtrl.nonemptySearch, 'nonempty-search2': searchCtrl.nonemptySearch}">
+  <div class="search-box" ng-class="{'nonempty-search': app.searchCtrl.searchResults && !app.searchCtrl.nonemptySearch, 'nonempty-search2': app.searchCtrl.nonemptySearch}">
     <div class="b-b wrapper-md">
       <div class="m-n font-thin h3">
         <form ng-submit="submitSearch()">
-          <input type="text" class="b-none text-2x w-full back-none" placeholder="Busque por histórias...">
+          <input ng-model="app.searchCtrl.searchQuery" type="text" class="b-none text-2x w-full back-none" placeholder="Busque por histórias...">
         </form>
       </div>
     </div>
@@ -25,3 +69,5 @@
   <!-- /search box -->
 
 </div>
+
+<div ui-view></div>
