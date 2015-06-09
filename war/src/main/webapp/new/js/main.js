@@ -358,7 +358,7 @@ angular.module('app')
        * @param {[type]} postView [description]
        * @param {[type]} list    [description]
        */
-      $scope.app.setNowReading = function(postView, list, listMeta, fromSearch){
+      $scope.app.setNowReading = function(postView, list, listMeta, baseState){
         if($state.current.name == "app.stations.read" && $scope.app.nowReading && $scope.app.nowReading.postId == postView.postId)
           return;
 
@@ -386,21 +386,21 @@ angular.module('app')
         $scope.app.incomingPostDirection = null;
 
         $timeout(function() {
-          if(fromSearch)
+          // if(baseState)
             $scope.app.incomingPostDirection = "fadeIn"
-          else if($scope.app.readList && oldId && oldId > postView.postId)
-            $scope.app.incomingPostDirection = "slideInRight";
-          else
-            $scope.app.incomingPostDirection = "slideInLeft";
+          // else if($scope.app.readList && oldId && oldId > postView.postId)
+          //   $scope.app.incomingPostDirection = "slideInRight";
+          // else
+          //   $scope.app.incomingPostDirection = "slideInLeft";
 
           $scope.app.nowReading = postView;
           if(!$scope.app.nowReadingMeta)
             $scope.app.nowReadingMeta = {};
 
-          $scope.app.nowReadingMeta.fromSearch = fromSearch;
+          $scope.app.nowReadingMeta.baseState = baseState;
           $scope.app.nowReadingMeta.listMeta = listMeta;
-          if(fromSearch)
-            $state.go('app.search.read',{slug: postView.slug}); 
+          if(baseState)
+            $state.go(baseState + '.read',{slug: postView.slug}); 
           else
             $state.go('app.stations.read',{slug: postView.slug}); 
 

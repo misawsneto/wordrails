@@ -39,8 +39,10 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', 'trix', function($sc
 				$scope.searchLoaging = false;
 				$scope.app.searchCtrl.searchPage = $scope.app.searchCtrl.searchPage + 1
 
-				if(!response.posts || response.posts.length == 0)
+				if(!response.posts || response.posts.length == 0){
+					$scope.app.searchCtrl.allLoaded = true;
 					return;
+				}
 
 				response.posts && response.posts.forEach(function(element, index){
 					$scope.app.searchCtrl.searchResults.push(element)

@@ -81,7 +81,18 @@ angular.module('app')
                   controller:'SearchCtrl'
               })
               .state('app.search.read', {
-                  url: '/s/:slug',
+                  url: '/:slug',
+                  template: '',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/read.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  },
+                  controller:'ReadCtrl'
+              })
+              .state('app.user.read', {
+                  url: '/:slug',
                   template: '',
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -112,7 +123,7 @@ angular.module('app')
                         return $ocLazyLoad.load(['js/controllers/bookmarks.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  // , controller:'SearchCtrl'
+                  , controller:'BookmarksCtrl'
               })
               .state('app.notifications', {
                 url: '/notifications',
@@ -123,7 +134,7 @@ angular.module('app')
                         return $ocLazyLoad.load(['js/controllers/notifications.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  // , controller:'SearchCtrl'
+                  , controller:'NotificationsCtrl'
               })
               .state('app.user', {
                   url: '/@:username',

@@ -4,8 +4,8 @@
 		</div>
 	</div>
 	<div class="user-details m-b-lg block-600 m-auto " ng-class="{'with-cover': person.coverLargeId}">
-		<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover bg-img-xxl bg-cover-round m-b m-auto b b-3x b-light-grey" title="{{person.name}}"></div>
-		<div class="m-t-sm text-3x font-bold wrapper-xs text-center">
+		<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}"></div>
+		<div class="m-t-sm font-bold wrapper-xs text-center" ng-class="{'text-4x': !person.coverLargeId, 'text-3x': person.coverLargeId}">
 			{{person.name}}
 		</div>
 	</div>
@@ -16,3 +16,4 @@
 
 
 			<!-- <div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{person.name}}"></div> -->
+<div ui-view></div>

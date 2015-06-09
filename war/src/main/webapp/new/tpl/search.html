@@ -8,7 +8,7 @@
       <ul class="b-none no-padding m-b-none ls-style-none">
         <li ng-repeat="result in app.searchCtrl.searchResults">
          <div class="search-divider" ng-class="{'search-divider-dark': app.customStyle.darkFonts2, 'b-t': !$first}"></div>
-          <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(result,app.searchCtrl.searchResults, null, true)">
+          <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(result,app.searchCtrl.searchResults, null, 'app.search')">
             <!-- image -->
             <a class="block-image m-l m-t" ng-if="result.mediumId" >
               <div class="cell-wrap r r-2x" ng-class="{'hide': !result.mediumId}">
