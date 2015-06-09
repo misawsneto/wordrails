@@ -1191,6 +1191,8 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
 
 #bookmarks .animated,
 #notifications .animated,
+#user-profile .animated,
+#notifications .animated,
 #post-left-content .animated,
 #post-right-content .animated{
  -webkit-animation-duration: 0.3s;
@@ -1495,6 +1497,11 @@ background: rgba(0,0,0,0.5);
 
 .user-details.with-cover{
   margin-top: -120px;
+}
+
+.user-details.animated{
+  -webkit-animation-duration: 0.5s!important;
+  animation-duration: 0.5s!important;
 }
 
 /* /user_profile */

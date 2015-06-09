@@ -146,6 +146,10 @@ angular.module('app')
         else if(toState.name == "app.search"){
           $("title").html($scope.app.initData.network.name + " | Busca");
         }
+        else if(toState.name == "app.user"){
+          console.log(toParams);
+          $("title").html($scope.app.initData.network.name + " | @"+toParams.username);
+        }
         // check state read
         if(toState.name != "app.stations.read"){
           // show to navbar
@@ -303,7 +307,9 @@ angular.module('app')
       $scope.app.refreshData = function(){
         $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
         $scope.app.stationsPermissions = trixService.getStationPermissions();
-        $scope.cancelModal();
+        if(!$scope.app.loginError)
+          $scope.cancelModal();
+
         $scope.app.checkIfLogged();
         window.console && console.log($scope.app.currentStation, $scope.app.stationsPermissions);
       }

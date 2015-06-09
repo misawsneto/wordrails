@@ -3,8 +3,9 @@
 		<div class="profile-cover abstract-bg bg-cover" style="{{person.coverLargeId | imageLink | bgimg2}}">
 		</div>
 	</div>
-	<div class="user-details m-b-lg block-600 m-auto " ng-class="{'with-cover': person.coverLargeId}">
-		<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}"></div>
+	<div class="user-details m-b-lg block-600 m-auto animated fadeInDown" ng-class="{'with-cover': person.coverLargeId}">
+		<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
+		</div>
 		<div class="m-t-sm font-bold wrapper-xs text-center" ng-class="{'text-4x': !person.coverLargeId, 'text-3x': person.coverLargeId}">
 			{{person.name}}
 		</div>
