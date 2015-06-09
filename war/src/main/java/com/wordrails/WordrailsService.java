@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -38,10 +39,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.api.Link;
 import com.wordrails.api.PersonData;
 import com.wordrails.api.PerspectiveResource;
 import com.wordrails.api.StationDto;
@@ -54,9 +58,11 @@ import com.wordrails.business.Image;
 import com.wordrails.business.ImageEventHandler;
 import com.wordrails.business.Network;
 import com.wordrails.business.PasswordReset;
+import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.business.PostRead;
 import com.wordrails.business.Station;
+import com.wordrails.business.StationRole;
 import com.wordrails.business.Term;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.FileContentsRepository;
@@ -68,6 +74,8 @@ import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;
+import com.wordrails.persistence.StationRepository;
+import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
 import com.wordrails.services.AsyncService;
@@ -90,6 +98,16 @@ public class WordrailsService {
 	private @Autowired PerspectiveResource perspectiveResource;
 	private @Autowired PostConverter postConverter;
 	private @Autowired CacheService cacheService;
+	private @Autowired StationRepository stationRepository;
+	private @Autowired StationRolesRepository stationRolesRepository;
+	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
+
+	public List<Link> generateSelfLinks(String self){
+		Link link = new Link();
+		link.href = self;
+		link.rel = "self";
+		return Arrays.asList(link);
+	} 
 
 	/**
 	 * This method should be used with caution because it accesses the database.
@@ -138,7 +156,7 @@ public class WordrailsService {
 			queryPersistence.incrementReadsCount(post.id);
 		} catch (org.springframework.dao.DataIntegrityViolationException ex) {}
 	}
-	
+
 	@Async
 	@Transactional
 	public void countPostRead(Integer postId, String sessionId){
@@ -322,7 +340,7 @@ public class WordrailsService {
 		}
 		return extractImageFromContent(body);
 	}
-	
+
 	public StationDto getDefaultStation(PersonData personData, Integer currentStationId){
 		List<StationPermission> stationPermissions = personData.personPermissions.stationPermissions;
 
@@ -359,7 +377,7 @@ public class WordrailsService {
 				return station;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -377,7 +395,7 @@ public class WordrailsService {
 			}
 		return null;
 	}
-	
+
 	public List<Term> createTermTree(List<Term> allTerms){
 		List<Term> roots = getRootTerms(allTerms);
 		for (Term term : roots) {
@@ -385,7 +403,7 @@ public class WordrailsService {
 		}
 		return roots;
 	}
-	
+
 	public Set<Term> getChilds(Term parent, List<Term> allTerms){
 		cleanTerm(parent);
 		parent.children = new HashSet<Term>();
@@ -394,14 +412,14 @@ public class WordrailsService {
 				parent.children.add(term);
 			}
 		}
-		
+
 		for (Term term: parent.children) {
 			getChilds(term, allTerms);
 		}
-		
+
 		return parent.children;
 	}
-	
+
 	private List<Term> getRootTerms(List<Term> allTerms){
 		List<Term> roots = new ArrayList<Term>();
 		for (Term term : allTerms) {
@@ -411,12 +429,61 @@ public class WordrailsService {
 		}
 		return roots;
 	}
-	
+
 	private void cleanTerm(Term term){
 		term.posts = null;
 		term.rows = null;
 		term.termPerspectives = null;
 		term.cells = null;
 		term.taxonomy = null;
+	}
+
+	public List<StationPermission> getStationPermissions(String baseUrl, Person person, Network network, List<StationDto> stationDtos) {
+		List<Station> stations = new ArrayList<Station>();
+		//Stations Permissions
+		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>();
+		try {
+			stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
+			for (Station station : stations) {
+				StationPermission stationPermissionDto = new StationPermission();
+				StationDto stationDto = new StationDto();
+				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
+
+				//Station Fields
+				stationPermissionDto.stationId = station.id;
+				stationPermissionDto.stationName = station.name;
+				stationPermissionDto.writable = station.writable;
+				stationPermissionDto.main = station.main;
+				stationPermissionDto.visibility = station.visibility;
+				stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
+
+				stationPermissionDto.social = station.social;
+				stationPermissionDto.subheading = station.subheading;
+				stationPermissionDto.sponsored = station.sponsored;
+				stationPermissionDto.topper = station.topper;
+
+				stationPermissionDto.allowComments = station.allowComments;
+				stationPermissionDto.allowSignup = station.allowSignup;
+				stationPermissionDto.allowSocialLogin = station.allowSocialLogin;
+				stationPermissionDto.allowSocialShare = station.allowSocialShare;
+
+				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes(), StationDto.class);
+				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
+				//StationRoles Fields
+				StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
+				if(stationRole != null){
+					stationPermissionDto.admin = stationRole.admin;
+					stationPermissionDto.editor = stationRole.editor;
+					stationPermissionDto.writer = stationRole.writer;
+				}
+
+				stationPermissionDtos.add(stationPermissionDto);
+				stationDtos.add(stationDto);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return stationPermissionDtos;
 	}
 }
