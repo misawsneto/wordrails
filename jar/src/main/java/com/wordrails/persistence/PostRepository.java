@@ -3,6 +3,7 @@ package com.wordrails.persistence;
 import com.wordrails.business.Image;
 import com.wordrails.business.Post;
 import com.wordrails.business.Station;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Pageable;
@@ -66,4 +67,22 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported=false)
     @Query("SELECT wordpressId FROM Post post where post.station.id = :stationId")
     public Set<Integer> findWordpressIdsByStation(@Param("stationId") Integer stationId);
+    
+    //select *, count(*), sum(readsCount) as sumReads from post group by author_id order by sumReads desc
+    
+	@Query("SELECT post, count(*), sum(readsCount) sumReads FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd " + 
+        "group by author ORDER BY sumReads DESC")
+	public List<Object[]> findPostsOrderByMostReadAuthors(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+	
+	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.readsCount DESC, post.date DESC")
+	public List<Post> findPostsOrderByFavoritesCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+	
+	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.favoritesCount DESC, post.date DESC")
+	public List<Post> findPostsOrderByReadsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+	
+	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.recommendsCount DESC, post.date DESC")
+	public List<Post> findPostsOrderByRecommendsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+	
+	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.commentsCount DESC, post.date DESC")
+	public List<Post> findPostsOrderByCommentsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
 }
