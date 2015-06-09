@@ -3,8 +3,10 @@ package com.wordrails.persistence;
 import com.wordrails.business.Image;
 import com.wordrails.business.Post;
 import com.wordrails.business.Station;
+
 import java.util.List;
 import java.util.Set;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -47,10 +49,10 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	public List<Post> findUnreadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId, Pageable pageable);
 	public List<Post> findUnreadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.id DESC")
 	public List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.date DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.id DESC")
 	public List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
     
 	@RestResource(exported=false)
@@ -66,4 +68,8 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported=false)
     @Query("SELECT wordpressId FROM Post post where post.station.id = :stationId")
     public Set<Integer> findWordpressIdsByStation(@Param("stationId") Integer stationId);
+	
+	@RestResource(exported=false)
+	@Query("SELECT wordpressId FROM Post post where post.station.id in :stationIds order by post.id DESC")
+	public List<Post> findPostByPersonIdAndStations(Integer personId, List<Integer> stationIds, Pageable pageable);
 }

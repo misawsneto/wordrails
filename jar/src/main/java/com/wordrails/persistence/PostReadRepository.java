@@ -18,10 +18,10 @@ public interface PostReadRepository extends JpaRepository<PostRead, Integer>, Qu
 	@RestResource(exported = false)
 	public <S extends PostRead> S save(S arg0);
 	
-	@Query("select postRead from PostRead postRead where postRead.person.id != 1 and postRead.person.id = :personId order by postRead.post.date desc")
+	@Query("select postRead from PostRead postRead where postRead.person.id != 1 and postRead.person.id = :personId order by postRead.post.id desc")
 	public List<PostRead> findPostReadByPersonIdOrderByDate(@Param("personId") Integer personId);
 	
-	@Query("select postRead from PostRead postRead where postRead.person.id = :personId order by postRead.post.date desc")
+	@Query("select postRead from PostRead postRead where postRead.person.id = :personId order by postRead.post.id desc")
 	public List<PostRead> findPostReadByPersonIdOrderByDatePaginated(@Param("personId") Integer personId, Pageable pageable);
     
 	@RestResource(exported = false)
