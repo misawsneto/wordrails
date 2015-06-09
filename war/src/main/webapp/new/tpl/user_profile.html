@@ -1,10 +1,15 @@
-<div class="hbox hbox-auto-xs">
-	<div class="pos-abt w-full text-center profile-cover pos-rlt abstract-bg bg-cover clear" style="{{person.coverLargeId | imageLink | bgimg2}}">
-		<div class="cover-abstract-mask" ng-if="!person.coverLargeId">
+<div id="user-profile" class="hbox" ng-cloak>
+	<div class="" ng-show="person.coverLargeId">
+		<div class="profile-cover abstract-bg bg-cover" style="{{person.coverLargeId | imageLink | bgimg2}}">
 		</div>
-		<div style="{{person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{person.name}}"></div>
 	</div>
-	<div class="text-u-c m-t-sm text-lg font-thin wrapper-xs text-center text-white w-full">
-		{{person.name}}
+	<div class="user-details m-b-lg block-600 m-auto animated fadeInDown" ng-class="{'with-cover': person.coverLargeId}">
+		<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
+		</div>
+		<div class="m-t-sm font-bold wrapper-xs text-center" ng-class="{'text-4x': !person.coverLargeId, 'text-3x': person.coverLargeId}">
+			{{person.name}}
+		</div>
 	</div>
+	<div class="m-t m-b b-t w-full"></div>
+	<div ui-view></div>
 </div>

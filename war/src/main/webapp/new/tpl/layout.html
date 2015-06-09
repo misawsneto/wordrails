@@ -10,7 +10,7 @@
 
   <!-- view -->
   <div class="app-content" ng-class="{'m-n': app.hideAside, 'h-full': app.hideFooter }">
-    <div class="app-content-body fade-in" ng-class="{'h-full': app.hideFooter, 'no-header-space': $state.current.name.indexOf('app.search') > -1 || $state.current.name.indexOf('app.stations') > -1 || $state.current.name.indexOf('app.notifications') > -1 || $state.current.name.indexOf('app.bookmarks') > -1 || $state.current.name.indexOf('app.settings') > -1 || $state.current.name.indexOf('app.user') > -1, 'app-content-full': $state.current.name.indexOf('app.stations') == -1}" ui-view>
+    <div class="app-content-body fade-in" ng-class="{'h-full': app.hideFooter, 'no-header-space': $state.current.name.indexOf('app.search') > -1 || $state.current.name.indexOf('app.stations') > -1 || $state.current.name.indexOf('app.notifications') > -1 || $state.current.name.indexOf('app.bookmarks') > -1 || $state.current.name.indexOf('app.settings') > -1 || $state.current.name.indexOf('app.user') > -1, 'app-content-full': ($state.current.name.indexOf('app.stations') == -1 && $state.current.name.indexOf('app.search') == -1 && $state.current.name.indexOf('app.user') == -1)}" ui-view>
     </div>
   </div>
   <!-- / view -->
@@ -55,12 +55,16 @@
             </div>      
             <button angular-ripple type="submit" class="m-t-md btn-custom btn text-lg text-u-c btn-block p-h-md">Entrar</button>
           </form>
+          <!-- 
           <button angular-ripple type="submit" class="m-t-md btn-info btn text-lg text-u-c btn-block p-h-md">
-            <i class="mdi mdi-twitter m-r-sm"></i> Twitter</button>
-            <button angular-ripple type="submit" class="m-t-md btn-blue btn text-lg text-u-c btn-block p-h-md">
-              <i class="mdi mdi-facebook m-r-sm"></i> Facebook</button>
-            </div>
-          </div>
+            <i class="mdi mdi-twitter m-r-sm"></i> Twitter
+          </button>
+          <button angular-ripple type="submit" class="m-t-md btn-blue btn text-lg text-u-c btn-block p-h-md">
+            <i class="mdi mdi-facebook m-r-sm"></i> Facebook
+          </button>
+          -->
         </div>
       </div>
+    </div>
+  </div>
     </script>

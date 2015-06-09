@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -13,6 +14,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -41,8 +43,6 @@ import com.wordrails.business.Network;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationRole;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.NetworkRepository;
@@ -109,6 +109,20 @@ public class PersonsResource {
 		}catch(BadCredentialsException e){
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
+	}
+	
+	@GET
+	@Path("/{personId}/posts")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response personPost(@PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
+			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+		Pageable pageable = new PageRequest(page, size);
+		
+		List<Integer> stationIds = new ArrayList<Integer>();
+		
+		postRepository.findPostByPersonIdAndStations(personId, stationIds, pageable);
+
+		return null;
 	}
 	
 	@GET
@@ -195,7 +209,6 @@ public class PersonsResource {
 		
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
-		List<Station> stations;
 		List<StationDto> stationDtos = new ArrayList<StationDto>();
 		
 			//Network Permissions
@@ -204,47 +217,9 @@ public class PersonsResource {
 			networkPermissionDto.networkId = networkRole.id;
 		else
 			networkPermissionDto.admin = false;
-			//Stations Permissions
-			stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
-			List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>(stations.size());
-			for (Station station : stations) {
-				StationPermission stationPermissionDto = new StationPermission();
-				StationDto stationDto = new StationDto();
-				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
-				
-				//Station Fields
-				stationPermissionDto.stationId = station.id;
-				stationPermissionDto.stationName = station.name;
-				stationPermissionDto.writable = station.writable;
-				stationPermissionDto.main = station.main;
-				stationPermissionDto.visibility = station.visibility;
-				stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
-				
-				stationPermissionDto.social = station.social;
-				stationPermissionDto.subheading = station.subheading;
-				stationPermissionDto.sponsored = station.sponsored;
-				stationPermissionDto.topper = station.topper;
-				
-				stationPermissionDto.allowComments = station.allowComments;
-				stationPermissionDto.allowSignup = station.allowSignup;
-				stationPermissionDto.allowSocialLogin = station.allowSocialLogin;
-				stationPermissionDto.allowSocialShare = station.allowSocialShare;
-				
-				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes(), StationDto.class);
-				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
-				//StationRoles Fields
-				StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
-				if(stationRole != null){
-					stationPermissionDto.admin = stationRole.admin;
-					stationPermissionDto.editor = stationRole.editor;
-					stationPermissionDto.writer = stationRole.writer;
-				}
-				
-				stationPermissionDtos.add(stationPermissionDto);
-				stationDtos.add(stationDto);
-			}
+			
 			personPermissions.networkPermission = networkPermissionDto;
-			personPermissions.stationPermissions = stationPermissionDtos;
+			personPermissions.stationPermissions = wordrailsService.getStationPermissions(baseUrl, person, network, stationDtos);
 			personPermissions.personId = person.id;
 			personPermissions.username = person.username;
 			personPermissions.personName = person.name;
@@ -257,18 +232,13 @@ public class PersonsResource {
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;
 		
-		initData.person.links = generateSelfLinks(baseUrl + "/api/persons/" + person.id);
-		initData.network.links = generateSelfLinks(baseUrl + "/api/stations/" + network.id);
+		initData.person.links = wordrailsService.generateSelfLinks(baseUrl + "/api/persons/" + person.id);
+		initData.network.links = wordrailsService.generateSelfLinks(baseUrl + "/api/stations/" + network.id);
 		if(initData.networkRole != null)
-			initData.networkRole.links = networkRole != null ? generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id) : Arrays.asList(new Link());
+			initData.networkRole.links = networkRole != null ? wordrailsService.generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id) : Arrays.asList(new Link());
 		
 		return initData;
 	}
 	
-	private List<Link> generateSelfLinks(String self){
-		Link link = new Link();
-		link.href = self;
-		link.rel = "self";
-		return Arrays.asList(link);
-	} 
+	
 }

@@ -146,6 +146,10 @@ angular.module('app')
         else if(toState.name == "app.search"){
           $("title").html($scope.app.initData.network.name + " | Busca");
         }
+        else if(toState.name == "app.user"){
+          console.log(toParams);
+          $("title").html($scope.app.initData.network.name + " | @"+toParams.username);
+        }
         // check state read
         if(toState.name != "app.stations.read"){
           // show to navbar
@@ -303,7 +307,9 @@ angular.module('app')
       $scope.app.refreshData = function(){
         $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
         $scope.app.stationsPermissions = trixService.getStationPermissions();
-        $scope.cancelModal();
+        if(!$scope.app.loginError)
+          $scope.cancelModal();
+
         $scope.app.checkIfLogged();
         window.console && console.log($scope.app.currentStation, $scope.app.stationsPermissions);
       }
@@ -333,6 +339,7 @@ angular.module('app')
       // close post read and go back to previous state
       $scope.app.closePostRead = function(){
         $state.go('^')
+        /*$window.history.back();*/
         $timeout(function(){
           $scope.app.nowReading = null;
         }, 300)
@@ -357,7 +364,7 @@ angular.module('app')
        * @param {[type]} postView [description]
        * @param {[type]} list    [description]
        */
-      $scope.app.setNowReading = function(postView, list, listMeta, fromSearch){
+      $scope.app.setNowReading = function(postView, list, listMeta, baseState){
         if($state.current.name == "app.stations.read" && $scope.app.nowReading && $scope.app.nowReading.postId == postView.postId)
           return;
 
@@ -385,21 +392,21 @@ angular.module('app')
         $scope.app.incomingPostDirection = null;
 
         $timeout(function() {
-          if(fromSearch)
+          // if(baseState)
             $scope.app.incomingPostDirection = "fadeIn"
-          else if($scope.app.readList && oldId && oldId > postView.postId)
-            $scope.app.incomingPostDirection = "slideInRight";
-          else
-            $scope.app.incomingPostDirection = "slideInLeft";
+          // else if($scope.app.readList && oldId && oldId > postView.postId)
+          //   $scope.app.incomingPostDirection = "slideInRight";
+          // else
+          //   $scope.app.incomingPostDirection = "slideInLeft";
 
           $scope.app.nowReading = postView;
           if(!$scope.app.nowReadingMeta)
             $scope.app.nowReadingMeta = {};
 
-          $scope.app.nowReadingMeta.fromSearch = fromSearch;
+          $scope.app.nowReadingMeta.baseState = baseState;
           $scope.app.nowReadingMeta.listMeta = listMeta;
-          if(fromSearch)
-            $state.go('app.search.read',{slug: postView.slug}); 
+          if(baseState)
+            $state.go(baseState + '.read',{slug: postView.slug}); 
           else
             $state.go('app.stations.read',{slug: postView.slug}); 
 

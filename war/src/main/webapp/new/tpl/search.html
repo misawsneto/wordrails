@@ -1,14 +1,14 @@
 <!-- hbox layout -->
-<div class="hbox hbox-auto-xs">
+<div class="p-t-50">
   
-  <div class="w-full search-results" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}">
+  <div class="w-full search-results" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}" infinite-scroll="paginateSearch()" infinite-scroll-distance="1">
 
-    <div class="m-b-lg block-800 m-auto m-t-sm" infinite-scroll="verticalPaginate(ordinaryRow)" infinite-scroll-distance="1">
+    <div class="m-b-lg block-800 m-auto m-t-sm">
             <!-- posts -->
       <ul class="b-none no-padding m-b-none ls-style-none">
         <li ng-repeat="result in app.searchCtrl.searchResults">
          <div class="search-divider" ng-class="{'search-divider-dark': app.customStyle.darkFonts2, 'b-t': !$first}"></div>
-          <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(result,app.searchCtrl.searchResults, null, true)">
+          <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(result,app.searchCtrl.searchResults, null, 'app.search')">
             <!-- image -->
             <a class="block-image m-l m-t" ng-if="result.mediumId" >
               <div class="cell-wrap r r-2x" ng-class="{'hide': !result.mediumId}">
@@ -51,14 +51,14 @@
   </div>
 
   <!-- search-display -->
-  <div class="search-display wrapper-sm search-block block-600 b-b" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}">
+  <div class="search-display wrapper-sm search-block b-b" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}">
     <p class="m-t-sm m-b-xxs"><strong>{{app.searchCtrl.hits}}</strong> Resultados</p>
   </div>
   <!-- /search-display -->
 
    <!-- search box -->
   <div class="search-box" ng-class="{'nonempty-search': app.searchCtrl.searchResults && !app.searchCtrl.nonemptySearch, 'nonempty-search2': app.searchCtrl.nonemptySearch}">
-    <div class="b-b wrapper-md">
+    <div class="b-b wrapper-md p-l-xxl">
       <div class="m-n font-thin h3">
         <form ng-submit="submitSearch()">
           <input ng-model="app.searchCtrl.searchQuery" type="text" class="b-none text-2x w-full back-none" placeholder="Busque por histórias...">

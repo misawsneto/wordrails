@@ -1,4 +1,4 @@
-<div class="station-perspectives">
+<div class="station-perspectives p-t-50">
 
   <div ng-include=" 'tpl/stations_horizontal.html' "></div>
 
@@ -20,7 +20,7 @@
                   <div class="popular-index">{{$index + 1}}</div>
                   <div class="">
                     <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
-                    <a ng-click="app.setNowReading(post)" class="pointer">
+                    <a ng-click="app.setNowReading(post, app.initData.popular)" class="pointer">
                     <div>
                       {{post.title | characters:40}}
                     </div>
@@ -39,7 +39,7 @@
                 <div class="tl-wrap">
                   <div class="">
                     <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
-                    <a ng-click="app.setNowReading(post)" class="pointer">
+                    <a ng-click="app.setNowReading(post, app.initData.recent)" class="pointer">
                     <div clamp="1">
                       {{post.title | characters:40}}
                     </div>
@@ -69,10 +69,10 @@
       </a>
       <!-- dropdown -->
       <ul class="dropdown-menu animated w-sm">
-        <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Marcar como lida</span></li>
+        <!-- <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Marcar como lida</span></li>
         <li> <a href class="mark-as-read"> Todas</a> </li>
         <li> <a href class="mark-as-read"> Mais antigas que um dia</a> </li>
-        <li class="divider"></li>
+        <li class="divider"></li> -->
         <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">modo de exibição</span></li>
         <li> <a ng-click="changeView('horizontal')" href>
             <span class="mdi mdi-checkbox-marked-circle-outline pull-right m-t-xxs" ng-show="app.viewMode == 'horizontal'"></span>

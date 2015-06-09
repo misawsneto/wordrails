@@ -48,10 +48,10 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	public List<Post> findUnreadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId, Pageable pageable);
 	public List<Post> findUnreadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.id DESC")
 	public List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.date DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.id DESC")
 	public List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
     
 	@RestResource(exported=false)
@@ -85,4 +85,8 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	
 	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.commentsCount DESC, post.date DESC")
 	public List<Post> findPostsOrderByCommentsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+	
+	@RestResource(exported=false)
+	@Query("SELECT wordpressId FROM Post post where post.station.id in :stationIds order by post.id DESC")
+	public List<Post> findPostByPersonIdAndStations(Integer personId, List<Integer> stationIds, Pageable pageable);
 }
