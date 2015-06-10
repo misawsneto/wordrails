@@ -1514,7 +1514,15 @@ background: rgba(0,0,0,0.5);
 }
 
 #user-profile .header .header-title{
+  color: #666;
   background-color: #f7f7f7;
+}
+
+#profile-buttons{
+  right: 0;
+}
+.profile-buttons-cover{
+  margin-top: -45px;
 }
 
 /* /user_profile */

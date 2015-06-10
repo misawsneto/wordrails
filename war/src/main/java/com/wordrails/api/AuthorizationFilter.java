@@ -33,6 +33,7 @@ import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Path;
@@ -1314,5 +1315,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindByPerspectiveIdAuthorized(Integer perspectiveId) {
 		return true;
 	}
+
+	@Override
+	protected boolean isGetPersonNetworkAuthorized(Integer personId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isCountByDistinctSessionidAuthorized(Date dateIni, Date dateEnd) {
+		return true;
+	}
+
 
 }

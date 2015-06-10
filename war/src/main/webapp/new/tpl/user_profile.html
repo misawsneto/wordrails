@@ -5,6 +5,11 @@
 			<div class="profile-cover abstract-bg bg-cover" style="{{person.coverLargeId | imageLink | bgimg2}}">
 			</div>
 		</div>
+		<div id="profile-buttons" class="pos-abt wrapper" ng-class="{'profile-buttons-cover': person.coverLargeId}">
+			<md-button md-no-ink angular-ripple ng-show="person.id == app.initData.person.id" class="md-fab custom-fab-button text-lg" ng-click="editProfile()">
+        <i class="mdi mdi-pencil"></i>
+      </md-button>
+		</div>
 		<div class="user-details block-600 m-auto animated fadeInDown" ng-class="{'with-cover': person.coverLargeId}">
 			<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
 			</div>

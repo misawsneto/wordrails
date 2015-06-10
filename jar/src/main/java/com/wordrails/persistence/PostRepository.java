@@ -70,21 +70,21 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
     
     //select *, count(*), sum(readsCount) as sumReads from post group by author_id order by sumReads desc
     
-	@Query("SELECT post, count(*), sum(readsCount) sumReads FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd " + 
-        "group by author ORDER BY sumReads DESC")
-	public List<Object[]> findPostsOrderByMostReadAuthors(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+//	@Query("SELECT post, count(*), sum(readsCount) sumReads FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd " + 
+//        "group by author ORDER BY sumReads DESC")
+//	public List<Object[]> findPostsOrderByMostReadAuthors(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
 	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.readsCount DESC, post.date DESC")
-	public List<Post> findPostsOrderByFavoritesCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
-	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.favoritesCount DESC, post.date DESC")
-	public List<Post> findPostsOrderByReadsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
-	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.recommendsCount DESC, post.date DESC")
-	public List<Post> findPostsOrderByRecommendsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
-	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.commentsCount DESC, post.date DESC")
-	public List<Post> findPostsOrderByCommentsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+//	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.readsCount DESC, post.date DESC")
+//	public List<Post> findPostsOrderByFavoritesCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+//	
+//	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.favoritesCount DESC, post.date DESC")
+//	public List<Post> findPostsOrderByReadsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+//	
+//	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.recommendsCount DESC, post.date DESC")
+//	public List<Post> findPostsOrderByRecommendsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+//	
+//	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.commentsCount DESC, post.date DESC")
+//	public List<Post> findPostsOrderByCommentsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
 	
 	@RestResource(exported=false)
 	@Query("SELECT post FROM Post post where post.author.id = :personId AND post.state = 'PUBLISHED' AND post.station.id in (:stationIds) order by post.id DESC")
