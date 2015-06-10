@@ -68,23 +68,21 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
     @Query("SELECT wordpressId FROM Post post where post.station.id = :stationId")
     public Set<Integer> findWordpressIdsByStation(@Param("stationId") Integer stationId);
     
-    //select *, count(*), sum(readsCount) as sumReads from post group by author_id order by sumReads desc
-    
-	@Query("SELECT post, count(*), sum(readsCount) sumReads FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd " + 
-        "group by author ORDER BY sumReads DESC")
-	public List<Object[]> findPostsOrderByMostReadAuthors(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+	@Query(value = "SELECT *, count(*), sum(readsCount) FROM post, station where station.id = ?1 AND " +
+        "date BETWEEN ?2 AND ?3 group by author_id ORDER BY sum(readsCount) DESC", nativeQuery = true)
+	public List<Object[]> findPostsOrderByMostReadAuthors(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
 	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.readsCount DESC, post.date DESC")
-	public List<Post> findPostsOrderByFavoritesCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+	@Query(value = "SELECT * FROM post, station where station.id = 2 AND date BETWEEN ?2 AND ?3 ORDER BY favoritesCount DESC, date DESC", nativeQuery = true)
+	public List<Post> findPostsOrderByFavorites(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
 	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.favoritesCount DESC, post.date DESC")
-	public List<Post> findPostsOrderByReadsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+	@Query(value = "SELECT * FROM post, station where station.id = 2 AND date BETWEEN ?2 AND ?3 ORDER BY readsCount DESC, date DESC", nativeQuery = true)
+	public List<Post> findPostsOrderByReads(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
 	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.recommendsCount DESC, post.date DESC")
-	public List<Post> findPostsOrderByRecommendsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+	@Query(value = "SELECT * FROM post, station where station.id = 2 AND date BETWEEN ?2 AND ?3 ORDER BY recommendsCount DESC, date DESC", nativeQuery = true)
+	public List<Post> findPostsOrderByRecommends(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
 	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId AND date >= :dateIni AND date <= :dateEnd ORDER BY post.commentsCount DESC, post.date DESC")
-	public List<Post> findPostsOrderByCommentsCount(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+	@Query(value = "SELECT * FROM post, station where station.id = 2 AND date BETWEEN ?2 AND ?3 ORDER BY commentsCount DESC, date DESC", nativeQuery = true)
+	public List<Post> findPostsOrderByComments(@Param("stationId") Integer stationId, @Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
 	
 	@RestResource(exported=false)
 	@Query("SELECT wordpressId FROM Post post where post.station.id in :stationIds order by post.id DESC")

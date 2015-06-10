@@ -221,6 +221,6 @@
 			<groupId>co.xarx</groupId>
 			<artifactId>trix-generator</artifactId>
 			<version>${project.version}</version>
-		</dependency>				
+		</dependency>
 	</dependencies>
 </project>
