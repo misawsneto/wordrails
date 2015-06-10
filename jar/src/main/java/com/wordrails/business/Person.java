@@ -65,6 +65,9 @@ public class Person {
 	@OneToMany(mappedBy="person")
 	public Set<Recommend> recommends;
 	
+	@OneToOne(optional = true)
+	public Network network;
+	
 	@Size(max=2048)
 	public String bio;
 

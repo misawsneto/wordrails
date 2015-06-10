@@ -147,7 +147,6 @@ angular.module('app')
           $("title").html($scope.app.initData.network.name + " | Busca");
         }
         else if(toState.name == "app.user"){
-          console.log(toParams);
           $("title").html($scope.app.initData.network.name + " | @"+toParams.username);
         }
         // check state read
@@ -175,7 +174,6 @@ angular.module('app')
       })
 
       $scope.app.goToProfile = function($event, username){
-        console.log('asdfasdf');
         $event.preventDefault();
         $event.stopPropagation();
         $state.go('app.user', {username: username})

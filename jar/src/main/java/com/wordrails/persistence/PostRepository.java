@@ -70,6 +70,11 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
     public Set<Integer> findWordpressIdsByStation(@Param("stationId") Integer stationId);
 	
 	@RestResource(exported=false)
-	@Query("SELECT wordpressId FROM Post post where post.station.id in :stationIds order by post.id DESC")
-	public List<Post> findPostByPersonIdAndStations(Integer personId, List<Integer> stationIds, Pageable pageable);
+	@Query("SELECT post FROM Post post where post.author.id = :personId AND post.state = 'PUBLISHED' AND post.station.id in (:stationIds) order by post.id DESC")
+	public List<Post> findPostByPersonIdAndStations(@Param("personId") Integer personId, @Param("stationIds") List<Integer> stationIds, Pageable pageable);
+	
+	@RestResource(exported=false)
+	@Query("SELECT post FROM Recommend recommend join recommend.post post where recommend.person.id = :personId AND post.state = 'PUBLISHED' AND post.station.id in (:stationIds) order by recommend.id DESC")
+	public List<Post> findRecommendationsByPersonIdAndStations(Integer personId,
+			List<Integer> stationIds, Pageable pageable);
 }
