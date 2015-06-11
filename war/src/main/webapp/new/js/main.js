@@ -211,6 +211,13 @@ angular.module('app')
         });
       }
 
+      $scope.app.openSplash = function(templateId, size){
+        $scope.modalInstance = $splash.open({
+          templateUrl: templateId,
+          scope: $scope
+        });
+      }
+
       $scope.toastPosition = {
         bottom: false,
         top: true,

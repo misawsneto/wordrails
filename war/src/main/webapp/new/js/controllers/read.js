@@ -28,4 +28,16 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 		}
 	})
 
+	$scope.app.bookmark = function(postId){
+		if($scope.app.isLogged){
+          trix.toggleBookmark(postId).success(function(reponse){
+          	console.log(reponse);
+          	$scope.app.showSimpleToast('Esta história foi adicionado a sua lista.')
+          }).error(function(){
+          	console.log('error');
+          })
+        }else
+          $scope.openSplash('signin_splash.html')
+	}
+
 }])

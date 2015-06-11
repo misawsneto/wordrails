@@ -606,18 +606,6 @@
 		</query>
 	</named-query>
 	
-	<named-query name="Bookmark.findBookmarksByPersonIdOrderByDate">
-		<query>
-			select
-				bookmark
-			from
-				Bookmark bookmark join bookmark.person person
-			where
-				person.id = :personId
-			order by bookmark.createdAt desc
-		</query>
-	</named-query>
-	
 	<named-query name="Recommend.findRecommendsByPersonId">
 		<query>
 			select

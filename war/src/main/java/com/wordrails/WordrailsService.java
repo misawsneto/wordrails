@@ -490,4 +490,9 @@ public class WordrailsService {
 		}
 		return stationPermissionDtos;
 	}
+
+	public void toggleBookmark(Integer id, Integer postId) {
+		// TODO Auto-generated method stub
+		
+	}
 }

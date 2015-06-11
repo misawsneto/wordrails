@@ -136,6 +136,28 @@ angular.module('app')
                   }
                   , controller:'NotificationsCtrl'
               })
+              .state('app.bookmarks.read', {
+                  url: '/:slug',
+                  template: '',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/read.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  },
+                  controller:'ReadCtrl'
+              })
+              .state('app.notifications.read', {
+                  url: '/:slug',
+                  template: '',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/read.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  },
+                  controller:'ReadCtrl'
+              })
               .state('app.user', {
                   url: '/@:username',
                   templateUrl: 'tpl/user_profile.html',

@@ -46,6 +46,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Latitude;
 import org.hibernate.search.annotations.Longitude;
+import org.hibernate.search.annotations.NumericField;
 import org.hibernate.search.annotations.Parameter;
 import org.hibernate.search.annotations.Resolution;
 import org.hibernate.search.annotations.Spatial;
@@ -182,6 +183,7 @@ public class Post {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable=false)
+	@IndexedEmbedded
 	public Person author;
 		
 	@OneToMany(mappedBy="post")
@@ -194,15 +196,19 @@ public class Post {
 	public Station station;
 	
 	@Field
+	@NumericField
 	public int readsCount = 0;
 	
 	@Field
+	@NumericField
 	public int favoritesCount = 0;
 	
 	@Field
+	@NumericField
 	public int recommendsCount = 0;
 
 	@Field
+	@NumericField
 	public int commentsCount = 0;
 
 	@ManyToMany
