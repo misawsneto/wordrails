@@ -1329,22 +1329,22 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
     }
 
     @Override
-    protected boolean isFindPostsOrderByFavoritesAuthorized(Integer stationId, Date dateIni, Date dateEnd) {
+    protected boolean isFindPostsOrderByFavoritesAuthorized(Integer stationId, String dateIni, String dateEnd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    protected boolean isFindPostsOrderByReadsAuthorized(Integer stationId, Date dateIni, Date dateEnd) {
+    protected boolean isFindPostsOrderByReadsAuthorized(Integer stationId, String dateIni, String dateEnd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    protected boolean isFindPostsOrderByRecommendsAuthorized(Integer stationId, Date dateIni, Date dateEnd) {
+    protected boolean isFindPostsOrderByRecommendsAuthorized(Integer stationId, String dateIni, String dateEnd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    protected boolean isFindPostsOrderByCommentsAuthorized(Integer stationId, Date dateIni, Date dateEnd) {
+    protected boolean isFindPostsOrderByCommentsAuthorized(Integer stationId, String dateIni, String dateEnd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
