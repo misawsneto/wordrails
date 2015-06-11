@@ -93,6 +93,28 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/perspectives/termPerspectiveViews", config)
     }
     
+     this.getPersonNetworkPosts = function(personId, networkId, _page, _size) {
+		var config = {
+			"params": {
+				"networkId": networkId,
+				"page": _page,
+				"size": _size,
+			}
+		}
+      return \$http.get(_config.url + "/api/persons/"+personId+"/posts", config)
+    }
+    
+    this.getPersonNetworkRecommendations = function(personId, networkId, _page, _size) {
+		var config = {
+			"params": {
+				"networkId": networkId,
+				"page": _page,
+				"size": _size,
+			}
+		}
+      return \$http.get(_config.url + "/api/persons/"+personId+"/recommends", config)
+    }
+    
     this.searchPostsFromOrPromotedToStation = function(stationId, query, _page, _size) {
 		var config = {
 			"params": {

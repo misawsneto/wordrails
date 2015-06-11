@@ -76,7 +76,7 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 	    	ordinaryRow.loading = true;
     		return $q(function(resolve, reject) {
 	    		cfpLoadingBar.complete();
-		    	trix.getRowView($scope.app.currentStation.defaultPerspectiveId, null, ordinaryRow.termId, ordinaryRow.page + 1, 5)
+		    	trix.getRowView($scope.app.currentStation.defaultPerspectiveId, null, ordinaryRow.termId, ordinaryRow.page + 1, 10)
 		    	.success(function(response){
 		    		if(response.cells && response.cells.length > 0){
 		    			response.cells.forEach(function(cell, index){
@@ -115,7 +115,7 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
     	if(!ordinaryRow.loading){
     		cfpLoadingBar.complete();
 	    	ordinaryRow.loading = true;
-	    	trix.getRowView($scope.app.currentStation.defaultPerspectiveId, null, ordinaryRow.termId, ordinaryRow.page + 1, 5)
+	    	trix.getRowView($scope.app.currentStation.defaultPerspectiveId, null, ordinaryRow.termId, ordinaryRow.page + 1, 10)
 	    	.success(function(response){
 	    		if(response.cells && response.cells.length > 0){
 	    			response.cells.forEach(function(cell, index){

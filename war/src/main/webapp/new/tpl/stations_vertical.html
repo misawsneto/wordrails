@@ -7,7 +7,7 @@
             <!-- posts -->
           <ul class="b-none no-padding m-b-none ls-style-none">
             <li ng-repeat="cell in ordinaryRow.cells">
-             <div class="search-divider" ng-class="{'search-divider-dark': app.customStyle.darkFonts2, 'b-t': !$first}"></div>
+             <div ng-class="{'b-t': !$first}"></div>
               <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
                 <!-- image -->
                 <a class="block-image m-l m-t" ng-if="cell.postView.mediumId" >

@@ -1,15 +1,140 @@
 <div id="user-profile" class="hbox" ng-cloak>
-	<div class="" ng-show="person.coverLargeId">
-		<div class="profile-cover abstract-bg bg-cover" style="{{person.coverLargeId | imageLink | bgimg2}}">
+	<!-- cover container -->
+	<div ng-show="showProfile">
+		<div class="" ng-show="person.coverLargeId">
+			<div class="profile-cover abstract-bg bg-cover" style="{{person.coverLargeId | imageLink | bgimg2}}">
+			</div>
+		</div>
+		<div id="profile-buttons" class="pos-abt wrapper" ng-class="{'profile-buttons-cover': person.coverLargeId}">
+			<md-button md-no-ink angular-ripple ng-show="person.id == app.initData.person.id" class="md-fab custom-fab-button text-lg" ng-click="editProfile()">
+        <i class="mdi mdi-pencil"></i>
+      </md-button>
+		</div>
+		<div class="user-details block-600 m-auto animated fadeInDown" ng-class="{'with-cover': person.coverLargeId}">
+			<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
+			</div>
+			<div class="m-t-sm font-bold wrapper-xs text-center" ng-class="{'text-4x': !person.coverLargeId, 'text-3x': person.coverLargeId}">
+				{{person.name}}
+			</div>
+		</div>
+		<div class="user-bio block-600 m-auto font-thin text-2x text-center m-b-lg">
+			{{person.bio}}
 		</div>
 	</div>
-	<div class="user-details m-b-lg block-600 m-auto animated fadeInDown" ng-class="{'with-cover': person.coverLargeId}">
-		<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
-		</div>
-		<div class="m-t-sm font-bold wrapper-xs text-center" ng-class="{'text-4x': !person.coverLargeId, 'text-3x': person.coverLargeId}">
-			{{person.name}}
+	<!-- /conver container -->
+	
+	<!-- divider -->
+	<div ng-show="postViews && showProfile">
+		<div class="m-t b-t b-drk w-full"></div>
+		<div class="header m-auto text-center text-u-c text-lg">
+			<span class="header-title wrapper">
+				Histórias
+			</span>
 		</div>
 	</div>
-	<div class="m-t m-b b-t w-full"></div>
+
+	<!-- posts & recommendation -->
+	<div infinite-scroll="paginate()" infinite-scroll-distance="1">
+    <!-- posts -->
+		<div class="block-800 m-auto" ng-show="postViews && showProfile">
+	    <ul class="b-none no-padding m-b-none ls-style-none">
+	      <li ng-repeat="postView in postViews">
+	       <div ng-class="{'b-t': !$first}"></div>
+	        <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+	          <!-- image -->
+	          <a class="block-image m-l m-t" ng-if="postView.mediumId" >
+	            <div class="cell-wrap r r-2x" ng-class="{'hide': !postView.mediumId}">
+	              <div ng-style="getBackgroundImage(postView, 'md')"></div>
+	            </div>
+	          </a>
+	          <!-- /image -->
+	          <!-- /content -->
+	          <div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
+	            <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
+	            <a  class="h3 font-bold m-b m-t-sm block">
+	              {{postView.title}}
+	            </a>
+	            <div class="text-lg font-thin">
+	            	{{postView.snippet | characters:170}}
+	            </div>
+	            <div class="m-t">
+	              <div class="display-t-c">
+	                <a >
+	                    <div style="{{postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
+	                </a>
+	              </div>
+	              <div class="display-t-c p-l-sm v-middle">
+	                <a ng-click="app.goToProfile($event, postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
+	                  {{postView.authorName}}
+	                </a>
+	                <br>
+	                <span class="postMetaInline text-sm">
+	                  <span class="postMetaInline postMetaInline--bookmark">
+	                    <span class="readingTime">{{postView.date | fromNow}}</span>
+	                  </span>
+	                </span>
+	              </div>
+	            </div>
+	          </div>
+	          <!-- /content -->
+	        </div>    
+	      </li>
+	    </ul>
+	  </div>
+    <!-- /posts -->
+
+    <div class="wrapper-md m-t m-b bg-dark" ng-show="recommendations && showProfile">
+    </div>
+		
+		<!-- pages -->
+		<div class="block-800 m-auto" ng-show="pages && showProfile">
+			<ul class="b-none no-padding m-b-none ls-style-none">
+	      <li ng-repeat="postView in pages">
+	       <div ng-class="{'b-t': !$first || (!recommendations || recommendations.length == 0)}"></div>
+	        <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+	          <!-- image -->
+	          <a class="block-image m-l m-t" ng-if="postView.mediumId" >
+	            <div class="cell-wrap r r-2x" ng-class="{'hide': !postView.mediumId}">
+	              <div ng-style="getBackgroundImage(postView, 'md')"></div>
+	            </div>
+	          </a>
+	          <!-- /image -->
+	          <!-- /content -->
+	          <div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
+	            <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
+	            <a  class="h3 font-bold m-b m-t-sm block">
+	              {{postView.title}}
+	            </a>
+	            <div class="text-lg font-thin">
+	            	{{postView.snippet | characters:170}}
+	            </div>
+	            <div class="m-t">
+	              <div class="display-t-c">
+	                <a >
+	                    <div style="{{postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
+	                </a>
+	              </div>
+	              <div class="display-t-c p-l-sm v-middle">
+	                <a ng-click="app.goToProfile($event, postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
+	                  {{postView.authorName}}
+	                </a>
+	                <br>
+	                <span class="postMetaInline text-sm">
+	                  <span class="postMetaInline postMetaInline--bookmark">
+	                    <span class="readingTime">{{postView.date | fromNow}}</span>
+	                  </span>
+	                </span>
+	              </div>
+	            </div>
+	          </div>
+	          <!-- /content -->
+	        </div>    
+	      </li>
+	    </ul>
+    </div>
+		<!-- /pages -->
+
+  </div>
+
 	<div ui-view></div>
 </div>

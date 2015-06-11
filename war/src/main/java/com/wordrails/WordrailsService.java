@@ -437,13 +437,17 @@ public class WordrailsService {
 		term.cells = null;
 		term.taxonomy = null;
 	}
+	
+	public List<StationPermission> getStationPermissions(String baseUrl, Integer personId, Integer networkId) {
+		return getStationPermissions(baseUrl, personId, networkId, null);
+	}
 
-	public List<StationPermission> getStationPermissions(String baseUrl, Person person, Network network, List<StationDto> stationDtos) {
+	public List<StationPermission> getStationPermissions(String baseUrl, Integer personId, Integer networkId, List<StationDto> stationDtos) {
 		List<Station> stations = new ArrayList<Station>();
 		//Stations Permissions
 		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>();
 		try {
-			stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
+			stations = stationRepository.findByPersonIdAndNetworkId(personId, networkId);
 			for (Station station : stations) {
 				StationPermission stationPermissionDto = new StationPermission();
 				StationDto stationDto = new StationDto();
@@ -470,7 +474,7 @@ public class WordrailsService {
 				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes(), StationDto.class);
 				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
 				//StationRoles Fields
-				StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
+				StationRole stationRole = stationRolesRepository.findByStationAndPersonId(station, personId);
 				if(stationRole != null){
 					stationPermissionDto.admin = stationRole.admin;
 					stationPermissionDto.editor = stationRole.editor;
@@ -478,10 +482,10 @@ public class WordrailsService {
 				}
 
 				stationPermissionDtos.add(stationPermissionDto);
-				stationDtos.add(stationDto);
+				if(stationDtos != null)
+					stationDtos.add(stationDto);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return stationPermissionDtos;

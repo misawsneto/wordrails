@@ -29,6 +29,6 @@ public interface PostReadRepository extends JpaRepository<PostRead, Integer>, Qu
 	@RestResource(exported = false)
 	public void findByPostIdAndPersonId(@Param("postId") Integer postId, @Param("personId") Integer personId);
     
-    @Query("select count(distinct sessionid) from PostRead pr where pr.createdAt between ?1 and ?2 and pr.createdAt between ?1 and ?2")
-    public Integer countByDistinctSessionid(Date dateIni, Date dateEnd);
+    @Query("select count(distinct sessionid) from PostRead pr where pr.createdAt between :dateIni and :dateEnd")
+    public Integer countByDistinctSessionid(@Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
 }

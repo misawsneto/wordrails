@@ -14,6 +14,9 @@ import com.wordrails.business.StationRole;
 public interface StationRolesRepository extends JpaRepository<StationRole, Integer>, QueryDslPredicateExecutor<StationRole> {
 	@RestResource(exported=false)
 	StationRole findByStationAndPerson(Station station, Person person);
+	
+	@RestResource(exported=false)
+	StationRole findByStationAndPersonId(Station station, Integer personId);
 
 	@RestResource(exported=false)
 	List<StationRole> findByStation(Station station);

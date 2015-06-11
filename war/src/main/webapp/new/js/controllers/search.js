@@ -25,10 +25,11 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', 'trix', function($sc
 
 	$scope.paginateSearch = function(){
 
-		if($scope.app.searchCtrl.allLoaded)
+		if(!$scope.app.searchCtrl.searchResults || $scope.app.searchCtrl.searchResults.length == 0)
 			return;
 
-		console.log($scope.searchLoaging);
+		if($scope.app.searchCtrl.allLoaded)
+			return;
 
 		if(!$scope.searchLoaging){
 

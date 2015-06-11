@@ -113,16 +113,54 @@ public class PersonsResource {
 	
 	@GET
 	@Path("/{personId}/posts")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response personPost(@PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
+	public ContentResponse<List<PostView>> getPersonNetworkPosts(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
 			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 		
-		List<Integer> stationIds = new ArrayList<Integer>();
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		
-		postRepository.findPostByPersonIdAndStations(personId, stationIds, pageable);
+		Person person = accessControllerUtil.getLoggedPerson();
+		
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
+		
+		List<Integer> stationIds = new ArrayList<Integer>();
+		if(permissions != null && permissions.size() > 0){
+			for (StationPermission stationPermission : permissions) {
+				stationIds.add(stationPermission.stationId);
+			}
+		}
+		
+		List<Post> posts = postRepository.findPostByPersonIdAndStations(personId, stationIds, pageable);
 
-		return null;
+		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		response.content = postConverter.convertToViews(posts); 
+		return response;
+	}
+	
+	@GET
+	@Path("/{personId}/recommends")
+	public ContentResponse<List<PostView>> getPersonNetworkRecommendations(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
+			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+		Pageable pageable = new PageRequest(page, size);
+		
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		
+		Person person = accessControllerUtil.getLoggedPerson();
+		
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
+		
+		List<Integer> stationIds = new ArrayList<Integer>();
+		if(permissions != null && permissions.size() > 0){
+			for (StationPermission stationPermission : permissions) {
+				stationIds.add(stationPermission.stationId);
+			}
+		}
+		
+		List<Post> posts = postRepository.findRecommendationsByPersonIdAndStations(personId, stationIds, pageable);
+
+		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		response.content = postConverter.convertToViews(posts); 
+		return response;
 	}
 	
 	@GET
@@ -170,7 +208,7 @@ public class PersonsResource {
 			StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
 			Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
 
-			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 5);
+			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
 			
 			Pageable pageable = new PageRequest(0, 15);
 
@@ -219,7 +257,7 @@ public class PersonsResource {
 			networkPermissionDto.admin = false;
 			
 			personPermissions.networkPermission = networkPermissionDto;
-			personPermissions.stationPermissions = wordrailsService.getStationPermissions(baseUrl, person, network, stationDtos);
+			personPermissions.stationPermissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id, stationDtos);
 			personPermissions.personId = person.id;
 			personPermissions.username = person.username;
 			personPermissions.personName = person.name;

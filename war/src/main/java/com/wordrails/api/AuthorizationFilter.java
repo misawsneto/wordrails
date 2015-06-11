@@ -32,11 +32,9 @@ import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
-
+import java.util.Date;
 import java.util.List;
-
 import javax.ws.rs.Path;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1314,5 +1312,41 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindByPerspectiveIdAuthorized(Integer perspectiveId) {
 		return true;
 	}
+
+	@Override
+	protected boolean isGetPersonNetworkAuthorized(Integer personId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isCountByDistinctSessionidAuthorized(Date dateIni, Date dateEnd) {
+		return true;
+	}
+
+    @Override
+    protected boolean isFindPostsOrderByMostReadAuthorsAuthorized(Integer stationId, String dateIni, String dateEnd) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected boolean isFindPostsOrderByFavoritesAuthorized(Integer stationId, Date dateIni, Date dateEnd) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected boolean isFindPostsOrderByReadsAuthorized(Integer stationId, Date dateIni, Date dateEnd) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected boolean isFindPostsOrderByRecommendsAuthorized(Integer stationId, Date dateIni, Date dateEnd) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected boolean isFindPostsOrderByCommentsAuthorized(Integer stationId, Date dateIni, Date dateEnd) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
 }

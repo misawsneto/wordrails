@@ -1178,6 +1178,10 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   .box-shadow2{
     box-shadow: 0 2px 1px rgba(0,0,0,0.3);
   }
+
+  .b-drk{
+    border-color: #ced5d7
+  }
 /* /general */
 
 /* animate */
@@ -1502,6 +1506,23 @@ background: rgba(0,0,0,0.5);
 .user-details.animated{
   -webkit-animation-duration: 0.5s!important;
   animation-duration: 0.5s!important;
+}
+
+#user-profile .header{
+  width: 200px;
+  margin-top: -14px;
+}
+
+#user-profile .header .header-title{
+  color: #666;
+  background-color: #f7f7f7;
+}
+
+#profile-buttons{
+  right: 0;
+}
+.profile-buttons-cover{
+  margin-top: -45px;
 }
 
 /* /user_profile */
@@ -2545,9 +2566,7 @@ li.sly-stub{width: 1px;height: 100px;background: none;}
 #perspective-horizontal div.h3{margin: 0 0 10px 0; color: #363f44; min-height: 26px;}
 #perspective-horizontal div.h3:hover{color: #141719}
 
-#perspective-vertical div.cell-wrap{z-index: 2}
-
-div.cell-wrap { height: 100%; width: 100%; overflow: hidden; position: relative; }
+div.cell-wrap { height: 100%; width: 100%; overflow: hidden; position: relative; z-index: 2}
 div.cell-wrap > div {
   position: absolute;
   height: 100%;

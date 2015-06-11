@@ -196,7 +196,14 @@ angular.module('app')
               {
                   name: 'leaflet-directive',
                   files: [
-                    '../bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js',
+                    '../bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js'
+                  ]
+              },
+              {
+                  name: 'afkl.lazyImage',
+                  files: [
+                    '../bower_components/ng-directive-lazy-image/release/lazy-image.min.js',
+                    '../bower_components/ng-directive-lazy-image/release/lazy-image-style.min.css'
                   ]
               }
           ]
