@@ -32,9 +32,12 @@ import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
+
 import java.util.Date;
 import java.util.List;
+
 import javax.ws.rs.Path;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1362,6 +1365,20 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
     protected boolean isDeleteByPostIdAndPersonIdAuthorized(Integer postId, Integer personId) {
 		return true;
     }
+
+	@Override
+	protected boolean isDeleteByPostIdAndPersonIdAuthorized(Integer postId,
+			Integer personId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isFindByPersonIdAuthorized(Integer personId,
+			Integer page, Integer size, List<String> sort) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 
 }
