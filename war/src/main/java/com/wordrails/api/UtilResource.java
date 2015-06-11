@@ -120,7 +120,7 @@ public class UtilResource {
 			FullTextEntityManager ftem = Search.getFullTextEntityManager(manager);
 			ftem.createIndexer().startAndWait();
 			ftem.flushToIndexes();
-			return Response.status(Status.OK).entity("Updating...").build();
+			return Response.status(Status.OK).entity("Updated").build();
 		}
 
 		throw new UnauthorizedException();
@@ -146,11 +146,10 @@ public class UtilResource {
 			try {
 				massIndexer.startAndWait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			//		ftem.flushToIndexes();
-			return Response.status(Status.OK).entity("Reindexing...").build();
+			return Response.status(Status.OK).entity("Reindexed").build();
 		}
 		throw new UnauthorizedException();
 	}

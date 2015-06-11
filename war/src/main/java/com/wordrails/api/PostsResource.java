@@ -219,6 +219,9 @@ public class PostsResource {
 				.withPrefixLength(1)
 				.onField("title").boostedTo(5)
 				.andField("body").boostedTo(2)
+				.andField("topper")
+				.andField("subheading")
+				.andField("author.name")
 				.andField("terms.name")
 				.matching(q).createQuery();
 		}catch(Exception e){

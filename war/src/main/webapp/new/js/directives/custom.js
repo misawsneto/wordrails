@@ -141,7 +141,7 @@ angular.module('ui.splash', ['ui.bootstrap'])
     $templateCache.put('splash_index.html',
       "<div modal-render=\"{{$isRendered}}\" tabindex=\"-1\" role=\"dialog\" class=\"splash\"\n" +
       "    modal-animation-class=\"fade\"\n" +
-      " ng-class=\"{'splash-open': animate}\" ng-style=\"{'z-index': 1050 + index*10, display: 'block'}\" ng-click=\"close($event)\">\n" +
+      " ng-class=\"{'splash-open': animate}\" ng-style=\"{'z-index': 2050 + index*10, display: 'block'}\" ng-click=\"close($event)\">\n" +
       "    <div class='splash-inner' modal-transclude></div>\n" +
       "</div>\n" +
       ""

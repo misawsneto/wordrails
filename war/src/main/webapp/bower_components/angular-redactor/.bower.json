@@ -37,7 +37,6 @@
     "commit": "d794a82fd5f55f5540a2a380c2318ecc5830fdb9"
   },
   "_source": "git://github.com/TylerGarlick/angular-redactor.git",
-  "_target": "~1.1.4",
-  "_originalSource": "angular-redactor",
-  "_direct": true
+  "_target": "1.1.4",
+  "_originalSource": "angular-redactor"
 }

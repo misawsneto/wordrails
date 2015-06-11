@@ -1628,7 +1628,7 @@ background: rgba(0,0,0,0.5);
   left: 0;
   top: 0;
   position: fixed;
-  z-index: 9998;
+  z-index: 2024;
   margin-left: -298px;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;

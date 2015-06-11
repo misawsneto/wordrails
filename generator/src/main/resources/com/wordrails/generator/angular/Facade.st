@@ -126,6 +126,22 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/posts/"+stationId+"/searchPostsFromOrPromotedToStation", config)
     }
     
+    this.searchBookmarks = function(query, _page, _size) {
+    	var config = {
+    	"params": {
+				"query": query,
+				"page": _page,
+				"size": _size,
+			}
+		}
+      return \$http.get(_config.url + "/api/bookmarks/searchBookmarks", config)
+    }
+    
+    this.toggleBookmark = function(postId) {
+    	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
+    	return \$http.put(_config.url + "/api/bookmarks/toggleBookmark", \$.param({"postId": postId}), config)
+    };
+    
     this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, _page, _size){
     	var config = {
 			"params": {
@@ -179,6 +195,7 @@ var trix = angular.module('trix', [])
     }
 
     this.putPassword = function(oldPassword, newPassword, _success, _error, _complete) {
+    	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
     	return \$http.put(_config.url + "/api/persons/me/password", \$.param({"oldPassword": oldPassword, "newPassword": newPassword}), config)
     };
 

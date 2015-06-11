@@ -205,6 +205,12 @@ angular.module('app')
                     '../bower_components/ng-directive-lazy-image/release/lazy-image.min.js',
                     '../bower_components/ng-directive-lazy-image/release/lazy-image-style.min.css'
                   ]
+              },
+              {
+                  name: 'wu.masonry',
+                  files: [
+                    '../bower_components/angular-masonry/angular-masonry.js',
+                  ]
               }
           ]
       });
