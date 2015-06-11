@@ -1353,5 +1353,15 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
     }
 
+    @Override
+    protected boolean isFindByPersonIdAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
+		return true;
+    }
+
+    @Override
+    protected boolean isDeleteByPostIdAndPersonIdAuthorized(Integer postId, Integer personId) {
+		return true;
+    }
+
 
 }
