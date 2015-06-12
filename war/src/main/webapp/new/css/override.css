@@ -1525,6 +1525,10 @@ background: rgba(0,0,0,0.5);
   margin-top: -45px;
 }
 
+a.underline-hover:hover{
+  text-decoration: underline;
+}
+
 /* /user_profile */
 
 /* card */
@@ -1764,6 +1768,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   color: #eee;
   border-color: #eee;
 }
+
+md-toast{z-index: 2000; position: fixed;}
 
 /* /read */
 
@@ -2683,6 +2689,21 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 
 .bookmarks-navbar .divider-v{
   border-right:1px solid #ddd;   height: 36px;
+}
+
+.deckgrid[deckgrid]::before {
+    /* Specifies that the grid should have a maximum of 4 columns. Each column will have the classes 'column' and 'column-1-4' */
+    content: '4 .column.column-1-4';
+    font-size: 0; /* See https://github.com/akoenig/angular-deckgrid/issues/14#issuecomment-35728861 */
+    visibility: hidden;
+}
+
+.deckgrid .column {
+    float: left;
+}
+
+.deckgrid .column-1-4 {
+    width: 25%;
 }
 /* /bookmarks */
 

@@ -28,18 +28,18 @@ import org.springframework.stereotype.Component;
 
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.Bookmark;
 import com.wordrails.business.Person;
+import com.wordrails.business.Recommend;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.converter.PostConverter;
-import com.wordrails.persistence.BookmarkRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.QueryPersistence;
+import com.wordrails.persistence.RecommendRepository;
 
-@Path("/bookmarks")
+@Path("/recommends")
 @Consumes(MediaType.WILDCARD)
 @Component
-public class BookmarksResource {
+public class RecommendsResource {
 	private @Context HttpServletRequest request;
 	private @Context UriInfo uriInfo;
 	private @Context HttpServletResponse response;
@@ -47,16 +47,16 @@ public class BookmarksResource {
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
-	private @Autowired BookmarkRepository bookmarkRepository;
+	private @Autowired RecommendRepository recommendRepository;
 	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired QueryPersistence queryPersistence;
 	
 	private @PersistenceContext EntityManager manager;
 
 	@GET
-	@Path("/searchBookmarks")
+	@Path("/searchRecommends")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+	public ContentResponse<List<PostView>> searchRecommends(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
 		Person person = accessControllerUtil.getLoggedPerson();
 		
@@ -64,13 +64,13 @@ public class BookmarksResource {
 			Pageable pageable = new PageRequest(page, size);
 			
 			ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-			List<Bookmark> pages = bookmarkRepository.findBookmarksByPersonIdOrderByDate(person.id, pageable);
+			List<Recommend> pages = recommendRepository.findRecommendsByPersonIdOrderByDate(person.id, pageable);
 			
-			List<PostView> bookmarks = new ArrayList<PostView>();
-			for (Bookmark bookmark : pages) {
-				bookmarks.add(postConverter.convertToView(bookmark.post));
+			List<PostView> recommends = new ArrayList<PostView>();
+			for (Recommend recommend : pages) {
+				recommends.add(postConverter.convertToView(recommend.post));
 			}
-			response.content = bookmarks;
+			response.content = recommends;
 			return response;
 		}
 		
@@ -78,7 +78,7 @@ public class BookmarksResource {
 		// create native Lucene query unsing the query DSL
 		// alternatively you can write the Lucene query using the Lucene query parser
 		// or the Lucene programmatic API. The Hibernate Search DSL is recommend though
-		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Bookmark.class).get();
+		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Recommend.class).get();
 
 		org.apache.lucene.search.Query text = null;
 		try{
@@ -107,53 +107,53 @@ public class BookmarksResource {
 		org.apache.lucene.search.Query personQuery = qb.keyword().onField("person.id").ignoreAnalyzer().matching(person.id).createQuery();
 
 		org.apache.lucene.search.Query full = qb.bool().must(text).must(personQuery).createQuery();
-		
-		FullTextQuery ftq = ftem.createFullTextQuery(full, Bookmark.class);
+
+		FullTextQuery ftq = ftem.createFullTextQuery(full, Recommend.class);
 
 		// wrap Lucene query in a javax.persistence.Query
 		javax.persistence.Query persistenceQuery = ftq;
 
 		// execute search
-		List<Bookmark> result = persistenceQuery
+		List<Recommend> result = persistenceQuery
 				.setFirstResult(size * page)
 				.setMaxResults(size)
 				.getResultList();
 
-		List<PostView> bookmarks = new ArrayList<PostView>();
-		for (Bookmark bookmark : result) {
-			bookmarks.add(postConverter.convertToView(bookmark.post));
+		List<PostView> recommends = new ArrayList<PostView>();
+		for (Recommend recommend : result) {
+			recommends.add(postConverter.convertToView(recommend.post));
 		}
 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = bookmarks;
+		response.content = recommends;
 
 		return response;
 	}
 	
 	@PUT
-	@Path("/toggleBookmark")
+	@Path("/toggleRecommend")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public ContentResponse<BooleanResponse> toggleBookmark(@FormParam("postId") Integer postId){
+	public ContentResponse<BooleanResponse> toggleRecommend(@FormParam("postId") Integer postId){
 		
 		Person person = accessControllerUtil.getLoggedPerson();
 		if(person.username.equals("wordrails"))
 			throw new UnauthorizedException();
 		
-		Bookmark bookmark = new Bookmark();
-		bookmark.post = postRepository.findOne(postId);
-		bookmark.person = person;
+		Recommend recommend = new Recommend();
+		recommend.post = postRepository.findOne(postId);
+		recommend.person = person;
 		ContentResponse<BooleanResponse> bool = new ContentResponse<BooleanResponse>();
 		try{
-			bookmarkRepository.save(bookmark);
+			recommendRepository.save(recommend);
 			bool.content = new BooleanResponse();
 			bool.content.response = true;
-			queryPersistence.incrementBookmarksCount(postId);
+			queryPersistence.incrementRecommendsCount(postId);
 			return bool;
 		}catch(Exception e){
-			queryPersistence.decrementBookmarksCount(postId);
+			queryPersistence.deleteRecommend(postId, person.id);
 			bool.content = new BooleanResponse();
 			bool.content.response = false;
-			queryPersistence.deleteBookmark(postId, person.id);
+			queryPersistence.decrementRecommendsCount(postId);
 			return bool;
 		}
 	}

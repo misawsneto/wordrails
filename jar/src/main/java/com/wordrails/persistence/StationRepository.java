@@ -36,6 +36,7 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
             " from station as s" +
             " inner join (select post.id as pid, post.station_id, count(postread.post_id) as prcount, post.favoritesCount, post.readsCount, post.recommendsCount, post.commentsCount from post left join postread on postread.post_id = post.id group by post.id) post on s.id = post.station_id" +
             " group by s.id", nativeQuery = true)
-    public List<Object[]> findAllWithCounts(@Param("uselessParameter") Integer uselessParameter);
+    @RestResource(exported=false)
+    public List<Object[]> findAllWithCounts();
 
 }

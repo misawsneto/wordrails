@@ -9,7 +9,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.business.Station;
 import com.wordrails.persistence.StationRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -17,7 +16,6 @@ import com.wordrails.persistence.StationRepository;
 	"classpath:applicationContext.xml",
 	"classpath:applicationContext-integration.xml",
 	"classpath:applicationContext-security.xml",
-	"classpath:applicationContext-test.xml"
 })
 public abstract class AbstractTest {
 	protected @Autowired ApplicationContext context;

@@ -17,11 +17,15 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Integer>, Qu
 //	List<Favorite> findByPersonUsername(@Param("username") String username, Pageable pageable);
 	
 	List<Bookmark> findBookmarksByPersonId(@Param("personId") Integer personId);
-	@Query("select bookmark from Bookmark bookmark join bookmark.person person where person.id = :personId order by bookmark.id desc")
+	@Query("select bookmark from Bookmark bookmark where bookmark.person.id = :personId order by bookmark.id desc")
 	List<Bookmark> findBookmarksByPersonIdOrderByDate(@Param("personId") Integer personId, Pageable pageable);
 	List<Bookmark> findBookmarksByPostId(@Param("postId") Integer postId);
 	@RestResource(exported=false)
 	void deleteByPost(Post post);
-	List<Bookmark> findByPersonId(@Param("personId") Integer personId, Pageable pageable);
-	void deleteByPostIdAndPersonId(@Param("postId") Integer postId, @Param("personId") Integer personId);
+	@Query("SELECT bookmark FROM Bookmark bookmark WHERE bookmark.person.id = :personId")
+	List<Bookmark> findBookmarksByPersonId(@Param("personId") Integer personId, Pageable pageable);
+	
+	@Query("SELECT bookmark FROM Bookmark bookmark WHERE bookmark.person.id = :personId AND bookmark.post.id = :postId")
+	Bookmark findBookmarkByPersonIdAndPostId(@Param("personId") Integer personId, @Param("postId") Integer postId);
+
 }

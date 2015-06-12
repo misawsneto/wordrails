@@ -83,7 +83,22 @@
 	  </div>
     <!-- /posts -->
 
-    <div class="wrapper-md m-t m-b bg-dark" ng-show="recommendations && showProfile">
+    <div class="clear wrapper m-t m-b bg-light dk b-t b-b" ng-show="recommendations && showProfile">
+    	<div class="block-800 m-auto text-md text-u-c m-b-md p-l font-bold">
+    		recomendados por {{person.name}}
+    	</div>
+    	<div class="block-800 m-auto">
+    		<div class="col-sm-6" ng-repeat="recommendation in recommendations">
+    			<div class="m-t-sm m-b-md">
+    				<div clamp="1" class="text-md">
+    					<a class="underline-hover">{{recommendation.post.title}}</a>
+    				</div>
+    				<div clamp="1" class="font-thin">
+    					{{recommendation.post.body | stripHtml}}
+    				</div>
+    			</div>
+    		</div>
+    	</div>
     </div>
 		
 		<!-- pages -->

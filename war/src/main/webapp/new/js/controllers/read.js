@@ -1,5 +1,5 @@
-app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix',
-	function($scope, $log, $timeout, $rootScope, $state, trix) {
+app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', '$mdToast',
+	function($scope, $log, $timeout, $rootScope, $state, trix, $mdToast) {
 
 	var slug = $state.params.slug;
 
@@ -31,8 +31,24 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	$scope.app.bookmark = function(postId){
 		if($scope.app.isLogged){
           trix.toggleBookmark(postId).success(function(reponse){
-          	console.log(reponse);
-          	$scope.app.showSimpleToast('Esta história foi adicionado a sua lista.')
+          	if(reponse.content && reponse.content.response)
+          		$scope.app.showInfoToast('A história foi adicionado a sua lista.')
+          	else
+          		$scope.app.showInfoToast('A história foi removida da sua lista.')
+          }).error(function(){
+          	console.log('error');
+          })
+        }else
+          $scope.openSplash('signin_splash.html')
+	}
+
+	$scope.app.recommend = function(postId){
+		if($scope.app.isLogged){
+          trix.toggleRecommend(postId).success(function(reponse){
+          	if(reponse.content && reponse.content.response)
+          		$scope.app.showInfoToast('Você recomendou essa hostória.')
+          	else
+          		$scope.app.showInfoToast('Recomendação removida.')
           }).error(function(){
           	console.log('error');
           })

@@ -32,9 +32,12 @@ import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
+
 import java.util.Date;
 import java.util.List;
+
 import javax.ws.rs.Path;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1124,11 +1127,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindRecommendsByPersonIdAuthorized(Integer personId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isGetPersonFavoritesAuthorized(Integer personId) {
 		return true;
 	}
@@ -1279,7 +1277,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindTermsByPostIdAuthorized(Integer postId) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
@@ -1348,20 +1345,23 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
     }
 
-    @Override
-    protected boolean isFindAllWithCountsAuthorized(Integer personId) {
+	@Override
+	protected boolean isFindBookmarksByPersonIdAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
-    }
+	}
 
-    @Override
-    protected boolean isFindByPersonIdAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-    }
+	@Override
+	protected boolean isFindBookmarkByPersonIdAndPostIdAuthorized(
+			Integer personId, Integer postId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    @Override
-    protected boolean isDeleteByPostIdAndPersonIdAuthorized(Integer postId, Integer personId) {
+	@Override
+	protected boolean isFindRecommendByPersonIdAndPostIdAuthorized(
+			Integer personId, Integer postId) {
 		return true;
-    }
+	}
 
 
 }

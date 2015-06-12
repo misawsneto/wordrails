@@ -21,6 +21,12 @@ angular.module('app')
 	}
 })
 
+.filter('stripHtml', function myDateTimeFormat() {
+	return function(text) {
+		return text.stripHtml();
+	}
+})
+
 .filter('myLongTimeFormat', function myLongTimeFormat() {
 	return function(longTime) {
 		return moment(longTime).format("DD/MM/YYYY HH:mm:ss");

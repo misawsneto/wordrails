@@ -636,7 +636,7 @@
 				Recommend recommend join recommend.person person
 			where
 				person.id = :personId
-			order by recommend.createdAt desc
+			order by recommend.id desc
 		</query>
 	</named-query>
 	
