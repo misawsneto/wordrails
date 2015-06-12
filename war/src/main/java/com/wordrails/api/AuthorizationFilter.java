@@ -1282,7 +1282,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindTermsByPostIdAuthorized(Integer postId) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
@@ -1353,6 +1352,24 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindBookmarksByPersonIdAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindBookmarkByPersonIdAndPostIdAuthorized(
+			Integer personId, Integer postId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isFindRecommendByPersonIdAndPostIdAuthorized(
+			Integer personId, Integer postId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindAllWithCountsAuthorized(Integer uselessParameter) {
 		return true;
 	}
 
