@@ -1127,11 +1127,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindRecommendsByPersonIdAuthorized(Integer personId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isGetPersonFavoritesAuthorized(Integer personId) {
 		return true;
 	}
