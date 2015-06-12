@@ -107,7 +107,7 @@ public class BookmarksResource {
 		org.apache.lucene.search.Query personQuery = qb.keyword().onField("person.id").ignoreAnalyzer().matching(person.id).createQuery();
 
 		org.apache.lucene.search.Query full = qb.bool().must(text).must(personQuery).createQuery();
-
+		
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Bookmark.class);
 
 		// wrap Lucene query in a javax.persistence.Query

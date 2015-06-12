@@ -1368,10 +1368,5 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
-	@Override
-	protected boolean isFindAllWithCountsAuthorized(Integer uselessParameter) {
-		return true;
-	}
-
 
 }

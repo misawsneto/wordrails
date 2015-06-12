@@ -14,9 +14,6 @@ import com.wordrails.business.Recommend;
 
 public interface RecommendRepository extends JpaRepository<Recommend, Integer>, QueryDslPredicateExecutor<Recommend> {
 
-//	List<Favorite> findByPersonUsername(@Param("username") String username, Pageable pageable);
-	
-	List<Recommend> findRecommendsByPersonId(@Param("personId") Integer personId);
 	List<Recommend> findRecommendsByPersonIdOrderByDate(@Param("personId") Integer personId, Pageable pageable);
 	List<Recommend> findRecommendsByPostId(@Param("postId") Integer postId);
 	@RestResource(exported=false)

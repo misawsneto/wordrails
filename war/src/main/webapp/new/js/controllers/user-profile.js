@@ -30,9 +30,10 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 				$scope.postViews = posts;
 		})
 
-		trix.getPersonNetworkPosts(person.id, $scope.app.initData.network.id,$scope.postsPage, 6).success(function(posts){
-			if(!posts && posts.length > 0)
-				$scope.recommendations = posts;
+		trix.findRecommendsByPersonIdOrderByDate(person.id, 0, 6, null, "recommendProjection").success(function(response){
+			if(response.recommends && response.recommends.length > 0)
+				$scope.recommendations = response.recommends;
+			console.log($scope.recommendations);
 		})
 	}
 
