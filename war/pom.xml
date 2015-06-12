@@ -209,13 +209,26 @@
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
-							
-		
+                
+                <dependency>
+                    <groupId>org.quartz-scheduler</groupId>
+                    <artifactId>quartz</artifactId>
+                </dependency>
+                
+                <dependency>
+                    <groupId>org.quartz-scheduler</groupId>
+                    <artifactId>quartz-jobs</artifactId>
+                </dependency>
 						
 		<dependency>
 			<groupId>co.xarx</groupId>
 			<artifactId>trix-api</artifactId>
 		</dependency>
+                        
+                <dependency>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context-support</artifactId>
+                </dependency>
 		
 		<dependency>
 			<groupId>co.xarx</groupId>
