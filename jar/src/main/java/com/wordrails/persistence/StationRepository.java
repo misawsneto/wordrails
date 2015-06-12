@@ -30,5 +30,12 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
 	@Modifying
 	@Query(nativeQuery=true, value="DELETE FROM station_network WHERE stations_id = ?")
 	void deleteStationNetwork(Integer stationId);
+    
+    
+    @Query(value="select s.id, s.name, sum(post.favoritesCount), sum(post.readsCount), sum(post.recommendsCount), sum(post.commentsCount), sum(post.prcount)" +
+            " from station as s" +
+            " inner join (select post.id as pid, post.station_id, count(postread.post_id) as prcount, post.favoritesCount, post.readsCount, post.recommendsCount, post.commentsCount from post left join postread on postread.post_id = post.id group by post.id) post on s.id = post.station_id" +
+            " group by s.id", nativeQuery = true)
+    public List<Object[]> findAllWithCounts(@Param("uselessParameter") Integer uselessParameter);
 
 }
