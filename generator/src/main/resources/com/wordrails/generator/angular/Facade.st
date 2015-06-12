@@ -137,9 +137,23 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/bookmarks/searchBookmarks", config)
     }
     
+    this.checkBookmarkedRecommendedByMe = function(postId) {
+    	var config = {
+    	"params": {
+				"postId": postId,
+			}
+		}
+      return \$http.get(_config.url + "/api/me/bookmarkedRecommended", config)
+    }
+    
     this.toggleBookmark = function(postId) {
     	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
     	return \$http.put(_config.url + "/api/bookmarks/toggleBookmark", \$.param({"postId": postId}), config)
+    };
+    
+    this.toggleRecommend = function(postId) {
+    	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
+    	return \$http.put(_config.url + "/api/recommends/toggleRecommend", \$.param({"postId": postId}), config)
     };
     
     this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, _page, _size){

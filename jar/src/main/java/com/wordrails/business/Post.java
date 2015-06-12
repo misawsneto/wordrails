@@ -205,6 +205,10 @@ public class Post {
 	
 	@Field
 	@NumericField
+	public int bookmarksCount = 0;
+	
+	@Field
+	@NumericField
 	public int recommendsCount = 0;
 
 	@Field

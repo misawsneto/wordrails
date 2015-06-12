@@ -17,6 +17,7 @@ public class PostView implements Serializable {
 	public String state;
 	public int readsCount;
 	public int favoritesCount;
+	public int bookmarksCount;
 	public int recommendsCount;
 	public int commentsCount;
 	

@@ -1765,6 +1765,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   border-color: #eee;
 }
 
+md-toast{z-index: 2000; position: fixed;}
+
 /* /read */
 
 /* redactor */

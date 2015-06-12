@@ -45,11 +45,13 @@ import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.converter.PostConverter;
+import com.wordrails.persistence.BookmarkRepository;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.PostRepository;
+import com.wordrails.persistence.RecommendRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
@@ -76,6 +78,9 @@ public class PersonsResource {
 	private @Autowired GCMService gcmService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
+	
+	private @Autowired BookmarkRepository bookmarkRepository;
+	private @Autowired RecommendRepository recommendRepository;
 	
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	
@@ -279,4 +284,34 @@ public class PersonsResource {
 	}
 	
 	
+	@GET
+	@Path("/me/bookmarkedRecommended")
+	public ContentResponse<List<BooleanResponse>> checkBookmarkedRecommendedByMe(@QueryParam("postId") Integer postId){
+		Person person = accessControllerUtil.getLoggedPerson();
+		List<BooleanResponse> resp = new ArrayList<BooleanResponse>();
+		
+		if(bookmarkRepository.findBookmarkByPersonIdAndPostId(person.id, postId)!=null){
+			BooleanResponse bool = new BooleanResponse();
+			bool.response = true;
+			resp.add(bool);
+		}else{
+			BooleanResponse bool = new BooleanResponse();
+			bool.response = false;
+			resp.add(bool);
+		}
+		
+		if(recommendRepository.findRecommendByPersonIdAndPostId(person.id, postId)!=null){
+			BooleanResponse bool = new BooleanResponse();
+			bool.response = true;
+			resp.add(bool);
+		}else{
+			BooleanResponse bool = new BooleanResponse();
+			bool.response = false;
+			resp.add(bool);
+		}
+		
+		ContentResponse<List<BooleanResponse>> response = new ContentResponse<List<BooleanResponse>>();
+		response.content = resp;
+		return response;
+	}
 }
