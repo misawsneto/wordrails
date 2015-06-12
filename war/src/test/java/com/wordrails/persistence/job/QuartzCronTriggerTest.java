@@ -1,4 +1,4 @@
-package com.wordrails.job;
+package com.wordrails.persistence.job;
 
 import com.wordrails.test.AbstractTest;
 import java.util.Date;

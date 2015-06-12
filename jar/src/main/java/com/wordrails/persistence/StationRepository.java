@@ -35,8 +35,9 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
     @Query(value="select s.id, s.name, sum(post.favoritesCount), sum(post.readsCount), sum(post.recommendsCount), sum(post.commentsCount), sum(post.prcount)" +
             " from station as s" +
             " inner join (select post.id as pid, post.station_id, count(postread.post_id) as prcount, post.favoritesCount, post.readsCount, post.recommendsCount, post.commentsCount from post left join postread on postread.post_id = post.id group by post.id) post on s.id = post.station_id" +
+            " where defaultPerspectiveId = :defaultPerspectiveId" +
             " group by s.id", nativeQuery = true)
     @RestResource(exported=false)
-    public List<Object[]> findAllWithCounts();
+    public List<Object[]> findAllWithCounts(@Param("defaultPerspectiveId") Integer defaultPerspectiveId);
 
 }

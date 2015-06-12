@@ -1,4 +1,4 @@
-package com.wordrails.jobs;
+package com.wordrails.scheduler.jobs;
 
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.config.BeanDefinition;
