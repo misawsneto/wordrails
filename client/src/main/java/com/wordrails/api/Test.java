@@ -160,7 +160,6 @@ public class Test {
 		
 		NetworkDto network = new NetworkDto();
 		network.name = "Rede Teste";
-		network.defaultTaxonomy = categoria.getSelf();
 		network.id = wordRails.postNetwork(network);
 		network = wordRails.getNetwork(network.id);
 

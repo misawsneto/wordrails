@@ -139,7 +139,7 @@ public class StationPerspectiveResourceTest extends AbstractTest {
 			//-------------------- Station --------------------//
 			Network network = new Network();
 			network.name = "XARX";
-			network.defaultTaxonomy = taxonomy;
+//			network.defaultTaxonomy = taxonomy;
 			context.getBean(NetworkRepository.class).save(network);
 			
 			Station station = new Station();

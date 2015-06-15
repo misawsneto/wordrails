@@ -46,21 +46,13 @@ public class StationEventHandler {
 				//Perspective Default
 				StationPerspective stationPerspective = new StationPerspective();
 				stationPerspective.station = station;
-				stationPerspective.name = "Default";
-				stationPerspective.taxonomy = station.networks.iterator().next().defaultTaxonomy;
+				stationPerspective.name = station.name + " (Default)";
 				perspectives.add(stationPerspective);
 				station.stationPerspectives = perspectives;
 				
 				Set<Taxonomy> taxonomies = new HashSet<Taxonomy>();
-				//Author Default Taxonomy
-				Taxonomy aTaxonomy = new Taxonomy();
-				aTaxonomy.name = "Autores " + station.name;
-				aTaxonomy.owningStation = station;
-				aTaxonomy.type = Taxonomy.STATION_AUTHOR_TAXONOMY;
-				taxonomies.add(aTaxonomy);
-				station.ownedTaxonomies = taxonomies;
 				
-				//Author Default Taxonomy
+				//Tag Default Taxonomy
 				Taxonomy tTaxonomy = new Taxonomy();
 				tTaxonomy.name = "Tags " + station.name;
 				tTaxonomy.owningStation = station;

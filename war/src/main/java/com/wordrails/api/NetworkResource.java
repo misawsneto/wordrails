@@ -111,8 +111,6 @@ public class NetworkResource {
 		
 		taxonomyRepository.save(taxonomy);
 		
-		network.defaultTaxonomy = taxonomy;
-		
 		networkRepository.save(network);
 		
 		NetworkRole networkRole = new NetworkRole();

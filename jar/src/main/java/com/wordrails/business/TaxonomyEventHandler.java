@@ -53,10 +53,10 @@ public class TaxonomyEventHandler {
 //		}else if(taxonomy.type.equals(Taxonomy.STATION_AUTHOR_TAXONOMY)){
 //			throw new OperationNotSupportedException();
 		} else{
-			List<Network> networks = networkRepository.findByDefaultTaxonomy(taxonomy);
-			if(networks != null && networks.size() > 0){
-				throw new UnauthorizedException("Existe(m) rede(s) com essa taxonomia default.");
-			}else{
+//			List<Network> networks = networkRepository.findByDefaultTaxonomy(taxonomy);
+//			if(networks != null && networks.size() > 0){
+//				throw new UnauthorizedException("Existe(m) rede(s) com essa taxonomia default.");
+//			}else{
 				taxonomyRepository.deleteTaxonomyNetworks(taxonomy.id);
 				for (Term term : termRepository.findRoots(taxonomy.id)) {
 					termEventHandler.handleBeforeDelete(term);
@@ -66,7 +66,7 @@ public class TaxonomyEventHandler {
 				if(stationsPerspectives != null && stationsPerspectives.size() > 0){
 					stationPerspectiveRepository.delete(stationsPerspectives);
 				}
-			}
+//			}
 		}
 	}
 }

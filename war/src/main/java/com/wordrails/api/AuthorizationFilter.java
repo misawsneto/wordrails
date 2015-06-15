@@ -211,11 +211,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetNetworkDefaultTaxonomyAuthorized(Integer networkId) {
-		return belongsToNetwork(networkId);
-	}
-
-	@Override
 	protected boolean isGetNetworkOwnedTaxonomiesAuthorized(Integer networkId) {
 		return belongsToNetwork(networkId);
 	}
@@ -595,11 +590,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetTaxonomyNetworksAuthorized(Integer taxonomyId) {
 		Taxonomy taxonomy = taxonomyRepository.findOne(taxonomyId);
 		return taxonomy != null && taxonomy.owningNetwork != null && isNetworkAdminById(taxonomy.owningNetwork.id);
-	}
-
-	@Override
-	protected boolean isGetTaxonomyDefaultNetworksAuthorized(Integer taxonomyId) {
-		return false;
 	}
 
 	@Override
