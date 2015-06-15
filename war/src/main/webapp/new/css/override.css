@@ -1182,6 +1182,10 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   .b-drk{
     border-color: #ced5d7
   }
+
+  .font-italic{
+    font-style: italic;
+  }
 /* /general */
 
 /* animate */
