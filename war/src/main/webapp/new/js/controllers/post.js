@@ -46,7 +46,9 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	  }, true)*/
 
 	$scope.$watch('app.hidePostOptions', checkPostToolsWidth)
-	$scope.app.showPostToolbar = false;
+
+	if(typeof $scope.app.showPostToolbar === 'undefined')
+		$scope.app.showPostToolbar = false;
 
 	function checkPostToolsWidth () {
 		$timeout(function(){
@@ -342,6 +344,19 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		}
 	}
 
+	$scope.savePostAsDraf = function(ev){
+		window.console && console.log('saving draft...')
+	}
+
+	$scope.deleteOrDiscardPost = function(ev){
+		window.console && console.log('delete post...')
+	}
+
+	$scope.doAction = function(action){
+		if(typeof action === 'function')
+			action();
+	}
+
 	$scope.showMoreOptions = function(ev){
 		// show term alert
 		$mdDialog.show({
@@ -453,10 +468,12 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
     {
       label: 'Salvar rascunho',
       icon: 'mdi mdi-content-save',
+      action: $scope.savePostAsDraf
     },
     {
       label: 'Remover/Descartar',
       icon: 'mdi mdi-delete',
+      action: $scope.deleteOrDiscardPost
     }
     ];
 	

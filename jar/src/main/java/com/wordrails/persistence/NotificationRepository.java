@@ -21,4 +21,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 
 	@RestResource(exported = false)
 	public void deleteByPost(Post post);
+	
+	@RestResource(exported = false)
+	public void deleteByHash(String notificationHash);
 }

@@ -1371,7 +1371,7 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
 }
 
 #post-fab-button{
-  z-index: 2;
+  z-index: 11;
   position: fixed;
   right: 10px;
   bottom: 0px;
@@ -1491,6 +1491,10 @@ background: rgba(0,0,0,0.5);
   z-index: 2;
 }
 
+#post-media{
+  margin-top: -5px;
+}
+
 #video-remove-button{
   margin-left:-43px;
   z-index: 2;
@@ -1504,7 +1508,7 @@ background: rgba(0,0,0,0.5);
   color: rgba(255,255,255,.95)!important
 }
 
-#toggle-toolbars{position: absolute; margin-top:65px;}
+/* #toggle-toolbars{position: absolute; margin-top:65px;} */
 #publication-img{
   height: 200px;
   width: 200px;
@@ -1517,6 +1521,17 @@ background: rgba(0,0,0,0.5);
 .redactor-toolbar, .redactor-dropdown{
   z-index: 9 !important;
 }
+
+.redactor-toolbar>li>a.re-icon {
+  font-size: 14px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+  margin-bottom: 2px;
+  width: 13px;
+}
+
+.redactor-toolbar{border: none!important;}
 
 /* /post */
 

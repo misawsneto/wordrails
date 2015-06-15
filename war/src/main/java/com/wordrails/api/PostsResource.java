@@ -22,6 +22,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.highlight.Encoder;
 import org.apache.lucene.search.highlight.Formatter;
 import org.apache.lucene.search.highlight.Fragmenter;
@@ -239,8 +241,13 @@ public class PostsResource {
 		org.apache.lucene.search.Query station = qb.keyword().onField("station.id").ignoreAnalyzer().matching(stationId).createQuery();
 
 		org.apache.lucene.search.Query full = qb.bool().must(text).must(station).createQuery();
+		
 
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Post.class);
+		
+		org.apache.lucene.search.Sort sort = new Sort( SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
+		ftq.setSort(sort);
+		
 		int totalHits = ftq.getResultSize();
 
 		// wrap Lucene query in a javax.persistence.Query
