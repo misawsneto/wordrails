@@ -1,5 +1,23 @@
 <!-- hbox layout -->
 <div class="p-t-50">
+
+    <!-- search-display -->
+  <div class="search-display wrapper-sm search-block b-b" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}">
+    <p class="m-t-sm m-b-xxs"><strong>{{app.searchCtrl.hits}}</strong> Resultados</p>
+  </div>
+  <!-- /search-display -->
+
+   <!-- search box -->
+  <div class="search-box" ng-class="{'nonempty-search': app.searchCtrl.searchResults && !app.searchCtrl.nonemptySearch, 'nonempty-search2': app.searchCtrl.nonemptySearch}">
+    <div class="b-b wrapper-md p-l-xxl">
+      <div class="m-n font-thin h3">
+        <form ng-submit="submitSearch()">
+          <input ng-model="app.searchCtrl.searchQuery" type="text" class="b-none text-2x w-full back-none" placeholder="Busque por histórias...">
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- /search box -->
   
   <div class="w-full search-results" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}" infinite-scroll="paginateSearch()" infinite-scroll-distance="1">
 
@@ -50,23 +68,7 @@
     </div>
   </div>
 
-  <!-- search-display -->
-  <div class="search-display wrapper-sm search-block b-b" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}">
-    <p class="m-t-sm m-b-xxs"><strong>{{app.searchCtrl.hits}}</strong> Resultados</p>
-  </div>
-  <!-- /search-display -->
 
-   <!-- search box -->
-  <div class="search-box" ng-class="{'nonempty-search': app.searchCtrl.searchResults && !app.searchCtrl.nonemptySearch, 'nonempty-search2': app.searchCtrl.nonemptySearch}">
-    <div class="b-b wrapper-md p-l-xxl">
-      <div class="m-n font-thin h3">
-        <form ng-submit="submitSearch()">
-          <input ng-model="app.searchCtrl.searchQuery" type="text" class="b-none text-2x w-full back-none" placeholder="Busque por histórias...">
-        </form>
-      </div>
-    </div>
-  </div>
-  <!-- /search box -->
 
 </div>
 

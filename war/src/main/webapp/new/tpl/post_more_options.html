@@ -6,12 +6,13 @@
           <div class="b-t wrapper-md post-general-info" flex>
             <div class="row">
               <div class="col-sm-6">
-                <div class="wrapper" ng-show="writableStations && writableStations.length > 1">
-                  <span>Estação: </span>
-                  <select class="form-control m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
-                  ng-options="station as station.stationName for station in writableStations track by station.stationId">
-                  </select>
+                <span class="text-md font-bold">
+                  Pronto para publicar sua notícia?
+                </span>
+                <div class="m-t">
+                  Quando estiver pronto para publicar a notícia, escolha uma categoria, preencha as opções desejadas e pressione o botão de <strong>publicar</strong>.
                 </div>
+                <img id="publication-img" src="img/publication-img.png">
               </div>
               <div class="col-sm-6 b-l">
                 <div class="m-t-sm">
@@ -33,6 +34,14 @@
                       </a>
                     </div>
                   </div>
+                </div>
+                <div class="wrapper" ng-show="writableStations && writableStations.length > 1">
+                  <div class="m-t">
+                    Escolha a estação que deseja publicar:
+                  </div>
+                  <select class="form-control m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
+                  ng-options="station as station.stationName for station in writableStations track by station.stationId">
+                  </select>
                 </div>
                 <div class="slug-editor">
                   <span class="pull-left m-t-lg m-r-sm h3">/</span>

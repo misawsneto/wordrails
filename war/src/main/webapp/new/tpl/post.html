@@ -10,30 +10,34 @@
           <div id="post-editor" class="wrapper-md p-r-xxl p-l-xxl">
             <div id="post-media-box" class="post-block" ng-class="{'image-landscape': app.editingPost.imageLandscape && app.editingPost.uploadedImage.filelink}">
             <!-- media selection buttons -->
-              <button class="post-stroke-btn btn text-md btn-sm m-t-xxs btn-icon btn-rounded btn-stroke btn-muted" ng-class="{'hide': app.editingPost.uploadedImage.filelink || app.editingPost.showInputVideoUrl}" ng-style="landscapeStyle"
+              <!-- <button class="post-stroke-btn btn text-md btn-sm m-t-xxs btn-icon btn-rounded btn-stroke btn-muted" ng-class="{'hide': app.editingPost.uploadedImage.filelink || app.editingPost.showInputVideoUrl}" ng-style="landscapeStyle"
                tooltip="Destaque" tooltip-append-to-body="true" ng-click="toggleMediaButtons()">
                 <i class="mdi-dots-horizontal mdi"></i>
-              </button>
-              <div class="pull-left" ng-class="{'hide': !app.editingPost.showMediaButtons || app.editingPost.uploadedImage.filelink}">
-                <ul class="redactor-toolbar post-media-buttons">
+              </button> -->
+              <div id="post-media" class="pull-left text-2x" ng-class="{'hide': app.editingPost.showInputVideoUrl || app.editingPost.uploadedImage.filelink}">
+                <!-- <ul class="redactor-toolbar post-media-buttons"> -->
                   <!-- <li><a ng-click="openImageUpload()" href="#" class="mdi mdi-image-filter-hdr" tooltip="imagem" tooltip-append-to-body="true"></a>
                   </li> -->
-                  <li tooltip="Imagem" tooltip-append-to-body="true">
-                    <span id="image-button" class="custom-btn">
-                      <i class="re-icon re-image"></i>
-                      <input tooltip="imagem" tooltip-append-to-body="true" id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+                  <!-- <li tooltip="Imagem" tooltip-append-to-body="true"> -->
+                  <div id="image-button-wrapper" tooltip="imagem" tooltip-append-to-body="true">
+                    <span id="image-button" class="mdi mdi-file-image-box custom-btn">
+                      <input id="image-upload" type="file" nv-file-select=""
+                        uploader="uploader" name="contents" accept="image/*"/>
                     </span>
-                  </li>
+                  </div>
+                  <!-- </li> -->
                   <!-- <li tooltip="Slide show" tooltip-append-to-body="true"><a href="#" class="mdi disabled mdi-image-filter"></a></li> -->
-                  <li tooltip="Vídeo" tooltip-append-to-body="true">
-                    <a href ng-click="toggleVideoUrl()" class="re-icon re-video"></a>
-                  </li>
-                </ul>
+                  <!-- <li tooltip="Vídeo" tooltip-append-to-body="true"> -->
+                  <span id="video-button" tooltip="video" tooltip-append-to-body="true">
+                    <a href ng-click="toggleVideoUrl()" class="mdi mdi-youtube-play"></a>
+                  </span>
+                  <!-- </li> -->
+                <!-- </ul> -->
               </div>
-              <a id="video-remove-button" ng-click="removeVideo()" class="pos-abt h3 m-t-xs" href tooltip="Remover vídeo" tooltip-append-to-body="true" ng-hide="!app.editingPost.showInputVideoUrl">
+              <a id="video-remove-button" ng-click="removeVideo()" class="pos-abt h3 m-t-sm" href tooltip="Remover vídeo" tooltip-append-to-body="true" ng-hide="!app.editingPost.showInputVideoUrl">
                 <i class="mdi mdi-close-circle-outline"></i>
               </a>
-              <input id="video-url-input" ng-model="videoUrl" class="pull-left form-control text-md b-none" ng-hide="!app.editingPost.showInputVideoUrl" placeholder="url do vídeo"/>
+              <input id="video-url-input" ng-model="videoUrl" class="m-t-xs m-b-xs pos-abt form-control text-lg b-none" ng-hide="!app.editingPost.showInputVideoUrl" placeholder="Digite o link para um vídeo do YouTube ou Vimeo."/>
               <div class="video-container" ng-show="app.editingPost.externalVideoUrl">
                 <embed-video enablejsapi="1" class="video" iframe-id="video1" api="1" player_id="video1" href="{{videoUrl}}" width=800 height=460 ></embed-video>
               </div>
@@ -74,11 +78,35 @@
               <textarea ng-model="app.editingPost.body" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
             <!-- send button -->
-            <md-button id="post-fab-button" class="md-fab text-lg" ng-click="publishPost($event)"
+            <!-- <md-button id="post-fab-button" class="md-fab text-lg" ng-click="publishPost($event)"
             ng-class="{'sidebar-opened': !app.hidePostOptions}">
               <i class="mdi mdi-send"></i>
-            </md-button>
+            </md-button> -->
             <!-- /send button -->
+            <!-- options button -->
+            <!-- <nav mfb-menu
+              position="{{chosen.position}}" effect="{{chosen.effect}}"
+                 active-icon="mdi mdi-close" resting-icon="mdi mdi-plus"
+                 ng-mouseenter="hovered()" ng-mouseleave="hovered()"
+                 toggling-method="{{chosen.method}}" menu-state="menuState" main-action="mainAction()">
+            
+              <button mfb-button icon="{{button.icon}}" ng-click="ctrl.loc(button.href)"
+                 label="{{button.label}}" ng-repeat="button in buttons"></button>
+            
+            </nav> -->
+            <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html"
+                label="Publicar"
+                 mfb-menu position="{{chosen.position}}" effect="{{chosen.effect}}"
+                 active-icon="mdi mdi-send" resting-icon="mdi mdi-plus"
+                 ng-mouseenter="hovered()" ng-mouseleave="hovered()"
+                 toggling-method="{{chosen.method}}" menu-state="menuState" main-action="mainAction()"
+                 ng-class="{'sidebar-opened': !app.hidePostOptions}">
+
+              <button template-url="ng-mfb-button-md.tpl.html"
+                 mfb-button icon="{{button.icon}}" ng-click="loc(button.href)"
+                 label="{{button.label}}" ng-repeat="button in buttons"></button>
+            </nav>
+            <!-- /options button -->
           </div>
         </div>
       </div>
@@ -110,7 +138,7 @@
         <i class="mdi-information-outline mdi"></i>
       </a>
     </li>
-    <li>
+    <!-- <li>
       <div class="m-t" style="line-height:16px">•</div>
     </li>
     <li>
@@ -118,7 +146,7 @@
       href class="text-lg" >
         <i class="mdi-delete mdi"></i>
       </a>
-    </li>
+    </li> -->
     <li>
       <div class="m-t" style="line-height:16px">•</div>
     </li>

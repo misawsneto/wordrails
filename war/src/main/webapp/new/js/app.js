@@ -21,5 +21,5 @@ angular.module('app', [
     'angular-loading-bar',
     'pascalprecht.translate',
     'angular-redactor',
-    'trix'
+    'trix',
 ]);

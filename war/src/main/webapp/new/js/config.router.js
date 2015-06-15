@@ -31,7 +31,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll']);
+                          return $ocLazyLoad.load(['videosharing-embed', 'toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll']);
                       }]
                   }
               })
@@ -41,7 +41,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['videosharing-embed','js/controllers/stations.js?' + GLOBAL_URL_HASH]);
+                          return $ocLazyLoad.load(['js/controllers/stations.js?' + GLOBAL_URL_HASH]);
                       }]
                   },
                   controller: 'StationsCtrl'
@@ -63,7 +63,7 @@ angular.module('app')
                             '../bower_components/leaflet/dist/leaflet.js',
                             '../bower_components/leaflet/dist/leaflet.css'
                           ]).then(function(){
-                            return $ocLazyLoad.load(['angularFileUpload','videosharing-embed','js/controllers/post.js?' + GLOBAL_URL_HASH])
+                            return $ocLazyLoad.load(['ng-mfb', 'ui.slimscroll', 'angularFileUpload','js/controllers/post.js?' + GLOBAL_URL_HASH])
                           });
                     }]
                   },

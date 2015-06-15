@@ -1,5 +1,5 @@
 <div id="perspective-vertical" class="animated fadeIn" ng-if="app.viewMode === 'vertical'">
-  <md-tabs md-selected="selectedIndex" flex class="">
+  <md-tabs md-selected="selectedIndex" flex class="" md-center-tabs md-dynamic-height>
     <!-- tab -->
     <md-tab md-no-ink md-on-select="selectVerticalRow(ordinaryRow)" angular-ripple ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="bg-custom" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
       <div flex>

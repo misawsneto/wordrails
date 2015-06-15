@@ -13,20 +13,21 @@
       <!-- /search -->
     </div>
     <div class="block-800 m-auto">
-      <div ng-repeat="bookmark in app.bookmarksCtrl.bookmarks">
+      
+      <div class="panel panel-card animated zoomIn" angular-ripple ng-repeat="bookmark in app.bookmarksCtrl.bookmarks">
 
-        <div class="panel panel-card animated zoomIn">
-        <div class="notification-image pull-left m-r-lg"></div>
-        <div class="p">
-          <h3>Paracosm</h3>
-          <p>
-            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
-            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
-          </p>
+        <div>
+          <div class="notification-image pull-left m-r-lg"></div>
+          <div class="p">
+            <h3>Paracosm</h3>
+            <p>
+              The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+              two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+            </p>
+          </div>
         </div>
-      </div>
 
-        <div class="panel panel-card animated zoomIn">
+        <div>
           <div class="notification-image pull-left m-r-lg"></div>
           <div class="p">
             <div class="display-t-c">
@@ -47,6 +48,7 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>

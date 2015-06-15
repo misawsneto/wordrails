@@ -125,13 +125,21 @@ function getCustomStyle(color, perspective, header) {
 	"}\n"+*/
 
 	".redactor-editor a, .redactor-editor a:hover {color:"+ color +"}\n"+
-	"#post-fab-button{background-color: " + color + "; color: " + textColorEval(color) + "}"+
 	".custom-fab-button{background-color: " + color + "!important; color: " + textColorEval(color) + "!important}"+
 
 	".bg-perspective md-tabs.md-default-theme md-tabs-ink-bar {\n"+
 	  "color: "+ textColorEval(perspective) +";\n"+
 	  "background: "+ (textColorEval2(perspective) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)") +";\n"+
 	"}\n"+
+
+	".bg-perspective md-tab md-tab-label {\n"+
+	  "opacity: 0.7;\n"+
+	"}\n"+
+
+	".bg-perspective md-tab.active md-tab-label {\n"+
+	  "opacity: 1!important;\n"+
+	"}\n"+
+
 	".bg-perspective{\n"+
 		"background: "+perspective+";\n"+
 	"}\n"+
