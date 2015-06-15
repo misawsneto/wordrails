@@ -9,5 +9,6 @@ public class TermView implements Serializable {
 	public Integer termId;
 	public String termName;
 	public Integer parentId;
+	public Integer taxonomyId;
 	public List<TermView> children;
 }

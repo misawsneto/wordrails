@@ -22,6 +22,7 @@ public class TermConverter extends AbstractConverter<Term, TermView> {
 		TermView termView = new TermView();
 		termView.termId = term.id;
 		termView.parentId = term.parent.id;
+		termView.taxonomyId = term.taxonomy.id;
 		termView.termName = term.name;
 		
 		return termView;
