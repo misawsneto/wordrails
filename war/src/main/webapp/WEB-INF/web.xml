@@ -45,6 +45,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 			classpath:applicationContext.xml
+			classpath:applicationContext-quartz.xml
 			classpath:applicationContext-integration.xml
 			classpath:applicationContext-security.xml
 		</param-value>
