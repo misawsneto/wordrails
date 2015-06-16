@@ -24,7 +24,7 @@
 	<!-- /conver container -->
 	
 	<!-- divider -->
-	<div ng-show="postViews && showProfile">
+	<div ng-show="postViews && showProfile.length > 0 && showProfile">
 		<div class="m-t b-t b-drk w-full"></div>
 		<div class="header m-auto text-center text-u-c text-lg">
 			<span class="header-title p-l p-r">
@@ -36,7 +36,7 @@
 	<!-- posts & recommendation -->
 	<div infinite-scroll="paginate()" infinite-scroll-distance="1">
     <!-- posts -->
-		<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="postViews && showProfile">
+		<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="postViews && showProfile.length > 0 && showProfile">
 	    <ul class="b-none no-padding m-b-none ls-style-none">
 	      <li ng-repeat="postView in postViews">
 	       <div ng-class="{'b-t': !$first}"></div>

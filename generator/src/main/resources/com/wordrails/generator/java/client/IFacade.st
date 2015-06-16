@@ -48,6 +48,20 @@ interface I$facade$ {
 	@GET("/terms/allTerms")
 	void getAllTerms(@Query("taxonomyId")Integer taxonomyId, @Query("perspectiveId") Integer perspectiveId, Callback<ContentResponse<List<TermView\>\>\> _callback);
 		
+	@GET("/posts/{stationId}/recent")
+	ContentResponse<List<PostView\>\> findRecentPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size);
+	
+	@GET("/posts/{stationId}/recent")
+	ContentResponse<List<PostView\>\> findRecentPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size, 
+	Callback<ContentResponse<List<PostView\>\>\> _callback);
+	
+	@GET("/posts/{stationId}/popular")
+	ContentResponse<List<PostView\>\> findPopularPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size);
+	
+	@GET("/posts/{stationId}/popular")
+	ContentResponse<List<PostView\>\> findPopularPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size, 
+	Callback<ContentResponse<List<PostView\>\>\> _callback);
+		
 	@GET("/posts/{stationId}/findPostsByStationIdAndAuthorIdAndState")
 	ContentResponse<List<PostView\>\> findPostsByStationIdAndAuthorIdAndState(@Path("stationId") Integer stationId, @Query("authorId") Integer authorId, @Query("state") String state, 
 			@Query("page") int page, @Query("size") int size);

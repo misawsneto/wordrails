@@ -1229,11 +1229,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return false;
 	}
 
-	@Override
-	protected boolean isFindPopularPostsAuthorized(Integer stationId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
     @Override
     protected boolean isGetStationRoleWordpressAuthorized(Integer stationRoleId) {
 		return true;

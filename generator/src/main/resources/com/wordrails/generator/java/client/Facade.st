@@ -153,6 +153,42 @@ public class $facade$ {
 		});
 	}
 	
+	public List<PostView> findRecentPosts(Integer stationId, int page, int size){
+		return _facade.findRecentPosts(stationId, page, size).content;
+	}
+	
+	public void findRecentPosts(Integer stationId, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.findRecentPosts(stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}		
+		});
+	}
+	
+	public List<PostView> findPopularPosts(Integer stationId, int page, int size){
+		return _facade.findPopularPosts(stationId, page, size).content;
+	}
+	
+	public void findPopularPosts(Integer stationId, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.findPopularPosts(stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}		
+		});
+	}
+	
 	public List<PostView> findPostsByStationIdAndAuthorIdAndState(Integer stationId, Integer authorId, String state, int page, int size){
 		return _facade.findPostsByStationIdAndAuthorIdAndState(stationId, authorId, state, page, size).content;
 	}
