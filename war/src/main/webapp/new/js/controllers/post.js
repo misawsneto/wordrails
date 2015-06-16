@@ -464,7 +464,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 	var postPost = function(post){
 		trix.postPost(post).success(function(postId){
-			$scope.app.showSuccessToast('História publicada.');
+			$scope.app.showSuccessToast('Notícia publicada.');
 			// replace url withou state reload
 			$state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
 		})

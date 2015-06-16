@@ -167,7 +167,7 @@ angular.module('app')
             $state.go('app.stations');
         }else if(toState.name == 'app.post' && (!trixService.getWritableStations() || trixService.getWritableStations().length == 0)){
           event.preventDefault();
-          $scope.app.showInfoToast('Você não possui permissão para criar histórias.')
+          $scope.app.showInfoToast('Você não possui permissão para criar notícias.')
           if(fromState.abstract)
             $state.go('app.stations');
         }
@@ -440,4 +440,5 @@ angular.module('app')
       $scope.app.refreshData();
       moment.locale('pt')
       /* end of added */
+
   }]); 

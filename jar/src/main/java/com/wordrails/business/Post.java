@@ -198,6 +198,10 @@ public class Post {
 	
 	@Field
 	@NumericField
+	public Integer stationId;
+	
+	@Field
+	@NumericField
 	public int readsCount = 0;
 	
 	@Field
@@ -280,6 +284,7 @@ public class Post {
 		}
 		readTime = WordrailsUtil.calculateReadTime(body);
 		date = new Date();
+		stationId = station.id;
 	}
 	
 	@PreUpdate
@@ -307,6 +312,7 @@ public class Post {
 		updatedAt = new Date();
 		lastModificationDate = updatedAt;
 		readTime = WordrailsUtil.calculateReadTime(body);
+		stationId = station.id;
 	}
 	
 	public Integer imageId;

@@ -208,12 +208,12 @@ public class $facade$ {
 	}
 	
 	
-	public List<PostView> getUnreadPosts(Integer stationId, Integer personId){
-		return _facade.getUnreadPosts(stationId, personId).content;
+	public List<PostView> getPostReadPosts(Integer stationId, Integer personId){
+		return _facade.getPostReadPosts(stationId, personId).content;
 	}
 	
-	public void getUnreadPosts(Integer stationId, Integer personId, final Callback<List<PostView\>\> _callback){
-		_facade.getUnreadPosts(stationId, personId, new Callback<ContentResponse<List<PostView\>\>\>() {
+	public void getPostReadPosts(Integer stationId, Integer personId, final Callback<List<PostView\>\> _callback){
+		_facade.getPostReadPosts(stationId, personId, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
@@ -226,12 +226,12 @@ public class $facade$ {
 		});
 	}
 	
-	public List<PostView> getAllUnreadPosts(Integer stationId, Integer personId, int page, int size){
-		return _facade.getAllUnreadPosts(stationId, personId, page, size).content;
+	public List<PostView> getAllPostReadPosts(Integer stationId, Integer personId, int page, int size){
+		return _facade.getAllPostReadPosts(stationId, personId, page, size).content;
 	}
 	
-	public void getAllUnreadPosts(Integer stationId, Integer personId, int page, int size, final Callback<List<PostView\>\> _callback){
-		_facade.getAllUnreadPosts(stationId, personId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+	public void getAllPostReadPosts(Integer stationId, Integer personId, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.getAllPostReadPosts(stationId, personId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);

@@ -15,21 +15,29 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"post_id", "person_id", "sessionid"}))
+@Indexed
 public class PostRead {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)				
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@DocumentId
 	public Integer id;
 	
 	@ManyToOne
 	@NotNull
+	@IndexedEmbedded
 	public Person person;
 	
 	@ManyToOne
+	@IndexedEmbedded
 	public Post post;
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)

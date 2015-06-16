@@ -216,14 +216,21 @@ public class PersonsResource {
 			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
 			
 			Pageable pageable = new PageRequest(0, 15);
+			Pageable pageable2 = new PageRequest(0, 100);
 
 			if(defaultStation != null){
-				List<Post> unread = postRepository.findUnreadByStationAndPerson(defaultStation.id, personData.person.id, pageable);
+				List<Integer> postsRead = postRepository.findPostReadByPerson(personData.person.id, pageable);
+				List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(personData.person.id, pageable);
+				List<Integer> recommends = recommendRepository.findRecommendByPerson(personData.person.id, pageable);
+				
 				List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
 				List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
-				personData.unread = postConverter.convertToViews(unread);
 				personData.popular = postConverter.convertToViews(popular);
 				personData.recent = postConverter.convertToViews(recent);
+				
+				personData.postsRead = postsRead;
+//				personData.postsRead = postsRead;
+//				personData.postsRead = postsRead;
 			}
 
 			if(setAttributes != null && setAttributes){

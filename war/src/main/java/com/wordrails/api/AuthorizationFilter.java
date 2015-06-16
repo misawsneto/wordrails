@@ -1100,12 +1100,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindUnreadByStationAndPersonAuthorized(
-			Integer stationId, Integer personId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isFindRecommendsByPersonIdOrderByDateAuthorized(
 			Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
@@ -1341,15 +1335,27 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindBookmarkByPersonIdAndPostIdAuthorized(
-			Integer personId, Integer postId) {
-		// TODO Auto-generated method stub
-		return false;
+	protected boolean isFindBookmarkByPersonIdAndPostIdAuthorized( Integer personId, Integer postId) {
+		return true;
 	}
 
 	@Override
-	protected boolean isFindRecommendByPersonIdAndPostIdAuthorized(
-			Integer personId, Integer postId) {
+	protected boolean isFindRecommendByPersonIdAndPostIdAuthorized( Integer personId, Integer postId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindPostReadByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindRecommendByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindBookmarkByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
 

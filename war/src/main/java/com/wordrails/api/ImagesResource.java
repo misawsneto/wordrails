@@ -10,9 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -41,9 +39,7 @@ import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
@@ -54,10 +50,10 @@ import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.util.WordrailsUtil;
 
-@Path("/posts")
+@Path("/images")
 @Consumes(MediaType.WILDCARD)
 @Component
-public class PostsResource {
+public class ImagesResource {
 	private @Context HttpServletRequest request;
 	private @Context UriInfo uriInfo;
 	private @Context HttpServletResponse response;
@@ -70,137 +66,6 @@ public class PostsResource {
 	
 	private @Autowired AccessControllerUtil accessControllerUtil;
 
-	private void forward() throws ServletException, IOException {
-		String path = request.getServletPath() + uriInfo.getPath();		
-		request.getServletContext().getRequestDispatcher(path).forward(request, response);
-	}
-	
-
-	@PUT
-	@Path("/{postId}/updatePostTags")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
-	public ContentResponse<PostView> updatePostTerms(@PathParam("postId") Integer postId, List<TermDto> terms) throws ServletException, IOException {
-		
-		Post post = postRepository.findOne(postId);
-		if(post == null){
-			
-		}
-		
-		ContentResponse<PostView> response = new ContentResponse<PostView>();
-		response.content = postConverter.convertToView(post); 
-		return response;
-	}
-	
-	@GET
-	@Path("/getPostViewBySlug")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
-	public ContentResponse<PostView> getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") boolean withBody) throws ServletException, IOException {
-		Post post = postRepository.findBySlug(slug);
-		ContentResponse<PostView> response = new ContentResponse<PostView>();
-		if(post != null){
-			response.content = postConverter.convertToView(post); 
-			response.content.snippet = post.body;
-		}
-		
-		return response;
-	}
-	
-	@GET
-	@Path("/{postId}/getPostViewById")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
-	public ContentResponse<PostView> getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") boolean withBody) throws ServletException, IOException {
-		Post post = postRepository.findOne(postId);
-		ContentResponse<PostView> response = new ContentResponse<PostView>();
-		if(post != null){
-			response.content = postConverter.convertToView(post); 
-			response.content.snippet = post.body;
-		}
-		
-		return response;
-	}
-	@GET
-	@Path("/{postId}")
-	public void getPost(@PathParam("postId") int postId) throws ServletException, IOException {
-		String userIp = request.getRemoteAddr();
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//		analytics.postViewed(username, userIp, postId);
-		forward();
-	}
-
-	@PUT
-	@Path("/{id}")
-	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
-		forward();
-	}	
-
-	@DELETE
-	@Path("/{id}")
-	public void deletePost(@PathParam("id") Integer id) throws ServletException, IOException {
-		forward();
-	}
-
-	@GET
-	@Path("/{stationId}/findPostsAndPostsPromotedByBody")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsAndPostsPromotedByBody(@PathParam("stationId") Integer stationId, @QueryParam("body") String body, 
-			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-
-		Pageable pageable = new PageRequest(page, size);
-
-		body = "%" + body + "%";
-		List<Post> posts = postRepository.findPostsAndPostsPromotedByBody(stationId, body, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts); 
-		return response;
-	}
-	
-	@GET
-	@Path("/{stationId}/findPostsByStationIdAndAuthorIdAndState")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsByStationIdAndAuthorIdAndState(@PathParam("stationId") Integer stationId, @QueryParam("authorId") Integer authorId, @QueryParam("state") String state, 
-			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-		
-		Pageable pageable = new PageRequest(page, size);
-		
-		List<Post> posts = postRepository.findPostsByStationIdAndAuthorIdAndState(stationId, authorId, state, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts); 
-		return response;
-	}
-
-	@GET
-	@Path("/{stationId}/findPostsAndPostsPromotedByTermId")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsAndPostsPromotedByTermId(@PathParam("stationId") Integer stationId, @QueryParam("termId") Integer termId, 
-			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-
-		Pageable pageable = new PageRequest(page, size);
-
-		List<Post> posts = postRepository.findPostsAndPostsPromotedByTermId(stationId, termId, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts); 
-		return response;
-	}
-
-	@GET
-	@Path("/{stationId}/findPostsAndPostsPromotedByAuthorId")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsAndPostsPromotedByAuthorId(@PathParam("stationId") Integer stationId, @QueryParam("authorId") Integer authorId, 
-			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-		Pageable pageable = new PageRequest(page, size);
-
-		List<Post> posts = postRepository.findPostsAndPostsPromotedByAuthorId(stationId, authorId, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts); 
-		return response;
-	}
-	
 	@GET
 	@Path("/{stationId}/searchPostsFromOrPromotedToStation")
 	@Produces(MediaType.APPLICATION_JSON)
