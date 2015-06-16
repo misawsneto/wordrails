@@ -219,10 +219,6 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
       }
   };
 
-	trix.getTermTree($scope.app.currentStation.defaultPerspectiveId).success(function(response){
-		$scope.termTree = response;
-	});
-
 	$scope.$watch('app.editingPost.selectedStation', function(newVal){
 		trix.getTermTree($scope.app.editingPost.selectedStation.defaultPerspectiveId).success(function(response){
 			$scope.termTree = response;
