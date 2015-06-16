@@ -469,12 +469,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	var postPost = function(post){
 		trix.postPost(post).success(function(postId){
 			$scope.app.showSuccessToast('História publicada.');
-
-			$state.current.reloadOnSearch = false;
-			$location.search({'id': postId})
-			$timeout(function() {
-				$state.current.reloadOnSearch = true;
-			});
+			// replace url withou state reload
+			$state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
 		})
 	}
 
