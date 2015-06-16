@@ -5,9 +5,8 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 
 	if(slug){
 		trix.findBySlug(slug, 'postProjection').success(function(response){
-			console.log(response);
-			if(response && response.posts){
-				$scope.app.nowReading = response.posts[0]
+			if(response){
+				$scope.app.nowReading = response
 				$scope.app.nowReading.postId = $scope.app.nowReading.id;
 				$scope.app.nowReadingAuthor = {
 		            authorId: $scope.app.nowReading.author.id,
@@ -15,7 +14,6 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 		            coverMediumId: $scope.app.nowReading.author.coverMediumId,
 		            authorName: $scope.app.nowReading.author.name
 		        }
-		        console.log(response.posts[0]);
 			}
 			$("title").html($scope.app.nowReading.title);
 			//console.log($scope.app.nowReading);
