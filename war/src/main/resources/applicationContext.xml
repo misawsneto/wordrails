@@ -49,6 +49,13 @@
    		<property name="username" value="wordrails"/>
 		<property name="password" value="wordrails"/>
 	</bean>
+
+	<bean id="dataSourceQuartz" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"/>	
+		<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_quartz"/>
+   		<property name="username" value="wordrails"/>
+		<property name="password" value="wordrails"/>
+	</bean>
 	
 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 	
@@ -67,22 +74,18 @@
         <bean id="firstTrigger" class="com.wordrails.scheduler.PersistableCronTriggerFactoryBean">
             <property name="jobDetail" ref="firstJobDetail" />
             <!-- run every morning at 5:00 AM -->
-            <property name="cronExpression" value="0 0 5 * * ?" />
+            <property name="cronExpression" value="0/10 * * * * ?" />
         </bean>
 
         <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 
-            <property name="configLocation" value="quartz.properties"/>
-            <property name="dataSource" ref="dataSource"/>
+            <property name="configLocation" value="classpath:quartz.properties"/>
+            <property name="dataSource" ref="dataSourceQuartz"/>
             <property name="transactionManager" ref="transactionManager"/>
 
             <!-- This name is persisted as SCHED_NAME in db. for local testing could change to unique name
             to avoid collision with dev server -->
             <property name="schedulerName" value="quartzScheduler"/>
-
-            <!-- Will update database cron triggers to what is in this jobs file on each deploy.
-            Replaces all previous trigger and job data that was in the database. YMMV  -->
-            <property name="overwriteExistingJobs" value="true"/>
 
             <property name="autoStartup" value="true"/>
             <property name="applicationContextSchedulerContextKey" value="applicationContext"/>

@@ -13,9 +13,9 @@
             allowDuplicateDomains="true" />
 
         <transport clusterName="HibernateSearch-Infinispan-cluster">
-<!--            <properties>
+            <properties>
                 <property name="configurationFile" value="jgroups.xml" />
-            </properties>-->
+            </properties>
         </transport>
 
         <shutdown hookBehavior="DONT_REGISTER" />
@@ -56,7 +56,7 @@
                 </properties>
             </singleFile>
         </persistence>
-        <clustering mode="distribution">
+        <clustering mode="replication">
             <stateTransfer fetchInMemoryState="true" />
             <sync replTimeout="25000" />
         </clustering>
@@ -73,7 +73,7 @@
                 </properties>
             </singleFile>
         </persistence>
-        <clustering mode="distribution">
+        <clustering mode="replication">
             <stateTransfer fetchInMemoryState="true" />
             <sync replTimeout="25000" />
         </clustering>

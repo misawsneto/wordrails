@@ -1,9 +1,16 @@
 package com.wordrails.api;
 
+import com.wordrails.WordrailsService;
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.BadRequestException;
+import com.wordrails.business.Person;
+import com.wordrails.business.Post;
+import com.wordrails.converter.PostConverter;
+import com.wordrails.persistence.PostRepository;
+import com.wordrails.util.WordrailsUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
@@ -20,7 +27,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.highlight.Encoder;
 import org.apache.lucene.search.highlight.Formatter;
@@ -42,15 +48,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.BadRequestException;
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
-import com.wordrails.converter.PostConverter;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.util.WordrailsUtil;
 
 @Path("/posts")
 @Consumes(MediaType.WILDCARD)
@@ -223,6 +220,7 @@ public class PostsResource {
 				.andField("subheading")
 				.andField("author.name")
 				.andField("terms.name")
+                .ignoreAnalyzer()
 				.matching(q).createQuery();
 		}catch(Exception e){
 			
