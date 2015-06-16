@@ -1,6 +1,6 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache',
-										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache){
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
+										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
@@ -224,7 +224,6 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	});
 
 	$scope.$watch('app.editingPost.selectedStation', function(newVal){
-		console.log(newVal);
 		trix.getTermTree($scope.app.editingPost.selectedStation.defaultPerspectiveId).success(function(response){
 			$scope.termTree = response;
 		});
@@ -447,11 +446,37 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	    post.station = TRIX.baseUrl + "/api/stations/" + $scope.app.editingPost.selectedStation.stationId;
 	    post.author = extractSelf($scope.app.getLoggedPerson())
 
-			trix.postPost(post).success(function(){
-				$scope.app.showSuccessToast('História publicada.');
-			})
+	    	if($scope.app.editingPost.uploadedImage){
+		    	var featuredImage = { original: TRIX.baseUrl + "/api/files/" + $scope.app.editingPost.uploadedImage.id }
+		    	if($scope.app.editingPost.imageCaption)
+		    		featuredImage.caption = $scope.app.editingPost.imageCaption
+
+		    	if($scope.app.editingPost.imageTitle)
+		    		featuredImage.caption = $scope.app.editingPost.imageTitle
+
+		    	trix.postImage(featuredImage).success(function(imageId){
+		    		post.featuredImage = TRIX.baseUrl + "/api/images/" + imageId;
+		    		postPost(post);
+		    	})
+		    }else{
+		    	postPost(post);
+		    }
+
+			
 		} // end of final else
 	}// end of createPost()
+
+	var postPost = function(post){
+		trix.postPost(post).success(function(postId){
+			$scope.app.showSuccessToast('História publicada.');
+
+			$state.current.reloadOnSearch = false;
+			$location.search({'id': postId})
+			$timeout(function() {
+				$state.current.reloadOnSearch = true;
+			});
+		})
+	}
 
 	// {height:'auto', size:'8px', 'railVisible': true}
 	

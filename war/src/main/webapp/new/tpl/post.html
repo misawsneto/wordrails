@@ -41,7 +41,7 @@
               <!-- <img src="img/c0.jpg" class="img-full"> -->
                 <img id="image-box-holder" ng-src="{{app.editingPost.uploadedImage.filelink}}" class="img-full" ng-if="app.editingPost.uploadedImage.filelink">
             </div>
-            <div class="post-block m-t-sm m-b-sm clear" ng-class="{'hide': !app.editingPost.uploadedImage.filelink}">
+            <div class="post-block m-t-xs m-b-sm clear" ng-class="{'hide': !app.editingPost.uploadedImage.filelink}">
               <input placeholder="Créditos da imagem" ng-model="app.editingPost.imageCaption" class="text-md font-italic b-none w-full back-none">
             </div>
             <div ng-show="app.editingPost.selectedStation.topper" id="post-topper-box" class="post-block m-t-md m-b clear" style="min-height:30px;">

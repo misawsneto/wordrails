@@ -44,8 +44,11 @@ public interface PostProjection {
 	String getExternalFeaturedImgUrl();
 	String getExternalVideoUrl();
 	Integer getReadTime();
+	
 	String getImageCaptionText();
 	String getImageCreditsText();
+	String getImageTitleText();
+	
 	Boolean getNotify();
 	Double getLat();
 	Double getLng();

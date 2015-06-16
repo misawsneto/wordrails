@@ -47,7 +47,7 @@ angular.module('app')
                   controller: 'StationsCtrl'
               })
               .state('app.post', {
-                  url: '/post',
+                  url: '/post?id',
                   templateUrl: 'tpl/post.html',
                   resolve: {
                     deps: ['$ocLazyLoad',

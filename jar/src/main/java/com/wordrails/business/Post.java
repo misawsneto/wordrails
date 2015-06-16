@@ -175,6 +175,7 @@ public class Post {
 	public Set<Comment> comments;
 		
 	@ManyToOne
+	@IndexedEmbedded
 	public Image featuredImage;	
 	
 	@OneToMany(mappedBy="post")
@@ -253,6 +254,9 @@ public class Post {
 	@Longitude
 	public Double lng;
 	
+	@Lob
+	public String imageTitleText;
+	
 	@PrePersist
 	public void onCreate() {
 		if(featuredImage != null && featuredImage.original != null){
@@ -263,6 +267,7 @@ public class Post {
 			imageLandscape = !featuredImage.vertical;
 			imageCaptionText = featuredImage.caption;
 			imageCreditsText = featuredImage.credits;
+			imageTitleText = featuredImage.title;
 		}else{
 			imageId = null;
 			imageSmallId = null;
@@ -285,6 +290,9 @@ public class Post {
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId= featuredImage.large.id;
 			imageLandscape = !featuredImage.vertical;
+			imageCaptionText = featuredImage.caption;
+			imageCreditsText = featuredImage.credits;
+			imageTitleText = featuredImage.title;
 		}else{
 			imageId = null;
 			imageSmallId = null;

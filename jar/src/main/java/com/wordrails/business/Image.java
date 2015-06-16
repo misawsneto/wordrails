@@ -12,22 +12,33 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 @Entity
+@Indexed
 public class Image {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@DocumentId
 	public Integer id;
 	
+	@Field
 	@Size(min=1, max=100)
 	public String title;
 	
 	@Lob
+	@Field
 	public String caption;
 	
 	@Lob
+	@Field
 	public String credits;
 	
 	@ManyToOne
@@ -68,5 +79,27 @@ public class Image {
 	public Set<Post> featuringPosts;		
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
-	public boolean vertical = false;;
+	public boolean vertical = false;
+	
+	public Integer postId;
+	
+	public Integer commentId;
+	
+	@PrePersist
+	public void onCreate(){
+		if(post!=null)
+			postId = post.id;
+		
+		if(comment!=null)
+			commentId = comment.id;
+	}
+	
+	@PreUpdate
+	public void onUpdate(){
+		if(post!=null)
+			postId = post.id;
+		
+		if(comment!=null)
+			commentId = comment.id;
+	}
 }

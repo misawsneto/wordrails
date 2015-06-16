@@ -51,6 +51,9 @@
               <embed-video enablejsapi="1" class="video" iframe-id="video1" api="1" player_id="video1" href="{{app.nowReading.externalVideoUrl}}" width=800 height=460 ></embed-video>
             </div>
             <div class="p-r-xxl p-l-xxl">
+              <div ng-if="app.nowReading.imageCaptionText" class="text-md font-italic m-t-xs m-b-sm post-block">
+                {{app.nowReading.imageCaptionText}}
+              </div>
               <div ng-if="app.nowReading.topper" class="m-t-md post-block">
                 <span class="no-radius normal p-xxs topper text-lg bg-custom-primary ng-binding ng-scope">
                   {{app.nowReading.topper}}

@@ -57,6 +57,9 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.readTime = post.readTime;
 		postView.lat = post.lat;
 		postView.lng = post.lng;
+		postView.imageCaptionText = post.imageCaptionText;
+		postView.imageCreditsText = post.imageCreditsText;
+		postView.imageTitleText = post.imageTitleText;
 		
 		return postView;
 	}
