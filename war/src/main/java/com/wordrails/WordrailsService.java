@@ -9,7 +9,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -51,11 +50,9 @@ import com.wordrails.api.PerspectiveResource;
 import com.wordrails.api.StationDto;
 import com.wordrails.api.StationPermission;
 import com.wordrails.api.TermPerspectiveView;
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.File;
 import com.wordrails.business.FileContents;
 import com.wordrails.business.Image;
-import com.wordrails.business.ImageEventHandler;
 import com.wordrails.business.Network;
 import com.wordrails.business.PasswordReset;
 import com.wordrails.business.Person;
@@ -72,13 +69,8 @@ import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.PostReadRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.RowRepository;
-import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.TermPerspectiveRepository;
-import com.wordrails.persistence.TermRepository;
-import com.wordrails.services.AsyncService;
 import com.wordrails.services.CacheService;
 import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
@@ -88,7 +80,6 @@ public class WordrailsService {
 
 	private @Autowired NetworkRepository networkRepository;
 	private @PersistenceContext EntityManager manager;
-	private @Autowired AccessControllerUtil accessControllerUtil;
 	private @Autowired PostReadRepository postReadRepository;
 	private @Autowired QueryPersistence queryPersistence;
 	private @Autowired FileContentsRepository contentsRepository;
@@ -145,33 +136,33 @@ public class WordrailsService {
 
 	@Async
 	@Transactional
-	public void countPostRead(Post post, String sessionId){
+	public void countPostRead(Post post, Person person, String sessionId){
 		PostRead postRead = new PostRead();
-		postRead.person = accessControllerUtil.getLoggedPerson();
+		postRead.person = person;
 		postRead.post = post;
-		if(postRead.person != null && postRead.person.id == 1) // if user wordrails, include session to uniquely identify the user.
+		if(postRead.person != null && postRead.person.username.equals("wordrails")) // if user wordrails, include session to uniquely identify the user.
 			postRead.sessionid = sessionId;
 		try {
 			postReadRepository.save(postRead);
 			queryPersistence.incrementReadsCount(post.id);
 		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-//			ex.printStackTrace();
+			ex.printStackTrace();
 		}
 	}
 
 	@Async
 	@Transactional
-	public void countPostRead(Integer postId, String sessionId){
+	public void countPostRead(Integer postId, Person person, String sessionId){
 		PostRead postRead = new PostRead();
-		postRead.person = accessControllerUtil.getLoggedPerson();
+		postRead.person = person;
 		postRead.post = postRepository.findOne(postId);
-		if(postRead.person != null && postRead.person.id == 1) // if user wordrails, include session to uniquely identify the user.
+		if(postRead.person != null && postRead.person.username.equals("wordrails")) // if user wordrails, include session to uniquely identify the user.
 			postRead.sessionid = sessionId;
 		try {
 			postReadRepository.save(postRead);
 			queryPersistence.incrementReadsCount(postId);
 		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-//			ex.printStackTrace();
+			ex.printStackTrace();
 		}
 	}
 

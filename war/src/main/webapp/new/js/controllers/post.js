@@ -7,14 +7,22 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   };
 
 	$scope.postCtrl = {}
+	// check if user has permisstion to write
+  $scope.writableStations = trixService.getWritableStations();
 
-	if(!$scope.app.editingPost){
+  if(!$scope.writableStations || $scope.writableStations.length == 0){}
+
+	var createPostObject = function(){
 		$scope.app.editingPost = {};
 		$scope.app.editingPost.imageLandscape = true;
 		$scope.discardedMedia = null;
 		$scope.app.editingPost.uploadedImage = null;
 		$scope.app.editingPost.showMediaButtons = false;
 		$scope.postCtrl.editingExisting = false;
+	}
+
+	if(!$scope.app.editingPost){
+		createPostObject();
 	}else{
 		$scope.postCtrl.editingExisting = true;
 		if($scope.app.editingPost.externalVideoUrl)
@@ -24,13 +32,6 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			$scope.invertLandscapeSquare();
 		}, 50);
 	}
-
-	// check if user has permisstion to write
-  $scope.writableStations = trixService.getWritableStations();
-
-  if(!$scope.writableStations || $scope.writableStations.length == 0){
-  	// no permission.
-  }
 
   $scope.writableStations && $scope.writableStations.forEach(function(station, index){
   	if(station.stationId == $scope.app.currentStation.id)

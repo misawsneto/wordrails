@@ -1,15 +1,9 @@
 package com.wordrails.services;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.wordrails.business.Image;
 import com.wordrails.business.ImageEventHandler;
 import com.wordrails.persistence.FileRepository;
 import com.wordrails.persistence.ImageRepository;
@@ -32,7 +26,4 @@ public class AsyncService {
 		}
 
 	}
-
-	
-	
 }

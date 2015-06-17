@@ -29,32 +29,4 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 		}
 	})
 
-	$scope.app.bookmark = function(postId){
-		if($scope.app.isLogged){
-          trix.toggleBookmark(postId).success(function(reponse){
-          	if(reponse.content && reponse.content.response)
-          		$scope.app.showInfoToast('A notícia foi adicionado a sua lista.')
-          	else
-          		$scope.app.showInfoToast('A notícia foi removida da sua lista.')
-          }).error(function(){
-          	console.log('error');
-          })
-        }else
-          $scope.openSplash('signin_splash.html')
-	}
-
-	$scope.app.recommend = function(postId){
-		if($scope.app.isLogged){
-          trix.toggleRecommend(postId).success(function(reponse){
-          	if(reponse.content && reponse.content.response)
-          		$scope.app.showInfoToast('Você recomendou essa hostória.')
-          	else
-          		$scope.app.showInfoToast('Recomendação removida.')
-          }).error(function(){
-          	console.log('error');
-          })
-        }else
-          $scope.openSplash('signin_splash.html')
-	}
-
 }])

@@ -440,8 +440,16 @@ angular.module('app')
       $scope.app.addBookmarked = function(postId){
         if(!$scope.app.initData.bookmarks || $scope.app.initData.bookmarks.length == 0)
           $scope.app.initData.bookmarks = [];
-        if(!$scope.app.bookmaked(postId))
+        if(!$scope.app.bookmarked(postId))
           $scope.app.initData.bookmarks.push(postId);
+      }
+
+      $scope.app.removeBookmarked = function(postId){
+        if($scope.app.initData.bookmarks && $scope.app.initData.bookmarks.length > 0){
+          var index = $scope.app.initData.bookmarks.indexOf(postId)
+          if(index > -1)
+            $scope.app.initData.bookmarks.splice(index, 1);
+        }
       }
 
       $scope.app.bookmarked = function(postId){
@@ -461,9 +469,54 @@ angular.module('app')
         return bool;
       }
 
+      $scope.app.addRecommended = function(postId){
+        if(!$scope.app.initData.recommends || $scope.app.initData.recommends.length == 0)
+          $scope.app.initData.recommends = [];
+        if(!$scope.app.recommended(postId))
+          $scope.app.initData.recommends.push(postId);
+      }
+
+      $scope.app.removeRecommended = function(postId){
+        if($scope.app.initData.recommends && $scope.app.initData.recommends.length > 0){
+          var index = $scope.app.initData.recommends.indexOf(postId)
+          if(index > -1)
+            $scope.app.initData.recommends.splice(index, 1);
+        }
+      }
+
       $scope.app.recommended = function(postId){
         var bool = $scope.app.initData.recommends && $scope.app.initData.recommends.length > 0 ? $scope.app.initData.recommends.indexOf(postId) > -1 : false;
         return bool;
+      }
+
+      $scope.app.bookmark = function(postId){
+        if($scope.app.isLogged){
+              trix.toggleBookmark(postId).success(function(reponse){
+                if(reponse.content && reponse.content.response){
+                  $scope.app.addBookmarked(postId)
+                }else{
+                  $scope.app.removeBookmarked(postId)
+                }
+              }).error(function(){
+                console.log('error');
+              })
+            }else
+              $scope.openSplash('signin_splash.html')
+      }
+
+      $scope.app.recommend = function(postId){
+        if($scope.app.isLogged){
+              trix.toggleRecommend(postId).success(function(reponse){
+                if(reponse.content && reponse.content.response){
+                  $scope.app.addRecommended(postId)
+                }else{
+                  $scope.app.removeRecommended(postId)
+                }
+              }).error(function(){
+                console.log('error');
+              })
+            }else
+              $scope.openSplash('signin_splash.html')
       }
 
       $scope.app.refreshData();

@@ -21,10 +21,10 @@
               <div class="divider-v"></div>
             </li>
             <li><a href class="text-center text-lg" ng-click="app.recommend(app.nowReading.postId)">
-              <i class="mdi mdi-heart-outline"></i>
+              <i class="mdi" ng-class="{'mdi-heart': app.recommended(app.nowReading.postId), 'mdi-heart-outline': !app.recommended(app.nowReading.postId)}"></i>
             </a></li>
             <li><a href class="text-center text-lg" ng-click="app.bookmark(app.nowReading.postId)">
-              <i class="mdi mdi-bookmark-outline"></i>
+              <i class="mdi" ng-class="{'mdi-bookmark': app.bookmarked(app.nowReading.postId), 'mdi-bookmark-outline': !app.bookmarked(app.nowReading.postId)}"></i>
             </a></li>
           </ul>
           <!-- nabar right -->

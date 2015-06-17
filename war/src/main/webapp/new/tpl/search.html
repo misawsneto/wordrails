@@ -24,7 +24,7 @@
     <div class="m-b-lg block-800 m-auto m-t-sm">
             <!-- posts -->
       <ul class="b-none no-padding m-b-none ls-style-none">
-        <li ng-repeat="result in app.searchCtrl.searchResults">
+        <li ng-repeat="result in app.searchCtrl.searchResults" ng-class="{'post-read': app.postRead(result.postId)}">
          <div ng-class="{'b-t': !$first}"></div>
           <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(result,app.searchCtrl.searchResults, null, 'app.search')">
             <!-- image -->
