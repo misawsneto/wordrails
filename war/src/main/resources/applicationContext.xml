@@ -49,13 +49,6 @@
    		<property name="username" value="wordrails"/>
 		<property name="password" value="wordrails"/>
 	</bean>
-
-	<bean id="dataSourceQuartz" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-		<property name="driverClass" value="com.mysql.jdbc.Driver"/>	
-		<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_quartz"/>
-   		<property name="username" value="wordrails"/>
-		<property name="password" value="wordrails"/>
-	</bean>
 	
 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 	
