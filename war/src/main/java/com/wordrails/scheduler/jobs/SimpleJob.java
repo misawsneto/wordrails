@@ -1,5 +1,6 @@
 package com.wordrails.scheduler.jobs;
 
+import java.text.SimpleDateFormat;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -12,7 +13,8 @@ public class SimpleJob extends QuartzJobBean {
     
  
     @Override
-    protected void executeInternal(JobExecutionContext context) {
-        System.out.println("THIS IS A QUARTZ TEST");
+    protected void executeInternal(JobExecutionContext context) {        
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println("[" + formatter.format(context.getFireTime()) + "]" + context.getFireInstanceId());
     }
 }

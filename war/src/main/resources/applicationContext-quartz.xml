@@ -19,7 +19,7 @@
                 <property name="persistenceUnitName" value="wordrails" />
 	</bean>
 
-	<bean id="dataSourceQuartz" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+	<bean id="quartzDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
 		<property name="driverClass" value="com.mysql.jdbc.Driver"/>	
 		<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_quartz"/>
    		<property name="username" value="wordrails"/>
@@ -39,7 +39,7 @@
         <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 
             <property name="configLocation" value="classpath:quartz.properties"/>
-            <property name="dataSource" ref="dataSourceQuartz"/>
+            <property name="dataSource" ref="quartzDataSource"/>
             <property name="transactionManager" ref="transactionManager"/>
 
             <!-- This name is persisted as SCHED_NAME in db. for local testing could change to unique name
