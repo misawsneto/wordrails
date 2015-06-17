@@ -16,7 +16,7 @@
       </div>
       <div class="frame info-flow" style="overflow: hidden;">
         <ul class="sly-clearfix info-flow-list" data-term-id="{{ordinaryRow.termId}}">
-          <li class="cell" ng-repeat="cell in ordinaryRow.cells">
+          <li class="cell" ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
             <div class="" data-ng-include=" 'tpl/stations_horizontal_cells.html' "></div>
           </li>
           <li syle="1px"></li>

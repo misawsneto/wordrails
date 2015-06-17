@@ -8,6 +8,7 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 			if(response){
 				$scope.app.nowReading = response
 				$scope.app.nowReading.postId = $scope.app.nowReading.id;
+				$scope.app.addPostRead($scope.app.nowReading.postId)
 				$scope.app.nowReadingAuthor = {
 		            authorId: $scope.app.nowReading.author.id,
 		            imageSmallId: $scope.app.nowReading.author.imageSmallId,

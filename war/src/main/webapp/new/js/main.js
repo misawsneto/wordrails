@@ -437,6 +437,35 @@ angular.module('app')
           $scope.openSplash('signin_splash.html')
       }
 
+      $scope.app.addBookmarked = function(postId){
+        if(!$scope.app.initData.bookmarks || $scope.app.initData.bookmarks.length == 0)
+          $scope.app.initData.bookmarks = [];
+        if(!$scope.app.bookmaked(postId))
+          $scope.app.initData.bookmarks.push(postId);
+      }
+
+      $scope.app.bookmarked = function(postId){
+        var bool = $scope.app.initData.bookmarks && $scope.app.initData.bookmarks.length > 0 ?  $scope.app.initData.bookmarks.indexOf(postId) > -1 : false;
+        return bool;
+      }
+
+      $scope.app.addPostRead = function(postId){
+        if(!$scope.app.initData.postsRead || $scope.app.initData.postsRead.length == 0)
+          $scope.app.initData.postsRead = [];
+        if(!$scope.app.postRead(postId))
+          $scope.app.initData.postsRead.push(postId);
+      }
+
+      $scope.app.postRead = function(postId){
+        var bool = $scope.app.initData.postsRead && $scope.app.initData.postsRead.length > 0 ? $scope.app.initData.postsRead.indexOf(postId) > -1 : false;
+        return bool;
+      }
+
+      $scope.app.recommended = function(postId){
+        var bool = $scope.app.initData.recommends && $scope.app.initData.recommends.length > 0 ? $scope.app.initData.recommends.indexOf(postId) > -1 : false;
+        return bool;
+      }
+
       $scope.app.refreshData();
       moment.locale('pt')
       /* end of added */

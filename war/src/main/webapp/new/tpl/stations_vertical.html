@@ -6,7 +6,7 @@
         <div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm" infinite-scroll="verticalPaginate(ordinaryRow)" infinite-scroll-distance="3">
             <!-- posts -->
           <ul class="b-none no-padding m-b-none ls-style-none">
-            <li ng-repeat="cell in ordinaryRow.cells">
+            <li ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
              <div ng-class="{'b-t': !$first}"></div>
               <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
                 <!-- image -->

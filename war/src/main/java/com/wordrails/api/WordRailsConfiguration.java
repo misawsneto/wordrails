@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Configuration
 public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
@@ -19,5 +20,6 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 		Reflections reflections = new Reflections("com.wordrails.business");
 		Set<Class<?>> entities = reflections.getTypesAnnotatedWith(Entity.class);
 		config.exposeIdsFor(entities.toArray(new Class<?>[0]));
+		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 	}
 }

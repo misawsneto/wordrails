@@ -14,5 +14,7 @@ public class PersonData implements Serializable{
 	public List<PostView> popular;
 	
 	public List<Integer> postsRead;
+	public List<Integer> bookmarks;
+	public List<Integer> recommends;
 }
 

@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -216,21 +218,23 @@ public class PersonsResource {
 			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
 			
 			Pageable pageable = new PageRequest(0, 15);
-			Pageable pageable2 = new PageRequest(0, 100);
+			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
 
 			if(defaultStation != null){
-				List<Integer> postsRead = postRepository.findPostReadByPerson(personData.person.id, pageable);
-				List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(personData.person.id, pageable);
-				List<Integer> recommends = recommendRepository.findRecommendByPerson(personData.person.id, pageable);
+				if(personData.person != null && !personData.person.username.equals("wordrails")){
+					List<Integer> postsRead = postRepository.findPostReadByPerson(personData.person.id, pageable2);
+					List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(personData.person.id, pageable2);
+					List<Integer> recommends = recommendRepository.findRecommendByPerson(personData.person.id, pageable2);
+					personData.postsRead = postsRead;
+					personData.bookmarks = bookmarks;
+					personData.recommends = recommends;
+				}
 				
 				List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
 				List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
 				personData.popular = postConverter.convertToViews(popular);
 				personData.recent = postConverter.convertToViews(recent);
 				
-				personData.postsRead = postsRead;
-//				personData.postsRead = postsRead;
-//				personData.postsRead = postsRead;
 			}
 
 			if(setAttributes != null && setAttributes){

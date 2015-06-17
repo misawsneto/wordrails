@@ -154,7 +154,9 @@ public class WordrailsService {
 		try {
 			postReadRepository.save(postRead);
 			queryPersistence.incrementReadsCount(post.id);
-		} catch (org.springframework.dao.DataIntegrityViolationException ex) {}
+		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
+//			ex.printStackTrace();
+		}
 	}
 
 	@Async
@@ -168,7 +170,9 @@ public class WordrailsService {
 		try {
 			postReadRepository.save(postRead);
 			queryPersistence.incrementReadsCount(postId);
-		} catch (org.springframework.dao.DataIntegrityViolationException ex) {}
+		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
+//			ex.printStackTrace();
+		}
 	}
 
 	@Async
