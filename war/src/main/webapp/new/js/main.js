@@ -170,6 +170,16 @@ angular.module('app')
           $scope.app.showInfoToast('Você não possui permissão para criar notícias.')
           if(fromState.abstract)
             $state.go('app.stations');
+        }else if( (toState.name.indexOf('app.user') > -1 && (toParams.username === "wordrails")) ||
+                (toState.name == 'app.publications' && 
+                  ((!trixService.getWritableStations() || trixService.getWritableStations().length == 0) ||
+                    ($scope.app.initData && $scope.app.initData.person && $scope.app.initData.person.username !== toParams.username))
+                 )
+          ){
+          event.preventDefault();
+          $scope.app.showInfoToast('Permissão negada.')
+          if(fromState.abstract)
+            $state.go('app.stations');
         }
       })
 
