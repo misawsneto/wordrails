@@ -4,7 +4,7 @@
       <div class="row-row">
         <div class="collapse post-read-header pos-rlt navbar-collapse box-shadow post-nav">
           <!-- nabar left -->
-          <ul class="nav navbar-nav navbar-left">
+          <ul class="nav navbar-nav navbar-left ">
             <li ng-show="app.currentStation.allowSocialShare">
               <a href class="text-center text-lg">
               <i class="mdi mdi-google-plus"></i>
@@ -21,10 +21,10 @@
               <div class="divider-v"></div>
             </li>
             <li><a href class="text-center text-lg" ng-click="app.recommend(app.nowReading.postId)">
-              <i class="mdi" ng-class="{'mdi-heart': app.recommended(app.nowReading.postId), 'mdi-heart-outline': !app.recommended(app.nowReading.postId)}"></i>
+              <i class="mdi" ng-class="{'mdi-heart animated rubberBand': app.recommended(app.nowReading.postId), 'mdi-heart-outline': !app.recommended(app.nowReading.postId)}"></i>
             </a></li>
             <li><a href class="text-center text-lg" ng-click="app.bookmark(app.nowReading.postId)">
-              <i class="mdi" ng-class="{'mdi-bookmark': app.bookmarked(app.nowReading.postId), 'mdi-bookmark-outline': !app.bookmarked(app.nowReading.postId)}"></i>
+              <i class="mdi" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(app.nowReading.postId), 'mdi-bookmark-outline': !app.bookmarked(app.nowReading.postId)}"></i>
             </a></li>
           </ul>
           <!-- nabar right -->
