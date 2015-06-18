@@ -36,6 +36,7 @@ import org.apache.lucene.search.highlight.SimpleHTMLEncoder;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.query.dsl.MustJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,7 +205,10 @@ public class PostsResource {
 	@GET
 	@Path("/{stationId}/searchPostsFromOrPromotedToStation")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<SearchView> searchPostsFromOrPromotedToStation(@PathParam("stationId") Integer stationId, @QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+	public ContentResponse<SearchView> searchPostsFromOrPromotedToStation(@PathParam("stationId") Integer stationId, @QueryParam("query") String q,
+			@QueryParam("stationIds") String stationIds, @QueryParam("networkId") Integer network, @QueryParam("personId") Integer personId, 
+			@QueryParam("publicationType") Integer publicationType, @QueryParam("noHighlight") Boolean noHighlight,
+			@QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
 		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
 		// create native Lucene query unsing the query DSL
@@ -214,7 +218,7 @@ public class PostsResource {
 
 		org.apache.lucene.search.Query text = null;
 		try{
-			
+			if(q != null){
 			text = qb.keyword()
 				.fuzzy()
 				.withThreshold(.8f)
@@ -226,6 +230,7 @@ public class PostsResource {
 				.andField("author.name")
 				.andField("terms.name")
 				.matching(q).createQuery();
+			}
 		}catch(Exception e){
 			
 			e.printStackTrace();
@@ -238,10 +243,29 @@ public class PostsResource {
 			return response;
 		};
 
-		org.apache.lucene.search.Query station = qb.keyword().onField("station.id").ignoreAnalyzer().matching(stationId).createQuery();
-
-		org.apache.lucene.search.Query full = qb.bool().must(text).must(station).createQuery();
+		MustJunction musts = null;
 		
+		if(q != null){
+			musts = qb.bool().must(text);
+		}
+		
+		if(personId != null){
+			org.apache.lucene.search.Query station = qb.keyword().onField("station.id").ignoreAnalyzer().matching(stationId).createQuery();
+			if(musts == null)
+				musts = qb.bool().must(station);
+			else
+				musts.must(station);
+		}
+		
+		if(personId != null){
+			org.apache.lucene.search.Query person = qb.keyword().onField("author.id").ignoreAnalyzer().matching(personId).createQuery();
+			if(musts == null)
+				musts = qb.bool().must(person);
+			else
+				musts.must(person);
+		}
+
+		org.apache.lucene.search.Query full = musts.createQuery(); //qb.bool().must(text).must(station).createQuery();
 
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Post.class);
 		
@@ -264,7 +288,9 @@ public class PostsResource {
 			Fragmenter fragmenter = new SimpleFragmenter(120); 
 			Scorer scorer = new QueryScorer(full); 
 			Encoder encoder = new SimpleHTMLEncoder(); 
-			Formatter formatter = new SimpleHTMLFormatter("<b>", "</b>"); 
+			Formatter formatter = new SimpleHTMLFormatter("<b>", "</b>");
+			if(noHighlight != null && noHighlight)
+				formatter = new SimpleHTMLFormatter("", "");
 
 			Highlighter ht = new Highlighter(formatter, encoder, scorer); 
 			ht.setTextFragmenter(fragmenter);

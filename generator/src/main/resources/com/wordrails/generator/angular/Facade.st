@@ -124,7 +124,7 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/persons/"+personId+"/recommends", config)
     }
     
-    this.searchPostsFromOrPromotedToStation = function(stationId, query, _page, _size) {
+    this.searchPostsFromOrPromotedToStation = function(stationId, query, _page, _size, params) {
 		var config = {
 			"params": {
 				"query": query,
@@ -132,6 +132,10 @@ var trix = angular.module('trix', [])
 				"size": _size,
 			}
 		}
+		
+		if(params && angular)
+			config.params = angular.extend(config.params, params);
+		
       return \$http.get(_config.url + "/api/posts/"+stationId+"/searchPostsFromOrPromotedToStation", config)
     }
     

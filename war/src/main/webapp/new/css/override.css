@@ -757,6 +757,10 @@ a.text-lgrey:hover {
   background: transparent;
 }
 
+.block-1000{
+  max-width: 1000px;
+}
+
 .block-800{
   max-width: 800px;
 }
@@ -1208,6 +1212,7 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
 #bookmarks .animated,
 #notifications .animated,
 #user-profile .animated,
+#publications .animated,
 #notifications .animated,
 #post-left-content .animated,
 #post-right-content .animated{
@@ -1591,6 +1596,13 @@ a.underline-hover:hover{
 }
 
 /* /user_profile */
+
+/* user_publications */
+ #publications .block-image{
+  width: 120px;
+  height: 100px;
+ }
+/* /user_publications */
 
 /* card */
 .panel-card {

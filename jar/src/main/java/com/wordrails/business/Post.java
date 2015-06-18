@@ -283,7 +283,8 @@ public class Post {
 			commentsCount = comments.size();
 		}
 		readTime = WordrailsUtil.calculateReadTime(body);
-		date = new Date();
+		if(date == null)
+			date = new Date();
 		stationId = station.id;
 	}
 	

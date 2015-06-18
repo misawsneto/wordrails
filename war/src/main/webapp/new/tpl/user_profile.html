@@ -6,9 +6,10 @@
 			</div>
 		</div>
 		<div id="profile-buttons" class="pos-abt wrapper" ng-class="{'profile-buttons-cover': person.coverLargeId}">
-			<md-button md-no-ink angular-ripple ng-show="person.id == app.initData.person.id" class="md-fab custom-fab-button text-lg" ng-click="editProfile()">
-        <i class="mdi mdi-pencil"></i>
-      </md-button>
+			<md-button tooltip="Editar perfil" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+				md-no-ink angular-ripple ng-show="person.id == app.initData.person.id" class="md-fab custom-fab-button text-lg" ng-click="editProfile()">
+		        <i class="mdi mdi-pencil"></i>
+		      </md-button>
 		</div>
 		<div class="user-details block-600 m-auto animated zoomIn" ng-class="{'with-cover': person.coverLargeId}">
 			<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
@@ -68,8 +69,8 @@
 	                  {{postView.authorName}}
 	                </a>
 	                <br>
-	                <span class="postMetaInline text-sm">
-	                  <span class="postMetaInline postMetaInline--bookmark">
+	                <span class="text-sm">
+	                  <span class="">
 	                    <span class="readingTime">{{postView.date | fromNow}}</span>
 	                  </span>
 	                </span>
@@ -134,8 +135,8 @@
 	                  {{postView.authorName}}
 	                </a>
 	                <br>
-	                <span class="postMetaInline text-sm">
-	                  <span class="postMetaInline postMetaInline--bookmark">
+	                <span class="text-sm">
+	                  <span class="">
 	                    <span class="readingTime">{{postView.date | fromNow}}</span>
 	                  </span>
 	                </span>

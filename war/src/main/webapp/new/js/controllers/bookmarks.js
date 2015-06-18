@@ -24,7 +24,7 @@ app.controller('BookmarksCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 	}
 
 	$scope.paginate = function(){
-		if($scope.app.bookmarksCtrl.allLoaded)
+		if($state.current.name != 'app.bookmarks' || $scope.app.bookmarksCtrl.allLoaded)
 			return;
 
 		if(!$scope.searchLoaging){

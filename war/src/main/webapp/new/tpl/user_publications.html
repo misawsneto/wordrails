@@ -1,1 +1,48 @@
-user_publications
+<div id="publications" class="hbox hbox-auto-xs">
+	<div class="wrapper-lg">
+		<div class="block-1000 m-auto">
+			<div class="text-3x font-bold m-b-lg">
+				Notícias
+			</div>
+
+			  <div class="w-full" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}" infinite-scroll="paginatePosts()" infinite-scroll-distance="1">
+            <!-- posts -->
+			      <ul class="b-none no-padding m-b-none ls-style-none">
+			        <li ng-repeat="result in app.searchCtrl.searchResults">
+			         <div ng-class="{'b-t': !$first}"></div>
+			          <div class="clear p-t-sm padder-v post-list news-item" angular-ripple ng-click="app.setNowReading(result,app.searchCtrl.searchResults, null, 'app.search')">
+			            <!-- image -->
+			            <a class="block-image m-l m-t" ng-if="result.mediumId" >
+			              <div class="cell-wrap r r-2x" ng-class="{'hide': !result.mediumId}">
+			                <div ng-style="getBackgroundImage(result, 'md')"></div>
+			              </div>
+			            </a>
+			            <!-- /image -->
+			            <!-- /content -->
+			            <div class="m-t-sm" ng-class="{'content-block': result.mediumId}">
+			              <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="result.topper">{{result.topper}}</span>
+			              <a  class="h3 font-bold m-b m-t-sm block">
+			                {{result.title}}
+			              </a>
+			              <div class="text-lg font-thin">
+			              	{{result.snippet | characters: 80}}
+			              </div>
+		                <div class="p-t display-t-c v-middle">
+	                    <span class="text-lg readingTime">{{result.date | fromNow2}}</span>
+		                </div>
+			            </div>
+			            <!-- /content -->
+			          </div>    
+			        </li>
+			      </ul>
+			  </div>
+        <!-- /posts -->
+		</div>
+	</div>
+</div>
+
+<md-button ui-sref="app.post" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+tooltip="Nova notícia" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+ id="station-fab" angular-ripple md-no-ink class="animated fadeIn custom-fab-button md-fab md-button md-default-theme text-2x" aria-label="Nova notícia">
+  <i class="mdi mdi-plus"></i>
+</md-button>

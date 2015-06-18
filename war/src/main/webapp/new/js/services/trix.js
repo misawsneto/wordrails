@@ -72,7 +72,6 @@ angular.module('app').service('trixService', function(){
 	 		if(permissions.writable || permissions.writer)
 	 			stations.push(permissions)
 	 	});
-	 	console.log(initData.personPermissions.stationPermissions);
 	 	return stations;
 	 }
 

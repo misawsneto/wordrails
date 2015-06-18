@@ -58,7 +58,7 @@ angular.module('app')
       }
 
       $scope.app.getLoggedPerson = function(){
-        return initData.person;
+        return $scope.app.initData.person;
       }
 
       // angular translate
@@ -183,11 +183,25 @@ angular.module('app')
         }
       })
 
-      $scope.app.goToProfile = function($event, username){
+      $scope.app.goToProfile = function($event){
         $event.preventDefault();
         $event.stopPropagation();
-        $state.go('app.user', {username: username})
+        $state.go('app.user', {username: $scope.app.getLoggedPerson().username})
         $scope.app.profilepopover.open = false;
+      }
+
+      $scope.app.goToUserPublications = function($event){
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, publicationType: 'publications'})
+        $scope.app.profilepopover.open = false; 
+      }
+
+      $scope.app.goToUserDrafts = function(){
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, publicationType: 'drafts'})
+        $scope.app.profilepopover.open = false; 
       }
 
       $scope.getBackgroundImage = function(postView, size){
