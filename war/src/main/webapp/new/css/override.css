@@ -2825,6 +2825,13 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 .deckgrid .column-1-4 {
     width: 25%;
 }
+
+.author-div{
+  position: absolute;
+  bottom: 15px;
+  left: 230px;
+}
+
 /* /bookmarks */
 
 /* splash */
