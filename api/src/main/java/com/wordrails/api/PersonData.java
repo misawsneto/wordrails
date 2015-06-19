@@ -10,8 +10,11 @@ public class PersonData implements Serializable{
 	public NetworkRoleDto networkRole;
 	public List<StationDto> stations;
 	public PersonPermissions personPermissions;
-	public List<PostView> unread;
 	public List<PostView> recent;
 	public List<PostView> popular;
+	
+	public List<Integer> postsRead;
+	public List<Integer> bookmarks;
+	public List<Integer> recommends;
 }
 

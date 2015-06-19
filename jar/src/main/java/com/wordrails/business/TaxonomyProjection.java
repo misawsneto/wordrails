@@ -11,7 +11,6 @@ public interface TaxonomyProjection {
 	String getType();
 	String getName();
 	Set<Network> getNetworks();
-	Set<Network> defaultNetworks();
 	Set<Term> terms();
 	Network owningNetwork();
 	Station owningStation();

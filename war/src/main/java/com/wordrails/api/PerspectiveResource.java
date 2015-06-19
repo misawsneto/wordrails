@@ -1,6 +1,7 @@
 package com.wordrails.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -162,6 +163,7 @@ public class PerspectiveResource {
 				int upperLimit = (page == 0 ? size : page * size);
 				
 				List<Row> rows = rowRepository.findByPerspective(termPerspective);
+				Collections.sort(rows);
 				termView = convertRowsToTermView(termPerspective, rows, page, size, lowerLimit, upperLimit);
 				termView.stationPerspectiveId = termPerspective.perspective.id;
 				termView.stationId = termPerspective.stationId;

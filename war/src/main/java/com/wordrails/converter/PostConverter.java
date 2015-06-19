@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.api.PostView;
-import com.wordrails.api.PostsResource;
 import com.wordrails.business.Post;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.util.WordrailsUtil;
@@ -58,6 +57,9 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.readTime = post.readTime;
 		postView.lat = post.lat;
 		postView.lng = post.lng;
+		postView.imageCaptionText = post.imageCaptionText;
+		postView.imageCreditsText = post.imageCreditsText;
+		postView.imageTitleText = post.imageTitleText;
 		
 		return postView;
 	}

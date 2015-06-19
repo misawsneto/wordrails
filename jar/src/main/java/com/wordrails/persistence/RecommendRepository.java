@@ -21,4 +21,7 @@ public interface RecommendRepository extends JpaRepository<Recommend, Integer>, 
 	
 	@Query("SELECT recommend FROM Recommend recommend WHERE recommend.person.id = :personId AND recommend.post.id = :postId")
 	Recommend findRecommendByPersonIdAndPostId(@Param("personId") Integer personId, @Param("postId") Integer postId);
+	
+	@Query("select r.post.id from Recommend r where r.person.id=:personId)")
+	public List<Integer> findRecommendByPerson(@Param("personId") Integer personId, Pageable pageable);
 }

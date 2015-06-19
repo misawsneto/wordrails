@@ -50,9 +50,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 	tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
 	filters = {
 	@TokenFilterDef(factory = WordDelimiterFilterFactory.class),
-	@TokenFilterDef(factory = LowerCaseFilterFactory.class),
-	},
-	charFilters = { @CharFilterDef(factory = HTMLStripCharFilterFactory.class)   })
+	@TokenFilterDef(factory = LowerCaseFilterFactory.class)
+	})
 })
 public class Person {
 	@Id

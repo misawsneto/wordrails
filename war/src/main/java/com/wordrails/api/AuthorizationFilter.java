@@ -32,12 +32,9 @@ import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
-
 import java.util.Date;
 import java.util.List;
-
 import javax.ws.rs.Path;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -208,11 +205,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetNetworkTaxonomiesAuthorized(Integer networkId) {
 		return true;
-	}
-
-	@Override
-	protected boolean isGetNetworkDefaultTaxonomyAuthorized(Integer networkId) {
-		return belongsToNetwork(networkId);
 	}
 
 	@Override
@@ -595,11 +587,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetTaxonomyNetworksAuthorized(Integer taxonomyId) {
 		Taxonomy taxonomy = taxonomyRepository.findOne(taxonomyId);
 		return taxonomy != null && taxonomy.owningNetwork != null && isNetworkAdminById(taxonomy.owningNetwork.id);
-	}
-
-	@Override
-	protected boolean isGetTaxonomyDefaultNetworksAuthorized(Integer taxonomyId) {
-		return false;
 	}
 
 	@Override
@@ -1110,12 +1097,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindUnreadByStationAndPersonAuthorized(
-			Integer stationId, Integer personId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isFindRecommendsByPersonIdOrderByDateAuthorized(
 			Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
@@ -1245,11 +1226,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return false;
 	}
 
-	@Override
-	protected boolean isFindPopularPostsAuthorized(Integer stationId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
     @Override
     protected boolean isGetStationRoleWordpressAuthorized(Integer stationRoleId) {
 		return true;
@@ -1351,17 +1327,27 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindBookmarkByPersonIdAndPostIdAuthorized(
-			Integer personId, Integer postId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected boolean isFindRecommendByPersonIdAndPostIdAuthorized(
-			Integer personId, Integer postId) {
+	protected boolean isFindBookmarkByPersonIdAndPostIdAuthorized( Integer personId, Integer postId) {
 		return true;
 	}
 
+	@Override
+	protected boolean isFindRecommendByPersonIdAndPostIdAuthorized( Integer personId, Integer postId) {
+		return true;
+	}
 
+	@Override
+	protected boolean isFindPostReadByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindRecommendByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindBookmarkByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
 }

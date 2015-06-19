@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Row {
+public class Row implements Comparable<Row> {
 	public static final String FEATURED_ROW = "F";
 	public static final String ORDINARY_ROW = "O";	
 	public static final String SPLASHED_ROW = "S";	
@@ -98,5 +99,19 @@ public class Row {
 		} else if (!type.equals(other.type))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Row o) {
+		if(this.index != null &&  o.index != null)
+			return Integer.compare(this.index, o.index);
+		else if(this.index == null && o.index != null)
+			return 1;
+		else if(this.index != null && o.index == null)
+			return -1;
+		else if(this.index == null && o.index == null)
+			return 1;
+		
+		else return 0;
 	}
 }

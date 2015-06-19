@@ -5,9 +5,10 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 
 	if(slug){
 		trix.findBySlug(slug, 'postProjection').success(function(response){
-			if(response && response.posts){
-				$scope.app.nowReading = response.posts[0]
+			if(response){
+				$scope.app.nowReading = response
 				$scope.app.nowReading.postId = $scope.app.nowReading.id;
+				$scope.app.addPostRead($scope.app.nowReading.postId)
 				$scope.app.nowReadingAuthor = {
 		            authorId: $scope.app.nowReading.author.id,
 		            imageSmallId: $scope.app.nowReading.author.imageSmallId,
@@ -27,33 +28,5 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 			$("body").addClass("show-post")
 		}
 	})
-
-	$scope.app.bookmark = function(postId){
-		if($scope.app.isLogged){
-          trix.toggleBookmark(postId).success(function(reponse){
-          	if(reponse.content && reponse.content.response)
-          		$scope.app.showInfoToast('A história foi adicionado a sua lista.')
-          	else
-          		$scope.app.showInfoToast('A história foi removida da sua lista.')
-          }).error(function(){
-          	console.log('error');
-          })
-        }else
-          $scope.openSplash('signin_splash.html')
-	}
-
-	$scope.app.recommend = function(postId){
-		if($scope.app.isLogged){
-          trix.toggleRecommend(postId).success(function(reponse){
-          	if(reponse.content && reponse.content.response)
-          		$scope.app.showInfoToast('Você recomendou essa hostória.')
-          	else
-          		$scope.app.showInfoToast('Recomendação removida.')
-          }).error(function(){
-          	console.log('error');
-          })
-        }else
-          $scope.openSplash('signin_splash.html')
-	}
 
 }])

@@ -1,12 +1,30 @@
 <!-- hbox layout -->
 <div class="p-t-50">
+
+    <!-- search-display -->
+  <div class="search-display wrapper-sm search-block b-b" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}">
+    <p class="m-t-sm m-b-xxs"><strong>{{app.searchCtrl.hits}}</strong> Resultados</p>
+  </div>
+  <!-- /search-display -->
+
+   <!-- search box -->
+  <div class="search-box" ng-class="{'nonempty-search': app.searchCtrl.searchResults && !app.searchCtrl.nonemptySearch, 'nonempty-search2': app.searchCtrl.nonemptySearch}">
+    <div class="b-b wrapper-md p-l-xxl">
+      <div class="m-n font-thin h3">
+        <form ng-submit="submitSearch()">
+          <input ng-model="app.searchCtrl.searchQuery" type="text" class="b-none text-2x w-full back-none" placeholder="Busque por notícias...">
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- /search box -->
   
   <div class="w-full search-results" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}" infinite-scroll="paginateSearch()" infinite-scroll-distance="1">
 
     <div class="m-b-lg block-800 m-auto m-t-sm">
             <!-- posts -->
       <ul class="b-none no-padding m-b-none ls-style-none">
-        <li ng-repeat="result in app.searchCtrl.searchResults">
+        <li ng-repeat="result in app.searchCtrl.searchResults" ng-class="{'post-read': app.postRead(result.postId)}">
          <div ng-class="{'b-t': !$first}"></div>
           <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(result,app.searchCtrl.searchResults, null, 'app.search')">
             <!-- image -->
@@ -34,8 +52,8 @@
                     {{result.authorName}}
                   </a>
                   <br>
-                  <span class="postMetaInline text-sm">
-                    <span class="postMetaInline postMetaInline--bookmark">
+                  <span class="text-sm">
+                    <span class="">
                       <span class="readingTime">{{result.date | fromNow}}</span>
                     </span>
                   </span>
@@ -50,23 +68,7 @@
     </div>
   </div>
 
-  <!-- search-display -->
-  <div class="search-display wrapper-sm search-block b-b" ng-class="{'hide': !app.searchCtrl.searchResults, 'animated fadeIn': app.searchCtrl.searchResults}">
-    <p class="m-t-sm m-b-xxs"><strong>{{app.searchCtrl.hits}}</strong> Resultados</p>
-  </div>
-  <!-- /search-display -->
 
-   <!-- search box -->
-  <div class="search-box" ng-class="{'nonempty-search': app.searchCtrl.searchResults && !app.searchCtrl.nonemptySearch, 'nonempty-search2': app.searchCtrl.nonemptySearch}">
-    <div class="b-b wrapper-md p-l-xxl">
-      <div class="m-n font-thin h3">
-        <form ng-submit="submitSearch()">
-          <input ng-model="app.searchCtrl.searchQuery" type="text" class="b-none text-2x w-full back-none" placeholder="Busque por histórias...">
-        </form>
-      </div>
-    </div>
-  </div>
-  <!-- /search box -->
 
 </div>
 

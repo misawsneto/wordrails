@@ -43,6 +43,7 @@ public class PostView implements Serializable {
 	
 	public String imageCaptionText;
 	public String imageCreditsText;
+	public String imageTitleText;
 
 	public Integer authorCoverMediumId;
 

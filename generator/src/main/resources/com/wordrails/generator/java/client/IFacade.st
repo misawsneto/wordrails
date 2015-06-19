@@ -42,6 +42,26 @@ interface I$facade$ {
 	void findPostsAndPostsPromotedByTermId(@Path("stationId")Integer stationId, @Query("termId") Integer termId, 
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 		
+	@GET("/terms/allTerms")
+	ContentResponse<List<TermView\>\> getAllTerms(@Query("taxonomyId")Integer taxonomyId, @Query("perspectiveId") Integer perspectiveId);
+		
+	@GET("/terms/allTerms")
+	void getAllTerms(@Query("taxonomyId")Integer taxonomyId, @Query("perspectiveId") Integer perspectiveId, Callback<ContentResponse<List<TermView\>\>\> _callback);
+		
+	@GET("/posts/{stationId}/recent")
+	ContentResponse<List<PostView\>\> findRecentPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size);
+	
+	@GET("/posts/{stationId}/recent")
+	ContentResponse<List<PostView\>\> findRecentPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size, 
+	Callback<ContentResponse<List<PostView\>\>\> _callback);
+	
+	@GET("/posts/{stationId}/popular")
+	ContentResponse<List<PostView\>\> findPopularPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size);
+	
+	@GET("/posts/{stationId}/popular")
+	ContentResponse<List<PostView\>\> findPopularPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size, 
+	Callback<ContentResponse<List<PostView\>\>\> _callback);
+		
 	@GET("/posts/{stationId}/findPostsByStationIdAndAuthorIdAndState")
 	ContentResponse<List<PostView\>\> findPostsByStationIdAndAuthorIdAndState(@Path("stationId") Integer stationId, @Query("authorId") Integer authorId, @Query("state") String state, 
 			@Query("page") int page, @Query("size") int size);
@@ -66,19 +86,19 @@ interface I$facade$ {
 	void searchPostsFromOrPromotedToStation(@Path("stationId")Integer stationId, @Query("query")String query,
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<SearchView\>\> _callback);
 		
-	@GET("/posts/{stationId}/allUnread")
-	ContentResponse<List<PostView\>\> getAllUnreadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId,
+	@GET("/posts/{stationId}/allPostRead")
+	ContentResponse<List<PostView\>\> getAllPostReadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId,
 		@Query("page") int page, @Query("size") int size);
 	
-	@GET("/posts/{stationId}/allUnread")
-	void getAllUnreadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId,
+	@GET("/posts/{stationId}/allPostRead")
+	void getAllPostReadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId,
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 		
-	@GET("/posts/{stationId}/unread")
-	ContentResponse<List<PostView\>\> getUnreadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId);
+	@GET("/posts/{stationId}/postRead")
+	ContentResponse<List<PostView\>\> getPostReadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId);
 	
-	@GET("/posts/{stationId}/unread")
-	void getUnreadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	@GET("/posts/{stationId}/postRead")
+	void getPostReadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 /*---------------------------------------------------------------------------*/
 
@@ -134,6 +154,22 @@ interface I$facade$ {
 	@PUT("/persons/me/password")
 	@FormUrlEncoded
 	void putPassword(@Field("oldPassword") String oldPassword, @Field("newPassword") String newPassword, Callback<Response> _callback);
+	
+	@PUT("/bookmarks/toggleBookmark")
+	@FormUrlEncoded
+	BooleanResponse toggleBookmark(@Field("postId") Integer postId);
+	
+	@PUT("/bookmarks/toggleBookmark")
+	@FormUrlEncoded
+	void toggleBookmark(@Field("postId") Integer postId, Callback<BooleanResponse> _callback);
+	
+	@PUT("/recommends/toggleRecommend")
+	@FormUrlEncoded
+	BooleanResponse toggleRecommend(@Field("postId") Integer postId);
+	
+	@PUT("/recommends/toggleRecommend")
+	@FormUrlEncoded
+	void toggleRecommend(@Field("postId") Integer postId, Callback<BooleanResponse> _callback);
 	
 	@PUT("/persons/me/regId")
 	@FormUrlEncoded

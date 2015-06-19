@@ -58,7 +58,7 @@ angular.module('app')
       }
 
       $scope.app.getLoggedPerson = function(){
-        return initData.person;
+        return $scope.app.initData.person;
       }
 
       // angular translate
@@ -167,7 +167,17 @@ angular.module('app')
             $state.go('app.stations');
         }else if(toState.name == 'app.post' && (!trixService.getWritableStations() || trixService.getWritableStations().length == 0)){
           event.preventDefault();
-          $scope.app.showInfoToast('Você não possui permissão para criar histórias.')
+          $scope.app.showInfoToast('Você não possui permissão para criar notícias.')
+          if(fromState.abstract)
+            $state.go('app.stations');
+        }else if( (toState.name.indexOf('app.user') > -1 && (toParams.username === "wordrails")) ||
+                (toState.name == 'app.publications' && 
+                  ((!trixService.getWritableStations() || trixService.getWritableStations().length == 0) ||
+                    ($scope.app.initData && $scope.app.initData.person && $scope.app.initData.person.username !== toParams.username))
+                 )
+          ){
+          event.preventDefault();
+          $scope.app.showInfoToast('Permissão negada.')
           if(fromState.abstract)
             $state.go('app.stations');
         }
@@ -178,6 +188,20 @@ angular.module('app')
         $event.stopPropagation();
         $state.go('app.user', {username: username})
         $scope.app.profilepopover.open = false;
+      }
+
+      $scope.app.goToUserPublications = function($event){
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, publicationType: 'publications'})
+        $scope.app.profilepopover.open = false; 
+      }
+
+      $scope.app.goToUserDrafts = function(){
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, publicationType: 'drafts'})
+        $scope.app.profilepopover.open = false; 
       }
 
       $scope.getBackgroundImage = function(postView, size){
@@ -437,7 +461,90 @@ angular.module('app')
           $scope.openSplash('signin_splash.html')
       }
 
+      $scope.app.addBookmarked = function(postId){
+        if(!$scope.app.initData.bookmarks || $scope.app.initData.bookmarks.length == 0)
+          $scope.app.initData.bookmarks = [];
+        if(!$scope.app.bookmarked(postId))
+          $scope.app.initData.bookmarks.push(postId);
+      }
+
+      $scope.app.removeBookmarked = function(postId){
+        if($scope.app.initData.bookmarks && $scope.app.initData.bookmarks.length > 0){
+          var index = $scope.app.initData.bookmarks.indexOf(postId)
+          if(index > -1)
+            $scope.app.initData.bookmarks.splice(index, 1);
+        }
+      }
+
+      $scope.app.bookmarked = function(postId){
+        var bool = $scope.app.initData.bookmarks && $scope.app.initData.bookmarks.length > 0 ?  $scope.app.initData.bookmarks.indexOf(postId) > -1 : false;
+        return bool;
+      }
+
+      $scope.app.addPostRead = function(postId){
+        if(!$scope.app.initData.postsRead || $scope.app.initData.postsRead.length == 0)
+          $scope.app.initData.postsRead = [];
+        if(!$scope.app.postRead(postId))
+          $scope.app.initData.postsRead.push(postId);
+      }
+
+      $scope.app.postRead = function(postId){
+        var bool = $scope.app.initData.postsRead && $scope.app.initData.postsRead.length > 0 ? $scope.app.initData.postsRead.indexOf(postId) > -1 : false;
+        return bool;
+      }
+
+      $scope.app.addRecommended = function(postId){
+        if(!$scope.app.initData.recommends || $scope.app.initData.recommends.length == 0)
+          $scope.app.initData.recommends = [];
+        if(!$scope.app.recommended(postId))
+          $scope.app.initData.recommends.push(postId);
+      }
+
+      $scope.app.removeRecommended = function(postId){
+        if($scope.app.initData.recommends && $scope.app.initData.recommends.length > 0){
+          var index = $scope.app.initData.recommends.indexOf(postId)
+          if(index > -1)
+            $scope.app.initData.recommends.splice(index, 1);
+        }
+      }
+
+      $scope.app.recommended = function(postId){
+        var bool = $scope.app.initData.recommends && $scope.app.initData.recommends.length > 0 ? $scope.app.initData.recommends.indexOf(postId) > -1 : false;
+        return bool;
+      }
+
+      $scope.app.bookmark = function(postId){
+        if($scope.app.isLogged){
+              trix.toggleBookmark(postId).success(function(reponse){
+                if(reponse.content && reponse.content.response){
+                  $scope.app.addBookmarked(postId)
+                }else{
+                  $scope.app.removeBookmarked(postId)
+                }
+              }).error(function(){
+                console.log('error');
+              })
+            }else
+              $scope.openSplash('signin_splash.html')
+      }
+
+      $scope.app.recommend = function(postId){
+        if($scope.app.isLogged){
+              trix.toggleRecommend(postId).success(function(reponse){
+                if(reponse.content && reponse.content.response){
+                  $scope.app.addRecommended(postId)
+                }else{
+                  $scope.app.removeRecommended(postId)
+                }
+              }).error(function(){
+                console.log('error');
+              })
+            }else
+              $scope.openSplash('signin_splash.html')
+      }
+
       $scope.app.refreshData();
       moment.locale('pt')
       /* end of added */
+
   }]); 

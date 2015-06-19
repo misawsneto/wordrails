@@ -12,8 +12,8 @@
 					{{cell.postView.authorName}}
 				</a>
 				<br>
-				<span class="postMetaInline text-sm">
-					<span class="postMetaInline">
+				<span class="text-sm">
+					<span class="">
 						<span class="readingTime">{{cell.postView.date | fromNow}}</span>
 					</span>
 				</span>
@@ -39,15 +39,16 @@
 				{{cell.postView.authorName}}
 			</a>
 			<br>
-			<span class="postMetaInline text-sm">
-				<span class="postMetaInline">
+			<span class="text-sm">
+				<span class="">
 					<span class="readingTime">{{cell.postView.date | fromNow}}</span>
 				</span>
 			</span>
 		</div>
 	</div>
 
-	<div class="cell-wrap" ng-class="{'hide': !cell.postView.mediumId}">
+	<div angular-ripple class="cell-wrap" ng-class="{'hide': !cell.postView.mediumId}">
 		<div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
 	</div>
+	<div ng-include=" 'tpl/vertical-share.html' " class="pos-abt vertical-share text-right wrapper-xs"></div>
 </div>

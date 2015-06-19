@@ -31,7 +31,10 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll']);
+                          return $ocLazyLoad.load(['videosharing-embed', 'toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll']).then(function(){
+                            // you might call this after your module initalization
+                              angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 1000)
+                          });
                       }]
                   }
               })
@@ -41,29 +44,29 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['videosharing-embed','js/controllers/stations.js?' + GLOBAL_URL_HASH]);
+                          return $ocLazyLoad.load(['js/controllers/stations.js?' + GLOBAL_URL_HASH]);
                       }]
                   },
                   controller: 'StationsCtrl'
               })
               .state('app.post', {
-                  url: '/post',
+                  url: '/post?id',
                   templateUrl: 'tpl/post.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
                           return $ocLazyLoad.load([
-                            'com.2fdevs.videogular', 
-                            'com.2fdevs.videogular.plugins.controls', 
-                            'com.2fdevs.videogular.plugins.overlayplay',
-                            'com.2fdevs.videogular.plugins.poster',
-                            'com.2fdevs.videogular.plugins.buffering',
+                            // 'com.2fdevs.videogular', 
+                            // 'com.2fdevs.videogular.plugins.controls', 
+                            // 'com.2fdevs.videogular.plugins.overlayplay',
+                            // 'com.2fdevs.videogular.plugins.poster',
+                            // 'com.2fdevs.videogular.plugins.buffering',
                             'js/app/music/ctrl.js', 
                             'js/app/music/theme.css',
                             '../bower_components/leaflet/dist/leaflet.js',
                             '../bower_components/leaflet/dist/leaflet.css'
                           ]).then(function(){
-                            return $ocLazyLoad.load(['angularFileUpload','videosharing-embed','js/controllers/post.js?' + GLOBAL_URL_HASH])
+                            return $ocLazyLoad.load(['ng-mfb', 'ui.slimscroll', 'angularFileUpload','js/controllers/post.js?' + GLOBAL_URL_HASH])
                           });
                     }]
                   },
@@ -171,6 +174,20 @@ angular.module('app')
                       }]
                   },
                   controller: 'UserCtrl'
+              })
+              .state('app.publications', {
+                  url: '/:publicationType/@:username',
+                  templateUrl: 'tpl/user_publications.html',
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load([
+                            'angularFileUpload',
+                            'js/controllers/user-publications.js?' + GLOBAL_URL_HASH])
+                      }]
+                  },
+                  controller: 'UserPublicationsCtrl'
               })
               .state('app.stations.read', {
                 url: ':slug',

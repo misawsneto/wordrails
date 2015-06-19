@@ -8,7 +8,7 @@ public class TermView implements Serializable {
 	
 	public Integer termId;
 	public String termName;
-	public RowView splashedRow;
-	public List<RowView> ordinaryRows;
-	public RowView featuredRow;
+	public Integer parentId;
+	public Integer taxonomyId;
+	public List<TermView> children;
 }

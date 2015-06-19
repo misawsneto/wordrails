@@ -1,5 +1,5 @@
 // tab controller
-app.controller('SearchCtrl', ['$scope', '$log', '$timeout', 'trix', function($scope, $log, $timeout, trix) {
+app.controller('SearchCtrl', ['$state', '$scope', '$log', '$timeout', 'trix', function($state, $scope, $log, $timeout, trix) {
 	if(!$scope.app.searchCtrl)
 		$scope.app.searchCtrl = {searchPage: 0}
 
@@ -25,7 +25,7 @@ app.controller('SearchCtrl', ['$scope', '$log', '$timeout', 'trix', function($sc
 
 	$scope.paginateSearch = function(){
 
-		if(!$scope.app.searchCtrl.searchResults || $scope.app.searchCtrl.searchResults.length == 0)
+		if($state.current.name != 'app.search' || !$scope.app.searchCtrl.searchResults || $scope.app.searchCtrl.searchResults.length == 0)
 			return;
 
 		if($scope.app.searchCtrl.allLoaded)

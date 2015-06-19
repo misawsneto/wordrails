@@ -175,6 +175,7 @@ public class Post {
 	public Set<Comment> comments;
 		
 	@ManyToOne
+	@IndexedEmbedded
 	public Image featuredImage;	
 	
 	@OneToMany(mappedBy="post")
@@ -194,6 +195,10 @@ public class Post {
 	@IndexedEmbedded
 	@JoinColumn(updatable=false)
 	public Station station;
+	
+	@Field
+	@NumericField
+	public Integer stationId;
 	
 	@Field
 	@NumericField
@@ -253,6 +258,9 @@ public class Post {
 	@Longitude
 	public Double lng;
 	
+	@Lob
+	public String imageTitleText;
+	
 	@PrePersist
 	public void onCreate() {
 		if(featuredImage != null && featuredImage.original != null){
@@ -263,6 +271,7 @@ public class Post {
 			imageLandscape = !featuredImage.vertical;
 			imageCaptionText = featuredImage.caption;
 			imageCreditsText = featuredImage.credits;
+			imageTitleText = featuredImage.title;
 		}else{
 			imageId = null;
 			imageSmallId = null;
@@ -274,7 +283,9 @@ public class Post {
 			commentsCount = comments.size();
 		}
 		readTime = WordrailsUtil.calculateReadTime(body);
-		date = new Date();
+		if(date == null)
+			date = new Date();
+		stationId = station.id;
 	}
 	
 	@PreUpdate
@@ -285,6 +296,9 @@ public class Post {
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId= featuredImage.large.id;
 			imageLandscape = !featuredImage.vertical;
+			imageCaptionText = featuredImage.caption;
+			imageCreditsText = featuredImage.credits;
+			imageTitleText = featuredImage.title;
 		}else{
 			imageId = null;
 			imageSmallId = null;
@@ -299,6 +313,7 @@ public class Post {
 		updatedAt = new Date();
 		lastModificationDate = updatedAt;
 		readTime = WordrailsUtil.calculateReadTime(body);
+		stationId = station.id;
 	}
 	
 	public Integer imageId;

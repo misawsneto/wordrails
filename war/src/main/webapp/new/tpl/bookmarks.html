@@ -13,22 +13,22 @@
       <!-- /search -->
     </div>
     <div class="block-800 m-auto">
-      <div ng-repeat="bookmark in app.bookmarksCtrl.bookmarks">
+      
+      <div class="panel panel-card animated zoomIn" angular-ripple ng-repeat="bookmark in app.bookmarksCtrl.bookmarks">
 
-        <div class="panel panel-card animated zoomIn">
-        <div class="notification-image pull-left m-r-lg"></div>
-        <div class="p">
-          <h3>Paracosm</h3>
-          <p>
-            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
-            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
-          </p>
-        </div>
-      </div>
-
-        <div class="panel panel-card animated zoomIn">
-          <div class="notification-image pull-left m-r-lg"></div>
+        <div>
+          <div class="notification-image pull-left m-r-lg" ng-style="getBackgroundImage(bookmark, 'md')">
+          </div>
           <div class="p">
+            <div class="text-md font-bold">{{bookmark.title}}</div>
+            <div>
+              {{bookmark.snippet | characters: 140}}
+            </div>
+          </div>
+        </div>
+
+        <div class="author-div">
+          <!-- <div class="notification-image pull-left m-r-lg"></div> -->
             <div class="display-t-c">
               <a >
                   <div style="{{bookmark.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="bookmark.authorName"></div>
@@ -39,14 +39,14 @@
                 {{bookmark.authorName}}
               </a>
               <br>
-              <span class="postMetaInline text-sm">
-                <span class="postMetaInline postMetaInline--bookmark">
+              <span class="text-sm">
+                <span class="">
                   <span class="readingTime">{{bookmark.date | fromNow}}</span>
                 </span>
               </span>
             </div>
-          </div>
         </div>
+
       </div>
     </div>
   </div>

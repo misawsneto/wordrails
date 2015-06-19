@@ -6,11 +6,12 @@
 			</div>
 		</div>
 		<div id="profile-buttons" class="pos-abt wrapper" ng-class="{'profile-buttons-cover': person.coverLargeId}">
-			<md-button md-no-ink angular-ripple ng-show="person.id == app.initData.person.id" class="md-fab custom-fab-button text-lg" ng-click="editProfile()">
-        <i class="mdi mdi-pencil"></i>
-      </md-button>
+			<md-button tooltip="Editar perfil" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+				md-no-ink angular-ripple ng-show="person.id == app.initData.person.id" class="md-fab custom-fab-button text-lg" ng-click="editProfile()">
+		        <i class="mdi mdi-pencil"></i>
+		      </md-button>
 		</div>
-		<div class="user-details block-600 m-auto animated fadeInDown" ng-class="{'with-cover': person.coverLargeId}">
+		<div class="user-details block-600 m-auto animated zoomIn" ng-class="{'with-cover': person.coverLargeId}">
 			<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
 			</div>
 			<div class="m-t-sm font-bold wrapper-xs text-center" ng-class="{'text-4x': !person.coverLargeId, 'text-3x': person.coverLargeId}">
@@ -24,11 +25,11 @@
 	<!-- /conver container -->
 	
 	<!-- divider -->
-	<div ng-show="postViews && showProfile">
+	<div ng-show="postViews && postViews.length > 0 && showProfile">
 		<div class="m-t b-t b-drk w-full"></div>
 		<div class="header m-auto text-center text-u-c text-lg">
-			<span class="header-title wrapper">
-				Histórias
+			<span class="header-title p-l p-r">
+				Notícias
 			</span>
 		</div>
 	</div>
@@ -36,11 +37,11 @@
 	<!-- posts & recommendation -->
 	<div infinite-scroll="paginate()" infinite-scroll-distance="1">
     <!-- posts -->
-		<div class="block-800 m-auto" ng-show="postViews && showProfile">
+		<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="postViews && postViews.length > 0 && showProfile">
 	    <ul class="b-none no-padding m-b-none ls-style-none">
 	      <li ng-repeat="postView in postViews">
 	       <div ng-class="{'b-t': !$first}"></div>
-	        <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+	        <div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
 	          <!-- image -->
 	          <a class="block-image m-l m-t" ng-if="postView.mediumId" >
 	            <div class="cell-wrap r r-2x" ng-class="{'hide': !postView.mediumId}">
@@ -68,8 +69,8 @@
 	                  {{postView.authorName}}
 	                </a>
 	                <br>
-	                <span class="postMetaInline text-sm">
-	                  <span class="postMetaInline postMetaInline--bookmark">
+	                <span class="text-sm">
+	                  <span class="">
 	                    <span class="readingTime">{{postView.date | fromNow}}</span>
 	                  </span>
 	                </span>
@@ -102,11 +103,11 @@
     </div>
 		
 		<!-- pages -->
-		<div class="block-800 m-auto" ng-show="pages && showProfile">
+		<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="pages && showProfile">
 			<ul class="b-none no-padding m-b-none ls-style-none">
 	      <li ng-repeat="postView in pages">
 	       <div ng-class="{'b-t': !$first || (!recommendations || recommendations.length == 0)}"></div>
-	        <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+	        <div class="m-b panel-card panel animated zoomIn m-b clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
 	          <!-- image -->
 	          <a class="block-image m-l m-t" ng-if="postView.mediumId" >
 	            <div class="cell-wrap r r-2x" ng-class="{'hide': !postView.mediumId}">
@@ -134,8 +135,8 @@
 	                  {{postView.authorName}}
 	                </a>
 	                <br>
-	                <span class="postMetaInline text-sm">
-	                  <span class="postMetaInline postMetaInline--bookmark">
+	                <span class="text-sm">
+	                  <span class="">
 	                    <span class="readingTime">{{postView.date | fromNow}}</span>
 	                  </span>
 	                </span>

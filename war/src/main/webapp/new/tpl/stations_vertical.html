@@ -1,12 +1,12 @@
 <div id="perspective-vertical" class="animated fadeIn" ng-if="app.viewMode === 'vertical'">
-  <md-tabs md-selected="selectedIndex" flex class="">
+  <md-tabs md-selected="selectedIndex" flex class="" md-center-tabs md-dynamic-height>
     <!-- tab -->
     <md-tab md-no-ink md-on-select="selectVerticalRow(ordinaryRow)" angular-ripple ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="bg-custom" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
       <div flex>
         <div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm" infinite-scroll="verticalPaginate(ordinaryRow)" infinite-scroll-distance="3">
             <!-- posts -->
           <ul class="b-none no-padding m-b-none ls-style-none">
-            <li ng-repeat="cell in ordinaryRow.cells">
+            <li ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
              <div ng-class="{'b-t': !$first}"></div>
               <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
                 <!-- image -->
@@ -34,8 +34,8 @@
                         {{cell.postView.authorName}}
                       </a>
                       <br>
-                      <span class="postMetaInline text-sm">
-                        <span class="postMetaInline postMetaInline--bookmark">
+                      <span class="text-sm">
+                        <span class="">
                           <span class="readingTime">{{cell.postView.date | fromNow}}</span>
                         </span>
                       </span>

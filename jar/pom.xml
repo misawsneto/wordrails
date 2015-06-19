@@ -83,7 +83,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>co.xarx</groupId>
+			<!-- <groupId>co.xarx</groupId> -->
+			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-rest-webmvc</artifactId>
 		</dependency>
 

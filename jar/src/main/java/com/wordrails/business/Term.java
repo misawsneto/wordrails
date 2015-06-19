@@ -19,13 +19,19 @@ import javax.validation.constraints.Size;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.NumericField;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressSlug"}), @UniqueConstraint(columnNames={"taxonomy_id","name","wordpressId"})})
+@Indexed
 public class Term {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@DocumentId
+	@Field
 	public Integer id;
 	
 	@Size(min=1, max=100)
@@ -59,6 +65,8 @@ public class Term {
 	@OneToMany(mappedBy="term")
 	public Set<TermPerspective> termPerspectives;
 	
+	@Field
+	@NumericField
 	public Integer taxonomyId;
 	
 	public String taxonomyName;

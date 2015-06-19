@@ -1,6 +1,7 @@
 package com.wordrails.api;
 
 import com.wordrails.WordrailsService;
+import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Post;
 import com.wordrails.business.ServiceGenerator;
 import com.wordrails.business.Wordpress;
@@ -8,7 +9,9 @@ import com.wordrails.business.WordpressApi;
 import com.wordrails.business.WordpressPost;
 import com.wordrails.business.WordpressService;
 import com.wordrails.persistence.PostRepository;
+
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -17,6 +20,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,8 @@ public class PostFilter implements Filter {
 	
 	@Autowired
 	private WordrailsService wordrailsService;
+	
+	@Autowired AccessControllerUtil accessControllerUtil;
 	
 	@Override
 	public void destroy() {/* not implemented */
@@ -74,7 +80,7 @@ public class PostFilter implements Filter {
 				}
 				if(post != null){
 					handleAfterRead(post);
-					wordrailsService.countPostRead(post, rq.getRequestedSessionId());
+					wordrailsService.countPostRead(post, accessControllerUtil.getLoggedPerson(), rq.getRequestedSessionId());
 				}
 			} else if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
 				postId = getPostId(res.getHeader("Location"));

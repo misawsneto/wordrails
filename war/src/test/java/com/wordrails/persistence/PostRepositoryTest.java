@@ -14,10 +14,12 @@ public class PostRepositoryTest extends AbstractTest {
 	
 	@Test
 	public void test() {
-		Sort sort = new Sort(Direction.DESC, "date");
-		Pageable pageable = new PageRequest(0, 10, sort);
-		repository.findPostsFromOrPromotedToStation(1, pageable);
-		repository.findAll(sort);
+		Pageable pageable = new PageRequest(0, 100);
+//		repository.findPostsFromOrPromotedToStation(1, pageable);
+//		repository.findAll(sort);
+		for (Integer num : repository.findPostReadByPerson(2, pageable)) {
+			System.out.println(num);
+		}
 	}
 	
 	@Test

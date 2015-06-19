@@ -43,13 +43,18 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported=false)
 	List<Post> findPostsByStationIdAndAuthorIdAndState(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, @Param("state") String state, Pageable pageable);
 	
+	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
+	public List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);
+	
 	@RestResource(exported=false)
-	public List<Post> findUnreadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId, Pageable pageable);
-	public List<Post> findUnreadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
+	public List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId, Pageable pageable);
+	@RestResource(exported=false)
+	public List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 	
 	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.id DESC")
 	public List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 	
+	@RestResource(exported=false)
 	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.id DESC")
 	public List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
     

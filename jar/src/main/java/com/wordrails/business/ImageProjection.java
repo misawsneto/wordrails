@@ -7,5 +7,6 @@ public interface ImageProjection {
 	Integer getId();
 	FileProjection getSmall();
 	FileProjection getMedium();
-	FileProjection getLarge();	
+	FileProjection getLarge();
+	Integer getPostId();
 }

@@ -38,8 +38,17 @@ var trix = angular.module('trix', [])
 	    		response.data && response.data.content){
 	    			response.data = response.data.content;
 		    		return response
-		    	}else
-	     			return response;
+		    }else if(response.config.method === "POST" || response.config.method === "PUT"){
+		    	var _value = response.headers("Location");
+                if (_value) {
+                    var _index = _value.lastIndexOf("/");
+                    var _suffix = _value.substring(_index + 1);
+                    var id = _suffix;
+                    response.data = id
+                }
+                return response;
+	    	}else
+	     		return response;
 	  	},
 	  	request: function(config) {
 	      return config;
@@ -115,7 +124,7 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/persons/"+personId+"/recommends", config)
     }
     
-    this.searchPostsFromOrPromotedToStation = function(stationId, query, _page, _size) {
+    this.searchPostsFromOrPromotedToStation = function(stationId, query, _page, _size, params) {
 		var config = {
 			"params": {
 				"query": query,
@@ -123,6 +132,10 @@ var trix = angular.module('trix', [])
 				"size": _size,
 			}
 		}
+		
+		if(params && angular)
+			config.params = angular.extend(config.params, params);
+		
       return \$http.get(_config.url + "/api/posts/"+stationId+"/searchPostsFromOrPromotedToStation", config)
     }
     
@@ -196,6 +209,16 @@ var trix = angular.module('trix', [])
 			}
 		}
       return \$http.get(_config.url + "/api/posts/" + postId + "/getPostViewById", config)
+    }
+    
+    this.findPopularPosts = function(stationId, _page, _size) {
+		var config = {
+			"params": {
+				"page": _page,
+				"size": _size
+			}
+		}
+      return \$http.get(_config.url + "/api/posts/" + stationId + "/popular", config)
     }
     
     this.findRecentPosts = function(stationId, _page, _size) {

@@ -135,6 +135,60 @@ public class $facade$ {
 		});
 	}
 	
+	public List<TermView> getAllTerms(Integer taxonomyId, Integer perspectiveId){
+		return _facade.getAllTerms(taxonomyId, perspectiveId).content;
+	}
+	
+	public void getAllTerms(Integer taxonomyId, Integer perspectiveId, final Callback<List<TermView\>\> _callback){
+		_facade.getAllTerms(taxonomyId, perspectiveId, new Callback<ContentResponse<List<TermView\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<TermView\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}		
+		});
+	}
+	
+	public List<PostView> findRecentPosts(Integer stationId, int page, int size){
+		return _facade.findRecentPosts(stationId, page, size).content;
+	}
+	
+	public void findRecentPosts(Integer stationId, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.findRecentPosts(stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}		
+		});
+	}
+	
+	public List<PostView> findPopularPosts(Integer stationId, int page, int size){
+		return _facade.findPopularPosts(stationId, page, size).content;
+	}
+	
+	public void findPopularPosts(Integer stationId, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.findPopularPosts(stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}		
+		});
+	}
+	
 	public List<PostView> findPostsByStationIdAndAuthorIdAndState(Integer stationId, Integer authorId, String state, int page, int size){
 		return _facade.findPostsByStationIdAndAuthorIdAndState(stationId, authorId, state, page, size).content;
 	}
@@ -190,12 +244,12 @@ public class $facade$ {
 	}
 	
 	
-	public List<PostView> getUnreadPosts(Integer stationId, Integer personId){
-		return _facade.getUnreadPosts(stationId, personId).content;
+	public List<PostView> getPostReadPosts(Integer stationId, Integer personId){
+		return _facade.getPostReadPosts(stationId, personId).content;
 	}
 	
-	public void getUnreadPosts(Integer stationId, Integer personId, final Callback<List<PostView\>\> _callback){
-		_facade.getUnreadPosts(stationId, personId, new Callback<ContentResponse<List<PostView\>\>\>() {
+	public void getPostReadPosts(Integer stationId, Integer personId, final Callback<List<PostView\>\> _callback){
+		_facade.getPostReadPosts(stationId, personId, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
@@ -208,12 +262,12 @@ public class $facade$ {
 		});
 	}
 	
-	public List<PostView> getAllUnreadPosts(Integer stationId, Integer personId, int page, int size){
-		return _facade.getAllUnreadPosts(stationId, personId, page, size).content;
+	public List<PostView> getAllPostReadPosts(Integer stationId, Integer personId, int page, int size){
+		return _facade.getAllPostReadPosts(stationId, personId, page, size).content;
 	}
 	
-	public void getAllUnreadPosts(Integer stationId, Integer personId, int page, int size, final Callback<List<PostView\>\> _callback){
-		_facade.getAllUnreadPosts(stationId, personId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+	public void getAllPostReadPosts(Integer stationId, Integer personId, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.getAllPostReadPosts(stationId, personId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
 			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
@@ -279,6 +333,22 @@ public class $facade$ {
 	
 	public void putPassword(String oldPassword, String newPassword, Callback<Response> _callback){
 		_facade.putPassword(oldPassword, newPassword, _callback);
+	}
+	
+	public BooleanResponse toggleBookmark(Integer postId){
+		return _facade.toggleBookmark(postId);
+	}
+	
+	public void toggleBookmark(Integer postId, Callback<BooleanResponse> _callback){
+		_facade.toggleBookmark(postId, _callback);
+	}
+	
+	public BooleanResponse toggleRecommend(Integer postId){
+		return _facade.toggleRecommend(postId);
+	}
+	
+	public void toggleRecommend(Integer postId, Callback<BooleanResponse> _callback){
+		_facade.toggleRecommend(postId, _callback);
 	}
 	
 	public Response putRegId(String regId, Integer networkId, Double lat, Double lng){

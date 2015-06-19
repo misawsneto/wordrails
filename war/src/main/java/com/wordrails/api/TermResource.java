@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Term;
+import com.wordrails.converter.TermConverter;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.PersonRepository;
@@ -52,6 +53,7 @@ public class TermResource {
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired TermRepository termRepository;
+	private @Autowired TermConverter termConverter;
 
 	@GET
 	@Path("/termTree")
@@ -68,6 +70,21 @@ public class TermResource {
 
 		String json = mapper.writeValueAsString(roots);
 		return Response.status(Status.OK).entity(json).build();
+	}
+	
+	@GET
+	@Path("/allTerms")
+	public ContentResponse<List<TermView>> getAllTerms(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws JsonGenerationException, JsonMappingException, IOException {
+		List<Term> allTerms = new ArrayList<Term>(); 
+		if(perspectiveId != null){
+			allTerms = termRepository.findByPerspectiveId(perspectiveId);
+		}else{
+			allTerms = termRepository.findByTaxonomyId(taxonomyId);
+		}
+
+		ContentResponse<List<TermView>> response = new ContentResponse<List<TermView>>();
+		response.content = termConverter.convertToViews(allTerms);
+		return response;
 	}
 
 }

@@ -28,6 +28,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.highlight.Encoder;
 import org.apache.lucene.search.highlight.Formatter;
 import org.apache.lucene.search.highlight.Fragmenter;
@@ -40,6 +42,7 @@ import org.apache.lucene.search.highlight.SimpleHTMLEncoder;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.query.dsl.MustJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +51,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.wordrails.WordrailsService;
+import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.BadRequestException;
+import com.wordrails.business.Network;
+import com.wordrails.business.Person;
+import com.wordrails.business.Post;
+import com.wordrails.converter.PostConverter;
+import com.wordrails.persistence.PostRepository;
+import com.wordrails.util.WordrailsUtil;
 
 @Path("/posts")
 @Consumes(MediaType.WILDCARD)
@@ -199,17 +212,23 @@ public class PostsResource {
 	@GET
 	@Path("/{stationId}/searchPostsFromOrPromotedToStation")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<SearchView> searchPostsFromOrPromotedToStation(@PathParam("stationId") Integer stationId, @QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+	public ContentResponse<SearchView> searchPostsFromOrPromotedToStation(@Context HttpServletRequest request,
+			@PathParam("stationId") Integer stationId, @QueryParam("query") String q,
+			@QueryParam("stationIds") String stationIds, @QueryParam("personId") Integer personId, 
+			@QueryParam("publicationType") Integer publicationType, @QueryParam("noHighlight") Boolean noHighlight,
+			@QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
 		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
 		// create native Lucene query unsing the query DSL
 		// alternatively you can write the Lucene query using the Lucene query parser
 		// or the Lucene programmatic API. The Hibernate Search DSL is recommend though
 		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Post.class).get();
+		
+		Network network = wordrailsService.getNetworkFromHost(request);
 
 		org.apache.lucene.search.Query text = null;
 		try{
-			
+			if(q != null){
 			text = qb.keyword()
 				.fuzzy()
 				.withThreshold(.8f)
@@ -222,6 +241,7 @@ public class PostsResource {
 				.andField("terms.name")
                 .ignoreAnalyzer()
 				.matching(q).createQuery();
+			}
 		}catch(Exception e){
 			
 			e.printStackTrace();
@@ -234,28 +254,52 @@ public class PostsResource {
 			return response;
 		};
 
-		org.apache.lucene.search.Query station = qb.keyword().onField("station.id").ignoreAnalyzer().matching(stationId).createQuery();
+		MustJunction musts = null;
+		
+		if(q != null){
+			musts = qb.bool().must(text);
+		}
+		
+		if(personId != null){
+			org.apache.lucene.search.Query station = qb.keyword().onField("station.id").ignoreAnalyzer().matching(stationId).createQuery();
+			if(musts == null)
+				musts = qb.bool().must(station);
+			else
+				musts.must(station);
+		}
+		
+		if(personId != null){
+			org.apache.lucene.search.Query person = qb.keyword().onField("author.id").ignoreAnalyzer().matching(personId).createQuery();
+			if(musts == null)
+				musts = qb.bool().must(person);
+			else
+				musts.must(person);
+		}
 
-		org.apache.lucene.search.Query full = qb.bool().must(text).must(station).createQuery();
+		org.apache.lucene.search.Query full = musts.createQuery(); //qb.bool().must(text).must(station).createQuery();
 
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Post.class);
+		
+		org.apache.lucene.search.Sort sort = new Sort( SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
+		ftq.setSort(sort);
+		
 		int totalHits = ftq.getResultSize();
 
 		// wrap Lucene query in a javax.persistence.Query
 		javax.persistence.Query persistenceQuery = ftq;
 
 		// execute search
-		List<Post> result = persistenceQuery
-				.setFirstResult(size * page)
-				.setMaxResults(size)
-				.getResultList();
+		List<Post> result = persistenceQuery.setFirstResult(size * page).setMaxResults(size).getResultList();
 
 		List<PostView> postsViews = postConverter.convertToViews(result);
+		
 		try {
 			Fragmenter fragmenter = new SimpleFragmenter(120); 
 			Scorer scorer = new QueryScorer(full); 
 			Encoder encoder = new SimpleHTMLEncoder(); 
-			Formatter formatter = new SimpleHTMLFormatter("<b>", "</b>"); 
+			Formatter formatter = new SimpleHTMLFormatter("<b>", "</b>");
+			if(noHighlight != null && noHighlight)
+				formatter = new SimpleHTMLFormatter("", "");
 
 			Highlighter ht = new Highlighter(formatter, encoder, scorer); 
 			ht.setTextFragmenter(fragmenter);
@@ -296,9 +340,9 @@ public class PostsResource {
 	}
 	
 	@GET
-	@Path("/{stationId}/unread")
+	@Path("/{stationId}/postRead")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> getUnread(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
 		if(stationId == null || page == null || size == null){
 			throw new BadRequestException("Invalid null parameter(s).");
@@ -306,7 +350,7 @@ public class PostsResource {
 		
 		Person person = accessControllerUtil.getLoggedPerson();
 		Pageable pageable = new PageRequest(page, size);
-		List<Post> posts = postRepository.findUnreadByStationAndPerson(stationId, person.id, pageable);
+		List<Post> posts = postRepository.findPostReadByStationAndPerson(stationId, person.id, pageable);
 		 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
 		response.content = postConverter.convertToViews(posts);
@@ -314,12 +358,12 @@ public class PostsResource {
 	}
 	
 	@GET
-	@Path("/{stationId}/allUnread")
+	@Path("/{stationId}/allPostRead")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> getAllUnread(@PathParam("stationId") Integer stationId){
+	public ContentResponse<List<PostView>> getAllPostRead(@PathParam("stationId") Integer stationId){
 		
 		Person person = accessControllerUtil.getLoggedPerson();
-		List<Post> posts = postRepository.findUnreadByStationAndPerson(stationId, person.id);
+		List<Post> posts = postRepository.findPostReadByStationAndPerson(stationId, person.id);
 		 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
 		response.content = postConverter.convertToViews(posts);

@@ -205,6 +205,18 @@ angular.module('app')
                     '../bower_components/ng-directive-lazy-image/release/lazy-image.min.js',
                     '../bower_components/ng-directive-lazy-image/release/lazy-image-style.min.css'
                   ]
+              },{
+                  name: 'ui.slimscroll',
+                  files: [
+                          '../bower_components/slimscroll/jquery.slimscroll.min.js',
+                          '../bower_components/angular-slimscroll/angular-slimscroll.js'
+                  ]
+              },{
+                  name: 'ng-mfb',
+                  files: [
+                          '../bower_components/ng-material-floating-button/mfb/dist/mfb-directive.js',
+                          '../bower_components/ng-material-floating-button/mfb/dist/mfb.min.css',
+                          ]
               }
           ]
       });

@@ -37,9 +37,6 @@ public class Taxonomy {
 	@ManyToMany(mappedBy="taxonomies")
 	public Set<Network> networks;
 	
-	@OneToMany(mappedBy="defaultTaxonomy")
-	public Set<Network> defaultNetworks;
-
 	@OneToMany(mappedBy="taxonomy")
 	public Set<Term> terms;
 		

@@ -1,20 +1,28 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', 
-										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast){
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
+										function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 
   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
   };
 
 	$scope.postCtrl = {}
+	// check if user has permisstion to write
+  $scope.writableStations = trixService.getWritableStations();
 
-	if(!$scope.app.editingPost){
+  if(!$scope.writableStations || $scope.writableStations.length == 0){}
+
+	var createPostObject = function(){
 		$scope.app.editingPost = {};
 		$scope.app.editingPost.imageLandscape = true;
 		$scope.discardedMedia = null;
 		$scope.app.editingPost.uploadedImage = null;
 		$scope.app.editingPost.showMediaButtons = false;
 		$scope.postCtrl.editingExisting = false;
+	}
+
+	if(!$scope.app.editingPost){
+		createPostObject();
 	}else{
 		$scope.postCtrl.editingExisting = true;
 		if($scope.app.editingPost.externalVideoUrl)
@@ -24,13 +32,6 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			$scope.invertLandscapeSquare();
 		}, 50);
 	}
-
-	// check if user has permisstion to write
-  $scope.writableStations = trixService.getWritableStations();
-
-  if(!$scope.writableStations || $scope.writableStations.length == 0){
-  	// no permission.
-  }
 
   $scope.writableStations && $scope.writableStations.forEach(function(station, index){
   	if(station.stationId == $scope.app.currentStation.id)
@@ -46,7 +47,9 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	  }, true)*/
 
 	$scope.$watch('app.hidePostOptions', checkPostToolsWidth)
-	$scope.app.showPostToolbar = false;
+
+	if(typeof $scope.app.showPostToolbar === 'undefined')
+		$scope.app.showPostToolbar = false;
 
 	function checkPostToolsWidth () {
 		$timeout(function(){
@@ -217,9 +220,11 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
       }
   };
 
-	trix.getTermTree($scope.app.currentStation.defaultPerspectiveId).success(function(response){
-		$scope.termTree = response;
-	});
+	$scope.$watch('app.editingPost.selectedStation', function(newVal){
+		trix.getTermTree($scope.app.editingPost.selectedStation.defaultPerspectiveId).success(function(response){
+			$scope.termTree = response;
+		});
+	})
 
 	$scope.$watch('app.editingPost.title', function(newVal){
 		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
@@ -335,6 +340,19 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		}
 	}
 
+	$scope.savePostAsDraf = function(ev){
+		window.console && console.log('saving draft...')
+	}
+
+	$scope.deleteOrDiscardPost = function(ev){
+		window.console && console.log('delete post...')
+	}
+
+	$scope.doAction = function(action){
+		if(typeof action === 'function')
+			action();
+	}
+
 	$scope.showMoreOptions = function(ev){
 		// show term alert
 		$mdDialog.show({
@@ -425,11 +443,97 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	    post.station = TRIX.baseUrl + "/api/stations/" + $scope.app.editingPost.selectedStation.stationId;
 	    post.author = extractSelf($scope.app.getLoggedPerson())
 
-			trix.postPost(post).success(function(){
-				$scope.app.showSuccessToast('História publicada.');
-			})
+	    	if($scope.app.editingPost.uploadedImage){
+		    	var featuredImage = { original: TRIX.baseUrl + "/api/files/" + $scope.app.editingPost.uploadedImage.id }
+		    	if($scope.app.editingPost.imageCaption)
+		    		featuredImage.caption = $scope.app.editingPost.imageCaption
+
+		    	if($scope.app.editingPost.imageTitle)
+		    		featuredImage.caption = $scope.app.editingPost.imageTitle
+
+		    	trix.postImage(featuredImage).success(function(imageId){
+		    		post.featuredImage = TRIX.baseUrl + "/api/images/" + imageId;
+		    		postPost(post);
+		    	})
+		    }else{
+		    	postPost(post);
+		    }
+
+			
 		} // end of final else
 	}// end of createPost()
 
+	var postPost = function(post){
+		trix.postPost(post).success(function(postId){
+			$scope.app.showSuccessToast('Notícia publicada.');
+			// replace url withou state reload
+			$state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
+		})
+	}
+
+	// {height:'auto', size:'8px', 'railVisible': true}
+	
+    $scope.menuState = 'closed';
+
+    $scope.chosen = {
+      effect : 'slidein',
+      position : 'br',
+      method : 'hover',
+      action : 'fire'
+    };
+
+    $scope.buttons = [
+    {
+      label: 'Salvar rascunho',
+      icon: 'mdi mdi-content-save',
+      action: $scope.savePostAsDraf
+    },
+    {
+      label: 'Remover/Descartar',
+      icon: 'mdi mdi-delete',
+      action: $scope.deleteOrDiscardPost
+    }
+    ];
+	
+	$timeout(function() {
+		safeApply($scope, function(){
+			$('#post-cell').slimScroll({
+				height:'auto',
+				size:'8px',
+				'railVisible': true
+			})
+		})
+	}, 100);
+
+	    $templateCache.put('ng-mfb-menu-md.tpl.html?'+GLOBAL_URL_HASH,
+      '<ul class="mfb-component--{{position}} mfb-{{effect}}"' +
+      '    data-mfb-toggle="{{togglingMethod}}" data-mfb-state="{{menuState}}">' +
+      '  <li class="mfb-component__wrap">' +
+      '    <a ng-click="clicked()" ng-mouseenter="hovered()" ng-mouseleave="hovered()"' +
+      '       style="background: transparent; box-shadow: none;"' +
+      '       ng-attr-data-mfb-label="{{label}}" class="mfb-component__button--main">' +
+      '     <md-button class="md-fab md-primary custom-fab-button text-lg" aria-label={{label}} style="position:relative; margin: 0; padding:0;">' +
+      '       <i style="left: 0; position: absolute;"' +
+      '         class="mfb-component__main-icon--resting {{resting}}"></i>' +
+      '       <i style="position:relative;" ' +
+      '         class="mfb-component__main-icon--active {{active}}"></i>' +
+      '     </md-button>' +
+      '    </a>' +
+      '    <ul class="mfb-component__list" ng-transclude>' +
+      '    </ul>' +
+      '</li>' +
+      '</ul>'
+    );
+
+    $templateCache.put('ng-mfb-button-md.tpl.html?'+GLOBAL_URL_HASH,
+      '<li>' +
+      '  <a href="" data-mfb-label="{{label}}" class="mfb-component__button--child" ' +
+      '     style="background: transparent; box-shadow: none;">' +
+      '     <md-button style="margin: 0;" class="md-fab md-primary custom-fab-button text-lg" aria-label={{label}}>' +
+      '       <i class="{{icon}}"></i>' +
+      '     </md-button>' +
+      '  </a>' +
+      '</li>'
+    );
 
 }]);

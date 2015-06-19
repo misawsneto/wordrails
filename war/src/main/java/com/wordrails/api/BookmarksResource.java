@@ -18,6 +18,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -109,6 +111,8 @@ public class BookmarksResource {
 		org.apache.lucene.search.Query full = qb.bool().must(text).must(personQuery).createQuery();
 		
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Bookmark.class);
+		org.apache.lucene.search.Sort sort = new Sort( SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
+		ftq.setSort(sort);
 
 		// wrap Lucene query in a javax.persistence.Query
 		javax.persistence.Query persistenceQuery = ftq;

@@ -138,7 +138,7 @@ public class GCMService {
 			Message message = new Message.Builder().addData("message", notificationJson).build();
 			List<List<String>> parts = WordrailsUtil.partition(new ArrayList<String>(devices), GCM_WINDOW_SIZE);
 			for (List<String> part : parts) {
-				sendBulkMessages(message, part, notification);
+				sendBulkMessages(message, part, notification.hash);
 				Thread.sleep(1000);
 			}
 		}catch(Throwable e){
@@ -147,14 +147,14 @@ public class GCMService {
 		}
 	}
 
-	private void sendBulkMessages(Message message, List<String> devices, Notification notification){
+	private void sendBulkMessages(Message message, List<String> devices, String notificationHash){
 		MulticastResult multicastResult;
 		try {
 			multicastResult = sender.send(message, devices, 5);
 		} catch (Exception e) {
 			e.printStackTrace();
-			if(notification.id != null)
-				notificationRepository.delete(notification.id);
+			if(notificationHash!= null)
+				notificationRepository.deleteByHash(notificationHash);
 			return;
 		}
 		List<Result> results = multicastResult.getResults();

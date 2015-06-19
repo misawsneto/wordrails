@@ -27,5 +27,7 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Integer>, Qu
 	
 	@Query("SELECT bookmark FROM Bookmark bookmark WHERE bookmark.person.id = :personId AND bookmark.post.id = :postId")
 	Bookmark findBookmarkByPersonIdAndPostId(@Param("personId") Integer personId, @Param("postId") Integer postId);
-
+	
+	@Query("select b.post.id from Bookmark b where b.person.id=:personId)")
+	public List<Integer> findBookmarkByPerson(@Param("personId") Integer personId, Pageable pageable);
 }

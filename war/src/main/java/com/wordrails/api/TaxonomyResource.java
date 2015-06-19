@@ -35,7 +35,7 @@ import com.wordrails.persistence.TaxonomyRepository;
 @Produces(MediaType.APPLICATION_JSON)
 public class TaxonomyResource {
 	
-	private @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
+	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired NetworkRolesRepository networkRolesRepository;

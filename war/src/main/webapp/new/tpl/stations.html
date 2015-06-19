@@ -65,7 +65,7 @@
   <!-- nabar right -->
   <ul class="nav navbar-nav navbar-right">
     <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
-      <a href class="dropdown-toggle i-24 mdi-dots-vertical mdi" dropdown-toggle>
+      <a href angular-ripple class="dropdown-toggle i-24 mdi-dots-vertical mdi" dropdown-toggle>
       </a>
       <!-- dropdown -->
       <ul class="dropdown-menu animated w-sm">
@@ -97,5 +97,12 @@
     </li>
   </ul>
 </div>
+
+<md-button ui-sref="app.post" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+tooltip="Nova notícia" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+ id="station-fab" angular-ripple md-no-ink class="custom-fab-button md-fab md-button md-default-theme text-2x" aria-label="Nova notícia">
+  <i class="mdi mdi-plus"></i>
+</md-button>
+
 <div ui-view></div>
 <!-- /header bar-->

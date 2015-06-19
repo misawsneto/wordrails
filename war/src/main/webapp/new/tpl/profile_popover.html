@@ -14,8 +14,15 @@
 				<li class="inline m-l-sm m-r-sm"> | </li>
 				<li class="inline"><a ng-click="app.signOut()"><i class="mdi mdi-logout"></i> Sair</a></li>
 			</ul> -->
-			<div class="text-lg">
-				<a ng-click="app.goToProfile($event, app.initData.person.username)"><i class="mdi mdi-account"></i> Perfil</a></li>
+			<div class="text-md">
+				<a class="m-b-xs" ng-class="{'block-item': app.writableStations && app.writableStations.length > 0}" ng-click="app.goToProfile($event, app.initData.person.username)"><i class="mdi mdi-account"></i> Perfil</a>
+
+				<a class="m-b-xs" ng-class="{'block-item': app.writableStations && app.writableStations.length > 0, 'hide':
+				!(app.writableStations && app.writableStations.length > 0)}" ng-click="app.goToUserPublications($event)"><i class="mdi mdi-newspaper"></i> Publicações</a>
+
+				<a  ng-class="{'hide': !(app.writableStations && app.writableStations.length > 0)}"
+				ng-click="app.goToUserReadStats($event, app.initData.person.username)"><i class="mdi mdi-chart-bar"></i> Estatísticas</a>
+
 				<a ng-click="app.signOut()" class="pull-right m-r-xs"><i class="mdi mdi-logout "></i> Sair</a>
 			</div>
 		</div>
