@@ -1,4 +1,4 @@
-<config xmlns="urn:org:jgroups" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<!-- <config xmlns="urn:org:jgroups" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="urn:org:jgroups http://www.jgroups.org/schema/JGroups-3.5.xsd">
     <TCP
         bind_port="${jgroups.tcp.port:7800}"
@@ -59,4 +59,4 @@
     <UFC max_credits="2000000" min_threshold="0.10"/>
     <MFC max_credits="2000000" min_threshold="0.10"/>
     <FRAG2 frag_size="60000"/>
-</config>
+</config> -->

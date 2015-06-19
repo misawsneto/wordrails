@@ -1408,9 +1408,9 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
 }
 
 #post-more-options{
-  width: 800px;
-  min-height: 300px;
-  max-height: 400px;
+  width: 1000px;
+  min-height: 400px;
+  max-height: 500px;
 }
 
 #post-more-options .term-tags{

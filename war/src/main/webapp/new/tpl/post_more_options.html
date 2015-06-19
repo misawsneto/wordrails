@@ -5,7 +5,7 @@
         <md-tab md-no-ink angular-ripple label="Informações Gerais">
           <div class="b-t wrapper-md post-general-info" flex>
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col-sm-5">
                 <span class="text-md font-bold">
                   Pronto para publicar sua notícia?
                 </span>
@@ -14,7 +14,7 @@
                 </div>
                 <img id="publication-img" src="img/publication-img.png">
               </div>
-              <div class="col-sm-6 b-l">
+              <div class="col-sm-7 b-l">
                 <div class="m-t-sm">
                   <div class="input-group w-md m-auto" ng-click="app.editingPost.dateTouched = true">
                     <input type="text" class="form-control" datepicker-popup="{{app.editingPost.format}}" ng-model="app.editingPost.date" is-open="app.editingPost.opened" datepicker-options="app.editingPost.dateOptions" ng-required="true" close-text="Fechar" current-text="Hoje" clear-text="Limpar"/>

@@ -1,6 +1,5 @@
 app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', '$mdToast',
 	function($scope, $log, $timeout, $rootScope, $state, trix, $mdToast) {
-
 	var slug = $state.params.slug;
 
 	if(slug){

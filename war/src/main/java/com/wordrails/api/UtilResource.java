@@ -42,7 +42,7 @@ import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
 import com.wordrails.persistence.WordpressRepository;
-import com.wordrails.scheduler.jobs.SimpleJob;
+//import com.wordrails.scheduler.jobs.SimpleJob;
 import com.wordrails.services.AsyncService;
 import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
@@ -488,23 +488,23 @@ public class UtilResource {
     @Autowired
     private Scheduler sched;
 	
-	@GET
-	@Path("/testQuartz")
-    public void testQuartz(@Context HttpServletRequest request) throws SchedulerException {
-        String host = request.getHeader("Host");
-        if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
-            JobDetail job = newJob(SimpleJob.class)
-                .withIdentity("job1", "group1")
-                .build();
-            
-            Date runTime = evenMinuteDate(new Date());
-            // Trigger the job to run on the next round minute
-            Trigger trigger = newTrigger()
-             .withIdentity("trigger1", "group1")
-             .startAt(runTime)
-             .build();
-            
-            sched.scheduleJob(job, trigger);
-        }
-    }
+//	@GET
+//	@Path("/testQuartz")
+//    public void testQuartz(@Context HttpServletRequest request) throws SchedulerException {
+//        String host = request.getHeader("Host");
+//        if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+//            JobDetail job = newJob(SimpleJob.class)
+//                .withIdentity("job1", "group1")
+//                .build();
+//            
+//            Date runTime = evenMinuteDate(new Date());
+//            // Trigger the job to run on the next round minute
+//            Trigger trigger = newTrigger()
+//             .withIdentity("trigger1", "group1")
+//             .startAt(runTime)
+//             .build();
+//            
+//            sched.scheduleJob(job, trigger);
+//        }
+//    }
 }

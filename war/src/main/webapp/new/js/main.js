@@ -123,6 +123,8 @@ angular.module('app')
         $rootScope.previousState = fromState.name;
         $rootScope.currentState = toState.name;
 
+        window.console && console.log($rootScope.currentState);
+
         // on change state, exit if in fullscreen mode.
         if(typeof screenfull !== 'undefined' && screenfull){ screenfull.exit(); }
 
@@ -541,6 +543,10 @@ angular.module('app')
               })
             }else
               $scope.openSplash('signin_splash.html')
+      }
+
+      $scope.app.stripHtml = function(text){
+        return text ? text.stripHtml : null;
       }
 
       $scope.app.refreshData();

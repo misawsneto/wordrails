@@ -13,9 +13,9 @@
             allowDuplicateDomains="true" />
 
         <transport clusterName="HibernateSearch-Infinispan-cluster">
-            <properties>
+            <!-- <properties>
                 <property name="configurationFile" value="jgroups.xml" />
-            </properties>
+            </properties> -->
         </transport>
 
         <shutdown hookBehavior="DONT_REGISTER" />
