@@ -155,6 +155,22 @@ interface I$facade$ {
 	@FormUrlEncoded
 	void putPassword(@Field("oldPassword") String oldPassword, @Field("newPassword") String newPassword, Callback<Response> _callback);
 	
+	@PUT("/bookmarks/toggleBookmark")
+	@FormUrlEncoded
+	BooleanResponse toggleBookmark(@Field("postId") Integer postId);
+	
+	@PUT("/bookmarks/toggleBookmark")
+	@FormUrlEncoded
+	void toggleBookmark(@Field("postId") Integer postId, Callback<BooleanResponse> _callback);
+	
+	@PUT("/recommends/toggleRecommend")
+	@FormUrlEncoded
+	BooleanResponse toggleRecommend(@Field("postId") Integer postId);
+	
+	@PUT("/recommends/toggleRecommend")
+	@FormUrlEncoded
+	void toggleRecommend(@Field("postId") Integer postId, Callback<BooleanResponse> _callback);
+	
 	@PUT("/persons/me/regId")
 	@FormUrlEncoded
 	Response putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId, @Field("lat") Double lat, @Field("lng") Double lng);

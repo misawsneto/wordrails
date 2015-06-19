@@ -183,10 +183,10 @@ angular.module('app')
         }
       })
 
-      $scope.app.goToProfile = function($event){
+      $scope.app.goToProfile = function($event, username){
         $event.preventDefault();
         $event.stopPropagation();
-        $state.go('app.user', {username: $scope.app.getLoggedPerson().username})
+        $state.go('app.user', {username: username})
         $scope.app.profilepopover.open = false;
       }
 

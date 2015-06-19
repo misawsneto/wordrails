@@ -49,6 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.BadRequestException;
+import com.wordrails.business.Network;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.converter.PostConverter;
@@ -205,8 +206,9 @@ public class PostsResource {
 	@GET
 	@Path("/{stationId}/searchPostsFromOrPromotedToStation")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<SearchView> searchPostsFromOrPromotedToStation(@PathParam("stationId") Integer stationId, @QueryParam("query") String q,
-			@QueryParam("stationIds") String stationIds, @QueryParam("networkId") Integer network, @QueryParam("personId") Integer personId, 
+	public ContentResponse<SearchView> searchPostsFromOrPromotedToStation(@Context HttpServletRequest request,
+			@PathParam("stationId") Integer stationId, @QueryParam("query") String q,
+			@QueryParam("stationIds") String stationIds, @QueryParam("personId") Integer personId, 
 			@QueryParam("publicationType") Integer publicationType, @QueryParam("noHighlight") Boolean noHighlight,
 			@QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
@@ -215,6 +217,8 @@ public class PostsResource {
 		// alternatively you can write the Lucene query using the Lucene query parser
 		// or the Lucene programmatic API. The Hibernate Search DSL is recommend though
 		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Post.class).get();
+		
+		Network network = wordrailsService.getNetworkFromHost(request);
 
 		org.apache.lucene.search.Query text = null;
 		try{
@@ -278,12 +282,10 @@ public class PostsResource {
 		javax.persistence.Query persistenceQuery = ftq;
 
 		// execute search
-		List<Post> result = persistenceQuery
-				.setFirstResult(size * page)
-				.setMaxResults(size)
-				.getResultList();
+		List<Post> result = persistenceQuery.setFirstResult(size * page).setMaxResults(size).getResultList();
 
 		List<PostView> postsViews = postConverter.convertToViews(result);
+		
 		try {
 			Fragmenter fragmenter = new SimpleFragmenter(120); 
 			Scorer scorer = new QueryScorer(full); 

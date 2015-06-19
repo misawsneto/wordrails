@@ -335,6 +335,22 @@ public class $facade$ {
 		_facade.putPassword(oldPassword, newPassword, _callback);
 	}
 	
+	public BooleanResponse toggleBookmark(Integer postId){
+		return _facade.toggleBookmark(postId);
+	}
+	
+	public void toggleBookmark(Integer postId, Callback<BooleanResponse> _callback){
+		_facade.toggleBookmark(postId, _callback);
+	}
+	
+	public BooleanResponse toggleRecommend(Integer postId){
+		return _facade.toggleRecommend(postId);
+	}
+	
+	public void toggleRecommend(Integer postId, Callback<BooleanResponse> _callback){
+		_facade.toggleRecommend(postId, _callback);
+	}
+	
 	public Response putRegId(String regId, Integer networkId, Double lat, Double lng){
 		return _facade.putRegId(regId, networkId, lat, lng);
 	}

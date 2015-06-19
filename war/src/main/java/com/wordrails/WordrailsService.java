@@ -100,9 +100,6 @@ public class WordrailsService {
 		return Arrays.asList(link);
 	} 
 
-	/**
-	 * This method should be used with caution because it accesses the database.
-	 */
 	public Network getNetworkFromHost(ServletRequest srq){
 		String host = ((HttpServletRequest) srq).getHeader("Host");
 
