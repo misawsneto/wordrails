@@ -16,7 +16,6 @@
 	</properties>	
 
     <modules>
-	<module>spring-data-rest</module>
         <module>parent</module>
         <module>api</module>
         <module>client</module>
