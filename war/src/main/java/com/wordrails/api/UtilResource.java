@@ -1,5 +1,6 @@
 package com.wordrails.api;
 
+    
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
@@ -41,6 +42,7 @@ import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
 import com.wordrails.persistence.WordpressRepository;
+import com.wordrails.scheduler.jobs.SimpleJob;
 import com.wordrails.services.AsyncService;
 import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
@@ -67,6 +69,13 @@ import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.jboss.resteasy.spi.HttpRequest;
+import static org.quartz.DateBuilder.evenMinuteDate;
+import static org.quartz.JobBuilder.newJob;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import static org.quartz.TriggerBuilder.newTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
@@ -475,4 +484,27 @@ public class UtilResource {
 			System.out.println(wpc.content);
 		}
 	}
+    
+    @Autowired
+    private Scheduler sched;
+	
+	@GET
+	@Path("/testQuartz")
+    public void testQuartz(@Context HttpServletRequest request) throws SchedulerException {
+        String host = request.getHeader("Host");
+        if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+            JobDetail job = newJob(SimpleJob.class)
+                .withIdentity("job1", "group1")
+                .build();
+            
+            Date runTime = evenMinuteDate(new Date());
+            // Trigger the job to run on the next round minute
+            Trigger trigger = newTrigger()
+             .withIdentity("trigger1", "group1")
+             .startAt(runTime)
+             .build();
+            
+            sched.scheduleJob(job, trigger);
+        }
+    }
 }
