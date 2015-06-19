@@ -1,5 +1,5 @@
-<!-- <config xmlns="urn:org:jgroups" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="urn:org:jgroups http://www.jgroups.org/schema/JGroups-3.5.xsd">
+<config xmlns="urn:org:jgroups" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:org:jgroups http://www.jgroups.org/schema/JGroups-3.2.xsd">
     <TCP
         bind_port="${jgroups.tcp.port:7800}"
         loopback="true"
@@ -31,7 +31,7 @@
     />
     <TCPPING 
         timeout="3000"
-        initial_hosts="${jgroups.tcpping.initial_hosts:192.168.1.10[7800]}"
+        initial_hosts="${jgroups.tcpping.initial_hosts:xarxlocal.com[7800]}"
         port_range="1"/>
 
     <MERGE2 
@@ -59,4 +59,4 @@
     <UFC max_credits="2000000" min_threshold="0.10"/>
     <MFC max_credits="2000000" min_threshold="0.10"/>
     <FRAG2 frag_size="60000"/>
-</config> -->
+</config>
