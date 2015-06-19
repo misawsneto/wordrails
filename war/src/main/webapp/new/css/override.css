@@ -1198,6 +1198,10 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   .post-read{
     opacity: 0.7;
   }
+
+  .w-1{
+    width: 1px!important;
+  }
 /* /general */
 
 /* animate */
@@ -2830,6 +2834,10 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   position: absolute;
   bottom: 15px;
   left: 230px;
+}
+
+.author-div.no-margin{
+  left: 15px;
 }
 
 /* /bookmarks */

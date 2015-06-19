@@ -3,13 +3,10 @@ app.controller('BookmarksCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 												 function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast){
 
 	if(!$scope.app.bookmarksCtrl)
-		$scope.app.bookmarksCtrl = {bookmarksPage: -1}
+		$scope.app.bookmarksCtrl = {}
 
 	if(!$scope.app.bookmarksCtrl.query)
 		$scope.app.bookmarksCtrl.query = "";
-
-	if(!$scope.app.bookmarksCtrl.bookmarks)
-		$scope.app.bookmarksCtrl.bookmarks = []
 
 	$scope.submitSearch = function(){
 		$scope.app.bookmarksCtrl.bookmarks = []
@@ -23,8 +20,10 @@ app.controller('BookmarksCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 		})
 	}
 
+	$scope.submitSearch();
+
 	$scope.paginate = function(){
-		if($state.current.name != 'app.bookmarks' || $scope.app.bookmarksCtrl.allLoaded)
+		if($state.current.name != 'app.bookmarks' || $scope.app.bookmarksCtrl.allLoaded || $scope.app.bookmarksCtrl.bookmarks.length == 0)
 			return;
 
 		if(!$scope.searchLoaging){
