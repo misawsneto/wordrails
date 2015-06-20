@@ -47,3 +47,5 @@ war/com.wordrails.business.Post/*
 client/journal
 war/nb-configuration.xml
 nbactions.xml
+*.iml
+.idea/*
