@@ -19,7 +19,7 @@ public class RunTomcat {
         }
         
 		
-		Context context = tomcat.addWebapp("/", new File("src/main/webapp").getAbsolutePath());
+		Context context = tomcat.addWebapp("", new File("src/main/webapp").getAbsolutePath());
 
 		System.out.println("Starting Tomcat");
 		tomcat.start();

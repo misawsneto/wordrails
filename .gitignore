@@ -49,3 +49,4 @@ war/nb-configuration.xml
 nbactions.xml
 *.iml
 .idea/*
+/target/

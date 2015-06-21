@@ -18,13 +18,22 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.apache.tomcat.maven</groupId>
+					<artifactId>tomcat7-maven-plugin</artifactId>
+					<version>2.2</version>
+					<configuration>
+						<url>src/main/webapp</url>
+						<path>/</path>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
 					<configuration>
 						<source>1.7</source>
 						<target>1.7</target>
-                                                <debug>true</debug>
+                         <debug>true</debug>
 					</configuration>
 				</plugin>
 

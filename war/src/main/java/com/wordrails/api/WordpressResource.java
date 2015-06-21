@@ -149,12 +149,13 @@ public class WordpressResource {
                 post.author = author;
             }
 
-            if (!slugs.add(post.slug)) { //if slug already exists in db
-                String hash = WordrailsUtil.generateRandomString(5, "!Aau");
-                post.slug = post.slug + "-" + hash;
-            }
 
             if (post != null) {
+                if (!slugs.add(post.slug)) { //if slug already exists in db
+                    String hash = WordrailsUtil.generateRandomString(5, "!Aau");
+                    post.slug = post.slug + "-" + hash;
+                }
+
                 postRepository.save(post);
                 wordpressService.processWordpressPost(post);
             }
@@ -184,8 +185,6 @@ public class WordpressResource {
 
             Wordpress wordpress = station.wordpress;
             if (wordpress.domain == null || wordpress.domain.isEmpty()) { //new login
-                //TODO manage taxonomy to enable this                    
-
                 if (config.terms != null) {
                     if (config.terms.tags != null) {
                         for (WordpressTerm tag : config.terms.tags) {
@@ -267,7 +266,7 @@ public class WordpressResource {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        Taxonomy taxonomy = null;
+        Taxonomy taxonomy;
 
         if (term.isTag()) {
             taxonomy = taxonomyRepository.findTypeTByWordpress(wp);
@@ -345,7 +344,6 @@ public class WordpressResource {
         HashBasedTable<String, Integer, Term> dbTerms = HashBasedTable.create();
         dbTerms.putAll(wordpressService.getTermsByTaxonomy(tagTaxonomy));
         dbTerms.putAll(wordpressService.getTermsByTaxonomy(categoryTaxonomy));
-        //TODO enviar terms
 
         Set<Term> newTerms = wordpressService.findAndSaveTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
 
