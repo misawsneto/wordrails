@@ -1,30 +1,29 @@
 package com.wordrails.business;
 
 import com.wordrails.GCMService;
-import com.wordrails.persistence.BookmarkRepository;
-import com.wordrails.persistence.CellRepository;
-import com.wordrails.persistence.CommentRepository;
-import com.wordrails.persistence.FavoriteRepository;
-import com.wordrails.persistence.ImageRepository;
-import com.wordrails.persistence.NotificationRepository;
-import com.wordrails.persistence.PostReadRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.PromotionRepository;
-import com.wordrails.persistence.RecommendRepository;
-import com.wordrails.persistence.StationRepository;
+import com.wordrails.jobs.PostScheduleJob;
+import com.wordrails.persistence.*;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
-
-import java.util.Date;
-import java.util.List;
-
+import org.joda.time.DateTime;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
+
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -55,6 +54,9 @@ public class PostEventHandler {
 	private @Autowired RecommendRepository recommendRepository;
 	private @Autowired NotificationRepository notificationRepository;
 
+	@Autowired
+	private Scheduler sched;
+
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {
 
@@ -62,22 +64,20 @@ public class PostEventHandler {
 			Date now = new Date();
 			if (post.date == null) {
 				post.date = now;
-			} else if (post.date.after(now)) {
-				throw new NotImplementedException("Agendamento de publicações não estão disponíveis.");
 			}
 
-			if(post.slug == null || post.slug.isEmpty()){
+			if (post.slug == null || post.slug.isEmpty()) {
 				String originalSlug = WordrailsUtil.toSlug(post.title);
 				post.originalSlug = originalSlug;
 				try {
 					post.slug = originalSlug;
 					postRepository.save(post);
-				} catch (org.springframework.dao.DataIntegrityViolationException ex) {
+				} catch (DataIntegrityViolationException ex) {
 					String hash = WordrailsUtil.generateRandomString(5, "Aa#u");
 					post.slug = originalSlug + "-" + hash;
 				}
-			}else{
-				post.originalSlug = post.slug; 
+			} else {
+				post.originalSlug = post.slug;
 			}
 
 		} else {
@@ -87,15 +87,35 @@ public class PostEventHandler {
 
 	@HandleAfterCreate
 	@Transactional
-	public void handleAfterCreate(Post post){
-		if(post.notify)
+	public void handleAfterCreate(Post post) {
+		//TEST PURPOSES
+		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(1).toDate();
+		if (post.state.equals(Post.STATE_SCHEDULED)) {
+			if (post.scheduledDate == null) post.scheduledDate = post.date;
+
+			JobDetail job = newJob(PostScheduleJob.class)
+					.withIdentity("schedule-" + post.id, "schedules")
+					.build();
+
+			job.getJobDataMap().put("postId", post.id);
+
+			Trigger trigger = newTrigger()
+					.withIdentity("trigger-" + post.id, "schedules")
+					.startAt(post.scheduledDate)
+					.build();
+
+			try {
+				sched.scheduleJob(job, trigger);
+			} catch (SchedulerException e) {
+				e.printStackTrace();
+			}
+		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED))
 			buildNotification(post);
 	}
 
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
-		System.out.println("HANDLE BEFORE DELETE");
 		if (postAndCommentSecurityChecker.canRemove(post)) {
 
 			List<Image> images = imageRepository.findByPost(post);
@@ -115,21 +135,21 @@ public class PostEventHandler {
 			throw new UnauthorizedException();
 		}
 	}
-	
-	private void buildNotification(Post post){
+
+	private void buildNotification(Post post) {
 		Notification notification = new Notification();
 		notification.type = Notification.Type.POST_ADDED.toString();
 		notification.station = post.station;
 		notification.post = post;
 		notification.message = post.title;
-		try{
-			if(post.station != null && post.station.networks != null){
+		try {
+			if (post.station != null && post.station.networks != null) {
 				Station station = stationRepository.findOne(post.station.id);
 				gcmService.sendToStation(station.id, notification);
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

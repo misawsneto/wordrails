@@ -59,7 +59,7 @@ public class TermResource {
 	@Path("/termTree")
 	public Response getTermTree(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws JsonGenerationException, JsonMappingException, IOException {
 		org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
-		List<Term> allTerms = new ArrayList<Term>(); 
+		List<Term> allTerms;
 		if(perspectiveId != null){
 			allTerms = termRepository.findByPerspectiveId(perspectiveId);
 		}else{
@@ -75,7 +75,7 @@ public class TermResource {
 	@GET
 	@Path("/allTerms")
 	public ContentResponse<List<TermView>> getAllTerms(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws JsonGenerationException, JsonMappingException, IOException {
-		List<Term> allTerms = new ArrayList<Term>(); 
+		List<Term> allTerms;
 		if(perspectiveId != null){
 			allTerms = termRepository.findByPerspectiveId(perspectiveId);
 		}else{

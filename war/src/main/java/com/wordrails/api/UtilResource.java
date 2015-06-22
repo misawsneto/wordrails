@@ -18,6 +18,7 @@ import com.wordrails.business.Term;
 import com.wordrails.business.TermPerspective;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.business.Wordpress;
+import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.BookmarkRepository;
 import com.wordrails.persistence.CellRepository;
 import com.wordrails.persistence.CommentRepository;
@@ -42,7 +43,6 @@ import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
 import com.wordrails.persistence.WordpressRepository;
-//import com.wordrails.scheduler.jobs.SimpleJob;
 import com.wordrails.services.AsyncService;
 import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
@@ -69,13 +69,8 @@ import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.jboss.resteasy.spi.HttpRequest;
-import static org.quartz.DateBuilder.evenMinuteDate;
-import static org.quartz.JobBuilder.newJob;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import static org.quartz.TriggerBuilder.newTrigger;
+import org.quartz.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
@@ -137,9 +132,6 @@ public class UtilResource {
 
 	/**
 	 * Regenerates all the indexed class indexes
-	 *
-	 * @param async true if the reindexing will be done as a background thread
-	 * @param sess the hibernate session
 	 */
 	@GET
 	@Path("/reindex")
@@ -488,23 +480,23 @@ public class UtilResource {
     @Autowired
     private Scheduler sched;
 	
-//	@GET
-//	@Path("/testQuartz")
-//    public void testQuartz(@Context HttpServletRequest request) throws SchedulerException {
-//        String host = request.getHeader("Host");
-//        if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
-//            JobDetail job = newJob(SimpleJob.class)
-//                .withIdentity("job1", "group1")
-//                .build();
-//            
-//            Date runTime = evenMinuteDate(new Date());
-//            // Trigger the job to run on the next round minute
-//            Trigger trigger = newTrigger()
-//             .withIdentity("trigger1", "group1")
-//             .startAt(runTime)
-//             .build();
-//            
-//            sched.scheduleJob(job, trigger);
-//        }
-//    }
+	@GET
+	@Path("/testQuartz")
+    public void testQuartz(@Context HttpServletRequest request) throws SchedulerException {
+        String host = request.getHeader("Host");
+        if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+            JobDetail job = JobBuilder.newJob(SimpleJob.class)
+                .withIdentity("job1", "group1")
+                .build();
+
+            Date runTime = DateBuilder.evenMinuteDate(new Date());
+            // Trigger the job to run on the next round minute
+            Trigger trigger = TriggerBuilder.newTrigger()
+             .withIdentity("trigger1", "group1")
+             .startAt(runTime)
+             .build();
+
+            sched.scheduleJob(job, trigger);
+        }
+    }
 }

@@ -134,10 +134,14 @@ public class Post {
 	@Field(analyze = Analyze.NO)
     @DateBridge(resolution = Resolution.SECOND)
 	public Date date;
-	
+
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastModificationDate;
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date scheduledDate;
 	
 	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Analyzer(definition="customPostAnalyzer")
@@ -263,6 +267,9 @@ public class Post {
 	
 	@PrePersist
 	public void onCreate() {
+        if(this.date.after(new Date()) || this.scheduledDate != null) {
+            this.state = STATE_SCHEDULED;
+        }
 		if(featuredImage != null && featuredImage.original != null){
 			imageId = featuredImage.original.id;
 			imageSmallId = featuredImage.small.id;

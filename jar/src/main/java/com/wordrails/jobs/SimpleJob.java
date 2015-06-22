@@ -1,4 +1,4 @@
-package com.wordrails.scheduler.jobs;
+package com.wordrails.jobs;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
