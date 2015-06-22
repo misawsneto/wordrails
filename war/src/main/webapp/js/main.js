@@ -517,12 +517,13 @@ angular.module('app')
 
       $scope.app.bookmark = function(postId){
         if($scope.app.isLogged){
-              trix.toggleBookmark(postId).success(function(reponse){
-                if(reponse.content && reponse.content.response){
+              trix.toggleBookmark(postId).success(function(response){
+                if(response.response){
                   $scope.app.addBookmarked(postId)
                 }else{
                   $scope.app.removeBookmarked(postId)
                 }
+                console.log(response);
               }).error(function(){
                 console.log('error');
               })
@@ -532,8 +533,8 @@ angular.module('app')
 
       $scope.app.recommend = function(postId){
         if($scope.app.isLogged){
-              trix.toggleRecommend(postId).success(function(reponse){
-                if(reponse.content && reponse.content.response){
+              trix.toggleRecommend(postId).success(function(response){
+                if(response.response){
                   $scope.app.addRecommended(postId)
                 }else{
                   $scope.app.removeRecommended(postId)
