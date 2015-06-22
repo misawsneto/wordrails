@@ -18,7 +18,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	@Override
 	@RestResource(exported = false)
 	public <S extends Notification> S save(S arg0);
-	
+
 	@Query("select notification from Notification notification where notification.person.id = :personId order by notification.id desc")
 	public List<Notification> findNotificationsByPersonIdOrderByDate(@Param("personId") Integer personId, Pageable pageable);
 
