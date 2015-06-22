@@ -144,6 +144,9 @@ public class RecommendsResource {
 		recommend.post = postRepository.findOne(postId);
 		recommend.person = person;
 		ContentResponse<BooleanResponse> bool = new ContentResponse<BooleanResponse>();
+		
+		System.out.println(postId);
+		
 		try{
 			recommendRepository.save(recommend);
 			bool.content = new BooleanResponse();

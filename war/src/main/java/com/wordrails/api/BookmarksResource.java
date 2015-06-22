@@ -176,6 +176,9 @@ public class BookmarksResource {
 		bookmark.post = postRepository.findOne(postId);
 		bookmark.person = person;
 		ContentResponse<BooleanResponse> bool = new ContentResponse<BooleanResponse>();
+		
+		System.out.println(postId);
+		
 		try{
 			bookmarkRepository.save(bookmark);
 			bool.content = new BooleanResponse();
