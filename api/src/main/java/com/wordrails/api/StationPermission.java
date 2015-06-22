@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class StationPermission implements Serializable {
 	private static final long serialVersionUID = -870078497247617149L;
-	
+
 	//Station
 	public Integer stationId;
 	public String stationName;
@@ -12,7 +12,7 @@ public class StationPermission implements Serializable {
 	public boolean main;
 	public String visibility;
 	public Integer defaultPerspectiveId;
-	
+
 	// flags
 	public boolean sponsored;
 	public boolean social;

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class PostView implements Serializable {
 	private static final long serialVersionUID = -1474032487285763669L;
-	
+
 	public String title;
 	public Integer postId;
 	public Integer smallId;
@@ -20,7 +20,7 @@ public class PostView implements Serializable {
 	public int bookmarksCount;
 	public int recommendsCount;
 	public int commentsCount;
-	
+
 	public Integer imageId;
 	public Integer imageSmallId;
 	public Integer imageMediumId;
@@ -40,7 +40,7 @@ public class PostView implements Serializable {
 	public String slug;
 	public String externalFeaturedImgUrl;
 	public String externalVideoUrl;
-	
+
 	public String imageCaptionText;
 	public String imageCreditsText;
 	public String imageTitleText;
@@ -54,5 +54,5 @@ public class PostView implements Serializable {
 	public Double lng;
 
 	public String subheading;
-	
+
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class TermPerspectiveView implements Serializable {
 	private static final long serialVersionUID = 1073381103300701505L;
-	
+
 	public Integer id;
 	public Integer stationPerspectiveId;
 	public Integer termId;
