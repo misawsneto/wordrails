@@ -1,48 +1,9 @@
 package com.wordrails.api;
 
 import com.google.common.collect.HashBasedTable;
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
-import com.wordrails.business.ServiceGenerator;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationRole;
-import com.wordrails.business.Taxonomy;
-import com.wordrails.business.Term;
-import com.wordrails.business.UnauthorizedException;
-import com.wordrails.business.Wordpress;
-import com.wordrails.business.WordpressApi;
-import com.wordrails.business.WordpressConfig;
-import com.wordrails.business.WordpressPost;
-import com.wordrails.business.WordpressService;
-import com.wordrails.business.WordpressTerm;
-import com.wordrails.business.WordpressTerms;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.TaxonomyRepository;
-import com.wordrails.persistence.TermRepository;
-import com.wordrails.persistence.WordpressRepository;
+import com.wordrails.business.*;
+import com.wordrails.persistence.*;
 import com.wordrails.util.WordrailsUtil;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -51,8 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
- *
  * @author arthur
  */
 @Path("/wp")
@@ -149,13 +121,12 @@ public class WordpressResource {
 				post.author = author;
 			}
 
+			if (!slugs.add(post.slug)) { //if slug already exists in db
+				String hash = WordrailsUtil.generateRandomString(5, "!Aau");
+				post.slug = post.slug + "-" + hash;
+			}
 
 			if (post != null) {
-				if (!slugs.add(post.slug)) { //if slug already exists in db
-					String hash = WordrailsUtil.generateRandomString(5, "!Aau");
-					post.slug = post.slug + "-" + hash;
-				}
-
 				postRepository.save(post);
 				wordpressService.processWordpressPost(post);
 			}
@@ -185,6 +156,8 @@ public class WordpressResource {
 
 			Wordpress wordpress = station.wordpress;
 			if (wordpress.domain == null || wordpress.domain.isEmpty()) { //new login
+				//TODO manage taxonomy to enable this
+
 				if (config.terms != null) {
 					if (config.terms.tags != null) {
 						for (WordpressTerm tag : config.terms.tags) {
@@ -266,7 +239,7 @@ public class WordpressResource {
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 
-		Taxonomy taxonomy;
+		Taxonomy taxonomy = null;
 
 		if (term.isTag()) {
 			taxonomy = taxonomyRepository.findTypeTByWordpress(wp);
@@ -344,6 +317,7 @@ public class WordpressResource {
 		HashBasedTable<String, Integer, Term> dbTerms = HashBasedTable.create();
 		dbTerms.putAll(wordpressService.getTermsByTaxonomy(tagTaxonomy));
 		dbTerms.putAll(wordpressService.getTermsByTaxonomy(categoryTaxonomy));
+		//TODO enviar terms
 
 		Set<Term> newTerms = wordpressService.findAndSaveTerms(terms, dbTerms, tagTaxonomy, categoryTaxonomy);
 

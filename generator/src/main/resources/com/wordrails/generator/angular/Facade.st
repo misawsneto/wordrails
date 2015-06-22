@@ -139,6 +139,21 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/posts/"+stationId+"/searchPostsFromOrPromotedToStation", config)
     }
     
+    this.searchPosts = function(query, _page, _size, params) {
+		var config = {
+			"params": {
+				"query": query,
+				"page": _page,
+				"size": _size,
+			}
+		}
+		
+		if(params && angular)
+			config.params = angular.extend(config.params, params);
+		
+      return \$http.get(_config.url + "/api/posts/search/networkPosts", config)
+    }
+    
     this.searchBookmarks = function(query, _page, _size) {
     	var config = {
     	"params": {

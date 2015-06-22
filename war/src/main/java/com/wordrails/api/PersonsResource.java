@@ -218,17 +218,17 @@ public class PersonsResource {
 			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
 			
 			Pageable pageable = new PageRequest(0, 15);
-			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
 
 			if(defaultStation != null){
-				if(personData.person != null && !personData.person.username.equals("wordrails")){
-					List<Integer> postsRead = postRepository.findPostReadByPerson(personData.person.id, pageable2);
-					List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(personData.person.id, pageable2);
-					List<Integer> recommends = recommendRepository.findRecommendByPerson(personData.person.id, pageable2);
-					personData.postsRead = postsRead;
-					personData.bookmarks = bookmarks;
-					personData.recommends = recommends;
-				}
+//				if(personData.person != null && !personData.person.username.equals("wordrails")){
+//					List<Integer> postsRead = postRepository.findPostReadByPerson(personData.person.id, pageable2);
+//					List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(personData.person.id, pageable2);
+//					List<Integer> recommends = recommendRepository.findRecommendByPerson(personData.person.id, pageable2);
+//					personData.postsRead = postsRead;
+//					personData.bookmarks = bookmarks;
+//					personData.recommends = recommends;
+//				}
 				
 				List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
 				List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
@@ -290,6 +290,16 @@ public class PersonsResource {
 		initData.network.links = wordrailsService.generateSelfLinks(baseUrl + "/api/stations/" + network.id);
 		if(initData.networkRole != null)
 			initData.networkRole.links = networkRole != null ? wordrailsService.generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id) : Arrays.asList(new Link());
+			
+		Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+		if(initData.person != null && !initData.person.username.equals("wordrails")){
+			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
+			List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(initData.person.id, pageable2);
+			List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
+			initData.postsRead = postsRead;
+			initData.bookmarks = bookmarks;
+			initData.recommends = recommends;
+		}
 		
 		return initData;
 	}

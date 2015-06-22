@@ -8,33 +8,103 @@
       <span class="h4">Documents</span>
     </div>
     <div class="hidden-sm hidden-xs" id="nav-docs">
-      <ul class="nav nav-md">
-        <li class="padder-md b-b l-h-2x bg text-success"><em>CSS</em></li>
-        <li><a ui-scroll="bootstrap">Bootstrap</a></li>
-        <li><a ui-scroll="icons">Icons</a></li>
-        <li><a ui-scroll="animate">Animate</a></li>
-        <li><a ui-scroll="colors">Colors</a></li>
-        <li><a ui-scroll="layout">Layout</a></li>
-        <li><a ui-scroll="utilities">Utilities</a></li>
-        <li ui-scroll="core" class="padder-md b-b b-t l-h-2x bg text-danger"><em>Core</em></li>        
-        <li><a ui-scroll="ui-router">ui-router</a></li>
-        <li><a ui-scroll="ui-load">ui-load</a></li>
-        <li><a ui-scroll="ui-jq">ui-jq</a></li>
-        <li><a ui-scroll="ui-module">ui-module</a></li>
-        <li><a ui-scroll="ui-validate">ui-validate</a></li>        
-        <li ui-scroll="directives" class="padder-md b-b b-t l-h-2x bg text-primary"><em>Directives</em></li>
-        <li><a ui-scroll="ui-toggle-class">ui-toggle-class</a></li>
-        <li><a ui-scroll="ui-shift">ui-shift</a></li>
-        <li><a ui-scroll="ui-scroll">ui-scroll</a></li>
-        <li><a ui-scroll="ui-fullscreen">ui-fullscreen</a></li>
-        <li ui-scroll="plugins" class="padder-md b-b b-t l-h-2x bg text-info"><em>Plugins</em></li>
-        <li><a ui-scroll="plugins">Plugins docs</a></li>
+      <ul class="nav">
+        <li class="padder b-b l-h-2x bg text-info"><em>Build</em></li>
+        <li><a ui-scroll-to="node-req">Requirements</a></li>
+        <li><a ui-scroll-to="bower">Bower</a></li>
+        <li><a ui-scroll-to="grunt">Grunt</a></li>      
+        <li><a ui-scroll-to="dev-server">Local Server</a></li>
+
+        <li class="padder b-b l-h-2x bg text-success"><em>CSS</em></li>
+        <li><a ui-scroll-to="bootstrap">Bootstrap</a></li>
+        <li><a ui-scroll-to="icons">Icons</a></li>
+        <li><a ui-scroll-to="animate">Animate</a></li>
+        <li><a ui-scroll-to="colors">Colors</a></li>
+        <li><a ui-scroll-to="layout">Layout</a></li>
+        <li><a ui-scroll-to="utilities">Utilities</a></li>
+
+        <li ui-scroll-to="core" class="padder b-b b-t l-h-2x bg text-danger"><em>Core</em></li>        
+        <li><a ui-scroll-to="ui-router">ui-router</a></li>
+        <li><a ui-scroll-to="ui-load">ui-load</a></li>
+        <li><a ui-scroll-to="ui-jq">ui-jq</a></li>
+        <li><a ui-scroll-to="ui-module">ui-module</a></li>
+        <li><a ui-scroll-to="ui-validate">ui-validate</a></li>
+
+        <li ui-scroll-to="directives" class="padder b-b b-t l-h-2x bg text-primary"><em>Directives</em></li>
+        <li><a ui-scroll-to="ui-toggle-class">ui-toggle-class</a></li>
+        <li><a ui-scroll-to="ui-shift">ui-shift</a></li>
+        <li><a ui-scroll-to="ui-scroll-to">ui-scroll-to</a></li>
+        <li><a ui-scroll-to="ui-fullscreen">ui-fullscreen</a></li>
+
+        <li ui-scroll-to="plugins" class="padder b-b b-t l-h-2x bg text-info"><em>Plugins</em></li>
+        <li><a ui-scroll-to="plugins">Plugins docs</a></li>
       </ul>
     </div>
   </div>
   <!-- /.aside -->
   <div class="col">
     <div class="clearfix padder-md">
+      <h3 class="text-info m-t-xl font-thin m-b-none">Build </h3>
+      <div>Build your project with grunt and manage dependencies with bower.</div>
+
+      <div id="node-req" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">Requirements</h4>
+      <p>
+        In order to utilize <a href="http://gruntjs.com" class="text-info font-bold">Grunt</a> you will need to have installed <a href="http://nodejs.org" class="text-info font-bold">Node.js</a> on your computer. Also
+        insure that you have <a href="https://www.npmjs.org/" class="text-info font-bold">NPM</a> installed. <br />
+        You can check if these are installed properly by opening up a Terminal (Linux or Mac) or Command Prompt (Windows) <br /> 
+        and entering the command: <code>node --version</code> and <code>npm --version</code>
+        These commands should output something similar to "v0.10.31" and "1.4.23" respectively.
+      </p>
+      <p>
+        Once you have installed these programs, you'll need to get grunt and bower. You can achieve this by running the following command:
+        <code>npm install -g bower grunt-cli</code> <br />
+        Now you should be able to exectue the commands "grunt" and "bower". 
+      </p>
+      <p class="well b bg-light lt wrapper-sm m-t text-danger font-bold">
+        Please note that any commands we tell you to run must be ran from the project's root folder.
+      </p>
+
+      <div id="bower" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">Bower Dependency Management</h4>
+      <p>
+        To ensure you have all updated the Javascript libraries managed by bower, run the command <code>bower install</code> in a terminal or command prompt
+        while you are in the current working directory of the project.
+      </p>
+
+      <div id="grunt" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">Grunt Build Tool</h4>
+      <p>
+        This project supports build steps with Grunt. The supported Grunt tasks that this project ships with is:
+      </p>
+      <ul>
+        <li>Less Compilation</li>
+        <li>Bower Depenecy Inclusion</li>
+        <li>Release Tagging (requires project to be a <a href="http://git-scm.com/" class="text-info font-bold">GIT repository</a>)</li>
+      </ul>
+      <p>
+        To build your project, just run the command <code>grunt build:dev</code>. This will compile your less files and
+        copy over your bower dependencies.
+      </p>
+      <p>
+        Release tagging allows you to bump your current project's version and tag it with git. It also creates a changelog based on your
+        prevoius commit history. Checkout <a href="https://github.com/ericmatthys/grunt-changelog" class="text-info font-bold">the grunt-changelog module</a> for more
+        details and how to customize.
+      </p>
+
+      <div id="dev-server" class="wrapper"></div>
+      <div class="line b-b"></div>
+      <h4 class="m-t-xl">Local Server Development</h4>
+      <p>
+        We've made it easy to develop and test on your local machine. Once you've installed the bower dependencies and built your project,
+        you can start a local server by running the command <code>npm start</code>. This will start a local server and open up your browser.
+      </p>
+
+      <div id="css" class="wrapper"></div>
+      <div class="line b-b"></div>
       <h3 class="text-success m-t-xl font-thin m-b-none">CSS </h3>
       <div>Extensible classes</div>
 
@@ -152,7 +222,7 @@
       <div id="utilities" class="wrapper"></div>
       <div class="line b-b"></div>
       <h4  class="m-t-xl">CSS Utilities</h3>
-      <table class="table table-border bg-white b-a">
+      <table class="table table-border bg-white-only b-a">
         <tbody>
           <tr class="bg-light lt">
             <td colspan="2">Margin</td>
@@ -331,11 +401,11 @@
           </tr>
           <tr>
             <td>.padder-md</td>
-            <td>padding-top: 20px; padding-bottom: 20px</td>
+            <td>padding-left: 20px; padding-right: 20px</td>
           </tr>
           <tr>
             <td>.padder-lg</td>
-            <td>padding-top: 30px; padding-bottom: 30px</td>
+            <td>padding-left: 30px; padding-right: 30px</td>
           </tr>
           <tr>
             <td>.no-padder</td>
@@ -701,12 +771,12 @@
         <code>&lt;div ui-shift="append" target="#nav">&lt;/div></code>
       </p>
 
-      <div id="ui-scroll" class="wrapper"></div>
+      <div id="ui-scroll-to" class="wrapper"></div>
       <div class="line b-b"></div>
-      <h4 class="m-t-xl">ui-scroll</h4>
+      <h4 class="m-t-xl">ui-scroll-to</h4>
       <p>
         Scroll to element when click, attr value for target element.
-        <code>&lt;a ui-scroll="target">&lt;/a></code>
+        <code>&lt;a ui-scroll-to="target">&lt;/a></code>
       </p>
 
       <div id="ui-fullscreen" class="wrapper"></div>

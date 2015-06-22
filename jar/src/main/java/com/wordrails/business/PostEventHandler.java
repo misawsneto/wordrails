@@ -142,8 +142,8 @@ public class PostEventHandler {
 		notification.station = post.station;
 		notification.post = post;
 		notification.message = post.title;
-		try {
-			if (post.station != null && post.station.networks != null) {
+		try{
+			if(post.station != null && post.station.networks != null){
 				Station station = stationRepository.findOne(post.station.id);
 				gcmService.sendToStation(station.id, notification);
 			}

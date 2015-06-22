@@ -86,6 +86,34 @@ interface I$facade$ {
 	void searchPostsFromOrPromotedToStation(@Path("stationId")Integer stationId, @Query("query")String query,
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<SearchView\>\> _callback);
 		
+	@GET("/posts/search/networkPosts")
+	ContentResponse<SearchView\> searchPosts(@Query("query") String query, @Query("stationIds") String stationIds, @Query("personId") Integer personId, 
+			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight,
+			@Query("page") Integer page, @Query("size") Integer size);
+	
+	@GET("/posts/search/networkPosts")
+	void searchPosts(@Query("query") String query, @Query("stationIds") String stationIds, @Query("personId") Integer personId, 
+			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight,
+			@Query("page") Integer page, @Query("size") Integer size, Callback<ContentResponse<SearchView\>\> _callback);
+		
+	@GET("/bookmarks/searchBookmarks")
+	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	
+	@GET("/bookmarks/searchBookmarks")
+	void searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	
+	@GET("/recommends/searchRecommends")
+	ContentResponse<List<PostView\>\> searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	
+	@GET("/recommends/searchRecommends")
+	void searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	
+	@GET("/notifications/searchNotifications")
+	ContentResponse<List<NotificationView\>\> searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	
+	@GET("/notifications/searchNotifications")
+	void searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<NotificationView\>\>\> _callback);
+		
 	@GET("/posts/{stationId}/allPostRead")
 	ContentResponse<List<PostView\>\> getAllPostReadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId,
 		@Query("page") int page, @Query("size") int size);

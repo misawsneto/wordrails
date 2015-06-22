@@ -133,7 +133,8 @@ public class RecommendsResource {
 	@PUT
 	@Path("/toggleRecommend")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public ContentResponse<BooleanResponse> toggleRecommend(@FormParam("postId") Integer postId){
+	@Produces(MediaType.APPLICATION_JSON)
+	public BooleanResponse toggleRecommend(@FormParam("postId") Integer postId){
 		
 		Person person = accessControllerUtil.getLoggedPerson();
 		if(person.username.equals("wordrails"))
@@ -142,19 +143,19 @@ public class RecommendsResource {
 		Recommend recommend = new Recommend();
 		recommend.post = postRepository.findOne(postId);
 		recommend.person = person;
-		ContentResponse<BooleanResponse> bool = new ContentResponse<BooleanResponse>();
 		try{
 			recommendRepository.save(recommend);
-			bool.content = new BooleanResponse();
-			bool.content.response = true;
+			BooleanResponse content = new BooleanResponse();
+			content.response = true;
 			queryPersistence.incrementRecommendsCount(postId);
-			return bool;
+			return content;
 		}catch(Exception e){
+			BooleanResponse content = new BooleanResponse();
 			queryPersistence.deleteRecommend(postId, person.id);
-			bool.content = new BooleanResponse();
-			bool.content.response = false;
+			content = new BooleanResponse();
+			content.response = false;
 			queryPersistence.decrementRecommendsCount(postId);
-			return bool;
+			return content;
 		}
 	}
 	

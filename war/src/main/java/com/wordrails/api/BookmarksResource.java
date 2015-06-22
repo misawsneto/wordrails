@@ -165,7 +165,8 @@ public class BookmarksResource {
 	@PUT
 	@Path("/toggleBookmark")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public ContentResponse<BooleanResponse> toggleBookmark(@FormParam("postId") Integer postId){
+	@Produces(MediaType.APPLICATION_JSON)
+	public BooleanResponse toggleBookmark(@FormParam("postId") Integer postId){
 		
 		Person person = accessControllerUtil.getLoggedPerson();
 		if(person.username.equals("wordrails"))
@@ -174,19 +175,18 @@ public class BookmarksResource {
 		Bookmark bookmark = new Bookmark();
 		bookmark.post = postRepository.findOne(postId);
 		bookmark.person = person;
-		ContentResponse<BooleanResponse> bool = new ContentResponse<BooleanResponse>();
 		try{
 			bookmarkRepository.save(bookmark);
-			bool.content = new BooleanResponse();
-			bool.content.response = true;
+			BooleanResponse content = new BooleanResponse();
+			content.response = true;
 			queryPersistence.incrementBookmarksCount(postId);
-			return bool;
+			return content;
 		}catch(Exception e){
 			queryPersistence.decrementBookmarksCount(postId);
-			bool.content = new BooleanResponse();
-			bool.content.response = false;
+			BooleanResponse content = new BooleanResponse();
+			content.response = false;
 			queryPersistence.deleteBookmark(postId, person.id);
-			return bool;
+			return content;
 		}
 	}
 	
