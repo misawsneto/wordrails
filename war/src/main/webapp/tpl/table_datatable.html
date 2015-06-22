@@ -8,15 +8,15 @@
     </div>
     <div class="table-responsive">
       <table ui-jq="dataTable" ui-options="{
-          'sAjaxSource': 'js/jquery/datatables/datatable.json',
-          'aoColumns': [
-            { 'mData': 'engine' },
-            { 'mData': 'browser' },
-            { 'mData': 'platform' },
-            { 'mData': 'version' },
-            { 'mData': 'grade' }
+          sAjaxSource: 'api/datatable.json',
+          aoColumns: [
+            { mData: 'engine' },
+            { mData: 'browser' },
+            { mData: 'platform' },
+            { mData: 'version' },
+            { mData: 'grade' }
           ]
-        }" class="table table-striped m-b-none">
+        }" class="table table-striped b-t b-b">
         <thead>
           <tr>
             <th  style="width:20%">Rendering engine</th>

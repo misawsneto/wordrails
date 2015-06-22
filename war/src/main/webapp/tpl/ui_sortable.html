@@ -3,9 +3,61 @@
 </div>
 <div class="wrapper-md">
   <h4 class="m-t-none m-b">Drag to sort list <small>(no touch)</small></h4>
-  <ul ui-jq="sortable" ng-model="testArray" class="list-group gutter list-group-lg list-group-sp" >
-    <li class="list-group-item bg-primary" ng-repeat="test in testArray">
-      {{test}}
+  <ul ui-jq="sortable" class="list-group gutter list-group-lg list-group-sp" >
+    <li class="list-group-item bg-primary">
+      <span class="pull-right" >
+        <a href><i class="fa fa-pencil fa-fw m-r-xs"></i></a>
+        <a href><i class="fa fa-plus fa-fw m-r-xs"></i></a>
+        <a href><i class="fa fa-times fa-fw"></i></a>                  
+      </span>
+      <span class="pull-left"><i class="fa fa-sort text-muted fa m-r-sm"></i> </span>
+      <div class="clear">
+        Browser compatibility
+      </div>
+    </li>
+    <li class="list-group-item bg-info">
+      <span class="pull-right" >
+        <a href><i class="fa fa-pencil fa-fw m-r-xs"></i></a>
+        <a href><i class="fa fa-plus fa-fw m-r-xs"></i></a>
+        <a href><i class="fa fa-times fa-fw"></i></a>
+      </span>
+      <span class="pull-left"><i class="fa fa-sort text-muted fa m-r-sm"></i> </span>
+      <div class="clear">
+        Looking for more example templates
+      </div>
+    </li>
+    <li class="list-group-item bg-success">
+     <span class="pull-right" >
+        <a href><i class="fa fa-pencil fa-fw m-r-xs"></i></a>
+        <a href><i class="fa fa-plus fa-fw m-r-xs"></i></a>
+        <a href><i class="fa fa-times fa-fw"></i></a>                  
+      </span>
+      <span class="pull-left"><i class="fa fa-sort text-muted fa m-r-sm"></i> </span>
+      <div class="clear">
+        Customizing components
+      </div>
+    </li>
+    <li class="list-group-item">
+      <span class="pull-right" >
+        <a href><i class="fa fa-pencil fa-fw m-r-xs"></i></a>
+        <a href><i class="fa fa-plus fa-fw m-r-xs"></i></a>
+        <a href><i class="fa fa-times fa-fw"></i></a>                  
+      </span>
+      <span class="pull-left"><i class="fa fa-sort text-muted fa m-r-sm"></i> </span>
+      <div class="clear">
+        The fastest way to get started
+      </div>
+    </li>
+    <li class="list-group-item">
+      <span class="pull-right" >
+        <a href><i class="fa fa-fw m-r-xs fa-pencil"></i></a>
+        <a href><i class="fa fa-fw m-r-xs fa-plus"></i></a>
+        <a href><i class="fa fa-fw fa-times"></i></a>
+      </span>
+      <span class="pull-left"><i class="fa fa-sort text-muted fa m-r-sm"></i> </span>
+      <div class="clear">
+        HTML5 doctype required
+      </div>
     </li>
   </ul>
   <h4 class="m-t-none m-b">Nestable list <small>(touch support)</small></h4>

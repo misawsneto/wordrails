@@ -5,10 +5,10 @@
 	margin-left: -20px;
 	.transition(all .2s ease-in-out 0s);
 
-  .active &,
-  .app-aside-folded li:hover &,
-  .app-aside-folded li:focus &,
-  .app-aside-folded li:active &{
+  .active > &,
+  .app-aside-folded li:hover > &,
+  .app-aside-folded li:focus > &,
+  .app-aside-folded li:active > &{
   	opacity: 1;
 		margin-left: 0;
 		height: auto !important;
@@ -31,6 +31,12 @@
 			li {
 				a {
 					padding-left: @app-aside-nav-height + 15px;
+				}
+				ul{
+					display:none;
+				}
+				&.active > ul{
+					display:block;
 				}
 			}
 			a {
@@ -96,7 +102,6 @@
 							margin: 0;
 							line-height: @app-aside-folded-nav-height;
 							border: none !important;
-							.transition(margin-top 0.2s);
 							b{
 								left: 0 !important;
 							}
@@ -110,7 +115,7 @@
 						}
 					}
 				}
-				ul{
+				> li > ul{
 					height: 0 !important;
 					position: absolute;
 					left: 100%;
