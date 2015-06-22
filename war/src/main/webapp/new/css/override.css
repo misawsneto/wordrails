@@ -1202,6 +1202,119 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   .w-1{
     width: 1px!important;
   }
+
+.dropdown-menu {
+  /* border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3px; */
+  -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  -webkit-transform-origin: top left;
+     -moz-transform-origin: top left;
+      -ms-transform-origin: top left;
+          transform-origin: top left;
+}
+
+.dropdown-menu.pull-left {
+  left: 100%;
+}
+
+.dropdown-menu.pull-right {
+  left: auto !important;
+  -webkit-transform-origin: top right;
+     -moz-transform-origin: top right;
+      -ms-transform-origin: top right;
+          transform-origin: top right;
+}
+
+.dropdown-menu.pull-up {
+  top: 0;
+}
+
+.dropup .dropdown-menu {
+  -webkit-transform-origin: bottom left;
+     -moz-transform-origin: bottom left;
+      -ms-transform-origin: bottom left;
+          transform-origin: bottom left;
+}
+
+.dropup .dropdown-menu.pull-right {
+  -webkit-transform-origin: bottom right;
+     -moz-transform-origin: bottom right;
+      -ms-transform-origin: bottom right;
+          transform-origin: bottom right;
+}
+
+/* .dropdown-menu > .panel {
+  margin: -5px 0;
+  border: none;
+}
+
+.dropdown-menu > li > a {
+  padding: 8px 16px;
+  color: inherit;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #eaebec !important;
+  background-image: none;
+  filter: none;
+}
+
+.dropdown-menu.top,
+.dropdown-menu.top-left,
+.dropdown-menu.top-right {
+  margin-top: -2px;
+}
+
+.dropdown-menu.datepicker {
+  padding-right: 5px;
+  padding-left: 5px;
+  font-size: 12px;
+}
+
+.dropdown-menu.datepicker .btn {
+  font-size: 12px;
+}
+
+.dropdown-menu.timepicker {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 12px;
+}
+
+.dropdown-menu.timepicker .btn {
+  font-size: 12px;
+} */
+
+.dropdown-menu-scale {
+  display: block;
+  opacity: 0;
+  -webkit-transform: scale(0);
+      -ms-transform: scale(0);
+          transform: scale(0);
+  -webkit-transition: all 0.25s;
+          transition: all 0.25s;
+  -webkit-backface-visibility: hidden;
+     -moz-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+.open > .dropdown-menu-scale {
+  opacity: 1;
+  -webkit-transform: scale(1);
+      -ms-transform: scale(1);
+          transform: scale(1);
+}
+
+.border-radius-50{
+  border-radius:50%;
+}
+
 /* /general */
 
 /* animate */

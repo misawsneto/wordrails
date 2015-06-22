@@ -1,5 +1,6 @@
 package com.wordrails.services;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +27,7 @@ public class CacheService {
 	private PersonRepository personRepository; 
 
 	@Autowired NetworkRepository networkRepository;
-
+	
 	public void init(){
 		// ------------- init person cache
 		persons = CacheBuilder.newBuilder().maximumSize(1000)
@@ -72,6 +73,7 @@ public class CacheService {
 								return networkRepository.findNetworkBySubdomain(subdomain);
 							}
 						});
+		
 	}
 	
 	public Person getPerson(Integer id) throws ExecutionException{

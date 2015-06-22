@@ -65,23 +65,23 @@
   <!-- nabar right -->
   <ul class="nav navbar-nav navbar-right">
     <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
-      <a href angular-ripple class="dropdown-toggle i-24 mdi-dots-vertical mdi" dropdown-toggle>
+      <a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-dots-vertical mdi" dropdown-toggle>
       </a>
       <!-- dropdown -->
-      <ul class="dropdown-menu animated w-sm">
+      <ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
         <!-- <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Marcar como lida</span></li>
         <li> <a href class="mark-as-read"> Todas</a> </li>
         <li> <a href class="mark-as-read"> Mais antigas que um dia</a> </li>
         <li class="divider"></li> -->
         <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">modo de exibição</span></li>
         <li> <a ng-click="changeView('horizontal')" href>
-            <span class="mdi mdi-checkbox-marked-circle-outline pull-right m-t-xxs" ng-show="app.viewMode == 'horizontal'"></span>
+            <span class="mdi mdi-check pull-right m-t-xxs" ng-show="app.viewMode == 'horizontal'"></span>
             <i class="mdi mdi-swap-horizontal m-r-sm"></i> 
             Horizontal 
             </a> 
         </li>
         <li> <a ng-click="changeView('vertical')" href> 
-            <span class="mdi mdi-checkbox-marked-circle-outline pull-right m-t-xxs" ng-show="app.viewMode == 'vertical'"></span>
+            <span class="mdi mdi-check pull-right m-t-xxs" ng-show="app.viewMode == 'vertical'"></span>
             <i class="mdi mdi-swap-vertical m-r-sm"></i>
             Vertical 
             </a> 

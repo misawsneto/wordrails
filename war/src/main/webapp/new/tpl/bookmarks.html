@@ -14,7 +14,9 @@
     </div>
     <div class="block-800 m-auto">
       
-      <div class="panel panel-card animated zoomIn" angular-ripple ng-repeat="bookmark in app.bookmarksCtrl.bookmarks">
+      <div class="panel panel-card animated zoomIn" angular-ripple ng-repeat="bookmark in app.bookmarksCtrl.bookmarks"
+      ng-click="app.setNowReading(bookmark,app.bookmarksCtrl.bookmarks, null, 'app.bookmarks')" 
+      ng-class="{'hide': !app.bookmarked(bookmark.postId)}">
 
         <div>
           <div class="notification-image pull-left bg-cover"
@@ -53,3 +55,5 @@
     </div>
   </div>
 </div>
+
+<div ui-view></div>
