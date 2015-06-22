@@ -1350,4 +1350,5 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindBookmarkByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
+
 }
