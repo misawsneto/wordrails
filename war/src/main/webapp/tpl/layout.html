@@ -1,0 +1,70 @@
+  <!-- navbar -->
+  <div data-ng-include=" 'tpl/blocks/header.html' " class="app-header navbar animated slideInLeft">
+  </div>
+  <!-- / navbar -->
+
+  <!-- menu -->
+  <div data-ng-include=" 'tpl/blocks/aside.html' " class="app-aside hidden-xs {{app.settings.asideColor}} animated slideInLeft" ng-class="{'hide': app.hideAside }">
+  </div>
+  <!-- / menu -->
+
+  <!-- view -->
+  <div class="app-content" ng-class="{'m-n': app.hideAside, 'h-full': app.hideFooter }">
+    <div class="app-content-body fade-in" ng-class="{'h-full': app.hideFooter, 'no-header-space': $state.current.name.indexOf('app.search') > -1 || $state.current.name.indexOf('app.stations') > -1 || $state.current.name.indexOf('app.notifications') > -1 || $state.current.name.indexOf('app.bookmarks') > -1 || $state.current.name.indexOf('app.settings') > -1 || $state.current.name.indexOf('app.user') > -1 || $state.current.name.indexOf('app.publications') > -1, 'app-content-full': ($state.current.name.indexOf('app.stations') == -1 && $state.current.name.indexOf('app.search') == -1 && $state.current.name.indexOf('app.user') == -1 && $state.current.name.indexOf('app.bookmarks') == -1 && $state.current.name.indexOf('app.notifications') == -1)}" ui-view>
+    </div>
+  </div>
+  <!-- / view -->
+  <!-- navbar -->
+  <!-- <div class="app-footer navbar navbar-fixed-bottom bg-light lt b-t" ng-class="{'m-n': app.hideAside, 'hide': app.hideFooter}" ui-view="footer"></div> -->
+
+  <div id="post-left-content" data-ng-include=" 'tpl/read-post-left-content.html' "></div>
+  <div id="post-right-content" ng-class="{'night-mode': app.nightMode}" data-ng-include=" 'tpl/read-post-right-content.html' "></div>
+<!-- /navbar -->
+
+    <!-- profile-popover -->
+  <div id="my-profile-popover" class="popover right animated" ng-class="{ show: app.profilepopover.open, hide: !app.profilepopover.open}" click-outside="app.profilepopover.open = false; console.log('teste')" outside-if-not="profile-popover-toggle">
+    <div class="arrow"></div>
+    <div class="popover-inner">
+      <div class="popover-content">
+        <div data-ng-include=" 'tpl/profile_popover.html' "></div>
+      </div>
+    </div>
+  </div>
+  <!-- /profile-popover -->
+  
+
+<script type="text/ng-template" id="signin_splash.html">
+  <a class="splash-close-button" ng-click="cancelModal()">×</a>
+  <div class="splash-content text-center" ng-cloak>
+    <div class="row">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="p-lg text-color wrapper-lg">
+          <div id="login-error">
+            <span id="login-error" class="text-danger animated" ng-class="{'fadeIn': app.loginError, 'hide': !app.loginError}">
+              Usuário ou senha inválidos
+            </span>
+          </div>
+          <form name="form" ng-submit="app.signIn(username, password)">
+            <div class="md-form-group float-label p-b-sm">
+              <input class="md-input" ng-model="username" required>
+              <label>Usuário</label>
+            </div>
+            <div class="md-form-group float-label p-b-sm">
+              <input type="password" class="md-input" ng-model="password" required>
+              <label>Senha</label>
+            </div>      
+            <button angular-ripple type="submit" class="m-t-md btn-custom btn text-lg text-u-c btn-block p-h-md">Entrar</button>
+          </form>
+          <!-- 
+          <button angular-ripple type="submit" class="m-t-md btn-info btn text-lg text-u-c btn-block p-h-md">
+            <i class="mdi mdi-twitter m-r-sm"></i> Twitter
+          </button>
+          <button angular-ripple type="submit" class="m-t-md btn-blue btn text-lg text-u-c btn-block p-h-md">
+            <i class="mdi mdi-facebook m-r-sm"></i> Facebook
+          </button>
+          -->
+        </div>
+      </div>
+    </div>
+  </div>
+    </script>

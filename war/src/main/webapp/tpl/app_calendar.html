@@ -1,6 +1,6 @@
 <div ng-controller="FullcalendarCtrl">
   <div class="wrapper-md bg-light b-b">
-    <button type="button" class="btn btn-default btn-addon pull-right m-t-n-xs" ui-toggle-class="show" target="#aside" ng-click="renderCalender(calendar1)">
+    <button type="button" class="btn btn-default btn-addon pull-right m-t-n-xs" ui-toggle-class="show" target="#aside">
       <i class="fa fa-bars"></i> List
     </button>
     <h1 class="m-n font-thin h3">Fullcalendar</h1>
@@ -8,15 +8,15 @@
   <div class="hbox hbox-auto-xs hbox-auto-sm">
     <div class="col wrapper-md">
       <div class="clearfix m-b">
-        <button type="button" class="btn btn-sm btn-primary btn-addon" ng-click="addEvent()">
+        <button type="button" tooltip="Double click on calendar day to create event" class="btn btn-sm btn-primary btn-addon" ng-click="addEvent()">
           <i class="fa fa-plus"></i>Add
         </button>
         <div class="pull-right">
-          <button type="button" class="btn btn-sm btn-default" ng-click="today(calendar1)">today</button>
+          <button type="button" class="btn btn-sm btn-default" ng-click="today()">today</button>
           <div class="btn-group m-l-xs">
-            <button class="btn btn-sm btn-default" ng-click="changeView('agendaDay', calendar1)">Day</button>
-            <button class="btn btn-sm btn-default" ng-click="changeView('agendaWeek', calendar1)">Week</button>
-            <button class="btn btn-sm btn-default" ng-click="changeView('month', calendar1)">Month</button>
+            <button class="btn btn-sm btn-default" ng-click="changeView('agendaDay')">Day</button>
+            <button class="btn btn-sm btn-default" ng-click="changeView('agendaWeek')">Week</button>
+            <button class="btn btn-sm btn-default" ng-click="changeView('month')">Month</button>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
             <div class="m-t-sm">{{event.url}}</div>
           </div>
         </div>
-        <div class="calendar" ng-model="eventSources" calendar="calendar1" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+        <div class="calendar" ng-model="eventSources" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
       </div>
     </div>
     <div class="col w-md w-auto-xs bg-light dk bg-auto b-l hide" id="aside">

@@ -1,148 +1,111 @@
 <%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.wordrails.business.Network" %>
 <!DOCTYPE html>
 <html lang="en" data-ng-app="app">
 <head>
   <meta charset="utf-8" />
-  <title><%=((Network)request.getSession().getAttribute("network")).getName()%></title>
-  <meta name="description" content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
+  <title>${networkName}</title>
+  <meta name="description" content="${networkDesciption}" />
+  <meta name="keywords" content="${networkKeywords}" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="../bower_components/animate.css/animate.css" type="text/css" />
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="../bower_components/simple-line-icons/css/simple-line-icons.css" type="text/css" />
+  <link rel="stylesheet" href="../bower_components/redactor/redactor.css" />
+  <link rel="stylesheet" href="../bower_components/angular-loading-bar/build/loading-bar.min.css">
+  <link rel="stylesheet" href="../bower_components/angular-material/angular-material.css" type="text/css" />
 
-  <link href='http://fonts.googleapis.com/css?family=Oswald:400,700,300' rel='stylesheet' type='text/css'>
-  <link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/materialdesignicons.css" type="text/css" />
 
-  <!-- sly -->
-  <link rel="stylesheet" href="css/horizontal.css?${buildNumber}">
-  <!-- medium editor -->
-  <!-- <link rel="stylesheet" href="css/medium-editor.min.css?${buildNumber}" type="text/css" />
-  <link rel="stylesheet" href="css/medium-editor-plugins.css?${buildNumber}" type="text/css" />
-  <link rel="stylesheet" href="css/me-themes/bootstrap.min.css?${buildNumber}" type="text/css" /> -->
-<!-- 
-  <link rel="stylesheet" href="css/jq-ui.css?${buildNumber}" type="text/css" />
- -->
-  <!-- froala -->
-  <link href="css/froala_editor.min.css" rel="stylesheet" type="text/css" />
-  <link href="css/splash.css" rel="stylesheet" type="text/css">
-
-  <link rel="stylesheet" href="css/bootstrap.css?${buildNumber}" type="text/css" />
-  <link rel="stylesheet" href="css/colorpicker.css?${buildNumber}">
-  <link rel="stylesheet" href="css/ui-tree.min.css?${buildNumber}" type="text/css" />
-  <link rel="stylesheet" href="css/animate.css?${buildNumber}" type="text/css" />
-  <link rel="stylesheet" href="css/font-awesome.min.css?${buildNumber}" type="text/css" />
-  <link rel="stylesheet" href="css/simple-line-icons.css?${buildNumber}" type="text/css" />
-  <link rel="stylesheet" href="css/font.css?${buildNumber}" type="text/css" />
+  <link rel="stylesheet" href="css/font.css" type="text/css" />
   <link rel="stylesheet" href="css/app.css?${buildNumber}" type="text/css" />
   <link rel="stylesheet" href="css/override.css?${buildNumber}" type="text/css" />
-  <!-- toastr -->
-  <link rel="stylesheet" href="css/toastr.min.css?${buildNumber}" type="text/css" />
-  <link rel="stylesheet" type="text/css" href="offcanvas/css/demo.css" />
-  <link rel="stylesheet" type="text/css" href="offcanvas/css/menu_sideslide.css" />
-
-  <link href="css/froala_content.min.css" rel="stylesheet" type="text/css" />
-  <link href="css/froala_style.min.css" rel="stylesheet" type="text/css" />
-  <link href="js/libs/redactor/redactor.css" rel="stylesheet" type="text/css" />
-  <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
-  <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,100,100italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
-  <link href='http://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700' rel='stylesheet' type='text/css'>
-  <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-  <style>
-    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  <script type="text/javascript">
+  	var GLOBAL_URL_HASH = "${buildNumber}"
+    var initData = ${personData};
+    var initTermPerspective = ${termPerspectiveView};
+  </script>
+  <style type="text/css">
+      [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
       display: none !important;
-      /* font-family: {{!network.primaryFont ? "'Oswald', sans-serif" : network.primaryFont;}}!important */
     }
   </style>
-  <script type="text/javascript">
-    var GLOBAL_URL_HASH = "${buildNumber}"
-    var NETWORK_ID = <%=((Network)request.getSession().getAttribute("network")).getId()%>;
-  </script>
+  <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 </head>
-<body ng-controller="AppCtrl" ng-style="app.customStyle.primaryFont">
+<body ng-controller="AppCtrl" ng-cloak>
   <offcanvas></offcanvas>
-  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed} " ui-view></div>
-  <!-- jQuery -->
-  <script src="js/jquery/jquery.min.js?${buildNumber}"></script>
-  <!-- summernote -->
-  <script src="js/summernote/summernote.min.js?${buildNumber}"></script>
-  <script src="js/summernote/summernote-pt-BR.js?${buildNumber}"></script>
-  <!-- file upload -->
-  <script src="js/jquery/jq-ui.js?${buildNumber}"></script>
-  <script src="js/jquery/jquery.fileupload.js?${buildNumber}"></script>
-  <!-- medium editor -->
-  <!-- <script src="js/libs/medium-editor.min.js?${buildNumber}"></script>
-  <script src="js/libs/medium-editor-plugins.js?${buildNumber}"></script> -->
-  <!-- moment, livestamp, locales-->
-  <!-- froala. -->
-  <script src="js/libs/redactor/redactor.js"></script>
-  <script src="js/libs/redactor/video.js"></script>
-  <script src="js/libs/redactor/fontsize.js"></script>
-  <script src="js/libs/redactor/counter.js"></script>
-  <script src="js/libs/redactor/fontcolor.js"></script>
-  <script src="js/libs/redactor/pt_br.js"></script>
-  <script src="js/libs/froala/froala_editor.min.js"></script>
-  <script src="js/libs/froala/plugins/font_size.min.js"></script>
-  <script src="js/libs/froala/plugins/video.min.js"></script>
-  <script src="js/libs/froala/plugins/lists.min.js"></script>
-  <script src="js/libs/froala/plugins/tables.min.js"></script>
-  <script src="js/libs/froala/plugins/colors.min.js"></script>
-  <script src="js/libs/froala/langs/pt_br.js"></script>
-  <!--[if lt IE 9]>
-      <script src="../js/libs/froala/froala_editor_ie8.min.js"></script>
-  <![endif]-->
+  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.post', 'bg-perspective': $state.current.name.indexOf('app.stations') > -1, 'bg-light-grey': $state.current.name.indexOf('app.settings') > -1 || $state.current.name.indexOf('app.bookmarks') > -1 || $state.current.name.indexOf('app.search') > -1 || $state.current.name.indexOf('app.notifications') > -1 || $state.current.name.indexOf('app.user') > -1 || $state.current.name.indexOf('app.publications') > -1}" ui-view></div>
 
-  <script src="js/libs/moment.min.js?${buildNumber}"></script>
-  <script src="js/libs/locales.min.js?${buildNumber}"></script>
-  <script src="js/jquery/livestamp/livestamp.min.js?${buildNumber}"></script>
+
+  <!-- jQuery -->
+  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+
   <!-- Angular -->
-  <script src="js/angular/angular.min.js?${buildNumber}"></script>
-  <script src="js/angular/angular-locale_pt-br.js?${buildNumber}"></script>
-  <script src="js/angular/angular-cookies.min.js?${buildNumber}"></script>
-  <script src="js/angular/angular-animate.min.js?${buildNumber}"></script>
-  <script src="js/angular/angular-ui-router.min.js?${buildNumber}"></script>
-  <script src="js/angular/angular-translate.js?${buildNumber}"></script>
-  <script src="js/angular/angular-infinite-scroll.min.js?${buildNumber}"></script>
-  <script src="js/angular/angular-colorpicker.js?${buildNumber}"></script>
-  <script src="js/angular/ngStorage.min.js?${buildNumber}"></script>
-  <script src="js/angular/ui-load.js?${buildNumber}"></script>
-  <script src="js/angular/ui-jq.js?${buildNumber}"></script>
-  <script src="js/angular/ui-validate.js?${buildNumber}"></script>
-  <script src="js/angular/ui-bootstrap-tpls.min.js?${buildNumber}"></script>
-  <script src="js/angular/ui-tree.min.js?${buildNumber}"></script>
-  <script src="js/angular/angular-sortable.js?${buildNumber}"></script>
-  <!-- <script src="js/angular/jquery.fileupload-angular.js?${buildNumber}"></script> -->
-  <script src="js/libs/angular/ocLazyLoad.js"></script>
-  <script src="js/libs/splash.js?${buildNumber}"></script>
-  <!-- <script src="js/angular/angular-medium-editor.min.js?${buildNumber}"></script> -->
-  <!-- angular-summernote -->
-  <script src="js/angular/angular-froala.js?${buildNumber}"></script>
-  <script src="js/angular/froala-sanitize.js?${buildNumber}"></script>
-  <script src="js/angular/angular-redactor.js?${buildNumber}"></script>
-  <!-- Wordrails -->
-  <script src="js/BaseWordRails.js?${buildNumber}"></script>
+  <script src="../bower_components/angular/angular.js"></script>
+  <script src="../bower_components/angular-animate/angular-animate.js"></script>
+  <script src="../bower_components/angular-aria/angular-aria.js"></script>
+  <script src="../bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="../bower_components/angular-messages/angular-messages.js"></script>
+  <script src="../bower_components/angular-resource/angular-resource.js"></script>
+  <script src="../bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="../bower_components/angular-touch/angular-touch.js"></script>
+  <script src="../bower_components/angular-material/angular-material.js"></script>
+
+  <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script> 
+  <script src="../bower_components/ngstorage/ngStorage.js"></script>
+  <script src="../bower_components/angular-ui-utils/ui-utils.js"></script>
+
+  <!-- bootstrap -->
+  <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <!-- lazyload -->
+  <script src="../bower_components/oclazyload/dist/ocLazyLoad.js"></script>
+  <!-- translate -->
+  <script src="../bower_components/angular-translate/angular-translate.js"></script>
+  <script src="../bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+  <script src="../bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
+  <script src="../bower_components/angular-translate-storage-local/angular-translate-storage-local.js"></script>
+  <!-- redactor -->
+  <script src="../bower_components/redactor/redactor.js"></script>
+  <script src="../bower_components/redactor/video.js"></script>
+  <script src="../bower_components/redactor/fontsize.js"></script>
+  <script src="../bower_components/redactor/counter.js"></script>
+  <script src="../bower_components/redactor/fontcolor.js"></script>
+  <script src="../bower_components/redactor/pt_br.js"></script>
+  <script src="../bower_components/redactor/angular-redactor.js"></script>
+  <script src="../bower_components/moment/min/moment-with-locales.min.js"></script>
+  <script src="../bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
+
   <!-- App -->
   <script src="js/app.js?${buildNumber}"></script>
-  <script src="js/services.js?${buildNumber}"></script>
-  <script src="js/controllers.js?${buildNumber}"></script>
-  <script src="js/filters.js?${buildNumber}"></script>
-  <script src="js/directives.js?${buildNumber}"></script>
-  <!-- Lazy loading -->
+  <script src="js/config.js?${buildNumber}"></script>
+  <script src="js/config.lazyload.js?${buildNumber}"></script>
+  <script src="js/config.router.js?${buildNumber}"></script>
+  <script src="js/main.js?${buildNumber}"></script>
+  <script src="js/services/ui-load.js"></script>
+  <script src="js/services/trix.js?${buildNumber}"></script>
+  <script src="js/filters/filters.js?${buildNumber}"></script>
+  <script src="js/directives/setnganimate.js"></script>
+  <script src="js/directives/ui-butterbar.js"></script>
+  <script src="js/directives/ui-focus.js"></script>
+  <script src="js/directives/ui-fullscreen.js"></script>
+  <script src="js/directives/ui-jq.js"></script>
+  <script src="js/directives/ui-module.js"></script>
+  <script src="js/directives/ui-nav.js"></script>
+  <script src="js/directives/ui-scroll.js"></script>
+  <script src="js/directives/ui-shift.js"></script>
+  <script src="js/directives/ui-toggleclass.js"></script>
+  <script src="js/directives/custom.js?${buildNumber}"></script>
+  <script src="js/directives/directives.js?${buildNumber}"></script>
+  <script src="js/controllers/bootstrap.js"></script>
 
-  <!-- controllers -->
-  <script src="js/controllers_scaffold.js?${buildNumber}"></script>
-  <script src="js/controllers_perspectives.js?${buildNumber}"></script>
+  <script src="/js/BaseTrix.js?${buildNumber}"></script>
+
   <!-- Sly -->
   <script src="js/sly/sly.plugins.js?${buildNumber}"></script>
   <script src="js/sly/sly.min.js?${buildNumber}"></script>
-  <script src="js/sly/horizontal.js?${buildNumber}"></script>
-  
-  <!-- util -->
-  <script src="js/toastr.min.js?${buildNumber}"></script>
-  <script src="js/util.js?${buildNumber}"></script>
-<!-- 
-  <script src="js/jquery/custom-jq-ui.js?${buildNumber}"></script>
- -->
-
-  <script src="offcanvas/js/classie.js"></script>
- 
+  <!-- Sly end -->
+  <script src="js/util.js"></script>
+  <!-- Lazy loading -->
+  <script src="js/iframe-api.js"></script>
 </body>
 </html>

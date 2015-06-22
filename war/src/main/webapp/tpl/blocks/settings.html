@@ -1,5 +1,7 @@
 <!-- settings -->
-  <button class="btn btn-default no-shadow pos-abt" ui-toggle-class="active" target=".settings"><i class="fa fa-gear"></i></button>
+  <button class="btn btn-default no-shadow pos-abt" ui-toggle-class="active" target=".settings">
+    <i class="fa fa-spin fa-gear"></i>
+  </button>
   <div class="panel-heading">
     Settings
   </div>
@@ -18,12 +20,26 @@
       </label>
       Fixed aside 
     </div>
-    <div>
+    <div class="m-b-sm">
       <label class="i-switch bg-info pull-right">
         <input type="checkbox" ng-model="app.settings.asideFolded">
         <i></i>
       </label>
       Folded aside 
+    </div>
+    <div class="m-b-sm">
+      <label class="i-switch bg-info pull-right">
+        <input type="checkbox" ng-model="app.settings.asideDock">
+        <i></i>
+      </label>
+      Dock aside
+    </div>
+    <div>
+      <label class="i-switch bg-info pull-right">
+        <input type="checkbox" ng-model="app.settings.container">
+        <i></i>
+      </label>
+      Boxed layout
     </div>
   </div>
   <div class="wrapper b-t b-light bg-light lter r-b">
@@ -42,6 +58,22 @@
             <b class="bg-black header"></b>
             <b class="bg-white header"></b>
             <b class="bg-black"></b>
+          </span>
+        </label>
+
+        <label class="i-checks block m-b" ng-click="
+          app.settings.navbarHeaderColor='bg-dark'; 
+          app.settings.navbarCollapseColor='bg-white-only'; 
+          app.settings.asideColor='bg-dark';
+         ">
+          <input type="radio" name="a" ng-model="app.settings.themeID" value="13">
+          <span class="block bg-light clearfix pos-rlt">
+            <span class="active pos-abt w-full h-full bg-black-opacity text-center">
+              <i class="glyphicon glyphicon-ok text-white m-t-xs"></i>
+            </span>
+            <b class="bg-dark header"></b>
+            <b class="bg-white header"></b>
+            <b class="bg-dark"></b>
           </span>
         </label>
 
@@ -127,8 +159,8 @@
       </div>
       <div class="col-xs-6">
         <label class="i-checks block m-b" ng-click="
-          app.settings.navbarHeaderColor='bg-primary'; 
-          app.settings.navbarCollapseColor='bg-primary'; 
+          app.settings.navbarHeaderColor='bg-black'; 
+          app.settings.navbarCollapseColor='bg-black'; 
           app.settings.asideColor='bg-white b-r';
          ">
           <input type="radio" ng-model="app.settings.themeID" value="7">
@@ -136,9 +168,25 @@
             <span class="active pos-abt w-full h-full bg-black-opacity text-center">
               <i class="glyphicon glyphicon-ok text-white m-t-xs"></i>
             </span>
-            <b class="bg-primary header"></b>
-            <b class="bg-primary header"></b>
+            <b class="bg-black header"></b>
+            <b class="bg-black header"></b>
             <b class="bg-white"></b>
+          </span>
+        </label>
+
+        <label class="i-checks block m-b" ng-click="
+          app.settings.navbarHeaderColor='bg-dark'; 
+          app.settings.navbarCollapseColor='bg-dark'; 
+          app.settings.asideColor='bg-light';
+         ">
+          <input type="radio" name="a" ng-model="app.settings.themeID" value="14">
+          <span class="block bg-light clearfix pos-rlt">
+            <span class="active pos-abt w-full h-full bg-black-opacity text-center">
+              <i class="glyphicon glyphicon-ok text-white m-t-xs"></i>
+            </span>
+            <b class="bg-dark header"></b>
+            <b class="bg-dark header"></b>
+            <b class="bg-light"></b>
           </span>
         </label>
 

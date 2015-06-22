@@ -151,12 +151,11 @@
 	<filter-mapping>
 	    <filter-name>NetworkDomainFilter</filter-name>
 	    <url-pattern>/index.jsp</url-pattern>
-	    <url-pattern>/app/index.jsp</url-pattern>
 	</filter-mapping>
 	
 	<filter-mapping>
 	    <filter-name>PersonDataFilter</filter-name>
-	    <url-pattern>/new/index.jsp</url-pattern>
+	    <url-pattern>/index.jsp</url-pattern>
 	</filter-mapping>
 	
 	<filter-mapping>

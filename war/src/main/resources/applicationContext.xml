@@ -57,4 +57,5 @@
 	<bean id="personDataFilter" class="com.wordrails.api.PersonDataFilter"></bean>
 	<bean id="corsCustomFilter" class="com.wordrails.api.CORSCustomFilter"></bean>
 	<bean id="cacheService" class="com.wordrails.services.CacheService" init-method="init" ></bean>
+	<bean id="wordrailsService" class="com.wordrails.WordrailsService" init-method="init" ></bean>
 </beans>

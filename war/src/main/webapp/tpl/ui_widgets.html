@@ -9,10 +9,10 @@
           <span class="text-lt">The Restaurant</span>
         </div>
         <div class="item m-l-n-xxs m-r-n-xxs">
-          <div ng-init="x = 3" class="top text-right padder m-t-xs">
+          <div ng-init="x = 3" class="top text-right padder m-t-xs w-full">
             <rating ng-model="x" max="5" state-on="'fa fa-star text-white'" state-off="'fa fa-star-o text-white'"></rating>
           </div>
-          <div class="center text-center" style="margin-top:-60px">
+          <div class="center text-center w-full" style="margin-top:-60px">
             <div ui-jq="easyPieChart" ui-refresh="x" ui-options="{
                 percent: {{x*15}},
                 lineWidth: 60,
@@ -162,12 +162,12 @@
                 <span class="h4 text-white">Member Stats</span>
               </div>              
               <div class="text-center m-t-md">
-                  <div ng-init="data2=[50.32,45.23,47.56,36.25,53.85,40.15,41.25,50.15,57.14,36.15,97.26,50.15,45.32,47.19,37.75,25.15,56.34,50.35,47.25,53.15]" ui-jq="sparkline" ui-options="
-                  {{data2}}, 
+                  <div ui-jq="sparkline" ui-options="
+                  [50.32,45.23,47.56,36.25,53.85,40.15,41.25,50.15,57.14,36.15,97.26,50.15,45.32,47.19,37.75,25.15,56.34,50.35,47.25,53.15], 
                   {type:'line', height:80, width: '100%', lineWidth:4, lineColor:'#fff', spotColor:'#fff', fillColor:'', highlightLineColor:'#fff', spotRadius:6, minSpotColor:'{{app.color.warning}}', maxSpotColor:'{{app.color.info}}'}
                   ">loading...</div>
 
-                  <div ng-init="data3=[ 10,9,11,10,11,10,12,10,9,10,11,9,8 ]" ui-jq="sparkline" ui-options="{{data3}}, 
+                  <div ui-jq="sparkline" ui-options="[ 10,9,11,10,11,10,12,10,9,10,11,9,8 ], 
                   {type:'bar', height:60, barWidth:4, barSpacing:6, barColor:'{{app.color.primary}}'}
                   " class="sparkline inline m-t m-b-n-sm"></div>
               </div>
@@ -257,8 +257,8 @@
           <div class="panel panel-default">
             <a href class="text-muted m-t-sm m-l inline"  ng-click="data=[40, 40, 20]"><i class="icon-pie-chart"></i></a>
             <div class="text-center wrapper m-b-sm">              
-              <div ng-init="data = [55, 30, 15] " ui-refresh="data" ui-jq="sparkline" ui-options="
-              {{data}}, 
+              <div ui-refresh="data" ui-jq="sparkline" ui-options="
+              [55, 30, 15], 
               {
                 type:'pie', 
                 height:126, 
@@ -369,7 +369,7 @@
           <!-- chat form -->
           <div>
             <a class="pull-left thumb-xs avatar"><img src="img/a3.jpg" class="img-circle" alt="..."></a>
-            <form action="index.html" class="m-b-none m-l-xl">
+            <form class="m-b-none m-l-xl">
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="Say something">
                 <span class="input-group-btn">

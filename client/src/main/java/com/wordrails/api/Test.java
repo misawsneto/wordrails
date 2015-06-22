@@ -15,9 +15,9 @@ public class Test {
 				new MockConnectivityManager(true),
 				new File("."), 
 				0, 
-				"http://localhost:8080", 
-				"silvio", 
-				"silvio", 
+				"http://ufpe.xarxlocal.com", 
+				"ufpe", 
+				"ufpe", 
 				LogLevel.NONE
 			);
 		
@@ -33,6 +33,16 @@ public class Test {
 //		wordRails.postFavorite(favorite);
 		
 //		wordRails.findPostReadByPersonIdOrderByDate(personId)
+		
+		System.out.println(wordRails.toggleBookmark(1161).response);
+		System.out.println(wordRails.toggleBookmark(1161).response);
+		
+		System.out.println(wordRails.toggleRecommend(1161).response);
+		System.out.println(wordRails.toggleRecommend(1161).response);
+
+		
+		if(true)
+			return;
 		
 		PersonData data = wordRails.getInitialData();
 		System.out.println(data.person.name);

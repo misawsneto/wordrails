@@ -24,4 +24,5 @@ public class NotificationView implements Serializable {
 	public String postSnippet;
 	public Integer imageSmallId;
 	public Integer imageMediumId;
+	public PostView post;
 }

@@ -2,6 +2,7 @@ package com.wordrails.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,21 +23,25 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.query.dsl.BooleanJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import com.wordrails.PermissionId;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Bookmark;
+import com.wordrails.business.Network;
 import com.wordrails.business.Person;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.BookmarkRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.QueryPersistence;
+import com.wordrails.services.CacheService;
 
 @Path("/bookmarks")
 @Consumes(MediaType.WILDCARD)
@@ -54,6 +59,8 @@ public class BookmarksResource {
 	private @Autowired QueryPersistence queryPersistence;
 	
 	private @PersistenceContext EntityManager manager;
+	
+	private @Autowired CacheService cacheService;
 
 	@GET
 	@Path("/searchBookmarks")
@@ -61,12 +68,28 @@ public class BookmarksResource {
 	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
 		Person person = accessControllerUtil.getLoggedPerson();
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		Network network = wordrailsService.getNetworkFromHost(request);
+		
+		PermissionId pId = new PermissionId();
+		pId.baseUrl = baseUrl;
+		pId.networkId = network.id;
+		pId.personId = person.id;
+		
+		StationsPermissions permissions = new StationsPermissions();
+		try {
+			permissions = wordrailsService.getPersonPermissions(pId);
+		} catch (ExecutionException e1) {
+			e1.printStackTrace();
+		}
+		
+		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
 		
 		if(q == null || q.trim().isEmpty()){
 			Pageable pageable = new PageRequest(page, size);
 			
 			ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-			List<Bookmark> pages = bookmarkRepository.findBookmarksByPersonIdOrderByDate(person.id, pageable);
+			List<Bookmark> pages = bookmarkRepository.findBookmarksByPersonIdOrderByDate(person.id, readableIds, pageable);
 			
 			List<PostView> bookmarks = new ArrayList<PostView>();
 			for (Bookmark bookmark : pages) {
@@ -107,8 +130,13 @@ public class BookmarksResource {
 		};
 		
 		org.apache.lucene.search.Query personQuery = qb.keyword().onField("person.id").ignoreAnalyzer().matching(person.id).createQuery();
+		
+		BooleanJunction stations = qb.bool();
+		for (Integer integer : readableIds) {
+			stations.should(qb.keyword().onField("post.station.id").ignoreAnalyzer().matching(integer).createQuery());
+		}
 
-		org.apache.lucene.search.Query full = qb.bool().must(text).must(personQuery).createQuery();
+		org.apache.lucene.search.Query full = qb.bool().must(text).must(personQuery).must(stations.createQuery()).createQuery();
 		
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Bookmark.class);
 		org.apache.lucene.search.Sort sort = new Sort( SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
@@ -137,7 +165,8 @@ public class BookmarksResource {
 	@PUT
 	@Path("/toggleBookmark")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public ContentResponse<BooleanResponse> toggleBookmark(@FormParam("postId") Integer postId){
+	@Produces(MediaType.APPLICATION_JSON)
+	public BooleanResponse toggleBookmark(@FormParam("postId") Integer postId){
 		
 		Person person = accessControllerUtil.getLoggedPerson();
 		if(person.username.equals("wordrails"))
@@ -146,19 +175,18 @@ public class BookmarksResource {
 		Bookmark bookmark = new Bookmark();
 		bookmark.post = postRepository.findOne(postId);
 		bookmark.person = person;
-		ContentResponse<BooleanResponse> bool = new ContentResponse<BooleanResponse>();
 		try{
 			bookmarkRepository.save(bookmark);
-			bool.content = new BooleanResponse();
-			bool.content.response = true;
+			BooleanResponse content = new BooleanResponse();
+			content.response = true;
 			queryPersistence.incrementBookmarksCount(postId);
-			return bool;
+			return content;
 		}catch(Exception e){
 			queryPersistence.decrementBookmarksCount(postId);
-			bool.content = new BooleanResponse();
-			bool.content.response = false;
+			BooleanResponse content = new BooleanResponse();
+			content.response = false;
 			queryPersistence.deleteBookmark(postId, person.id);
-			return bool;
+			return content;
 		}
 	}
 	
