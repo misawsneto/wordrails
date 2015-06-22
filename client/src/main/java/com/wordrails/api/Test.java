@@ -2,10 +2,9 @@ package com.wordrails.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
+import org.joda.time.DateTime;
 import retrofit.RestAdapter.LogLevel;
 
 public class Test {
@@ -22,6 +21,7 @@ public class Test {
 			);
 		
 		wordRails.login();
+		createPost(wordRails);
 //		
 //		NetworkDto network = wordRails.getNetwork(1);
 //
@@ -34,23 +34,23 @@ public class Test {
 		
 //		wordRails.findPostReadByPersonIdOrderByDate(personId)
 		
-		PersonData data = wordRails.getInitialData();
-		System.out.println(data.person.name);
-		wordRails.logout();
-		
-		data = wordRails.getInitialData();
-		System.out.println(data.person.name);
-		if(true)
-			return;
-		
-		String phrase = "This is a phrase";
-		
-		String[] splitPhrase = phrase.split("\\s+");
-		
-		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
-		
-		if(true)
-			return;
+//		PersonData data = wordRails.getInitialData();
+//		System.out.println(data.person.name);
+//		wordRails.logout();
+//
+//		data = wordRails.getInitialData();
+//		System.out.println(data.person.name);
+//		if(true)
+//			return;
+//
+//		String phrase = "This is a phrase";
+//
+//		String[] splitPhrase = phrase.split("\\s+");
+//
+//		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
+//
+//		if(true)
+//			return;
 		
 //		WordRails wordRails = new WordRails(
 //			new MockConnectivityManager(true),
@@ -84,7 +84,7 @@ public class Test {
 //		NetworkDto network = new NetworkDto();
 //		network.name = "Network 1";
 //		wordRails.postNetwork(network);
-//		network = wordRails.getNetwork(network.id);
+//		network = wordRails.getNetwork(1);
 //		System.out.println(network);
 //		
 //		PersonNetworkRolesDto personNetworkRoles = new PersonNetworkRolesDto();
@@ -107,7 +107,7 @@ public class Test {
 //		station.networks = new HashSet<String>();
 //		station.networks.add(wordRails.getSelf(network));
 //		wordRails.postStation(station);
-//		station = wordRails.getStation(station.id);
+//		station = wordRails.getStation(49);
 //		System.out.println(station);
 //		
 //		FileDto file = new FileDto();
@@ -127,6 +127,7 @@ public class Test {
 //		PostDto post = new PostDto();
 //		post.title = "Post 1";
 //		post.body = "Post 1";
+//		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(2).toDate();
 //		post.author = wordRails.getSelf(person);
 //		post.station = wordRails.getSelf(station);
 //		wordRails.postPost(post);
@@ -142,6 +143,18 @@ public class Test {
 //			System.out.println(imageProjection.medium);
 //			System.out.println(imageProjection.large);
 //		}
+	}
+
+	private static void createPost(WordRails wordRails) {
+		PostDto post = new PostDto();
+		post.title = "Post 1";
+		post.body = "Post 1";
+		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(2).toDate();
+		post.author = wordRails.getSelf(wordRails.getPerson(2));
+		post.station = wordRails.getSelf(wordRails.getStation(46));
+		wordRails.postPost(post);
+		post = wordRails.getPost(post.id);
+		System.out.println(post);
 	}
 	
 	public static void createDevEnv(WordRails wordRails){
