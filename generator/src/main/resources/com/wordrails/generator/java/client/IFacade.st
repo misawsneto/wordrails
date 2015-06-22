@@ -92,6 +92,12 @@ interface I$facade$ {
 	@GET("/bookmarks/searchBookmarks")
 	void searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
+	@GET("/recommends/searchRecommends")
+	ContentResponse<List<PostView\>\> searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	
+	@GET("/recommends/searchRecommends")
+	void searchRecommends(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	
 	@GET("/notifications/searchNotifications")
 	ContentResponse<List<NotificationView\>\> searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size);
 	
