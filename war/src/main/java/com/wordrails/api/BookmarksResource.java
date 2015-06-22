@@ -165,6 +165,7 @@ public class BookmarksResource {
 	@PUT
 	@Path("/toggleBookmark")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<BooleanResponse> toggleBookmark(@FormParam("postId") Integer postId){
 		
 		Person person = accessControllerUtil.getLoggedPerson();

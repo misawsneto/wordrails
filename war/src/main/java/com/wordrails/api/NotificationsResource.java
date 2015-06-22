@@ -30,6 +30,7 @@ import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Notification;
 import com.wordrails.business.Person;
+import com.wordrails.converter.NotificationConverter;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PostRepository;
@@ -51,11 +52,13 @@ public class NotificationsResource {
 	private @Autowired QueryPersistence queryPersistence;
 	
 	private @PersistenceContext EntityManager manager;
+	
+	private @Autowired NotificationConverter notificationConverter;
 
 	@GET
 	@Path("/searchNotifications")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> searchNotifications(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+	public ContentResponse<List<NotificationView>> searchNotifications(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
 		Person person = accessControllerUtil.getLoggedPerson();
 //		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -78,12 +81,12 @@ public class NotificationsResource {
 		if(q == null || q.trim().isEmpty()){
 			Pageable pageable = new PageRequest(page, size);
 			
-			ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+			ContentResponse<List<NotificationView>> response = new ContentResponse<List<NotificationView>>();
 			List<Notification> pages = notificationRepository.findNotificationsByPersonIdOrderByDate(person.id, pageable);
 			
-			List<PostView> notifications = new ArrayList<PostView>();
+			List<NotificationView> notifications = new ArrayList<NotificationView>();
 			for (Notification notification : pages) {
-				notifications.add(postConverter.convertToView(notification.post));
+				notifications.add(notificationConverter.convertToView(notification));
 			}
 			response.content = notifications;
 			return response;
@@ -113,8 +116,8 @@ public class NotificationsResource {
 			
 			e.printStackTrace();
 			
-			ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-			response.content = new ArrayList<PostView>();
+			ContentResponse<List<NotificationView>> response = new ContentResponse<List<NotificationView>>();
+			response.content = new ArrayList<NotificationView>();
 
 			return response;
 		};
@@ -143,12 +146,12 @@ public class NotificationsResource {
 				.setMaxResults(size)
 				.getResultList();
 
-		List<PostView> notifications = new ArrayList<PostView>();
+		List<NotificationView> notifications = new ArrayList<NotificationView>();
 		for (Notification notification : result) {
-			notifications.add(postConverter.convertToView(notification.post));
+			notifications.add(notificationConverter.convertToView(notification));
 		}
 
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		ContentResponse<List<NotificationView>> response = new ContentResponse<List<NotificationView>>();
 		response.content = notifications;
 
 		return response;

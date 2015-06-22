@@ -133,6 +133,7 @@ public class RecommendsResource {
 	@PUT
 	@Path("/toggleRecommend")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<BooleanResponse> toggleRecommend(@FormParam("postId") Integer postId){
 		
 		Person person = accessControllerUtil.getLoggedPerson();

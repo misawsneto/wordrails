@@ -93,10 +93,10 @@ interface I$facade$ {
 	void searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/notifications/searchNotifications")
-	ContentResponse<List<PostView\>\> searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	ContentResponse<List<NotificationView\>\> searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size);
 	
 	@GET("/notifications/searchNotifications")
-	void searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	void searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<NotificationView\>\>\> _callback);
 		
 	@GET("/posts/{stationId}/allPostRead")
 	ContentResponse<List<PostView\>\> getAllPostReadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId,

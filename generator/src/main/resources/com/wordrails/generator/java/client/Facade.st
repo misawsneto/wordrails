@@ -261,14 +261,14 @@ public class $facade$ {
 		});
 	}
 	
-	public List<PostView\> searchNotifications(String query, int page, int size){
-		return _facade.searchBookmarks(query, page, size).content;
+	public List<NotificationView\> searchNotifications(String query, int page, int size){
+		return _facade.searchNotifications(query, page, size).content;
 	}
 	
-	public void searchNotifications(String query, int page, int size, final Callback<List<PostView\>\> _callback){
-		_facade.searchNotifications(query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+	public void searchNotifications(String query, int page, int size, final Callback<List<NotificationView\>\> _callback){
+		_facade.searchNotifications(query, page, size, new Callback<ContentResponse<List<NotificationView\>\>\>() {
 			@Override
-			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+			public void success(ContentResponse<List<NotificationView\>\> _t, Response _response) {
 				_callback.success(_t.content, _response);
 			}
 
