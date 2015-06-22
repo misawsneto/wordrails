@@ -52,7 +52,7 @@ public class CacheService {
 							}
 						});
 		// ------------- init person cache
-		persons2 = CacheBuilder.newBuilder().maximumSize(10000)
+		persons2 = CacheBuilder.newBuilder().maximumSize(1000)
 				.expireAfterWrite(1, TimeUnit.MINUTES)
 				//	       .removalListener(MY_LISTENER)
 				.build(
@@ -64,7 +64,7 @@ public class CacheService {
 
 		// ------------- init network cache
 
-		networks2 = CacheBuilder.newBuilder().maximumSize(5000)
+		networks2 = CacheBuilder.newBuilder().maximumSize(100)
 				.expireAfterWrite(1, TimeUnit.MINUTES)
 				//	       .removalListener(MY_LISTENER)
 				.build(
@@ -80,15 +80,32 @@ public class CacheService {
 		return persons.get(id);
 	}
 	
+	public Person getPersonByUsername(String username) throws ExecutionException {
+		return persons2.get(username);
+	}
+	
+	public void updatePerson(Integer id){
+		persons.refresh(id);
+	}
+	
+	public void updatePerson(String username){
+		persons2.refresh(username);
+	}
+	
 	public Network getNetwork(Integer id) throws ExecutionException{
 		return networks.get(id);
+	}
+	
+	public void updateNetwork(String username){
+		networks2.refresh(username);
+	}
+	
+	public void updateNetwork(Integer id){
+		networks.refresh(id);
 	}
 
 	public Network getNetworkBySubdomain(String subdomain) throws ExecutionException {
 		return networks2.get(subdomain);
 	}
 	
-	public Person getPersonByUsername(String username) throws ExecutionException {
-		return persons2.get(username);
-	}
 }

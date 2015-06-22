@@ -123,6 +123,10 @@ public class WordrailsService {
 	public StationsPermissions getPersonPermissions(PermissionId id) throws ExecutionException{
 		return stationsPermissions.get(id);
 	}
+	
+	public void updatePersonPermissions(PermissionId id){
+		stationsPermissions.refresh(id);
+	}
 
 	public List<Link> generateSelfLinks(String self){
 		Link link = new Link();
