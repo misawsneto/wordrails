@@ -63,7 +63,7 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
     }
 
     $scope.horizontalPaginate = function(ordinaryRow){
-    	if($state.current.name != 'app.stations' || $scope.app.viewMode != 'horizontal' || ordinaryRow.allLoaded)
+    	if($scope.app.getCurrentStateName() != 'app.stations' || $scope.app.viewMode != 'horizontal' || ordinaryRow.allLoaded)
     		return null;
 
     	if(ordinaryRow.page == null){

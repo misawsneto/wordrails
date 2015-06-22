@@ -549,6 +549,10 @@ angular.module('app')
         return text ? text.stripHtml : null;
       }
 
+      $scope.app.getCurrentStateName = function(){
+        return $state.current.name;
+      }
+
       $scope.app.refreshData();
       moment.locale('pt')
       /* end of added */

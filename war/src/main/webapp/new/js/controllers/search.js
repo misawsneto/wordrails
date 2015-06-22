@@ -25,7 +25,7 @@ app.controller('SearchCtrl', ['$state', '$scope', '$log', '$timeout', 'trix', fu
 
 	$scope.paginateSearch = function(){
 
-		if($state.current.name != 'app.search' || !$scope.app.searchCtrl.searchResults || $scope.app.searchCtrl.searchResults.length == 0)
+		if($scope.app.getCurrentStateName() != 'app.search' || !$scope.app.searchCtrl.searchResults || $scope.app.searchCtrl.searchResults.length == 0)
 			return;
 
 		if($scope.app.searchCtrl.allLoaded)

@@ -196,6 +196,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   uploader.onErrorItem = function(fileItem, response, status, headers) {
   	if(status == 413)
     	$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+    else
+    	$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
   }
 
   $scope.clearImage = function(){ 

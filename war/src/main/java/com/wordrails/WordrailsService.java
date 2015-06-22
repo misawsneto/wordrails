@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
@@ -44,11 +45,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.wordrails.api.Link;
 import com.wordrails.api.PersonData;
 import com.wordrails.api.PerspectiveResource;
 import com.wordrails.api.StationDto;
 import com.wordrails.api.StationPermission;
+import com.wordrails.api.StationsPermissions;
 import com.wordrails.api.TermPerspectiveView;
 import com.wordrails.business.File;
 import com.wordrails.business.FileContents;
@@ -92,6 +97,36 @@ public class WordrailsService {
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
+	
+	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
+	
+	public void init(){
+		// ------------- init person cache
+		stationsPermissions = CacheBuilder.newBuilder().maximumSize(1000)
+				.expireAfterWrite(1, TimeUnit.MINUTES)
+				//	       .removalListener(MY_LISTENER)
+				.build(
+						new CacheLoader<PermissionId, StationsPermissions>() {
+							public StationsPermissions load(PermissionId id) {
+								List<StationPermission> permissions = getStationPermissions(id.baseUrl, id.personId, id.networkId);
+								if(permissions != null){
+									StationsPermissions stationsPermissions = new StationsPermissions();
+									stationsPermissions.stationPermissionDtos = permissions;
+									return stationsPermissions;
+								}else{
+									return null;
+								}
+							}
+						});
+	}
+	
+	public StationsPermissions getPersonPermissions(PermissionId id) throws ExecutionException{
+		return stationsPermissions.get(id);
+	}
+	
+	public void updatePersonPermissions(PermissionId id){
+		stationsPermissions.refresh(id);
+	}
 
 	public List<Link> generateSelfLinks(String self){
 		Link link = new Link();
@@ -486,5 +521,25 @@ public class WordrailsService {
 	public void toggleBookmark(Integer id, Integer postId) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public List<Integer> getReadableStationIds(StationsPermissions permissions) {
+		List<Integer> ids = new ArrayList<Integer>();
+		if(permissions.stationPermissionDtos != null)
+			for (StationPermission sp : permissions.stationPermissionDtos) {
+				if(sp.visibility.equals(Station.UNRESTRICTED) || sp.writer)
+					ids.add(sp.stationId);
+			}
+		return ids;
+	}
+	
+	public List<Integer> getWritableStationIds(StationsPermissions permissions) {
+		List<Integer> ids = new ArrayList<Integer>();
+		if(permissions.stationPermissionDtos != null)
+			for (StationPermission sp : permissions.stationPermissionDtos) {
+				if(sp.writable || sp.writer || sp.editor)
+					ids.add(sp.stationId);
+			}
+		return ids;
 	}
 }
