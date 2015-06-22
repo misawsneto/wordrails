@@ -243,6 +243,42 @@ public class $facade$ {
 		});
 	}
 	
+	public List<PostView\> searchBookmarks(String query, int page, int size){
+		return _facade.searchBookmarks(query, page, size).content;
+	}
+	
+	public void searchBookmarks(String query, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.searchBookmarks(query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}		
+		});
+	}
+	
+	public List<PostView\> searchNotifications(String query, int page, int size){
+		return _facade.searchBookmarks(query, page, size).content;
+	}
+	
+	public void searchNotifications(String query, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.searchNotifications(query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}		
+		});
+	}
+	
 	
 	public List<PostView> getPostReadPosts(Integer stationId, Integer personId){
 		return _facade.getPostReadPosts(stationId, personId).content;

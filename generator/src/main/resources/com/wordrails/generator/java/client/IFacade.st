@@ -86,6 +86,18 @@ interface I$facade$ {
 	void searchPostsFromOrPromotedToStation(@Path("stationId")Integer stationId, @Query("query")String query,
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<SearchView\>\> _callback);
 		
+	@GET("/bookmarks/searchBookmarks")
+	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	
+	@GET("/bookmarks/searchBookmarks")
+	void searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+	
+	@GET("/notifications/searchNotifications")
+	ContentResponse<List<PostView\>\> searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size);
+	
+	@GET("/notifications/searchNotifications")
+	void searchNotifications(@Query("query") String query, @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+		
 	@GET("/posts/{stationId}/allPostRead")
 	ContentResponse<List<PostView\>\> getAllPostReadPosts(@Path("stationId")Integer stationId, @Query("personId") Integer personId,
 		@Query("page") int page, @Query("size") int size);
