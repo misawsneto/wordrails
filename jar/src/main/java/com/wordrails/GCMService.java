@@ -3,6 +3,7 @@ package com.wordrails;
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -51,10 +52,25 @@ public class GCMService {
 	public void sendToStation(Integer stationId, Notification notification){
 		List<PersonNetworkRegId> personNetworkRegIds = personNetworkRegIdRepository.findRegIdByStationId(stationId);
 		try {
+			removeNotificationProducer(personNetworkRegIds, notification);
 			gcmNotify(personNetworkRegIds, notification);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void removeNotificationProducer(
+			List<PersonNetworkRegId> personNetworkRegIds,
+			Notification notification) {
+		if(personNetworkRegIds !=null && notification.person != null){
+			Iterator<PersonNetworkRegId> it = personNetworkRegIds.iterator();
+			while(it.hasNext()){
+				PersonNetworkRegId regId = it.next();
+				if(regId.person.id.equals(notification.person.id))
+					it.remove();
+			}
+		}
+		
 	}
 
 	public void sendToNetwork(Integer networkId, Notification notification){
@@ -67,6 +83,7 @@ public class GCMService {
 	public void sendToNetwork(Network network, Notification notification){
 		List<PersonNetworkRegId> personNetworkRegIds = personNetworkRegIdRepository.findByNetwork(network);
 		try {
+			removeNotificationProducer(personNetworkRegIds, notification);
 			gcmNotify(personNetworkRegIds, notification);
 		} catch (Exception e) {
 			e.printStackTrace();

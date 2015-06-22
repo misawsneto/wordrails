@@ -11,7 +11,7 @@ app.controller('SearchCtrl', ['$state', '$scope', '$log', '$timeout', 'trix', fu
 		
 		$scope.app.searchCtrl.searchPage = 0;
 		$scope.app.searchCtrl.allLoaded = false;
-		trix.searchPostsFromOrPromotedToStation($scope.app.currentStation.id, $scope.app.searchCtrl.searchQuery, $scope.app.searchCtrl.searchPage, 10)
+		trix.searchPosts($scope.app.searchCtrl.searchQuery, $scope.app.searchCtrl.searchPage, 10)
 		.success(function(response){
 			$scope.app.searchCtrl.hits = response.hits;
 			$scope.app.searchCtrl.searchResults = response.posts;
@@ -34,7 +34,7 @@ app.controller('SearchCtrl', ['$state', '$scope', '$log', '$timeout', 'trix', fu
 		if(!$scope.searchLoaging){
 
 			$scope.searchLoaging = true;
-			trix.searchPostsFromOrPromotedToStation($scope.app.currentStation.id, $scope.app.searchCtrl.searchQuery, $scope.app.searchCtrl.searchPage + 1, 10)
+			trix.searchPosts($scope.app.searchCtrl.searchQuery, $scope.app.searchCtrl.searchPage + 1, 10)
 			.success(function(response){
 				
 				$scope.searchLoaging = false;
