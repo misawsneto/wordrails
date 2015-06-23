@@ -88,16 +88,13 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	@Transactional
 	public void handleAfterCreate(Post post) {
-		//TEST PURPOSES
-		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(1).toDate();
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			if (post.scheduledDate == null) post.scheduledDate = post.date;
-
 			JobDetail job = newJob(PostScheduleJob.class)
 					.withIdentity("schedule-" + post.id, "schedules")
 					.build();
 
-			job.getJobDataMap().put("postId", post.id);
+			//must send as string because useProperties is set true
+			job.getJobDataMap().put("postId", String.valueOf(post.id));
 
 			Trigger trigger = newTrigger()
 					.withIdentity("trigger-" + post.id, "schedules")

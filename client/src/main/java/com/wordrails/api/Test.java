@@ -1,28 +1,28 @@
 package com.wordrails.api;
 
+import org.joda.time.DateTime;
+import retrofit.RestAdapter.LogLevel;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import org.joda.time.DateTime;
-import retrofit.RestAdapter.LogLevel;
-
 public class Test {
 
-	public static void main(String[] args) throws IOException {			
+	public static void main(String[] args) throws IOException {
 		WordRails wordRails = new WordRails(
 				new MockConnectivityManager(true),
-				new File("."), 
-				0, 
-				"http://localhost:8080", 
-				"silvio", 
-				"silvio", 
+				new File("."),
+				0,
+				"http://ufrpe.localhost:8080",
+				"silvio",
+				"silvio",
 				LogLevel.NONE
-			);
-		
+		);
+
 		wordRails.login();
 		createPost(wordRails);
-//		
+
 //		NetworkDto network = wordRails.getNetwork(1);
 //
 //		PersonDto person = wordRails.getPerson(3);
@@ -31,9 +31,9 @@ public class Test {
 //		favorite.person = person.getSelf();
 //		
 //		wordRails.postFavorite(favorite);
-		
+
 //		wordRails.findPostReadByPersonIdOrderByDate(personId)
-		
+
 //		PersonData data = wordRails.getInitialData();
 //		System.out.println(data.person.name);
 //		wordRails.logout();
@@ -51,7 +51,7 @@ public class Test {
 //
 //		if(true)
 //			return;
-		
+
 //		WordRails wordRails = new WordRails(
 //			new MockConnectivityManager(true),
 //			new File("."), 
@@ -80,20 +80,20 @@ public class Test {
 //		}catch(RetrofitError e){
 //			System.out.println(e.getBodyAs(String.class));
 //		}
-		
+
 //		NetworkDto network = new NetworkDto();
 //		network.name = "Network 1";
 //		wordRails.postNetwork(network);
 //		network = wordRails.getNetwork(1);
 //		System.out.println(network);
 //		
-//		PersonNetworkRolesDto personNetworkRoles = new PersonNetworkRolesDto();
-//		personNetworkRoles.admin = true;
-//		personNetworkRoles.network = wordRails.getSelf(network);
-//		personNetworkRoles.person = wordRails.getSelf(person);
-//		wordRails.postPersonNetworkRoles(personNetworkRoles);
-//		personNetworkRoles = wordRails.getPersonNetworkRoles(personNetworkRoles.id);
-//		System.out.println(personNetworkRoles);
+//		stationRoleDto stationRole = new stationRoleDto();
+//		stationRole.admin = true;
+//		stationRole.network = wordRails.getSelf(network);
+//		stationRole.person = wordRails.getSelf(person);
+//		wordRails.poststationRole(stationRole);
+//		stationRole = wordRails.getstationRole(stationRole.id);
+//		System.out.println(stationRole);
 //
 //		StationPermissionsDto stationPermissions = new StationPermissionsDto();
 //		stationPermissions.writePermission = true;
@@ -146,39 +146,42 @@ public class Test {
 	}
 
 	private static void createPost(WordRails wordRails) {
+		String person = wordRails.getSelf(wordRails.getPerson(2));
+		String station = wordRails.getSelf(wordRails.getStation(49));
+
 		PostDto post = new PostDto();
 		post.title = "Post 1";
 		post.body = "Post 1";
 		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(2).toDate();
-		post.author = wordRails.getSelf(wordRails.getPerson(2));
-		post.station = wordRails.getSelf(wordRails.getStation(46));
+		post.author = person;
+		post.station = station;
 		wordRails.postPost(post);
 		post = wordRails.getPost(post.id);
 		System.out.println(post);
 	}
-	
-	public static void createDevEnv(WordRails wordRails){
-		
+
+	public static void createDevEnv(WordRails wordRails) {
+
 		TaxonomyDto localizacao = new TaxonomyDto();
 		localizacao.name = "Localização";
 		localizacao.type = "N";
 		localizacao.id = wordRails.postTaxonomy(localizacao);
 		localizacao = wordRails.getTaxonomy(localizacao.id);
-		
+
 		TaxonomyDto categoria = new TaxonomyDto();
 		categoria.name = "Categoria";
 		categoria.type = "N";
 		categoria.id = wordRails.postTaxonomy(categoria);
 		categoria = wordRails.getTaxonomy(categoria.id);
-		
+
 		NetworkDto network = new NetworkDto();
 		network.name = "Rede Teste";
 		network.id = wordRails.postNetwork(network);
 		network = wordRails.getNetwork(network.id);
 
-		wordRails.putTaxonomyOwningNetwork(localizacao.id, network.getSelf()); 
+		wordRails.putTaxonomyOwningNetwork(localizacao.id, network.getSelf());
 		wordRails.putTaxonomyOwningNetwork(categoria.id, network.getSelf());
-		
+
 		StationDto station1 = new StationDto();
 		station1.name = "Estação 1";
 		station1.networks = new HashSet<String>();
@@ -196,11 +199,11 @@ public class Test {
 		station3.networks = new HashSet<String>();
 		station3.networks.add(network.getSelf());
 		wordRails.postStation(station3);
-		
+
 		List<String> l = new ArrayList<String>();
 		l.add(network.getSelf());
-		
-		for(StationDto s : wordRails.getStations(0, 10, null))
+
+		for (StationDto s : wordRails.getStations(0, 10, null))
 			wordRails.putStationNetworks(s.id, l);
 
 		TermDto cat1 = new TermDto();
@@ -248,7 +251,7 @@ public class Test {
 		wordRails.putTermParent(cat1Child3.id, cat1.getSelf());
 		wordRails.putTermParent(cat1Child1Child1.id, cat1Child1.getSelf());
 		wordRails.putTermParent(cat1Child1Child2.id, cat1Child1.getSelf());
-		
+
 		TermDto brasil = new TermDto();
 		brasil.name = "Brasil";
 		brasil.taxonomy = localizacao.getSelf();
@@ -259,13 +262,13 @@ public class Test {
 		pernambuco.taxonomy = localizacao.getSelf();
 		pernambuco.id = wordRails.postTerm(pernambuco);
 		wordRails.putTermParent(pernambuco.id, brasil.getSelf());
-		
+
 		PersonDto person = wordRails.getPerson(1);
 		List<StationDto> stas = wordRails.getStations(0, 50, null);
 		List<TermDto> locs = wordRails.getTaxonomyTerms(1);
 		List<TermDto> cats = wordRails.getTaxonomyTerms(2);
-		for(StationDto s : stas){
-			for(int i = 0; i < 100; i++){
+		for (StationDto s : stas) {
+			for (int i = 0; i < 100; i++) {
 				TermDto loc = locs.get(new Random().nextInt(locs.size()));
 				TermDto cat = cats.get(new Random().nextInt(cats.size()));
 
@@ -281,9 +284,9 @@ public class Test {
 				terms.add(loc.getSelf());
 				terms.add(cat.getSelf());
 				wordRails.putPostTerms(p.id, terms);
-				
+
 				//addImage("test.jpg", p.getSelf());
 			}
 		}
-	}	
+	}
 }
