@@ -5,7 +5,6 @@ import com.wordrails.jobs.PostScheduleJob;
 import com.wordrails.persistence.*;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
-import org.joda.time.DateTime;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -98,20 +97,27 @@ public class PostEventHandler {
 	@Transactional
 	private void schedule(Post post) {
 		JobDetail job = null;
+		Trigger trigger = null;
 		try {
 			job = sched.getJobDetail(new JobKey("schedule-" + post.id));
 		} catch (SchedulerException e) {
 		}
 
-		if(job == null) {
-			job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + post.id, "schedules").build();
+		try {
+			trigger = sched.getTrigger(new TriggerKey("trigger-" + post.id));
+		} catch (SchedulerException e) {
 		}
 
-		//must send as string because useProperties is set true
-		job.getJobDataMap().put("postId", String.valueOf(post.id));
+		if (job == null) {
+			job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + post.id, "schedules").build();
+			//must send as string because useProperties is set true
+			job.getJobDataMap().put("postId", String.valueOf(post.id));
+		}
 
-		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + post.id, "schedules").startAt(post.scheduledDate).build();
-
+		if (trigger == null) {
+			trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + post.id, "schedules").startAt(post.scheduledDate).build();
+		}
+		
 		try {
 			sched.scheduleJob(job, trigger);
 		} catch (SchedulerException e) {
