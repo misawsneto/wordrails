@@ -226,11 +226,6 @@ public class Post {
 
 	@PrePersist
 	public void onCreate() {
-		if (this.date.after(new Date()) || this.scheduledDate != null) {
-			this.state = STATE_SCHEDULED;
-			if (this.scheduledDate == null)
-				this.scheduledDate = this.date;
-		}
 		if (featuredImage != null && featuredImage.original != null) {
 			imageId = featuredImage.original.id;
 			imageSmallId = featuredImage.small.id;
