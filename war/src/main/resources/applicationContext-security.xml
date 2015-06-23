@@ -42,6 +42,16 @@
 	    <intercept-url pattern="/new/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/> -->
 	    <intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/search" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/search/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/post" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/post/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/notifications" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/notifications/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/bookmarks" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/bookmarks/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/settings" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/settings/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 	    
 		<intercept-url pattern="/**" access="ROLE_USER"/>
 

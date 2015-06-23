@@ -1,45 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-		 version="3.0"
-		 metadata-complete="true">		 
-	
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0" metadata-complete="true">
+
 	<session-config>
-        <session-timeout>2880</session-timeout>
-    </session-config>
-	
+		<session-timeout>2880</session-timeout>
+	</session-config>
+
 
 	<listener>
-      	<listener-class>com.wordrails.ContextServletListener</listener-class>
-   	</listener>   	
+		<listener-class>com.wordrails.ContextServletListener</listener-class>
+	</listener>
 
-<!-- RESTEasy -->
+	<!-- RESTEasy -->
 	<listener>
-      	<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
-   	</listener>   	
+		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+	</listener>
 
 	<context-param>
-   		<param-name>resteasy.servlet.mapping.prefix</param-name>
-   		<param-value>/api</param-value>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/api</param-value>
 	</context-param>
-   	
+
 	<filter>
 		<filter-name>FilterDispatcher</filter-name>
 		<filter-class>org.jboss.resteasy.plugins.server.servlet.FilterDispatcher</filter-class>
 	</filter>
-<!-- RESTEasy -->
+	<!-- RESTEasy -->
 
-<!-- Spring -->
-<!--  
-   	<listener>
-      	<listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>      	
-   	</listener>
--->   	
-   	<listener>
-      	<listener-class>com.wordrails.api.WordRailsContextLoaderListener</listener-class>      	
-   	</listener>
+	<!-- Spring -->
+	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class> 
+		</listener> -->
+	<listener>
+		<listener-class>com.wordrails.api.WordRailsContextLoaderListener</listener-class>
+	</listener>
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
@@ -53,36 +48,40 @@
 
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-   	</listener>
-<!-- Spring -->
+	</listener>
+	<!-- Spring -->
 
-<!-- Spring Data REST -->
-    <servlet>
-    	<servlet-name>DispatcherServlet</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
+	<!-- Spring Data REST -->
+	<servlet>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value></param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-    <servlet-mapping>
-    	<servlet-name>DispatcherServlet</servlet-name>
-        <url-pattern>/api/*</url-pattern>
-    </servlet-mapping>
-<!-- Spring Data REST -->
+	<servlet-mapping>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+	<!-- Spring Data REST -->
 
 	<servlet>
-      <servlet-name>myindex</servlet-name>
-      <jsp-file>/index.jsp</jsp-file>
- 	</servlet>
- 	<servlet-mapping>
-      <servlet-name>myindex</servlet-name>
-      <url-pattern>/station</url-pattern>
- 	</servlet-mapping>
+		<servlet-name>myindex</servlet-name>
+		<jsp-file>/index.jsp</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>myindex</servlet-name>
+		<url-pattern>/search/*</url-pattern>
+		<url-pattern>/post/*</url-pattern>
+		<url-pattern>/bookmarks/*</url-pattern>
+		<url-pattern>/notifications/*</url-pattern>
+		<url-pattern>/settings/*</url-pattern>
+	</servlet-mapping>
 
-<!-- Spring ORM -->
+	<!-- Spring ORM -->
 	<filter>
 		<filter-name>OpenEntityManagerInViewFilter</filter-name>
 		<filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
@@ -91,113 +90,128 @@
 			<param-value>entityManagerFactory</param-value>
 		</init-param>
 	</filter>
-<!-- Spring ORM -->
+	<!-- Spring ORM -->
 
-<!-- Spring Security -->
+	<!-- Spring Security -->
 	<listener>
-    	<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
 	</listener>
 
 	<filter>
-  		<filter-name>springSecurityFilterChain</filter-name>
-  		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>	
-<!-- Spring Security -->
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<!-- Spring Security -->
 
-<!-- Cache -->
+	<!-- Cache -->
 	<filter>
 		<filter-name>CacheFilter</filter-name>
 		<filter-class>com.wordrails.api.CacheFilter</filter-class>
 	</filter>
-<!-- Cache -->
-	
+	<!-- Cache -->
+
 	<filter>
-	    <filter-name>PostFilter</filter-name>
-	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	    <init-param>
-	        <param-name>targetBeanName</param-name>
-	        <param-value>postFilter</param-value>
-	    </init-param>
+		<filter-name>PostFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>postFilter</param-value>
+		</init-param>
 	</filter>
-	
+
 	<filter>
-	    <filter-name>NetworkDomainFilter</filter-name>
-	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	    <init-param>
-	        <param-name>targetBeanName</param-name>
-	        <param-value>networkDomainFilter</param-value>
-	    </init-param>
+		<filter-name>NetworkDomainFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>networkDomainFilter</param-value>
+		</init-param>
 	</filter>
-	
+
 	<filter>
-	    <filter-name>CORSCustomFilter</filter-name>
-	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	    <init-param>
-	        <param-name>targetBeanName</param-name>
-	        <param-value>corsCustomFilter</param-value>
-	    </init-param>
+		<filter-name>CORSCustomFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>corsCustomFilter</param-value>
+		</init-param>
 	</filter>
 
 	<filter-mapping>
-	    <filter-name>CORSCustomFilter</filter-name>
-	    <url-pattern>/*</url-pattern>
+		<filter-name>CORSCustomFilter</filter-name>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
-  		<filter-name>springSecurityFilterChain</filter-name>
-  		<url-pattern>/*</url-pattern>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+
 	<filter-mapping>
-	    <filter-name>NetworkDomainFilter</filter-name>
-	    <url-pattern>/index.jsp</url-pattern>
+		<filter-name>NetworkDomainFilter</filter-name>
+		<url-pattern>/index.jsp</url-pattern>
+		<url-pattern>/search/*</url-pattern>
+		<url-pattern>/post/*</url-pattern>
+		<url-pattern>/bookmarks/*</url-pattern>
+		<url-pattern>/notifications/*</url-pattern>
+		<url-pattern>/settings/*</url-pattern>
 	</filter-mapping>
-	
+
 	<filter-mapping>
-	    <filter-name>PersonDataFilter</filter-name>
-	    <url-pattern>/index.jsp</url-pattern>
+		<filter-name>PersonDataFilter</filter-name>
+		<url-pattern>/index.jsp</url-pattern>
+		<url-pattern>/search/*</url-pattern>
+		<url-pattern>/post/*</url-pattern>
+		<url-pattern>/bookmarks/*</url-pattern>
+		<url-pattern>/notifications/*</url-pattern>
+		<url-pattern>/settings/*</url-pattern>
 	</filter-mapping>
-	
+
 	<filter-mapping>
 		<filter-name>OpenEntityManagerInViewFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
 		<url-pattern>/new/index.jsp</url-pattern>
 		<url-pattern>/index.jsp</url-pattern>
+		<url-pattern>/search/*</url-pattern>
+		<url-pattern>/post/*</url-pattern>
+		<url-pattern>/bookmarks/*</url-pattern>
+		<url-pattern>/notifications/*</url-pattern>
+		<url-pattern>/settings/*</url-pattern>
 	</filter-mapping>
-	
+
 	<filter-mapping>
 		<filter-name>FilterDispatcher</filter-name>
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
-	
+
 	<filter-mapping>
-	    <filter-name>PostFilter</filter-name>
-	    <url-pattern>/api/posts</url-pattern>
-	    <url-pattern>/api/posts/*</url-pattern>
-	    <dispatcher>FORWARD</dispatcher>
-   		<dispatcher>REQUEST</dispatcher>
+		<filter-name>PostFilter</filter-name>
+		<url-pattern>/api/posts</url-pattern>
+		<url-pattern>/api/posts/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
-	
+
 	<filter>
-	    <filter-name>PersonDataFilter</filter-name>
-	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	    <init-param>
-	        <param-name>targetBeanName</param-name>
-	        <param-value>personDataFilter</param-value>
-	    </init-param>
+		<filter-name>PersonDataFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>personDataFilter</param-value>
+		</init-param>
 	</filter>
-	
+
 	<filter-mapping>
 		<filter-name>CacheFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
-	
-    <error-page>
-       <error-code>500</error-code>
-       <location>/500.html</location>
-    </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/404.html</location>
-    </error-page>  	
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/500.html</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.html</location>
+	</error-page>
 </web-app>
