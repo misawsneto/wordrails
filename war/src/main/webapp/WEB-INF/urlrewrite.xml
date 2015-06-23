@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE urlrewrite
+    PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+    "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<urlrewrite>
+	<!-- <rule match-type="regex">
+	    <condition type="request-uri" operator="notequal">^/(index.jsp|css|js|bower_components|api)</condition>
+	    <from>^/(.*)$</from>
+	    <to type="passthrough">/index.jsp</to>
+	</rule>
+	
+	<rule match-type="regex">
+	    <from>^/@(.*)$</from>
+	    <to type="passthrough">/index.jsp</to>
+	</rule> -->
+</urlrewrite>

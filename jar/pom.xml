@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-    	<groupId>co.xarx</groupId>
-    	<artifactId>trix-parent</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    	<relativePath>../parent/pom.xml</relativePath>
-    </parent>
-    
-    <artifactId>trix-jar</artifactId>
+	<parent>
+		<groupId>co.xarx</groupId>
+		<artifactId>trix-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>trix-jar</artifactId>
 
 	<packaging>jar</packaging>
 
@@ -36,11 +36,11 @@
 			<groupId>com.squareup.retrofit</groupId>
 			<artifactId>retrofit</artifactId>
 		</dependency>
-                
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-		</dependency>	
+		</dependency>
 
 		<dependency>
 			<groupId>com.squareup.retrofit</groupId>
@@ -97,16 +97,16 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search</artifactId>
 		</dependency>
-				
+
 		<dependency>
 			<groupId>org.apache.tika</groupId>
-			<artifactId>tika-core</artifactId>		
+			<artifactId>tika-core</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search-infinispan</artifactId>
-                </dependency>
+		</dependency>
 
 		<dependency>
 			<groupId>org.jsoup</groupId>
@@ -137,20 +137,20 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>org.quartz-scheduler</groupId>
-		    <artifactId>quartz</artifactId>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
 		</dependency>
 
 		<dependency>
-		    <groupId>org.quartz-scheduler</groupId>
-		    <artifactId>quartz-jobs</artifactId>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
 		</dependency>
 
 		<dependency>

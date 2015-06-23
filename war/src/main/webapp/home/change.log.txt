@@ -1,0 +1,20 @@
+v 1.2.1
+
+1: Upgrade to Bootstrap 3.1
+   override "css/bootstrap.css","js/bootstrap.js". change ".h1-h6" margin:0 in the app.reset.less
+
+2: Inlucde open sans font
+   "css/font.css", "fonts/opensans". only .woff font type, check more info on http://caniuse.com/woff
+
+3: Improve the landing.html
+   change the "js/landing.js", use 'data-ride="scroll"' to smooth scroll page when a hash link
+
+v 1.2.2
+
+1: Upgrade to Bootstrap 3.2
+   override "css/bootstrap.css","js/bootstrap.js" 
+
+   less/app.widget.less to fix "tasks" page.
+
+2: Fix wizard
+   js/fuelux/fuelux.css and html tag. js/app.plugin.js //wizard

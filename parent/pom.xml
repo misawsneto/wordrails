@@ -33,7 +33,7 @@
 					<configuration>
 						<source>1.7</source>
 						<target>1.7</target>
-                         <debug>true</debug>
+						<debug>true</debug>
 					</configuration>
 				</plugin>
 
@@ -149,11 +149,12 @@
 			</dependency>
                         
 
-                        <dependency>
-                                <groupId>com.squareup.retrofit</groupId>
-                                <artifactId>converter-jackson</artifactId>
+
+			<dependency>
+				<groupId>com.squareup.retrofit</groupId>
+				<artifactId>converter-jackson</artifactId>
 				<version>1.9.0</version>
-                        </dependency>
+			</dependency>
 
 			<dependency>
 				<groupId>commons-fileupload</groupId>
@@ -214,7 +215,7 @@
 				<artifactId>hibernate-validator</artifactId>
 				<version>5.1.1.Final</version>
 			</dependency>
-										
+
 			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
 				<artifactId>resteasy-jackson2-provider</artifactId>
@@ -358,11 +359,11 @@
 				<artifactId>aws-java-sdk</artifactId>
 				<version>1.9.26</version>
 			</dependency>
-			
+
 			<dependency>
-			    <groupId>com.google.android.gcm</groupId>
-			    <artifactId>gcm-server</artifactId>
-			    <version>1.0.2</version>
+				<groupId>com.google.android.gcm</groupId>
+				<artifactId>gcm-server</artifactId>
+				<version>1.0.2</version>
 			</dependency>
 
 			<dependency>
@@ -376,48 +377,48 @@
 				<artifactId>trix-jar</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
 				<version>2.5.3</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
 				<version>2.5.3</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
 				<version>2.5.3</version>
 			</dependency>
-			
+
 			<dependency>
-			    <groupId>org.quartz-scheduler</groupId>
-			    <artifactId>quartz</artifactId>
-			    <version>2.2.1</version>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz</artifactId>
+				<version>2.2.1</version>
 			</dependency>
 			<dependency>
-			    <groupId>org.quartz-scheduler</groupId>
-			    <artifactId>quartz-jobs</artifactId>
-			    <version>2.2.1</version>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz-jobs</artifactId>
+				<version>2.2.1</version>
 			</dependency>
-                        
-                        <dependency>
-                                <groupId>org.springframework</groupId>
-                                <artifactId>spring-context-support</artifactId>
-                                <version>3.2.5.RELEASE</version>
-                        </dependency>
-                        
-                        <dependency>
-                            <groupId>org.jgroups</groupId>
-                            <artifactId>jgroups</artifactId>
-                            <version>3.4.1.Final</version>
-                        </dependency>
-                        
-                </dependencies>
-        </dependencyManagement>
+
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>3.2.5.RELEASE</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jgroups</groupId>
+				<artifactId>jgroups</artifactId>
+				<version>3.4.1.Final</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
 </project>

@@ -117,7 +117,7 @@ public class PostEventHandler {
 		if (trigger == null) {
 			trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + post.id, "schedules").startAt(post.scheduledDate).build();
 		}
-		
+
 		try {
 			sched.scheduleJob(job, trigger);
 		} catch (SchedulerException e) {
