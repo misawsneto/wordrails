@@ -1,17 +1,31 @@
 <div id="notifications" class="hbox hbox-auto-xs">
 	<div class="wrapper-lg">
-		<div class="block-800 m-auto text-center m-b-lg">
+		<div class="header-custom text-center">
       <p class="h2 font-bold">Notificações</p>
     </div>
+    <div class="block-800 m-auto text-center m-b-lg">
+    </div>
+    <div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm m-t-xxl p-t-md pos-rlt">
+      <!-- search -->
+      <div class="notifications-navbar panel panel-card m-b-md">
+        <div class="p">
+          <form ng-submit="submitSearch()">
+            <input ng-model="app.notificationsCtrl.query" class="text-lg b-none form-control w-full pull-left" placeholder="Busca..."/>
+          </form>
+          <!-- <div class="divider-v pull-left m-l m-r"></div> -->
+        </div>
+      </div>
+      <!-- /search -->
+    </div>
 		<div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm">
-			<!-- search -->
-			<div class="notifications-navbar panel panel-card m-b-md">
-				<div class="p">
-					<input class="text-lg b-none form-control w-full pull-left" placeholder="Busca..."/>
-          			<!-- <div class="divider-v pull-left m-l m-r"></div> -->
-				</div>
-			</div>
-			<!-- /search -->
+<!-- 			search
+<div class="notifications-navbar panel panel-card m-b-md">
+	<div class="p">
+		<input class="text-lg b-none form-control w-full pull-left" placeholder="Busca..."/>
+          			<div class="divider-v pull-left m-l m-r"></div>
+	</div>
+</div>
+/search -->
 
 			<!-- notification item -->
 			<div angular-ripple class="panel panel-card animated zoomIn">

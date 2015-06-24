@@ -1328,7 +1328,12 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   top: 0;
   right: 0;
   left: 0;
-  padding:50px 30px 90px 30px
+  padding:50px 30px 90px 30px;
+}
+
+#bookmarks .header-custom,
+#notifications .header-custom{
+  padding: 30px 30px 75px 30px;
 }
 
 .header-custom p{padding-left: 35px;}

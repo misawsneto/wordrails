@@ -151,6 +151,9 @@ angular.module('app')
         else if(toState.name == "app.user"){
           $("title").html($scope.app.initData.network.name + " | @"+toParams.username);
         }
+        else if(toState.name == "app.publications"){
+          $("title").html($scope.app.initData.network.name + " | Publicações");
+        }
         // check state read
         if(toState.name != "app.stations.read"){
           // show to navbar
