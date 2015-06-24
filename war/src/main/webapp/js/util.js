@@ -247,6 +247,11 @@ function getCustomStyle(color, perspective, header) {
 	"  color: " + textColorEval(header) + ";\n"+
 	"}\n"+
 
+	".header-custom{\n"+
+	"  background-color: rgba("+hexToRgb(shadeBlend(0.15,header)).r+", " + hexToRgb(shadeBlend(0.15,header)).g + ", "+ hexToRgb(shadeBlend(0.15,header)).b +", 1);\n"+
+	"  color: " + textColorEval(header) + ";\n"+
+	"}\n"+
+
 	".station-header .nav > li > a{\n"+
 	"  color: " + textColorEval(header) + ";\n"+
 	"}\n"+

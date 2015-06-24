@@ -1,5 +1,5 @@
 <!-- hbox layout -->
-<div  class="hbox hbox-auto-xs">
+<div id="post-editor"  class="hbox hbox-auto-xs">
 
 <!-- column -->
 <div class="col">
@@ -66,7 +66,7 @@
               <div id="post-placeholder" class="post-content-font text-muted m-t-xxs" ng-class="{'hide': app.editingPost.body}">Texto...</div>
               <textarea ng-model="app.editingPost.body" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
-            <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html"
+            <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html" 
                 label="Publicar"
                  mfb-menu position="{{chosen.position}}" effect="{{chosen.effect}}"
                  active-icon="mdi mdi-send" resting-icon="mdi mdi-plus"

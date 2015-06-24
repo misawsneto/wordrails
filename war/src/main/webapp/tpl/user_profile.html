@@ -6,8 +6,10 @@
 			</div>
 		</div>
 		<div id="profile-buttons" class="pos-abt wrapper" ng-class="{'profile-buttons-cover': person.coverLargeId}">
-			<md-button tooltip="Editar perfil" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
-				md-no-ink angular-ripple ng-show="person.id == app.initData.person.id" class="md-fab custom-fab-button text-lg" ng-click="editProfile()">
+			<md-button class="md-fab custom-fab-button text-lg animated zoomIn" 
+				tooltip="Editar perfil" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+				md-no-ink angular-ripple ng-show="person.id == app.initData.person.id" 
+				ng-click="editProfile()">
 		        <i class="mdi mdi-pencil"></i>
 		      </md-button>
 		</div>

@@ -79,6 +79,7 @@
 		<url-pattern>/bookmarks/*</url-pattern>
 		<url-pattern>/notifications/*</url-pattern>
 		<url-pattern>/settings/*</url-pattern>
+		<url-pattern>/publications/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Spring ORM -->
@@ -155,6 +156,7 @@
 		<url-pattern>/bookmarks/*</url-pattern>
 		<url-pattern>/notifications/*</url-pattern>
 		<url-pattern>/settings/*</url-pattern>
+		<url-pattern>/publications/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
@@ -165,6 +167,7 @@
 		<url-pattern>/bookmarks/*</url-pattern>
 		<url-pattern>/notifications/*</url-pattern>
 		<url-pattern>/settings/*</url-pattern>
+		<url-pattern>/publications/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
@@ -177,6 +180,7 @@
 		<url-pattern>/bookmarks/*</url-pattern>
 		<url-pattern>/notifications/*</url-pattern>
 		<url-pattern>/settings/*</url-pattern>
+		<url-pattern>/publications/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>

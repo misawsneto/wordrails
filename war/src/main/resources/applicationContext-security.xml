@@ -52,6 +52,8 @@
 	    <intercept-url pattern="/bookmarks/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 	    <intercept-url pattern="/settings" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 	    <intercept-url pattern="/settings/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/publications" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+	    <intercept-url pattern="/publications/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 	    
 		<intercept-url pattern="/**" access="ROLE_USER"/>
 
