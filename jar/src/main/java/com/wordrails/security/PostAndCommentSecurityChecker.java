@@ -21,13 +21,13 @@ import com.wordrails.persistence.StationRepository;
 
 @Component
 public class PostAndCommentSecurityChecker {
-	
+
 	private @Autowired StationRolesRepository personStationRolesRepository;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired PostRepository postRepository;
 	private @Autowired AccessControllerUtil accessControllerUtil;
-	
+
 	public boolean canWrite(Post post){
 		boolean canWrite = false;
 
@@ -59,7 +59,7 @@ public class PostAndCommentSecurityChecker {
 
 	public boolean canEdit(Post post){
 		boolean canEdit = false;
-		
+
 		Person personLogged = accessControllerUtil.getLoggedPerson();
 		if(personLogged != null){
 			StationRole personStationRoles = personStationRolesRepository.findByStationAndPerson(post.station, personLogged);
@@ -72,7 +72,7 @@ public class PostAndCommentSecurityChecker {
 
 	public boolean canRead(Post post){
 		boolean canRead = false;
-		
+
 		Person personLogged = accessControllerUtil.getLoggedPerson();
 		if(personLogged != null){
 			if(post.station.visibility.equals(Station.UNRESTRICTED)){
@@ -97,7 +97,7 @@ public class PostAndCommentSecurityChecker {
 		}
 		return canRead;
 	}
-	
+
 	public boolean canRemove(Post post){
 		return canEdit(post);
 	}
@@ -105,16 +105,24 @@ public class PostAndCommentSecurityChecker {
 	public boolean canWrite(Comment comment){
 		return canWrite(comment.post);
 	}
-	
+
 	public boolean canEdit(Comment comment){
 		return canEdit(comment.post);
 	}
-	
+
 	public boolean canRead(Comment comment){
 		return canRead(comment.post);
 	}
-	
+
 	public boolean canRemove(Comment comment){
 		return canEdit(comment.post);
 	}
+
+	public boolean canComment(Comment comment) {
+		if((comment.post.station.allowComments || canWrite(comment.post)) && !comment.author.username.equals("wordrails"))
+			return true;
+		else
+			return false;
+	}
+
 }

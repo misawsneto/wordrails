@@ -124,6 +124,7 @@ public class Post {
 	public String subheading;
 
 	@Size(min = 1, max = 15)
+	@Field(analyze = Analyze.NO)
 	public String state = STATE_PUBLISHED;
 
 	@ManyToOne

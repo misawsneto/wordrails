@@ -65,10 +65,10 @@ import com.wordrails.persistence.TaxonomyRepository;
 public class PersonsResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
-	
+
 	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired PersonRepository personRepository;
-	
+
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
@@ -80,12 +80,12 @@ public class PersonsResource {
 	private @Autowired GCMService gcmService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
-	
+
 	private @Autowired BookmarkRepository bookmarkRepository;
 	private @Autowired RecommendRepository recommendRepository;
-	
+
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
-	
+
 	@PUT
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -95,17 +95,17 @@ public class PersonsResource {
 		gcmService.updateRegId(network, person, regId);
 		return Response.status(Status.OK).build();
 	}
-	
+
 	@PUT
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@FormParam("token") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-//		Network network = networkRepository.findOne(networkId);
-//		Person person = accessControllerUtil.getLoggedPerson();
-//		gcmService.updateRegId(network, person, regId);
+		//		Network network = networkRepository.findOne(networkId);
+		//		Person person = accessControllerUtil.getLoggedPerson();
+		//		gcmService.updateRegId(network, person, regId);
 		return Response.status(Status.OK).build();
 	}
-	
+
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -117,77 +117,79 @@ public class PersonsResource {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
 	}
-	
+
 	@GET
 	@Path("/{personId}/posts")
 	public ContentResponse<List<PostView>> getPersonNetworkPosts(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
 			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
-		
+
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		
+
 		Person person = accessControllerUtil.getLoggedPerson();
-		
+
 		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
-		
+
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
 			for (StationPermission stationPermission : permissions) {
 				stationIds.add(stationPermission.stationId);
 			}
 		}
-		
+
 		List<Post> posts = postRepository.findPostByPersonIdAndStations(personId, stationIds, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
 		response.content = postConverter.convertToViews(posts); 
 		return response;
 	}
-	
+
 	@GET
 	@Path("/{personId}/recommends")
 	public ContentResponse<List<PostView>> getPersonNetworkRecommendations(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
 			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
-		
+
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		
+
 		Person person = accessControllerUtil.getLoggedPerson();
-		
+
 		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
-		
+
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
 			for (StationPermission stationPermission : permissions) {
 				stationIds.add(stationPermission.stationId);
 			}
 		}
-		
+
 		List<Post> posts = postRepository.findRecommendationsByPersonIdAndStations(personId, stationIds, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
 		response.content = postConverter.convertToViews(posts); 
 		return response;
 	}
-	
+
 	@GET
 	@Path("/logout")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response logout(){
 		return Response.status(Status.OK).build();
 	}
-		
+
 	@PUT
 	@Path("/me/password")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
-		
-		org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String username = user.getUsername();
-		if(!username.equalsIgnoreCase("wordrails")) // don't allow users to change wordrails password
-			userDetailsManager.changePassword(oldPassword, newPassword);
+
+		try{
+			org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			String username = user.getUsername();
+			if(!username.equalsIgnoreCase("wordrails")) // don't allow users to change wordrails password
+				userDetailsManager.changePassword(oldPassword, newPassword);
+		}catch(Exception e){}
 	}
-	
+
 	@GET
 	@Path("/me")
 	public void getCurrentPerson() {
@@ -197,120 +199,120 @@ public class PersonsResource {
 		String path = httpServletRequest.getServletPath() + "/persons/search/findByUsername?username=" + username;
 		httpRequest.forward(path);
 	}
-	
+
 	@POST
 	@Path("/create")
 	public Response create(Person person){
 		// TODO create user
 		return Response.status(Status.CREATED).build();
 	}
-	
+
 	@GET
 	@Path("/allInit")
 	public PersonData getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
 
-			Integer stationId = wordrailsService.getStationIdFromCookie(request);
-			PersonData personData = getInitialData(request);
-			
-			StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
-			Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
+		Integer stationId = wordrailsService.getStationIdFromCookie(request);
+		PersonData personData = getInitialData(request);
 
-			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
-			
-			Pageable pageable = new PageRequest(0, 15);
-//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+		StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
+		Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
 
-			if(defaultStation != null){
-//				if(personData.person != null && !personData.person.username.equals("wordrails")){
-//					List<Integer> postsRead = postRepository.findPostReadByPerson(personData.person.id, pageable2);
-//					List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(personData.person.id, pageable2);
-//					List<Integer> recommends = recommendRepository.findRecommendByPerson(personData.person.id, pageable2);
-//					personData.postsRead = postsRead;
-//					personData.bookmarks = bookmarks;
-//					personData.recommends = recommends;
-//				}
-				
-				List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
-				List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
-				personData.popular = postConverter.convertToViews(popular);
-				personData.recent = postConverter.convertToViews(recent);
-				
-			}
+		TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
 
-			if(setAttributes != null && setAttributes){
-				request.setAttribute("personData", mapper.writeValueAsString(personData));
-				request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView));
-				request.setAttribute("networkName", personData.network.name);
-				request.setAttribute("networkDesciption", "");
-				request.setAttribute("networkKeywords", "");
-			}
-			
-			return personData;
+		Pageable pageable = new PageRequest(0, 15);
+		//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+
+		if(defaultStation != null){
+			//				if(personData.person != null && !personData.person.username.equals("wordrails")){
+			//					List<Integer> postsRead = postRepository.findPostReadByPerson(personData.person.id, pageable2);
+			//					List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(personData.person.id, pageable2);
+			//					List<Integer> recommends = recommendRepository.findRecommendByPerson(personData.person.id, pageable2);
+			//					personData.postsRead = postsRead;
+			//					personData.bookmarks = bookmarks;
+			//					personData.recommends = recommends;
+			//				}
+
+			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
+			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
+			personData.popular = postConverter.convertToViews(popular);
+			personData.recent = postConverter.convertToViews(recent);
+
 		}
-	
+
+		if(setAttributes != null && setAttributes){
+			request.setAttribute("personData", mapper.writeValueAsString(personData));
+			request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView));
+			request.setAttribute("networkName", personData.network.name);
+			request.setAttribute("networkDesciption", "");
+			request.setAttribute("networkKeywords", "");
+		}
+
+		return personData;
+	}
+
 	@GET
 	@Path("/init")
 	public PersonData getInitialData (@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		
+
 		Person person = accessControllerUtil.getLoggedPerson();
-		
+
 		if(person == null){
 			throw new UnauthorizedException("User is not authorized");
 		}
-		
+
 		Network network = wordrailsService.getNetworkFromHost(request);
-		
+
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
 		List<StationDto> stationDtos = new ArrayList<StationDto>();
-		
-			//Network Permissions
-			NetworkPermission networkPermissionDto = new NetworkPermission();
+
+		//Network Permissions
+		NetworkPermission networkPermissionDto = new NetworkPermission();
 		if(networkRole != null)
 			networkPermissionDto.networkId = networkRole.id;
 		else
 			networkPermissionDto.admin = false;
-			
-			personPermissions.networkPermission = networkPermissionDto;
-			personPermissions.stationPermissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id, stationDtos);
-			personPermissions.personId = person.id;
-			personPermissions.username = person.username;
-			personPermissions.personName = person.name;
-			
+
+		personPermissions.networkPermission = networkPermissionDto;
+		personPermissions.stationPermissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id, stationDtos);
+		personPermissions.personId = person.id;
+		personPermissions.username = person.username;
+		personPermissions.personName = person.name;
+
 		PersonData initData = new PersonData();
-		
+
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes(), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes(), NetworkDto.class); 
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes(), NetworkRoleDto.class);
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;
-		
+
 		initData.person.links = wordrailsService.generateSelfLinks(baseUrl + "/api/persons/" + person.id);
 		initData.network.links = wordrailsService.generateSelfLinks(baseUrl + "/api/stations/" + network.id);
 		if(initData.networkRole != null)
 			initData.networkRole.links = networkRole != null ? wordrailsService.generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id) : Arrays.asList(new Link());
-			
-		Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
-		if(initData.person != null && !initData.person.username.equals("wordrails")){
-			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
-			List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(initData.person.id, pageable2);
-			List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
-			initData.postsRead = postsRead;
-			initData.bookmarks = bookmarks;
-			initData.recommends = recommends;
-		}
-		
-		return initData;
+
+			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+			if(initData.person != null && !initData.person.username.equals("wordrails")){
+				List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
+				List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(initData.person.id, pageable2);
+				List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
+				initData.postsRead = postsRead;
+				initData.bookmarks = bookmarks;
+				initData.recommends = recommends;
+			}
+
+			return initData;
 	}
-	
-	
+
+
 	@GET
 	@Path("/me/bookmarkedRecommended")
 	public ContentResponse<List<BooleanResponse>> checkBookmarkedRecommendedByMe(@QueryParam("postId") Integer postId){
 		Person person = accessControllerUtil.getLoggedPerson();
 		List<BooleanResponse> resp = new ArrayList<BooleanResponse>();
-		
+
 		if(bookmarkRepository.findBookmarkByPersonIdAndPostId(person.id, postId)!=null){
 			BooleanResponse bool = new BooleanResponse();
 			bool.response = true;
@@ -320,7 +322,7 @@ public class PersonsResource {
 			bool.response = false;
 			resp.add(bool);
 		}
-		
+
 		if(recommendRepository.findRecommendByPersonIdAndPostId(person.id, postId)!=null){
 			BooleanResponse bool = new BooleanResponse();
 			bool.response = true;
@@ -330,7 +332,7 @@ public class PersonsResource {
 			bool.response = false;
 			resp.add(bool);
 		}
-		
+
 		ContentResponse<List<BooleanResponse>> response = new ContentResponse<List<BooleanResponse>>();
 		response.content = resp;
 		return response;

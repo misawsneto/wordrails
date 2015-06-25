@@ -47,6 +47,7 @@
             <property name="hibernate.search.infinispan.metadata_cachename" value="LuceneIndexesMetadata" />
             <property name="hibernate.search.infinispan.locking_cachename" value="LuceneIndexesLocking" />
             <property name="hibernate.search.default.indexBase" value="indexes"/>
+            <property name="hibernate.search.default.worker.execution" value="async"/>
         </properties>
     </persistence-unit>	
 </persistence>

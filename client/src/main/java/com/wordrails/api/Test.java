@@ -14,14 +14,17 @@ public class Test {
 				new MockConnectivityManager(true),
 				new File("."),
 				0,
-				"http://ufrpe.localhost:8080",
-				"silvio",
-				"silvio",
-				LogLevel.NONE
+				"http://sport.xarx.co",
+				"sport",
+				"Sport@dmiN",
+				LogLevel.FULL
 		);
 
 		wordRails.login();
-		createPost(wordRails);
+		
+		wordRails.putPassword("Sport@dmiN", "Sport@dmiN");
+		
+//		createPost(wordRails);
 
 //		NetworkDto network = wordRails.getNetwork(1);
 //

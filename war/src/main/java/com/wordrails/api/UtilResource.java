@@ -140,6 +140,7 @@ public class UtilResource {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			System.out.println("reindex started");
 			FullTextEntityManager ftem = Search.getFullTextEntityManager(manager);
 			MassIndexer massIndexer = ftem.createIndexer();
 			massIndexer.purgeAllOnStart(true);
@@ -150,6 +151,7 @@ public class UtilResource {
 				e.printStackTrace();
 			}
 			//		ftem.flushToIndexes();
+			System.out.println("reindex finished");
 			return Response.status(Status.OK).entity("Reindexed").build();
 		}
 		throw new UnauthorizedException();

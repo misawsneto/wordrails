@@ -5,7 +5,7 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 			$scope.app.publicationsCtrl = {page: 0};
 
 		var personId = $scope.app.getLoggedPerson().id;
-		trix.searchPostsFromOrPromotedToStation($scope.app.currentStation.id, null, $scope.app.publicationsCtrl.page, 10, {'personId': personId}).success(function(response){
+		trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': personId, 'publicationType': 'PUBLISHED'}).success(function(response){
 			$scope.app.publicationsCtrl.publications = response.posts;
 		})
 }])		
