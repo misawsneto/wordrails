@@ -175,7 +175,7 @@ angular.module('app')
                   controller: 'UserCtrl'
               })
               .state('app.publications', {
-                  url: '/:publicationType/@:username',
+                  url: '/publications/@:username?publicationType',
                   templateUrl: 'tpl/user_publications.html',
                   // use resolve to load other dependences
                    resolve: {
@@ -186,6 +186,7 @@ angular.module('app')
                             'js/controllers/user-publications.js?' + GLOBAL_URL_HASH])
                       }]
                   },
+                  reloadOnSearch: false,
                   controller: 'UserPublicationsCtrl'
               })
               .state('app.publications.read', {

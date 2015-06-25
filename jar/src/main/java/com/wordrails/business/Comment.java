@@ -67,11 +67,6 @@ public class Comment {
 	public Date date;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@NotNull
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastModificationDate;
 	
@@ -106,6 +101,6 @@ public class Comment {
 
 	@PreUpdate
 	public void onUpdate() {
-		updatedAt = new Date();
+		lastModificationDate = new Date();
 	}
 }

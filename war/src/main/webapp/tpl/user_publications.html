@@ -1,5 +1,5 @@
 <div id="publications" class="hbox hbox-auto-xs">
-	<div class="header-custom animated slideInDown">
+	<div class="header-custom animated fadeIn box-shadow">
 		<div class="block-1000 m-auto m-b-xxl text-center">
 			<p class="h1 font-bold">Publicações</p>
 		</div>
@@ -20,19 +20,24 @@
 
 			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications">
 				<ul class="nav nav-tabs text-lg" role="tablist">
-					<li class="active">
-						<a>
+					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
+						<a class="text-u-c">
 							Meus rascunhos
 						</a>
 					</li>
-					<li>
-						<a>
+					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 1}">
+						<a class="text-u-c">
 							Minhas publicações
 						</a>
 					</li>
-					<li>
-						<a>
-							Todos
+					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 2}">
+						<a class="text-u-c">
+							Meus agendados
+						</a>
+					</li>
+					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 3}">
+						<a class="text-u-c">
+							Outros
 						</a>
 					</li>
 				</ul>

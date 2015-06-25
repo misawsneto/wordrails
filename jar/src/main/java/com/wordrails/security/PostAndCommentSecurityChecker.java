@@ -63,7 +63,7 @@ public class PostAndCommentSecurityChecker {
 		Person personLogged = accessControllerUtil.getLoggedPerson();
 		if(personLogged != null){
 			StationRole personStationRoles = personStationRolesRepository.findByStationAndPerson(post.station, personLogged);
-			if(post.author.id == personLogged.id || (personStationRoles != null && personStationRoles.editor)){
+			if(post.author.id == personLogged.id || (personStationRoles != null && (personStationRoles.editor || personStationRoles.admin))){
 				canEdit = true;
 			}
 		}

@@ -124,6 +124,10 @@ function getCustomStyle(color, perspective, header) {
 	  "background: "+ color +";\n"+
 	"}\n"+*/
 
+	".nav-tabs li.custom-active a{"+
+	"border-bottom-color:" +color+ "!important"+
+	"}"+
+
 	".redactor-editor a, .redactor-editor a:hover {color:"+ color +"}\n"+
 	".custom-fab-button{background-color: " + color + "!important; color: " + textColorEval(color) + "!important}"+
 
