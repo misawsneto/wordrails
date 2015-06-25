@@ -1338,6 +1338,55 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
 
 .header-custom p{padding-left: 35px;}
 
+.nav-lines {
+  margin-bottom: -1px;
+  border-width: 0 !important;
+}
+
+.nav-lines.nav-justified {
+  margin-bottom: -2px;
+  border-bottom: 2px solid #2196f3;
+}
+
+.nav-lines > li {
+  float: left;
+  border-color: inherit;
+  opacity: 0.6;
+}
+
+.nav-lines > li:after {
+  position: absolute;
+  right: 50%;
+  bottom: 0;
+  left: 50%;
+  border-bottom-color: transparent;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  content: "";
+  -webkit-transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+          transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+.nav-lines > li > a {
+  background-color: transparent !important;
+  border-width: 0 !important;
+}
+
+.nav-lines > li.active {
+  opacity: 1;
+}
+
+.nav-lines > li.active:after {
+  right: 0;
+  left: 0;
+  border-bottom-color: inherit;
+}
+
+.nav-lines.nav-lines-top > li:after {
+  top: 0;
+  bottom: auto;
+}
+
 /* /general */
 
 /* animate */

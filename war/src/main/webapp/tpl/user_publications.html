@@ -1,5 +1,5 @@
 <div id="publications" class="hbox hbox-auto-xs">
-	<div class="header-custom">
+	<div class="header-custom animated slideInDown">
 		<div class="block-1000 m-auto m-b-xxl text-center">
 			<p class="h1 font-bold">Publicações</p>
 		</div>
@@ -14,47 +14,64 @@
 			ui-sref="app.post" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
 			tooltip="Nova notícia" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
 			angular-ripple md-no-ink  aria-label="Nova notícia">
-				<i class="mdi mdi-plus"></i>
-			</md-button>
-			<div class="w-full panel panel-card no-radius animated zoomIn" infinite-scroll="paginatePosts()" infinite-scroll-distance="1">
+			<i class="mdi mdi-plus"></i>
+		</md-button>
+		<div class="w-full panel panel-card no-radius animated zoomIn" infinite-scroll="paginatePosts()" infinite-scroll-distance="1">
 
-				<div class="">
-				</div>
-
-				<!-- posts -->
-				<ul class="b-none no-padding m-b-none ls-style-none">
-					<li ng-repeat="publication in app.publicationsCtrl.publications" class="p-l p-r">
-						<div ng-class="{'b-t': !$first}"></div>
-						<div class="clear p-t-sm p post-list news-item">
-							<!-- image -->
-							<a class="block-image m-l" ng-if="publication.mediumId" ng-class="{'m-t': publication.topper}">
-								<div class="cell-wrap r r-2x" ng-class="{'hide': !publication.mediumId}">
-									<div ng-style="getBackgroundImage(publication, 'md')"></div>
-								</div>
-							</a>
-							<!-- /image -->
-							<!-- /content -->
-							<div ng-class="{'content-block': publication.mediumId}">
-								<div class="m-b-sm" ng-if="publication.topper">
-									<span class="no-radius normal p-xxs topper text-md bg-custom-primary">{{publication.topper}}</span>
-								</div>
-								<a  class="h3 font-bold m-b block" ng-click="app.setNowReading(publication, app.publicationsCtrl.publications, null, 'app.publications')">
-									{{publication.title}}
-								</a>
-								<div class="text-lg font-thin" ng-bind-html="publication.snippet | characters: 100 | stripHtml">
-								</div>
-								<div class="p-t display-t-c v-middle">
-									<span class="text-muted readingTime">{{publication.date | fromNow2}}</span>
-								</div>
-							</div>
-							<!-- /content -->
-						</div>    
+			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications">
+				<ul class="nav nav-tabs text-lg" role="tablist">
+					<li class="active">
+						<a>
+							Meus rascunhos
+						</a>
+					</li>
+					<li>
+						<a>
+							Minhas publicações
+						</a>
+					</li>
+					<li>
+						<a>
+							Todos
+						</a>
 					</li>
 				</ul>
 			</div>
-			<!-- /posts -->
+
+			<!-- posts -->
+			<ul class="b-none no-padding m-b-none ls-style-none">
+				<li ng-repeat="publication in app.publicationsCtrl.publications" class="p-l p-r">
+					<div ng-class="{'b-t': !$first}"></div>
+					<div class="clear p-t-sm p post-list news-item">
+						<!-- image -->
+						<a class="block-image m-l" ng-if="publication.mediumId" ng-class="{'m-t': publication.topper}">
+							<div class="cell-wrap r r-2x" ng-class="{'hide': !publication.mediumId}">
+								<div ng-style="getBackgroundImage(publication, 'md')"></div>
+							</div>
+						</a>
+						<!-- /image -->
+						<!-- /content -->
+						<div ng-class="{'content-block': publication.mediumId}">
+							<div class="m-b-sm" ng-if="publication.topper">
+								<span class="no-radius normal p-xxs topper text-md bg-custom-primary">{{publication.topper}}</span>
+							</div>
+							<a  class="h3 font-bold m-b block" ng-click="app.setNowReading(publication, app.publicationsCtrl.publications, null, 'app.publications')">
+								{{publication.title}}
+							</a>
+							<div class="text-lg font-thin" ng-bind-html="publication.snippet | characters: 100 | stripHtml">
+							</div>
+							<div class="p-t display-t-c v-middle">
+								<span class="text-muted readingTime">{{publication.date | fromNow2}}</span>
+							</div>
+						</div>
+						<!-- /content -->
+					</div>    
+				</li>
+			</ul>
 		</div>
+		<!-- /posts -->
 	</div>
+</div>
 </div>
 
 <div ui-view></div>
