@@ -1,5 +1,5 @@
 <div id="publications" class="hbox hbox-auto-xs">
-	<div class="header-custom animated fadeIn box-shadow">
+	<div class="header-custom animated box-shadow">
 		<div class="block-1000 m-auto m-b-xxl text-center">
 			<p class="h1 font-bold">Publicações</p>
 		</div>
@@ -17,30 +17,33 @@
 			<i class="mdi mdi-plus"></i>
 		</md-button>
 		<div class="w-full panel panel-card no-radius animated zoomIn" infinite-scroll="paginatePosts()" infinite-scroll-distance="1">
-
 			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications">
 				<ul class="nav nav-tabs text-lg" role="tablist">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
-						<a class="text-u-c">
+						<a class="text-u-c" ng-click="app.goToUserDrafts($event)">
 							Meus rascunhos
 						</a>
 					</li>
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 1}">
-						<a class="text-u-c">
+						<a class="text-u-c" ng-click="app.goToUserPublications($event)">
 							Minhas publicações
 						</a>
 					</li>
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 2}">
-						<a class="text-u-c">
-							Meus agendados
+						<a class="text-u-c" ng-click="app.goToUserScheduled($event)">
+							AGENDADOS
 						</a>
 					</li>
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 3}">
-						<a class="text-u-c">
+						<a class="text-u-c" ng-click="app.goToUserOtherPosts($event)">
 							Outros
 						</a>
 					</li>
 				</ul>
+			</div>
+			<div class="wrapper-xxl text-3x text-center" ng-class="{'hide': app.publicationsCtrl.publications && app.publicationsCtrl.publications.length>0 || !app.publicationsCtrl.firstLoad}">
+				<i class="mdi mdi-file-find text-3x text-muted"></i>
+				<p>lista vazia<i></i></p>
 			</div>
 
 			<!-- posts -->

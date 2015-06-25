@@ -165,6 +165,17 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/bookmarks/searchBookmarks", config)
     }
     
+    this.searchNotifications = function(query, _page, _size) {
+    	var config = {
+    	"params": {
+				"query": query,
+				"page": _page,
+				"size": _size,
+			}
+		}
+      return \$http.get(_config.url + "/api/notifications/searchNotifications", config)
+    }
+    
     this.checkBookmarkedRecommendedByMe = function(postId) {
     	var config = {
     	"params": {

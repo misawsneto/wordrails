@@ -2,21 +2,41 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q) {
 		
 		if(!$scope.app.publicationsCtrl)
-			$scope.app.publicationsCtrl = {page: 0};
+			$scope.app.publicationsCtrl = {page: 0, firstLoad: false};
 
-		console.log($state.params.publicationType);
+		$scope.$watch('$state.params.type', function(){
+			if($state.params.type == "drafts"){
+				trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
+					'publicationType': 'DRAFT'}).success(function(response){
+					$scope.app.publicationsCtrl.publications = response.posts;
+					$scope.app.publicationsCtrl.tabIndex = 0;
+					$scope.app.publicationsCtrl.firstLoad = true;
+				})
+			}
+			if($state.params.type == "publications"){
+				trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
+					'publicationType': 'PUBLISHED'}).success(function(response){
+					$scope.app.publicationsCtrl.publications = response.posts;
+					$scope.app.publicationsCtrl.tabIndex = 1;
+					$scope.app.publicationsCtrl.firstLoad = true;
+				})
+			}
+			if($state.params.type == "scheduled"){
+				trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
+					'publicationType': 'SCHEDULED'}).success(function(response){
+					$scope.app.publicationsCtrl.publications = response.posts;
+					$scope.app.publicationsCtrl.tabIndex = 2;
+					$scope.app.publicationsCtrl.firstLoad = true;
+				})
+			}
+			if($state.params.type == "others"){
+				trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
+					'publicationType': 'EDITOR'}).success(function(response){
+					$scope.app.publicationsCtrl.publications = response.posts;
+					$scope.app.publicationsCtrl.tabIndex = 3;
+					$scope.app.publicationsCtrl.firstLoad = true;
+				})
+			}
+		});
 
-		if($state.params.publicationType == "publications")
-			$scope.app.publicationsCtrl.tabIndex = 0;
-		if($state.params.publicationType == "drafts")
-			$scope.app.publicationsCtrl.tabIndex = 1;
-		if($state.params.publicationType == "scheduled")
-			$scope.app.publicationsCtrl.tabIndex = 2;
-		if($state.params.publicationType == "others")
-			$scope.app.publicationsCtrl.tabIndex = 3;
-
-		var personId = $scope.app.getLoggedPerson().id;
-		trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': personId, 'publicationType': 'PUBLISHED'}).success(function(response){
-			$scope.app.publicationsCtrl.publications = response.posts;
-		})
 }])		

@@ -175,7 +175,7 @@ angular.module('app')
                   controller: 'UserCtrl'
               })
               .state('app.publications', {
-                  url: '/publications/@:username?publicationType',
+                  url: '/publications/@:username?type',
                   templateUrl: 'tpl/user_publications.html',
                   // use resolve to load other dependences
                    resolve: {

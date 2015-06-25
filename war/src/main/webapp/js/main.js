@@ -192,21 +192,40 @@ angular.module('app')
         $event.preventDefault();
         $event.stopPropagation();
         $state.go('app.user', {username: username})
+        if($scope.app.profilepopover)
         $scope.app.profilepopover.open = false;
       }
 
       $scope.app.goToUserPublications = function($event){
         $event.preventDefault();
         $event.stopPropagation();
-        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, publicationType: 'publications'})
-        $scope.app.profilepopover.open = false; 
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'publications'})
+        if($scope.app.profilepopover)
+          $scope.app.profilepopover.open = false; 
       }
 
-      $scope.app.goToUserDrafts = function(){
+      $scope.app.goToUserDrafts = function($event){
         $event.preventDefault();
         $event.stopPropagation();
-        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, publicationType: 'drafts'})
-        $scope.app.profilepopover.open = false; 
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'drafts'})
+        if($scope.app.profilepopover)
+          $scope.app.profilepopover.open = false; 
+      }
+
+      $scope.app.goToUserScheduled = function($event){
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'scheduled'})
+        if($scope.app.profilepopover)
+          $scope.app.profilepopover.open = false; 
+      }
+
+      $scope.app.goToUserOtherPosts = function($event){
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'others'})
+        if($scope.app.profilepopover)
+          $scope.app.profilepopover.open = false; 
       }
 
       $scope.getBackgroundImage = function(postView, size){
@@ -469,8 +488,10 @@ angular.module('app')
       $scope.app.addBookmarked = function(postId){
         if(!$scope.app.initData.bookmarks || $scope.app.initData.bookmarks.length == 0)
           $scope.app.initData.bookmarks = [];
-        if(!$scope.app.bookmarked(postId))
+        if(!$scope.app.bookmarked(postId)){
           $scope.app.initData.bookmarks.push(postId);
+          $scope.app.showSimpleToast('Enviado a Minha Lista.')
+        }
       }
 
       $scope.app.removeBookmarked = function(postId){
@@ -501,8 +522,10 @@ angular.module('app')
       $scope.app.addRecommended = function(postId){
         if(!$scope.app.initData.recommends || $scope.app.initData.recommends.length == 0)
           $scope.app.initData.recommends = [];
-        if(!$scope.app.recommended(postId))
+        if(!$scope.app.recommended(postId)){
           $scope.app.initData.recommends.push(postId);
+          $scope.app.showSimpleToast('Você recomendou essa publicação.')
+        }
       }
 
       $scope.app.removeRecommended = function(postId){

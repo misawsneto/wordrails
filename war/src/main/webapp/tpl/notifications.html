@@ -1,6 +1,6 @@
 <div id="notifications" class="hbox hbox-auto-xs">
 	<div class="wrapper-lg">
-		<div class="header-custom text-center animated fadeIn box-shadow">
+		<div class="header-custom text-center animated box-shadow">
       <p class="h2 font-bold">Notificações</p>
     </div>
     <div class="block-800 m-auto text-center m-b-lg">
@@ -28,7 +28,7 @@
 /search -->
 
 			<!-- notification item -->
-			<div angular-ripple class="panel panel-card animated zoomIn">
+			<!-- <div angular-ripple class="panel panel-card animated zoomIn">
 				<div class="notification-image pull-left m-r-lg"></div>
 				<div class="p">
 					<h3>Paracosm</h3>
@@ -37,7 +37,14 @@
 						two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
 					</p>
 				</div>
+			</div> -->
+
+
+			<div class="wrapper-xxl text-3x text-center" ng-class="{'hide': app.notificationsCtrl.notifications && app.notificationsCtrl.notifications.length > 0 || !app.notificationsCtrl.firstLoad}">
+				<i class="mdi mdi-bell-outline text-3x text-muted"></i>
+				<p>lista vazia<i></i></p>
 			</div>
+
 			<!-- /notification item -->
 		</div>
 	</div>
