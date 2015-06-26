@@ -10,13 +10,10 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 	    $scope.tabs[index] = true;
 		}
 
-		// $scope.app.termPerspectiveView = initTermPerspective;
+		if(!$scope.app.termPerspectiveView)
+			$scope.app.termPerspectiveView = initTermPerspective;
 		
-		 $scope.app.termPerspectiveView = null;
-
-		trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
-			$scope.app.termPerspectiveView = termPerspective
-		})
+		// $scope.app.changeStation($scope.app.currentStation);
 
 		var lastScrollTop = 0
 		var didScroll = false;

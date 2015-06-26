@@ -97,6 +97,35 @@ angular.module('app')
         .success(function(response){
         })
       }
+
+      $scope.app.changeStation = function(station){
+
+        var stationObject = null;
+        $scope.app.initData.stations.forEach(function(st){
+          if(station.stationId == st.id) 
+            stationObject = st
+        });
+
+        $scope.app.termPerspectiveView = null;
+
+        trix.findPerspectiveView(stationObject.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
+          $scope.app.termPerspectiveView = termPerspective
+        })
+
+        $scope.app.currentStation = stationObject;
+
+        $scope.app.checkIfLogged();
+      }
+
+      $scope.app.refreshPerspective = function(){
+        $scope.app.termPerspectiveView = null;
+
+        trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
+          $scope.app.termPerspectiveView = termPerspective
+        })
+
+        $scope.app.checkIfLogged();
+      }
       
       $scope.app.initData = angular.copy(initData);
 
@@ -354,7 +383,7 @@ angular.module('app')
       };
 
       $scope.app.refreshData = function(){
-        $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
+        $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
         $scope.app.stationsPermissions = trixService.getStationPermissions();
         if(!$scope.app.loginError)
           $scope.cancelModal();
