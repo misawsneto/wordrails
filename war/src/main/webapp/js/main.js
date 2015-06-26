@@ -53,14 +53,6 @@ angular.module('app')
         $localStorage.settings = $scope.app.settings;
       }, true);
 
-      if(initTermPerspective){
-
-      }
-
-      $scope.app.getLoggedPerson = function(){
-        return $scope.app.initData.person;
-      }
-
       // angular translate
       $scope.lang = { isopen: false };
       $scope.langs = {en:'English', de_DE:'German', it_IT:'Italian'};
@@ -107,6 +99,10 @@ angular.module('app')
       }
       
       $scope.app.initData = angular.copy(initData);
+
+      $scope.app.getLoggedPerson = function(){
+        return $scope.app.initData.person;
+      }
 
       $scope.app.checkIfLogged = function(){
         $scope.app.isLogged = trixService.isLoggedIn();

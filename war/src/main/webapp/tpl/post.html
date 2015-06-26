@@ -9,16 +9,16 @@
         <div class="cell-inner">
           <div id="post-editor" class="wrapper-md p-r-xxl p-l-xxl">
             <div id="post-media-box" class="post-block" ng-class="{'image-landscape': app.editingPost.imageLandscape && app.editingPost.uploadedImage.filelink}">
-              <div id="post-media" class="pull-left text-2x" ng-class="{'hide': app.editingPost.showInputVideoUrl || app.editingPost.uploadedImage.filelink}">
-                  <div id="image-button-wrapper" tooltip="Imagem" tooltip-append-to-body="true" tooltip-placement="left">
+              <div id="post-media" class="text-center text-3x" ng-class="{'hide': app.editingPost.showInputVideoUrl || app.editingPost.uploadedImage.filelink}">
+                  <div id="image-button-wrapper" class="thumb" tooltip="Imagem" tooltip-append-to-body="true" tooltip-placement="top">
                     <span id="image-button" class="mdi mdi-file-image-box custom-btn">
                       <input id="image-upload" type="file" nv-file-select=""
                         uploader="uploader" name="contents" accept="image/*"/>
                     </span>
                   </div>
-                  <span id="video-button" tooltip="Video" tooltip-append-to-body="true">
+                  <div class="thumb" id="video-button" tooltip="Video" tooltip-placement="top" tooltip-append-to-body="true">
                     <a href ng-click="toggleVideoUrl()" class="mdi mdi-youtube-play"></a>
-                  </span>
+                  </div>
               </div>
               <a id="video-remove-button" ng-click="removeVideo()" class="pos-abt h3 m-t-xs" href tooltip="Remover vídeo" tooltip-append-to-body="true" ng-hide="!app.editingPost.showInputVideoUrl">
                 <i class="mdi mdi-close-circle-outline"></i>
