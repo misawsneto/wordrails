@@ -82,6 +82,10 @@ import java.util.Set;
 @Spatial
 public class Post {
 
+	public static final String STATE_PUBLISHED = "PUBLISHED";
+	public static final String STATE_DRAFT = "DRAFT";
+	public static final String STATE_SCHEDULED = "SCHEDULED";
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@DocumentId

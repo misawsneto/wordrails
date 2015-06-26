@@ -372,6 +372,13 @@ public class PostsResource {
 			if (musts == null) musts = qb.bool().must(personQ);
 			else musts.must(personQ);
 		}
+		
+		if(publicationType!=null){
+			musts = musts.must(qb.keyword().onField("state").ignoreAnalyzer().matching(publicationType).createQuery());
+		}else{
+			musts = musts.must(qb.keyword().onField("state").ignoreAnalyzer().matching(Post.STATE_PUBLISHED).createQuery());
+		}
+		
 
 		BooleanJunction stations = qb.bool();
 		for (Integer integer : readableIds) {

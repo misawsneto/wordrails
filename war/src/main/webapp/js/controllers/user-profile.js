@@ -17,7 +17,6 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 		}catch(e){
 			$state.go('access.404')
 		}
-		console.log($scope.person);
 			$scope.findUserPosts($scope.person);
 	}).error(function(){
 		$state.go('access.404')
@@ -34,7 +33,6 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 		trix.findRecommendsByPersonIdOrderByDate(person.id, 0, 6, null, "recommendProjection").success(function(response){
 			if(response.recommends && response.recommends.length > 0)
 				$scope.recommendations = response.recommends;
-			console.log($scope.recommendations);
 		})
 	}
 

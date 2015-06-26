@@ -1315,6 +1315,78 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   border-radius:50%;
 }
 
+.material-panel-m{
+  margin-top: 100px;
+}
+
+.wrapper-xxl{
+  padding: 60px;
+}
+
+.header-custom{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding:50px 30px 90px 30px;
+}
+
+#bookmarks .header-custom,
+#notifications .header-custom{
+  padding: 30px 30px 75px 30px;
+}
+
+.header-custom p{padding-left: 35px;}
+
+.nav-lines {
+  margin-bottom: -1px;
+  border-width: 0 !important;
+}
+
+.nav-lines.nav-justified {
+  margin-bottom: -2px;
+  border-bottom: 2px solid #2196f3;
+}
+
+.nav-lines > li {
+  float: left;
+  border-color: inherit;
+  opacity: 0.6;
+}
+
+.nav-lines > li:after {
+  position: absolute;
+  right: 50%;
+  bottom: 0;
+  left: 50%;
+  border-bottom-color: transparent;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  content: "";
+  -webkit-transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+          transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+.nav-lines > li > a {
+  background-color: transparent !important;
+  border-width: 0 !important;
+}
+
+.nav-lines > li.active {
+  opacity: 1;
+}
+
+.nav-lines > li.active:after {
+  right: 0;
+  left: 0;
+  border-bottom-color: inherit;
+}
+
+.nav-lines.nav-lines-top > li:after {
+  top: 0;
+  bottom: auto;
+}
+
 /* /general */
 
 /* animate */
@@ -1326,6 +1398,9 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   animation-duration: 0.2s;
 }
 
+#station-fab.animated,
+.station-perspectives .animated,
+#post-editor .animated,
 #bookmarks .animated,
 #notifications .animated,
 #user-profile .animated,
@@ -1702,10 +1777,11 @@ background: rgba(0,0,0,0.5);
 }
 
 #profile-buttons{
-  right: 0;
+  right: 100px;
 }
 .profile-buttons-cover{
   margin-top: -45px;
+  margin-right: 100px;
 }
 
 a.underline-hover:hover{
@@ -1718,6 +1794,10 @@ a.underline-hover:hover{
  #publications .block-image{
   width: 120px;
   height: 100px;
+ }
+ #publication-new-story{
+  margin-top: -30px;
+  margin-right: 30px;
  }
 /* /user_publications */
 

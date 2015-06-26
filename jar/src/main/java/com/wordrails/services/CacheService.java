@@ -12,8 +12,10 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.wordrails.business.Network;
 import com.wordrails.business.Person;
+import com.wordrails.business.Station;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.StationRepository;
 
 @Component
 public class CacheService {
@@ -22,11 +24,15 @@ public class CacheService {
 	
 	private LoadingCache<String, Person> persons2;
 	private LoadingCache<String, Network> networks2;
+	
+	private LoadingCache<Integer, Station> stations;
 
 	@Autowired
 	private PersonRepository personRepository; 
 
 	@Autowired NetworkRepository networkRepository;
+	
+	@Autowired StationRepository stationRepository;
 	
 	public void init(){
 		// ------------- init person cache
@@ -74,6 +80,24 @@ public class CacheService {
 							}
 						});
 		
+		stations = CacheBuilder.newBuilder().maximumSize(100)
+				.expireAfterWrite(1, TimeUnit.MINUTES)
+				//	       .removalListener(MY_LISTENER)
+				.build(
+						new CacheLoader<Integer, Station>() {
+							public Station load(Integer id) {
+								return stationRepository.findOne(id);
+							}
+						});
+		
+	}
+	
+	public Station getStation(Integer id) throws ExecutionException{
+		return stations.get(id);
+	}
+	
+	public void updateStation(Integer id) throws ExecutionException{
+		stations.refresh(id);
 	}
 	
 	public Person getPerson(Integer id) throws ExecutionException{

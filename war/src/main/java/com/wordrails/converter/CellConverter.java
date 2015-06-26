@@ -20,7 +20,7 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 	@Autowired RowRepository rowRepository;
 	
 	public List<Cell> convertToEntities(List<CellView> views, Row row){
-		List<Cell> entities = new ArrayList<Cell>(views.size());
+		List<Cell> entities = new ArrayList<Cell>();
 		for (CellView cellView : views) {
 			Cell cell = convertToEntity(cellView);
 			cell.row = row;
@@ -48,8 +48,10 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 		cellView.id = cell.id;
 		cellView.index = cell.index;
 		if(cell.post != null){
-			cellView.postView = postConverter.convertToView(cell.post); 
-		}
+			cellView.postView = postConverter.convertToView(cell.post);
+			if(cellView.postView == null || cellView.postView.postId == null)
+				return null;
+		}else return null;
 		return cellView;
 	}
 }

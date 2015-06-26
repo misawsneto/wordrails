@@ -1,4 +1,4 @@
-<div id="perspective-horizontal" ng-if="app.viewMode === 'horizontal'" class="p-t-lg p-b-lg">
+<div id="perspective-horizontal" ng-if="app.viewMode === 'horizontal'" class="p-t-lg p-b-lg" ng-class="{'hide': !app.termPerspectiveView}">
   <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-show="ordinaryRow.cells && ordinaryRow.cells.length">
 
     <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->

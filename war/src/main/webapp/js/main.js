@@ -53,14 +53,6 @@ angular.module('app')
         $localStorage.settings = $scope.app.settings;
       }, true);
 
-      if(initTermPerspective){
-
-      }
-
-      $scope.app.getLoggedPerson = function(){
-        return $scope.app.initData.person;
-      }
-
       // angular translate
       $scope.lang = { isopen: false };
       $scope.langs = {en:'English', de_DE:'German', it_IT:'Italian'};
@@ -105,8 +97,41 @@ angular.module('app')
         .success(function(response){
         })
       }
+
+      $scope.app.changeStation = function(station){
+
+        var stationObject = null;
+        $scope.app.initData.stations.forEach(function(st){
+          if(station.stationId == st.id) 
+            stationObject = st
+        });
+
+        $scope.app.termPerspectiveView = null;
+
+        trix.findPerspectiveView(stationObject.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
+          $scope.app.termPerspectiveView = termPerspective
+        })
+
+        $scope.app.currentStation = stationObject;
+
+        $scope.app.checkIfLogged();
+      }
+
+      $scope.app.refreshPerspective = function(){
+        $scope.app.termPerspectiveView = null;
+
+        trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
+          $scope.app.termPerspectiveView = termPerspective
+        })
+
+        $scope.app.checkIfLogged();
+      }
       
       $scope.app.initData = angular.copy(initData);
+
+      $scope.app.getLoggedPerson = function(){
+        return $scope.app.initData.person;
+      }
 
       $scope.app.checkIfLogged = function(){
         $scope.app.isLogged = trixService.isLoggedIn();
@@ -151,6 +176,9 @@ angular.module('app')
         else if(toState.name == "app.user"){
           $("title").html($scope.app.initData.network.name + " | @"+toParams.username);
         }
+        else if(toState.name == "app.publications"){
+          $("title").html($scope.app.initData.network.name + " | Publicações");
+        }
         // check state read
         if(toState.name != "app.stations.read"){
           // show to navbar
@@ -189,21 +217,40 @@ angular.module('app')
         $event.preventDefault();
         $event.stopPropagation();
         $state.go('app.user', {username: username})
+        if($scope.app.profilepopover)
         $scope.app.profilepopover.open = false;
       }
 
       $scope.app.goToUserPublications = function($event){
         $event.preventDefault();
         $event.stopPropagation();
-        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, publicationType: 'publications'})
-        $scope.app.profilepopover.open = false; 
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'publications'})
+        if($scope.app.profilepopover)
+          $scope.app.profilepopover.open = false; 
       }
 
-      $scope.app.goToUserDrafts = function(){
+      $scope.app.goToUserDrafts = function($event){
         $event.preventDefault();
         $event.stopPropagation();
-        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, publicationType: 'drafts'})
-        $scope.app.profilepopover.open = false; 
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'drafts'})
+        if($scope.app.profilepopover)
+          $scope.app.profilepopover.open = false; 
+      }
+
+      $scope.app.goToUserScheduled = function($event){
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'scheduled'})
+        if($scope.app.profilepopover)
+          $scope.app.profilepopover.open = false; 
+      }
+
+      $scope.app.goToUserOtherPosts = function($event){
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'others'})
+        if($scope.app.profilepopover)
+          $scope.app.profilepopover.open = false; 
       }
 
       $scope.getBackgroundImage = function(postView, size){
@@ -336,7 +383,7 @@ angular.module('app')
       };
 
       $scope.app.refreshData = function(){
-        $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations);
+        $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
         $scope.app.stationsPermissions = trixService.getStationPermissions();
         if(!$scope.app.loginError)
           $scope.cancelModal();
@@ -466,8 +513,10 @@ angular.module('app')
       $scope.app.addBookmarked = function(postId){
         if(!$scope.app.initData.bookmarks || $scope.app.initData.bookmarks.length == 0)
           $scope.app.initData.bookmarks = [];
-        if(!$scope.app.bookmarked(postId))
+        if(!$scope.app.bookmarked(postId)){
           $scope.app.initData.bookmarks.push(postId);
+          $scope.app.showSimpleToast('Enviado a Minha Lista.')
+        }
       }
 
       $scope.app.removeBookmarked = function(postId){
@@ -498,8 +547,10 @@ angular.module('app')
       $scope.app.addRecommended = function(postId){
         if(!$scope.app.initData.recommends || $scope.app.initData.recommends.length == 0)
           $scope.app.initData.recommends = [];
-        if(!$scope.app.recommended(postId))
+        if(!$scope.app.recommended(postId)){
           $scope.app.initData.recommends.push(postId);
+          $scope.app.showSimpleToast('Você recomendou essa publicação.')
+        }
       }
 
       $scope.app.removeRecommended = function(postId){

@@ -60,8 +60,8 @@ angular.module('app')
                             // 'com.2fdevs.videogular.plugins.overlayplay',
                             // 'com.2fdevs.videogular.plugins.poster',
                             // 'com.2fdevs.videogular.plugins.buffering',
-                            'js/app/music/ctrl.js', 
-                            'js/app/music/theme.css',
+                            // 'js/app/music/ctrl.js', 
+                            // 'js/app/music/theme.css',
                             '../bower_components/leaflet/dist/leaflet.js',
                             '../bower_components/leaflet/dist/leaflet.css'
                           ]).then(function(){
@@ -175,7 +175,7 @@ angular.module('app')
                   controller: 'UserCtrl'
               })
               .state('app.publications', {
-                  url: '/:publicationType/@:username',
+                  url: '/publications/@:username?type',
                   templateUrl: 'tpl/user_publications.html',
                   // use resolve to load other dependences
                    resolve: {
@@ -186,6 +186,7 @@ angular.module('app')
                             'js/controllers/user-publications.js?' + GLOBAL_URL_HASH])
                       }]
                   },
+                  reloadOnSearch: false,
                   controller: 'UserPublicationsCtrl'
               })
               .state('app.publications.read', {

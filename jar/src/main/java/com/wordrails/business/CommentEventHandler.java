@@ -21,18 +21,14 @@ public class CommentEventHandler {
 	
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Comment comment) throws UnauthorizedException {
-		if(postAndCommentSecurityChecker.canWrite(comment)){
-			comment.date = new Date();
-		}else{
+		if(!postAndCommentSecurityChecker.canComment(comment)){
 			throw new UnauthorizedException();
 		}
 	}
 
 	@HandleBeforeSave
 	public void handleBeforeSave(Comment comment) throws UnauthorizedException {
-		if(postAndCommentSecurityChecker.canEdit(comment)){
-			comment.lastModificationDate = new Date();
-		}else{
+		if(!postAndCommentSecurityChecker.canEdit(comment)){
 			throw new UnauthorizedException();
 		}
 	}

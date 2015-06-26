@@ -1,6 +1,11 @@
 <div id="bookmarks" class="hbox hbox-auto-xs">
   <div class="wrapper-lg" infinite-scroll="paginate()" infinite-scroll-distance="1">
-    <div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm">
+    <div class="header-custom text-center animated box-shadow">
+      <p class="h2 font-bold">Minha Lista</p>
+    </div>
+    <div class="block-800 m-auto text-center m-b-lg">
+    </div>
+    <div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm m-t-xxl p-t-md pos-rlt">
       <!-- search -->
       <div class="bookmarks-navbar panel panel-card m-b-md">
         <div class="p">
@@ -13,6 +18,11 @@
       <!-- /search -->
     </div>
     <div class="block-800 m-auto">
+
+      <div class="wrapper-xxl text-3x text-center" ng-class="{'hide': app.bookmarksCtrl.bookmarks && app.bookmarksCtrl.bookmarks.length > 0 || !app.bookmarksCtrl.firstLoad}">
+        <i class="mdi mdi-bookmark-outline text-3x text-muted"></i>
+        <p>lista vazia<i></i></p>
+      </div>
       
       <div class="panel panel-card animated zoomIn" angular-ripple ng-repeat="bookmark in app.bookmarksCtrl.bookmarks"
       ng-click="app.setNowReading(bookmark,app.bookmarksCtrl.bookmarks, null, 'app.bookmarks')" 

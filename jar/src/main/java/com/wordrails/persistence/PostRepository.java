@@ -57,38 +57,38 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	List<PostScheduled> findScheduledsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
 
 	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
-	List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);
-
-	@RestResource(exported = false)
-	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId, Pageable pageable);
-
-	@RestResource(exported = false)
-	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
-
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.id DESC")
-	List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
-
-	@RestResource(exported = false)
+	public List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);
+	
+	@RestResource(exported=false)
+	public List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId, Pageable pageable);
+	@RestResource(exported=false)
+	public List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
+	
+	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
+	public List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
+	
+	@RestResource(exported=false)
 	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.id DESC")
-	List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
-
-	@RestResource(exported = false)
-	@Query("SELECT slug FROM Post")
-	Set<String> findSlugs();
-
-	Post findBySlug(@Param("slug") String slug);
-
-	@RestResource(exported = false)
-	@Query("SELECT post FROM Post post ORDER BY post.id DESC")
-	List<Post> findAllPostsOrderByIdDesc();
-
-	@RestResource(exported = false)
-	@Query("SELECT wordpressId FROM Post post where post.station.id = :stationId")
-	Set<Integer> findWordpressIdsByStation(@Param("stationId") Integer stationId);
-
-	@Query(value = "SELECT *, count(*), sum(readsCount) FROM post, station where station.id = :stationId AND " + "date BETWEEN :dateIni AND :dateEnd group by author_id ORDER BY sum(readsCount) DESC", nativeQuery = true)
-	List<Object[]> findPostsOrderByMostReadAuthors(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
-
+	public List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
+    
+	@RestResource(exported=false)
+    @Query("SELECT slug FROM Post")
+    public Set<String> findSlugs();
+	
+	public Post findBySlug(@Param("slug") String slug);
+	
+	@RestResource(exported=false)
+	@Query("SELECT post FROM Post post ORDER BY post.date DESC")
+	public List<Post> findAllPostsOrderByIdDesc();
+	
+	@RestResource(exported=false)
+    @Query("SELECT wordpressId FROM Post post where post.station.id = :stationId")
+    public Set<Integer> findWordpressIdsByStation(@Param("stationId") Integer stationId);
+    
+	@Query(value = "SELECT *, count(*), sum(readsCount) FROM post, station where station.id = :stationId AND " +
+        "date BETWEEN :dateIni AND :dateEnd group by author_id ORDER BY sum(readsCount) DESC", nativeQuery = true)
+	public List<Object[]> findPostsOrderByMostReadAuthors(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
+	
 	@Query(value = "SELECT * FROM post, station where station.id = :stationId AND date BETWEEN :dateIni AND :dateEnd ORDER BY favoritesCount DESC, date DESC", nativeQuery = true)
 	List<Post> findPostsOrderByFavorites(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
 

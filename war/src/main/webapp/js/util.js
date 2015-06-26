@@ -124,6 +124,10 @@ function getCustomStyle(color, perspective, header) {
 	  "background: "+ color +";\n"+
 	"}\n"+*/
 
+	".nav-tabs li.custom-active a{"+
+	"border-bottom-color:" +color+ "!important"+
+	"}"+
+
 	".redactor-editor a, .redactor-editor a:hover {color:"+ color +"}\n"+
 	".custom-fab-button{background-color: " + color + "!important; color: " + textColorEval(color) + "!important}"+
 
@@ -244,6 +248,11 @@ function getCustomStyle(color, perspective, header) {
 
 	".station-header {\n"+
 	"  background-color: rgba("+hexToRgb(header).r+", " + hexToRgb(header).g + ", "+ hexToRgb(header).b +", 0.95);\n"+
+	"  color: " + textColorEval(header) + ";\n"+
+	"}\n"+
+
+	".header-custom{\n"+
+	"  background-color: rgba("+hexToRgb(shadeBlend(0.15,header)).r+", " + hexToRgb(shadeBlend(0.15,header)).g + ", "+ hexToRgb(shadeBlend(0.15,header)).b +", 1);\n"+
 	"  color: " + textColorEval(header) + ";\n"+
 	"}\n"+
 

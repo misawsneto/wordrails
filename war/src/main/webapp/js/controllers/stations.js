@@ -10,7 +10,11 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 	    $scope.tabs[index] = true;
 		}
 
-		$scope.app.termPerspectiveView = initTermPerspective;
+		if(!$scope.app.termPerspectiveView)
+			$scope.app.termPerspectiveView = initTermPerspective;
+		
+		// $scope.app.changeStation($scope.app.currentStation);
+
 		var lastScrollTop = 0
 		var didScroll = false;
 		$timeout(function(){
@@ -18,22 +22,22 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 		}, 20)
 
 		function checkStationHeaderVisibel(scrollTop){
-	    // Make sure they scroll more than delta
-	    if(Math.abs(lastScrollTop - scrollTop) <= 5)
-	    	return;
-	    // If they scrolled down and are past the navbar, add class .nav-up.
-	    // This is necessary so you never see what is "behind" the navbar.
-	    if (scrollTop > lastScrollTop && scrollTop > 50){
-	        // Scroll Down
-	        $('body').removeClass('nav-down').addClass('nav-up');
-	      } else {
-	        // Scroll Up
-	        if(scrollTop + $(window).height() < $(document).height()) {
-	        	$('body').removeClass('nav-up').addClass('nav-down');
-	        }
-      }
-      lastScrollTop = scrollTop;
-    }
+		    // Make sure they scroll more than delta
+		    if(Math.abs(lastScrollTop - scrollTop) <= 5)
+		    	return;
+		    // If they scrolled down and are past the navbar, add class .nav-up.
+		    // This is necessary so you never see what is "behind" the navbar.
+		    if (scrollTop > lastScrollTop && scrollTop > 50){
+		        // Scroll Down
+		        $('body').removeClass('nav-down').addClass('nav-up');
+		      } else {
+		        // Scroll Up
+		        if(scrollTop + $(window).height() < $(document).height()) {
+		        	$('body').removeClass('nav-up').addClass('nav-down');
+		        }
+	      }
+	      lastScrollTop = scrollTop;
+	    }
 
     $timeout(function(){
     	checkStationHeaderVisibel(lastScrollTop);
