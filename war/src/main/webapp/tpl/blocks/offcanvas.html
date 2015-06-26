@@ -8,7 +8,7 @@
   <!-- <div class="scroll-wrap"> -->
   <nav class="menu">
     <div class="offcanvas-icon-list">
-      <a href ng-repeat="station in app.stationsPermissions" ng-class="{'bg-custom-primary': station.stationId == app.currentStation.id}" ng-click="app.changeStation(station); toggleMenu();">
+      <a ui-sref="app.stations" ng-repeat="station in app.stationsPermissions" ng-class="{'bg-custom-primary': station.stationId == app.currentStation.id}" ng-click="app.changeStation(station); toggleMenu();">
         <span class="text-lg">{{station.stationName}}</span>
       </a>
     </div>
