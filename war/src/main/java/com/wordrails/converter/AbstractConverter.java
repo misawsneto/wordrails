@@ -10,7 +10,9 @@ public abstract class AbstractConverter<Entity, View> {
 	public List<View> convertToViews(List<Entity> entities){
 		List<View> views = new ArrayList<View>(entities.size());
 		for (Entity entity : entities) {
-			views.add(convertToView(entity));
+			View view = convertToView(entity);
+			if(view!=null)
+				views.add(view);
 		}
 		return views;
 	}

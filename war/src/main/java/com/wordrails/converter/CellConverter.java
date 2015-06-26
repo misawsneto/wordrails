@@ -48,8 +48,10 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 		cellView.id = cell.id;
 		cellView.index = cell.index;
 		if(cell.post != null){
-			cellView.postView = postConverter.convertToView(cell.post); 
-		}
+			cellView.postView = postConverter.convertToView(cell.post);
+			if(cellView.postView == null || cellView.postView.postId == null)
+				return null;
+		}else return null;
 		return cellView;
 	}
 }
