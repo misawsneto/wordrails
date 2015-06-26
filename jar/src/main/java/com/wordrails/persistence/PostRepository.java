@@ -51,7 +51,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported=false)
 	public List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 	
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.id DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
 	public List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 	
 	@RestResource(exported=false)
@@ -65,7 +65,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	public Post findBySlug(@Param("slug") String slug);
 	
 	@RestResource(exported=false)
-	@Query("SELECT post FROM Post post ORDER BY post.id DESC")
+	@Query("SELECT post FROM Post post ORDER BY post.date DESC")
 	public List<Post> findAllPostsOrderByIdDesc();
 	
 	@RestResource(exported=false)

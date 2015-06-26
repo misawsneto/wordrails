@@ -16,6 +16,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>, Quer
 	@RestResource(exported=false)
 	List<Comment> findByPost(Post post);
 
-	@Query("SELECT comment FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.id DESC")
+	@Query("SELECT comment FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
 	List<Comment> findPostCommentsOrderByDate(@Param("postId") Integer postId, Pageable pageable);
 }
