@@ -9,14 +9,14 @@
         <div class="cell-inner">
           <div id="post-editor" class="wrapper-md p-r-xxl p-l-xxl">
             <div id="post-media-box" class="post-block" ng-class="{'image-landscape': app.editingPost.imageLandscape && app.editingPost.uploadedImage.filelink}">
-              <div id="post-media" class="text-center text-3x" ng-class="{'hide': app.editingPost.showInputVideoUrl || app.editingPost.uploadedImage.filelink}">
-                  <div id="image-button-wrapper" class="thumb">
+              <div id="post-media" class="pull-left text-2x" ng-class="{'hide': app.editingPost.showInputVideoUrl || app.editingPost.uploadedImage.filelink}">
+                  <div id="image-button-wrapper" class="thumb-xs">
                     <span id="image-button" class="mdi mdi-file-image-box custom-btn" tooltip="Imagem" tooltip-append-to-body="true" tooltip-placement="top">
                       <input id="image-upload" type="file" nv-file-select=""
                         uploader="uploader" name="contents" accept="image/*"/>
                     </span>
                   </div>
-                  <div class="thumb" id="video-button">
+                  <div class="thumb-xs" id="video-button">
                     <a tooltip="Video" tooltip-placement="top" tooltip-append-to-body="true" href ng-click="toggleVideoUrl()" class="mdi mdi-youtube-play"></a>
                   </div>
               </div>
