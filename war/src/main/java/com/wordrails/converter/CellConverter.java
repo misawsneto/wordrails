@@ -20,7 +20,7 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 	@Autowired RowRepository rowRepository;
 	
 	public List<Cell> convertToEntities(List<CellView> views, Row row){
-		List<Cell> entities = new ArrayList<Cell>(views.size());
+		List<Cell> entities = new ArrayList<Cell>();
 		for (CellView cellView : views) {
 			Cell cell = convertToEntity(cellView);
 			cell.row = row;
