@@ -152,7 +152,7 @@ public class Test {
 		PostDto post = new PostDto();
 		post.title = "Post 1";
 		post.body = "Post 1";
-		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(2).toDate();
+		//post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(2).toDate();
 		post.author = person;
 		post.station = station;
 		wordRails.postPost(post);

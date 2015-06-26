@@ -23,6 +23,12 @@ public class WordpressPost {
 	public WordpressPost() {
 	}
 
+	public WordpressPost(String title, String body, Date date) {
+		this.title = title;
+		this.body = body;
+		this.date = date;
+	}
+
 	public WordpressPost(String title, String body, String status, Date date) {
 		this.title = title;
 		this.body = body;

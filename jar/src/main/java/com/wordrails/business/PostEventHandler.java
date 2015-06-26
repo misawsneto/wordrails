@@ -79,9 +79,9 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	@Transactional
 	public void handleAfterCreate(Post post) {
-		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			schedule(post);
-		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
+		if (post instanceof PostScheduled) {
+			schedule((PostScheduled) post);
+		} else if (post.notify && !(post instanceof PostDraft)) {
 			buildNotification(post);
 		}
 	}
@@ -89,13 +89,13 @@ public class PostEventHandler {
 	@HandleAfterSave
 	@Transactional
 	public void handleAfterSave(Post post) {
-		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			schedule(post);
+		if (post instanceof PostScheduled) {
+			schedule((PostScheduled) post);
 		}
 	}
 
 	@Transactional
-	private void schedule(Post post) {
+	private void schedule(PostScheduled post) {
 		JobDetail job = null;
 		Trigger trigger = null;
 		try {

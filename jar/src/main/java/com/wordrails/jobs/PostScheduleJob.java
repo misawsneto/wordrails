@@ -36,7 +36,6 @@ public class PostScheduleJob extends QuartzJobBean {
 
 		Post post = postRepository.findOne(id);
 		if (post != null) {
-			post.state = Post.STATE_PUBLISHED;
 			postRepository.save(post);
 
 			if (post.notify) {

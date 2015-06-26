@@ -38,7 +38,6 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;
 		postView.topper = post.topper;
-		postView.state = post.state;
 		postView.readsCount = post.readsCount;
 		postView.favoritesCount = post.favoritesCount;
 		postView.recommendsCount = post.recommendsCount;

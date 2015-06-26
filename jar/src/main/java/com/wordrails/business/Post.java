@@ -15,6 +15,12 @@ import java.util.Set;
 
 @Entity
 @Indexed
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+		name="state",
+		discriminatorType=DiscriminatorType.STRING
+)
+@DiscriminatorValue(value="PUBLISHED")
 @AnalyzerDefs({
 		// auto complete 1
 		@AnalyzerDef(name = "autocompleteEdgeAnalyzer",
@@ -76,10 +82,6 @@ import java.util.Set;
 @Spatial
 public class Post {
 
-	public static final String STATE_PUBLISHED = "PUBLISHED";
-	public static final String STATE_DRAFT = "DRAFT";
-	public static final String STATE_SCHEDULED = "SCHEDULED";
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@DocumentId
@@ -97,10 +99,6 @@ public class Post {
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastModificationDate;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date scheduledDate;
 
 	@Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
 	@Analyzer(definition = "customPostAnalyzer")
@@ -123,9 +121,6 @@ public class Post {
 	@Column(length = 1024)
 	public String subheading;
 
-	@Size(min = 1, max = 15)
-	public String state = STATE_PUBLISHED;
-
 	@ManyToOne
 	public Sponsor sponsor;
 
@@ -136,6 +131,11 @@ public class Post {
 
 	@OneToMany(mappedBy = "post")
 	public Set<Comment> comments;
+
+	@Size(min = 1, max = 15)
+	@Field(analyze = Analyze.NO)
+	@Column(insertable = false, updatable = false)
+	public String state;
 
 	@ManyToOne
 	@IndexedEmbedded

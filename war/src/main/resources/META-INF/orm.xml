@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
-    			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    			 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
     			 					 http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
-    			 version="2.1">
-    			 
+                 version="2.1">
+
 	<named-query name="Cell.findCellsPositioned">
 		<query>
 			<![CDATA[
@@ -16,198 +16,200 @@
 			]]>
 		</query>
 	</named-query>
-	
+
 	<named-query name="TermPerspective.findPerspectiveAndTerm">
 		<query>
-			select termPerspective 
-			from TermPerspective termPerspective join termPerspective.term term join termPerspective.perspective perspective 
+			select termPerspective
+			from TermPerspective termPerspective join termPerspective.term term join termPerspective.perspective
+			perspective
 			where term.id = :termId and perspective.id = :stationPerspectiveId
 		</query>
 	</named-query>
-	
+
 	<named-query name="TermPerspective.findPerspectiveAndTermNull">
 		<query>
-			select termPerspective 
-			from TermPerspective termPerspective join termPerspective.perspective perspective 
+			select termPerspective
+			from TermPerspective termPerspective join termPerspective.perspective perspective
 			where termPerspective.term is null and perspective.id = :stationPerspectiveId
 		</query>
 	</named-query>
-	
+
 	<named-query name="TermPerspective.findRootTermByStationPerspective">
 		<query>
-			select termPerspective 
-			from TermPerspective termPerspective join termPerspective.term term join termPerspective.perspective perspective 
-			where term.parent is null and perspective.id = :stationPerspectiveId	
+			select termPerspective
+			from TermPerspective termPerspective join termPerspective.term term join termPerspective.perspective
+			perspective
+			where term.parent is null and perspective.id = :stationPerspectiveId
 		</query>
 	</named-query>
-        
+
 	<named-query name="Term.findTagsByWordpress">
 		<query>
-                    select term
-                    from Term term
-                        join term.taxonomy taxonomy
-                        join taxonomy.owningStation station
-                        join station.wordpress wordpress
-                    where wordpress = :wordpress and taxonomy.type = 'T'
+			select term
+			from Term term
+			join term.taxonomy taxonomy
+			join taxonomy.owningStation station
+			join station.wordpress wordpress
+			where wordpress = :wordpress and taxonomy.type = 'T'
 		</query>
 	</named-query>
-        
+
 	<named-query name="Term.findCategoriesByWordpress">
 		<query>
-                    select term
-                    from Term term, StationPerspective p
-                        join term.taxonomy t1
-                        join p.taxonomy t2
-                        join p.station station
-                        join station.wordpress wordpress
-                    where wordpress = :wordpress and t1.type != 'T' and t1.type != 'A' and t1 = t2
+			select term
+			from Term term, StationPerspective p
+			join term.taxonomy t1
+			join p.taxonomy t2
+			join p.station station
+			join station.wordpress wordpress
+			where wordpress = :wordpress and t1.type != 'T' and t1.type != 'A' and t1 = t2
 		</query>
 	</named-query>
-        
+
 	<named-query name="Taxonomy.findTypeTByWordpress">
 		<query>
-                    select t
-                    from Taxonomy t 
-                        join t.owningStation station
-                    where station.wordpress = :wordpress and t.type = 'T'
+			select t
+			from Taxonomy t
+			join t.owningStation station
+			where station.wordpress = :wordpress and t.type = 'T'
 		</query>
 	</named-query>
-        
+
 	<named-query name="Taxonomy.findByWordpress">
 		<query>
-                    select t
-                    from Taxonomy t, StationPerspective p
-                        join p.station station
-                    where station.wordpress = :wordpress and t.type != 'T' and t.type != 'A' and t = p.taxonomy
+			select t
+			from Taxonomy t, StationPerspective p
+			join p.station station
+			where station.wordpress = :wordpress and t.type != 'T' and t.type != 'A' and t = p.taxonomy
 		</query>
 	</named-query>
-        
+
 	<named-query name="Taxonomy.findTypeTByStation">
 		<query>
-                    select t
-                    from Taxonomy t 
-                        join t.owningStation station
-                    where station = :station and t.type = 'T'
+			select t
+			from Taxonomy t
+			join t.owningStation station
+			where station = :station and t.type = 'T'
 		</query>
 	</named-query>
-        
+
 	<named-query name="Taxonomy.findByStation">
 		<query>
-                    select t
-                    from Taxonomy t, StationPerspective p
-                        join p.station station
-                    where station = :station and t.type != 'T' and t.type != 'A' and t = p.taxonomy
+			select t
+			from Taxonomy t, StationPerspective p
+			join p.station station
+			where station = :station and t.type != 'T' and t.type != 'A' and t = p.taxonomy
 		</query>
 	</named-query>
-        
+
 	<named-query name="Station.findByWordpressToken">
 		<query>
-                    select s from Station s join s.wordpress wordpress where wordpress.token = :wordpressToken
+			select s from Station s join s.wordpress wordpress where wordpress.token = :wordpressToken
 		</query>
 	</named-query>
-	
+
 	<named-query name="Taxonomy.findNetworkOrStationTaxonomiesByNetworkIdExcludeType">
 		<query>
-			select 
-				t 
-			from 
-				Taxonomy t 
+			select
+			t
+			from
+			Taxonomy t
 			where
-				t.id IN (select 
-							taxonomy.id 
-						from 
-							Taxonomy taxonomy join taxonomy.owningStation station join station.networks network
-						where network.id = :networkId and taxonomy.type != :type)
-						
-				OR t.id IN (select 
-								taxonomy.id 
-							from 
-								Taxonomy taxonomy join taxonomy.owningNetwork network
-							where network.id = :networkId)
+			t.id IN (select
+			taxonomy.id
+			from
+			Taxonomy taxonomy join taxonomy.owningStation station join station.networks network
+			where network.id = :networkId and taxonomy.type != :type)
+
+			OR t.id IN (select
+			taxonomy.id
+			from
+			Taxonomy taxonomy join taxonomy.owningNetwork network
+			where network.id = :networkId)
 		</query>
 	</named-query>
-	
+
 	<named-query name="Taxonomy.findByStationsIds">
 		<query>
-			select 
-				t 
-			from 
-				Taxonomy t join t.owningStation station
-			where 
-				station.id IN (:stationsIds)	
+			select
+			t
+			from
+			Taxonomy t join t.owningStation station
+			where
+			station.id IN (:stationsIds)
 		</query>
 	</named-query>
-	
+
 	<named-query name="Taxonomy.findAuthorTaxonomyByStationId">
 		<query>
-			select t from Taxonomy t where t.owningStation = :station and t.type = :taxonomyType 	
+			select t from Taxonomy t where t.owningStation = :station and t.type = :taxonomyType
 		</query>
 	</named-query>
 
 	<named-query name="Taxonomy.findByTermsIds">
 		<query>
-			select term.taxonomy from Term term where term.id IN (:termsIds)	
+			select term.taxonomy from Term term where term.id IN (:termsIds)
 		</query>
 	</named-query>
-	
+
 	<named-query name="Taxonomy.findByStationId">
 		<query>
-			select taxonomy 
-			from Taxonomy taxonomy  
-			where 
-			
+			select taxonomy
+			from Taxonomy taxonomy
+			where
+
 			taxonomy.id in (
-				select t.id
-				from Taxonomy t join t.owningStation station
-				where station.id = :stationId
+			select t.id
+			from Taxonomy t join t.owningStation station
+			where station.id = :stationId
 			)
-			
+
 			or taxonomy.id in
 			(
-				select t.id 
-				from Taxonomy t join t.owningNetwork network 
-				where :stationId member of network.stations
+			select t.id
+			from Taxonomy t join t.owningNetwork network
+			where :stationId member of network.stations
 			)
-			
+
 			or taxonomy.id in
 			(
-				select t.id 
-				from Taxonomy t join t.networks network 
-				where :stationId member of network.stations
+			select t.id
+			from Taxonomy t join t.networks network
+			where :stationId member of network.stations
 			)
 		</query>
 	</named-query>
-	
+
 	<named-query name="Term.findTermAuthorTaxonomy">
 		<query>
 			select t from Term t where t.name = :name and t.taxonomy = :taxonomy
 		</query>
 	</named-query>
-	
+
 	<named-query name="Term.findTreeByTermId">
 		<query>
 			select t from Term t left join fetch t.children where t.id = :termId
 		</query>
 	</named-query>
-	
+
 	<named-query name="findTreeByTaxonomyId">
 		<query>
 			select t from Term t left join fetch t.children where t.taxonomy.id = :taxonomyId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Term.countTerms">
 		<query>
-			select count(1) from Term term where term.id IN (:termsIds)	
+			select count(1) from Term term where term.id IN (:termsIds)
 		</query>
 	</named-query>
-	
+
 	<named-query name="Term.findRoots">
 		<query>
-			select term from Term term where term.parent is null and term.taxonomy.id = :taxonomyId	
+			select term from Term term where term.parent is null and term.taxonomy.id = :taxonomyId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Post.countSlugPost">
 		<query>
 			select count(1)
@@ -215,7 +217,7 @@
 			where post.slug = :slug
 		</query>
 	</named-query>
-	
+
 	<named-query name="Post.findByFeaturedImages">
 		<query>
 			select post
@@ -223,217 +225,217 @@
 			where post.featuredImage IN (:featuredImages)
 		</query>
 	</named-query>
-	
+
 	<named-query name="Post.findPostsFromOrPromotedToStation">
 		<query>
 			select
-				post
+			post
 			from
-				Post post
+			Post post
 			where
-				post.id in (
-					select
-						p.id
-					from
-						Post p 
-					where
-						p.station.id = :stationId
-				) or post.id in (
-					select
-						p.id
-					from
-						Station station 
-						join station.promotions promotion 
-						join promotion.post p
-					where
-						station.id = :stationId
-				)
+			post.id in (
+			select
+			p.id
+			from
+			Post p
+			where
+			p.station.id = :stationId
+			) or post.id in (
+			select
+			p.id
+			from
+			Station station
+			join station.promotions promotion
+			join promotion.post p
+			where
+			station.id = :stationId
+			)
 			order by
-				post.date desc 
+			post.date desc
 		</query>
 	</named-query>
 
 	<named-query name="Post.findPostsNotPositioned">
 		<query>
 			select
-				post
+			post
 			from
-				Post post
+			Post post
 			where
-				post.id in (
-					select
-						p.id
-					from
-						Post p join p.terms t
-					where
-						p.station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)
-				) or post.id in (
-					select
-						p.id
-					from
-						Station station 
-						join station.promotions promotion 
-						join promotion.post p
-						join p.terms t
-					where
-						station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)
-				)
+			post.id in (
+			select
+			p.id
+			from
+			Post p join p.terms t
+			where
+			p.station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)
+			) or post.id in (
+			select
+			p.id
+			from
+			Station station
+			join station.promotions promotion
+			join promotion.post p
+			join p.terms t
+			where
+			station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)
+			)
 			order by
-				post.date desc
+			post.date desc
 		</query>
 	</named-query>
 
 	<named-query name="Post.findPosts">
 		<query>
 			select
-				post
+			post
 			from
-				Post post
+			Post post
 			where
-				:termId member of post.terms and post.station.id = :stationId
+			:termId member of post.terms and post.station.id = :stationId
 			order by
-				post.date desc 
+			post.date desc
 		</query>
 	</named-query>
 
 	<named-query name="Post.findPostsAndPostsPromoted">
 		<query>
 			select
-				post
+			post
 			from
-				Post post
+			Post post
 			where
-				post.id in (
-					select
-						p.id
-					from
-						Post p join p.terms t
-					where
-						p.station.id = :stationId and t.id in (:termsIds) and p.state != 'DRAFT'
-				) or post.id in (
-					select
-						p.id
-					from
-						Station station 
-						join station.promotions promotion 
-						join promotion.post p
-						join p.terms t
-					where
-						station.id = :stationId and t.id in (:termsIds) and p.state != 'DRAFT'
-				)
+			post.id in (
+			select
+			p.id
+			from
+			Post p join p.terms t
+			where
+			p.station.id = :stationId and t.id in (:termsIds) and p.state = 'PUBLISHED'
+			) or post.id in (
+			select
+			p.id
+			from
+			Station station
+			join station.promotions promotion
+			join promotion.post p
+			join p.terms t
+			where
+			station.id = :stationId and t.id in (:termsIds) and p.state = 'PUBLISHED'
+			)
 			order by
-				post.date desc
+			post.date desc
 		</query>
 	</named-query>
 
 	<named-query name="Post.findPostsAndPostsPromotedByBody">
 		<query>
 			select
-				post
+			post
 			from
-				Post post
+			Post post
 			where
-				post.id in (
-					select
-						p.id
-					from
-						Post p 
-					where
-						p.station.id = :stationId and p.body like :body
-				) or post.id in (
-					select
-						p.id
-					from
-						Station station 
-						join station.promotions promotion 
-						join promotion.post p
-					where
-						station.id = :stationId and p.body like :body
-				)
+			post.id in (
+			select
+			p.id
+			from
+			Post p
+			where
+			p.station.id = :stationId and p.body like :body
+			) or post.id in (
+			select
+			p.id
+			from
+			Station station
+			join station.promotions promotion
+			join promotion.post p
+			where
+			station.id = :stationId and p.body like :body
+			)
 			order by
-				post.date desc
+			post.date desc
 		</query>
 	</named-query>
 
-	<named-query name="Post.findPostsByStationIdAndAuthorIdAndState">
+	<named-query name="Post.findPostsByStationIdAndAuthorId">
 		<query>
 			select
-				p
+			p
 			from
-				Post p 
+			Post p
 			where
-				p.station.id = :stationId and p.state = :state and p.author.id = :authorId
+			p.station.id = :stationId and p.author.id = :authorId
 			order by
-				p.date desc
+			p.date desc
 		</query>
 	</named-query>
-	
+
 	<named-query name="Post.findPostsAndPostsPromotedByTermId">
 		<query>
 			select
-				post
+			post
 			from
-				Post post
+			Post post
 			where
-				post.id in (
-					select
-						p.id
-					from
-						Post p 
-					where
-						p.station.id = :stationId and :termId member of p.terms
-				) or post.id in (
-					select
-						p.id
-					from
-						Station station 
-						join station.promotions promotion 
-						join promotion.post p
-					where
-						station.id = :stationId and :termId member of p.terms
-				)
+			post.id in (
+			select
+			p.id
+			from
+			Post p
+			where
+			p.station.id = :stationId and :termId member of p.terms
+			) or post.id in (
+			select
+			p.id
+			from
+			Station station
+			join station.promotions promotion
+			join promotion.post p
+			where
+			station.id = :stationId and :termId member of p.terms
+			)
 			order by
-				post.date desc
+			post.date desc
 		</query>
 	</named-query>
 
 	<named-query name="Post.findPostsAndPostsPromotedByAuthorId">
 		<query>
 			select
-				post
+			post
 			from
-				Post post
+			Post post
 			where
-				post.id in (
-					select
-						p.id
-					from
-						Post p 
-					where
-						p.station.id = :stationId and p.author.id = :authorId
-				) or post.id in (
-					select
-						p.id
-					from
-						Station station 
-						join station.promotions promotion 
-						join promotion.post p
-					where
-						station.id = :stationId and p.author.id = :authorId
-				)
+			post.id in (
+			select
+			p.id
+			from
+			Post p
+			where
+			p.station.id = :stationId and p.author.id = :authorId
+			) or post.id in (
+			select
+			p.id
+			from
+			Station station
+			join station.promotions promotion
+			join promotion.post p
+			where
+			station.id = :stationId and p.author.id = :authorId
+			)
 			order by
-				post.date desc
+			post.date desc
 		</query>
 	</named-query>
 
 	<named-query name="Comment.findPostCommentsOrderByDate">
 		<query>
 			select
-				comment
+			comment
 			from
-				Comment comment join comment.post post
+			Comment comment join comment.post post
 			where
-				post.id = :postId
+			post.id = :postId
 			order by comment.date
 		</query>
 	</named-query>
@@ -441,280 +443,280 @@
 	<named-query name="Network.findByNetworkIdAndPersonId">
 		<query>
 			select
-				nr
+			nr
 			from
-				NetworkRole nr join nr.network n join nr.person p
+			NetworkRole nr join nr.network n join nr.person p
 			where
-				n.id = :networkId AND p.id = :personId
+			n.id = :networkId AND p.id = :personId
 		</query>
 	</named-query>
 
 	<named-query name="Network.findIdsByStation">
 		<query>
 			select
-				n.id
+			n.id
 			from
-				Network n join n.stations s
+			Network n join n.stations s
 			where
-				s.id = :stationId
+			s.id = :stationId
 		</query>
 	</named-query>
 
 	<named-query name="Network.belongsToNetworks">
 		<query>
 			select
-				network
+			network
 			from
-				Network network join network.personsNetworkRoles personRoles join personRoles.person person
+			Network network join network.personsNetworkRoles personRoles join personRoles.person person
 			where
-				person.id = :personId and network.id IN (:networksId)
+			person.id = :personId and network.id IN (:networksId)
 		</query>
 	</named-query>
 
 	<named-query name="StationRole.findByPersonIdAndNetworkId">
 		<query>
 			select
-				role
+			role
 			from StationRole role join role.person person
-								  join role.station station
+			join role.station station
 			where person.id = :personId and :networkId member of station.networks
 		</query>
 	</named-query>
 	<named-query name="Station.findByPersonIdAndNetworkId">
 		<query>
-			select 
-				station
-			from 
-				Station station
-			where 
-				station.id IN 
-					(
-						select 
-							station.id
-						from 
-							Station station join station.personsStationRoles personRoles join personRoles.person person
-						where 
-							person.id = :personId and :networkId member of station.networks
-					) 
-				or 
-				
-				station.id IN 
-					(
-						select 
-							station.id
-						from 
-							Station station
-						where 
-							(station.visibility = 'UNRESTRICTED' or  station.visibility = 'RESTRICTED_TO_NETWORKS') 
-							and :networkId member of station.networks
-					)
+			select
+			station
+			from
+			Station station
+			where
+			station.id IN
+			(
+			select
+			station.id
+			from
+			Station station join station.personsStationRoles personRoles join personRoles.person person
+			where
+			person.id = :personId and :networkId member of station.networks
+			)
+			or
+
+			station.id IN
+			(
+			select
+			station.id
+			from
+			Station station
+			where
+			(station.visibility = 'UNRESTRICTED' or station.visibility = 'RESTRICTED_TO_NETWORKS')
+			and :networkId member of station.networks
+			)
 		</query>
 	</named-query>
 
 	<named-query name="Station.belongsToStations">
 		<query>
 			select
-				station
+			station
 			from
-				Station station join station.personsStationRoles personRoles join personRoles.person person
+			Station station join station.personsStationRoles personRoles join personRoles.person person
 			where
-				person.id = :personId and station.id IN (:stationsId)
+			person.id = :personId and station.id IN (:stationsId)
 		</query>
 	</named-query>
 
 	<named-query name="Station.belongsToStation">
 		<query>
 			select
-				station
+			station
 			from
-				Station station join station.personsStationRoles personRoles join personRoles.person person
+			Station station join station.personsStationRoles personRoles join personRoles.person person
 			where
-				person.id = :personId and station.id = :stationId
+			person.id = :personId and station.id = :stationId
 		</query>
 	</named-query>
 
 	<named-query name="Image.findByFileId">
 		<query>
 			select
-				image
+			image
 			from
-				Image image join image.original original 
-				join image.small small
-				join image.medium medium
-				join image.large large
+			Image image join image.original original
+			join image.small small
+			join image.medium medium
+			join image.large large
 			where
-				original.id = :fileId OR
-				small.id = :fileId OR
-				medium.id = :fileId OR
-				large.id = :fileId
+			original.id = :fileId OR
+			small.id = :fileId OR
+			medium.id = :fileId OR
+			large.id = :fileId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Favorite.findFavoritesByPersonId">
 		<query>
 			select
-				favorite
+			favorite
 			from
-				Favorite favorite join favorite.person person
+			Favorite favorite join favorite.person person
 			where
-				person.id = :personId
+			person.id = :personId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Favorite.findFavoritesByPostId">
 		<query>
 			select
-				favorite
+			favorite
 			from
-				Favorite favorite join favorite.post post
+			Favorite favorite join favorite.post post
 			where
-				post.id = :postId
+			post.id = :postId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Favorite.findFavoritesByPersonIdOrderByDate">
 		<query>
 			select
-				favorite
+			favorite
 			from
-				Favorite favorite join favorite.person person
+			Favorite favorite join favorite.person person
 			where
-				person.id = :personId
+			person.id = :personId
 			order by favorite.createdAt desc
 		</query>
 	</named-query>
-	
+
 	<named-query name="Bookmark.findBookmarksByPersonId">
 		<query>
 			select
-				bookmark
+			bookmark
 			from
-				Bookmark bookmark join bookmark.person person
+			Bookmark bookmark join bookmark.person person
 			where
-				person.id = :personId
+			person.id = :personId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Bookmark.findBookmarksByPostId">
 		<query>
 			select
-				bookmark
+			bookmark
 			from
-				Bookmark bookmark join bookmark.post post
+			Bookmark bookmark join bookmark.post post
 			where
-				post.id = :postId
+			post.id = :postId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Recommend.findRecommendsByPersonId">
 		<query>
 			select
-				recommend
+			recommend
 			from
-				Recommend recommend join recommend.person person
+			Recommend recommend join recommend.person person
 			where
-				person.id = :personId
+			person.id = :personId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Recommend.findRecommendsByPostId">
 		<query>
 			select
-				recommend
+			recommend
 			from
-				Recommend recommend join recommend.post post
+			Recommend recommend join recommend.post post
 			where
-				post.id = :postId
+			post.id = :postId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Recommend.findRecommendsByPersonIdOrderByDate">
 		<query>
 			select
-				recommend
+			recommend
 			from
-				Recommend recommend join recommend.person person
+			Recommend recommend join recommend.person person
 			where
-				person.id = :personId
+			person.id = :personId
 			order by recommend.id desc
 		</query>
 	</named-query>
-	
+
 	<named-query name="Notification.findNotificationsByPersonIdOrderByDate">
-	    <query>
+		<query>
 			select
-				notification
+			notification
 			from
-				Notification notification join notification.person person
+			Notification notification join notification.person person
 			where
-				person.id = :personId
+			person.id = :personId
 			order by notification.createdAt desc
 		</query>
 	</named-query>
 	<named-query name="PostRead.findPostReadByPersonIdOrderByDate">
-	    <query>
+		<query>
 			select
-				postRead
+			postRead
 			from
-				PostRead postRead join postRead.person person
+			PostRead postRead join postRead.person person
 			where
-				person.id = :personId
+			person.id = :personId
 			order by postRead.createdAt desc
 		</query>
 	</named-query>
 	<!--
 		select count(*) from post p join station s on p.station_id = s.id where s.id=:stationId and p.id not in (select pr.id from postread pr join person pe on pr.id = pe.id where pe.id=:personId); 
-	 --> 
-	
+	 -->
+
 	<named-query name="Post.findPostReadByStationAndPerson">
-	    <query>
-			select 
-				post  
-			from 
-				Post post join post.station station
-			where 
-				station.id = :stationId and post.id not in 
-				
-				(select 
-					pr.id from PostRead pr join pr.person person
-				where 
-					person.id=:personId)
+		<query>
+			select
+			post
+			from
+			Post post join post.station station
+			where
+			station.id = :stationId and post.id not in
+
+			(select
+			pr.id from PostRead pr join pr.person person
+			where
+			person.id=:personId)
 		</query>
 	</named-query>
-	
+
 	<named-query name="StationPerspective.findByStationId">
-	    <query>
-			select 
-				stationPerspective 
-			from 
-				StationPerspective stationPerspective 
-			where 
-				stationPerspective.station.id = :stationId 
+		<query>
+			select
+			stationPerspective
+			from
+			StationPerspective stationPerspective
+			where
+			stationPerspective.station.id = :stationId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Invitation.findByInvitationHash">
-	    <query>
-			select 
-				invitation 
-			from 
-				Invitation invitation
-			where 
-				invitation.hash = :hash
+		<query>
+			select
+			invitation
+			from
+			Invitation invitation
+			where
+			invitation.hash = :hash
 		</query>
 	</named-query>
-	
+
 	<named-query name="Post.findPopularPosts">
-	    <query>
-			select 
-				post 
-			from 
-				Post post
-			where 
-				post.station.id = :stationId
+		<query>
+			select
+			post
+			from
+			Post post
+			where
+			post.station.id = :stationId
 			order by
-				post.date desc, post.recommendsCount desc 
+			post.date desc, post.recommendsCount desc
 		</query>
 	</named-query>
-	
+
 </entity-mappings>

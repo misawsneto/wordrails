@@ -66,19 +66,15 @@ public class WordpressService {
 	private FileContentsRepository contentsRepository;
 
 	public WordpressPost createPost(Post post, WordpressApi api) throws Exception {
-		WordpressPost wp = new WordpressPost(post.title, post.body, post.state, new Date());
+		WordpressPost wp = new WordpressPost(post.title, post.body, new Date());
 
-		switch (post.state) {
-			case (Post.STATE_SCHEDULED):
-				wp.status = "future";
-				wp.date = post.date;
-				break;
-			case (Post.STATE_PUBLISHED):
-				wp.status = "publish";
-				break;
-			case (Post.STATE_DRAFT):
-				wp.status = "draft";
-				break;
+		if (post instanceof PostScheduled) {
+			wp.status = "future";
+			wp.date = post.date;
+		} else if (post instanceof PostDraft) {
+			wp.status = "draft";
+		} else {
+			wp.status = "publish";
 		}
 
 		return api.createPost(wp);
@@ -89,39 +85,39 @@ public class WordpressService {
 	}
 
 	public WordpressPost updatePost(Post post, WordpressApi api) throws Exception {
-		WordpressPost wp = new WordpressPost(post.title, post.body, post.state, new Date());
+		WordpressPost wp = new WordpressPost(post.title, post.body, new Date());
 
-		switch (post.state) {
-			case (Post.STATE_SCHEDULED):
-				wp.status = "future";
-				wp.date = post.date;
-				break;
-			case (Post.STATE_PUBLISHED):
-				wp.status = "publish";
-				break;
-			case (Post.STATE_DRAFT):
-				wp.status = "draft";
-				break;
+		if (post instanceof PostScheduled) {
+			wp.status = "future";
+			wp.date = post.date;
+		} else if (post instanceof PostDraft) {
+			wp.status = "draft";
+		} else {
+			wp.status = "publish";
 		}
 
 		return api.editPost(post.wordpressId, wp);
 	}
 
+
 	@Transactional
-	public Post getPost(Post post, WordpressPost wpPost, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy)
-			throws Exception {
-		post.body = wpPost.body;
+	public Post getPost(WordpressPost wpPost, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy) throws Exception {
 		switch (wpPost.status) {
 			case "publish":
-				post.state = Post.STATE_PUBLISHED;
-				break;
+				return getPost(new Post(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
 			case "draft":
-				post.state = Post.STATE_DRAFT;
-				break;
+				return getPost(new PostDraft(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
 			case "future":
-				post.state = Post.STATE_SCHEDULED;
-				break;
+				return getPost(new PostScheduled(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
 		}
+
+		return null; //should never happen
+	}
+
+	@Transactional
+	public Post getPost(Post post, WordpressPost wpPost, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy tagTaxonomy, Taxonomy categoryTaxonomy) throws Exception {
+		post.body = wpPost.body;
+
 		post.date = wpPost.date;
 		post.slug = wpPost.slug;
 		post.originalSlug = wpPost.slug;
@@ -161,8 +157,7 @@ public class WordpressService {
 
 				manager.persist(term);
 			} else {//another wordpressId is using this slug. Data is fucked up somewhere. should never happen
-				throw new SecurityException("Data stored in database is different from the terms sent in the request. Wordpress ID: "
-						+ wordpressId + ", Slug: " + slug + ", is tag: " + isTag);
+				throw new SecurityException("Data stored in database is different from the terms sent in the request. Wordpress ID: " + wordpressId + ", Slug: " + slug + ", is tag: " + isTag);
 			}
 		} else if (terms.containsRow(slug)) { //if this wp id does not exist, what about a term with the same slug?
 			if (terms.contains(slug, 0)) { //is the wordpressId of this term null?
@@ -177,8 +172,7 @@ public class WordpressService {
 				Integer taxId = Lists.newArrayList(terms.rowMap().get(slug).values()).get(0).taxonomy.id;
 				if ((isTag && Objects.equals(taxId, taxTagId)) || (!isTag && !Objects.equals(taxId, taxTagId))) { //if they are part of same taxonomy, it should not have the same slug. otherwise no prob
 					//another wordpressId is using this slug. Data is fucked up somewhere. should never happen
-					throw new SecurityException("Data stored in database is different from the terms sent in the request. Wordpress ID: "
-							+ wordpressId + ", Slug: " + slug + ", is tag: " + isTag);
+					throw new SecurityException("Data stored in database is different from the terms sent in the request. Wordpress ID: " + wordpressId + ", Slug: " + slug + ", is tag: " + isTag);
 				}
 			}
 		} else {
@@ -213,8 +207,7 @@ public class WordpressService {
 	}
 
 	@Transactional
-	public Set<Term> findAndSaveTerms(Map<Integer, WordpressTerm> wpTerms, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy taxTag, Taxonomy taxCat)
-			throws Exception {
+	public Set<Term> findAndSaveTerms(Map<Integer, WordpressTerm> wpTerms, HashBasedTable<String, Integer, Term> dbTerms, Taxonomy taxTag, Taxonomy taxCat) throws Exception {
 		Set<Term> terms = new HashSet();
 		for (WordpressTerm term : wpTerms.values()) {
 			Term t = selectTerm(dbTerms, term.id, term.slug, term.isTag(), taxTag.id);
@@ -302,8 +295,7 @@ public class WordpressService {
 				Set<Integer> wordpressIds = postRepository.findWordpressIdsByStation(tagTaxonomy.owningStation.id);
 				for (WordpressPost wpPost : wpPosts) {
 
-					if (wpPost.id > id)
-						id = wpPost.id; //in the end the last id will prevail
+					if (wpPost.id > id) id = wpPost.id; //in the end the last id will prevail
 
 					if (!wordpressIds.add(wpPost.id)) { //if wordpressId already exists in db
 						post = postRepository.findByWordpressId(wpPost.id);
@@ -312,7 +304,7 @@ public class WordpressService {
 						Person author = personRepository.findByWordpressId(1); //temporary
 						Station station = stationRepository.findByWordpressId(wp.id);
 
-						post = getPost(new Post(), wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
+						post = getPost(wpPost, dbTerms, tagTaxonomy, categoryTaxonomy);
 						post.station = station;
 						post.author = author;
 
