@@ -353,7 +353,7 @@ public class PerspectiveResource {
 	}
 
 	private List<Cell> mergePostsPositionedsNotPositioneds(Row row, List<Cell> positionedCells, List<Post> notPositionedPosts, int size){
-		List<Cell> cells = new ArrayList<Cell>(size);
+		List<Cell> cells = new ArrayList<Cell>();
 
 		Iterator<Cell> iteratorPositionedCell = positionedCells.iterator();
 		Cell positionedCell = (iteratorPositionedCell.hasNext() ? iteratorPositionedCell.next() : null);
@@ -464,7 +464,7 @@ public class PerspectiveResource {
 	}
 
 	private List<Cell> convertPostsToCells(Row row, List<Post> posts){
-		List<Cell> cells = new ArrayList<Cell>(posts.size());
+		List<Cell> cells = new ArrayList<Cell>();
 		int index = 0;
 
 		for (Post post : posts) {
