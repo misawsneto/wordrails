@@ -309,7 +309,7 @@ public class UtilResource {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			reindexAll(request);
+//			reindexAll(request);
 			updateDefaultStationPerspective(request);
 			updatePostFields(request);
 			updateTermPerspectivesStationIds(request);
