@@ -420,9 +420,9 @@ public class PostsResource {
 		}
 		
 		if(publicationType!=null){
-			musts = qb.bool().must(qb.keyword().onField("state").ignoreAnalyzer().matching(publicationType).createQuery());
+			musts = musts.must(qb.keyword().onField("state").ignoreAnalyzer().matching(publicationType).createQuery());
 		}else{
-			musts = qb.bool().must(qb.keyword().onField("state").ignoreAnalyzer().matching(Post.STATE_PUBLISHED).createQuery());
+			musts = musts.must(qb.keyword().onField("state").ignoreAnalyzer().matching(Post.STATE_PUBLISHED).createQuery());
 		}
 		
 		BooleanJunction stations = qb.bool();

@@ -48,6 +48,7 @@
             <property name="hibernate.search.infinispan.locking_cachename" value="LuceneIndexesLocking" />
             <property name="hibernate.search.default.indexBase" value="indexes"/>
             <property name="hibernate.search.default.worker.execution" value="async"/>
+            <property name="hibernate.search.worker.thread_pool.size" value="3"/>
         </properties>
     </persistence-unit>	
 </persistence>
