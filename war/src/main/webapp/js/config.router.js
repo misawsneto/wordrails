@@ -60,8 +60,8 @@ angular.module('app')
                             // 'com.2fdevs.videogular.plugins.overlayplay',
                             // 'com.2fdevs.videogular.plugins.poster',
                             // 'com.2fdevs.videogular.plugins.buffering',
-                            'js/app/music/ctrl.js', 
-                            'js/app/music/theme.css',
+                            // 'js/app/music/ctrl.js', 
+                            // 'js/app/music/theme.css',
                             '../bower_components/leaflet/dist/leaflet.js',
                             '../bower_components/leaflet/dist/leaflet.css'
                           ]).then(function(){
