@@ -1387,6 +1387,10 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   bottom: auto;
 }
 
+.border-radius-50p{
+  border-radius: 50%
+}
+
 /* /general */
 
 /* animate */
@@ -2313,11 +2317,6 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 .app-aside-folded .app-footer {
   margin-left: 70px!important;
 }
-
-  /* .navbar-collapse {
-    margin-left: 0px;
-  }
-  */
 }
 
 .bg-dg {
@@ -2436,8 +2435,25 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
     font-size: 30px;
   }
   .app-aside-folded .navi > ul > li > a {
-   height: 55px;
+   height: 50px;
  }
+
+  .app-aside-fixed.app-aside-folded .aside-wrap .navi-wrap nav.navi ul.nav li{
+    padding: 5px 0;
+  }
+
+  .app-aside-fixed.app-aside-folded .aside-wrap .navi-wrap nav.navi ul.nav li.line {
+    padding: 0px;
+  }
+  .app-aside-fixed.app-aside-folded .aside-wrap .navi-wrap nav.navi ul.nav li a{
+    width: 50px;
+    margin-left: 10px;
+  }
+
+  .app-aside-fixed.app-aside-folded .aside-wrap .navi-wrap nav.navi ul.nav li a i{
+    margin-left: 1px;
+  }
+
 }
 
 /* /aside.html */

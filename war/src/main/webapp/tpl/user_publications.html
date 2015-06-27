@@ -68,8 +68,12 @@
 							</a>
 							<div class="text-lg font-thin" ng-bind-html="publication.snippet | characters: 100 | stripHtml">
 							</div>
-							<div class="p-t display-t-c v-middle">
-								<span class="text-muted readingTime">{{publication.date | fromNow2}}</span>
+							<div class="p-t display-t-c v-middle inline">
+								<span class="readingTime text-muted">{{publication.date | fromNow2}}</span>
+								<div class="inline text-muted p-l-lg text-u-c">
+									<a class="text-muted p-r underline-hover">editar</a>
+									<a class="text-muted underline-hover">remover</a>
+								</div>
 							</div>
 						</div>
 						<!-- /content -->

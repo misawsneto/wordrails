@@ -36,6 +36,9 @@ public class PostView implements Serializable {
 	public String authorEmail;
 	public String authorTwitter;
 	public Integer authorSmallImageId;
+	
+	public String stationName;
+	public Integer stationId;
 
 	public String slug;
 	public String externalFeaturedImgUrl;

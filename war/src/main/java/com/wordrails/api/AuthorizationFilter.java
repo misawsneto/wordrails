@@ -32,9 +32,12 @@ import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
+
 import java.util.Date;
 import java.util.List;
+
 import javax.ws.rs.Path;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1367,16 +1370,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindBySlugAuthorized(String slug) {
-		boolean authorized = false;
-		Post post = postRepository.findBySlug(slug);
-		if(post != null){
-			authorized = postAndCommentSecurityChecker.canRead(post);
-		}
-		return authorized;
-	}
-
-	@Override
 	protected boolean isFindTermsByPostSlugAuthorized(String slug) {
 		boolean authorized = false;
 		Post post = postRepository.findBySlug(slug);
@@ -1459,6 +1452,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindBookmarkByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
+	}
+
+	@Override
+	protected boolean isFindPostBySlugAuthorized(String slug) {
+		boolean authorized = false;
+		Post post = postRepository.findBySlug(slug);
+		if(post != null){
+			authorized = postAndCommentSecurityChecker.canRead(post);
+		}
+		return authorized;
 	}
 
 }
