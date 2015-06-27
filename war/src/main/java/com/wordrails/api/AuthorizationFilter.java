@@ -324,7 +324,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 			List<Integer> termsIds, List<Integer> idsToExclude, Integer page, Integer size, List<String> sort) {
 		return canVisualizeStation(stationId);
 	}
-	
+
+	@Override
+	protected boolean isFindScheduledsByStationIdAndAuthorIdAuthorized(Integer stationId, Integer authorId, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
 	@Override
 	protected boolean isFindPostsAuthorized(Integer stationId, Integer termId, Integer page, Integer size, List<String> sort) {
 		return canVisualizeStation(stationId);
@@ -373,6 +378,56 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetPostTermsAuthorized(Integer postId) {
 		return canReadPosts(postId);
+	}
+
+	@Override
+	protected boolean isGetPostDraftsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPostDraftAuthorized(Integer postDraftId) {
+		return canReadPosts(postDraftId);
+	}
+
+	@Override
+	protected boolean isGetPostDraftSponsorAuthorized(Integer postDraftId) {
+		return canReadPosts(postDraftId);
+	}
+
+	@Override
+	protected boolean isGetPostDraftCommentsAuthorized(Integer postDraftId) {
+		return canReadPosts(postDraftId);
+	}
+
+	@Override
+	protected boolean isGetPostDraftFeaturedImageAuthorized(Integer postDraftId) {
+		return canReadPosts(postDraftId);
+	}
+
+	@Override
+	protected boolean isGetPostDraftImagesAuthorized(Integer postDraftId) {
+		return canReadPosts(postDraftId);
+	}
+
+	@Override
+	protected boolean isGetPostDraftAuthorAuthorized(Integer postDraftId) {
+		return canReadPosts(postDraftId);
+	}
+
+	@Override
+	protected boolean isGetPostDraftPromotionsAuthorized(Integer postDraftId) {
+		return canReadPosts(postDraftId);
+	}
+
+	@Override
+	protected boolean isGetPostDraftStationAuthorized(Integer postDraftId) {
+		return canReadPosts(postDraftId);
+	}
+
+	@Override
+	protected boolean isGetPostDraftTermsAuthorized(Integer postDraftId) {
+		return canReadPosts(postDraftId);
 	}
 
 	@Override

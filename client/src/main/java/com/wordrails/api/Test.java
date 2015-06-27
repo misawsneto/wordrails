@@ -1,5 +1,6 @@
 package com.wordrails.api;
 
+import com.wordrails.business.PostDraft;
 import org.joda.time.DateTime;
 import retrofit.RestAdapter.LogLevel;
 
@@ -14,17 +15,18 @@ public class Test {
 				new MockConnectivityManager(true),
 				new File("."),
 				0,
-				"http://sport.xarx.co",
-				"sport",
-				"Sport@dmiN",
+				"http://localhost:8080",
+				"silvio",
+				"silvio",
 				LogLevel.FULL
 		);
 
 		wordRails.login();
+		wordRails.getInitialData();
 		
-		wordRails.putPassword("Sport@dmiN", "Sport@dmiN");
+//		wordRails.putPassword("Sport@dmiN", "Sport@dmiN");
 		
-//		createPost(wordRails);
+		createPost(wordRails);
 
 //		NetworkDto network = wordRails.getNetwork(1);
 //
@@ -150,17 +152,17 @@ public class Test {
 
 	private static void createPost(WordRails wordRails) {
 		String person = wordRails.getSelf(wordRails.getPerson(2));
-		String station = wordRails.getSelf(wordRails.getStation(49));
+		String station = wordRails.getSelf(wordRails.getStation(2));
 
-		PostDto post = new PostDto();
+
+		PostDto post = new PostDto();//.getPostDraft(1598);
 		post.title = "Post 1";
 		post.body = "Post 1";
-		//post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(2).toDate();
+//		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(2).toDate();
 		post.author = person;
 		post.station = station;
+		post.date=new Date();
 		wordRails.postPost(post);
-		post = wordRails.getPost(post.id);
-		System.out.println(post);
 	}
 
 	public static void createDevEnv(WordRails wordRails) {

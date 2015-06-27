@@ -80,6 +80,7 @@ import java.util.Set;
 				charFilters = {@CharFilterDef(factory = HTMLStripCharFilterFactory.class)})
 })
 @Spatial
+//@Table(uniqueConstraints=@UniqueConstraint(columnNames={"slug", "state"}))
 public class Post {
 
 	public static final String STATE_PUBLISHED = "PUBLISHED";
@@ -130,7 +131,10 @@ public class Post {
 
 	public String originalSlug;
 
-	@Column(unique = true)
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date scheduledDate;
+
 	public String slug;
 
 	@OneToMany(mappedBy = "post")

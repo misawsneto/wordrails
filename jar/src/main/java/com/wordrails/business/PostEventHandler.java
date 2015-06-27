@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -57,15 +58,14 @@ public class PostEventHandler {
 				post.date = now;
 			}
 
+			Set<String> slugs = postRepository.findSlugs();
+
 			if (post.slug == null || post.slug.isEmpty()) {
 				String originalSlug = WordrailsUtil.toSlug(post.title);
 				post.originalSlug = originalSlug;
-				try {
-					post.slug = originalSlug;
-					postRepository.save(post);
-				} catch (DataIntegrityViolationException ex) {
-					String hash = WordrailsUtil.generateRandomString(5, "Aa#u");
-					post.slug = originalSlug + "-" + hash;
+				if (!slugs.add(post.slug)) { //if slug already exists in db
+					String hash = WordrailsUtil.generateRandomString(5, "!Aau");
+					post.slug = post.slug + "-" + hash;
 				}
 			} else {
 				post.originalSlug = post.slug;
