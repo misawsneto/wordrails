@@ -1,7 +1,11 @@
 package com.wordrails.api;
 
 import org.joda.time.DateTime;
+
+import com.wordrails.business.Station;
+
 import retrofit.RestAdapter.LogLevel;
+import retrofit.RetrofitError;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,15 +18,34 @@ public class Test {
 				new MockConnectivityManager(true),
 				new File("."),
 				0,
-				"http://sport.xarx.co",
-				"sport",
-				"Sport@dmiN",
+				"http://demo.xarxlocal.com",
+				"silvio",
+				"silvio",
 				LogLevel.FULL
 		);
 
 		wordRails.login();
 		
-		wordRails.putPassword("Sport@dmiN", "Sport@dmiN");
+		PersonDto person = wordRails.getPerson(2);
+		System.out.println(person);
+		
+		NetworkDto network = wordRails.getNetwork(1);
+		
+		try{
+		StationDto station = new StationDto();
+		station.name = "Station 1";
+		station.networks = new HashSet<String>();
+		station.networks.add(wordRails.getSelf(network));
+		station.visibility = Station.RESTRICTED_TO_NETWORKS;
+		station.writable = true;
+		station.main = false;
+		
+		wordRails.postStation(station);
+		station = wordRails.getStation(station.id);
+		System.out.println(station);
+		}catch(RetrofitError e){
+			System.out.println(e.getBodyAs(String.class));
+		}
 		
 //		createPost(wordRails);
 
