@@ -3,9 +3,11 @@ package com.wordrails.api;
 import com.wordrails.business.PostDraft;
 import org.joda.time.DateTime;
 import retrofit.RestAdapter.LogLevel;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedInput;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Test {
@@ -155,14 +157,18 @@ public class Test {
 		String station = wordRails.getSelf(wordRails.getStation(2));
 
 
-		PostDto post = new PostDto();//.getPostDraft(1598);
+		PostScheduledDto post = new PostScheduledDto();//.getPostDraft(1598);
 		post.title = "Post 1";
 		post.body = "Post 1";
 //		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(2).toDate();
 		post.author = person;
 		post.station = station;
 		post.date=new Date();
-		wordRails.postPost(post);
+		try {
+			wordRails.postPostScheduled(post);
+		}catch (RetrofitError err) {
+			printServerError(err);
+		}
 	}
 
 	public static void createDevEnv(WordRails wordRails) {
@@ -291,6 +297,46 @@ public class Test {
 				wordRails.putPostTerms(p.id, terms);
 
 				//addImage("test.jpg", p.getSelf());
+			}
+		}
+	}
+
+	public static void printServerError(RetrofitError error) {
+		if (error.getResponse() != null) {
+			Response response = error.getResponse();
+			TypedInput body = response.getBody();
+			if (body != null) {
+				InputStream input = null;
+				Reader reader = null;
+				BufferedReader buffer = null;
+				try {
+					input = body.in();
+					reader = new InputStreamReader(input);
+					buffer = new BufferedReader(reader);
+					String line = buffer.readLine();
+					while (line != null) {
+						System.out.println(line);
+						line = buffer.readLine();
+					}
+				} catch (IOException e) {
+
+				} finally {
+					if (buffer != null) {
+						try {
+							buffer.close();
+						} catch (IOException e) { }
+					}
+					if (reader != null) {
+						try {
+							reader.close();
+						} catch (IOException e) { }
+					}
+					if (input != null) {
+						try {
+							input.close();
+						} catch (IOException e) { }
+					}
+				}
 			}
 		}
 	}

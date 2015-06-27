@@ -50,7 +50,6 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported = false)
 	List<Post> findPostsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
 
-	@RestResource(exported = false)
 	List<PostDraft> findDraftsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
 
 	List<PostScheduled> findScheduledsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);

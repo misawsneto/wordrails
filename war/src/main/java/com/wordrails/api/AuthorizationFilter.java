@@ -326,6 +326,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindDraftsByStationIdAndAuthorIdAuthorized(Integer stationId, Integer authorId, Integer page, Integer size, List<String> sort) {
+		return false;
+	}
+
+	@Override
 	protected boolean isFindScheduledsByStationIdAndAuthorIdAuthorized(Integer stationId, Integer authorId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
@@ -1124,6 +1129,56 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetPostReadPostAuthorized(Integer postReadId) {
 		return true;
+	}
+
+	@Override
+	protected boolean isGetPostScheduledsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPostScheduledAuthorized(Integer postScheduledId) {
+		return canReadPosts(postScheduledId);
+	}
+
+	@Override
+	protected boolean isGetPostScheduledSponsorAuthorized(Integer postScheduledId) {
+		return canReadPosts(postScheduledId);
+	}
+
+	@Override
+	protected boolean isGetPostScheduledCommentsAuthorized(Integer postScheduledId) {
+		return canReadPosts(postScheduledId);
+	}
+
+	@Override
+	protected boolean isGetPostScheduledFeaturedImageAuthorized(Integer postScheduledId) {
+		return canReadPosts(postScheduledId);
+	}
+
+	@Override
+	protected boolean isGetPostScheduledImagesAuthorized(Integer postScheduledId) {
+		return canReadPosts(postScheduledId);
+	}
+
+	@Override
+	protected boolean isGetPostScheduledAuthorAuthorized(Integer postScheduledId) {
+		return canReadPosts(postScheduledId);
+	}
+
+	@Override
+	protected boolean isGetPostScheduledPromotionsAuthorized(Integer postScheduledId) {
+		return canReadPosts(postScheduledId);
+	}
+
+	@Override
+	protected boolean isGetPostScheduledStationAuthorized(Integer postScheduledId) {
+		return canReadPosts(postScheduledId);
+	}
+
+	@Override
+	protected boolean isGetPostScheduledTermsAuthorized(Integer postScheduledId) {
+		return canReadPosts(postScheduledId);
 	}
 
 	@Override

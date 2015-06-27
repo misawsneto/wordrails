@@ -7,14 +7,12 @@ import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -58,14 +56,15 @@ public class PostEventHandler {
 				post.date = now;
 			}
 
-			Set<String> slugs = postRepository.findSlugs();
-
 			if (post.slug == null || post.slug.isEmpty()) {
 				String originalSlug = WordrailsUtil.toSlug(post.title);
 				post.originalSlug = originalSlug;
-				if (!slugs.add(post.slug)) { //if slug already exists in db
-					String hash = WordrailsUtil.generateRandomString(5, "!Aau");
-					post.slug = post.slug + "-" + hash;
+				try {
+					post.slug = originalSlug;
+					postRepository.save(post);
+				} catch (org.springframework.dao.DataIntegrityViolationException ex) {
+					String hash = WordrailsUtil.generateRandomString(5, "Aa#u");
+					post.slug = originalSlug + "-" + hash;
 				}
 			} else {
 				post.originalSlug = post.slug;
