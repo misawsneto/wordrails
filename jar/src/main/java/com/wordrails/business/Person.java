@@ -19,7 +19,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.apache.solr.analysis.HTMLStripCharFilterFactory;
 import org.apache.solr.analysis.LowerCaseFilterFactory;
 import org.apache.solr.analysis.StandardTokenizerFactory;
 import org.apache.solr.analysis.WordDelimiterFilterFactory;
@@ -27,7 +26,6 @@ import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.AnalyzerDef;
 import org.hibernate.search.annotations.AnalyzerDefs;
-import org.hibernate.search.annotations.CharFilterDef;
 import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -43,7 +41,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Indexed
-
 @AnalyzerDefs({
 	@AnalyzerDef(name = "customAnalyzer",
 	
@@ -90,9 +87,6 @@ public class Person {
 
 	@OneToMany
 	public Set<Person> following;
-	
-	@OneToMany(mappedBy="person")
-	public Set<Favorite> favorites;
 	
 	@OneToMany(mappedBy="person")
 	public Set<Bookmark> bookmarks;

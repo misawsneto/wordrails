@@ -37,7 +37,7 @@ public class Notification {
 	
 	@ManyToOne
 	@NotNull
-	@IndexedEmbedded
+	@IndexedEmbedded(includePaths={"name", "id"})
 	public Person person;
 	
 	@ManyToOne
@@ -51,7 +51,7 @@ public class Notification {
 	public Station station;
 	
 	@ManyToOne
-	@IndexedEmbedded
+	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id", "station.id"})
 	public Post post;
 	
 	public Integer postId;

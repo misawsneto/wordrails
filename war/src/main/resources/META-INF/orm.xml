@@ -550,40 +550,6 @@
 		</query>
 	</named-query>
 	
-	<named-query name="Favorite.findFavoritesByPersonId">
-		<query>
-			select
-				favorite
-			from
-				Favorite favorite join favorite.person person
-			where
-				person.id = :personId
-		</query>
-	</named-query>
-	
-	<named-query name="Favorite.findFavoritesByPostId">
-		<query>
-			select
-				favorite
-			from
-				Favorite favorite join favorite.post post
-			where
-				post.id = :postId
-		</query>
-	</named-query>
-	
-	<named-query name="Favorite.findFavoritesByPersonIdOrderByDate">
-		<query>
-			select
-				favorite
-			from
-				Favorite favorite join favorite.person person
-			where
-				person.id = :personId
-			order by favorite.createdAt desc
-		</query>
-	</named-query>
-	
 	<named-query name="Bookmark.findBookmarksByPersonId">
 		<query>
 			select

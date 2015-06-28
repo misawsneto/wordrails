@@ -18,34 +18,48 @@ public class Test {
 				new MockConnectivityManager(true),
 				new File("."),
 				0,
-				"http://demo.xarxlocal.com",
-				"silvio",
-				"silvio",
-				LogLevel.FULL
+				"http://sport.xarxlocal.com",
+				"sport",
+				"sport",
+				LogLevel.NONE
 		);
 
 		wordRails.login();
 		
-		PersonDto person = wordRails.getPerson(2);
-		System.out.println(person);
-		
-		NetworkDto network = wordRails.getNetwork(1);
-		
-		try{
-		StationDto station = new StationDto();
-		station.name = "Station 1";
-		station.networks = new HashSet<String>();
-		station.networks.add(wordRails.getSelf(network));
-		station.visibility = Station.RESTRICTED_TO_NETWORKS;
-		station.writable = true;
-		station.main = false;
-		
-		wordRails.postStation(station);
-		station = wordRails.getStation(station.id);
-		System.out.println(station);
-		}catch(RetrofitError e){
-			System.out.println(e.getBodyAs(String.class));
-		}
+//		List<PostDto> posts = wordRails.findPostsOrderByDateDesc(10, 0, 1000, null);
+//		
+//		Collections.reverse(posts);
+//		
+//		for (int i = 0; i < posts.size() * (posts.size() * 70/100) ; i++) {
+////			posts.get(i).id;
+//			try{
+//				wordRails.deletePost(posts.get(i).id);
+//			}catch(Exception e){
+//				System.err.println("Error: " + posts.get(i).id);
+//			}
+//			System.out.println("Ok: " + posts.get(i).id);
+//		}
+//		
+//		PersonDto person = wordRails.getPerson(2);
+//		System.out.println(person);
+//		
+//		NetworkDto network = wordRails.getNetwork(1);
+//		
+//		try{
+//		StationDto station = new StationDto();
+//		station.name = "Station 1";
+//		station.networks = new HashSet<String>();
+//		station.networks.add(wordRails.getSelf(network));
+//		station.visibility = Station.RESTRICTED_TO_NETWORKS;
+//		station.writable = true;
+//		station.main = false;
+//		
+//		wordRails.postStation(station);
+//		station = wordRails.getStation(station.id);
+//		System.out.println(station);
+//		}catch(RetrofitError e){
+//			System.out.println(e.getBodyAs(String.class));
+//		}
 		
 //		createPost(wordRails);
 

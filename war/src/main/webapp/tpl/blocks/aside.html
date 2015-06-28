@@ -8,7 +8,7 @@
     <!-- nav -->
 
     <!-- user -->
-    <div class="clearfix hidden-xs text-center" id="aside-user" ng-if="app.isLogged">
+    <div class="clearfix hidden-xs text-center animated bounceIn" id="aside-user" ng-if="app.isLogged">
       <div class="wrapper">
         <a ng-click="app.profilepopover.open = !app.profilepopover.open;" id="profile-popover-toggle">
           <div style="{{app.initData.person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="{{app.initData.person.name}}"></div>
