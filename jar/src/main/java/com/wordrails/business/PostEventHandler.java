@@ -37,8 +37,6 @@ public class PostEventHandler {
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
-	private FavoriteRepository favoriteRepository;
-	@Autowired
 	private BookmarkRepository bookmarkRepository;
 	@Autowired
 	private RecommendRepository recommendRepository;
@@ -139,7 +137,6 @@ public class PostEventHandler {
 			promotionRepository.delete(post.promotions);
 			postReadRepository.deleteByPost(post);
 			notificationRepository.deleteByPost(post);
-			favoriteRepository.deleteByPost(post);
 			bookmarkRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
 		} else {

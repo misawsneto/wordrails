@@ -22,7 +22,6 @@ import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.BookmarkRepository;
 import com.wordrails.persistence.CellRepository;
 import com.wordrails.persistence.CommentRepository;
-import com.wordrails.persistence.FavoriteRepository;
 import com.wordrails.persistence.ImageRepository;
 import com.wordrails.persistence.InvitationRepository;
 import com.wordrails.persistence.NetworkRepository;
@@ -354,7 +353,6 @@ public class UtilResource {
 	private @Autowired CommentRepository commentRepository;
 	private @Autowired ImageRepository imageRepository;
 	private @Autowired PromotionRepository promotionRepository;
-	private @Autowired FavoriteRepository favoriteRepository;
 	private @Autowired BookmarkRepository bookmarkRepository;
 	private @Autowired RecommendRepository recommendRepository;
 	private @Autowired NotificationRepository notificationRepository;
@@ -390,7 +388,6 @@ public class UtilResource {
                     promotionRepository.delete(post.promotions);
                     postReadRepository.deleteByPost(post);
                     notificationRepository.deleteByPost(post);
-                    favoriteRepository.deleteByPost(post);
                     bookmarkRepository.deleteByPost(post);
                     recommendRepository.deleteByPost(post);
                     postRepository.delete(post);

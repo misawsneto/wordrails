@@ -2,6 +2,7 @@ package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wordrails.util.WordrailsUtil;
+
 import org.apache.solr.analysis.*;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
@@ -10,6 +11,7 @@ import org.hibernate.search.annotations.Parameter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -146,7 +148,6 @@ public class Post {
 	public String state;
 
 	@ManyToOne
-	@IndexedEmbedded
 	public Image featuredImage;
 
 	@OneToMany(mappedBy = "post")
@@ -155,7 +156,7 @@ public class Post {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable = false)
-	@IndexedEmbedded
+	@IndexedEmbedded(includePaths={"name", "id"})
 	public Person author;
 
 	@OneToMany(mappedBy = "post")
@@ -163,8 +164,8 @@ public class Post {
 
 	@NotNull
 	@ManyToOne
-	@IndexedEmbedded
 	@JoinColumn(updatable = false)
+	@IndexedEmbedded(includePaths={"id"})
 	public Station station;
 
 	@Field
@@ -192,7 +193,7 @@ public class Post {
 	public int commentsCount = 0;
 
 	@ManyToMany
-	@IndexedEmbedded
+	@IndexedEmbedded(includePaths={"name", "id", "taxonomyId"})
 	public Set<Term> terms;
 
 	@Field(analyze = Analyze.NO)

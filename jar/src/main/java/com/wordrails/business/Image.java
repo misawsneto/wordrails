@@ -19,10 +19,9 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 @Entity
-@Indexed
 public class Image {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -73,6 +72,7 @@ public class Image {
 	public File large;
 
 	@ManyToOne
+	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id", "station.id"})
 	public Post post;
 	
 	@OneToMany(mappedBy="featuredImage")

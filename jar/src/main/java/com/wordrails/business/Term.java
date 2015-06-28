@@ -21,16 +21,13 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.NumericField;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressSlug"}), @UniqueConstraint(columnNames={"taxonomy_id","name","wordpressId"})})
-@Indexed
 public class Term {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@DocumentId
 	@Field
 	public Integer id;
 	

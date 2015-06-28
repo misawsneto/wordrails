@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"post_id", "person_id", "sessionid"}))
-@Indexed
 public class PostRead {
 	
 	@Id
@@ -33,11 +32,11 @@ public class PostRead {
 	
 	@ManyToOne
 	@NotNull
-	@IndexedEmbedded
+	@IndexedEmbedded(includePaths={"name", "id"})
 	public Person person;
 	
 	@ManyToOne
-	@IndexedEmbedded
+	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id", "station.id"})
 	public Post post;
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)

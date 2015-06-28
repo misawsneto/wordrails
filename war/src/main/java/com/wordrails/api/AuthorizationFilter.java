@@ -1040,41 +1040,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetFavoritesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetFavoriteAuthorized(Integer favoriteId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindFavoritesByPersonIdAuthorized(Integer personId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindFavoritesByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindFavoritesByPostIdAuthorized(Integer postId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetFavoritePostAuthorized(Integer favoriteId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetFavoritePersonAuthorized(Integer favoriteId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isGetNotificationsAuthorized() {
 		return false;
 	}
@@ -1217,11 +1182,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindRecommendsByPostIdAuthorized(Integer postId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonFavoritesAuthorized(Integer personId) {
 		return true;
 	}
 
@@ -1462,6 +1422,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 			authorized = postAndCommentSecurityChecker.canRead(post);
 		}
 		return authorized;
+	}
+
+	@Override
+	protected boolean isFindBySlugAuthorized(String slug) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }
