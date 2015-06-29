@@ -1,10 +1,13 @@
 package com.wordrails.persistence;
 
 import com.wordrails.business.Image;
+import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.business.Station;
+
 import java.util.List;
 import java.util.Set;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

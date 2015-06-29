@@ -1316,7 +1316,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindBySlugAuthorized(String slug) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 

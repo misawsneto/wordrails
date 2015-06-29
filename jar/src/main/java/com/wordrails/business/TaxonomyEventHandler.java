@@ -3,6 +3,7 @@ package com.wordrails.business;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
@@ -45,6 +46,18 @@ public class TaxonomyEventHandler {
 		}
 	}
 	
+	@HandleAfterSave
+	public void handleAfterSave(Taxonomy taxonomy) {
+		List<Term> terms = termRepository.findByTaxonomy(taxonomy);
+		
+		if(terms!=null && terms.size() > 0){
+			for (Term term : terms) {
+				term.taxonomyName = taxonomy.name;
+			}
+			termRepository.save(terms);
+		}
+	}
+
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Taxonomy taxonomy) throws UnauthorizedException, OperationNotSupportedException {
