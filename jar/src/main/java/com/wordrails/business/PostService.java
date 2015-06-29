@@ -48,6 +48,7 @@ public class PostService {
 			queryPersistence.changePostState(postId, state);
 
 			dbPost = postRepository.findOne(postId);
+			dbPost.lastModificationDate = new Date();
 			postRepository.save(dbPost); //this way PostEventHandler methods get executed
 			log.debug("After convert: " + dbPost.getClass().getSimpleName());
 		}
