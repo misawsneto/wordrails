@@ -14,13 +14,14 @@ import com.wordrails.persistence.StationRepository;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({
 	"classpath:applicationContext.xml",
+	"classpath:applicationContext-quartz.xml",
 	"classpath:applicationContext-integration.xml",
 	"classpath:applicationContext-security.xml",
 })
 public abstract class AbstractTest {
 	protected @Autowired ApplicationContext context;
 	private @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
-	private @Autowired StationRepository stationRepository;
+	//private @Autowired StationRepository stationRepository;
 	
 	@Test
 	public  void doTest() {

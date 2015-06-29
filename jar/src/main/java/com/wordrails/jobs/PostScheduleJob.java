@@ -1,13 +1,9 @@
 package com.wordrails.jobs;
 
-import com.wordrails.GCMService;
-import com.wordrails.business.Notification;
 import com.wordrails.business.Post;
 import com.wordrails.business.PostScheduled;
-import com.wordrails.business.Station;
-import com.wordrails.persistence.PostRepository;
+import com.wordrails.business.PostService;
 import com.wordrails.persistence.PostScheduledRepository;
-import com.wordrails.persistence.StationRepository;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +17,9 @@ import org.springframework.stereotype.Component;
 public class PostScheduleJob extends QuartzJobBean {
 
 	@Autowired
-	private PostRepository postRepository;
+	private PostService postService;
 	@Autowired
 	private PostScheduledRepository postScheduledRepository;
-	@Autowired
-	private GCMService gcmService;
-	@Autowired
-	private StationRepository stationRepository;
 
 
 	@Override
@@ -38,31 +30,15 @@ public class PostScheduleJob extends QuartzJobBean {
 
 		System.out.println("SCHEDULED POST: " + id);
 
-		PostScheduled post = postScheduledRepository.findOne(id);
-		if (post != null) {
-
-
-			postRepository.save(post);
-
-			if (post.notify) {
-				buildNotification(post);
+		PostScheduled scheduledPost = postScheduledRepository.findOne(id);
+		if (scheduledPost != null) {
+			if (scheduledPost.notify) {
+				postService.buildNotification(scheduledPost);
 			}
+
+			postService.convertPost(id, Post.STATE_PUBLISHED);
 		}
 	}
 
-	private void buildNotification(Post post) {
-		Notification notification = new Notification();
-		notification.type = Notification.Type.POST_ADDED.toString();
-		notification.station = post.station;
-		notification.post = post;
-		notification.message = post.title;
-		try {
-			if (post.station != null && post.station.networks != null) {
-				Station station = stationRepository.findOne(post.station.id);
-				gcmService.sendToStation(station.id, notification);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+
 }

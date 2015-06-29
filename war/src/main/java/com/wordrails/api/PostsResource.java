@@ -134,6 +134,17 @@ public class PostsResource {
 		forward();
 	}
 
+	@Autowired
+	private PostService postService;
+
+	@PUT
+	@Path("/{postId}/convert")
+	public void convertPost(@PathParam("postId") int postId, @QueryParam("state") String state) throws ServletException, IOException {
+		postService.convertPost(postId, state);
+
+		forward();
+	}
+
 	@PUT
 	@Path("/{id}")
 	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
