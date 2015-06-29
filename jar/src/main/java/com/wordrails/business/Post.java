@@ -244,9 +244,6 @@ public class Post {
 			imageLargeId = null;
 		}
 
-		if (comments != null) {
-			commentsCount = comments.size();
-		}
 		readTime = WordrailsUtil.calculateReadTime(body);
 		if (date == null)
 			date = new Date();
@@ -269,10 +266,6 @@ public class Post {
 			imageSmallId = null;
 			imageMediumId = null;
 			imageLargeId = null;
-		}
-
-		if (comments != null) {
-			commentsCount = comments.size();
 		}
 
 		updatedAt = new Date();
