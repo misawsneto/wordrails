@@ -171,7 +171,7 @@ public class Post {
 	@Field
 	@NumericField
 	public Integer stationId;
-
+	
 	@Field
 	@NumericField
 	public int readsCount = 0;

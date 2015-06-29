@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.TermRepository;
 import com.wordrails.util.WordrailsUtil;
 
@@ -24,6 +25,7 @@ public class PersonEventHandler {
 	private @Autowired PersonRepository personRepository;
 	private @Autowired TermRepository termRepository;
 	private @Autowired EmailService passwordResetService;
+	private @Autowired PostRepository postRepository;    
 
 	@HandleBeforeSave
 	@Transactional
@@ -32,6 +34,7 @@ public class PersonEventHandler {
 		if(originalPerson != null && !originalPerson.name.equals(person.name)){
 			termRepository.updateTermsNamesAuthorTaxonomies(person.name, originalPerson.name);
 		}
+		
 	}
 	
 	@HandleAfterCreate

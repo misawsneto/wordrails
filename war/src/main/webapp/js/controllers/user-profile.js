@@ -13,7 +13,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	trix.findByUsername(username).success(function(response){
 		try{
 			$scope.showProfile = true;
-			$scope.person = response;
+			$scope.person = response.persons[0];
 		}catch(e){
 			$state.go('access.404')
 		}
