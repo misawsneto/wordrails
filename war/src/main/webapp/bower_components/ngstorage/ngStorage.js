@@ -50,7 +50,20 @@
                 $timeout
             ){
                 function isStorageSupported(storageType) {
-                    var supported = $window[storageType];
+
+                    // Some installations of IE, for an unknown reason, throw "SCRIPT5: Error: Access is denied"
+                    // when accessing window.localStorage. This happens before you try to do anything with it. Catch
+                    // that error and allow execution to continue.
+
+                    // fix 'SecurityError: DOM Exception 18' exception in Desktop Safari, Mobile Safari
+                    // when "Block cookies": "Always block" is turned on
+                    var supported;
+                    try {
+                        supported = $window[storageType];
+                    }
+                    catch (err) {
+                        supported = false;
+                    }
 
                     // When Safari (OS X or iOS) is in private browsing mode, it appears as though localStorage
                     // is available, but trying to call .setItem throws an exception below:
@@ -82,7 +95,7 @@
                         },
                         $reset: function(items) {
                             for (var k in $storage) {
-                                '$' === k[0] || delete $storage[k];
+                                '$' === k[0] || (delete $storage[k] && webStorage.removeItem('ngStorage-' + k));
                             }
 
                             return $storage.$default(items);
