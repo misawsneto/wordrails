@@ -12,7 +12,7 @@
       </div>
       <md-tabs style="height: 100%" md-center-tabs md-dynamic-height md-no-ink>
         <md-tab class="bg-custom" label="Populares">
-          <div class="b-t wrapper-sm popular-posts" flex>
+          <div class="wrapper-sm popular-posts" flex>
             <ul class="timeline m-t-sm m-b-md">
               <li class="tl-item" ng-repeat="post in app.initData.popular | limitTo: 5">
                 <div class="tl-wrap">
@@ -32,7 +32,7 @@
           </div>
         </md-tab>
         <md-tab md-no-ink angular-ripple class="bg-custom" label="Recentes">
-          <div class="b-t wrapper-sm recent-posts" flex>
+          <div class="wrapper-sm recent-posts" flex>
             <ul class="timeline m-t-md m-b-md">
               <li class="tl-item" ng-repeat="post in app.initData.recent | limitTo: 5">
                 <div class="tl-wrap">
@@ -97,7 +97,7 @@
 </div>
 
 <md-button 
-  id="station-fab" class="custom-fab-button md-fab md-button md-default-theme text-2x animated zoomIn" 
+  id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
   ui-sref="app.post" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
   tooltip="Nova notícia" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
   angular-ripple md-no-ink aria-label="Nova notícia">
