@@ -20,25 +20,25 @@ public class Test {
 				0,
 				"http://sport.xarxlocal.com",
 				"sport",
-				"sport",
+				"Sport@dmiN",
 				LogLevel.NONE
 		);
 
 		wordRails.login();
 		
-//		List<PostDto> posts = wordRails.findPostsOrderByDateDesc(10, 0, 1000, null);
-//		
-//		Collections.reverse(posts);
-//		
-//		for (int i = 0; i < posts.size() * (posts.size() * 70/100) ; i++) {
-////			posts.get(i).id;
-//			try{
-//				wordRails.deletePost(posts.get(i).id);
-//			}catch(Exception e){
-//				System.err.println("Error: " + posts.get(i).id);
-//			}
-//			System.out.println("Ok: " + posts.get(i).id);
-//		}
+		List<PostDto> posts = wordRails.findPostsOrderByDateDesc(10, 0, 1000, null);
+		
+		Collections.reverse(posts);
+		
+		for (int i = 0; i < posts.size() * (posts.size() * 70/100) ; i++) {
+//			posts.get(i).id;
+			try{
+				wordRails.deletePost(posts.get(i).id);
+				System.out.println("Ok: " + posts.get(i).id);
+			}catch(Exception e){
+				System.err.println("Error: " + posts.get(i).id);
+			}
+		}
 //		
 //		PersonDto person = wordRails.getPerson(2);
 //		System.out.println(person);
