@@ -7,12 +7,11 @@
   <!-- perspective view vertical/horizontal -->
   <div id="station-sidebar" class="b-l animated fadeIn">
     <!-- <div class="vbox"> -->
-    <div class="">
       <div class="wrapper sidebar-top">
         <div class="font-thin h4">&nbsp;</div>
       </div>
-      <md-tabs>
-        <md-tab md-no-ink angular-ripple class="bg-custom" label="Populares">
+      <md-tabs style="height: 100%" md-center-tabs md-dynamic-height md-no-ink>
+        <md-tab class="bg-custom" label="Populares">
           <div class="b-t wrapper-sm popular-posts" flex>
             <ul class="timeline m-t-sm m-b-md">
               <li class="tl-item" ng-repeat="post in app.initData.popular | limitTo: 5">
@@ -53,7 +52,6 @@
         </md-tab>
         <!-- /tab -->
       </md-tabs>
-    </div>
   </div>
 </div>
 
@@ -93,7 +91,7 @@
       <div class="divider-v m-r-xs"></div>
     </li>
     <li ng-if="!app.isLogged">
-      <a href class="text-u-c text-center" ng-click="openSplash('signin_splash.html');">ENTRAR / Cadastrar</a>
+      <a href class="text-u-c text-center" ng-click="openSplash('signin_splash.html');">ENTRAR {{app.initData.network.allowSignup ? '/ Cadastrar' : ''}}</a>
     </li>
   </ul>
 </div>

@@ -29,14 +29,14 @@ body {
 }
 
 a {
-  color: #363f44;
+  color: inherit;
   text-decoration: none;
   cursor: pointer;
 }
 
 a:hover,
 a:focus {
-  color: #141719;
+  color: inherit;
   text-decoration: none;
 }
 
@@ -209,10 +209,6 @@ a:hover .caret-white {
   margin-top: -7px;
 }
 
-.input-lg {
-  height: 45px;
-}
-
 .input-group-addon {
   background-color: #edf1f2;
   border-color: #cfdadd;
@@ -326,7 +322,7 @@ a.list-group-item.hover {
 
 .nav > li > a:hover,
 .nav > li > a:focus {
-  background-color: #f6f8f8;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .nav.nav-lg > li > a {
@@ -356,7 +352,7 @@ a.list-group-item.hover {
 .nav .open > a,
 .nav .open > a:hover,
 .nav .open > a:focus {
-  background-color: #f6f8f8;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .nav-tabs {
@@ -548,7 +544,7 @@ pre {
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
 .dropdown-menu > .active > a:focus {
-  color: #141719;
+  color: #58666e;
   background-color: #edf1f2 !important;
   background-image: none;
   filter: none;
@@ -957,6 +953,9 @@ body {
     display: block;
     padding: 0;
   }
+  .app-aside-fixed .app-aside:before {
+    position: fixed;
+  }
   .app-aside-fixed .app-header .navbar-header {
     position: fixed;
   }
@@ -1084,12 +1083,12 @@ body {
   }
 }
 
-/* html {
+html.bg {
   background: url('../img/bg.jpg');
   background-attachment: fixed;
   background-size: cover;
 }
- */
+
 .app.container {
   padding-right: 0;
   padding-left: 0;
@@ -2207,7 +2206,6 @@ fieldset[disabled] .btn-black.active {
   display: inline-block;
   width: 40px;
   margin: 0;
-  font-size: 14px;
   text-align: center;
   vertical-align: middle;
   -webkit-transition: font-size 0.2s;
@@ -2654,6 +2652,7 @@ fieldset[disabled] .i-checks input + i:before {
 /*Charts*/
 
 .jqstooltip {
+  max-height: 12px;
   padding: 5px 10px !important;
   background-color: rgba(0, 0, 0, 0.8) !important;
   border: solid 1px #000 !important;
@@ -3697,11 +3696,11 @@ fieldset[disabled] .i-checks input + i:before {
 }
 
 .bg-white a {
-  color: #363f44;
+  color: inherit;
 }
 
 .bg-white a:hover {
-  color: #1f2427;
+  color: inherit;
 }
 
 .bg-white .text-muted {
@@ -3728,7 +3727,7 @@ fieldset[disabled] .i-checks input + i:before {
 }
 
 a.bg-light:hover {
-  color: #363f44;
+  color: inherit;
 }
 
 a.bg-primary:hover {
@@ -3937,6 +3936,10 @@ a.text-#000000:hover {
 
 .text-muted {
   color: #98a6ad;
+}
+
+.bg {
+  background-color: #f0f3f4;
 }
 
 .pos-rlt {

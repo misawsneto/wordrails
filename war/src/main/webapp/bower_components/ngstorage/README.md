@@ -1,5 +1,3 @@
-###[** Looking for Maintainers! **](https://github.com/gsklee/ngStorage/issues/84)
-
 ngStorage
 =========
 
@@ -25,8 +23,30 @@ An [AngularJS](https://github.com/angular/angular.js) module that makes Web Stor
 Install
 =======
 
+### Bower
+
 ```bash
 bower install ngstorage
+```
+
+*NOTE:* We are `ngstorage` and *NOT* `ngStorage`. The casing is important!
+
+### NPM
+```bash
+npm install ngstorage
+```
+
+*NOTE:* We are `ngstorage` and *NOT* `ngStorage`. The casing is important!
+
+CDN
+===
+
+cdnjs now hosts ngStorage at <https://cdnjs.com/libraries/ngStorage>
+
+To use it
+
+``` html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.5/ngStorage.min.js"></script>
 ```
 
 Usage

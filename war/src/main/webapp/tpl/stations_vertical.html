@@ -1,7 +1,7 @@
-<div id="perspective-vertical" class="animated fadeIn" ng-if="app.viewMode === 'vertical'" ng-class="{'hide': !app.termPerspectiveView}">
-  <md-tabs md-selected="selectedIndex" flex class="" md-center-tabs md-dynamic-height>
+<div id="perspective-vertical" class="animated fadeIn" ng-if="app.viewMode === 'vertical'" ng-class="{'hide': !app.termPerspectiveView || app.viewMode !== 'vertical'}">
+  <md-tabs md-no-ink md-selected="selectedIndex" flex class="bg-custom" md-center-tabs md-dynamic-height>
     <!-- tab -->
-    <md-tab md-no-ink md-on-select="selectVerticalRow(ordinaryRow)" angular-ripple ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="bg-custom" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
+    <md-tab md-on-select="selectVerticalRow(ordinaryRow)" ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
       <div flex>
         <div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm" infinite-scroll="verticalPaginate(ordinaryRow)" infinite-scroll-distance="3">
             <!-- posts -->

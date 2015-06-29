@@ -1,8 +1,8 @@
 <md-dialog aria-label="MAIS OPÇÕES" id="more-options-dialog">
   <md-content>
     <div id="post-more-options">
-      <md-tabs>
-        <md-tab md-no-ink angular-ripple label="Informações Gerais">
+      <md-tabs md-no-ink md-dynamic-height>
+        <md-tab label="Informações Gerais">
           <div class="b-t wrapper-md post-general-info" flex>
             <div class="row">
               <div class="col-sm-5">
@@ -39,7 +39,7 @@
                   <div class="m-t">
                     Escolha a estação que deseja publicar:
                   </div>
-                  <select class="form-control m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
+                  <select class="form-control w-lg m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
                   ng-options="station as station.stationName for station in writableStations track by station.stationId">
                   </select>
                 </div>

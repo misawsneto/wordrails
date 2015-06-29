@@ -131,16 +131,16 @@ function getCustomStyle(color, perspective, header) {
 	".redactor-editor a, .redactor-editor a:hover {color:"+ color +"}\n"+
 	".custom-fab-button{background-color: " + color + "!important; color: " + textColorEval(color) + "!important}"+
 
-	".bg-perspective md-tabs.md-default-theme md-tabs-ink-bar {\n"+
+	".bg-perspective md-tabs.md-default-theme md-ink-bar {\n"+
 	  "color: "+ textColorEval(perspective) +";\n"+
 	  "background: "+ (textColorEval2(perspective) ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)") +";\n"+
 	"}\n"+
 
-	".bg-perspective md-tab md-tab-label {\n"+
+	".bg-perspective md-tab-item {\n"+
 	  "opacity: 0.7;\n"+
 	"}\n"+
 
-	".bg-perspective md-tab.active md-tab-label {\n"+
+	".bg-perspective md-tab-item.md-active {\n"+
 	  "opacity: 1!important;\n"+
 	"}\n"+
 
@@ -220,7 +220,7 @@ function getCustomStyle(color, perspective, header) {
 	"\n"
 	)+
 
-	".bg-custom, .bg-perspective md-tabs.md-default-theme .md-paginator md-icon {\n"+
+	".bg-custom, .bg-perspective md-tab-item span, .bg-perspective md-tabs.md-default-theme .md-paginator md-icon {\n"+
 	"  color: "+textColorEval(perspective)+" !important;\n"+
 	"}\n"+
 

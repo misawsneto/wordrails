@@ -3,6 +3,7 @@ package com.wordrails.persistence;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,5 +59,11 @@ public class QueryPersistence {
 	@Transactional
 	public void deleteRecommend(Integer postId, Integer personId) {
 		manager.createNativeQuery("DELETE FROM Recommend WHERE post_id = :postId AND person_id = :personId").setParameter("postId", postId).setParameter("personId", personId).executeUpdate();
+	}
+	
+	@Async
+	@Transactional
+	public void updateCommentsCount(Integer postId) {
+		manager.createNativeQuery("UPDATE Post set commentsCount = (select count(*) FROM comment WHERE post_id = :postId) WHERE id = postId;").setParameter("postId", postId).executeUpdate();
 	}
 }

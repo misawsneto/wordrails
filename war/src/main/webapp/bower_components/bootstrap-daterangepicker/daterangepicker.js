@@ -1,5 +1,5 @@
 /**
-* @version: 1.3.21
+* @version: 1.3.22
 * @author: Dan Grossman http://www.dangrossman.info/
 * @copyright: Copyright (c) 2012-2015 Dan Grossman. All rights reserved.
 * @license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
@@ -27,7 +27,7 @@
 
   // Finally, as a browser global.
   } else {
-    root.daterangepicker = factory(root, {}, root.moment, (root.jQuery || root.Zepto || root.ender || root.$));
+    root.daterangepicker = factory(root, {}, root.moment || moment, (root.jQuery || root.Zepto || root.ender || root.$));
   }
 
 }(this, function(root, daterangepicker, moment, $) {
@@ -57,8 +57,8 @@
                       '<label for="daterangepicker_end"></label>' +
                       '<input class="input-mini" type="text" name="daterangepicker_end" value="" />' +
                     '</div>' +
-                    '<button class="applyBtn" disabled="disabled"></button>&nbsp;' +
-                    '<button class="cancelBtn"></button>' +
+                    '<button class="applyBtn" disabled="disabled" type="button"></button>&nbsp;' +
+                    '<button class="cancelBtn" type="button"></button>' +
                   '</div>' +
                 '</div>' +
               '</div>';
@@ -70,6 +70,10 @@
         this.parentEl = (typeof options === 'object' && options.parentEl && $(options.parentEl).length) ? $(options.parentEl) : $(this.parentEl);
         this.container = $(DRPTemplate).appendTo(this.parentEl);
 
+        //allow setting options with data attributes
+        //data-api options will be overwritten with custom javascript options
+        options = $.extend(this.element.data(), options);
+        
         this.setOptions(options, cb);
 
         //event listeners
@@ -125,6 +129,7 @@
             this.timePickerSeconds = false;
             this.timePickerIncrement = 30;
             this.timePicker12Hour = true;
+            this.autoApply = false;
             this.singleDatePicker = false;
             this.ranges = {};
 
@@ -282,6 +287,12 @@
                 this.timePicker12Hour = options.timePicker12Hour;
             }
 
+            if (typeof options.autoApply === 'boolean') {
+                this.autoApply = options.autoApply;
+                if (this.autoApply)
+                  this.container.find('.applyBtn, .cancelBtn').addClass('hide');
+            }
+
             // update day names order to firstDay
             if (this.locale.firstDay != 0) {
                 var iterator = this.locale.firstDay;
@@ -380,7 +391,7 @@
             }
 
             if (this.singleDatePicker) {
-                this.opens = 'right';
+                this.opens = this.opens || 'right';
                 this.container.addClass('single');
                 this.container.find('.calendar.right').show();
                 this.container.find('.calendar.left').hide();
@@ -394,6 +405,7 @@
             } else {
                 this.container.removeClass('single');
                 this.container.find('.calendar.right').removeClass('single');
+                this.container.find('.calendar.left').show();
                 this.container.find('.ranges').show();
             }
 
@@ -546,6 +558,7 @@
 
         notify: function () {
             this.updateView();
+            this.updateInputText();
             this.cb(this.startDate, this.endDate, this.chosenLabel);
         },
 
@@ -704,9 +717,21 @@
             if (el.attr('name') === 'daterangepicker_start') {
                 startDate = (false !== this.minDate && date.isBefore(this.minDate)) ? this.minDate : date;
                 endDate = this.endDate;
+                if (typeof this.dateLimit === 'object') {
+                    var maxDate = moment(startDate).add(this.dateLimit).endOf('day');
+                    if (endDate.isAfter(maxDate)) {
+                        endDate = maxDate;
+                    }
+                }
             } else {
                 startDate = this.startDate;
-                endDate = (false !== this.maxDate && date.isAfter(this.maxDate)) ? this.maxDate : date;
+                endDate = (false !== this.maxDate && date.isAfter(this.maxDate)) ? this.maxDate : date.endOf('day');
+                if (typeof this.dateLimit === 'object') {
+                    var minDate = moment(endDate).subtract(this.dateLimit).startOf('day');
+                    if (startDate.isBefore(minDate)) {
+                        startDate = minDate;
+                    }
+                }
             }
             this.setCustomDates(startDate, endDate);
         },
@@ -753,6 +778,11 @@
                 this.hideCalendars();
                 this.hide();
                 this.element.trigger('apply.daterangepicker', this);
+
+                if (this.autoApply) {
+                    this.notify();
+                }
+
             }
         },
 
@@ -803,6 +833,11 @@
 
             this.updateView();
             this.updateCalendars();
+
+            if (this.autoApply) {
+                this.notify();
+                this.element.trigger('apply.daterangepicker', this);
+            }
         },
 
         clickDate: function (e) {
@@ -816,7 +851,7 @@
                 startDate = this.leftCalendar.calendar[row][col];
                 endDate = this.endDate;
                 if (typeof this.dateLimit === 'object') {
-                    var maxDate = moment(startDate).add(this.dateLimit).startOf('day');
+                    var maxDate = moment(startDate).add(this.dateLimit).endOf('day');
                     if (endDate.isAfter(maxDate)) {
                         endDate = maxDate;
                     }
@@ -945,6 +980,11 @@
 
             this.updateView();
             this.updateCalendars();
+
+            if (this.autoApply) {
+                this.notify();
+                this.element.trigger('apply.daterangepicker', this);
+            }
         },
 
         updateCalendars: function () {
@@ -1009,7 +1049,8 @@
             if (dayOfWeek == this.locale.firstDay)
                 startDay = daysInLastMonth - 6;
 
-            var curDate = moment([lastYear, lastMonth, startDay, 12, minute, second]).utcOffset(this.timeZone);
+            // Possible patch for issue #626 https://github.com/dangrossman/bootstrap-daterangepicker/issues/626
+            var curDate = moment([lastYear, lastMonth, startDay, 12, minute, second]); // .utcOffset(this.timeZone);
 
             var col, row;
             for (i = 0, col = 0, row = 0; i < 42; i++, col++, curDate = moment(curDate).add(24, 'hour')) {
@@ -1120,6 +1161,10 @@
                 for (var col = 0; col < 7; col++) {
                     var cname = 'available ';
                     cname += (calendar[row][col].month() == calendar[1][1].month()) ? '' : 'off';
+                    
+                    if(calendar[row][col].isSame(new Date(), "day") ) {
+                        cname += ' today ';
+                    }
 
                     if ((minDate && calendar[row][col].isBefore(minDate, 'day')) || (maxDate && calendar[row][col].isAfter(maxDate, 'day'))) {
                         cname = ' off disabled ';

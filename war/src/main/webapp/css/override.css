@@ -1387,8 +1387,8 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   bottom: auto;
 }
 
-.border-radius-50p{
-  border-radius: 50%
+button, select, html, textarea, input{
+  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* /general */
@@ -1653,24 +1653,24 @@ md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-in
   width: 200px;
 }
 
-#more-options-dialog md-tabs.md-default-theme md-tabs-ink-bar {
+#more-options-dialog md-tabs.md-default-theme md-ink-bar {
 color: rgba(0,0,0, 0.84);
 background: rgba(0,0,0,0.5);
 }
 
-#more-options-dialog .md-header-items md-tab md-tab-label{
+#more-options-dialog md-tab-item span{
   color: rgba(0,0,0, 0.54) !important
 }
 
-#more-options-dialog .md-header-items md-tab.active md-tab-label{
+#more-options-dialog md-tab-item.md-active span{
   color: rgba(0,0,0, 0.84) !important
 }
 
-#more-options-dialog .md-header-items md-tab[disabled]{
+#more-options-dialog md-tab[disabled]{
   background-color: #f9f9f9;
 }
 
-#more-options-dialog .md-header-items md-tab[disabled] md-tab-label{
+#more-options-dialog md-tab[disabled] md-tab-item span{
   color: rgba(0,0,0, 0.40) !important 
 }
 
@@ -2769,7 +2769,7 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
     transition: all 0.4s ease-in-out;
   }
 
-  #perspective-vertical md-tab-label {font-size: 24px; letter-spacing: -1px; font-weight: 300;}
+  #perspective-vertical md-tab-item span {font-size: 24px; letter-spacing: -1px; font-weight: 300;}
   /*#perspective-vertical md-tabs .md-ripple-container,
   #station-sidebar md-tabs .md-ripple-container 
   {display: none;} */

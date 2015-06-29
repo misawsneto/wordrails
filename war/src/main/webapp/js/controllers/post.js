@@ -342,7 +342,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		}
 	}
 
-	$scope.savePostAsDraf = function(ev){
+	$scope.savePostAsDraft = function(ev){
 		window.console && console.log('saving draft...')
 	}
 
@@ -489,7 +489,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
     {
       label: 'Salvar rascunho',
       icon: 'mdi mdi-content-save',
-      action: $scope.savePostAsDraf
+      action: $scope.savePostAsDraft
     },
     {
       label: 'Remover/Descartar',
