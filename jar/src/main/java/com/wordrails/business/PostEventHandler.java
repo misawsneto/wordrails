@@ -1,11 +1,8 @@
 package com.wordrails.business;
 
-import com.wordrails.GCMService;
-import com.wordrails.jobs.PostScheduleJob;
 import com.wordrails.persistence.*;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
-import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
@@ -17,6 +14,9 @@ import java.util.List;
 @RepositoryEventHandler(Post.class)
 @Component
 public class PostEventHandler {
+
+	@Autowired
+	private PostService postService;
 
 	@Autowired
 	private PostRepository postRepository;
@@ -33,17 +33,11 @@ public class PostEventHandler {
 	@Autowired
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
-	private GCMService gcmService;
-	@Autowired
-	private StationRepository stationRepository;
-	@Autowired
 	private BookmarkRepository bookmarkRepository;
 	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
-	@Autowired
-	private Scheduler scheduler;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {
@@ -76,12 +70,12 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	@Transactional
 	public void handleAfterCreate(Post post) {
-		if(post.originalPostId == null || post.originalPostId <= 0) {
+		if (post.originalPostId == null || post.originalPostId <= 0) {
 			post.originalPostId = post.id;
 		}
 
 		if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
-			buildNotification(post);
+			postService.buildNotification(post);
 		}
 	}
 
@@ -89,26 +83,7 @@ public class PostEventHandler {
 	@Transactional
 	public void handleAfterSave(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			schedule(post.id, post.scheduledDate);
-		}
-	}
-
-	@Transactional
-	private void schedule(Integer postId, Date scheduledDate) {
-		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + postId, "schedules").startAt(scheduledDate).build();
-		TriggerKey triggerKey = new TriggerKey("trigger-" + postId);
-
-		try {
-			if(scheduler.checkExists(triggerKey)) {
-				scheduler.rescheduleJob(triggerKey, trigger);
-			}
-
-			JobDetail job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + postId, "schedules").build();
-			job.getJobDataMap().put("postId", String.valueOf(postId)); //must send as string because useProperties is set true
-
-			scheduler.scheduleJob(job, trigger);
-		} catch (SchedulerException e) {
-			e.printStackTrace();
+			postService.schedule(post.id, post.scheduledDate);
 		}
 	}
 
@@ -131,22 +106,6 @@ public class PostEventHandler {
 			recommendRepository.deleteByPost(post);
 		} else {
 			throw new UnauthorizedException();
-		}
-	}
-
-	private void buildNotification(Post post) {
-		Notification notification = new Notification();
-		notification.type = Notification.Type.POST_ADDED.toString();
-		notification.station = post.station;
-		notification.post = post;
-		notification.message = post.title;
-		try {
-			if (post.station != null && post.station.networks != null) {
-				Station station = stationRepository.findOne(post.station.id);
-				gcmService.sendToStation(station.id, notification);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 }

@@ -5,7 +5,6 @@ import com.wordrails.WordrailsService;
 import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.converter.PostConverter;
-import com.wordrails.jobs.PostScheduleJob;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.util.WordrailsUtil;
 import org.apache.lucene.analysis.Analyzer;
@@ -18,7 +17,6 @@ import org.hibernate.search.query.dsl.BooleanJunction;
 import org.hibernate.search.query.dsl.MustJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.jsoup.Jsoup;
-import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +35,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -137,72 +134,15 @@ public class PostsResource {
 		forward();
 	}
 
+	@Autowired
+	private PostService postService;
+
 	@PUT
 	@Path("/{postId}/convert")
 	public void convertPost(@PathParam("postId") int postId, @QueryParam("state") String state) throws ServletException, IOException {
-		Post dbPost = postRepository.getOne(postId);
-
-		if (dbPost != null) {
-			Post post = null;
-
-			if(state.equals(Post.STATE_PUBLISHED)) {
-				post = new Post();
-			} else if (state.equals(Post.STATE_DRAFT)) {
-				post = new PostDraft();
-			} else if (state.equals(Post.STATE_SCHEDULED)) {
-				post = new PostScheduled();
-			} else if (state.equals(Post.STATE_TRASH)) {
-				post = new PostTrash();
-			}
-
-			if(dbPost.getClass().equals(post.getClass())) {
-				return; //they are the same type. no need for convertion
-			}
-
-			if(dbPost.state.equals(Post.STATE_SCHEDULED)) { //if converting FROM scheduled, unschedule
-				unschedule(post.id);
-			} else if (state.equals(Post.STATE_SCHEDULED)) { //if converting TO scheduled, schedule
-				schedule(post.id, post.scheduledDate);
-			}
-
-			post.convertSubtype(dbPost);
-
-			postRepository.delete(dbPost);
-			postRepository.save(post);
-		}
+		postService.convertPost(postId, state);
 
 		forward();
-	}
-
-	@Autowired
-	private Scheduler scheduler;
-
-
-	@Transactional
-	private void unschedule(Integer postId) {
-		try {
-			scheduler.unscheduleJob(new TriggerKey("trigger-" + postId));
-		} catch (SchedulerException e) {
-		}
-	}
-
-	@Transactional
-	private void schedule(Integer postId, Date scheduledDate) {
-		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + postId, "schedules").startAt(scheduledDate).build();
-		TriggerKey triggerKey = new TriggerKey("trigger-" + postId);
-
-		try {
-			if(scheduler.checkExists(triggerKey)) {
-				scheduler.rescheduleJob(triggerKey, trigger);
-			}
-
-			JobDetail job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + postId, "schedules").build();
-			job.getJobDataMap().put("postId", String.valueOf(postId)); //must send as string because useProperties is set true
-
-			scheduler.scheduleJob(job, trigger);
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@PUT
