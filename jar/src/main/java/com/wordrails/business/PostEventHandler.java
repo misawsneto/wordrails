@@ -43,7 +43,7 @@ public class PostEventHandler {
 	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
-	private Scheduler sched;
+	private Scheduler scheduler;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {
@@ -76,9 +76,11 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	@Transactional
 	public void handleAfterCreate(Post post) {
-		if (post instanceof PostScheduled) {
-			schedule((PostScheduled) post);
-		} else if (post.notify && !(post instanceof PostDraft)) {
+		if(post.originalPostId == null || post.originalPostId <= 0) {
+			post.originalPostId = post.id;
+		}
+
+		if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
 			buildNotification(post);
 		}
 	}
@@ -86,37 +88,25 @@ public class PostEventHandler {
 	@HandleAfterSave
 	@Transactional
 	public void handleAfterSave(Post post) {
-		if (post instanceof PostScheduled) {
-			schedule((PostScheduled) post);
+		if (post.state.equals(Post.STATE_SCHEDULED)) {
+			schedule(post.id, post.scheduledDate);
 		}
 	}
 
 	@Transactional
-	private void schedule(PostScheduled post) {
-		JobDetail job = null;
-		Trigger trigger = null;
-		try {
-			job = sched.getJobDetail(new JobKey("schedule-" + post.id));
-		} catch (SchedulerException e) {
-		}
+	private void schedule(Integer postId, Date scheduledDate) {
+		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + postId, "schedules").startAt(scheduledDate).build();
+		TriggerKey triggerKey = new TriggerKey("trigger-" + postId);
 
 		try {
-			trigger = sched.getTrigger(new TriggerKey("trigger-" + post.id));
-		} catch (SchedulerException e) {
-		}
+			if(scheduler.checkExists(triggerKey)) {
+				scheduler.rescheduleJob(triggerKey, trigger);
+			}
 
-		if (job == null) {
-			job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + post.id, "schedules").build();
-			//must send as string because useProperties is set true
-			job.getJobDataMap().put("postId", String.valueOf(post.id));
-		}
+			JobDetail job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + postId, "schedules").build();
+			job.getJobDataMap().put("postId", String.valueOf(postId)); //must send as string because useProperties is set true
 
-		if (trigger == null) {
-			trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + post.id, "schedules").startAt(post.scheduledDate).build();
-		}
-
-		try {
-			sched.scheduleJob(job, trigger);
+			scheduler.scheduleJob(job, trigger);
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}

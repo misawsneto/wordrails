@@ -1,6 +1,5 @@
 package com.wordrails.api;
 
-import com.wordrails.business.PostDraft;
 import org.joda.time.DateTime;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.RetrofitError;
@@ -12,23 +11,22 @@ import java.util.*;
 
 public class Test {
 
-	public static void main(String[] args) throws IOException {
-		WordRails wordRails = new WordRails(
+	private static WordRails getLocal() throws IOException {
+		return new WordRails(
 				new MockConnectivityManager(true),
-				new File("."),
-				0,
-				"http://localhost:8080",
-				"silvio",
-				"silvio",
-				LogLevel.FULL
-		);
+				new File("."), 0,
+				"http://localhost:8080", "silvio", "silvio",
+				LogLevel.FULL);
+	}
 
+	public static void main(String[] args) throws IOException {
+		WordRails wordRails = getLocal();
 		wordRails.login();
 		wordRails.getInitialData();
-		
+
 //		wordRails.putPassword("Sport@dmiN", "Sport@dmiN");
-		
-		createPost(wordRails);
+
+		createScheduledPost(wordRails);
 
 //		NetworkDto network = wordRails.getNetwork(1);
 //
@@ -157,16 +155,34 @@ public class Test {
 		String station = wordRails.getSelf(wordRails.getStation(2));
 
 
-		PostScheduledDto post = new PostScheduledDto();//.getPostDraft(1598);
+		PostDto post = new PostDto();//.getPostDraft(1598);
 		post.title = "Post 1";
 		post.body = "Post 1";
-//		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(2).toDate();
 		post.author = person;
 		post.station = station;
-		post.date=new Date();
+		post.date = new Date();
+		try {
+			wordRails.postPost(post);
+		} catch (RetrofitError err) {
+			printServerError(err);
+		}
+	}
+
+	private static void createScheduledPost(WordRails wordRails) {
+		String person = wordRails.getSelf(wordRails.getPerson(2));
+		String station = wordRails.getSelf(wordRails.getStation(2));
+
+
+		PostScheduledDto post = new PostScheduledDto();
+		post.title = "Post 1";
+		post.body = "Post 1";
+		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(1).toDate();
+		post.author = person;
+		post.station = station;
+		post.date = new Date();
 		try {
 			wordRails.postPostScheduled(post);
-		}catch (RetrofitError err) {
+		} catch (RetrofitError err) {
 			printServerError(err);
 		}
 	}
@@ -324,17 +340,20 @@ public class Test {
 					if (buffer != null) {
 						try {
 							buffer.close();
-						} catch (IOException e) { }
+						} catch (IOException e) {
+						}
 					}
 					if (reader != null) {
 						try {
 							reader.close();
-						} catch (IOException e) { }
+						} catch (IOException e) {
+						}
 					}
 					if (input != null) {
 						try {
 							input.close();
-						} catch (IOException e) { }
+						} catch (IOException e) {
+						}
 					}
 				}
 			}

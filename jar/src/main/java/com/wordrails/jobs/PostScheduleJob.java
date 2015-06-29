@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
+
 @Component
 @Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
 public class PostScheduleJob extends QuartzJobBean {
@@ -38,15 +40,17 @@ public class PostScheduleJob extends QuartzJobBean {
 
 		System.out.println("SCHEDULED POST: " + id);
 
-		PostScheduled post = postScheduledRepository.findOne(id);
-		if (post != null) {
-
-
-			postRepository.save(post);
-
-			if (post.notify) {
-				buildNotification(post);
+		PostScheduled scheduledPost = postScheduledRepository.findOne(id);
+		if (scheduledPost != null) {
+			if (scheduledPost.notify) {
+				buildNotification(scheduledPost);
 			}
+
+			Post post = new Post();
+			post.convertSubtype(scheduledPost);
+
+			postScheduledRepository.delete(scheduledPost);
+			postRepository.save(post);
 		}
 	}
 
