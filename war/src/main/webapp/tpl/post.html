@@ -66,18 +66,18 @@
               <div id="post-placeholder" class="post-content-font text-muted m-t-xxs" ng-class="{'hide': app.editingPost.body}">Texto...</div>
               <textarea ng-model="app.editingPost.body" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
-            <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html" 
+            <!-- <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html" 
                 label="Publicar"
                  mfb-menu position="{{chosen.position}}" effect="{{chosen.effect}}"
                  active-icon="mdi mdi-send" resting-icon="mdi mdi-plus"
                  ng-mouseenter="hovered()" ng-mouseleave="hovered()"
                  toggling-method="{{chosen.method}}" menu-state="menuState" main-action="publishPost($event)"
                  ng-class="{'sidebar-opened': !app.hidePostOptions}">
-
+            
               <button template-url="ng-mfb-button-md.tpl.html"
                  mfb-button icon="{{button.icon}}" ng-click="doAction(button.action($event))"
                  label="{{button.label}}" ng-repeat="button in buttons"></button>
-            </nav>
+            </nav> -->
             <!-- /options button -->
           </div>
         </div>
