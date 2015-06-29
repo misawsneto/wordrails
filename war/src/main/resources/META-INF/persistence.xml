@@ -17,6 +17,7 @@
 		<class>com.wordrails.business.Post</class>
 		<class>com.wordrails.business.PostScheduled</class>
 		<class>com.wordrails.business.PostDraft</class>
+		<class>com.wordrails.business.PostTrash</class>
 		<class>com.wordrails.business.Promotion</class>
 		<class>com.wordrails.business.Row</class>
 		<class>com.wordrails.business.Station</class>
@@ -30,28 +31,27 @@
 		<class>com.wordrails.business.Sponsor</class>
 		<class>com.wordrails.business.PasswordReset</class>
 		<class>com.wordrails.business.Notification</class>
-		<class>com.wordrails.business.Favorite</class>
 		<class>com.wordrails.business.Recommend</class>
 		<class>com.wordrails.business.Bookmark</class>
 		<class>com.wordrails.business.PostRead</class>
 		<class>com.wordrails.business.PersonNetworkRegId</class>
 		<class>com.wordrails.business.Invitation</class>
 
-        <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>      		      		
-            <property name="hibernate.show_sql" value="false"/>
-            <property name="hibernate.format_sql" value="true"/>
-			
-            <property name="hibernate.search.default.directory_provider" value="filesystem" />
-            <!-- <property name="hibernate.search.default.directory_provider" value="infinispan" />
-            <property name="hibernate.search.infinispan.configuration_resourcename" value="infinispan.xml" />
-            <property name="hibernate.search.infinispan.data_cachename" value="LuceneIndexesData" />
-            <property name="hibernate.search.infinispan.metadata_cachename" value="LuceneIndexesMetadata" />
-            <property name="hibernate.search.infinispan.locking_cachename" value="LuceneIndexesLocking" /> -->
-            <property name="hibernate.search.default.indexBase" value="indexes"/>
-            <!-- <property name="hibernate.search.default.worker.execution" value="async"/> -->
-            <property name="hibernate.search.worker.thread_pool.size" value="3"/>
-        </properties>
-    </persistence-unit>	
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+			<property name="hibernate.hbm2ddl.auto" value="update"/>
+			<property name="hibernate.show_sql" value="false"/>
+			<property name="hibernate.format_sql" value="true"/>
+
+			<property name="hibernate.search.default.directory_provider" value="filesystem"/>
+			<!-- <property name="hibernate.search.default.directory_provider" value="infinispan" />
+			<property name="hibernate.search.infinispan.configuration_resourcename" value="infinispan.xml" />
+			<property name="hibernate.search.infinispan.data_cachename" value="LuceneIndexesData" />
+			<property name="hibernate.search.infinispan.metadata_cachename" value="LuceneIndexesMetadata" />
+			<property name="hibernate.search.infinispan.locking_cachename" value="LuceneIndexesLocking" /> -->
+			<property name="hibernate.search.default.indexBase" value="indexes"/>
+			<!-- <property name="hibernate.search.default.worker.execution" value="async"/> -->
+			<property name="hibernate.search.worker.thread_pool.size" value="3"/>
+		</properties>
+	</persistence-unit>
 </persistence>

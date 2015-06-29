@@ -1150,6 +1150,56 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetPostTrashsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPostTrashAuthorized(Integer postTrashId) {
+		return canReadPosts(postTrashId);
+	}
+
+	@Override
+	protected boolean isGetPostTrashSponsorAuthorized(Integer postTrashId) {
+		return canReadPosts(postTrashId);
+	}
+
+	@Override
+	protected boolean isGetPostTrashCommentsAuthorized(Integer postTrashId) {
+		return canReadPosts(postTrashId);
+	}
+
+	@Override
+	protected boolean isGetPostTrashFeaturedImageAuthorized(Integer postTrashId) {
+		return canReadPosts(postTrashId);
+	}
+
+	@Override
+	protected boolean isGetPostTrashImagesAuthorized(Integer postTrashId) {
+		return canReadPosts(postTrashId);
+	}
+
+	@Override
+	protected boolean isGetPostTrashAuthorAuthorized(Integer postTrashId) {
+		return canReadPosts(postTrashId);
+	}
+
+	@Override
+	protected boolean isGetPostTrashPromotionsAuthorized(Integer postTrashId) {
+		return canReadPosts(postTrashId);
+	}
+
+	@Override
+	protected boolean isGetPostTrashStationAuthorized(Integer postTrashId) {
+		return canReadPosts(postTrashId);
+	}
+
+	@Override
+	protected boolean isGetPostTrashTermsAuthorized(Integer postTrashId) {
+		return canReadPosts(postTrashId);
+	}
+
+	@Override
 	protected boolean isGetStationWordpressAuthorized(Integer stationId) {
 		return true;
 	}

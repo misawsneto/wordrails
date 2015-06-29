@@ -3,8 +3,10 @@ package com.wordrails.jobs;
 import com.wordrails.GCMService;
 import com.wordrails.business.Notification;
 import com.wordrails.business.Post;
+import com.wordrails.business.PostScheduled;
 import com.wordrails.business.Station;
 import com.wordrails.persistence.PostRepository;
+import com.wordrails.persistence.PostScheduledRepository;
 import com.wordrails.persistence.StationRepository;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -21,6 +23,8 @@ public class PostScheduleJob extends QuartzJobBean {
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
+	private PostScheduledRepository postScheduledRepository;
+	@Autowired
 	private GCMService gcmService;
 	@Autowired
 	private StationRepository stationRepository;
@@ -34,8 +38,10 @@ public class PostScheduleJob extends QuartzJobBean {
 
 		System.out.println("SCHEDULED POST: " + id);
 
-		Post post = postRepository.findOne(id);
+		PostScheduled post = postScheduledRepository.findOne(id);
 		if (post != null) {
+
+
 			postRepository.save(post);
 
 			if (post.notify) {
