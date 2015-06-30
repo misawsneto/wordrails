@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <infinispan
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="urn:infinispan:config:6.0 http://www.infinispan.org/schemas/infinispan-config-6.0.xsd"
-    xmlns="urn:infinispan:config:6.0">
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="urn:infinispan:config:6.0 http://www.infinispan.org/schemas/infinispan-config-6.0.xsd"
+		xmlns="urn:infinispan:config:6.0">
 
 
-    <global>
+	<global>
 
-        <globalJmxStatistics
-            enabled="false"
-            cacheManagerName="HibernateSearch"
-            allowDuplicateDomains="true" />
+		<globalJmxStatistics
+				enabled="false"
+				cacheManagerName="HibernateSearch"
+				allowDuplicateDomains="true"/>
 
-        <transport clusterName="HibernateSearch-Infinispan-cluster">
-            <properties>
-                <property name="configurationFile" value="jgroups.xml" />
-            </properties>
-        </transport>
+		<transport clusterName="HibernateSearch-Infinispan-cluster">
+			<!-- <properties>
+				<property name="configurationFile" value="jgroups.xml" />
+			</properties> -->
+		</transport>
 
-        <shutdown hookBehavior="DONT_REGISTER" />
+		<shutdown hookBehavior="DONT_REGISTER"/>
 
-    </global>
+	</global>
 
-    <default>
+	<default>
 
-        <locking
-            lockAcquisitionTimeout="20000"
-            writeSkewCheck="false"
-            concurrencyLevel="500"
-            useLockStriping="false" />
+		<locking
+				lockAcquisitionTimeout="20000"
+				writeSkewCheck="false"
+				concurrencyLevel="500"
+				useLockStriping="false"/>
 
-        <invocationBatching enabled="false" />
-        
-        <clustering mode="replication">
-            <stateTransfer timeout="480000" fetchInMemoryState="true" />
-            <sync replTimeout="20000" />
-        </clustering>
+		<invocationBatching enabled="false"/>
 
-        <jmxStatistics enabled="true" />
+		<clustering mode="replication">
+			<stateTransfer timeout="480000" fetchInMemoryState="true"/>
+			<sync replTimeout="20000"/>
+		</clustering>
 
-        <eviction maxEntries="-1" strategy="NONE" />
+		<jmxStatistics enabled="true"/>
 
-        <expiration maxIdle="-1" />
+		<eviction maxEntries="-1" strategy="NONE"/>
 
-    </default>
+		<expiration maxIdle="-1"/>
 
-
-    <namedCache name="LuceneIndexesMetadata">
-        <persistence passivation="false">
-            <singleFile fetchPersistentState="false" preload="true"
-                   shared="true" purgeOnStartup="false" ignoreModifications="false">
-                <async enabled="true" flushLockTimeout="15000" threadPoolSize="5"/>
-                <properties>
-                    <property name="location" value="indexes"/>
-                </properties>
-            </singleFile>
-        </persistence>
-        <clustering mode="replication">
-            <stateTransfer fetchInMemoryState="true" />
-            <sync replTimeout="25000" />
-        </clustering>
-    </namedCache>
+	</default>
 
 
-    <namedCache name="LuceneIndexesData">
-        <persistence passivation="false">
-            <singleFile fetchPersistentState="false" preload="true"
-               shared="true" purgeOnStartup="false" ignoreModifications="false">
-                <async enabled="true" flushLockTimeout="15000" threadPoolSize="5"/>
-                <properties>
-                    <property name="location" value="indexes"/>
-                </properties>
-            </singleFile>
-        </persistence>
-        <clustering mode="replication">
-            <stateTransfer fetchInMemoryState="true" />
-            <sync replTimeout="25000" />
-        </clustering>
-    </namedCache>
+	<namedCache name="LuceneIndexesMetadata">
+		<persistence passivation="false">
+			<singleFile fetchPersistentState="false" preload="true"
+			            shared="true" purgeOnStartup="false" ignoreModifications="false">
+				<async enabled="true" flushLockTimeout="15000" threadPoolSize="5"/>
+				<properties>
+					<property name="location" value="indexes"/>
+				</properties>
+			</singleFile>
+		</persistence>
+		<clustering mode="replication">
+			<stateTransfer fetchInMemoryState="true"/>
+			<sync replTimeout="25000"/>
+		</clustering>
+	</namedCache>
 
 
-    <namedCache name="LuceneIndexesLocking">
-        <clustering mode="replication">
-            <stateTransfer fetchInMemoryState="true" />
-            <sync replTimeout="25000" />
-        </clustering>
-    </namedCache>
+	<namedCache name="LuceneIndexesData">
+		<persistence passivation="false">
+			<singleFile fetchPersistentState="false" preload="true"
+			            shared="true" purgeOnStartup="false" ignoreModifications="false">
+				<async enabled="true" flushLockTimeout="15000" threadPoolSize="5"/>
+				<properties>
+					<property name="location" value="indexes"/>
+				</properties>
+			</singleFile>
+		</persistence>
+		<clustering mode="replication">
+			<stateTransfer fetchInMemoryState="true"/>
+			<sync replTimeout="25000"/>
+		</clustering>
+	</namedCache>
+
+
+	<namedCache name="LuceneIndexesLocking">
+		<clustering mode="replication">
+			<stateTransfer fetchInMemoryState="true"/>
+			<sync replTimeout="25000"/>
+		</clustering>
+	</namedCache>
 
 </infinispan>
