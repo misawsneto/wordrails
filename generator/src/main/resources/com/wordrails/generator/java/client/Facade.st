@@ -243,6 +243,24 @@ public class $facade$ {
 		});
 	}
 	
+	public PostView convertPost(Integer postId, String type){
+		return _facade.convertPost(postId, type).content;
+	}
+	
+	public void convertPost(Integer postId, String type, final Callback<PostView\> _callback){
+		_facade.convertPost(postId, type, new Callback<ContentResponse<PostView\>\>() {
+			@Override
+			public void success(ContentResponse<PostView\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}		
+		});
+	}
+	
 	public SearchView searchPosts(String query, String stationIds, Integer personId, String publicationType, Boolean noHighlight, Integer page, Integer size){
 		return _facade.searchPosts(query, stationIds, personId, publicationType, noHighlight, page, size).content;
 	}

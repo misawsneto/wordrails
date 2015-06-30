@@ -6,6 +6,21 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
     return true; // true|false
   };
 
+  if($state.params && $state.params.id){
+  	var postId = $state.params.id
+  	trix.getPost(postId, 'postProjection').success(function(response){
+		$scope.app.editingPost = response;
+		setWritableStationById(response.station.id)
+  	})
+  }
+
+  setWritableStationById = function(id){
+  	$scope.writableStations && $scope.writableStations.forEach(function(station, index){
+  		if(station.stationId == id)
+  			$scope.app.editingPost.selectedStation = station;
+  	});
+  }
+
 	$scope.postCtrl = {}
 	// check if user has permisstion to write
   $scope.writableStations = trixService.getWritableStations();
@@ -40,7 +55,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
   $scope.showTopOptions = function(){
   	if($scope.app.editingPost){
-  		return $scope.app.editingPost.body && $scope.app.editingPost.title
+  		return ($scope.app.editingPost.body && $scope.app.editingPost.title) || $scope.app.editingPost.id 
   	}else 
   		return false;
   }

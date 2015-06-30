@@ -605,6 +605,10 @@ angular.module('app')
         return $state.current.name;
       }
 
+      $scope.app.movePostToTrash = function(){
+        
+      }
+
       $scope.app.refreshData();
       moment.locale('pt')
       /* end of added */

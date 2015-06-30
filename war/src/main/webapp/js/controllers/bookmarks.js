@@ -17,7 +17,7 @@ app.controller('BookmarksCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 			$scope.app.bookmarksCtrl.firstLoad = true;
 		})
 		.error(function(){
-			$scope.searchLoaging = false;
+			$scope.searchLoading = false;
 		})
 	}
 
@@ -29,13 +29,13 @@ app.controller('BookmarksCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 
 		console.log('asdf');
 
-		if(!$scope.searchLoaging){
+		if(!$scope.searchLoading){
 
-			$scope.searchLoaging = true;
+			$scope.searchLoading = true;
 			trix.searchBookmarks($scope.app.bookmarksCtrl.query, $scope.app.bookmarksCtrl.bookmarksPage + 1, 10)
 			.success(function(posts){
 				
-				$scope.searchLoaging = false;
+				$scope.searchLoading = false;
 				$scope.app.bookmarksCtrl.bookmarksPage = $scope.app.bookmarksCtrl.bookmarksPage + 1
 
 				if(!posts || posts.length == 0){
@@ -50,7 +50,7 @@ app.controller('BookmarksCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 				$(".search-results").focus();
 			})
 			.error(function(){
-				$scope.searchLoaging = false;
+				$scope.searchLoading = false;
 			})
 
 		}

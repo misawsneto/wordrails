@@ -30,13 +30,13 @@ public class PostService {
 	@Autowired
 	private StationRepository stationRepository;
 
-	public void convertPost(int postId, String state) {
+	public Post convertPost(int postId, String state) {
 		Post dbPost = postRepository.findOne(postId);
 
 		if (dbPost != null) {
 			log.debug("Before convert: " + dbPost.getClass().getSimpleName());
 			if (state.equals(dbPost.state)) {
-				return; //they are the same type. no need for convertion
+				return dbPost; //they are the same type. no need for convertion
 			}
 
 			if (dbPost.state.equals(Post.STATE_SCHEDULED)) { //if converting FROM scheduled, unschedule
@@ -51,6 +51,8 @@ public class PostService {
 			postRepository.save(dbPost);
 			log.debug("After convert: " + dbPost.getClass().getSimpleName());
 		}
+		
+		return dbPost;
 	}
 
 
