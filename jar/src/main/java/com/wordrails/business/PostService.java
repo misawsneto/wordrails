@@ -70,12 +70,12 @@ public class PostService {
 		try {
 			if (scheduler.checkExists(triggerKey)) {
 				scheduler.rescheduleJob(triggerKey, trigger);
+			} else {
+				JobDetail job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + postId, "schedules").build();
+				job.getJobDataMap().put("postId", String.valueOf(postId)); //must send as string because useProperties is set true
+
+				scheduler.scheduleJob(job, trigger);
 			}
-
-			JobDetail job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + postId, "schedules").build();
-			job.getJobDataMap().put("postId", String.valueOf(postId)); //must send as string because useProperties is set true
-
-			scheduler.scheduleJob(job, trigger);
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}
