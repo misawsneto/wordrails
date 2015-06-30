@@ -41,6 +41,15 @@ public class PostEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {
+		
+		if(post instanceof PostDraft)
+			post.state = Post.STATE_DRAFT;
+		else if(post instanceof PostScheduled)
+			post.state = Post.STATE_SCHEDULED;
+		else if(post instanceof PostTrash)
+			throw new BadRequestException();
+		else
+			post.state = Post.STATE_PUBLISHED;
 
 		if (postAndCommentSecurityChecker.canWrite(post)) {
 			Date now = new Date();
