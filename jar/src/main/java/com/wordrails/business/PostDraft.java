@@ -9,4 +9,8 @@ import javax.persistence.Entity;
 @Indexed
 @DiscriminatorValue(value="DRAFT")
 public class PostDraft extends Post {
+
+	public PostDraft() {
+		state = Post.STATE_DRAFT;
+	}
 }

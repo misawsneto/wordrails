@@ -41,15 +41,8 @@ public class PostEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {
-		
-		if(post instanceof PostDraft)
-			post.state = Post.STATE_DRAFT;
-		else if(post instanceof PostScheduled)
-			post.state = Post.STATE_SCHEDULED;
-		else if(post instanceof PostTrash)
+		if(post instanceof PostTrash) //post of type Trash is not insertable
 			throw new BadRequestException();
-		else
-			post.state = Post.STATE_PUBLISHED;
 
 		if (postAndCommentSecurityChecker.canWrite(post)) {
 			Date now = new Date();
@@ -79,7 +72,9 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	@Transactional
 	public void handleAfterCreate(Post post) {
-		if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
+		if (post.state.equals(Post.STATE_SCHEDULED)) {
+			postService.schedule(post.id, post.scheduledDate);
+		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
 			postService.buildNotification(post);
 		}
 	}

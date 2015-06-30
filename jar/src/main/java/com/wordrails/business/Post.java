@@ -89,6 +89,10 @@ public class Post {
 	public static final String STATE_PUBLISHED = "PUBLISHED";
 	public static final String STATE_SCHEDULED = "SCHEDULED";
 
+	public Post() {
+		state = Post.STATE_PUBLISHED;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@DocumentId

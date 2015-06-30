@@ -45,11 +45,10 @@ public class PostService {
 				schedule(dbPost.id, dbPost.scheduledDate);
 			}
 
-			queryPersistence.changePostState(postId, state);
+			//queryPersistence.changePostState(postId, state);
 
-			dbPost = postRepository.findOne(postId);
-			dbPost.lastModificationDate = new Date();
-			postRepository.save(dbPost); //this way PostEventHandler methods get executed
+			dbPost.state = state;
+			postRepository.save(dbPost);
 			log.debug("After convert: " + dbPost.getClass().getSimpleName());
 		}
 	}

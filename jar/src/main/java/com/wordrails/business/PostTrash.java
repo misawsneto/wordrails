@@ -9,4 +9,8 @@ import javax.persistence.Entity;
 @Indexed
 @DiscriminatorValue(value = "TRASH")
 public class PostTrash extends Post {
+
+	public PostTrash() {
+		state = Post.STATE_TRASH;
+	}
 }
