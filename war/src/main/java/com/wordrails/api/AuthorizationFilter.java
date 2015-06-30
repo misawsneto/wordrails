@@ -1479,4 +1479,9 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
+	@Override
+	protected boolean isFindByOriginalPostIdAuthorized(Integer originalPostId) {
+		return true;
+	}
+
 }

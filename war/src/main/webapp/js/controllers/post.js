@@ -38,6 +38,13 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   		$scope.app.editingPost.selectedStation = station;
   });
 
+  $scope.showTopOptions = function(){
+  	if($scope.app.editingPost){
+  		return $scope.app.editingPost.body && $scope.app.editingPost.title
+  	}else 
+  		return false;
+  }
+
   $scope.selectStation = function(selectedStation){
   	$scope.app.editingPost.selectedStation = selectedStation
   }

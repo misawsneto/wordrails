@@ -96,7 +96,11 @@ public class UtilResource {
 			System.out.println("reindex started");
 			FullTextEntityManager ftem = Search.getFullTextEntityManager(manager);
 			MassIndexer massIndexer = ftem.createIndexer();
-			massIndexer.purgeAllOnStart(true);
+			massIndexer.purgeAllOnStart(true)
+			.optimizeAfterPurge(true)
+			.optimizeOnFinish(true)
+			.batchSizeToLoadObjects( 30 )
+			   .threadsToLoadObjects( 4 );
 			//		massIndexer.start;
 			try {
 				massIndexer.startAndWait();
