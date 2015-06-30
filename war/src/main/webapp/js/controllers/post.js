@@ -476,8 +476,10 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		trix.postPost(post).success(function(postId){
 			$scope.app.showSuccessToast('Notícia publicada.');
 			// replace url withou state reload
-			$state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
+			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
 			$scope.app.refreshPerspective();
+			$scope.app.editingPost = null;
+			$state.go('app.stations');
 		})
 	}
 
