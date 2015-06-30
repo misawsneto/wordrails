@@ -5,8 +5,8 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-@Indexed
 @Entity
+@Indexed
 @DiscriminatorValue(value = "SCHEDULED")
 public class PostScheduled extends Post {
 }

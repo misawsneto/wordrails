@@ -5,8 +5,8 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-@Indexed
 @Entity
+@Indexed
 @DiscriminatorValue(value="DRAFT")
 public class PostDraft extends Post {
 }

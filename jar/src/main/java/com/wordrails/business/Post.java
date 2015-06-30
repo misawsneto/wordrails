@@ -2,23 +2,19 @@ package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wordrails.util.WordrailsUtil;
-
 import org.apache.solr.analysis.*;
 import org.hibernate.search.annotations.*;
-import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import java.lang.reflect.*;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Indexed
+@Indexed(interceptor=PostIndexingInterceptor.class)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(
 		name="state",
@@ -145,6 +141,7 @@ public class Post {
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date scheduledDate;
 
+	@Column(unique = true)
 	public String slug;
 
 	@OneToMany(mappedBy = "post")
@@ -179,7 +176,7 @@ public class Post {
 	@Field
 	@NumericField
 	public Integer stationId;
-	
+
 	@Field
 	@NumericField
 	public int readsCount = 0;
@@ -312,4 +309,51 @@ public class Post {
 	public Integer imageMediumId;
 	public Integer imageLargeId;
 
+	@Override
+	public String toString() {
+		return "Post{" +
+				"id=" + id +
+				", originalPostId=" + originalPostId +
+				", wordpressId=" + wordpressId +
+				", date=" + date +
+				", lastModificationDate=" + lastModificationDate +
+				", title='" + title + '\'' +
+				", body='" + body + '\'' +
+				", topper='" + topper + '\'' +
+				", subheading='" + subheading + '\'' +
+				", sponsor=" + sponsor +
+				", originalSlug='" + originalSlug + '\'' +
+				", scheduledDate=" + scheduledDate +
+				", slug='" + slug + '\'' +
+				", comments=" + comments +
+				", state='" + state + '\'' +
+				", featuredImage=" + featuredImage +
+				", images=" + images +
+				", author=" + author +
+				", promotions=" + promotions +
+				", station=" + station +
+				", stationId=" + stationId +
+				", readsCount=" + readsCount +
+				", favoritesCount=" + favoritesCount +
+				", bookmarksCount=" + bookmarksCount +
+				", recommendsCount=" + recommendsCount +
+				", commentsCount=" + commentsCount +
+				", terms=" + terms +
+				", imageLandscape=" + imageLandscape +
+				", updatedAt=" + updatedAt +
+				", externalFeaturedImgUrl='" + externalFeaturedImgUrl + '\'' +
+				", externalVideoUrl='" + externalVideoUrl + '\'' +
+				", readTime=" + readTime +
+				", notify=" + notify +
+				", imageCaptionText='" + imageCaptionText + '\'' +
+				", imageCreditsText='" + imageCreditsText + '\'' +
+				", lat=" + lat +
+				", lng=" + lng +
+				", imageTitleText='" + imageTitleText + '\'' +
+				", imageId=" + imageId +
+				", imageSmallId=" + imageSmallId +
+				", imageMediumId=" + imageMediumId +
+				", imageLargeId=" + imageLargeId +
+				'}';
+	}
 }

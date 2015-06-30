@@ -70,10 +70,6 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	@Transactional
 	public void handleAfterCreate(Post post) {
-		if (post.originalPostId == null || post.originalPostId <= 0) {
-			post.originalPostId = post.id;
-		}
-
 		if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
 			postService.buildNotification(post);
 		}
