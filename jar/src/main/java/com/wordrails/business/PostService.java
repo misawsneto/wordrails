@@ -5,6 +5,8 @@ import com.wordrails.jobs.PostScheduleJob;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.persistence.StationRepository;
+
+import org.hibernate.search.jpa.FullTextEntityManager;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @Service
 public class PostService {
@@ -30,6 +35,14 @@ public class PostService {
 	@Autowired
 	private StationRepository stationRepository;
 
+	@PersistenceContext
+	private EntityManager manager;
+
+	public void updatePostIndex (Post post){
+		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
+		ftem.index(post);
+	}
+
 	public Post convertPost(int postId, String state) {
 		Post dbPost = postRepository.findOne(postId);
 
@@ -45,13 +58,15 @@ public class PostService {
 				schedule(dbPost.id, dbPost.scheduledDate);
 			}
 
-			//queryPersistence.changePostState(postId, state);
-
 			dbPost.state = state;
-			postRepository.save(dbPost);
-			log.debug("After convert: " + dbPost.getClass().getSimpleName());
+
+			queryPersistence.changePostState(postId, state);
+			updatePostIndex(dbPost);
+
+			//			postRepository.save(dbPost);
+			log.info("After convert: " + dbPost.getClass().getSimpleName());
 		}
-		
+
 		return dbPost;
 	}
 

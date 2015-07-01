@@ -87,10 +87,11 @@ interface I$facade$ {
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<SearchView\>\> _callback);
 		
 		@PUT("/posts/{postId}/convert")
-	ContentResponse<PostView\> convertPost(@Path("postId") Integer postId, @Query("type") String type);
+	ContentResponse<PostView\> convertPost(@Path("postId") Integer postId, @Query("state") String state);
 	
 	@PUT("/posts/{postId}/convert")
-	void convertPost(@Path("postId") Integer postId, @Query("type") String type, Callback<ContentResponse<PostView\>\> _callback);
+	@FormUrlEncoded
+	void convertPost(@Path("postId") Integer postId, @Field("state") String state, Callback<ContentResponse<PostView\>\> _callback);
 		
 	@GET("/posts/search/networkPosts")
 	ContentResponse<SearchView\> searchPosts(@Query("query") String query, @Query("stationIds") String stationIds, @Query("personId") Integer personId, 

@@ -6,6 +6,7 @@ import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.PostRepository;
+import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -65,6 +66,10 @@ public class PostsResource {
 	private
 	@Autowired
 	PostConverter postConverter;
+	
+	private
+	@Autowired
+	PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 
 	private
 	@PersistenceContext
@@ -143,12 +148,17 @@ public class PostsResource {
 
 	@PUT
 	@Path("/{postId}/convert")
-	public ContentResponse<PostView> convertPost(@PathParam("postId") int postId, @QueryParam("state") String state) throws ServletException, IOException {
-		Post post = postService.convertPost(postId, state);
+	public ContentResponse<PostView> convertPost(@PathParam("postId") int postId, @FormParam("state") String state) throws ServletException, IOException {
+		Post post = postRepository.findOne(postId);
+		if(post != null && postAndCommentSecurityChecker.canWrite(post)){
+			post = postService.convertPost(postId, state);
+			ContentResponse<PostView> response = new ContentResponse<PostView>();
+			response.content = postConverter.convertToView(post);
+			return response;
+		}else{
+			throw new UnauthorizedException();
+		}
 		
-		ContentResponse<PostView> response = new ContentResponse<PostView>();
-		response.content = postConverter.convertToView(post);
-		return response;
 	}
 
 	@PUT
@@ -330,7 +340,7 @@ public class PostsResource {
 
 		return response;
 	}
-
+	
 	@GET
 	@Path("/search/networkPosts")
 	@Produces(MediaType.APPLICATION_JSON)

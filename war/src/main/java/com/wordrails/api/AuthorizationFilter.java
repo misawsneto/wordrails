@@ -1484,4 +1484,14 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
+	@Override
+	protected boolean isGetImageOwnerAuthorized(Integer imageId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetImageStationAuthorized(Integer imageId) {
+		return true;
+	}
+
 }

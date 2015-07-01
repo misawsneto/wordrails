@@ -16,6 +16,24 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   	})
   }
 
+  $scope.app.checkState = function(){
+  	if($scope.app.editingPost.state == "PUBLISHED"){
+  		return 1;
+  	}else if($scope.app.editingPost.state == "DRAFT"){
+  		return 2;
+  	}else if($scope.app.editingPost.state == "SCHEDULED"){
+  		return 3;
+  	}else if($scope.app.editingPost.state == "TRASH"){
+			return 4;
+  	}else{
+  		return null;
+  	}
+  }
+
+  $scope.checkState = function(){
+  	return $scope.app.checkState();
+  }
+
   setWritableStationById = function(id){
   	$scope.writableStations && $scope.writableStations.forEach(function(station, index){
   		if(station.stationId == id)
@@ -178,7 +196,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	})
 
 	$scope.$watch('app.editingPost', function(newValue, oldValue){
-		if(newValue && oldValue && (newValue.title || newValue.body || newValue.editingExisting) && !newValue.id){
+		if(newValue && oldValue && (newValue.title || newValue.body || newValue.editingExisting)){
 			$scope.app.editingPost.editingExisting = true;
 		}
 		if(newValue.editingExisting){
@@ -188,7 +206,6 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		}else{
 			window.onbeforeunload = null;
 		}
-
 	}, true)
 
 	$scope.printPost = function(){
@@ -264,11 +281,13 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	})
 
 	$scope.$watch('app.editingPost.title', function(newVal){
-		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
+		if(newVal)
+			$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
 	})
 
 	$scope.$watch('app.editingPost.slug', function(newVal){
-		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
+		if(newVal)
+			$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
 	})
 
 	/*function uncheckTerms(terms){
@@ -378,8 +397,17 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	}
 
 	$scope.savePostAsDraft = function(ev){
-		$scope.app.editingPost.editingExisting = false;
-		window.console && console.log('saving draft...')
+		console.log($scope.checkState(), $scope.app.editingPost);
+		if($scope.showTopOptions()){
+			if($scope.checkState() == 1 || $scope.checkState() == 3){
+				$scope.app.openSplash('confirm_change_to_draft.html')
+			}else if($scope.checkState() == 2){
+				window.console && console.log("Already a draft... updating");
+			}else{
+				createPost("DRAFT")
+			}
+			//$scope.app.editingPost.editingExisting = false;
+		}
 	}
 
 	$scope.deleteOrDiscardPost = function(ev){
@@ -447,7 +475,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		return retTerms;
 	}	
 
-	function createPost(){
+	function createPost(state){
 		var post = {};
 		post.title = $scope.app.editingPost.title
 		post.body = $scope.app.editingPost.body
@@ -494,12 +522,26 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		    		postPost(post);
 		    	})
 		    }else{
-		    	postPost(post);
+		    	if(state == "DRAFT"){
+		    		post.state = state;
+		    		postDraft(post)
+		    	}else{
+		    		postPost(post);
+		    	}
 		    }
 
 			
 		} // end of final else
 	}// end of createPost()
+
+	var postDraft = function(post){
+		trix.postPostDraft(post).success(function(postId){
+			$scope.app.showSuccessToast('Rascunho salvo.');
+			// replace url withou state reload
+			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
+			$scope.app.refreshPerspective();
+		})
+	}
 
 	var postPost = function(post){
 		trix.postPost(post).success(function(postId){

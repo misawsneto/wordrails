@@ -41,6 +41,9 @@ public interface PostProjection {
 	Integer getRecommendsCount();
 	Integer getCommentsCount();
 	Date getUpdatedAt();
+	
+	Date getScheduledDate();
+	
 	String getExternalFeaturedImgUrl();
 	String getExternalVideoUrl();
 	Integer getReadTime();

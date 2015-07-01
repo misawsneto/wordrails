@@ -243,12 +243,12 @@ public class $facade$ {
 		});
 	}
 	
-	public PostView convertPost(Integer postId, String type){
-		return _facade.convertPost(postId, type).content;
+	public PostView convertPost(Integer postId, String state){
+		return _facade.convertPost(postId, state).content;
 	}
 	
-	public void convertPost(Integer postId, String type, final Callback<PostView\> _callback){
-		_facade.convertPost(postId, type, new Callback<ContentResponse<PostView\>\>() {
+	public void convertPost(Integer postId, String state, final Callback<PostView\> _callback){
+		_facade.convertPost(postId, state, new Callback<ContentResponse<PostView\>\>() {
 			@Override
 			public void success(ContentResponse<PostView\> _t, Response _response) {
 				_callback.success(_t.content, _response);

@@ -53,6 +53,12 @@ public class Image {
 	public Sponsor logoSponsor;
 	
 	@ManyToOne
+	public Person owner;
+	
+	@ManyToOne
+	public Station station;
+	
+	@ManyToOne
 	public Sponsor publicitySponsor;
 	
 	@NotNull

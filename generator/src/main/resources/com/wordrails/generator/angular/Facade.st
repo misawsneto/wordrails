@@ -257,10 +257,15 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/posts/" + stationId + "/recent", config)
     }
 
-    this.putPassword = function(oldPassword, newPassword, _success, _error, _complete) {
+    this.putPassword = function(oldPassword, newPassword) {
     	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
     	return \$http.put(_config.url + "/api/persons/me/password", \$.param({"oldPassword": oldPassword, "newPassword": newPassword}), config)
     };
+    
+    this.convertPost = function(postId, state){
+    	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
+    	return \$http.put(_config.url + "/api/posts/"+postId+"/convert", \$.param({"state": state}), config)
+    } 
 
 	this.findPostsByStationIdAndAuthorIdAndState = function(stationId, authorId, state, _page, _size, _sort) {
 		var config = {

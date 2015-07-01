@@ -214,6 +214,7 @@ angular.module('app')
           if($scope.app.editingPost && $scope.app.editingPost.editingExisting){
             if(confirm('Este conteúdo está sendo editado. Deseja descartar as alterações?')){
               $scope.app.editingPost = null;
+              window.onbeforeunload = null;
             }else{
               event.preventDefault();
             }
@@ -345,7 +346,19 @@ angular.module('app')
         });
       };
 
+      $scope.app.converToDraf = function(){
+        if($scope.app.editingPost && $scope.app.editingPost.id){
+          trix.convertPost($scope.app.editingPost.id, "DRAFT").success(function(){
+            app.cancelModal();
+          });
+        }
+      }
+
       $scope.cancelModal = function () {
+        $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
+      };
+
+      $scope.app.cancelModal = function () {
         $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
       };
 
