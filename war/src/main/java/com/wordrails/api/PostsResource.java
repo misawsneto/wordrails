@@ -148,6 +148,7 @@ public class PostsResource {
 
 	@PUT
 	@Path("/{postId}/convert")
+	@Transactional(readOnly=false)
 	public ContentResponse<PostView> convertPost(@PathParam("postId") int postId, @FormParam("state") String state) throws ServletException, IOException {
 		Post post = postRepository.findOne(postId);
 		if(post != null && postAndCommentSecurityChecker.canWrite(post)){

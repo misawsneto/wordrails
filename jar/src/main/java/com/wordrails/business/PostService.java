@@ -2,7 +2,10 @@ package com.wordrails.business;
 
 import com.wordrails.GCMService;
 import com.wordrails.jobs.PostScheduleJob;
+import com.wordrails.persistence.PostDraftRepository;
 import com.wordrails.persistence.PostRepository;
+import com.wordrails.persistence.PostScheduledRepository;
+import com.wordrails.persistence.PostTrashRepository;
 import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.persistence.StationRepository;
 
@@ -34,10 +37,21 @@ public class PostService {
 	private PostRepository postRepository;
 	@Autowired
 	private StationRepository stationRepository;
+	
+	@Autowired private PostDraftRepository postDraftRepository;
+	
+	@Autowired private PostScheduledRepository postScheduledRepository;
+	
+	@Autowired private PostTrashRepository postTrashRepository;
 
 	@PersistenceContext
 	private EntityManager manager;
 
+	public void removePostIndex(Post post){
+		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
+		ftem.purge(Post.class, post.id);
+	}
+	
 	public void updatePostIndex (Post post){
 		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
 		ftem.index(post);
@@ -61,10 +75,8 @@ public class PostService {
 			dbPost.state = state;
 
 			queryPersistence.changePostState(postId, state);
+			removePostIndex(dbPost);
 			updatePostIndex(dbPost);
-
-			//			postRepository.save(dbPost);
-			log.info("After convert: " + dbPost.getClass().getSimpleName());
 		}
 
 		return dbPost;
