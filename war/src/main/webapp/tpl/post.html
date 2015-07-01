@@ -131,7 +131,7 @@
           <button class="btn btn-default" ng-class="{'disabled': !showTopOptions()}" ng-click="publishPost()">Publicar</button>
           <button class="btn btn-default" dropdown-toggle><span class="caret"></span></button>
           <ul class="dropdown-menu">
-            <li ng-class="{'disabled': !showTopOptions()}"><a href>Salvar como rascunho</a></li>
+            <li ng-class="{'disabled': !showTopOptions()}"><a href ng-click="savePostAsDraft()">Salvar como rascunho</a></li>
             <li class="divider"></li>
             <li><a href>Ajuda</a></li>
           </ul>

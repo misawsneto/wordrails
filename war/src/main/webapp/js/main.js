@@ -189,7 +189,7 @@ angular.module('app')
       });
 
       // deal with unauthorized access
-      $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+      $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
         if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications') && !trixService.isLoggedIn()){
           event.preventDefault();
           $scope.app.showInfoToast('Autentique-se para acessar esta função.')
@@ -210,6 +210,14 @@ angular.module('app')
           $scope.app.showInfoToast('Permissão negada.')
           if(fromState.abstract)
             $state.go('app.stations');
+        }else if(fromState.name == 'app.post'){
+          if($scope.app.editingPost && $scope.app.editingPost.editingExisting){
+            if(confirm('Este conteúdo está sendo editado. Deseja descartar as alterações?')){
+              $scope.app.editingPost = null;
+            }else{
+              event.preventDefault();
+            }
+          }
         }
       })
 

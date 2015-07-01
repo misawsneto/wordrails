@@ -7,10 +7,12 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   };
 
   if($state.params && $state.params.id){
+  	$scope.app.editingPost = null;
   	var postId = $state.params.id
   	trix.getPost(postId, 'postProjection').success(function(response){
-		$scope.app.editingPost = response;
-		setWritableStationById(response.station.id)
+			$scope.app.editingPost = response;
+			setWritableStationById(response.station.id)
+			$scope.app.editingPost.editingExisting = true;
   	})
   }
 
@@ -33,13 +35,12 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		$scope.discardedMedia = null;
 		$scope.app.editingPost.uploadedImage = null;
 		$scope.app.editingPost.showMediaButtons = false;
-		$scope.postCtrl.editingExisting = false;
+		$scope.app.editingPost.editingExisting = false;
 	}
 
 	if(!$scope.app.editingPost){
 		createPostObject();
 	}else{
-		$scope.postCtrl.editingExisting = true;
 		if($scope.app.editingPost.externalVideoUrl)
 			$scope.videoUrl = $scope.app.editingPost.externalVideoUrl;
 		$timeout(function() {
@@ -48,6 +49,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		}, 50);
 	}
 
+	if(!$state.params.id)
   $scope.writableStations && $scope.writableStations.forEach(function(station, index){
   	if(station.stationId == $scope.app.currentStation.id)
   		$scope.app.editingPost.selectedStation = station;
@@ -175,8 +177,18 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		}
 	})
 
-	$scope.$watch('app.editingPost', function(newValue){
-		// console.log(newValue);
+	$scope.$watch('app.editingPost', function(newValue, oldValue){
+		if(newValue && oldValue && (newValue.title || newValue.body || newValue.editingExisting) && !newValue.id){
+			$scope.app.editingPost.editingExisting = true;
+		}
+		if(newValue.editingExisting){
+			window.onbeforeunload = function(){
+        return 'Você possui conteúdo que ainda não foi salvo. Deseja sair desta página?';
+      };
+		}else{
+			window.onbeforeunload = null;
+		}
+
 	}, true)
 
 	$scope.printPost = function(){
@@ -245,6 +257,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   };
 
 	$scope.$watch('app.editingPost.selectedStation', function(newVal){
+		if($scope.app.editingPost && $scope.app.editingPost.selectedStation)
 		trix.getTermTree($scope.app.editingPost.selectedStation.defaultPerspectiveId).success(function(response){
 			$scope.termTree = response;
 		});
@@ -365,6 +378,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	}
 
 	$scope.savePostAsDraft = function(ev){
+		$scope.app.editingPost.editingExisting = false;
 		window.console && console.log('saving draft...')
 	}
 
