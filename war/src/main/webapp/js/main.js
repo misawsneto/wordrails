@@ -349,7 +349,7 @@ angular.module('app')
       $scope.app.converToDraf = function(){
         if($scope.app.editingPost && $scope.app.editingPost.id){
           trix.convertPost($scope.app.editingPost.id, "DRAFT").success(function(){
-            app.cancelModal();
+            $scope.app.cancelModal();
           });
         }
       }

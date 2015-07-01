@@ -345,7 +345,7 @@ public class PostsResource {
 	@GET
 	@Path("/search/networkPosts")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request, @QueryParam("query") String q, @QueryParam("stationIds") String stationIds, @QueryParam("personId") Integer personId, @QueryParam("publicationType") String publicationType, @QueryParam("noHighlight") Boolean noHighlight, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
+	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request, @QueryParam("query") String q, @QueryParam("stationIds") String stationIds, @QueryParam("personId") Integer personId, @QueryParam("publicationType") String publicationType, @QueryParam("noHighlight") Boolean noHighlight, @QueryParam("sortByDate") Boolean sortByDate, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
 
 		Person person = accessControllerUtil.getLoggedPerson();
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -417,7 +417,12 @@ public class PostsResource {
 
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Post.class);
 
-		org.apache.lucene.search.Sort sort = new Sort(SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
+		org.apache.lucene.search.Sort sort = null; 
+		if(sortByDate != null && sortByDate)
+			sort = new Sort(new SortField("date", SortField.CUSTOM, true));
+		else
+			sort = new Sort(SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
+		
 		ftq.setSort(sort);
 
 		int totalHits = ftq.getResultSize();

@@ -410,6 +410,10 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		}
 	}
 
+	$scope.openHelp = function(){
+		$scope.app.openSplash('post_help.html')	
+	};
+
 	$scope.deleteOrDiscardPost = function(ev){
 		window.console && console.log('delete post...')
 	}

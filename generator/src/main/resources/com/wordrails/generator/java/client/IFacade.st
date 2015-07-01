@@ -95,12 +95,12 @@ interface I$facade$ {
 		
 	@GET("/posts/search/networkPosts")
 	ContentResponse<SearchView\> searchPosts(@Query("query") String query, @Query("stationIds") String stationIds, @Query("personId") Integer personId, 
-			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight,
+			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight, @Query("sortByDate") Boolean sortByDate,
 			@Query("page") Integer page, @Query("size") Integer size);
 	
 	@GET("/posts/search/networkPosts")
 	void searchPosts(@Query("query") String query, @Query("stationIds") String stationIds, @Query("personId") Integer personId, 
-			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight,
+			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight, @Query("sortByDate") Boolean sortByDate,
 			@Query("page") Integer page, @Query("size") Integer size, Callback<ContentResponse<SearchView\>\> _callback);
 		
 	@GET("/bookmarks/searchBookmarks")

@@ -133,7 +133,7 @@
           <ul class="dropdown-menu">
             <li ng-class="{'disabled': !showTopOptions()}"><a href ng-click="savePostAsDraft()">Salvar como rascunho</a></li>
             <li class="divider"></li>
-            <li><a href>Ajuda</a></li>
+            <li><a ng-click="openHelp()" >Ajuda</a></li>
           </ul>
         </div>
     </li>
@@ -176,6 +176,14 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+  </script>
+
+<script type="text/ng-template" id="post_help.html">
+  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <div class="splash-content text-center" ng-cloak>
+    <div class="row">
     </div>
   </div>
   </script>
