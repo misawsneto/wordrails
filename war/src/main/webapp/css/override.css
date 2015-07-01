@@ -1101,6 +1101,10 @@ a.text-lgrey:hover {
   opacity: 0;
 }
 
+.bg-lighter-grey{
+  background: #fafafa;
+}
+
 .bg-light-grey{
   background: #f7f7f7;
 }

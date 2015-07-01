@@ -36,10 +36,13 @@
                   </div>
                 </div>
                 <div class="wrapper" ng-show="writableStations && writableStations.length > 1">
-                  <div class="m-t">
-                    Escolha a estação que deseja publicar:
+                <span ng-class="{'hide': !app.editingPost.id}">Estação: 
+                  <strong>{{app.editingPost.id ? + app.editingPost.selectedStation.stationName : ''}}</strong>
+                </span>
+                  <div ng-class="{'hide': app.editingPost.id}" class="m-t">
+                    Escolha a estação em que deseja publicar:
                   </div>
-                  <select class="form-control w-lg m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
+                  <select ng-class="{'hide': app.editingPost.id}" class="form-control w-lg m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
                   ng-options="station as station.stationName for station in writableStations track by station.stationId">
                   </select>
                 </div>

@@ -5,6 +5,8 @@ import com.wordrails.jobs.PostScheduleJob;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.persistence.StationRepository;
+
+import org.hibernate.search.jpa.FullTextEntityManager;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @Service
 public class PostService {
@@ -30,13 +35,21 @@ public class PostService {
 	@Autowired
 	private StationRepository stationRepository;
 
-	public void convertPost(int postId, String state) {
+	@PersistenceContext
+	private EntityManager manager;
+
+	public void updatePostIndex (Post post){
+		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
+		ftem.index(post);
+	}
+
+	public Post convertPost(int postId, String state) {
 		Post dbPost = postRepository.findOne(postId);
 
 		if (dbPost != null) {
 			log.debug("Before convert: " + dbPost.getClass().getSimpleName());
 			if (state.equals(dbPost.state)) {
-				return; //they are the same type. no need for convertion
+				return dbPost; //they are the same type. no need for convertion
 			}
 
 			if (dbPost.state.equals(Post.STATE_SCHEDULED)) { //if converting FROM scheduled, unschedule
@@ -45,12 +58,16 @@ public class PostService {
 				schedule(dbPost.id, dbPost.scheduledDate);
 			}
 
-			//queryPersistence.changePostState(postId, state);
-
 			dbPost.state = state;
-			postRepository.save(dbPost);
-			log.debug("After convert: " + dbPost.getClass().getSimpleName());
+
+			queryPersistence.changePostState(postId, state);
+			updatePostIndex(dbPost);
+
+			//			postRepository.save(dbPost);
+			log.info("After convert: " + dbPost.getClass().getSimpleName());
 		}
+
+		return dbPost;
 	}
 
 
@@ -70,12 +87,12 @@ public class PostService {
 		try {
 			if (scheduler.checkExists(triggerKey)) {
 				scheduler.rescheduleJob(triggerKey, trigger);
+			} else {
+				JobDetail job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + postId, "schedules").build();
+				job.getJobDataMap().put("postId", String.valueOf(postId)); //must send as string because useProperties is set true
+
+				scheduler.scheduleJob(job, trigger);
 			}
-
-			JobDetail job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + postId, "schedules").build();
-			job.getJobDataMap().put("postId", String.valueOf(postId)); //must send as string because useProperties is set true
-
-			scheduler.scheduleJob(job, trigger);
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}

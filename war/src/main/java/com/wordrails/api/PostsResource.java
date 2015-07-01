@@ -6,7 +6,9 @@ import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.PostRepository;
+import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
@@ -32,7 +34,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +66,10 @@ public class PostsResource {
 	private
 	@Autowired
 	PostConverter postConverter;
+	
+	private
+	@Autowired
+	PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 
 	private
 	@PersistenceContext
@@ -139,10 +148,17 @@ public class PostsResource {
 
 	@PUT
 	@Path("/{postId}/convert")
-	public void convertPost(@PathParam("postId") int postId, @QueryParam("state") String state) throws ServletException, IOException {
-		postService.convertPost(postId, state);
-
-		forward();
+	public ContentResponse<PostView> convertPost(@PathParam("postId") int postId, @FormParam("state") String state) throws ServletException, IOException {
+		Post post = postRepository.findOne(postId);
+		if(post != null && postAndCommentSecurityChecker.canWrite(post)){
+			post = postService.convertPost(postId, state);
+			ContentResponse<PostView> response = new ContentResponse<PostView>();
+			response.content = postConverter.convertToView(post);
+			return response;
+		}else{
+			throw new UnauthorizedException();
+		}
+		
 	}
 
 	@PUT
@@ -324,7 +340,7 @@ public class PostsResource {
 
 		return response;
 	}
-
+	
 	@GET
 	@Path("/search/networkPosts")
 	@Produces(MediaType.APPLICATION_JSON)

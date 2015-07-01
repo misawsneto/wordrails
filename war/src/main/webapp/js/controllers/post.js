@@ -6,6 +6,41 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
     return true; // true|false
   };
 
+  if($state.params && $state.params.id){
+  	$scope.app.editingPost = null;
+  	var postId = $state.params.id
+  	trix.getPost(postId, 'postProjection').success(function(response){
+			$scope.app.editingPost = response;
+			setWritableStationById(response.station.id)
+			$scope.app.editingPost.editingExisting = true;
+  	})
+  }
+
+  $scope.app.checkState = function(){
+  	if($scope.app.editingPost.state == "PUBLISHED"){
+  		return 1;
+  	}else if($scope.app.editingPost.state == "DRAFT"){
+  		return 2;
+  	}else if($scope.app.editingPost.state == "SCHEDULED"){
+  		return 3;
+  	}else if($scope.app.editingPost.state == "TRASH"){
+			return 4;
+  	}else{
+  		return null;
+  	}
+  }
+
+  $scope.checkState = function(){
+  	return $scope.app.checkState();
+  }
+
+  setWritableStationById = function(id){
+  	$scope.writableStations && $scope.writableStations.forEach(function(station, index){
+  		if(station.stationId == id)
+  			$scope.app.editingPost.selectedStation = station;
+  	});
+  }
+
 	$scope.postCtrl = {}
 	// check if user has permisstion to write
   $scope.writableStations = trixService.getWritableStations();
@@ -18,13 +53,12 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		$scope.discardedMedia = null;
 		$scope.app.editingPost.uploadedImage = null;
 		$scope.app.editingPost.showMediaButtons = false;
-		$scope.postCtrl.editingExisting = false;
+		$scope.app.editingPost.editingExisting = false;
 	}
 
 	if(!$scope.app.editingPost){
 		createPostObject();
 	}else{
-		$scope.postCtrl.editingExisting = true;
 		if($scope.app.editingPost.externalVideoUrl)
 			$scope.videoUrl = $scope.app.editingPost.externalVideoUrl;
 		$timeout(function() {
@@ -33,6 +67,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		}, 50);
 	}
 
+	if(!$state.params.id)
   $scope.writableStations && $scope.writableStations.forEach(function(station, index){
   	if(station.stationId == $scope.app.currentStation.id)
   		$scope.app.editingPost.selectedStation = station;
@@ -40,7 +75,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
   $scope.showTopOptions = function(){
   	if($scope.app.editingPost){
-  		return $scope.app.editingPost.body && $scope.app.editingPost.title
+  		return ($scope.app.editingPost.body && $scope.app.editingPost.title) || $scope.app.editingPost.id 
   	}else 
   		return false;
   }
@@ -160,8 +195,17 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		}
 	})
 
-	$scope.$watch('app.editingPost', function(newValue){
-		// console.log(newValue);
+	$scope.$watch('app.editingPost', function(newValue, oldValue){
+		if(newValue && oldValue && (newValue.title || newValue.body || newValue.editingExisting)){
+			$scope.app.editingPost.editingExisting = true;
+		}
+		if(newValue.editingExisting){
+			window.onbeforeunload = function(){
+        return 'Você possui conteúdo que ainda não foi salvo. Deseja sair desta página?';
+      };
+		}else{
+			window.onbeforeunload = null;
+		}
 	}, true)
 
 	$scope.printPost = function(){
@@ -230,17 +274,20 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   };
 
 	$scope.$watch('app.editingPost.selectedStation', function(newVal){
+		if($scope.app.editingPost && $scope.app.editingPost.selectedStation)
 		trix.getTermTree($scope.app.editingPost.selectedStation.defaultPerspectiveId).success(function(response){
 			$scope.termTree = response;
 		});
 	})
 
 	$scope.$watch('app.editingPost.title', function(newVal){
-		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
+		if(newVal)
+			$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
 	})
 
 	$scope.$watch('app.editingPost.slug', function(newVal){
-		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
+		if(newVal)
+			$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
 	})
 
 	/*function uncheckTerms(terms){
@@ -350,7 +397,17 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	}
 
 	$scope.savePostAsDraft = function(ev){
-		window.console && console.log('saving draft...')
+		console.log($scope.checkState(), $scope.app.editingPost);
+		if($scope.showTopOptions()){
+			if($scope.checkState() == 1 || $scope.checkState() == 3){
+				$scope.app.openSplash('confirm_change_to_draft.html')
+			}else if($scope.checkState() == 2){
+				window.console && console.log("Already a draft... updating");
+			}else{
+				createPost("DRAFT")
+			}
+			//$scope.app.editingPost.editingExisting = false;
+		}
 	}
 
 	$scope.deleteOrDiscardPost = function(ev){
@@ -418,7 +475,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		return retTerms;
 	}	
 
-	function createPost(){
+	function createPost(state){
 		var post = {};
 		post.title = $scope.app.editingPost.title
 		post.body = $scope.app.editingPost.body
@@ -465,12 +522,26 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		    		postPost(post);
 		    	})
 		    }else{
-		    	postPost(post);
+		    	if(state == "DRAFT"){
+		    		post.state = state;
+		    		postDraft(post)
+		    	}else{
+		    		postPost(post);
+		    	}
 		    }
 
 			
 		} // end of final else
 	}// end of createPost()
+
+	var postDraft = function(post){
+		trix.postPostDraft(post).success(function(postId){
+			$scope.app.showSuccessToast('Rascunho salvo.');
+			// replace url withou state reload
+			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
+			$scope.app.refreshPerspective();
+		})
+	}
 
 	var postPost = function(post){
 		trix.postPost(post).success(function(postId){

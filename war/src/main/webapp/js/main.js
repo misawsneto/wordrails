@@ -189,7 +189,7 @@ angular.module('app')
       });
 
       // deal with unauthorized access
-      $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+      $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
         if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications') && !trixService.isLoggedIn()){
           event.preventDefault();
           $scope.app.showInfoToast('Autentique-se para acessar esta função.')
@@ -210,6 +210,15 @@ angular.module('app')
           $scope.app.showInfoToast('Permissão negada.')
           if(fromState.abstract)
             $state.go('app.stations');
+        }else if(fromState.name == 'app.post'){
+          if($scope.app.editingPost && $scope.app.editingPost.editingExisting){
+            if(confirm('Este conteúdo está sendo editado. Deseja descartar as alterações?')){
+              $scope.app.editingPost = null;
+              window.onbeforeunload = null;
+            }else{
+              event.preventDefault();
+            }
+          }
         }
       })
 
@@ -337,7 +346,19 @@ angular.module('app')
         });
       };
 
+      $scope.app.converToDraf = function(){
+        if($scope.app.editingPost && $scope.app.editingPost.id){
+          trix.convertPost($scope.app.editingPost.id, "DRAFT").success(function(){
+            app.cancelModal();
+          });
+        }
+      }
+
       $scope.cancelModal = function () {
+        $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
+      };
+
+      $scope.app.cancelModal = function () {
         $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
       };
 
@@ -603,6 +624,10 @@ angular.module('app')
 
       $scope.app.getCurrentStateName = function(){
         return $state.current.name;
+      }
+
+      $scope.app.movePostToTrash = function(){
+        
       }
 
       $scope.app.refreshData();

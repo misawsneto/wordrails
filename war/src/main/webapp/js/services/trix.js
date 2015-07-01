@@ -57,6 +57,19 @@ angular.module('app').service('trixService', function(){
 	 	return isAdmin;
 	 }
 
+	 /**
+	 * check if user is station admin
+	 */
+	 this.stationIsEditor = function(stationId){
+	 	if (!stationId) {return false};
+	 	var isEditor = false;
+	 	initData.personPermissions.stationPermissions.forEach(function(permissions, index){
+	 		if(permissions.stationId == stationId && permission.editor)
+	 			isEditor = true;
+	 	});
+	 	return isEditor;
+	 }
+
 	 this.isLoggedIn = function(){
 	 	if (initData.person && initData.person.username != "wordrails")
 	 		return true;
