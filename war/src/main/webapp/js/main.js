@@ -287,6 +287,10 @@ angular.module('app')
       }
 
       $scope.openSplash = function(templateId, size){
+        if(templateId === "signin_splash.html")
+          $timeout(function(){
+            $("#username-input").focus();
+          }, 300);
         $scope.modalInstance = $splash.open({
           templateUrl: templateId,
           scope: $scope
@@ -294,6 +298,10 @@ angular.module('app')
       }
 
       $scope.app.openSplash = function(templateId, size){
+        if(templateId === "signin_splash.html")
+          $timeout(function(){
+            $("#username-input").focus();
+          }, 300);
         $scope.modalInstance = $splash.open({
           templateUrl: templateId,
           scope: $scope
@@ -545,8 +553,9 @@ angular.module('app')
       $scope.goToBookmars = function(){
         if($scope.app.isLogged)
           $state.go('app.bookmarks')
-        else
+        else{
           $scope.openSplash('signin_splash.html')
+        }
       }
 
       $scope.goToNotifications = function(){

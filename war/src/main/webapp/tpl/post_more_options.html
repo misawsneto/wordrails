@@ -5,13 +5,27 @@
         <md-tab label="Informações Gerais">
           <div class="b-t wrapper-md post-general-info" flex>
             <div class="row">
-              <div class="col-sm-5">
+              <div class="col-sm-5" ng-class="{'hide': app.editingPost.id}">
                 <span class="text-md font-bold">
                   Pronto para publicar sua notícia?
                 </span>
                 <div class="m-t">
                   Quando estiver pronto para publicar a notícia, escolha uma categoria, preencha as opções desejadas e pressione o botão de <strong>publicar</strong>.
                 </div>
+                <img id="publication-img" src="img/publication-img.png">
+              </div>
+              <div class="col-sm-5" ng-class="{'hide': !app.editingPost.id}">
+                <span class="text-md font-bold">
+                  Esta notícia foi publicada na estação:
+                </span>
+                <div class="m-t-sm m-b-md text-lg">
+                  {{app.editingPost.station.name}}
+                </div>
+                <span class="pos-abt wrapper-xl text-3x" style="right:0">
+                  <i class="mdi mdi-check text-3x text-success" ng-show="app.checkState() == 1"></i>
+                  <i class="mdi mdi-pencil text-3x" ng-show="app.checkState() == 2"></i>
+                  <i class="mdi mdi-clock text-3x" ng-show="app.checkState() == 3"></i>
+                </span>
                 <img id="publication-img" src="img/publication-img.png">
               </div>
               <div class="col-sm-7 b-l">

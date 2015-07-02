@@ -198,8 +198,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	})
 
 	$scope.$watch('app.editingPost', function(newValue, oldValue){
-		if(newValue && oldValue)
-			console.log(oldValue.editingExisting + ' ' + newValue.editingExisting);
+		// if(newValue && oldValue)
+		// 	console.log(oldValue.editingExisting + ' ' + newValue.editingExisting);
 
 		if(!(newValue && oldValue && oldValue.editingExisting === true && newValue.editingExisting === false) &&
 			newValue && oldValue && (newValue.title || newValue.body || newValue.editingExisting)){
@@ -283,6 +283,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		if($scope.app.editingPost && $scope.app.editingPost.selectedStation)
 		trix.getTermTree($scope.app.editingPost.selectedStation.defaultPerspectiveId).success(function(response){
 			$scope.termTree = response;
+			selectTerms($scope.termTree, $scope.app.editingPost.terms)
 		});
 	})
 
@@ -465,6 +466,21 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			// check if user has permisstion to write
 	  scope.writableStations = trixService.getWritableStations();
 	};
+
+	function selectTerms(terms, termList){
+		if(!termList || !terms)
+			return;
+		var termIds = []
+		termList.forEach(function(termItem, index){
+			termIds.push(termItem.id)
+		});
+
+		terms && terms.forEach(function(term, index){
+			if(termIds.indexOf(term.id) > -1)
+				term.checked = true;
+			selectTerms(term.children, termList)
+		});
+	}
 
 	function getTermList(terms, retTerms){
 		if(!retTerms)
