@@ -2,19 +2,45 @@
 <div class="hbox hbox-auto-xs">
 
 <!-- column -->
-	<div class="col">
-	  <div class="vbox">
-	    <div class="row-row">
-	      <div class="cell" id="post-cell">
-	        <div class="cell-inner">
-	          <div class="wrapper-md">
-	          </div>
-	        </div>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+<div class="col w b-r bg-grey">
+  <div class="vbox">
+    <div class="wrapper text-center">
+      <div class="font-thin h3">Configurações</div>
+    </div>
+    <div class="row-row">
+      <div class="cell" id="settings-sidebar">
+        <div class="cell-inner">
+          <div class="list-group text-lg no-radius p-t-lg">
+            <a href="" class="list-group-item no-border no-radius bg-light">
+              Estações
+            </a>
+            <a href="" class="list-group-item no-border no-radius bg-light">
+              Usuários
+            </a>
+            <a href="" class="list-group-item no-border no-radius bg-light">
+              Taxonomias
+            </a>
+            <a href="" class="list-group-item no-border no-radius bg-light">
+              Geral
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- /column -->
+<div class="col">
+  <div class="vbox">
+    <div class="row-row">
+      <div class="cell" id="post-cell">
+        <div class="cell-inner">
+          <div ui-view></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- column -->
 <!-- <div class="col w-lg" ng-class="{'hide': app.hidePostOptions}">

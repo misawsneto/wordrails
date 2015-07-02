@@ -422,6 +422,12 @@ angular.module('app')
         })
       };
 
+      $scope.app.changeToSettings = function(){
+        if(!$scope.app.lastSettingState)
+          $scope.app.lastSettingState = 'app.settings.stations'
+        $state.go($scope.app.lastSettingState);
+      }
+
       $scope.app.refreshData = function(){
         $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
         $scope.app.stationsPermissions = trixService.getStationPermissions();

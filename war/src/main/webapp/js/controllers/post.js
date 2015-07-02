@@ -541,6 +541,11 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	}// end of createPost()
 
 	var postDraft = function(post){
+		if(post && post.id){
+			window.console && console.log('Erro ao criar post: ' + post.id);
+			return false;
+		}
+
 		trix.postPostDraft(post).success(function(postId){
 			$scope.app.showSuccessToast('Rascunho salvo.');
 			// replace url withou state reload

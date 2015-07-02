@@ -105,6 +105,7 @@ angular.module('app')
                   controller:'ReadCtrl'
               })
               .state('app.settings', {
+                  abstract: true,
                   url: '/settings',
                   templateUrl: 'tpl/settings.html',
                   resolve: {
@@ -113,7 +114,19 @@ angular.module('app')
                         return $ocLazyLoad.load(['js/controllers/settings.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  // , controller:'SearchCtrl'
+                  //, controller:'SettingsCtrl'
+              })
+
+              .state('app.settings.stations', {
+                  url: '/stations',
+                  templateUrl: 'tpl/settings-stations.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationCtrl'
               })
 
               .state('app.bookmarks', {

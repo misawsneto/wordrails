@@ -3067,6 +3067,30 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 
 /* /bookmarks */
 
+/* settings */
+.bg-grey{
+  background: #eee;
+}
+#settings-sidebar .list-group-item{
+  /* border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent; */
+  background: #eee;
+}
+#settings-sidebar .list-group-item:hover, #settings-sidebar .list-group-item:focus{
+  background-color:#f7f7f7!important;
+  /* border-top: 1px solid #dee5e7!important;
+  border-bottom: 1px solid #dee5e7!important; */
+}
+#settings-sidebar .list-group-item.active{
+  color: #555;
+  background-color:#f7f7f7!important;
+  /* border-right: none;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  border-color: #dee5e7!important; */
+}
+/* /settings */
+
 /* splash */
 /* Slideshow style */
 .splash {
