@@ -354,16 +354,22 @@ angular.module('app')
         }
       }
 
-      $scope.app.openDeletePost = function(){
+      $scope.app.openDeletePost = function(id){
+        $scope.app.deletingPostId = id;
         $scope.app.openSplash('confirm_delete_post.html') 
       };
 
       $scope.app.deletePost = function(){
-        trix.deletePost($scope.app.editingPost.id).success(function(){
+        trix.deletePost($scope.app.deletingPostId).success(function(){
+          $scope.app.deletingPostId = null;
+          $scope.app.editingPost = null;
+          window.onbeforeunload = null;
           $scope.app.showSuccessToast('Notícia removida.')
           $scope.app.cancelModal();
           if($state.current.name != 'app.stations')
             $state.go('app.stations');
+
+          $scope.app.refreshPerspective();
         });
       }
 

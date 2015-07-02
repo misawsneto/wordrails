@@ -72,7 +72,7 @@
 								<span class="readingTime text-muted">{{publication.date | fromNow2}}</span>
 								<div class="inline text-muted p-l-lg text-u-c">
 									<a ui-sref="app.post({'id': publication.postId})" class="text-muted p-r underline-hover">editar</a>
-									<a class="text-muted underline-hover" ng-click="app.movePostToTrash(publication.postId)">remover</a>
+									<a class="text-muted underline-hover" ng-click="app.openDeletePost(publication.postId);">remover</a>
 								</div>
 							</div>
 						</div>

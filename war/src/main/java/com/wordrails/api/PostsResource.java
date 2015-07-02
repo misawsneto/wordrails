@@ -419,7 +419,7 @@ public class PostsResource {
 
 		org.apache.lucene.search.Sort sort = null; 
 		if(sortByDate != null && sortByDate)
-			sort = new Sort(new SortField("date", SortField.CUSTOM, true));
+			sort = new Sort(new SortField("date", SortField.STRING, true));
 		else
 			sort = new Sort(SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
 		

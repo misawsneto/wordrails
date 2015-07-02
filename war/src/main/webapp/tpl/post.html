@@ -115,7 +115,7 @@
       </a>
     </li>
     <li>
-      <a tooltip="Excluir" ng-click="app.openDeletePost();" class="animated text-lg" ng-class="{'hide': !app.editingPost.id, 'bounceIn': app.editingPost.id}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      <a tooltip="Excluir" ng-click="app.openDeletePost(app.editingPost.id);" class="animated text-lg" ng-class="{'hide': !app.editingPost.id, 'bounceIn': app.editingPost.id}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
        href >
         <i class="mdi-delete mdi"></i>
       </a>

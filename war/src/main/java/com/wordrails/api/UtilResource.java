@@ -102,12 +102,12 @@ public class UtilResource {
 			.batchSizeToLoadObjects( 30 )
 			   .threadsToLoadObjects( 4 );
 			//		massIndexer.start;
-//			try {
-//				massIndexer.startAndWait();
-				massIndexer.start();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
+			try {
+				massIndexer.startAndWait();
+//				massIndexer.start();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			//		ftem.flushToIndexes();
 			System.out.println("reindex finished");
 			return Response.status(Status.OK).entity("Reindexed").build();
