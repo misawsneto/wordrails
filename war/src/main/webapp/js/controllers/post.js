@@ -12,7 +12,9 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
   	trix.getPost(postId, 'postProjection').success(function(response){
 			$scope.app.editingPost = response;
 			setWritableStationById(response.station.id)
-			$scope.app.editingPost.editingExisting = true;
+			$timeout(function() {
+				$scope.app.editingPost.editingExisting = false;
+			}, 1000);
   	})
   }
 
@@ -196,7 +198,11 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	})
 
 	$scope.$watch('app.editingPost', function(newValue, oldValue){
-		if(newValue && oldValue && (newValue.title || newValue.body || newValue.editingExisting)){
+		if(newValue && oldValue)
+			console.log(oldValue.editingExisting + ' ' + newValue.editingExisting);
+
+		if(!(newValue && oldValue && oldValue.editingExisting === true && newValue.editingExisting === false) &&
+			newValue && oldValue && (newValue.title || newValue.body || newValue.editingExisting)){
 			$scope.app.editingPost.editingExisting = true;
 		}
 		if(newValue.editingExisting){
@@ -413,10 +419,6 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	$scope.openHelp = function(){
 		$scope.app.openSplash('post_help.html')	
 	};
-
-	$scope.deleteOrDiscardPost = function(ev){
-		window.console && console.log('delete post...')
-	}
 
 	$scope.doAction = function(action){
 		if(typeof action === 'function')

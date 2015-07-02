@@ -58,7 +58,7 @@
             </div>
             <div id="external-toolbar-container" class="post-block bg-white">
               <button id="toggle-toolbars" class="post-stroke-btn btn text-md btn m-t btn-icon btn-rounded btn-stroke btn-muted" tooltip="Mostrar/Esconder ferramentas" tooltip-append-to-body="true" ng-click="app.showPostToolbar = !app.showPostToolbar">
-                <i class="mdi-format-italic mdi"></i>
+                <i class="mdi-pencil mdi"></i>
               </button>
               <div id="external-toolbar" class="w-full m-b-n-xxs p-t p-b bg-white" ng-class="{'hide': !app.showPostToolbar}"></div>
             </div>
@@ -109,13 +109,13 @@
       </a>
     </li>
     <li>
-      <a tooltip="Agendamento" class="animated text-lg text-muted" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      <a tooltip="Agendar" class="animated text-lg text-muted" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
        href>
         <i class="mdi-timer mdi"></i>
       </a>
     </li>
     <li>
-      <a tooltip="Excluir" class="animated text-lg" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      <a tooltip="Excluir" ng-click="app.openDeletePost();" class="animated text-lg" ng-class="{'hide': !app.editingPost.id, 'bounceIn': app.editingPost.id}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
        href >
         <i class="mdi-delete mdi"></i>
       </a>
@@ -131,6 +131,7 @@
           <button class="btn btn-default" ng-class="{'disabled': !showTopOptions()}" ng-click="publishPost()">Publicar</button>
           <button class="btn btn-default" dropdown-toggle><span class="caret"></span></button>
           <ul class="dropdown-menu">
+            <li ng-class="{'disabled': !showTopOptions()}"><a>Pré-visualização</a></li>
             <li ng-class="{'disabled': !showTopOptions()}"><a href ng-click="savePostAsDraft()">Salvar como rascunho</a></li>
             <li class="divider"></li>
             <li><a ng-click="openHelp()" >Ajuda</a></li>
@@ -180,10 +181,32 @@
   </div>
   </script>
 
+  <script type="text/ng-template" id="confirm_delete_post.html">
+  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <div class="splash-content text-center" ng-cloak>
+    <div class="row">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="p-lg text-color wrapper-lg">
+          <div class="m-b-lg">
+            Tem certeza que deseja remover está notícia?
+          </div>
+          <button ng-click="app.deletePost();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block p-h-md">
+             Sim
+          </button>
+          <button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
+             Não
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </script>
+
 <script type="text/ng-template" id="post_help.html">
   <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
   <div class="splash-content text-center" ng-cloak>
     <div class="row">
+      <img src="img/help.png">
     </div>
   </div>
   </script>

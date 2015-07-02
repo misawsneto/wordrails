@@ -354,6 +354,19 @@ angular.module('app')
         }
       }
 
+      $scope.app.openDeletePost = function(){
+        $scope.app.openSplash('confirm_delete_post.html') 
+      };
+
+      $scope.app.deletePost = function(){
+        trix.deletePost($scope.app.editingPost.id).success(function(){
+          $scope.app.showSuccessToast('Notícia removida.')
+          $scope.app.cancelModal();
+          if($state.current.name != 'app.stations')
+            $state.go('app.stations');
+        });
+      }
+
       $scope.cancelModal = function () {
         $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
       };

@@ -315,49 +315,30 @@ public class Post {
 
 	@Override
 	public String toString() {
-		return "Post{" +
-				"id=" + id +
-				", originalPostId=" + originalPostId +
-				", wordpressId=" + wordpressId +
-				", date=" + date +
-				", lastModificationDate=" + lastModificationDate +
-				", title='" + title + '\'' +
-				", body='" + body + '\'' +
-				", topper='" + topper + '\'' +
-				", subheading='" + subheading + '\'' +
-				", sponsor=" + sponsor +
-				", originalSlug='" + originalSlug + '\'' +
-				", scheduledDate=" + scheduledDate +
-				", slug='" + slug + '\'' +
-				", comments=" + comments +
-				", state='" + state + '\'' +
-				", featuredImage=" + featuredImage +
-				", images=" + images +
-				", author=" + author +
-				", promotions=" + promotions +
-				", station=" + station +
-				", stationId=" + stationId +
-				", readsCount=" + readsCount +
-				", favoritesCount=" + favoritesCount +
-				", bookmarksCount=" + bookmarksCount +
-				", recommendsCount=" + recommendsCount +
-				", commentsCount=" + commentsCount +
-				", terms=" + terms +
-				", imageLandscape=" + imageLandscape +
-				", updatedAt=" + updatedAt +
-				", externalFeaturedImgUrl='" + externalFeaturedImgUrl + '\'' +
-				", externalVideoUrl='" + externalVideoUrl + '\'' +
-				", readTime=" + readTime +
-				", notify=" + notify +
-				", imageCaptionText='" + imageCaptionText + '\'' +
-				", imageCreditsText='" + imageCreditsText + '\'' +
-				", lat=" + lat +
-				", lng=" + lng +
-				", imageTitleText='" + imageTitleText + '\'' +
-				", imageId=" + imageId +
-				", imageSmallId=" + imageSmallId +
-				", imageMediumId=" + imageMediumId +
-				", imageLargeId=" + imageLargeId +
-				'}';
+		return "Post [id=" + id + ", originalPostId=" + originalPostId
+				+ ", wordpressId=" + wordpressId + ", date=" + date
+				+ ", lastModificationDate=" + lastModificationDate + ", title="
+				+ title + ", body=" + body + ", topper=" + topper
+				+ ", subheading=" + subheading + ", sponsor=" + sponsor
+				+ ", originalSlug=" + originalSlug + ", scheduledDate="
+				+ scheduledDate + ", slug=" + slug + ", comments=" + comments
+				+ ", state=" + state + ", featuredImage=" + featuredImage
+				+ ", images=" + images + ", author=" + author + ", promotions="
+				+ promotions + ", station=" + station + ", stationId="
+				+ stationId + ", readsCount=" + readsCount
+				+ ", favoritesCount=" + favoritesCount + ", bookmarksCount="
+				+ bookmarksCount + ", recommendsCount=" + recommendsCount
+				+ ", commentsCount=" + commentsCount + ", terms=" + terms
+				+ ", imageLandscape=" + imageLandscape + ", updatedAt="
+				+ updatedAt + ", externalFeaturedImgUrl="
+				+ externalFeaturedImgUrl + ", externalVideoUrl="
+				+ externalVideoUrl + ", readTime=" + readTime + ", notify="
+				+ notify + ", imageCaptionText=" + imageCaptionText
+				+ ", imageCreditsText=" + imageCreditsText + ", lat=" + lat
+				+ ", lng=" + lng + ", imageTitleText=" + imageTitleText
+				+ ", imageId=" + imageId + ", imageSmallId=" + imageSmallId
+				+ ", imageMediumId=" + imageMediumId + ", imageLargeId="
+				+ imageLargeId + "]";
 	}
+
 }
