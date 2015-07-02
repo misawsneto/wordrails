@@ -18,10 +18,20 @@
 	<!--</rule>-->
 
 	<rule>
-		<from>/@([a-z]+)</from>
-		<to>/notifications</to>
+		<condition type="request-uri" operator="notequal">^/css(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/fonts(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/img(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/js(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/tpl(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/bower_components(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/api(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/l10n(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/libs(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/styles(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/scripts(/+.*)*$</condition>
+		<from>^/(.+)$</from>
+		<to last="true">/index.jsp</to>
 	</rule>
-	<!--</urlrewrite>-->
 
 	<rule>
 		<note>
