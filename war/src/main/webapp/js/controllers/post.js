@@ -6,6 +6,8 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
     return true; // true|false
   };
 
+  $scope.baseUrl = TRIX.baseUrl;
+
   var createPostObject = function(){
   	$scope.app.editingPost = {};
   	$scope.app.editingPost.imageLandscape = true;
