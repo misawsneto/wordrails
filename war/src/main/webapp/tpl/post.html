@@ -109,8 +109,9 @@
       </a>
     </li>
     <li>
-      <a tooltip="Agendar" class="animated text-lg text-muted" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
-       href>
+      <a id="scheduler-popover-toggle" class="animated text-lg text-muted" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" ng-click="schedulerPopoverOpen = !schedulerPopoverOpen"
+      tooltip="Agendar" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      popover-trigger="manual" popover-template="scheduling_popover.html" popover-append-to-body="true" popover-placement="bottom">
         <i class="mdi-timer mdi"></i>
       </a>
     </li>
@@ -179,9 +180,9 @@
       </div>
     </div>
   </div>
-  </script>
+</script>
 
-  <script type="text/ng-template" id="confirm_delete_post.html">
+<script type="text/ng-template" id="confirm_delete_post.html">
   <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
   <div class="splash-content text-center" ng-cloak>
     <div class="row">
@@ -200,7 +201,7 @@
       </div>
     </div>
   </div>
-  </script>
+</script>
 
 <script type="text/ng-template" id="post_help.html">
   <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
@@ -209,4 +210,20 @@
       <img src="img/help.png">
     </div>
   </div>
-  </script>
+</script>
+
+  <!-- profile-popover -->
+  <div id="schedulerPopover" class="popover bottom animated" click-outside="schedulerPopoverOpen = false; console.log('teste')" outside-if-not="scheduler-popover-toggle" style="max-width: 295px" ng-class="{'show': schedulerPopoverOpen, 'hide': !schedulerPopoverOpen}">
+    <div class="arrow"></div>
+    <div class="popover-inner">
+      <div class="popover-content">
+        <a class="popover-close-button text-2x" ng-click="schedulerPopoverOpen = false"
+        tooltip="Fechar" tooltip-append-to-body="true" tooltip-placement="top">×</a>
+          <div style="display:inline-block;" class="m-t">
+            <datepicker ng-model="dt" min-date="minDate" show-weeks="false" format-year="yy" class="datepicker"></datepicker>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- /profile-popover -->
+

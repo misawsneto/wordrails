@@ -306,9 +306,9 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		});
 	}*/
 
-	$scope.app.editingPost.date = new Date();
+	$scope.app.editingPost.customDate = new Date();
 	$timeout(function() {
-		$scope.app.editingPost.date = new Date();
+		$scope.app.editingPost.customDate = new Date();
 	}, 1000);
 
 	// $scope.$watch('termTree', function(n,o){
@@ -329,12 +329,12 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 	// --------- post time info
 
 	 $scope.app.editingPost.today = function() {
-      $scope.app.editingPost.date = new Date();
+      $scope.app.editingPost.customDate = new Date();
     };
     $scope.app.editingPost.today();
 
     $scope.app.editingPost.clear = function () {
-      $scope.app.editingPost.date = null;
+      $scope.app.editingPost.customDate = null;
     };
 
     // Disable weekend selection
@@ -366,7 +366,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
     $scope.app.editingPost.format = $scope.app.editingPost.formats[0];
 
     $scope.app.editingPost.showTimepicker = false;
-    $scope.app.editingPost.mytime = $scope.app.editingPost.date
+    $scope.app.editingPost.mytime = $scope.app.editingPost.customDate
 
     $scope.app.editingPost.hstep = 1;
     $scope.app.editingPost.mstep = 15;
@@ -565,8 +565,11 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		trix.postPostDraft(post).success(function(postId){
 			$scope.app.showSuccessToast('Rascunho salvo.');
 			// replace url withou state reload
-			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
+			$state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
 			$scope.app.refreshPerspective();
+			trix.getPostDraft(postId, "postProjection").success(function(postResponse){
+				$scope.app.editingPost = angular.extend($scope.app.editingPost, postResponse);
+			})
 		})
 	}
 
@@ -645,5 +648,71 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
       '  </a>' +
       '</li>'
     );
+
+	  $scope.today = function() {
+	    $scope.dt = new Date();
+	  };
+	  $scope.today();
+
+	  $scope.clear = function () {
+	    $scope.dt = null;
+	  };
+
+	  // Disable weekend selection
+	  $scope.disabled = function(date, mode) {
+	    return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+	  };
+
+	  $scope.toggleMin = function() {
+	    $scope.minDate = $scope.minDate ? null : new Date();
+	  };
+	  $scope.toggleMin();
+
+	  $scope.open = function($event) {
+	    $event.preventDefault();
+	    $event.stopPropagation();
+
+	    $scope.opened = true;
+	  };
+
+	  $scope.dateOptions = {
+	    formatYear: 'yy',
+	    startingDay: 1
+	  };
+
+	  $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+	  $scope.format = $scope.formats[0];
+
+	  var tomorrow = new Date();
+	  tomorrow.setDate(tomorrow.getDate() + 1);
+	  var afterTomorrow = new Date();
+	  afterTomorrow.setDate(tomorrow.getDate() + 2);
+	  $scope.events =
+	    [
+	      {
+	        date: tomorrow,
+	        status: 'full'
+	      },
+	      {
+	        date: afterTomorrow,
+	        status: 'partially'
+	      }
+	    ];
+
+	  $scope.getDayClass = function(date, mode) {
+	    if (mode === 'day') {
+	      var dayToCheck = new Date(date).setHours(0,0,0,0);
+
+	      for (var i=0;i<$scope.events.length;i++){
+	        var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
+
+	        if (dayToCheck === currentDay) {
+	          return $scope.events[i].status;
+	        }
+	      }
+	    }
+
+	    return '';
+	  };
 
 }]);

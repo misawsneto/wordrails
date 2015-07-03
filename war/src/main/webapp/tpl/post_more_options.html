@@ -1,7 +1,7 @@
 <md-dialog aria-label="MAIS OPÇÕES" id="more-options-dialog">
   <md-content>
     <div id="post-more-options">
-      <md-tabs md-no-ink md-dynamic-height>
+      <md-tabs md-no-ink>
         <md-tab label="Informações Gerais">
           <div class="b-t wrapper-md post-general-info" flex>
             <div class="row">
@@ -16,7 +16,7 @@
               </div>
               <div class="col-sm-5" ng-class="{'hide': !app.editingPost.id}">
                 <span class="text-md font-bold">
-                  Esta notícia foi publicada na estação:
+                  {{ getMoreOptionsMainMessage() }}
                 </span>
                 <div class="m-t-sm m-b-md text-lg">
                   {{app.editingPost.station.name}}
@@ -24,20 +24,20 @@
                 <span class="pos-abt wrapper-xl text-3x" style="right:0">
                   <i class="mdi mdi-check text-3x text-success" ng-show="app.checkState() == 1"></i>
                   <i class="mdi mdi-pencil text-3x" ng-show="app.checkState() == 2"></i>
-                  <i class="mdi mdi-clock text-3x" ng-show="app.checkState() == 3"></i>
+                  <i class="mdi mdi-timer text-3x" ng-show="app.checkState() == 3"></i>
                 </span>
                 <img id="publication-img" src="img/publication-img.png">
               </div>
               <div class="col-sm-7 b-l">
                 <div class="m-t-sm">
-                  <div class="input-group w-md m-auto" ng-click="app.editingPost.dateTouched = true">
-                    <input type="text" class="form-control" datepicker-popup="{{app.editingPost.format}}" ng-model="app.editingPost.date" is-open="app.editingPost.opened" datepicker-options="app.editingPost.dateOptions" ng-required="true" close-text="Fechar" current-text="Hoje" clear-text="Limpar"/>
+                  <div ng-show="app.editingPost.showTimepicker" class="input-group w-md m-auto" ng-click="app.editingPost.dateTouched = true">
+                    <input type="text" class="form-control" datepicker-popup="{{app.editingPost.format}}" ng-model="app.editingPost.customDate" is-open="app.editingPost.opened" datepicker-options="app.editingPost.dateOptions" ng-required="true" close-text="Fechar" current-text="Hoje" clear-text="Limpar"/>
                     <span class="input-group-btn">
                       <button type="button" class="btn btn-default" ng-click="app.editingPost.open($event); app.editingPost.dateTouched = true;"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                   </div>
-                  <div class="text-center m-t-xs" ng-show="!app.editingPost.showTimepicker">
-                    <a ng-click="app.editingPost.showTimepicker = !app.editingPost.showTimepicker"><i class="fa fa-fw m-r-xs fa-clock-o"></i><small class="">horário da publicação</small></a>
+                  <div class="m-t-xs" ng-show="!app.editingPost.showTimepicker">
+                    <a ng-click="app.editingPost.showTimepicker = !app.editingPost.showTimepicker"><i class="fa fa-fw m-r-xs fa-clock-o"></i>Personalizar data e horário da publicação</a>
                   </div>
                   <div ng-show="app.editingPost.showTimepicker" class="timepicker-container m-l-sm">
                     <div class="pull-left m-t-xl m-r-sm">horário, </div>
@@ -150,11 +150,11 @@
 
   <div class="md-actions" layout="row">
     <md-button ng-click="cancel()">
-     Cancelar
+     Fechar
     </md-button>
-    <md-button ng-click="publish()" class="md-primary">
+    <!-- <md-button ng-click="publish()" class="md-primary">
       Publicar
-    </md-button>
+    </md-button> -->
   </div>
 
 </md-dialog>
