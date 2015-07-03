@@ -1,11 +1,8 @@
 package com.wordrails.business;
 
-import com.wordrails.GCMService;
-import com.wordrails.jobs.PostScheduleJob;
 import com.wordrails.persistence.*;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
-import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
@@ -17,6 +14,9 @@ import java.util.List;
 @RepositoryEventHandler(Post.class)
 @Component
 public class PostEventHandler {
+
+	@Autowired
+	private PostService postService;
 
 	@Autowired
 	private PostRepository postRepository;
@@ -33,20 +33,16 @@ public class PostEventHandler {
 	@Autowired
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
-	private GCMService gcmService;
-	@Autowired
-	private StationRepository stationRepository;
-	@Autowired
 	private BookmarkRepository bookmarkRepository;
 	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
-	@Autowired
-	private Scheduler sched;
-
+	
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {
+		if(post instanceof PostTrash) //post of type Trash is not insertable
+			throw new BadRequestException();
 
 		if (postAndCommentSecurityChecker.canWrite(post)) {
 			Date now = new Date();
@@ -61,7 +57,7 @@ public class PostEventHandler {
 					post.slug = originalSlug;
 					postRepository.save(post);
 				} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-					String hash = WordrailsUtil.generateRandomString(5, "Aa#u");
+					String hash = WordrailsUtil.generateRandomString(5, "Aa#");
 					post.slug = originalSlug + "-" + hash;
 				}
 			} else {
@@ -76,49 +72,18 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	@Transactional
 	public void handleAfterCreate(Post post) {
-		if (post instanceof PostScheduled) {
-			schedule((PostScheduled) post);
-		} else if (post.notify && !(post instanceof PostDraft)) {
-			buildNotification(post);
+		if (post.state.equals(Post.STATE_SCHEDULED)) {
+			postService.schedule(post.id, post.scheduledDate);
+		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
+			postService.buildNotification(post);
 		}
 	}
 
 	@HandleAfterSave
 	@Transactional
 	public void handleAfterSave(Post post) {
-		if (post instanceof PostScheduled) {
-			schedule((PostScheduled) post);
-		}
-	}
-
-	@Transactional
-	private void schedule(PostScheduled post) {
-		JobDetail job = null;
-		Trigger trigger = null;
-		try {
-			job = sched.getJobDetail(new JobKey("schedule-" + post.id));
-		} catch (SchedulerException e) {
-		}
-
-		try {
-			trigger = sched.getTrigger(new TriggerKey("trigger-" + post.id));
-		} catch (SchedulerException e) {
-		}
-
-		if (job == null) {
-			job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + post.id, "schedules").build();
-			//must send as string because useProperties is set true
-			job.getJobDataMap().put("postId", String.valueOf(post.id));
-		}
-
-		if (trigger == null) {
-			trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + post.id, "schedules").startAt(post.scheduledDate).build();
-		}
-
-		try {
-			sched.scheduleJob(job, trigger);
-		} catch (SchedulerException e) {
-			e.printStackTrace();
+		if (post.state.equals(Post.STATE_SCHEDULED)) {
+			postService.schedule(post.id, post.scheduledDate);
 		}
 	}
 
@@ -139,24 +104,9 @@ public class PostEventHandler {
 			notificationRepository.deleteByPost(post);
 			bookmarkRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
+			postService.removePostIndex(post); // evitando bug de remoção de post que tiveram post alterado.
 		} else {
 			throw new UnauthorizedException();
-		}
-	}
-
-	private void buildNotification(Post post) {
-		Notification notification = new Notification();
-		notification.type = Notification.Type.POST_ADDED.toString();
-		notification.station = post.station;
-		notification.post = post;
-		notification.message = post.title;
-		try {
-			if (post.station != null && post.station.networks != null) {
-				Station station = stationRepository.findOne(post.station.id);
-				gcmService.sendToStation(station.id, notification);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 }

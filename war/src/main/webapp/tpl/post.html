@@ -58,7 +58,7 @@
             </div>
             <div id="external-toolbar-container" class="post-block bg-white">
               <button id="toggle-toolbars" class="post-stroke-btn btn text-md btn m-t btn-icon btn-rounded btn-stroke btn-muted" tooltip="Mostrar/Esconder ferramentas" tooltip-append-to-body="true" ng-click="app.showPostToolbar = !app.showPostToolbar">
-                <i class="mdi-format-italic mdi"></i>
+                <i class="mdi-pencil mdi"></i>
               </button>
               <div id="external-toolbar" class="w-full m-b-n-xxs p-t p-b bg-white" ng-class="{'hide': !app.showPostToolbar}"></div>
             </div>
@@ -66,18 +66,18 @@
               <div id="post-placeholder" class="post-content-font text-muted m-t-xxs" ng-class="{'hide': app.editingPost.body}">Texto...</div>
               <textarea ng-model="app.editingPost.body" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
             </div>
-            <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html" 
+            <!-- <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html" 
                 label="Publicar"
                  mfb-menu position="{{chosen.position}}" effect="{{chosen.effect}}"
                  active-icon="mdi mdi-send" resting-icon="mdi mdi-plus"
                  ng-mouseenter="hovered()" ng-mouseleave="hovered()"
                  toggling-method="{{chosen.method}}" menu-state="menuState" main-action="publishPost($event)"
                  ng-class="{'sidebar-opened': !app.hidePostOptions}">
-
+            
               <button template-url="ng-mfb-button-md.tpl.html"
                  mfb-button icon="{{button.icon}}" ng-click="doAction(button.action($event))"
                  label="{{button.label}}" ng-repeat="button in buttons"></button>
-            </nav>
+            </nav> -->
             <!-- /options button -->
           </div>
         </div>
@@ -99,16 +99,54 @@
     <li class="hidden-xs">
       <a ui-fullscreen></a>
     </li>
-  </ul>
-  <ul class="nav navbar-nav navbar-right text-lg">
     <li>
-      <a tooltip="Informações" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
-       href class="text-lg" >
+      <div class="divider-v" ng-class="{'hide': !showTopOptions()}"></div>
+    </li>
+    <li>
+      <a tooltip="Informações" ng-click="showPostDetails()" class="animated text-lg" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+       href >
         <i class="mdi-information-outline mdi"></i>
       </a>
     </li>
     <li>
+      <a id="scheduler-popover-toggle" class="animated text-lg text-muted" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" ng-click="schedulerPopoverOpen = !schedulerPopoverOpen"
+      tooltip="Agendar" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      popover-trigger="manual" popover-template="scheduling_popover.html" popover-append-to-body="true" popover-placement="bottom">
+        <i class="mdi-timer mdi"></i>
+      </a>
+    </li>
+    <li>
+      <a tooltip="Excluir" ng-click="app.openDeletePost(app.editingPost.id);" class="animated text-lg" ng-class="{'hide': !app.editingPost.id, 'bounceIn': app.editingPost.id}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+       href >
+        <i class="mdi-delete mdi"></i>
+      </a>
+    </li>
+  </ul>
+  <ul class="nav navbar-nav navbar-right text-lg">
+    
+    <!-- <li>
       <div class="m-t" style="line-height:16px">•</div>
+    </li> -->
+    <li style="padding: 8px 14px;">
+      <div class="btn-group dropdown" dropdown>
+          <button class="btn btn-default" ng-class="{'disabled': !showTopOptions()}" ng-click="publishPost()">
+            {{checkState() == 1 ? 'Atualizar' : 'Publicar'}}
+          </button>
+          <button class="btn btn-default" dropdown-toggle><span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li ng-class="{'disabled': !showTopOptions()}"><a>Pré-visualização</a></li>
+            <li ng-class="{'disabled': !showTopOptions()}"><a href ng-click="savePostAsDraft()">Salvar como rascunho</a></li>
+            <li ng-if="checkState() && app.editingPost.editingExisting" class="divider"></li>
+            <li ng-if="checkState() && app.editingPost.editingExisting">
+              <a ng-click="loadPost(app.editingPost.id)">Descartar altarações</a>
+            </li>
+            <li class="divider"></li>
+            <li><a ng-click="openHelp()" >Ajuda</a></li>
+          </ul>
+        </div>
+    </li>
+    <li>
+      <div class="divider-v"></div>
     </li>
     <li>
       <a tooltip="Opções de publicação" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
@@ -126,3 +164,61 @@
   </ul>
 </div>
 <!-- /header navbar -->
+<script type="text/ng-template" id="confirm_change_to_draft.html">
+  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <div class="splash-content text-center" ng-cloak>
+    <div class="row">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="p-lg text-color wrapper-lg">
+          <div class="m-b-lg" ng-if="app.checkState() == 1">
+            Esta notícia já foi publicada. Deseja salvar as alterações e transformá-la em rascunho?
+          </div>
+          <div class="m-b-lg" ng-if="app.checkState() == 3">
+            Esta notícia está agendada para publicação. Tem certeza que deseja transformá-la em rascunho?
+          </div>
+          <button ng-click="updateToDraf();" angular-ripple type="submit" class="m-t-md btn-success btn text-lg text-u-c btn-block p-h-md">
+             Sim
+          </button>
+          <button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
+             Não
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="post_help.html">
+  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <div class="splash-content text-center" ng-cloak>
+    <div class="row">
+      <img src="img/help.png">
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="show_posts_details.html">
+  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <div class="splash-content" ng-cloak>
+    <div class="row">
+      <div class="m-b"><code>{{baseUrl +'/'+ app.editingPost.slug}}</code></div>
+      <div class="h3 font-bold">{{app.editingPost.title}}</div>
+    </div>
+  </div>
+</script>
+
+  <!-- profile-popover -->
+  <div id="schedulerPopover" class="popover bottom animated" click-outside="schedulerPopoverOpen = false; console.log('teste')" outside-if-not="scheduler-popover-toggle" style="max-width: 295px" ng-class="{'show': schedulerPopoverOpen, 'hide': !schedulerPopoverOpen}">
+    <div class="arrow"></div>
+    <div class="popover-inner">
+      <div class="popover-content">
+        <a class="popover-close-button text-2x" ng-click="schedulerPopoverOpen = false"
+        tooltip="Fechar" tooltip-append-to-body="true" tooltip-placement="top">×</a>
+          <div style="display:inline-block;" class="m-t">
+            <datepicker ng-model="dt" min-date="minDate" show-weeks="false" format-year="yy" class="datepicker"></datepicker>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- /profile-popover -->
+

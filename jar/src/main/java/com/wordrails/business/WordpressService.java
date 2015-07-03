@@ -43,7 +43,7 @@ import java.util.*;
 @Service
 public class WordpressService {
 
-	private static final Logger log = LoggerFactory.getLogger(ResponseErrorHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(WordpressService.class);
 
 	@PersistenceContext
 	private EntityManager manager;

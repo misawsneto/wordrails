@@ -1,80 +1,34 @@
 package com.wordrails.api;
 
-    
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.Image;
-import com.wordrails.business.Invitation;
-import com.wordrails.business.Network;
-import com.wordrails.business.Person;
-import com.wordrails.business.PersonNetworkRegId;
-import com.wordrails.business.Post;
-import com.wordrails.business.Row;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationPerspective;
-import com.wordrails.business.Taxonomy;
-import com.wordrails.business.Term;
-import com.wordrails.business.TermPerspective;
-import com.wordrails.business.UnauthorizedException;
-import com.wordrails.business.Wordpress;
+import com.wordrails.business.*;
 import com.wordrails.jobs.SimpleJob;
-import com.wordrails.persistence.BookmarkRepository;
-import com.wordrails.persistence.CellRepository;
-import com.wordrails.persistence.CommentRepository;
-import com.wordrails.persistence.ImageRepository;
-import com.wordrails.persistence.InvitationRepository;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.NotificationRepository;
-import com.wordrails.persistence.PersonNetworkRegIdRepository;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.PostReadRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.PromotionRepository;
-import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.RecommendRepository;
-import com.wordrails.persistence.RowRepository;
-import com.wordrails.persistence.StationPerspectiveRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.TaxonomyRepository;
-import com.wordrails.persistence.TermPerspectiveRepository;
-import com.wordrails.persistence.TermRepository;
-import com.wordrails.persistence.WordpressRepository;
+import com.wordrails.persistence.*;
 import com.wordrails.services.AsyncService;
 import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.quartz.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.*;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -140,10 +94,15 @@ public class UtilResource {
 			System.out.println("reindex started");
 			FullTextEntityManager ftem = Search.getFullTextEntityManager(manager);
 			MassIndexer massIndexer = ftem.createIndexer();
-			massIndexer.purgeAllOnStart(true);
+			massIndexer.purgeAllOnStart(true)
+			.optimizeAfterPurge(true)
+			.optimizeOnFinish(true)
+			.batchSizeToLoadObjects( 30 )
+			   .threadsToLoadObjects( 4 );
 			//		massIndexer.start;
 			try {
 				massIndexer.startAndWait();
+//				massIndexer.start();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -295,7 +254,7 @@ public class UtilResource {
 			post.slug = originalSlug;
 			postRepository.save(post);
 		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-			String hash = WordrailsUtil.generateRandomString(5, "Aa#u");
+			String hash = WordrailsUtil.generateRandomString(5, "Aa#");
 			post.slug = originalSlug + "-" + hash;
 		}
 	}
@@ -461,6 +420,9 @@ public class UtilResource {
 	@Autowired private PersonNetworkRegIdRepository reg;
 	@Autowired private AsyncService asyncService; 
 	
+	@Autowired
+	private Scheduler sched;
+
 	@GET
 	@Path("/test")
 	public void test(@Context HttpServletRequest request){
@@ -473,27 +435,19 @@ public class UtilResource {
 			System.out.println(wpc.content);
 		}
 	}
-    
-    @Autowired
-    private Scheduler sched;
-	
+
 	@GET
 	@Path("/testQuartz")
-    public void testQuartz(@Context HttpServletRequest request) throws SchedulerException {
-        String host = request.getHeader("Host");
-        if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
-            JobDetail job = JobBuilder.newJob(SimpleJob.class)
-                .withIdentity("job1", "group1")
-                .build();
+	public void testQuartz(@Context HttpServletRequest request) throws SchedulerException {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+			JobDetail job = JobBuilder.newJob(SimpleJob.class).withIdentity("job1", "group1").build();
 
-            Date runTime = DateBuilder.evenMinuteDate(new Date());
-            // Trigger the job to run on the next round minute
-            Trigger trigger = TriggerBuilder.newTrigger()
-             .withIdentity("trigger1", "group1")
-             .startAt(runTime)
-             .build();
+			Date runTime = DateBuilder.evenMinuteDate(new Date());
+			// Trigger the job to run on the next round minute
+			Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").startAt(runTime).build();
 
-            sched.scheduleJob(job, trigger);
-        }
-    }
+			sched.scheduleJob(job, trigger);
+		}
+	}
 }

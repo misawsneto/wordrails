@@ -60,6 +60,11 @@ public class QueryPersistence {
 	public void deleteRecommend(Integer postId, Integer personId) {
 		manager.createNativeQuery("DELETE FROM Recommend WHERE post_id = :postId AND person_id = :personId").setParameter("postId", postId).setParameter("personId", personId).executeUpdate();
 	}
+
+	@Transactional
+	public void changePostState(Integer postId, String state) {
+		manager.createNativeQuery("UPDATE post SET state=:state where id = :postId").setParameter("postId", postId).setParameter("state", state).executeUpdate();
+	}
 	
 	@Async
 	@Transactional

@@ -2,19 +2,49 @@
 <div class="hbox hbox-auto-xs">
 
 <!-- column -->
-	<div class="col">
-	  <div class="vbox">
-	    <div class="row-row">
-	      <div class="cell" id="post-cell">
-	        <div class="cell-inner">
-	          <div class="wrapper-md">
-	          </div>
-	        </div>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+<div class="col w b-r bg-grey">
+  <div class="vbox">
+    <div class="wrapper text-center">
+      <div class="font-thin h3">Configurações</div>
+    </div>
+    <div class="row-row">
+      <div class="cell" id="settings-sidebar">
+        <div class="cell-inner">
+          <div class="list-group text-lg no-radius p-t-lg">
+            <a ui-sref="app.settings.stations" class="list-group-item no-border no-radius bg-light"
+            ng-class="{'active': $state.current.name.indexOf('app.settings.stations') > -1}">
+              Estações
+            </a>
+            <a ui-sref="app.settings.users" class="list-group-item no-border no-radius bg-light"
+            ng-class="{'active': $state.current.name.indexOf('app.settings.users') > -1}">
+              Usuários
+            </a>
+            <a ui-sref="app.settings.taxonomies" class="list-group-item no-border no-radius bg-light"
+            ng-class="{'active': $state.current.name.indexOf('app.settings.taxonomies') > -1}">
+              Taxonomias
+            </a>
+            <a ui-sref="app.settings.general" class="list-group-item no-border no-radius bg-light"
+            ng-class="{'active': $state.current.name.indexOf('app.settings.general') > -1}">
+              Geral
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- /column -->
+<div class="col">
+  <div class="vbox">
+    <div class="row-row">
+      <div class="cell" id="post-cell">
+        <div class="cell-inner">
+          <div ui-view></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- column -->
 <!-- <div class="col w-lg" ng-class="{'hide': app.hidePostOptions}">

@@ -86,14 +86,21 @@ interface I$facade$ {
 	void searchPostsFromOrPromotedToStation(@Path("stationId")Integer stationId, @Query("query")String query,
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<SearchView\>\> _callback);
 		
+		@PUT("/posts/{postId}/convert")
+	ContentResponse<PostView\> convertPost(@Path("postId") Integer postId, @Query("state") String state);
+	
+	@PUT("/posts/{postId}/convert")
+	@FormUrlEncoded
+	void convertPost(@Path("postId") Integer postId, @Field("state") String state, Callback<ContentResponse<PostView\>\> _callback);
+		
 	@GET("/posts/search/networkPosts")
 	ContentResponse<SearchView\> searchPosts(@Query("query") String query, @Query("stationIds") String stationIds, @Query("personId") Integer personId, 
-			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight,
+			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight, @Query("sortByDate") Boolean sortByDate,
 			@Query("page") Integer page, @Query("size") Integer size);
 	
 	@GET("/posts/search/networkPosts")
 	void searchPosts(@Query("query") String query, @Query("stationIds") String stationIds, @Query("personId") Integer personId, 
-			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight,
+			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight, @Query("sortByDate") Boolean sortByDate,
 			@Query("page") Integer page, @Query("size") Integer size, Callback<ContentResponse<SearchView\>\> _callback);
 		
 	@GET("/bookmarks/searchBookmarks")

@@ -6,7 +6,9 @@ import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.PostRepository;
+import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
@@ -32,7 +34,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +66,10 @@ public class PostsResource {
 	private
 	@Autowired
 	PostConverter postConverter;
+	
+	private
+	@Autowired
+	PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 
 	private
 	@PersistenceContext
@@ -132,6 +141,25 @@ public class PostsResource {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 //		analytics.postViewed(username, userIp, postId);
 		forward();
+	}
+
+	@Autowired
+	private PostService postService;
+
+	@PUT
+	@Path("/{postId}/convert")
+	@Transactional(readOnly=false)
+	public ContentResponse<PostView> convertPost(@PathParam("postId") int postId, @FormParam("state") String state) throws ServletException, IOException {
+		Post post = postRepository.findOne(postId);
+		if(post != null && postAndCommentSecurityChecker.canWrite(post)){
+			post = postService.convertPost(postId, state);
+			ContentResponse<PostView> response = new ContentResponse<PostView>();
+			response.content = postConverter.convertToView(post);
+			return response;
+		}else{
+			throw new UnauthorizedException();
+		}
+		
 	}
 
 	@PUT
@@ -313,11 +341,11 @@ public class PostsResource {
 
 		return response;
 	}
-
+	
 	@GET
 	@Path("/search/networkPosts")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request, @QueryParam("query") String q, @QueryParam("stationIds") String stationIds, @QueryParam("personId") Integer personId, @QueryParam("publicationType") String publicationType, @QueryParam("noHighlight") Boolean noHighlight, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
+	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request, @QueryParam("query") String q, @QueryParam("stationIds") String stationIds, @QueryParam("personId") Integer personId, @QueryParam("publicationType") String publicationType, @QueryParam("noHighlight") Boolean noHighlight, @QueryParam("sortByDate") Boolean sortByDate, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
 
 		Person person = accessControllerUtil.getLoggedPerson();
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -389,7 +417,12 @@ public class PostsResource {
 
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Post.class);
 
-		org.apache.lucene.search.Sort sort = new Sort(SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
+		org.apache.lucene.search.Sort sort = null; 
+		if(sortByDate != null && sortByDate)
+			sort = new Sort(new SortField("date", SortField.STRING, true));
+		else
+			sort = new Sort(SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
+		
 		ftq.setSort(sort);
 
 		int totalHits = ftq.getResultSize();

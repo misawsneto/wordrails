@@ -1,6 +1,7 @@
 package com.wordrails.api;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class PostView implements Serializable {
 	private static final long serialVersionUID = -1474032487285763669L;
@@ -57,5 +58,7 @@ public class PostView implements Serializable {
 	public Double lng;
 
 	public String subheading;
+
+	public Date scheduledDate;
 
 }

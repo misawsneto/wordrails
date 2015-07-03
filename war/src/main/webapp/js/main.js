@@ -189,7 +189,7 @@ angular.module('app')
       });
 
       // deal with unauthorized access
-      $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){ 
+      $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
         if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications') && !trixService.isLoggedIn()){
           event.preventDefault();
           $scope.app.showInfoToast('Autentique-se para acessar esta função.')
@@ -210,6 +210,17 @@ angular.module('app')
           $scope.app.showInfoToast('Permissão negada.')
           if(fromState.abstract)
             $state.go('app.stations');
+        }else if(fromState.name == 'app.post'){
+          if($scope.app.editingPost && $scope.app.editingPost.editingExisting){
+            if(confirm('Este conteúdo está sendo editado. Deseja descartar as alterações?')){
+              $scope.app.editingPost = null;
+              window.onbeforeunload = null;
+            }else{
+              event.preventDefault();
+            }
+          }else if($scope.app.editingPost && $scope.app.editingPost.id){
+            $scope.app.editingPost = null;
+          }
         }
       })
 
@@ -278,6 +289,10 @@ angular.module('app')
       }
 
       $scope.openSplash = function(templateId, size){
+        if(templateId === "signin_splash.html")
+          $timeout(function(){
+            $("#username-input").focus();
+          }, 300);
         $scope.modalInstance = $splash.open({
           templateUrl: templateId,
           scope: $scope
@@ -285,6 +300,10 @@ angular.module('app')
       }
 
       $scope.app.openSplash = function(templateId, size){
+        if(templateId === "signin_splash.html")
+          $timeout(function(){
+            $("#username-input").focus();
+          }, 300);
         $scope.modalInstance = $splash.open({
           templateUrl: templateId,
           scope: $scope
@@ -337,7 +356,39 @@ angular.module('app')
         });
       };
 
+      $scope.app.converToDraf = function(){
+        if($scope.app.editingPost && $scope.app.editingPost.id){
+          trix.convertPost($scope.app.editingPost.id, "DRAFT").success(function(){
+            $scope.app.editingPost.state = "DRAFT";
+            $scope.app.cancelModal();
+          });
+        }
+      }
+
+      $scope.app.openDeletePost = function(id){
+        $scope.app.deletingPostId = id;
+        $scope.app.openSplash('confirm_delete_post.html') 
+      };
+
+      $scope.app.deletePost = function(){
+        trix.deletePost($scope.app.deletingPostId).success(function(){
+          $scope.app.deletingPostId = null;
+          $scope.app.editingPost = null;
+          window.onbeforeunload = null;
+          $scope.app.showSuccessToast('Notícia removida.')
+          $scope.app.cancelModal();
+          if($state.current.name != 'app.stations')
+            $state.go('app.stations');
+
+          $scope.app.refreshPerspective();
+        });
+      }
+
       $scope.cancelModal = function () {
+        $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
+      };
+
+      $scope.app.cancelModal = function () {
         $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
       };
 
@@ -381,6 +432,12 @@ angular.module('app')
           $scope.app.refreshData();
         })
       };
+
+      $scope.app.changeToSettings = function(){
+        if(!$scope.app.lastSettingState)
+          $scope.app.lastSettingState = 'app.settings.stations'
+        $state.go($scope.app.lastSettingState);
+      }
 
       $scope.app.refreshData = function(){
         $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
@@ -499,8 +556,9 @@ angular.module('app')
       $scope.goToBookmars = function(){
         if($scope.app.isLogged)
           $state.go('app.bookmarks')
-        else
+        else{
           $scope.openSplash('signin_splash.html')
+        }
       }
 
       $scope.goToNotifications = function(){
@@ -603,6 +661,10 @@ angular.module('app')
 
       $scope.app.getCurrentStateName = function(){
         return $state.current.name;
+      }
+
+      $scope.app.movePostToTrash = function(){
+        
       }
 
       $scope.app.refreshData();

@@ -47,7 +47,7 @@
           </div>
           <form name="form" ng-submit="app.signIn(username, password)">
             <div class="md-form-group float-label p-b-sm">
-              <input class="md-input" ng-model="username" required>
+              <input id="username-input" class="md-input" ng-model="username" required>
               <label>Usuário</label>
             </div>
             <div class="md-form-group float-label p-b-sm">
@@ -69,3 +69,24 @@
     </div>
   </div>
     </script>
+
+    <script type="text/ng-template" id="confirm_delete_post.html">
+  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <div class="splash-content text-center" ng-cloak>
+    <div class="row">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="p-lg text-color wrapper-lg">
+          <div class="m-b-lg">
+            Tem certeza que deseja remover está notícia?
+          </div>
+          <button ng-click="app.deletePost();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block p-h-md">
+             Sim
+          </button>
+          <button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
+             Não
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </script>

@@ -19,7 +19,7 @@
     </div>
     <div class="block-800 m-auto">
 
-      <div class="wrapper-xxl text-3x text-center" ng-class="{'hide': app.bookmarksCtrl.bookmarks && app.bookmarksCtrl.bookmarks.length > 0 || !app.bookmarksCtrl.firstLoad}">
+      <div class="wrapper-xxl text-3x text-center" ng-class="{'hide': searchLoading || (app.bookmarksCtrl.bookmarks && app.bookmarksCtrl.bookmarks.length > 0 || !app.bookmarksCtrl.firstLoad)}">
         <i class="mdi mdi-bookmark-outline text-3x text-muted"></i>
         <p>lista vazia<i></i></p>
       </div>

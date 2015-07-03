@@ -1156,47 +1156,47 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPostTrashAuthorized(Integer postTrashId) {
-		return canReadPosts(postTrashId);
+		return false;
 	}
 
 	@Override
 	protected boolean isGetPostTrashSponsorAuthorized(Integer postTrashId) {
-		return canReadPosts(postTrashId);
+		return false;
 	}
 
 	@Override
 	protected boolean isGetPostTrashCommentsAuthorized(Integer postTrashId) {
-		return canReadPosts(postTrashId);
+		return false;
 	}
 
 	@Override
 	protected boolean isGetPostTrashFeaturedImageAuthorized(Integer postTrashId) {
-		return canReadPosts(postTrashId);
+		return false;
 	}
 
 	@Override
 	protected boolean isGetPostTrashImagesAuthorized(Integer postTrashId) {
-		return canReadPosts(postTrashId);
+		return false;
 	}
 
 	@Override
 	protected boolean isGetPostTrashAuthorAuthorized(Integer postTrashId) {
-		return canReadPosts(postTrashId);
+		return false;
 	}
 
 	@Override
 	protected boolean isGetPostTrashPromotionsAuthorized(Integer postTrashId) {
-		return canReadPosts(postTrashId);
+		return false;
 	}
 
 	@Override
 	protected boolean isGetPostTrashStationAuthorized(Integer postTrashId) {
-		return canReadPosts(postTrashId);
+		return false;
 	}
 
 	@Override
 	protected boolean isGetPostTrashTermsAuthorized(Integer postTrashId) {
-		return canReadPosts(postTrashId);
+		return false;
 	}
 
 	@Override
@@ -1476,6 +1476,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindBySlugAuthorized(String slug) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindByOriginalPostIdAuthorized(Integer originalPostId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetImageOwnerAuthorized(Integer imageId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetImageStationAuthorized(Integer imageId) {
 		return true;
 	}
 

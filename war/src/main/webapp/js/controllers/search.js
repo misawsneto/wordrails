@@ -31,13 +31,13 @@ app.controller('SearchCtrl', ['$state', '$scope', '$log', '$timeout', 'trix', fu
 		if($scope.app.searchCtrl.allLoaded)
 			return;
 
-		if(!$scope.searchLoaging){
+		if(!$scope.searchLoading){
 
-			$scope.searchLoaging = true;
+			$scope.searchLoading = true;
 			trix.searchPosts($scope.app.searchCtrl.searchQuery, $scope.app.searchCtrl.searchPage + 1, 10)
 			.success(function(response){
 				
-				$scope.searchLoaging = false;
+				$scope.searchLoading = false;
 				$scope.app.searchCtrl.searchPage = $scope.app.searchCtrl.searchPage + 1
 
 				if(!response.posts || response.posts.length == 0){
@@ -52,7 +52,7 @@ app.controller('SearchCtrl', ['$state', '$scope', '$log', '$timeout', 'trix', fu
 				$(".search-results").focus();
 			})
 			.error(function(){
-				$scope.searchLoaging = false;
+				$scope.searchLoading = false;
 			})
 
 		}

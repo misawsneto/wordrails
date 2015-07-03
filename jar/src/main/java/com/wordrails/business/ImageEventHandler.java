@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
+import com.wordrails.persistence.PersonRepository;
 
 @RepositoryEventHandler(Image.class)
 @Component
@@ -33,10 +34,14 @@ public class ImageEventHandler {
 	private @PersistenceContext EntityManager manager;
 	private @Autowired FileRepository fileRepository; 
 	private @Autowired FileContentsRepository contentsRepository;
+	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired PersonRepository personRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Image image) throws SQLException, IOException {
 		com.wordrails.business.File original = image.original;
+		
+		Person person = accessControllerUtil.getLoggedPerson();
 		
 		String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
 		
@@ -62,7 +67,10 @@ public class ImageEventHandler {
 			image.small = small;
 			image.medium = medium;
 			image.large = large;
-
+			
+			if(person != null)
+				image.owner = personRepository.findOne(person.id);
+				
 			BufferedImage bufferedImage;
 			FileContents contents = contentsRepository.findOne(original.id);
 			try (InputStream input = contents.contents.getBinaryStream()) {
