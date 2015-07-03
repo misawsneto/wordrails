@@ -73,7 +73,6 @@ import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,7 +84,6 @@ public class UtilResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
 
-	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired PersonRepository personRepository;
 
 	private @Autowired NetworkRolesRepository networkRolesRepository;

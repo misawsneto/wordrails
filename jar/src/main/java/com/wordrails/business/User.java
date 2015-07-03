@@ -2,13 +2,7 @@ package com.wordrails.business;
 
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -18,7 +12,7 @@ import javax.validation.constraints.Size;
  * @author misael
  */
 @Entity
-@Table(name="users")
+@Table(name="users", uniqueConstraints=@UniqueConstraint(columnNames={"networkId", "username"}))
 public class User {
 	@Id
 	@Size(max=50)
@@ -30,6 +24,9 @@ public class User {
 	
 	@NotNull
 	public boolean enabled;
+
+	@NotNull
+	public Integer networkId;
 
 	@ElementCollection
 	@CollectionTable(

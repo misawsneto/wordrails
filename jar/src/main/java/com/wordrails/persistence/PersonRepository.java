@@ -14,5 +14,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
     
 	@RestResource(exported=false)
     Person findByWordpressId(@Param("wordpressId") Integer wordpressId);
-	
+
+	Person findByUsernameAndNetworkId(String username, Integer networkId);
 }

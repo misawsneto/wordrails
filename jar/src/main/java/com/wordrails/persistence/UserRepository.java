@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<User, Integer>, QueryDslPr
 	User findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
 	User findByUsernameAndEnabled(@Param("username") String username, @Param("enabled") boolean b);
+
+	User findByUsernameAndPasswordAndNetworkId(String username, String password, Integer networkId);
 }

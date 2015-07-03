@@ -70,8 +70,6 @@
 	</beans:bean>
 
 	<authentication-manager alias="myAuthenticationManager">
-		<authentication-provider>
-			<jdbc-user-service data-source-ref="dataSource" />
-  		</authentication-provider>
+		<authentication-provider ref="authenticationNetwork"/>
 	</authentication-manager>
 </beans:beans>

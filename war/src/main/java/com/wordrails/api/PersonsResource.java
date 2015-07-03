@@ -66,7 +66,6 @@ public class PersonsResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
 
-	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired PersonRepository personRepository;
 
 	private @Autowired NetworkRolesRepository networkRolesRepository;
@@ -109,9 +108,12 @@ public class PersonsResource {
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response login(@FormParam("username") String username, @FormParam("password") String password){
+	public Response login(@FormParam("username") String username, @FormParam("password") String password, @FormParam("network") Integer network){
+		if(network == null){
+			network = 1;
+		}
 		try{
-			accessControllerUtil.authenticate(username, password);
+			accessControllerUtil.authenticate(username, password, network);
 			return Response.status(Status.OK).build();
 		}catch(BadCredentialsException e){
 			return Response.status(Status.UNAUTHORIZED).build();
@@ -177,18 +179,18 @@ public class PersonsResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@PUT
-	@Path("/me/password")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
-
-		try{
-			org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			String username = user.getUsername();
-			if(!username.equalsIgnoreCase("wordrails")) // don't allow users to change wordrails password
-				userDetailsManager.changePassword(oldPassword, newPassword);
-		}catch(Exception e){}
-	}
+//	@PUT
+//	@Path("/me/password")
+//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
+//
+//		try{
+//			org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//			String username = user.getUsername();
+//			if(!username.equalsIgnoreCase("wordrails")) // don't allow users to change wordrails password
+//				userDetailsManager.changePassword(oldPassword, newPassword);
+//		}catch(Exception e){}
+//	}
 
 	@GET
 	@Path("/me")

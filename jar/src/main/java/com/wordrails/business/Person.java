@@ -3,18 +3,7 @@ package com.wordrails.business;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -50,6 +39,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 	@TokenFilterDef(factory = LowerCaseFilterFactory.class)
 	})
 })
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"networkId", "username", "email"}))
 public class Person {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -69,6 +59,9 @@ public class Person {
 	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Analyzer(definition="customAnalyzer")
 	public String username;
+
+	@NotNull
+	public Integer networkId;
 
 	@OneToMany(mappedBy="author")
 	public Set<Comment> comments;

@@ -21,7 +21,7 @@ import com.wordrails.util.WordrailsUtil;
 @RepositoryEventHandler(Person.class)
 @Component
 public class PersonEventHandler {
-	private @Autowired UserDetailsManager userDetailsManager;
+//	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired PersonRepository personRepository;
 	private @Autowired TermRepository termRepository;
 	private @Autowired EmailService passwordResetService;
@@ -37,22 +37,22 @@ public class PersonEventHandler {
 		
 	}
 	
-	@HandleAfterCreate
-	@Transactional
-	public void handleAfterCreate(Person person) {
-		Collection<GrantedAuthority> authority = new ArrayList<GrantedAuthority>(1);
-		SimpleGrantedAuthority roleUser = new SimpleGrantedAuthority("ROLE_USER");
-		authority.add(roleUser);
-		
-		String password = person.password;
-		
-		if(password != null && password.trim().equals("")){
-			password = null;
-		}
-		
-		org.springframework.security.core.userdetails.User user = 
-				new org.springframework.security.core.userdetails.User(person.username, password == null ? WordrailsUtil.generateRandomString(8, "a#") : password, authority);
-		userDetailsManager.createUser(user);
-	}
+//	@HandleAfterCreate
+//	@Transactional
+//	public void handleAfterCreate(Person person) {
+//		Collection<GrantedAuthority> authority = new ArrayList<GrantedAuthority>(1);
+//		SimpleGrantedAuthority roleUser = new SimpleGrantedAuthority("ROLE_USER");
+//		authority.add(roleUser);
+//
+//		String password = person.password;
+//
+//		if(password != null && password.trim().equals("")){
+//			password = null;
+//		}
+//
+//		org.springframework.security.core.userdetails.User user =
+//				new org.springframework.security.core.userdetails.User(person.username, password == null ? WordrailsUtil.generateRandomString(8, "a#") : password, authority);
+//		userDetailsManager.createUser(user);
+//	}
 
 }
