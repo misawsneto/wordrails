@@ -2,14 +2,17 @@ package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wordrails.util.WordrailsUtil;
+
 import org.apache.solr.analysis.*;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Parameter;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import java.util.Date;
 import java.util.Set;
 

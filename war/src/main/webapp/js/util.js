@@ -271,6 +271,7 @@ function getCustomStyle(color, perspective, header) {
 	".redactor-toolbar li a:hover {\n"+
 	  "outline: none;\n"+
 	  "background-color:" + color + ";\n"+
+	  "border-color:" + color + ";\n"+
 	  "color: " + (textColorEval(color, true)) + ";\n"+
 	"}\n"+
 

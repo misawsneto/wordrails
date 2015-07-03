@@ -218,6 +218,8 @@ angular.module('app')
             }else{
               event.preventDefault();
             }
+          }else if($scope.app.editingPost && $scope.app.editingPost.id){
+            $scope.app.editingPost = null;
           }
         }
       })
