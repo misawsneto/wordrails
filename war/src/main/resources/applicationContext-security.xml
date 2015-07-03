@@ -52,13 +52,17 @@
 	    <intercept-url pattern="/bookmarks/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 	    <intercept-url pattern="/settings" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 	    <intercept-url pattern="/settings/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/publications" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/publications/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/publications" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/publications/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/user" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/user/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/read" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/read/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 	    
-		<intercept-url pattern="/**" access="ROLE_USER"/>
+		<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 
 		<form-login always-use-default-target="true" 
-					default-target-url="/loggedIn.jsp"									
+					default-target-url="/loggedIn.jsp"
 					authentication-failure-url="/logIn.jsp"/>
 		
 		<logout/>

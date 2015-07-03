@@ -256,7 +256,7 @@ public class UtilResource {
 			post.slug = originalSlug;
 			postRepository.save(post);
 		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-			String hash = WordrailsUtil.generateRandomString(5, "Aa#u");
+			String hash = WordrailsUtil.generateRandomString(5, "Aa#");
 			post.slug = originalSlug + "-" + hash;
 		}
 	}
