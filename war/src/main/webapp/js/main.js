@@ -359,6 +359,7 @@ angular.module('app')
       $scope.app.converToDraf = function(){
         if($scope.app.editingPost && $scope.app.editingPost.id){
           trix.convertPost($scope.app.editingPost.id, "DRAFT").success(function(){
+            $scope.app.editingPost.state = "DRAFT";
             $scope.app.cancelModal();
           });
         }
