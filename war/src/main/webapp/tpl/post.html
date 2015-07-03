@@ -103,7 +103,7 @@
       <div class="divider-v" ng-class="{'hide': !showTopOptions()}"></div>
     </li>
     <li>
-      <a tooltip="Informações" class="animated text-lg" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      <a tooltip="Informações" ng-click="showPostDetails()" class="animated text-lg" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
        href >
         <i class="mdi-information-outline mdi"></i>
       </a>
@@ -188,32 +188,21 @@
   </div>
 </script>
 
-<script type="text/ng-template" id="confirm_delete_post.html">
-  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-  <div class="splash-content text-center" ng-cloak>
-    <div class="row">
-      <div class="col-xs-6 col-xs-offset-3">
-        <div class="p-lg text-color wrapper-lg">
-          <div class="m-b-lg">
-            Esta notícia foi publicada. Tem certeza que deseja removê-la?
-          </div>
-          <button ng-click="app.deletePost();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block p-h-md">
-             Sim
-          </button>
-          <button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
-             Não
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</script>
-
 <script type="text/ng-template" id="post_help.html">
   <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
   <div class="splash-content text-center" ng-cloak>
     <div class="row">
       <img src="img/help.png">
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="show_posts_details.html">
+  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <div class="splash-content" ng-cloak>
+    <div class="row">
+      <div class="">{{app.editingPost.slug}}</div>
+      <div class="h3 font-bold">{{app.editingPost.title}}</div>
     </div>
   </div>
 </script>

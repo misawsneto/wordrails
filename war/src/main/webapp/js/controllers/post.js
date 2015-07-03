@@ -88,11 +88,29 @@ $scope.loadPost = function(postId){
 			updateTermTree();
 			$timeout(function() {
 				$scope.app.editingPost.editingExisting = false;
+				$scope.loadMedia()
 			}, 1000);
 		})
 	}else{
 		createPostObject();
 	}
+}
+
+$scope.loadMedia = function(){
+	if($scope.app.editingPost.externalVideoUrl){
+		$scope.app.editingPost.showInputVideoUrl = true
+		$scope.app.editingPost.showMediaButtons = false;
+		$("#video-url-input").focus();
+		$scope.videoUrl = $scope.app.editingPost.externalVideoUrl;
+	}else if($scope.app.editingPost.featuredImage){
+		$scope.app.editingPost.uploadedImage = {filelink: TRIX.baseUrl + "/api/files/"+$scope.app.editingPost.imageLargeId+"/contents" }
+		$scope.checkLandscape();
+	}
+
+	$timeout(function() {
+		$scope.invertLandscapeSquare();
+		$scope.invertLandscapeSquare();
+	}, 50);
 }
 
 if($state.params && $state.params.id){
@@ -137,12 +155,7 @@ $scope.postCtrl = {}
 		if(!$scope.app.editingPost){
 			createPostObject();
 		}else{
-			if($scope.app.editingPost.externalVideoUrl)
-				$scope.videoUrl = $scope.app.editingPost.externalVideoUrl;
-			$timeout(function() {
-				$scope.invertLandscapeSquare();
-				$scope.invertLandscapeSquare();
-			}, 50);
+			$scope.loadMedia();
 		}
 
 		if(!$state.params.id)
@@ -302,6 +315,7 @@ uploader.onSuccessItem = function(fileItem, response, status, headers) {
 		$scope.checkLandscape();
 		$("#image-config").removeClass("hide");
 		$mdToast.hide();
+		$scope.postCtrl.imageHasChanged = true
 	}
 };
 
@@ -331,6 +345,7 @@ $scope.clearImage = function(){
 	uploader.clearQueue();
 	uploader.cancelAll()
 	$scope.checkLandscape();
+	$scope.postCtrl.imageHasChanged = true;
 }
 
 uploader.onProgressItem = function(fileItem, progress) {
@@ -410,6 +425,10 @@ function isTermSelected(terms){
 			$scope.app.hidePostOptions = false;
 			$scope.app.showInfoToast('Escolha uma categoria.')
 		}
+	}
+
+	$scope.showPostDetails = function(){
+		$scope.app.openSplash('show_posts_details.html')
 	}
 
 	$scope.savePostAsDraft = function(ev){

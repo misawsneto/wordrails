@@ -114,7 +114,7 @@ angular.module('app')
                         return $ocLazyLoad.load(['js/controllers/settings.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  //, controller:'SettingsCtrl'
+                  , controller:'SettingsCtrl'
               })
 
               .state('app.settings.stations', {
@@ -123,12 +123,44 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  , controller:'SettingsStationCtrl'
+                  , controller:'SettingsStationsCtrl'
               })
-
+              .state('app.settings.users', {
+                  url: '/users',
+                  templateUrl: 'tpl/settings-users.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-users.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsUsersCtrl'
+              })
+              .state('app.settings.taxonomies', {
+                  url: '/taxonomies',
+                  templateUrl: 'tpl/settings-taxonomies.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-taxonomies.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsTaxonomiesCtrl'
+              })
+              .state('app.settings.general', {
+                  url: '/general',
+                  templateUrl: 'tpl/settings-taxonomies.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-general.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsGeneralCtrl'
+              })
               .state('app.bookmarks', {
                 url: '/bookmarks',
                   templateUrl: 'tpl/bookmarks.html',

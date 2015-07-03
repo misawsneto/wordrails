@@ -11,16 +11,20 @@
       <div class="cell" id="settings-sidebar">
         <div class="cell-inner">
           <div class="list-group text-lg no-radius p-t-lg">
-            <a href="" class="list-group-item no-border no-radius bg-light">
+            <a ui-sref="app.settings.stations" class="list-group-item no-border no-radius bg-light"
+            ng-class="{'active': $state.current.name.indexOf('app.settings.stations') > -1}">
               Estações
             </a>
-            <a href="" class="list-group-item no-border no-radius bg-light">
+            <a ui-sref="app.settings.users" class="list-group-item no-border no-radius bg-light"
+            ng-class="{'active': $state.current.name.indexOf('app.settings.users') > -1}">
               Usuários
             </a>
-            <a href="" class="list-group-item no-border no-radius bg-light">
+            <a ui-sref="app.settings.taxonomies" class="list-group-item no-border no-radius bg-light"
+            ng-class="{'active': $state.current.name.indexOf('app.settings.taxonomies') > -1}">
               Taxonomias
             </a>
-            <a href="" class="list-group-item no-border no-radius bg-light">
+            <a ui-sref="app.settings.general" class="list-group-item no-border no-radius bg-light"
+            ng-class="{'active': $state.current.name.indexOf('app.settings.general') > -1}">
               Geral
             </a>
           </div>
