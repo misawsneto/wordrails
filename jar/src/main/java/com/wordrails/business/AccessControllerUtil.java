@@ -30,32 +30,25 @@ public class AccessControllerUtil {
 	public Person getLoggedPerson() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-		if(auth instanceof AnonymousAuthenticationToken) {
+		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
 			Person person = personRepository.findByUsername("wordrails");
 			String password = person.password;
 			person.password = null;
 
 			Collection<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-			auth = new NetworkUsernamePasswordAuthenticationToken(person, password, null);
+			auth = new NetworkUsernamePasswordAuthenticationToken(person, password, null, authorities);
 
 			SecurityContextHolder.getContext().setAuthentication(auth);
 
 			return person;
 		}
 
-		NetworkUsernamePasswordAuthenticationToken authentication = (NetworkUsernamePasswordAuthenticationToken) auth;
-
-		if (authentication != null) {
-			return (Person) authentication.getPrincipal();
-		}
-
-		return null;
+		return (Person) auth.getPrincipal();
 	}
 
 	public boolean isLogged() {
-		NetworkUsernamePasswordAuthenticationToken authentication =
-				(NetworkUsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+		NetworkUsernamePasswordAuthenticationToken authentication = (NetworkUsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
 		return authentication != null && !authentication.isAnonymous();
 	}
@@ -68,7 +61,10 @@ public class AccessControllerUtil {
 			throw new BadCredentialsException("Username not found");
 		}
 
-		NetworkUsernamePasswordAuthenticationToken auth = new NetworkUsernamePasswordAuthenticationToken(person, password, network);
+		Collection<GrantedAuthority> authorities = new HashSet<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+		NetworkUsernamePasswordAuthenticationToken auth = new NetworkUsernamePasswordAuthenticationToken(person, password, network, authorities);
 
 		Authentication validAuth = authenticationManager.authenticate(auth);
 		SecurityContextHolder.getContext().setAuthentication(validAuth);

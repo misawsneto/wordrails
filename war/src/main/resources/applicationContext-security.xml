@@ -74,6 +74,9 @@
 	</beans:bean>
 
 	<authentication-manager alias="trixAuthenticationManager">
+		<!--<authentication-provider>-->
+			<!--<jdbc-user-service data-source-ref="dataSource" />-->
+		<!--</authentication-provider>-->
 		<authentication-provider ref="trixAuthenticationProvider"/>
 	</authentication-manager>
 </beans:beans>

@@ -25,7 +25,7 @@ import java.util.Set;
 				@TokenFilterDef(factory = LowerCaseFilterFactory.class)
 		})
 })
-@Table(uniqueConstraints={
+@Table(name = "person", uniqueConstraints={
 		@UniqueConstraint(columnNames={"network_id", "username"}),
 		@UniqueConstraint(columnNames={"email", "username"})
 })
@@ -73,9 +73,7 @@ public class Person {
 	@OneToMany(mappedBy="person")
 	public Set<Recommend> recommends;
 
-	@NotNull
-	@ManyToOne
-	@JoinColumn(name="network_id")
+	@OneToOne(optional = true)
 	public Network network;
 
 	@Size(max=2048)

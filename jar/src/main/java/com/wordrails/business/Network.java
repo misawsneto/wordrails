@@ -26,9 +26,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class Network {
 
-	public Network() {
-	}
-
 //	public String NIGHT_READ_MODE = "N";
 //	public String DAY_READ_MODE = "D";
 //	public String VERTICAL_ORIENTATION_MODE = "V";
@@ -50,9 +47,9 @@ public class Network {
 	@OneToMany(mappedBy="network")
 	public Set<NetworkRole> personsNetworkRoles;
 
-	@OneToMany(mappedBy="network")
-	public Set<Person> persons;
-	
+//	@OneToMany(mappedBy="network")
+//	public Set<Person> persons;
+
 	@ManyToMany(mappedBy="networks")
 	public Set<Station> stations;
 

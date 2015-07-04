@@ -194,10 +194,8 @@ public class PersonsResource {
 	@GET
 	@Path("/me")
 	public void getCurrentPerson() {
-		org.springframework.security.core.userdetails.User user = null;
-		user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String username = user.getUsername();		
-		String path = httpServletRequest.getServletPath() + "/persons/search/findByUsername?username=" + username;
+		Person person = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String path = httpServletRequest.getServletPath() + "/persons/search/findByUsername?username=" + person.username;
 		httpRequest.forward(path);
 	}
 
@@ -266,7 +264,7 @@ public class PersonsResource {
 
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
-		List<StationDto> stationDtos = new ArrayList<StationDto>();
+		List<StationDto> stationDtos = new ArrayList<>();
 
 		//Network Permissions
 		NetworkPermission networkPermissionDto = new NetworkPermission();

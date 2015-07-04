@@ -12,8 +12,8 @@ public class NetworkUsernamePasswordAuthenticationToken extends UsernamePassword
 
 	private Network network;
 
-	public NetworkUsernamePasswordAuthenticationToken(Person person, String credentials, Network network) {
-		super(person, credentials);
+	public NetworkUsernamePasswordAuthenticationToken(Person person, String credentials, Network network, Collection<GrantedAuthority> authorities) {
+		super(person, credentials, authorities);
 		this.network = network;
 	}
 

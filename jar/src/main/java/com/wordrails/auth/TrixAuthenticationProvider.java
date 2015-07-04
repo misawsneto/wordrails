@@ -2,10 +2,7 @@ package com.wordrails.auth;
 
 import com.wordrails.business.Network;
 import com.wordrails.business.Person;
-import com.wordrails.business.User;
-import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -48,9 +45,12 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			}
 		}
 
+		Collection<GrantedAuthority> authorities = new HashSet<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
 		person.password = null; //let's not store the password in a visible way. for security
 
-		return new NetworkUsernamePasswordAuthenticationToken(person, password, network);
+		return new NetworkUsernamePasswordAuthenticationToken(person, password, network, authorities);
 	}
 
 	@Override
