@@ -108,10 +108,9 @@ public class PersonsResource {
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response login(@FormParam("username") String username, @FormParam("password") String password, @FormParam("network") Integer network){
-		if(network == null){
-			network = 1;
-		}
+	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password){
+		Network network = wordrailsService.getNetworkFromHost(request);
+
 		try{
 			accessControllerUtil.authenticate(username, password, network);
 			return Response.status(Status.OK).build();

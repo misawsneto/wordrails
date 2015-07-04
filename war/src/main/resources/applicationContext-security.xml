@@ -73,7 +73,7 @@
 		<beans:property name="useForward" value="true"/>
 	</beans:bean>
 
-	<authentication-manager alias="myAuthenticationManager">
-		<authentication-provider ref="authenticationNetwork"/>
+	<authentication-manager alias="trixAuthenticationManager">
+		<authentication-provider ref="trixAuthenticationProvider"/>
 	</authentication-manager>
 </beans:beans>

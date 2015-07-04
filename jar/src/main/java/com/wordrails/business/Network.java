@@ -25,14 +25,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Network {
-	
+
+	public Network() {
+	}
+
 //	public String NIGHT_READ_MODE = "N";
 //	public String DAY_READ_MODE = "D";
 //	public String VERTICAL_ORIENTATION_MODE = "V";
 //	public String HORIZONTAL_ORIENTATION_MODE = "H";
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)				
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
 	
 	@Size(min=1, max=100)
@@ -43,9 +46,12 @@ public class Network {
 	
 	@Size(min=1, max=100)	
 	public String trackingId;
-	
+
 	@OneToMany(mappedBy="network")
 	public Set<NetworkRole> personsNetworkRoles;
+
+	@OneToMany(mappedBy="network")
+	public Set<Person> persons;
 	
 	@ManyToMany(mappedBy="networks")
 	public Set<Station> stations;

@@ -1,74 +1,82 @@
 package com.wordrails.business;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import com.wordrails.auth.NetworkUsernamePasswordAuthenticationToken;
+import com.wordrails.persistence.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.wordrails.persistence.PersonRepository;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
 
 @Component
 public class AccessControllerUtil {
-    private @Autowired PersonRepository personRepository;
-    private @Autowired @Qualifier("myAuthenticationManager") AuthenticationManager authenticationManager;
 
-    public Person getLoggedPerson() {
-        Authentication authentication = SecurityContextHolder.getContext()
-                .getAuthentication();
+	@Autowired
+	private PersonRepository personRepository;
 
-        User user = new User();
+	@Autowired
+	@Qualifier("trixAuthenticationManager")
+	private AuthenticationManager authenticationManager;
 
-        if (authentication == null
-                || (authentication != null && authentication.getPrincipal() instanceof String)
-                && authentication.getPrincipal().equals("anonymousUser")) {
+	public Person getLoggedPerson() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-            user.username = "wordrails";
-            user.password = "wordrails";
+		if(auth instanceof AnonymousAuthenticationToken) {
+			Person person = personRepository.findByUsername("wordrails");
+			String password = person.password;
+			person.password = null;
 
-            Collection<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            authentication = new NetworkUsernamePasswordAuthenticationToken(
-                    user.username, user.password, 1, authorities);
+			Collection<GrantedAuthority> authorities = new HashSet<>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+			auth = new NetworkUsernamePasswordAuthenticationToken(person, password, null);
 
-            authenticationManager.authenticate(authentication);
-            SecurityContextHolder.getContext()
-                    .setAuthentication(authentication);
-        } else {
-            user = (User) authentication.getPrincipal();
-        }
-        return personRepository.findByUsernameAndNetworkId(user.username,
-                user.networkId);
-    }
+			SecurityContextHolder.getContext().setAuthentication(auth);
 
-    public boolean isLogged() {
-        User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return person;
+		}
 
-        return (personRepository.findByUsernameAndNetworkId(u.username, u.networkId) != null ? true
-                : false);
-    }
+		NetworkUsernamePasswordAuthenticationToken authentication = (NetworkUsernamePasswordAuthenticationToken) auth;
 
-    public void authenticate(String username, String password, Integer networkId) {
-        NetworkUsernamePasswordAuthenticationToken auth = new NetworkUsernamePasswordAuthenticationToken(
-                username, password, networkId);
+		if (authentication != null) {
+			return (Person) authentication.getPrincipal();
+		}
 
-        Authentication validAuth = authenticationManager.authenticate(auth);
-        SecurityContextHolder.getContext().setAuthentication(validAuth);
-    }
+		return null;
+	}
 
-    public boolean areYouLogged(Integer personId) {
-        boolean areYouLogged = false;
-        Person person = getLoggedPerson();
-        if (person != null && person.id == personId) {
-            areYouLogged = true;
-        }
-        return areYouLogged;
-    }
+	public boolean isLogged() {
+		NetworkUsernamePasswordAuthenticationToken authentication =
+				(NetworkUsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+		return authentication != null && !authentication.isAnonymous();
+	}
+
+	public void authenticate(String username, String password, Network network) throws BadCredentialsException {
+		Person person = personRepository.findByUsername(username);
+
+		//These exceptions are not being thrown, not in a visible way at least
+		if (person == null) {
+			throw new BadCredentialsException("Username not found");
+		}
+
+		NetworkUsernamePasswordAuthenticationToken auth = new NetworkUsernamePasswordAuthenticationToken(person, password, network);
+
+		Authentication validAuth = authenticationManager.authenticate(auth);
+		SecurityContextHolder.getContext().setAuthentication(validAuth);
+	}
+
+	public boolean areYouLogged(Integer personId) {
+		Person person = getLoggedPerson();
+
+		return person != null && Objects.equals(personId, person.id);
+	}
 }

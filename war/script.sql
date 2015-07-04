@@ -25,3 +25,5 @@ insert into network_taxonomy (networks_id, taxonomies_id) values (1, 1);
 use wordrails2;
 drop table invitation;
 alter table post drop column imageLandscape;
+
+UPDATE person JOIN users ON person.username = users.username SET person.password = users.password;

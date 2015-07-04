@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
  * @author misael
  */
 @Entity
-@Table(name="users", uniqueConstraints=@UniqueConstraint(columnNames={"networkId", "username"}))
+@Table(name="users")
 public class User {
 	@Id
 	@Size(max=50)
@@ -24,9 +24,6 @@ public class User {
 	
 	@NotNull
 	public boolean enabled;
-
-	@NotNull
-	public Integer networkId;
 
 	@ElementCollection
 	@CollectionTable(
