@@ -1,6 +1,7 @@
 package com.wordrails.services;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -64,7 +65,10 @@ public class CacheService {
 				.build(
 						new CacheLoader<String, Person>() {
 							public Person load(String username) {
-								return personRepository.findByUsername(username);
+								Set<Person> persons = personRepository.findByUsername(username);
+
+								if(persons != null && persons.size() > 0) return persons.iterator().next(); //THIS IS NOT RIGHT!!! MUST SEND NETWORK
+								else return null;
 							}
 						});
 

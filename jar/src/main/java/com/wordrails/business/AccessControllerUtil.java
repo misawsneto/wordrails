@@ -31,13 +31,11 @@ public class AccessControllerUtil {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
-			Person person = personRepository.findByUsername("wordrails");
+			Person person = personRepository.findByUsernameAndNetwork("wordrails", null);
 			String password = person.password;
 			person.password = null;
 
-			Collection<GrantedAuthority> authorities = new HashSet<>();
-			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-			auth = new NetworkUsernamePasswordAuthenticationToken(person, password, null, authorities);
+			auth = new NetworkUsernamePasswordAuthenticationToken(person, password, null);
 
 			SecurityContextHolder.getContext().setAuthentication(auth);
 
@@ -54,17 +52,14 @@ public class AccessControllerUtil {
 	}
 
 	public void authenticate(String username, String password, Network network) throws BadCredentialsException {
-		Person person = personRepository.findByUsername(username);
+		Person person = personRepository.findByUsernameAndNetwork(username, network);
 
 		//These exceptions are not being thrown, not in a visible way at least
 		if (person == null) {
 			throw new BadCredentialsException("Username not found");
 		}
 
-		Collection<GrantedAuthority> authorities = new HashSet<>();
-		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-		NetworkUsernamePasswordAuthenticationToken auth = new NetworkUsernamePasswordAuthenticationToken(person, password, network, authorities);
+		NetworkUsernamePasswordAuthenticationToken auth = new NetworkUsernamePasswordAuthenticationToken(person, password, network);
 
 		Authentication validAuth = authenticationManager.authenticate(auth);
 		SecurityContextHolder.getContext().setAuthentication(validAuth);

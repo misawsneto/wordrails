@@ -1019,6 +1019,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindByUsernameAndPasswordAuthorized(String username, String password) {
+		return false;
+	}
+
+	@Override
 	protected boolean isFindByEmailAuthorized(String email) {
 		return false;
 	}

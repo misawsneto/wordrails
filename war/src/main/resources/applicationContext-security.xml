@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   	   		 xmlns:beans="http://www.springframework.org/schema/beans"
-  	   		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	         xmlns:p="http://www.springframework.org/schema/p"
   	   		 xsi:schemaLocation="http://www.springframework.org/schema/beans
   	   					   		 http://www.springframework.org/schema/beans/spring-beans.xsd
   	   					   		 http://www.springframework.org/schema/security
@@ -33,7 +34,8 @@
 	<http pattern="/api/util/**" security="none"/>
 	<http pattern="/invitation/**" security="none"/>
 
-	<http entry-point-ref="authenticationEntryPoint">
+
+	<http entry-point-ref="authenticationEntryPoint" auto-config='false'>
 	    <intercept-url pattern="/api/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/api/persons/init" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 	    <intercept-url pattern="/api/persons/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
@@ -58,25 +60,26 @@
 		<intercept-url pattern="/user/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<intercept-url pattern="/read" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<intercept-url pattern="/read/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    
+
 		<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 
-		<form-login always-use-default-target="true" 
-					default-target-url="/loggedIn.jsp"
-					authentication-failure-url="/logIn.jsp"/>
+		<custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
+
+		<!--<form-login always-use-default-target="true" -->
+					<!--default-target-url="/loggedIn.jsp"-->
+					<!--authentication-failure-url="/logIn.jsp"/>-->
 		
 		<logout/>
 	</http>
+
+	<beans:bean id="authenticationFilter" class="com.wordrails.filter.TrixAuthenticationFilter" p:authenticationManager-ref="trixAuthenticationManager"/>
 
 	<beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
 		<beans:property name="loginFormUrl" value="/logIn.jsp"/>
 		<beans:property name="useForward" value="true"/>
 	</beans:bean>
 
-	<authentication-manager alias="trixAuthenticationManager">
-		<!--<authentication-provider>-->
-			<!--<jdbc-user-service data-source-ref="dataSource" />-->
-		<!--</authentication-provider>-->
+	<authentication-manager alias="trixAuthenticationManager" erase-credentials="false">
 		<authentication-provider ref="trixAuthenticationProvider"/>
 	</authentication-manager>
 </beans:beans>

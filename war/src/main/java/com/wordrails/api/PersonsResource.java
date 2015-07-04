@@ -251,7 +251,7 @@ public class PersonsResource {
 
 	@GET
 	@Path("/init")
-	public PersonData getInitialData (@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+	public PersonData getInitialData (@Context HttpServletRequest request) throws IOException{
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
 		Person person = accessControllerUtil.getLoggedPerson();

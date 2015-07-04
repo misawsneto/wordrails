@@ -7,9 +7,11 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.util.Set;
+
 public interface PersonRepository extends JpaRepository<Person, Integer>, QueryDslPredicateExecutor<Person> {
 
-	Person findByUsername(@Param("username") String username);
+	Set<Person> findByUsername(@Param("username") String username);
 
 	@RestResource(exported = false)
 	Person findByUsernameAndNetwork(@Param("username") String username, @Param("network") Network network);
