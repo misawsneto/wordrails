@@ -3,15 +3,10 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 	$scope.app.lastSettingState = "app.settings.network";
 	$scope.network = angular.copy($scope.app.initData.network)
 
-	$scope.$watch('network', function(newVal){
-		console.log(newVal);
-	})
-
 	$scope.saveChanges = function(){
-		trix.getNetwork($scope.network.id).success(function(networkResponse){
-			trix.putNetwork(networkResponse).success(function(response){
-				console.log(response);
-			})
+		trix.putNetwork($scope.network).success(function(response){
+			$scope.app.getInitData();
+			$scope.app.showSuccessToast('Alterações salvas com successo.')
 		})
 	}
 }])

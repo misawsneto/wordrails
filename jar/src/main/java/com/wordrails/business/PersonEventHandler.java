@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
+import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.TermRepository;
+import com.wordrails.services.CacheService;
 import com.wordrails.util.WordrailsUtil;
 
 @RepositoryEventHandler(Person.class)
@@ -25,7 +27,9 @@ public class PersonEventHandler {
 	private @Autowired PersonRepository personRepository;
 	private @Autowired TermRepository termRepository;
 	private @Autowired EmailService passwordResetService;
-	private @Autowired PostRepository postRepository;    
+	private @Autowired PostRepository postRepository;
+	
+	private @Autowired CacheService cacheService;
 
 	@HandleBeforeSave
 	@Transactional
@@ -53,6 +57,13 @@ public class PersonEventHandler {
 		org.springframework.security.core.userdetails.User user = 
 				new org.springframework.security.core.userdetails.User(person.username, password == null ? WordrailsUtil.generateRandomString(8, "a#") : password, authority);
 		userDetailsManager.createUser(user);
+	}
+	
+	@HandleAfterSave
+	@Transactional
+	public void handleAfterSave(Person person){
+		cacheService.updatePerson(person.id);
+		cacheService.updatePerson(person.username);
 	}
 
 }

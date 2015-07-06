@@ -4,7 +4,7 @@
       <div class="col-sm-4" ng-repeat="station in app.initData.stations">
         <div class="panel panel-card animated zoomIn">
           <div class="p">
-            <div class="h3 m-b">{{station.name}}</div>
+            <div class="h4 m-b" clamp="1">{{station.name}}</div>
             <div class="panel panel-default m-b-none">
               <div class="list-group no-radius alt">
                 <a class="list-group-item" ui-sref="app.settings.stationsconfig({'stationId': station.id})">
@@ -16,9 +16,21 @@
                   Usuários
                 </a>
                 <a class="list-group-item" href>
+                  <i class="mdi mdi-account fa-fw text-muted"></i> 
+                  Perspectiva
+                </a>
+                <a class="list-group-item" href>
+                  <i class="mdi mdi-account fa-fw text-muted"></i> 
+                  Taxonomias
+                </a>
+                <a class="list-group-item" href>
                   <i class="mdi mdi-chart-bar fa-fw text-muted"></i> 
                   Estatísticas
                 </a>
+              </div>
+              <div class="m-t text-right text-md">
+                <button ng-click="removeStation(station.id)"
+                md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Excluir</button>
               </div>
             </div>
           </div>

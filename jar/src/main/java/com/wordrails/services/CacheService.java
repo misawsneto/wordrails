@@ -96,7 +96,7 @@ public class CacheService {
 		return stations.get(id);
 	}
 	
-	public void updateStation(Integer id) throws ExecutionException{
+	public void updateStation(Integer id){
 		stations.refresh(id);
 	}
 	
@@ -120,8 +120,8 @@ public class CacheService {
 		return networks.get(id);
 	}
 	
-	public void updateNetwork(String username){
-		networks2.refresh(username);
+	public void updateNetwork(String subdomain){
+		networks2.refresh(subdomain);
 	}
 	
 	public void updateNetwork(Integer id){

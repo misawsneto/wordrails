@@ -421,6 +421,8 @@ angular.module('app')
         trix.allInitData().success(function(response){
           initData = response;
           $scope.app.initData = angular.copy(initData);
+          $scope.app.loginError = false;
+          $scope.app.refreshData();
         })
       }
 

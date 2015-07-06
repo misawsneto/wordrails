@@ -21,6 +21,7 @@ import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.security.StationSecurityChecker;
+import com.wordrails.services.CacheService;
 
 @RepositoryEventHandler(Station.class)
 @Component
@@ -35,6 +36,7 @@ public class StationEventHandler {
 	@Autowired TaxonomyEventHandler taxonomyEventHandler;
 	@Autowired TaxonomyRepository taxonomyRepository;
 	@Autowired AccessControllerUtil accessControllerUtil;
+	@Autowired CacheService cacheService;
 	
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -120,5 +122,11 @@ public class StationEventHandler {
 		}else{
 			throw new UnauthorizedException();
 		}
+	}
+	
+	@HandleAfterSave
+	@Transactional
+	public void handleAfterSave(Station station){
+		cacheService.updateStation(station.id);
 	}
 }
