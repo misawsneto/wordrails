@@ -128,8 +128,8 @@ angular.module('app')
                   }
                   , controller:'SettingsStationsCtrl'
               })
-              .state('app.settings.stations.new', {
-                  url: '/stations',
+              .state('app.settings.stationsnew', {
+                  url: '/stationsnew',
                   templateUrl: 'tpl/settings-stations-new.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -139,8 +139,8 @@ angular.module('app')
                   }
                   , controller:'SettingsStationsNewCtrl'
               })
-              .state('app.settings.stations.config', {
-                  url: '/stations',
+              .state('app.settings.stationsconfig', {
+                  url: '/stationsconfig?stationId',
                   templateUrl: 'tpl/settings-stations-config.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -151,7 +151,7 @@ angular.module('app')
                   , controller:'SettingsStationsConfigCtrl'
               })
               .state('app.settings.stations.statistics', {
-                  url: '/stations',
+                  url: '/statistics',
                   templateUrl: 'tpl/settings-stations-statistics.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -162,7 +162,7 @@ angular.module('app')
                   , controller:'SettingsStationsStatisticsCtrl'
               })
               .state('app.settings.stations.users', {
-                  url: '/stations',
+                  url: '/users',
                   templateUrl: 'tpl/settings-stations-users.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -236,7 +236,7 @@ angular.module('app')
                         return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-colors.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  , controller:'SettingsNetworkCtrl'
+                  , controller:'SettingsColorsCtrl'
               })
               .state('app.settings.network', {
                   url: '/network',

@@ -59,9 +59,14 @@ public class Network {
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
 	
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSignup;
 	
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowComments;
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowSocialLogin;
 	
 	public boolean allowSponsors;
 	
