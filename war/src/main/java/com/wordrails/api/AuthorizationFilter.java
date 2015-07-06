@@ -1496,8 +1496,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetNetworkFaviconAuthorized(Integer networkId) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -1521,6 +1520,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetPersonNetworkTokenNetworkAuthorized(
 			Integer personNetworkTokenId) {
 		return false;
+	}
+
+	@Override
+	protected boolean isGetNetworkSplashImageAuthorized(Integer networkId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetNetworkLoginImageAuthorized(Integer networkId) {
+		return true;
 	}
 
 }

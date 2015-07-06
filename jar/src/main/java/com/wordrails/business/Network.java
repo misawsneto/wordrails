@@ -63,6 +63,8 @@ public class Network {
 	
 	public boolean allowComments;
 	
+	public boolean allowSponsors;
+	
 	public String domain;
 	
 //	@Column(columnDefinition="TEXT default '#F3F5F9'")
@@ -90,11 +92,19 @@ public class Network {
 	
 	@OneToOne
 	public Image logo;
+	public Integer logoId;
 	
 	@OneToOne
 	public Image favicon;
+	public Integer faviconId;
 	
-	public Integer logoId;
+	@OneToOne
+	public Image splashImage;
+	public Integer splashImageId;
+	
+	@OneToOne
+	public Image loginImage;
+	public Integer loginImageId;
 	
 	public String defaultReadMode;
 	public String defaultOrientationMode;
