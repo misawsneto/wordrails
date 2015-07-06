@@ -64,7 +64,7 @@ var trix = angular.module('trix', [])
   	this.login = function(username, password) {
       var config = {};
       config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
-      return \$http.post(_config.url + "/j_spring_security_check", \$.param({"j_username": username, "j_password": password}), config)
+      return \$http.post(_config.url + "/api/persons/login", \$.param({"username": username, "password": password}), config)
     }
 
     this.logout = function() {

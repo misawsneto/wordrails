@@ -91,6 +91,9 @@ public class Network {
 	@OneToOne
 	public Image logo;
 	
+	@OneToOne
+	public Image favicon;
+	
 	public Integer logoId;
 	
 	public String defaultReadMode;

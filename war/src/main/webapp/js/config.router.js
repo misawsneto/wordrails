@@ -128,6 +128,50 @@ angular.module('app')
                   }
                   , controller:'SettingsStationsCtrl'
               })
+              .state('app.settings.stations.new', {
+                  url: '/stations',
+                  templateUrl: 'tpl/settings-stations-new.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationsNewCtrl'
+              })
+              .state('app.settings.stations.config', {
+                  url: '/stations',
+                  templateUrl: 'tpl/settings-stations-config.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationsConfigCtrl'
+              })
+              .state('app.settings.stations.statistics', {
+                  url: '/stations',
+                  templateUrl: 'tpl/settings-stations-statistics.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationsStatisticsCtrl'
+              })
+              .state('app.settings.stations.users', {
+                  url: '/stations',
+                  templateUrl: 'tpl/settings-stations-users.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationsUsersCtrl'
+              })
               .state('app.settings.users', {
                   url: '/users',
                   templateUrl: 'tpl/settings-users.html',
@@ -150,16 +194,60 @@ angular.module('app')
                   }
                   , controller:'SettingsTaxonomiesCtrl'
               })
-              .state('app.settings.general', {
-                  url: '/general',
-                  templateUrl: 'tpl/settings-taxonomies.html',
+              .state('app.settings.taxonomies.new', {
+                  url: '/taxonomies',
+                  templateUrl: 'tpl/settings-taxonomies-new.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-general.js?' + GLOBAL_URL_HASH]);
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-taxonomies.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  , controller:'SettingsGeneralCtrl'
+                  , controller:'SettingsTaxonomiesNewCtrl'
+              })
+              .state('app.settings.taxonomies.config', {
+                  url: '/taxonomies',
+                  templateUrl: 'tpl/settings-taxonomies-config.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-taxonomies.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsTaxonomiesConfigCtrl'
+              })
+              .state('app.settings.statistics', {
+                  url: '/statistics',
+                  templateUrl: 'tpl/settings-statistics.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-statistics.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStatisticsCtrl'
+              })
+              .state('app.settings.colors', {
+                  url: '/colors',
+                  templateUrl: 'tpl/settings-colors.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-colors.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsNetworkCtrl'
+              })
+              .state('app.settings.network', {
+                  url: '/network',
+                  templateUrl: 'tpl/settings-network.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-network.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsNetworkCtrl'
               })
               .state('app.bookmarks', {
                 url: '/bookmarks',

@@ -127,12 +127,14 @@
     <!-- <li>
       <div class="m-t" style="line-height:16px">•</div>
     </li> -->
-    <li style="padding: 8px 14px;">
-      <div class="btn-group dropdown" dropdown>
-          <button class="btn btn-default" ng-class="{'disabled': !showTopOptions()}" ng-click="publishPost()">
-            {{checkState() == 1 ? 'Atualizar' : 'Publicar'}}
-          </button>
-          <button class="btn btn-default" dropdown-toggle><span class="caret"></span></button>
+    <li style="padding: 6px 0px;">
+      <button class="btn btn-default btn-sm text-md btn-rounded" ng-class="{'disabled': !showTopOptions()}" ng-click="publishPost()">
+        {{checkState() == 1 ? 'Atualizar' : 'Publicar'}}
+      </button>
+    </li>
+    <li style="padding: 6px 14px;">
+      <div class="dropdown" dropdown>
+          <button class="btn btn-default btn-sm text-md border-radius-50" dropdown-toggle><i class="mdi mdi-dots-vertical"></i></button>
           <ul class="dropdown-menu">
             <li ng-class="{'disabled': !showTopOptions()}"><a>Pré-visualização</a></li>
             <li ng-class="{'disabled': !showTopOptions()}"><a href ng-click="savePostAsDraft()">Salvar como rascunho</a></li>

@@ -1494,4 +1494,33 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
+	@Override
+	protected boolean isGetNetworkFaviconAuthorized(Integer networkId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkTokensAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkTokenAuthorized(
+			Integer personNetworkTokenId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkTokenPersonAuthorized(
+			Integer personNetworkTokenId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkTokenNetworkAuthorized(
+			Integer personNetworkTokenId) {
+		return false;
+	}
+
 }

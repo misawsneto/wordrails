@@ -1,4 +1,5 @@
-app.controller('SettingsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
-		function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state){
+app.controller('SettingsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trixService',
+						function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  trixService){
 
+					
 }])

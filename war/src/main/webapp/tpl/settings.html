@@ -1,8 +1,8 @@
 <!-- hbox layout -->
-<div class="hbox hbox-auto-xs">
 
+<div id="settings" class="hbox hbox-auto-xs">
 <!-- column -->
-<div class="col w b-r bg-grey">
+<div class="col w-md b-r bg-dg pos-rlt b-dark">
   <div class="vbox">
     <div class="wrapper text-center">
       <div class="font-thin h3">Configurações</div>
@@ -10,24 +10,48 @@
     <div class="row-row">
       <div class="cell" id="settings-sidebar">
         <div class="cell-inner">
-          <div class="list-group text-lg no-radius p-t-lg">
-            <a ui-sref="app.settings.stations" class="list-group-item no-border no-radius bg-light"
-            ng-class="{'active': $state.current.name.indexOf('app.settings.stations') > -1}">
+          <ul class="nav text-lg no-radius p-t-lg">
+            <li ng-class="{'active': $state.includes('app.settings.stations')}">
+            <a ng-if="app.networkAdmin || (app.adminStations && app.adminStations.length > 0)" ui-sref="app.settings.stations" class=" no-border no-radius">
               Estações
             </a>
-            <a ui-sref="app.settings.users" class="list-group-item no-border no-radius bg-light"
-            ng-class="{'active': $state.current.name.indexOf('app.settings.users') > -1}">
+            </li>
+            <li ng-class="{'active': $state.includes('app.settings.publications')}">
+            <a ng-if="app.networkAdmin || (app.adminStations && app.adminStations.length) > 0 || (app.editorStations && app.editorStations.length > 0)" ui-sref="app.settings.users" class="no-border no-radius">
+              Notícias
+            </a>
+            </li>
+            <li ng-class="{'active': $state.includes('app.settings.images')}">
+            <a ng-if="app.networkAdmin || (app.adminStations && app.adminStations.length) > 0 || (app.editorStations && app.editorStations.length > 0)" ui-sref="app.settings.users" class="no-border no-radius">
+              Galeria de Imagens
+            </a>
+            </li>
+            <li ng-class="{'active': $state.includes('app.settings.users')}">
+            <a ng-if="app.networkAdmin" ui-sref="app.settings.users" class="no-border no-radius">
               Usuários
             </a>
-            <a ui-sref="app.settings.taxonomies" class="list-group-item no-border no-radius bg-light"
-            ng-class="{'active': $state.current.name.indexOf('app.settings.taxonomies') > -1}">
+            </li>
+            <li ng-class="{'active': $state.includes('app.settings.taxonomies')}">
+            <a ng-if="app.networkAdmin" ui-sref="app.settings.taxonomies" class="no-border no-radius">
               Taxonomias
             </a>
-            <a ui-sref="app.settings.general" class="list-group-item no-border no-radius bg-light"
-            ng-class="{'active': $state.current.name.indexOf('app.settings.general') > -1}">
-              Geral
+            </li>
+            <li ng-class="{'active': $state.includes('app.settings.colors')}">
+            <a ng-if="app.networkAdmin" ui-sref="app.settings.colors" class="no-border no-radius">
+              Personalização de Cores
             </a>
-          </div>
+            </li>
+            <li ng-class="{'active': $state.includes('app.settings.statistics')}">
+            <a ng-if="app.networkAdmin" ui-sref="app.settings.statistics" class="no-border no-radius">
+              Estatísticas da Rede
+            </a>
+            </li>
+            <li ng-class="{'active': $state.includes('app.settings.network')}">
+            <a ng-if="app.networkAdmin" ui-sref="app.settings.network" class="no-border no-radius">
+              Configurações da Rede
+            </a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -39,7 +63,7 @@
     <div class="row-row">
       <div class="cell" id="post-cell">
         <div class="cell-inner">
-          <div ui-view></div>
+          <div class="fade-in" ui-view></div>
         </div>
       </div>
     </div>
