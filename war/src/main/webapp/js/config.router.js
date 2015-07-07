@@ -128,8 +128,8 @@ angular.module('app')
                   }
                   , controller:'SettingsStationsCtrl'
               })
-              .state('app.settings.stationsnew', {
-                  url: '/stationsnew',
+              .state('app.settings.newstation', {
+                  url: '/newstation',
                   templateUrl: 'tpl/settings-stations-new.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -139,8 +139,8 @@ angular.module('app')
                   }
                   , controller:'SettingsStationsNewCtrl'
               })
-              .state('app.settings.stationsconfig', {
-                  url: '/stationsconfig?stationId',
+              .state('app.settings.stationconfig', {
+                  url: '/stationconfig?stationId',
                   templateUrl: 'tpl/settings-stations-config.html',
                   resolve: {
                     deps: ['$ocLazyLoad',

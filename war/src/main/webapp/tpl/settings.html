@@ -11,7 +11,7 @@
       <div class="cell" id="settings-sidebar">
         <div class="cell-inner">
           <ul class="nav text-lg no-radius p-t-lg">
-            <li ng-class="{'active': $state.includes('app.settings.station')}">
+            <li ng-class="{'active': $state.current.name.indexOf('app.settings.station') > -1}">
             <a ng-if="app.networkAdmin || (app.adminStations && app.adminStations.length > 0)" ui-sref="app.settings.stations" class=" no-border no-radius">
               Estações
             </a>
@@ -70,51 +70,5 @@
   </div>
 </div>
 
-<!-- column -->
-<!-- <div class="col w-lg" ng-class="{'hide': app.hidePostOptions}">
-</div> -->
-<!-- /column -->
 </div>
-<!-- /hbox layout -->
-<!-- header navbar
-<div class="new-post-navbar navbar" ng-class="{'box-shadow': postCtrl.showHeaderShadow || !app.hidePostOptions}">
-  <ul class="nav navbar-nav m-l-xs">
-    <li class="hidden-xs">
-      <a ui-fullscreen></a>
-    </li>
-  </ul>
-  <ul class="nav navbar-nav navbar-right text-lg">
-    <li>
-      <a ng-click="printPost();">print</a>
-    </li>
-    <li>
-      <a href class="text-lg" >
-        <i class="mdi-information-outline mdi"></i>
-      </a>
-    </li>
-    <li>
-      <div class="m-t" style="line-height:16px">•</div>
-    </li>
-    <li>
-      <a href class="text-lg" >
-        <i class="mdi-delete mdi"></i>
-      </a>
-    </li>
-    <li>
-      <div class="m-t" style="line-height:16px">•</div>
-    </li>
-    <li>
-      <a href class="text-lg" ng-click="app.hidePostOptions = !app.hidePostOptions" style="font-size: 19px;">
-        <i class="mdi mdi-menu"></i>
-      </a>
-    </li>
-    <li>
-      <div class="divider-v"></div>
-    </li>
-    <li>
-      <a href class="text-u-c text-center" style="font-size: 30px;" ng-click="closeNewPost()">×</a>
-    </li>
-  </ul>
-</div>
-/header navbar
- -->
+ 

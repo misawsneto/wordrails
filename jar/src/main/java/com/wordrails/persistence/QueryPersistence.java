@@ -1,5 +1,7 @@
 package com.wordrails.persistence;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -70,5 +72,45 @@ public class QueryPersistence {
 	@Transactional
 	public void updateCommentsCount(Integer postId) {
 		manager.createNativeQuery("UPDATE Post set commentsCount = (select count(*) FROM comment WHERE post_id = :postId) WHERE id = postId;").setParameter("postId", postId).executeUpdate();
+	}
+
+	@Transactional
+	public void deletePostReadsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from PostRead postRead where postRead.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deleteNotificationsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Notification notification where notification.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+
+	@Transactional
+	public void deleteBookmarksInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Bookmark bookmark where bookmark.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deleteCellsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Cell cell where cell.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deleteCommentsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Comment comment where comment.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deleteImagesInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Image image where image.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deletePromotionsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Promotion promotion where promotion.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deleteRecommendsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Recommend recommend where recommend.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
 	}
 }

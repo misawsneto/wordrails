@@ -2,8 +2,10 @@ package com.wordrails.persistence;
 
 import com.wordrails.business.Post;
 import com.wordrails.business.PostRead;
+
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -31,4 +33,5 @@ public interface PostReadRepository extends JpaRepository<PostRead, Integer>, Qu
     
     @Query("select count(distinct sessionid) from PostRead pr where pr.createdAt between :dateIni and :dateEnd")
     public Integer countByDistinctSessionid(@Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
+
 }

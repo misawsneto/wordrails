@@ -12,6 +12,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+
 /**
  * This class is used by spring-security for authorizing users based on username and password.
  * For a functional representation of a user object for this system, check the {@link Person} class.  

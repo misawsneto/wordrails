@@ -12,6 +12,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import com.wordrails.business.Bookmark;
 import com.wordrails.business.Notification;
 import com.wordrails.business.Post;
+import com.wordrails.business.Station;
 
 public interface NotificationRepository extends JpaRepository<Notification, Integer>, QueryDslPredicateExecutor<Notification> {
 
@@ -27,5 +28,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	
 	@RestResource(exported = false)
 	public void deleteByHash(String notificationHash);
+
+	@RestResource(exported = false)
+	public List<Notification> findByStation(Station station);
 
 }

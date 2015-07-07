@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,9 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wordrails.persistence.NotificationRepository;
+import com.wordrails.persistence.PostReadRepository;
+import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.PromotionRepository;
@@ -36,9 +40,12 @@ public class StationEventHandler {
 	@Autowired StationSecurityChecker stationSecurityChecker;
 	@Autowired TaxonomyEventHandler taxonomyEventHandler;
 	@Autowired TaxonomyRepository taxonomyRepository;
+	@Autowired NotificationRepository notificationRepository;
+	@Autowired PostReadRepository postReadRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
 	@Autowired CacheService cacheService;
+	@Autowired QueryPersistence queryPersistence;
 	
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -113,14 +120,35 @@ public class StationEventHandler {
 				personStationRolesRepository.delete(stationsRoles);
 			}
 			
+			
 			List<Post> posts = postRepository.findByStation(station);
+			
 			if(posts != null && posts.size() > 0){
 //				for (Post post : posts) {
 //					postEventHandler.handleBeforeDelete(post);
 //					postRepository.delete(posts);
 //				}
+				
+				List<Integer> ids = new ArrayList<Integer>();
+				for (Post post : posts) {
+					ids.add(post.id);
+				}
+				queryPersistence.deleteBookmarksInPosts(ids);
+				queryPersistence.deleteCellsInPosts(ids);
+				queryPersistence.deleteCommentsInPosts(ids);
+				queryPersistence.deleteImagesInPosts(ids);
+				queryPersistence.deleteNotificationsInPosts(ids);
+				queryPersistence.deletePostReadsInPosts(ids);
+				queryPersistence.deletePromotionsInPosts(ids);
+				queryPersistence.deleteRecommendsInPosts(ids);
+				
 				postRepository.delete(posts);
 			}
+			
+			List<Notification> notifications = notificationRepository.findByStation(station);
+			if(notifications != null && notifications.size() > 0)
+				notificationRepository.delete(notifications);
+			
 		}else{
 			throw new UnauthorizedException();
 		}
