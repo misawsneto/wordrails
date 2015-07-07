@@ -6,7 +6,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 	$scope.saveChanges = function(){
 		trix.putNetwork($scope.network).success(function(response){
 			$scope.app.getInitData();
-			$scope.app.showSuccessToast('Alterações salvas com successo.')
+			$scope.app.showSuccessToast('Alterações realizadas com successo.')
 		})
 	}
 }])

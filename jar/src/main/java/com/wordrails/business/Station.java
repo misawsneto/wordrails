@@ -101,8 +101,8 @@ public class Station {
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean sponsored;
 	
-	@Column(columnDefinition = "boolean default true", nullable = false)
-	public boolean social;
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean overrideNetworkConfig;
 	
 	@OneToOne
 	public Wordpress wordpress;

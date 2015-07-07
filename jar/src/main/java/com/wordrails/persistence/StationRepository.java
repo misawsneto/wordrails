@@ -1,7 +1,10 @@
 package com.wordrails.persistence;
 
 import com.wordrails.business.Station;
+
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,7 +32,7 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
 	@RestResource(exported=false)
 	@Modifying
 	@Query(nativeQuery=true, value="DELETE FROM station_network WHERE stations_id = ?")
-	void deleteStationNetwork(Integer stationId);
+	public void deleteStationNetwork(Integer stationId);
     
     
     @Query(value="select s.id, s.name, sum(post.favoritesCount), sum(post.readsCount), sum(post.recommendsCount), sum(post.commentsCount), sum(post.prcount)" +
@@ -39,5 +42,9 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
             " group by s.id", nativeQuery = true)
     @RestResource(exported=false)
     public List<Object[]> findAllWithCounts(@Param("defaultPerspectiveId") Integer defaultPerspectiveId);
+
+    @RestResource(exported=false)
+    @Query("select network.stations from Network network where network.id = :networkId")
+	public List<Station> findByNetworkId(@Param("networkId") Integer networkId);
 
 }

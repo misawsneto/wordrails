@@ -71,7 +71,6 @@ public class NetworkResource {
 				stationPermissionDto.visibility = station.visibility;
 				stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId; 
 				
-				stationPermissionDto.social = station.social;
 				stationPermissionDto.subheading = station.subheading;
 				stationPermissionDto.sponsored = station.sponsored;
 				stationPermissionDto.topper = station.topper;

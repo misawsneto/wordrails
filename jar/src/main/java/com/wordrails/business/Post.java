@@ -177,7 +177,6 @@ public class Post {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable = false)
-	@IndexedEmbedded(includePaths={"id"})
 	public Station station;
 
 	@Field

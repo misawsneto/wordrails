@@ -133,7 +133,7 @@ public class BookmarksResource {
 		
 		BooleanJunction stations = qb.bool();
 		for (Integer integer : readableIds) {
-			stations.should(qb.keyword().onField("post.station.id").ignoreAnalyzer().matching(integer).createQuery());
+			stations.should(qb.keyword().onField("post.stationId").ignoreAnalyzer().matching(integer).createQuery());
 		}
 
 		org.apache.lucene.search.Query full = qb.bool().must(text).must(personQuery).must(stations.createQuery()).createQuery();
