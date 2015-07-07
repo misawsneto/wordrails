@@ -3,6 +3,7 @@ package com.wordrails.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.*;
@@ -43,7 +44,8 @@ public class UtilResource {
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;

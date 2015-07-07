@@ -16,6 +16,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -27,7 +28,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Notification;
 import com.wordrails.business.Person;
 import com.wordrails.converter.NotificationConverter;
@@ -48,7 +48,8 @@ public class NotificationsResource {
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
 	private @Autowired NotificationRepository notificationRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 	private @Autowired QueryPersistence queryPersistence;
 	
 	private @PersistenceContext EntityManager manager;
@@ -60,7 +61,7 @@ public class NotificationsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<NotificationView>> searchNotifications(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 //		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 //		Network network = wordrailsService.getNetworkFromHost(request);
 //		

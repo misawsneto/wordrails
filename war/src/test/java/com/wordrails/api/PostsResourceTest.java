@@ -34,7 +34,7 @@ public class PostsResourceTest extends AbstractTest {
 
 	@Test
 	public void testSearchPosts() throws Exception {
-//		Person person = accessControllerUtil.getLoggedPerson();
+//		Person person = authProvider.getLoggedPerson();
 //		String baseUrl = "http://localhost:8080";
 //		Network network = wordrailsService.getNetworkFromHost(request);
 //		PermissionId pId = new PermissionId();

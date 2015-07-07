@@ -19,8 +19,16 @@ public class Test {
 				LogLevel.FULL);
 	}
 
+	private static WordRails getLocal(String username, String password) throws IOException {
+		return new WordRails(
+				new MockConnectivityManager(true),
+				new File("."), 0,
+				"http://localhost:8080", username, password,
+				LogLevel.FULL);
+	}
+
 	public static void main(String[] args) throws IOException {
-		WordRails wordRails = getLocal();
+		WordRails wordRails = getLocal("demo", "demo");
 		wordRails.login();
 		wordRails.getInitialData();
 

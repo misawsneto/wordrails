@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,7 +32,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -40,7 +40,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.GCMService;
 import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Network;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
@@ -71,7 +70,8 @@ public class PersonsResource {
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
@@ -90,7 +90,7 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		gcmService.updateRegId(network, person, regId);
 		return Response.status(Status.OK).build();
 	}
@@ -100,7 +100,7 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@FormParam("token") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		//		Network network = networkRepository.findOne(networkId);
-		//		Person person = accessControllerUtil.getLoggedPerson();
+		//		Person person = authProvider.getLoggedPerson();
 		//		gcmService.updateRegId(network, person, regId);
 		return Response.status(Status.OK).build();
 	}
@@ -112,7 +112,7 @@ public class PersonsResource {
 		Network network = wordrailsService.getNetworkFromHost(request);
 
 		try{
-			accessControllerUtil.authenticate(username, password, network);
+			authProvider.authenticate(username, password, network.id);
 			return Response.status(Status.OK).build();
 		}catch(BadCredentialsException e){
 			return Response.status(Status.UNAUTHORIZED).build();
@@ -127,7 +127,7 @@ public class PersonsResource {
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 
 		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
 
@@ -153,7 +153,7 @@ public class PersonsResource {
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 
 		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
 
@@ -254,7 +254,7 @@ public class PersonsResource {
 	public PersonData getInitialData (@Context HttpServletRequest request) throws IOException{
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 
 		if(person == null){
 			throw new UnauthorizedException("User is not authorized");
@@ -309,7 +309,7 @@ public class PersonsResource {
 	@GET
 	@Path("/me/bookmarkedRecommended")
 	public ContentResponse<List<BooleanResponse>> checkBookmarkedRecommendedByMe(@QueryParam("postId") Integer postId){
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		List<BooleanResponse> resp = new ArrayList<BooleanResponse>();
 
 		if(bookmarkRepository.findBookmarkByPersonIdAndPostId(person.id, postId)!=null){

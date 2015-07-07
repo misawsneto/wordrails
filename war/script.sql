@@ -26,4 +26,7 @@ use wordrails2;
 drop table invitation;
 alter table post drop column imageLandscape;
 
-UPDATE person JOIN users ON person.username = users.username SET person.password = users.password;
+ALTER TABLE users DROP PRIMARY KEY;
+ALTER TABLE users ADD id INT PRIMARY KEY AUTO_INCREMENT;
+
+UPDATE person JOIN users ON person.username = users.username SET person.user_id = users.id;

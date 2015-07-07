@@ -26,8 +26,7 @@ import java.util.Set;
 		})
 })
 @Table(name = "person", uniqueConstraints={
-		@UniqueConstraint(columnNames={"network_id", "username"}),
-		@UniqueConstraint(columnNames={"email", "username"})
+		@UniqueConstraint(columnNames={"user_id", "username"})
 })
 public class Person {
 	@Id
@@ -73,8 +72,9 @@ public class Person {
 	@OneToMany(mappedBy="person")
 	public Set<Recommend> recommends;
 
-	@OneToOne(optional = true)
-	public Network network;
+	@NotNull
+	@OneToOne(fetch = FetchType.EAGER)
+	public User user;
 
 	@Size(max=2048)
 	@Field

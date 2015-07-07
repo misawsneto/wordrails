@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import net.coobird.thumbnailator.Thumbnails;
 
 import org.hibernate.Hibernate;
@@ -34,14 +35,15 @@ public class ImageEventHandler {
 	private @PersistenceContext EntityManager manager;
 	private @Autowired FileRepository fileRepository; 
 	private @Autowired FileContentsRepository contentsRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 	private @Autowired PersonRepository personRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Image image) throws SQLException, IOException {
 		com.wordrails.business.File original = image.original;
 		
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		
 		String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
 		

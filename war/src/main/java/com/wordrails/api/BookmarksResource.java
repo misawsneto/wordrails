@@ -19,6 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -32,7 +33,6 @@ import org.springframework.stereotype.Component;
 
 import com.wordrails.PermissionId;
 import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Bookmark;
 import com.wordrails.business.Network;
 import com.wordrails.business.Person;
@@ -55,7 +55,8 @@ public class BookmarksResource {
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
 	private @Autowired BookmarkRepository bookmarkRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 	private @Autowired QueryPersistence queryPersistence;
 	
 	private @PersistenceContext EntityManager manager;
@@ -67,7 +68,7 @@ public class BookmarksResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = wordrailsService.getNetworkFromHost(request);
 		
@@ -168,7 +169,7 @@ public class BookmarksResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public BooleanResponse toggleBookmark(@FormParam("postId") Integer postId){
 		
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		if(person.username.equals("wordrails"))
 			throw new UnauthorizedException();
 		

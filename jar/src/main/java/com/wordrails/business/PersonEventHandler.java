@@ -3,8 +3,10 @@ package com.wordrails.business;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.wordrails.services.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
+import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,7 +27,9 @@ public class PersonEventHandler {
 	private @Autowired PersonRepository personRepository;
 	private @Autowired TermRepository termRepository;
 	private @Autowired EmailService passwordResetService;
-	private @Autowired PostRepository postRepository;    
+	private @Autowired PostRepository postRepository;
+	@Autowired
+	private CacheService cacheService;
 
 	@HandleBeforeSave
 	@Transactional
@@ -34,7 +38,6 @@ public class PersonEventHandler {
 		if(originalPerson != null && !originalPerson.name.equals(person.name)){
 			termRepository.updateTermsNamesAuthorTaxonomies(person.name, originalPerson.name);
 		}
-		
 	}
 	
 //	@HandleAfterCreate

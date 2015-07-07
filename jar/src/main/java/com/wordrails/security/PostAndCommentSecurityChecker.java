@@ -3,10 +3,10 @@ package com.wordrails.security;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Comment;
 import com.wordrails.business.Network;
 import com.wordrails.business.Person;
@@ -26,12 +26,13 @@ public class PostAndCommentSecurityChecker {
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired PostRepository postRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 
 	public boolean canWrite(Post post){
 		boolean canWrite = false;
 
-		Person personLogged = accessControllerUtil.getLoggedPerson();
+		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null && personLogged.id == post.author.id){
 			Station station = post.station;
 			if(station.visibility.equals(Station.UNRESTRICTED) && station.writable){
@@ -60,7 +61,7 @@ public class PostAndCommentSecurityChecker {
 	public boolean canEdit(Post post){
 		boolean canEdit = false;
 
-		Person personLogged = accessControllerUtil.getLoggedPerson();
+		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null){
 			StationRole personStationRoles = personStationRolesRepository.findByStationAndPerson(post.station, personLogged);
 			if(post.author.id == personLogged.id || (personStationRoles != null && (personStationRoles.editor || personStationRoles.admin))){
@@ -73,7 +74,7 @@ public class PostAndCommentSecurityChecker {
 	public boolean canRead(Post post){
 		boolean canRead = false;
 
-		Person personLogged = accessControllerUtil.getLoggedPerson();
+		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null){
 			if(post.station.visibility.equals(Station.UNRESTRICTED)){
 				canRead = true;

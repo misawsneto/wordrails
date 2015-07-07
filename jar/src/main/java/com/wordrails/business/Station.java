@@ -1,119 +1,105 @@
 package com.wordrails.business;
 
-import java.util.Date;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.search.annotations.ContainedIn;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Station {
 	public static final String RESTRICTED = "RESTRICTED";
-	public static final String RESTRICTED_TO_NETWORKS = "RESTRICTED_TO_NETWORKS";	
-	public static final String UNRESTRICTED = "UNRESTRICTED";	
+	public static final String RESTRICTED_TO_NETWORKS = "RESTRICTED_TO_NETWORKS";
+	public static final String UNRESTRICTED = "UNRESTRICTED";
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)				
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer id;
-		
-	@Size(min=1, max=100)
+
+	@Size(min = 1, max = 100)
 	@NotNull
 	public String name;
 
 	@NotNull
 	public boolean writable;
-	
+
 	@NotNull
 	public boolean main = false;
-	
-	@NotNull	
+
+	@NotNull
 	public String visibility;
-	
+
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSignup;
-	
+
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowComments;
-	
+
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSocialLogin;
-	
+
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSocialShare;
-	
+
 	@Column(columnDefinition="varchar(255) default '#ffffff'")
 	public String backgroundColor = "#ffffff";
-	
+
 	@Column(columnDefinition="varchar(255) default '#ffffff'")
 	public String navbarColor = "#ffffff";
-	
+
 	@Column(columnDefinition="varchar(255) default '#5C78B0'")
 	public String primaryColor = "#5C78B0";
-	
+
 	@Size(min=1)
 	@NotNull
-	@ManyToMany	
+	@ManyToMany
 	public Set<Network> networks;
-	
+
 	@OneToMany(mappedBy="station", cascade=CascadeType.REMOVE)
 	public Set<StationRole> personsStationRoles;
 
 	@OneToMany(mappedBy="station")
 	@ContainedIn
 	public Set<Post> posts;
-	
+
 	@OneToMany(mappedBy="station", cascade=CascadeType.REMOVE)
-	public Set<Promotion> promotions;	
+	public Set<Promotion> promotions;
 
 	@Size(min=1)
-	@NotNull	
+	@NotNull
 	@OneToMany(mappedBy="station", cascade=CascadeType.PERSIST)
 	public Set<StationPerspective> stationPerspectives;
-	
+
 	@OneToMany(mappedBy="owningStation", cascade=CascadeType.PERSIST)
 	public Set<Taxonomy> ownedTaxonomies;
-	
+
 	public int postsTitleSize;
-	
+
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean topper;
-	
+
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean subheading;
-	
+
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean sponsored;
-	
+
 	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean social;
-	
+
 	@OneToOne
 	public Wordpress wordpress;
-	
+
 	@OneToOne
 	public Image logo;
-	
+
 	public Integer logoId;
-	
+
 	public Integer defaultPerspectiveId;
-	
+
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable=false)
@@ -126,7 +112,7 @@ public class Station {
 			logoId = logo.original.id;
 		}
 	}
-	
+
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date updatedAt;

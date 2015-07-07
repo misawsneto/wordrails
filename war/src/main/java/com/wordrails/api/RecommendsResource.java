@@ -18,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -27,7 +28,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Person;
 import com.wordrails.business.Recommend;
 import com.wordrails.business.UnauthorizedException;
@@ -48,7 +48,8 @@ public class RecommendsResource {
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
 	private @Autowired RecommendRepository recommendRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 	private @Autowired QueryPersistence queryPersistence;
 	
 	private @PersistenceContext EntityManager manager;
@@ -58,7 +59,7 @@ public class RecommendsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> searchRecommends(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		
 		if(q == null || q.trim().isEmpty()){
 			Pageable pageable = new PageRequest(page, size);
@@ -136,7 +137,7 @@ public class RecommendsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public BooleanResponse toggleRecommend(@FormParam("postId") Integer postId){
 		
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		if(person.username.equals("wordrails"))
 			throw new UnauthorizedException();
 		

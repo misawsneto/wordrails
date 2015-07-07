@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
@@ -34,7 +35,8 @@ public class StationEventHandler {
 	@Autowired StationSecurityChecker stationSecurityChecker;
 	@Autowired TaxonomyEventHandler taxonomyEventHandler;
 	@Autowired TaxonomyRepository taxonomyRepository;
-	@Autowired AccessControllerUtil accessControllerUtil;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 	
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -67,7 +69,7 @@ public class StationEventHandler {
 	
 	@HandleAfterCreate
 	public void handleAfterCreate(Station station){
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		StationRole role = new StationRole();
 		role.person = person;
 		role.station = station;

@@ -1,39 +1,46 @@
 package com.wordrails.services;
 
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.wordrails.business.Network;
 import com.wordrails.business.Person;
 import com.wordrails.business.Station;
+import com.wordrails.business.User;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.StationRepository;
+import com.wordrails.persistence.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class CacheService {
 	private LoadingCache<Integer, Person> persons;
 	private LoadingCache<Integer, Network> networks;
-	
-	private LoadingCache<String, Person> persons2;
+
+	private LoadingCache<String, Set<Person>> persons2;
+
+	private LoadingCache<User, Person> persons3;
 	private LoadingCache<String, Network> networks2;
-	
+
 	private LoadingCache<Integer, Station> stations;
 
-	@Autowired
-	private PersonRepository personRepository; 
+	private LoadingCache<String, Set<User>> users;
 
-	@Autowired NetworkRepository networkRepository;
-	
-	@Autowired StationRepository stationRepository;
+	@Autowired
+	NetworkRepository networkRepository;
+	@Autowired
+	StationRepository stationRepository;
+	@Autowired
+	UserRepository userRepository;
+	@Autowired
+	private PersonRepository personRepository;
 	
 	public void init(){
 		// ------------- init person cache
@@ -61,14 +68,32 @@ public class CacheService {
 		// ------------- init person cache
 		persons2 = CacheBuilder.newBuilder().maximumSize(1000)
 				.expireAfterWrite(1, TimeUnit.MINUTES)
-				//	       .removalListener(MY_LISTENER)
+						//	       .removalListener(MY_LISTENER)
 				.build(
-						new CacheLoader<String, Person>() {
-							public Person load(String username) {
-								Set<Person> persons = personRepository.findByUsername(username);
+						new CacheLoader<String, Set<Person>>() {
+							public Set<Person> load(String username) {
+								return personRepository.findByUsername(username);
+							}
+						});
 
-								if(persons != null && persons.size() > 0) return persons.iterator().next(); //THIS IS NOT RIGHT!!! MUST SEND NETWORK
-								else return null;
+		// ------------- init person cache
+		persons3 = CacheBuilder.newBuilder().maximumSize(1000)
+				.expireAfterWrite(1, TimeUnit.MINUTES)
+						//	       .removalListener(MY_LISTENER)
+				.build(
+						new CacheLoader<User, Person>() {
+							public Person load(User user) {
+								return personRepository.findByUser(user);
+							}
+						});
+
+		// ------------- init user cache
+		users = CacheBuilder.newBuilder().maximumSize(1000)
+				.expireAfterWrite(1, TimeUnit.MINUTES)
+				.build(new CacheLoader<String, Set<User>>() {
+							public Set<User> load(String username) {
+								Set<User> users = userRepository.findByUsernameAndEnabled(username, true);
+								return users;
 							}
 						});
 
@@ -107,9 +132,39 @@ public class CacheService {
 	public Person getPerson(Integer id) throws ExecutionException{
 		return persons.get(id);
 	}
-	
-	public Person getPersonByUsername(String username) throws ExecutionException {
+
+	public Set<Person> getPersonsByUsername(String username) throws ExecutionException {
 		return persons2.get(username);
+	}
+
+	public Person getPersonByUser(User user) throws ExecutionException {
+		return persons3.get(user);
+	}
+
+	public Person getPersonByUsernameAndNetworkId(String username, Integer networkId) throws ExecutionException {
+		Set<Person> persons = persons2.get(username);
+
+		for (Person p : persons) {
+			if((p.user == null && networkId == 0) || (p.user != null && p.user.networkId == networkId))
+				return p;
+		}
+
+		return null;
+	}
+
+	public Set<User> getUsersByUsername(String username) throws ExecutionException {
+		return users.get(username);
+	}
+
+	public User getUserByUsernameAndNetworkId(String username, Integer networkId) throws ExecutionException {
+		Set<User> us = users.get(username);
+
+		for (User u : us) {
+			if(Objects.equals(networkId, u.networkId))
+				return u;
+		}
+
+		return null;
 	}
 	
 	public void updatePerson(Integer id){

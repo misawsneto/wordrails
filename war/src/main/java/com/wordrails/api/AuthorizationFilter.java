@@ -1,6 +1,6 @@
 package com.wordrails.api;
 
-import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.Cell;
 import com.wordrails.business.Comment;
 import com.wordrails.business.Image;
@@ -63,7 +63,8 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Autowired private TermPerspectiveRepository termPerspectiveRepository;
 	@Autowired private ImageRepository imageRepository;
 	@Autowired private CommentRepository commentRepository;
-	@Autowired private AccessControllerUtil accessControllerUtil;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 	
 	@Override
 	protected boolean isGetCellsAuthorized() {
@@ -232,7 +233,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPersonCommentsAuthorized(Integer personId) {
-		return accessControllerUtil.areYouLogged(personId);
+		return authProvider.areYouLogged(personId);
 	}
 
 	@Override
@@ -247,12 +248,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPersonPostsAuthorized(Integer personId) {
-		return accessControllerUtil.areYouLogged(personId);
+		return authProvider.areYouLogged(personId);
 	}
 
 	@Override
 	protected boolean isGetPersonPromotionsAuthorized(Integer personId) {
-		return accessControllerUtil.areYouLogged(personId);
+		return authProvider.areYouLogged(personId);
 	}
 
 	@Override
@@ -911,7 +912,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindByPersonIdAndNetworkIdAuthorized(Integer personId, Integer networkId) {
 		boolean authorized = false;
 		
-		Person loggedPerson = accessControllerUtil.getLoggedPerson();
+		Person loggedPerson = authProvider.getLoggedPerson();
 		if(loggedPerson != null && loggedPerson.id == personId){
 			authorized = true;
 		}
