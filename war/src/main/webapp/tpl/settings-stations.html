@@ -7,32 +7,32 @@
             <div class="h4 m-b" clamp="1">{{station.name}}</div>
             <div class="panel panel-default m-b-none">
               <div class="list-group no-radius alt">
-                <a class="list-group-item" ui-sref="app.settings.stationsconfig({'stationId': station.id})">
+                <a class="list-group-item text-md" ui-sref="app.settings.stationconfig({'stationId': station.id})">
                   <i class="mdi mdi-settings fa-fw text-muted"></i> 
                   Configurações
                 </a>
-                <a class="list-group-item" href>
+                <a class="list-group-item text-md" href>
                   <i class="mdi mdi-account fa-fw text-muted"></i> 
                   Usuários
                 </a>
-                <a class="list-group-item" href>
-                  <i class="mdi mdi-account fa-fw text-muted"></i> 
+                <a class="list-group-item text-md" href>
+                  <i class="mdi mdi-view-quilt fa-fw text-muted"></i> 
                   Perspectiva
                 </a>
-                <a class="list-group-item" href>
-                  <i class="mdi mdi-account fa-fw text-muted"></i> 
+                <a class="list-group-item text-md" href>
+                  <i class="fa fa-sitemap fa-fw text-muted"></i> 
                   Taxonomias
                 </a>
-                <a class="list-group-item" href>
+                <a class="list-group-item text-md" href>
                   <i class="mdi mdi-chart-bar fa-fw text-muted"></i> 
                   Estatísticas
                 </a>
               </div>
+            </div>
               <div class="m-t text-right text-md">
-                <button ng-click="removeStation(station.id)"
+                <button ng-click="openDeleteStation(station.id)"
                 md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Excluir</button>
               </div>
-            </div>
           </div>
         </div>
       </div>
@@ -40,9 +40,30 @@
   </div>
   <md-button 
   id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-  ui-sref="app.settings.stations.new" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+  ui-sref="app.settings.stationsnew" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
   tooltip="Nova estação" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
   aria-label="Nova estação">
   <i class="mdi mdi-plus"></i>
 </md-button>
 </div>
+
+<script type="text/ng-template" id="confirm_delete_station.html">
+  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <div class="splash-content text-center" ng-cloak>
+    <div class="row">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="p-lg text-color wrapper-lg">
+          <div class="m-b-lg">
+            Tem certeza que deseja excluir esta estação e todo o seu conteúdo? Esta operação não poderá ser desfeita!
+          </div>
+          <button ng-click="app.deleteStation();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block p-h-md">
+             Sim
+          </button>
+          <button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
+             Não
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </script>
