@@ -24,9 +24,11 @@ import com.wordrails.business.Network;
 import com.wordrails.business.Notification;
 import com.wordrails.business.Person;
 import com.wordrails.business.PersonNetworkRegId;
+import com.wordrails.business.PersonNetworkToken;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
+import com.wordrails.persistence.PersonNetworkTokenRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.util.NotificationDto;
@@ -44,6 +46,7 @@ public class GCMService {
 	@Autowired private NetworkRepository networkRepository;
 	@Autowired private StationRepository stationRepository;
 	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository;
+	@Autowired private PersonNetworkTokenRepository personNetworkTokenRepository; 
 	@Autowired private NotificationRepository notificationRepository; 
 	private ObjectMapper mapper;
 
@@ -203,7 +206,7 @@ public class GCMService {
 		}
 	}
 
-	public void updateRegId(Network network, Person person, String regId) {
+	public void updateRegId(Network network, Person person, String regId, Double lat, Double lng) {
 		try{
 
 			PersonNetworkRegId pnregId = personNetworkRegIdRepository.findOneByRegId(regId);
@@ -214,9 +217,34 @@ public class GCMService {
 
 			pnregId.network = network;
 			pnregId.person = person;
+			if(lat != null && lng != null){
+				pnregId.lat = lat;
+				pnregId.lng = lng;
+			}
 			personNetworkRegIdRepository.save(pnregId);
 		}catch(Exception e){
 			System.out.println(e.getLocalizedMessage());
 		}
+	}
+
+	public void updateIosToken(Network network, Person person, String token, Double lat, Double lng){
+		try{
+			PersonNetworkToken pToken = personNetworkTokenRepository.findOneByToken(token);
+			if(token == null || pToken.token == null){
+				pToken = new PersonNetworkToken();
+				pToken.token = token;
+			}
+
+			pToken.network = network;
+			pToken.person = person;
+			if(lat != null && lng != null){
+				pToken.lat = lat;
+				pToken.lng = lng;
+			}
+			personNetworkTokenRepository.save(pToken);
+		}catch(Exception e){
+			System.out.println(e.getLocalizedMessage());
+		}
+		
 	}
 }

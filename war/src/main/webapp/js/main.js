@@ -137,6 +137,8 @@ angular.module('app')
         $scope.app.isLogged = trixService.isLoggedIn();
         $scope.app.writableStations = trixService.getWritableStations();
         $scope.app.adminStations = trixService.getAdminStations();
+        $scope.app.networkAdmin = trixService.isNetworkAdmin();
+        $scope.app.editorStations = trixService.getEditorStations();
       }
 
       uiLoad.load(JQ_CONFIG.screenfull)
@@ -161,13 +163,16 @@ angular.module('app')
         if(toState.name == "app.stations"){
           $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
         }
+        else if(toState.name.indexOf("app.post") > -1){
+          $("title").html($scope.app.initData.network.name + " | Editor");
+        }
         else if(toState.name == "app.notifications"){
           $("title").html($scope.app.initData.network.name + " | Notificações");
         }
         else if(toState.name == "app.bookmarks"){
           $("title").html($scope.app.initData.network.name + " | Minhas Leituras");
         }
-        else if(toState.name == "app.settings"){
+        else if(toState.name.indexOf("app.settings") > -1){
           $("title").html($scope.app.initData.network.name + " | Configurações");
         }
         else if(toState.name == "app.search"){
@@ -190,7 +195,7 @@ angular.module('app')
 
       // deal with unauthorized access
       $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
-        if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications') && !trixService.isLoggedIn()){
+        if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications' || toState.name.indexOf('app.settings') > -1) && !trixService.isLoggedIn()){
           event.preventDefault();
           $scope.app.showInfoToast('Autentique-se para acessar esta função.')
           if(fromState.abstract)
@@ -416,6 +421,8 @@ angular.module('app')
         trix.allInitData().success(function(response){
           initData = response;
           $scope.app.initData = angular.copy(initData);
+          $scope.app.loginError = false;
+          $scope.app.refreshData();
         })
       }
 

@@ -22,6 +22,7 @@ import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.security.StationSecurityChecker;
+import com.wordrails.services.CacheService;
 
 @RepositoryEventHandler(Station.class)
 @Component
@@ -37,6 +38,7 @@ public class StationEventHandler {
 	@Autowired TaxonomyRepository taxonomyRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
+	@Autowired CacheService cacheService;
 	
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -94,7 +96,7 @@ public class StationEventHandler {
 			stationPerspectiveRepository.delete(stationsPerspectives);
 			
 			List<Taxonomy> taxonomies = taxonomyRepository.findByStationId(station.id);
-			if(taxonomies != null & taxonomies.size() > 0){
+			if(taxonomies != null && !taxonomies.isEmpty()){
 				for (Taxonomy taxonomy : taxonomies) {
 					taxonomyEventHandler.handleBeforeDelete(taxonomy);
 					taxonomyRepository.delete(taxonomy);
@@ -122,5 +124,11 @@ public class StationEventHandler {
 		}else{
 			throw new UnauthorizedException();
 		}
+	}
+	
+	@HandleAfterSave
+	@Transactional
+	public void handleAfterSave(Station station){
+		cacheService.updateStation(station.id);
 	}
 }

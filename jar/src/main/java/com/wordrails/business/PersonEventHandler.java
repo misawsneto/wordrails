@@ -2,7 +2,10 @@ package com.wordrails.business;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.wordrails.persistence.UserRepository;
 import com.wordrails.services.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.TermRepository;
+import com.wordrails.services.CacheService;
 import com.wordrails.util.WordrailsUtil;
 
 @RepositoryEventHandler(Person.class)
@@ -27,7 +31,8 @@ public class PersonEventHandler {
 	private @Autowired PersonRepository personRepository;
 	private @Autowired TermRepository termRepository;
 	private @Autowired EmailService passwordResetService;
-	private @Autowired PostRepository postRepository;
+	private @Autowired
+	UserRepository userRepository;
 	@Autowired
 	private CacheService cacheService;
 
@@ -40,22 +45,30 @@ public class PersonEventHandler {
 		}
 	}
 	
-//	@HandleAfterCreate
-//	@Transactional
-//	public void handleAfterCreate(Person person) {
-//		Collection<GrantedAuthority> authority = new ArrayList<GrantedAuthority>(1);
-//		SimpleGrantedAuthority roleUser = new SimpleGrantedAuthority("ROLE_USER");
-//		authority.add(roleUser);
-//
-//		String password = person.password;
-//
-//		if(password != null && password.trim().equals("")){
-//			password = null;
-//		}
-//
-//		org.springframework.security.core.userdetails.User user =
-//				new org.springframework.security.core.userdetails.User(person.username, password == null ? WordrailsUtil.generateRandomString(8, "a#") : password, authority);
-//		userDetailsManager.createUser(user);
-//	}
+	@HandleAfterCreate
+	@Transactional
+	public void handleAfterCreate(Person person) {
+		Set<String> authority = new HashSet<>(1);
+		authority.add("ROLE_USER");
+
+		String password = person.password;
+		
+		if(password != null && password.trim().equals("")){
+			password = null;
+		}
+
+		person.user = new User();
+		person.user.username = person.username;
+		person.user.password = password == null ? WordrailsUtil.generateRandomString(8, "a#") : password;
+		person.user.authorities = authority;
+
+	}
+	
+	@HandleAfterSave
+	@Transactional
+	public void handleAfterSave(Person person){
+		cacheService.updatePerson(person.id);
+		cacheService.updatePerson(person.username);
+	}
 
 }

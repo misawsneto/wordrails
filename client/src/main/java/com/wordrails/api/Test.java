@@ -15,7 +15,7 @@ public class Test {
 		return new WordRails(
 				new MockConnectivityManager(true),
 				new File("."), 0,
-				"http://localhost:8080", "silvio", "silvio",
+				"http://sport.xarxlocal.com", "sport", "Sport@dmiN",
 				LogLevel.FULL);
 	}
 
@@ -31,10 +31,13 @@ public class Test {
 		WordRails wordRails = getLocal("demo", "demo");
 		wordRails.login();
 		wordRails.getInitialData();
+		
+		NetworkDto station = wordRails.getNetwork(3);
+		wordRails.putNetwork(station);
 
 //		wordRails.putPassword("Sport@dmiN", "Sport@dmiN");
 
-		createScheduledPost(wordRails);
+//		createScheduledPost(wordRails);
 
 //		NetworkDto network = wordRails.getNetwork(1);
 //

@@ -32,6 +32,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -91,17 +93,17 @@ public class PersonsResource {
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
 		Person person = authProvider.getLoggedPerson();
-		gcmService.updateRegId(network, person, regId);
+		gcmService.updateRegId(network, person, regId, lat, lng);
 		return Response.status(Status.OK).build();
 	}
 
 	@PUT
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response putToken(@FormParam("token") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		//		Network network = networkRepository.findOne(networkId);
-		//		Person person = authProvider.getLoggedPerson();
-		//		gcmService.updateRegId(network, person, regId);
+	public Response putToken(@FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
+		Network network = networkRepository.findOne(networkId);
+		Person person = authProvider.getLoggedPerson();
+		gcmService.updateIosToken(network, person, token, lat, lng);
 		return Response.status(Status.OK).build();
 	}
 
@@ -114,7 +116,7 @@ public class PersonsResource {
 		try{
 			authProvider.authenticate(username, password, network.id);
 			return Response.status(Status.OK).build();
-		}catch(BadCredentialsException e){
+		}catch(BadCredentialsException | UsernameNotFoundException e){
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
 	}
@@ -288,7 +290,7 @@ public class PersonsResource {
 		initData.personPermissions = personPermissions;
 
 		initData.person.links = wordrailsService.generateSelfLinks(baseUrl + "/api/persons/" + person.id);
-		initData.network.links = wordrailsService.generateSelfLinks(baseUrl + "/api/stations/" + network.id);
+		initData.network.links = wordrailsService.generateSelfLinks(baseUrl + "/api/network/" + network.id);
 		if(initData.networkRole != null)
 			initData.networkRole.links = networkRole != null ? wordrailsService.generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id) : Arrays.asList(new Link());
 

@@ -1,0 +1,137 @@
+<div id="settings-network">
+  <!--   <div class="wrapper-xl">
+  <div class="panel panel-card block-600 m-auto">
+    <div class="panel-heading h3">
+      Configurações Gerais
+    </div>
+    <div class="panel-body">
+      <div class="wrapper-xl">
+        <p>
+          <button class="btn btn-default btn-lg btn-block">Personalização da Rede</button>
+        </p>
+        <p>
+          <button class="btn btn-default btn-lg btn-block">Personalização de Cores</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="header-custom text-center animated box-shadow">
+</div>
+
+<div class="wrapper-lg animated zoomIn">
+    <div class="panel panel-card block-600 m-auto">
+      <div class="panel-heading h3 wrapper-md">
+        Configurações de Rede
+      </div>
+      <div class="panel-body wrapper-md">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="m-b text-muted text-md text-u-c">Configurações principais</div>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="network.allowSignup"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Permitir cadastros
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="network.allowSocialLogin"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Autenticação através de redes sociais
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="network.allowComments"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Permitir comentários
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="network.allowSponsors"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Ativar/Desativar patrocinadores
+              </label>
+            </p>
+          </div>
+          <div class="col-sm-6">
+              <div class="m-b text-muted text-md text-u-c">Orientação padrão</div>
+              <p>
+                <label class="md-check">
+                  <input type="radio" name="a" ng-model="network.defaultOrientationMode" value="H">
+                  <i class="blue"></i>
+                  Horizontal
+                </label>
+              </p>
+              <p>
+                <label class="md-check">
+                  <input type="radio" name="a" ng-model="network.defaultOrientationMode" value="V">
+                  <i class="blue"></i>
+                  Vertical
+                </label>
+              </p>
+              <div class="m-b m-t text-muted text-md text-u-c">Modo de leitura padrão</div>
+              <p>
+                <label class="md-check">
+                  <input type="radio" name="b" ng-model="network.defaultReadMode" value="N">
+                  <i class="blue"></i>
+                  Modo noturno
+                </label>
+              </p>
+              <p>
+                <label class="md-check">
+                  <input type="radio" name="b" ng-model="network.defaultReadMode" value="D">
+                  <i class="blue"></i>
+                  Modo diurno
+                </label>
+              </p>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="row pos-rlt">
+          <a class="text-lg pos-abt right-0 top-0 m-r-xxl"><i class="mdi mdi-help"></i></a>
+          <div class="w-xxl m-auto">
+            <div class="md-form-group md-neutral-theme">
+              <input class="md-input" ng-model="network.subdomain">
+              <label>Subdomínio</label>
+            </div>
+          </div>
+          <div class="w-xxl m-auto">
+            <div class="md-form-group md-neutral-theme">
+              <input class="md-input" ng-model="network.domain">
+              <label>Domínio personalizado</label>
+            </div>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="row pos-rlt">
+          <a class="text-lg pos-abt right-0 top-0 m-r-xxl"><i class="mdi mdi-help"></i></a>
+          <div class="w-xxl m-auto">
+            <div class="md-form-group md-neutral-theme">
+              <input class="md-input" ng-model="network.trackingId">
+              <label>Google Analytics - TRACKING ID</label>
+            </div>
+          </div>
+          <div class="w-xxl m-auto">
+            <div class="md-form-group md-neutral-theme">
+              <input class="md-input" ng-model="network.flurryKey">
+              <label>Flurry - API KEY</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="m-t text-right text-lg">
+        <button ng-click="saveChanges()"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>

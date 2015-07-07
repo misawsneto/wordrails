@@ -62,9 +62,16 @@ public class Network {
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
 	
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSignup;
 	
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowComments;
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowSocialLogin;
+	
+	public boolean allowSponsors;
 	
 	public String domain;
 	
@@ -93,8 +100,19 @@ public class Network {
 	
 	@OneToOne
 	public Image logo;
-	
 	public Integer logoId;
+	
+	@OneToOne
+	public Image favicon;
+	public Integer faviconId;
+	
+	@OneToOne
+	public Image splashImage;
+	public Integer splashImageId;
+	
+	@OneToOne
+	public Image loginImage;
+	public Integer loginImageId;
 	
 	public String defaultReadMode;
 	public String defaultOrientationMode;

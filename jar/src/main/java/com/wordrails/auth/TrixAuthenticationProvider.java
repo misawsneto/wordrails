@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 
@@ -36,10 +37,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 		if (user == null) {
 			throw new BadCredentialsException("Person is null");
-		}
-
-		if (user.isAnonymous()) {
-			return auth;
 		}
 
 		if (password == null || !password.equals(user.password)) {
@@ -87,23 +84,46 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		return authentication != null && (authentication.getPrincipal() instanceof String || !((User) authentication.getPrincipal()).isAnonymous());
 	}
 
-	public void authenticate(String username, String password, Integer networkId) throws BadCredentialsException {
-		User user;
+	public Authentication authenticate(String username, String password, Integer networkId) throws BadCredentialsException {
+		Set<User> users;
 		try {
-			user = cacheService.getUserByUsernameAndNetworkId(username, networkId);
+			users = cacheService.getUsersByUsername(username);
 		} catch (ExecutionException e) {
-			user = userRepository.findByUsernameAndEnabledAndNetworkId(username, true, networkId);
+			users = userRepository.findByUsernameAndEnabled(username, true);
 		}
 
-		//These exceptions are not being thrown, not in a visible way at least
-		if (user == null) {
-			throw new BadCredentialsException("Username not found");
+		if (users != null && users.size() > 0) {
+			User user = null;
+			for (User u : users) {
+				if (Objects.equals(u.networkId, networkId)) { //find by network
+					if (password.equals(u.password)) { //if this is the user for this network, is the password right?
+						user = u;
+						break;
+					}
+				} else if (password.equals(u.password)) { //find by password, if it enters here, the network is not set
+					user = u;
+					break;
+				}
+			}
+
+			if (user == null) { //didn't find by password or network.
+				throw new BadCredentialsException("Wrong password");
+			}
+
+			if (user.networkId == 0) {
+				user.networkId = networkId;
+				userRepository.save(user);
+			}
+
+			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+
+			Authentication validAuth = authenticate(auth);
+			SecurityContextHolder.getContext().setAuthentication(validAuth);
+
+			return auth;
 		}
 
-		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
-
-		Authentication validAuth = authenticate(auth);
-		SecurityContextHolder.getContext().setAuthentication(validAuth);
+		throw new BadCredentialsException("Wrong username");
 	}
 
 	public boolean areYouLogged(Integer personId) {

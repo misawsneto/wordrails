@@ -164,6 +164,7 @@ public class Person {
 	public Integer coverLargeId;
 	public Integer coverId;
 
+	@Transient
 	public String password;
 
 	public Boolean passwordReseted = false;

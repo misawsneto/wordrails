@@ -1,6 +1,7 @@
 package com.wordrails.filter;
 
 import com.wordrails.WordrailsService;
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.Network;
 import com.wordrails.business.User;
 import com.wordrails.persistence.PersonRepository;
@@ -24,49 +25,13 @@ public class TrixAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 	@Autowired
 	private WordrailsService wordrailsService;
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private CacheService cacheService;
+	private TrixAuthenticationProvider authProvider;
 
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 		String username = super.obtainUsername(request);
 		String password = super.obtainPassword(request);
 		Network network = wordrailsService.getNetworkFromHost(request);
-		Set<User> users;
-		try {
-			users = cacheService.getUsersByUsername(username);
-		} catch (ExecutionException e) {
-			users = userRepository.findByUsernameAndEnabled(username, true);
-		}
 
-		if (users != null && users.size() > 0) {
-			User user = null;
-			for (User u : users) {
-				if (Objects.equals(u.networkId, network.id)) { //find by network
-					if (password.equals(u.password)) { //if this is the user for this network, is the password right?
-						user = u;
-						break;
-					}
-				} else if (password.equals(u.password)) { //find by password, if it enters here, the network is not set
-					user = u;
-					break;
-				}
-			}
-
-			if (user == null) { //didn't find by password or network.
-				throw new BadCredentialsException("Wrong password");
-			}
-
-			if (user.networkId == 0) {
-				if (network != null) {
-					user.networkId = network.id;
-					userRepository.save(user);
-				}
-			}
-
-			return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
-		}
-
-		throw new BadCredentialsException("Wrong username");
+		return authProvider.authenticate(username, password, network.id);
 	}
 }

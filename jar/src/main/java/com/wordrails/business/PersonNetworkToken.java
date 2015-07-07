@@ -29,7 +29,7 @@ import org.hibernate.search.annotations.Store;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"network_id", "regId"}))
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"network_id", "token"}))
 @Indexed
 @Spatial
 public class PersonNetworkToken {
@@ -39,7 +39,7 @@ public class PersonNetworkToken {
 	public Integer id;
 
 	@Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
-	public String regId;
+	public String token;
 	
 	@NotNull
 	@ManyToOne

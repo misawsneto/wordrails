@@ -218,7 +218,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPersonsAuthorized() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -1015,12 +1015,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetUserAuthorized(String userUsername) {
-		return false;
-	}
-
-	@Override
-	protected boolean isFindByUsernameAndPasswordAuthorized(String username, String password) {
+	protected boolean isGetUserAuthorized(Integer userId) {
 		return false;
 	}
 
@@ -1033,6 +1028,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindByUsernameAndEnabledAuthorized(String username,
 			boolean enabled) {
 		return true;
+	}
+
+	@Override
+	protected boolean isFindByNetworkIdAndEnabledAuthorized(Integer networkId, boolean enabled) {
+		return false;
+	}
+
+	@Override
+	protected boolean isFindByUsernameAndEnabledAndNetworkIdAuthorized(String username, boolean enabled, Integer networkId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserPersonAuthorized(Integer userId) {
+		return false;
 	}
 
 	@Override
@@ -1303,6 +1313,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetPersonUserAuthorized(Integer personId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetPersonNetworkRegIdsAuthorized() {
 		return false;
 	}
@@ -1401,11 +1416,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPersonNetworkAuthorized(Integer personId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isCountByDistinctSessionidAuthorized(Date dateIni, Date dateEnd) {
 		return true;
 	}
@@ -1492,6 +1502,44 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetImageStationAuthorized(Integer imageId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetNetworkFaviconAuthorized(Integer networkId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkTokensAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkTokenAuthorized(
+			Integer personNetworkTokenId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkTokenPersonAuthorized(
+			Integer personNetworkTokenId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPersonNetworkTokenNetworkAuthorized(
+			Integer personNetworkTokenId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetNetworkSplashImageAuthorized(Integer networkId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetNetworkLoginImageAuthorized(Integer networkId) {
 		return true;
 	}
 
