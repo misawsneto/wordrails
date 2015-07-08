@@ -275,6 +275,7 @@ public class UtilResource {
 	
 	@GET
 	@Path("/updateAllResources")
+	@Transactional(readOnly=false)
 	public void updateAllResources(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
