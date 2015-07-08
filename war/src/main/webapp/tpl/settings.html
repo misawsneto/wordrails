@@ -51,6 +51,11 @@
               Configurações da Rede
             </a>
             </li>
+            <li ng-class="{'active': $state.includes('app.settings.sponsors'), 'hide': !app.initData.network.allowSponsors}">
+            <a ng-if="app.networkAdmin" ui-sref="app.settings.sponsors" class="no-border no-radius">
+              Patrocinadores
+            </a>
+            </li>
           </ul>
         </div>
       </div>

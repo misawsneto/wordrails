@@ -2694,7 +2694,7 @@ button, select, html, textarea, input{
 #settings-statistics .animated,
 #settings-taxonomies .animated,
 #settings-colors .animated,
-#station-fab.animated,
+#settings-sponsors .animated,
 .station-perspectives .animated,
 #post-editor .animated,
 #bookmarks .animated,
@@ -4300,7 +4300,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   text-decoration: underline;
 }
 
-#station-fab{
+#station-fab,
+#sponsor-fab {
   position: fixed;
   right: 18px;
   bottom: 24px;
@@ -4382,6 +4383,34 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   border-color: #dee5e7!important; */
 }
 /* /settings */
+
+/* settings-colors */
+
+.customizer{
+  top:60%!important;
+}
+#device-selector{
+  top:75px!important;
+}
+
+.mockup-browser .md-fab{
+  position: absolute!important;
+}
+
+.mockup-browser .md-fab i {
+  line-height: 40px;
+  margin-left: 1px;
+}
+
+.mobile.mockup-browser{
+  max-width: 300px;
+  border-bottom: 60px solid #ACADAE;
+}
+.mobile.mockup-browser::before{
+  display: none;
+}
+
+/* /settings-colors */
 
 /* splash */
 /* Slideshow style */

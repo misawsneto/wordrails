@@ -116,7 +116,6 @@ angular.module('app')
                   }
                   , controller:'SettingsCtrl'
               })
-
               .state('app.settings.stations', {
                   url: '/stations',
                   templateUrl: 'tpl/settings-stations.html',
@@ -171,6 +170,28 @@ angular.module('app')
                     }]
                   }
                   , controller:'SettingsStationsUsersCtrl'
+              })
+              .state('app.settings.sponsors', {
+                  url: '/sponsor',
+                  templateUrl: 'tpl/settings-sponsors.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-sponsors.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsSponsorsCtrl'
+              })
+              .state('app.settings.sponsorconfig', {
+                  url: '/sponsorconfig?sponsorId',
+                  templateUrl: 'tpl/settings-sponsors-config.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-sponsors.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationsConfigCtrl'
               })
               .state('app.settings.users', {
                   url: '/users',
@@ -233,7 +254,10 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-colors.js?' + GLOBAL_URL_HASH]);
+                        return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/interact.min.js'])
+                        .then(function(){
+                            return $ocLazyLoad.load(['color-selector', 'js/controllers/settings-colors.js?' + GLOBAL_URL_HASH])
+                          });
                     }]
                   }
                   , controller:'SettingsColorsCtrl'

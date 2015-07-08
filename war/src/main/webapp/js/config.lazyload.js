@@ -208,7 +208,7 @@ angular.module('app')
               },{
                   name: 'ui.slimscroll',
                   files: [
-                          '../bower_components/slimScroll/jquery.slimscroll.min.js',
+                          '../bower_components/slimscroll/jquery.slimscroll.min.js',
                           '../bower_components/angular-slimscroll/angular-slimscroll.js'
                   ]
               },{
@@ -216,6 +216,13 @@ angular.module('app')
                   files: [
                           '../bower_components/ng-material-floating-button/mfb/dist/mfb-directive.js',
                           '../bower_components/ng-material-floating-button/mfb/dist/mfb.min.css',
+                          ]
+              },{
+                  name: 'color-selector',
+                  files: [
+                          '../libs/color-selector.css',
+                          '../libs/color-selector.js',
+                          '../libs/color-selector-angular.js',
                           ]
               }
           ]
