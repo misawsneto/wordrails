@@ -271,7 +271,7 @@ public class PostsResource {
 		}
 
 		if (stationId != null) {
-			org.apache.lucene.search.Query station = qb.keyword().onField("station.id").ignoreAnalyzer().matching(stationId).createQuery();
+			org.apache.lucene.search.Query station = qb.keyword().onField("stationId").ignoreAnalyzer().matching(stationId).createQuery();
 			if (musts == null) musts = qb.bool().must(station);
 			else musts.must(station);
 		}
@@ -411,7 +411,7 @@ public class PostsResource {
 
 		BooleanJunction stations = qb.bool();
 		for (Integer integer : readableIds) {
-			stations.should(qb.keyword().onField("station.id").ignoreAnalyzer().matching(integer).createQuery());
+			stations.should(qb.keyword().onField("stationId").ignoreAnalyzer().matching(integer).createQuery());
 		}
 
 		org.apache.lucene.search.Query full = musts.must(stations.createQuery()).createQuery(); //qb.bool().must(text).must(station).createQuery();

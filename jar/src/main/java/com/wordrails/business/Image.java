@@ -78,7 +78,7 @@ public class Image {
 	public File large;
 
 	@ManyToOne
-	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id", "station.id"})
+	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})
 	public Post post;
 	
 	@OneToMany(mappedBy="featuredImage")

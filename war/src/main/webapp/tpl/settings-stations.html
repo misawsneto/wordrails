@@ -29,9 +29,16 @@
                 </a>
               </div>
             </div>
-              <div class="m-t text-right text-md">
+              <div class="m-t text-md text-right">
+                <div class="pull-left m-t-xs" ng-if="app.networkAdmin">
+                  <label class="md-check">
+                    <input type="checkbox" ng-model="station.main" ng-change="setMainStation(station)">
+                    <i class="blue"></i>
+                    Principal
+                  </label>
+                </div>
                 <button ng-click="openDeleteStation(station.id)"
-                md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Excluir</button>
+                md-ink-ripple class="md-btn md-flat btn-fw">Excluir</button>
               </div>
           </div>
         </div>

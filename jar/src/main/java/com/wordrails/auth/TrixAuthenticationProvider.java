@@ -6,7 +6,6 @@ import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserRepository;
 import com.wordrails.services.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +28,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	private UserRepository userRepository;
 	@Autowired
 	private CacheService cacheService;
+
 
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
@@ -54,18 +54,19 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	public Person getLoggedPerson() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-		User user;
-		if (auth == null || auth instanceof AnonymousAuthenticationToken) {
-			try {
-				user = cacheService.getUserByUsernameAndNetworkId("wordrails", 0);
-			} catch (ExecutionException e) {
-				user = userRepository.findByUsernameAndEnabledAndNetworkId("wordrails", true, 0);
-			}
-		} else {
-			user = (User) auth.getPrincipal();
-		}
+		User user = (User) auth.getPrincipal();
+
 
 		Person person;
+
+
+		if (user.isAnonymous()) {
+			person = new Person();
+			person.username = "wordrails";
+
+			return person;
+		}
+
 		try {
 			person = cacheService.getPersonByUser(user);
 		} catch (ExecutionException e) {

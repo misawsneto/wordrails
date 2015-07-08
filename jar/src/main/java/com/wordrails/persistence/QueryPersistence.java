@@ -113,4 +113,9 @@ public class QueryPersistence {
 	public void deleteRecommendsInPosts(List<Integer> ids) {
 		manager.createQuery("delete from Recommend recommend where recommend.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
 	}
+
+	@Transactional
+	public void updateMainStation(Integer id, boolean main) {
+		manager.createNativeQuery("update Station station set main = :main where station.id = :id").setParameter("id", id).setParameter("main", main).executeUpdate();		
+	}
 }

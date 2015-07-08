@@ -61,16 +61,18 @@
 		<intercept-url pattern="/read" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<intercept-url pattern="/read/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 
-		<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/**" access="ROLE_USER"/>
 
 		<custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
-
-		<!--<form-login always-use-default-target="true" -->
-		<!--default-target-url="/loggedIn.jsp"-->
-		<!--authentication-failure-url="/logIn.jsp"/>-->
-
+		<custom-filter ref="anonymousAuthenticationFilter" position="ANONYMOUS_FILTER"/>
 		<logout/>
+
+		<anonymous enabled="false"/>
 	</http>
+
+	<beans:bean id="anonymousAuthenticationFilter" class="com.wordrails.filter.TrixAnonymousAuthenticationFilter">
+		<beans:constructor-arg name="key" value="anonymousKey" />
+	</beans:bean>
 
 	<beans:bean id="authenticationFilter" class="com.wordrails.filter.TrixAuthenticationFilter"
 	            p:authenticationManager-ref="trixAuthenticationManager"/>
@@ -80,6 +82,8 @@
 		<beans:property name="loginFormUrl" value="/logIn.jsp"/>
 		<beans:property name="useForward" value="true"/>
 	</beans:bean>
+
+
 
 	<authentication-manager alias="trixAuthenticationManager" erase-credentials="false">
 		<authentication-provider ref="trixAuthenticationProvider"/>

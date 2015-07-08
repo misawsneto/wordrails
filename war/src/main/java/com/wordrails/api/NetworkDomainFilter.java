@@ -1,6 +1,8 @@
 package com.wordrails.api;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,7 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.wordrails.business.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.WordrailsService;
@@ -23,13 +31,7 @@ import com.wordrails.persistence.NetworkRepository;
 public class NetworkDomainFilter implements Filter {
 
 	@Autowired
-	private NetworkRepository networkRepository;
-
-	@Autowired
 	private WordrailsService wordrailsService;
-
-	//	@Autowired
-	//	private ServletContext ctx;
 
 	@Override
 	public void destroy() {

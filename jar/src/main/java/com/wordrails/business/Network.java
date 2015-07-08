@@ -71,6 +71,9 @@ public class Network {
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSocialLogin;
 	
+	@Column(columnDefinition = "boolean default true", nullable = false)
+	public boolean allowSocialShare;
+	
 	public boolean allowSponsors;
 	
 	public String domain;

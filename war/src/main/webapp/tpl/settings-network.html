@@ -39,6 +39,14 @@
             </p>
             <p>
               <label class="md-switch">
+                <input type="checkbox" ng-model="network.allowComments"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Permitir comentários
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
                 <input type="checkbox" ng-model="network.allowSocialLogin"
                 ng-true-value="true" ng-false-value="false">
                 <i class="blue"></i>
@@ -47,10 +55,10 @@
             </p>
             <p>
               <label class="md-switch">
-                <input type="checkbox" ng-model="network.allowComments"
+                <input type="checkbox" ng-model="network.allowSocialShare"
                 ng-true-value="true" ng-false-value="false">
                 <i class="blue"></i>
-                Permitir comentários
+                Permitir compartilhamento em redes sociais para estações públicas
               </label>
             </p>
             <p>
