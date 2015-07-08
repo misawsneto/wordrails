@@ -47,8 +47,14 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 
 		$scope.createStation = function(){
 			if($scope.station.name == null || $scope.station.name.trim() !== ''){
-				trix.postStation($scope.station).success(function(){
-					$scope.app.showSuccessToast('Estação criada com successo.')
+				trix.postStation($scope.station).success(function(response){
+					trix.getStation(response).success(function(responseStation){
+						$scope.app.getInitData();
+						$scope.app.showSuccessToast('Estação criada com successo.')
+						$scope.creating = false;
+						$scope.station = responseStation;
+						$state.go('app.settings.stationconfig', {'stationId': response}, {location: 'replace', inherit: false, notify: false, reload: false})
+					})
 				});
 			}
 		}
