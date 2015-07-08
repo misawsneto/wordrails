@@ -38,9 +38,11 @@ public class Station {
 	public String name;
 
 	@NotNull
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean writable;
 	
 	@NotNull
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean main = false;
 	
 	@NotNull	

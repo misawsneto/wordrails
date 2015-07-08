@@ -32,7 +32,7 @@
   </div>
   <md-button 
   id="sponsor-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-  ui-sref="app.settings.sponsorsnew" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+  ui-sref="app.settings.sponsorconfig({'newSponsor': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
   tooltip="Novo patrocinador" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
   aria-label="Nova estação">
   <i class="mdi mdi-plus"></i>

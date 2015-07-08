@@ -133,8 +133,11 @@
       <div class="m-t text-right text-lg">
         <button ui-sref="app.settings.stations"
         md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
-        <button ng-click="updateStation()"
+         <button ng-if="!creating" ng-click="updateStation()"
         md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
+
+        <button ng-if="creating" ng-click="createStation()"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
       </div>
     </div>
   </div>

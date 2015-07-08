@@ -2,7 +2,7 @@
   <div class="wrapper-lg m-b-xxl">
     <div class="row">
       <div class="col-sm-4" ng-repeat="station in app.initData.stations">
-        <div class="panel panel-card animated zoomIn">
+        <div class="panel panel-card animated fadeIn">
           <div class="p">
             <div class="h4 m-b" clamp="1">{{station.name}}</div>
             <div class="panel panel-default m-b-none">
@@ -47,7 +47,7 @@
   </div>
   <md-button 
   id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-  ui-sref="app.settings.stationsnew" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+  ui-sref="app.settings.stationconfig({'newStation': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
   tooltip="Nova estação" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
   aria-label="Nova estação">
   <i class="mdi mdi-plus"></i>

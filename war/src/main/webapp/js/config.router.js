@@ -127,19 +127,8 @@ angular.module('app')
                   }
                   , controller:'SettingsStationsCtrl'
               })
-              .state('app.settings.newstation', {
-                  url: '/newstation',
-                  templateUrl: 'tpl/settings-stations-new.html',
-                  resolve: {
-                    deps: ['$ocLazyLoad',
-                      function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
-                    }]
-                  }
-                  , controller:'SettingsStationsNewCtrl'
-              })
               .state('app.settings.stationconfig', {
-                  url: '/stationconfig?stationId',
+                  url: '/stationconfig?stationId?newStation',
                   templateUrl: 'tpl/settings-stations-config.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -183,7 +172,7 @@ angular.module('app')
                   , controller:'SettingsSponsorsCtrl'
               })
               .state('app.settings.sponsorconfig', {
-                  url: '/sponsorconfig?sponsorId',
+                  url: '/sponsorconfig?sponsorId?newSponsor',
                   templateUrl: 'tpl/settings-sponsors-config.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -191,7 +180,7 @@ angular.module('app')
                         return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-sponsors.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  , controller:'SettingsStationsConfigCtrl'
+                  , controller:'SettingsSponsorsConfigCtrl'
               })
               .state('app.settings.users', {
                   url: '/users',
