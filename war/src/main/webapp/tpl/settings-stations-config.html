@@ -5,8 +5,11 @@
 
 <div class="wrapper-lg animated zoomIn">
     <div class="panel panel-card block-600 m-auto">
-      <div class="panel-heading h4 wrapper-md">
-        <a ui-sref="app.settings.stations">Estações</a> <i class="mdi mdi-chevron-right"></i> <span clamp="1">{{station.name}}</span>
+      <div ng-if="!creating" class="panel-heading h4 wrapper-md">
+        <a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>{{station.name}}</span>
+      </div>
+      <div ng-if="creating" class="panel-heading h4 wrapper-md">
+        <span>Nova Estação</span>
       </div>
       <div class="panel-body wrapper-md">
         <div class="row pos-rlt">
@@ -22,32 +25,8 @@
           <div class="col-sm-6">
             <div class="m-b text-muted text-md text-u-c">Configurações principais</div>
             <p>
-              <label class="md-check">
-                <input type="checkbox" ng-model="station.overrideNetworkConfig"
-                ng-true-value="true" ng-false-value="false">
-                <i class="blue"></i>
-                Sobrescrever configurações da rede
-              </label>
-            </p>
-            <p>
               <label class="md-switch">
-                <input type="checkbox" ng-disabled="!station.overrideNetworkConfig" ng-model="station.allowSignup"
-                ng-true-value="true" ng-false-value="false">
-                <i class="blue"></i>
-                Permitir cadastros
-              </label>
-            </p>
-            <p>
-              <label class="md-switch">
-                <input type="checkbox" ng-disabled="!station.overrideNetworkConfig || (station.overrideNetworkConfig && !station.allowSignup)" ng-model="station.allowSocialLogin"
-                ng-true-value="true" ng-false-value="false">
-                <i class="blue"></i>
-                Autenticação através de redes sociais
-              </label>
-            </p>
-            <p>
-              <label class="md-switch">
-                <input type="checkbox" ng-disabled="!station.overrideNetworkConfig" ng-model="station.allowComments"
+                <input type="checkbox" ng-model="station.allowComments"
                 ng-true-value="true" ng-false-value="false">
                 <i class="blue"></i>
                 Permitir comentários
@@ -55,10 +34,10 @@
             </p>
             <p>
               <label class="md-switch">
-                <input type="checkbox" ng-disabled="!station.overrideNetworkConfig" ng-model="station.allowSponsors"
+                <input type="checkbox" ng-disabled="station.visibility !== 'UNRESTRICTED'" ng-model="station.allowSocialShare"
                 ng-true-value="true" ng-false-value="false">
                 <i class="blue"></i>
-                Ativar/Desativar patrocinadores
+                Permitir compartilhamento em redes sociais
               </label>
             </p>
             <div class="m-b m-t text-muted text-md text-u-c">Configurações de edição</div>

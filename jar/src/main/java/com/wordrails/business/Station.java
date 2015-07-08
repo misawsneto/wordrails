@@ -49,13 +49,7 @@ public class Station {
 	public String visibility;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
-	public boolean allowSignup;
-	
-	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowComments;
-	
-	@Column(columnDefinition = "boolean default false", nullable = false)
-	public boolean allowSocialLogin;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSocialShare;
@@ -108,9 +102,6 @@ public class Station {
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean sponsored;
-	
-	@Column(columnDefinition = "boolean default false", nullable = false)
-	public boolean overrideNetworkConfig;
 	
 	@OneToOne
 	public Wordpress wordpress;

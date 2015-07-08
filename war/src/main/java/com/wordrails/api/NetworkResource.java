@@ -76,8 +76,6 @@ public class NetworkResource {
 				stationPermissionDto.topper = station.topper;
 				
 				stationPermissionDto.allowComments = station.allowComments;
-				stationPermissionDto.allowSignup = station.allowSignup;
-				stationPermissionDto.allowSocialLogin = station.allowSocialLogin;
 				stationPermissionDto.allowSocialShare = station.allowSocialShare;
 				
 				//StationRoles Fields

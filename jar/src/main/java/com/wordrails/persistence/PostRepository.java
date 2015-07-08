@@ -104,7 +104,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	List<Post> findPostsOrderByComments(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
 
 	@RestResource(exported = false)
-	@Query("SELECT post FROM Post post where post.author.id = :personId AND post.station.id in (:stationIds) order by post.id DESC")
+	@Query("SELECT post FROM Post post where post.author.id = :personId AND post.state = 'PUBLISHED' AND post.station.id in (:stationIds) order by post.id DESC")
 	List<Post> findPostByPersonIdAndStations(@Param("personId") Integer personId, @Param("stationIds") List<Integer> stationIds, Pageable pageable);
 
 	@RestResource(exported = false)

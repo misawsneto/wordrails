@@ -208,7 +208,7 @@ angular.module('app')
               },{
                   name: 'ui.slimscroll',
                   files: [
-                          '../bower_components/slimscroll/jquery.slimscroll.min.js',
+                          '../bower_components/slimScroll/jquery.slimscroll.min.js',
                           '../bower_components/angular-slimscroll/angular-slimscroll.js'
                   ]
               },{

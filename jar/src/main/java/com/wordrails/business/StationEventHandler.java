@@ -61,6 +61,15 @@ public class StationEventHandler {
 				
 				Set<Taxonomy> taxonomies = new HashSet<Taxonomy>();
 				
+				//Station Default Taxonomy
+				Taxonomy sTaxonomy = new Taxonomy();
+				sTaxonomy.name = "Station: " + station.name;
+				sTaxonomy.owningStation = station;
+				sTaxonomy.type = Taxonomy.STATION_TAXONOMY;
+				taxonomies.add(sTaxonomy);
+				station.ownedTaxonomies = taxonomies;
+				stationPerspective.taxonomy = sTaxonomy;
+				
 				//Tag Default Taxonomy
 				Taxonomy tTaxonomy = new Taxonomy();
 				tTaxonomy.name = "Tags " + station.name;
@@ -84,6 +93,8 @@ public class StationEventHandler {
 		role.admin = true;
 		role.editor = true;
 		personStationRolesRepository.save(role);
+		station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
+		stationRepository.save(station);
 	}
 	
 	@HandleBeforeSave

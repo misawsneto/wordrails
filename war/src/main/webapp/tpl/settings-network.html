@@ -34,31 +34,15 @@
                 <input type="checkbox" ng-model="network.allowSignup"
                 ng-true-value="true" ng-false-value="false">
                 <i class="blue"></i>
-                Permitir cadastros
+                Permitir cadastro em estações públicas
               </label>
             </p>
             <p>
               <label class="md-switch">
-                <input type="checkbox" ng-model="network.allowComments"
+                <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.allowSocialLogin"
                 ng-true-value="true" ng-false-value="false">
                 <i class="blue"></i>
-                Permitir comentários
-              </label>
-            </p>
-            <p>
-              <label class="md-switch">
-                <input type="checkbox" ng-model="network.allowSocialLogin"
-                ng-true-value="true" ng-false-value="false">
-                <i class="blue"></i>
-                Autenticação através de redes sociais
-              </label>
-            </p>
-            <p>
-              <label class="md-switch">
-                <input type="checkbox" ng-model="network.allowSocialShare"
-                ng-true-value="true" ng-false-value="false">
-                <i class="blue"></i>
-                Permitir compartilhamento em redes sociais para estações públicas
+                Autenticação através de redes sociais em estações públicas
               </label>
             </p>
             <p>
