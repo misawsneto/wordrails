@@ -262,6 +262,18 @@ public class UtilResource {
 	}
 	
 	@GET
+	@Path("/updateRegIdsAndTokens")
+	@Transactional
+	public void updateRegIdsAndTokens(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			manager.createNativeQuery("UPDATE PersonNetworkRegId reg set person_id = null where reg.person_id = 1").executeUpdate();
+			manager.createNativeQuery("UPDATE PersonNetworkToken tok set person_id = null where tok.person_id = 1").executeUpdate();
+		}
+	}
+	
+	@GET
 	@Path("/updateAllResources")
 	public void updateAllResources(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
@@ -273,6 +285,7 @@ public class UtilResource {
 			updateTermPerspectivesStationIds(request);
 			updatePersonFields(request);
 			recalculateSlug(request);
+			updateRegIdsAndTokens(request);
 			updateRegDate(request);
 		}
 	}

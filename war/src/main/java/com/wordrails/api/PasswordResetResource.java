@@ -140,7 +140,7 @@ public class PasswordResetResource {
 
 		Person person = personRepository.findByEmail(pr.email);
 		person.passwordReseted = true;
-		if(!person.username.equals("wordrails")){ // don't allow users to change wordrails pas
+		if(person != null && !person.username.equals("wordrails")){ // don't allow users to change wordrails pas
 			User user = userRepository.findByUsernameAndEnabled(person.username, true);
 			if(user != null){
 				user.password = password;

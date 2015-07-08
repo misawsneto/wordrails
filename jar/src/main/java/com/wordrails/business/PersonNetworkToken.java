@@ -41,7 +41,6 @@ public class PersonNetworkToken {
 	@Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
 	public String token;
 	
-	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "person_id")
 	public Person person;

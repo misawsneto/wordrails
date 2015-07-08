@@ -137,7 +137,7 @@ public class RecommendsResource {
 	public BooleanResponse toggleRecommend(@FormParam("postId") Integer postId){
 		
 		Person person = accessControllerUtil.getLoggedPerson();
-		if(person.username.equals("wordrails"))
+		if(person == null || person.username.equals("wordrails"))
 			throw new UnauthorizedException();
 		
 		Recommend recommend = new Recommend();

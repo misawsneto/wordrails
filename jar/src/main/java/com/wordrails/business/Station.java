@@ -58,6 +58,12 @@ public class Station {
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSocialShare;
 	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowWritersToNotify;
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowWritersToAddSponsors;
+	
 	@Column(columnDefinition="varchar(255) default '#ffffff'")
 	public String backgroundColor = "#ffffff";
 	
