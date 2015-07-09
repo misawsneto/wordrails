@@ -21,7 +21,38 @@ public class StationRoleEventHandler {
 	@Transactional
 	public void handleBeforeSave(StationRole stationRole) {
 //		Person person = accessControllerUtil.getLoggedPerson();
-//		stationRole.person
+		if(stationRole.admin){
+			stationRole.writer = true;
+			stationRole.editor = true;
+		}else if(stationRole.editor){
+			stationRole.writer = true;
+		}else if(stationRole.writer){
+			stationRole.admin = false;
+			stationRole.editor = false;
+		}else{
+			stationRole.admin = false;
+			stationRole.editor = false;
+			stationRole.writer = false;
+		}
+	}
+	
+	@HandleBeforeCreate
+	@Transactional
+	public void handleBeforeCreate(StationRole stationRole) {
+//		Person person = accessControllerUtil.getLoggedPerson();
+		if(stationRole.admin){
+			stationRole.writer = true;
+			stationRole.editor = true;
+		}else if(stationRole.editor){
+			stationRole.writer = true;
+		}else if(stationRole.writer){
+			stationRole.admin = false;
+			stationRole.editor = false;
+		}else{
+			stationRole.admin = false;
+			stationRole.editor = false;
+			stationRole.writer = false;
+		}
 	}
 
 //	private @Autowired TaxonomyRepository taxonomyRepository;

@@ -65,9 +65,19 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 
 		$scope.app.initData.stations.forEach(function(station, index){
-			if($state.params.stationId == station.id)
+			if($state.params.stationId == station.id){
 				$scope.stationName = station.name;
+				$scope.stationId = station.id;
+			}
 		});	
+
+		if($state.params.newUser)
+			$scope.creating = true;
+		else
+			$scope.creating = false;
+
+		console.log($state.params.newUser);
+
 
 		trix.findByStationIds([$state.params.stationId], 0, 50, null, 'stationRoleProjection').success(function(personsRoles){
 			$scope.personsRoles = personsRoles.stationRoles;
