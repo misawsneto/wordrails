@@ -31,9 +31,14 @@
               Usuários
             </a>
             </li>
+            <li ng-class="{'active': $state.includes('app.settings.network')}">
+            <a ng-if="app.networkAdmin" ui-sref="app.settings.network" class="no-border no-radius">
+              Configurações da Rede
+            </a>
+            </li>
             <li ng-class="{'active': $state.includes('app.settings.taxonomies')}">
             <a ng-if="app.networkAdmin" ui-sref="app.settings.taxonomies" class="no-border no-radius">
-              Categorias
+              Categorias da Rede
             </a>
             </li>
             <li ng-class="{'active': $state.includes('app.settings.colors')}">
@@ -44,11 +49,6 @@
             <li ng-class="{'active': $state.includes('app.settings.statistics')}">
             <a ng-if="app.networkAdmin" ui-sref="app.settings.statistics" class="no-border no-radius">
               Estatísticas da Rede
-            </a>
-            </li>
-            <li ng-class="{'active': $state.includes('app.settings.network')}">
-            <a ng-if="app.networkAdmin" ui-sref="app.settings.network" class="no-border no-radius">
-              Configurações da Rede
             </a>
             </li>
             <li ng-class="{'active': $state.includes('app.settings.sponsors'), 'hide': !app.initData.network.allowSponsors}">

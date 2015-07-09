@@ -11,12 +11,15 @@
 			<div class="panel-body wrapper-md p-l-none p-r-none" style="min-height: 200px;">
 				<div class="row wrapper">
 					<div class="col-sm-5 m-b-xs">
-						<select class="input-sm form-control w-sm inline v-middle">
+						<!-- <select class="input-sm form-control w-sm inline v-middle">
 							<option value="0">Ações em grupo</option>
 							<option value="1">Alterar selecionados</option>
 							<option value="1">Remover selecionados</option>
-						</select>
-						<button class="btn btn-sm btn-default">Aplicar</button>                
+						</select> -->
+						<select class="input-sm form-control w-sm inline v-middle" ng-model="bulkActionSelected" ng-change="selectBulkAction()"
+				    ng-options="action as action.name for action in bulkActions track by action.id">
+				    </select>
+						<button ng-disabled="bulkActionSelected.id == 0" class="btn btn-sm btn-default">Aplicar</button>                
 					</div>
 					<div class="col-sm-2">
 					</div>

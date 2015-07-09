@@ -30,7 +30,7 @@
               </div>
             </div>
               <div class="m-t text-md text-right">
-                <div class="pull-left m-t-xs" ng-if="app.networkAdmin">
+                <div class="pull-left m-t-xs" ng-if="app.initData.stations.length > 1 &&  app.networkAdmin">
                   <label class="md-check">
                     <input type="checkbox" ng-model="station.main" ng-change="setMainStation(station)">
                     <i class="blue"></i>

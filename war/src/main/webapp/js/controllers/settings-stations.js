@@ -82,6 +82,18 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 			console.log('load user');
 		}
 
+		$scope.bulkActions = [
+			{name:'Ações em grupo', id:0},
+			{name:'Alterar selecionados', id:1},
+			{name:'Remover selecionados', id:2}
+		]
+
+		$scope.bulkActionSelected = $scope.bulkActions[0];
+
+		/*<option value="0">Ações em grupo</option>
+							<option value="1">Alterar selecionados</option>
+							<option value="1">Remover selecionados</option>*/
+
 		$scope.toggleAll = function(){
 			if($scope.toggleSelectValue && $scope.personsRoles){
 				$scope.personsRoles.forEach(function(role, index){
