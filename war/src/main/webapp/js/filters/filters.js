@@ -15,6 +15,12 @@ angular.module('app')
 	}
 })
 
+.filter('fromNow3', function() {
+	return function(date) {
+		return moment(date).format('DD/MM/YY - HH:mm');
+	}
+})
+
 .filter('myDateTimeFormat', function myDateTimeFormat() {
 	return function(text) {
 		return moment.utc(text, "YYYY-MM-DD HH:mm:ss").tz('America/Recife').format("DD/MM/YYYY HH:mm:ss");;

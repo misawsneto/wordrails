@@ -1,0 +1,287 @@
+<div id="settings-stations-users">
+
+	<div class="header-custom text-center animated box-shadow">
+	</div>
+
+	<div class="wrapper-lg animated zoomIn m-b-xxl">
+		<!-- start of user panel list -->
+		<div class="panel panel-card block-1000 m-auto" ng-hide="creating">
+			<div class="panel-heading h4 wrapper-md">
+				<a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Usuários da estação <strong>{{stationName}}</strong></span>
+			</div>
+			<div class="panel-body wrapper-md p-l-none p-r-none" style="min-height: 200px;">
+				<div class="row wrapper">
+					<div class="col-sm-5 m-b-xs">
+						<!-- <select class="input-sm form-control w-sm inline v-middle">
+							<option value="0">Ações em grupo</option>
+							<option value="1">Alterar selecionados</option>
+							<option value="1">Remover selecionados</option>
+						</select> -->
+						<select class="input-sm form-control w-sm inline v-middle" ng-model="bulkActionSelected" ng-change="selectBulkAction()"
+						ng-options="action as action.name for action in bulkActions track by action.id">
+					</select>
+					<button ng-disabled="bulkActionSelected.id == 0" ng-click="openBulkActionsSplash()" class="btn btn-sm btn-default">Aplicar</button>                
+				</div>
+				<div class="col-sm-2">
+				</div>
+				<div class="col-sm-5">
+					<!-- <div class="input-group"> -->
+					<input type="text" class="input-md w-xxl form-control" placeholder="Busque por usuário, nome ou email">
+							<!-- <span class="input-group-btn">
+								<button class="btn btn-sm text-lg btn-default" type="button">Buscar</button>
+							</span> -->
+							<!-- </div> -->
+						</div>
+					</div>
+					<div class="table-responsive o-visible text-md">
+						<table class="table b-t b-light">
+							<thead>
+								<tr>
+									<th style="width:20px;">
+										<label class="md-check">
+											<input type="checkbox" ng-model="toggleSelectValue" ng-change="toggleAll()">
+											<i class="blue"></i>
+										</label>
+									</th>
+									<th>Nome</th>
+									<th>Usuários</th>
+									<th class="text-center">Permissão</th>
+									<th class="text-center">Último login</th>
+									<th style="width:30px;"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- <tr ng-repeat="role in personsRoles"> -->
+								<tr ng-repeat="role in personsRoles" ng-click="loadPerson(role.person)">
+									<td>
+										<label class="md-check">
+											<input type="checkbox" ng-model="role.selected">
+											<i class="blue"></i>
+										</label>
+									</td>
+									<td>{{role.person.name}}</td>
+									<td>{{role.person.username}}</td>
+									<td class="text-center">{{role.admin ? 'admin': (role.editor ? 'editor' : role.writer ? 'escritor' : 'leitor')}}</td>
+									<td class="text-center" ng-if="!role.person.lastLogin"> - </td>
+									<td class="text-center" ng-if="role.person.lastLogin">{{role.person.lastLogin | fromNow3}}</td>
+									<td>
+										<div class="dropdown hidden-sm" dropdown ng-click="stopPropagation($event)">
+											<a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-dots-vertical mdi" dropdown-toggle>
+											</a>
+											<!-- dropdown -->
+											<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
+												<li> <a href> Reconfigurar a senha </a> </li>
+												<li> <a href> Alterar permissão </a> </li>
+												<!-- <li class="divider"></li> -->
+												<li> <a ng-click="openDeletePersonRole(role.id);"> Remover da estação </a> </li>
+											</ul>
+											<!-- / dropdown -->
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<!-- /end of user panel list -->
+
+			<!-- new user panel -->
+			<div class="panel panel-card block-600 m-auto" ng-show="creating">
+				<div class="panel-heading h4 wrapper-md">
+					<a ui-sref="app.settings.stations">Estações</a>
+					<i class="mdi mdi-chevron-right"></i>
+					<a ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null})">{{stationName}}</a>
+					<i class="mdi mdi-chevron-right"></i>
+					<span>Novo usuário da estação</span>
+				</div>
+				<div class="panel-body wrapper-md">
+					<div class="row pos-rlt">
+						<div class="w-xxl m-auto">
+							<div class="md-form-group md-neutral-theme text-lg">
+								<input class="md-input text-xl" ng-model="person.name">
+								<label>Nome completo</label>
+							</div>
+							<div class="md-form-group md-neutral-theme">
+			          <input class="md-input" ng-model="person.email" required>
+			          <label>Email</label>
+			        </div>
+							<div class="md-form-group md-neutral-theme">
+			          <input class="md-input" ng-model="person.username" required>
+			          <label>Usuário</label>
+			        </div>
+			        <div class="md-form-group md-neutral-theme">
+			          <input type="password" class="md-input" ng-model="person.password" required>
+			          <label>Senha</label>
+			          <span class="md-input-msg right">(opcional) se não fornecido, criaremos uma senha automaticamente.</span>
+			        </div>
+						</div>
+					</div>
+					<div class="line line-dashed b-b line-lg pull-in"></div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="m-b text-muted text-md text-u-c">Permissões</div>
+							<p>
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="person.stationRole.roleString" value="READER" ng-change="changePermission(person)">
+									<i class="blue"></i>
+									Leitor
+								</label>
+							</p>
+							<p>
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="person.stationRole.roleString" value="WRITER" ng-change="changePermission(person)">
+									<i class="blue"></i>
+									Escritor
+								</label>
+							</p>
+							<p>
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="person.stationRole.roleString" value="EDITOR" ng-change="changePermission(person)">
+									<i class="blue"></i>
+									Editor
+								</label>
+							</p>
+							<p>
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="person.stationRole.roleString" value="ADMIN" ng-change="changePermission(person)">
+									<i class="blue"></i>
+									Adminastrador
+								</label>
+							</p>
+						</div>
+						<div class="col-sm-6">
+							<div class="m-b text-muted text-md text-u-c">Notificar usuário</div>
+							<p>
+								<label class="md-switch">
+									<input type="checkbox" ng-model="person.emailNotification"
+									ng-true-value="true" ng-false-value="false">
+									<i class="blue"></i>
+									Enviar link de configuração do perfil via email.
+								</label>
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="m-t text-right text-lg" >
+					<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null})"
+					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+					<button ng-if="!creating" ng-click="updatePerson()"
+					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
+
+					<button ng-if="creating" ng-click="createPerson()"
+					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
+				</div>
+			</div>
+			<!-- /new user panel-->
+		</div>
+		<!--  /wrapper -->
+
+		<!-- create user -->
+		<md-button ng-hide="creating"
+		id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+		ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+		tooltip="Novo usuário" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+		aria-label="Novo usuário">
+		<i class="mdi mdi-plus"></i>
+	</md-button>
+
+</div>
+<!-- /settings-stations-users -->
+
+<script type="text/ng-template" id="confirm_delete_person.html">
+	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+	<div class="splash-content text-center" ng-cloak>
+		<div>
+			<div class="row">
+				<div class="col-xs-8 col-xs-offset-2">
+					<div class="">
+						Tem certeza que deseja remover as permissões deste usuário a esta estação?
+						Atenção! Este usuário não será excluído. Para excluir este usuário, entre em contato com o administrador da rede. 
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-xs-offset-3">
+					<div class="p-lg text-color wrapper-lg">
+						<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block p-h-md">
+							Sim
+						</button>
+						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
+							Não
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/ng-template" id="confirm_no_person_selected.html">
+	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+	<div class="splash-content text-center" ng-cloak>
+		<div class="row m-t-xxl">
+			<div class="col-xs-6 col-xs-offset-3 text-2x m-t-xxl">
+				Nenhum usuário foi selecionado.
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/ng-template" id="confirm_delete_person.html">
+	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+	<div class="splash-content text-center" ng-cloak>
+		<div>
+			<div class="row">
+				<div class="col-xs-8 col-xs-offset-2">
+					<div class="">
+						Tem certeza que deseja remover as permissões deste usuário a esta estação?
+						Atenção! Este usuário não será excluído. Para excluir este usuário, entre em contato com o administrador da rede. 
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-xs-offset-3">
+					<div class="p-lg text-color wrapper-lg">
+						<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block p-h-md">
+							Sim
+						</button>
+						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
+							Não
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</script>
+
+<script type="text/ng-template" id="confirm_bulk_delete_persons.html">
+	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+	<div class="splash-content text-center" ng-cloak>
+		<div>
+			<div class="row">
+				<div class="col-xs-8 col-xs-offset-2">
+					<div class="">
+						Tem certeza que deseja remover as permissões dos usuários selecionados para esta estação?
+						<br>
+						Atenção! Os usuários selecionados não serão excluídos. Para excluí-los, entre em contato com o administrador da rede. 
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-xs-offset-3">
+					<div class="p-lg text-color wrapper-lg">
+						<button ng-click="app.applyBulkActions();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block p-h-md">
+							Sim
+						</button>
+						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
+							Não
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>

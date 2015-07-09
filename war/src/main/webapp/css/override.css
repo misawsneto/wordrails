@@ -2272,7 +2272,7 @@ a.text-lgrey:hover {
 }
 
 .in-left-shadow{
-  box-shadow: inset 7px 0 9px -7px rgba(0,0,0,0.4);
+  box-shadow: inset 6px 0 9px -10px rgba(0,0,0,0.5);
 }
 
 .out-top-shadow {
@@ -2629,6 +2629,61 @@ button, select, html, textarea, input{
  border-color: #222;
 }
 
+@-webkit-keyframes .scaleIn {
+  0% {
+    width: 100%;
+    height: 100%;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-transform: translate3d(0,0,150px);
+    transform: translate3d(0,0,150px);
+    -webkit-transition: -webkit-transform 0.3s;
+    transition: transform 0.3s;
+  }
+
+
+  100% {
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+  }
+}
+
+@keyframes .scaleIn{
+  0% {
+    width: 100%;
+    height: 100%;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-transform: translate3d(0,0,150px);
+    transform: translate3d(0,0,150px);
+    -webkit-transition: -webkit-transform 0.3s;
+    transition: transform 0.3s;
+  }
+
+
+  100% {
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+  }
+}
+.scaleIn{
+  -webkit-animation-name: scaleIn;
+  animation-name: scaleIn;
+}
+
+/* .scaleIn {
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+} */
+
+.o-visible {
+  overflow: visible
+}
+
+.text-xl {
+  font-size: 22px;
+}
+
 /* /general */
 
 /* animate */
@@ -2642,12 +2697,15 @@ button, select, html, textarea, input{
 
 #settings>div.animated,
 #settings-network .animated,
+#settings-stations-users .animated,
+#settings-sponsor-config .animated,
+#settings-stations-config .animated,
 #settings-stations .animated,
 #settings-users .animated,
 #settings-statistics .animated,
 #settings-taxonomies .animated,
 #settings-colors .animated,
-#station-fab.animated,
+#settings-sponsors .animated,
 .station-perspectives .animated,
 #post-editor .animated,
 #bookmarks .animated,
@@ -2657,8 +2715,8 @@ button, select, html, textarea, input{
 #notifications .animated,
 #post-left-content .animated,
 #post-right-content .animated{
- -webkit-animation-duration: 0.3s;
-  animation-duration: 0.3s; 
+ -webkit-animation-duration: 0.3s!important;
+  animation-duration: 0.3s!important; 
 }
 
 /* /animate */
@@ -4253,7 +4311,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   text-decoration: underline;
 }
 
-#station-fab{
+#station-fab,
+#sponsor-fab {
   position: fixed;
   right: 18px;
   bottom: 24px;
@@ -4335,6 +4394,38 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   border-color: #dee5e7!important; */
 }
 /* /settings */
+
+/* settings-users */
+/* /settings-users */
+
+/* settings-colors */
+
+.customizer{
+  z-index: 10!important;
+  top: 60%!important;
+}
+#device-selector{
+  top: 75px!important;
+}
+
+.mockup-browser .md-fab{
+  position: absolute!important;
+}
+
+.mockup-browser .md-fab i {
+  line-height: 40px;
+  margin-left: 1px;
+}
+
+.mobile.mockup-browser{
+  max-width: 300px;
+  border-bottom: 60px solid #ACADAE;
+}
+.mobile.mockup-browser::before{
+  display: none;
+}
+
+/* /settings-colors */
 
 /* splash */
 /* Slideshow style */

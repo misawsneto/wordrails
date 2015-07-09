@@ -217,6 +217,13 @@ angular.module('app')
                           '../bower_components/ng-material-floating-button/mfb/dist/mfb-directive.js',
                           '../bower_components/ng-material-floating-button/mfb/dist/mfb.min.css',
                           ]
+              },{
+                  name: 'color-selector',
+                  files: [
+                          '../libs/color-selector.css',
+                          '../libs/color-selector.js',
+                          '../libs/color-selector-angular.js',
+                          ]
               }
           ]
       });

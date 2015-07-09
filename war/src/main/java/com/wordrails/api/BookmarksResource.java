@@ -170,7 +170,7 @@ public class BookmarksResource {
 	public BooleanResponse toggleBookmark(@FormParam("postId") Integer postId){
 		
 		Person person = authProvider.getLoggedPerson();
-		if(person.username.equals("wordrails"))
+		if(person == null || person.username.equals("wordrails"))
 			throw new UnauthorizedException();
 		
 		Bookmark bookmark = new Bookmark();

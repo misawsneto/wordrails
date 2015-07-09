@@ -69,14 +69,9 @@ public class Network {
 	public boolean allowSignup;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
-	public boolean allowComments;
-	
-	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSocialLogin;
 	
-	@Column(columnDefinition = "boolean default true", nullable = false)
-	public boolean allowSocialShare;
-	
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
 	
 	public String domain;
@@ -120,7 +115,9 @@ public class Network {
 	public Image loginImage;
 	public Integer loginImageId;
 	
+	@Column(columnDefinition = "varchar(255) default 'D", nullable = false)
 	public String defaultReadMode;
+	@Column(columnDefinition = "varchar(255) default 'V", nullable = false)
 	public String defaultOrientationMode;
 
 	@Override

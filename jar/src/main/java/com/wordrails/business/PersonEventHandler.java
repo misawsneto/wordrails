@@ -10,15 +10,29 @@ import com.wordrails.util.WordrailsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
+import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wordrails.persistence.ImageRepository;
+import com.wordrails.persistence.NetworkRolesRepository;
+import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.PostRepository;
+import com.wordrails.persistence.TermRepository;
+import com.wordrails.services.CacheService;
+import com.wordrails.util.WordrailsUtil;
+
 @RepositoryEventHandler(Person.class)
 @Component
 public class PersonEventHandler {
+	
+	private @Autowired NetworkRolesRepository networkRolesRepository;
+	private @Autowired ImageRepository imageRepository;
 
+	@Autowired
+	private ImageRepository bookmarksRepository;
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
@@ -62,6 +76,15 @@ public class PersonEventHandler {
 		userGrantedAuthorityRepository.save(authority);
 		userRepository.save(user);
 		person.user = user;
+	}
+	
+	@HandleBeforeDelete
+	public void handleBeforeDelete(Person person){
+		networkRolesRepository.deleteByPerson(person);
+		imageRepository.deleteByPerson(person);
+		bookmarksRepository.deleteByPerson(person);
+		System.out.println(person.id+ "");
+
 	}
 	
 	@HandleAfterSave

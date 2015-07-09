@@ -66,6 +66,12 @@ var trix = angular.module('trix', [])
       config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
       return \$http.post(_config.url + "/api/persons/login", \$.param({"username": username, "password": password}), config)
     }
+    
+    this.createPerson = function(person) {
+      var config = {};
+      config.headers = {"Content-Type": "application/json"}
+      return \$http.post(_config.url + "/api/persons/create", person, config)
+    }
 
     this.logout = function() {
     	return \$http.get(_config.url + "/j_spring_security_logout")
@@ -86,6 +92,11 @@ var trix = angular.module('trix', [])
     this.updatePostTerms = function(postId, terms) {
     	var config = {"headers": {"Content-Type": "application/json"}}
 		return \$http.put(_config.url + "/api/posts/" + postId + "/updatePostTerms", terms, config)
+	}
+	
+	this.deletePersonStationRoles = function(stationRolesIds) {
+    	var config = {"headers": {"Content-Type": "application/json"}}
+		return \$http.put(_config.url + "/api/persons/deletePersonStationRoles", stationRolesIds, config)
 	}
 
 	this.findPerspectiveView = function(stationPerspectiveId, termPerspectiveId, termId, _page, _size, _sort) {

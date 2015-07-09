@@ -33,6 +33,7 @@ import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -966,6 +967,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetNetworkUsersAuthorized(Integer networkId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetSponsorLogoAuthorized(Integer sponsorId) {
 		
 		return true;
@@ -1577,5 +1583,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetNetworkLoginImageAuthorized(Integer networkId) {
 		return true;
 	}
+
+	@Override
+	protected boolean isFindByStationIdsAndNameOrUseranmeOrEmailAuthorized(
+			List<Integer> stationIds, String nameOrUseranmeOrEmail,
+			Integer page, Integer size, List<String> sort) {
+		
+		return stationSecurityChecker.isStationsAdmin(stationIds);
+	}
+
+	@Override
+	protected boolean isFindByStationIdsAuthorized(List<Integer> stationIds,
+			Integer page, Integer size, List<String> sort) {
+		
+		return stationSecurityChecker.isStationsAdmin(stationIds);
+	}
+
 
 }

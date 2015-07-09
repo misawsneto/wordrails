@@ -24,26 +24,28 @@ public class Station {
 	public String name;
 
 	@NotNull
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean writable;
 
 	@NotNull
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean main = false;
 
 	@NotNull
 	public String visibility;
 
 	@Column(columnDefinition = "boolean default false", nullable = false)
-	public boolean allowSignup;
-
-	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowComments;
-
-	@Column(columnDefinition = "boolean default false", nullable = false)
-	public boolean allowSocialLogin;
-
+	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSocialShare;
-
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowWritersToNotify;
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowWritersToAddSponsors;
+	
 	@Column(columnDefinition="varchar(255) default '#ffffff'")
 	public String backgroundColor = "#ffffff";
 
@@ -86,9 +88,6 @@ public class Station {
 
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean sponsored;
-	
-	@Column(columnDefinition = "boolean default false", nullable = false)
-	public boolean overrideNetworkConfig;
 	
 	@OneToOne
 	public Wordpress wordpress;
@@ -164,4 +163,11 @@ public class Station {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Station [id=" + id + ", name=" + name + ", visibility="
+				+ visibility + ", networks=" + networks + "]";
+	}
+	
 }

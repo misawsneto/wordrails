@@ -1,5 +1,6 @@
 package com.wordrails.persistence;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -117,5 +118,10 @@ public class QueryPersistence {
 	@Transactional
 	public void updateMainStation(Integer id, boolean main) {
 		manager.createNativeQuery("update Station station set main = :main where station.id = :id").setParameter("id", id).setParameter("main", main).executeUpdate();		
+	}
+
+	public void updateLastLogin(String username) {
+		// TODO Auto-generated method stub
+		manager.createQuery("update Person person set person.lastLogin = :date where person.username = :username").setParameter("username", username).setParameter("date", new Date()).executeUpdate();
 	}
 }

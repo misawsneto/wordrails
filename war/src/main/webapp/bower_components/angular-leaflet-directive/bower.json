@@ -2,7 +2,7 @@
   "name": "angular-leaflet-directive",
   "author": "https://github.com/tombatossals/angular-leaflet-directive/graphs/contributors",
   "description": "angular-leaflet-directive - An AngularJS directive to easily interact with Leaflet maps",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "homepage": "http://tombatossals.github.io/angular-leaflet-directive/",
   "keywords": [
     "angularjs",
@@ -42,7 +42,11 @@
     "Leaflet.ExtraMarkers": "https://github.com/coryasilva/Leaflet.ExtraMarkers/archive/v1.0.1.tar.gz",
     "Leaflet.fullscreen": "http://github.com/Leaflet/Leaflet.fullscreen/archive/v0.0.4.tar.gz",
     "Leaflet.PolylineDecorator": "bbecquet/Leaflet.PolylineDecorator",
-    "ionrangeslider": "~1.9.3"
+    "ionrangeslider": "~1.9.3",
+    "leaflet-minimap": "~2.2.0",
+    "esri-leaflet-clustered-feature-layer": "~1.0.0-rc.4",
+    "esri-leaflet-heatmap-feature-layer": "~1.0.0-rc.4",
+    "leaflet-search": "~1.5.8"
   },
   "overrides": {
     "Leaflet.utfgrid": {

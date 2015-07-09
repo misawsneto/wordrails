@@ -75,8 +75,6 @@ public class NetworkResource {
 				stationPermissionDto.topper = station.topper;
 				
 				stationPermissionDto.allowComments = station.allowComments;
-				stationPermissionDto.allowSignup = station.allowSignup;
-				stationPermissionDto.allowSocialLogin = station.allowSocialLogin;
 				stationPermissionDto.allowSocialShare = station.allowSocialShare;
 				
 				//StationRoles Fields
@@ -104,17 +102,16 @@ public class NetworkResource {
 	public Response createNetwork (NetworkCreateDto networkCreate){
 		Person person = authProvider.getLoggedPerson();
 		
-		Network network = networkCreate.network;
 		Taxonomy taxonomy = networkCreate.taxonomy;
 		
 		taxonomyRepository.save(taxonomy);
 		
-		networkRepository.save(network);
+		networkRepository.save(networkCreate);
 		
 		NetworkRole networkRole = new NetworkRole();
 		networkRole.admin = true;
 		networkRole.person = person;
-		networkRole.network = network;
+		networkRole.network = networkCreate;
 		
 		networkRolesRepository.save(networkRole);
 		

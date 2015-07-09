@@ -239,7 +239,3 @@ angular.module('app')
     }
   };
 });
-
-  
-
-

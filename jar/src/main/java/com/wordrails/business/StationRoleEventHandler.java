@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
@@ -14,6 +15,49 @@ import com.wordrails.persistence.TermRepository;
 @RepositoryEventHandler(StationRole.class)
 @Component
 public class StationRoleEventHandler {
+
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
+	
+	@Transactional
+	@HandleBeforeSave
+	public void handleBeforeSave(StationRole stationRole) {
+//		Person person = accessControllerUtil.getLoggedPerson();
+		if(stationRole.admin){
+			stationRole.writer = true;
+			stationRole.editor = true;
+		}else if(stationRole.editor){
+			stationRole.admin = false;
+			stationRole.writer = true;
+		}else if(stationRole.writer){
+			stationRole.admin = false;
+			stationRole.editor = false;
+		}else{
+			stationRole.admin = false;
+			stationRole.editor = false;
+			stationRole.writer = false;
+		}
+	}
+	
+	@Transactional
+	@HandleBeforeCreate
+	public void handleBeforeCreate(StationRole stationRole) {
+//		Person person = accessControllerUtil.getLoggedPerson();
+		if(stationRole.admin){
+			stationRole.writer = true;
+			stationRole.editor = true;
+		}else if(stationRole.editor){
+			stationRole.admin = false;
+			stationRole.writer = true;
+		}else if(stationRole.writer){
+			stationRole.admin = false;
+			stationRole.editor = false;
+		}else{
+			stationRole.admin = false;
+			stationRole.editor = false;
+			stationRole.writer = false;
+		}
+	}
 
 //	private @Autowired TaxonomyRepository taxonomyRepository;
 //	private @Autowired TermRepository termRepository;

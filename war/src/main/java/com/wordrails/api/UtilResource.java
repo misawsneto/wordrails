@@ -1,6 +1,31 @@
 package com.wordrails.api;
 
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
@@ -14,22 +39,63 @@ import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.jboss.resteasy.spi.HttpRequest;
-import org.quartz.*;
+import org.joda.time.DateTime;
+import org.quartz.DateBuilder;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import java.util.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.WordrailsService;
+import com.wordrails.business.Image;
+import com.wordrails.business.Invitation;
+import com.wordrails.business.Network;
+import com.wordrails.business.Person;
+import com.wordrails.business.PersonNetworkRegId;
+import com.wordrails.business.Post;
+import com.wordrails.business.Row;
+import com.wordrails.business.Station;
+import com.wordrails.business.StationPerspective;
+import com.wordrails.business.Taxonomy;
+import com.wordrails.business.Term;
+import com.wordrails.business.TermPerspective;
+import com.wordrails.business.UnauthorizedException;
+import com.wordrails.business.Wordpress;
+import com.wordrails.jobs.SimpleJob;
+import com.wordrails.persistence.BookmarkRepository;
+import com.wordrails.persistence.CellRepository;
+import com.wordrails.persistence.CommentRepository;
+import com.wordrails.persistence.ImageRepository;
+import com.wordrails.persistence.InvitationRepository;
+import com.wordrails.persistence.NetworkRepository;
+import com.wordrails.persistence.NetworkRolesRepository;
+import com.wordrails.persistence.NotificationRepository;
+import com.wordrails.persistence.PersonNetworkRegIdRepository;
+import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.PostReadRepository;
+import com.wordrails.persistence.PostRepository;
+import com.wordrails.persistence.PromotionRepository;
+import com.wordrails.persistence.QueryPersistence;
+import com.wordrails.persistence.RecommendRepository;
+import com.wordrails.persistence.RowRepository;
+import com.wordrails.persistence.StationPerspectiveRepository;
+import com.wordrails.persistence.StationRepository;
+import com.wordrails.persistence.StationRolesRepository;
+import com.wordrails.persistence.TaxonomyRepository;
+import com.wordrails.persistence.TermPerspectiveRepository;
+import com.wordrails.persistence.TermRepository;
+import com.wordrails.persistence.WordpressRepository;
+import com.wordrails.services.AsyncService;
+import com.wordrails.services.WordpressParsedContent;
+import com.wordrails.util.WordrailsUtil;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -50,12 +116,12 @@ public class UtilResource {
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired PostRepository postRepository;
-	
+
 	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
 	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
-	
+
 	private @Autowired InvitationRepository invitationRepository;
-	
+
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 
 	private @PersistenceContext EntityManager manager;
@@ -100,11 +166,11 @@ public class UtilResource {
 			.optimizeAfterPurge(true)
 			.optimizeOnFinish(true)
 			.batchSizeToLoadObjects( 30 )
-			   .threadsToLoadObjects( 4 );
+			.threadsToLoadObjects( 4 );
 			//		massIndexer.start;
 			try {
 				massIndexer.startAndWait();
-//				massIndexer.start();
+				//				massIndexer.start();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -131,7 +197,7 @@ public class UtilResource {
 			stationRepository.save(stations);
 		}
 	}
-	
+
 	@GET
 	@Path("/updatePostFields")
 	public void updatePostFields(@Context HttpServletRequest request) {
@@ -162,7 +228,7 @@ public class UtilResource {
 			postRepository.save(posts);
 		}
 	}
-	
+
 	@GET
 	@Path("/updateTermPerspectivesStationIds")
 	public void updateTermPerspectivesStationIds(@Context HttpServletRequest request) {
@@ -174,7 +240,7 @@ public class UtilResource {
 				termPerspective.stationId = termPerspective.perspective.station.id;
 			}
 			termPerspectiveRepository.save(termPerspectives);
-			
+
 			List<StationPerspective> stationPerspectives = stationPerspectiveRepository.findAll();
 			for (StationPerspective stationPerspective : stationPerspectives) {
 				stationPerspective.stationId = stationPerspective.station.id;
@@ -182,7 +248,7 @@ public class UtilResource {
 			stationPerspectiveRepository.save(stationPerspectives);
 		}
 	}
-	
+
 	@GET
 	@Path("/updatePersonFields")
 	public void updatePersonFields(@Context HttpServletRequest request) {
@@ -190,7 +256,28 @@ public class UtilResource {
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Person> persons = personRepository.findAll();
-			for (Person person : persons) {
+
+			Iterator<Person> it = persons.iterator();
+			while (it.hasNext()) {
+				Person person =  it.next();
+
+				if(!Pattern.matches("^[a-z0-9\\._-]{3,50}$", person.username)){
+					System.err.println("Invalid username: "+ person.username + ", skipping");
+					it.remove();
+				}
+
+				if(person.email == null || person.email.trim().equals("")){
+					person.email = person.username + WordrailsUtil.generateRandomString(4, "a#")  + "@randomfix.com"; 
+				}
+
+				try {
+					InternetAddress emailAddr = new InternetAddress(person.email);
+					emailAddr.validate();
+				} catch (AddressException ex) {
+					System.err.println("Invalid email: "+ person.email + ", skipping");
+					it.remove();
+				}
+
 				if(person.image != null && person.image.original != null){
 					person.imageId = person.image.original.id;
 					person.imageSmallId = person.image.small.id;
@@ -202,17 +289,24 @@ public class UtilResource {
 					person.imageMediumId = null;
 					person.imageLargeId = null;
 				}
-				
+
 				if(person.cover != null && person.cover.original != null){
 					person.coverMediumId = person.cover.medium.id;
 					person.coverLargeId = person.cover.large.id;
 				}
+
+				if(person.createdAt == null){
+					person.createdAt = new DateTime(2015, 1, 17, 10, 31, 2, 0).toDate();
+				}
+
+				person.email = person.email.trim();
+
 			}
-			
 			personRepository.save(persons);
+
 		}
 	}
-	
+
 	@GET
 	@Path("/recalculateSlug")
 	public void recalculateSlug(@Context HttpServletRequest request){
@@ -223,20 +317,19 @@ public class UtilResource {
 			for (Post post : posts) {
 				doSlug(post);
 			}
-			postRepository.save(posts);
 		}
 	}
-	
+
 	@POST
 	@Path("/generateInvitations")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public void generate(@FormParam("subdomain") String subdomain, @FormParam("stationId") Integer stationId, @FormParam("count") Integer count){
-		
+
 		Network network = networkRepository.findOneBySubdomain(subdomain);
 		Station station = stationId != null ? stationRepository.findOne(stationId) : null;
-		
+
 		List<Invitation> invites = new ArrayList<>();
-		
+
 		for (int i = 0; i < count; i++) {
 			Invitation invitation =  new Invitation();
 			invitation.network = network;
@@ -245,10 +338,10 @@ public class UtilResource {
 			invitation.hash = WordrailsUtil.generateRandomString(8, "aA#");
 			invites.add(invitation);
 		}
-		
+
 		invitationRepository.save(invites);
 	}
-	
+
 	private void doSlug(Post post){
 		String originalSlug = WordrailsUtil.toSlug(post.title);
 		post.originalSlug = originalSlug;
@@ -258,32 +351,66 @@ public class UtilResource {
 		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
 			String hash = WordrailsUtil.generateRandomString(5, "Aa#");
 			post.slug = originalSlug + "-" + hash;
+			postRepository.save(post);
+		}
+	}
+
+	@GET
+	@Path("/updateRegIdsAndTokens")
+	@Transactional
+	public void updateRegIdsAndTokens(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			manager.createNativeQuery("UPDATE PersonNetworkRegId reg set person_id = null where reg.person_id = 1").executeUpdate();
+			manager.createNativeQuery("UPDATE PersonNetworkToken tok set person_id = null where tok.person_id = 1").executeUpdate();
 		}
 	}
 	
 	@GET
+	@Path("/updateNetworkProperties")
+	@Transactional
+	public void updateNetworkProperties(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<Network> networks = networkRepository.findAll();
+			for (Network network : networks) {
+				if(network.defaultOrientationMode == null || network.defaultOrientationMode.isEmpty() || !(network.defaultOrientationMode.equals("H") || network.defaultOrientationMode.equals("V") ))
+					network.defaultOrientationMode = "V";
+				
+				if(network.defaultReadMode == null || network.defaultReadMode.isEmpty() || !(network.defaultReadMode.equals("D") || network.defaultReadMode.equals("N") ))
+					network.defaultReadMode = "D";
+			}
+			networkRepository.save(networks);
+		}
+	}
+
+	@GET
 	@Path("/updateAllResources")
+	@Transactional(readOnly=false)
 	public void updateAllResources(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-//			reindexAll(request);
+			//			reindexAll(request);
+			//			recalculateSlug(request);
 			updateDefaultStationPerspective(request);
 			updatePostFields(request);
 			updateTermPerspectivesStationIds(request);
 			updatePersonFields(request);
-			recalculateSlug(request);
+			updateRegIdsAndTokens(request);
 			updateRegDate(request);
 		}
 	}
-	
+
 	@GET
 	@Path("/updateWordpressPosts")
 	public void updateWordpressPosts(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
 		int count = 0;
-		
+
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
 			List<Post> posts = new ArrayList<>();
@@ -302,11 +429,11 @@ public class UtilResource {
 				if(count > 100)
 					break;
 			}
-			
+
 			postRepository.save(posts);
 		}
 	}
-    
+
 	private @Autowired PostReadRepository postReadRepository;
 	private @Autowired CellRepository cellRepository;
 	private @Autowired CommentRepository commentRepository;
@@ -315,70 +442,70 @@ public class UtilResource {
 	private @Autowired BookmarkRepository bookmarkRepository;
 	private @Autowired RecommendRepository recommendRepository;
 	private @Autowired NotificationRepository notificationRepository;
-	
+
 	@GET
 	@Path("/removeWordpress")
 	public Response removeWordpress(@Context HttpServletRequest request, @QueryParam("token") String token){
-        int countPost = 0;
-        int countTerm = 0;
+		int countPost = 0;
+		int countTerm = 0;
 		String host = request.getHeader("Host");
-		
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-            Wordpress wp = wordpressRepository.findByToken(token);
 
-            Station station = stationRepository.findByWordpressToken(token);
-            
-            if(station == null) {
-                return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Something is very wrong:" + token).build();
-            } else if (wp == null) {
-                return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Token invalid:" + token).build();
-            } 
-            
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			Wordpress wp = wordpressRepository.findByToken(token);
+
+			Station station = stationRepository.findByWordpressToken(token);
+
+			if(station == null) {
+				return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Something is very wrong:" + token).build();
+			} else if (wp == null) {
+				return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Token invalid:" + token).build();
+			} 
+
 			List<Post> posts = postRepository.findByStation(station);
 			for (Post post : posts) {
 				if(post.wordpressId != null){
-                    List<Image> images = imageRepository.findByPost(post);
-                    if (images != null && images.size() > 0) {
-                        postRepository.updateFeaturedImagesToNull(images);
-                    }
+					List<Image> images = imageRepository.findByPost(post);
+					if (images != null && images.size() > 0) {
+						postRepository.updateFeaturedImagesToNull(images);
+					}
 					imageRepository.delete(images);
-                    cellRepository.delete(cellRepository.findByPost(post));
-                    commentRepository.delete(post.comments);
-                    promotionRepository.delete(post.promotions);
-                    postReadRepository.deleteByPost(post);
-                    notificationRepository.deleteByPost(post);
-                    bookmarkRepository.deleteByPost(post);
-                    recommendRepository.deleteByPost(post);
-                    postRepository.delete(post);
-                    
-                    countPost++;
+					cellRepository.delete(cellRepository.findByPost(post));
+					commentRepository.delete(post.comments);
+					promotionRepository.delete(post.promotions);
+					postReadRepository.deleteByPost(post);
+					notificationRepository.deleteByPost(post);
+					bookmarkRepository.deleteByPost(post);
+					recommendRepository.deleteByPost(post);
+					postRepository.delete(post);
+
+					countPost++;
 				}
 			}
-            Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
-            Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
-            List<Term> terms = new ArrayList<>();
+			Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
+			Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
+			List<Term> terms = new ArrayList<>();
 			terms.addAll(termRepository.findByTaxonomy(tagTaxonomy));
 			terms.addAll(termRepository.findByTaxonomy(categoryTaxonomy));
 			for (Term term : terms) {
 				if(term.wordpressId != null){
-                    countTerm += deleteCascade(term);
+					countTerm += deleteCascade(term);
 				}
 			}
 		}
-	
-        return Response.status(Response.Status.OK).type("text/plain").entity("Posts:"+countPost+" Terms:"+countTerm).build();
-    }
+
+		return Response.status(Response.Status.OK).type("text/plain").entity("Posts:"+countPost+" Terms:"+countTerm).build();
+	}
 	@Autowired private TermRepository termRepository;
 	@Autowired private RowRepository rowRepository; 
-    @Autowired private WordpressRepository wordpressRepository;
-    
-    @Transactional
-    public int deleteCascade(Term term){
-        int countTerm = 0;
+	@Autowired private WordpressRepository wordpressRepository;
+
+	@Transactional
+	public int deleteCascade(Term term){
+		int countTerm = 0;
 		if(term.termPerspectives != null && term.termPerspectives.size() > 0){
 			termPerspectiveRepository.delete(term.termPerspectives);
 		}
-		
+
 		List<Row> rows = rowRepository.findByTerm(term);
 		if(rows != null && rows.size() > 0){
 			rowRepository.delete(rows);
@@ -387,22 +514,22 @@ public class UtilResource {
 		List<Term> terms = termRepository.findByParent(term);
 		if(terms != null && terms.size() > 0){
 			for (Term t : terms) {
-                countTerm += deleteCascade(t);
-            }
+				countTerm += deleteCascade(t);
+			}
 		}
-        
-        try{
-            termRepository.delete(term);
-            countTerm++;
-        } catch(JpaObjectRetrievalFailureException e) {
-            
-        }
-        
-        return countTerm;
+
+		try{
+			termRepository.delete(term);
+			countTerm++;
+		} catch(JpaObjectRetrievalFailureException e) {
+
+		}
+
+		return countTerm;
 	}
-	
+
 	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository; 
-	
+
 	@GET
 	@Path("/updateRegDate")
 	private void updateRegDate(HttpServletRequest request) {
@@ -421,7 +548,7 @@ public class UtilResource {
 	@Autowired private QueryPersistence qp;
 	@Autowired private PersonNetworkRegIdRepository reg;
 	@Autowired private AsyncService asyncService; 
-	
+
 	@Autowired
 	private Scheduler sched;
 

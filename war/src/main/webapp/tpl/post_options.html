@@ -1,4 +1,4 @@
-<div id="post-options-sidebar" class="vbox bg-lighter-grey">
+<div id="post-options-sidebar" class="vbox bg-lighter-grey in-left-shadow">
   <div class="wrapper b-b b-l" ng-show="(writableStations && writableStations.length > 1) || app.editingPost.id">
     <span>Estação: <strong>{{app.editingPost.id ? + app.editingPost.selectedStation.stationName : ''}}</strong></span>
     <select ng-class="{'hide': app.editingPost.id}" class="form-control m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"

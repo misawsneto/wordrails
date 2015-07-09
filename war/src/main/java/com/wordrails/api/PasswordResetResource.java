@@ -143,7 +143,8 @@ public class PasswordResetResource {
 		person.passwordReseted = true;
 		if(!person.username.equals("wordrails")){ // don't allow users to change wordrails pas
 			Integer networkId = 0;
-			if(person.user != null) networkId = person.user.network.id;
+			if(person.user != null && person.user.network != null)
+				networkId = person.user.network.id;
 			User user = userRepository.findByUsernameAndEnabledAndNetworkId(person.username, true, networkId);
 			if(user != null){
 				user.password = password;

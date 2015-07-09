@@ -69,7 +69,7 @@ public class GCMService {
 			Iterator<PersonNetworkRegId> it = personNetworkRegIds.iterator();
 			while(it.hasNext()){
 				PersonNetworkRegId regId = it.next();
-				if(regId.person.id.equals(notification.person.id))
+				if(regId.person != null && regId.person.id.equals(notification.person.id))
 					it.remove();
 			}
 		}
@@ -119,6 +119,9 @@ public class GCMService {
 		notification.hash = WordrailsUtil.generateRandomString(10, "Aa#");
 		ArrayList<Notification> notis = new ArrayList<Notification>();
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
+			if(pnRegId.person.id == 1 || pnRegId.person == null)
+				continue;
+			
 			Notification noti = new Notification();
 			noti.message = notification.message + "";
 			noti.network = pnRegId.network;
