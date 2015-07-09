@@ -359,6 +359,25 @@ public class UtilResource {
 			manager.createNativeQuery("UPDATE PersonNetworkToken tok set person_id = null where tok.person_id = 1").executeUpdate();
 		}
 	}
+	
+	@GET
+	@Path("/updateNetworkProperties")
+	@Transactional
+	public void updateNetworkProperties(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<Network> networks = networkRepository.findAll();
+			for (Network network : networks) {
+				if(network.defaultOrientationMode == null || network.defaultOrientationMode.isEmpty() || !(network.defaultOrientationMode.equals("H") || network.defaultOrientationMode.equals("V") ))
+					network.defaultOrientationMode = "V";
+				
+				if(network.defaultReadMode == null || network.defaultReadMode.isEmpty() || !(network.defaultReadMode.equals("D") || network.defaultReadMode.equals("N") ))
+					network.defaultReadMode = "D";
+			}
+			networkRepository.save(networks);
+		}
+	}
 
 	@GET
 	@Path("/updateAllResources")

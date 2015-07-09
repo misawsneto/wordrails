@@ -89,114 +89,81 @@
 			<!-- new user panel -->
 			<div class="panel panel-card block-600 m-auto" ng-show="creating">
 				<div class="panel-heading h4 wrapper-md">
-					<a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Novo usuário da estação <strong>{{stationName}}</strong></span>
+					<a ui-sref="app.settings.stations">Estações</a>
+					<i class="mdi mdi-chevron-right"></i>
+					<a ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null})">{{stationName}}</a>
+					<i class="mdi mdi-chevron-right"></i>
+					<span>Novo usuário da estação</span>
 				</div>
 				<div class="panel-body wrapper-md">
 					<div class="row pos-rlt">
 						<div class="w-xxl m-auto">
-							<div class="md-form-group md-neutral-theme text-lg">
-								<input class="md-input" ng-model="station.name">
-								<label>Nome da estação</label>
+							<div class="md-form-group md-neutral-theme text-lg float-label">
+								<input class="md-input text-xl" ng-model="station.name">
+								<label>Nome completo</label>
 							</div>
+							<div class="md-form-group md-neutral-theme float-label">
+			          <input class="md-input" ng-model="person.username" required>
+			          <label>Email</label>
+			        </div>
+							<div class="md-form-group md-neutral-theme float-label">
+			          <input class="md-input" ng-model="person.username" required>
+			          <label>Usuário</label>
+			        </div>
+			        <div class="md-form-group md-neutral-theme float-label">
+			          <input type="password" class="md-input" ng-model="person.password" required>
+			          <label>Senha</label>
+			          <span class="md-input-msg right">(opcional) se não fornecido, criaremos uma senha automaticamente.</span>
+			        </div>
 						</div>
 					</div>
 					<div class="line line-dashed b-b line-lg pull-in"></div>
 					<div class="row">
 						<div class="col-sm-6">
-							<div class="m-b text-muted text-md text-u-c">Configurações principais</div>
-							<p>
-								<label class="md-switch">
-									<input type="checkbox" ng-model="station.allowComments"
-									ng-true-value="true" ng-false-value="false">
-									<i class="blue"></i>
-									Permitir comentários
-								</label>
-							</p>
-							<p>
-								<label class="md-switch">
-									<input type="checkbox" ng-disabled="station.visibility !== 'UNRESTRICTED'" ng-model="station.allowSocialShare"
-									ng-true-value="true" ng-false-value="false">
-									<i class="blue"></i>
-									Permitir compartilhamento em redes sociais
-								</label>
-							</p>
-							<div class="m-b m-t text-muted text-md text-u-c">Configurações de edição</div>
-							<p>
-								<label class="md-switch">
-									<input type="checkbox" ng-model="station.topper"
-									ng-true-value="true" ng-false-value="false">
-									<i class="blue"></i>
-									Chapéu
-								</label>
-							</p>
-							<p>
-								<label class="md-switch">
-									<input type="checkbox" ng-model="station.subheading"
-									ng-true-value="true" ng-false-value="false">
-									<i class="blue"></i>
-									Subtítulo
-								</label>
-							</p>
-						</div>
-						<div class="col-sm-6">
-							<div class="m-b text-muted text-md text-u-c">Visibilidade</div>
+							<div class="m-b text-muted text-md text-u-c">Permissões</div>
 							<p>
 								<label class="md-check">
-									<input type="radio" name="c" ng-model="station.visibility" value="UNRESTRICTED">
+									<input type="radio" name="c" ng-model="station.visibility" value="RESTRICTED">
 									<i class="blue"></i>
-									Pública
+									Escritor
 								</label>
 							</p>
 							<p>
 								<label class="md-check">
 									<input type="radio" name="c" ng-model="station.visibility" value="RESTRICTED">
 									<i class="blue"></i>
-									Privada
-								</label>
-							</p>
-							<div class="m-b text-muted text-md text-u-c">Permissões</div>
-							<p>
-								<label class="md-check">
-									<input type="radio" name="d" ng-model="station.writable" ng-value="false">
-									<i class="blue"></i>
-									Somente leitura
+									Editor
 								</label>
 							</p>
 							<p>
 								<label class="md-check">
-									<input type="radio" name="d" ng-model="station.writable" ng-value="true">
+									<input type="radio" name="c" ng-model="station.visibility" value="UNRESTRICTED">
 									<i class="blue"></i>
-									Escrita e leitura
+									Adminastrador
 								</label>
 							</p>
-							<div class="m-b m-t text-muted text-md text-u-c">Permissões de edição</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="m-b text-muted text-md text-u-c">Notificar usuário</div>
 							<p>
 								<label class="md-switch">
 									<input type="checkbox" ng-model="station.allowWritersToNotify"
 									ng-true-value="true" ng-false-value="false">
 									<i class="blue"></i>
-									Escritores podem notificar usuários em dispositivos móveis.
-								</label>
-							</p>
-							<p ng-if="app.initData.network.allowSponsors">
-								<label class="md-switch">
-									<input type="checkbox" ng-model="station.allowWritersToAddSponsors"
-									ng-true-value="true" ng-false-value="false">
-									<i class="blue"></i>
-									Escritores podem associar patrocinadores às notícias.
+									Enviar link de configuração do perfil via email.
 								</label>
 							</p>
 						</div>
 					</div>
-					<div class="m-t text-right text-lg">
-						<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null})"
-						md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
-						<button ng-if="!creating" ng-click="updatePerson()"
-						md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
+				</div>
+				<div class="m-t text-right text-lg" >
+					<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null})"
+					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+					<button ng-if="!creating" ng-click="updatePerson()"
+					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
 
-						<button ng-if="creating" ng-click="createPerson()"
-						md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
-					</div>
+					<button ng-if="creating" ng-click="createPerson()"
+					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
 				</div>
 			</div>
 			<!-- /new user panel-->
@@ -204,7 +171,7 @@
 		<!--  /wrapper -->
 
 		<!-- create user -->
-		<md-button ng-hide="creating == true"
+		<md-button ng-hide="creating"
 		id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
 		ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
 		tooltip="Novo usuário" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"

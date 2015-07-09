@@ -2680,6 +2680,10 @@ button, select, html, textarea, input{
   overflow: visible
 }
 
+.text-xl {
+  font-size: 22px;
+}
+
 /* /general */
 
 /* animate */

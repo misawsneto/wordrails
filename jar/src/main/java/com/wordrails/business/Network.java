@@ -109,7 +109,9 @@ public class Network {
 	public Image loginImage;
 	public Integer loginImageId;
 	
+	@Column(columnDefinition = "varchar(255) default 'D", nullable = false)
 	public String defaultReadMode;
+	@Column(columnDefinition = "varchar(255) default 'V", nullable = false)
 	public String defaultOrientationMode;
 
 	@Override
