@@ -1,15 +1,48 @@
-<div id="settings-network">
+<div id="settings-stations-users">
 
-<div class="header-custom text-center animated box-shadow">
-</div>
+	<div class="header-custom text-center animated box-shadow">
+	</div>
 
-<div class="wrapper-lg animated zoomIn">
-    <div class="panel panel-card block-800 m-auto">
-      <div class="panel-heading h4 wrapper-md">
-        <a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Usuários</span>
-      </div>
-      <div class="panel-body wrapper-md" style="min-height: 200px;">
-      </div>
-    </div>
-  </div>
+	<div class="wrapper-lg animated zoomIn">
+		<div class="panel panel-card block-1000 m-auto">
+			<div class="panel-heading h4 wrapper-md">
+				<a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Usuários</span>
+			</div>
+			<div class="panel-body wrapper-md p-l-none p-r-none" style="min-height: 200px;">
+				<table st-table="rowCollectionPip"  st-pipe="callServer" class="table table-striped">
+					<thead>
+						<tr>
+							<th st-sort="firstName">first name</th>
+							<th st-sort="lastName">last name</th>
+							<th st-sort="birthDate">birth date</th>
+							<th st-sort="balance">balance</th>
+							<th>email</th>
+						</tr>
+						<tr>
+							<th>
+								<input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+							</th>
+							<th colspan="4">
+								<input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+							</th>
+						</tr>
+					</thead>
+					<tbody ng-hide="isLoading">
+						<tr ng-repeat="row in rowCollectionPip">
+							<td>{{row.firstName | uppercase}}</td>
+							<td>{{row.lastName}}</td>
+							<td>{{row.birthDate | date}}</td>
+							<td>{{row.balance | currency}}</td>
+							<td><a ng-href="mailto:{{row.email}}">email</a></td>
+						</tr>
+					</tbody>
+					<tbody ng-show="isLoading">
+						<tr>
+							<td colspan="5" class="text-center"><i class="fa fa-spin fa-refresh"></i></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>

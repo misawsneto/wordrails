@@ -223,7 +223,6 @@ public class UtilResource {
 			for (Post post : posts) {
 				doSlug(post);
 			}
-			postRepository.save(posts);
 		}
 	}
 	
@@ -258,6 +257,7 @@ public class UtilResource {
 		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
 			String hash = WordrailsUtil.generateRandomString(5, "Aa#");
 			post.slug = originalSlug + "-" + hash;
+			postRepository.save(post);
 		}
 	}
 	
@@ -281,11 +281,11 @@ public class UtilResource {
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 //			reindexAll(request);
+			recalculateSlug(request);
 			updateDefaultStationPerspective(request);
 			updatePostFields(request);
 			updateTermPerspectivesStationIds(request);
 			updatePersonFields(request);
-			recalculateSlug(request);
 			updateRegIdsAndTokens(request);
 			updateRegDate(request);
 		}

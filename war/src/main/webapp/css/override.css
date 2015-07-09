@@ -2689,6 +2689,9 @@ button, select, html, textarea, input{
 
 #settings>div.animated,
 #settings-network .animated,
+#settings-stations-users .animated,
+#settings-sponsor-config .animated,
+#settings-stations-config .animated,
 #settings-stations .animated,
 #settings-users .animated,
 #settings-statistics .animated,
@@ -4384,13 +4387,20 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 /* /settings */
 
+/* settings-users */
+#settings-stations-users input.form-control{
+	width: 96%;
+}
+/* /settings-users */
+
 /* settings-colors */
 
 .customizer{
-  top:60%!important;
+  z-index: 10!important;
+  top: 60%!important;
 }
 #device-selector{
-  top:75px!important;
+  top: 75px!important;
 }
 
 .mockup-browser .md-fab{
