@@ -482,7 +482,7 @@ public class PostsResource {
 	@GET
 	@Path("/{stationId}/postRead")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
+	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size) throws BadRequestException{
 
 		if (stationId == null || page == null || size == null) {
 			throw new BadRequestException("Invalid null parameter(s).");

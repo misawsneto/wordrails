@@ -64,20 +64,54 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 
+		$scope.thisStation = {}
 		$scope.app.initData.stations.forEach(function(station, index){
 			if($state.params.stationId == station.id){
 				$scope.stationName = station.name;
 				$scope.stationId = station.id;
+				$scope.thisStation = station;
 			}
 		});	
 
-		if($state.params.newUser)
+		if($state.params.newUser){
 			$scope.creating = true;
-		else
+			$scope.person = {
+				'stationRole': {'roleString':'READER', 'writer': false, 'editor': false, 'admin': false, 'station': $scope.thisStation},
+				name: '',
+				username: '',
+				password: '',
+				email: '',
+				emailNotification: true
+			}
+		}else
 			$scope.creating = false;
 
-		console.log($state.params.newUser);
+		$scope.createPerson = function(){
+			trix.createPerson($scope.person).success(function(){
+				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+			});
+		}
 
+		$scope.changePermission = function(){
+			if($scope.person.stationRole.roleString == 'ADMIN'){
+				$scope.person.stationRole.admin = true;
+				$scope.person.stationRole.writer = true;
+				$scope.person.stationRole.editor = true;
+			}else if($scope.person.stationRole.roleString == 'EDITOR'){
+				$scope.person.stationRole.admin = false;
+				$scope.person.stationRole.writer = true;
+				$scope.person.stationRole.editor = true;
+			}else if($scope.person.stationRole.roleString == 'WRITER'){
+				$scope.person.stationRole.admin = false;
+				$scope.person.stationRole.editor = false;
+				$scope.person.stationRole.writer = true;
+			}else{
+				$scope.person.stationRole.admin = false;
+				$scope.person.stationRole.editor = false;
+				$scope.person.stationRole.writer = false;
+			}
+			console.log($scope.person.stationRole);
+		}
 
 		trix.findByStationIds([$state.params.stationId], 0, 50, null, 'stationRoleProjection').success(function(personsRoles){
 			$scope.personsRoles = personsRoles.stationRoles;

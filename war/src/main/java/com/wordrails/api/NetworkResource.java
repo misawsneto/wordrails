@@ -103,17 +103,16 @@ public class NetworkResource {
 	public Response createNetwork (NetworkCreateDto networkCreate){
 		Person person = accessControllerUtil.getLoggedPerson();
 		
-		Network network = networkCreate.network;
 		Taxonomy taxonomy = networkCreate.taxonomy;
 		
 		taxonomyRepository.save(taxonomy);
 		
-		networkRepository.save(network);
+		networkRepository.save(networkCreate);
 		
 		NetworkRole networkRole = new NetworkRole();
 		networkRole.admin = true;
 		networkRole.person = person;
-		networkRole.network = network;
+		networkRole.network = networkCreate;
 		
 		networkRolesRepository.save(networkRole);
 		

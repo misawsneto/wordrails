@@ -17,14 +17,15 @@ public class StationRoleEventHandler {
 	
 	@Autowired AccessControllerUtil accessControllerUtil;
 	
-	@HandleBeforeSave
 	@Transactional
+	@HandleBeforeSave
 	public void handleBeforeSave(StationRole stationRole) {
 //		Person person = accessControllerUtil.getLoggedPerson();
 		if(stationRole.admin){
 			stationRole.writer = true;
 			stationRole.editor = true;
 		}else if(stationRole.editor){
+			stationRole.admin = false;
 			stationRole.writer = true;
 		}else if(stationRole.writer){
 			stationRole.admin = false;
@@ -36,14 +37,15 @@ public class StationRoleEventHandler {
 		}
 	}
 	
-	@HandleBeforeCreate
 	@Transactional
+	@HandleBeforeCreate
 	public void handleBeforeCreate(StationRole stationRole) {
 //		Person person = accessControllerUtil.getLoggedPerson();
 		if(stationRole.admin){
 			stationRole.writer = true;
 			stationRole.editor = true;
 		}else if(stationRole.editor){
+			stationRole.admin = false;
 			stationRole.writer = true;
 		}else if(stationRole.writer){
 			stationRole.admin = false;

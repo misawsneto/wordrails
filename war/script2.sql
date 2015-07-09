@@ -5,6 +5,10 @@ ALTER TABLE PersonNetworkRegId MODIFY person_id INT(11) default NULL;
 ALTER TABLE PersonNetworkToken MODIFY person_id INT(11) default NULL;
 ALTER TABLE PostRead MODIFY person_id INT(11) default NULL;
 
+ALTER TABLE Network defaultTaxonomy_id INT(11) default NULL;
+
+ALTER TABLE station drop column social;
+
 delete from person_network_role where person_id = 125;
 delete from person_station_role where person_id = 125;
 delete from person where id = 125;

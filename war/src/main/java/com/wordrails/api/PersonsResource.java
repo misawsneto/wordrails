@@ -46,11 +46,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.GCMService;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.business.BadRequestException;
+import com.wordrails.business.ConflictException;
 import com.wordrails.business.Network;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.business.Station;
+import com.wordrails.business.StationRoleEventHandler;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.BookmarkRepository;
@@ -65,6 +68,7 @@ import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
+import com.wordrails.util.PersonCreateDto;
 
 @Path("/persons")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -96,6 +100,7 @@ public class PersonsResource {
 	private @Autowired StationSecurityChecker stationSecurityChecker;
 
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
+	public @Autowired StationRoleEventHandler stationRoleEventHandler;
 
 	@PUT
 	@Path("/me/regId")
@@ -213,9 +218,49 @@ public class PersonsResource {
 
 	@POST
 	@Path("/create")
-	public Response create(Person person){
-		// TODO create user
-		return Response.status(Status.CREATED).build();
+	public Response create(PersonCreateDto person, @Context HttpServletRequest request) throws ConflictException, BadRequestException{
+		Network network = wordrailsService.getNetworkFromHost(request);
+		
+		Person personObject = null;
+		
+		if(person != null){
+			try{
+				personObject = new Person();
+				personObject.name = person.name;
+				personObject.username = person.username;
+				personObject.password = person.password;
+				personObject.email = person.email;
+				
+				personRepository.save(personObject);
+			}catch (org.springframework.dao.DataIntegrityViolationException e) {
+				e.printStackTrace();
+				throw new ConflictException();
+			}
+			
+			if(network != null ){
+				NetworkRole networkRole = new NetworkRole();
+				networkRole.network = networkRepository.findOne(network.id);
+				networkRole.person = personObject;
+				networkRole.admin = false;
+				networkRolesRepository.save(networkRole);
+			}
+			
+			if(person.stationRole !=null){
+				if(person.stationRole.station != null && person.stationRole.station.id != null){
+					Station station = stationRepository.findOne(person.stationRole.station.id);
+					person.stationRole.station = station;
+					person.stationRole.person = personObject;
+					stationRoleEventHandler.handleBeforeCreate(person.stationRole);
+					stationRolesRepository.save(person.stationRole);
+				}else{
+					throw new BadRequestException();	
+				}
+			}
+			
+			return Response.status(Status.CREATED).build();
+		}else{
+			throw new BadRequestException();
+		}
 	}
 
 	@GET

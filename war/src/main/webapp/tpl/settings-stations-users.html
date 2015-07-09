@@ -61,7 +61,7 @@
 									</td>
 									<td>{{role.person.name}}</td>
 									<td>{{role.person.username}}</td>
-									<td class="text-center">{{role.admin ? 'admin': (role.editor ? 'editor' : role.writer ? 'escritor' : ' - ')}}</td>
+									<td class="text-center">{{role.admin ? 'admin': (role.editor ? 'editor' : role.writer ? 'escritor' : 'leitor')}}</td>
 									<td class="text-center" ng-if="!role.person.lastLogin"> - </td>
 									<td class="text-center" ng-if="role.person.lastLogin">{{role.person.lastLogin | fromNow3}}</td>
 									<td>
@@ -99,11 +99,11 @@
 					<div class="row pos-rlt">
 						<div class="w-xxl m-auto">
 							<div class="md-form-group md-neutral-theme text-lg">
-								<input class="md-input text-xl" ng-model="station.name">
+								<input class="md-input text-xl" ng-model="person.name">
 								<label>Nome completo</label>
 							</div>
 							<div class="md-form-group md-neutral-theme">
-			          <input class="md-input" ng-model="person.username" required>
+			          <input class="md-input" ng-model="person.email" required>
 			          <label>Email</label>
 			        </div>
 							<div class="md-form-group md-neutral-theme">
@@ -123,21 +123,28 @@
 							<div class="m-b text-muted text-md text-u-c">Permissões</div>
 							<p>
 								<label class="md-check">
-									<input type="radio" name="c" ng-model="station.visibility" value="RESTRICTED">
+									<input type="radio" name="c" ng-model="person.stationRole.roleString" value="READER" ng-change="changePermission(person)">
+									<i class="blue"></i>
+									Leitor
+								</label>
+							</p>
+							<p>
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="person.stationRole.roleString" value="WRITER" ng-change="changePermission(person)">
 									<i class="blue"></i>
 									Escritor
 								</label>
 							</p>
 							<p>
 								<label class="md-check">
-									<input type="radio" name="c" ng-model="station.visibility" value="RESTRICTED">
+									<input type="radio" name="c" ng-model="person.stationRole.roleString" value="EDITOR" ng-change="changePermission(person)">
 									<i class="blue"></i>
 									Editor
 								</label>
 							</p>
 							<p>
 								<label class="md-check">
-									<input type="radio" name="c" ng-model="station.visibility" value="UNRESTRICTED">
+									<input type="radio" name="c" ng-model="person.stationRole.roleString" value="ADMIN" ng-change="changePermission(person)">
 									<i class="blue"></i>
 									Adminastrador
 								</label>
@@ -147,7 +154,7 @@
 							<div class="m-b text-muted text-md text-u-c">Notificar usuário</div>
 							<p>
 								<label class="md-switch">
-									<input type="checkbox" ng-model="station.allowWritersToNotify"
+									<input type="checkbox" ng-model="person.emailNotification"
 									ng-true-value="true" ng-false-value="false">
 									<i class="blue"></i>
 									Enviar link de configuração do perfil via email.
