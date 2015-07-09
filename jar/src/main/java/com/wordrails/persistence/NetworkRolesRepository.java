@@ -20,4 +20,7 @@ public interface NetworkRolesRepository extends JpaRepository<NetworkRole, Integ
 	
 	@RestResource(exported=false)
 	List<NetworkRole> findByPersonId(@Param("personId") Integer personId);
+
+	@RestResource(exported=false)
+	void deleteByPerson(Person person);
 }

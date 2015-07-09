@@ -12,7 +12,7 @@ public class PostIndexingInterceptor implements EntityIndexingInterceptor {
 
 	@Override
 	public IndexingOverride onAdd(Object entity) {
-		log.info("Creating index for post " + ((Post) entity).id);
+//		log.info("Creating index for post " + ((Post) entity).id);
 		log.debug(entity.toString());
 
 		return IndexingOverride.APPLY_DEFAULT;
@@ -20,7 +20,7 @@ public class PostIndexingInterceptor implements EntityIndexingInterceptor {
 
 	@Override
 	public IndexingOverride onUpdate(Object entity) {
-		log.info("Updating index for post " + ((Post) entity).id);
+//		log.info("Updating index for post " + ((Post) entity).id);
 		log.debug(entity.toString());
 
 		return IndexingOverride.APPLY_DEFAULT;
@@ -28,7 +28,7 @@ public class PostIndexingInterceptor implements EntityIndexingInterceptor {
 
 	@Override
 	public IndexingOverride onDelete(Object entity) {
-		log.info("Deleting index for post " + ((Post) entity).id);
+//		log.info("Deleting index for post " + ((Post) entity).id);
 		log.debug(entity.toString());
 
 		return IndexingOverride.APPLY_DEFAULT;

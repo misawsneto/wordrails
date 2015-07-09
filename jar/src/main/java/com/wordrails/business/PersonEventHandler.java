@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
+import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +15,8 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wordrails.persistence.ImageRepository;
+import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.TermRepository;
@@ -29,7 +32,11 @@ public class PersonEventHandler {
 	private @Autowired EmailService passwordResetService;
 	private @Autowired PostRepository postRepository;
 	
+	private @Autowired NetworkRolesRepository networkRolesRepository;
+	private @Autowired ImageRepository imageRepository;
+	
 	private @Autowired CacheService cacheService;
+	private ImageRepository bookmarksRepository;
 
 	@HandleBeforeSave
 	@Transactional
@@ -57,6 +64,15 @@ public class PersonEventHandler {
 		org.springframework.security.core.userdetails.User user = 
 				new org.springframework.security.core.userdetails.User(person.username, password == null ? WordrailsUtil.generateRandomString(8, "a#") : password, authority);
 		userDetailsManager.createUser(user);
+	}
+	
+	@HandleBeforeDelete
+	public void handleBeforeDelete(Person person){
+		networkRolesRepository.deleteByPerson(person);
+		imageRepository.deleteByPerson(person);
+		bookmarksRepository.deleteByPerson(person);
+		System.out.println(person.id+ "");
+		
 	}
 	
 	@HandleAfterSave

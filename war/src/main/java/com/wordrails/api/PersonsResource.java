@@ -3,12 +3,15 @@ package com.wordrails.api;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,6 +37,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -46,6 +50,7 @@ import com.wordrails.business.Network;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
+import com.wordrails.business.Station;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.BookmarkRepository;
@@ -58,6 +63,8 @@ import com.wordrails.persistence.RecommendRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
+import com.wordrails.security.NetworkSecurityChecker;
+import com.wordrails.security.StationSecurityChecker;
 
 @Path("/persons")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -84,6 +91,9 @@ public class PersonsResource {
 
 	private @Autowired BookmarkRepository bookmarkRepository;
 	private @Autowired RecommendRepository recommendRepository;
+	
+	private @Autowired NetworkSecurityChecker networkSecurityChecker;
+	private @Autowired StationSecurityChecker stationSecurityChecker;
 
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 
@@ -249,6 +259,43 @@ public class PersonsResource {
 		}
 
 		return personData;
+	}
+	
+	@DELETE
+	@Path("/{personId}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+		Network network = wordrailsService.getNetworkFromHost(request);
+		
+		if(networkSecurityChecker.isNetworkAdmin(network)){
+			personRepository.findOne(personId);
+			return Response.status(Status.OK).build();
+		}else{
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+		
+	}
+	
+	@PUT
+	@Path("/deletePersonStationRoles")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Transactional(readOnly = false)
+	public Response deletePersonStationRoles(List<Integer> stationRolesIds) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+		
+		List<Station> stations = stationRepository.findByStationRolesIds(stationRolesIds);
+		
+		Set<Integer> stationIds = new HashSet<Integer>();
+		
+		for (Station station : stations) {
+			stationIds.add(station.id);
+		}
+		
+		if(stationSecurityChecker.isStationsAdmin(new ArrayList<Integer>(stationIds))){
+			stationRolesRepository.deleteByIds(stationRolesIds);
+			return Response.status(Status.OK).build();
+		}else{
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
 	}
 
 	@GET

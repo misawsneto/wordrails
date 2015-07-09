@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -41,4 +42,9 @@ public interface StationRolesRepository extends JpaRepository<StationRole, Integ
 	@RestResource(exported=false)
 	@Query("SELECT str FROM StationRole str WHERE str.station.id in (:stationIds) AND str.person.id = :personId")
 	List<StationRole> findByPersonAndStationIds(@Param("personId") Integer personId, @Param("stationIds") List<Integer> stationIds);
+
+	@RestResource(exported=false)
+	@Modifying
+	@Query("delete from StationRole str where str.id in (:stationRolesIds)")
+	void deleteByIds(@Param("stationRolesIds") List<Integer> stationRolesIds);
 }

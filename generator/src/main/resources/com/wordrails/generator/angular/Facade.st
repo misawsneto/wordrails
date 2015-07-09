@@ -87,6 +87,11 @@ var trix = angular.module('trix', [])
     	var config = {"headers": {"Content-Type": "application/json"}}
 		return \$http.put(_config.url + "/api/posts/" + postId + "/updatePostTerms", terms, config)
 	}
+	
+	this.deletePersonStationRoles = function(stationRolesIds) {
+    	var config = {"headers": {"Content-Type": "application/json"}}
+		return \$http.put(_config.url + "/api/persons/deletePersonStationRoles", stationRolesIds, config)
+	}
 
 	this.findPerspectiveView = function(stationPerspectiveId, termPerspectiveId, termId, _page, _size, _sort) {
 		var config = {

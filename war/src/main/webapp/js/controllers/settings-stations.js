@@ -71,15 +71,59 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 
 		trix.findByStationIds([$state.params.stationId], 0, 50, null, 'stationRoleProjection').success(function(personsRoles){
 			$scope.personsRoles = personsRoles.stationRoles;
+			for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
+				if($scope.personsRoles[i].person.id == $scope.app.initData.person.id)
+					$scope.personsRoles.splice(i, 1);
+			};
 		})
 
-		$scope.stopPropagation = function($event){
-			//$event.preventDefault();
-			$event.stopPropagation();
+		$scope.loadPerson = function(){
+
 		}
 
-		$scope.loadUser = function(){
-			console.log('load user');
+		$scope.app.applyBulkActions = function(){
+			if($scope.bulkActionSelected.id == 0)
+				return
+			else if($scope.bulkActionSelected.id == 2)
+				removeAllSelected();
+			$scope.app.cancelModal();
+		}
+
+		var removeAllSelected = function(){
+			var ids = [];
+			$scope.personsRoles.forEach(function(role, index){
+				if(role.selected)
+					ids.push(role.id);
+			});
+
+			trix.deletePersonStationRoles(ids).success(function(){
+				for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
+					if(ids.indexOf($scope.personsRoles[i].id) > -1)
+						$scope.personsRoles.splice(i, 1);
+				};
+				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$scope.app.cancelModal();
+			})
+		}		
+
+		$scope.openDeletePersonRole = function(roleId){
+			$scope.app.openSplash('confirm_delete_person.html')
+			$scope.deletePersonRoleId = roleId;
+		}
+
+		$scope.app.deletePersonRole = function(){
+			trix.deleteStationRole($scope.deletePersonRoleId).success(function(response){
+				for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
+					if($scope.personsRoles[i].id == $scope.deletePersonRoleId)
+						$scope.personsRoles.splice(i, 1);
+				};
+				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$scope.app.cancelModal();
+			})
+		}
+
+		$scope.stopPropagation = function($event){
+			$event.stopPropagation();
 		}
 
 		$scope.bulkActions = [
@@ -89,10 +133,6 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 		]
 
 		$scope.bulkActionSelected = $scope.bulkActions[0];
-
-		/*<option value="0">Ações em grupo</option>
-							<option value="1">Alterar selecionados</option>
-							<option value="1">Remover selecionados</option>*/
 
 		$scope.toggleAll = function(){
 			if($scope.toggleSelectValue && $scope.personsRoles){
@@ -106,6 +146,24 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 			}
 		}
 
-		$scope.changePersonStation
+		function noPersonSelected(){
+			var ret = true
+			$scope.personsRoles.forEach(function(role, index){
+				if(role.selected)
+					ret = false;
+			});
+			return ret;
+		}
+
+		$scope.openBulkActionsSplash = function(){
+			if(noPersonSelected())
+				$scope.app.openSplash('confirm_no_person_selected.html');
+			else if($scope.bulkActionSelected.id == 0)
+				return null;
+			else if($scope.bulkActionSelected.id == 2)
+				$scope.app.openSplash('confirm_bulk_delete_persons.html');
+		}
+
+		// $scope.changePersonStation
 
 }]);

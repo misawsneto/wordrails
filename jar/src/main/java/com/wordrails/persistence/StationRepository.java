@@ -47,4 +47,8 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
     @Query("select network.stations from Network network where network.id = :networkId")
 	public List<Station> findByNetworkId(@Param("networkId") Integer networkId);
 
+    @RestResource(exported=false)
+    @Query("select str.station from StationRole str where str.id in (:stationRolesIds) group by str.station.id")
+	public List<Station> findByStationRolesIds(@Param("stationRolesIds") List<Integer> stationRolesIds);
+
 }

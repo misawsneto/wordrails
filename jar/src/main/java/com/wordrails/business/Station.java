@@ -177,4 +177,11 @@ public class Station {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Station [id=" + id + ", name=" + name + ", visibility="
+				+ visibility + ", networks=" + networks + "]";
+	}
+	
 }
