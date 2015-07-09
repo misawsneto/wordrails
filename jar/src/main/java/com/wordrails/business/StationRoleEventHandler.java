@@ -14,6 +14,15 @@ import com.wordrails.persistence.TermRepository;
 @RepositoryEventHandler(StationRole.class)
 @Component
 public class StationRoleEventHandler {
+	
+	@Autowired AccessControllerUtil accessControllerUtil;
+	
+	@HandleBeforeSave
+	@Transactional
+	public void handleBeforeSave(StationRole stationRole) {
+//		Person person = accessControllerUtil.getLoggedPerson();
+//		stationRole.person
+	}
 
 //	private @Autowired TaxonomyRepository taxonomyRepository;
 //	private @Autowired TermRepository termRepository;

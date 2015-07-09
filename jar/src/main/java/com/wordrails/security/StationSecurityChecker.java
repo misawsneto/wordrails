@@ -1,5 +1,6 @@
 package com.wordrails.security;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,22 @@ public class StationSecurityChecker {
 			}else{
 				isAdmin = isNetworkAdmin(station, personLogged);
 			}
+		}
+		return isAdmin;
+	}
+	
+	public boolean isStationsAdmin(List<Integer> stationIds){
+		boolean isAdmin = false;
+		Person personLogged = accessControllerUtil.getLoggedPerson();
+		if(personLogged != null){
+			List<StationRole> personStationRoles = stationRolesRepository.findByPersonAndStationIds(personLogged.id, stationIds);
+			
+			for (StationRole stationRole : personStationRoles) {
+				if(!stationRole.admin)
+					return false;
+			}
+			
+			return true;
 		}
 		return isAdmin;
 	}

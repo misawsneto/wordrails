@@ -2676,6 +2676,10 @@ button, select, html, textarea, input{
   transform: translate3d(0,0,0);
 } */
 
+.o-visible {
+  overflow: visible
+}
+
 /* /general */
 
 /* animate */
@@ -2707,8 +2711,8 @@ button, select, html, textarea, input{
 #notifications .animated,
 #post-left-content .animated,
 #post-right-content .animated{
- -webkit-animation-duration: 0.3s;
-  animation-duration: 0.3s; 
+ -webkit-animation-duration: 0.3s!important;
+  animation-duration: 0.3s!important; 
 }
 
 /* /animate */
@@ -4388,9 +4392,6 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 /* /settings */
 
 /* settings-users */
-#settings-stations-users input.form-control{
-	width: 96%;
-}
 /* /settings-users */
 
 /* settings-colors */

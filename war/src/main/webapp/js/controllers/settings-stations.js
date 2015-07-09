@@ -64,4 +64,36 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 
-	}]);
+		$scope.app.initData.stations.forEach(function(station, index){
+			if($state.params.stationId == station.id)
+				$scope.stationName = station.name;
+		});	
+
+		trix.findByStationIds([$state.params.stationId], 0, 50, null, 'stationRoleProjection').success(function(personsRoles){
+			$scope.personsRoles = personsRoles.stationRoles;
+		})
+
+		$scope.stopPropagation = function($event){
+			//$event.preventDefault();
+			$event.stopPropagation();
+		}
+
+		$scope.loadUser = function(){
+			console.log('load user');
+		}
+
+		$scope.toggleAll = function(){
+			if($scope.toggleSelectValue && $scope.personsRoles){
+				$scope.personsRoles.forEach(function(role, index){
+					role.selected = true;
+				}); 
+			}else if($scope.personsRoles){
+				$scope.personsRoles.forEach(function(role, index){
+					role.selected = false;
+				}); 
+			}
+		}
+
+		$scope.changePersonStation
+
+}]);

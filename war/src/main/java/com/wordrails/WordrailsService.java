@@ -539,4 +539,10 @@ public class WordrailsService {
 			}
 		return ids;
 	}
+
+	@Async
+	@Transactional
+	public void updateLastLogin(String username) {
+		queryPersistence.updateLastLogin(username);
+	}
 }

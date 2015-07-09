@@ -65,7 +65,7 @@ public class Person {
 	@Size(max=50)
 	@NotNull
 	@Column(unique=true)
-	@Pattern(regexp="^[a-z0-9\\._-]{3,50}$", message="Invalid username")
+	@Pattern(regexp="^[a-z0-9\\._-]{3,50}$")
 	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	@Analyzer(definition="customAnalyzer")
 	public String username;
@@ -116,10 +116,15 @@ public class Person {
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
 	@Field(analyze = Analyze.NO)
     @DateBridge(resolution = Resolution.SECOND)
 	public Date createdAt;
+	
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Field(analyze = Analyze.NO)
+    @DateBridge(resolution = Resolution.SECOND)
+	public Date lastLogin;
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
