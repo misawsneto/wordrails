@@ -1,7 +1,9 @@
 package com.wordrails.auth;
 
+import com.wordrails.business.Network;
 import com.wordrails.business.Person;
 import com.wordrails.business.User;
+import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserRepository;
 import com.wordrails.services.CacheService;
@@ -24,6 +26,8 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
 	private PersonRepository personRepository;
+	@Autowired
+	private NetworkRepository networkRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -51,15 +55,27 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		return (UsernamePasswordAuthenticationToken.class.equals(authentication));
 	}
 
-	public Person getLoggedPerson() {
+	public User getUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-		User user = (User) auth.getPrincipal();
+		return (User) auth.getPrincipal();
+	}
 
+	public Network getNetwork() {
+		return getUser().network;
+	}
+
+	public Integer getNetworkId() {
+		if(getUser().isAnonymous() || getUser().network == null)
+			return 0;
+
+		return getUser().network.id;
+	}
+
+	public Person getLoggedPerson() {
+		User user = getUser();
 
 		Person person;
-
-
 		if (user.isAnonymous()) {
 			person = new Person();
 			person.username = "wordrails";
@@ -68,21 +84,19 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		}
 
 		try {
-			person = cacheService.getPersonByUser(user);
+			person = cacheService.getPersonByUsernameAndNetworkId(user.username, getNetworkId());
 		} catch (ExecutionException e) {
 			person = personRepository.findByUser(user);
 		}
 
-		auth = new UsernamePasswordAuthenticationToken(user, user.password, user.getAuthorities());
+		Authentication auth = new UsernamePasswordAuthenticationToken(user, user.password, user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
 
 		return person;
 	}
 
 	public boolean isLogged() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		return authentication != null && (authentication.getPrincipal() instanceof String || !((User) authentication.getPrincipal()).isAnonymous());
+		return !getUser().isAnonymous();
 	}
 
 	public Authentication authenticate(String username, String password, Integer networkId) throws BadCredentialsException {
@@ -96,7 +110,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		if (users != null && users.size() > 0) {
 			User user = null;
 			for (User u : users) {
-				if (Objects.equals(u.networkId, networkId)) { //find by network
+				if (u.network != null && Objects.equals(u.network.id, networkId)) { //find by network
 					if (password.equals(u.password)) { //if this is the user for this network, is the password right?
 						user = u;
 						break;
@@ -111,8 +125,8 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 				throw new BadCredentialsException("Wrong password");
 			}
 
-			if (user.networkId == 0) {
-				user.networkId = networkId;
+			if (user.network == null || Objects.equals(user.network.id, 0)) {
+				user.network = getNetwork();
 				userRepository.save(user);
 			}
 

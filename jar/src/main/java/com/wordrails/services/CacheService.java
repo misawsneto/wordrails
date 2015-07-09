@@ -31,8 +31,6 @@ public class CacheService {
 	private LoadingCache<Integer, Network> networks;
 
 	private LoadingCache<String, Set<Person>> persons2;
-
-	private LoadingCache<User, Person> persons3;
 	private LoadingCache<String, Network> networks2;
 
 	private LoadingCache<Integer, Station> stations;
@@ -79,17 +77,6 @@ public class CacheService {
 						new CacheLoader<String, Set<Person>>() {
 							public Set<Person> load(String username) {
 								return personRepository.findByUsername(username);
-							}
-						});
-
-		// ------------- init person cache
-		persons3 = CacheBuilder.newBuilder().maximumSize(1000)
-				.expireAfterWrite(1, TimeUnit.MINUTES)
-						//	       .removalListener(MY_LISTENER)
-				.build(
-						new CacheLoader<User, Person>() {
-							public Person load(User user) {
-								return personRepository.findByUser(user);
 							}
 						});
 
@@ -143,15 +130,11 @@ public class CacheService {
 		return persons2.get(username);
 	}
 
-	public Person getPersonByUser(User user) throws ExecutionException {
-		return persons3.get(user);
-	}
-
 	public Person getPersonByUsernameAndNetworkId(String username, Integer networkId) throws ExecutionException {
 		Set<Person> persons = persons2.get(username);
 
 		for (Person p : persons) {
-			if((p.user == null && networkId == 0) || (p.user != null && p.user.networkId == networkId))
+			if((p.user == null && networkId == 0) || p.user != null && p.user.network != null && Objects.equals(p.user.network.id, networkId))
 				return p;
 		}
 
@@ -166,7 +149,7 @@ public class CacheService {
 		Set<User> us = users.get(username);
 
 		for (User u : us) {
-			if(Objects.equals(networkId, u.networkId))
+			if(u.network != null && Objects.equals(networkId, u.network.id))
 				return u;
 		}
 

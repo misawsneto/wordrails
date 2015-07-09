@@ -1041,7 +1041,42 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetUserNetworkAuthorized(Integer userId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetUserPersonAuthorized(Integer userId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserAuthoritiesAuthorized(Integer userId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserGrantedAuthoritiesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserGrantedAuthorityAuthorized(Integer userGrantedAuthorityId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserGrantedAuthorityUserAuthorized(Integer userGrantedAuthorityId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserGrantedAuthorityNetworkAuthorized(Integer userGrantedAuthorityId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserGrantedAuthorityStationAuthorized(Integer userGrantedAuthorityId) {
 		return false;
 	}
 

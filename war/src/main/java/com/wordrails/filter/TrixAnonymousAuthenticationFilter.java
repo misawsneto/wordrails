@@ -26,7 +26,7 @@ public class TrixAnonymousAuthenticationFilter extends AnonymousAuthenticationFi
 
 		User user = new User();
 		user.username = "wordrails";
-		user.networkId = network.id;
+		user.network = network;
 		return new AnonymousAuthenticationToken("anonymousKey", user, this.getAuthorities());
 	}
 }

@@ -55,9 +55,12 @@ public class Network {
 
 	@ManyToMany
 	public Set<Taxonomy> taxonomies;
-	
+
 	@OneToMany(mappedBy="network", cascade=CascadeType.ALL)
 	public Set<Sponsor> sponsors;
+
+	@OneToMany(mappedBy="network")
+	public Set<User> users;
 		
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;

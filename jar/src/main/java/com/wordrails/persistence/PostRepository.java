@@ -77,7 +77,6 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 
 	Post findByOriginalPostId(@Param("originalPostId") Integer originalPostId);
 
-	@PreAuthorize("hasAuthentication(ADMIN), isPostFromThisNetwork(:slug)")
 	Post findBySlug(@Param("slug") String slug);
 
 	List<Post> findPostBySlug(@Param("slug") String slug);
