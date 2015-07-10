@@ -208,6 +208,37 @@
 </div>
 <!-- /settings-stations-users -->
 
+<script type="text/ng-template" id="conflicting_person.html">
+	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+	<div class="splash-content text-center" ng-cloak>
+		<div>
+			<div class="row">
+				<div class="col-xs-8 col-xs-offset-2">
+    			<div style="{{app.conflictingPerson.conflictingPerson.imageSmallId | imageLink | bgimg}}" 
+    			class="bg-cover bg-img-lg bg-cover-round m-auto" 
+    			title="{{app.conflictingPerson.conflictingPerson.name}}"></div>
+					<div class="h3 m-b-xs">{{app.conflictingPerson.conflictingPerson.name}}</div>
+					<div class="h4 m-b-lg">{{app.conflictingPerson.conflictingPerson.username}} | {{app.conflictingPerson.conflictingPerson.email}}</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-xs-offset-3">
+					<div class="h4 m-b">Este usuário já pertence a rede. Deseja adioná-lo a esta estação no papel de <strong>
+					{{app.conflictingPerson.role == 'ADMIN' ? 'admin': (app.conflictingPerson.role == 'EDITOR' ? 'editor' : app.conflictingPerson.role == 'WRITER' ? 'escritor' : 'leitor')}}?</strong></div>
+					<div class="text-color p-l-lg p-r-lg">
+						<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-default btn text-lg text-u-c btn-block ">
+							Sim
+						</button>
+						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
+							Não
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
 <script type="text/ng-template" id="confirm_delete_person.html">
 	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
 	<div class="splash-content text-center" ng-cloak>
@@ -223,10 +254,10 @@
 			<div class="row">
 				<div class="col-xs-6 col-xs-offset-3">
 					<div class="p-lg text-color wrapper-lg">
-						<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block p-h-md">
+						<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
 							Sim
 						</button>
-						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
+						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
 							Não
 						</button>
 					</div>
@@ -262,10 +293,10 @@
 			<div class="row">
 				<div class="col-xs-6 col-xs-offset-3">
 					<div class="p-lg text-color wrapper-lg">
-						<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block p-h-md">
+						<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
 							Sim
 						</button>
-						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
+						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
 							Não
 						</button>
 					</div>
@@ -292,10 +323,10 @@
 			<div class="row">
 				<div class="col-xs-6 col-xs-offset-3">
 					<div class="p-lg text-color wrapper-lg">
-						<button ng-click="app.applyBulkActions();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block p-h-md">
+						<button ng-click="app.applyBulkActions();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
 							Sim
 						</button>
-						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block p-h-md">
+						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
 							Não
 						</button>
 					</div>

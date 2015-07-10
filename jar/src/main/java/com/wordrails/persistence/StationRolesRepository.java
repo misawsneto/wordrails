@@ -22,6 +22,9 @@ public interface StationRolesRepository extends JpaRepository<StationRole, Integ
 	StationRole findByStationAndPersonId(Station station, Integer personId);
 	
 	@RestResource(exported=false)
+	StationRole findByStationIdAndPersonId(Integer stationId, Integer personId);
+	
+	@RestResource(exported=false)
 	List<StationRole> findByStationAndPersonId(Station station, Integer personId, Pageable pageable);
 
 	@RestResource(exported=false)
