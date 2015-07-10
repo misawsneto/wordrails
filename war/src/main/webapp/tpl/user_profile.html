@@ -1,11 +1,11 @@
 <div id="user-profile" class="hbox" ng-cloak>
 	<!-- cover container -->
 	<div ng-show="showProfile">
-		<div class="" ng-show="person.coverLargeId">
-			<div class="profile-cover abstract-bg bg-cover" style="{{person.coverLargeId | imageLink | bgimg2}}">
+			<div class="profile-cover abstract-bg bg-cover pos-rlt" style="{{person.coverLargeId | imageLink | bgimg2}}">
+				<div class="cover-abstract-mask ng-scope" ng-if="!person.coverLargeId">
+				</div>
 			</div>
-		</div>
-		<div id="profile-buttons" class="pos-abt wrapper" ng-class="{'profile-buttons-cover': person.coverLargeId}">
+		<div id="profile-buttons" class="pos-abt wrapper profile-buttons-cover">
 			<md-button class="md-fab custom-fab-button text-lg animated zoomIn" 
 				tooltip="Editar perfil" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
 				md-no-ink angular-ripple ng-show="person.id == app.initData.person.id" 
@@ -13,7 +13,7 @@
 		        <i class="mdi mdi-pencil"></i>
 		      </md-button>
 		</div>
-		<div class="user-details block-600 m-auto animated zoomIn" ng-class="{'with-cover': person.coverLargeId}">
+		<div class="user-details block-600 m-auto animated zoomIn with-cover">
 			<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
 			</div>
 			<div class="m-t-sm font-bold wrapper-xs text-center" ng-class="{'text-4x': !person.coverLargeId, 'text-3x': person.coverLargeId}">

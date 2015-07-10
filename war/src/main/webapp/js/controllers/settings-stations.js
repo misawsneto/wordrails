@@ -92,6 +92,8 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 			$scope.creating = false;
 		}
 
+
+
 		$scope.createPerson = function(){
 			trix.createPerson($scope.person).success(function(response){
 				$scope.app.showSuccessToast('Alterações realizadas com successo.')
@@ -100,7 +102,8 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 				$scope.creating = false;
 			}).error(function(data, status, headers, config){
 				if(status == 409){
-					console.log(data);
+					$scope.app.conflictingPerson = data;
+					$scope.app.conflictingPerson.role = $scope.person.stationRole.roleString;
 					$scope.openAddUserToStaionSplash()
 				}else
 					$scope.app.showErrorToast('Dados inválidos. Tente novamente')
@@ -111,7 +114,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 		}
 
 		$scope.openAddUserToStaionSplash = function(){
-
+			$scope.app.openSplash('conflicting_person.html')
 		}
 
 		$scope.changePermission = function(){
@@ -143,8 +146,8 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 			};
 		})
 
-		$scope.loadPerson = function(){
-
+		$scope.loadPerson = function(person){
+			$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': person.id})
 		}
 
 		$scope.app.applyBulkActions = function(){

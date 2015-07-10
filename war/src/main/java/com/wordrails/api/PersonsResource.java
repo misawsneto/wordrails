@@ -57,6 +57,7 @@ import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.business.Station;
+import com.wordrails.business.StationRole;
 import com.wordrails.business.StationRoleEventHandler;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.converter.PostConverter;
@@ -222,20 +223,20 @@ public class PersonsResource {
 
 	@POST
 	@Path("/create")
-	public Response create(PersonCreateDto person, @Context HttpServletRequest request) throws ConflictException, BadRequestException, JsonProcessingException{
+	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, JsonProcessingException{
 		Network network = wordrailsService.getNetworkFromHost(request);
 
-		Person personObject = null;
+		Person person = null;
 
-		if(person != null){
+		if(personCreationObject != null){
 			try{
-				personObject = new Person();
-				personObject.name = person.name;
-				personObject.username = person.username;
-				personObject.password = person.password;
-				personObject.email = person.email;
+				person = new Person();
+				person.name = personCreationObject.name;
+				person.username = personCreationObject.username;
+				person.password = personCreationObject.password;
+				person.email = personCreationObject.email;
 
-				personRepository.save(personObject);
+				personRepository.save(person);
 			}catch (javax.validation.ConstraintViolationException e){
 				BadRequestException badRequest = new BadRequestException();
 				
@@ -260,10 +261,19 @@ public class PersonsResource {
 
 						Person conflictingPerson = null;
 
-						if(personObject.email != null && personObject.email.trim().equals(errorVal)){
-							conflictingPerson = personRepository.findByEmail(personObject.email);
-						}else if(personObject.username != null && personObject.username.trim().equals(errorVal)){
-							conflictingPerson = personRepository.findByUsername(personObject.username);
+						if(person.email != null && person.email.trim().equals(errorVal)){
+							conflictingPerson = personRepository.findByEmail(person.email);
+						}else if(person.username != null && person.username.trim().equals(errorVal)){
+							conflictingPerson = personRepository.findByUsername(person.username);
+						}
+						
+						if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
+//							conflictingPerson.id 
+							StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
+							if(str != null)
+								return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
+										+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", " 
+										+ "\"conflictingStationRole\": " + mapper.writeValueAsString(str) +"}").build();
 						}
 
 						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) +"}").build();
@@ -276,24 +286,24 @@ public class PersonsResource {
 			if(network != null ){
 				NetworkRole networkRole = new NetworkRole();
 				networkRole.network = networkRepository.findOne(network.id);
-				networkRole.person = personObject;
+				networkRole.person = person;
 				networkRole.admin = false;
 				networkRolesRepository.save(networkRole);
 			}
 
-			if(person.stationRole !=null){
-				if(person.stationRole.station != null && person.stationRole.station.id != null){
-					Station station = stationRepository.findOne(person.stationRole.station.id);
-					person.stationRole.station = station;
-					person.stationRole.person = personObject;
-					stationRoleEventHandler.handleBeforeCreate(person.stationRole);
-					stationRolesRepository.save(person.stationRole);
+			if(personCreationObject.stationRole !=null){
+				if(personCreationObject.stationRole.station != null && personCreationObject.stationRole.station.id != null){
+					Station station = stationRepository.findOne(personCreationObject.stationRole.station.id);
+					personCreationObject.stationRole.station = station;
+					personCreationObject.stationRole.person = person;
+					stationRoleEventHandler.handleBeforeCreate(personCreationObject.stationRole);
+					stationRolesRepository.save(personCreationObject.stationRole);
 				}else{
 					throw new BadRequestException();	
 				}
 			}
 
-			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(personObject)).build();
+			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		}else{
 			throw new BadRequestException();
 		}

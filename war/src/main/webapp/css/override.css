@@ -3095,6 +3095,26 @@ background: rgba(0,0,0,0.5);
   background-color: #f7f7f7;
 }
 
+#user-profile .abstract-bg{background-image: url(../img/abstract-cover-orig.png);}
+#user-profile .cover-abstract-mask {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+}
+
+#editing-user-profile .profile-cover{
+  height: 190px;
+}
+
+#editing-user-profile .abstract-bg{background-image: url(../img/abstract-cover-orig.png);}
+#editing-user-profile .cover-abstract-mask {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+}
+
 #profile-buttons{
   right: 100px;
 }
