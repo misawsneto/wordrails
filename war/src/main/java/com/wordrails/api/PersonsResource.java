@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -40,6 +41,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.FieldError;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -235,8 +237,15 @@ public class PersonsResource {
 
 				personRepository.save(personObject);
 			}catch (javax.validation.ConstraintViolationException e){
-				e.printStackTrace();
-				throw new BadRequestException();
+				BadRequestException badRequest = new BadRequestException();
+				
+				for (ConstraintViolation violation : e.getConstraintViolations()) {
+//					violation.get
+					FieldError error = new FieldError(violation.getInvalidValue()+"", violation.getInvalidValue()+"", violation.getMessage());  
+					badRequest.errors.add(error);
+				}
+				
+				throw badRequest;
 			}catch (org.springframework.dao.DataIntegrityViolationException e) {
 				if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
 					if(e.getCause() != null){
@@ -257,7 +266,7 @@ public class PersonsResource {
 							conflictingPerson = personRepository.findByUsername(personObject.username);
 						}
 
-						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson)).build();
+						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) +"}").build();
 					}
 				}
 				e.printStackTrace();
@@ -284,7 +293,7 @@ public class PersonsResource {
 				}
 			}
 
-			return Response.status(Status.CREATED).build();
+			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(personObject)).build();
 		}else{
 			throw new BadRequestException();
 		}

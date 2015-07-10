@@ -5,7 +5,7 @@
 
 	<div class="wrapper-lg animated zoomIn m-b-xxl">
 		<!-- start of user panel list -->
-		<div class="panel panel-card block-1000 m-auto" ng-hide="creating">
+		<div class="panel panel-card block-1000 m-auto" ng-hide="creating || editing">
 			<div class="panel-heading h4 wrapper-md">
 				<a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Usuários da estação <strong>{{stationName}}</strong></span>
 			</div>
@@ -93,7 +93,7 @@
 					<i class="mdi mdi-chevron-right"></i>
 					<a ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null})">{{stationName}}</a>
 					<i class="mdi mdi-chevron-right"></i>
-					<span>Novo usuário da estação</span>
+					<span>Novo usuário</span>
 				</div>
 				<div class="panel-body wrapper-md">
 					<div class="row pos-rlt">
@@ -164,16 +164,35 @@
 					</div>
 				</div>
 				<div class="m-t text-right text-lg" >
-					<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null})"
+					<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null, 'userId': null})"
 					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
-					<button ng-if="!creating" ng-click="updatePerson()"
-					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
 
-					<button ng-if="creating" ng-click="createPerson()"
+					<button ng-click="createPerson()"
 					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
 				</div>
 			</div>
 			<!-- /new user panel-->
+
+			<!-- editing user panel -->
+			<div class="panel panel-card block-600 m-auto animated fadeIn" ng-show="editing">
+				<div class="panel-heading h4 wrapper-md">
+				</div>
+				<div class="panel-body wrapper-md">
+					<div class="row pos-rlt">
+					</div>
+					<div class="line line-dashed b-b line-lg pull-in"></div>
+					<div class="row">
+					</div>
+				</div>
+				<div class="m-t text-right text-lg" >
+					<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null, 'userId': null})"
+					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+
+					<button ng-if="creating" ng-click="createPerson()"
+					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
+				</div>
+			</div>
+			<!-- /editing user panel -->
 		</div>
 		<!--  /wrapper -->
 

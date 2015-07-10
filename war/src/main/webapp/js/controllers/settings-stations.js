@@ -74,7 +74,6 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 		});	
 
 		if($state.params.newUser){
-			$scope.creating = true;
 			$scope.person = {
 				'stationRole': {'roleString':'READER', 'writer': false, 'editor': false, 'admin': false, 'station': $scope.thisStation},
 				name: '',
@@ -83,17 +82,31 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 				email: '',
 				emailNotification: true
 			}
-		}else
+			$scope.editing = false;
+			$scope.creating = true;
+		}else if($state.params.userId){
+			$scope.editing = true;
 			$scope.creating = false;
+		}else{
+			$scope.editing = false;
+			$scope.creating = false;
+		}
 
 		$scope.createPerson = function(){
-			trix.createPerson($scope.person).success(function(){
+			trix.createPerson($scope.person).success(function(response){
 				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': response.id}, {location: 'replace', inherit: false, notify: false, reload: false})
+				$scope.editing = true;
+				$scope.creating = false;
 			}).error(function(data, status, headers, config){
 				if(status == 409){
+					console.log(data);
 					$scope.openAddUserToStaionSplash()
 				}else
-					$scope.app.showErrorToast('Alterações realizadas com successo.')
+					$scope.app.showErrorToast('Dados inválidos. Tente novamente')
+				$timeout(function() {
+						cfpLoadingBar.complete();	
+				}, 100);		
 			});
 		}
 

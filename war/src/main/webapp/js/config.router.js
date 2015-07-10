@@ -150,7 +150,7 @@ angular.module('app')
                   , controller:'SettingsStationsStatisticsCtrl'
               })
               .state('app.settings.stationusers', {
-                  url: '/stationusers?stationId?newUser',
+                  url: '/stationusers?stationId?newUser?userId',
                   templateUrl: 'tpl/settings-stations-users.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
