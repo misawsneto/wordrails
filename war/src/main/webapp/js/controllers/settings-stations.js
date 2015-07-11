@@ -87,9 +87,20 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 		}else if($state.params.userId){
 			$scope.editing = true;
 			$scope.creating = false;
+			getEditingPerson($state.params.userId)
 		}else{
 			$scope.editing = false;
 			$scope.creating = false;
+		}
+
+		function getEditingPerson(id){
+			trix.findByStationIdAndPersonId($scope.thisStation.id, id, 'stationRoleProjection').success(function(response){
+				if(!response.stationRoles || response.stationRoles.length == 0){
+					return false;
+				}
+				$scope.person = response.stationRoles[0].person;
+				$scope.editingPersonLoaded = true;
+			})
 		}
 
 		$scope.createPerson = function(){
@@ -100,19 +111,30 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 				$scope.creating = false;
 			}).error(function(data, status, headers, config){
 				if(status == 409){
-					$scope.app.conflictingPerson = data;
-					$scope.app.conflictingPerson.role = $scope.person.stationRole.roleString;
+					$scope.app.conflictingData = data;
+					$scope.app.conflictingData.role = $scope.person.stationRole.roleString;
 					$scope.openAddUserToStaionSplash()
 				}else
 					$scope.app.showErrorToast('Dados inválidos. Tente novamente')
 				$timeout(function() {
 						cfpLoadingBar.complete();	
-				}, 100);		
+				}, 100);
 			});
 		}
 
-		$scope.addConflictingToStation = function(){
-
+		$scope.app.addConflictingToStation = function(){
+			$scope.app.changeExistingUserPermission();
+			$scope.app.conflictingData.stationRole.person = '/api/persons/'+ $scope.app.conflictingData.conflictingPerson.id;
+			$scope.app.conflictingData.stationRole.station = '/api/stations/' + $scope.thisStation.id
+			trix.postStationRole($scope.app.conflictingData.stationRole).success(function(){
+				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': $scope.app.conflictingData.conflictingPerson.id, 'newUser': null})
+				$scope.app.cancelModal();
+			}).error(function(){
+				$timeout(function() {
+						cfpLoadingBar.complete();	
+				}, 100);
+			})
 		}
 
 		$scope.openAddUserToStaionSplash = function(){
@@ -120,24 +142,24 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 		}
 
 		$scope.app.changeExistingUserPermission = function(){
-			if($scope.person.stationRole.roleString == 'ADMIN'){
-				$scope.person.stationRole.admin = true;
-				$scope.person.stationRole.writer = true;
-				$scope.person.stationRole.editor = true;
+			$scope.app.conflictingData.stationRole = {};
+			if($scope.app.conflictingData.role == 'ADMIN'){
+				$scope.app.conflictingData.stationRole.admin = true;
+				$scope.app.conflictingData.stationRole.writer = true;
+				$scope.app.conflictingData.stationRole.editor = true;
 			}else if($scope.person.stationRole.roleString == 'EDITOR'){
-				$scope.person.stationRole.admin = false;
-				$scope.person.stationRole.writer = true;
-				$scope.person.stationRole.editor = true;
+				$scope.app.conflictingData.stationRole.admin = false;
+				$scope.app.conflictingData.stationRole.writer = true;
+				$scope.app.conflictingData.stationRole.editor = true;
 			}else if($scope.person.stationRole.roleString == 'WRITER'){
-				$scope.person.stationRole.admin = false;
-				$scope.person.stationRole.editor = false;
-				$scope.person.stationRole.writer = true;
+				$scope.app.conflictingData.stationRole.admin = false;
+				$scope.app.conflictingData.stationRole.editor = false;
+				$scope.app.conflictingData.stationRole.writer = true;
 			}else{
-				$scope.person.stationRole.admin = false;
-				$scope.person.stationRole.editor = false;
-				$scope.person.stationRole.writer = false;
+				$scope.app.conflictingData.stationRole.admin = false;
+				$scope.app.conflictingData.stationRole.editor = false;
+				$scope.app.conflictingData.stationRole.writer = false;
 			}
-			console.log($scope.person.stationRole);
 		}
 
 		$scope.changePermission = function(){

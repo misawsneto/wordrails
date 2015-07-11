@@ -169,19 +169,20 @@
 			<!-- /new user panel-->
 
 			<!-- editing user panel -->
-			<div class="panel panel-card block-600 m-auto animated fadeIn" ng-show="editing">
+			<div class="panel panel-card block-600 m-auto animated fadeIn" ng-show="editing && editingPersonLoaded">
 				<div class="panel-body wrapper-md p-t-none">
 					<div id="editing-user-profile" class="row">
 						<div class="profile-cover abstract-bg bg-cover pos-rlt m-l-n-xs m-r-n-xs o-h" style="border-radius:3px 3px 0 0; {{person.coverLargeId | imageLink | bgimg2}}">
 							<div class="cover-abstract-mask ng-scope" ng-if="!person.coverLargeId">
 							</div>
-							<div style="{{app.conflictingPerson.conflictingPerson.imageSmallId | imageLink | bgimg}}" 
+							<div style="{{person.imageSmallId | imageLink | bgimg}}" 
 			    			class="bg-cover bg-img-xl bg-cover-round m-l-lg m-t-lg pos-rlt"
-			    			title="{{app.conflictingPerson.conflictingPerson.name}}"></div>
+			    			title="{{person.name}}"></div>
 						</div>
 					</div>
 					<!-- <div class="line line-dashed b-b line-lg pull-in"></div> -->
 					<div class="row">
+						
 					</div>
 				</div>
 				<div class="m-t text-right text-lg" >
@@ -205,6 +206,20 @@
 		<i class="mdi mdi-plus"></i>
 	</md-button>
 
+	<!-- <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html" 
+                label="Publicar"
+                 mfb-menu position="{{chosen.position}}" effect="{{chosen.effect}}"
+                 active-icon="mdi mdi-send" resting-icon="mdi mdi-plus"
+                 ng-mouseenter="hovered()" ng-mouseleave="hovered()"
+                 toggling-method="{{chosen.method}}" menu-state="menuState" main-action="publishPost($event)"
+                 ng-class="{'sidebar-opened': !app.hidePostOptions}">
+            
+              <button template-url="ng-mfb-button-md.tpl.html"
+                 mfb-button icon="{{button.icon}}" ng-click="doAction(button.action($event))"
+                 label="{{button.label}}" ng-repeat="button in buttons"></button>
+               </nav> -->
+               <!-- /options button -->
+
 </div>
 <!-- /settings-stations-users -->
 
@@ -215,25 +230,25 @@
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2">
 
-					<div class="h3 m-b-lg m-t-lg" ng-show="app.conflictingPerson.conflictingStationRole">
+					<div class="h3 m-b-lg m-t-lg" ng-show="app.conflictingData.conflictingStationRole">
 						Esta estação já possui um usuário cadastrado com estes dados!
 					</div>
 
-    			<div style="{{app.conflictingPerson.conflictingPerson.imageSmallId | imageLink | bgimg}}" 
+    			<div style="{{app.conflictingData.conflictingPerson.imageSmallId | imageLink | bgimg}}" 
     			class="bg-cover bg-img-lg bg-cover-round m-auto" 
-    			title="{{app.conflictingPerson.conflictingPerson.name}}"></div>
-					<div class="h3 m-b-xs">{{app.conflictingPerson.conflictingPerson.name}}</div>
-					<div class="h4 m-b-lg">{{app.conflictingPerson.conflictingPerson.username}} | {{app.conflictingPerson.conflictingPerson.email}}</div>
+    			title="{{app.conflictingData.conflictingPerson.name}}"></div>
+					<div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
+					<div class="h4 m-b-lg">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-xs-6 col-xs-offset-3">
 
-					<div class="h4 m-b" ng-hide="app.conflictingPerson.conflictingStationRole">
+					<div class="h4 m-b" ng-hide="app.conflictingData.conflictingStationRole">
 					Este usuário já existe. Deseja adioná-lo a esta estação no papel de <strong>
-					{{app.conflictingPerson.role == 'ADMIN' ? 'admin': (app.conflictingPerson.role == 'EDITOR' ? 'editor' : app.conflictingPerson.role == 'WRITER' ? 'escritor' : 'leitor')}}?</strong></div>
+					{{app.conflictingData.role == 'ADMIN' ? 'admin': (app.conflictingData.role == 'EDITOR' ? 'editor' : app.conflictingData.role == 'WRITER' ? 'escritor' : 'leitor')}}?</strong></div>
 
-					<div class="text-color p-l-lg p-r-lg" ng-hide="app.conflictingPerson.conflictingStationRole">
+					<div class="text-color p-l-lg p-r-lg" ng-hide="app.conflictingData.conflictingStationRole">
 						<button ng-click="app.addConflictingToStation();" angular-ripple type="submit" class="m-t-md btn-default btn text-lg text-u-c btn-block ">
 							Sim
 						</button>
