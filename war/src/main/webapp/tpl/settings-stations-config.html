@@ -57,6 +57,23 @@
                 Subtítulo
               </label>
             </p>
+            <div class="m-b m-t text-muted text-md text-u-c">Permissões de edição</div>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.allowWritersToNotify"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Escritores podem notificar usuários em dispositivos móveis.
+              </label>
+            </p>
+            <p ng-if="app.initData.network.allowSponsors">
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.allowWritersToAddSponsors"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Escritores podem associar patrocinadores às notícias.
+              </label>
+            </p>
           </div>
           <div class="col-sm-6">
             <div class="m-b text-muted text-md text-u-c">Visibilidade</div>
@@ -89,27 +106,10 @@
                 Escrita e leitura
               </label>
             </p>
-            <div class="m-b m-t text-muted text-md text-u-c">Permissões de edição</div>
-            <p>
-              <label class="md-switch">
-                <input type="checkbox" ng-model="station.allowWritersToNotify"
-                ng-true-value="true" ng-false-value="false">
-                <i class="blue"></i>
-                Escritores podem notificar usuários em dispositivos móveis.
-              </label>
-            </p>
-            <p ng-if="app.initData.network.allowSponsors">
-              <label class="md-switch">
-                <input type="checkbox" ng-model="station.allowWritersToAddSponsors"
-                ng-true-value="true" ng-false-value="false">
-                <i class="blue"></i>
-                Escritores podem associar patrocinadores às notícias.
-              </label>
-            </p>
           </div>
         </div>
       </div>
-      <div class="m-t text-right text-lg">
+      <div class="m-t-n-xs text-right text-lg">
         <button ui-sref="app.settings.stations"
         md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
          <button ng-if="!creating" ng-click="updateStation()"

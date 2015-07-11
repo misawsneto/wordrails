@@ -1,158 +1,174 @@
 <div id="user-profile" class="hbox" ng-cloak>
 	<!-- cover container -->
 	<div ng-show="showProfile">
-			<div class="profile-cover abstract-bg bg-cover pos-rlt" style="{{person.coverLargeId | imageLink | bgimg2}}">
-				<div class="cover-abstract-mask ng-scope" ng-if="!person.coverLargeId">
-				</div>
+		<div class="profile-cover abstract-bg bg-cover pos-rlt" style="{{person.coverLargeId | imageLink | bgimg2}}">
+			<div class="cover-abstract-mask ng-scope" ng-if="!person.coverLargeId">
 			</div>
+			<div id="cover-image-button"
+			 class="pos-abt left-0 bottom-0 m-l-lg m-b-lg" ng-if="person.id == app.initData.person.id">
+				<i class="mdi mdi-camera text-3x icon-text-shadow v-middle p-r-xs"></i>
+				<span class="p-r-xs text-lg" style="text-shadow:1px 1px 1px #000; vertical-align: sub;">
+					Trocar imagem de capa
+				</span>
+				<div id="image-button" class="">
+					<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+				</div>	
+			</div>
+		</div>
 		<div id="profile-buttons" class="pos-abt wrapper profile-buttons-cover">
 			<md-button class="md-fab custom-fab-button text-lg animated zoomIn" 
-				tooltip="Editar perfil" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
-				md-no-ink angular-ripple ng-show="person.id == app.initData.person.id" 
-				ng-click="editProfile()">
-		        <i class="mdi mdi-pencil"></i>
-		      </md-button>
-		</div>
-		<div class="user-details block-600 m-auto animated zoomIn with-cover">
-			<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
+			tooltip="Editar perfil" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+			md-no-ink angular-ripple ng-if="person.id == app.initData.person.id" 
+			ng-click="editProfile()">
+			<i class="mdi mdi-pencil"></i>
+		</md-button>
+	</div>
+	<div id="editing-user-profile" class="user-details block-600 m-auto animated zoomIn with-cover">
+		<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
+			<div id="image-button-wrapper" ng-if="person.id == app.initData.person.id">
+				<div id="image-button" class="custom-btn bg-img-xxl border-radius-50 box-shadow2" style="margin: -3px;">
+					<i class="mdi mdi-pencil text-4x text-white image-edit" style="margin: 75px;"></i>
+					<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+				</div>
 			</div>
-			<div class="m-t-sm font-bold wrapper-xs text-center" ng-class="{'text-4x': !person.coverLargeId, 'text-3x': person.coverLargeId}">
-				{{person.name}}
-			</div>
 		</div>
-		<div class="user-bio block-600 m-auto font-thin text-2x text-center m-b-lg">
-			{{person.bio}}
+		<div class="m-t-sm font-bold wrapper-xs text-center" ng-class="{'text-4x': !person.coverLargeId, 'text-3x': person.coverLargeId}">
+			{{person.name}}
 		</div>
 	</div>
-	<!-- /conver container -->
-	
-	<!-- divider -->
-	<div ng-show="postViews && postViews.length > 0 && showProfile">
-		<div class="m-t b-t b-drk w-full"></div>
-		<div class="header m-auto text-center text-u-c text-lg">
-			<span class="header-title p-l p-r">
-				Notícias
-			</span>
+	<div class="user-bio block-600 m-auto font-thin text-2x text-center m-b-lg">
+		{{person.bio}}
+	</div>
+</div>
+<!-- /conver container -->
+
+<!-- divider -->
+<div ng-show="postViews && postViews.length > 0 && showProfile">
+	<div class="m-t b-t b-drk w-full"></div>
+	<div class="header m-auto text-center text-u-c text-lg">
+		<span class="header-title p-l p-r">
+			Notícias
+		</span>
+	</div>
+</div>
+
+<!-- posts & recommendation -->
+<div infinite-scroll="paginate()" infinite-scroll-distance="1">
+	<!-- posts -->
+	<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="postViews && postViews.length > 0 && showProfile">
+		<ul class="b-none no-padding m-b-none ls-style-none">
+			<li ng-repeat="postView in postViews">
+				<div ng-class="{'b-t': !$first}"></div>
+				<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+					<!-- image -->
+					<a class="block-image m-l m-t" ng-if="postView.mediumId" >
+						<div class="cell-wrap r r-2x" ng-class="{'hide': !postView.mediumId}">
+							<div ng-style="getBackgroundImage(postView, 'md')"></div>
+						</div>
+					</a>
+					<!-- /image -->
+					<!-- /content -->
+					<div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
+						<span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
+						<a  class="h3 font-bold m-b m-t-sm block">
+							{{postView.title}}
+						</a>
+						<div class="text-lg font-thin">
+							{{postView.snippet | characters:170}}
+						</div>
+						<div class="m-t">
+							<div class="display-t-c">
+								<a >
+									<div style="{{postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
+								</a>
+							</div>
+							<div class="display-t-c p-l-sm v-middle">
+								<a ng-click="app.goToProfile($event, postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
+									{{postView.authorName}}
+								</a>
+								<br>
+								<span class="text-sm">
+									<span class="">
+										<span class="readingTime">{{postView.date | fromNow}}</span>
+									</span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<!-- /content -->
+				</div>    
+			</li>
+		</ul>
+	</div>
+	<!-- /posts -->
+
+	<div class="clear wrapper m-t m-b bg-light dk b-t b-b" ng-show="recommendations && showProfile">
+		<div class="block-800 m-auto text-md text-u-c m-b-md p-l font-bold">
+			recomendados por {{person.name}}
+		</div>
+		<div class="block-800 m-auto">
+			<div class="col-sm-6" ng-repeat="recommendation in recommendations">
+				<div class="m-t-sm m-b-md">
+					<div clamp="1" class="text-md">
+						<a class="underline-hover">{{recommendation.post.title}}</a>
+					</div>
+					<div clamp="1" class="font-thin">
+						{{recommendation.post.body | stripHtml}}
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
-	<!-- posts & recommendation -->
-	<div infinite-scroll="paginate()" infinite-scroll-distance="1">
-    <!-- posts -->
-		<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="postViews && postViews.length > 0 && showProfile">
-	    <ul class="b-none no-padding m-b-none ls-style-none">
-	      <li ng-repeat="postView in postViews">
-	       <div ng-class="{'b-t': !$first}"></div>
-	        <div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
-	          <!-- image -->
-	          <a class="block-image m-l m-t" ng-if="postView.mediumId" >
-	            <div class="cell-wrap r r-2x" ng-class="{'hide': !postView.mediumId}">
-	              <div ng-style="getBackgroundImage(postView, 'md')"></div>
-	            </div>
-	          </a>
-	          <!-- /image -->
-	          <!-- /content -->
-	          <div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
-	            <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
-	            <a  class="h3 font-bold m-b m-t-sm block">
-	              {{postView.title}}
-	            </a>
-	            <div class="text-lg font-thin">
-	            	{{postView.snippet | characters:170}}
-	            </div>
-	            <div class="m-t">
-	              <div class="display-t-c">
-	                <a >
-	                    <div style="{{postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
-	                </a>
-	              </div>
-	              <div class="display-t-c p-l-sm v-middle">
-	                <a ng-click="app.goToProfile($event, postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
-	                  {{postView.authorName}}
-	                </a>
-	                <br>
-	                <span class="text-sm">
-	                  <span class="">
-	                    <span class="readingTime">{{postView.date | fromNow}}</span>
-	                  </span>
-	                </span>
-	              </div>
-	            </div>
-	          </div>
-	          <!-- /content -->
-	        </div>    
-	      </li>
-	    </ul>
-	  </div>
-    <!-- /posts -->
+	<!-- pages -->
+	<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="pages && showProfile">
+		<ul class="b-none no-padding m-b-none ls-style-none">
+			<li ng-repeat="postView in pages">
+				<div ng-class="{'b-t': !$first || (!recommendations || recommendations.length == 0)}"></div>
+				<div class="m-b panel-card panel animated zoomIn m-b clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+					<!-- image -->
+					<a class="block-image m-l m-t" ng-if="postView.mediumId" >
+						<div class="cell-wrap r r-2x" ng-class="{'hide': !postView.mediumId}">
+							<div ng-style="getBackgroundImage(postView, 'md')"></div>
+						</div>
+					</a>
+					<!-- /image -->
+					<!-- /content -->
+					<div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
+						<span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
+						<a  class="h3 font-bold m-b m-t-sm block">
+							{{postView.title}}
+						</a>
+						<div class="text-lg font-thin">
+							{{postView.snippet | characters:170}}
+						</div>
+						<div class="m-t">
+							<div class="display-t-c">
+								<a >
+									<div style="{{postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
+								</a>
+							</div>
+							<div class="display-t-c p-l-sm v-middle">
+								<a ng-click="app.goToProfile($event, postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
+									{{postView.authorName}}
+								</a>
+								<br>
+								<span class="text-sm">
+									<span class="">
+										<span class="readingTime">{{postView.date | fromNow}}</span>
+									</span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<!-- /content -->
+				</div>    
+			</li>
+		</ul>
+	</div>
+	<!-- /pages -->
 
-    <div class="clear wrapper m-t m-b bg-light dk b-t b-b" ng-show="recommendations && showProfile">
-    	<div class="block-800 m-auto text-md text-u-c m-b-md p-l font-bold">
-    		recomendados por {{person.name}}
-    	</div>
-    	<div class="block-800 m-auto">
-    		<div class="col-sm-6" ng-repeat="recommendation in recommendations">
-    			<div class="m-t-sm m-b-md">
-    				<div clamp="1" class="text-md">
-    					<a class="underline-hover">{{recommendation.post.title}}</a>
-    				</div>
-    				<div clamp="1" class="font-thin">
-    					{{recommendation.post.body | stripHtml}}
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </div>
-		
-		<!-- pages -->
-		<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="pages && showProfile">
-			<ul class="b-none no-padding m-b-none ls-style-none">
-	      <li ng-repeat="postView in pages">
-	       <div ng-class="{'b-t': !$first || (!recommendations || recommendations.length == 0)}"></div>
-	        <div class="m-b panel-card panel animated zoomIn m-b clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
-	          <!-- image -->
-	          <a class="block-image m-l m-t" ng-if="postView.mediumId" >
-	            <div class="cell-wrap r r-2x" ng-class="{'hide': !postView.mediumId}">
-	              <div ng-style="getBackgroundImage(postView, 'md')"></div>
-	            </div>
-	          </a>
-	          <!-- /image -->
-	          <!-- /content -->
-	          <div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
-	            <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
-	            <a  class="h3 font-bold m-b m-t-sm block">
-	              {{postView.title}}
-	            </a>
-	            <div class="text-lg font-thin">
-	            	{{postView.snippet | characters:170}}
-	            </div>
-	            <div class="m-t">
-	              <div class="display-t-c">
-	                <a >
-	                    <div style="{{postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
-	                </a>
-	              </div>
-	              <div class="display-t-c p-l-sm v-middle">
-	                <a ng-click="app.goToProfile($event, postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
-	                  {{postView.authorName}}
-	                </a>
-	                <br>
-	                <span class="text-sm">
-	                  <span class="">
-	                    <span class="readingTime">{{postView.date | fromNow}}</span>
-	                  </span>
-	                </span>
-	              </div>
-	            </div>
-	          </div>
-	          <!-- /content -->
-	        </div>    
-	      </li>
-	    </ul>
-    </div>
-		<!-- /pages -->
+</div>
 
-  </div>
-
-	<div ui-view></div>
+<div ui-view></div>
 </div>
