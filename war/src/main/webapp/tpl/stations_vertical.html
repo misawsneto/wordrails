@@ -1,7 +1,7 @@
 <div id="perspective-vertical" class="animated fadeIn" ng-class="{'hide': !app.termPerspectiveView || app.viewMode !== 'vertical'}">
   <md-tabs md-no-ink md-selected="selectedIndex" flex class="bg-custom" md-center-tabs md-dynamic-height>
     <!-- tab -->
-    <md-tab md-on-select="selectVerticalRow(ordinaryRow)" ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{ordinaryRow.termName}}">
+    <md-tab md-on-select="selectVerticalRow(ordinaryRow)" ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{::ordinaryRow.termName}}">
       <div flex>
         <div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm" infinite-scroll="verticalPaginate(ordinaryRow)" infinite-scroll-distance="3">
             <!-- posts -->
@@ -18,25 +18,25 @@
                 <!-- /image -->
                 <!-- /content -->
                 <div class="m-t-sm" ng-class="{'content-block': cell.postView.mediumId}">
-                  <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{cell.postView.topper}}</span>
+                  <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{::cell.postView.topper}}</span>
                   <a  class="h3 font-bold m-b m-t-sm block">
-                    {{cell.postView.title}}
+                    {{::cell.postView.title}}
                   </a>
-                  <div class="text-lg font-thin">{{cell.postView.snippet | characters:170}}</div>
+                  <div class="text-lg font-thin">{{::cell.postView.snippet | characters:170}}</div>
                   <div class="m-t">
                     <div class="display-t-c">
                       <a >
-                          <div style="{{cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                          <div style="{{::cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
                       </a>
                     </div>
                     <div class="display-t-c p-l-sm v-middle">
                       <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
-                        {{cell.postView.authorName}}
+                        {{::cell.postView.authorName}}
                       </a>
                       <br>
                       <span class="text-sm">
                         <span class="">
-                          <span class="readingTime">{{cell.postView.date | fromNow}}</span>
+                          <span class="readingTime">{{::cell.postView.date | fromNow}}</span>
                         </span>
                       </span>
                     </div>

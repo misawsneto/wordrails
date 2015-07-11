@@ -293,6 +293,7 @@ public class UtilResource {
 				if(person.cover != null && person.cover.original != null){
 					person.coverMediumId = person.cover.medium.id;
 					person.coverLargeId = person.cover.large.id;
+					person.coverMediumId = person.cover.medium.id;
 				}
 
 				if(person.createdAt == null){

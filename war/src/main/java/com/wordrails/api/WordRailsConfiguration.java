@@ -3,17 +3,12 @@ package com.wordrails.api;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.validation.Validator;
 
 import org.reflections.Reflections;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
-import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Configuration
 public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {

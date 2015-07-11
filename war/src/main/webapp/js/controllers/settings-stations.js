@@ -74,7 +74,6 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 		});	
 
 		if($state.params.newUser){
-			$scope.creating = true;
 			$scope.person = {
 				'stationRole': {'roleString':'READER', 'writer': false, 'editor': false, 'admin': false, 'station': $scope.thisStation},
 				name: '',
@@ -83,22 +82,84 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 				email: '',
 				emailNotification: true
 			}
-		}else
+			$scope.editing = false;
+			$scope.creating = true;
+		}else if($state.params.userId){
+			$scope.editing = true;
 			$scope.creating = false;
+			getEditingPerson($state.params.userId)
+		}else{
+			$scope.editing = false;
+			$scope.creating = false;
+		}
+
+		function getEditingPerson(id){
+			trix.findByStationIdAndPersonId($scope.thisStation.id, id, 'stationRoleProjection').success(function(response){
+				if(!response.stationRoles || response.stationRoles.length == 0){
+					return false;
+				}
+				$scope.person = response.stationRoles[0].person;
+				$scope.editingPersonLoaded = true;
+			})
+		}
 
 		$scope.createPerson = function(){
-			trix.createPerson($scope.person).success(function(){
+			trix.createPerson($scope.person).success(function(response){
 				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': response.id}, {location: 'replace', inherit: false, notify: false, reload: false})
+				$scope.editing = true;
+				$scope.creating = false;
 			}).error(function(data, status, headers, config){
 				if(status == 409){
+					$scope.app.conflictingData = data;
+					$scope.app.conflictingData.role = $scope.person.stationRole.roleString;
 					$scope.openAddUserToStaionSplash()
 				}else
-					$scope.app.showErrorToast('Erro ao criar usuário')
+					$scope.app.showErrorToast('Dados inválidos. Tente novamente')
+				$timeout(function() {
+						cfpLoadingBar.complete();	
+				}, 100);
 			});
 		}
 
-		$scope.openAddUserToStaionSplash = function(){
+		$scope.app.addConflictingToStation = function(){
+			$scope.app.changeExistingUserPermission();
+			$scope.app.conflictingData.stationRole.person = '/api/persons/'+ $scope.app.conflictingData.conflictingPerson.id;
+			$scope.app.conflictingData.stationRole.station = '/api/stations/' + $scope.thisStation.id
+			trix.postStationRole($scope.app.conflictingData.stationRole).success(function(){
+				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': $scope.app.conflictingData.conflictingPerson.id, 'newUser': null})
+				$scope.app.cancelModal();
+			}).error(function(){
+				$timeout(function() {
+						cfpLoadingBar.complete();	
+				}, 100);
+			})
+		}
 
+		$scope.openAddUserToStaionSplash = function(){
+			$scope.app.openSplash('conflicting_person.html')
+		}
+
+		$scope.app.changeExistingUserPermission = function(){
+			$scope.app.conflictingData.stationRole = {};
+			if($scope.app.conflictingData.role == 'ADMIN'){
+				$scope.app.conflictingData.stationRole.admin = true;
+				$scope.app.conflictingData.stationRole.writer = true;
+				$scope.app.conflictingData.stationRole.editor = true;
+			}else if($scope.person.stationRole.roleString == 'EDITOR'){
+				$scope.app.conflictingData.stationRole.admin = false;
+				$scope.app.conflictingData.stationRole.writer = true;
+				$scope.app.conflictingData.stationRole.editor = true;
+			}else if($scope.person.stationRole.roleString == 'WRITER'){
+				$scope.app.conflictingData.stationRole.admin = false;
+				$scope.app.conflictingData.stationRole.editor = false;
+				$scope.app.conflictingData.stationRole.writer = true;
+			}else{
+				$scope.app.conflictingData.stationRole.admin = false;
+				$scope.app.conflictingData.stationRole.editor = false;
+				$scope.app.conflictingData.stationRole.writer = false;
+			}
 		}
 
 		$scope.changePermission = function(){
@@ -130,8 +191,8 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 			};
 		})
 
-		$scope.loadPerson = function(){
-
+		$scope.loadPerson = function(person){
+			$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': person.id})
 		}
 
 		$scope.app.applyBulkActions = function(){

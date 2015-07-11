@@ -75,9 +75,6 @@ public class Notification {
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
-		if(!contains(type)){
-			throw new BadRequestException("Invalid notification type");
-		}
 		if(post!=null){
 			postId = post.id;
 		}

@@ -23,14 +23,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.FieldError;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -134,7 +135,7 @@ public class PersonsResource {
 		List<Post> posts = postRepository.findPostByPersonIdAndStations(personId, stationIds, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts); 
+		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
 
@@ -160,7 +161,7 @@ public class PersonsResource {
 		List<Post> posts = postRepository.findRecommendationsByPersonIdAndStations(personId, stationIds, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts); 
+		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
 
@@ -201,18 +202,18 @@ public class PersonsResource {
 
 	@POST
 	@Path("/create")
-	public Response create(PersonCreateDto person, @Context HttpServletRequest request) throws ConflictException, BadRequestException, JsonProcessingException{
+	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, JsonProcessingException{
 		Network network = authProvider.getNetwork();
 
-		Person personObject = null;
+		Person person = null;
 
-		if(person != null){
+		if(personCreationObject != null){
 			try{
-				personObject = new Person();
-				personObject.name = person.name;
-				personObject.username = person.username;
-				personObject.password = person.password;
-				personObject.email = person.email;
+				person = new Person();
+				person.name = personCreationObject.name;
+				person.username = personCreationObject.username;
+				person.password = personCreationObject.password;
+				person.email = personCreationObject.email;
 
 				UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
 				authority.network = network;
@@ -233,10 +234,17 @@ public class PersonsResource {
 				userRepository.save(user);
 				person.user = user;
 
-				personRepository.save(personObject);
+				personRepository.save(person);
 			}catch (javax.validation.ConstraintViolationException e){
-				e.printStackTrace();
-				throw new BadRequestException();
+				BadRequestException badRequest = new BadRequestException();
+
+				for (ConstraintViolation violation : e.getConstraintViolations()) {
+//					violation.get
+					FieldError error = new FieldError(violation.getInvalidValue()+"", violation.getInvalidValue()+"", violation.getMessage());
+					badRequest.errors.add(error);
+				}
+
+				throw badRequest;
 			}catch (org.springframework.dao.DataIntegrityViolationException e) {
 				if(e.getCause() != null){
 					if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
@@ -250,13 +258,22 @@ public class PersonsResource {
 						}
 
 						Person conflictingPerson = null;
-						if(personObject.email != null && personObject.email.trim().equals(errorVal)){
-							conflictingPerson = personRepository.findByEmailAndNetworkId(personObject.email, network.id);
-						}else if(personObject.username != null && personObject.username.trim().equals(errorVal)){
-							conflictingPerson = personRepository.findByUsernameAndNetworkId(personObject.username, network.id);
+						if(person.email != null && person.email.trim().equals(errorVal)){
+							conflictingPerson = personRepository.findByEmailAndNetworkId(person.email, network.id);
+						}else if(person.username != null && person.username.trim().equals(errorVal)){
+							conflictingPerson = personRepository.findByUsernameAndNetworkId(person.username, network.id);
 						}
 
-						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson)).build();
+						if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
+//							conflictingPerson.id 
+							StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
+							if(str != null)
+								return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
+										+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
+										+ "\"conflictingStationRole\": " + mapper.writeValueAsString(str) +"}").build();
+						}
+
+						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) +"}").build();
 					}
 				}
 				e.printStackTrace();
@@ -266,24 +283,24 @@ public class PersonsResource {
 			if(network != null ){
 				NetworkRole networkRole = new NetworkRole();
 				networkRole.network = networkRepository.findOne(network.id);
-				networkRole.person = personObject;
+				networkRole.person = person;
 				networkRole.admin = false;
 				networkRolesRepository.save(networkRole);
 			}
 
-			if(person.stationRole !=null){
-				if(person.stationRole.station != null && person.stationRole.station.id != null){
-					Station station = stationRepository.findOne(person.stationRole.station.id);
-					person.stationRole.station = station;
-					person.stationRole.person = personObject;
-					stationRoleEventHandler.handleBeforeCreate(person.stationRole);
-					stationRolesRepository.save(person.stationRole);
+			if(personCreationObject.stationRole !=null){
+				if(personCreationObject.stationRole.station != null && personCreationObject.stationRole.station.id != null){
+					Station station = stationRepository.findOne(personCreationObject.stationRole.station.id);
+					personCreationObject.stationRole.station = station;
+					personCreationObject.stationRole.person = person;
+					stationRoleEventHandler.handleBeforeCreate(personCreationObject.stationRole);
+					stationRolesRepository.save(personCreationObject.stationRole);
 				}else{
-					throw new BadRequestException();	
+					throw new BadRequestException();
 				}
 			}
 
-			return Response.status(Status.CREATED).build();
+			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		}else{
 			throw new BadRequestException();
 		}
@@ -402,7 +419,7 @@ public class PersonsResource {
 		PersonData initData = new PersonData();
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes(), PersonDto.class);
-		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes(), NetworkDto.class); 
+		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes(), NetworkDto.class);
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes(), NetworkRoleDto.class);
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;
