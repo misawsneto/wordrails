@@ -55,7 +55,7 @@
 								<tr ng-repeat="role in personsRoles" ng-click="loadPerson(role.person)">
 									<td>
 										<label class="md-check">
-											<input type="checkbox" ng-model="role.selected">
+											<input type="checkbox" ng-model="role.selected" ng-click="stopPropagation($event)">
 											<i class="blue"></i>
 										</label>
 									</td>
@@ -214,6 +214,11 @@
 		<div>
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2">
+
+					<div class="h3 m-b-lg m-t-lg" ng-show="app.conflictingPerson.conflictingStationRole">
+						Esta estação já possui um usuário cadastrado com estes dados!
+					</div>
+
     			<div style="{{app.conflictingPerson.conflictingPerson.imageSmallId | imageLink | bgimg}}" 
     			class="bg-cover bg-img-lg bg-cover-round m-auto" 
     			title="{{app.conflictingPerson.conflictingPerson.name}}"></div>
@@ -223,10 +228,13 @@
 			</div>
 			<div class="row">
 				<div class="col-xs-6 col-xs-offset-3">
-					<div class="h4 m-b">Este usuário já pertence a rede. Deseja adioná-lo a esta estação no papel de <strong>
+
+					<div class="h4 m-b" ng-hide="app.conflictingPerson.conflictingStationRole">
+					Este usuário já existe. Deseja adioná-lo a esta estação no papel de <strong>
 					{{app.conflictingPerson.role == 'ADMIN' ? 'admin': (app.conflictingPerson.role == 'EDITOR' ? 'editor' : app.conflictingPerson.role == 'WRITER' ? 'escritor' : 'leitor')}}?</strong></div>
-					<div class="text-color p-l-lg p-r-lg">
-						<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-default btn text-lg text-u-c btn-block ">
+
+					<div class="text-color p-l-lg p-r-lg" ng-hide="app.conflictingPerson.conflictingStationRole">
+						<button ng-click="app.addConflictingToStation();" angular-ripple type="submit" class="m-t-md btn-default btn text-lg text-u-c btn-block ">
 							Sim
 						</button>
 						<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
@@ -316,7 +324,7 @@
 					<div class="">
 						Tem certeza que deseja remover as permissões dos usuários selecionados para esta estação?
 						<br>
-						Atenção! Os usuários selecionados não serão excluídos. Para excluí-los, entre em contato com o administrador da rede. 
+						Atenção! Os usuários selecionados não serão excluídos da rede. Para excluir um usuário, entre em contato com o administrador da rede. 
 					</div>
 				</div>
 			</div>

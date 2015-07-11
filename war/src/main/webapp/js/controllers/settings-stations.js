@@ -92,8 +92,6 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 			$scope.creating = false;
 		}
 
-
-
 		$scope.createPerson = function(){
 			trix.createPerson($scope.person).success(function(response){
 				$scope.app.showSuccessToast('Alterações realizadas com successo.')
@@ -113,8 +111,33 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 			});
 		}
 
+		$scope.addConflictingToStation = function(){
+
+		}
+
 		$scope.openAddUserToStaionSplash = function(){
 			$scope.app.openSplash('conflicting_person.html')
+		}
+
+		$scope.app.changeExistingUserPermission = function(){
+			if($scope.person.stationRole.roleString == 'ADMIN'){
+				$scope.person.stationRole.admin = true;
+				$scope.person.stationRole.writer = true;
+				$scope.person.stationRole.editor = true;
+			}else if($scope.person.stationRole.roleString == 'EDITOR'){
+				$scope.person.stationRole.admin = false;
+				$scope.person.stationRole.writer = true;
+				$scope.person.stationRole.editor = true;
+			}else if($scope.person.stationRole.roleString == 'WRITER'){
+				$scope.person.stationRole.admin = false;
+				$scope.person.stationRole.editor = false;
+				$scope.person.stationRole.writer = true;
+			}else{
+				$scope.person.stationRole.admin = false;
+				$scope.person.stationRole.editor = false;
+				$scope.person.stationRole.writer = false;
+			}
+			console.log($scope.person.stationRole);
 		}
 
 		$scope.changePermission = function(){
