@@ -38,6 +38,7 @@ angular.module('app')
         }
       }
 
+
       // save settings to local storage
       if ( angular.isDefined($localStorage.settings) ) {
         $scope.app.settings = $localStorage.settings;

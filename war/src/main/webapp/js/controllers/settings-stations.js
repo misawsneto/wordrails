@@ -89,7 +89,16 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 		$scope.createPerson = function(){
 			trix.createPerson($scope.person).success(function(){
 				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+			}).error(function(data, status, headers, config){
+				if(status == 409){
+					$scope.openAddUserToStaionSplash()
+				}else
+					$scope.app.showErrorToast('Erro ao criar usuário')
 			});
+		}
+
+		$scope.openAddUserToStaionSplash = function(){
+
 		}
 
 		$scope.changePermission = function(){

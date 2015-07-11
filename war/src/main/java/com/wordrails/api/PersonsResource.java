@@ -14,6 +14,7 @@ import com.wordrails.persistence.*;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
 import com.wordrails.util.PersonCreateDto;
+import com.wordrails.util.WordrailsUtil;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,6 +38,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Path("/persons")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -63,9 +66,14 @@ public class PersonsResource {
 
 	private @Autowired BookmarkRepository bookmarkRepository;
 	private @Autowired RecommendRepository recommendRepository;
-	
+
 	private @Autowired NetworkSecurityChecker networkSecurityChecker;
 	private @Autowired StationSecurityChecker stationSecurityChecker;
+
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private UserGrantedAuthorityRepository userGrantedAuthorityRepository;
 
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired StationRoleEventHandler stationRoleEventHandler;
@@ -163,6 +171,13 @@ public class PersonsResource {
 		return Response.status(Status.OK).build();
 	}
 
+	@POST
+	@Path("/testpost")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response testPost(){
+		return Response.status(Status.OK).build();
+	}
+
 //	@PUT
 //	@Path("/me/password")
 //	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -179,18 +194,18 @@ public class PersonsResource {
 	@GET
 	@Path("/me")
 	public void getCurrentPerson() {
-		Person person = (Person) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Person person = authProvider.getLoggedPerson();
 		String path = httpServletRequest.getServletPath() + "/persons/search/findByUsername?username=" + person.username;
 		httpRequest.forward(path);
 	}
 
 	@POST
 	@Path("/create")
-	public Response create(PersonCreateDto person, @Context HttpServletRequest request) throws ConflictException, BadRequestException{
-		Network network = wordrailsService.getNetworkFromHost(request);
-		
+	public Response create(PersonCreateDto person, @Context HttpServletRequest request) throws ConflictException, BadRequestException, JsonProcessingException{
+		Network network = authProvider.getNetwork();
+
 		Person personObject = null;
-		
+
 		if(person != null){
 			try{
 				personObject = new Person();
@@ -198,13 +213,56 @@ public class PersonsResource {
 				personObject.username = person.username;
 				personObject.password = person.password;
 				personObject.email = person.email;
-				
+
+				UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
+				authority.network = network;
+
+				String password = person.password;
+
+				if (password == null || password.trim().equals("")) {
+					password = WordrailsUtil.generateRandomString(8, "a#");
+				}
+
+				User user = new User();
+				user.username = person.username;
+				user.password = password;
+				user.network = authority.network;
+				user.addAuthority(authority);
+
+				userGrantedAuthorityRepository.save(authority);
+				userRepository.save(user);
+				person.user = user;
+
 				personRepository.save(personObject);
+			}catch (javax.validation.ConstraintViolationException e){
+				e.printStackTrace();
+				throw new BadRequestException();
 			}catch (org.springframework.dao.DataIntegrityViolationException e) {
+				if(e.getCause() != null){
+					if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
+						String errorMsg = e.getCause().getCause().getLocalizedMessage();
+						Pattern p = Pattern.compile("\'([^\']*)\'");
+						Matcher m = p.matcher(errorMsg);
+						String errorVal = "";
+						while (m.find()) {
+							errorVal = m.group(1);
+							break;
+						}
+
+						Person conflictingPerson = null;
+						if(personObject.email != null && personObject.email.trim().equals(errorVal)){
+							conflictingPerson = personRepository.findByEmailAndNetworkId(personObject.email, network.id);
+						}else if(personObject.username != null && personObject.username.trim().equals(errorVal)){
+							conflictingPerson = personRepository.findByUsernameAndNetworkId(personObject.username, network.id);
+						}
+
+						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson)).build();
+					}
+				}
 				e.printStackTrace();
 				throw new ConflictException();
 			}
-			
+
 			if(network != null ){
 				NetworkRole networkRole = new NetworkRole();
 				networkRole.network = networkRepository.findOne(network.id);
@@ -212,7 +270,7 @@ public class PersonsResource {
 				networkRole.admin = false;
 				networkRolesRepository.save(networkRole);
 			}
-			
+
 			if(person.stationRole !=null){
 				if(person.stationRole.station != null && person.stationRole.station.id != null){
 					Station station = stationRepository.findOne(person.stationRole.station.id);
@@ -224,7 +282,7 @@ public class PersonsResource {
 					throw new BadRequestException();	
 				}
 			}
-			
+
 			return Response.status(Status.CREATED).build();
 		}else{
 			throw new BadRequestException();
@@ -273,36 +331,36 @@ public class PersonsResource {
 
 		return personData;
 	}
-	
+
 	@DELETE
 	@Path("/{personId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
 		Network network = wordrailsService.getNetworkFromHost(request);
-		
+
 		if(networkSecurityChecker.isNetworkAdmin(network)){
 			personRepository.findOne(personId);
 			return Response.status(Status.OK).build();
 		}else{
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
-		
+
 	}
-	
+
 	@PUT
 	@Path("/deletePersonStationRoles")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Transactional(readOnly = false)
 	public Response deletePersonStationRoles(List<Integer> stationRolesIds) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
-		
+
 		List<Station> stations = stationRepository.findByStationRolesIds(stationRolesIds);
-		
+
 		Set<Integer> stationIds = new HashSet<Integer>();
-		
+
 		for (Station station : stations) {
 			stationIds.add(station.id);
 		}
-		
+
 		if(stationSecurityChecker.isStationsAdmin(new ArrayList<Integer>(stationIds))){
 			stationRolesRepository.deleteByIds(stationRolesIds);
 			return Response.status(Status.OK).build();

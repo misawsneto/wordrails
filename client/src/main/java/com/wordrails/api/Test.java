@@ -1,5 +1,6 @@
 package com.wordrails.api;
 
+import com.wordrails.util.PersonCreateDto;
 import org.joda.time.DateTime;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.RetrofitError;
@@ -28,12 +29,15 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		WordRails wordRails = getLocal("demo", "demo");
+		WordRails wordRails = getLocal("silvio", "silvio");
 		wordRails.login();
 		wordRails.getInitialData();
 		
 		NetworkDto station = wordRails.getNetwork(3);
 		wordRails.putNetwork(station);
+
+
+		createPerson(wordRails);
 
 //		wordRails.putPassword("Sport@dmiN", "Sport@dmiN");
 
@@ -158,6 +162,23 @@ public class Test {
 //			System.out.println(imageProjection.small);
 //			System.out.println(imageProjection.medium);
 //			System.out.println(imageProjection.large);
+//		}
+	}
+
+	private static void createPerson(WordRails wordRails) {
+		String person = wordRails.getSelf(wordRails.getPerson(2));
+		String station = wordRails.getSelf(wordRails.getStation(2));
+
+
+		PersonCreateDto personObject = new PersonCreateDto();//.getPostDraft(1598);
+		personObject.name = "arthur";
+		personObject.username = "arthur";
+		personObject.password = "password";
+		personObject.email = "email";
+//		try {
+//			wordRails.(post);
+//		} catch (RetrofitError err) {
+//			printServerError(err);
 //		}
 	}
 

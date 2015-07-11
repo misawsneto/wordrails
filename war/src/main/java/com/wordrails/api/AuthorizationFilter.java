@@ -233,6 +233,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindByUsernameAndNetworkIdAuthorized(String username, Integer networkId) {
+		return true;
+	}
+
+
+	@Override
 	protected boolean isGetPersonCommentsAuthorized(Integer personId) {
 		return authProvider.areYouLogged(personId);
 	}
@@ -1029,6 +1035,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindByEmailAuthorized(String email) {
 		return false;
 	}
+
+	@Override
+	protected boolean isFindByEmailAndNetworkIdAuthorized(String email, Integer networkId) {
+		return true;
+	}
+
 
 	@Override
 	protected boolean isFindByUsernameAndEnabledAuthorized(String username,

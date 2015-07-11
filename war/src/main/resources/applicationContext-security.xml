@@ -29,7 +29,6 @@
 	<http pattern="/l10n/**" security="none"/>
 	<http pattern="/fonts/**" security="none"/>
 	<http pattern="/api/persons/search/findByUsername/**" security="none"/>
-	<http pattern="/api/persons/create" security="none"/>
 	<http pattern="/api/wp/**" security="none"/>
 	<http pattern="/api/util/**" security="none"/>
 	<http pattern="/invitation/**" security="none"/>
