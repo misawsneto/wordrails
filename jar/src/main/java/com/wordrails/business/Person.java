@@ -149,9 +149,11 @@ public class Person {
 		if(cover != null && cover.original != null){
 			coverId = cover.original.id;
 			coverLargeId= cover.large.id;
+			coverMediumId= cover.medium.id;
 		}else{
 			coverId = null;
 			coverLargeId = null;
+			coverMediumId= null;
 		}
 		
 		createdAt = new Date();
@@ -174,9 +176,11 @@ public class Person {
 		if(cover != null && cover.original != null){
 			coverId = cover.original.id;
 			coverLargeId= cover.large.id;
+			coverMediumId= cover.medium.id;
 		}else{
 			coverId = null;
 			coverLargeId = null;
+			coverMediumId = null;
 		}
 		
 		updatedAt = new Date();
