@@ -1,33 +1,20 @@
 package com.wordrails.api;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.GCMService;
+import com.wordrails.WordrailsService;
+import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.business.BadRequestException;
+import com.wordrails.business.*;
+import com.wordrails.converter.PostConverter;
+import com.wordrails.persistence.*;
+import com.wordrails.security.NetworkSecurityChecker;
+import com.wordrails.security.StationSecurityChecker;
+import com.wordrails.util.PersonCreateDto;
+import com.wordrails.util.WordrailsUtil;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,44 +23,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.GCMService;
-import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
-import com.wordrails.business.BadRequestException;
-import com.wordrails.business.ConflictException;
-import com.wordrails.business.Network;
-import com.wordrails.business.NetworkRole;
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationRole;
-import com.wordrails.business.StationRoleEventHandler;
-import com.wordrails.business.UnauthorizedException;
-import com.wordrails.converter.PostConverter;
-import com.wordrails.persistence.BookmarkRepository;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.PersonNetworkRegIdRepository;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.RecommendRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.TaxonomyRepository;
-import com.wordrails.security.NetworkSecurityChecker;
-import com.wordrails.security.StationSecurityChecker;
-import com.wordrails.util.PersonCreateDto;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Path("/persons")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -83,13 +50,13 @@ public class PersonsResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
 
-	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired PersonRepository personRepository;
 
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
@@ -104,6 +71,11 @@ public class PersonsResource {
 	private @Autowired NetworkSecurityChecker networkSecurityChecker;
 	private @Autowired StationSecurityChecker stationSecurityChecker;
 
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private UserGrantedAuthorityRepository userGrantedAuthorityRepository;
+
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired StationRoleEventHandler stationRoleEventHandler;
 
@@ -112,7 +84,7 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		gcmService.updateRegId(network, person, regId, lat, lng);
 		return Response.status(Status.OK).build();
 	}
@@ -122,7 +94,7 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		gcmService.updateIosToken(network, person, token, lat, lng);
 		return Response.status(Status.OK).build();
 	}
@@ -130,9 +102,11 @@ public class PersonsResource {
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response login(@FormParam("username") String username, @FormParam("password") String password){
+	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password){
+		Network network = wordrailsService.getNetworkFromHost(request);
+
 		try{
-			accessControllerUtil.authenticate(username, password);
+			authProvider.authenticate(username, password, network.id);
 			return Response.status(Status.OK).build();
 		}catch(BadCredentialsException | UsernameNotFoundException e){
 			return Response.status(Status.UNAUTHORIZED).build();
@@ -147,7 +121,7 @@ public class PersonsResource {
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 
 		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
 
@@ -161,7 +135,7 @@ public class PersonsResource {
 		List<Post> posts = postRepository.findPostByPersonIdAndStations(personId, stationIds, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts); 
+		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
 
@@ -173,7 +147,7 @@ public class PersonsResource {
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 
 		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
 
@@ -187,7 +161,7 @@ public class PersonsResource {
 		List<Post> posts = postRepository.findRecommendationsByPersonIdAndStations(personId, stationIds, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts); 
+		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
 
@@ -198,33 +172,38 @@ public class PersonsResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@PUT
-	@Path("/me/password")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
-
-		try{
-			org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			String username = user.getUsername();
-			if(!username.equalsIgnoreCase("wordrails")) // don't allow users to change wordrails password
-				userDetailsManager.changePassword(oldPassword, newPassword);
-		}catch(Exception e){}
+	@POST
+	@Path("/testpost")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response testPost(){
+		return Response.status(Status.OK).build();
 	}
+
+//	@PUT
+//	@Path("/me/password")
+//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
+//
+//		try{
+//			org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//			String username = user.getUsername();
+//			if(!username.equalsIgnoreCase("wordrails")) // don't allow users to change wordrails password
+//				userDetailsManager.changePassword(oldPassword, newPassword);
+//		}catch(Exception e){}
+//	}
 
 	@GET
 	@Path("/me")
 	public void getCurrentPerson() {
-		org.springframework.security.core.userdetails.User user = null;
-		user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String username = user.getUsername();		
-		String path = httpServletRequest.getServletPath() + "/persons/search/findByUsername?username=" + username;
+		Person person = authProvider.getLoggedPerson();
+		String path = httpServletRequest.getServletPath() + "/persons/search/findByUsername?username=" + person.username;
 		httpRequest.forward(path);
 	}
 
 	@POST
 	@Path("/create")
 	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, JsonProcessingException{
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = authProvider.getNetwork();
 
 		Person person = null;
 
@@ -236,20 +215,39 @@ public class PersonsResource {
 				person.password = personCreationObject.password;
 				person.email = personCreationObject.email;
 
+				UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
+				authority.network = network;
+
+				String password = person.password;
+
+				if (password == null || password.trim().equals("")) {
+					password = WordrailsUtil.generateRandomString(8, "a#");
+				}
+
+				User user = new User();
+				user.username = person.username;
+				user.password = password;
+				user.network = authority.network;
+				user.addAuthority(authority);
+
+				userGrantedAuthorityRepository.save(authority);
+				userRepository.save(user);
+				person.user = user;
+
 				personRepository.save(person);
 			}catch (javax.validation.ConstraintViolationException e){
 				BadRequestException badRequest = new BadRequestException();
-				
+
 				for (ConstraintViolation violation : e.getConstraintViolations()) {
 //					violation.get
-					FieldError error = new FieldError(violation.getInvalidValue()+"", violation.getInvalidValue()+"", violation.getMessage());  
+					FieldError error = new FieldError(violation.getInvalidValue()+"", violation.getInvalidValue()+"", violation.getMessage());
 					badRequest.errors.add(error);
 				}
-				
+
 				throw badRequest;
 			}catch (org.springframework.dao.DataIntegrityViolationException e) {
-				if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
-					if(e.getCause() != null){
+				if(e.getCause() != null){
+					if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
 						String errorMsg = e.getCause().getCause().getLocalizedMessage();
 						Pattern p = Pattern.compile("\'([^\']*)\'");
 						Matcher m = p.matcher(errorMsg);
@@ -260,19 +258,18 @@ public class PersonsResource {
 						}
 
 						Person conflictingPerson = null;
-
 						if(person.email != null && person.email.trim().equals(errorVal)){
-							conflictingPerson = personRepository.findByEmail(person.email);
+							conflictingPerson = personRepository.findByEmailAndNetworkId(person.email, network.id);
 						}else if(person.username != null && person.username.trim().equals(errorVal)){
-							conflictingPerson = personRepository.findByUsername(person.username);
+							conflictingPerson = personRepository.findByUsernameAndNetworkId(person.username, network.id);
 						}
-						
+
 						if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
 //							conflictingPerson.id 
 							StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
 							if(str != null)
 								return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
-										+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", " 
+										+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
 										+ "\"conflictingStationRole\": " + mapper.writeValueAsString(str) +"}").build();
 						}
 
@@ -299,7 +296,7 @@ public class PersonsResource {
 					stationRoleEventHandler.handleBeforeCreate(personCreationObject.stationRole);
 					stationRolesRepository.save(personCreationObject.stationRole);
 				}else{
-					throw new BadRequestException();	
+					throw new BadRequestException();
 				}
 			}
 
@@ -391,10 +388,10 @@ public class PersonsResource {
 
 	@GET
 	@Path("/init")
-	public PersonData getInitialData (@Context HttpServletRequest request) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+	public PersonData getInitialData (@Context HttpServletRequest request) throws IOException{
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 
 		if(person == null){
 			throw new UnauthorizedException("User is not authorized");
@@ -404,7 +401,7 @@ public class PersonsResource {
 
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
-		List<StationDto> stationDtos = new ArrayList<StationDto>();
+		List<StationDto> stationDtos = new ArrayList<>();
 
 		//Network Permissions
 		NetworkPermission networkPermissionDto = new NetworkPermission();
@@ -449,7 +446,7 @@ public class PersonsResource {
 	@GET
 	@Path("/me/bookmarkedRecommended")
 	public ContentResponse<List<BooleanResponse>> checkBookmarkedRecommendedByMe(@QueryParam("postId") Integer postId){
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		List<BooleanResponse> resp = new ArrayList<BooleanResponse>();
 
 		if(bookmarkRepository.findBookmarkByPersonIdAndPostId(person.id, postId)!=null){

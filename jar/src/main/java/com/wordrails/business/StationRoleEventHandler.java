@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
@@ -14,8 +15,9 @@ import com.wordrails.persistence.TermRepository;
 @RepositoryEventHandler(StationRole.class)
 @Component
 public class StationRoleEventHandler {
-	
-	@Autowired AccessControllerUtil accessControllerUtil;
+
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 	
 	@Transactional
 	@HandleBeforeSave

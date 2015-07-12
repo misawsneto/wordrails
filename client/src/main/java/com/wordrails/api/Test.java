@@ -1,5 +1,6 @@
 package com.wordrails.api;
 
+import com.wordrails.util.PersonCreateDto;
 import org.joda.time.DateTime;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.RetrofitError;
@@ -19,13 +20,24 @@ public class Test {
 				LogLevel.FULL);
 	}
 
+	private static WordRails getLocal(String username, String password) throws IOException {
+		return new WordRails(
+				new MockConnectivityManager(true),
+				new File("."), 0,
+				"http://localhost:8080", username, password,
+				LogLevel.FULL);
+	}
+
 	public static void main(String[] args) throws IOException {
-		WordRails wordRails = getLocal();
+		WordRails wordRails = getLocal("silvio", "silvio");
 		wordRails.login();
 		wordRails.getInitialData();
 		
 		NetworkDto station = wordRails.getNetwork(3);
 		wordRails.putNetwork(station);
+
+
+		//createPerson(wordRails);
 
 //		wordRails.putPassword("Sport@dmiN", "Sport@dmiN");
 
@@ -150,6 +162,23 @@ public class Test {
 //			System.out.println(imageProjection.small);
 //			System.out.println(imageProjection.medium);
 //			System.out.println(imageProjection.large);
+//		}
+	}
+
+	private static void createPerson(WordRails wordRails) {
+		String person = wordRails.getSelf(wordRails.getPerson(2));
+		String station = wordRails.getSelf(wordRails.getStation(2));
+
+
+		PersonCreateDto personObject = new PersonCreateDto();//.getPostDraft(1598);
+		personObject.name = "arthur";
+		personObject.username = "arthur";
+		personObject.password = "password";
+		personObject.email = "email";
+//		try {
+//			wordRails.(post);
+//		} catch (RetrofitError err) {
+//			printServerError(err);
 //		}
 	}
 

@@ -1,6 +1,7 @@
 package com.wordrails.api;
 
 import com.wordrails.WordrailsService;
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.WordpressRepository;
@@ -33,7 +34,7 @@ public class PostFilter implements Filter {
 	private WordrailsService wordrailsService;
 
 	@Autowired
-	AccessControllerUtil accessControllerUtil;
+	TrixAuthenticationProvider authProvider;
 
 	@Override
 	public void destroy() {/* not implemented */
@@ -74,7 +75,7 @@ public class PostFilter implements Filter {
 				if (post != null) {
 					Wordpress wp = wordpressRepository.findByStation(post.station);
 					handleAfterRead(post, wp);
-					wordrailsService.countPostRead(post, accessControllerUtil.getLoggedPerson(), rq.getRequestedSessionId());
+					wordrailsService.countPostRead(post, authProvider.getLoggedPerson(), rq.getRequestedSessionId());
 				}
 			} else if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
 				postId = getPostId(res.getHeader("Location"));

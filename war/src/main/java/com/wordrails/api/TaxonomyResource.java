@@ -11,13 +11,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Network;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
@@ -42,7 +42,8 @@ public class TaxonomyResource {
 	private @Autowired StationRepository stationRepository;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 
 	@Path("/networks/{networkId}/taxonomiesToEdit")
 	@GET
@@ -51,7 +52,7 @@ public class TaxonomyResource {
 		
 		Network network = networkRepository.findOne(networkId);
 		if(network != null){
-			Person personLogged = accessControllerUtil.getLoggedPerson();
+			Person personLogged = authProvider.getLoggedPerson();
 			NetworkRole networkRole = networkRolesRepository.findByNetworkAndPerson(network, personLogged);
 			if(networkRole != null && networkRole.admin){
 				taxonomies = taxonomyRepository.findNetworkOrStationTaxonomiesByNetworkIdExcludeType(networkId, Taxonomy.STATION_AUTHOR_TAXONOMY);

@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,6 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.EmailService;
 import com.wordrails.business.PasswordReset;
 import com.wordrails.business.Person;
@@ -50,7 +50,8 @@ public class PasswordResetResource {
 	@Autowired private NetworkRepository networkRepository; 
 	private @Autowired UserRepository userRepository;
 	private @Autowired EmailService emailService;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 	private @Autowired WordrailsService wordrailsService;
 
 	@POST
@@ -96,7 +97,7 @@ public class PasswordResetResource {
 			scopes.put("networkSubdomain", passwordReset.networkSubdomain);
 			scopes.put("passwordReset", passwordReset);
 			
-			Person person = accessControllerUtil.getLoggedPerson();
+			Person person = authProvider.getLoggedPerson();
 			if(person != null)
 				scopes.put("inviterName", person.name);
 			else
@@ -140,8 +141,11 @@ public class PasswordResetResource {
 
 		Person person = personRepository.findByEmail(pr.email);
 		person.passwordReseted = true;
-		if(person != null && !person.username.equals("wordrails")){ // don't allow users to change wordrails pas
-			User user = userRepository.findByUsernameAndEnabled(person.username, true);
+		if(!person.username.equals("wordrails")){ // don't allow users to change wordrails pas
+			Integer networkId = 0;
+			if(person.user != null && person.user.network != null)
+				networkId = person.user.network.id;
+			User user = userRepository.findByUsernameAndEnabledAndNetworkId(person.username, true, networkId);
 			if(user != null){
 				user.password = password;
 				userRepository.save(user);

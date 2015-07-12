@@ -24,7 +24,10 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.NumericField;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressSlug"}), @UniqueConstraint(columnNames={"taxonomy_id","name","wordpressId"})})
+@Table(uniqueConstraints = {
+		@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressSlug"}),
+		@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressId"})
+})
 public class Term {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

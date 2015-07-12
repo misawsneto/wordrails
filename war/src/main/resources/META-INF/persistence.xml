@@ -28,6 +28,7 @@
 		<class>com.wordrails.business.TermPerspective</class>
 		<class>com.wordrails.business.Wordpress</class>
 		<class>com.wordrails.business.User</class>
+		<class>com.wordrails.business.UserGrantedAuthority</class>
 		<class>com.wordrails.business.Sponsor</class>
 		<class>com.wordrails.business.PasswordReset</class>
 		<class>com.wordrails.business.Notification</class>

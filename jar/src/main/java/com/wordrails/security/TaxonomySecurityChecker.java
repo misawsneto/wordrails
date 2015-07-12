@@ -1,9 +1,9 @@
 package com.wordrails.security;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
 import com.wordrails.business.StationRole;
@@ -16,10 +16,11 @@ public class TaxonomySecurityChecker {
 	
 	private @Autowired StationRolesRepository personStationRolesRepository;
 	private @Autowired NetworkRolesRepository personNetworkRolesRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 	
 	public boolean canCreate(Taxonomy taxonomy){
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		boolean canCreate = false;
 		if(person != null){
 			if(taxonomy.type.equals(Taxonomy.STATION_TAXONOMY) || taxonomy.type.equals(Taxonomy.STATION_TAG_TAXONOMY) || taxonomy.type.equals(Taxonomy.STATION_AUTHOR_TAXONOMY)){
@@ -38,7 +39,7 @@ public class TaxonomySecurityChecker {
 	}
 	
 	public boolean canEdit(Taxonomy taxonomy){
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		if(taxonomy.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
 			StationRole personStationRoles = personStationRolesRepository.findByStationAndPerson(taxonomy.owningStation, person);
 			if(personStationRoles != null && (personStationRoles.writer)){

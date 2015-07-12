@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-  	   		 xmlns:beans="http://www.springframework.org/schema/beans"
-  	   		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  	   		 xsi:schemaLocation="http://www.springframework.org/schema/beans
-  	   					   		 http://www.springframework.org/schema/beans/spring-beans.xsd
-  	   					   		 http://www.springframework.org/schema/security
-  	   					   		 http://www.springframework.org/schema/security/spring-security.xsd">
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+								 http://www.springframework.org/schema/beans/spring-beans.xsd
+								 http://www.springframework.org/schema/security
+								 http://www.springframework.org/schema/security/spring-security.xsd">
 	<http pattern="/logIn.jsp" security="none"/>
-<!-- 	<http pattern="/index.jsp" security="none"/> -->
+	<!-- 	<http pattern="/index.jsp" security="none"/> -->
 	<http pattern="/app/**" security="none"/>
 	<http pattern="/home/**" security="none"/>
 	<http pattern="/bower_components/**" security="none"/>
@@ -25,49 +26,58 @@
 	<http pattern="/api/util/**" security="none"/>
 	<http pattern="/invitation/**" security="none"/>
 
-	<http entry-point-ref="authenticationEntryPoint">
-	    <intercept-url pattern="/api/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-	    <intercept-url pattern="/api/persons/init" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-	    <intercept-url pattern="/api/persons/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-	    <intercept-url pattern="/api/files/*/contents" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-	   <!--  <intercept-url pattern="/new" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-	    <intercept-url pattern="/new/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/> -->
-	    <intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-	    <intercept-url pattern="/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/search" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/search/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/post" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/post/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/notifications" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/notifications/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/bookmarks" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/bookmarks/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/settings" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    <intercept-url pattern="/settings/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+
+	<http entry-point-ref="authenticationEntryPoint" auto-config='false'>
+		<intercept-url pattern="/api/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+		<intercept-url pattern="/api/persons/init" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+		<intercept-url pattern="/api/persons/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+		<intercept-url pattern="/api/files/*/contents" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+		<!--  <intercept-url pattern="/new" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+			<intercept-url pattern="/new/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/> -->
+		<intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+		<intercept-url pattern="/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/search" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/search/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/post" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/post/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/notifications" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/notifications/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/bookmarks" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/bookmarks/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/settings" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+		<intercept-url pattern="/settings/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<intercept-url pattern="/publications" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<intercept-url pattern="/publications/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<intercept-url pattern="/user" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<intercept-url pattern="/user/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<intercept-url pattern="/read" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<intercept-url pattern="/read/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
-	    
-		<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 
-		<form-login always-use-default-target="true" 
-					default-target-url="/loggedIn.jsp"
-					authentication-failure-url="/logIn.jsp"/>
-		
+		<intercept-url pattern="/**" access="ROLE_USER"/>
+
+		<custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
+		<custom-filter ref="anonymousAuthenticationFilter" position="ANONYMOUS_FILTER"/>
 		<logout/>
+
+		<anonymous enabled="false"/>
 	</http>
 
-	<beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+	<beans:bean id="anonymousAuthenticationFilter" class="com.wordrails.filter.TrixAnonymousAuthenticationFilter">
+		<beans:constructor-arg name="key" value="anonymousKey" />
+	</beans:bean>
+
+	<beans:bean id="authenticationFilter" class="com.wordrails.filter.TrixAuthenticationFilter"
+	            p:authenticationManager-ref="trixAuthenticationManager"/>
+
+	<beans:bean id="authenticationEntryPoint"
+	            class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
 		<beans:property name="loginFormUrl" value="/logIn.jsp"/>
 		<beans:property name="useForward" value="true"/>
 	</beans:bean>
 
-	<authentication-manager alias="myAuthenticationManager">
-		<authentication-provider>
-			<jdbc-user-service data-source-ref="dataSource" />
-  		</authentication-provider>
+
+
+	<authentication-manager alias="trixAuthenticationManager" erase-credentials="false">
+		<authentication-provider ref="trixAuthenticationProvider"/>
 	</authentication-manager>
 </beans:beans>

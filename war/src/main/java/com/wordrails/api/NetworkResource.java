@@ -12,12 +12,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Network;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
@@ -40,7 +38,8 @@ public class NetworkResource {
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 
@@ -48,7 +47,7 @@ public class NetworkResource {
 	@GET
 	public PersonPermissions getNetworkPersonPermissions(@PathParam("id") Integer id){
 		PersonPermissions personPermissions = new PersonPermissions();
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(id, person.id);
 		if(networkRole != null){
@@ -101,7 +100,7 @@ public class NetworkResource {
 	@Path("/create")
 	@GET
 	public Response createNetwork (NetworkCreateDto networkCreate){
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		
 		Taxonomy taxonomy = networkCreate.taxonomy;
 		

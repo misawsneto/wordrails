@@ -3,10 +3,10 @@ package com.wordrails.security;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Network;
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
@@ -18,14 +18,15 @@ import com.wordrails.persistence.StationRolesRepository;
 
 @Component
 public class StationSecurityChecker {
-	
-	private @Autowired AccessControllerUtil accessControllerUtil;
+
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	
 	public boolean canCreate(Station station){
-		Person personLogged = accessControllerUtil.getLoggedPerson();
+		Person personLogged = authProvider.getLoggedPerson();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkAndPerson(station.networks.iterator().next(), personLogged);
 		return (networkRole != null && networkRole.admin);
 	}
@@ -36,7 +37,7 @@ public class StationSecurityChecker {
 	
 	public boolean isStationAdmin(Station station){
 		boolean isAdmin = false;
-		Person personLogged = accessControllerUtil.getLoggedPerson();
+		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null){
 			StationRole personStationRole = stationRolesRepository.findByStationAndPerson(station, personLogged);
 			if(personStationRole != null && personStationRole.admin){
@@ -50,7 +51,7 @@ public class StationSecurityChecker {
 	
 	public boolean isStationsAdmin(List<Integer> stationIds){
 		boolean isAdmin = false;
-		Person personLogged = accessControllerUtil.getLoggedPerson();
+		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null){
 			List<StationRole> personStationRoles = stationRolesRepository.findByPersonAndStationIds(personLogged.id, stationIds);
 			
@@ -66,7 +67,7 @@ public class StationSecurityChecker {
 	
 	public boolean isStationAdminOrEditor(Station station){
 		boolean isEditorOrAdmin = false;
-		Person personLogged = accessControllerUtil.getLoggedPerson();
+		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null){
 			StationRole personStationRole = stationRolesRepository.findByStationAndPerson(station, personLogged);
 			if(personStationRole != null && (personStationRole.editor || personStationRole.admin)){
@@ -81,7 +82,7 @@ public class StationSecurityChecker {
 	public boolean canVisualize(Station station){
 		boolean canVisualize = false;
 		
-		Person personLogged = accessControllerUtil.getLoggedPerson();
+		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null){
 			if(station.visibility.equals(Station.UNRESTRICTED)){
 				canVisualize = true;

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
@@ -41,7 +42,8 @@ public class StationEventHandler {
 	@Autowired TaxonomyRepository taxonomyRepository;
 	@Autowired NotificationRepository notificationRepository;
 	@Autowired PostReadRepository postReadRepository;
-	@Autowired AccessControllerUtil accessControllerUtil;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 	@Autowired CacheService cacheService;
 	@Autowired QueryPersistence queryPersistence;
 	
@@ -85,7 +87,7 @@ public class StationEventHandler {
 	
 	@HandleAfterCreate
 	public void handleAfterCreate(Station station){
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		StationRole role = new StationRole();
 		role.person = person;
 		role.station = station;
@@ -112,7 +114,7 @@ public class StationEventHandler {
 			stationPerspectiveRepository.delete(stationsPerspectives);
 			
 			List<Taxonomy> taxonomies = taxonomyRepository.findByStationId(station.id);
-			if(taxonomies != null & taxonomies.size() > 0){
+			if(taxonomies != null && !taxonomies.isEmpty()){
 				for (Taxonomy taxonomy : taxonomies) {
 					taxonomyEventHandler.handleBeforeDelete(taxonomy);
 					taxonomyRepository.delete(taxonomy);

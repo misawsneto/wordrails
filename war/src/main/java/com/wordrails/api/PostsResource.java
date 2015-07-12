@@ -2,6 +2,7 @@ package com.wordrails.api;
 
 import com.wordrails.PermissionId;
 import com.wordrails.WordrailsService;
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.converter.PostConverter;
@@ -77,7 +78,7 @@ public class PostsResource {
 
 	private
 	@Autowired
-	AccessControllerUtil accessControllerUtil;
+	TrixAuthenticationProvider authProvider;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -347,7 +348,7 @@ public class PostsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request, @QueryParam("query") String q, @QueryParam("stationIds") String stationIds, @QueryParam("personId") Integer personId, @QueryParam("publicationType") String publicationType, @QueryParam("noHighlight") Boolean noHighlight, @QueryParam("sortByDate") Boolean sortByDate, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = wordrailsService.getNetworkFromHost(request);
 
@@ -488,7 +489,7 @@ public class PostsResource {
 			throw new BadRequestException("Invalid null parameter(s).");
 		}
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPostReadByStationAndPerson(stationId, person.id, pageable);
 
@@ -502,7 +503,7 @@ public class PostsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getAllPostRead(@PathParam("stationId") Integer stationId) {
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		List<Post> posts = postRepository.findPostReadByStationAndPerson(stationId, person.id);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();

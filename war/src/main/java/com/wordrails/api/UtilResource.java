@@ -26,6 +26,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.WordrailsService;
+import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.business.*;
+import com.wordrails.jobs.SimpleJob;
+import com.wordrails.persistence.*;
+import com.wordrails.services.AsyncService;
+import com.wordrails.services.WordpressParsedContent;
+import com.wordrails.util.WordrailsUtil;
 import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
@@ -41,13 +50,11 @@ import org.quartz.TriggerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Image;
 import com.wordrails.business.Invitation;
 import com.wordrails.business.Network;
@@ -98,13 +105,13 @@ public class UtilResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
 
-	private @Autowired UserDetailsManager userDetailsManager;
 	private @Autowired PersonRepository personRepository;
 
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;

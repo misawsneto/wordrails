@@ -1,6 +1,6 @@
 package com.wordrails.api;
 
-import com.wordrails.business.AccessControllerUtil;
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.Cell;
 import com.wordrails.business.Comment;
 import com.wordrails.business.Image;
@@ -64,8 +64,9 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Autowired private TermPerspectiveRepository termPerspectiveRepository;
 	@Autowired private ImageRepository imageRepository;
 	@Autowired private CommentRepository commentRepository;
-	@Autowired private AccessControllerUtil accessControllerUtil;
-
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	
 	@Override
 	protected boolean isGetCellsAuthorized() {
 		return false;
@@ -232,8 +233,14 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindByUsernameAndNetworkIdAuthorized(String username, Integer networkId) {
+		return true;
+	}
+
+
+	@Override
 	protected boolean isGetPersonCommentsAuthorized(Integer personId) {
-		return accessControllerUtil.areYouLogged(personId);
+		return authProvider.areYouLogged(personId);
 	}
 
 	@Override
@@ -248,12 +255,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPersonPostsAuthorized(Integer personId) {
-		return accessControllerUtil.areYouLogged(personId);
+		return authProvider.areYouLogged(personId);
 	}
 
 	@Override
 	protected boolean isGetPersonPromotionsAuthorized(Integer personId) {
-		return accessControllerUtil.areYouLogged(personId);
+		return authProvider.areYouLogged(personId);
 	}
 
 	@Override
@@ -911,8 +918,8 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindByPersonIdAndNetworkIdAuthorized(Integer personId, Integer networkId) {
 		boolean authorized = false;
-
-		Person loggedPerson = accessControllerUtil.getLoggedPerson();
+		
+		Person loggedPerson = authProvider.getLoggedPerson();
 		if(loggedPerson != null && loggedPerson.id == personId){
 			authorized = true;
 		}
@@ -966,6 +973,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetNetworkUsersAuthorized(Integer networkId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetSponsorLogoAuthorized(Integer sponsorId) {
 
 		return true;
@@ -1015,7 +1027,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetUserAuthorized(String userUsername) {
+	protected boolean isGetUserAuthorized(Integer userId) {
 		return false;
 	}
 
@@ -1025,14 +1037,65 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByUsernameAndPasswordAuthorized(String username, String password) {
-		return false;
+	protected boolean isFindByEmailAndNetworkIdAuthorized(String email, Integer networkId) {
+		return true;
 	}
+
 
 	@Override
 	protected boolean isFindByUsernameAndEnabledAuthorized(String username,
 			boolean enabled) {
 		return true;
+	}
+
+	@Override
+	protected boolean isFindByNetworkIdAndEnabledAuthorized(Integer networkId, boolean enabled) {
+		return false;
+	}
+
+	@Override
+	protected boolean isFindByUsernameAndEnabledAndNetworkIdAuthorized(String username, boolean enabled, Integer networkId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserNetworkAuthorized(Integer userId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserPersonAuthorized(Integer userId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserAuthoritiesAuthorized(Integer userId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserGrantedAuthoritiesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserGrantedAuthorityAuthorized(Integer userGrantedAuthorityId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserGrantedAuthorityUserAuthorized(Integer userGrantedAuthorityId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserGrantedAuthorityNetworkAuthorized(Integer userGrantedAuthorityId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserGrantedAuthorityStationAuthorized(Integer userGrantedAuthorityId) {
+		return false;
 	}
 
 	@Override
@@ -1303,6 +1366,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetPersonUserAuthorized(Integer personId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetPersonNetworkRegIdsAuthorized() {
 		return false;
 	}
@@ -1398,11 +1466,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindByPerspectiveIdAuthorized(Integer perspectiveId) {
 		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkAuthorized(Integer personId) {
-		return false;
 	}
 
 	@Override

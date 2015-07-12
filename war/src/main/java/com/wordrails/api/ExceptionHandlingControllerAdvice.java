@@ -30,25 +30,25 @@ public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHa
 	@ExceptionHandler(UnauthorizedException.class)
 	public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException exception) {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
-		return new ResponseEntity<>(stackTrace, HttpStatus.FORBIDDEN); 
+		return new ResponseEntity<>(stackTrace, HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(NotImplementedException.class)
 	public ResponseEntity<String> handleNotImplementedException(NotImplementedException exception) {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
-		return new ResponseEntity<>(stackTrace, HttpStatus.NOT_IMPLEMENTED); 
+		return new ResponseEntity<>(stackTrace, HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	@ExceptionHandler(OperationNotSupportedException.class)
 	public ResponseEntity<String> handleOperationNotSupportedException(OperationNotSupportedException exception) {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
-		return new ResponseEntity<>(stackTrace, HttpStatus.METHOD_NOT_ALLOWED); 
+		return new ResponseEntity<>(stackTrace, HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
 	@ExceptionHandler(ConflictException.class)
 	public ResponseEntity<String> handleConflictException(ConflictException exception) {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
-		return new ResponseEntity<>(stackTrace, HttpStatus.CONFLICT); 
+		return new ResponseEntity<>(stackTrace, HttpStatus.CONFLICT);
 	}
 
 	@ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="IOException occured")
