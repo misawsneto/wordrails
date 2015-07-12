@@ -110,8 +110,8 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		if (users != null && users.size() > 0) {
 			User user = null;
 			for (User u : users) {
-				if (u.network != null && Objects.equals(u.network.id, networkId)) { //find by network
-					if (password.equals(u.password)) { //if this is the user for this network, is the password right?
+				if (u.network != null) { //find by network
+					if (Objects.equals(u.network.id, networkId) && password.equals(u.password)) { //if this is the user for this network, is the password right?
 						user = u;
 						break;
 					}

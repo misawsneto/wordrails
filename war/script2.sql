@@ -5,7 +5,7 @@ ALTER TABLE PersonNetworkRegId MODIFY person_id INT(11) default NULL;
 ALTER TABLE PersonNetworkToken MODIFY person_id INT(11) default NULL;
 ALTER TABLE PostRead MODIFY person_id INT(11) default NULL;
 
-ALTER TABLE Network defaultTaxonomy_id INT(11) default NULL;
+ALTER TABLE Network MODIFY defaultTaxonomy_id INT(11) default NULL;
 
 ALTER TABLE station drop column social;
 
@@ -20,6 +20,7 @@ delete from person where id = 126;
 
 -- NEW LOGIN --
 
+DROP TABLE authorities;
 
 ALTER TABLE users DROP PRIMARY KEY;
 ALTER TABLE users ADD id INT PRIMARY KEY AUTO_INCREMENT;
@@ -33,7 +34,6 @@ ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 delete from person_network_role where person_id = 1;
 
 
-DROP TABLE authorities;
 CREATE TABLE `authorities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `authority` varchar(255) NOT NULL,
@@ -56,32 +56,32 @@ UPDATE users INNER JOIN (SELECT p.username, r.network_id FROM person AS p JOIN p
 INSERT INTO authorities (authority, network_id, user_id) SELECT DISTINCT "ROLE_USER", network_id, id FROM users;
 
 
---update person set username = 'adriano' where username = 'Adriano';
---delete from authorities where username = 'Adriano';
---insert into authorities (username, authority) values ('adriano', 'ROLE_USER');
---update users set username = 'adriano' where username = 'Adriano';
---
---update person set username = 'fabiana' where username = 'Fabiana';
---delete from authorities where username = 'Fabiana';
---insert into authorities (username, authority) values ('fabiana', 'ROLE_USER');
---update users set username = 'fabiana' where username = 'Fabiana';
---
---update person set username = 'styvensena' where username = 'StyvenSena';
---delete from authorities where username = 'StyvenSena';
---insert into authorities (username, authority) values ('styvensena', 'ROLE_USER');
---update users set username = 'styvensena' where username = 'StyvenSena';
---
---update person set username = 'raphael' where username = 'Raphael';
---delete from authorities where username = 'Raphael';
---insert into authorities (username, authority) values ('raphael', 'ROLE_USER');
---update users set username = 'raphael' where username = 'Raphael';
---
---update person set username = 'kaciomello' where username = 'KacioMello';
---delete from authorities where username = 'KacioMello';
---insert into authorities (username, authority) values ('kaciomello', 'ROLE_USER');
---update users set username = 'kaciomello' where username = 'KacioMello';
---
---update person set username = 'marcoscosta' where username = 'marcos costa';
---delete from authorities where username = 'marcos costa';
---insert into authorities (username, authority) values ('marcoscosta', 'ROLE_USER');
---update users set username = 'marcoscosta' where username = 'marcos costa';
+# --update person set username = 'adriano' where username = 'Adriano';
+# --delete from authorities where username = 'Adriano';
+# --insert into authorities (username, authority) values ('adriano', 'ROLE_USER');
+# --update users set username = 'adriano' where username = 'Adriano';
+# --
+# --update person set username = 'fabiana' where username = 'Fabiana';
+# --delete from authorities where username = 'Fabiana';
+# --insert into authorities (username, authority) values ('fabiana', 'ROLE_USER');
+# --update users set username = 'fabiana' where username = 'Fabiana';
+# --
+# --update person set username = 'styvensena' where username = 'StyvenSena';
+# --delete from authorities where username = 'StyvenSena';
+# --insert into authorities (username, authority) values ('styvensena', 'ROLE_USER');
+# --update users set username = 'styvensena' where username = 'StyvenSena';
+# --
+# --update person set username = 'raphael' where username = 'Raphael';
+# --delete from authorities where username = 'Raphael';
+# --insert into authorities (username, authority) values ('raphael', 'ROLE_USER');
+# --update users set username = 'raphael' where username = 'Raphael';
+# --
+# --update person set username = 'kaciomello' where username = 'KacioMello';
+# --delete from authorities where username = 'KacioMello';
+# --insert into authorities (username, authority) values ('kaciomello', 'ROLE_USER');
+# --update users set username = 'kaciomello' where username = 'KacioMello';
+# --
+# --update person set username = 'marcoscosta' where username = 'marcos costa';
+# --delete from authorities where username = 'marcos costa';
+# --insert into authorities (username, authority) values ('marcoscosta', 'ROLE_USER');
+# --update users set username = 'marcoscosta' where username = 'marcos costa';
