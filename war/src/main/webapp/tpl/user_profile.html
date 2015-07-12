@@ -26,7 +26,7 @@
 	<div id="editing-user-profile" class="user-details block-600 m-auto animated zoomIn with-cover">
 		<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
 			<div id="image-button-wrapper" ng-if="person.id == app.initData.person.id">
-				<div id="image-button" class="custom-btn bg-img-xxl border-radius-50 box-shadow2" style="margin: -3px;">
+				<div id="image-button" class="custom-btn border-radius-50" style="width: 194px; height: 194px;">
 					<i class="mdi mdi-pencil text-4x text-white image-edit" style="margin: 75px;"></i>
 					<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
 				</div>
@@ -102,7 +102,7 @@
 	</div>
 	<!-- /posts -->
 
-	<div class="clear wrapper m-t m-b bg-light dk b-t b-b" ng-show="recommendations && showProfile">
+	<!-- <div class="clear wrapper m-t m-b bg-light dk b-t b-b" ng-show="recommendations && showProfile">
 		<div class="block-800 m-auto text-md text-u-c m-b-md p-l font-bold">
 			recomendados por {{person.name}}
 		</div>
@@ -118,7 +118,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<!-- pages -->
 	<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="pages && showProfile">

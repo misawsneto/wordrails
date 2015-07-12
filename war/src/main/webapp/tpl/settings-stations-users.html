@@ -181,7 +181,7 @@
 							<div class="cover-abstract-mask ng-scope" ng-if="!person.coverLargeId">
 							</div>
 							<div style="{{person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-xl bg-cover-round m-l-lg m-t-lg pos-rlt" title="{{person.name}}">
-								<div id="image-button-wrapper">
+								<div id="image-button-wrapper" ng-if="app.networkAdmin">
 									<div id="image-button" class="custom-btn bg-img-xl border-radius-50">
 										<i class="mdi mdi-pencil text-3x text-white image-edit" style="margin: 40px;"></i>
 										<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>

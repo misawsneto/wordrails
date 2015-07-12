@@ -17,6 +17,16 @@ delete from person_network_role where person_id = 126;
 delete from person_station_role where person_id = 126;
 delete from person where id = 126;
 
+-- select person.* from person_network_role pnr join Person person on person.id = pnr.person_id join users users on person.username = users.username;
+-- select p.id from person p where p.username not in (select u.username from users u);
+-- delete from person_station_role where person_id in (select person.id from person person where person.username not in (select u.username from users u));
+-- delete from person_network_role where person_id in (select person.id from person person where person.username not in (select u.username from users u));
+-- delete from authorities where username in (select person.username from person person where person.username not in (select u.username from users u));
+-- delete from person where username not in (select u.username from users u);
+-- delete from users where username not in (select a.username from authorities a);
+-- select count(*) from users;
+-- select count(*) from authorities;
+
 --update person set username = 'adriano' where username = 'Adriano';
 --delete from authorities where username = 'Adriano';
 --insert into authorities (username, authority) values ('adriano', 'ROLE_USER');

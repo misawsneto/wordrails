@@ -145,6 +145,10 @@ angular.module('app')
         $scope.app.editorStations = trixService.getEditorStations();
       }
 
+      $scope.app.stationIsAdmin = function(stationId){
+        return trixService.stationIsAdmin();
+      }
+
       uiLoad.load(JQ_CONFIG.screenfull)
 
       $rootScope.previousState;

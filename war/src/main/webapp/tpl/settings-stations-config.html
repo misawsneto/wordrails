@@ -34,7 +34,7 @@
             </p>
             <p>
               <label class="md-switch">
-                <input type="checkbox" ng-model="station.allowSocialShare"
+                <input type="checkbox" ng-disabled="station.visibility !== 'UNRESTRICTED'"  ng-model="station.allowSocialShare"
                 ng-true-value="true" ng-false-value="false">
                 <i class="blue"></i>
                 Permitir compartilhamento em redes sociais
@@ -42,7 +42,7 @@
             </p>
             <p>
               <label class="md-switch">
-                <input type="checkbox" ng-disabled="station.visibility !== 'UNRESTRICTED'" ng-model="station.showAuthorSocialData"
+                <input type="checkbox" ng-model="station.showAuthorSocialData"
                 ng-true-value="true" ng-false-value="false">
                 <i class="blue"></i>
                 Exibir email e dados sociais do autor no corpo das notícias.

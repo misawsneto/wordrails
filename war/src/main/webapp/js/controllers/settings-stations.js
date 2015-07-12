@@ -293,8 +293,8 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 
   $scope.bulkActions = [
   {name:'Ações em grupo', id:0},
-  {name:'Alterar selecionados', id:1},
-  {name:'Remover selecionados', id:2}
+  {name:'Alterar permissões', id:1},
+  {name:'Remover usuários', id:2}
   ]
 
   $scope.bulkActionSelected = $scope.bulkActions[0];
