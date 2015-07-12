@@ -4,6 +4,7 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:p="http://www.springframework.org/schema/p"
+             xmlns:aop="http://www.springframework.org/schema/aop"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
 								 http://www.springframework.org/schema/beans/spring-beans.xsd
 								 http://www.springframework.org/schema/security
@@ -64,10 +65,15 @@
 
 		<custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
 		<custom-filter ref="anonymousAuthenticationFilter" position="ANONYMOUS_FILTER"/>
+
 		<logout/>
 
 		<anonymous enabled="false"/>
 	</http>
+
+
+
+	<!--AUTHENTICATION-->
 
 	<beans:bean id="anonymousAuthenticationFilter" class="com.wordrails.filter.TrixAnonymousAuthenticationFilter">
 		<beans:constructor-arg name="key" value="anonymousKey" />

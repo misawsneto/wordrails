@@ -41,6 +41,9 @@ public class User implements UserDetails {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	public Set<UserGrantedAuthority> authorities;
 
+	@OneToMany(mappedBy = "user")
+	public Set<UserConnection> userConnections;
+
 	public void addAuthority(UserGrantedAuthority authority) {
 		if(authorities == null) authorities = new HashSet<>();
 

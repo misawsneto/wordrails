@@ -24,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.social.connect.web.ProviderSignInController;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
@@ -97,7 +98,7 @@ public class PersonsResource {
 		Person person = authProvider.getLoggedPerson();
 		gcmService.updateIosToken(network, person, token, lat, lng);
 		return Response.status(Status.OK).build();
-	}
+	} ProviderSignInController
 
 	@POST
 	@Path("/login")
