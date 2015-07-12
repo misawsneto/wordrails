@@ -34,30 +34,21 @@
             </p>
             <p>
               <label class="md-switch">
-                <input type="checkbox" ng-disabled="station.visibility !== 'UNRESTRICTED'" ng-model="station.allowSocialShare"
+                <input type="checkbox" ng-model="station.allowSocialShare"
                 ng-true-value="true" ng-false-value="false">
                 <i class="blue"></i>
                 Permitir compartilhamento em redes sociais
               </label>
             </p>
-            <div class="m-b m-t text-muted text-md text-u-c">Configurações de edição</div>
             <p>
               <label class="md-switch">
-                <input type="checkbox" ng-model="station.topper"
+                <input type="checkbox" ng-disabled="station.visibility !== 'UNRESTRICTED'" ng-model="station.showAuthorSocialData"
                 ng-true-value="true" ng-false-value="false">
                 <i class="blue"></i>
-                Chapéu
+                Exibir email e dados sociais do autor no corpo das notícias.
               </label>
             </p>
-            <p>
-              <label class="md-switch">
-                <input type="checkbox" ng-model="station.subheading"
-                ng-true-value="true" ng-false-value="false">
-                <i class="blue"></i>
-                Subtítulo
-              </label>
-            </p>
-            <div class="m-b m-t text-muted text-md text-u-c">Permissões de edição</div>
+            <div class="m-b m-t text-muted text-md text-u-c">Permissões avançadas</div>
             <p>
               <label class="md-switch">
                 <input type="checkbox" ng-model="station.allowWritersToNotify"
@@ -104,6 +95,23 @@
                 <input type="radio" name="d" ng-model="station.writable" ng-value="true">
                 <i class="blue"></i>
                 Escrita e leitura
+              </label>
+            </p>
+            <div class="m-b m-t text-muted text-md text-u-c">Configurações de edição</div>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.topper"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Chapéu
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.subheading"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Subtítulo
               </label>
             </p>
           </div>

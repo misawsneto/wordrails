@@ -4,8 +4,8 @@
 		<div class="profile-cover abstract-bg bg-cover pos-rlt" style="{{person.coverLargeId | imageLink | bgimg2}}">
 			<div class="cover-abstract-mask ng-scope" ng-if="!person.coverLargeId">
 			</div>
-			<div id="cover-image-button"
-			 class="pos-abt left-0 bottom-0 m-l-lg m-b-lg" ng-if="person.id == app.initData.person.id">
+			<div id="cover-image-button" style="overflow:hidden;" 
+			 class="pos-abt left-0 bottom-0 m-l-md m-b-md wrapper-sm" ng-if="person.id == app.initData.person.id">
 				<i class="mdi mdi-camera text-3x icon-text-shadow v-middle p-r-xs"></i>
 				<span class="p-r-xs text-lg" style="text-shadow:1px 1px 1px #000; vertical-align: sub;">
 					Trocar imagem de capa

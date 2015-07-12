@@ -291,10 +291,6 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	})
   }
 
-  $scope.stopPropagation = function($event){
-  	$event.stopPropagation();
-  }
-
   $scope.bulkActions = [
   {name:'Ações em grupo', id:0},
   {name:'Alterar selecionados', id:1},
