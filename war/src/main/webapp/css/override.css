@@ -2684,6 +2684,7 @@ button, select, html, textarea, input{
   font-size: 22px;
 }
 
+.icon-text-shadow{text-shadow:2px 2px 15px #000}
 /* /general */
 
 /* animate */
@@ -2967,7 +2968,7 @@ button, select, html, textarea, input{
 
 #more-options-dialog md-tabs.md-default-theme md-ink-bar {
 color: rgba(0,0,0, 0.84);
-background: rgba(0,0,0,0.5);
+background: rgba(0,0,0,0.7);
 }
 
 #more-options-dialog md-tab-item span{
@@ -4416,6 +4417,59 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 /* /settings */
 
 /* settings-users */
+#editing-user-profile #image-button{position: relative; overflow: hidden; vertical-align: bottom;}
+#editing-user-profile #image-button #image-upload, 
+#cover-image-button #image-button #image-upload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 142px;
+  direction: ltr;
+  cursor: pointer;
+  display: block;
+}
+
+#editing-user-profile #image-button .image-edit{
+  display: none;
+}
+
+#editing-user-profile #image-button:hover .image-edit{
+  display: block;
+}
+
+#editing-user-profile #image-button:hover{
+    background-color: rgba(0,0,0,0.7);
+}
+
+#cover-image-button{
+  color: rgba(255,255,255,0.8);
+}
+
+#cover-image-button{
+  color: rgba(255,255,255,0.8);
+}
+
+#cover-image-button:hover{
+  color: rgba(255,255,255,0.9);
+}
+
+#cover-image-button span{
+  opacity: 0;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+#cover-image-button:hover span{opacity: 1;
+-webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
 /* /settings-users */
 
 /* settings-colors */

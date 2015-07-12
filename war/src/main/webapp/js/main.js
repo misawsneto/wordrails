@@ -99,6 +99,10 @@ angular.module('app')
         })
       }
 
+      $scope.app.stopPropagation = function($event){
+        $event.stopPropagation();
+      }
+
       $scope.app.changeStation = function(station){
 
         var stationObject = null;

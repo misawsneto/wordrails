@@ -89,6 +89,9 @@ public class Station {
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean sponsored;
 	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+		public boolean showAuthorSocialData;
+	
 	@OneToOne
 	public Wordpress wordpress;
 

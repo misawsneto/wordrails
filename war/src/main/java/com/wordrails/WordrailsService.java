@@ -484,7 +484,7 @@ public class WordrailsService {
 				stationPermissionDto.allowComments = station.allowComments;
 				stationPermissionDto.allowSocialShare = station.allowSocialShare;
 
-				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes(), StationDto.class);
+				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
 				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
 				//StationRoles Fields
 				StationRole stationRole = stationRolesRepository.findByStationAndPersonId(station, personId);
