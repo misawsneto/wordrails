@@ -56,7 +56,8 @@ delete from person where id = 126;
 --delete from authorities where username = 'marcos costa';
 --insert into authorities (username, authority) values ('marcoscosta', 'ROLE_USER');
 --update users set username = 'marcoscosta' where username = 'marcos costa';
--- NEW LOGIN --
+
+--  NEW LOGIN --
 
 DROP TABLE authorities;
 

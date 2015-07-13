@@ -516,6 +516,14 @@ angular.module('app')
        * @param {[type]} list    [description]
        */
       $scope.app.setNowReading = function(postView, list, listMeta, baseState){
+
+        if($scope.app.nowReadingAuthor && postView && postView.authorId && $scope.app.nowReadingAuthor.authorId != postView.authorId){
+          $("#left-profile-cover").removeClass("slideInRight");
+          setTimeout(function() {
+            $("#left-profile-cover").addClass("slideInRight");
+          });
+        }
+
         if($state.current.name == "app.stations.read" && $scope.app.nowReading && $scope.app.nowReading.postId == postView.postId)
           return;
 
