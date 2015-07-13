@@ -31,6 +31,7 @@ public class PersonEventHandler {
 	@Autowired
 	private CacheService cacheService;
 
+
 	@HandleBeforeSave
 	@Transactional
 	public void handleBeforeSave(Person person) {

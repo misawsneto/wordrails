@@ -17,6 +17,19 @@ public class UserGrantedAuthority implements GrantedAuthority {
 		this.authority = authority;
 	}
 
+	public UserGrantedAuthority(User user, String authority, Network network) {
+		this.user = user;
+		this.authority = authority;
+		this.network = network;
+	}
+
+	public UserGrantedAuthority(User user, String authority, Network network, Station station) {
+		this.user = user;
+		this.authority = authority;
+		this.network = network;
+		this.station = station;
+	}
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
