@@ -30,7 +30,7 @@ import java.util.Set;
 })
 public class Person {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@NumericField
 	@Field
 	public Integer id;
@@ -73,7 +73,7 @@ public class Person {
 	public Set<Recommend> recommends;
 
 	@NotNull
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	public User user;
 
 	@Size(max=2048)

@@ -17,10 +17,17 @@ public class TrixAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 	private WordrailsService wordrailsService;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private TrixAnonymousAuthenticationFilter anonymousAuthenticationFilter;
 
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 		String username = super.obtainUsername(request);
 		String password = super.obtainPassword(request);
+
+		if(username.equals("wordrails")) {
+			return anonymousAuthenticationFilter.createAuthentication(request);
+		}
+
 		Network network = wordrailsService.getNetworkFromHost(request);
 
 		return authProvider.authenticate(username, password, network.id);

@@ -21,9 +21,13 @@
 </div>
 
 <div class="wrapper-lg animated zoomIn">
-    <div class="panel panel-card block-600 m-auto">
+    <div class="panel panel-card block-600 m-auto pos-rlt">
       <div class="panel-heading h3 wrapper-md">
         Configurações de Rede
+      </div>
+      <div class="pos-abt top-0 right-0 text-lg m-t">
+        <button ng-click="saveChanges()"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
       </div>
       <div class="panel-body wrapper-md">
         <div class="row">
@@ -86,6 +90,20 @@
                 </label>
               </p>
           </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+          <div class="m-b text-muted text-md text-u-c">Configurações de aparência</div>
+          <div class="text-center">
+            Clique no botão abaixo para personalizar as cores da sua rede
+            <br>
+            <button md-ink-ripple class="md-btn m-t m-b custom-fab-button" ui-sref="app.settings.colors">
+              Editor de cores
+            </button>
+          </div>
+        <div class="md-form-group md-neutral-theme m-t text-md">
+          <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="3"></textarea>
+          <label>Rodapé da tela de login</label>
+          <span class="md-input-msg right">(opcional) Este rodapé aperece na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
         </div>
         <div class="line line-dashed b-b line-lg pull-in"></div>
         <div class="row pos-rlt">

@@ -64,220 +64,271 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 
-		$scope.thisStation = {}
-		$scope.app.initData.stations.forEach(function(station, index){
-			if($state.params.stationId == station.id){
-				$scope.stationName = station.name;
-				$scope.stationId = station.id;
-				$scope.thisStation = station;
-			}
-		});	
+		FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
+    return true; // true|false
+  };
 
-		if($state.params.newUser){
-			$scope.person = {
-				'stationRole': {'roleString':'READER', 'writer': false, 'editor': false, 'admin': false, 'station': $scope.thisStation},
-				name: '',
-				username: '',
-				password: '',
-				email: '',
-				emailNotification: true
-			}
-			$scope.editing = false;
-			$scope.creating = true;
-		}else if($state.params.userId){
-			$scope.editing = true;
-			$scope.creating = false;
-			getEditingPerson($state.params.userId)
-		}else{
-			$scope.editing = false;
-			$scope.creating = false;
-		}
+  var uploader = $scope.uploader = new FileUploader({
+  	url: TRIX.baseUrl + "/api/files/contents/simple"
+  });
 
-		function getEditingPerson(id){
-			trix.findByStationIdAndPersonId($scope.thisStation.id, id, 'stationRoleProjection').success(function(response){
-				if(!response.stationRoles || response.stationRoles.length == 0){
-					return false;
-				}
-				$scope.person = response.stationRoles[0].person;
-				$scope.editingPersonLoaded = true;
-			})
-		}
+  uploader.onAfterAddingFile = function(fileItem) {
+  	$scope.app.editingPost.uploadedImage = null;
+  	uploader.uploadAll();
+  };
+  uploader.onSuccessItem = function(fileItem, response, status, headers) {
+  	if(response.filelink){
+  		$scope.app.editingPost.uploadedImage = response;
+  		$scope.app.editingPost.uploadedImage.filelink = TRIX.baseUrl + $scope.app.editingPost.uploadedImage.filelink
+  		$scope.app.editingPost.showMediaButtons = false;
+  		$scope.checkLandscape();
+  		$("#image-config").removeClass("hide");
+  		$mdToast.hide();
+  		$scope.postCtrl.imageHasChanged = true
+  	}
+  };
 
-		$scope.createPerson = function(){
-			trix.createPerson($scope.person).success(function(response){
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
-				$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': response.id}, {location: 'replace', inherit: false, notify: false, reload: false})
-				$scope.editing = true;
-				$scope.creating = false;
-			}).error(function(data, status, headers, config){
-				if(status == 409){
-					$scope.app.conflictingData = data;
-					$scope.app.conflictingData.role = $scope.person.stationRole.roleString;
-					$scope.openAddUserToStaionSplash()
-				}else
-					$scope.app.showErrorToast('Dados inválidos. Tente novamente')
-				$timeout(function() {
-						cfpLoadingBar.complete();	
-				}, 100);
-			});
-		}
+  uploader.onErrorItem = function(fileItem, response, status, headers) {
+  	if(status == 413)
+  		$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+  	else
+  		$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+  }
 
-		$scope.app.addConflictingToStation = function(){
-			$scope.app.changeExistingUserPermission();
-			$scope.app.conflictingData.stationRole.person = '/api/persons/'+ $scope.app.conflictingData.conflictingPerson.id;
-			$scope.app.conflictingData.stationRole.station = '/api/stations/' + $scope.thisStation.id
-			trix.postStationRole($scope.app.conflictingData.stationRole).success(function(){
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
-				$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': $scope.app.conflictingData.conflictingPerson.id, 'newUser': null})
-				$scope.app.cancelModal();
-			}).error(function(){
-				$timeout(function() {
-						cfpLoadingBar.complete();	
-				}, 100);
-			})
-		}
+  $scope.clearImage = function(){ 
+  	$("#image-config").addClass("hide");
+  	$scope.app.editingPost.uploadedImage = null;
+  	uploader.clearQueue();
+  	uploader.cancelAll()
+  	$scope.checkLandscape();
+  	$scope.postCtrl.imageHasChanged = true;
+  }
 
-		$scope.openAddUserToStaionSplash = function(){
-			$scope.app.openSplash('conflicting_person.html')
-		}
+  uploader.onProgressItem = function(fileItem, progress) {
+  	cfpLoadingBar.start();
+  	cfpLoadingBar.set(progress/10)
+  	if(progress == 100){
+  		cfpLoadingBar.complete()
+  		toastPromise = $mdToast.show(
+  			$mdToast.simple()
+  			.content('Processando...')
+  			.position('top right')
+  			.hideDelay(false)
+  			);
+  	}
+  };
 
-		$scope.app.changeExistingUserPermission = function(){
-			$scope.app.conflictingData.stationRole = {};
-			if($scope.app.conflictingData.role == 'ADMIN'){
-				$scope.app.conflictingData.stationRole.admin = true;
-				$scope.app.conflictingData.stationRole.writer = true;
-				$scope.app.conflictingData.stationRole.editor = true;
-			}else if($scope.person.stationRole.roleString == 'EDITOR'){
-				$scope.app.conflictingData.stationRole.admin = false;
-				$scope.app.conflictingData.stationRole.writer = true;
-				$scope.app.conflictingData.stationRole.editor = true;
-			}else if($scope.person.stationRole.roleString == 'WRITER'){
-				$scope.app.conflictingData.stationRole.admin = false;
-				$scope.app.conflictingData.stationRole.editor = false;
-				$scope.app.conflictingData.stationRole.writer = true;
-			}else{
-				$scope.app.conflictingData.stationRole.admin = false;
-				$scope.app.conflictingData.stationRole.editor = false;
-				$scope.app.conflictingData.stationRole.writer = false;
-			}
-		}
 
-		$scope.changePermission = function(){
-			if($scope.person.stationRole.roleString == 'ADMIN'){
-				$scope.person.stationRole.admin = true;
-				$scope.person.stationRole.writer = true;
-				$scope.person.stationRole.editor = true;
-			}else if($scope.person.stationRole.roleString == 'EDITOR'){
-				$scope.person.stationRole.admin = false;
-				$scope.person.stationRole.writer = true;
-				$scope.person.stationRole.editor = true;
-			}else if($scope.person.stationRole.roleString == 'WRITER'){
-				$scope.person.stationRole.admin = false;
-				$scope.person.stationRole.editor = false;
-				$scope.person.stationRole.writer = true;
-			}else{
-				$scope.person.stationRole.admin = false;
-				$scope.person.stationRole.editor = false;
-				$scope.person.stationRole.writer = false;
-			}
-			console.log($scope.person.stationRole);
-		}
+  $scope.thisStation = {}
+  $scope.app.initData.stations.forEach(function(station, index){
+  	if($state.params.stationId == station.id){
+  		$scope.stationName = station.name;
+  		$scope.stationId = station.id;
+  		$scope.thisStation = station;
+  	}
+  });	
 
-		trix.findByStationIds([$state.params.stationId], 0, 50, null, 'stationRoleProjection').success(function(personsRoles){
-			$scope.personsRoles = personsRoles.stationRoles;
-			for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
-				if($scope.personsRoles[i].person.id == $scope.app.initData.person.id)
-					$scope.personsRoles.splice(i, 1);
-			};
-		})
+  if($state.params.newUser){
+  	$scope.person = {
+  		'stationRole': {'roleString':'READER', 'writer': false, 'editor': false, 'admin': false, 'station': $scope.thisStation},
+  		name: '',
+  		username: '',
+  		password: '',
+  		email: '',
+  		emailNotification: true
+  	}
+  	$scope.editing = false;
+  	$scope.creating = true;
+  }else if($state.params.userId){
+  	$scope.editing = true;
+  	$scope.creating = false;
+  	getEditingPerson($state.params.userId)
+  }else{
+  	$scope.editing = false;
+  	$scope.creating = false;
+  }
 
-		$scope.loadPerson = function(person){
-			$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': person.id})
-		}
+  function getEditingPerson(id){
+  	trix.findByStationIdAndPersonId($scope.thisStation.id, id, 'stationRoleProjection').success(function(response){
+  		if(!response.stationRoles || response.stationRoles.length == 0){
+  			return false;
+  		}
+  		$scope.person = response.stationRoles[0].person;
+  		$scope.editingPersonLoaded = true;
+  	})
+  }
 
-		$scope.app.applyBulkActions = function(){
-			if($scope.bulkActionSelected.id == 0)
-				return
-			else if($scope.bulkActionSelected.id == 2)
-				removeAllSelected();
-			$scope.app.cancelModal();
-		}
+  $scope.createPerson = function(){
+  	trix.createPerson($scope.person).success(function(response){
+  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': response.id}, {location: 'replace', inherit: false, notify: false, reload: false})
+  		$scope.editing = true;
+  		$scope.creating = false;
+  	}).error(function(data, status, headers, config){
+  		if(status == 409){
+  			$scope.app.conflictingData = data;
+  			$scope.app.conflictingData.role = $scope.person.stationRole.roleString;
+  			$scope.openAddUserToStaionSplash()
+  		}else
+  		$scope.app.showErrorToast('Dados inválidos. Tente novamente')
+  		$timeout(function() {
+  			cfpLoadingBar.complete();	
+  		}, 100);
+  	});
+  }
 
-		var removeAllSelected = function(){
-			var ids = [];
-			$scope.personsRoles.forEach(function(role, index){
-				if(role.selected)
-					ids.push(role.id);
-			});
+  $scope.app.addConflictingToStation = function(){
+  	$scope.app.changeExistingUserPermission();
+  	$scope.app.conflictingData.stationRole.person = '/api/persons/'+ $scope.app.conflictingData.conflictingPerson.id;
+  	$scope.app.conflictingData.stationRole.station = '/api/stations/' + $scope.thisStation.id
+  	trix.postStationRole($scope.app.conflictingData.stationRole).success(function(){
+  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': $scope.app.conflictingData.conflictingPerson.id, 'newUser': null})
+  		$scope.app.cancelModal();
+  	}).error(function(){
+  		$timeout(function() {
+  			cfpLoadingBar.complete();	
+  		}, 100);
+  	})
+  }
 
-			trix.deletePersonStationRoles(ids).success(function(){
-				for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
-					if(ids.indexOf($scope.personsRoles[i].id) > -1)
-						$scope.personsRoles.splice(i, 1);
-				};
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
-				$scope.app.cancelModal();
-			})
-		}		
+  $scope.openAddUserToStaionSplash = function(){
+  	$scope.app.openSplash('conflicting_person.html')
+  }
 
-		$scope.openDeletePersonRole = function(roleId){
-			$scope.app.openSplash('confirm_delete_person.html')
-			$scope.deletePersonRoleId = roleId;
-		}
+  $scope.app.changeExistingUserPermission = function(){
+  	$scope.app.conflictingData.stationRole = {};
+  	if($scope.app.conflictingData.role == 'ADMIN'){
+  		$scope.app.conflictingData.stationRole.admin = true;
+  		$scope.app.conflictingData.stationRole.writer = true;
+  		$scope.app.conflictingData.stationRole.editor = true;
+  	}else if($scope.person.stationRole.roleString == 'EDITOR'){
+  		$scope.app.conflictingData.stationRole.admin = false;
+  		$scope.app.conflictingData.stationRole.writer = true;
+  		$scope.app.conflictingData.stationRole.editor = true;
+  	}else if($scope.person.stationRole.roleString == 'WRITER'){
+  		$scope.app.conflictingData.stationRole.admin = false;
+  		$scope.app.conflictingData.stationRole.editor = false;
+  		$scope.app.conflictingData.stationRole.writer = true;
+  	}else{
+  		$scope.app.conflictingData.stationRole.admin = false;
+  		$scope.app.conflictingData.stationRole.editor = false;
+  		$scope.app.conflictingData.stationRole.writer = false;
+  	}
+  }
 
-		$scope.app.deletePersonRole = function(){
-			trix.deleteStationRole($scope.deletePersonRoleId).success(function(response){
-				for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
-					if($scope.personsRoles[i].id == $scope.deletePersonRoleId)
-						$scope.personsRoles.splice(i, 1);
-				};
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
-				$scope.app.cancelModal();
-			})
-		}
+  $scope.changePermission = function(){
+  	if($scope.person.stationRole.roleString == 'ADMIN'){
+  		$scope.person.stationRole.admin = true;
+  		$scope.person.stationRole.writer = true;
+  		$scope.person.stationRole.editor = true;
+  	}else if($scope.person.stationRole.roleString == 'EDITOR'){
+  		$scope.person.stationRole.admin = false;
+  		$scope.person.stationRole.writer = true;
+  		$scope.person.stationRole.editor = true;
+  	}else if($scope.person.stationRole.roleString == 'WRITER'){
+  		$scope.person.stationRole.admin = false;
+  		$scope.person.stationRole.editor = false;
+  		$scope.person.stationRole.writer = true;
+  	}else{
+  		$scope.person.stationRole.admin = false;
+  		$scope.person.stationRole.editor = false;
+  		$scope.person.stationRole.writer = false;
+  	}
+  	console.log($scope.person.stationRole);
+  }
 
-		$scope.stopPropagation = function($event){
-			$event.stopPropagation();
-		}
+  trix.findByStationIds([$state.params.stationId], 0, 50, null, 'stationRoleProjection').success(function(personsRoles){
+  	$scope.personsRoles = personsRoles.stationRoles;
+  	for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
+  		if($scope.personsRoles[i].person.id == $scope.app.initData.person.id)
+  			$scope.personsRoles.splice(i, 1);
+  	};
+  })
 
-		$scope.bulkActions = [
-			{name:'Ações em grupo', id:0},
-			{name:'Alterar selecionados', id:1},
-			{name:'Remover selecionados', id:2}
-		]
+  $scope.loadPerson = function(person){
+  	$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': person.id})
+  }
 
-		$scope.bulkActionSelected = $scope.bulkActions[0];
+  $scope.app.applyBulkActions = function(){
+  	if($scope.bulkActionSelected.id == 0)
+  		return
+  	else if($scope.bulkActionSelected.id == 2)
+  		removeAllSelected();
+  	$scope.app.cancelModal();
+  }
 
-		$scope.toggleAll = function(){
-			if($scope.toggleSelectValue && $scope.personsRoles){
-				$scope.personsRoles.forEach(function(role, index){
-					role.selected = true;
-				}); 
-			}else if($scope.personsRoles){
-				$scope.personsRoles.forEach(function(role, index){
-					role.selected = false;
-				}); 
-			}
-		}
+  var removeAllSelected = function(){
+  	var ids = [];
+  	$scope.personsRoles.forEach(function(role, index){
+  		if(role.selected)
+  			ids.push(role.id);
+  	});
 
-		function noPersonSelected(){
-			var ret = true
-			$scope.personsRoles.forEach(function(role, index){
-				if(role.selected)
-					ret = false;
-			});
-			return ret;
-		}
+  	trix.deletePersonStationRoles(ids).success(function(){
+  		for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
+  			if(ids.indexOf($scope.personsRoles[i].id) > -1)
+  				$scope.personsRoles.splice(i, 1);
+  		};
+  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$scope.app.cancelModal();
+  	})
+  }		
 
-		$scope.openBulkActionsSplash = function(){
-			if(noPersonSelected())
-				$scope.app.openSplash('confirm_no_person_selected.html');
-			else if($scope.bulkActionSelected.id == 0)
-				return null;
-			else if($scope.bulkActionSelected.id == 2)
-				$scope.app.openSplash('confirm_bulk_delete_persons.html');
-		}
+  $scope.openDeletePersonRole = function(roleId){
+  	$scope.app.openSplash('confirm_delete_person.html')
+  	$scope.deletePersonRoleId = roleId;
+  }
+
+  $scope.app.deletePersonRole = function(){
+  	trix.deleteStationRole($scope.deletePersonRoleId).success(function(response){
+  		for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
+  			if($scope.personsRoles[i].id == $scope.deletePersonRoleId)
+  				$scope.personsRoles.splice(i, 1);
+  		};
+  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$scope.app.cancelModal();
+  	})
+  }
+
+  $scope.bulkActions = [
+  {name:'Ações em grupo', id:0},
+  {name:'Alterar permissões', id:1},
+  {name:'Remover usuários', id:2}
+  ]
+
+  $scope.bulkActionSelected = $scope.bulkActions[0];
+
+  $scope.toggleAll = function(){
+  	if($scope.toggleSelectValue && $scope.personsRoles){
+  		$scope.personsRoles.forEach(function(role, index){
+  			role.selected = true;
+  		}); 
+  	}else if($scope.personsRoles){
+  		$scope.personsRoles.forEach(function(role, index){
+  			role.selected = false;
+  		}); 
+  	}
+  }
+
+  function noPersonSelected(){
+  	var ret = true
+  	$scope.personsRoles.forEach(function(role, index){
+  		if(role.selected)
+  			ret = false;
+  	});
+  	return ret;
+  }
+
+  $scope.openBulkActionsSplash = function(){
+  	if(noPersonSelected())
+  		$scope.app.openSplash('confirm_no_person_selected.html');
+  	else if($scope.bulkActionSelected.id == 0)
+  		return null;
+  	else if($scope.bulkActionSelected.id == 2)
+  		$scope.app.openSplash('confirm_bulk_delete_persons.html');
+  }
 
 		// $scope.changePersonStation
 
-}]);
+	}]);

@@ -40,6 +40,20 @@
                         </span>
                       </span>
                     </div>
+                    <div class="display-t-c v-middle padder">
+                      <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
+                        <a href class="text-center text-lg v-middle">
+                        <i class="mdi" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
+                        </a>
+                        <span class="p-b-sm">Recomendar</span>
+                      </span>
+                      <span class="p-l-sm" ng-click="app.bookmark(cell.postView.postId); app.stopPropagation($event);">
+                        <a href class="text-center text-lg v-middle">
+                        <i class="mdi" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(cell.postView.postId), 'mdi-bookmark-outline': !app.bookmarked(cell.postView.postId)}"></i>
+                        </a>
+                        <span class="p-b-sm">Adicionar a Minha Lista</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <!-- /content -->

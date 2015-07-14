@@ -2266,11 +2266,6 @@ a.text-lgrey:hover {
   border-color: #344397 !important;
 }
 
-.btn-blue.btn-addon > i {
-  background-color: #37479e;
-  border: 1px solid #37479e;
-}
-
 .in-left-shadow{
   box-shadow: inset 6px 0 9px -10px rgba(0,0,0,0.5);
 }
@@ -2684,6 +2679,39 @@ button, select, html, textarea, input{
   font-size: 22px;
 }
 
+.icon-text-shadow{text-shadow:2px 2px 15px #000}
+.font-code{font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;}
+
+.btn-info {
+  color: #ffffff !important;
+  background-color: #23b7e5;
+  border-color: #23b7e5;
+}
+
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active,
+.btn-info.active,
+.open .dropdown-toggle.btn-info {
+  color: #ffffff !important;
+  background-color: #19a9d5;
+  border-color: #189ec8;
+}
+.btn-danger {
+  color: #ffffff !important;
+  background-color: #f05050;
+  border-color: #f05050;
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger.active,
+.open .dropdown-toggle.btn-danger {
+  color: #ffffff !important;
+  background-color: #ee3939;
+  border-color: #ed2a2a;
+}
 /* /general */
 
 /* animate */
@@ -2967,7 +2995,7 @@ button, select, html, textarea, input{
 
 #more-options-dialog md-tabs.md-default-theme md-ink-bar {
 color: rgba(0,0,0, 0.84);
-background: rgba(0,0,0,0.5);
+background: rgba(0,0,0,0.7);
 }
 
 #more-options-dialog md-tab-item span{
@@ -3268,11 +3296,12 @@ a.underline-hover:hover{
 
 /* #post-left-content .scroll-y{overflow:hidden;} */
 
-#post-left-content .profile-cover{min-height: 155px; margin-right: 18px;  border-bottom: 1px solid #222;}
+#post-left-content .profile-cover{min-height: 155px; margin-right: 18px;  border-bottom: 1px solid #222;   box-shadow: inset -10px 0px 10px -7px rgba(0,0,0,0.8);}
 #post-left-content .left-content-wrap {width: 298px; padding; overflow-x:hidden; overflow-y:scroll;
  height: calc(100% - 155px);
  height: -webkit-calc(100% - 155px);
  height: -moz-cal(100% - 155px);
+ box-shadow: inset 0px -1px 9px 0px rgba(0,0,0,0.8)
 }
 #post-left-content .popup-profile-img{margin: 30px auto 0px auto; position: absolute; margin-left: -30px; left: 20%}
 #post-left-content .title-wrapper-bg-gd {/* background: rgba(0,0,0,0.75); */
@@ -4416,6 +4445,59 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 /* /settings */
 
 /* settings-users */
+#editing-user-profile #image-button{position: relative; overflow: hidden; vertical-align: bottom;}
+#editing-user-profile #image-button #image-upload, 
+#cover-image-button #image-button #image-upload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 142px;
+  direction: ltr;
+  cursor: pointer;
+  display: block;
+}
+
+#editing-user-profile #image-button .image-edit{
+  display: none;
+}
+
+#editing-user-profile #image-button:hover .image-edit{
+  display: block;
+}
+
+#editing-user-profile #image-button:hover{
+    background-color: rgba(0,0,0,0.7);
+}
+
+#cover-image-button{
+  color: rgba(255,255,255,0.8);
+}
+
+#cover-image-button{
+  color: rgba(255,255,255,0.8);
+}
+
+#cover-image-button:hover{
+  color: rgba(255,255,255,0.9);
+}
+
+#cover-image-button span{
+  opacity: 0;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+#cover-image-button:hover span{opacity: 1;
+-webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
 /* /settings-users */
 
 /* settings-colors */

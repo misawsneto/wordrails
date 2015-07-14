@@ -4,20 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -75,6 +62,9 @@ public class Network {
 	public boolean allowSponsors;
 	
 	public String domain;
+
+	@Lob
+	public String loginFooterMessage;
 	
 //	@Column(columnDefinition="TEXT default '#F3F5F9'")
 	public String backgroundColor = "#F3F5F9";
@@ -115,9 +105,9 @@ public class Network {
 	public Image loginImage;
 	public Integer loginImageId;
 	
-	@Column(columnDefinition = "varchar(255) default 'D", nullable = false)
+	@Column(columnDefinition = "varchar(255) default 'D'", nullable = false)
 	public String defaultReadMode;
-	@Column(columnDefinition = "varchar(255) default 'V", nullable = false)
+	@Column(columnDefinition = "varchar(255) default 'V'", nullable = false)
 	public String defaultOrientationMode;
 
 	@Override

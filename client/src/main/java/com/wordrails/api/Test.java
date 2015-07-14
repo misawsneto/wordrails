@@ -37,7 +37,7 @@ public class Test {
 		wordRails.putNetwork(station);
 
 
-		createPerson(wordRails);
+		//createPerson(wordRails);
 
 //		wordRails.putPassword("Sport@dmiN", "Sport@dmiN");
 

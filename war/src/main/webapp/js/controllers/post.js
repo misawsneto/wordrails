@@ -651,7 +651,7 @@ function isTermSelected(terms){
 				'railVisible': true
 			})
 		})
-	}, 100);
+	}, 10);
 
 	$scope.today = function() {
 		$scope.dt = new Date();

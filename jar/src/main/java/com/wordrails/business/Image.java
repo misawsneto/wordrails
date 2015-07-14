@@ -23,6 +23,12 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 
 @Entity
 public class Image {
+
+	public static final String FAVICON = "FAVICON";
+	public static final String SPLASH = "SPLASH";
+	public static final String LOGIN = "LOGIN";
+	public static final String POST = "POST";
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@DocumentId
@@ -39,6 +45,10 @@ public class Image {
 	@Lob
 	@Field
 	public String credits;
+
+	@Field
+	@Column(columnDefinition = "varchar(255) default 'POST'", nullable = false)
+	public String type;
 	
 	@ManyToOne
 	public Comment comment;

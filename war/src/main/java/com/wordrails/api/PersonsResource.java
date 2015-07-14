@@ -207,7 +207,7 @@ public class PersonsResource {
 		Network network = authProvider.getNetwork();
 
 		Person person = null;
-
+		User user = null;
 		if(personCreationObject != null){
 			try{
 				person = new Person();
@@ -225,14 +225,14 @@ public class PersonsResource {
 					password = WordrailsUtil.generateRandomString(8, "a#");
 				}
 
-				User user = new User();
+				user = new User();
+				user.enabled = true;
 				user.username = person.username;
 				user.password = password;
 				user.network = authority.network;
+				authority.user = user;
 				user.addAuthority(authority);
 
-				userGrantedAuthorityRepository.save(authority);
-				userRepository.save(user);
 				person.user = user;
 
 				personRepository.save(person);
@@ -287,19 +287,39 @@ public class PersonsResource {
 				networkRole.person = person;
 				networkRole.admin = false;
 				networkRolesRepository.save(networkRole);
+
+				if(networkRole.admin) {
+					UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
+					user.addAuthority(authority);
+				}
 			}
 
-			if(personCreationObject.stationRole !=null){
-				if(personCreationObject.stationRole.station != null && personCreationObject.stationRole.station.id != null){
-					Station station = stationRepository.findOne(personCreationObject.stationRole.station.id);
-					personCreationObject.stationRole.station = station;
-					personCreationObject.stationRole.person = person;
-					stationRoleEventHandler.handleBeforeCreate(personCreationObject.stationRole);
-					stationRolesRepository.save(personCreationObject.stationRole);
+			StationRole stRole = personCreationObject.stationRole;
+			if(stRole !=null){
+				if(stRole.station != null && stRole.station.id != null){
+					stRole.station = stationRepository.findOne(stRole.station.id);
+					stRole.person = person;
+					stationRoleEventHandler.handleBeforeCreate(stRole);
+					stationRolesRepository.save(stRole);
+
+					if(stRole.admin) {
+						UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_STATION_ADMIN", network, stRole.station);
+						user.addAuthority(authority);
+					}
+					if(stRole.editor) {
+						UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_STATION_EDITOR", network, stRole.station);
+						user.addAuthority(authority);
+					}
+					if(stRole.writer) {
+						UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_STATION_WRITER", network, stRole.station);
+						user.addAuthority(authority);
+					}
 				}else{
 					throw new BadRequestException();
 				}
 			}
+
+			userRepository.save(user);
 
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		}else{
@@ -419,9 +439,9 @@ public class PersonsResource {
 
 		PersonData initData = new PersonData();
 
-		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes(), PersonDto.class);
-		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes(), NetworkDto.class);
-		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes(), NetworkRoleDto.class);
+		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
+		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class); 
+		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes("UTF-8"), NetworkRoleDto.class);
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;
 

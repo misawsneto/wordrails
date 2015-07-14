@@ -1,8 +1,12 @@
 package com.wordrails.business;
 
+import org.hibernate.annotations.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -38,7 +42,7 @@ public class User implements UserDetails {
 	@OneToOne(mappedBy = "user")
 	public Person person;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserGrantedAuthority> authorities;
 
 	@OneToMany(mappedBy = "user")

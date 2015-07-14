@@ -79,6 +79,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		if (user.isAnonymous()) {
 			person = new Person();
 			person.username = "wordrails";
+			person.password = "wordrails";
 
 			return person;
 		}
