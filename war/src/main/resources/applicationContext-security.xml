@@ -53,7 +53,7 @@
 		<intercept-url pattern="/read" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<intercept-url pattern="/read/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 
-		<intercept-url pattern="/**" access="ROLE_USER"/>
+		<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 
 		<custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
 		<custom-filter ref="anonymousAuthenticationFilter" position="ANONYMOUS_FILTER"/>
