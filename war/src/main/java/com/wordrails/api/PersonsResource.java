@@ -10,6 +10,7 @@ import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.business.*;
 import com.wordrails.converter.PostConverter;
+import com.wordrails.filter.TrixAnonymousAuthenticationFilter;
 import com.wordrails.persistence.*;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
@@ -102,11 +103,11 @@ public class PersonsResource {
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password){
+	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password) {
 		Network network = wordrailsService.getNetworkFromHost(request);
 
 		try{
-			authProvider.authenticate(username, password, network.id);
+			authProvider.authenticate(username, password, network);
 			return Response.status(Status.OK).build();
 		}catch(BadCredentialsException | UsernameNotFoundException e){
 			return Response.status(Status.UNAUTHORIZED).build();
