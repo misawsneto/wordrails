@@ -5,7 +5,7 @@ ALTER TABLE PersonNetworkRegId MODIFY person_id INT(11) default NULL;
 ALTER TABLE PersonNetworkToken MODIFY person_id INT(11) default NULL;
 ALTER TABLE PostRead MODIFY person_id INT(11) default NULL;
 
-ALTER TABLE Network defaultTaxonomy_id INT(11) default NULL;
+ALTER TABLE Network MODIFY defaultTaxonomy_id INT(11) default NULL;
 
 ALTER TABLE station drop column social;
 
@@ -56,7 +56,8 @@ delete from person where id = 126;
 --delete from authorities where username = 'marcos costa';
 --insert into authorities (username, authority) values ('marcoscosta', 'ROLE_USER');
 --update users set username = 'marcoscosta' where username = 'marcos costa';
--- NEW LOGIN --
+
+--  NEW LOGIN --
 
 DROP TABLE authorities;
 
