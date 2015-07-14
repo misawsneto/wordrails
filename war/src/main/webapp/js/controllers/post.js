@@ -301,6 +301,20 @@ if(newValue && newValue.editingExisting){
 }
 }, true)
 
+
+$scope.invertLandscapeSquare = function(){
+	$scope.app.editingPost.imageLandscape = !$scope.app.editingPost.imageLandscape; 
+	$scope.checkLandscape();
+}
+
+$scope.checkLandscape = function(){
+	if($scope.app.editingPost.uploadedImage){
+		$("#post-media-box").css('background-image', 'url(' + $scope.app.editingPost.uploadedImage.filelink + ')');
+	}else{
+		$("#post-media-box").removeAttr('style')
+	}
+}
+
 var uploader = $scope.uploader = new FileUploader({
 	url: TRIX.baseUrl + "/api/files/contents/simple"
 });
@@ -320,19 +334,6 @@ uploader.onSuccessItem = function(fileItem, response, status, headers) {
 		$scope.postCtrl.imageHasChanged = true
 	}
 };
-
-$scope.invertLandscapeSquare = function(){
-	$scope.app.editingPost.imageLandscape = !$scope.app.editingPost.imageLandscape; 
-	$scope.checkLandscape();
-}
-
-$scope.checkLandscape = function(){
-	if($scope.app.editingPost.uploadedImage){
-		$("#post-media-box").css('background-image', 'url(' + $scope.app.editingPost.uploadedImage.filelink + ')');
-	}else{
-		$("#post-media-box").removeAttr('style')
-	}
-}
 
 uploader.onErrorItem = function(fileItem, response, status, headers) {
 	if(status == 413)

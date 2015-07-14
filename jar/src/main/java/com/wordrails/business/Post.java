@@ -185,6 +185,7 @@ public class Post {
 
 	@Field
 	@NumericField
+	@Column(updatable = false)
 	public int readsCount = 0;
 
 	@Field
@@ -193,14 +194,17 @@ public class Post {
 
 	@Field
 	@NumericField
+	@Column(updatable = false)
 	public int bookmarksCount = 0;
 
 	@Field
 	@NumericField
+	@Column(updatable = false)
 	public int recommendsCount = 0;
 
 	@Field
 	@NumericField
+	@Column(updatable = false)
 	public int commentsCount = 0;
 
 	@ManyToMany

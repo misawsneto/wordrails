@@ -1,5 +1,6 @@
 package com.wordrails.persistence;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -18,4 +19,12 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>, Quer
 
 	@Query("SELECT comment FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
 	List<Comment> findPostCommentsOrderByDate(@Param("postId") Integer postId, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.id = :postId and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")
+	public List<Object[]> countByPostAndDate(@Param("postId") Integer postId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
+
+	@RestResource(exported = false)
+	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.author.id = :authorId and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")
+	List<Object[]> countByAuthorAndDate(@Param("authorId") Integer authorId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
 }

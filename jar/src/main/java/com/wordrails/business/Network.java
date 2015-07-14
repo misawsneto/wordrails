@@ -149,6 +149,24 @@ public class Network {
 		}else{
 			logoId = null;
 		}
+
+		if(favicon != null && favicon.original != null){
+			faviconId = favicon.original.id;
+		}else{
+			faviconId = null;
+		}
+
+		if(splashImage != null && splashImage.original != null){
+			splashImageId = splashImage.original.id;
+		}else{
+			splashImageId = null;
+		}
+
+		if(loginImage != null && loginImage.original != null){
+			loginImageId = loginImage.original.id;
+		}else{
+			loginImageId = null;
+		}
 	}
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
@@ -162,6 +180,24 @@ public class Network {
 			logoId = logo.original.id;
 		}else{
 			logoId = null;
+		}
+
+		if(favicon != null && favicon.original != null){
+			faviconId = favicon.original.id;
+		}else{
+			faviconId = null;
+		}
+
+		if(splashImage != null && splashImage.original != null){
+			splashImageId = splashImage.original.id;
+		}else{
+			splashImageId = null;
+		}
+
+		if(loginImage != null && loginImage.original != null){
+			loginImageId = loginImage.original.id;
+		}else{
+			loginImageId = null;
 		}
 	}
 

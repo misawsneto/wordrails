@@ -16,12 +16,12 @@
             <ul class="timeline m-t-sm m-b-md">
               <li class="tl-item" ng-repeat="post in app.initData.popular | limitTo: 5">
                 <div class="tl-wrap">
-                  <div class="popular-index">{{::$index + 1}}</div>
+                  <div class="popular-index">{{$index + 1}}</div>
                   <div class="">
-                    <small style="opacity: 0.7" class="post-time w-md">{{::post.date | fromNow}}</small>
+                    <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
                     <a ng-click="app.setNowReading(post, app.initData.popular)" class="pointer">
                     <div>
-                      {{::post.title | characters:40}}
+                      {{post.title | characters:40}}
                     </div>
                     </a>
                   </div>
@@ -37,10 +37,10 @@
               <li class="tl-item" ng-repeat="post in app.initData.recent | limitTo: 5">
                 <div class="tl-wrap">
                   <div class="">
-                    <small style="opacity: 0.7" class="post-time w-md">{{::post.date | fromNow}}</small>
+                    <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
                     <a ng-click="app.setNowReading(post, app.initData.recent)" class="pointer">
                     <div clamp="1">
-                      {{::post.title | characters:40}}
+                      {{post.title | characters:40}}
                     </div>
                     </a>
                   </div>
@@ -58,7 +58,7 @@
 <!-- header bar -->
 <div class="collapse pos-rlt navbar-collapse box-shadow nav-down station-header {{::app.settings.navbarCollapseColor}}">
   <div class="nav navbar-nav hidden-xs text-center text-lg w-full wrapper-sm header-font font-thin pos-abt">
-    {{::app.currentStation.name}}
+    {{app.currentStation.name}}
   </div>
   <!-- nabar right -->
   <ul class="nav navbar-nav navbar-right">
@@ -91,7 +91,7 @@
       <div class="divider-v m-r-xs"></div>
     </li>
     <li ng-if="!app.isLogged">
-      <a href class="text-u-c text-center" ng-click="openSplash('signin_splash.html');">ENTRAR {{::app.initData.network.allowSignup ? '/ Cadastrar' : ''}}</a>
+      <a href class="text-u-c text-center" ng-click="openSplash('signin_splash.html');">ENTRAR {{app.initData.network.allowSignup ? '/ Cadastrar' : ''}}</a>
     </li>
   </ul>
 </div>

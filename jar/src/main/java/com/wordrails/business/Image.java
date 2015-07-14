@@ -24,10 +24,7 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 @Entity
 public class Image {
 
-	public static final String FAVICON = "FAVICON";
-	public static final String SPLASH = "SPLASH";
-	public static final String LOGIN = "LOGIN";
-	public static final String POST = "POST";
+	public enum Type {FAVICON, SPLASH, LOGIN, POST}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -117,5 +114,14 @@ public class Image {
 		
 		if(comment!=null)
 			commentId = comment.id;
+	}
+
+	public static boolean containsType(String string) {
+		for (Image.Type type : Image.Type.values()) {
+			if (type.name().equals(string)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

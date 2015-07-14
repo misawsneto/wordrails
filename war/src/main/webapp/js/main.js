@@ -193,6 +193,10 @@ angular.module('app')
         else if(toState.name == "app.publications"){
           $("title").html($scope.app.initData.network.name + " | Publicações");
         }
+
+        else if(toState.name == "app.mystats"){
+          $("title").html($scope.app.initData.network.name + " | Publicações");
+        }
         // check state read
         if(toState.name != "app.stations.read"){
           // show to navbar
@@ -244,6 +248,14 @@ angular.module('app')
         $state.go('app.user', {username: username})
         if($scope.app.profilepopover)
         $scope.app.profilepopover.open = false;
+      }
+
+      $scope.app.goToUserStats = function($event){
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.userstats')
+        if($scope.app.profilepopover)
+          $scope.app.profilepopover.open = false; 
       }
 
       $scope.app.goToUserPublications = function($event){
@@ -517,12 +529,12 @@ angular.module('app')
        */
       $scope.app.setNowReading = function(postView, list, listMeta, baseState){
 
-        if($scope.app.nowReadingAuthor && postView && postView.authorId && $scope.app.nowReadingAuthor.authorId != postView.authorId){
-          $("#left-profile-cover").removeClass("slideInRight");
-          setTimeout(function() {
-            $("#left-profile-cover").addClass("slideInRight");
-          });
-        }
+        // if($scope.app.nowReadingAuthor && postView && postView.authorId && $scope.app.nowReadingAuthor.authorId != postView.authorId){
+        //   $("#left-profile-cover").removeClass("slideInRight");
+        //   setTimeout(function() {
+        //     $("#left-profile-cover").addClass("slideInRight");
+        //   });
+        // }
 
         if($state.current.name == "app.stations.read" && $scope.app.nowReading && $scope.app.nowReading.postId == postView.postId)
           return;

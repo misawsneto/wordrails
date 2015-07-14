@@ -70,10 +70,10 @@
 											</a>
 											<!-- dropdown -->
 											<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
-												<li> <a href> Reconfigurar a senha </a> </li>
+												<li ng-if="app.networkAdmin" > <a href> Reconfigurar a senha </a> </li>
 												<li> <a href> Alterar permissão </a> </li>
 												<!-- <li class="divider"></li> -->
-												<li> <a ng-click="openDeletePersonRole(role.id);"> Remover da estação </a> </li>
+												<li> <a ng-click="openDeletePersonRole(role.id);"> Remover permissões </a> </li>
 											</ul>
 											<!-- / dropdown -->
 										</div>

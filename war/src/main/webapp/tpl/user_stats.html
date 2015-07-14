@@ -1,0 +1,97 @@
+<div id="user-stats" class="hbox" ng-cloak>
+	<div class="header-custom animated box-shadow">
+		<div class="block-1000 m-auto m-b-xxl text-center">
+			<p class="h1 font-bold">Minhas Estatísticas</p>
+		</div>
+	</div>
+	<div class="wrapper-lg material-panel-m">
+		<div class="block-1200 m-auto" >
+			<div class="panel panel-card animated zoomIn o-h" style="min-height:200px">
+			<div class="stats-wrapper pos-rlt b-b">
+				<div class="w-full">
+					<!-- summary -->
+					<div class="text-center w-sm bg-light pos-abt top-0 right-0 bottom-0 r-r" style="box-shadow: inset 2px 3px 6px -1px rgba(0,0,0,0.2)">
+						<div class="padder-v item m-t">
+	            <div class="font-thin h1">129</div>
+	            <span class="text-grey text-base">Publicados</span>
+	          </div>
+	          <div class="padder-v item">
+	            <div class="font-thin h1">3</div>
+	            <span class="text-grey text-base">Rascunhos</span>
+	          </div>
+	          <div class="padder-v item">
+	            <div class="font-thin h1">12</div>
+	            <span class="text-grey text-base">Agendados</span>
+	          </div>
+					</div>
+					<!-- /summary -->
+					<!-- user stats chart -->
+					<div class="" style="margin-right: 175px; min-height: 470px">
+						<div class="wrapper-sm"></div>
+						<nvd3 options="chartOptions" data="chartData"></nvd3>
+					</div>
+					<!-- /user stats chart -->
+				</div>
+			</div>
+			<!-- div post list -->
+			<div>
+				<div class="m h4 b-b m-b-none font-bold">
+					Publicações
+					<div class="pull-right">
+						<div class="display-t-c w-sm text-center">
+							Leituras
+						</div>
+						<div class="display-t-c w-sm text-center">
+							Recomendações
+						</div>
+						<div class="display-t-c w-sm text-center">
+							Comentários
+						</div>
+					</div>
+				</div>
+				<ul class="b-none no-padding m-b-none ls-style-none">
+					<li ng-repeat="publication in publications" class="p-l p-r">
+						<div ng-class="{'b-t': !$first}"></div>
+						<div class="clear p-t-sm p post-list news-item">
+							<!-- image -->
+							<div class="block-image m-r m-l-n pull-left" style="width: 100px; height: 100px" ng-if="publication.mediumId" ng-class="{'m-t': publication.topper}">
+								<div class="cell-wrap r r-2x" ng-class="{'hide': !publication.mediumId}">
+									<div ng-style="getBackgroundImage(publication, 'md')"></div>
+								</div>
+							</div>
+							<!-- /image -->
+							<!-- stats -->
+							<div class="pull-right">
+								<div class="display-t-c h2 p-t p-b w-sm text-center font-bold">
+									{{publication.readsCount}}
+								</div>
+								<div class="display-t-c h2 p-t p-b w-sm text-center font-bold">
+									{{publication.recommendsCount}}
+								</div>
+								<div class="display-t-c h2 p-t p-b w-sm text-center font-bold">
+									{{publication.commentsCount}}
+								</div>
+							</div>
+							<!-- /stats -->
+							<!-- /content -->
+							<div class="p-t display-t-c">
+								<div class="m-b-sm v-middle display-t-c" ng-if="publication.topper">
+									<span class="no-radius normal p-xxs topper text-md bg-custom-primary">{{publication.topper}}</span>
+								</div>
+								<a  class="h4 font-bold m-b block" href>
+									{{publication.title}}
+								</a>
+								<div class="text-base font-thin" ng-bind-html="publication.snippet | characters: 100 | stripHtml">
+								</div>
+							</div>
+							<!-- /content -->
+						</div>    
+					</li>
+				</ul>
+			</div>
+			<!-- div post list -->
+			</div>
+			<!-- panel -->
+		</div>
+	</div>
+</div>

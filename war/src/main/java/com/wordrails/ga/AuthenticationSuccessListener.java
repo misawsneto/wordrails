@@ -13,11 +13,11 @@ import com.wordrails.WordrailsService;
 @Component
 class AuthenticationSuccessListener implements ApplicationListener<AuthenticationSuccessEvent> {
 //	static final String USER_IP =  AuthenticationSuccessListener.class.getName() + ".USER_IP";
-	
+
 	private @Autowired HttpServletRequest request;
 	private @Autowired WordrailsService wordrailsService;
-//	private @Autowired GoogleAnalytics analytics;	
-	
+//	private @Autowired GoogleAnalytics analytics;
+
 	@Override
 	public void onApplicationEvent(AuthenticationSuccessEvent event) {
 //		String userIp = request.getRemoteAddr();
@@ -26,7 +26,7 @@ class AuthenticationSuccessListener implements ApplicationListener<Authenticatio
 //
 		String username = event.getAuthentication().getName();
 //		analytics.sessionStarted(username, userIp);
-		
+
 		wordrailsService.updateLastLogin(username);
 	}
 }
