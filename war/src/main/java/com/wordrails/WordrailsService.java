@@ -161,6 +161,7 @@ public class WordrailsService {
 		PostRead postRead = new PostRead();
 		postRead.person = person;
 		postRead.post = post;
+		postRead.sessionid = "0"; // constraint fails if null
 		if(postRead.person != null && postRead.person.username.equals("wordrails")) // if user wordrails, include session to uniquely identify the user.
 			postRead.sessionid = sessionId;
 		try {

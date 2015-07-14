@@ -224,6 +224,11 @@ angular.module('app')
                           '../libs/color-selector.js',
                           '../libs/color-selector-angular.js',
                           ]
+              },{
+                  name: 'nvd3',
+                  files: ['../bower_components/nvd3/build/nv.d3.min.js',
+                          '../bower_components/angular-nvd3/dist/angular-nvd3.min.js'
+                  ]
               }
           ]
       });

@@ -7,11 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-import java.util.AbstractList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
@@ -43,6 +39,16 @@ public class WordrailsUtil {
 		String slug = NONLATIN.matcher(normalized).replaceAll("");
 		slug = slug.trim().replaceAll("-+", "-");
 		return slug.toLowerCase(Locale.ENGLISH);
+	}
+
+	public static Date removeTime(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
 	}
 
 	public static String generateRandomString(int length, String chars) {

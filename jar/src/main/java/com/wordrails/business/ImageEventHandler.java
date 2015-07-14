@@ -41,13 +41,20 @@ public class ImageEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Image image) throws SQLException, IOException {
+
+		if(image.type == null || image.type.trim().isEmpty())
+			image.type = Image.Type.POST.toString();
+
+		if(!Image.containsType(image.type))
+			throw new BadRequestException("Invalid Image Type:" + image.type);
+
 		com.wordrails.business.File original = image.original;
 		
 		Person person = authProvider.getLoggedPerson();
 		
 		String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
 		
-		if (original != null) {
+		if (original != null &&  Image.Type.POST.toString().equals(image.type)) {
 			com.wordrails.business.File small = new File();
 			small.type = File.INTERNAL_FILE; 
 			small.mime = image.original.mime != null ? image.original.mime : MIME;

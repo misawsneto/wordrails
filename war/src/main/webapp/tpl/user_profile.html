@@ -1,6 +1,6 @@
 <div id="user-profile" class="hbox" ng-cloak>
 	<!-- cover container -->
-	<div ng-show="showProfile">
+	<div ng-if="showProfile">
 		<div class="profile-cover abstract-bg bg-cover pos-rlt" style="{{person.coverLargeId | imageLink | bgimg2}}">
 			<div class="cover-abstract-mask ng-scope" ng-if="!person.coverLargeId">
 			</div>
@@ -43,7 +43,7 @@
 <!-- /conver container -->
 
 <!-- divider -->
-<div ng-show="postViews && postViews.length > 0 && showProfile">
+<div ng-if="postViews && postViews.length > 0 && showProfile">
 	<div class="m-t b-t b-drk w-full"></div>
 	<div class="header m-auto text-center text-u-c text-lg">
 		<span class="header-title p-l p-r">
@@ -55,7 +55,7 @@
 <!-- posts & recommendation -->
 <div infinite-scroll="paginate()" infinite-scroll-distance="1">
 	<!-- posts -->
-	<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="postViews && postViews.length > 0 && showProfile">
+	<div class="block-800 m-auto m-t-lg m-b-lg" ng-if="postViews && postViews.length > 0 && showProfile">
 		<ul class="b-none no-padding m-b-none ls-style-none">
 			<li ng-repeat="postView in postViews">
 				<div ng-class="{'b-t': !$first}"></div>
@@ -102,7 +102,7 @@
 	</div>
 	<!-- /posts -->
 
-	<!-- <div class="clear wrapper m-t m-b bg-light dk b-t b-b" ng-show="recommendations && showProfile">
+	<!-- <div class="clear wrapper m-t m-b bg-light dk b-t b-b" ng-if="recommendations && showProfile">
 		<div class="block-800 m-auto text-md text-u-c m-b-md p-l font-bold">
 			recomendados por {{person.name}}
 		</div>
@@ -121,7 +121,7 @@
 	</div> -->
 
 	<!-- pages -->
-	<div class="block-800 m-auto m-t-lg m-b-lg" ng-show="pages && showProfile">
+	<div class="block-800 m-auto m-t-lg m-b-lg" ng-if="pages && showProfile">
 		<ul class="b-none no-padding m-b-none ls-style-none">
 			<li ng-repeat="postView in pages">
 				<div ng-class="{'b-t': !$first || (!recommendations || recommendations.length == 0)}"></div>

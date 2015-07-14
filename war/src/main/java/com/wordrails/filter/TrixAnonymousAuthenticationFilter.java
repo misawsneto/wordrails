@@ -20,13 +20,15 @@ public class TrixAnonymousAuthenticationFilter extends AnonymousAuthenticationFi
 		super(key);
 	}
 
-	@Override
-	protected Authentication createAuthentication(HttpServletRequest request) {
-		Network network = wordrailsService.getNetworkFromHost(request);
-
+	public Authentication createAuthentication(Network network) {
 		User user = new User();
 		user.username = "wordrails";
 		user.network = network;
 		return new AnonymousAuthenticationToken("anonymousKey", user, this.getAuthorities());
+	}
+
+	public Authentication createAuthentication(HttpServletRequest request) {
+		Network network = wordrailsService.getNetworkFromHost(request);
+		return createAuthentication(network);
 	}
 }

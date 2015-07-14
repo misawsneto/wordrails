@@ -46,8 +46,6 @@ public class PersonEventHandler {
 		networkRolesRepository.deleteByPerson(person);
 		imageRepository.deleteByPerson(person);
 		bookmarksRepository.deleteByPerson(person);
-		System.out.println(person.id + "");
-
 	}
 
 	@HandleAfterSave

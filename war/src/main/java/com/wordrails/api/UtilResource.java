@@ -14,6 +14,7 @@ import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -302,8 +303,15 @@ public class UtilResource {
 
 				person.email = person.email.trim();
 
+				try {
+					personRepository.save(person);
+				}catch (javax.validation.ConstraintViolationException e){
+					for (ConstraintViolation v:  e.getConstraintViolations()){
+						System.out.println(v.getInvalidValue());
+						System.out.println(v.getPropertyPath());
+					}
+				}
 			}
-			personRepository.save(persons);
 
 		}
 	}
@@ -399,7 +407,7 @@ public class UtilResource {
 			updateDefaultStationPerspective(request);
 			updatePostFields(request);
 			updateTermPerspectivesStationIds(request);
-			updatePersonFields(request);
+			//updatePersonFields(request);
 			updateRegIdsAndTokens(request);
 			updateRegDate(request);
 		}

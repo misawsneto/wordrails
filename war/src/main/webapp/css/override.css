@@ -1836,6 +1836,7 @@ fieldset[disabled] .md-switch input + i:after {
 
 html{
   background: #fff;
+  text-shadow: 0 0px .1px rgba(0,0,0,.3);
 }
 
 body {
@@ -1979,6 +1980,10 @@ a.text-lgrey:hover {
 
 .block-1000{
   max-width: 1000px;
+}
+
+.block-1200{
+  max-width: 1200px;
 }
 
 .block-800{
@@ -2712,7 +2717,40 @@ button, select, html, textarea, input{
   background-color: #ee3939;
   border-color: #ed2a2a;
 }
+
+.wrapper-xxs {
+  padding: 3px;
+}
+
+.text-grey{
+  color: #666;
+}
+
 /* /general */
+
+/* nvd3 */
+
+.nv-axis line {display: #f0f0f0}
+.nv-x.nv-axis line {display: none;}
+.nvd3 .nv-axis path {
+ stroke: #666!important;
+}
+.nvd3 text{
+  fill:#58666e!important;
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif!important;
+}
+.nvtooltip {
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif!important;
+  background-color: rgba(0,0,0,0.85)!important;
+  color: #f5f5f5!important;
+  border-radius: 5px!important;
+}
+.nvtooltip h3{
+  background-color: rgba(0,0,0,0)!important;
+  font-size: 14px!important;
+  border-bottom: 0px!important;
+}
+/* /nvd3 */
 
 /* animate */
 
@@ -2725,6 +2763,7 @@ button, select, html, textarea, input{
 
 #settings>div.animated,
 #settings-network .animated,
+#user-stats .animated,
 #settings-stations-users .animated,
 #settings-sponsor-config .animated,
 #settings-stations-config .animated,

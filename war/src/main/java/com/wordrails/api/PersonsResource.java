@@ -10,12 +10,16 @@ import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.business.*;
 import com.wordrails.converter.PostConverter;
+import com.wordrails.filter.TrixAnonymousAuthenticationFilter;
 import com.wordrails.persistence.*;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
 import com.wordrails.util.PersonCreateDto;
+import com.wordrails.util.ReadsCommentsRecommendsCount;
 import com.wordrails.util.WordrailsUtil;
 import org.jboss.resteasy.spi.HttpRequest;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
@@ -56,8 +60,7 @@ public class PersonsResource {
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
+	private @Autowired TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
@@ -68,6 +71,8 @@ public class PersonsResource {
 
 	private @Autowired BookmarkRepository bookmarkRepository;
 	private @Autowired RecommendRepository recommendRepository;
+	private @Autowired PostReadRepository postReadRepository;
+	private @Autowired CommentRepository commentRepository;
 
 	private @Autowired NetworkSecurityChecker networkSecurityChecker;
 	private @Autowired StationSecurityChecker stationSecurityChecker;
@@ -103,11 +108,11 @@ public class PersonsResource {
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password){
+	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password) {
 		Network network = wordrailsService.getNetworkFromHost(request);
 
 		try{
-			authProvider.authenticate(username, password, network.id);
+			authProvider.authenticate(username, password, network);
 			return Response.status(Status.OK).build();
 		}catch(BadCredentialsException | UsernameNotFoundException e){
 			return Response.status(Status.UNAUTHORIZED).build();
@@ -493,5 +498,92 @@ public class PersonsResource {
 		ContentResponse<List<BooleanResponse>> response = new ContentResponse<List<BooleanResponse>>();
 		response.content = resp;
 		return response;
+	}
+
+	@GET
+	@Path("/me/stats")
+	public Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws JsonProcessingException{
+		if(date == null)
+			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
+
+		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+		Person person = null;
+		if(postId == null || postId == 0) {
+			person = authProvider.getLoggedPerson();
+		}
+
+		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<Long, ReadsCommentsRecommendsCount>();
+		DateTime firstDay = formatter.parseDateTime(date);
+
+		// create date slots
+		DateTime lastestDay = firstDay;
+		while (firstDay.minusDays(30).getMillis() < lastestDay.getMillis()){
+			stats.put(lastestDay. getMillis(), new ReadsCommentsRecommendsCount());
+			lastestDay = lastestDay.minusDays(1);
+		}
+
+		List<Object[]> postReadCounts = new ArrayList<Object[]>();
+		List<Object[]> recommendsCounts = new ArrayList<Object[]>();
+		List<Object[]> commentsCounts = new ArrayList<Object[]>();
+
+		if(person == null)
+			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
+		else
+			postReadCounts = postReadRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
+
+		if(person == null)
+			recommendsCounts = recommendRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
+		else
+			recommendsCounts = recommendRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
+
+		if(person == null)
+			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
+		else
+			commentsCounts = commentRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
+
+
+		// check date and map counts
+		Iterator it = stats.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
+			long key = (Long)pair.getKey();
+			for(Object[] counts: postReadCounts){
+				long dateLong = ((java.sql.Date) counts[0]).getTime();
+				long count = (long) counts[1];
+				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
+					pair.getValue().readsCount = count;
+			}
+//			long value = pair.getValue();
+		}
+
+		it = stats.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
+			long key = (Long)pair.getKey();
+			for(Object[] counts: recommendsCounts){
+				long dateLong = ((java.sql.Date) counts[0]).getTime();
+				long count = (long) counts[1];
+				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
+					pair.getValue().recommendsCount = count;
+			}
+//			long value = pair.getValue();
+		}
+
+		it = stats.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
+			long key = (Long)pair.getKey();
+			for(Object[] counts: commentsCounts){
+				long dateLong = ((java.sql.Date) counts[0]).getTime();
+				long count = (long) counts[1];
+				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
+					pair.getValue().commentsCount = count;
+			}
+//			long value = pair.getValue();
+		}
+
+		String json = mapper.writeValueAsString(stats);
+		return Response.status(Status.OK).entity(json).build();
 	}
 }

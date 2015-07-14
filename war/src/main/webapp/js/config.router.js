@@ -317,19 +317,22 @@ angular.module('app')
                   },
                   controller:'ReadCtrl'
               })
-              .state('app.user', {
-                  url: '/@:username',
-                  templateUrl: 'tpl/user_profile.html',
+              .state('app.userstats', {
+                  url: '/mystats',
+                  templateUrl: 'tpl/user_stats.html',
                   // use resolve to load other dependences
                    resolve: {
                       deps: ['$ocLazyLoad',
-                        function( $ocLazyLoad ){
-                          return $ocLazyLoad.load([
-                            'angularFileUpload',
-                            'js/controllers/user-profile.js?' + GLOBAL_URL_HASH])
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['../bower_components/d3/d3.min.js', '../bower_components/nvd3/build/nv.d3.min.css'])
+                        .then(function(){
+                            return $ocLazyLoad.load(['nvd3', 'js/controllers/user.js?' + GLOBAL_URL_HASH])
+                          });
                       }]
+                          
                   },
-                  controller: 'UserCtrl'
+                  reloadOnSearch: false,
+                  controller: 'UserStatsCtrl'
               })
               .state('app.publications', {
                   url: '/publications/@:username?type',
@@ -339,12 +342,25 @@ angular.module('app')
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad ){
                           return $ocLazyLoad.load([
-                            'angularFileUpload',
-                            'js/controllers/user-publications.js?' + GLOBAL_URL_HASH])
+                            'js/controllers/user.js?' + GLOBAL_URL_HASH])
                       }]
                   },
                   reloadOnSearch: false,
                   controller: 'UserPublicationsCtrl'
+              })
+              .state('app.user', {
+                  url: '/@:username',
+                  templateUrl: 'tpl/user_profile.html',
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load([
+                            'angularFileUpload',
+                            'js/controllers/user.js?' + GLOBAL_URL_HASH])
+                      }]
+                  },
+                  controller: 'UserCtrl'
               })
               .state('app.publications.read', {
                   url: '/:slug',
