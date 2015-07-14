@@ -161,9 +161,11 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   $scope.createPerson = function(){
   	trix.createPerson($scope.person).success(function(response){
   		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+      $scope.person = response;
+      $scope.editingPersonLoaded = true;
+      $scope.editing = true;
+      $scope.creating = false;
   		$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': response.id}, {location: 'replace', inherit: false, notify: false, reload: false})
-  		$scope.editing = true;
-  		$scope.creating = false;
   	}).error(function(data, status, headers, config){
   		if(status == 409){
   			$scope.app.conflictingData = data;
@@ -294,7 +296,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   $scope.bulkActions = [
   {name:'Ações em grupo', id:0},
   {name:'Alterar permissões', id:1},
-  {name:'Remover usuários', id:2}
+  {name:'Remover permissões', id:2}
   ]
 
   $scope.bulkActionSelected = $scope.bulkActions[0];

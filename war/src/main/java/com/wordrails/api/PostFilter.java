@@ -58,7 +58,7 @@ public class PostFilter implements Filter {
 		Integer postId;
 		try {
 			String[] urlParts = rq.getRequestURI().split("/");
-			log.info("POSTFILTER URL: " + rq.getMethod().toUpperCase() + " " + rq.getRequestURI());
+//			log.info("POSTFILTER URL: " + rq.getMethod().toUpperCase() + " " + rq.getRequestURI());
 
 			if (rq.getMethod().toLowerCase().equals("get")) {
 				String url = rq.getRequestURI();

@@ -11,8 +11,8 @@
       <div class="cell" id="settings-sidebar">
         <div class="cell-inner">
           <ul class="nav text-lg no-radius p-t-lg">
-            <li ng-class="{'active': $state.current.name.indexOf('app.settings.station') > -1}">
-            <a ng-if="app.networkAdmin || (app.adminStations && app.adminStations.length > 0)" ui-sref="app.settings.stations" class=" no-border no-radius">
+            <li ng-if="app.networkAdmin || (app.adminStations && app.adminStations.length > 0)" ng-class="{'active': $state.current.name.indexOf('app.settings.station') > -1}">
+            <a ui-sref="app.settings.stations" class=" no-border no-radius">
               Estações
             </a>
             </li>
@@ -26,28 +26,28 @@
               Galeria de Imagens
             </a>
             </li> -->
-            <li ng-class="{'active': $state.includes('app.settings.users')}">
-            <a ng-if="app.networkAdmin" ui-sref="app.settings.users" class="no-border no-radius">
+            <li ng-if="app.networkAdmin || (app.adminStations && app.adminStations.length > 0)" ng-class="{'active': $state.includes('app.settings.users')}">
+            <a class="no-border no-radius">
               Usuários da Rede
             </a>
             </li>
-            <li ng-class="{'active': $state.includes('app.settings.network')}">
-            <a ng-if="app.networkAdmin" ui-sref="app.settings.network" class="no-border no-radius">
+            <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.network')}">
+            <a ui-sref="app.settings.network" class="no-border no-radius">
               Configurações da Rede
             </a>
             </li>
-            <li ng-class="{'active': $state.includes('app.settings.taxonomies')}">
-            <a ng-if="app.networkAdmin" ui-sref="app.settings.taxonomies" class="no-border no-radius">
+            <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.taxonomies')}">
+            <a ui-sref="app.settings.taxonomies" class="no-border no-radius">
               Categorias da Rede
             </a>
             </li>
-            <li ng-class="{'active': $state.includes('app.settings.statistics')}">
-            <a ng-if="app.networkAdmin" ui-sref="app.settings.statistics" class="no-border no-radius">
+            <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.statistics')}">
+            <a ui-sref="app.settings.statistics" class="no-border no-radius">
               Estatísticas da Rede
             </a>
             </li>
-            <li ng-class="{'active': $state.includes('app.settings.sponsors'), 'hide': !app.initData.network.allowSponsors}">
-            <a ng-if="app.networkAdmin" ui-sref="app.settings.sponsors" class="no-border no-radius">
+            <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.sponsors'), 'hide': !app.initData.network.allowSponsors}">
+            <a ui-sref="app.settings.sponsors" class="no-border no-radius">
               Patrocinadores
             </a>
             </li>

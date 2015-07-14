@@ -1,5 +1,6 @@
 package com.wordrails.persistence;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -24,4 +25,12 @@ public interface RecommendRepository extends JpaRepository<Recommend, Integer>, 
 	
 	@Query("select r.post.id from Recommend r where r.person.id=:personId)")
 	public List<Integer> findRecommendByPerson(@Param("personId") Integer personId, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Query("select date(rec.createdAt), count(*)  from Recommend rec where rec.post.id = :postId and (date(rec.createdAt) >= date(:dateStart) and date(rec.createdAt) <= date(:dateEnd)) group by date(rec.createdAt)")
+	public List<Object[]> countByPostAndDate(@Param("postId") Integer postId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
+
+	@RestResource(exported = false)
+	@Query("select date(rec.createdAt), count(*)  from Recommend rec where rec.post.author.id = :authorId and (date(rec.createdAt) >= date(:dateStart) and date(rec.createdAt) <= date(:dateEnd)) group by date(rec.createdAt)")
+	List<Object[]> countByAuthorAndDate(@Param("authorId") Integer authorId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
 }

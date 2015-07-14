@@ -34,4 +34,12 @@ public interface PostReadRepository extends JpaRepository<PostRead, Integer>, Qu
     @Query("select count(distinct sessionid) from PostRead pr where pr.createdAt between :dateIni and :dateEnd")
     public Integer countByDistinctSessionid(@Param("dateIni") Date dateIni, @Param("dateEnd") Date dateEnd);
 
+	@RestResource(exported = false)
+	@Query("select date(pr.createdAt), count(*)  from PostRead pr where pr.post.id = :postId and (date(pr.createdAt) >= date(:dateStart) and date(pr.createdAt) <= date(:dateEnd)) group by date(pr.createdAt)")
+	public List<Object[]> countByPostAndDate(@Param("postId") Integer postId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
+
+	@RestResource(exported = false)
+	@Query("select date(pr.createdAt), count(*)  from PostRead pr where pr.post.author.id = :authorId and (date(pr.createdAt) >= date(:dateStart) and date(pr.createdAt) <= date(:dateEnd)) group by date(pr.createdAt)")
+	List<Object[]> countByAuthorAndDate(@Param("authorId") Integer authorId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
 }
+
