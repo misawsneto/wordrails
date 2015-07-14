@@ -19,6 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -80,11 +81,17 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		User user = getUser();
 
 		Person person;
-		if (user.isAnonymous()) {
+		if (user.isAnonymous()) { //Legacy code for old iOS and Android app
 			person = new Person();
 			person.id = 0;
 			person.username = "wordrails";
 			person.password = "wordrails";
+			person.email = "";
+			person.name = "";
+			person.imageId = 0;
+			person.coverId = 0;
+			person.bookmarks = new HashSet<>();
+			person.recommends = new HashSet<>();
 
 			return person;
 		}
