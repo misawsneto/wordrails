@@ -33,7 +33,8 @@ public class PostAndCommentSecurityChecker {
 		boolean canWrite = false;
 
 		Person personLogged = authProvider.getLoggedPerson();
-		if(personLogged != null && personLogged.id == post.author.id){
+
+		if(personLogged != null && personLogged.id.equals(post.author.id)){
 			Station station = post.station;
 			if(station.visibility.equals(Station.UNRESTRICTED) && station.writable){
 				canWrite = true;

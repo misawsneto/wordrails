@@ -616,6 +616,7 @@ function isTermSelected(terms){
 			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
 			$scope.app.refreshPerspective();
 			$scope.app.editingPost = null;
+			window.onbeforeunload = null;
 			$state.go('app.stations');
 		})
 	}

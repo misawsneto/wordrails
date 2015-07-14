@@ -102,8 +102,6 @@ app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$s
 			      "axisLabel": " ",
 			      "showMaxMin": false,
 			      "tickFormat": function(d) { 
-			      	 console.log(d);
-			      	//d = d * 100000000;
 			      	return d3.time.format('%d/%m/%Y')(new Date(d)) 
 			      }
 			    },
@@ -129,7 +127,6 @@ app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$s
 
         	for (var property in response) {
 				    if (response.hasOwnProperty(property)) {
-				    	console.log(property);
 				    	readsCount.values.push({
 				    		x: parseInt(property),
 				    		y: response[property].readsCount
@@ -142,7 +139,6 @@ app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$s
 
         	for (var property in response) {
 				    if (response.hasOwnProperty(property)) {
-				    	console.log(property);
 				    	recommendsCount.values.push({
 				    		x: parseInt(property),
 				    		y: response[property].recommendsCount
@@ -155,15 +151,12 @@ app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$s
 
         	for (var property in response) {
 				    if (response.hasOwnProperty(property)) {
-				    	console.log(property);
 				    	commentsCount.values.push({
 				    		x: parseInt(property),
 				    		y: response[property].commentsCount
 				    	})
 				    }
 					}
-
-					console.log(readsCount);
 
         	$scope.chartData = [readsCount, recommendsCount, commentsCount]
         })
