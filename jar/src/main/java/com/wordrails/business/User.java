@@ -1,12 +1,9 @@
 package com.wordrails.business;
 
-import org.hibernate.annotations.*;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.social.UserIdSource;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -29,14 +26,13 @@ public class User implements UserDetails {
 	@Size(max = 50)
 	public String username;
 
-	@NotNull
 	@Size(max = 500)
 	public String password;
 
 	public boolean enabled;
 
 	@ManyToOne
-	@JoinColumn(name="network_id")
+	@JoinColumn(name = "network_id")
 	public Network network;
 
 	@OneToOne(mappedBy = "user")
@@ -49,7 +45,7 @@ public class User implements UserDetails {
 	public Set<UserConnection> userConnections;
 
 	public void addAuthority(UserGrantedAuthority authority) {
-		if(authorities == null) authorities = new HashSet<>();
+		if (authorities == null) authorities = new HashSet<>();
 
 		authorities.add(authority);
 	}

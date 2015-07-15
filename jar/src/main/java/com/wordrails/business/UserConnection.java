@@ -7,23 +7,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "userconnection")
 public class UserConnection {
 
-	public enum Provider {
-		FACEBOOK("facebook"),
-		GOOGLE("google"),
-		TWITTER("twitter");
-
-		private final String text;
-
-		Provider(final String text) {
-			this.text = text;
-		}
-
-		@Override
-		public String toString() {
-			return text;
-		}
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer id;
@@ -31,8 +14,6 @@ public class UserConnection {
 	@NotNull
 	@Column(unique = true)
 	public String accessToken;
-
-	public String userId;
 
 	public String providerUserId;
 
@@ -42,7 +23,7 @@ public class UserConnection {
 	public User user;
 
 	@NotNull
-	public Provider provider;
+	public String providerId;
 
 	public String displayName;
 

@@ -35,6 +35,8 @@ public class CacheService {
 
 	private LoadingCache<Integer, Station> stations;
 
+	private LoadingCache<Integer, User> user;
+
 	private LoadingCache<String, Set<User>> users;
 
 	@Autowired
@@ -81,14 +83,24 @@ public class CacheService {
 						});
 
 		// ------------- init user cache
+		user = CacheBuilder.newBuilder().maximumSize(1000)
+				.expireAfterWrite(1, TimeUnit.MINUTES)
+				.build(new CacheLoader<Integer, User>() {
+					public User load(Integer id) {
+						User user = userRepository.findOne(id);
+						return user;
+					}
+				});
+
+		// ------------- init user cache
 		users = CacheBuilder.newBuilder().maximumSize(1000)
 				.expireAfterWrite(1, TimeUnit.MINUTES)
 				.build(new CacheLoader<String, Set<User>>() {
-							public Set<User> load(String username) {
-								Set<User> users = userRepository.findByUsernameAndEnabled(username, true);
-								return users;
-							}
-						});
+					public Set<User> load(String username) {
+						Set<User> users = userRepository.findByUsernameAndEnabled(username, true);
+						return users;
+					}
+				});
 
 		// ------------- init network cache
 
@@ -143,6 +155,10 @@ public class CacheService {
 
 	public Set<User> getUsersByUsername(String username) throws ExecutionException {
 		return users.get(username);
+	}
+
+	public User getUser(Integer id) throws ExecutionException{
+		return user.get(id);
 	}
 
 	public User getUserByUsernameAndNetworkId(String username, Integer networkId) throws ExecutionException {

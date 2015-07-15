@@ -17,9 +17,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.social.security.SocialAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -41,18 +41,26 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
-		User user = (User) auth.getPrincipal();
-		String password = (String) auth.getCredentials();
 
-		if (user == null) {
-			throw new BadCredentialsException("Person is null");
+		if(auth instanceof UsernamePasswordAuthenticationToken) {
+			User user = (User) auth.getPrincipal();
+			String password = (String) auth.getCredentials();
+
+			if (user == null) {
+				throw new BadCredentialsException("User is null");
+			}
+
+			if (password == null || !password.equals(user.password)) {
+				throw new BadCredentialsException("Wrong password");
+			}
+
+			return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+		} else if(auth instanceof SocialAuthenticationToken) {
+
 		}
 
-		if (password == null || !password.equals(user.password)) {
-			throw new BadCredentialsException("Wrong password");
-		}
 
-		return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+
 	}
 
 	@Override
@@ -71,8 +79,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	}
 
 	public Integer getNetworkId() {
-		if(getUser().isAnonymous() || getUser().network == null)
-			return 0;
+		if (getUser().isAnonymous() || getUser().network == null) return 0;
 
 		return getUser().network.id;
 	}
@@ -114,7 +121,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 	public Authentication authenticate(String username, String password, Network network) throws BadCredentialsException {
 		Authentication auth;
-		if(username.equals("wordrails")) {
+		if (username.equals("wordrails")) {
 			User user = new User();
 			user.username = "wordrails";
 			user.network = network;

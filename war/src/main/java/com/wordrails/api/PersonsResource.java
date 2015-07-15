@@ -103,7 +103,7 @@ public class PersonsResource {
 		Person person = authProvider.getLoggedPerson();
 		gcmService.updateIosToken(network, person, token, lat, lng);
 		return Response.status(Status.OK).build();
-	} ProviderSignInController
+	}
 
 	@POST
 	@Path("/login")
@@ -131,7 +131,7 @@ public class PersonsResource {
 
 		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
 
-		List<Integer> stationIds = new ArrayList<Integer>();
+		List<Integer> stationIds = new ArrayList<>();
 		if(permissions != null && permissions.size() > 0){
 			for (StationPermission stationPermission : permissions) {
 				stationIds.add(stationPermission.stationId);
