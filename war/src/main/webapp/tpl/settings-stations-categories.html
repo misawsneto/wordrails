@@ -1,0 +1,28 @@
+<div id="settings-stations-categories">
+
+	<div class="header-custom text-center animated box-shadow">
+	</div>
+
+	<div class="wrapper-lg animated zoomIn m-b-xxl">
+		<!-- start of user panel list -->
+		<div class="panel panel-card block-600 m-auto" ng-hide="creating || editing">
+			<div class="panel-heading h4 wrapper-md">
+				<a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Usuários da estação <strong>{{stationName}}</strong></span>
+			</div>
+			<div class="panel-body p-n" style="min-height: 200px;">
+
+				<div class="span5 article-tree animated fadeIn">
+					<div ng-style="{'overflow': 'auto'}">
+						<div class="tree well">
+							<ul>
+								<node-tree ng-model="termTree"></node-tree>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>

@@ -395,6 +395,20 @@ public class UtilResource {
 		}
 	}
 
+    @GET
+    @Path("/updateStationTaxonomy")
+    @Transactional(readOnly=false)
+    public void updateStationTaxonomy(@Context HttpServletRequest request){
+//        String host = request.getHeader("Host");
+//
+//        if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+           List<Station> stations = stationRepository.findAll();
+            for (Station station: stations){
+
+            }
+//        }
+    }
+
 	@GET
 	@Path("/updateAllResources")
 	@Transactional(readOnly=false)
@@ -541,7 +555,7 @@ public class UtilResource {
 
 	@GET
 	@Path("/updateRegDate")
-	private void updateRegDate(HttpServletRequest request) {
+	public void updateRegDate(HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
