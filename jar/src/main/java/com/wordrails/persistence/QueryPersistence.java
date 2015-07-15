@@ -120,8 +120,17 @@ public class QueryPersistence {
 		manager.createNativeQuery("update Station station set main = :main where station.id = :id").setParameter("id", id).setParameter("main", main).executeUpdate();		
 	}
 
+	@Transactional
+	public List<Object[]> getPersonPublicationsCount(Integer personId) {
+		return manager.createNativeQuery("select (select count(*) from Post po where po.author_id = p.id and po.state = 'PUBLISHED')," +
+										"(select count(*) from Post po where po.author_id = p.id and po.state = 'DRAFT')," +
+										"(select count(*) from Post po where po.author_id = p.id and po.state = 'SCHEDULED')" +
+				"from Person p where p.id = :personId").setParameter("personId", personId).getResultList();
+	}
 	public void updateLastLogin(String username) {
 		// TODO Auto-generated method stub
 		manager.createQuery("update Person person set person.lastLogin = :date where person.username = :username").setParameter("username", username).setParameter("date", new Date()).executeUpdate();
 	}
+
+
 }

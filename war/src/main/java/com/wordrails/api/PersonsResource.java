@@ -10,7 +10,6 @@ import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.business.*;
 import com.wordrails.converter.PostConverter;
-import com.wordrails.filter.TrixAnonymousAuthenticationFilter;
 import com.wordrails.persistence.*;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
@@ -75,6 +74,7 @@ public class PersonsResource {
 
 	private @Autowired NetworkSecurityChecker networkSecurityChecker;
 	private @Autowired StationSecurityChecker stationSecurityChecker;
+	private @Autowired QueryPersistence queryPersistence;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -500,6 +500,20 @@ public class PersonsResource {
 	}
 
 	@GET
+	@Path("/me/publicationsCount")
+	public Response publicationsCount(@QueryParam("personId") Integer personId)throws JsonProcessingException {
+		Person person = null;
+		if(personId != null){
+			person = personRepository.findOne(personId);
+		}else{
+			person = authProvider.getLoggedPerson();
+		}
+
+		List<Object[]> counts =  queryPersistence.getPersonPublicationsCount(person.id);
+		return Response.status(Status.OK).entity("{\"publicationsCounts\": " + (counts.size() > 0 ? mapper.writeValueAsString(counts.get(0)) : null) + "}").build();
+	}
+
+	@GET
 	@Path("/me/stats")
 	public Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws JsonProcessingException{
 		if(date == null)
@@ -525,22 +539,19 @@ public class PersonsResource {
 		List<Object[]> postReadCounts = new ArrayList<Object[]>();
 		List<Object[]> recommendsCounts = new ArrayList<Object[]>();
 		List<Object[]> commentsCounts = new ArrayList<Object[]>();
+		List<Object[]> generalStatus = new ArrayList<Object[]>();
 
-		if(person == null)
+		if(person == null) {
 			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-		else
-			postReadCounts = postReadRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-
-		if(person == null)
 			recommendsCounts = recommendRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-		else
-			recommendsCounts = recommendRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-
-		if(person == null)
 			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-		else
+			generalStatus = postRepository.findPostStats(postId);
+		}else {
+			postReadCounts = postReadRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
+			recommendsCounts = recommendRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
 			commentsCounts = commentRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-
+			generalStatus = personRepository.findPersonStats(person.id);
+		}
 
 		// check date and map counts
 		Iterator it = stats.entrySet().iterator();
@@ -553,7 +564,6 @@ public class PersonsResource {
 				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
 					pair.getValue().readsCount = count;
 			}
-//			long value = pair.getValue();
 		}
 
 		it = stats.entrySet().iterator();
@@ -566,7 +576,6 @@ public class PersonsResource {
 				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
 					pair.getValue().recommendsCount = count;
 			}
-//			long value = pair.getValue();
 		}
 
 		it = stats.entrySet().iterator();
@@ -579,10 +588,10 @@ public class PersonsResource {
 				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
 					pair.getValue().commentsCount = count;
 			}
-//			long value = pair.getValue();
 		}
 
-		String json = mapper.writeValueAsString(stats);
-		return Response.status(Status.OK).entity(json).build();
+		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
+		String dateStatsJson = mapper.writeValueAsString(stats);
+		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 	}
 }

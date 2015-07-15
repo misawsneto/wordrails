@@ -10,19 +10,50 @@
 			<div class="stats-wrapper pos-rlt b-b">
 				<div class="w-full">
 					<!-- summary -->
-					<div class="text-center w-sm bg-light pos-abt top-0 right-0 bottom-0 r-r" style="box-shadow: inset 2px 3px 6px -1px rgba(0,0,0,0.2)">
-						<div class="padder-v item m-t">
-	            <div class="font-thin h1">129</div>
-	            <span class="text-grey text-base">Publicados</span>
+					<div class="text-center w-sm bg-dg pos-abt top-0 right-0 bottom-0 r-r" style="box-shadow: inset 2px 3px 6px -1px rgba(0,0,0,0.2)">
+						<!-- <div class="padder-v item m-t">
+							            <div class="font-thin h1">129</div>
+							            <span class="text-grey text-base">Publicados</span>
+							          </div>
+							          <div class="padder-v item">
+							            <div class="font-thin h1">3</div>
+							            <span class="text-grey text-base">Rascunhos</span>
+							          </div>
+							          <div class="padder-v item">
+							            <div class="font-thin h1">12</div>
+							            <span class="text-grey text-base">Agendados</span>
+							          </div> -->
+						
+						<div class="padder-v item">
+	            <div class="font-bold h3">{{totalPublished}}</div>
+	            <span class="text-base">Publicados</span>
 	          </div>
-	          <div class="padder-v item">
-	            <div class="font-thin h1">3</div>
-	            <span class="text-grey text-base">Rascunhos</span>
+	          <div class="divider"></div>
+	          <div class="padder-v item ">
+	            <div class="font-bold h3">{{totalDrafts}}</div>
+	            <span class="text-base">Rascunhos</span>
 	          </div>
-	          <div class="padder-v item">
-	            <div class="font-thin h1">12</div>
-	            <span class="text-grey text-base">Agendados</span>
+	          <div class="divider"></div>
+	          <div class="padder-v item ">
+	            <div class="font-bold h3">{{totalScheduled}}</div>
+	            <span class="text-base">Agendados</span>
 	          </div>
+						<div class="divider"></div>
+						<div class="padder-v item ">
+	            <div class="font-thin h3">{{totalPostsRead}}</div>
+	            <span class="text-base">Leituras</span>
+	          </div>
+	          <div class="divider"></div>
+	          <div class="padder-v item ">
+	            <div class="font-thin h3">{{totalComments}}</div>
+	            <span class="text-base">Comentários</span>
+	          </div>
+	          <div class="divider"></div>
+	          <div class="padder-v item ">
+	            <div class="font-thin h3">{{totalRecommends}}</div>
+	            <span class="text-base">Recommendações</span>
+	          </div>
+
 					</div>
 					<!-- /summary -->
 					<!-- user stats chart -->

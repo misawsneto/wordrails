@@ -111,4 +111,8 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported = false)
 	@Query("SELECT post FROM Recommend recommend join recommend.post post where recommend.person.id = :personId AND post.station.id in (:stationIds) order by recommend.id DESC")
 	List<Post> findRecommendationsByPersonIdAndStations(Integer personId, List<Integer> stationIds, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Query("select (select count(*) from PostRead pr where pr.post.id = p.id), (select count(*) from Comment comment where comment.post.id = p.id), (select count(*) from Recommend recommend where recommend.post.id = p.id) from Post p where p.id = :postId")
+	public List<Object[]> findPostStats(@Param("postId") Integer postId);
 }
