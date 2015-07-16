@@ -1059,6 +1059,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isExistsByUsernameAndNetworkIdAuthorized(String username, Integer networkId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetUserNetworkAuthorized(Integer userId) {
 		return false;
 	}
@@ -1070,6 +1075,26 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetUserAuthoritiesAuthorized(Integer userId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserUserConnectionsAuthorized(Integer userId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserConnectionsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserConnectionAuthorized(Integer userConnectionId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserConnectionUserAuthorized(Integer userConnectionId) {
 		return false;
 	}
 

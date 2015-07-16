@@ -17,6 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.social.UserIdSource;
 import org.springframework.social.security.SocialAuthenticationToken;
 import org.springframework.stereotype.Component;
 
@@ -41,26 +42,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
-
-		if(auth instanceof UsernamePasswordAuthenticationToken) {
-			User user = (User) auth.getPrincipal();
-			String password = (String) auth.getCredentials();
-
-			if (user == null) {
-				throw new BadCredentialsException("User is null");
-			}
-
-			if (password == null || !password.equals(user.password)) {
-				throw new BadCredentialsException("Wrong password");
-			}
-
-			return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
-		} else if(auth instanceof SocialAuthenticationToken) {
-
-		}
-
-
-
+		return auth; //won't do any validation because we ensure it's validated in both cases: social login and user/password
 	}
 
 	@Override

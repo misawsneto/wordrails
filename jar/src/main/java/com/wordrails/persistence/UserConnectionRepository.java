@@ -21,16 +21,16 @@ public interface UserConnectionRepository extends JpaRepository<UserConnection, 
 	UserConnection findByProviderIdAndProviderUserId(@Param("providerId") String providerId, @Param("providerUserId") String providerUserId);
 
 	@RestResource(exported = false)
-	@Query("select sc from socialconnection sc where " +
-			"(sc.providerUserId in (:fbIds) and sc.provider in ('facebook')) OR" +
-			"(sc.providerUserId in (:ttIds) and sc.provider in ('twitter')) OR" +
-			"(sc.providerUserId in (:ggIds) and sc.provider in ('google'))")
+	@Query("select sc from UserConnection sc where " +
+			"(sc.providerUserId in (:fbIds) and sc.providerId in ('facebook')) OR" +
+			"(sc.providerUserId in (:ttIds) and sc.providerId in ('twitter')) OR" +
+			"(sc.providerUserId in (:ggIds) and sc.providerId in ('google'))")
 	List<UserConnection> findByProvidersAndUserId(@Param("fbIds") List<String> fbIds,
 	                                                   @Param("ttIds") List<String> ttIds,
 	                                                   @Param("ggIds") List<String> ggIds);
 
 	@RestResource(exported = false)
-	@Query("select sc from socialconnection sc where (sc.providerUserId in (:userIds) and sc.provider in (:providerId))")
+	@Query("select sc from UserConnection sc where (sc.providerUserId in (:userIds) and sc.providerId in (:providerId))")
 	List<UserConnection> findByProviderIdAndUserIds(@Param("providerId") String providerId, @Param("userIds") Collection<String> userIds);
 
 	@RestResource(exported = false)

@@ -17,8 +17,6 @@ import java.util.Set;
 @Component
 public class SocialUsersConnectionRepository implements UsersConnectionRepository {
 
-	@Autowired
-	private UserRepository userRepository;
 	@Qualifier("userConnectionRepository")
 	@Autowired
 	private UserConnectionRepository userConnectionRepository;
@@ -26,6 +24,9 @@ public class SocialUsersConnectionRepository implements UsersConnectionRepositor
 	private TextEncryptor textEncryptor;
 
 	private ConnectionFactoryLocator connectionFactoryLocator;
+
+	public SocialUsersConnectionRepository() {
+	}
 
 	public SocialUsersConnectionRepository(TextEncryptor textEncryptor, ConnectionFactoryLocator connectionFactoryLocator) {
 		this.textEncryptor = textEncryptor;

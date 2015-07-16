@@ -1,5 +1,6 @@
 package com.wordrails.auth;
 
+import com.wordrails.business.User;
 import com.wordrails.business.UserConnection;
 import com.wordrails.persistence.UserConnectionRepository;
 import com.wordrails.persistence.UserRepository;
@@ -177,8 +178,15 @@ public class SocialConnectionRepository implements ConnectionRepository {
 			}
 		}
 
+		User user = userRepository.findOne(userId);
+
+		if(user == null) {
+			throw new NotConnectedException("user " + userId + " does not exist");
+		}
+
 		UserConnection userConnection = new UserConnection();
 
+		userConnection.user = user;
 		userConnection.providerId = connectionData.getProviderId();
 		userConnection.providerUserId = connectionData.getProviderUserId();
 		userConnection.displayName = connectionData.getDisplayName();
