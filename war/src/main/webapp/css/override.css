@@ -4489,6 +4489,12 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 /* /settings */
 
+/* settings-categories */
+  #settings-stations-categories .check-term{
+    display: none;
+  }
+/* /settings-categories */
+
 /* settings-users */
 #editing-user-profile #image-button{position: relative; overflow: hidden; vertical-align: bottom;}
 #editing-user-profile #image-button #image-upload, 

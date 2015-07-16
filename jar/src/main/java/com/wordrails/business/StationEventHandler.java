@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
@@ -16,15 +17,6 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wordrails.persistence.NotificationRepository;
-import com.wordrails.persistence.PostReadRepository;
-import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.PromotionRepository;
-import com.wordrails.persistence.StationPerspectiveRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.security.StationSecurityChecker;
 import com.wordrails.services.CacheService;
 
@@ -46,6 +38,7 @@ public class StationEventHandler {
 	private TrixAuthenticationProvider authProvider;
 	@Autowired CacheService cacheService;
 	@Autowired QueryPersistence queryPersistence;
+	@Autowired TermRepository termRepository;
 	
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -87,6 +80,36 @@ public class StationEventHandler {
 	
 	@HandleAfterCreate
 	public void handleAfterCreate(Station station){
+
+		Set<Taxonomy> taxonomies = station.ownedTaxonomies;
+		for (Taxonomy tax: taxonomies){
+			if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
+				if(station.tagsTaxonomyId == null)
+					station.tagsTaxonomyId = tax.id;
+			}
+			if(tax.type.equals(Taxonomy.STATION_TAXONOMY)){
+				if(station.categoriesTaxonomyId == null) {
+					station.categoriesTaxonomyId = tax.id;
+					// ---- create sample terms...
+					Term term1 = new Term();
+					term1.name = "Categoria 1";
+
+					Term term2 = new Term();
+					term2.name = "Categoria 2";
+
+					term1.taxonomy = tax;
+					term2.taxonomy = tax;
+
+					tax.terms = new HashSet<Term>();
+					tax.terms.add(term1);
+					tax.terms.add(term2);
+					termRepository.save(term1);
+					termRepository.save(term2);
+					taxonomyRepository.save(tax);
+				}
+			}
+		}
+
 		Person person = authProvider.getLoggedPerson();
 		StationRole role = new StationRole();
 		role.person = person;

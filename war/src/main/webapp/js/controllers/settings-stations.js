@@ -62,17 +62,22 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 	}])
 
 app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
-  function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
+                                          function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 
-    trix.findByStationId($state.params.stationId).success(function(response){
-      console.log(response.taxonomies);
-    })
+    $scope.thisStation = {}
+    $scope.app.initData.stations.forEach(function(station, index){
+      if($state.params.stationId == station.id){
+        $scope.stationName = station.name;
+        $scope.stationId = station.id;
+        $scope.thisStation = station;
+      }
+    });
 
-    function updateTermTree (taxonomyId){
-      trix.getTermTree(null, taxonomyId).success(function(response){
-        $scope.termTree = response;
-      });   
-    }
+    $scope.editing = true;
+
+    trix.getTermTree(null, $scope.thisStation.categoriesTaxonomyId).success(function(response){
+      $scope.termTree = response;
+    });
 
   }])
 

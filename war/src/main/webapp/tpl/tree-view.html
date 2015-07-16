@@ -2,9 +2,15 @@
  <span class="check-term" ng-click="nodeClicked(node)">
     <md-checkbox aria-label="{{node.name}}" ng-model="node.checked" ng-click="node.checked = !node.checked" class="pull-left"></md-checkbox>
  </span>
- <span class="leaf">
+ <span class="leaf box-shadow" tooltip="{{node.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
  	{{node.name}}
     <!-- <i class="{{ switcher( isLeaf(node), '', 'fa fa-remove' ) }}"></i> -->
     {{showNode(node)}}
  </span>
+ 	<button ng-if="editing" md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+ 		<i class="mdi mdi-plus i-20" style="vertical-align: 44%; line-height: normal;"></i>
+ 	</button>
+ 	<button ng-if="editing" md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+ 		<i class="mdi mdi-delete i-20" style="vertical-align: 44%; line-height: normal;"></i>
+ 	</button>
 </li>

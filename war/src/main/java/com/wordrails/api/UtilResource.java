@@ -163,19 +163,19 @@ public class UtilResource {
 			System.out.println("reindex started");
 			FullTextEntityManager ftem = Search.getFullTextEntityManager(manager);
 			MassIndexer massIndexer = ftem.createIndexer();
-			massIndexer.purgeAllOnStart(true)
+			massIndexer//.purgeAllOnStart(true)
 			.optimizeAfterPurge(true)
 			.optimizeOnFinish(true)
 			.batchSizeToLoadObjects( 30 )
 			.threadsToLoadObjects( 4 );
 			//		massIndexer.start;
-			try {
-				massIndexer.startAndWait();
-				//				massIndexer.start();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			//		ftem.flushToIndexes();
+//			try {
+//				massIndexer.startAndWait();
+								massIndexer.start();
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//					ftem.flushToIndexes();
 			System.out.println("reindex finished");
 			return Response.status(Status.OK).entity("Reindexed").build();
 		}
@@ -396,18 +396,118 @@ public class UtilResource {
 	}
 
     @GET
-    @Path("/updateStationTaxonomy")
+    @Path("/updateStationTaxonomies")
     @Transactional(readOnly=false)
-    public void updateStationTaxonomy(@Context HttpServletRequest request){
-//        String host = request.getHeader("Host");
-//
-//        if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+    public void updateStationTaxonomies(@Context HttpServletRequest request){
+        String host = request.getHeader("Host");
+
+        if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
            List<Station> stations = stationRepository.findAll();
             for (Station station: stations){
+				Set<Taxonomy> taxonomies = station.ownedTaxonomies;
+				boolean hasStationTaxonomy = false;
+				for (Taxonomy tax: taxonomies){
+					if(tax.type.equals(Taxonomy.STATION_TAXONOMY))
+					hasStationTaxonomy = true;
+				}
+				if(!hasStationTaxonomy){
+					//Station Default Taxonomy
+					Taxonomy sTaxonomy = new Taxonomy();
+					sTaxonomy.name = "Station: " + station.name;
+					sTaxonomy.owningStation = station;
+					sTaxonomy.type = Taxonomy.STATION_TAXONOMY;
+					taxonomyRepository.save(sTaxonomy);
+					station.ownedTaxonomies.add(sTaxonomy);
+					stationRepository.save(station);
 
+					Term term1 = new Term();
+					term1.name = "Categoria 1";
+
+					Term term2 = new Term();
+					term2.name = "Categoria 2";
+
+					term1.taxonomy = sTaxonomy;
+					term2.taxonomy = sTaxonomy;
+
+					sTaxonomy.terms = new HashSet<Term>();
+					sTaxonomy.terms.add(term1);
+					sTaxonomy.terms.add(term2);
+					termRepository.save(term1);
+					termRepository.save(term2);
+					taxonomyRepository.save(sTaxonomy);
+				}
             }
-//        }
+        }
     }
+
+	@GET
+	@Path("/updateStationTagsTaxonomy")
+	@Transactional(readOnly=false)
+	public void updateStationTagsTaxonomy(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<Station> stations = stationRepository.findAll();
+			for (Station station: stations){
+				Set<Taxonomy> taxonomies = station.ownedTaxonomies;
+				boolean hasStationTag = false;
+				for (Taxonomy tax: taxonomies){
+					if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY))
+						hasStationTag = true;
+				}
+				if(!hasStationTag){
+					//Station Default Taxonomy
+					Taxonomy sTaxonomy = new Taxonomy();
+					sTaxonomy.name = "Station: " + station.name;
+					sTaxonomy.owningStation = station;
+					sTaxonomy.type = Taxonomy.STATION_TAG_TAXONOMY;
+					taxonomyRepository.save(sTaxonomy);
+					station.ownedTaxonomies.add(sTaxonomy);
+					stationRepository.save(station);
+				}
+			}
+		}
+	}
+
+	@GET
+	@Path("/updateStationTagsCategoriesIds")
+	@Transactional(readOnly=false)
+	public void updateStationTagsCategoriesIds(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<Station> stations = stationRepository.findAll();
+			for (Station station: stations){
+				Set<Taxonomy> taxonomies = station.ownedTaxonomies;
+				for (Taxonomy tax: taxonomies){
+					if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
+						if(station.tagsTaxonomyId == null)
+							station.tagsTaxonomyId = tax.id;
+					}
+
+					if(tax.type.equals(Taxonomy.STATION_TAXONOMY)){
+						if(station.categoriesTaxonomyId == null)
+							station.categoriesTaxonomyId = tax.id;
+					}
+				}
+			}
+		}
+	}
+
+	@GET
+	@Path("/updateStationTerm")
+	@Transactional(readOnly=false)
+	public void updateAllTerms(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			List<Term> terms = termRepository.findAll();
+			for(Term term: terms){
+				term.taxonomyId = term.taxonomy.id;
+				term.taxonomyName = term.taxonomy.name;
+			}
+		}
+	}
 
 	@GET
 	@Path("/updateAllResources")

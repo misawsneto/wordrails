@@ -649,8 +649,20 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByTypeAndNameAuthorized(String type, String name) {
+	protected boolean isFindStationTagsAuthorized(Integer stationId) {
+		Station station = stationRepository.findOne(stationId);
+		return stationSecurityChecker.canVisualize(station);
+	}
 
+	@Override
+	protected boolean isFindByTypeAndNameAuthorized(String type, String name) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindStationTaxonomyAuthorized(Integer stationId) {
+		Station station = stationRepository.findOne(stationId);
+		stationSecurityChecker.canVisualize(station);
 		return true;
 	}
 
