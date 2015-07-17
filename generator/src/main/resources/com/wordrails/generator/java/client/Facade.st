@@ -424,7 +424,15 @@ public class $facade$ {
 	public void putPassword(String oldPassword, String newPassword, Callback<Response> _callback){
 		_facade.putPassword(oldPassword, newPassword, _callback);
 	}
-	
+
+	public StringResponse getPostBody(Integer postId){
+    		return _facade.getPostBody(postId);
+    	}
+
+	public void getPostBody(Integer postId, Callback<StringResponse> _callback){
+		_facade.getPostBody(postId, _callback);
+	}
+
 	public BooleanResponse toggleBookmark(Integer postId){
 		return _facade.toggleBookmark(postId);
 	}

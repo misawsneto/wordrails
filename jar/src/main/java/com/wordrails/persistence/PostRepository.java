@@ -115,4 +115,8 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported = false)
 	@Query("select (select count(*) from PostRead pr where pr.post.id = p.id), (select count(*) from Comment comment where comment.post.id = p.id), (select count(*) from Recommend recommend where recommend.post.id = p.id) from Post p where p.id = :postId")
 	public List<Object[]> findPostStats(@Param("postId") Integer postId);
+
+	@RestResource(exported = false)
+	@Query("select post.body from Post post where post.id=:postId")
+	public String findPostBodyById(@Param("postId") Integer postId);
 }

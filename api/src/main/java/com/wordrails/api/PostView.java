@@ -14,6 +14,7 @@ public class PostView implements Serializable {
 	public Boolean sponsor;
 	public java.util.Date date;
 	public String snippet;
+	public String body;
 	public String topper;
 	public String state;
 	public int readsCount;

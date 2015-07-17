@@ -536,4 +536,18 @@ public class PostsResource {
 		return response;
 	}
 
+	@GET
+	@Path("/{postId}/body")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public StringResponse getPostBody(@PathParam("postId") Integer postId){
+
+		Person person = authProvider.getLoggedPerson();
+		String body = postRepository.findPostBodyById(postId);
+
+		StringResponse content = new StringResponse();
+		content.response = body;
+		return content;
+	}
+
 }

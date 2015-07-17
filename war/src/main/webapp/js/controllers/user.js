@@ -87,7 +87,7 @@ app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$s
 		$scope.chartOptions = {
 			  "chart": {
 			    "type": "multiBarChart",
-			    "height": 450,
+			    "height": 300,
 			    "margin": {
 			      "top": 20,
 			      "right": 20,

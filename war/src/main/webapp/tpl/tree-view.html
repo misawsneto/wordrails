@@ -2,15 +2,26 @@
  <span class="check-term" ng-click="nodeClicked(node)">
     <md-checkbox aria-label="{{node.name}}" ng-model="node.checked" ng-click="node.checked = !node.checked" class="pull-left"></md-checkbox>
  </span>
- <span class="leaf box-shadow" tooltip="{{node.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
- 	{{node.name}}
-    <!-- <i class="{{ switcher( isLeaf(node), '', 'fa fa-remove' ) }}"></i> -->
-    {{showNode(node)}}
+ <span class="leaf box-shadow animated fadeIn" tooltip="{{node.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
+ 	<span ng-if="!node.editing">
+	 	{{node.name}}
+	    <!-- <i class="{{ switcher( isLeaf(node), '', 'fa fa-remove' ) }}"></i> -->
+	    {{showNode(node)}}
+    </span>
+    <input style="padding:0; background-color: transparent;" ng-click="$event.stopPropagation();"
+    ng-if="node.editing" ng-model="node.editingName" type="text" class="b-none" placeholder="Nome da categoria" />
  </span>
- 	<button ng-if="editing" md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+ 	<button ng-if="editing" ng-click="showAddCategorySplash(node)"
+ 	md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
  		<i class="mdi mdi-plus i-20" style="vertical-align: 44%; line-height: normal;"></i>
  	</button>
+ 	<button ng-if="editing" ng-click="node.editing=!node.editing; node.editingName = node.name;"
+ 	md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+ 		<i ng-if="!node.editing" class="mdi mdi-pencil i-20" style="vertical-align: 44%; line-height: normal;"></i>
+ 		<i ng-if="node.editing" class="mdi mdi-close i-20" style="vertical-align: 44%; line-height: normal;"></i>
+ 	</button>
  	<button ng-if="editing" md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
- 		<i class="mdi mdi-delete i-20" style="vertical-align: 44%; line-height: normal;"></i>
+ 		<i class="mdi mdi-delete i-20" style="vertical-align: 44%; line-height: normal;"
+ 		ng-click="showDeleteCategorySplash(node)"></i>
  	</button>
 </li>

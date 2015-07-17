@@ -6,15 +6,15 @@
           <!-- nabar left -->
           <ul class="nav navbar-nav navbar-left ">
             <li ng-show="app.currentStation.allowSocialShare">
-              <a href class="text-center text-lg">
+              <a class="text-center text-lg" socialshare socialshare-provider="google+" socialshare-text="{{app.nowReading.title}}" socialshare-url="{{app.nowReading.slug}}">
               <i class="mdi mdi-google-plus"></i>
             </a></li>
             <li ng-show="app.currentStation.allowSocialShare">
-              <a href class="text-center text-lg">
+              <a class="text-center text-lg" socialshare socialshare-provider="twitter" socialshare-text="{{app.nowReading.title}}" socialshare-url="{{app.nowReading.slug}}">
               <i class="mdi mdi-twitter"></i>
             </a></li>
             <li ng-show="app.currentStation.allowSocialShare">
-              <a href class="text-center text-lg">
+              <a class="text-center text-lg" socialshare socialshare-provider="facebook" socialshare-text="{{app.nowReading.title}}" socialshare-url="{{app.nowReading.slug}}">
               <i class="mdi mdi-facebook"></i>
             </a></li>
             <li ng-show="app.currentStation.allowSocialShare">
