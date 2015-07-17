@@ -425,9 +425,25 @@ public class $facade$ {
 		_facade.putPassword(oldPassword, newPassword, _callback);
 	}
 
+	public PostView getPostViewBySlug(String slug, Boolean withBody){
+    	return _facade.getPostViewBySlug(slug, withBody);
+	}
+
+	public void getPostViewBySlug(String slug, Boolean withBody, Callback<PostView> _callback){
+		_facade.getPostViewBySlug(slug, withBody, _callback);
+	}
+
+	public PostView getPostViewById(Integer postId, Boolean withBody){
+		return _facade.getPostViewById(postId, withBody);
+	}
+
+	public void getPostViewById(Integer postId, Boolean withBody, Callback<PostView> _callback){
+		_facade.getPostViewById(postId, withBody, _callback);
+	}
+
 	public StringResponse getPostBody(Integer postId){
-    		return _facade.getPostBody(postId);
-    	}
+		return _facade.getPostBody(postId);
+	}
 
 	public void getPostBody(Integer postId, Callback<StringResponse> _callback){
 		_facade.getPostBody(postId, _callback);

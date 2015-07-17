@@ -66,4 +66,11 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		
 		return postView;
 	}
+
+	public PostView convertToView(Post post, boolean addBody) {
+		PostView postView = convertToView(post);
+		if(addBody)
+			postView.body = post.body;
+		return postView;
+	}
 }

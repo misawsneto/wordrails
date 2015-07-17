@@ -667,6 +667,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindNetworkCategoriesAuthorized(Integer networkId) {
+		Network network = networkRepository.findOne(networkId);
+		return networkSecurityChecker.isNetworkAdmin(network);
+	}
+
+	@Override
 	protected boolean isGetTaxonomyNetworksAuthorized(Integer taxonomyId) {
 		Taxonomy taxonomy = taxonomyRepository.findOne(taxonomyId);
 		return taxonomy != null && taxonomy.owningNetwork != null && isNetworkAdminById(taxonomy.owningNetwork.id);

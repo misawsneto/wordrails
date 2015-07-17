@@ -105,15 +105,15 @@ public class PostsResource {
 
 	@GET
 	@Path("/getPostViewBySlug")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public ContentResponse<PostView> getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") boolean withBody) throws ServletException, IOException {
+	public ContentResponse<PostView> getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findBySlug(slug);
 		ContentResponse<PostView> response = new ContentResponse<PostView>();
 		if (post != null) {
 			response.content = postConverter.convertToView(post);
-			response.content.snippet = post.body;
+			if(withBody != null && withBody)
+				response.content.snippet = post.body;
 		}
 
 		return response;
@@ -121,15 +121,15 @@ public class PostsResource {
 
 	@GET
 	@Path("/{postId}/getPostViewById")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public ContentResponse<PostView> getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") boolean withBody) throws ServletException, IOException {
+	public ContentResponse<PostView> getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findOne(postId);
 		ContentResponse<PostView> response = new ContentResponse<PostView>();
 		if (post != null) {
 			response.content = postConverter.convertToView(post);
-			response.content.snippet = post.body;
+			if(withBody != null && withBody)
+				response.content.snippet = post.body;
 		}
 
 		return response;

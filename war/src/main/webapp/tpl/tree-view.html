@@ -1,5 +1,5 @@
 <li class="parent_li">
- <span class="check-term" ng-click="nodeClicked(node)">
+ <span ng-if="!editing" class="check-term" ng-click="nodeClicked(node)">
     <md-checkbox aria-label="{{node.name}}" ng-model="node.checked" ng-click="node.checked = !node.checked" class="pull-left"></md-checkbox>
  </span>
  <span class="leaf box-shadow animated fadeIn" tooltip="{{node.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
@@ -8,8 +8,10 @@
 	    <!-- <i class="{{ switcher( isLeaf(node), '', 'fa fa-remove' ) }}"></i> -->
 	    {{showNode(node)}}
     </span>
-    <input style="padding:0; background-color: transparent;" ng-click="$event.stopPropagation();"
-    ng-if="node.editing" ng-model="node.editingName" type="text" class="b-none" placeholder="Nome da categoria" />
+    <form ng-submit="updateCategory(node)" ng-if="node.editing">
+    	<input style="padding:0; background-color: transparent;" ng-click="$event.stopPropagation();"
+    	ng-model="node.editingName" type="text" class="b-none" placeholder="Nome da categoria" />
+ 	</form>
  </span>
  	<button ng-if="editing" ng-click="showAddCategorySplash(node)"
  	md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">

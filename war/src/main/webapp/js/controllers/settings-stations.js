@@ -88,9 +88,26 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
       })
     }
 
+    $scope.updateCategory = function(node){
+      node.name = node.editingName;
+      node.taxonomy = TRIX.baseUrl + "/api/taxonomies/" + $scope.thisStation.categoriesTaxonomyId;
+      var term = angular.copy(node);
+      console.log(term);
+      delete term['children']
+      trix.putTerm(term).success(function(){
+        node.editing=false;
+        $scope.app.showSuccessToast('Alterações realizadas com successo.');
+      }).error(function(){
+        $timeout(function() {
+          cfpLoadingBar.complete(); 
+        }, 100);
+      });
+    }
+
     $scope.app.addCategory = function(newCategoryName){
       if(!newCategoryName || newCategoryName.trim() == ""){
         $scope.app.showErrorToast("Categoria Inválida");
+        $scope.app.cancelModal();
         return;
       }
 

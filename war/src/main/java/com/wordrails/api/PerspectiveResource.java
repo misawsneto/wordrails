@@ -221,7 +221,7 @@ public class PerspectiveResource {
 				List<Cell> cells = fillPostsNotPositionedInRow(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				rowView = new RowView();
 				rowView.id = row.id;
-				rowView.cells = cellConverter.convertToViews(cells);
+				rowView.cells = cellConverter.convertToViews(cells, true);
 				rowView.termId = term.id;
 				rowView.termName = term.name;
 				rowView.type = Row.ORDINARY_ROW;

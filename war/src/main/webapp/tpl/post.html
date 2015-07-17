@@ -124,14 +124,16 @@
 <ul class="nav navbar-nav navbar-right text-lg">
 
   <li style="padding: 6px 0px;">
-    <button class="btn btn-default btn-sm text-md btn-rounded" ng-class="{'disabled': !showTopOptions()}" ng-click="publishPost()">
-      {{checkState() == 1 ? 'Atualizar' : 'Publicar'}}
-    </button>
+    <button md-ink-ripple ng-class="{'disabled': !showTopOptions()}" ng-click="publishPost()" style="font-size:16px;" 
+    class="md-btn md-raised m-b btn-fw bg-white">{{checkState() == 1 ? 'Atualizar' : 'Publicar'}}</button>
   </li>
   <li style="padding: 6px 14px;">
     <div class="dropdown" dropdown>
-      <button class="btn btn-default btn-sm text-md border-radius-50" dropdown-toggle><i class="mdi mdi-dots-vertical"></i></button>
-      <ul class="dropdown-menu">
+      <button ng-click="showAddCategorySplash(node)" dropdown-toggle
+      md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:34px;height:34px;">
+        <i class="mdi mdi-dots-vertical i-20" style="vertical-align: 44%; line-height: normal;"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
         <li ng-class="{'disabled': !showTopOptions()}"><a>Pré-visualização</a></li>
         <li ng-class="{'disabled': !showTopOptions()}"><a href ng-click="savePostAsDraft()">Salvar como rascunho</a></li>
         <li ng-if="checkState() && app.editingPost.editingExisting" class="divider"></li>

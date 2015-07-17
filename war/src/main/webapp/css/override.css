@@ -2771,6 +2771,7 @@ button, select, html, textarea, input{
 #user-stats .animated,
 #settings-stations-users .animated,
 #settings-stations-categories .animated,
+#settings-categories .animated,
 #settings-sponsor-config .animated,
 #settings-stations-config .animated,
 #settings-stations .animated,
@@ -4490,9 +4491,6 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 /* /settings */
 
 /* settings-categories */
-  #settings-stations-categories .check-term{
-    display: none;
-  }
 /* /settings-categories */
 
 /* settings-users */

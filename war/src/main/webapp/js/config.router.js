@@ -215,27 +215,16 @@ angular.module('app')
                   }
                   , controller:'SettingsUsersCtrl'
               })
-              .state('app.settings.taxonomies', {
-                  url: '/taxonomies',
-                  templateUrl: 'tpl/settings-taxonomies.html',
+              .state('app.settings.categories', {
+                  url: '/categories',
+                  templateUrl: 'tpl/settings-stations-categories.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-taxonomies.js?' + GLOBAL_URL_HASH]);
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-categories.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  , controller:'SettingsTaxonomiesCtrl'
-              })
-              .state('app.settings.taxonomies.config', {
-                  url: '/taxonomies',
-                  templateUrl: 'tpl/settings-taxonomies-config.html',
-                  resolve: {
-                    deps: ['$ocLazyLoad',
-                      function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-taxonomies.js?' + GLOBAL_URL_HASH]);
-                    }]
-                  }
-                  , controller:'SettingsTaxonomiesConfigCtrl'
+                  , controller:'SettingsCategoriesCtrl'
               })
               .state('app.settings.statistics', {
                   url: '/statistics',
