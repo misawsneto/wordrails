@@ -33,8 +33,8 @@ public class Test {
 		wordRails.login();
 		wordRails.getInitialData();
 
-		StringResponse string = wordRails.getPostBody(57);
-		System.out.println(string);
+		PostView postView = wordRails.getPostViewById(57, true);
+		System.out.println(postView);
 
 		//createPerson(wordRails);
 

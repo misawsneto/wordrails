@@ -7,7 +7,7 @@
 						<div class="mockup-content mockup-grid mockup-grid--spread pull-right">
 							<ul class="nav navbar-nav">
 								<li class="hidden-sm">
-									<a href class="i-24 mdi-view-dashboard mdi">
+									<a href class="i-24 mdi-view-dashboard mdi" style="padding:10px">
 									</a>
 								</li>
 							</ul>
@@ -31,7 +31,7 @@
 											<!-- <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div> -->
 											<div style="height:130px" class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
 
-												<div class="wrapper-sm text-sm font-thin pos-abt top-0 text-shadow-dark text-white" style="z-index:3;">
+												<div class="wrapper-xs text-sm font-thin pos-abt top-0 text-shadow-dark text-white" style="z-index:3;">
 													{{::cell.postView.title | characters:60}}
 												</div>
 
