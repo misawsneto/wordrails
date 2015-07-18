@@ -26,7 +26,7 @@
                     </a>
                   </div>
                 </div>
-                <div class="divider" ng-hide="$last"></div>
+                <div class="divider" ng-if="!$last"></div>
               </li>
             </ul>
           </div>
@@ -98,7 +98,7 @@
 
 <md-button 
   id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-  ui-sref="app.post" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+  ui-sref="app.post" ng-if="!(app.writableStations && app.writableStations.length > 0 && app.isLogged)"
   tooltip="Nova notícia" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
   aria-label="Nova notícia">
   <i class="mdi mdi-plus"></i>
