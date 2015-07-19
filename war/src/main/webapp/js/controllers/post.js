@@ -431,6 +431,10 @@ function isTermSelected(terms){
 		}
 	}
 
+	$scope.app.updateToDraf = function(){
+		updatePost("DRAFT")
+	}
+
 	$scope.showPostDetails = function(){
 		$scope.app.openSplash('show_posts_details.html')
 	}
@@ -554,16 +558,19 @@ function isTermSelected(terms){
 					trix.putPost(post).success(function(){
 							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
 							$scope.app.editingPost.state = state;
+							$scope.app.cancelModal();
 					});
 				}else if($scope.checkState(state) == 2){
 					trix.putPostDraft(post).success(function(){
 							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
 							$scope.app.editingPost.state = state;
+							$scope.app.cancelModal();
 					});
 				}else if($scope.checkState(state) == 3){
 					trix.putPostScheduled(post).success(function(){
 							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
 							$scope.app.editingPost.state = state;
+							$scope.app.cancelModal();
 					});
 				}
 			});

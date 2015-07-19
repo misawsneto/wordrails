@@ -176,7 +176,7 @@
           <div class="m-b-lg" ng-if="app.checkState() == 3">
             Esta notícia está agendada para publicação. Tem certeza que deseja transformá-la em rascunho?
           </div>
-          <button ng-click="updateToDraf();" angular-ripple type="submit" class="m-t-md btn-success btn text-lg text-u-c btn-block ">
+          <button ng-click="app.updateToDraf();" angular-ripple type="submit" class="m-t-md btn-success btn text-lg text-u-c btn-block ">
            Sim
          </button>
          <button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
