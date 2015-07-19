@@ -2,19 +2,19 @@
 app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 
-	FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
+		FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
-  };
+};
 
-  $scope.baseUrl = TRIX.baseUrl;
+$scope.baseUrl = TRIX.baseUrl;
 
-  var createPostObject = function(){
-  	$scope.app.editingPost = {};
-  	$scope.app.editingPost.imageLandscape = true;
-  	$scope.discardedMedia = null;
-  	$scope.app.editingPost.uploadedImage = null;
-  	$scope.app.editingPost.showMediaButtons = false;
-  	$scope.app.editingPost.editingExisting = false;
+var createPostObject = function(){
+	$scope.app.editingPost = {};
+	$scope.app.editingPost.imageLandscape = true;
+	$scope.discardedMedia = null;
+	$scope.app.editingPost.uploadedImage = null;
+	$scope.app.editingPost.showMediaButtons = false;
+	$scope.app.editingPost.editingExisting = false;
 			// --------- post time info
 
 			$scope.app.editingPost.today = function() {
@@ -121,24 +121,25 @@ if($state.params && $state.params.id){
 	$scope.loadPost(postId);
 }
 
-$scope.app.checkState = function(){
-	if(!$scope.app.editingPost)
+$scope.app.checkState = function(state){
+	state = state ? state : $scope.app.editingPost.state;
+	if(!state)
 		return null;
-	if($scope.app.editingPost.state == "PUBLISHED"){
+	if(state == "PUBLISHED"){
 		return 1;
-	}else if($scope.app.editingPost.state == "DRAFT"){
+	}else if(state == "DRAFT"){
 		return 2;
-	}else if($scope.app.editingPost.state == "SCHEDULED"){
+	}else if(state == "SCHEDULED"){
 		return 3;
-	}else if($scope.app.editingPost.state == "TRASH"){
+	}else if(state == "TRASH"){
 		return 4;
 	}else{
 		return null;
 	}
 }
 
-$scope.checkState = function(){
-	return $scope.app.checkState();
+$scope.checkState = function(state){
+	return $scope.app.checkState(state);
 }
 
 var setWritableStationById = function(id){
@@ -530,7 +531,49 @@ function isTermSelected(terms){
 		}	
 
 		function updatePost(state){
-			console.log(state);
+			var post = angular.copy($scope.app.editingPost);
+			post.station = TRIX.baseUrl + "/api/stations/" + post.station.id;
+			// post is ok to be created
+			var termList = getTermList($scope.termTree);
+			var termUris = []
+			termList.forEach(function(term){
+				termUris.push(TRIX.baseUrl + "/api/terms/" + term.id);
+			})
+
+			post.terms = termUris;
+			post.author = TRIX.baseUrl + "/api/authors/" + post.author.id
+			
+			trix.convertPost(post.id, state).success(function(){
+				post.state = state
+				if($scope.checkState(state) == 1){
+					trix.putPost(post).success(function(){
+							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+							$scope.app.editingPost.state = state;
+					});
+				}else if($scope.checkState(state) == 2){
+					trix.putPostDraft(post).success(function(){
+							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+							$scope.app.editingPost.state = state;
+					});
+				}else if($scope.checkState(state) == 3){
+					trix.putPostScheduled(post).success(function(){
+							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+							$scope.app.editingPost.state = state;
+					});
+				}
+			});
+
+			// post.state = state
+			// trix.putPost(post).success(function(){
+			// 	if(post.state != state){
+			// 		trix.convertPost(post.id, state).success(function(){
+			// 			$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+			// 			$scope.app.editingPost.state = state;
+			// 			console.log($scope.checkState());
+			// 		});
+			// 		console.log('change state');
+			// 	}
+			// })
 		}
 
 		function createPost(state){

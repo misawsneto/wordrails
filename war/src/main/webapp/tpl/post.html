@@ -201,13 +201,16 @@
   <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
   <div class="splash-content" ng-cloak>
     <div class="row">
+      <div class="h4 m-b"><span class="">Status:</span>
+        <strong>{{(app.checkState() == 1) ? 'Publicado' : (app.checkState() == 2 || !app.checkState()) ? 'Rascunho' : (app.checkState() == 3) ? 'Agendado': app.checkState() == 4 ? 'Lixo' : ''}}</strong>
+      </div>
       <div class="m-b"><code>{{baseUrl +'/'+ app.editingPost.slug}}</code></div>
       <div class="h3 font-bold">{{app.editingPost.title}}</div>
     </div>
   </div>
 </script>
 
-<!-- profile-popover -->
+<!-- scheduler-popover -->
 <div id="schedulerPopover" class="popover bottom animated" click-outside="schedulerPopoverOpen = false; console.log('teste')" outside-if-not="scheduler-popover-toggle" style="max-width: 295px" ng-class="{'show': schedulerPopoverOpen, 'hide': !schedulerPopoverOpen}">
   <div class="arrow"></div>
   <div class="popover-inner">
