@@ -542,6 +542,11 @@ function isTermSelected(terms){
 
 			post.terms = termUris;
 			post.author = TRIX.baseUrl + "/api/authors/" + post.author.id
+
+			if(($scope.checkState() == 1 || $scope.checkState() == 3) && (!post.terms || post.terms.length == 0)){
+				$scope.app.showInfoToast('Escolha uma categoria.')
+				return;
+			}
 			
 			trix.convertPost(post.id, state).success(function(){
 				post.state = state
