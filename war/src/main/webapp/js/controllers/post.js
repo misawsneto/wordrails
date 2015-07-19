@@ -122,6 +122,9 @@ if($state.params && $state.params.id){
 }
 
 $scope.app.checkState = function(state){
+	if(!$scope.app.editingPost)
+		return null;
+	
 	state = state ? state : $scope.app.editingPost.state;
 	if(!state)
 		return null;
