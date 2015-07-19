@@ -63,6 +63,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.imageTitleText = post.imageTitleText;
 		postView.stationName = post.station.name;
 		postView.stationId = post.station.id;
+		postView.notify = post.notify;
 		
 		return postView;
 	}

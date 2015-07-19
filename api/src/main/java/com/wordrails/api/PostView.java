@@ -62,4 +62,5 @@ public class PostView implements Serializable {
 
 	public Date scheduledDate;
 
+	public boolean notify;
 }
