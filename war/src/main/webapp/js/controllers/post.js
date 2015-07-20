@@ -538,6 +538,7 @@ function isTermSelected(terms){
 		}	
 
 		function updatePost(state){
+
 			var post = angular.copy($scope.app.editingPost);
 			post.station = TRIX.baseUrl + "/api/stations/" + post.station.id;
 			// post is ok to be created
@@ -554,29 +555,48 @@ function isTermSelected(terms){
 				$scope.app.showInfoToast('Escolha uma categoria.')
 				return;
 			}
+
+			var doUpdate = function(){
+				trix.convertPost(post.id, state).success(function(){
+					post.state = state
+					if($scope.checkState(state) == 1){
+						trix.putPost(post).success(function(){
+								$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+								$scope.app.editingPost.state = state;
+								$scope.app.cancelModal();
+						});
+					}else if($scope.checkState(state) == 2){
+						trix.putPostDraft(post).success(function(){
+								$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+								$scope.app.editingPost.state = state;
+								$scope.app.cancelModal();
+						});
+					}else if($scope.checkState(state) == 3){
+						trix.putPostScheduled(post).success(function(){
+								$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+								$scope.app.editingPost.state = state;
+								$scope.app.cancelModal();
+						});
+					}
+				});
+			}
+
+			if($scope.app.editingPost.uploadedImage && $scope.app.editingPost.uploadedImage.id){
+				var featuredImage = { original: TRIX.baseUrl + "/api/files/" + $scope.app.editingPost.uploadedImage.id }
+				if($scope.app.editingPost.imageCaption)
+					featuredImage.caption = $scope.app.editingPost.imageCaption
+
+				if($scope.app.editingPost.imageTitle)
+					featuredImage.caption = $scope.app.editingPost.imageTitle
+
+				trix.postImage(featuredImage).success(function(imageId){
+					post.featuredImage = TRIX.baseUrl + "/api/images/" + imageId;
+					doUpdate();
+				})
+			}else{
+				doUpdate();
+			}
 			
-			trix.convertPost(post.id, state).success(function(){
-				post.state = state
-				if($scope.checkState(state) == 1){
-					trix.putPost(post).success(function(){
-							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
-							$scope.app.editingPost.state = state;
-							$scope.app.cancelModal();
-					});
-				}else if($scope.checkState(state) == 2){
-					trix.putPostDraft(post).success(function(){
-							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
-							$scope.app.editingPost.state = state;
-							$scope.app.cancelModal();
-					});
-				}else if($scope.checkState(state) == 3){
-					trix.putPostScheduled(post).success(function(){
-							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
-							$scope.app.editingPost.state = state;
-							$scope.app.cancelModal();
-					});
-				}
-			});
 
 			// post.state = state
 			// trix.putPost(post).success(function(){
@@ -635,7 +655,13 @@ function isTermSelected(terms){
 
 				trix.postImage(featuredImage).success(function(imageId){
 					post.featuredImage = TRIX.baseUrl + "/api/images/" + imageId;
-					postPost(post);
+					//postPost(post);
+					if(state == "DRAFT"){
+						post.state = state;
+						postDraft(post)
+					}else{
+						postPost(post);
+					}
 				})
 			}else{
 				if(state == "DRAFT"){
