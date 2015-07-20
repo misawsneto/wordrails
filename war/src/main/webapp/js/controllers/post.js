@@ -556,6 +556,12 @@ function isTermSelected(terms){
 				return;
 			}
 
+			if(post.featuredImage && post.featuredImage.id){
+				post.featuredImage = TRIX.baseUrl + "/api/images/" + post.featuredImage.id;
+			}else{
+				post.featuredImage = null;
+			}
+
 			var doUpdate = function(){
 				trix.convertPost(post.id, state).success(function(){
 					post.state = state
@@ -594,6 +600,8 @@ function isTermSelected(terms){
 					doUpdate();
 				})
 			}else{
+				if(!$scope.app.editingPost.uploadedImage) // remove if no image
+					post.featuredImage = null;
 				doUpdate();
 			}
 			
