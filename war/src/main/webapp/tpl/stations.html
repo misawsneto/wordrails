@@ -1,58 +1,244 @@
 <div class="station-perspectives p-t-50">
 
-  <div ng-include=" 'tpl/stations_horizontal.html' "></div>
+  <!-- horizontal perspective -->
+  <div id="perspective-horizontal" ng-if="app.viewMode === 'horizontal'" class="p-t-lg p-b-lg">
+    <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-if="ordinaryRow.cells && ordinaryRow.cells.length">
 
-  <div ng-include=" 'tpl/stations_vertical.html' "></div>
+      <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
+      <button ng-if="ordinaryRow.cells"  class="backward"><i class="mdi mdi-chevron-left"></i></button>
+      <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}"  -->
+      <button ng-if="ordinaryRow.cells"  class="forward"><i class="mdi mdi-chevron-right"></i></button>
+      <div ng-if="ordinaryRow.cells" data-term-id="{{::ordinaryRow.termId}}" class="wrap info-flow-wrap" 
+      scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" sly-scroll>
+      <div class="h3">
+        <a ng-if="ordinaryRow.termName" class="animated fadeIn" 
+        ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
+        <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
+        <span class="m-l-xs font-thin text-u-c" >{{::ordinaryRow.termName}}</span>
+      </a>
+    </div>
+    <div class="frame info-flow" style="overflow: hidden;">
+      <ul class="sly-clearfix info-flow-list" data-term-id="{{::ordinaryRow.termId}}">
+        <li class="cell" ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
 
-  <!-- perspective view vertical/horizontal -->
-  <div id="station-sidebar" class="b-l animated fadeIn">
-    <!-- <div class="vbox"> -->
-      <div class="wrapper sidebar-top">
-        <div class="font-thin h4">&nbsp;</div>
+
+
+          <!-- <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div> -->
+          <div class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+            <div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.mediumId">
+              <div class="text-md font-thin text-white ls-sm">{{::cell.postView.title}}</div>
+              <div class="m-t-md" ng-if="cell.postView.mediumId">
+                <div class="display-t-c">
+                  <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
+                    <div style="{{::cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                  </a>
+                </div>
+                <div class="display-t-c p-l-sm v-middle">
+                  <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="text-white" title="Ir para o perfil de {{::cell.postView.authorName}}" dir="auto">
+                    {{::cell.postView.authorName}}
+                  </a>
+                  <br>
+                  <span class="text-sm">
+                    <span class="">
+                      <span class="readingTime">{{::cell.postView.date | fromNow}}</span>
+                    </span>
+                  </span>
+                </div>
+                <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r">
+                  <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
+                    <a href class="text-center text-lg v-middle">
+                      <i class="mdi text-white link" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
+                    </a>
+                  </span>
+                  <span class="p-l-sm" ng-click="app.bookmark(cell.postView.postId); app.stopPropagation($event);">
+                    <a href class="text-center text-lg v-middle">
+                      <i class="mdi text-white link" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(cell.postView.postId), 'mdi-bookmark-outline': !app.bookmarked(cell.postView.postId)}"></i>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="wrapper-sm text-lg font-bold" ng-if="!cell.postView.mediumId">
+              {{::cell.postView.title | characters:50}}
+            </div>
+            <div class="wrapper-sm clamped" ng-if="!cell.postView.mediumId">
+              {{::cell.postView.snippet}}
+            </div>
+
+            <div class="pos-abt bottom-0 wrapper-sm" ng-if="!cell.postView.mediumId">
+              <div class="display-t-c">
+                <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" title="Ir para o perfil de {{::cell.postView.authorName}}">
+                  <div style="{{::cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                </a>
+              </div>
+              <div class="display-t-c p-l-sm v-middle">
+                <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="text-custom-primary link" title="Ir para o perfil de {{::cell.postView.authorName}}" dir="auto">
+                  {{::cell.postView.authorName}}
+                </a>
+                <br>
+                <span class="text-sm">
+                  <span class="">
+                    <span class="readingTime">{{::cell.postView.date | fromNow}}</span>
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r">
+              <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
+                <a href class="text-center text-lg v-middle">
+                  <i class="mdi text-custom-primary link" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
+                </a>
+              </span>
+              <span class="p-l-sm" ng-click="app.bookmark(cell.postView.postId); app.stopPropagation($event);">
+                <a href class="text-center text-lg v-middle">
+                  <i class="mdi text-custom-primary link" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(cell.postView.postId), 'mdi-bookmark-outline': !app.bookmarked(cell.postView.postId)}"></i>
+                </a>
+              </span>
+            </div>
+
+            <div class="cell-wrap" ng-if="cell.postView.mediumId">
+              <div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
+            </div>
+          </div>
+
+
+        </li>
+        <li syle="1px"></li>
+      </ul>
+    </div>
+    <div class="scrollbar info-flow-scroll">
+      <div class="handle">
+        <div class="mousearea"></div>
       </div>
-      <md-tabs style="height: 100%" md-center-tabs md-dynamic-height md-no-ink>
-        <md-tab class="bg-custom" label="Populares">
-          <div class="wrapper-sm popular-posts" flex>
-            <ul class="timeline m-t-sm m-b-md">
-              <li class="tl-item" ng-repeat="post in app.initData.popular | limitTo: 5">
-                <div class="tl-wrap">
-                  <div class="popular-index">{{$index + 1}}</div>
-                  <div class="">
-                    <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
-                    <a ng-click="app.setNowReading(post, app.initData.popular)" class="pointer">
-                    <div>
-                      {{post.title | characters:40}}
-                    </div>
-                    </a>
-                  </div>
-                </div>
-                <div class="divider" ng-if="!$last"></div>
-              </li>
-            </ul>
-          </div>
-        </md-tab>
-        <md-tab md-no-ink angular-ripple class="bg-custom" label="Recentes">
-          <div class="wrapper-sm recent-posts" flex>
-            <ul class="timeline m-t-md m-b-md">
-              <li class="tl-item" ng-repeat="post in app.initData.recent | limitTo: 5">
-                <div class="tl-wrap">
-                  <div class="">
-                    <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
-                    <a ng-click="app.setNowReading(post, app.initData.recent)" class="pointer">
-                    <div clamp="1">
-                      {{post.title | characters:40}}
-                    </div>
-                    </a>
-                  </div>
-                </div>
-                <div class="divider" ng-hide="$last"></div>
-              </li>
-            </ul>
-          </div>
-        </md-tab>
-        <!-- /tab -->
-      </md-tabs>
+    </div>
   </div>
+</div>
+</div>
+<!-- /horizontal perspective -->
+
+<!-- vertical perspective -->
+<div id="perspective-vertical" class="animated fadeIn" ng-if="app.viewMode === 'vertical'">
+  <md-tabs md-no-ink md-selected="selectedIndex" flex class="bg-custom" md-center-tabs md-dynamic-height>
+  <!-- tab -->
+  <md-tab md-on-select="selectVerticalRow(ordinaryRow)" ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{::ordinaryRow.termName}}">
+  <div flex>
+    <div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm" infinite-scroll="verticalPaginate(ordinaryRow)" infinite-scroll-distance="3">
+      <!-- posts -->
+      <ul class="b-none no-padding m-b-none ls-style-none">
+        <li ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
+         <div ng-class="{'b-t': !$first}"></div>
+         <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+          <!-- image -->
+          <a class="block-image m-l m-t" ng-if="cell.postView.mediumId" >
+            <div class="cell-wrap r r-2x">
+              <div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
+            </div>
+          </a>
+          <!-- /image -->
+          <!-- /content -->
+          <div class="m-t-sm" ng-class="{'content-block': cell.postView.mediumId}">
+            <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{::cell.postView.topper}}</span>
+            <a  class="h3 font-bold m-b m-t-sm block">
+              {{::cell.postView.title}}
+            </a>
+            <div class="text-lg font-thin">{{::cell.postView.snippet | characters:170}}</div>
+            <div class="m-t">
+              <div class="display-t-c">
+                <a >
+                  <div style="{{::cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                </a>
+              </div>
+              <div class="display-t-c p-l-sm v-middle">
+                <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
+                  {{::cell.postView.authorName}}
+                </a>
+                <br>
+                <span class="text-sm">
+                  <span class="">
+                    <span class="readingTime">{{::cell.postView.date | fromNow}}</span>
+                  </span>
+                </span>
+              </div>
+              <div class="display-t-c v-middle padder">
+                <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
+                  <a href class="text-center text-lg v-middle">
+                    <i class="mdi" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
+                  </a>
+                  <span class="p-b-sm">Recomendar</span>
+                </span>
+                <span class="p-l-sm" ng-click="app.bookmark(cell.postView.postId); app.stopPropagation($event);">
+                  <a href class="text-center text-lg v-middle">
+                    <i class="mdi" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(cell.postView.postId), 'mdi-bookmark-outline': !app.bookmarked(cell.postView.postId)}"></i>
+                  </a>
+                  <span class="p-b-sm">Adicionar a Minha Lista</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <!-- /content -->
+        </div>    
+      </li>
+    </ul>
+    <!-- /posts -->
+  </div>
+</div>
+</md-tab>
+<!-- /tab -->
+</md-tabs>
+</div>
+<!-- /vertical perspective -->
+
+
+<!-- perspective view vertical/horizontal -->
+<div id="station-sidebar" class="b-l animated fadeIn">
+  <!-- <div class="vbox"> -->
+  <div class="wrapper sidebar-top">
+    <div class="font-thin h4">&nbsp;</div>
+  </div>
+  <md-tabs style="height: 100%" md-center-tabs md-dynamic-height md-no-ink>
+  <md-tab class="bg-custom" label="Populares">
+  <div class="wrapper-sm popular-posts" flex>
+    <ul class="timeline m-t-sm m-b-md">
+      <li class="tl-item" ng-repeat="post in app.initData.popular | limitTo: 5">
+        <div class="tl-wrap">
+          <div class="popular-index">{{$index + 1}}</div>
+          <div class="">
+            <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
+            <a ng-click="app.setNowReading(post, app.initData.popular)" class="pointer">
+              <div>
+                {{post.title | characters:40}}
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="divider" ng-if="!$last"></div>
+      </li>
+    </ul>
+  </div>
+</md-tab>
+<md-tab md-no-ink angular-ripple class="bg-custom" label="Recentes">
+<div class="wrapper-sm recent-posts" flex>
+  <ul class="timeline m-t-md m-b-md">
+    <li class="tl-item" ng-repeat="post in app.initData.recent | limitTo: 5">
+      <div class="tl-wrap">
+        <div class="">
+          <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
+          <a ng-click="app.setNowReading(post, app.initData.recent)" class="pointer">
+            <div clamp="1">
+              {{post.title | characters:40}}
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="divider" ng-hide="$last"></div>
+    </li>
+  </ul>
+</div>
+</md-tab>
+<!-- /tab -->
+</md-tabs>
+</div>
 </div>
 
 <!-- header bar -->
@@ -73,35 +259,35 @@
         <li class="divider"></li> -->
         <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">modo de exibição</span></li>
         <li> <a ng-click="changeView('horizontal')" href>
-            <span class="mdi mdi-check pull-right m-t-xxs" ng-if="app.viewMode == 'horizontal'"></span>
-            <i class="mdi mdi-swap-horizontal m-r-sm"></i> 
-            Horizontal 
-            </a> 
-        </li>
-        <li> <a ng-click="changeView('vertical')" href> 
-            <span class="mdi mdi-check pull-right m-t-xxs" ng-if="app.viewMode == 'vertical'"></span>
-            <i class="mdi mdi-swap-vertical m-r-sm"></i>
-            Vertical 
-            </a> 
-        </li>
-      </ul>
-      <!-- / dropdown -->
-    </li>
-    <li ng-if="!app.isLogged">
-      <div class="divider-v m-r-xs"></div>
-    </li>
-    <li ng-if="!app.isLogged">
-      <a href class="text-u-c text-center text-lg" ng-click="openSplash('signin_splash.html');">ENTRAR {{app.initData.network.allowSignup ? '/ Cadastrar' : ''}}</a>
+          <span class="mdi mdi-check pull-right m-t-xxs" ng-if="app.viewMode == 'horizontal'"></span>
+          <i class="mdi mdi-swap-horizontal m-r-sm"></i> 
+          Horizontal 
+        </a> 
+      </li>
+      <li> <a ng-click="changeView('vertical')" href> 
+        <span class="mdi mdi-check pull-right m-t-xxs" ng-if="app.viewMode == 'vertical'"></span>
+        <i class="mdi mdi-swap-vertical m-r-sm"></i>
+        Vertical 
+      </a> 
     </li>
   </ul>
+  <!-- / dropdown -->
+</li>
+<li ng-if="!app.isLogged">
+  <div class="divider-v m-r-xs"></div>
+</li>
+<li ng-if="!app.isLogged">
+  <a href class="text-u-c text-center text-lg" ng-click="openSplash('signin_splash.html');">ENTRAR {{app.initData.network.allowSignup ? '/ Cadastrar' : ''}}</a>
+</li>
+</ul>
 </div>
 
 <md-button 
-  id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-  ui-sref="app.post" ng-if="app.writableStations && app.writableStations.length > 0 && app.isLogged"
-  tooltip="Nova notícia" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
-  aria-label="Nova notícia">
-  <i class="mdi mdi-plus"></i>
+id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+ui-sref="app.post" ng-if="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+tooltip="Nova notícia" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+aria-label="Nova notícia">
+<i class="mdi mdi-plus"></i>
 </md-button>
 
 <div ui-view></div>
