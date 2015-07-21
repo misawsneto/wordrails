@@ -189,7 +189,25 @@ interface I$facade$ {
 	@PUT("/persons/me/password")
 	@FormUrlEncoded
 	void putPassword(@Field("oldPassword") String oldPassword, @Field("newPassword") String newPassword, Callback<Response> _callback);
-	
+
+	@GET("/posts/{postId}/getPostViewById")
+	PostView getPostViewById(@Path("postId") Integer postId, @Query("withBody") Boolean withBody);
+
+	@GET("/posts/{postId}/getPostViewById")
+	void getPostViewById(@Path("postId") Integer postId, @Query("withBody") Boolean withBody, Callback<PostView> _callback);
+
+	@GET("/posts/getPostViewBySlug")
+	PostView getPostViewBySlug(@Query("slug") String slug, @Query("withBody") Boolean withBody);
+
+	@GET("/posts/getPostViewBySlug")
+	void getPostViewBySlug(@Query("slug") String slug,  @Query("withBody") Boolean withBody, Callback<PostView> _callback);
+
+	@GET("/posts/{postId}/body")
+	StringResponse getPostBody(@Path("postId") Integer postId);
+
+	@GET("/posts/{postId}/body")
+	void getPostBody(@Path("postId") Integer postId, Callback<StringResponse> _callback);
+
 	@PUT("/bookmarks/toggleBookmark")
 	@FormUrlEncoded
 	BooleanResponse toggleBookmark(@Field("postId") Integer postId);

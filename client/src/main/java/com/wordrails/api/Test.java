@@ -32,10 +32,9 @@ public class Test {
 		WordRails wordRails = getLocal("silvio", "silvio");
 		wordRails.login();
 		wordRails.getInitialData();
-		
-		NetworkDto station = wordRails.getNetwork(3);
-		wordRails.putNetwork(station);
 
+		PostView postView = wordRails.getPostViewById(57, true);
+		System.out.println(postView);
 
 		//createPerson(wordRails);
 

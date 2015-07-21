@@ -487,6 +487,7 @@ angular.module('app')
               $state.go("app.stations");
             }
             $scope.app.refreshData();
+            $scope.app.showInfoToast('Obrigado e volte sempre...')
           })
         })
       };

@@ -87,7 +87,7 @@ app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$s
 		$scope.chartOptions = {
 			  "chart": {
 			    "type": "multiBarChart",
-			    "height": 450,
+			    "height": 300,
 			    "margin": {
 			      "top": 20,
 			      "right": 20,
@@ -119,17 +119,26 @@ app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$s
 			  }
 			}
 
+				trix.getPersonPublicationsCount().success(function(response){
+					$scope.totalPublished = response.publicationsCounts[0]
+					$scope.totalDrafts = response.publicationsCounts[1]
+					$scope.totalScheduled = response.publicationsCounts[2]
+				})
+
 
         trix.getPersonStats(d3.time.format("%Y-%m-%d")(new Date())).success(function(response){
+
+        	var dateStats = response.dateStatsJson
+        	var generalStatsJson = response.generalStatsJson && response.generalStatsJson.length > 0 ? response.generalStatsJson : null;
 
         	var readsCount = {"key": "Leituras"}
         	readsCount.values = [];
 
-        	for (var property in response) {
-				    if (response.hasOwnProperty(property)) {
+        	for (var property in dateStats) {
+				    if (dateStats.hasOwnProperty(property)) {
 				    	readsCount.values.push({
 				    		x: parseInt(property),
-				    		y: response[property].readsCount
+				    		y: dateStats[property].readsCount
 				    	})
 				    }
 					}
@@ -137,11 +146,11 @@ app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$s
 					var recommendsCount = {"key": "Recomendações"}
         	recommendsCount.values = [];
 
-        	for (var property in response) {
-				    if (response.hasOwnProperty(property)) {
+        	for (var property in dateStats) {
+				    if (dateStats.hasOwnProperty(property)) {
 				    	recommendsCount.values.push({
 				    		x: parseInt(property),
-				    		y: response[property].recommendsCount
+				    		y: dateStats[property].recommendsCount
 				    	})
 				    }
 					}
@@ -149,13 +158,19 @@ app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$s
 					var commentsCount = {"key": "Comentários"}
         	commentsCount.values = [];
 
-        	for (var property in response) {
-				    if (response.hasOwnProperty(property)) {
+        	for (var property in dateStats) {
+				    if (dateStats.hasOwnProperty(property)) {
 				    	commentsCount.values.push({
 				    		x: parseInt(property),
-				    		y: response[property].commentsCount
+				    		y: dateStats[property].commentsCount
 				    	})
 				    }
+					}
+
+					if(generalStatsJson && generalStatsJson.length > 0){
+						$scope.totalPostsRead = generalStatsJson[0]
+						$scope.totalComments = generalStatsJson[1]
+						$scope.totalRecommends = generalStatsJson[2]
 					}
 
         	$scope.chartData = [readsCount, recommendsCount, commentsCount]

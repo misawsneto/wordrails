@@ -229,6 +229,13 @@ angular.module('app')
                   files: ['../bower_components/nvd3/build/nv.d3.min.js',
                           '../bower_components/angular-nvd3/dist/angular-nvd3.min.js'
                   ]
+              },{
+                  name: '720kb.socialshare',
+                  files: ['../bower_components/angularjs-socialshare/dist/angular-socialshare.min.js']
+              }
+              ,{
+                  name: 'dndDraggable',
+                  files: ['../bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js']
               }
           ]
       });

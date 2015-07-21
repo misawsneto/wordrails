@@ -83,12 +83,12 @@
                       <div>Notificar usuários em seus dispositivos móveis</div>
                     </div>
                   </li>
-                  <li class="">
+                  <!-- <li class="">
                     <div>
                       <md-checkbox aria-label="{{app.editingPost.breakingNews}}" ng-model="app.editingPost.breakingNews" class="pull-left"></md-checkbox>
                       <div class="font-bold text-u-c">Últimas Notícias</div>
                     </div>
-                  </li>
+                  </li> -->
                 </ul>
               </div>
             </div>
@@ -149,9 +149,10 @@
   </md-content>
 
   <div class="md-actions" layout="row">
-    <md-button ng-click="cancel()">
-     Fechar
-    </md-button>
+
+    <button ng-click="cancel()"
+    md-ink-ripple class="md-btn md-flat btn-fw" style="font-size: 18px">Fechar</button>
+
     <!-- <md-button ng-click="publish()" class="md-primary">
       Publicar
     </md-button> -->

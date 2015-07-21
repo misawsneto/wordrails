@@ -30,7 +30,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['videosharing-embed', 'toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll']).then(function(){
+                          return $ocLazyLoad.load(['720kb.socialshare', 'videosharing-embed', 'toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll']).then(function(){
                             // you might call this after your module initalization
                               angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 1000)
                           });
@@ -162,7 +162,7 @@ angular.module('app')
               })
               .state('app.settings.stationcategories', {
                   url: '/stationcategories?stationId?newStation',
-                  templateUrl: 'tpl/settings-stations-categories.html',
+                  templateUrl: 'tpl/settings-categories.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -181,6 +181,26 @@ angular.module('app')
                     }]
                   }
                   , controller:'SettingsStationsPerspectivesCtrl'
+              })
+              .state('app.settings.perspectiveeditor', {
+                  url: '/perspectiveeditor?stationId?',
+                  templateUrl: 'tpl/settings-perspective-editor.html',
+                  /*resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }*/
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/interact.min.js'])
+                        .then(function(){
+                            return $ocLazyLoad.load(['ui.slimscroll','color-selector', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH])
+                          });
+                    }]
+                  }
+                  , controller:'SettingsPerspectiveEditorCtrl'
               })
               .state('app.settings.sponsors', {
                   url: '/sponsor',
@@ -215,27 +235,16 @@ angular.module('app')
                   }
                   , controller:'SettingsUsersCtrl'
               })
-              .state('app.settings.taxonomies', {
-                  url: '/taxonomies',
-                  templateUrl: 'tpl/settings-taxonomies.html',
+              .state('app.settings.categories', {
+                  url: '/categories',
+                  templateUrl: 'tpl/settings-categories.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-taxonomies.js?' + GLOBAL_URL_HASH]);
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-categories.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  , controller:'SettingsTaxonomiesCtrl'
-              })
-              .state('app.settings.taxonomies.config', {
-                  url: '/taxonomies',
-                  templateUrl: 'tpl/settings-taxonomies-config.html',
-                  resolve: {
-                    deps: ['$ocLazyLoad',
-                      function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-taxonomies.js?' + GLOBAL_URL_HASH]);
-                    }]
-                  }
-                  , controller:'SettingsTaxonomiesConfigCtrl'
+                  , controller:'SettingsCategoriesCtrl'
               })
               .state('app.settings.statistics', {
                   url: '/statistics',

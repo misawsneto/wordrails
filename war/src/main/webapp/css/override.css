@@ -2343,6 +2343,7 @@ list-style: none; margin: 0; padding: 0;
 md-backdrop.md-opaque.md-default-theme{background: rgba(255, 255, 255,0.8); z-index: 1026}
 
 .o-h{overflow: hidden;}
+
 .white-bg{
   background: #ffffff;
 }
@@ -2726,6 +2727,15 @@ button, select, html, textarea, input{
   color: #666;
 }
 
+.bg-dg .divider{
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid rgba(0, 0, 0, 0.6); 
+}
+
+.text-shadow-dark{
+  text-shadow:1px 1px 1px #000;
+}
+
 /* /general */
 
 /* nvd3 */
@@ -2765,6 +2775,8 @@ button, select, html, textarea, input{
 #settings-network .animated,
 #user-stats .animated,
 #settings-stations-users .animated,
+#settings-stations-categories .animated,
+#settings-categories .animated,
 #settings-sponsor-config .animated,
 #settings-stations-config .animated,
 #settings-stations .animated,
@@ -4311,12 +4323,13 @@ div.cell-wrap > div {
   position: absolute;
   height: 100%;
   width: 100%;
-  -moz-transition: all .2s;
+  /* -moz-transition: all .2s;
   -webkit-transition: all .2s;
   transition: all .2s;
   -moz-transform: scale(1);
   -webkit-transform: scale(1);
   transform: scale(1);
+  */
   -moz-background-size: cover;
   -webkit-background-size: cover;
   background-size: cover;
@@ -4324,6 +4337,21 @@ div.cell-wrap > div {
 }
 
 div.cell-wrap:hover > div {
+  /* -moz-transform: scale(1.05);
+  -webkit-transform: scale(1.05);
+  transform: scale(1.05);     */
+}
+
+.station-perspectives div.cell-wrap > div{
+  -moz-transition: all .2s;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+  -moz-transform: scale(1);
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+
+.station-perspectives div.cell-wrap:hover > div {
   -moz-transform: scale(1.05);
   -webkit-transform: scale(1.05);
   transform: scale(1.05);    
@@ -4483,6 +4511,19 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 /* /settings */
 
+/* setting-perspective-editor */
+#setting-perspective-editor .mockup-section{
+  padding:0px!important;
+}
+
+#setting-perspective-editor .mockup-content{
+  padding:0;
+}
+/* /setting-perspective-editor */
+
+/* settings-categories */
+/* /settings-categories */
+
 /* settings-users */
 #editing-user-profile #image-button{position: relative; overflow: hidden; vertical-align: bottom;}
 #editing-user-profile #image-button #image-upload, 
@@ -4553,6 +4594,10 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   position: absolute!important;
 }
 
+.mockup-browser{
+  max-width: 900px;
+}
+
 .mockup-browser .md-fab i {
   line-height: 40px;
   margin-left: 1px;
@@ -4564,6 +4609,16 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 .mobile.mockup-browser::before{
   display: none;
+}
+
+#setting-perspective-editor .mobile.mockup-browser{
+  max-width: 340px;
+  height: 600px;
+}
+
+#setting-perspective-editor .mockup-section{
+  overflow: auto;
+  height: 476px;
 }
 
 /* /settings-colors */

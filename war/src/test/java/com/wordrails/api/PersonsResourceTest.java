@@ -1,9 +1,8 @@
 package com.wordrails.api;
 
-import com.wordrails.business.Post;
+import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.PostRepository;
 import com.wordrails.test.AbstractTest;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.query.dsl.QueryBuilder;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Date;
 import java.util.List;
 
 
@@ -26,15 +24,19 @@ public class PersonsResourceTest extends AbstractTest {
 	@PersistenceContext
 	EntityManager manager;
 	@Autowired PersonsResource personsResource;
+	@Autowired PersonRepository personRepository;
+	@Autowired PostRepository postRepository;
 
 	@Test
 	public void testSearchStats() throws Exception {
 
-		try {
-			personsResource.personStats("", null);
-		}catch (Exception e){
-			e.printStackTrace();
-		}
+//		List<Object[]> counts = personRepository.findPersonStats(4);
+//		counts.size();
+//		try {
+//			personsResource.personStats("", null);
+//		}catch (Exception e){
+//			e.printStackTrace();
+//		}
 
 //		Person person = authProvider.getLoggedPerson();
 //		String baseUrl = "http://localhost:8080";

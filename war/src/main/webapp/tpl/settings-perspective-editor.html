@@ -1,0 +1,89 @@
+<div id="setting-perspective-editor">
+	<div class="wrapper-md">
+		<div class="color-selector-container">
+			<div class="content m-t-md">
+				<div class="mockup-browser animated fadeIn" ng-class="{'mobile': isMobile}">
+					<header class="mockup-header station-header paint-area" style="padding:0">
+						<div class="mockup-content mockup-grid mockup-grid--spread pull-right">
+							<ul class="nav navbar-nav">
+								<li class="hidden-sm">
+									<a href class="i-24 mdi-view-dashboard mdi" style="padding:10px">
+									</a>
+								</li>
+							</ul>
+						</div>
+					</header>
+
+					<section class="mockup-section bg-perspective"> 
+						<div class="mockup-content mockup-grid">
+
+							<div ng-if="isMobile" ng-repeat="ordinaryRow in termPerspectiveView.ordinaryRows" class="ordinary-row" ng-if="ordinaryRow.cells && ordinaryRow.cells.length">
+
+								<div ng-if="ordinaryRow.cells" data-term-id="{{::ordinaryRow.termId}}" class="wrap info-flow-wrap" 
+								scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" style="margin:0" sly-scroll>
+								<div class="h4 wrapper-xs text-u-c">
+									<a>{{::ordinaryRow.termName}}</a>
+								</div>
+								<div class="frame info-flow" style="overflow: hidden; height:130px">
+									<ul class="sly-clearfix info-flow-list" data-term-id="{{::ordinaryRow.termId}}">
+										<li class="cell" style="width:130px" ng-repeat="cell in ordinaryRow.cells">
+
+											<!-- <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div> -->
+											<div style="height:130px" class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+
+												<div class="wrapper-xs text-sm font-thin pos-abt top-0 text-shadow-dark text-white" style="z-index:3;">
+													{{::cell.postView.title | characters:60}}
+												</div>
+
+												<div class="cell-wrap" ng-if="cell.postView.mediumId">
+													<div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
+												</div>
+											</div>
+
+										</li>
+										<li syle="1px"></li>
+									</ul>
+								</div>
+								<div class="scrollbar info-flow-scroll">
+									<div class="handle">
+										<div class="mousearea"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<!-- /mockup-grid -->
+				<!-- <md-button class="custom-fab-button md-fab pos-abt bottom-0 right-0 m-r m-b" aria-label="demo">
+			</md-button> -->
+			<!-- /mockup-browser -->
+		</section>
+	</div>
+</div><!-- /content -->
+<div id="device-selector" class="customizer" >
+	<ul class="color-tool">
+		<li class="text-2x text-white">
+			<div class="m-t-n-sm" ng-click="isMobile = true;"><i class="mdi mdi-cellphone"></i></div>
+		</li>
+		<li class="text-2x text-white">
+			<div class="" ng-click="isMobile = false;"><i class="mdi mdi-desktop-mac"></i></div>
+		</li>
+	</ul>
+</div>
+
+<div id="order-selector" class="customizer" >
+	<ul class="color-tool">
+		<li class="text-2x text-white">
+			<div class="m-t-n-xs">
+				<i class="mdi mdi-sort"></i>
+			</div>
+		</li>
+	</ul>
+</div>
+
+<div>
+	
+</div>
+</div><!-- /container -->
+</div>
+</div>

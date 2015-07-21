@@ -133,6 +133,15 @@ var trix = angular.module('trix', [])
 		}
 	  return \$http.get(_config.url + "/api/persons/me/stats", config)
 	}
+
+	this.getPersonPublicationsCount = function(personId) {
+		var config = {
+			"params": {
+				"personId": personId,
+			}
+		}
+	  return \$http.get(_config.url + "/api/persons/me/publicationsCount", config)
+	}
     
     this.getPersonNetworkRecommendations = function(personId, networkId, _page, _size) {
 		var config = {

@@ -119,6 +119,8 @@
     "angular-tour": "~0.1.1",
     "interact": "~1.2.4",
     "modernizr": "~2.8.3",
-    "angular-nvd3": "1.0.0-rc.2"
+    "angular-nvd3": "1.0.0-rc.2",
+    "angularjs-socialshare": "~0.1.9",
+    "angular-drag-and-drop-lists": "~1.2.0"
   }
 }

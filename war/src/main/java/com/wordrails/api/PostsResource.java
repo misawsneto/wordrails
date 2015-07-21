@@ -105,34 +105,34 @@ public class PostsResource {
 
 	@GET
 	@Path("/getPostViewBySlug")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public ContentResponse<PostView> getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") boolean withBody) throws ServletException, IOException {
+	public PostView getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findBySlug(slug);
-		ContentResponse<PostView> response = new ContentResponse<PostView>();
+		PostView postView = null;
 		if (post != null) {
-			response.content = postConverter.convertToView(post);
-			response.content.snippet = post.body;
+			postView = postConverter.convertToView(post);
+			if(withBody != null && withBody)
+				postView.body = post.body;
 		}
 
-		return response;
+		return postView;
 	}
 
 	@GET
 	@Path("/{postId}/getPostViewById")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public ContentResponse<PostView> getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") boolean withBody) throws ServletException, IOException {
+	public PostView getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findOne(postId);
-		ContentResponse<PostView> response = new ContentResponse<PostView>();
+		PostView postView = null;
 		if (post != null) {
-			response.content = postConverter.convertToView(post);
-			response.content.snippet = post.body;
+			postView = postConverter.convertToView(post);
+			if(withBody != null && withBody)
+				postView.body = post.body;
 		}
 
-		return response;
+		return postView;
 	}
 
 	@GET
@@ -534,6 +534,20 @@ public class PostsResource {
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
+	}
+
+	@GET
+	@Path("/{postId}/body")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public StringResponse getPostBody(@PathParam("postId") Integer postId){
+
+		Person person = authProvider.getLoggedPerson();
+		String body = postRepository.findPostBodyById(postId);
+
+		StringResponse content = new StringResponse();
+		content.response = body;
+		return content;
 	}
 
 }

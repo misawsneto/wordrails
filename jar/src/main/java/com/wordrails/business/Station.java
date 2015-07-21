@@ -78,6 +78,10 @@ public class Station {
 	@OneToMany(mappedBy="owningStation", cascade=CascadeType.PERSIST)
 	public Set<Taxonomy> ownedTaxonomies;
 
+	public Integer categoriesTaxonomyId;
+
+	public Integer tagsTaxonomyId;
+
 	public int postsTitleSize;
 
 	@Column(columnDefinition = "boolean default false", nullable = false)

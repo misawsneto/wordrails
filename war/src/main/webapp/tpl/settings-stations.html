@@ -15,7 +15,8 @@
                   <i class="mdi mdi-account fa-fw text-muted"></i> 
                   Usuários
                 </a>
-                <a class="list-group-item text-md" ui-sref="app.settings.stationperspectives({'stationId': station.id})">
+                <!-- <a class="list-group-item text-md" ui-sref="app.settings.stationperspectives({'stationId': station.id})"> -->
+                <a class="list-group-item text-md" ui-sref="app.settings.perspectiveeditor({'stationId': station.id})">
                   <i class="mdi mdi-view-quilt fa-fw text-muted"></i> 
                   Perspectivas
                 </a>
@@ -46,12 +47,12 @@
     </div>
   </div>
   <md-button 
-  id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-  ui-sref="app.settings.stationconfig({'newStation': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
-  tooltip="Nova estação" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
-  aria-label="Nova estação">
-  <i class="mdi mdi-plus"></i>
-</md-button>
+    id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+    ui-sref="app.settings.stationconfig({'newStation': true})" ng-if="app.networkAdmin && app.isLogged"
+    tooltip="Nova estação" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+    aria-label="Nova estação">
+    <i class="mdi mdi-plus"></i>
+  </md-button>
 </div>
 
 <script type="text/ng-template" id="confirm_delete_station.html">

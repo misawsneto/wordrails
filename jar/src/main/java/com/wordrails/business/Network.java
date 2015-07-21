@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -11,7 +12,9 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-public class Network {
+public class Network implements Serializable{
+
+	private static final long serialVersionUID = 7723825842358687233L;
 
 //	public String NIGHT_READ_MODE = "N";
 //	public String DAY_READ_MODE = "D";

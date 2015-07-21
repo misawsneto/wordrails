@@ -2,21 +2,21 @@ var bla = 0;
 
 angular.module('app')
 .directive("slyScroll",function($state, $timeout) {
-     return {
-       restrict: 'A',
-       scope: {
-        scroll: '&',
-        active: '&'
-       },
-       link: function(scope,element,attrs) {
-          $timeout(function () {
-              executeSly()
-          });
+ return {
+   restrict: 'A',
+   scope: {
+    scroll: '&',
+    active: '&'
+  },
+  link: function(scope,element,attrs) {
+    $timeout(function () {
+      executeSly()
+    });
 
           /**
            * function to be executed after ng-repeat is finished
            */
-          function executeSly(){
+           function executeSly(){
             var elem = element
             // var job = function(){
               var $wrap  = $(elem);
@@ -48,7 +48,7 @@ angular.module('app')
               }).sly('on', 'active', function(eventName, index){
 
                 var sly = this;
-                  
+
                 /* see main.js $scope.app.setHorizontalCursor */
 
                 if(sly.items && sly.items.length - 1){
@@ -74,8 +74,8 @@ angular.module('app')
                   // scope.updateRowPage && scope.updateRowPage(termId, function(){
                   //   sly.reload();
                   // });
-                }
-              });
+            }
+          });
           }// execute finished
         }// end of link
      } // end of object to return
@@ -118,53 +118,53 @@ angular.module('app')
   }
 
   return{
-      restrict: 'A',
-      link: function (scope, element, attrs) {
-        $timeout(function() {
-          var lineCount = 1, lineMax = +attrs.clamp;
-          var lineStart = 0, lineEnd = 0;
-          var text = element.html().replace(/\n/g, ' ');
-          var maxWidth = element[0].offsetWidth;
-          var estimateTag = createElement();
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      $timeout(function() {
+        var lineCount = 1, lineMax = +attrs.clamp;
+        var lineStart = 0, lineEnd = 0;
+        var text = element.html().replace(/\n/g, ' ');
+        var maxWidth = element[0].offsetWidth;
+        var estimateTag = createElement();
 
-          element.empty();
-          element.append(estimateTag);
+        element.empty();
+        element.append(estimateTag);
 
-          text.replace(/ /g, function(m, pos) {
-            if (lineCount >= lineMax) {
-              return;
-            } else {
-              estimateTag.html(text.slice(lineStart, pos));
-              if (estimateTag[0].offsetWidth > maxWidth) {
-                estimateTag.html(text.slice(lineStart, lineEnd));
-                resetElement(estimateTag);
-                lineCount++;
-                lineStart = lineEnd + 1;
-                estimateTag = createElement();
-                element.append(estimateTag);
-              }
-              lineEnd = pos;
+        text.replace(/ /g, function(m, pos) {
+          if (lineCount >= lineMax) {
+            return;
+          } else {
+            estimateTag.html(text.slice(lineStart, pos));
+            if (estimateTag[0].offsetWidth > maxWidth) {
+              estimateTag.html(text.slice(lineStart, lineEnd));
+              resetElement(estimateTag);
+              lineCount++;
+              lineStart = lineEnd + 1;
+              estimateTag = createElement();
+              element.append(estimateTag);
             }
-          });
-          estimateTag.html(text.slice(lineStart));
-          resetElement(estimateTag, true);
-
-          scope.$emit('clampCallback', element, attrs);
+            lineEnd = pos;
+          }
         });
-    }
-  }
+        estimateTag.html(text.slice(lineStart));
+        resetElement(estimateTag, true);
+
+        scope.$emit('clampCallback', element, attrs);
+      });
+}
+}
 })
 
 .directive('nodeTree', function() {
-      return {
-        template: '<node ng-repeat="node in tree"></node>',
-        replace: true,
-        transclude: true,
-        restrict: 'E',
-        scope: {
-          tree: '=ngModel'
-        }
-      };
+  return {
+    template: '<node ng-repeat="node in tree"></node>',
+    replace: true,
+    transclude: true,
+    restrict: 'E',
+    scope: {
+      tree: '=ngModel'
+    }
+  };
 })
 
 .directive('focusMe', function($timeout) {
@@ -178,8 +178,8 @@ angular.module('app')
             element[0].focus();
             scope.trigger = false;
           //});
-        }
-      });
+    }
+  });
     }
   };
 })
@@ -188,28 +188,27 @@ angular.module('app')
   return { 
     restrict: 'E',
     replace:true,
-     templateUrl: 'tpl/tree-view.html',
+    templateUrl: 'tpl/tree-view.html',
     link: function(scope, elm, attrs) {
-    
+
       //$(elm).parent('ul').find('span.leaf').on('click', function (e) {
        $(elm).find('span.leaf').on('click', function (e) {
-      
+
          var children = $(elm).find('li');
-      
-        if (children.is(":visible")) {
-            children.hide('fast');
-            $(elm).find('span.leaf i.icon-minus-sign').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+
+         if (children.is(":visible")) {
+          children.hide('fast');
+          $(elm).find('span.leaf i.icon-minus-sign').addClass('icon-plus-sign').removeClass('icon-minus-sign');
         }
         else{
-          
-            children.show('fast');
-            $(elm).find('span.leaf i.icon-plus-sign').addClass('icon-minus-sign').removeClass('icon-plus-sign');
-            }
-                e.stopPropagation();
-            });
-      
-      
-      scope.nodeClicked = function(node) {
+
+          children.show('fast');
+          $(elm).find('span.leaf i.icon-plus-sign').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+        }
+        e.stopPropagation();
+      });
+
+       scope.nodeClicked = function(node) {
         node.checked = !node.checked;
         /*function checkChildren(c) {
           angular.forEach(c.children, function(c) {
@@ -222,16 +221,15 @@ angular.module('app')
       
       scope.switcher = function(booleanExpr, trueValue, falseValue) {
         return booleanExpr ? trueValue : falseValue;
-    };
+      };
       
       scope.isLeaf = function(_data) {
         if (_data.children.length == 0) {
-            return true;
+          return true;
         }
         return false;
-    };
-      
-     
+      };
+
       if (scope.node.children.length > 0) {
         var childNode = $compile('<ul><node-tree ng-model="node.children"></node-tree></ul>')(scope)
         elm.append(childNode);
