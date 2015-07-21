@@ -232,11 +232,14 @@ angular.module('app')
               },{
                   name: '720kb.socialshare',
                   files: ['../bower_components/angularjs-socialshare/dist/angular-socialshare.min.js']
-              }
-              ,{
+              },{
                   name: 'dndDraggable',
                   files: ['../bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js']
+              },{
+                  name: 'pc035860.scrollWatch',
+                  files: ['../bower_components/angular-scroll-watch/build/angular-scroll-watch.min.js']
               }
+
           ]
       });
   }])
