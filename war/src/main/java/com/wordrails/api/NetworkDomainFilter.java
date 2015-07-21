@@ -46,15 +46,12 @@ public class NetworkDomainFilter implements Filter {
 
 		if(host.equals("xarx.co")){
 			((HttpServletResponse) res).sendRedirect("/home");
-			chain.doFilter(req, res);
-			return;
+		}else {
+			Network network = wordrailsService.getNetworkFromHost(req);
+			HttpSession session = request.getSession();
+			if (network != null)
+				session.setAttribute("network", network);
 		}
-
-		Network network = wordrailsService.getNetworkFromHost(req);
-
-		HttpSession session = request.getSession();
-		if(network!=null)
-			session.setAttribute("network", network);
 
 		HttpServletResponse resp = (HttpServletResponse) res;
 		resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");

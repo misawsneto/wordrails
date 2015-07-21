@@ -140,7 +140,7 @@ public class WordrailsService {
 				try {
 					network = cacheService.getNetworkBySubdomain(subdomain);
 				} catch (Exception e) {
-					e.printStackTrace();
+					// no network found in cache or db.
 				}
 				if(network != null)
 					networks.add(network); 
@@ -153,7 +153,7 @@ public class WordrailsService {
 			try {
 				network = cacheService.getNetworkByDomain(host);
 			} catch (Exception e) {
-				e.printStackTrace();
+				// no network found in cache or db.
 			}
 			if(network != null)
 				networks.add(network);
