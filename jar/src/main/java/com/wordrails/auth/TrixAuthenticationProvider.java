@@ -62,6 +62,12 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 	public User getUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth == null){
+			User user  = new User();
+			user.username = "wordrails";
+			user.password = "wordrails";
+			return user;
+		}
 
 		return (User) auth.getPrincipal();
 	}
