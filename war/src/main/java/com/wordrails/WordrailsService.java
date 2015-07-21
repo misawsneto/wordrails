@@ -139,7 +139,7 @@ public class WordrailsService {
 				Network network = null;
 				try {
 					network = cacheService.getNetworkBySubdomain(subdomain);
-				} catch (ExecutionException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				if(network != null)
@@ -148,7 +148,15 @@ public class WordrailsService {
 		}
 
 		if(networks == null || networks.size() == 0){
-			networks = networkRepository.findByDomain(host);
+			//networks = networkRepository.findByDomain(host);
+			Network network = null;
+			try {
+				network = cacheService.getNetworkByDomain(host);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(network != null)
+				networks.add(network);
 		}
 
 		Network network = (networks != null && networks.size() > 0) ? networks.get(0) : networkRepository.findOne(1);

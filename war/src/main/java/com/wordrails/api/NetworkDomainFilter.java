@@ -44,6 +44,12 @@ public class NetworkDomainFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		String host = request .getHeader("Host");
 
+		if(host.equals("xarx.co")){
+			((HttpServletResponse) res).sendRedirect("/home");
+			chain.doFilter(req, res);
+			return;
+		}
+
 		Network network = wordrailsService.getNetworkFromHost(req);
 
 		HttpSession session = request.getSession();
@@ -54,10 +60,6 @@ public class NetworkDomainFilter implements Filter {
 		resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
 		resp.setHeader("Pragma", "no-cache");
 		resp.setDateHeader ("Expires", 0);
-
-		if(host.equals("xarx.co") || network == null){
-			((HttpServletResponse) res).sendRedirect("/home");
-		}
 
 		chain.doFilter(req, res);
 	}
