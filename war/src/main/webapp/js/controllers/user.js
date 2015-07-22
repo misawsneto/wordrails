@@ -229,8 +229,6 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 
 	$scope.paginate = function(){
 
-		console.log('asdfasdfasdf');
-
 		if(!$scope.app.publicationsCtrl.publications || $scope.app.publicationsCtrl.publications.length == 0)
 			return;
 

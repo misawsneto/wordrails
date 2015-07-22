@@ -30,6 +30,8 @@
 		<condition type="request-uri" operator="notequal">^/styles(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/scripts(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/home(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/404.html$</condition>
+		<condition type="request-uri" operator="notequal">^/505.html$</condition>
 		<from>^/(.+)$</from>
 		<to last="true">/index.jsp</to>
 	</rule>

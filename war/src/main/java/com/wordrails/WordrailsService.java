@@ -159,7 +159,7 @@ public class WordrailsService {
 				networks.add(network);
 		}
 
-		Network network = (networks != null && networks.size() > 0) ? networks.get(0) : networkRepository.findOne(1);
+		Network network = (networks != null && networks.size() > 0) ? networks.get(0) : null;
 		return network;
 	}
 
