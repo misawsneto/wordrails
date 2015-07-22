@@ -32,9 +32,9 @@ public class CORSCustomFilter implements Filter{
 		    return;
 		}
 
+		setCorsHeader(reqt, resp);
 		chain.doFilter(req, res);
 
-		setCorsHeader(reqt, resp);
 	}
 	
 	private void setCorsHeader(HttpServletRequest reqt, HttpServletResponse resp){

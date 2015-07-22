@@ -32,6 +32,7 @@ public class CacheService {
 
 	private LoadingCache<String, Set<Person>> persons2;
 	private LoadingCache<String, Network> networks2;
+	private LoadingCache<String, Network> networks3;
 
 	private LoadingCache<Integer, Station> stations;
 
@@ -111,6 +112,16 @@ public class CacheService {
 						new CacheLoader<String, Network>() {
 							public Network load(String subdomain) {
 								return networkRepository.findNetworkBySubdomain(subdomain);
+							}
+						});
+
+		networks3 = CacheBuilder.newBuilder().maximumSize(100)
+				.expireAfterWrite(1, TimeUnit.MINUTES)
+						//	       .removalListener(MY_LISTENER)
+				.build(
+						new CacheLoader<String, Network>() {
+							public Network load(String host) {
+								return networkRepository.findByDomain(host);
 							}
 						});
 		
@@ -195,5 +206,8 @@ public class CacheService {
 	public Network getNetworkBySubdomain(String subdomain) throws ExecutionException {
 		return networks2.get(subdomain);
 	}
-	
+
+	public Network getNetworkByDomain(String host) throws ExecutionException {
+		return networks3.get(host);
+	}
 }

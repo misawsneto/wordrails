@@ -109,6 +109,10 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	List<Post> findPostByPersonIdAndStations(@Param("personId") Integer personId, @Param("stationIds") List<Integer> stationIds, Pageable pageable);
 
 	@RestResource(exported = false)
+	@Query("SELECT post FROM Post post where post.author.id = :personId AND post.state = :state AND post.station.id in (:stationIds) order by post.id DESC")
+	List<Post> findPostByPersonIdAndStationsAndState(@Param("personId") Integer personId, @Param("state") String state, @Param("stationIds") List<Integer> stationIds, Pageable pageable);
+
+	@RestResource(exported = false)
 	@Query("SELECT post FROM Recommend recommend join recommend.post post where recommend.person.id = :personId AND post.station.id in (:stationIds) order by recommend.id DESC")
 	List<Post> findRecommendationsByPersonIdAndStations(Integer personId, List<Integer> stationIds, Pageable pageable);
 

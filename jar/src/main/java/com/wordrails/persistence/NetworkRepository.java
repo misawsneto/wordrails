@@ -31,5 +31,5 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 	Network findOneBySubdomain(@Param("subdomain") String subdomain);
 	
 	@RestResource(exported=false)
-	List<Network> findByDomain(String domain);
+	Network findByDomain(String domain);
 }

@@ -16,8 +16,8 @@
 			angular-ripple md-no-ink  aria-label="Nova notícia">
 			<i class="mdi mdi-plus"></i>
 		</md-button>
-		<div class="w-full panel panel-card animated zoomIn" infinite-scroll="paginatePosts()" infinite-scroll-distance="1">
-			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications">
+		<div class="w-full panel panel-card animated zoomIn" infinite-scroll="paginate()" infinite-scroll-distance="1">
+			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications" >
 				<ul class="nav nav-tabs text-lg" role="tablist">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
 						<a class="text-u-c" ng-click="app.goToUserDrafts($event)">

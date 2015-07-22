@@ -146,6 +146,39 @@ public class PersonsResource {
 	}
 
 	@GET
+	@Path("/getPostsByState")
+	public ContentResponse<List<PostView>> getPersonNetworkPostsByState(@Context HttpServletRequest request, @QueryParam("personId") Integer personId, @QueryParam("state") String state,
+								@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+		Pageable pageable = new PageRequest(page, size);
+
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+
+		Person person = null;
+		if(personId == null){
+			authProvider.getLoggedPerson();
+		}else{
+			person = personRepository.findOne(personId);
+		}
+
+		Network network = authProvider.getNetwork();
+
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id);
+
+		List<Integer> stationIds = new ArrayList<Integer>();
+		if(permissions != null && permissions.size() > 0){
+			for (StationPermission stationPermission : permissions) {
+				stationIds.add(stationPermission.stationId);
+			}
+		}
+
+		List<Post> posts = postRepository.findPostByPersonIdAndStationsAndState(personId, state, stationIds, pageable);
+
+		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
+	}
+
+	@GET
 	@Path("/{personId}/recommends")
 	public ContentResponse<List<PostView>> getPersonNetworkRecommendations(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
 			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {

@@ -29,6 +29,7 @@
 		<condition type="request-uri" operator="notequal">^/libs(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/styles(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/scripts(/+.*)*$</condition>
+		<condition type="request-uri" operator="notequal">^/home(/+.*)*$</condition>
 		<from>^/(.+)$</from>
 		<to last="true">/index.jsp</to>
 	</rule>
