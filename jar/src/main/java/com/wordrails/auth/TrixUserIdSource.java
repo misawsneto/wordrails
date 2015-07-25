@@ -1,5 +1,6 @@
 package com.wordrails.auth;
 
+import com.wordrails.business.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.UserIdSource;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ public class TrixUserIdSource implements UserIdSource {
 
 	@Override
 	public String getUserId() {
-		return authProvider.getUser().id.toString();
+		User user = authProvider.getUser();
+		return user.id + "_" + user.network.id;
 	}
 }

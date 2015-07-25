@@ -2,6 +2,7 @@ package com.wordrails.filter;
 
 
 import com.wordrails.WordrailsService;
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.Network;
 import com.wordrails.business.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +16,15 @@ public class TrixAnonymousAuthenticationFilter extends AnonymousAuthenticationFi
 
 	@Autowired
 	private WordrailsService wordrailsService;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 
 	public TrixAnonymousAuthenticationFilter(String key) {
 		super(key);
 	}
 
-	public Authentication createAuthentication(Network network) {
-		User user = new User();
-		user.username = "wordrails";
-		user.network = network;
-		return new AnonymousAuthenticationToken("anonymousKey", user, this.getAuthorities());
-	}
-
 	public Authentication createAuthentication(HttpServletRequest request) {
 		Network network = wordrailsService.getNetworkFromHost(request);
-		return createAuthentication(network);
+		return authProvider.anonymousAuthentication(network);
 	}
 }

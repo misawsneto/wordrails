@@ -81,7 +81,7 @@ public class Person {
 	public String bio;
 
 	@NotNull
-	@Column(unique=true)
+	@Column
 	@Email
 	public String email;
 

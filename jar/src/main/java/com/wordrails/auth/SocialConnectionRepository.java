@@ -20,6 +20,7 @@ import java.util.List;
 public class SocialConnectionRepository implements ConnectionRepository {
 
 	private Integer userId;
+	private Integer networkId;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -33,8 +34,10 @@ public class SocialConnectionRepository implements ConnectionRepository {
 	public SocialConnectionRepository() {
 	}
 
-	public SocialConnectionRepository(Integer userId, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
-		this.userId = userId;
+	public SocialConnectionRepository(String userId, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
+		String[] data = userId.split("_");
+		this.userId = Integer.valueOf(data[0]);
+		this.networkId = Integer.valueOf(data[1]);
 		this.connectionFactoryLocator = connectionFactoryLocator;
 		this.textEncryptor = textEncryptor;
 	}
@@ -90,7 +93,7 @@ public class SocialConnectionRepository implements ConnectionRepository {
 	public List<Connection<?>> findConnections(String providerId) {
 		List<Connection<?>> connections = new ArrayList<>();
 
-		List<UserConnection> userConnections = userConnectionRepository.findByProviderId(providerId);
+		List<UserConnection> userConnections = userConnectionRepository.findByProviderId(providerId, networkId);
 		for (UserConnection userConnection : userConnections) {
 			ConnectionData connectionData = toConnectionData(userConnection);
 			Connection<?> connection = createConnection(connectionData);
@@ -117,7 +120,7 @@ public class SocialConnectionRepository implements ConnectionRepository {
 		List<String> ttIds = providerUserIds.get("twitter");
 		List<String> ggIds = providerUserIds.get("google");
 
-		List<UserConnection> userConnections = userConnectionRepository.findByProvidersAndUserId(fbIds, ttIds, ggIds);
+		List<UserConnection> userConnections = userConnectionRepository.findByProvidersAndUserId(fbIds, ttIds, ggIds, networkId);
 		for (UserConnection userConnection : userConnections) {
 			ConnectionData connectionData = toConnectionData(userConnection);
 			Connection<?> connection = createConnection(connectionData);
@@ -130,7 +133,7 @@ public class SocialConnectionRepository implements ConnectionRepository {
 	@Override
 	public Connection<?> getConnection(ConnectionKey connectionKey) {
 		UserConnection userConnection = userConnectionRepository.
-				findByProviderIdAndProviderUserId(connectionKey.getProviderId(), connectionKey.getProviderUserId());
+				findByProviderIdAndProviderUserId(connectionKey.getProviderId(), connectionKey.getProviderUserId(), networkId);
 
 		if(userConnection == null) {
 			throw new NoSuchConnectionException(new ConnectionKey(connectionKey.getProviderId(), connectionKey.getProviderUserId()));
@@ -168,7 +171,7 @@ public class SocialConnectionRepository implements ConnectionRepository {
 		ConnectionData connectionData = connection.createData();
 
 		// check if this social account is already connected to a local account
-		List<UserConnection> userConnections = userConnectionRepository.findByProviderId(connectionData.getProviderId());
+		List<UserConnection> userConnections = userConnectionRepository.findByProviderId(connectionData.getProviderId(), networkId);
 
 		if (userConnections != null) {
 			for(UserConnection userConnection : userConnections) {
@@ -211,7 +214,7 @@ public class SocialConnectionRepository implements ConnectionRepository {
 	public void updateConnection(Connection<?> connection) {
 		ConnectionData connectionData = connection.createData();
 		UserConnection userConnection = userConnectionRepository.
-				findByProviderIdAndProviderUserId(connectionData.getProviderId(), connectionData.getProviderUserId());
+				findByProviderIdAndProviderUserId(connectionData.getProviderId(), connectionData.getProviderUserId(), networkId);
 		if (userConnection != null) {
 			userConnection.displayName = connectionData.getDisplayName();
 			userConnection.profileUrl = connectionData.getProfileUrl();
@@ -228,11 +231,11 @@ public class SocialConnectionRepository implements ConnectionRepository {
 
 	@Override
 	public void removeConnections(String providerId) {
-		userConnectionRepository.deleteByProviderId(providerId);
+		userConnectionRepository.deleteByProviderId(providerId, networkId);
 	}
 
 	@Override
 	public void removeConnection(ConnectionKey connectionKey) {
-		userConnectionRepository.deleteByProviderIdAndProviderUserId(connectionKey.getProviderId(), connectionKey.getProviderUserId());
+		userConnectionRepository.deleteByProviderIdAndProviderUserId(connectionKey.getProviderId(), connectionKey.getProviderUserId(), networkId);
 	}
 }

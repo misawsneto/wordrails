@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * This is executed when someones signup using facebook and an user is not found
+ * This is executed when someones signup using any social network and an user is not found
  * Then we must create a new user
  */
 @Component

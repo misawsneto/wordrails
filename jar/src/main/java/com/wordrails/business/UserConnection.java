@@ -18,7 +18,7 @@ public class UserConnection {
 	public String providerUserId;
 
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	public User user;
 
@@ -28,6 +28,8 @@ public class UserConnection {
 	public String displayName;
 
 	public String profileUrl;
+
+	public String email;
 
 	public String imageUrl;
 

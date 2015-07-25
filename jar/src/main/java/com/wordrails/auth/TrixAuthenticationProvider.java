@@ -3,11 +3,13 @@ package com.wordrails.auth;
 import com.wordrails.business.Network;
 import com.wordrails.business.Person;
 import com.wordrails.business.User;
-import com.wordrails.persistence.NetworkRepository;
+import com.wordrails.business.UserConnection;
 import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.UserConnectionRepository;
 import com.wordrails.persistence.UserRepository;
 import com.wordrails.services.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,8 +19,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.social.UserIdSource;
-import org.springframework.social.security.SocialAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -33,11 +33,13 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
-	private NetworkRepository networkRepository;
-	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private CacheService cacheService;
+
+	@Qualifier("userConnectionRepository")
+	@Autowired
+	private UserConnectionRepository userConnectionRepository;
 
 
 	@Override
@@ -52,8 +54,8 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 	public User getUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if(auth == null){
-			User user  = new User();
+		if (auth == null) {
+			User user = new User();
 			user.username = "wordrails";
 			user.password = "wordrails";
 			return user;
@@ -107,60 +109,74 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		return !getUser().isAnonymous();
 	}
 
-	public Authentication authenticate(String username, String password, Network network) throws BadCredentialsException {
-		Authentication auth;
-		if (username.equals("wordrails")) {
-			User user = new User();
-			user.username = "wordrails";
-			user.network = network;
+	public Authentication anonymousAuthentication(Network network) {
+		User user = new User();
+		user.username = "wordrails";
+		user.network = network;
 
-			Set<GrantedAuthority> authorities = new HashSet<>();
-			authorities.add(new SimpleGrantedAuthority("ROLE_ANONYMOUS"));
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_ANONYMOUS"));
 
-			auth = new AnonymousAuthenticationToken("anonymousKey", user, authorities);
-		} else {
-			Set<User> users;
-			try {
-				users = cacheService.getUsersByUsername(username);
-			} catch (ExecutionException e) {
-				users = userRepository.findByUsernameAndEnabled(username, true);
-			}
-
-			if (users != null && users.size() > 0) {
-				User user = null;
-				for (User u : users) {
-					if (u.network != null) { //find by network
-						if (Objects.equals(u.network.id, network.id) && password.equals(u.password)) { //if this is the user for this network, is the password right?
-							user = u;
-							break;
-						}
-					} else if (password.equals(u.password)) { //find by password, if it enters here, the network is not set
-						user = u;
-						break;
-					}
-				}
-
-				if (user == null) { //didn't find by password or network.
-					throw new BadCredentialsException("Wrong password");
-				}
-
-				if (user.network == null || Objects.equals(user.network.id, 0)) {
-					user.network = getNetwork();
-					userRepository.save(user);
-				}
-
-				auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
-			} else {
-				throw new BadCredentialsException("Wrong username");
-			}
-		}
+		Authentication auth = new AnonymousAuthenticationToken("anonymousKey", user, authorities);
 
 		SecurityContextHolder.getContext().setAuthentication(auth);
 
 		return auth;
 	}
 
-	public boolean areYouLogged(Integer personId) {
+	public Authentication passwordAuthentication(String username, String password, Network network) throws BadCredentialsException {
+		Set<User> users;
+		try {
+			users = cacheService.getUsersByUsername(username);
+		} catch (ExecutionException e) {
+			users = userRepository.findByUsernameAndEnabled(username, true);
+		}
+
+		if (users == null || users.isEmpty()) {
+			throw new BadCredentialsException("Wrong username");
+		}
+
+		User user = null;
+		for (User u : users) {
+			if (u.network != null) { //find by network
+				if (Objects.equals(u.network.id, network.id) && password.equals(u.password)) { //if this is the user for this network, is the password right?
+					user = u;
+					break;
+				}
+			} else if (password.equals(u.password)) { //find by password, if it enters here, the network is not set
+				user = u;
+				break;
+			}
+		}
+
+		if (user == null) { //didn't find by password or network.
+			throw new BadCredentialsException("Wrong password");
+		}
+
+		if (user.network == null || Objects.equals(user.network.id, 0)) {
+			user.network = getNetwork();
+			userRepository.save(user);
+		}
+
+		Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+
+		SecurityContextHolder.getContext().setAuthentication(auth);
+
+		return auth;
+	}
+
+	public Authentication socialAuthentication(String provider, String userId, Network network) throws BadCredentialsException {
+		UserConnection userConnection = userConnectionRepository.findByProviderIdAndProviderUserId(provider, userId, network.id);
+		User user = userConnection.user;
+
+		Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
+		SecurityContextHolder.getContext().setAuthentication(auth);
+
+		return auth;
+	}
+
+	public boolean isLogged(Integer personId) {
 		Person person = getLoggedPerson();
 
 		return person != null && Objects.equals(personId, person.id);

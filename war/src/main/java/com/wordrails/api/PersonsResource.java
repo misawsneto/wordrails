@@ -27,7 +27,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.social.connect.web.ProviderSignInController;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
@@ -109,10 +108,8 @@ public class PersonsResource {
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password) {
-		Network network = wordrailsService.getNetworkFromHost(request);
-
 		try{
-			authProvider.authenticate(username, password, network);
+			authProvider.passwordAuthentication(username, password, authProvider.getNetwork());
 			return Response.status(Status.OK).build();
 		}catch(BadCredentialsException | UsernameNotFoundException e){
 			return Response.status(Status.UNAUTHORIZED).build();

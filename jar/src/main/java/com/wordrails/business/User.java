@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")//, uniqueConstraints = @UniqueConstraint(columnNames = {"username", "network_id"}))
-public class User implements UserDetails {
+public class User implements UserDetails, UserIdSource {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +40,7 @@ public class User implements UserDetails {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserGrantedAuthority> authorities;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserConnection> userConnections;
 
 	public void addAuthority(UserGrantedAuthority authority) {
@@ -86,5 +86,10 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	@Override
+	public String getUserId() {
+		return this.id + "_" + this.network.id;
 	}
 }

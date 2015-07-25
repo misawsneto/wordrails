@@ -2,7 +2,6 @@ package com.wordrails.auth;
 
 import com.wordrails.business.UserConnection;
 import com.wordrails.persistence.UserConnectionRepository;
-import com.wordrails.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
@@ -40,8 +39,8 @@ public class SocialUsersConnectionRepository implements UsersConnectionRepositor
 		UserConnection userConnection = userConnectionRepository.
 				findByProviderIdAndProviderUserId(key.getProviderId(), key.getProviderUserId());
 
-		if(userConnection != null) {
-			ids.add(userConnection.id + "");
+		if (userConnection != null) {
+			ids.add(userConnection.user.getUserId());
 		}
 
 		return ids;
@@ -53,7 +52,7 @@ public class SocialUsersConnectionRepository implements UsersConnectionRepositor
 		List<UserConnection> userConnections = userConnectionRepository.
 				findByProviderIdAndUserIds(providerId, providerUserIds);
 
-		for(UserConnection userConnection : userConnections) {
+		for (UserConnection userConnection : userConnections) {
 			ids.add(userConnection.id + "");
 		}
 
@@ -62,6 +61,6 @@ public class SocialUsersConnectionRepository implements UsersConnectionRepositor
 
 	@Override
 	public ConnectionRepository createConnectionRepository(String userId) {
-		return new SocialConnectionRepository(Integer.valueOf(userId), connectionFactoryLocator, textEncryptor);
+		return new SocialConnectionRepository(userId, connectionFactoryLocator, textEncryptor);
 	}
 }
