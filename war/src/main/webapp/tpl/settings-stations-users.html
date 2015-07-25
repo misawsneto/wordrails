@@ -71,7 +71,6 @@
 											<!-- dropdown -->
 											<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
 												<li ng-if="app.networkAdmin" > <a href> Reconfigurar a senha </a> </li>
-												<li> <a href> Alterar permissão </a> </li>
 												<!-- <li class="divider"></li> -->
 												<li> <a ng-click="openDeletePersonRole(role.id);"> Remover permissões </a> </li>
 											</ul>
@@ -87,7 +86,7 @@
 			<!-- /end of user panel list -->
 
 			<!-- new user panel -->
-			<div class="panel panel-card block-600 m-auto" ng-show="creating">
+			<div class="panel panel-card block-600 m-auto" ng-if="creating">
 				<div class="panel-heading h4 wrapper-md">
 					<a ui-sref="app.settings.stations">Estações</a>
 					<i class="mdi mdi-chevron-right"></i>

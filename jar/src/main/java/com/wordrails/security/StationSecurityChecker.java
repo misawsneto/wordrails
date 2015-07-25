@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.persistence.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,7 @@ public class StationSecurityChecker {
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired NetworkRolesRepository networkRolesRepository;
+	private @Autowired PersonRepository personRepository;
 	
 	public boolean canCreate(Station station){
 		Person personLogged = authProvider.getLoggedPerson();
@@ -112,5 +114,10 @@ public class StationSecurityChecker {
 			}
 		}
 		return isAdmin;
+	}
+
+	public boolean isAdmin() {
+		Person person = authProvider.getLoggedPerson();
+		return personRepository.isAdmin(person.id) > 0;
 	}
 }

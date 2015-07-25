@@ -62,10 +62,10 @@ angular.module('app')
                             // 'com.2fdevs.videogular.plugins.buffering',
                             // 'js/app/music/ctrl.js', 
                             // 'js/app/music/theme.css',
-                            '../bower_components/leaflet/dist/leaflet.js',
-                            '../bower_components/leaflet/dist/leaflet.css'
+                            // '../bower_components/leaflet/dist/leaflet.js',
+                            // '../bower_components/leaflet/dist/leaflet.css'
                           ]).then(function(){
-                            return $ocLazyLoad.load(['ng-mfb', 'ui.slimscroll', 'angularFileUpload','js/controllers/post.js?' + GLOBAL_URL_HASH])
+                            return $ocLazyLoad.load(['ui.slimscroll', 'angularFileUpload','js/controllers/post.js?' + GLOBAL_URL_HASH])
                           });
                     }]
                   },
@@ -155,7 +155,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                        return $ocLazyLoad.load(['ng-mfb', 'angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
                   , controller:'SettingsStationsUsersCtrl'
@@ -225,12 +225,12 @@ angular.module('app')
                   , controller:'SettingsSponsorsConfigCtrl'
               })
               .state('app.settings.users', {
-                  url: '/users',
+                  url: '/users?userId?newUser',
                   templateUrl: 'tpl/settings-users.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-users.js?' + GLOBAL_URL_HASH]);
+                        return $ocLazyLoad.load(['ng-mfb', 'angularFileUpload', 'angularFileUpload', 'js/controllers/settings-users.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
                   , controller:'SettingsUsersCtrl'

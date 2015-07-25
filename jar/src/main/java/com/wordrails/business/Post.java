@@ -255,7 +255,7 @@ public class Post {
 			imageSmallId = featuredImage.small.id;
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId = featuredImage.large.id;
-			imageLandscape = !featuredImage.vertical;
+//			imageLandscape = !featuredImage.vertical;
 			imageCaptionText = featuredImage.caption;
 			imageCreditsText = featuredImage.credits;
 			imageTitleText = featuredImage.title;
@@ -279,7 +279,7 @@ public class Post {
 			imageSmallId = featuredImage.small.id;
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId = featuredImage.large.id;
-			imageLandscape = !featuredImage.vertical;
+//			imageLandscape = !featuredImage.vertical;
 			imageCaptionText = featuredImage.caption;
 			imageCreditsText = featuredImage.credits;
 			imageTitleText = featuredImage.title;

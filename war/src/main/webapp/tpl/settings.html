@@ -27,18 +27,18 @@
             </a>
             </li> -->
             <li ng-if="app.networkAdmin || (app.adminStations && app.adminStations.length > 0)" ng-class="{'active': $state.includes('app.settings.users')}">
-            <a class="no-border no-radius">
-              Usuários da Rede
-            </a>
-            </li>
-            <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.network')}">
-            <a ui-sref="app.settings.network" class="no-border no-radius">
-              Configurações da Rede
+            <a ui-sref="app.settings.users" class="no-border no-radius">
+              Usuários
             </a>
             </li>
             <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.categories')}">
             <a ui-sref="app.settings.categories" class="no-border no-radius">
               Categorias da Rede
+            </a>
+            </li>
+            <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.network')}">
+            <a ui-sref="app.settings.network" class="no-border no-radius">
+              Configurações da Rede
             </a>
             </li>
             <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.statistics')}">

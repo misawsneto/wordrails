@@ -7,22 +7,22 @@
             <div class="h4 m-b" clamp="1">{{station.name}}</div>
             <div class="panel panel-default m-b-none">
               <div class="list-group no-radius alt">
-                <a class="list-group-item text-md" ui-sref="app.settings.stationconfig({'stationId': station.id})">
-                  <i class="mdi mdi-settings fa-fw text-muted"></i> 
-                  Configurações
-                </a>
-                <a class="list-group-item text-md" ui-sref="app.settings.stationusers({'stationId': station.id})">
-                  <i class="mdi mdi-account fa-fw text-muted"></i> 
-                  Usuários
-                </a>
-                <!-- <a class="list-group-item text-md" ui-sref="app.settings.stationperspectives({'stationId': station.id})"> -->
                 <a class="list-group-item text-md" ui-sref="app.settings.perspectiveeditor({'stationId': station.id})">
                   <i class="mdi mdi-view-quilt fa-fw text-muted"></i> 
-                  Perspectivas
+                  Páginas
                 </a>
                 <a class="list-group-item text-md" ui-sref="app.settings.stationcategories({'stationId': station.id})">
                   <i class="fa fa-sitemap fa-fw text-muted"></i> 
                   Categorias
+                </a>
+                <a class="list-group-item text-md" ui-sref="app.settings.stationusers({'stationId': station.id})">
+                  <i class="mdi mdi-account fa-fw text-muted"></i> 
+                  Permissões
+                </a>
+                <!-- <a class="list-group-item text-md" ui-sref="app.settings.stationperspectives({'stationId': station.id})"> -->
+                <a class="list-group-item text-md" ui-sref="app.settings.stationconfig({'stationId': station.id})">
+                  <i class="mdi mdi-settings fa-fw text-muted"></i> 
+                  Configurações
                 </a>
                 <a class="list-group-item text-md" ui-sref="app.settings.stationstatistics({'stationId': station.id})">
                   <i class="mdi mdi-chart-bar fa-fw text-muted"></i> 

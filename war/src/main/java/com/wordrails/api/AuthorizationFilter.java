@@ -1055,10 +1055,19 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindAllByNetworkAuthorized(Integer networkId, Integer page, Integer size, List<String> sort) {
+		return stationSecurityChecker.isAdmin();
+	}
+
+	@Override
 	protected boolean isFindByEmailAndNetworkIdAuthorized(String email, Integer networkId) {
 		return true;
 	}
 
+	@Override
+	protected boolean isFindAllByNetworkAndQueryAuthorized(Integer networkId, String query, Integer page, Integer size, List<String> sort) {
+		return stationSecurityChecker.isAdmin();
+	}
 
 	@Override
 	protected boolean isFindByUsernameAndEnabledAuthorized(String username,
@@ -1554,6 +1563,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 			authorized = postAndCommentSecurityChecker.canRead(post);
 		}
 		return authorized;
+	}
+
+	@Override
+	protected boolean isFindPersonByIdAuthorized(Integer personId) {
+		return stationSecurityChecker.isAdmin();
 	}
 
 	@Override
