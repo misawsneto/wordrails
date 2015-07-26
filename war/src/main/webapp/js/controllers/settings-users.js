@@ -34,8 +34,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }else if($state.params.userId){
   	$scope.editing = true;
   	$scope.creating = false;
-  	trix.getPerson($state.params.userId, 'personProjection').success(function(person){
-  		$scope.selectedPerson = person;
+  	trix.findPersonById($state.params.userId, 'personProjection').success(function(response){
+  		$scope.selectedPerson = response.persons[0];
   	})
   }else{
   	$scope.editing = false;
