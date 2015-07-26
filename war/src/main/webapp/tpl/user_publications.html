@@ -53,11 +53,10 @@
 					<div ng-class="{'b-t': !$first}"></div>
 					<div class="clear p-t-sm p post-list news-item">
 						<!-- image -->
-						<a class="block-image m-l" ng-if="publication.mediumId" ng-class="{'m-t': publication.topper}">
-							<div class="cell-wrap r r-2x" ng-class="{'hide': !publication.mediumId}">
-								<div ng-style="getBackgroundImage(publication, 'md')"></div>
-							</div>
-						</a>
+						<a class="block-image m-l m-t" ng-if="publication.mediumId" >
+              <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'md')">
+              </div>
+            </a>
 						<!-- /image -->
 						<!-- /content -->
 						<div ng-class="{'content-block': publication.mediumId}">

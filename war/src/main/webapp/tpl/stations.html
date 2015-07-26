@@ -3,127 +3,113 @@
   <!-- horizontal perspective -->
   <div id="perspective-horizontal" ng-if="app.viewMode === 'horizontal'" class="p-t-lg p-b-lg">
     <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-if="ordinaryRow.cells && ordinaryRow.cells.length">
-
-      <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
+    <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
       <button ng-if="ordinaryRow.cells"  class="backward"><i class="mdi mdi-chevron-left"></i></button>
       <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}"  -->
       <button ng-if="ordinaryRow.cells"  class="forward"><i class="mdi mdi-chevron-right"></i></button>
-      <div ng-if="ordinaryRow.cells" data-term-id="{{::ordinaryRow.termId}}" class="wrap info-flow-wrap" 
-      scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" sly-scroll>
-      <div class="h3">
-        <a ng-if="ordinaryRow.termName" class="animated fadeIn" 
-        ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
-        <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
-        <span class="m-l-xs font-thin text-u-c" >{{::ordinaryRow.termName}}</span>
-      </a>
-    </div>
-    <div class="frame info-flow" style="overflow: hidden;">
-      <ul class="sly-clearfix info-flow-list" data-term-id="{{::ordinaryRow.termId}}">
-        <li class="cell" ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
-
-
-
-          <!-- <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div> -->
-          <div class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
-            <div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.mediumId">
-              <div class="text-md font-thin text-white ls-sm">{{::cell.postView.title}}</div>
-              <div class="m-t-md" ng-if="cell.postView.mediumId">
-                <div class="display-t-c">
-                  <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
-                    <div style="{{::cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
-                  </a>
+      <div ng-if="ordinaryRow.cells" data-term-id="{{::ordinaryRow.termId}}" class="wrap info-flow-wrap" scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" sly-scroll>
+        <div class="h3">
+          <a ng-if="ordinaryRow.termName" class="animated fadeIn" ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
+            <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
+            <span class="m-l-xs font-thin text-u-c" >{{::ordinaryRow.termName}}</span>
+          </a>
+        </div>
+        <div class="frame info-flow" style="overflow: hidden;">
+          <ul class="sly-clearfix info-flow-list" data-term-id="{{::ordinaryRow.termId}}">
+            <li class="cell" ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
+              <!-- <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div> -->
+              <div class="news-item animated fadeIn o-h" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+                <div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.mediumId">
+                  <div class="text-md font-thin text-white ls-sm">{{::cell.postView.title}}</div>
+                  <div class="m-t-md" ng-if="cell.postView.mediumId">
+                    <div class="display-t-c">
+                      <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
+                        <div style="{{::cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                      </a>
+                    </div>
+                    <div class="display-t-c p-l-sm v-middle">
+                      <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="text-white" title="Ir para o perfil de {{::cell.postView.authorName}}" dir="auto">
+                        {{::cell.postView.authorName}}
+                      </a>
+                      <br>
+                      <span class="text-sm readingTime">
+                        {{::cell.postView.date | fromNow}}
+                      </span>
+                    </div>
+                    <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r">
+                      <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
+                        <a href class="text-center text-lg v-middle">
+                          <i class="mdi text-white link" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
+                        </a>
+                      </span>
+                      <span class="p-l-sm" ng-click="app.bookmark(cell.postView.postId); app.stopPropagation($event);">
+                        <a href class="text-center text-lg v-middle">
+                          <i class="mdi text-white link" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(cell.postView.postId), 'mdi-bookmark-outline': !app.bookmarked(cell.postView.postId)}"></i>
+                        </a>
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div class="display-t-c p-l-sm v-middle">
-                  <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="text-white" title="Ir para o perfil de {{::cell.postView.authorName}}" dir="auto">
-                    {{::cell.postView.authorName}}
-                  </a>
-                  <br>
-                  <span class="text-sm">
-                    <span class="">
-                      <span class="readingTime">{{::cell.postView.date | fromNow}}</span>
+
+                <div class="wrapper-sm text-lg font-bold" ng-if="!cell.postView.mediumId">
+                  {{::cell.postView.title | characters:50}}
+                </div>
+                <div class="wrapper-sm clamped" ng-if="!cell.postView.mediumId">
+                  {{::cell.postView.snippet}}
+                </div>
+
+                <div class="pos-abt bottom-0 wrapper-sm" ng-if="!cell.postView.mediumId">
+                  <div class="display-t-c">
+                    <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" title="Ir para o perfil de {{::cell.postView.authorName}}">
+                      <div style="{{::cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                    </a>
+                  </div>
+                  <div class="display-t-c p-l-sm v-middle">
+                    <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="text-custom-primary link" title="Ir para o perfil de {{::cell.postView.authorName}}" dir="auto">
+                      {{::cell.postView.authorName}}
+                    </a>
+                    <br>
+                    <span class="text-sm readingTime">
+                      {{::cell.postView.date | fromNow}}
                     </span>
-                  </span>
+                  </div>
                 </div>
                 <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r">
                   <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
                     <a href class="text-center text-lg v-middle">
-                      <i class="mdi text-white link" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
+                      <i class="mdi text-custom-primary link" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
                     </a>
                   </span>
                   <span class="p-l-sm" ng-click="app.bookmark(cell.postView.postId); app.stopPropagation($event);">
                     <a href class="text-center text-lg v-middle">
-                      <i class="mdi text-white link" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(cell.postView.postId), 'mdi-bookmark-outline': !app.bookmarked(cell.postView.postId)}"></i>
+                      <i class="mdi text-custom-primary link" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(cell.postView.postId), 'mdi-bookmark-outline': !app.bookmarked(cell.postView.postId)}"></i>
                     </a>
                   </span>
                 </div>
-              </div>
-            </div>
 
-            <div class="wrapper-sm text-lg font-bold" ng-if="!cell.postView.mediumId">
-              {{::cell.postView.title | characters:50}}
-            </div>
-            <div class="wrapper-sm clamped" ng-if="!cell.postView.mediumId">
-              {{::cell.postView.snippet}}
-            </div>
-
-            <div class="pos-abt bottom-0 wrapper-sm" ng-if="!cell.postView.mediumId">
-              <div class="display-t-c">
-                <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" title="Ir para o perfil de {{::cell.postView.authorName}}">
-                  <div style="{{::cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
-                </a>
+                <div class="cell-wrap img-bg" ng-if="cell.postView.mediumId" ng-style="getBackgroundImage(cell.postView, 'md')">
+                </div>
               </div>
-              <div class="display-t-c p-l-sm v-middle">
-                <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="text-custom-primary link" title="Ir para o perfil de {{::cell.postView.authorName}}" dir="auto">
-                  {{::cell.postView.authorName}}
-                </a>
-                <br>
-                <span class="text-sm">
-                  <span class="">
-                    <span class="readingTime">{{::cell.postView.date | fromNow}}</span>
-                  </span>
-                </span>
-              </div>
-            </div>
-            <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r">
-              <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
-                <a href class="text-center text-lg v-middle">
-                  <i class="mdi text-custom-primary link" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
-                </a>
-              </span>
-              <span class="p-l-sm" ng-click="app.bookmark(cell.postView.postId); app.stopPropagation($event);">
-                <a href class="text-center text-lg v-middle">
-                  <i class="mdi text-custom-primary link" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(cell.postView.postId), 'mdi-bookmark-outline': !app.bookmarked(cell.postView.postId)}"></i>
-                </a>
-              </span>
-            </div>
-
-            <div class="cell-wrap" ng-if="cell.postView.mediumId">
-              <div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
-            </div>
+            </li>
+            <li syle="width:1px"></li>
+          </ul>
+        </div>
+        <div class="scrollbar info-flow-scroll">
+          <div class="handle">
+            <div class="mousearea"></div>
           </div>
-
-
-        </li>
-        <li syle="1px"></li>
-      </ul>
-    </div>
-    <div class="scrollbar info-flow-scroll">
-      <div class="handle">
-        <div class="mousearea"></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-</div>
-<!-- /horizontal perspective -->
+  <!-- /horizontal perspective -->
 
-<!-- vertical perspective -->
-<div id="perspective-vertical" class="animated fadeIn" ng-if="app.viewMode === 'vertical'">
-  <md-tabs md-no-ink md-selected="selectedIndex" flex class="bg-custom" md-center-tabs md-dynamic-height>
-  <!-- tab -->
-  <md-tab md-on-select="selectVerticalRow(ordinaryRow)" ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{::ordinaryRow.termName}}">
-  <div flex>
-    <div class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm" infinite-scroll="verticalPaginate(ordinaryRow)" infinite-scroll-distance="3">
+  <!-- vertical perspective -->
+  <div id="perspective-vertical" class="animated fadeIn" ng-if="app.viewMode === 'vertical'">
+    <md-tabs md-no-ink md-selected="selectedIndex" flex class="bg-custom" md-center-tabs md-dynamic-height>
+    <!-- tab -->
+    <md-tab md-on-select="selectVerticalRow(ordinaryRow)" ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" ng-if="ordinaryRow.cells && ordinaryRow.cells.length" label="{{::ordinaryRow.termName}}">
+    <div flex class="m-b-lg p-l-xxl p-r-xxl block-800 m-auto m-t-sm" infinite-scroll="verticalPaginate(ordinaryRow)" infinite-scroll-distance="3">
       <!-- posts -->
       <ul class="b-none no-padding m-b-none ls-style-none">
         <li ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
@@ -131,8 +117,7 @@
          <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
           <!-- image -->
           <a class="block-image m-l m-t" ng-if="cell.postView.mediumId" >
-            <div class="cell-wrap r r-2x">
-              <div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
+            <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(cell.postView, 'md')">
             </div>
           </a>
           <!-- /image -->
@@ -154,10 +139,8 @@
                   {{::cell.postView.authorName}}
                 </a>
                 <br>
-                <span class="text-sm">
-                  <span class="">
-                    <span class="readingTime">{{::cell.postView.date | fromNow}}</span>
-                  </span>
+                <span class="text-sm readingTime">
+                  {{::cell.postView.date | fromNow}}
                 </span>
               </div>
               <div class="display-t-c v-middle padder">
@@ -180,9 +163,8 @@
         </div>    
       </li>
     </ul>
-    <!-- /posts -->
   </div>
-</div>
+  <!-- /posts -->
 </md-tab>
 <!-- /tab -->
 </md-tabs>

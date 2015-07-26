@@ -29,8 +29,7 @@
           <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(result,app.searchCtrl.searchResults, null, 'app.search')">
             <!-- image -->
             <a class="block-image m-l m-t" ng-if="result.mediumId" >
-              <div class="cell-wrap r r-2x" ng-class="{'hide': !result.mediumId}">
-                <div ng-style="getBackgroundImage(result, 'md')"></div>
+              <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(result, 'md')">
               </div>
             </a>
             <!-- /image -->

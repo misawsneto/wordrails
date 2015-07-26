@@ -4319,30 +4319,29 @@ li.sly-stub{width: 1px;height: 100px;background: none;}
 #perspective-horizontal div.h3:hover{color: #141719}
 
 div.cell-wrap { height: 100%; width: 100%; overflow: hidden; position: relative; z-index: 2}
-div.cell-wrap > div {
+div.cell-wrap.img-bg {
   position: absolute;
   height: 100%;
   width: 100%;
-  /* -moz-transition: all .2s;
+  -moz-transition: all .2s;
   -webkit-transition: all .2s;
   transition: all .2s;
   -moz-transform: scale(1);
   -webkit-transform: scale(1);
   transform: scale(1);
-  */
   -moz-background-size: cover;
   -webkit-background-size: cover;
   background-size: cover;
   z-index: -1;
 }
 
-div.cell-wrap:hover > div {
-  /* -moz-transform: scale(1.05);
+div.cell-wrap.img-bg:hover {
+  -moz-transform: scale(1.05);
   -webkit-transform: scale(1.05);
-  transform: scale(1.05);     */
+  transform: scale(1.05);     
 }
 
-.station-perspectives div.cell-wrap > div{
+.station-perspectives div.cell-wrap.img-bg{
   -moz-transition: all .2s;
   -webkit-transition: all .2s;
   transition: all .2s;
@@ -4351,13 +4350,13 @@ div.cell-wrap:hover > div {
   transform: scale(1);
 }
 
-.station-perspectives div.cell-wrap:hover > div {
+.station-perspectives div.cell-wrap.img-bg:hover {
   -moz-transform: scale(1.05);
   -webkit-transform: scale(1.05);
   transform: scale(1.05);    
 }
 
-.post-list:hover div.cell-wrap > div {
+.post-list:hover div.cell-wrap.img-bg {
   -moz-transform: scale(1.05);
   -webkit-transform: scale(1.05);
   transform: scale(1.05);    
