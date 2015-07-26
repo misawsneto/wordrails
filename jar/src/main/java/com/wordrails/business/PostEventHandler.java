@@ -57,7 +57,7 @@ public class PostEventHandler {
 					post.slug = originalSlug;
 					postRepository.save(post);
 				} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-					String hash = WordrailsUtil.generateRandomString(5, "Aa#");
+					String hash = WordrailsUtil.generateRandomString(6, "a#");
 					post.slug = originalSlug + "-" + hash;
 				}
 			} else {
