@@ -376,7 +376,7 @@ public class PersonsResource {
 
 		TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
 
-		Pageable pageable = new PageRequest(0, 15);
+		Pageable pageable = new PageRequest(0, 10);
 		//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
 
 		if(defaultStation != null){

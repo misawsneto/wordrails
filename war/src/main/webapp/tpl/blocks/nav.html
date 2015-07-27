@@ -3,6 +3,18 @@
   <!-- <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
     <span translate="aside.nav.HEADER">Navigation</span>
   </li> -->
+<li id="aside-user-list-item" ng-if="app.isLogged">
+  <a ng-click="app.profilepopover.open = !app.profilepopover.open;" id="profile-popover-toggle">
+    <div id="aside-user" style="{{::app.initData.person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div>
+  </a>
+  
+  <!-- <div class="clearfix hidden-xs text-center animated bounceIn" id="aside-user">
+      <div class="wrapper">
+        
+      </div>
+      <div class="line dk hidden-folded"></div>
+    </div> -->
+</li>
 <li ng-class="{'active': $state.includes('app.post')}" ng-show="app.writableStations && app.writableStations.length > 0">
   <a ui-sref="app.post" class="border-radius-50" tooltip="Nova notícia" ng-if="app.isLogged" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700" >      
     <i class="mdi-plus mdi text-lgrey text-shadow-dark"></i>
