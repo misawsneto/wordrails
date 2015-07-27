@@ -7,7 +7,7 @@
       <button ng-if="ordinaryRow.cells"  class="backward"><i class="mdi mdi-chevron-left"></i></button>
       <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}"  -->
       <button ng-if="ordinaryRow.cells"  class="forward"><i class="mdi mdi-chevron-right"></i></button>
-      <div ng-if="ordinaryRow.cells" data-term-id="{{::ordinaryRow.termId}}" class="wrap info-flow-wrap" scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" sly-scroll>
+      <div ng-if="ordinaryRow.cells" class="wrap info-flow-wrap" scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" sly-scroll>
         <div class="h3">
           <a ng-if="ordinaryRow.termName" class="animated fadeIn" ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
             <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
@@ -15,10 +15,10 @@
           </a>
         </div>
         <div class="frame info-flow" style="overflow: hidden;">
-          <ul class="sly-clearfix info-flow-list" data-term-id="{{::ordinaryRow.termId}}">
+          <ul class="sly-clearfix info-flow-list" >
             <li class="cell" ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
               <!-- <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div> -->
-              <div class="news-item animated fadeIn o-h" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+              <div class="news-item animated fadeIn o-h" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
                 <div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.mediumId">
                   <div class="text-md font-thin text-white ls-sm">{{::cell.postView.title}}</div>
                   <div class="m-t-md" ng-if="cell.postView.mediumId">
@@ -93,11 +93,6 @@
             </li>
             <li syle="width:1px"></li>
           </ul>
-        </div>
-        <div class="scrollbar info-flow-scroll">
-          <div class="handle">
-            <div class="mousearea"></div>
-          </div>
         </div>
       </div>
     </div>

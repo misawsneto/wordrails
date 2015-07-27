@@ -31,7 +31,6 @@ angular.module('app')
                 touchDragging: 1,
                 releaseSwing: 1,
                 startAt: null,
-                scrollBar: $wrap.find('.scrollbar'),
                 scrollSource: "null",
                 scrollBy: 1,
                 activatePageOn: 'click',
