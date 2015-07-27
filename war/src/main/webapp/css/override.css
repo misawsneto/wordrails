@@ -1865,7 +1865,7 @@ a{color: #333}
 }
 
 .app:before {
-	background-color: inherit!important;	
+  background-color: inherit!important;  
 }
 
 a.text-lgrey:hover {
@@ -3678,7 +3678,7 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 #my-profile-popover{
   position: fixed;
   top: inherit;
-  bottom: 10px;
+  top: 30px;
   left: 60px;
   display: inherit;
   padding: 0;
@@ -3690,7 +3690,7 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
   cursor: auto;
 }
 
-#my-profile-popover .arrow{top: 90%;}
+#my-profile-popover .arrow{top: 26%;}
 #my-profile-popover .popover-content{padding: 0;}
 #my-profile-popover .profile-popover{ width: 244px; border-top-right-radius: 4px; border-top-left-radius: 4px; overflow: hidden;}
 #my-profile-popover .profile-cover{height: 136px;}
@@ -3715,7 +3715,14 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 }
 
  #aside-user{
-  position: fixed; bottom: 5px;
+  /* position: fixed; bottom: 5px; */
+  margin: 0 auto;
+  background-color: transparent!important;
+}
+
+#aside-user-list-item:hover a, #aside-user-list-item:focus a,
+#aside-user-list-item a:hover, #aside-user-list-item a:focus{
+  background-color: transparent!important;
 }
 
 .app-aside-fixed.app-aside-folded .aside-wrap {
@@ -4319,30 +4326,29 @@ li.sly-stub{width: 1px;height: 100px;background: none;}
 #perspective-horizontal div.h3:hover{color: #141719}
 
 div.cell-wrap { height: 100%; width: 100%; overflow: hidden; position: relative; z-index: 2}
-div.cell-wrap > div {
+div.cell-wrap.img-bg {
   position: absolute;
   height: 100%;
   width: 100%;
-  /* -moz-transition: all .2s;
+  -moz-transition: all .2s;
   -webkit-transition: all .2s;
   transition: all .2s;
   -moz-transform: scale(1);
   -webkit-transform: scale(1);
   transform: scale(1);
-  */
   -moz-background-size: cover;
   -webkit-background-size: cover;
   background-size: cover;
   z-index: -1;
 }
 
-div.cell-wrap:hover > div {
-  /* -moz-transform: scale(1.05);
+div.cell-wrap.img-bg:hover {
+  -moz-transform: scale(1.05);
   -webkit-transform: scale(1.05);
-  transform: scale(1.05);     */
+  transform: scale(1.05);     
 }
 
-.station-perspectives div.cell-wrap > div{
+.station-perspectives div.cell-wrap.img-bg{
   -moz-transition: all .2s;
   -webkit-transition: all .2s;
   transition: all .2s;
@@ -4351,13 +4357,13 @@ div.cell-wrap:hover > div {
   transform: scale(1);
 }
 
-.station-perspectives div.cell-wrap:hover > div {
+.station-perspectives div.cell-wrap.img-bg:hover {
   -moz-transform: scale(1.05);
   -webkit-transform: scale(1.05);
   transform: scale(1.05);    
 }
 
-.post-list:hover div.cell-wrap > div {
+.post-list:hover div.cell-wrap.img-bg {
   -moz-transform: scale(1.05);
   -webkit-transform: scale(1.05);
   transform: scale(1.05);    

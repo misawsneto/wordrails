@@ -2,6 +2,8 @@ package com.wordrails.persistence;
 
 import com.wordrails.business.Person;
 import com.wordrails.business.User;
+import org.joda.time.DateTime;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -33,4 +35,13 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@Query("select (select count(*) from PostRead pr where pr.post.author.id = p.id), (select count(*) from Comment comment where comment.post.author.id = p.id), (select count(*) from Recommend recommend where recommend.post.author.id = p.id) from Person p where p.id = :authorId")
 	public List<Object[]> findPersonStats(@Param("authorId") Integer authorId);
 
+	@Query("select person from Person person where person.user.network.id = :networkId")
+	public List<Person> findAllByNetwork(@Param("networkId") Integer networkId, Pageable pageable);
+
+	@Query("select person from Person person where person.user.network.id = :networkId and (person.username = :query OR person.email = :query)")
+	public List<Person> findAllByNetworkAndQuery(@Param("networkId") Integer networkId, @Param("query") String query, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Query("select count(*) from StationRole sr, NetworkRole nr where (sr.person.id = :personId AND sr.admin = true) OR (nr.person.id = :personId AND nr.admin = true)")
+	public Long isAdmin(@Param("personId") Integer personId);
 }

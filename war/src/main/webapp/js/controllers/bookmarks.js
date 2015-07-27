@@ -15,6 +15,7 @@ app.controller('BookmarksCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$st
 		.success(function(posts){
 			$scope.app.bookmarksCtrl.bookmarks = posts
 			$scope.app.bookmarksCtrl.firstLoad = true;
+			$scope.app.bookmarksCtrl.bookmarksPage = $scope.app.bookmarksCtrl.bookmarksPage + 1;
 		})
 		.error(function(){
 			$scope.searchLoading = false;

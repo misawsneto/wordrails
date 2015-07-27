@@ -48,9 +48,14 @@ public class NetworkDomainFilter implements Filter {
 			((HttpServletResponse) res).sendRedirect("/home");
 		}else {
 			Network network = wordrailsService.getNetworkFromHost(req);
-			HttpSession session = request.getSession();
-			if (network != null)
-				session.setAttribute("network", network);
+			if(network == null){
+				((HttpServletResponse)res).sendRedirect("/404.html");
+				return;
+			}else{
+				HttpSession session = request.getSession();
+				if (network != null)
+					session.setAttribute("network", network);
+			}
 		}
 
 		HttpServletResponse resp = (HttpServletResponse) res;

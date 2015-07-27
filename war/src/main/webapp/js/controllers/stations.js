@@ -4,10 +4,10 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 
 		$scope.tabs = [true, false];
 		$scope.tab = function(index){
-	    angular.forEach($scope.tabs, function(i, v) {
-      	$scope.tabs[v] = false;
-	    });
-	    $scope.tabs[index] = true;
+			angular.forEach($scope.tabs, function(i, v) {
+				$scope.tabs[v] = false;
+			});
+			$scope.tabs[index] = true;
 		}
 
 		if(!$scope.app.termPerspectiveView)
@@ -30,40 +30,40 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 		    if (scrollTop > lastScrollTop && scrollTop > 50){
 		        // Scroll Down
 		        $('body').removeClass('nav-down').addClass('nav-up');
-		      } else {
+		    } else {
 		        // Scroll Up
 		        if(scrollTop + $(window).height() < $(document).height()) {
 		        	$('body').removeClass('nav-up').addClass('nav-down');
 		        }
-	      }
-	      lastScrollTop = scrollTop;
-	    }
+		    }
+		    lastScrollTop = scrollTop;
+		}
 
-    $timeout(function(){
-    	checkStationHeaderVisibel(lastScrollTop);
-    	$(window).scroll(function(){
-    		didScroll = true;
-    	})
-    }, 70);
+		$timeout(function(){
+			checkStationHeaderVisibel(lastScrollTop);
+			$(window).scroll(function(){
+				didScroll = true;
+			})
+		}, 70);
 
-    $interval(function() {
-    	if (didScroll) {
-    		checkStationHeaderVisibel($(window).scrollTop());
-    		didScroll = false;
-    	}
-    }, 250);
+		$interval(function() {
+			if (didScroll) {
+				checkStationHeaderVisibel($(window).scrollTop());
+				didScroll = false;
+			}
+		}, 250);
 
-    $scope.selectedVerticalRow = null;
-    $scope.selectVerticalRow = function(ordinaryRow){
-    	$scope.selectedVerticalRow = ordinaryRow
+		$scope.selectedVerticalRow = null;
+		$scope.selectVerticalRow = function(ordinaryRow){
+			$scope.selectedVerticalRow = ordinaryRow
     	// console.log(ordinaryRow);
     }
 
     $scope.horizontalCallback = function(){
     	if($scope.app.horizontalCursor){
-        $scope.app.setNowReading($scope.app.horizontalCursor.postView, $scope.app.horizontalCursor.list)
-        $scope.app.horizontalCursor = null;
-      }
+    		$scope.app.setNowReading($scope.app.horizontalCursor.postView, $scope.app.horizontalCursor.list)
+    		$scope.app.horizontalCursor = null;
+    	}
     }
 
     $scope.horizontalPaginate = function(ordinaryRow){
@@ -77,30 +77,43 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
     	}
 
     	if(!ordinaryRow.loading){
-	    	ordinaryRow.loading = true;
+    		ordinaryRow.loading = true;
     		return $q(function(resolve, reject) {
-	    		cfpLoadingBar.complete();
-		    	trix.getRowView($scope.app.currentStation.defaultPerspectiveId, null, ordinaryRow.termId, ordinaryRow.page + 1, 10)
-		    	.success(function(response){
-		    		if(response.cells && response.cells.length > 0){
-		    			response.cells.forEach(function(cell, index){
-		    				ordinaryRow.cells.push(cell)
-		    			});
-		    			ordinaryRow.page = ordinaryRow.page + 1
-		    		}else{
-		    			ordinaryRow.allLoaded = true;
-		    		}
-		    		$timeout(function() {
-		    			ordinaryRow.loading = false;
-		    		}, 300);
-		    		resolve();
-		    	}).error(function(){
-		    		ordinaryRow.loading = false;
-		    		reject();
-		    	})
-		    });
-		  }
+    			cfpLoadingBar.complete();
+    			trix.getRowView($scope.app.currentStation.defaultPerspectiveId, null, ordinaryRow.termId, ordinaryRow.page + 1, 10)
+    			.success(function(response){
+    				if(response.cells && response.cells.length > 0){
+    					response.cells.forEach(function(cell, index){
+    						ordinaryRow.cells.push(cell)
+    					});
+    					ordinaryRow.page = ordinaryRow.page + 1
+    				}else{
+    					ordinaryRow.allLoaded = true;
+    				}
+    				$timeout(function() {
+    					ordinaryRow.loading = false;
+    				}, 300);
+    				resolve();
+    			}).error(function(){
+    				ordinaryRow.loading = false;
+    				reject();
+    			})
+    		});
+    	}
     }
+
+    $scope.$on('load more', function () {
+      // Normally scroll case
+      $scope.items.load(50);
+    });
+    $scope.$on('load more end', function ($evt, n, locals) {
+      // For the "end" button
+      if (locals.$progress == 1) {
+        $scope.$apply(function () {
+          $scope.items.load(50);
+        });
+      }
+    });
 
     $scope.verticalPaginate = function(ordinaryRow){
 
@@ -118,24 +131,24 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 
     	if(!ordinaryRow.loading){
     		cfpLoadingBar.complete();
-	    	ordinaryRow.loading = true;
-	    	trix.getRowView($scope.app.currentStation.defaultPerspectiveId, null, ordinaryRow.termId, ordinaryRow.page + 1, 10)
-	    	.success(function(response){
-	    		if(response.cells && response.cells.length > 0){
-	    			response.cells.forEach(function(cell, index){
-	    				ordinaryRow.cells.push(cell)
-	    			});
-	    			ordinaryRow.page = ordinaryRow.page + 1
-	    		}else{
-	    			ordinaryRow.allLoaded = true;
-	    		}
-	    		$timeout(function() {
-	    			ordinaryRow.loading = false;
-	    		}, 300);
-	    	}).error(function(){
-	    		ordinaryRow.loading = false;
-	    	})
-	    }
+    		ordinaryRow.loading = true;
+    		trix.getRowView($scope.app.currentStation.defaultPerspectiveId, null, ordinaryRow.termId, ordinaryRow.page + 1, 10)
+    		.success(function(response){
+    			if(response.cells && response.cells.length > 0){
+    				response.cells.forEach(function(cell, index){
+    					ordinaryRow.cells.push(cell)
+    				});
+    				ordinaryRow.page = ordinaryRow.page + 1
+    			}else{
+    				ordinaryRow.allLoaded = true;
+    			}
+    			$timeout(function() {
+    				ordinaryRow.loading = false;
+    			}, 300);
+    		}).error(function(){
+    			ordinaryRow.loading = false;
+    		})
+    	}
 
     }
 

@@ -382,7 +382,7 @@ function updateTermTree(){
 }
 
 $scope.$watch('app.editingPost.title', function(newVal){
-	if(newVal)
+	if(newVal && (!$scope.app.editingPost.slug || $scope.app.editingPost.slug.trim() == ''))
 		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
 })
 

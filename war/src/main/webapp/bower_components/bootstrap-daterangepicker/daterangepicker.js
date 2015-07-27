@@ -1,5 +1,5 @@
 /**
-* @version: 1.3.22
+* @version: 1.3.23
 * @author: Dan Grossman http://www.dangrossman.info/
 * @copyright: Copyright (c) 2012-2015 Dan Grossman. All rights reserved.
 * @license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
@@ -405,7 +405,6 @@
             } else {
                 this.container.removeClass('single');
                 this.container.find('.calendar.right').removeClass('single');
-                this.container.find('.calendar.left').show();
                 this.container.find('.ranges').show();
             }
 
