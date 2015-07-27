@@ -198,12 +198,12 @@ angular.module('app')
 
          if (children.is(":visible")) {
           children.hide('fast');
-          $(elm).find('span.leaf i.icon-minus-sign').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+          // $(elm).find('span.leaf i.icon-minus-sign').addClass('icon-plus-sign').removeClass('icon-minus-sign');
         }
         else{
 
           children.show('fast');
-          $(elm).find('span.leaf i.icon-plus-sign').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+          // $(elm).find('span.leaf i.icon-plus-sign').addClass('icon-minus-sign').removeClass('icon-plus-sign');
         }
         e.stopPropagation();
       });

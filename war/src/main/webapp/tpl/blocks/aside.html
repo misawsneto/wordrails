@@ -4,19 +4,68 @@
   -->
   <div class="navi-wrap">
     <!-- nav -->
-    <nav ui-nav class="navi clearfix" ng-include="'tpl/blocks/nav.html'"></nav>
-    <!-- nav -->
-
-    <!-- user -->
-    <div class="clearfix hidden-xs text-center animated bounceIn" id="aside-user" ng-if="app.isLogged">
-      <div class="wrapper">
+    <!-- <nav ui-nav class="navi clearfix" ninclude="'tpl/blocks/nav.html'"></nav> -->
+    <!-- list -->
+    <nav ui-nav class="navi clearfix" >
+      <ul class="nav m-t-md">
+        <!-- <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+          <span translate="aside.nav.HEADER">Navigation</span>
+        </li> -->
+      <li id="aside-user-list-item" ng-if="app.isLogged">
         <a ng-click="app.profilepopover.open = !app.profilepopover.open;" id="profile-popover-toggle">
-          <div style="{{::app.initData.person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div>
+          <div id="aside-user" style="{{::app.initData.person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div>
         </a>
-      </div>
-      <div class="line dk hidden-folded"></div>
-    </div>
-    <!-- / user -->
+        
+        <!-- <div class="clearfix hidden-xs text-center animated bounceIn" id="aside-user">
+            <div class="wrapper">
+              
+            </div>
+            <div class="line dk hidden-folded"></div>
+          </div> -->
+      </li>
+      <li ng-class="{'active': $state.includes('app.post')}" ng-show="app.writableStations && app.writableStations.length > 0">
+        <a ui-sref="app.post" class="border-radius-50" tooltip="Nova notícia" ng-if="app.isLogged" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700" >      
+          <i class="mdi-plus mdi text-lgrey text-shadow-dark"></i>
+          <span class="font-bold">Novo</span>
+        </a>
+      </li>
+        <li ng-class="{'active': $state.includes('app.search')}">
+          <a ui-sref="app.search" class="border-radius-50" tooltip="Busca" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
+            <i class="mdi-magnify mdi text-lgrey text-shadow-dark"></i>
+            <span class="font-bold">Procurar</span>
+          </a>
+        </li>
+        <li ng-class="{'active': $state.includes('app.bookmarks')}">
+          <a href ng-click="goToBookmars()" class="border-radius-50" tooltip="Minhas Leituras" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
+            <i class="mdi-bookmark-outline mdi text-lgrey text-shadow-dark"></i>
+            <span class="font-bold">Minhas Leituras</span>
+          </a>
+        </li>
+        <li ng-class="{'active': $state.includes('app.notifications')}">
+          <a href tooltip="Notificações" class="border-radius-50" ng-click="goToNotifications()" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
+            <!-- 
+            <b class="badge bg-custom-primary pull-right" ng-show="app.isLogged">9</b>
+             -->
+            <i class="mdi-bell-outline mdi text-lgrey text-shadow-dark"></i>
+            <span class="font-bold">Notificações</span>
+          </a>
+        </li>
+        <li ui-sref-active="active" ng-if="app.stationsPermissions && app.stationsPermissions.length > 1">
+          <a ng-click="toggleMenu($event);" class="border-radius-50" tooltip="Estações" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
+            <i class="mdi-library-books mdi text-lgrey text-shadow-dark"></i>
+            <span class="font-bold">Estações</span>
+          </a>
+        </li>
+        <li class="line dk" ng-if="app.isLogged && app.networkAdmin && app.adminStations && app.adminStations.length > 0"></li>
+        <li ng-class="{'active': $state.includes('app.settings')}">
+          <a ng-click="app.changeToSettings()" class="border-radius-50" tooltip="Configurações" ng-if="app.isLogged && app.adminStations && app.adminStations.length > 0" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
+            <i class="mdi-settings mdi text-lgrey text-shadow-dark"></i>
+            <span class="font-bold">Configurações</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+<!-- / list -->
+    <!-- nav -->
   </div>
-
 </div>
