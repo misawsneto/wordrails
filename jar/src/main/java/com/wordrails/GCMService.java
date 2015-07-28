@@ -203,20 +203,4 @@ public class GCMService {
 		}
 	}
 
-	public void updateRegId(Network network, Person person, String regId) {
-		try{
-
-			PersonNetworkRegId pnregId = personNetworkRegIdRepository.findOneByRegId(regId);
-			if(pnregId == null || pnregId.regId == null){
-				pnregId = new PersonNetworkRegId();
-				pnregId.regId = regId;
-			}
-
-			pnregId.network = network;
-			pnregId.person = person;
-			personNetworkRegIdRepository.save(pnregId);
-		}catch(Exception e){
-			System.out.println(e.getLocalizedMessage());
-		}
-	}
 }

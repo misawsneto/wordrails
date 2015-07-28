@@ -3,8 +3,7 @@ package com.wordrails.notification;
 import com.relayrides.pushy.apns.ApnsEnvironment;
 import com.relayrides.pushy.apns.PushManager;
 import com.relayrides.pushy.apns.PushManagerConfiguration;
-import com.relayrides.pushy.apns.util.SSLContextUtil;
-import com.relayrides.pushy.apns.util.SimpleApnsPushNotification;
+import com.relayrides.pushy.apns.util.*;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
@@ -20,6 +19,9 @@ import java.security.cert.CertificateException;
 public class APNService {
 
 	private PushManager<SimpleApnsPushNotification> pushManager = null;
+	private final ApnsPayloadBuilder payloadBuilder = new ApnsPayloadBuilder();
+
+	public APNService(){ }
 
 	private void init(String networkCert, String certPassword){
 		try {
@@ -54,6 +56,17 @@ public class APNService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void add2Queue(String deviceToken, String notifyMsg) throws InterruptedException, MalformedTokenStringException {
+		final byte[] token = TokenUtil.tokenStringToByteArray(
+				"<5f6aa01d 8e335894 9b7c25d4 61bb78ad 740f4707 462c7eaf bebcf74f a5ddb387>");
+
+		payloadBuilder.addCustomProperty("msg", notifyMsg);
+
+		String payload = payloadBuilder.buildWithDefaultMaximumLength();
+
+		pushManager.getQueue().put(new SimpleApnsPushNotification(token, payload));
 	}
 
 }

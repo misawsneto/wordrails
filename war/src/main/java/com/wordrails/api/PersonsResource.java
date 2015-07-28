@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.wordrails.notification.NotificationManager;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -77,7 +78,8 @@ public class PersonsResource {
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired PersonNetworkRegIdRepository pnrRepository;
-	private @Autowired GCMService gcmService;
+//	private @Autowired GCMService gcmService;
+	private @Autowired NotificationManager notificationManager;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
 
@@ -92,7 +94,8 @@ public class PersonsResource {
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
 		Person person = accessControllerUtil.getLoggedPerson();
-		gcmService.updateRegId(network, person, regId);
+//		gcmService.updateRegId(network, person, regId);
+		notificationManager.updateRegId(network, person, regId);
 		return Response.status(Status.OK).build();
 	}
 
