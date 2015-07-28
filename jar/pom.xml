@@ -158,5 +158,11 @@
 			<artifactId>spring-context-support</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.relayrides</groupId>
+			<artifactId>pushy</artifactId>
+			<version>0.4.3</version>
+		</dependency>
+
 	</dependencies>
 </project>
