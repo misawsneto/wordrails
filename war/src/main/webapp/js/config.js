@@ -70,9 +70,25 @@ angular.module('app')
       $style.html(getCustomStyle(mainColor, backgroundColor, navbarColor));
 
       $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
-            window.console && console.log(toState);
-            window.console && console.log(fromState);
-            window.console && console.error(event)
-          });
-  })
-  ;
+        window.console && console.log(toState);
+        window.console && console.log(fromState);
+        window.console && console.error(event)
+      });
+
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : 'your-app-id',
+          xfbml      : true,
+          version    : 'v2.3'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+
+  });

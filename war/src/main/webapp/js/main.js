@@ -323,17 +323,26 @@ angular.module('app')
           templateUrl: templateId,
           scope: $scope
         });
+        $timeout(function(){
+          $(".splash").addClass('splash-open')
+        })
       }
 
+      $scope.cancelModal = function () {
+        $(".splash").removeClass('splash-open')
+        $timeout(function(){
+          if($scope.modalInstance){
+            $scope.modalInstance.dismiss('cancel');
+          }
+        },150)
+      };
+
+      $scope.app.cancelModal = function () {
+        $scope.cancelModal();
+      };
+
       $scope.app.openSplash = function(templateId, size){
-        if(templateId === "signin_splash.html")
-          $timeout(function(){
-            $("#username-input").focus();
-          }, 300);
-        $scope.modalInstance = $splash.open({
-          templateUrl: templateId,
-          scope: $scope
-        });
+        $scope.openSplash(templateId, size)
       }
 
       $scope.toastPosition = {
@@ -409,14 +418,6 @@ angular.module('app')
           $scope.app.refreshPerspective();
         });
       }
-
-      $scope.cancelModal = function () {
-        $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
-      };
-
-      $scope.app.cancelModal = function () {
-        $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
-      };
 
       if ( angular.isDefined($localStorage.viewMode) ) {
         $scope.app.viewMode = $localStorage.viewMode

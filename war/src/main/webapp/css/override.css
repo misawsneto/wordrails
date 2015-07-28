@@ -4656,6 +4656,13 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   transition: opacity 0.3s;
 }
 
+/*.modal-open .splash {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+}*/
+
 .splash .splash-inner {
   width: 100%;
   height: 100%;
@@ -4672,6 +4679,11 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
 }
+
+/*.modal-open .splash .splash-inner {
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}*/
 
 .splash .splash-content {
   width: 660px;
