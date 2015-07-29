@@ -407,6 +407,13 @@ public class PersonsResource {
 		return personData;
 	}
 
+	@Path("/count")
+	@GET
+	@Produces(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response countPersonsByNetwork(@QueryParam("networkId") Integer networkId){
+		return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersonsByNetwork(networkId) + " }").build();
+	}
+
 	@DELETE
 	@Path("/{personId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)

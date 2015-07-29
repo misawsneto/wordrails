@@ -8,18 +8,36 @@
 		<div class="panel panel-card block-1000 m-auto" ng-if="!(creating || editing)">
 			<div class="panel-heading h4 wrapper-md">
 				<span>Usuários</span>
+				<div class="pull-right" ng-if="showProgress" layout="row" layout-sm="column" layout-align="space-around" style="transform: scale(0.5); margin:-15px -15px 0 0">
+		      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+		    </div>
 			</div>
 			<div class="panel-body p-n" style="min-height: 200px;">
 				<div class="row wrapper">
-					<div class="col-sm-6 m-b-xs">
+					<div class="col-sm-4 m-b-xs">
 						<select class="form-control w inline v-middle" ng-model="bulkActionSelected" ng-change="selectBulkAction()"
 						ng-options="action as action.name for action in bulkActions track by action.id">
 					</select>
 					<button ng-disabled="bulkActionSelected.id == 0" ng-click="openBulkActionsSplash()" class="btn btn-default">Aplicar</button>                
 				</div>
-				<div class="col-sm-1">
+				<!-- persons pagination -->
+				<div class="col-sm-4 text-right">
+					<div ng-if="persons && personsCount">
+						<span class="font-bold">
+							{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
+						</span>
+						<span class="p-l-xs p-r-xs">de</span> 
+						<span class="p-r font-bold">
+							{{personsCount}}
+						</span>
+						<div class="btn-group inline">
+		          <a ng-click="paginate('left')" ng-class="{'disabled': beginning}" href class="btn btn-default"><span class="mdi mdi-chevron-left"></span></a>
+		          <a ng-click="paginate('right')" ng-class="{'disabled': allLoaded}" href class="btn btn-default"><span class="mdi mdi-chevron-right"></span></a>
+		        </div>
+					</div>
 				</div>
-				<div class="col-sm-5">
+				<!-- /persons pagination -->
+				<div class="col-sm-4">
 					<!-- <div class="input-group"> -->
 					<input type="text" class="input-md w-full form-control" placeholder="Busque por usuário, nome ou email">
 							<!-- <span class="input-group-btn">

@@ -1,7 +1,7 @@
 app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar){
 
-	FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
+   FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
   };
 
@@ -50,10 +50,64 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   $scope.bulkActionSelected = $scope.bulkActions[0];
 
+  $scope.page = 0;
+  var loading = false;
+  $scope.allLoaded = false;
+  $scope.beginning = true;
+  $scope.window = 20
+
   if(!$scope.editing && !$scope.creating){
-  	trix.findAllByNetwork(initData.network.id, 0, 15, null, 'personProjection').success(function(response){
+    $scope.showProgress = true;
+  	trix.findAllByNetwork(initData.network.id, $scope.page, $scope.window, null, 'personProjection').success(function(response){
   		$scope.persons = response.persons;
+      $scope.showProgress = false;
   	});
+  }
+
+  trix.countPersonsByNetwork($scope.app.initData.network.id).success(function(response){
+    $scope.personsCount = response.count;
+  })
+
+  $scope.paginate = function(direction){
+    var page = 0;
+    if(!direction)
+      return;
+
+    if(direction == 'left'){
+      page = $scope.page-1;
+      $scope.allLoaded = false;
+    }
+    else if(direction == 'right'){
+      page = $scope.page+1;
+      $scope.beginning = false;
+    }
+
+    if(page < 0){
+      return;
+    }
+
+    if(!$scope.allLoaded){
+      $scope.showProgress = true;
+      trix.findAllByNetwork(initData.network.id, page, $scope.window, null, 'personProjection').success(function(response){
+        if((!response.persons || response.persons.length == 0) && direction == 'right'){
+          $scope.allLoaded = true;
+        }else{
+          if(!$scope.persons && response.persons)
+            $scope.persons = response.persons;
+          else if(response.persons && response.persons.length > 0){
+            $scope.persons = response.persons;
+            $scope.page = page;
+          }
+
+          if($scope.page == 0)
+            $scope.beginning = true;
+
+          if((($scope.page * $scope.window) + $scope.persons.length) == $scope.personsCount)
+            $scope.allLoaded = true;
+        }
+        $scope.showProgress = false;
+      }); 
+    }
   }
 
   $scope.loadPerson = function(person){
