@@ -1060,12 +1060,27 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isIsAdminAuthorized(Integer personId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isFindByEmailAndNetworkIdAuthorized(String email, Integer networkId) {
 		return true;
 	}
 
 	@Override
+	protected boolean isFindAllByNetworkExcludingPersonAuthorized(Integer networkId, Integer personId, Integer page, Integer size, List<String> sort) {
+		return stationSecurityChecker.isAdmin();
+	}
+
+	@Override
 	protected boolean isFindAllByNetworkAndQueryAuthorized(Integer networkId, String query, Integer page, Integer size, List<String> sort) {
+		return stationSecurityChecker.isAdmin();
+	}
+
+	@Override
+	protected boolean isFindAllByNetworkAndQueryExcludingPersonAuthorized(Integer networkId, Integer personId, String query, Integer page, Integer size, List<String> sort) {
 		return stationSecurityChecker.isAdmin();
 	}
 

@@ -40,6 +40,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -84,6 +85,38 @@ public class PersonsResource {
 
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired StationRoleEventHandler stationRoleEventHandler;
+
+	private
+	@Autowired
+	TrixAuthenticationProvider authProvider;
+
+	private
+	@Context
+	HttpServletRequest request;
+	private
+	@Context
+	UriInfo uriInfo;
+	private
+	@Context
+	HttpServletResponse response;
+
+	private void forward() throws ServletException, IOException {
+		String path = request.getServletPath() + uriInfo.getPath();
+		request.getServletContext().getRequestDispatcher(path).forward(request, response);
+	}
+
+	@PUT
+	@Path("/{id}")
+	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
+		Person person = authProvider.getLoggedPerson();
+
+		Network network = wordrailsService.getNetworkFromHost(request);
+
+		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network))
+			forward();
+		else
+			throw new BadRequestException();
+	}
 
 	@PUT
 	@Path("/me/regId")
@@ -477,6 +510,15 @@ public class PersonsResource {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
 	}
+
+//	@PUT
+//	@Path("/{id}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Transactional()
+//	public Response updatePerson(@PathParam("id") Integer personId, Person person){
+//		personRepository.save(sa)
+//		return Response.status(Status.OK).build();
+//	}
 
 	@GET
 	@Path("/init")

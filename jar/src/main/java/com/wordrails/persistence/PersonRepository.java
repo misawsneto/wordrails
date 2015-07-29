@@ -39,14 +39,19 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@Query("select person from Person person where person.user.network.id = :networkId")
 	public List<Person> findAllByNetwork(@Param("networkId") Integer networkId, Pageable pageable);
 
-	@RestResource(exported = false)
-	@Query("select count(*) from Person person where person.user.network.id = :networkId")
-	public Long countPersonsByNetwork(@Param("networkId") Integer networkId);
+	@Query("select person from Person person where person.user.network.id = :networkId and person.id <> :personId")
+	public List<Person> findAllByNetworkExcludingPerson(@Param("networkId") Integer networkId, @Param("personId") Integer personId, Pageable pageable);
 
 	@Query("select person from Person person where person.user.network.id = :networkId and (person.username = :query OR person.email = :query)")
 	public List<Person> findAllByNetworkAndQuery(@Param("networkId") Integer networkId, @Param("query") String query, Pageable pageable);
 
+	@Query("select person from Person person where person.user.network.id = :networkId and person.id <> :personId and (person.username = :query OR person.email = :query)")
+	public List<Person> findAllByNetworkAndQueryExcludingPerson(@Param("networkId") Integer networkId, @Param("personId") Integer personId, @Param("query") String query, Pageable pageable);
+
 	@RestResource(exported = false)
+	@Query("select count(*) from Person person where person.user.network.id = :networkId")
+	public Long countPersonsByNetwork(@Param("networkId") Integer networkId);
+
 	@Query("select count(*) from StationRole sr, NetworkRole nr where (sr.person.id = :personId AND sr.admin = true) OR (nr.person.id = :personId AND nr.admin = true)")
 	public Long isAdmin(@Param("personId") Integer personId);
 
