@@ -132,10 +132,10 @@
 			<div class="panel panel-card block-600 m-auto animated fadeIn" ng-if="editing && selectedPerson">
 				<div class="panel-body wrapper-md p-t-none">
 					<div id="editing-user-profile" class="row">
-						<div class="profile-cover abstract-bg bg-cover pos-rlt m-l-n-xs m-r-n-xs o-h" style="border-radius:3px 3px 0 0; {{person.coverLargeId | imageLink | bgimg2}}">
-							<div class="cover-abstract-mask ng-scope" ng-if="!person.coverLargeId">
+						<div class="profile-cover abstract-bg bg-cover pos-rlt m-l-n-xs m-r-n-xs o-h" style="border-radius:3px 3px 0 0; {{selectedPerson.coverLargeId | imageLink | bgimg2}}">
+							<div class="cover-abstract-mask ng-scope" ng-if="!selectedPerson.coverLargeId">
 							</div>
-							<div style="{{person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-xl bg-cover-round m-l-lg m-t-lg pos-rlt" title="{{person.name}}">
+							<div style="{{selectedPerson.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-xl bg-cover-round m-l-lg m-t-lg pos-rlt" title="{{selectedPerson.name}}">
 								<div id="image-button-wrapper" ng-if="app.networkAdmin">
 									<div id="image-button" class="custom-btn bg-img-xl border-radius-50">
 										<i class="mdi mdi-pencil text-3x text-white image-edit" style="margin: 40px;"></i>
@@ -143,6 +143,12 @@
 									</div>
 								</div>
 							</div>
+							
+							<div id="settings-users-name" class="pos-rlt text-white text-xl p-l-lg p-r-lg p-t p-b text-xl"
+							style="text-shadow:1px 1px 1px #000; margin-top: -90px; margin-left: 140px;">
+							{{selectedPerson.name}}
+							</div>
+							
 							<div id="cover-image-button" style="overflow:hidden;" 
 							 class="pos-abt right-0 bottom-0 m-r-xs m-b-xs wrapper-sm">
 								<div style="z-index: 2; position: absolute; width: 100%;height:100%;overflow:hidden; vertical-align: bottom;">
@@ -156,9 +162,28 @@
 						</div>
 					</div>
 					<!-- <div class="line line-dashed b-b line-lg pull-in"></div> -->
-					<div class="row">
-
+					<!-- user's data -->
+					<div class="wrapper">
+						<form class="bs-example form-horizontal text-md">
+							<div class="form-group m-b-n">
+								<label class="col-lg-2 control-label font-bold">Usuário</label>
+								<div class="col-lg-10">
+									<div class="form-control b-none text-md">
+										{{selectedPerson.username}}
+									</div>
+								</div>
+							</div>
+							<div class="form-group m-b-n">
+								<label class="col-lg-2 control-label font-bold">Biografia</label>
+								<div class="col-lg-10">
+									<div class="form-control b-none text-md" ng-class="{'font-italic text-muted': !selectedPerson.bio}">
+										{{selectedPerson.bio ? person.bio : 'Usuário ainda não possui biografia.'}}
+									</div>
+								</div>
+							</div>
+						</form>
 					</div>
+					<!-- /user's data -->
 				</div>
 				<div class="m-t text-right text-lg" >
 					<button ui-sref="app.settings.users({'newUser': null, 'userId': null})"
