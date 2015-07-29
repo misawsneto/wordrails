@@ -57,7 +57,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   if(!$scope.editing && !$scope.creating){
     $scope.showProgress = true;
-  	trix.findAllByNetwork(initData.network.id, $scope.page, $scope.window, null, 'personProjection').success(function(response){
+  	trix.findAllByNetworkExcludingPerson(initData.network.id, initData.person.id, $scope.page, $scope.window, null, 'personProjection').success(function(response){
   		$scope.persons = response.persons;
       $scope.showProgress = false;
   	});
@@ -87,7 +87,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
     if(!$scope.allLoaded){
       $scope.showProgress = true;
-      trix.findAllByNetwork(initData.network.id, page, $scope.window, null, 'personProjection').success(function(response){
+      trix.findAllByNetworkExcludingPerson(initData.network.id, initData.person.id, page, $scope.window, null, 'personProjection').success(function(response){
         if((!response.persons || response.persons.length == 0) && direction == 'right'){
           $scope.allLoaded = true;
         }else{

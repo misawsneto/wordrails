@@ -28,7 +28,7 @@
 						</span>
 						<span class="p-l-xs p-r-xs">de</span> 
 						<span class="p-r font-bold">
-							{{personsCount}}
+							{{personsCount - 1}}
 						</span>
 						<div class="btn-group inline">
 		          <a ng-click="paginate('left')" ng-class="{'disabled': beginning}" href class="btn btn-default"><span class="mdi mdi-chevron-left"></span></a>
@@ -72,7 +72,7 @@
 									</td>
 									<td>
 										<div style="{{person.imageSmallId | imageLink | bgimg}}" 
-										class="bg-cover bg-img-xs bg-cover-round pull-left m-r m-t-n-xxs m-b-n-xxs pos-rlt"
+										class="bg-cover bg-img-xs bg-cover-round pull-left m-r m-t-n-xxs m-b-n-xxs pos-rlt bla-{{person.imageSmallId}}"
 										title="{{person.name}}"></div>
 										{{person.username}}
 									</td>
