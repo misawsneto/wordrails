@@ -3,6 +3,7 @@ package com.wordrails.persistence;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -21,6 +22,7 @@ public interface NetworkRolesRepository extends JpaRepository<NetworkRole, Integ
 	@RestResource(exported=false)
 	List<NetworkRole> findByPersonId(@Param("personId") Integer personId);
 
-	@RestResource(exported=false)
-	void deleteByPerson(Person person);
+	@RestResource(exported = false)
+	@Modifying
+	void deleteByPersonId(Integer id);
 }

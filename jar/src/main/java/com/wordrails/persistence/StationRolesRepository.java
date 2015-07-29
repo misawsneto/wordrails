@@ -49,4 +49,8 @@ public interface StationRolesRepository extends JpaRepository<StationRole, Integ
 	@Modifying
 	@Query("delete from StationRole str where str.id in (:stationRolesIds)")
 	void deleteByIds(@Param("stationRolesIds") List<Integer> stationRolesIds);
+
+	@RestResource(exported = false)
+	@Modifying
+	void deleteByPersonId(Integer id);
 }

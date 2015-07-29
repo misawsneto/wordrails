@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -41,5 +42,9 @@ public interface PostReadRepository extends JpaRepository<PostRead, Integer>, Qu
 	@RestResource(exported = false)
 	@Query("select date(pr.createdAt), count(*)  from PostRead pr where pr.post.author.id = :authorId and (date(pr.createdAt) >= date(:dateStart) and date(pr.createdAt) <= date(:dateEnd)) group by date(pr.createdAt)")
 	List<Object[]> countByAuthorAndDate(@Param("authorId") Integer authorId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
+
+	@RestResource(exported = false)
+	@Modifying
+	void deleteByPersonId(Integer id);
 }
 

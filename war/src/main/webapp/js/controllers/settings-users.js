@@ -119,6 +119,20 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	$scope.deletePerson = person;
   }
 
+  $scope.app.deletePerson = function(){
+    trix.deletePerson($scope.deletePerson.id).success(function(){
+      $scope.app.showSuccessToast('Usuário removido com sucesso.');
+      $scope.app.cancelModal();
+      for (var i = $scope.persons.length - 1; i >= 0; i--) {
+        console.log(($scope.persons[i].id + " - " + $scope.deletePerson.id));
+        if($scope.persons[i].id == $scope.deletePerson.id){
+          $scope.persons.slice(i,1)
+          $scope.personsCount--;
+        }
+      };
+    })
+  }
+
   $scope.toggleAll = function(toggleSelectValue){
 
   	if(toggleSelectValue && $scope.persons){

@@ -89,6 +89,15 @@ var trix = angular.module('trix', [])
     	return \$http.get(_config.url + "/api/persons/me")
     }
 
+    this.countPersonsByNetwork = function(networkId){
+    	var config = {
+			"params": {
+				"networkId": networkId
+			}
+		}
+    	return \$http.get(_config.url + "/api/persons/count", config)
+    }
+
     this.updatePostTerms = function(postId, terms) {
     	var config = {"headers": {"Content-Type": "application/json"}}
 		return \$http.put(_config.url + "/api/posts/" + postId + "/updatePostTerms", terms, config)

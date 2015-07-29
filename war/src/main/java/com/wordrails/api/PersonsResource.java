@@ -75,6 +75,7 @@ public class PersonsResource {
 	private @Autowired NetworkSecurityChecker networkSecurityChecker;
 	private @Autowired StationSecurityChecker stationSecurityChecker;
 	private @Autowired QueryPersistence queryPersistence;
+	private @Autowired PersonEventHandler personEventHandler;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -419,9 +420,11 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
 		Network network = wordrailsService.getNetworkFromHost(request);
+		Person person = personRepository.findOne(personId);
 
-		if(networkSecurityChecker.isNetworkAdmin(network)){
-			personRepository.findOne(personId);
+		if(person != null && networkSecurityChecker.isNetworkAdmin(network) && person.user.network.id.equals(network.id)){
+			personEventHandler.handleBeforeDelete(person);
+			personRepository.delete(person.id);
 			return Response.status(Status.OK).build();
 		}else{
 			return Response.status(Status.UNAUTHORIZED).build();

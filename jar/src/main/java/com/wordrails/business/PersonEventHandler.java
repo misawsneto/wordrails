@@ -1,9 +1,6 @@
 package com.wordrails.business;
 
-import com.wordrails.persistence.ImageRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.TermRepository;
+import com.wordrails.persistence.*;
 import com.wordrails.services.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
@@ -18,14 +15,34 @@ import org.springframework.transaction.annotation.Transactional;
 public class PersonEventHandler {
 
 	@Autowired
-	private NetworkRolesRepository networkRolesRepository;
-	@Autowired
 	private ImageRepository imageRepository;
 
 	@Autowired
-	private ImageRepository bookmarksRepository;
+	private BookmarkRepository bookmarksRepository;
+
+	@Autowired
+	private NotificationRepository notificationRepository;
+
+	@Autowired
+	private PersonNetworkRegIdRepository personNetworkRegIdRepository;
+
+	@Autowired
+	private PersonNetworkTokenRepository personNetworkTokenRepository;
+
+	@Autowired
+	private RecommendRepository recommendRepository;
+	@Autowired
+	private PostReadRepository postReadRepository;
+	@Autowired
+	private StationRolesRepository stationRolesRepository;
+	@Autowired
+	private NetworkRolesRepository networkRolesRepository;
 	@Autowired
 	private PersonRepository personRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
 	@Autowired
 	private TermRepository termRepository;
 	@Autowired
@@ -43,9 +60,22 @@ public class PersonEventHandler {
 
 	@HandleBeforeDelete
 	public void handleBeforeDelete(Person person) {
-		networkRolesRepository.deleteByPerson(person);
-		imageRepository.deleteByPerson(person);
-		bookmarksRepository.deleteByPerson(person);
+		networkRolesRepository.deleteByPersonId(person.id);
+		imageRepository.deleteByPersonId(person.id);
+		stationRolesRepository.deleteByPersonId(person.id);
+
+		if(person.cover != null) {
+			imageRepository.delete(person.cover);
+		}
+
+		bookmarksRepository.deleteByPersonId(person.id);
+		recommendRepository.deleteByPersonId(person.id);
+		postReadRepository.deleteByPersonId(person.id);
+
+		notificationRepository.deleteByPersonId(person.id);
+		personNetworkRegIdRepository.deleteByPersonId(person.id);
+		personNetworkTokenRepository.deleteByPersonId(person.id);
+		userRepository.deleteByUserId(person.user.id);
 	}
 
 	@HandleAfterSave
