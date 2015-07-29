@@ -75,7 +75,7 @@ public class PersonEventHandler {
 		notificationRepository.deleteByPersonId(person.id);
 		personNetworkRegIdRepository.deleteByPersonId(person.id);
 		personNetworkTokenRepository.deleteByPersonId(person.id);
-		userRepository.deleteByUserId(person.user.id);
+		userRepository.delete(person.user.id);
 	}
 
 	@HandleAfterSave
