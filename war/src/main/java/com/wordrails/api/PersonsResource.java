@@ -415,7 +415,7 @@ public class PersonsResource {
 		return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersonsByNetwork(networkId) + " }").build();
 	}
 
-	@DELETE
+	@PUT
 	@Path("/deleteMany/network")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){

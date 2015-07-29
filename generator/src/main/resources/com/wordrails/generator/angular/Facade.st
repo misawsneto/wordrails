@@ -91,7 +91,7 @@ var trix = angular.module('trix', [])
 
     this.deletePersons = function(personIds) {
 		var config = {"headers": {"Content-Type": "application/json"}}
-		return \$http.delete(_config.url + "/api/persons/deleteMany/network",  config, personIds)
+		return \$http.put(_config.url + "/api/persons/deleteMany/network", personIds, config)
 	};
 
     this.countPersonsByNetwork = function(networkId){

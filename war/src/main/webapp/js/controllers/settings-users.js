@@ -22,7 +22,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   if($state.params.newUser){
   	$scope.person = {
-  		'stationRole': {'roleString':'READER', 'writer': false, 'editor': false, 'admin': false, 'station': $scope.thisStation},
   		name: '',
   		username: '',
   		password: '',
@@ -124,15 +123,34 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       $scope.app.showSuccessToast('Usuário removido com sucesso.');
       $scope.app.cancelModal();
       for (var i = $scope.persons.length - 1; i >= 0; i--) {
-        console.log(($scope.persons[i].id + " - " + $scope.deletePerson.id));
         if($scope.persons[i].id == $scope.deletePerson.id){
-          safeApply($scope, function(){
-            $scope.persons.splice(i,1)
-            $scope.personsCount--;
-          })
+          $scope.persons.splice(i,1)
+          $scope.personsCount--;
         }
       };
     })
+  }
+
+  $scope.createPerson = function(){
+    trix.createPerson($scope.person).success(function(response){
+      $scope.app.showSuccessToast('Alterações realizadas com successo.')
+      $scope.selectedPerson = response;
+      $scope.editingPersonLoaded = true;
+      $scope.editing = true;
+      $scope.creating = false;
+      $state.go('app.settings.users', {'userId': response.id}, {location: 'replace', inherit: false, notify: false, reload: false})
+    }).error(function(data, status, headers, config){
+      if(status == 409){
+        $scope.app.conflictingData = data;
+        $scope.app.conflictingData.role = $scope.person.stationRole.roleString;
+        $scope.openConflictingUserSplash()
+      }else
+        $scope.app.showErrorToast('Dados inválidos. Tente novamente')
+      
+      $timeout(function() {
+        cfpLoadingBar.complete(); 
+      }, 100);
+    });
   }
 
   var deletePersons = function(){
@@ -143,17 +161,14 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     });
 
     trix.deletePersons(ids).success(function(){
-      /*$scope.app.showSuccessToast('Usuário removido com sucesso.');
+      $scope.app.showSuccessToast('Usuário removido com sucesso.');
       $scope.app.cancelModal();
       for (var i = $scope.persons.length - 1; i >= 0; i--) {
-        console.log(($scope.persons[i].id + " - " + $scope.deletePerson.id));
-        if($scope.persons[i].id == $scope.deletePerson.id){
-          safeApply($scope, function(){
-            $scope.persons.splice(i,1)
-            $scope.personsCount--;
-          })
+        if(ids.indexOf($scope.persons[i].id) > -1){
+          $scope.persons.splice(i,1)
+          $scope.personsCount--;
         }
-      };*/
+      };
     })
   }
 

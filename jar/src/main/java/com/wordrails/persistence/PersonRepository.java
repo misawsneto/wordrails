@@ -51,6 +51,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	public Long isAdmin(@Param("personId") Integer personId);
 
 	@RestResource(exported = false)
-	@Query("select person from Person person where person.id = :personIds")
-	List<Person> findPersonsByIds(@Param("personId") List<Integer> personIds);
+	@Query("select person from Person person where person.id in (:personIds)")
+	List<Person> findPersonsByIds(@Param("personIds") List<Integer> personIds);
 }
