@@ -10,6 +10,8 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RepositoryEventHandler(Person.class)
 @Component
 public class PersonEventHandler {
@@ -41,10 +43,20 @@ public class PersonEventHandler {
 	private PersonRepository personRepository;
 
 	@Autowired
+	private QueryPersistence queryPersistence;
+
+	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private TermRepository termRepository;
+
+	@Autowired
+	private PostRepository postRepository;
+
+	@Autowired
+	private PostService postService;
+
 	@Autowired
 	private CacheService cacheService;
 
@@ -71,6 +83,13 @@ public class PersonEventHandler {
 		bookmarksRepository.deleteByPersonId(person.id);
 		recommendRepository.deleteByPersonId(person.id);
 		postReadRepository.deleteByPersonId(person.id);
+
+		List<Post> posts = postRepository.findAllFromPerson(person.id);
+		for (Post post: posts){
+			postService.removePostIndex(post);
+		}
+
+		queryPersistence.setNoAuthor(person.id);
 
 		notificationRepository.deleteByPersonId(person.id);
 		personNetworkRegIdRepository.deleteByPersonId(person.id);

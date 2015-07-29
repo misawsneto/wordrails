@@ -15,7 +15,7 @@
 			<div class="panel-body p-n" style="min-height: 200px;">
 				<div class="row wrapper">
 					<div class="col-sm-4 m-b-xs">
-						<select class="form-control w inline v-middle" ng-model="bulkActionSelected" ng-change="selectBulkAction()"
+						<select class="form-control w inline v-middle" ng-model="bulkActionSelected" ng-change="selectBulkAction(bulkActionSelected)"
 						ng-options="action as action.name for action in bulkActions track by action.id">
 					</select>
 					<button ng-disabled="bulkActionSelected.id == 0" ng-click="openBulkActionsSplash()" class="btn btn-default">Aplicar</button>                
@@ -335,9 +335,8 @@
          				<div class="row">
          					<div class="col-xs-8 col-xs-offset-2">
          						<div class="">
-         							Tem certeza que deseja remover as permissões dos usuários selecionados para esta estação?
-         							<br>
-         							Atenção! Os usuários selecionados não serão excluídos da rede. Para excluir um usuário, entre em contato com o administrador da rede. 
+         							Tem certeza que deseja remover os usuários selecionados?
+         							Ateção! As notícias criadas por estes usuários não terão autor algum. 
          						</div>
          					</div>
          				</div>

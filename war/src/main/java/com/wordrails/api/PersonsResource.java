@@ -416,6 +416,30 @@ public class PersonsResource {
 	}
 
 	@DELETE
+	@Path("/deleteMany/network")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
+		Network network = wordrailsService.getNetworkFromHost(request);
+		List<Person> persons = personRepository.findPersonsByIds(personIds);
+
+		for(Person person: persons){
+			if(!person.user.network.id.equals(network.id))
+				return Response.status(Status.UNAUTHORIZED).build();
+		}
+
+		if(persons != null && persons.size() > 0 && networkSecurityChecker.isNetworkAdmin(network)){
+		for(Person person: persons){
+			personEventHandler.handleBeforeDelete(person);
+		}
+
+		personRepository.delete(persons);
+		return Response.status(Status.OK).build();
+		}else{
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+	}
+
+	@DELETE
 	@Path("/{personId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{

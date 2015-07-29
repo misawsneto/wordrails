@@ -43,9 +43,9 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   $scope.bulkActions = [
-  {name:'Ações em grupo', id:0},
-  {name:'Alterar permissões', id:1},
-  {name:'Remover permissões', id:2}
+    {name:'Ações em grupo', id:0},
+    {name:'Alterar permissões', id:1},
+    {name:'Remover usuários', id:2}
   ]
 
   $scope.bulkActionSelected = $scope.bulkActions[0];
@@ -126,10 +126,34 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       for (var i = $scope.persons.length - 1; i >= 0; i--) {
         console.log(($scope.persons[i].id + " - " + $scope.deletePerson.id));
         if($scope.persons[i].id == $scope.deletePerson.id){
-          $scope.persons.slice(i,1)
-          $scope.personsCount--;
+          safeApply($scope, function(){
+            $scope.persons.splice(i,1)
+            $scope.personsCount--;
+          })
         }
       };
+    })
+  }
+
+  var deletePersons = function(){
+    var ids = []
+    $scope.persons.forEach(function(person, index){
+      if(person.selected)
+        ids.push(person.id)
+    });
+
+    trix.deletePersons(ids).success(function(){
+      /*$scope.app.showSuccessToast('Usuário removido com sucesso.');
+      $scope.app.cancelModal();
+      for (var i = $scope.persons.length - 1; i >= 0; i--) {
+        console.log(($scope.persons[i].id + " - " + $scope.deletePerson.id));
+        if($scope.persons[i].id == $scope.deletePerson.id){
+          safeApply($scope, function(){
+            $scope.persons.splice(i,1)
+            $scope.personsCount--;
+          })
+        }
+      };*/
     })
   }
 
@@ -153,6 +177,18 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   			ret = false;
   	});
   	return ret;
+  }
+
+  $scope.selectBulkAction = function(bulkActionSelected){
+    $scope.bulkActionSelected = bulkActionSelected;
+  }
+
+  $scope.app.applyBulkActions = function(){
+    if($scope.bulkActionSelected.id == 0)
+      return
+    else if($scope.bulkActionSelected.id == 2)
+      deletePersons();
+    $scope.app.cancelModal();
   }
 
   $scope.openBulkActionsSplash = function(){

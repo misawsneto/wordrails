@@ -126,4 +126,8 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 
 	@Query("select person from Person person where person.id = :personId")
 	public Person findPersonById(@Param("personId") Integer personId);
+
+	@RestResource(exported = false)
+	@Query("select post from Post post where post.author.id = :personId")
+	List<Post> findAllFromPerson(@Param("personId") Integer personId);
 }

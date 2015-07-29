@@ -89,6 +89,11 @@ var trix = angular.module('trix', [])
     	return \$http.get(_config.url + "/api/persons/me")
     }
 
+    this.deletePersons = function(personIds) {
+		var config = {"headers": {"Content-Type": "application/json"}}
+		return \$http.delete(_config.url + "/api/persons/deleteMany/network",  config, personIds)
+	};
+
     this.countPersonsByNetwork = function(networkId){
     	var config = {
 			"params": {
