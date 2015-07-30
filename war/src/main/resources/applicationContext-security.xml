@@ -66,30 +66,6 @@
 
 	<facebook:config app-id="${facebook.app.id}" app-secret="${facebook.app.secret}"/>
 
-
-
-	<bean class="org.springframework.social.connect.support.ConnectionFactoryRegistry" id="connectionFactoryLocator" />
-	<bean class="com.wordrails.auth.TrixSignInAdapter" id="signInAdapter" />
-
-	<bean class="com.wordrails.auth.SocialUsersConnectionRepository" id="usersConnectionRepository">
-		<constructor-arg name="textEncryptor" ref="textEncryptor" />
-		<constructor-arg name="connectionFactoryLocator" ref="connectionFactoryLocator" />
-	</bean>
-
-	<bean class="org.springframework.social.connect.web.ProviderSignInController">
-		<constructor-arg name="connectionFactoryLocator" ref="connectionFactoryLocator" />
-		<constructor-arg name="signInAdapter" ref="signInAdapter" />
-		<constructor-arg name="usersConnectionRepository" ref="usersConnectionRepository" />
-	</bean>
-
-	<bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors"
-	      factory-method="text">
-		<constructor-arg value="${security.encryptPassword}" />
-		<constructor-arg value="${security.encryptSalt}" />
-	</bean>
-
-
-
 	<!--AUTHENTICATION-->
 
 	<bean id="anonymousAuthenticationFilter" class="com.wordrails.filter.TrixAnonymousAuthenticationFilter">

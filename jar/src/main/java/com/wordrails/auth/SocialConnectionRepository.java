@@ -16,10 +16,11 @@ import org.springframework.util.MultiValueMap;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 @Component
 public class SocialConnectionRepository implements ConnectionRepository {
 
-	private Integer userId;
+	private String providerUserId;
 	private Integer networkId;
 
 	@Autowired
@@ -34,9 +35,9 @@ public class SocialConnectionRepository implements ConnectionRepository {
 	public SocialConnectionRepository() {
 	}
 
-	public SocialConnectionRepository(String userId, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
-		String[] data = userId.split("_");
-		this.userId = Integer.valueOf(data[0]);
+	public SocialConnectionRepository(String userData, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
+		String[] data = userData.split("_");
+		this.providerUserId = data[0];
 		this.networkId = Integer.valueOf(data[1]);
 		this.connectionFactoryLocator = connectionFactoryLocator;
 		this.textEncryptor = textEncryptor;
@@ -161,9 +162,7 @@ public class SocialConnectionRepository implements ConnectionRepository {
 
 	@Override
 	public <A> Connection<A> findPrimaryConnection(Class<A> apiType) {
-		String providerId = connectionFactoryLocator.getConnectionFactory(apiType).getProviderId();
-
-		return getConnection(apiType, providerId);
+		return getConnection(apiType, providerUserId);
 	}
 
 	@Override
@@ -171,23 +170,20 @@ public class SocialConnectionRepository implements ConnectionRepository {
 		ConnectionData connectionData = connection.createData();
 
 		// check if this social account is already connected to a local account
-		List<UserConnection> userConnections = userConnectionRepository.findByProviderId(connectionData.getProviderId(), networkId);
+		UserConnection userConnection = userConnectionRepository.
+				findByProviderIdAndProviderUserId(connectionData.getProviderId(), connectionData.getProviderUserId(), networkId);
 
-		if (userConnections != null) {
-			for(UserConnection userConnection : userConnections) {
-				if(userConnection.providerId.equals(connectionData.getProviderId()))
-					if(userConnection.providerUserId.equals(connectionData.getProviderUserId()))
-						throw new DuplicateConnectionException(new ConnectionKey(connectionData.getProviderId(), connectionData.getProviderUserId()));
-			}
+		if (userConnection != null) {
+			throw new DuplicateConnectionException(new ConnectionKey(connectionData.getProviderId(), connectionData.getProviderUserId()));
 		}
 
-		User user = userRepository.findOne(userId);
+		userConnection = new UserConnection();
+
+		User user = userRepository.findOne(Integer.valueOf(providerUserId));
 
 		if(user == null) {
-			throw new NotConnectedException("user " + userId + " does not exist");
+			throw new NotConnectedException("user " + providerUserId + " does not exist");
 		}
-
-		UserConnection userConnection = new UserConnection();
 
 		userConnection.user = user;
 		userConnection.providerId = connectionData.getProviderId();

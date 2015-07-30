@@ -11,7 +11,6 @@ public class UserConnection {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer id;
 
-	@NotNull
 	@Column(unique = true)
 	public String accessToken;
 

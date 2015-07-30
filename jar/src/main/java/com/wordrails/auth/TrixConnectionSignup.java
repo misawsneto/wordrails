@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
  * This is executed when someones signup using any social network and an user is not found
  * Then we must create a new user
  */
+@Deprecated
 @Component
 public class TrixConnectionSignup implements ConnectionSignUp {
 

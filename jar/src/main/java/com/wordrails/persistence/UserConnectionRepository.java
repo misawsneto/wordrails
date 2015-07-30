@@ -46,6 +46,7 @@ public interface UserConnectionRepository extends JpaRepository<UserConnection, 
 	                                                @Param("networkId") Integer networkId);
 
 	@RestResource(exported = false)
+	@Query("select uc from UserConnection uc where (uc.providerUserId in (:userIds) and uc.providerId in (:providerId))")
 	List<UserConnection> findByProviderIdAndUserIds(@Param("providerId") String providerId,
 	                                                @Param("userIds") Collection<String> userIds);
 

@@ -34,13 +34,13 @@ public class User implements UserDetails, UserIdSource {
 	@JoinColumn(name = "network_id")
 	public Network network;
 
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
 	public Person person;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserGrantedAuthority> authorities;
 
-	@OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserConnection> userConnections;
 
 	public void addAuthority(UserGrantedAuthority authority) {

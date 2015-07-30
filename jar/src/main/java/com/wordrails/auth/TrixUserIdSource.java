@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.UserIdSource;
 import org.springframework.stereotype.Component;
 
+@Deprecated
 @Component("userIdSource")
 public class TrixUserIdSource implements UserIdSource {
 
