@@ -40,6 +40,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -58,7 +59,6 @@ public class PersonsResource {
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
@@ -75,6 +75,7 @@ public class PersonsResource {
 	private @Autowired NetworkSecurityChecker networkSecurityChecker;
 	private @Autowired StationSecurityChecker stationSecurityChecker;
 	private @Autowired QueryPersistence queryPersistence;
+	private @Autowired PersonEventHandler personEventHandler;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -83,6 +84,36 @@ public class PersonsResource {
 
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired StationRoleEventHandler stationRoleEventHandler;
+
+	private @Autowired TrixAuthenticationProvider authProvider;
+
+	private
+	@Context
+	HttpServletRequest request;
+	private
+	@Context
+	UriInfo uriInfo;
+	private
+	@Context
+	HttpServletResponse response;
+
+	private void forward() throws ServletException, IOException {
+		String path = request.getServletPath() + uriInfo.getPath();
+		request.getServletContext().getRequestDispatcher(path).forward(request, response);
+	}
+
+	@PUT
+	@Path("/{id}")
+	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
+		Person person = authProvider.getLoggedPerson();
+
+		Network network = wordrailsService.getNetworkFromHost(request);
+
+		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network))
+			forward();
+		else
+			throw new BadRequestException();
+	}
 
 	@PUT
 	@Path("/me/regId")
@@ -405,14 +436,47 @@ public class PersonsResource {
 		return personData;
 	}
 
+	@Path("/count")
+	@GET
+	@Produces(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response countPersonsByNetwork(@QueryParam("networkId") Integer networkId){
+		return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersonsByNetwork(networkId) + " }").build();
+	}
+
+	@PUT
+	@Path("/deleteMany/network")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
+		Network network = wordrailsService.getNetworkFromHost(request);
+		List<Person> persons = personRepository.findPersonsByIds(personIds);
+
+		for(Person person: persons){
+			if(!person.user.network.id.equals(network.id))
+				return Response.status(Status.UNAUTHORIZED).build();
+		}
+
+		if(persons != null && persons.size() > 0 && networkSecurityChecker.isNetworkAdmin(network)){
+		for(Person person: persons){
+			personEventHandler.handleBeforeDelete(person);
+		}
+
+		personRepository.delete(persons);
+		return Response.status(Status.OK).build();
+		}else{
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+	}
+
 	@DELETE
 	@Path("/{personId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
 		Network network = wordrailsService.getNetworkFromHost(request);
+		Person person = personRepository.findOne(personId);
 
-		if(networkSecurityChecker.isNetworkAdmin(network)){
-			personRepository.findOne(personId);
+		if(person != null && networkSecurityChecker.isNetworkAdmin(network) && person.user.network.id.equals(network.id)){
+			personEventHandler.handleBeforeDelete(person);
+			personRepository.delete(person.id);
 			return Response.status(Status.OK).build();
 		}else{
 			return Response.status(Status.UNAUTHORIZED).build();
@@ -441,6 +505,15 @@ public class PersonsResource {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
 	}
+
+//	@PUT
+//	@Path("/{id}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Transactional()
+//	public Response updatePerson(@PathParam("id") Integer personId, Person person){
+//		personRepository.save(sa)
+//		return Response.status(Status.OK).build();
+//	}
 
 	@GET
 	@Path("/init")

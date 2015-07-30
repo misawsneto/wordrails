@@ -16,6 +16,11 @@ public interface PersonProjection {
     String getEmail();
     public Set<StationRole> getPersonsStationPermissions();
     public Set<NetworkRole> getPersonsNetworkRoles();
+
+    Integer getCoverLargeId();
     Integer getCoverMediumId();
+
+    Integer getImageLargeId();
     Integer getImageMediumId();
+    Integer getImageSmallId();
 }

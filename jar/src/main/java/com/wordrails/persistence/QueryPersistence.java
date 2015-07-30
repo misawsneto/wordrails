@@ -132,5 +132,8 @@ public class QueryPersistence {
 		manager.createQuery("update Person person set person.lastLogin = :date where person.username = :username").setParameter("username", username).setParameter("date", new Date()).executeUpdate();
 	}
 
-
+	@Transactional
+	public void setNoAuthor(Integer personId) {
+		manager.createNativeQuery("UPDATE Post post SET post.author_id = 1, post.state = 'NOAUTHOR' WHERE post.author_id = :personId").setParameter("personId", personId).executeUpdate();
+	}
 }

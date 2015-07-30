@@ -3,6 +3,7 @@ package com.wordrails.persistence;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -40,4 +41,8 @@ public interface PersonNetworkTokenRepository extends JpaRepository<PersonNetwor
 
 	@RestResource(exported=false)
 	public PersonNetworkToken findOneByToken(String token);
+
+	@RestResource(exported = false)
+	@Modifying
+	void deleteByPersonId(Integer id);
 }

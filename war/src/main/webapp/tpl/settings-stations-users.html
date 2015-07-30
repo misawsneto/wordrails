@@ -187,43 +187,68 @@
 									</div>
 								</div>
 							</div>
-							<div id="cover-image-button" style="overflow:hidden;" 
-							 class="pos-abt right-0 bottom-0 m-r-xs m-b-xs wrapper-sm">
-								<div style="z-index: 2; position: absolute; width: 100%;height:100%;overflow:hidden; vertical-align: bottom;">
-									<input style="opacity: 0;cursor:pointer" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
-								</div>	
-								<span class="p-r-xs text-md" style="text-shadow:1px 1px 1px #000; vertical-align: sub;">
-									Trocar imagem de capa
-								</span>
-								<i class="mdi mdi-camera text-2x icon-text-shadow v-middle p-r-xs"></i>
+
+							<div id="settings-users-name" class="pos-rlt text-white text-xl p-l-lg p-r-lg p-t p-b text-xl"
+							style="text-shadow:1px 1px 1px #000; margin-top: -90px; margin-left: 140px;">
+							{{person.name}}
+						</div>
+
+						<div id="cover-image-button" style="overflow:hidden;" 
+						class="pos-abt right-0 bottom-0 m-r-xs m-b-xs wrapper-sm">
+						<div style="z-index: 2; position: absolute; width: 100%;height:100%;overflow:hidden; vertical-align: bottom;">
+							<input style="opacity: 0;cursor:pointer" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+						</div>	
+						<span class="p-r-xs text-md" style="text-shadow:1px 1px 1px #000; vertical-align: sub;">
+							Trocar imagem de capa
+						</span>
+						<i class="mdi mdi-camera text-2x icon-text-shadow v-middle p-r-xs"></i>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="line line-dashed b-b line-lg pull-in"></div> -->
+			<!-- user's data -->
+			<div class="wrapper">
+				<form class="bs-example form-horizontal text-md">
+					<div class="form-group m-b-n">
+						<label class="col-lg-2 control-label font-bold">Usuário</label>
+						<div class="col-lg-10">
+							<div class="form-control b-none text-md">
+								{{person.username}}
 							</div>
 						</div>
 					</div>
-					<!-- <div class="line line-dashed b-b line-lg pull-in"></div> -->
-					<div class="row">
-
+					<div class="form-group m-b-n">
+						<label class="col-lg-2 control-label font-bold">Biografia</label>
+						<div class="col-lg-10">
+							<div class="form-control b-none text-md" ng-class="{'font-italic text-muted': !person.bio}">
+								{{person.bio ? person.bio : 'Usuário ainda não possui biografia.'}}
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="m-t text-right text-lg" >
-					<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null, 'userId': null})"
-					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
-
-					<button ng-if="creating" ng-click="createPerson()"
-					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
-				</div>
+				</form>
 			</div>
-			<!-- /editing user panel -->
+			<!-- /user's data -->
 		</div>
-		<!--  /wrapper -->
+		<div class="m-t text-right text-lg" >
+			<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null, 'userId': null})"
+			md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
 
-		<!-- create user -->
-		<md-button ng-hide="creating || editing"
-		id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-		ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
-		tooltip="Novo usuário" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
-		aria-label="Novo usuário">
-		<i class="mdi mdi-plus"></i>
-	</md-button>
+			<button ng-if="creating" ng-click="createPerson()"
+			md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
+		</div>
+	</div>
+	<!-- /editing user panel -->
+</div>
+<!--  /wrapper -->
+
+<!-- create user -->
+<md-button ng-hide="creating || editing"
+id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+tooltip="Novo usuário" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+aria-label="Novo usuário">
+<i class="mdi mdi-plus"></i>
+</md-button>
 
 	<!-- <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html" 
                 label="Publicar"
