@@ -20,17 +20,17 @@
 			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications" >
 				<ul class="nav nav-tabs text-lg" role="tablist">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
-						<a class="text-u-c" ng-click="app.goToUserDrafts($event)">
+						<a class="text-u-c" ng-click="app.goToUserDrafts($event); allLoaded = false;">
 							Meus rascunhos
 						</a>
 					</li>
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 1}">
-						<a class="text-u-c" ng-click="app.goToUserPublications($event)">
+						<a class="text-u-c" ng-click="app.goToUserPublications($event); allLoaded = false;">
 							Minhas publicações
 						</a>
 					</li>
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 2}">
-						<a class="text-u-c" ng-click="app.goToUserScheduled($event)">
+						<a class="text-u-c" ng-click="app.goToUserScheduled($event); allLoaded = false;">
 							AGENDADOS
 						</a>
 					</li>
@@ -42,7 +42,7 @@
 					</li> -->
 				</ul>
 			</div>
-			<div class="wrapper-xxl text-3x text-center" ng-class="{'hide': app.publicationsCtrl.publications && app.publicationsCtrl.publications.length>0 || !app.publicationsCtrl.firstLoad}">
+			<div class="wrapper-xxl text-3x text-center" ng-if="!(app.publicationsCtrl.publications && app.publicationsCtrl.publications.length>0 || !app.publicationsCtrl.firstLoad)">
 				<i class="mdi mdi-file-find text-3x text-muted"></i>
 				<p>lista vazia<i></i></p>
 			</div>
