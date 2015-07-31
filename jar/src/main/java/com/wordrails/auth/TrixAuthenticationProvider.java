@@ -1,9 +1,7 @@
 package com.wordrails.auth;
 
-import com.wordrails.business.Network;
-import com.wordrails.business.Person;
-import com.wordrails.business.User;
-import com.wordrails.business.UserConnection;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.wordrails.business.*;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserConnectionRepository;
 import com.wordrails.persistence.UserRepository;
@@ -19,8 +17,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.ImageType;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
+import org.springframework.social.support.URIBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -165,15 +169,95 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		return auth;
 	}
 
-	public Authentication socialAuthentication(String provider, String userId, Network network) throws BadCredentialsException {
-		UserConnection userConnection = userConnectionRepository.findByProviderIdAndProviderUserId(provider, userId, network.id);
-		User user = userConnection.user;
+	public boolean socialAuthentication(String providerId, String userId, String accessToken, Network network) throws BadCredentialsException {
+		UserConnection userConnection = userConnectionRepository.findByProviderIdAndProviderUserId(providerId, userId, network.id);
+
+		User user = null;
+		Facebook facebook = new FacebookTemplate(accessToken);
+		if (userConnection == null) {
+			if (providerId.equals("facebook")) {
+				Person person = getFacebookUser(facebook, userId, network);
+				personRepository.save(person);
+
+				user = person.user;
+			}
+		} else {
+			if (providerId.equals("facebook")) {
+				org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
+
+				if (profile == null) {
+					return false;
+				} else {
+					user = userConnection.user;
+				}
+			}
+		}
+
+		if(user == null) return false;
 
 		Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
 		SecurityContextHolder.getContext().setAuthentication(auth);
 
-		return auth;
+		return true;
+	}
+
+	private Person getFacebookUser(Facebook facebook, String userId, Network network) {
+		org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
+
+		String email = profile.getEmail() == null ? "" : profile.getEmail();
+		Person person = personRepository.findByEmailAndNetworkId(email, network.id);
+
+		if (person == null) {
+			int i = 1;
+			String username = profile.getId();
+			while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
+				username = profile.getId() + i++;
+			}
+
+			person = new Person();
+			person.name = profile.getName();
+			person.username = username;
+			person.email = email;
+		}
+
+		User user = new User();
+
+		UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
+		authority.network = network;
+
+		user.enabled = true;
+		user.username = person.username;
+		user.password = "";
+		user.network = network;
+		authority.user = user;
+		user.addAuthority(authority);
+
+		UserConnection userConnection = new UserConnection();
+		userConnection.providerId = "facebook";
+		userConnection.providerUserId = userId;
+		userConnection.email = profile.getEmail();
+		userConnection.user = user;
+		userConnection.displayName = profile.getName();
+		userConnection.profileUrl = profile.getLink();
+		userConnection.imageUrl = fetchPictureUrl(userId, ImageType.LARGE);
+		user.userConnections = new HashSet<>();
+		user.userConnections.add(userConnection);
+
+		person.user = user;
+
+		return person;
+	}
+
+	private static final String GRAPH_API_URL = "http://graph.facebook.com/";
+
+	public String fetchPictureUrl(String userId, ImageType imageType) {
+		URI uri = URIBuilder.fromUri(GRAPH_API_URL + userId + "/picture" +
+				"?type=" + imageType.toString().toLowerCase() + "&redirect=false").build();
+
+		RestTemplate restTemplate = new RestTemplate();
+		JsonNode response = restTemplate.getForObject(uri, JsonNode.class);
+		return response.get("data").get("url").textValue();
 	}
 
 	public boolean isLogged(Integer personId) {

@@ -1,20 +1,10 @@
 package com.wordrails.resource;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.UserConnectionRepository;
-import com.wordrails.persistence.UserRepository;
+import com.wordrails.business.Network;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.api.ImageType;
-import org.springframework.social.facebook.api.impl.FacebookTemplate;
-import org.springframework.social.support.URIBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -23,110 +13,30 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.net.URI;
-import java.util.HashSet;
 
 @Path("/auth")
 @Component
 public class AuthResource {
 
-	@Value("facebook.app.id")
-	String facebookAppId;
-	@Value("facebook.app.secret")
-	String facebookAppSecret;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
-	@Autowired
-	private UserRepository userRepository;
-	@Qualifier("userConnectionRepository")
-	@Autowired
-	private UserConnectionRepository userConnectionRepository;
-	@Autowired
-	private PersonRepository personRepository;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/signin")
 	public Response signin(@FormParam("providerId") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
-
 		Network network = authProvider.getNetwork();
 
-		UserConnection userConnection = userConnectionRepository.findByProviderIdAndProviderUserId(providerId, userId, network.id);
-
-		Facebook facebook = new FacebookTemplate(accessToken);
-		if (userConnection == null) {
-			if (providerId.equals("facebook")) {
-				Person person = getFacebookUser(facebook, userId, network);
-				personRepository.save(person);
-			}
-		} else {
-			if (providerId.equals("facebook")) {
-				org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
-
-				if (profile == null) {
-					return Response.status(Response.Status.UNAUTHORIZED).build();
-				}
-			}
+		if (!network.allowSocialLogin) {
+			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 		}
 
-		return Response.status(Response.Status.OK).build();
-	}
+		boolean authorized = authProvider.socialAuthentication(providerId, userId, accessToken, network);
 
-	private Person getFacebookUser(Facebook facebook, String userId, Network network) {
-		org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
-
-		String email = profile.getEmail() == null ? "" : profile.getEmail();
-		Person person = personRepository.findByEmailAndNetworkId(email, network.id);
-
-		if (person == null) {
-			int i = 1;
-			String username = profile.getId();
-			while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
-				username = profile.getId() + i++;
-			}
-
-			person = new Person();
-			person.name = profile.getName();
-			person.username = username;
-			person.email = email;
+		if (authorized) {
+			return Response.status(Response.Status.OK).build();
 		}
 
-		User user = new User();
-
-		UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
-		authority.network = network;
-
-		user.enabled = true;
-		user.username = person.username;
-		user.password = "";
-		user.network = network;
-		authority.user = user;
-		user.addAuthority(authority);
-
-		UserConnection userConnection = new UserConnection();
-		userConnection.providerId = "facebook";
-		userConnection.providerUserId = userId;
-		userConnection.email = profile.getEmail();
-		userConnection.user = user;
-		userConnection.displayName = profile.getName();
-		userConnection.profileUrl = profile.getLink();
-		userConnection.imageUrl = fetchPictureUrl(userId, ImageType.LARGE);
-		user.userConnections = new HashSet<>();
-		user.userConnections.add(userConnection);
-
-		person.user = user;
-
-		return person;
-	}
-
-	private static final String GRAPH_API_URL = "http://graph.facebook.com/";
-
-	public String fetchPictureUrl(String userId, ImageType imageType) {
-		URI uri = URIBuilder.fromUri(GRAPH_API_URL + userId + "/picture" +
-				"?type=" + imageType.toString().toLowerCase() + "&redirect=false").build();
-
-		RestTemplate restTemplate = new RestTemplate();
-		JsonNode response = restTemplate.getForObject(uri, JsonNode.class);
-		return response.get("data").get("url").textValue();
+		return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 }
