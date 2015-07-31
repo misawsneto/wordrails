@@ -59,7 +59,7 @@ public class NotificationsResource {
 	@GET
 	@Path("/searchNotifications")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<NotificationView>> searchNotifications(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+	public ContentResponse<List<NotificationView>> searchNotifications(@QueryParam("query") String query, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
 		
 		Person person = authProvider.getLoggedPerson();
 //		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -79,7 +79,7 @@ public class NotificationsResource {
 //		
 //		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
 		
-		if(q == null || q.trim().isEmpty()){
+		if(query == null || query.trim().isEmpty()){
 			Pageable pageable = new PageRequest(page, size);
 			
 			ContentResponse<List<NotificationView>> response = new ContentResponse<List<NotificationView>>();
@@ -112,7 +112,7 @@ public class NotificationsResource {
 				.andField("post.subheading")
 				.andField("post.author.name")
 				.andField("post.terms.name")
-				.matching(q).createQuery();
+				.matching(query).createQuery();
 		}catch(Exception e){
 			
 			e.printStackTrace();

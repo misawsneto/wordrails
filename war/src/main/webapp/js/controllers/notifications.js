@@ -7,4 +7,6 @@ app.controller('NotificationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
 		console.log($scope.app.notificationsCtrl);
 
+		trix.searchNotifications('',0,5);
+
 }]);

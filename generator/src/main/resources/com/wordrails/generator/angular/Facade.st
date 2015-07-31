@@ -28,13 +28,13 @@ var trix = angular.module('trix', [])
 	    // optional method
 	    response: function(response) {
 	    // do something on success
-	    	if (_config.url && response.config.method === "GET" && 
-	    		response.config.url.indexOf(_config.url + "/api") > -1 && 
+	    	if (_config.url && response.config.method === "GET" &&
+	    		response.config.url.indexOf(_config.url + "/api") > -1 &&
 	    		response.data && response.data._embedded){
 	    			response.data = response.data._embedded;
 		    		return response
-	    	}else if (_config.url && response.config.method === "GET" && 
-	    		response.config.url.indexOf(_config.url + "/api") > -1 && 
+	    	}else if (_config.url && response.config.method === "GET" &&
+	    		response.config.url.indexOf(_config.url + "/api") > -1 &&
 	    		response.data && response.data.content){
 	    			response.data = response.data.content;
 		    		return response
@@ -56,7 +56,7 @@ var trix = angular.module('trix', [])
 		};
 		return requestInterceptor;
 	})
-	
+
 	delete \$httpProvider.defaults.headers.common['X-Requested-With'];
 
   var Trix = function(\$http){
@@ -72,7 +72,7 @@ var trix = angular.module('trix', [])
 	  config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
 	  return \$http.post(_config.url + "/api/auth/signin", \$.param({"userId": userId, "accessToken": accessToken, "provider": provider}), config)
 	}
-    
+
     this.createPerson = function(person) {
       var config = {};
       config.headers = {"Content-Type": "application/json"}
@@ -82,15 +82,15 @@ var trix = angular.module('trix', [])
     this.logout = function() {
     	return \$http.get(_config.url + "/j_spring_security_logout")
     }
-    
+
     this.initData = function() {
       return \$http.get(_config.url + "/api/persons/init");
     }
-    
+
     this.allInitData = function() {
       return \$http.get(_config.url + "/api/persons/allInit");
     }
-    
+
     this.getCurrentPerson = function(){
     	return \$http.get(_config.url + "/api/persons/me")
     }
@@ -113,7 +113,7 @@ var trix = angular.module('trix', [])
     	var config = {"headers": {"Content-Type": "application/json"}}
 		return \$http.put(_config.url + "/api/posts/" + postId + "/updatePostTerms", terms, config)
 	}
-	
+
 	this.deletePersonStationRoles = function(stationRolesIds) {
     	var config = {"headers": {"Content-Type": "application/json"}}
 		return \$http.put(_config.url + "/api/persons/deletePersonStationRoles", stationRolesIds, config)
@@ -132,7 +132,7 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/perspectives/termPerspectiveViews", config)
     }
-    
+
      this.getPersonNetworkPosts = function(personId, networkId, _page, _size) {
 		var config = {
 			"params": {
@@ -142,6 +142,18 @@ var trix = angular.module('trix', [])
 			}
 		}
       return \$http.get(_config.url + "/api/persons/"+personId+"/posts", config)
+    }
+
+    this.getPersonNetworkPostsByState = function(personId, state, _page, _size){
+    	var config = {
+    		"params": {
+    			"state": state,
+				"personId": personId,
+				"page": _page,
+				"size": _size,
+			}
+    	}
+        return \$http.get(_config.url + "/api/persons/getPostsByState", config)
     }
 
     this.getPersonStats = function(date, postId) {
@@ -162,7 +174,7 @@ var trix = angular.module('trix', [])
 		}
 	  return \$http.get(_config.url + "/api/persons/me/publicationsCount", config)
 	}
-    
+
     this.getPersonNetworkRecommendations = function(personId, networkId, _page, _size) {
 		var config = {
 			"params": {
@@ -173,7 +185,7 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/persons/"+personId+"/recommends", config)
     }
-    
+
     this.searchPostsFromOrPromotedToStation = function(stationId, query, _page, _size, params) {
 		var config = {
 			"params": {
@@ -182,13 +194,13 @@ var trix = angular.module('trix', [])
 				"size": _size,
 			}
 		}
-		
+
 		if(params && angular)
 			config.params = angular.extend(config.params, params);
-		
+
       return \$http.get(_config.url + "/api/posts/"+stationId+"/searchPostsFromOrPromotedToStation", config)
     }
-    
+
     this.searchPosts = function(query, _page, _size, params) {
 		var config = {
 			"params": {
@@ -197,13 +209,13 @@ var trix = angular.module('trix', [])
 				"size": _size,
 			}
 		}
-		
+
 		if(params && angular)
 			config.params = angular.extend(config.params, params);
-		
+
       return \$http.get(_config.url + "/api/posts/search/networkPosts", config)
     }
-    
+
     this.searchBookmarks = function(query, _page, _size) {
     	var config = {
     	"params": {
@@ -214,7 +226,7 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/bookmarks/searchBookmarks", config)
     }
-    
+
     this.searchNotifications = function(query, _page, _size) {
     	var config = {
     	"params": {
@@ -225,7 +237,7 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/notifications/searchNotifications", config)
     }
-    
+
     this.checkBookmarkedRecommendedByMe = function(postId) {
     	var config = {
     	"params": {
@@ -234,22 +246,22 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/me/bookmarkedRecommended", config)
     }
-    
+
     this.toggleBookmark = function(postId) {
     	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
     	return \$http.put(_config.url + "/api/bookmarks/toggleBookmark", \$.param({"postId": postId}), config)
     };
-    
+
     this.setMainStation = function(stationId, value) {
     	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
     	return \$http.put(_config.url + "/api/stations/"+stationId+"/setMainStation", \$.param({"value": value}), config)
     };
-    
+
     this.toggleRecommend = function(postId) {
     	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
     	return \$http.put(_config.url + "/api/recommends/toggleRecommend", \$.param({"postId": postId}), config)
     };
-    
+
     this.getRowView = function(stationPerspectiveId, termPerspectiveId, childTermId, _page, _size){
     	var config = {
 			"params": {
@@ -262,7 +274,7 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/perspectives/rowViews", config)
     }
-    
+
     this.getTermTree = function(perspectiveId, taxonomyId) {
 		var config = {
 			"params": {
@@ -272,7 +284,7 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/terms/termTree", config)
     }
-    
+
     this.getPostViewBySlug = function(slug, withBody) {
 		var config = {
 			"params": {
@@ -282,7 +294,7 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/posts/getPostViewBySlug", config)
     }
-    
+
     this.getPostViewById = function(postId, withBody) {
 		var config = {
 			"params": {
@@ -291,7 +303,7 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/posts/" + postId + "/getPostViewById", config)
     }
-    
+
     this.findPopularPosts = function(stationId, _page, _size) {
 		var config = {
 			"params": {
@@ -301,7 +313,7 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/posts/" + stationId + "/popular", config)
     }
-    
+
     this.findRecentPosts = function(stationId, _page, _size) {
 		var config = {
 			"params": {
@@ -316,11 +328,11 @@ var trix = angular.module('trix', [])
     	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
     	return \$http.put(_config.url + "/api/persons/me/password", \$.param({"oldPassword": oldPassword, "newPassword": newPassword}), config)
     };
-    
+
     this.convertPost = function(postId, state){
     	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
     	return \$http.put(_config.url + "/api/posts/"+postId+"/convert", \$.param({"state": state}), config)
-    } 
+    }
 
 	this.findPostsByStationIdAndAuthorIdAndState = function(stationId, authorId, state, _page, _size, _sort) {
 		var config = {

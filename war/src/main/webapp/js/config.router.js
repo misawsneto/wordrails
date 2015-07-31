@@ -340,7 +340,6 @@ angular.module('app')
                       }]
                           
                   },
-                  reloadOnSearch: false,
                   controller: 'UserStatsCtrl'
               })
               .state('app.publications', {
