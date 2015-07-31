@@ -86,7 +86,7 @@ angular.module('app')
       $scope.app.hideAside = false;
       $scope.app.hideFooter = true;
       // ---------------------
-       
+      
       function loadPopular(){
         trix.findPopularPosts($scope.app.currentStation.id, 0, 10)
         .success(function(response){
@@ -219,10 +219,10 @@ angular.module('app')
           if(fromState.abstract)
             $state.go('app.stations');
         }else if( (toState.name.indexOf('app.user') > -1 && (toParams.username === "wordrails")) ||
-                (toState.name == 'app.publications' && 
-                  ((!trixService.getWritableStations() || trixService.getWritableStations().length == 0) ||
-                    ($scope.app.initData && $scope.app.initData.person && $scope.app.initData.person.username !== toParams.username))
-                 )
+          (toState.name == 'app.publications' && 
+            ((!trixService.getWritableStations() || trixService.getWritableStations().length == 0) ||
+              ($scope.app.initData && $scope.app.initData.person && $scope.app.initData.person.username !== toParams.username))
+            )
           ){
           event.preventDefault();
           $scope.app.showInfoToast('Permissão negada.')
@@ -242,256 +242,260 @@ angular.module('app')
         }
       })
 
-      $scope.app.goToProfile = function($event, username){
-        $event.preventDefault();
-        $event.stopPropagation();
-        $state.go('app.user', {username: username})
-        if($scope.app.profilepopover)
-        $scope.app.profilepopover.open = false;
-      }
+$scope.app.goToProfile = function($event, username){
+  $event.preventDefault();
+  $event.stopPropagation();
+  $state.go('app.user', {username: username})
+  if($scope.app.profilepopover)
+    $scope.app.profilepopover.open = false;
+}
 
-      $scope.app.goToUserStats = function($event){
-        $event.preventDefault();
-        $event.stopPropagation();
-        $state.go('app.userstats')
-        if($scope.app.profilepopover)
-          $scope.app.profilepopover.open = false; 
-      }
+$scope.app.goToUserStats = function($event){
+  $event.preventDefault();
+  $event.stopPropagation();
+  $state.go('app.userstats')
+  if($scope.app.profilepopover)
+    $scope.app.profilepopover.open = false; 
+}
 
-      $scope.app.goToUserPublications = function($event){
-        $event.preventDefault();
-        $event.stopPropagation();
-        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'publications'})
-        if($scope.app.profilepopover)
-          $scope.app.profilepopover.open = false; 
-      }
+$scope.app.goToUserPublications = function($event){
+  $event.preventDefault();
+  $event.stopPropagation();
+  $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'publications'})
+  if($scope.app.profilepopover)
+    $scope.app.profilepopover.open = false; 
+}
 
-      $scope.app.goToUserDrafts = function($event){
-        $event.preventDefault();
-        $event.stopPropagation();
-        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'drafts'})
-        if($scope.app.profilepopover)
-          $scope.app.profilepopover.open = false; 
-      }
+$scope.app.goToUserDrafts = function($event){
+  $event.preventDefault();
+  $event.stopPropagation();
+  $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'drafts'})
+  if($scope.app.profilepopover)
+    $scope.app.profilepopover.open = false; 
+}
 
-      $scope.app.goToUserScheduled = function($event){
-        $event.preventDefault();
-        $event.stopPropagation();
-        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'scheduled'})
-        if($scope.app.profilepopover)
-          $scope.app.profilepopover.open = false; 
-      }
+$scope.app.goToUserScheduled = function($event){
+  $event.preventDefault();
+  $event.stopPropagation();
+  $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'scheduled'})
+  if($scope.app.profilepopover)
+    $scope.app.profilepopover.open = false; 
+}
 
-      $scope.app.goToUserOtherPosts = function($event){
-        $event.preventDefault();
-        $event.stopPropagation();
-        $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'others'})
-        if($scope.app.profilepopover)
-          $scope.app.profilepopover.open = false; 
-      }
+$scope.app.goToUserOtherPosts = function($event){
+  $event.preventDefault();
+  $event.stopPropagation();
+  $state.go('app.publications', {username: $scope.app.getLoggedPerson().username, type: 'others'})
+  if($scope.app.profilepopover)
+    $scope.app.profilepopover.open = false; 
+}
 
-      $scope.getBackgroundImage = function(postView, size){
-        var img = $filter('pvimageLink')(postView, size);
-        return img;
-      }
+$scope.getBackgroundImage = function(postView, size){
+  var img = $filter('pvimageLink')(postView, size);
+  return img;
+}
 
-      $scope.getBackgroundImage2 = function(post, size){
-        var img = $filter('pvimageLink2')(post, size);
-        return img;
-      }
+$scope.getBackgroundImage2 = function(post, size){
+  var img = $filter('pvimageLink2')(post, size);
+  return img;
+}
 
-      $scope.getImageLink = function(id){
-        var img = $filter('imageLink')(id);
-        return img;
-      }
+$scope.getImageLink = function(id){
+  var img = $filter('imageLink')(id);
+  return img;
+}
 
 
-      $scope.openModal = function(templateId, size){
-        $scope.modalInstance = $modal.open({
+$scope.openModal = function(templateId, size){
+  $scope.modalInstance = $modal.open({
           templateUrl: templateId, // the id of the <script> template
           size: size,
           scope: $scope, // pass the current scope. no need for a new controller
         });
+}
+
+$scope.openSplash = function(templateId, size){
+  if(templateId === "signin_splash.html")
+    $timeout(function(){
+      $("#username-input").focus();
+    }, 300);
+  $scope.modalInstance = $splash.open({
+    templateUrl: templateId,
+    scope: $scope
+  });
+  $timeout(function(){
+    $(".splash").addClass('splash-open')
+  })
+}
+
+$scope.cancelModal = function () {
+  $(".splash").removeClass('splash-open')
+  $timeout(function(){
+    if($scope.modalInstance){
+      $scope.modalInstance.dismiss('cancel');
+    }
+  },150)
+};
+
+$scope.app.cancelModal = function () {
+  $scope.cancelModal();
+};
+
+$scope.app.openSplash = function(templateId, size){
+  $scope.openSplash(templateId, size)
+}
+
+$scope.toastPosition = {
+  bottom: false,
+  top: true,
+  left: false,
+  right: true
+};
+
+$scope.getToastPosition = function() {
+  return Object.keys($scope.toastPosition)
+  .filter(function(pos) { return $scope.toastPosition[pos]; })
+  .join(' ');
+};
+
+$scope.app.showSimpleToast = function(content) {
+  $mdToast.show(
+    $mdToast.simple()
+    .content(content)
+    .position($scope.getToastPosition())
+    .hideDelay(3000)
+    );
+};
+
+$scope.app.showErrorToast = function(content) {
+  $mdToast.show({
+    template: '<md-toast style="background-color: rgba(204,34,0,0.95)" ><span flex>'+content+'</span></md-toast>',
+    hideDelay: 3000,
+    position: $scope.getToastPosition()
+  });
+};
+
+$scope.app.showSuccessToast = function(content) {
+  $mdToast.show({
+    template: '<md-toast style="background-color: rgba(0,128,0,0.95)" ><span flex>'+content+'</span></md-toast>',
+    hideDelay: 3000,
+    position: $scope.getToastPosition()
+  });
+};
+
+$scope.app.showInfoToast = function(content) {
+  $mdToast.show({
+    template: '<md-toast style="background-color: rgba(0,85,187,0.95)" ><span flex>'+content+'</span></md-toast>',
+    hideDelay: 3000,
+    position: $scope.getToastPosition()
+  });
+};
+
+$scope.app.converToDraf = function(){
+  if($scope.app.editingPost && $scope.app.editingPost.id){
+    trix.convertPost($scope.app.editingPost.id, "DRAFT").success(function(){
+      $scope.app.editingPost.state = "DRAFT";
+      $scope.app.cancelModal();
+    });
+  }
+}
+
+$scope.app.openDeletePost = function(id){
+  $scope.app.deletingPostId = id;
+  $scope.app.openSplash('confirm_delete_post.html') 
+};
+
+$scope.app.deletePost = function(){
+  trix.deletePost($scope.app.deletingPostId).success(function(){
+    $scope.app.deletingPostId = null;
+    $scope.app.editingPost = null;
+    window.onbeforeunload = null;
+    $scope.app.showSuccessToast('Notícia removida.')
+    $scope.app.cancelModal();
+    if($state.current.name != 'app.stations')
+      $state.go('app.stations');
+
+    $scope.app.refreshPerspective();
+  });
+}
+
+if ( angular.isDefined($localStorage.viewMode) ) {
+  $scope.app.viewMode = $localStorage.viewMode
+}else{
+  $scope.app.viewMode = 'vertical';
+}
+
+$scope.changeView = function(view){
+  $localStorage.viewMode = $scope.app.viewMode = view;
+}
+
+if ( angular.isDefined($localStorage.nightMode) ) {
+  $scope.app.nightMode = $localStorage.nightMode
+}else{
+  $scope.app.nightMode = false;
+}
+
+$scope.toggleNightMode = function(bool){
+  $localStorage.nightMode = $scope.app.nightMode = bool;
+}
+
+$scope.app.getInitData = function(){
+  trix.allInitData().success(function(response){
+    initData = response;
+    $scope.app.initData = angular.copy(initData);
+    $scope.app.loginError = false;
+    $scope.app.refreshData();
+  })
+}
+
+$scope.app.signIn = function(username, password){
+  trix.login(username, password).success(function(){
+    handleLoginSuccess();
+  }).error(function(){
+    $scope.app.loginError = true;
+    $scope.app.refreshData();
+  })
+};
+
+function handleLoginSuccess (){
+  trix.allInitData().success(function(response){
+    initData = response;
+    $scope.app.initData = angular.copy(initData);
+    $scope.app.loginError = false;
+    $scope.app.refreshData();
+  })
+}
+
+$scope.app.changeToSettings = function(){
+  if(!$scope.app.lastSettingState)
+    $scope.app.lastSettingState = 'app.settings.stations'
+  $state.go($scope.app.lastSettingState);
+}
+
+$scope.app.refreshData = function(){
+  $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
+  $scope.app.stationsPermissions = trixService.getStationPermissions();
+  if(!$scope.app.loginError)
+    $scope.cancelModal();
+
+  $scope.app.checkIfLogged();
+  window.console && console.log($scope.app.currentStation, $scope.app.stationsPermissions);
+}
+
+$scope.app.signOut = function(username, password){
+  trix.logout().success(function(){
+    trix.allInitData().success(function(response){
+      initData = response;
+      $scope.app.initData = angular.copy(initData);
+      $scope.app.profilepopover.open = false;
+      if($scope.$state.current.name != "app.stations" && $scope.$state.current.name != "app.search"){
+        $state.go("app.stations");
       }
-
-      $scope.openSplash = function(templateId, size){
-        if(templateId === "signin_splash.html")
-          $timeout(function(){
-            $("#username-input").focus();
-          }, 300);
-        $scope.modalInstance = $splash.open({
-          templateUrl: templateId,
-          scope: $scope
-        });
-        $timeout(function(){
-          $(".splash").addClass('splash-open')
-        })
-      }
-
-      $scope.cancelModal = function () {
-        $(".splash").removeClass('splash-open')
-        $timeout(function(){
-          if($scope.modalInstance){
-            $scope.modalInstance.dismiss('cancel');
-          }
-        },150)
-      };
-
-      $scope.app.cancelModal = function () {
-        $scope.cancelModal();
-      };
-
-      $scope.app.openSplash = function(templateId, size){
-        $scope.openSplash(templateId, size)
-      }
-
-      $scope.toastPosition = {
-        bottom: false,
-        top: true,
-        left: false,
-        right: true
-      };
-
-      $scope.getToastPosition = function() {
-        return Object.keys($scope.toastPosition)
-          .filter(function(pos) { return $scope.toastPosition[pos]; })
-          .join(' ');
-      };
-
-      $scope.app.showSimpleToast = function(content) {
-        $mdToast.show(
-          $mdToast.simple()
-            .content(content)
-            .position($scope.getToastPosition())
-            .hideDelay(3000)
-        );
-      };
-
-      $scope.app.showErrorToast = function(content) {
-        $mdToast.show({
-          template: '<md-toast style="background-color: rgba(204,34,0,0.95)" ><span flex>'+content+'</span></md-toast>',
-          hideDelay: 3000,
-          position: $scope.getToastPosition()
-        });
-      };
-
-      $scope.app.showSuccessToast = function(content) {
-        $mdToast.show({
-          template: '<md-toast style="background-color: rgba(0,128,0,0.95)" ><span flex>'+content+'</span></md-toast>',
-          hideDelay: 3000,
-          position: $scope.getToastPosition()
-        });
-      };
-
-      $scope.app.showInfoToast = function(content) {
-        $mdToast.show({
-          template: '<md-toast style="background-color: rgba(0,85,187,0.95)" ><span flex>'+content+'</span></md-toast>',
-          hideDelay: 3000,
-          position: $scope.getToastPosition()
-        });
-      };
-
-      $scope.app.converToDraf = function(){
-        if($scope.app.editingPost && $scope.app.editingPost.id){
-          trix.convertPost($scope.app.editingPost.id, "DRAFT").success(function(){
-            $scope.app.editingPost.state = "DRAFT";
-            $scope.app.cancelModal();
-          });
-        }
-      }
-
-      $scope.app.openDeletePost = function(id){
-        $scope.app.deletingPostId = id;
-        $scope.app.openSplash('confirm_delete_post.html') 
-      };
-
-      $scope.app.deletePost = function(){
-        trix.deletePost($scope.app.deletingPostId).success(function(){
-          $scope.app.deletingPostId = null;
-          $scope.app.editingPost = null;
-          window.onbeforeunload = null;
-          $scope.app.showSuccessToast('Notícia removida.')
-          $scope.app.cancelModal();
-          if($state.current.name != 'app.stations')
-            $state.go('app.stations');
-
-          $scope.app.refreshPerspective();
-        });
-      }
-
-      if ( angular.isDefined($localStorage.viewMode) ) {
-        $scope.app.viewMode = $localStorage.viewMode
-      }else{
-        $scope.app.viewMode = 'vertical';
-      }
-      
-      $scope.changeView = function(view){
-        $localStorage.viewMode = $scope.app.viewMode = view;
-      }
-
-      if ( angular.isDefined($localStorage.nightMode) ) {
-        $scope.app.nightMode = $localStorage.nightMode
-      }else{
-        $scope.app.nightMode = false;
-      }
-      
-      $scope.toggleNightMode = function(bool){
-        $localStorage.nightMode = $scope.app.nightMode = bool;
-      }
-
-      $scope.app.getInitData = function(){
-        trix.allInitData().success(function(response){
-          initData = response;
-          $scope.app.initData = angular.copy(initData);
-          $scope.app.loginError = false;
-          $scope.app.refreshData();
-        })
-      }
-
-      $scope.app.signIn = function(username, password){
-        trix.login(username, password).success(function(){
-          trix.allInitData().success(function(response){
-            initData = response;
-            $scope.app.initData = angular.copy(initData);
-            $scope.app.loginError = false;
-            $scope.app.refreshData();
-          })
-        }).error(function(){
-          $scope.app.loginError = true;
-          $scope.app.refreshData();
-        })
-      };
-
-      $scope.app.changeToSettings = function(){
-        if(!$scope.app.lastSettingState)
-          $scope.app.lastSettingState = 'app.settings.stations'
-        $state.go($scope.app.lastSettingState);
-      }
-
-      $scope.app.refreshData = function(){
-        $scope.app.currentStation = trixService.selectDefaultStation($scope.app.initData.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
-        $scope.app.stationsPermissions = trixService.getStationPermissions();
-        if(!$scope.app.loginError)
-          $scope.cancelModal();
-
-        $scope.app.checkIfLogged();
-        window.console && console.log($scope.app.currentStation, $scope.app.stationsPermissions);
-      }
-
-      $scope.app.signOut = function(username, password){
-        trix.logout().success(function(){
-          trix.allInitData().success(function(response){
-            initData = response;
-            $scope.app.initData = angular.copy(initData);
-            $scope.app.profilepopover.open = false;
-            if($scope.$state.current.name != "app.stations" && $scope.$state.current.name != "app.search"){
-              $state.go("app.stations");
-            }
-            $scope.app.refreshData();
-            $scope.app.showInfoToast('Obrigado e volte sempre...')
-          })
-        })
-      };
+      $scope.app.refreshData();
+      $scope.app.showInfoToast('Obrigado e volte sempre...')
+    })
+  })
+};
 
       // close post read and go back to previous state
       $scope.app.closePostRead = function(state){
@@ -513,7 +517,7 @@ angular.module('app')
       /**
        * helper function, see sly-scroll directive 
        */
-      $scope.app.setHorizontalCursor = function(postView, list){
+       $scope.app.setHorizontalCursor = function(postView, list){
         $scope.app.horizontalCursor = {
           postView: postView,
           list: list
@@ -529,7 +533,7 @@ angular.module('app')
        * @param {[type]} postView [description]
        * @param {[type]} list    [description]
        */
-      $scope.app.setNowReading = function(postView, list, listMeta, baseState){
+       $scope.app.setNowReading = function(postView, list, listMeta, baseState){
 
         // if($scope.app.nowReadingAuthor && postView && postView.authorId && $scope.app.nowReadingAuthor.authorId != postView.authorId){
         //   $("#left-profile-cover").removeClass("slideInRight");
@@ -566,7 +570,7 @@ angular.module('app')
 
         $timeout(function() {
           // if(baseState)
-            $scope.app.incomingPostDirection = "fadeIn"
+          $scope.app.incomingPostDirection = "fadeIn"
           // else if($scope.app.readList && oldId && oldId > postView.postId)
           //   $scope.app.incomingPostDirection = "slideInRight";
           // else
@@ -664,33 +668,33 @@ angular.module('app')
 
       $scope.app.bookmark = function(postId){
         if($scope.app.isLogged){
-              trix.toggleBookmark(postId).success(function(response){
-                if(response.response){
-                  $scope.app.addBookmarked(postId)
-                }else{
-                  $scope.app.removeBookmarked(postId)
-                }
-                console.log(response);
-              }).error(function(){
-                console.log('error');
-              })
-            }else
-              $scope.openSplash('signin_splash.html')
+          trix.toggleBookmark(postId).success(function(response){
+            if(response.response){
+              $scope.app.addBookmarked(postId)
+            }else{
+              $scope.app.removeBookmarked(postId)
+            }
+            console.log(response);
+          }).error(function(){
+            console.log('error');
+          })
+        }else
+        $scope.openSplash('signin_splash.html')
       }
 
       $scope.app.recommend = function(postId){
         if($scope.app.isLogged){
-              trix.toggleRecommend(postId).success(function(response){
-                if(response.response){
-                  $scope.app.addRecommended(postId)
-                }else{
-                  $scope.app.removeRecommended(postId)
-                }
-              }).error(function(){
-                console.log('error');
-              })
-            }else
-              $scope.openSplash('signin_splash.html')
+          trix.toggleRecommend(postId).success(function(response){
+            if(response.response){
+              $scope.app.addRecommended(postId)
+            }else{
+              $scope.app.removeRecommended(postId)
+            }
+          }).error(function(){
+            console.log('error');
+          })
+        }else
+        $scope.openSplash('signin_splash.html')
       }
 
       $scope.app.stripHtml = function(text){
@@ -702,11 +706,48 @@ angular.module('app')
       }
 
       $scope.app.movePostToTrash = function(){
-        
+
+      }
+
+      $scope.app.facebookSignIn = function(){
+        FB.getLoginStatus(function(response) {
+          if (response.status === 'connected') {
+            // the user is logged in and has authenticated your
+            // app, and response.authResponse supplies
+            // the user's ID, a valid access token, a signed
+            // request, and the time the access token 
+            // and signed request each expire
+            var uid = response.authResponse.userID;
+            var accessToken = response.authResponse.accessToken;
+            handleFacebookLogin(response);
+          } else {
+            // the user isn't logged in to Facebook.
+            FB.login(function(response) {
+              if (response.authResponse) {
+                handleFacebookLogin(response);
+              } else {
+                $scope.app.cancelModal();
+              }
+            });
+          }
+        });
+
+      }
+
+      function handleFacebookLogin(authResponse){
+        if(authResponse)
+          trix.socialLogin(authResponse.authResponse.userID, authResponse.authResponse.accessToken, "facebook").success(function(){
+            handleLoginSuccess();
+          })
+
+        FB.api('/me?fields=id,name,email', function(me) {
+          console.log(me);
+        },{scope: 'public_profile,email', fields: 'id,name,email'});
+      }
       }
 
       $scope.app.refreshData();
       moment.locale('pt')
       /* end of added */
 
-  }]); 
+    }]); 

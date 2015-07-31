@@ -55,12 +55,12 @@
             </div>      
             <button md-ink-ripple type="submit" class="m-t-md btn-custom md-btn text-lg text-u-c btn-block ">Entrar</button>
           </form>
-          <button md-ink-ripple type="submit" class="m-t-md btn-blue md-btn text-lg text-u-c btn-block">
+          <button ng-click="app.facebookSignIn()" md-ink-ripple type="submit" class="m-t-md btn-blue md-btn text-lg text-u-c btn-block">
             <i class="mdi mdi-facebook m-r-sm"></i> Facebook
           </button>
-          <!--<button md-ink-ripple type="submit" class="m-t-md btn-info md-btn text-lg text-u-c btn-block">-->
-            <!--<i class="mdi mdi-twitter m-r-sm"></i> Twitter-->
-          <!--</button>-->
+          <button md-ink-ripple type="submit" class="m-t-md btn-info md-btn text-lg text-u-c btn-block">
+            <i class="mdi mdi-twitter m-r-sm"></i> Twitter
+          </button>
         </div>
       </div>
       <div class="col-xs-8 col-xs-offset-2 text-base" ng-bind-html="app.initData.network.loginFooterMessage">
