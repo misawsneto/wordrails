@@ -217,7 +217,29 @@ angular.module('app')
                           '../bower_components/ng-material-floating-button/mfb/dist/mfb-directive.js',
                           '../bower_components/ng-material-floating-button/mfb/dist/mfb.min.css',
                           ]
+              },{
+                  name: 'color-selector',
+                  files: [
+                          '../libs/color-selector.css',
+                          '../libs/color-selector.js',
+                          '../libs/color-selector-angular.js',
+                          ]
+              },{
+                  name: 'nvd3',
+                  files: ['../bower_components/nvd3/build/nv.d3.min.js',
+                          '../bower_components/angular-nvd3/dist/angular-nvd3.min.js'
+                  ]
+              },{
+                  name: '720kb.socialshare',
+                  files: ['../bower_components/angularjs-socialshare/dist/angular-socialshare.min.js']
+              },{
+                  name: 'dndDraggable',
+                  files: ['../bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js']
+              },{
+                  name: 'pc035860.scrollWatch',
+                  files: ['../bower_components/angular-scroll-watch/build/angular-scroll-watch.min.js']
               }
+
           ]
       });
   }])

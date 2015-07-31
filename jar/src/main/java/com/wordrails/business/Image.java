@@ -23,6 +23,9 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 
 @Entity
 public class Image {
+
+	public enum Type {FAVICON, SPLASH, LOGIN, POST}
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@DocumentId
@@ -39,6 +42,10 @@ public class Image {
 	@Lob
 	@Field
 	public String credits;
+
+	@Field
+	@Column(columnDefinition = "varchar(255) default 'POST'", nullable = false)
+	public String type;
 	
 	@ManyToOne
 	public Comment comment;
@@ -78,7 +85,7 @@ public class Image {
 	public File large;
 
 	@ManyToOne
-	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id", "station.id"})
+	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})
 	public Post post;
 	
 	@OneToMany(mappedBy="featuredImage")
@@ -107,5 +114,14 @@ public class Image {
 		
 		if(comment!=null)
 			commentId = comment.id;
+	}
+
+	public static boolean containsType(String string) {
+		for (Image.Type type : Image.Type.values()) {
+			if (type.name().equals(string)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -88,6 +88,10 @@ angular.module('app').service('trixService', function(){
 	 	return stations;
 	 }
 
+	 this.isNetworkAdmin = function(){
+	 	return initData.networkRole ? initData.networkRole.admin : false;
+	 }
+
 	 	/**
 	 * get a list of all stations that the user has permission to write
 	 */
@@ -95,6 +99,18 @@ angular.module('app').service('trixService', function(){
 	 	var stations = [];
 	 	initData.personPermissions.stationPermissions.forEach(function(permissions, index){
 	 		if(permissions.admin)
+	 			stations.push(permissions)
+	 	});
+	 	return stations;
+	 }
+
+	 /**
+	 * get a list of all stations that the user has permission to write
+	 */
+	 this.getEditorStations = function(){
+	 	var stations = [];
+	 	initData.personPermissions.stationPermissions.forEach(function(permissions, index){
+	 		if(permissions.editor)
 	 			stations.push(permissions)
 	 	});
 	 	return stations;

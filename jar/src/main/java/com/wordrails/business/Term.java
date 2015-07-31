@@ -1,21 +1,13 @@
 package com.wordrails.business;
 
+import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.hibernate.search.annotations.ContainedIn;
@@ -24,7 +16,10 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.NumericField;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressSlug"}), @UniqueConstraint(columnNames={"taxonomy_id","name","wordpressId"})})
+@Table(uniqueConstraints = {
+		@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressSlug"}),
+		@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressId"})
+})
 public class Term {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -73,16 +68,32 @@ public class Term {
     public Integer wordpressId;
     
     public String color;
-	
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable=false)
+	public Date createdAt;
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable=false)
+	public Date updatedAt;
+
 	@PrePersist
 	void onCreate(){
-		taxonomyId = taxonomy.id;
-		taxonomyName = taxonomy.name;
+		if(taxonomy != null && taxonomy.id != null) {
+			taxonomyId = taxonomy.id;
+			taxonomyName = taxonomy.name;
+		}
+		createdAt = new Date();
 	}
 	
 	@PreUpdate
 	void onUpdate(){
-		taxonomyId = taxonomy.id;
-		taxonomyName = taxonomy.name;
+		if(taxonomy != null && taxonomy.id != null) {
+			taxonomyId = taxonomy.id;
+			taxonomyName = taxonomy.name;
+		}
+		updatedAt = new Date();
 	}
 }

@@ -1,0 +1,96 @@
+<div id="settings-stations-categories">
+
+	<div class="header-custom text-center animated box-shadow">
+	</div>
+
+	<div class="wrapper-lg animated zoomIn m-b-xxl">
+		<!-- start of user panel list -->
+		<div class="panel panel-card block-800 m-auto pos-rlt">
+
+			<div class="pos-abt top-0 right-0 text-lg m-t">
+				<button ui-sref="app.settings.stations"
+				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+			</div>
+
+			<div ng-if="$state.current.name != 'app.settings.categories'" class="panel-heading h4 wrapper-md">
+				<a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Categorias da estação <strong>{{stationName}}</strong></span>
+			</div>
+
+			<div ng-if="$state.current.name == 'app.settings.categories'" class="panel-heading h4 wrapper-md">
+				Categories da Rede
+			</div>
+
+			<div class="panel-body p-n" style="min-height: 100px;">
+				<div class="m-l-xxl m-t">
+					<button md-ink-ripple="" class="md-btn md-raised m-b btn-fw bg-white" ng-click="showAddCategorySplash(null)">
+						<i class="mdi mdi-plus"></i> Nova categoria
+					</button>
+				</div>
+				<div class="term-tree p-l-xl p-r-xl">
+					<div class="article-tree animated fadeIn">
+						<div ng-style="{'overflow': 'auto'}">
+							<div class="tree well text-xl">
+								<ul>
+									<node-tree ng-model="termTree"></node-tree>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/ng-template" id="delete_category.html">
+	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+	<div class="splash-content text-center" ng-cloak>
+		<div>
+			<div class="row m-t-xxl">
+				<div class="col-xs-8 col-xs-offset-2">
+					<strong>Atenção! </strong> Tem certeza que deseja remover esta categoria? Esta operação não pode ser desfeita.
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-xs-offset-3">
+					<div class="text-color padder-lg">
+						<button ng-click="app.deleteCategory();" angular-ripple type="submit" class="m-t-md btn-success btn text-lg text-u-c btn-block ">
+							Sim
+						</button>
+						<button ng-click="app.cancelModal()" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
+							Não
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/ng-template" id="add_category.html">
+	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+	<div class="splash-content text-center" ng-cloak>
+		<div>
+			<div class="row m-t-xxl">
+				<div class="col-xs-6 col-xs-offset-3 m-t-xxl">
+					<form ng-submit="app.addCategory(newCategoryName);">
+						<div class="md-form-group float-label md-neutral-theme">
+		          <input class="md-input" ng-model="newCategoryName" />
+		          <label>Nome da categoria</label>
+		        </div>
+	        </form>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 col-xs-offset-3">
+					<div class="text-color p-r-lg p-l-lg">
+						<button ng-click="app.addCategory(newCategoryName);" angular-ripple type="submit" class="m-t-md btn-default btn text-lg text-u-c btn-block ">
+							Criar
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>

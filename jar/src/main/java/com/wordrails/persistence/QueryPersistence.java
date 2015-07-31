@@ -1,5 +1,8 @@
 package com.wordrails.persistence;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -70,5 +73,67 @@ public class QueryPersistence {
 	@Transactional
 	public void updateCommentsCount(Integer postId) {
 		manager.createNativeQuery("UPDATE Post set commentsCount = (select count(*) FROM comment WHERE post_id = :postId) WHERE id = postId;").setParameter("postId", postId).executeUpdate();
+	}
+
+	@Transactional
+	public void deletePostReadsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from PostRead postRead where postRead.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deleteNotificationsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Notification notification where notification.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+
+	@Transactional
+	public void deleteBookmarksInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Bookmark bookmark where bookmark.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deleteCellsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Cell cell where cell.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deleteCommentsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Comment comment where comment.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deleteImagesInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Image image where image.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deletePromotionsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Promotion promotion where promotion.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
+	public void deleteRecommendsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Recommend recommend where recommend.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+
+	@Transactional
+	public void updateMainStation(Integer id, boolean main) {
+		manager.createNativeQuery("update Station station set main = :main where station.id = :id").setParameter("id", id).setParameter("main", main).executeUpdate();		
+	}
+
+	@Transactional
+	public List<Object[]> getPersonPublicationsCount(Integer personId) {
+		return manager.createNativeQuery("select (select count(*) from Post po where po.author_id = p.id and po.state = 'PUBLISHED')," +
+										"(select count(*) from Post po where po.author_id = p.id and po.state = 'DRAFT')," +
+										"(select count(*) from Post po where po.author_id = p.id and po.state = 'SCHEDULED')" +
+				"from Person p where p.id = :personId").setParameter("personId", personId).getResultList();
+	}
+	public void updateLastLogin(String username) {
+		// TODO Auto-generated method stub
+		manager.createQuery("update Person person set person.lastLogin = :date where person.username = :username").setParameter("username", username).setParameter("date", new Date()).executeUpdate();
+	}
+
+	@Transactional
+	public void setNoAuthor(Integer personId) {
+		manager.createNativeQuery("UPDATE Post post SET post.author_id = 1, post.state = 'NOAUTHOR' WHERE post.author_id = :personId").setParameter("personId", personId).executeUpdate();
 	}
 }

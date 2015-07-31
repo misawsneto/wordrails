@@ -42,6 +42,28 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 		return cell;
 	}
 
+	public List<CellView> convertToViews(List<Cell> entities, boolean addBody){
+		List<CellView> views = new ArrayList<CellView>(entities.size());
+		for (Cell entity : entities) {
+			CellView view = convertToView(entity, addBody);
+			if(view!=null)
+				views.add(view);
+		}
+		return views;
+	}
+
+	CellView convertToView(Cell cell, boolean addBody) {
+		CellView cellView = new CellView();
+		cellView.id = cell.id;
+		cellView.index = cell.index;
+		if(cell.post != null){
+			cellView.postView = postConverter.convertToView(cell.post, addBody);
+			if(cellView.postView == null || cellView.postView.postId == null)
+				return null;
+		}else return null;
+		return cellView;
+	}
+
 	@Override
 	CellView convertToView(Cell cell) {
 		CellView cellView = new CellView();

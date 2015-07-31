@@ -1,38 +1,28 @@
 package com.wordrails.business;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-public class Network {
-	
+public class Network implements Serializable{
+
+	private static final long serialVersionUID = 7723825842358687233L;
+
 //	public String NIGHT_READ_MODE = "N";
 //	public String DAY_READ_MODE = "D";
 //	public String VERTICAL_ORIENTATION_MODE = "V";
 //	public String HORIZONTAL_ORIENTATION_MODE = "H";
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)				
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
 	
 	@Size(min=1, max=100)
@@ -43,27 +33,41 @@ public class Network {
 	
 	@Size(min=1, max=100)	
 	public String trackingId;
-	
+
 	@OneToMany(mappedBy="network")
 	public Set<NetworkRole> personsNetworkRoles;
-	
+
+//	@OneToMany(mappedBy="network")
+//	public Set<Person> persons;
+
 	@ManyToMany(mappedBy="networks")
 	public Set<Station> stations;
 
 	@ManyToMany
 	public Set<Taxonomy> taxonomies;
-	
+
 	@OneToMany(mappedBy="network", cascade=CascadeType.ALL)
 	public Set<Sponsor> sponsors;
+
+	@OneToMany(mappedBy="network")
+	public Set<User> users;
 		
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
 	
+	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSignup;
 	
-	public boolean allowComments;
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowSocialLogin;
+	
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean allowSponsors;
 	
 	public String domain;
+
+	@Lob
+	public String loginFooterMessage;
 	
 //	@Column(columnDefinition="TEXT default '#F3F5F9'")
 	public String backgroundColor = "#F3F5F9";
@@ -90,10 +94,23 @@ public class Network {
 	
 	@OneToOne
 	public Image logo;
-	
 	public Integer logoId;
 	
+	@OneToOne
+	public Image favicon;
+	public Integer faviconId;
+	
+	@OneToOne
+	public Image splashImage;
+	public Integer splashImageId;
+	
+	@OneToOne
+	public Image loginImage;
+	public Integer loginImageId;
+	
+	@Column(columnDefinition = "varchar(255) default 'D'", nullable = false)
 	public String defaultReadMode;
+	@Column(columnDefinition = "varchar(255) default 'V'", nullable = false)
 	public String defaultOrientationMode;
 
 	@Override
@@ -135,6 +152,24 @@ public class Network {
 		}else{
 			logoId = null;
 		}
+
+		if(favicon != null && favicon.original != null){
+			faviconId = favicon.original.id;
+		}else{
+			faviconId = null;
+		}
+
+		if(splashImage != null && splashImage.original != null){
+			splashImageId = splashImage.original.id;
+		}else{
+			splashImageId = null;
+		}
+
+		if(loginImage != null && loginImage.original != null){
+			loginImageId = loginImage.original.id;
+		}else{
+			loginImageId = null;
+		}
 	}
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
@@ -148,6 +183,24 @@ public class Network {
 			logoId = logo.original.id;
 		}else{
 			logoId = null;
+		}
+
+		if(favicon != null && favicon.original != null){
+			faviconId = favicon.original.id;
+		}else{
+			faviconId = null;
+		}
+
+		if(splashImage != null && splashImage.original != null){
+			splashImageId = splashImage.original.id;
+		}else{
+			splashImageId = null;
+		}
+
+		if(loginImage != null && loginImage.original != null){
+			loginImageId = loginImage.original.id;
+		}else{
+			loginImageId = null;
 		}
 	}
 

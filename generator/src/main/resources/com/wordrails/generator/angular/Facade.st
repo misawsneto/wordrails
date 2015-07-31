@@ -64,7 +64,13 @@ var trix = angular.module('trix', [])
   	this.login = function(username, password) {
       var config = {};
       config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
-      return \$http.post(_config.url + "/j_spring_security_check", \$.param({"j_username": username, "j_password": password}), config)
+      return \$http.post(_config.url + "/api/persons/login", \$.param({"username": username, "password": password}), config)
+    }
+    
+    this.createPerson = function(person) {
+      var config = {};
+      config.headers = {"Content-Type": "application/json"}
+      return \$http.post(_config.url + "/api/persons/create", person, config)
     }
 
     this.logout = function() {
@@ -83,9 +89,28 @@ var trix = angular.module('trix', [])
     	return \$http.get(_config.url + "/api/persons/me")
     }
 
+    this.deletePersons = function(personIds) {
+		var config = {"headers": {"Content-Type": "application/json"}}
+		return \$http.put(_config.url + "/api/persons/deleteMany/network", personIds, config)
+	};
+
+    this.countPersonsByNetwork = function(networkId){
+    	var config = {
+			"params": {
+				"networkId": networkId
+			}
+		}
+    	return \$http.get(_config.url + "/api/persons/count", config)
+    }
+
     this.updatePostTerms = function(postId, terms) {
     	var config = {"headers": {"Content-Type": "application/json"}}
 		return \$http.put(_config.url + "/api/posts/" + postId + "/updatePostTerms", terms, config)
+	}
+	
+	this.deletePersonStationRoles = function(stationRolesIds) {
+    	var config = {"headers": {"Content-Type": "application/json"}}
+		return \$http.put(_config.url + "/api/persons/deletePersonStationRoles", stationRolesIds, config)
 	}
 
 	this.findPerspectiveView = function(stationPerspectiveId, termPerspectiveId, termId, _page, _size, _sort) {
@@ -112,6 +137,25 @@ var trix = angular.module('trix', [])
 		}
       return \$http.get(_config.url + "/api/persons/"+personId+"/posts", config)
     }
+
+    this.getPersonStats = function(date, postId) {
+		var config = {
+			"params": {
+				"date": date,
+				"postId": postId,
+			}
+		}
+	  return \$http.get(_config.url + "/api/persons/me/stats", config)
+	}
+
+	this.getPersonPublicationsCount = function(personId) {
+		var config = {
+			"params": {
+				"personId": personId,
+			}
+		}
+	  return \$http.get(_config.url + "/api/persons/me/publicationsCount", config)
+	}
     
     this.getPersonNetworkRecommendations = function(personId, networkId, _page, _size) {
 		var config = {
@@ -188,6 +232,11 @@ var trix = angular.module('trix', [])
     this.toggleBookmark = function(postId) {
     	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
     	return \$http.put(_config.url + "/api/bookmarks/toggleBookmark", \$.param({"postId": postId}), config)
+    };
+    
+    this.setMainStation = function(stationId, value) {
+    	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
+    	return \$http.put(_config.url + "/api/stations/"+stationId+"/setMainStation", \$.param({"value": value}), config)
     };
     
     this.toggleRecommend = function(postId) {

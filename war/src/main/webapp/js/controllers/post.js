@@ -2,19 +2,19 @@
 app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 
-	FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
+		FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
-  };
+};
 
-  $scope.baseUrl = TRIX.baseUrl;
+$scope.baseUrl = TRIX.baseUrl;
 
-  var createPostObject = function(){
-  	$scope.app.editingPost = {};
-  	$scope.app.editingPost.imageLandscape = true;
-  	$scope.discardedMedia = null;
-  	$scope.app.editingPost.uploadedImage = null;
-  	$scope.app.editingPost.showMediaButtons = false;
-  	$scope.app.editingPost.editingExisting = false;
+var createPostObject = function(){
+	$scope.app.editingPost = {};
+	$scope.app.editingPost.imageLandscape = true;
+	$scope.discardedMedia = null;
+	$scope.app.editingPost.uploadedImage = null;
+	$scope.app.editingPost.showMediaButtons = false;
+	$scope.app.editingPost.editingExisting = false;
 			// --------- post time info
 
 			$scope.app.editingPost.today = function() {
@@ -121,24 +121,28 @@ if($state.params && $state.params.id){
 	$scope.loadPost(postId);
 }
 
-$scope.app.checkState = function(){
+$scope.app.checkState = function(state){
 	if(!$scope.app.editingPost)
 		return null;
-	if($scope.app.editingPost.state == "PUBLISHED"){
+	
+	state = state ? state : $scope.app.editingPost.state;
+	if(!state)
+		return null;
+	if(state == "PUBLISHED"){
 		return 1;
-	}else if($scope.app.editingPost.state == "DRAFT"){
+	}else if(state == "DRAFT"){
 		return 2;
-	}else if($scope.app.editingPost.state == "SCHEDULED"){
+	}else if(state == "SCHEDULED"){
 		return 3;
-	}else if($scope.app.editingPost.state == "TRASH"){
+	}else if(state == "TRASH"){
 		return 4;
 	}else{
 		return null;
 	}
 }
 
-$scope.checkState = function(){
-	return $scope.app.checkState();
+$scope.checkState = function(state){
+	return $scope.app.checkState(state);
 }
 
 var setWritableStationById = function(id){
@@ -301,6 +305,20 @@ if(newValue && newValue.editingExisting){
 }
 }, true)
 
+
+$scope.invertLandscapeSquare = function(){
+	$scope.app.editingPost.imageLandscape = !$scope.app.editingPost.imageLandscape; 
+	$scope.checkLandscape();
+}
+
+$scope.checkLandscape = function(){
+	if($scope.app.editingPost.uploadedImage){
+		$("#post-media-box").css('background-image', 'url(' + $scope.app.editingPost.uploadedImage.filelink + ')');
+	}else{
+		$("#post-media-box").removeAttr('style')
+	}
+}
+
 var uploader = $scope.uploader = new FileUploader({
 	url: TRIX.baseUrl + "/api/files/contents/simple"
 });
@@ -320,19 +338,6 @@ uploader.onSuccessItem = function(fileItem, response, status, headers) {
 		$scope.postCtrl.imageHasChanged = true
 	}
 };
-
-$scope.invertLandscapeSquare = function(){
-	$scope.app.editingPost.imageLandscape = !$scope.app.editingPost.imageLandscape; 
-	$scope.checkLandscape();
-}
-
-$scope.checkLandscape = function(){
-	if($scope.app.editingPost.uploadedImage){
-		$("#post-media-box").css('background-image', 'url(' + $scope.app.editingPost.uploadedImage.filelink + ')');
-	}else{
-		$("#post-media-box").removeAttr('style')
-	}
-}
 
 uploader.onErrorItem = function(fileItem, response, status, headers) {
 	if(status == 413)
@@ -377,7 +382,7 @@ function updateTermTree(){
 }
 
 $scope.$watch('app.editingPost.title', function(newVal){
-	if(newVal)
+	if(newVal && (!$scope.app.editingPost.slug || $scope.app.editingPost.slug.trim() == ''))
 		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
 })
 
@@ -427,6 +432,10 @@ function isTermSelected(terms){
 			$scope.app.hidePostOptions = false;
 			$scope.app.showInfoToast('Escolha uma categoria.')
 		}
+	}
+
+	$scope.app.updateToDraf = function(){
+		updatePost("DRAFT")
 	}
 
 	$scope.showPostDetails = function(){
@@ -529,7 +538,85 @@ function isTermSelected(terms){
 		}	
 
 		function updatePost(state){
-			console.log(state);
+
+			var post = angular.copy($scope.app.editingPost);
+			post.station = TRIX.baseUrl + "/api/stations/" + post.station.id;
+			// post is ok to be created
+			var termList = getTermList($scope.termTree);
+			var termUris = []
+			termList.forEach(function(term){
+				termUris.push(TRIX.baseUrl + "/api/terms/" + term.id);
+			})
+
+			post.terms = termUris;
+			post.author = TRIX.baseUrl + "/api/authors/" + post.author.id
+
+			if(($scope.checkState() == 1 || $scope.checkState() == 3) && (!post.terms || post.terms.length == 0)){
+				$scope.app.showInfoToast('Escolha uma categoria.')
+				return;
+			}
+
+			if(post.featuredImage && post.featuredImage.id){
+				post.featuredImage = TRIX.baseUrl + "/api/images/" + post.featuredImage.id;
+			}else{
+				post.featuredImage = null;
+			}
+
+			var doUpdate = function(){
+				trix.convertPost(post.id, state).success(function(){
+					post.state = state
+					if($scope.checkState(state) == 1){
+						trix.putPost(post).success(function(){
+								$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+								$scope.app.editingPost.state = state;
+								$scope.app.cancelModal();
+						});
+					}else if($scope.checkState(state) == 2){
+						trix.putPostDraft(post).success(function(){
+								$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+								$scope.app.editingPost.state = state;
+								$scope.app.cancelModal();
+						});
+					}else if($scope.checkState(state) == 3){
+						trix.putPostScheduled(post).success(function(){
+								$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+								$scope.app.editingPost.state = state;
+								$scope.app.cancelModal();
+						});
+					}
+				});
+			}
+
+			if($scope.app.editingPost.uploadedImage && $scope.app.editingPost.uploadedImage.id){
+				var featuredImage = { original: TRIX.baseUrl + "/api/files/" + $scope.app.editingPost.uploadedImage.id }
+				if($scope.app.editingPost.imageCaption)
+					featuredImage.caption = $scope.app.editingPost.imageCaption
+
+				if($scope.app.editingPost.imageTitle)
+					featuredImage.caption = $scope.app.editingPost.imageTitle
+
+				trix.postImage(featuredImage).success(function(imageId){
+					post.featuredImage = TRIX.baseUrl + "/api/images/" + imageId;
+					doUpdate();
+				})
+			}else{
+				if(!$scope.app.editingPost.uploadedImage) // remove if no image
+					post.featuredImage = null;
+				doUpdate();
+			}
+			
+
+			// post.state = state
+			// trix.putPost(post).success(function(){
+			// 	if(post.state != state){
+			// 		trix.convertPost(post.id, state).success(function(){
+			// 			$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+			// 			$scope.app.editingPost.state = state;
+			// 			console.log($scope.checkState());
+			// 		});
+			// 		console.log('change state');
+			// 	}
+			// })
 		}
 
 		function createPost(state){
@@ -576,7 +663,13 @@ function isTermSelected(terms){
 
 				trix.postImage(featuredImage).success(function(imageId){
 					post.featuredImage = TRIX.baseUrl + "/api/images/" + imageId;
-					postPost(post);
+					//postPost(post);
+					if(state == "DRAFT"){
+						post.state = state;
+						postDraft(post)
+					}else{
+						postPost(post);
+					}
 				})
 			}else{
 				if(state == "DRAFT"){
@@ -615,6 +708,7 @@ function isTermSelected(terms){
 			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
 			$scope.app.refreshPerspective();
 			$scope.app.editingPost = null;
+			window.onbeforeunload = null;
 			$state.go('app.stations');
 		})
 	}
@@ -651,7 +745,7 @@ function isTermSelected(terms){
 				'railVisible': true
 			})
 		})
-	}, 100);
+	}, 10);
 
 	$scope.today = function() {
 		$scope.dt = new Date();

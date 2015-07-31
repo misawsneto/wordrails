@@ -1,0 +1,39 @@
+<div id="settings-sponsor-config">
+
+<div class="header-custom text-center animated box-shadow">
+</div>
+
+<div class="wrapper-lg animated zoomIn">
+    <div class="panel panel-card block-600 m-auto">
+      <div class="panel-heading h4 wrapper-md">
+        <a ui-sref="app.settings.sponsors">Patrocinadores</a> <i class="mdi mdi-chevron-right"></i> <span clamp="1">{{sponsor.name}}</span>
+      </div>
+      <div class="panel-body wrapper-md">
+        <div class="row pos-rlt">
+          <div class="w-xxl m-auto">
+            <div class="md-form-group md-neutral-theme text-lg">
+              <input class="md-input" ng-model="sponsor.name">
+              <label>Nome do patrocinador</label>
+            </div>
+            <div class="md-form-group md-neutral-theme m-t text-md">
+              <textarea class="md-input" ng-model="sponsor.keywords" rows="4"></textarea>
+              <label>Detalhes</label>
+            </div>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="row">
+        </div>
+      </div>
+      <div class="m-t text-right text-lg">
+        <button ui-sref="app.settings.sponsors"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+        <button ng-if="!creating" ng-click="updateSponsor()"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
+
+        <button ng-if="creating" ng-click="createSponsor()"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -30,7 +30,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['videosharing-embed', 'toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll']).then(function(){
+                          return $ocLazyLoad.load(['720kb.socialshare', 'videosharing-embed', 'toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll', 'pc035860.scrollWatch']).then(function(){
                             // you might call this after your module initalization
                               angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 1000)
                           });
@@ -62,10 +62,10 @@ angular.module('app')
                             // 'com.2fdevs.videogular.plugins.buffering',
                             // 'js/app/music/ctrl.js', 
                             // 'js/app/music/theme.css',
-                            '../bower_components/leaflet/dist/leaflet.js',
-                            '../bower_components/leaflet/dist/leaflet.css'
+                            // '../bower_components/leaflet/dist/leaflet.js',
+                            // '../bower_components/leaflet/dist/leaflet.css'
                           ]).then(function(){
-                            return $ocLazyLoad.load(['ng-mfb', 'ui.slimscroll', 'angularFileUpload','js/controllers/post.js?' + GLOBAL_URL_HASH])
+                            return $ocLazyLoad.load(['ui.slimscroll', 'angularFileUpload','js/controllers/post.js?' + GLOBAL_URL_HASH])
                           });
                     }]
                   },
@@ -116,7 +116,6 @@ angular.module('app')
                   }
                   , controller:'SettingsCtrl'
               })
-
               .state('app.settings.stations', {
                   url: '/stations',
                   templateUrl: 'tpl/settings-stations.html',
@@ -128,38 +127,160 @@ angular.module('app')
                   }
                   , controller:'SettingsStationsCtrl'
               })
+              .state('app.settings.stationconfig', {
+                  url: '/stationconfig?stationId?newStation',
+                  templateUrl: 'tpl/settings-stations-config.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationsConfigCtrl'
+              })
+              .state('app.settings.stationstatistics', {
+                  url: '/stationstatistics?stationId',
+                  templateUrl: 'tpl/settings-stations-statistics.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationsStatisticsCtrl'
+              })
+              .state('app.settings.stationusers', {
+                  url: '/stationusers?stationId?newUser?userId',
+                  templateUrl: 'tpl/settings-stations-users.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['ng-mfb', 'angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationsUsersCtrl'
+              })
+              .state('app.settings.stationcategories', {
+                  url: '/stationcategories?stationId?newStation',
+                  templateUrl: 'tpl/settings-categories.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationsCategoriesCtrl'
+              })
+              .state('app.settings.stationperspectives', {
+                  url: '/stationperspectives?stationId?newStation',
+                  templateUrl: 'tpl/settings-stations-perspectives.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-stations.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsStationsPerspectivesCtrl'
+              })
+              .state('app.settings.perspectiveeditor', {
+                  url: '/perspectiveeditor?stationId?',
+                  templateUrl: 'tpl/settings-perspective-editor.html',
+                  /*resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }*/
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/interact.min.js'])
+                        .then(function(){
+                            return $ocLazyLoad.load(['ui.slimscroll','color-selector', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH])
+                          });
+                    }]
+                  }
+                  , controller:'SettingsPerspectiveEditorCtrl'
+              })
+              .state('app.settings.sponsors', {
+                  url: '/sponsor',
+                  templateUrl: 'tpl/settings-sponsors.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-sponsors.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsSponsorsCtrl'
+              })
+              .state('app.settings.sponsorconfig', {
+                  url: '/sponsorconfig?sponsorId?newSponsor',
+                  templateUrl: 'tpl/settings-sponsors-config.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-sponsors.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsSponsorsConfigCtrl'
+              })
               .state('app.settings.users', {
-                  url: '/users',
+                  url: '/users?userId?newUser',
                   templateUrl: 'tpl/settings-users.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-users.js?' + GLOBAL_URL_HASH]);
+                        return $ocLazyLoad.load(['ng-mfb', 'angularFileUpload', 'angularFileUpload', 'js/controllers/settings-users.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
                   , controller:'SettingsUsersCtrl'
               })
-              .state('app.settings.taxonomies', {
-                  url: '/taxonomies',
-                  templateUrl: 'tpl/settings-taxonomies.html',
+              .state('app.settings.categories', {
+                  url: '/categories',
+                  templateUrl: 'tpl/settings-categories.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-taxonomies.js?' + GLOBAL_URL_HASH]);
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-categories.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  , controller:'SettingsTaxonomiesCtrl'
+                  , controller:'SettingsCategoriesCtrl'
               })
-              .state('app.settings.general', {
-                  url: '/general',
-                  templateUrl: 'tpl/settings-taxonomies.html',
+              .state('app.settings.statistics', {
+                  url: '/statistics',
+                  templateUrl: 'tpl/settings-statistics.html',
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-general.js?' + GLOBAL_URL_HASH]);
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-statistics.js?' + GLOBAL_URL_HASH]);
                     }]
                   }
-                  , controller:'SettingsGeneralCtrl'
+                  , controller:'SettingsStatisticsCtrl'
+              })
+              .state('app.settings.colors', {
+                  url: '/colors',
+                  templateUrl: 'tpl/settings-colors.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/interact.min.js'])
+                        .then(function(){
+                            return $ocLazyLoad.load(['color-selector', 'js/controllers/settings-colors.js?' + GLOBAL_URL_HASH])
+                          });
+                    }]
+                  }
+                  , controller:'SettingsColorsCtrl'
+              })
+              .state('app.settings.network', {
+                  url: '/network',
+                  templateUrl: 'tpl/settings-network.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-network.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }
+                  , controller:'SettingsNetworkCtrl'
               })
               .state('app.bookmarks', {
                 url: '/bookmarks',
@@ -205,19 +326,22 @@ angular.module('app')
                   },
                   controller:'ReadCtrl'
               })
-              .state('app.user', {
-                  url: '/@:username',
-                  templateUrl: 'tpl/user_profile.html',
+              .state('app.userstats', {
+                  url: '/mystats',
+                  templateUrl: 'tpl/user_stats.html',
                   // use resolve to load other dependences
                    resolve: {
                       deps: ['$ocLazyLoad',
-                        function( $ocLazyLoad ){
-                          return $ocLazyLoad.load([
-                            'angularFileUpload',
-                            'js/controllers/user-profile.js?' + GLOBAL_URL_HASH])
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['../bower_components/d3/d3.min.js', '../bower_components/nvd3/build/nv.d3.min.css'])
+                        .then(function(){
+                            return $ocLazyLoad.load(['nvd3', 'js/controllers/user.js?' + GLOBAL_URL_HASH])
+                          });
                       }]
+                          
                   },
-                  controller: 'UserCtrl'
+                  reloadOnSearch: false,
+                  controller: 'UserStatsCtrl'
               })
               .state('app.publications', {
                   url: '/publications/@:username?type',
@@ -227,12 +351,25 @@ angular.module('app')
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad ){
                           return $ocLazyLoad.load([
-                            'angularFileUpload',
-                            'js/controllers/user-publications.js?' + GLOBAL_URL_HASH])
+                            'js/controllers/user.js?' + GLOBAL_URL_HASH])
                       }]
                   },
                   reloadOnSearch: false,
                   controller: 'UserPublicationsCtrl'
+              })
+              .state('app.user', {
+                  url: '/@:username',
+                  templateUrl: 'tpl/user_profile.html',
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load([
+                            'angularFileUpload',
+                            'js/controllers/user.js?' + GLOBAL_URL_HASH])
+                      }]
+                  },
+                  controller: 'UserCtrl'
               })
               .state('app.publications.read', {
                   url: '/:slug',

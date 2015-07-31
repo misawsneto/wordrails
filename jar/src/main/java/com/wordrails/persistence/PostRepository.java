@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Set;
@@ -104,10 +105,29 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	List<Post> findPostsOrderByComments(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
 
 	@RestResource(exported = false)
-	@Query("SELECT post FROM Post post where post.author.id = :personId AND post.station.id in (:stationIds) order by post.id DESC")
+	@Query("SELECT post FROM Post post where post.author.id = :personId AND post.state = 'PUBLISHED' AND post.station.id in (:stationIds) order by post.id DESC")
 	List<Post> findPostByPersonIdAndStations(@Param("personId") Integer personId, @Param("stationIds") List<Integer> stationIds, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Query("SELECT post FROM Post post where post.author.id = :personId AND post.state = :state AND post.station.id in (:stationIds) order by post.id DESC")
+	List<Post> findPostByPersonIdAndStationsAndState(@Param("personId") Integer personId, @Param("state") String state, @Param("stationIds") List<Integer> stationIds, Pageable pageable);
 
 	@RestResource(exported = false)
 	@Query("SELECT post FROM Recommend recommend join recommend.post post where recommend.person.id = :personId AND post.station.id in (:stationIds) order by recommend.id DESC")
 	List<Post> findRecommendationsByPersonIdAndStations(Integer personId, List<Integer> stationIds, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Query("select (select count(*) from PostRead pr where pr.post.id = p.id), (select count(*) from Comment comment where comment.post.id = p.id), (select count(*) from Recommend recommend where recommend.post.id = p.id) from Post p where p.id = :postId")
+	public List<Object[]> findPostStats(@Param("postId") Integer postId);
+
+	@RestResource(exported = false)
+	@Query("select post.body from Post post where post.id=:postId")
+	public String findPostBodyById(@Param("postId") Integer postId);
+
+	@Query("select person from Person person where person.id = :personId")
+	public Person findPersonById(@Param("personId") Integer personId);
+
+	@RestResource(exported = false)
+	@Query("select post from Post post where post.author.id = :personId")
+	List<Post> findAllFromPerson(@Param("personId") Integer personId);
 }

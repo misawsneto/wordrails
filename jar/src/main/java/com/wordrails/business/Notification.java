@@ -51,7 +51,7 @@ public class Notification {
 	public Station station;
 	
 	@ManyToOne
-	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id", "station.id"})
+	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})
 	public Post post;
 	
 	public Integer postId;
@@ -75,9 +75,6 @@ public class Notification {
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
-		if(!contains(type)){
-			throw new BadRequestException("Invalid notification type");
-		}
 		if(post!=null){
 			postId = post.id;
 		}

@@ -1,3 +1,8 @@
+/*! anguar-scroll-watch
+version: 0.5.5
+build date: 2015-7-25
+author: Chih-Hsuan Fan
+https://github.com/pc035860/angular-scroll-watch.git */
 (function (module) {
 
   var DIR_STYLE = 'swStyle',
@@ -169,9 +174,8 @@
     };
 
     p.destroy = function () {
-      this._unbind(this.element);
+      this.clearElement();
       this.configs = null;
-      this.element = null;
       this.scrollHandler = null;
       this._digestDebounced = null;
     };

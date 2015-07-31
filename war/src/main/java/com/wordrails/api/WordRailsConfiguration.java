@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 
 import org.reflections.Reflections;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.http.MediaType;
@@ -21,4 +20,19 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 		Set<Class<?>> entities = reflections.getTypesAnnotatedWith(Entity.class);
 		config.exposeIdsFor(entities.toArray(new Class<?>[0]));
 	}
+	
+//	@Bean
+//    public Validator validator() {
+//        return new LocalValidatorFactoryBean();
+//    }
+//
+//    @Bean
+////    @Override
+//    public ValidatingRepositoryEventListener validatingRepositoryEventListener() {
+//        ValidatingRepositoryEventListener listener = new ValidatingRepositoryEventListener();
+//        configureValidatingRepositoryEventListener(listener);
+//        listener.addValidator("afterCreate", validator());
+//        listener.addValidator("beforeCreate", validator());
+//        return listener;
+//    }
 }

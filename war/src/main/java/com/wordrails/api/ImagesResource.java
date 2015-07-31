@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -19,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
@@ -42,7 +42,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.WordrailsService;
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
@@ -64,7 +63,8 @@ public class ImagesResource {
 
 	private @PersistenceContext EntityManager manager;
 	
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	private @Autowired
+	TrixAuthenticationProvider authProvider;
 
 	@GET
 	@Path("/{stationId}/searchPostsFromOrPromotedToStation")
@@ -172,13 +172,13 @@ public class ImagesResource {
 	@GET
 	@Path("/{stationId}/postRead")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size) throws BadRequestException{
 		
 		if(stationId == null || page == null || size == null){
 			throw new BadRequestException("Invalid null parameter(s).");
 		}
 		
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPostReadByStationAndPerson(stationId, person.id, pageable);
 		 
@@ -192,7 +192,7 @@ public class ImagesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getAllPostRead(@PathParam("stationId") Integer stationId){
 		
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		List<Post> posts = postRepository.findPostReadByStationAndPerson(stationId, person.id);
 		 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();

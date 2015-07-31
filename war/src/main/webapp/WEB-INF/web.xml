@@ -54,7 +54,8 @@
 	<!-- Spring Data REST -->
 	<servlet>
 		<servlet-name>DispatcherServlet</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		 <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!--<servlet-class>org.springframework.data.rest.webmvc.RepositoryRestDispatcherServlet</servlet-class>-->
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<!--suppress WebProperties -->
@@ -82,6 +83,7 @@
 		<url-pattern>/notifications/*</url-pattern>
 		<url-pattern>/settings/*</url-pattern>
 		<url-pattern>/publications/*</url-pattern>
+		<url-pattern>/mystats/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Spring ORM -->
@@ -176,6 +178,7 @@
 		<url-pattern>/publications/*</url-pattern>
 		<url-pattern>/user/*</url-pattern>
 		<url-pattern>/read/*</url-pattern>
+		<url-pattern>/mystats/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
@@ -191,6 +194,7 @@
 		<url-pattern>/publications/*</url-pattern>
 		<url-pattern>/user/*</url-pattern>
 		<url-pattern>/read/*</url-pattern>
+		<url-pattern>/mystats/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
@@ -207,6 +211,7 @@
 		<url-pattern>/publications/*</url-pattern>
 		<url-pattern>/user/*</url-pattern>
 		<url-pattern>/read/*</url-pattern>
+		<url-pattern>/mystats/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>

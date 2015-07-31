@@ -2,6 +2,7 @@ package com.wordrails.api;
 
 import com.wordrails.PermissionId;
 import com.wordrails.WordrailsService;
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.converter.PostConverter;
@@ -77,7 +78,7 @@ public class PostsResource {
 
 	private
 	@Autowired
-	AccessControllerUtil accessControllerUtil;
+	TrixAuthenticationProvider authProvider;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -104,34 +105,34 @@ public class PostsResource {
 
 	@GET
 	@Path("/getPostViewBySlug")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public ContentResponse<PostView> getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") boolean withBody) throws ServletException, IOException {
+	public PostView getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findBySlug(slug);
-		ContentResponse<PostView> response = new ContentResponse<PostView>();
+		PostView postView = null;
 		if (post != null) {
-			response.content = postConverter.convertToView(post);
-			response.content.snippet = post.body;
+			postView = postConverter.convertToView(post);
+			if(withBody != null && withBody)
+				postView.body = post.body;
 		}
 
-		return response;
+		return postView;
 	}
 
 	@GET
 	@Path("/{postId}/getPostViewById")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public ContentResponse<PostView> getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") boolean withBody) throws ServletException, IOException {
+	public PostView getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findOne(postId);
-		ContentResponse<PostView> response = new ContentResponse<PostView>();
+		PostView postView = null;
 		if (post != null) {
-			response.content = postConverter.convertToView(post);
-			response.content.snippet = post.body;
+			postView = postConverter.convertToView(post);
+			if(withBody != null && withBody)
+				postView.body = post.body;
 		}
 
-		return response;
+		return postView;
 	}
 
 	@GET
@@ -248,7 +249,7 @@ public class PostsResource {
 		org.apache.lucene.search.Query text = null;
 		try {
 			if (q != null) {
-				text = qb.keyword().fuzzy().withThreshold(.8f).withPrefixLength(1).onField("title").boostedTo(5).andField("body").boostedTo(2).andField("topper").andField("subheading").andField("author.name").andField("terms.name").ignoreAnalyzer().matching(q).createQuery();
+				text = qb.keyword().fuzzy().withThreshold(.8f).withPrefixLength(1).onField("title").boostedTo(5).andField("body").boostedTo(2).andField("topper").andField("subheading").andField("author.name").andField("terms.name").matching(q).createQuery();
 			}
 		} catch (Exception e) {
 
@@ -270,7 +271,7 @@ public class PostsResource {
 		}
 
 		if (stationId != null) {
-			org.apache.lucene.search.Query station = qb.keyword().onField("station.id").ignoreAnalyzer().matching(stationId).createQuery();
+			org.apache.lucene.search.Query station = qb.keyword().onField("stationId").ignoreAnalyzer().matching(stationId).createQuery();
 			if (musts == null) musts = qb.bool().must(station);
 			else musts.must(station);
 		}
@@ -347,7 +348,7 @@ public class PostsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request, @QueryParam("query") String q, @QueryParam("stationIds") String stationIds, @QueryParam("personId") Integer personId, @QueryParam("publicationType") String publicationType, @QueryParam("noHighlight") Boolean noHighlight, @QueryParam("sortByDate") Boolean sortByDate, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = wordrailsService.getNetworkFromHost(request);
 
@@ -374,7 +375,7 @@ public class PostsResource {
 		org.apache.lucene.search.Query text = null;
 		try {
 			if (q != null) {
-				text = qb.keyword().fuzzy().withThreshold(.8f).withPrefixLength(1).onField("title").boostedTo(5).andField("body").boostedTo(2).andField("topper").andField("subheading").andField("author.name").andField("terms.name").ignoreAnalyzer().matching(q).createQuery();
+				text = qb.keyword().fuzzy().withThreshold(.8f).withPrefixLength(1).onField("title").boostedTo(5).andField("body").boostedTo(2).andField("topper").andField("subheading").andField("author.name").andField("terms.name").matching(q).createQuery();
 			}
 		} catch (Exception e) {
 
@@ -410,7 +411,7 @@ public class PostsResource {
 
 		BooleanJunction stations = qb.bool();
 		for (Integer integer : readableIds) {
-			stations.should(qb.keyword().onField("station.id").ignoreAnalyzer().matching(integer).createQuery());
+			stations.should(qb.keyword().onField("stationId").ignoreAnalyzer().matching(integer).createQuery());
 		}
 
 		org.apache.lucene.search.Query full = musts.must(stations.createQuery()).createQuery(); //qb.bool().must(text).must(station).createQuery();
@@ -482,13 +483,13 @@ public class PostsResource {
 	@GET
 	@Path("/{stationId}/postRead")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
+	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size) throws BadRequestException{
 
 		if (stationId == null || page == null || size == null) {
 			throw new BadRequestException("Invalid null parameter(s).");
 		}
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPostReadByStationAndPerson(stationId, person.id, pageable);
 
@@ -502,7 +503,7 @@ public class PostsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getAllPostRead(@PathParam("stationId") Integer stationId) {
 
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		List<Post> posts = postRepository.findPostReadByStationAndPerson(stationId, person.id);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
@@ -533,6 +534,20 @@ public class PostsResource {
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
+	}
+
+	@GET
+	@Path("/{postId}/body")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public StringResponse getPostBody(@PathParam("postId") Integer postId){
+
+		Person person = authProvider.getLoggedPerson();
+		String body = postRepository.findPostBodyById(postId);
+
+		StringResponse content = new StringResponse();
+		content.response = body;
+		return content;
 	}
 
 }

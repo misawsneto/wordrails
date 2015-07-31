@@ -40,7 +40,7 @@ public class PostEventHandler {
 	private NotificationRepository notificationRepository;
 	
 	@HandleBeforeCreate
-	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException {
+	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
 		if(post instanceof PostTrash) //post of type Trash is not insertable
 			throw new BadRequestException();
 
@@ -57,7 +57,7 @@ public class PostEventHandler {
 					post.slug = originalSlug;
 					postRepository.save(post);
 				} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-					String hash = WordrailsUtil.generateRandomString(5, "Aa#");
+					String hash = WordrailsUtil.generateRandomString(6, "a#");
 					post.slug = originalSlug + "-" + hash;
 				}
 			} else {

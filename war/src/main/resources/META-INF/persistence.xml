@@ -28,6 +28,7 @@
 		<class>com.wordrails.business.TermPerspective</class>
 		<class>com.wordrails.business.Wordpress</class>
 		<class>com.wordrails.business.User</class>
+		<class>com.wordrails.business.UserGrantedAuthority</class>
 		<class>com.wordrails.business.Sponsor</class>
 		<class>com.wordrails.business.PasswordReset</class>
 		<class>com.wordrails.business.Notification</class>
@@ -35,6 +36,7 @@
 		<class>com.wordrails.business.Bookmark</class>
 		<class>com.wordrails.business.PostRead</class>
 		<class>com.wordrails.business.PersonNetworkRegId</class>
+		<class>com.wordrails.business.PersonNetworkToken</class>
 		<class>com.wordrails.business.Invitation</class>
 
 		<properties>

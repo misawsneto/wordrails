@@ -177,7 +177,6 @@ public class Post {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable = false)
-	@IndexedEmbedded(includePaths={"id"})
 	public Station station;
 
 	@Field
@@ -186,6 +185,7 @@ public class Post {
 
 	@Field
 	@NumericField
+	@Column(updatable = false)
 	public int readsCount = 0;
 
 	@Field
@@ -194,14 +194,17 @@ public class Post {
 
 	@Field
 	@NumericField
+	@Column(updatable = false)
 	public int bookmarksCount = 0;
 
 	@Field
 	@NumericField
+	@Column(updatable = false)
 	public int recommendsCount = 0;
 
 	@Field
 	@NumericField
+	@Column(updatable = false)
 	public int commentsCount = 0;
 
 	@ManyToMany
@@ -252,7 +255,7 @@ public class Post {
 			imageSmallId = featuredImage.small.id;
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId = featuredImage.large.id;
-			imageLandscape = !featuredImage.vertical;
+//			imageLandscape = !featuredImage.vertical;
 			imageCaptionText = featuredImage.caption;
 			imageCreditsText = featuredImage.credits;
 			imageTitleText = featuredImage.title;
@@ -276,7 +279,7 @@ public class Post {
 			imageSmallId = featuredImage.small.id;
 			imageMediumId = featuredImage.medium.id;
 			imageLargeId = featuredImage.large.id;
-			imageLandscape = !featuredImage.vertical;
+//			imageLandscape = !featuredImage.vertical;
 			imageCaptionText = featuredImage.caption;
 			imageCreditsText = featuredImage.credits;
 			imageTitleText = featuredImage.title;

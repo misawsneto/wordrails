@@ -7,12 +7,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -26,6 +21,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import com.wordrails.business.*;
 import net.coobird.thumbnailator.Thumbnails;
 
 import org.apache.commons.io.FileUtils;
@@ -41,6 +37,10 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,17 +55,6 @@ import com.wordrails.api.StationDto;
 import com.wordrails.api.StationPermission;
 import com.wordrails.api.StationsPermissions;
 import com.wordrails.api.TermPerspectiveView;
-import com.wordrails.business.File;
-import com.wordrails.business.FileContents;
-import com.wordrails.business.Image;
-import com.wordrails.business.Network;
-import com.wordrails.business.PasswordReset;
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
-import com.wordrails.business.PostRead;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationRole;
-import com.wordrails.business.Term;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
@@ -150,8 +139,8 @@ public class WordrailsService {
 				Network network = null;
 				try {
 					network = cacheService.getNetworkBySubdomain(subdomain);
-				} catch (ExecutionException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					// no network found in cache or db.
 				}
 				if(network != null)
 					networks.add(network); 
@@ -159,10 +148,18 @@ public class WordrailsService {
 		}
 
 		if(networks == null || networks.size() == 0){
-			networks = networkRepository.findByDomain(host);
+			//networks = networkRepository.findByDomain(host);
+			Network network = null;
+			try {
+				network = cacheService.getNetworkByDomain(host);
+			} catch (Exception e) {
+				// no network found in cache or db.
+			}
+			if(network != null)
+				networks.add(network);
 		}
 
-		Network network = (networks != null && networks.size() > 0) ? networks.get(0) : networkRepository.findOne(1);
+		Network network = (networks != null && networks.size() > 0) ? networks.get(0) : null;
 		return network;
 	}
 
@@ -172,6 +169,7 @@ public class WordrailsService {
 		PostRead postRead = new PostRead();
 		postRead.person = person;
 		postRead.post = post;
+		postRead.sessionid = "0"; // constraint fails if null
 		if(postRead.person != null && postRead.person.username.equals("wordrails")) // if user wordrails, include session to uniquely identify the user.
 			postRead.sessionid = sessionId;
 		try {
@@ -488,17 +486,14 @@ public class WordrailsService {
 				stationPermissionDto.visibility = station.visibility;
 				stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
 
-				stationPermissionDto.social = station.social;
 				stationPermissionDto.subheading = station.subheading;
 				stationPermissionDto.sponsored = station.sponsored;
 				stationPermissionDto.topper = station.topper;
 
 				stationPermissionDto.allowComments = station.allowComments;
-				stationPermissionDto.allowSignup = station.allowSignup;
-				stationPermissionDto.allowSocialLogin = station.allowSocialLogin;
 				stationPermissionDto.allowSocialShare = station.allowSocialShare;
 
-				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes(), StationDto.class);
+				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
 				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
 				//StationRoles Fields
 				StationRole stationRole = stationRolesRepository.findByStationAndPersonId(station, personId);
@@ -541,5 +536,11 @@ public class WordrailsService {
 					ids.add(sp.stationId);
 			}
 		return ids;
+	}
+
+	@Async
+	@Transactional
+	public void updateLastLogin(String username) {
+		queryPersistence.updateLastLogin(username);
 	}
 }

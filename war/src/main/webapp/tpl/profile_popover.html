@@ -21,7 +21,7 @@
 				!(app.writableStations && app.writableStations.length > 0)}" ng-click="app.goToUserDrafts($event)"><i class="mdi mdi-newspaper"></i> Publicações</a>
 
 				<a  ng-class="{'hide': !(app.writableStations && app.writableStations.length > 0)}"
-				ng-click="app.goToUserReadStats($event, app.initData.person.username)"><i class="mdi mdi-chart-bar"></i> Estatísticas</a>
+				ng-click="app.goToUserStats($event, app.initData.person.username)"><i class="mdi mdi-chart-bar"></i> Estatísticas</a>
 
 				<a ng-click="app.signOut()" class="pull-right m-r-xs"><i class="mdi mdi-logout "></i> Sair</a>
 			</div>

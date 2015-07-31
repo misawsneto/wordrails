@@ -2,10 +2,10 @@ package com.wordrails.security;
 
 import java.util.List;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.wordrails.business.AccessControllerUtil;
 import com.wordrails.business.Bookmark;
 import com.wordrails.business.Network;
 import com.wordrails.business.Person;
@@ -20,7 +20,8 @@ import com.wordrails.persistence.StationRolesRepository;
 
 @Component
 public class FavoriteSecurityChecker {
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired PostRepository postRepository;
@@ -30,7 +31,7 @@ public class FavoriteSecurityChecker {
 		boolean canWrite = false;
 		Post post = bookmark.post;
 
-		Person personLogged = accessControllerUtil.getLoggedPerson();
+		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null && personLogged.id == bookmark.person.id){
 			Station station = post.station;
 			if(station.visibility.equals(Station.UNRESTRICTED) && station.writable){
@@ -60,7 +61,7 @@ public class FavoriteSecurityChecker {
 		boolean canWrite = false;
 		Post post = recommend.post;
 
-		Person personLogged = accessControllerUtil.getLoggedPerson();
+		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null && personLogged.id == recommend.person.id){
 			Station station = post.station;
 			if(station.visibility.equals(Station.UNRESTRICTED) && station.writable){

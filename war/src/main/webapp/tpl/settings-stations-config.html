@@ -1,0 +1,131 @@
+<div id="settings-stations-config">
+
+<div class="header-custom text-center animated box-shadow">
+</div>
+
+<div class="wrapper-lg animated zoomIn">
+    <div class="panel panel-card block-600 m-auto">
+      <div ng-if="!creating" class="panel-heading h4 wrapper-md">
+        <a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>{{station.name}}</span>
+      </div>
+      <div ng-if="creating" class="panel-heading h4 wrapper-md">
+        <span>Nova Estação</span>
+      </div>
+      <div class="panel-body wrapper-md">
+        <div class="row pos-rlt">
+          <div class="w-xxl m-auto">
+            <div class="md-form-group md-neutral-theme text-lg">
+              <input class="md-input" ng-model="station.name">
+              <label>Nome da estação</label>
+            </div>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="m-b text-muted text-md text-u-c">Configurações principais</div>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.allowComments"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Permitir comentários
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-disabled="station.visibility !== 'UNRESTRICTED'"  ng-model="station.allowSocialShare"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Permitir compartilhamento em redes sociais
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.showAuthorSocialData"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Exibir email e dados sociais do autor no corpo das notícias.
+              </label>
+            </p>
+            <div class="m-b m-t text-muted text-md text-u-c">Permissões avançadas</div>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.allowWritersToNotify"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Escritores podem notificar usuários em dispositivos móveis.
+              </label>
+            </p>
+            <p ng-if="app.initData.network.allowSponsors">
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.allowWritersToAddSponsors"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Escritores podem associar patrocinadores às notícias.
+              </label>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="m-b text-muted text-md text-u-c">Visibilidade</div>
+            <p>
+              <label class="md-check">
+                <input type="radio" name="c" ng-model="station.visibility" value="UNRESTRICTED">
+                <i class="blue"></i>
+                Pública
+              </label>
+            </p>
+            <p>
+              <label class="md-check">
+                <input type="radio" name="c" ng-model="station.visibility" value="RESTRICTED">
+                <i class="blue"></i>
+                Privada
+              </label>
+            </p>
+            <div class="m-b text-muted text-md text-u-c">Permissões</div>
+            <p>
+              <label class="md-check">
+                <input type="radio" name="d" ng-model="station.writable" ng-value="false">
+                <i class="blue"></i>
+                Somente leitura
+              </label>
+            </p>
+            <p>
+              <label class="md-check">
+                <input type="radio" name="d" ng-model="station.writable" ng-value="true">
+                <i class="blue"></i>
+                Escrita e leitura
+              </label>
+            </p>
+            <div class="m-b m-t text-muted text-md text-u-c">Configurações de edição</div>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.topper"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Chapéu
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.subheading"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Subtítulo
+              </label>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="m-t-n-xs text-right text-lg">
+        <button ui-sref="app.settings.stations"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+         <button ng-if="!creating" ng-click="updateStation()"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
+
+        <button ng-if="creating" ng-click="createStation()"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
+      </div>
+    </div>
+  </div>
+</div>

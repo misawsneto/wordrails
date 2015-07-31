@@ -16,6 +16,15 @@ public interface TaxonomyRepository extends JpaRepository<Taxonomy, Integer>, Qu
 
 	List<Taxonomy> findByStationId(@Param("stationId") Integer stationId);
 
+	@Query("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'S' and taxonomy.owningStation.id = :stationId")
+	List<Taxonomy> findStationTaxonomy(@Param("stationId") Integer stationId);
+
+	@Query("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'T' and taxonomy.owningStation.id = :stationId")
+	List<Taxonomy> findStationTags(@Param("stationId") Integer stationId);
+
+	@Query("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'N' and taxonomy.owningNetwork.id = :networkId")
+	List<Taxonomy> findNetworkCategories(@Param("networkId") Integer networkId);
+
 	@RestResource(exported=false)
 	List<Taxonomy> findNetworkOrStationTaxonomiesByNetworkIdExcludeType(@Param("networkId") Integer networkId, @Param("type") String type);
 

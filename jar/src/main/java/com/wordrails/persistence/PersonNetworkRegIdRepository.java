@@ -3,6 +3,7 @@ package com.wordrails.persistence;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -32,7 +33,7 @@ public interface PersonNetworkRegIdRepository extends JpaRepository<PersonNetwor
 //	 where s.visibility = "UNRESTRICTED"))
 
 	@RestResource(exported=false)
-	@Query("SELECT reg FROM PersonNetworkRegId reg join reg.person p where p in ( select psr.person from StationRole psr where psr.station.id = :stationId AND psr.person.id != 1 ) OR ( reg.person.id = 1 and reg.network in ( select network from Network network join network.stations s where s.id = :stationId AND s.visibility = 'UNRESTRICTED') )")
+	@Query("SELECT reg FROM PersonNetworkRegId reg join reg.person p where p in ( select psr.person from StationRole psr where psr.station.id = :stationId AND psr.person.id != 1 ) OR ( (reg.person is null OR reg.person.id = 1) and reg.network in ( select network from Network network join network.stations s where s.id = :stationId AND s.visibility = 'UNRESTRICTED') )")
 	public List<PersonNetworkRegId> findRegIdByStationId(@Param("stationId") Integer stationId);
 
 	@RestResource(exported=false)
@@ -40,4 +41,8 @@ public interface PersonNetworkRegIdRepository extends JpaRepository<PersonNetwor
 
 	@RestResource(exported=false)
 	public PersonNetworkRegId findOneByRegId(String regId);
+
+	@RestResource(exported = false)
+	@Modifying
+	void deleteByPersonId(Integer id);
 }

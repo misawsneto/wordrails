@@ -106,6 +106,9 @@ digraph dependencies {
       "geojson"[label="geojson", color=3]
       "leaflet-directive" -> "geojson"
     
+      "opacityControl"[label="opacityControl", color=3]
+      "leaflet-directive" -> "opacityControl"
+    
       "layercontrol"[label="layercontrol", color=3]
       "leaflet-directive" -> "layercontrol"
     
@@ -186,6 +189,9 @@ digraph dependencies {
         "leafletHelpers"[label="leafletHelpers"]
         "leafletHelpers" -> "controls"
       
+        "leafletLayerHelpers"[label="leafletLayerHelpers"]
+        "leafletLayerHelpers" -> "controls"
+      
     
       
         "leafletHelpers"[label="leafletHelpers"]
@@ -198,6 +204,9 @@ digraph dependencies {
       
         "leafletEvents"[label="leafletEvents"]
         "leafletEvents" -> "eventBroadcast"
+      
+        "leafletIterators"[label="leafletIterators"]
+        "leafletIterators" -> "eventBroadcast"
       
     
       
@@ -218,6 +227,14 @@ digraph dependencies {
       
         "leafletGeoJsonEvents"[label="leafletGeoJsonEvents"]
         "leafletGeoJsonEvents" -> "geojson"
+      
+    
+      
+        "leafletData"[label="leafletData"]
+        "leafletData" -> "opacityControl"
+      
+        "leafletHelpers"[label="leafletHelpers"]
+        "leafletHelpers" -> "opacityControl"
       
     
       
@@ -401,6 +418,9 @@ digraph dependencies {
       
         "leafletPathEvents"[label="leafletPathEvents"]
         "leafletPathEvents" -> "leafletEvents"
+      
+        "leafletIterators"[label="leafletIterators"]
+        "leafletIterators" -> "leafletEvents"
       
     
       

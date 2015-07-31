@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -38,4 +39,8 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Integer>, Qu
 	@RestResource(exported=false)
 	@Query("select bookmark from Bookmark bookmark where bookmark.person.id = :personId and bookmark.post.station.id in (:readableIds) order by bookmark.id desc")
 	List<Bookmark> findBookmarksByPersonIdOrderByDate(@Param("personId") Integer personId, @Param("readableIds") List<Integer> readableIds, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Modifying
+	void deleteByPersonId(Integer id);
 }

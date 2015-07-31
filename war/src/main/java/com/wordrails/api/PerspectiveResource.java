@@ -201,8 +201,9 @@ public class PerspectiveResource {
 	@Path("/rowViews")
 	@GET
 	public RowView getRowView(@QueryParam("stationPerspectiveId") Integer stationPerspectiveId, 
-			@QueryParam("termPerspectiveId") Integer termPerspectiveId, @QueryParam("childTermId") Integer childTermId, 
-			@QueryParam("page") int page, @QueryParam("size") int size){
+			@QueryParam("termPerspectiveId") Integer termPerspectiveId, @QueryParam("childTermId") Integer childTermId,
+		  	@QueryParam("withBody") Boolean withBody, @QueryParam("page") int page, @QueryParam("size") int size){
+
 		RowView rowView = null;
 
 		Term term = termRepository.findOne(childTermId);
@@ -221,7 +222,7 @@ public class PerspectiveResource {
 				List<Cell> cells = fillPostsNotPositionedInRow(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				rowView = new RowView();
 				rowView.id = row.id;
-				rowView.cells = cellConverter.convertToViews(cells);
+				rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
 				rowView.termId = term.id;
 				rowView.termName = term.name;
 				rowView.type = Row.ORDINARY_ROW;

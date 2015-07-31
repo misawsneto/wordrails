@@ -38,6 +38,7 @@ angular.module('app')
         }
       }
 
+
       // save settings to local storage
       if ( angular.isDefined($localStorage.settings) ) {
         $scope.app.settings = $localStorage.settings;
@@ -98,6 +99,10 @@ angular.module('app')
         })
       }
 
+      $scope.app.stopPropagation = function($event){
+        $event.stopPropagation();
+      }
+
       $scope.app.changeStation = function(station){
 
         var stationObject = null;
@@ -137,6 +142,12 @@ angular.module('app')
         $scope.app.isLogged = trixService.isLoggedIn();
         $scope.app.writableStations = trixService.getWritableStations();
         $scope.app.adminStations = trixService.getAdminStations();
+        $scope.app.networkAdmin = trixService.isNetworkAdmin();
+        $scope.app.editorStations = trixService.getEditorStations();
+      }
+
+      $scope.app.stationIsAdmin = function(stationId){
+        return trixService.stationIsAdmin();
       }
 
       uiLoad.load(JQ_CONFIG.screenfull)
@@ -161,13 +172,16 @@ angular.module('app')
         if(toState.name == "app.stations"){
           $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
         }
+        else if(toState.name.indexOf("app.post") > -1){
+          $("title").html($scope.app.initData.network.name + " | Editor");
+        }
         else if(toState.name == "app.notifications"){
           $("title").html($scope.app.initData.network.name + " | Notificações");
         }
         else if(toState.name == "app.bookmarks"){
           $("title").html($scope.app.initData.network.name + " | Minhas Leituras");
         }
-        else if(toState.name == "app.settings"){
+        else if(toState.name.indexOf("app.settings") > -1){
           $("title").html($scope.app.initData.network.name + " | Configurações");
         }
         else if(toState.name == "app.search"){
@@ -177,6 +191,10 @@ angular.module('app')
           $("title").html($scope.app.initData.network.name + " | @"+toParams.username);
         }
         else if(toState.name == "app.publications"){
+          $("title").html($scope.app.initData.network.name + " | Publicações");
+        }
+
+        else if(toState.name == "app.mystats"){
           $("title").html($scope.app.initData.network.name + " | Publicações");
         }
         // check state read
@@ -190,7 +208,7 @@ angular.module('app')
 
       // deal with unauthorized access
       $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
-        if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications') && !trixService.isLoggedIn()){
+        if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications' || toState.name.indexOf('app.settings') > -1) && !trixService.isLoggedIn()){
           event.preventDefault();
           $scope.app.showInfoToast('Autentique-se para acessar esta função.')
           if(fromState.abstract)
@@ -230,6 +248,14 @@ angular.module('app')
         $state.go('app.user', {username: username})
         if($scope.app.profilepopover)
         $scope.app.profilepopover.open = false;
+      }
+
+      $scope.app.goToUserStats = function($event){
+        $event.preventDefault();
+        $event.stopPropagation();
+        $state.go('app.userstats')
+        if($scope.app.profilepopover)
+          $scope.app.profilepopover.open = false; 
       }
 
       $scope.app.goToUserPublications = function($event){
@@ -297,17 +323,26 @@ angular.module('app')
           templateUrl: templateId,
           scope: $scope
         });
+        $timeout(function(){
+          $(".splash").addClass('splash-open')
+        })
       }
 
+      $scope.cancelModal = function () {
+        $(".splash").removeClass('splash-open')
+        $timeout(function(){
+          if($scope.modalInstance){
+            $scope.modalInstance.dismiss('cancel');
+          }
+        },150)
+      };
+
+      $scope.app.cancelModal = function () {
+        $scope.cancelModal();
+      };
+
       $scope.app.openSplash = function(templateId, size){
-        if(templateId === "signin_splash.html")
-          $timeout(function(){
-            $("#username-input").focus();
-          }, 300);
-        $scope.modalInstance = $splash.open({
-          templateUrl: templateId,
-          scope: $scope
-        });
+        $scope.openSplash(templateId, size)
       }
 
       $scope.toastPosition = {
@@ -384,14 +419,6 @@ angular.module('app')
         });
       }
 
-      $scope.cancelModal = function () {
-        $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
-      };
-
-      $scope.app.cancelModal = function () {
-        $scope.modalInstance && $scope.modalInstance.dismiss('cancel');
-      };
-
       if ( angular.isDefined($localStorage.viewMode) ) {
         $scope.app.viewMode = $localStorage.viewMode
       }else{
@@ -416,6 +443,8 @@ angular.module('app')
         trix.allInitData().success(function(response){
           initData = response;
           $scope.app.initData = angular.copy(initData);
+          $scope.app.loginError = false;
+          $scope.app.refreshData();
         })
       }
 
@@ -459,6 +488,7 @@ angular.module('app')
               $state.go("app.stations");
             }
             $scope.app.refreshData();
+            $scope.app.showInfoToast('Obrigado e volte sempre...')
           })
         })
       };
@@ -500,6 +530,14 @@ angular.module('app')
        * @param {[type]} list    [description]
        */
       $scope.app.setNowReading = function(postView, list, listMeta, baseState){
+
+        // if($scope.app.nowReadingAuthor && postView && postView.authorId && $scope.app.nowReadingAuthor.authorId != postView.authorId){
+        //   $("#left-profile-cover").removeClass("slideInRight");
+        //   setTimeout(function() {
+        //     $("#left-profile-cover").addClass("slideInRight");
+        //   });
+        // }
+
         if($state.current.name == "app.stations.read" && $scope.app.nowReading && $scope.app.nowReading.postId == postView.postId)
           return;
 

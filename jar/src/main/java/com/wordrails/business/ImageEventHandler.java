@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import net.coobird.thumbnailator.Thumbnails;
 
 import org.hibernate.Hibernate;
@@ -34,18 +35,26 @@ public class ImageEventHandler {
 	private @PersistenceContext EntityManager manager;
 	private @Autowired FileRepository fileRepository; 
 	private @Autowired FileContentsRepository contentsRepository;
-	private @Autowired AccessControllerUtil accessControllerUtil;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 	private @Autowired PersonRepository personRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Image image) throws SQLException, IOException {
+
+		if(image.type == null || image.type.trim().isEmpty())
+			image.type = Image.Type.POST.toString();
+
+		if(!Image.containsType(image.type))
+			throw new BadRequestException("Invalid Image Type:" + image.type);
+
 		com.wordrails.business.File original = image.original;
 		
-		Person person = accessControllerUtil.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 		
 		String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
 		
-		if (original != null) {
+		if (original != null &&  Image.Type.POST.toString().equals(image.type)) {
 			com.wordrails.business.File small = new File();
 			small.type = File.INTERNAL_FILE; 
 			small.mime = image.original.mime != null ? image.original.mime : MIME;

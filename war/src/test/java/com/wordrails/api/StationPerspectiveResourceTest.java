@@ -70,7 +70,7 @@ public class StationPerspectiveResourceTest extends AbstractTest {
 	public void perspectiveViewTest2() throws Exception{
 		List<Term> terms = termRepository.findByParent(null);
 		Term term = (terms.size() > 0 ? terms.get(0) : null);
-		perspectiveResource.getRowView(stationPerspective.station.id, null, term.id, 0, 10);
+		perspectiveResource.getRowView(stationPerspective.station.id, null, term.id, false, 0, 10);
 	}
 	
 	@Test
@@ -82,7 +82,7 @@ public class StationPerspectiveResourceTest extends AbstractTest {
 			
 			List<Term> terms = termRepository.findByParent(termPerspective.term);
 			Term term = (terms.size() > 0 ? terms.get(0) : null);
-			perspectiveResource.getRowView(stationPerspective.station.id, termPerspective.id, term.id, 0, 10);
+			perspectiveResource.getRowView(stationPerspective.station.id, termPerspective.id, term.id,false, 0, 10);
 		}
 	}
 	

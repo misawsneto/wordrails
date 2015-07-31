@@ -12,7 +12,8 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPredicateExecutor<Term> {
+public interface
+		TermRepository extends JpaRepository<Term, Integer>, QueryDslPredicateExecutor<Term> {
 	@RestResource(path="findRootsPage")
 	List<Term> findRoots(@Param("taxonomyId") Integer taxonomyId, Pageable pageable);
 	

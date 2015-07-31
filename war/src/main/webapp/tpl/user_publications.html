@@ -16,8 +16,8 @@
 			angular-ripple md-no-ink  aria-label="Nova notícia">
 			<i class="mdi mdi-plus"></i>
 		</md-button>
-		<div class="w-full panel panel-card no-radius animated zoomIn" infinite-scroll="paginatePosts()" infinite-scroll-distance="1">
-			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications">
+		<div class="w-full panel panel-card animated zoomIn" infinite-scroll="paginate()" infinite-scroll-distance="1">
+			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications" >
 				<ul class="nav nav-tabs text-lg" role="tablist">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
 						<a class="text-u-c" ng-click="app.goToUserDrafts($event)">
@@ -34,11 +34,12 @@
 							AGENDADOS
 						</a>
 					</li>
-					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 3}">
+					<!-- <li ng-show="app.networkAdmin || app.adminStations.length > 0 || app.editorStations > 0"
+					ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 3}">
 						<a class="text-u-c" ng-click="app.goToUserOtherPosts($event)">
 							Outros
 						</a>
-					</li>
+					</li> -->
 				</ul>
 			</div>
 			<div class="wrapper-xxl text-3x text-center" ng-class="{'hide': app.publicationsCtrl.publications && app.publicationsCtrl.publications.length>0 || !app.publicationsCtrl.firstLoad}">
@@ -52,11 +53,10 @@
 					<div ng-class="{'b-t': !$first}"></div>
 					<div class="clear p-t-sm p post-list news-item">
 						<!-- image -->
-						<a class="block-image m-l" ng-if="publication.mediumId" ng-class="{'m-t': publication.topper}">
-							<div class="cell-wrap r r-2x" ng-class="{'hide': !publication.mediumId}">
-								<div ng-style="getBackgroundImage(publication, 'md')"></div>
-							</div>
-						</a>
+						<a class="block-image m-l m-t" ng-if="publication.mediumId" >
+              <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'md')">
+              </div>
+            </a>
 						<!-- /image -->
 						<!-- /content -->
 						<div ng-class="{'content-block': publication.mediumId}">
