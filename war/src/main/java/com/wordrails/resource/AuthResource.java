@@ -75,24 +75,29 @@ public class AuthResource {
 	private Person getFacebookUser(Facebook facebook, String userId, Network network) {
 		org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
 
-		int i = 1;
-		String username = profile.getId();
-		while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
-			username = profile.getId() + i++;
+		String email = profile.getEmail() == null ? "" : profile.getEmail();
+		Person person = personRepository.findByEmailAndNetworkId(email, network.id);
+
+		if (person == null) {
+			int i = 1;
+			String username = profile.getId();
+			while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
+				username = profile.getId() + i++;
+			}
+
+			person = new Person();
+			person.name = profile.getName();
+			person.username = username;
+			person.email = email;
 		}
 
 		User user = new User();
-		Person person = new Person();
-		person.name = profile.getName();
-		person.username = username;
-		person.email = profile.getEmail();
-
 
 		UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
 		authority.network = network;
 
 		user.enabled = true;
-		user.username = username;
+		user.username = person.username;
 		user.password = "";
 		user.network = network;
 		authority.user = user;
@@ -105,7 +110,7 @@ public class AuthResource {
 		userConnection.user = user;
 		userConnection.displayName = profile.getName();
 		userConnection.profileUrl = profile.getLink();
-		userConnection.imageUrl = fetchPictureUrl(userId, facebook, ImageType.LARGE);
+		userConnection.imageUrl = fetchPictureUrl(userId, ImageType.LARGE);
 		user.userConnections = new HashSet<>();
 		user.userConnections.add(userConnection);
 
@@ -116,7 +121,7 @@ public class AuthResource {
 
 	private static final String GRAPH_API_URL = "http://graph.facebook.com/";
 
-	public String fetchPictureUrl(String userId, Facebook facebook, ImageType imageType) {
+	public String fetchPictureUrl(String userId, ImageType imageType) {
 		URI uri = URIBuilder.fromUri(GRAPH_API_URL + userId + "/picture" +
 				"?type=" + imageType.toString().toLowerCase() + "&redirect=false").build();
 

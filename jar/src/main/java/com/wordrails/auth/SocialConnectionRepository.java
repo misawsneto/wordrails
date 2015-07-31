@@ -16,7 +16,6 @@ import org.springframework.util.MultiValueMap;
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated
 @Component
 public class SocialConnectionRepository implements ConnectionRepository {
 

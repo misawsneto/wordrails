@@ -61,8 +61,6 @@ public class PersonsResource {
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
-	private @Autowired TaxonomyRepository taxonomyRepository;
-	private @Autowired PersonNetworkRegIdRepository pnrRepository;
 	private @Autowired GCMService gcmService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
@@ -79,8 +77,6 @@ public class PersonsResource {
 
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private UserGrantedAuthorityRepository userGrantedAuthorityRepository;
 
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired StationRoleEventHandler stationRoleEventHandler;
@@ -450,21 +446,23 @@ public class PersonsResource {
 		Network network = wordrailsService.getNetworkFromHost(request);
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
 
-		for(Person person: persons){
-			if(!person.user.network.id.equals(network.id))
+		if(persons != null && persons.size() > 0) {
+			for (Person person : persons) {
+				if (!person.user.network.id.equals(network.id)) return Response.status(Status.UNAUTHORIZED).build();
+			}
+
+			if (networkSecurityChecker.isNetworkAdmin(network)) {
+				for (Person person : persons) {
+					personEventHandler.handleBeforeDelete(person);
+				}
+
+				personRepository.delete(persons);
+			} else {
 				return Response.status(Status.UNAUTHORIZED).build();
+			}
 		}
 
-		if(persons != null && persons.size() > 0 && networkSecurityChecker.isNetworkAdmin(network)){
-		for(Person person: persons){
-			personEventHandler.handleBeforeDelete(person);
-		}
-
-		personRepository.delete(persons);
 		return Response.status(Status.OK).build();
-		}else{
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
 	}
 
 	@DELETE
