@@ -67,7 +67,7 @@ public class PostFilter implements Filter {
 					postId = getPostId(url);
 					if (postId != null)
 						post = postRepository.findOne(postId);
-				} else if (url.contains("findBySlug")) {
+				} else if (url.contains("/findBySlug")) {
 					String slug = rq.getParameter("slug");
 					if (slug != null && !slug.isEmpty()) ;
 					post = postRepository.findBySlug(slug);

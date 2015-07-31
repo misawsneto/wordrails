@@ -15,11 +15,11 @@
                 <img id="publication-img" src="img/publication-img.png">
               </div>
               <div class="col-sm-5" ng-class="{'hide': !app.editingPost.id}">
-                <span class="text-md font-bold">
-                  {{ getMoreOptionsMainMessage() }}
-                </span>
                 <div class="m-t-sm m-b-md text-lg">
-                  {{app.editingPost.station.name}}
+                  <span>
+                    {{app.checkState() == 1 ? 'Publicado na estação ' : app.checkState() == 2 ? 'Salvo como rascunho na estação' : app.checkState() == 3 ? 'Agendado para publicação na estação ' : ''}}
+                  </span>
+                  <strong>{{app.editingPost.station.name}}</strong>
                 </div>
                 <span class="pos-abt wrapper-xl text-3x" style="right:0">
                   <i class="mdi mdi-check text-3x text-success" ng-if="app.checkState() == 1"></i>
