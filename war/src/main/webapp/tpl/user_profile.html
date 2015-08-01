@@ -160,7 +160,13 @@
 								<span class="text-sm">
 									<span class="">
 										<span class="readingTime">{{postView.date | fromNow}}</span>
-										<div class="inline text-muted p-l-lg text-u-c">
+										<span ng-if="postView.commentsCount > 0" class="readingTime text-muted p-l text-md">
+											<i class="mdi mdi-comment-text-outline"></i> 
+											{{postView.commentsCount}}</span>
+										<span ng-if="postView.recommendsCount > 0" class="readingTime text-muted p-l text-md">
+											<i class="mdi mdi-heart"></i> 
+											{{postView.recommendsCount}}</span>
+										<div class="inline text-muted p-l text-u-c">
 											<a ui-sref="app.post({'id': publication.postId})" class="text-muted p-r underline-hover">editar</a>
 											<a class="text-muted underline-hover" ng-click="app.openDeletePost(publication.postId);">remover</a>
 										</div>
