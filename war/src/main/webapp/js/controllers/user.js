@@ -275,8 +275,8 @@ trix.searchPosts(null, $scope.page, 10, {'personId': $scope.app.getLoggedPerson(
 app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout', '$interval', 'trix', 'cfpLoadingBar', '$q',
 	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q) {
 		
-		if(!$scope.app.publicationsCtrl)
-			$scope.app.publicationsCtrl = {page: 0, firstLoad: false};
+		$scope.app.publicationsCtrl = {page: 0, firstLoad: false};
+
 
 		$scope.$watch('$state.params.type', function(){
 			if($state.params.type == "drafts"){

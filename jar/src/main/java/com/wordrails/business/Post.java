@@ -190,10 +190,6 @@ public class Post {
 
 	@Field
 	@NumericField
-	public int favoritesCount = 0;
-
-	@Field
-	@NumericField
 	@Column(updatable = false)
 	public int bookmarksCount = 0;
 
