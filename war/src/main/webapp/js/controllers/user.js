@@ -302,6 +302,7 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 								$scope.app.publicationsCtrl.firstLoad = true;
 							})
 						}
+						});
 
 $scope.paginate = function(){
 
