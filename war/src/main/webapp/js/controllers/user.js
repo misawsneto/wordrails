@@ -4,168 +4,170 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	// set left side post list to initial scroll
 	//$("#post-left-content .left-content-wrap").scrollTop(0);
 	//
-	 	FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
+	FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
 	    return true; // true|false
-	  };
+	};
 
-	  var cover = $scope.cover = new FileUploader({
-	  	url: TRIX.baseUrl + "/api/files/contents/simple"
-	  });
+	var cover = $scope.cover = new FileUploader({
+		url: TRIX.baseUrl + "/api/files/contents/simple"
+	});
 
-	  var image = $scope.image = new FileUploader({
-	  	url: TRIX.baseUrl + "/api/files/contents/simple"
-	  });
+	var image = $scope.image = new FileUploader({
+		url: TRIX.baseUrl + "/api/files/contents/simple"
+	});
 
-	  cover.onAfterAddingFile = function(fileItem) {
-			$scope.userCover = null;
-			cover.uploadAll();
-		};
+	cover.onAfterAddingFile = function(fileItem) {
+		$scope.userCover = null;
+		cover.uploadAll();
+	};
 
-	  cover.onSuccessItem = function(fileItem, response, status, headers) {
-	  	if(response.filelink){
-	  		$scope.userCover = response;
-	  		var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userCover.id }
-	  		trix.postImage(imageObject).success(function(imageId){
-					var myCoverImage = TRIX.baseUrl + "/api/images/" + imageId;
-	  			$scope.person.cover = myCoverImage
-	  			trix.putPerson($scope.person).success(function(){
-	  				$scope.person.coverLargeId = $scope.userCover.id;
-	  				$mdToast.hide();
-	  			})
+	cover.onSuccessItem = function(fileItem, response, status, headers) {
+		if(response.filelink){
+			$scope.userCover = response;
+			var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userCover.id }
+			trix.postImage(imageObject).success(function(imageId){
+				var myCoverImage = TRIX.baseUrl + "/api/images/" + imageId;
+				$scope.person.cover = myCoverImage
+				trix.putPerson($scope.person).success(function(){
+					$scope.app.initData.person.coverLargeId = $scope.person.coverLargeId = $scope.userCover.id;
+					$scope.app.initData.person.coverMediumId = $scope.person.coverMediumId = $scope.userCover.id;
+					$mdToast.hide();
 				})
-	  	}
-	  };
+			})
+		}
+	};
 
-	  cover.onErrorItem = function(fileItem, response, status, headers) {
-	  	if(status == 413)
-	  		$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
-	  	else
-	  		$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
-	  }
+	cover.onErrorItem = function(fileItem, response, status, headers) {
+		if(status == 413)
+			$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+		else
+			$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+	}
 
-	  cover.onProgressItem = function(fileItem, progress) {
-	  	cfpLoadingBar.start();
-	  	cfpLoadingBar.set(progress/10)
-	  	if(progress == 100){
-	  		cfpLoadingBar.complete()
-	  		toastPromise = $mdToast.show(
-	  			$mdToast.simple()
-	  			.content('Processando...')
-	  			.position('top right')
-	  			.hideDelay(false)
-	  			);
-	  	}
-	  };
+	cover.onProgressItem = function(fileItem, progress) {
+		cfpLoadingBar.start();
+		cfpLoadingBar.set(progress/10)
+		if(progress == 100){
+			cfpLoadingBar.complete()
+			toastPromise = $mdToast.show(
+				$mdToast.simple()
+				.content('Processando...')
+				.position('top right')
+				.hideDelay(false)
+				);
+		}
+	};
 
-	  image.onAfterAddingFile = function(fileItem) {
-			$scope.userImage = null;
-			image.uploadAll();
-		};
+	image.onAfterAddingFile = function(fileItem) {
+		$scope.userImage = null;
+		image.uploadAll();
+	};
 
-	  image.onSuccessItem = function(fileItem, response, status, headers) {
-	  	if(response.filelink){
-	  		$scope.userImage = response;
-	  		var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userImage.id }
-	  		trix.postImage(imageObject).success(function(imageId){
-					var myImageImage = TRIX.baseUrl + "/api/images/" + imageId;
-	  			$scope.person.image = myImageImage
-	  			trix.putPerson($scope.person).success(function(){
-	  				$scope.person.imageMediumId = $scope.userImage.id;
-	  				$mdToast.hide();
-	  			})
+	image.onSuccessItem = function(fileItem, response, status, headers) {
+		if(response.filelink){
+			$scope.userImage = response;
+			var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userImage.id }
+			trix.postImage(imageObject).success(function(imageId){
+				var myImageImage = TRIX.baseUrl + "/api/images/" + imageId;
+				$scope.person.image = myImageImage
+				trix.putPerson($scope.person).success(function(){
+					$scope.app.initData.person.imageMediumId = $scope.person.imageMediumId = $scope.userImage.id;
+					$scope.app.initData.person.imageSmallId = $scope.person.imageSmallId = $scope.userImage.id;
+					$mdToast.hide();
 				})
-	  	}
-	  };
+			})
+		}
+	};
 
-	  image.onErrorItem = function(fileItem, response, status, headers) {
-	  	if(status == 413)
-	  		$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
-	  	else
-	  		$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
-	  }
+	image.onErrorItem = function(fileItem, response, status, headers) {
+		if(status == 413)
+			$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+		else
+			$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+	}
 
-	  image.onProgressItem = function(fileItem, progress) {
-	  	cfpLoadingBar.start();
-	  	cfpLoadingBar.set(progress/10)
-	  	if(progress == 100){
-	  		cfpLoadingBar.complete()
-	  		toastPromise = $mdToast.show(
-	  			$mdToast.simple()
-	  			.content('Processando...')
-	  			.position('top right')
-	  			.hideDelay(false)
-	  			);
-	  	}
-	  };
+	image.onProgressItem = function(fileItem, progress) {
+		cfpLoadingBar.start();
+		cfpLoadingBar.set(progress/10)
+		if(progress == 100){
+			cfpLoadingBar.complete()
+			toastPromise = $mdToast.show(
+				$mdToast.simple()
+				.content('Processando...')
+				.position('top right')
+				.hideDelay(false)
+				);
+		}
+	};
 
-	  var username = $state.params.username
+	var username = $state.params.username
 
-	  if(username == null){
-	  	$state.go('access.404')
-	  }
+	if(username == null){
+		$state.go('access.404')
+	}
 
-	  trix.findByUsername(username).success(function(response){
-	  	try{
-	  		$scope.showProfile = true;
-	  		$scope.person = response.persons[0];
-	  	}catch(e){
-	  		$state.go('access.404')
-	  	}
-	  	$scope.findUserPosts($scope.person);
-	  }).error(function(){
-	  	$state.go('access.404')
-	  })
+	trix.findByUsername(username).success(function(response){
+		try{
+			$scope.showProfile = true;
+			$scope.person = response.persons[0];
+		}catch(e){
+			$state.go('access.404')
+		}
+		$scope.findUserPosts($scope.person);
+	}).error(function(){
+		$state.go('access.404')
+	})
 
-	  $scope.postsPage = 0;
-	  $scope.postViews = [];
-	  $scope.findUserPosts = function(person){
-	  	trix.getPersonNetworkPosts(person.id, $scope.app.initData.network.id,$scope.postsPage, 5).success(function(posts){
-	  		if(posts && posts.length > 0)
-	  			$scope.postViews = posts;
-	  	})
+	$scope.postsPage = 0;
+	$scope.postViews = [];
+	$scope.findUserPosts = function(person){
+		trix.getPersonNetworkPosts(person.id, $scope.app.initData.network.id,$scope.postsPage, 5).success(function(posts){
+			if(posts && posts.length > 0)
+				$scope.postViews = posts;
+		})
 
-	  	trix.findRecommendsByPersonIdOrderByDate(person.id, 0, 6, null, "recommendProjection").success(function(response){
-	  		if(response.recommends && response.recommends.length > 0)
-	  			$scope.recommendations = response.recommends;
-	  	})
-	  }
+		trix.findRecommendsByPersonIdOrderByDate(person.id, 0, 6, null, "recommendProjection").success(function(response){
+			if(response.recommends && response.recommends.length > 0)
+				$scope.recommendations = response.recommends;
+		})
+	}
 
-	  $scope.paginate = function(){
+	$scope.paginate = function(){
 
-	  	if(!$scope.postViews || $scope.postViews.length == 0)
-	  		return;
+		if(!$scope.postViews || $scope.postViews.length == 0)
+			return;
 
-	  	if($scope.allLoaded)
-	  		return;
+		if($scope.allLoaded)
+			return;
 
-	  	if(!$scope.loadingPage){
-	  		$scope.loadingPage = true;
-	  		trix.getPersonNetworkPosts($scope.person.id, $scope.app.initData.network.id,$scope.postsPage + 1, 5)
-	  		.success(function(posts){
-	  			$scope.loadingPage = false;
-	  			$scope.postsPage = $scope.postsPage + 1;
+		if(!$scope.loadingPage){
+			$scope.loadingPage = true;
+			trix.getPersonNetworkPosts($scope.person.id, $scope.app.initData.network.id,$scope.postsPage + 1, 5)
+			.success(function(posts){
+				$scope.loadingPage = false;
+				$scope.postsPage = $scope.postsPage + 1;
 
-	  			if(!posts || posts.length == 0){
-	  				$scope.allLoaded = true;
-	  				return;
-	  			}
+				if(!posts || posts.length == 0){
+					$scope.allLoaded = true;
+					return;
+				}
 
-	  			if(!$scope.pages)
-	  				$scope.pages = []
+				if(!$scope.pages)
+					$scope.pages = []
 
-	  			posts && posts.forEach(function(element, index){
-	  				$scope.pages.push(element)
-	  			}); 
+				posts && posts.forEach(function(element, index){
+					$scope.pages.push(element)
+				}); 
 
-	  			$(".search-results").focus();
-	  		})
-	  		.error(function(){
-	  			$scope.loadingPage = false;
-	  		})
-	  	}
-	  }
+				$(".search-results").focus();
+			})
+			.error(function(){
+				$scope.loadingPage = false;
+			})
+		}
+	}
 
-	}])
+}])
 
 app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'TRIX',
 	function($scope ,  $log ,  $timeout ,  $rootScope ,  $state ,  trix , TRIX) {
@@ -282,14 +284,14 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 			if($state.params.type == "drafts"){
 				// trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
 					// 'publicationType': 'DRAFT', sortByDate: true}).success(function(response){
-					trix.getPersonNetworkPostsByState(null, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
-						$scope.app.publicationsCtrl.publications = response;
-						$scope.app.publicationsCtrl.tabIndex = 2;
-						$scope.app.publicationsCtrl.firstLoad = true;
-					})
-				}
-				if($state.params.type == "publications"){
-					trix.getPersonNetworkPostsByState(null, 'PUBLISHED', $scope.app.publicationsCtrl.page, 10).success(function(response){
+						trix.getPersonNetworkPostsByState(null, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
+							$scope.app.publicationsCtrl.publications = response;
+							$scope.app.publicationsCtrl.tabIndex = 2;
+							$scope.app.publicationsCtrl.firstLoad = true;
+						})
+					}
+					if($state.params.type == "publications"){
+						trix.getPersonNetworkPostsByState(null, 'PUBLISHED', $scope.app.publicationsCtrl.page, 10).success(function(response){
 							$scope.app.publicationsCtrl.publications = response;
 							$scope.app.publicationsCtrl.tabIndex = 0;
 							$scope.app.publicationsCtrl.firstLoad = true;
@@ -297,12 +299,12 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 					}
 					if($state.params.type == "scheduled"){
 						trix.getPersonNetworkPostsByState(null, 'SCHEDULED', $scope.app.publicationsCtrl.page, 10).success(function(response){
-								$scope.app.publicationsCtrl.publications = response;
-								$scope.app.publicationsCtrl.tabIndex = 1;
-								$scope.app.publicationsCtrl.firstLoad = true;
-							})
-						}
-						});
+							$scope.app.publicationsCtrl.publications = response;
+							$scope.app.publicationsCtrl.tabIndex = 1;
+							$scope.app.publicationsCtrl.firstLoad = true;
+						})
+					}
+				});
 
 $scope.paginate = function(){
 
@@ -327,28 +329,28 @@ $scope.paginate = function(){
 			'publicationType': type, sortByDate: true}).success(function(response){*/
 
 				trix.getPersonNetworkPostsByState(null, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
-				var posts = response;
+					var posts = response;
 
-				$scope.loadingPage = false;
-				$scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
+					$scope.loadingPage = false;
+					$scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
 
-				if(!posts || posts.length == 0){
-					$scope.allLoaded = true;
-					return;
-				}
+					if(!posts || posts.length == 0){
+						$scope.allLoaded = true;
+						return;
+					}
 
-				if(!$scope.pages)
-					$scope.pages = []
+					if(!$scope.pages)
+						$scope.pages = []
 
-				posts && posts.forEach(function(element, index){
-					$scope.app.publicationsCtrl.publications.push(element)
-				}); 
+					posts && posts.forEach(function(element, index){
+						$scope.app.publicationsCtrl.publications.push(element)
+					}); 
 
-			})
-			.error(function(){
-				$scope.loadingPage = false;
-			})
+				})
+				.error(function(){
+					$scope.loadingPage = false;
+				})
+			}
 		}
-	}
 
-}])		
+	}])		

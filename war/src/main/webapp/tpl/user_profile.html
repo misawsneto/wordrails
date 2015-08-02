@@ -1,7 +1,7 @@
 <div id="user-profile" class="hbox" ng-cloak>
 	<!-- cover container -->
 	<div ng-if="showProfile">
-		<div class="profile-cover abstract-bg bg-cover pos-rlt" style="{{person.coverLargeId | imageLink | bgimg2}}">
+		<div class="profile-cover abstract-bg bg-cover pos-rlt" back-img-cover="{{person.coverLargeId}}">
 			<div class="cover-abstract-mask ng-scope" ng-if="!person.coverLargeId">
 			</div>
 			<div id="cover-image-button" style="overflow:hidden;" 
@@ -24,7 +24,7 @@
 		</md-button>
 	</div>
 	<div id="editing-user-profile" class="user-details block-600 m-auto animated zoomIn with-cover">
-		<div style="{{person.imageMediumId | imageLink | bgimg}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
+		<div back-img="{{person.imageMediumId}}" class="bg-cover box-shadow2 bg-img-xxl bg-cover-round m-b m-auto b b-3x b-white" title="{{person.name}}">
 			<div id="image-button-wrapper" ng-if="person.id == app.initData.person.id">
 				<div id="image-button" class="custom-btn border-radius-50" style="width: 194px; height: 194px;">
 					<i class="mdi mdi-pencil text-4x text-white image-edit" style="margin: 75px;"></i>
@@ -78,7 +78,7 @@
 						<div class="m-t">
 							<div class="display-t-c">
 								<a >
-									<div style="{{postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
+									<div back-img="{{postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
 								</a>
 							</div>
 							<div class="display-t-c p-l-sm v-middle">
@@ -149,7 +149,7 @@
 						<div class="m-t">
 							<div class="display-t-c">
 								<a >
-									<div style="{{postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
+									<div back-img="{{postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
 								</a>
 							</div>
 							<div class="display-t-c p-l-sm v-middle">

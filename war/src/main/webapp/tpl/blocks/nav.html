@@ -5,7 +5,7 @@
   </li> -->
 <li id="aside-user-list-item" ng-if="app.isLogged">
   <a ng-click="app.profilepopover.open = !app.profilepopover.open;" id="profile-popover-toggle">
-    <div id="aside-user" style="{{::app.initData.person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div>
+    <div id="aside-user" back-img="{{::app.initData.person.imageSmallId}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div>
   </a>
   
   <!-- <div class="clearfix hidden-xs text-center animated bounceIn" id="aside-user">

@@ -2,10 +2,10 @@
   <div class="col o-h">
     <div class="vbox">
       <div class="row-row">
-      <div id="left-profile-cover" class="profile-cover pos-rlt abstract-bg bg-cover animated slideInRight" style="{{app.nowReadingAuthor.coverMediumId | imageLink | bgimg2}}">
+      <div id="left-profile-cover" class="profile-cover pos-rlt abstract-bg bg-cover animated slideInRight" back-img-cover="{{app.nowReadingAuthor.coverMediumId}}">
         <div class="cover-abstract-mask" ng-if="!app.nowReadingAuthor.coverMediumId">
         </div>
-        <div style="{{app.nowReadingAuthor.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{app.nowReadingAuthor.authorName}}"></div>
+        <div back-img="{{app.nowReadingAuthor.imageSmallId}}" class="bg-cover bg-img-md bg-cover-round popup-profile-img" title="{{app.nowReadingAuthor.authorName}}"></div>
         <!-- <div class="m-t-sm p-l text-md font-thin wrapper-xs title-wrapper-bg-gd pos-abt bottom-0 w-full">
           por <span class="m-xs font-normal">{{::app.nowReadingAuthor.authorName}}</spna>
         </div> -->

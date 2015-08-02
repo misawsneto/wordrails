@@ -27,7 +27,7 @@
                 <div class="m-t-md" ng-if="cell.postView.mediumId">
                   <div class="display-t-c">
                     <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
-                      <div style="{{::cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                      <div back-img="{{::cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
                     </a>
                   </div>
                   <div class="display-t-c p-l-sm v-middle">
@@ -66,7 +66,7 @@
               <div class="pos-abt bottom-0 wrapper-sm" ng-if="!cell.postView.mediumId">
                 <div class="display-t-c">
                   <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" title="Ir para o perfil de {{::cell.postView.authorName}}">
-                    <div style="{{::cell.postView.authorSmallImageId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                    <div back-img="{{::cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
                   </a>
                 </div>
                 <div class="display-t-c p-l-sm v-middle">
