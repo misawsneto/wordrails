@@ -284,32 +284,24 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 					// 'publicationType': 'DRAFT', sortByDate: true}).success(function(response){
 					trix.getPersonNetworkPostsByState(null, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
 						$scope.app.publicationsCtrl.publications = response;
-						$scope.app.publicationsCtrl.tabIndex = 0;
+						$scope.app.publicationsCtrl.tabIndex = 2;
 						$scope.app.publicationsCtrl.firstLoad = true;
 					})
 				}
 				if($state.params.type == "publications"){
 					trix.getPersonNetworkPostsByState(null, 'PUBLISHED', $scope.app.publicationsCtrl.page, 10).success(function(response){
 							$scope.app.publicationsCtrl.publications = response;
-							$scope.app.publicationsCtrl.tabIndex = 1;
+							$scope.app.publicationsCtrl.tabIndex = 0;
 							$scope.app.publicationsCtrl.firstLoad = true;
 						})
 					}
 					if($state.params.type == "scheduled"){
 						trix.getPersonNetworkPostsByState(null, 'SCHEDULED', $scope.app.publicationsCtrl.page, 10).success(function(response){
 								$scope.app.publicationsCtrl.publications = response;
-								$scope.app.publicationsCtrl.tabIndex = 2;
+								$scope.app.publicationsCtrl.tabIndex = 1;
 								$scope.app.publicationsCtrl.firstLoad = true;
 							})
 						}
-						if($state.params.type == "others"){
-							trix.getPersonNetworkPostsByState(null, 'EDITOR', $scope.app.publicationsCtrl.page, 10).success(function(response){
-									$scope.app.publicationsCtrl.publications = response;
-									$scope.app.publicationsCtrl.tabIndex = 3;
-									$scope.app.publicationsCtrl.firstLoad = true;
-								})
-							}
-						});
 
 $scope.paginate = function(){
 

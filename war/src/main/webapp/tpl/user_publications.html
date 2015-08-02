@@ -20,18 +20,18 @@
 			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications" >
 				<ul class="nav nav-tabs text-lg" role="tablist">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
-						<a class="text-u-c" ng-click="app.goToUserDrafts($event); allLoaded = false;">
-							Meus rascunhos
-						</a>
-					</li>
-					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 1}">
 						<a class="text-u-c" ng-click="app.goToUserPublications($event); allLoaded = false;">
 							Minhas publicações
 						</a>
 					</li>
-					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 2}">
+					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 1}">
 						<a class="text-u-c" ng-click="app.goToUserScheduled($event); allLoaded = false;">
 							AGENDADOS
+						</a>
+					</li>
+					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 2}">
+						<a class="text-u-c" ng-click="app.goToUserDrafts($event); allLoaded = false;">
+							Meus rascunhos
 						</a>
 					</li>
 					<!-- <li ng-show="app.networkAdmin || app.adminStations.length > 0 || app.editorStations > 0"

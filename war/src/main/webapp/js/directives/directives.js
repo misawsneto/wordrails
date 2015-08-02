@@ -34,15 +34,21 @@ angular.module('app')
                 scrollSource: "null",
                 scrollBy: 1,
                 activatePageOn: 'click',
-                speed: 300,
+                speed: 1000,
                 elasticBounds: 1,
                 easing: 'easeOutExpo',
                 dragHandle: 1,
                 dynamicHandle: 1,
                 clickBar: 1,
                 // Buttons
-                backward: $wrap.siblings('.backward'),
-                forward: $wrap.siblings('.forward'),
+                // backward: $wrap.siblings('.backward'),
+                // forward: $wrap.siblings('.forward'),
+
+                // prev: $wrap.find('.prev'),
+                // next: $wrap.find('.next'),
+                prevPage: $wrap.find('.backward'),
+                nextPage: $wrap.find('.forward'),
+
                 moveBy:1000
               }).sly('on', 'active', function(eventName, index){
 
