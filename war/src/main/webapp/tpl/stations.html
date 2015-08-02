@@ -74,7 +74,7 @@
                     </span>
                   </div>
                 </div>
-                <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r">
+                <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r" ng-if="!cell.postView.mediumId">
                   <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
                     <a href class="text-center text-lg v-middle">
                       <i class="mdi text-custom-primary link" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
