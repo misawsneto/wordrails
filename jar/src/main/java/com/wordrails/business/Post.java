@@ -190,10 +190,6 @@ public class Post {
 
 	@Field
 	@NumericField
-	public int favoritesCount = 0;
-
-	@Field
-	@NumericField
 	@Column(updatable = false)
 	public int bookmarksCount = 0;
 
@@ -220,6 +216,13 @@ public class Post {
 	@Field(analyze = Analyze.NO)
 	@DateBridge(resolution = Resolution.SECOND)
 	public Date updatedAt;
+
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Field(analyze = Analyze.NO)
+	@DateBridge(resolution = Resolution.SECOND)
+	@Column(updatable = false)
+	public Date createdAt;
 
 	@Column(length = 1024)
 	public String externalFeaturedImgUrl;
@@ -269,6 +272,7 @@ public class Post {
 		readTime = WordrailsUtil.calculateReadTime(body);
 		if (date == null)
 			date = new Date();
+		createdAt = new Date();
 		stationId = station.id;
 	}
 

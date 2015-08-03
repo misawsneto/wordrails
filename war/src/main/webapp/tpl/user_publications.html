@@ -20,18 +20,18 @@
 			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications" >
 				<ul class="nav nav-tabs text-lg" role="tablist">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
-						<a class="text-u-c" ng-click="app.goToUserDrafts($event)">
-							Meus rascunhos
-						</a>
-					</li>
-					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 1}">
-						<a class="text-u-c" ng-click="app.goToUserPublications($event)">
+						<a class="text-u-c" ng-click="app.goToUserPublications($event); allLoaded = false;">
 							Minhas publicações
 						</a>
 					</li>
-					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 2}">
-						<a class="text-u-c" ng-click="app.goToUserScheduled($event)">
+					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 1}">
+						<a class="text-u-c" ng-click="app.goToUserScheduled($event); allLoaded = false;">
 							AGENDADOS
+						</a>
+					</li>
+					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 2}">
+						<a class="text-u-c" ng-click="app.goToUserDrafts($event); allLoaded = false;">
+							Meus rascunhos
 						</a>
 					</li>
 					<!-- <li ng-show="app.networkAdmin || app.adminStations.length > 0 || app.editorStations > 0"
@@ -42,7 +42,7 @@
 					</li> -->
 				</ul>
 			</div>
-			<div class="wrapper-xxl text-3x text-center" ng-class="{'hide': app.publicationsCtrl.publications && app.publicationsCtrl.publications.length>0 || !app.publicationsCtrl.firstLoad}">
+			<div class="wrapper-xxl text-3x text-center" ng-if="!(app.publicationsCtrl.publications && app.publicationsCtrl.publications.length>0 || !app.publicationsCtrl.firstLoad)">
 				<i class="mdi mdi-file-find text-3x text-muted"></i>
 				<p>lista vazia<i></i></p>
 			</div>
@@ -70,7 +70,13 @@
 							</div>
 							<div class="p-t display-t-c v-middle inline">
 								<span class="readingTime text-muted">{{publication.date | fromNow2}}</span>
-								<div class="inline text-muted p-l-lg text-u-c">
+								<span class="readingTime text-muted p-l text-md">
+									<i class="mdi mdi-comment-text-outline"></i> 
+									{{publication.commentsCount}}</span>
+								<span class="readingTime text-muted p-l text-md">
+									<i class="mdi mdi-heart"></i> 
+									{{publication.recommendsCount}}</span>
+								<div class="inline text-muted p-l text-u-c">
 									<a ui-sref="app.post({'id': publication.postId})" class="text-muted p-r underline-hover">editar</a>
 									<a class="text-muted underline-hover" ng-click="app.openDeletePost(publication.postId);">remover</a>
 								</div>

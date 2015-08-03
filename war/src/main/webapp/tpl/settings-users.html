@@ -71,7 +71,7 @@
 										</label>
 									</td>
 									<td>
-										<div style="{{person.imageSmallId | imageLink | bgimg}}" 
+										<div back-img="{{person.imageSmallId}}" 
 										class="bg-cover bg-img-xs bg-cover-round pull-left m-r m-t-n-xxs m-b-n-xxs pos-rlt bla-{{person.imageSmallId}}"
 										title="{{person.name}}"></div>
 										{{person.username}}
@@ -153,7 +153,7 @@
 						<div class="profile-cover abstract-bg bg-cover pos-rlt m-l-n-xs m-r-n-xs o-h" style="border-radius:3px 3px 0 0; {{selectedPerson.coverLargeId | imageLink | bgimg2}}">
 							<div class="cover-abstract-mask ng-scope" ng-if="!selectedPerson.coverLargeId">
 							</div>
-							<div style="{{selectedPerson.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img-xl bg-cover-round m-l-lg m-t-lg pos-rlt" title="{{selectedPerson.name}}">
+							<div back-img="{{selectedPerson.imageSmallId}}" class="bg-cover bg-img-xl bg-cover-round m-l-lg m-t-lg pos-rlt" title="{{selectedPerson.name}}">
 								<div id="image-button-wrapper" ng-if="app.networkAdmin">
 									<div id="image-button" class="custom-btn bg-img-xl border-radius-50">
 										<i class="mdi mdi-pencil text-3x text-white image-edit" style="margin: 40px;"></i>
@@ -261,7 +261,7 @@
          						Esta estação já possui um usuário cadastrado com estes dados!
          					</div>
 
-         					<div style="{{app.conflictingData.conflictingPerson.imageSmallId | imageLink | bgimg}}" 
+         					<div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
          					class="bg-cover bg-img-lg bg-cover-round m-auto" 
          					title="{{app.conflictingData.conflictingPerson.name}}"></div>
          					<div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>

@@ -11,8 +11,8 @@
  * FileUploader.FileDrop
  * FileUploader.FileOver
  */
-
-module
+angular
+    .module('angularFileUpload', [])
 
 
     .value('fileUploaderOptions', {
@@ -81,7 +81,7 @@ module
                         this.queue.push(fileItem);
                         this._onAfterAddingFile(fileItem);
                     } else {
-                        var filter = this.filters[this._failFilterIndex];
+                        var filter = arrayOfFilters[this._failFilterIndex];
                         this._onWhenAddingFileFailed(temp, filter, options);
                     }
                 }, this);
@@ -326,7 +326,7 @@ module
              * @private
              */
             FileUploader.prototype._getFilters = function(filters) {
-                if (angular.isUndefined(filters)) return this.filters;
+                if (!filters) return this.filters;
                 if (angular.isArray(filters)) return filters;
                 var names = filters.match(/[^\s,]+/g);
                 return this.filters.filter(function(filter) {
@@ -451,6 +451,10 @@ module
                     });
                 });
 
+                if ( typeof(item._file.size) != 'number' ) {
+                    throw new TypeError('The file specified is no longer valid');
+                }
+
                 form.append(item.alias, item._file, item.file.name);
 
                 xhr.upload.onprogress = function(event) {
@@ -527,6 +531,9 @@ module
                 });
 
                 iframe.bind('load', function() {
+                    var html = '';
+                    var status = 200;
+
                     try {
                         // Fix for legacy IE browsers that loads internal error page
                         // when failed WS response received. In consequence iframe
@@ -540,10 +547,14 @@ module
                         // returning response via same 'success' event handler.
 
                         // fixed angular.contents() for iframes
-                        var html = iframe[0].contentDocument.body.innerHTML;
-                    } catch (e) {}
+                        html = iframe[0].contentDocument.body.innerHTML;
+                    } catch (e) {
+                        // in case we run into the access-is-denied error or we have another error on the server side
+                        // (intentional 500,40... errors), we at least say 'something went wrong' -> 500
+                        status = 500;
+                    }
 
-                    var xhr = {response: html, status: 200, dummy: true};
+                    var xhr = {response: html, status: status, dummy: true};
                     var headers = {};
                     var response = that._transformResponse(xhr.response, headers);
 
@@ -796,7 +807,12 @@ module
              * Uploads a FileItem
              */
             FileItem.prototype.upload = function() {
-                this.uploader.uploadItem(this);
+                try {
+                    this.uploader.uploadItem(this);
+                } catch (e) {
+                    this.uploader._onCompleteItem( this, '', 0, [] );
+                    this.uploader._onErrorItem( this, '', 0, [] );
+                }
             };
             /**
              * Cancels uploading of FileItem
@@ -1150,7 +1166,7 @@ module
              * Event handler
              */
             FileDrop.prototype.onDragLeave = function(event) {
-                if (event.currentTarget !== this.element[0]) return;
+                if (event.currentTarget === this.element[0]) return;
                 this._preventAndStop(event);
                 angular.forEach(this.uploader._directives.over, this._removeOverClass, this);
             };

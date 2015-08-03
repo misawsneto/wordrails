@@ -199,13 +199,34 @@
 
 <script type="text/ng-template" id="show_posts_details.html">
   <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-  <div class="splash-content" ng-cloak>
+  <div class="splash-content text-center" ng-cloak>
     <div class="row">
-      <div class="h4 m-b"><span class="">Status:</span>
-        <strong>{{(app.checkState() == 1) ? 'Publicado' : (app.checkState() == 2 || !app.checkState()) ? 'Rascunho' : (app.checkState() == 3) ? 'Agendado': app.checkState() == 4 ? 'Lixo' : ''}}</strong>
+      <div class="m-b-sm"><code>{{baseUrl +'/'+ app.editingPost.slug}}</code></div>
+      <div class="h3 font-bold m-b-md">{{app.editingPost.title}}</div>
+      <div class="text-md m-b-sm">
+        <strong>Status:</strong>
+        <span class="text-u-c m-l-sm">{{(app.checkState() == 1) ? 'Publicado' : (app.checkState() == 2 || !app.checkState()) ? 'Rascunho' : (app.checkState() == 3) ? 'Agendado': app.checkState() == 4 ? 'Lixo' : ''}}</span>
       </div>
-      <div class="m-b"><code>{{baseUrl +'/'+ app.editingPost.slug}}</code></div>
-      <div class="h3 font-bold">{{app.editingPost.title}}</div>
+      <div class="text-md m-b-sm">
+        <strong>Data de publicação:</strong>
+        <span class="text-u-c m-l-sm">{{app.editingPost.date | fromNow2}}</span>
+      </div>
+      <div class="text-md m-b-sm" ng-if="app.editingPost.createdAt">
+        <strong>Criado em:</strong>
+        <span class="text-u-c m-l-sm">{{app.editingPost.createdAt | fromNow2}}</span>
+      </div>
+      <div class="text-md m-b-sm" ng-if="app.editingPost.updatedAt">
+        <strong>Atualizado em:</strong>
+        <span class="text-u-c m-l-sm">{{app.editingPost.updatedAt | fromNow2}}</span>
+      </div>
+      <div class="text-md m-b-sm" ng-if="app.editingPost.body">
+        <strong>Título:</strong>
+        <span class="m-l-sm m-r-sm">{{app.countTitleWords()}} palavras</span> | <span class="m-l-sm">{{app.countTitleCharacters()}} caracteres</span>
+      </div>
+      <div class="text-md m-b-sm" ng-if="app.editingPost.body">
+        <strong>Texto:</strong>
+        <span class="m-l-sm m-r-sm">{{app.countBodyWords()}} palavras</span> | <span class="m-l-sm">{{app.countBodyCharacters()}} caracteres</span>
+      </div>
     </div>
   </div>
 </script>
