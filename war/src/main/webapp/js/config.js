@@ -1,5 +1,7 @@
 // config
 
+var TW;
+
 var app =  
 angular.module('app')
 .config(
@@ -93,7 +95,7 @@ angular.module('app')
    fjs.parentNode.insertBefore(js, fjs);
  }(document, 'script', 'facebook-jssdk'));
 
-  window.twttr = (function(d, s, id) {
+  /*window.twttr = (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0],
     t = window.twttr || {};
     if (d.getElementById(id)) return t;
@@ -108,6 +110,27 @@ angular.module('app')
     };
     
     return t;
-  }(document, "script", "twitter-wjs"));
+  }(document, "script", "twitter-wjs"));*/
+
+  /*TW = new Codebird;
+  TW.setConsumerKey("c9GcdgHslRJRAqeCXlxHpZ5SG");
+
+  TW.__call(
+    "oauth_requestToken",
+    {oauth_callback: "oob"},
+    function (reply) {
+        // stores it
+        TW.setToken(reply.oauth_token, reply.oauth_token_secret);
+
+        // gets the authorize screen URL
+        TW.__call(
+            "oauth_authorize",
+            {},
+            function (auth_url) {
+                window.codebird_auth = window.open(auth_url);
+            }
+        );
+    }*/
+    //);
 
 });

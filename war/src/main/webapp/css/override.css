@@ -2790,6 +2790,7 @@ button, select, html, textarea, input{
 #bookmarks .animated,
 #notifications .animated,
 #user-profile .animated,
+#tag-posts .animated,
 #publications .animated,
 #notifications .animated,
 #post-left-content .animated,
@@ -3205,6 +3206,16 @@ background: rgba(0,0,0,0.7);
 a.underline-hover:hover{
   text-decoration: underline;
 }
+
+/* tagspage */
+.tag-page-tag{
+  border: 1px solid #999;
+  border-radius: 50px;
+  display: inline-block;
+  padding: 5px 15px;
+  text-decoration: none;
+}
+/* /tagspage*/
 
 /* /user_profile */
 

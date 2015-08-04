@@ -26,6 +26,13 @@
             <li><a href class="text-center text-lg" ng-click="app.bookmark(app.nowReading.postId)">
               <i class="mdi" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(app.nowReading.postId), 'mdi-bookmark-outline': !app.bookmarked(app.nowReading.postId)}"></i>
             </a></li>
+            <li ng-if="app.nowReadingAuthor.authorId == app.initData.person.id">
+              <a ui-sref="app.post({'id': app.nowReading.postId})" class="text-center text-lg">
+              <i class="mdi mdi-pencil" ></i>
+            </a></li>
+            <li ng-if="app.nowReadingAuthor.authorId == app.initData.person.id"><a href class="text-center text-lg" ng-click="app.openDeletePost(app.nowReading.postId);">
+              <i class="mdi mdi-delete"></i>
+            </a></li>
           </ul>
           <!-- nabar right -->
           <ul class="nav navbar-nav navbar-right">
@@ -75,10 +82,10 @@
                 <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
                 </div>
                 <div class="p-t p-b">
-                  <button ng-repeat="term in app.nowReading.terms"
+                  <a ng-repeat="term in app.nowReading.terms" ui-sref="app.tagspage({'tagName': term.name})"
                     class="btn btn-rounded btn-stroke btn-term text-md m-r-sm m-b">
                     {{term.name}}
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>

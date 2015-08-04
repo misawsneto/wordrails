@@ -1,5 +1,6 @@
 package com.wordrails.persistence;
 
+import com.wordrails.business.Post;
 import com.wordrails.business.Taxonomy;
 import com.wordrails.business.Term;
 import com.wordrails.business.Wordpress;
@@ -75,4 +76,8 @@ public interface
 	
 	@Query(value="SELECT taxonomy.terms FROM Taxonomy taxonomy where taxonomy.id = :taxonomyId")
 	List<Term> findByTaxonomyId(@Param("taxonomyId") Integer perspectiveId);
+
+	@RestResource(exported = false)
+	@Query(value="SELECT post FROM Post post left join post.terms term where post.state = 'PUBLISHED' and post.stationId = :stationId and term.name = :tagName")
+	List<Post> findPostsByTagAndStationId(@Param("tagName") String tagName, @Param("stationId")Integer stationId, Pageable pageable);
 }
