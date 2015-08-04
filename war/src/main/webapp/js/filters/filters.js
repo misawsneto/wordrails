@@ -90,7 +90,7 @@ angular.module('app')
 .filter('bgimg2', function bgimg(){
 	return function(img){
 		if(img){
-			return "background-image: url(" + img + ")";
+			return {"background-image": "url(" + img + ")"};
 		}else{
 			return "";
 		}
@@ -100,9 +100,9 @@ angular.module('app')
 .filter('bgimg', function bgimg(){
 	return function(img){
 		if(img){
-			return "background-image: url(" + img + ")";
+			return {"background-image": "url(" + img + ")"};
 		}else{
-			return "background-image: url(img/default-user.png)";
+			return {"background-image": "url(img/default-user.png)"};
 		}
 	}
 })

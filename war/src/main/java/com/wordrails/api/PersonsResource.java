@@ -209,14 +209,14 @@ public class PersonsResource {
 
 		Person person = null;
 		if(personId == null){
-			authProvider.getLoggedPerson();
+			person = authProvider.getLoggedPerson();
 		}else{
 			person = personRepository.findOne(personId);
 		}
 
 		Network network = authProvider.getNetwork();
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id);
+			List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id);
 
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
@@ -225,7 +225,7 @@ public class PersonsResource {
 			}
 		}
 
-		List<Post> posts = postRepository.findPostByPersonIdAndStationsAndState(personId, state, stationIds, pageable);
+		List<Post> posts = postRepository.findPostByPersonIdAndStationsAndState(person.id, state, stationIds, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
 		response.content = postConverter.convertToViews(posts);

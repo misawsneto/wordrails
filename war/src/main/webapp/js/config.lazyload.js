@@ -84,7 +84,7 @@ angular.module('app')
               {
                   name:'angularFileUpload',
                   files: [
-                    '../bower_components/angular-file-upload/angular-file-upload.min.js'
+                    '../bower_components/angular-file-upload/dist/angular-file-upload.min.js'
                   ]
               },
               {

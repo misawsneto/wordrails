@@ -7,9 +7,11 @@ public interface NetworkProjection {
 	Integer getId();
 	String getName();
 	Integer getLogoId();
+    Integer getLogoSmallId();
 	Integer getFaviconId();
 	Integer getSplashImageId();
 	Integer getLoginImageId();
+    Integer getLoginImageSmallId();
 	
 	
     String getFlurryKey();

@@ -34,7 +34,7 @@ angular.module('app')
                 scrollSource: "null",
                 scrollBy: 1,
                 activatePageOn: 'click',
-                speed: 300,
+                speed: 1000,
                 elasticBounds: 1,
                 easing: 'easeOutExpo',
                 dragHandle: 1,
@@ -43,6 +43,12 @@ angular.module('app')
                 // Buttons
                 backward: $wrap.siblings('.backward'),
                 forward: $wrap.siblings('.forward'),
+
+                // prev: $wrap.find('.prev'),
+                // next: $wrap.find('.next'),
+                // prevPage: $wrap.find('.backward'),
+                // nextPage: $wrap.find('.forward'),
+
                 moveBy:1000
               }).sly('on', 'active', function(eventName, index){
 
@@ -88,6 +94,38 @@ angular.module('app')
       }
     });
   }
+})
+
+app.directive('backImg', function(TRIX){
+    return function(scope, element, attrs){
+        attrs.$observe('backImg', function(value) {
+            if(value){
+              element.css({
+                'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
+              });
+            }else{
+              element.css({
+                'background-image': 'url(img/default-user.png)'
+              });
+            }
+        });
+    };
+})
+
+app.directive('backImgCover', function(TRIX){
+    return function(scope, element, attrs){
+        attrs.$observe('backImgCover', function(value) {
+          if(value){
+            element.css({
+              'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
+            });
+          }else{
+            element.css({
+              'background-image': 'url(../img/abstract-cover-orig.png)'
+            });
+          }
+        });
+    };
 })
 
 .directive('clamp', function ($timeout) {

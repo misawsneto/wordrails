@@ -5,7 +5,7 @@
   </li> -->
 <li id="aside-user-list-item" ng-if="app.isLogged">
   <a ng-click="app.profilepopover.open = !app.profilepopover.open;" id="profile-popover-toggle">
-    <div id="aside-user" style="{{::app.initData.person.imageSmallId | imageLink | bgimg}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div>
+    <div id="aside-user" back-img="{{::app.initData.person.imageSmallId}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div>
   </a>
   
   <!-- <div class="clearfix hidden-xs text-center animated bounceIn" id="aside-user">
@@ -48,7 +48,7 @@
       <span class="font-bold">Estações</span>
     </a>
   </li>
-  <li class="line dk" ng-if="app.isLogged && app.networkAdmin && app.adminStations && app.adminStations.length > 0"></li>
+  <li class="line dk" ng-if="(app.isLogged && app.networkAdmin) || (app.adminStations && app.adminStations.length > 0)"></li>
   <li ng-class="{'active': $state.includes('app.settings')}">
     <a ng-click="app.changeToSettings()" class="border-radius-50" tooltip="Configurações" ng-if="app.isLogged && app.adminStations && app.adminStations.length > 0" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
       <i class="mdi-settings mdi text-lgrey text-shadow-dark"></i>

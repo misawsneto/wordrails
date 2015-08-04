@@ -108,5 +108,6 @@
   <script src="/js/util.js"></script>
   <!-- Lazy loading -->
   <script src="/js/iframe-api.js"></script>
+  <script src="/js/codebird.js?${buildNumber}"></script>
 </body>
 </html>

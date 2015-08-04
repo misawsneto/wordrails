@@ -1,0 +1,71 @@
+<div id="tag-posts" class="hbox" ng-cloak>
+	<!-- cover container -->
+	<div ng-if="showProfile">
+	</div>
+	<div id="editing-user-profile" class="user-details block-600 m-auto animated zoomIn with-cover">
+	</div>
+	<div class="user-bio block-600 m-auto font-thin text-2x text-center m-b-lg">
+	</div>
+	<!-- /conver container -->
+
+
+	<!-- posts & recommendation -->
+	<div infinite-scroll="paginate()" infinite-scroll-distance="1">
+		<!-- posts -->
+		<div class="block-800 m-auto m-t-lg m-b-lg" ng-if="postViews && postViews.length > 0 && showProfile">
+			<ul class="b-none no-padding m-b-none ls-style-none">
+				<li ng-repeat="postView in postViews">
+					<div ng-class="{'b-t': !$first}"></div>
+					<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+						<!-- image -->
+						<a class="block-image m-l m-t" ng-if="postView.mediumId" >
+							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
+							</div>
+						</a>
+						<!-- /image -->
+						<!-- /content -->
+						<div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
+							<span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
+							<a  class="h3 font-bold m-b m-t-sm block">
+								{{postView.title}}
+							</a>
+							<div class="text-lg font-thin">
+								{{postView.snippet | characters:170}}
+							</div>
+							<div class="m-t">
+								<div class="display-t-c">
+									<a >
+										<div back-img="{{postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
+									</a>
+								</div>
+								<div class="display-t-c p-l-sm v-middle">
+									<a ng-click="app.goToProfile($event, postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
+										{{postView.authorName}}
+									</a>
+									<br>
+									<span class="text-sm">
+										<span class="">
+											<span class="readingTime">{{postView.date | fromNow}}</span>
+											<div class="inline text-muted p-l-lg text-u-c" ng-if="postView.authorId == app.initData.person.id">
+												<a ng-click="app.goToEditPost(postView.postId, $event)"
+												class="text-muted p-r underline-hover">editar</a>
+												<a class="text-muted underline-hover" ng-click="app.openDeletePost(postView.postId, $event);
+												">remover</a>
+											</div>
+										</span>
+									</span>
+								</div>
+							</div>
+						</div>
+						<!-- /content -->
+					</div>    
+				</li>
+			</ul>
+		</div>
+		<!-- /posts -->
+
+		<!-- /pages -->
+	</div>
+
+	<div ui-view></div>
+</div>

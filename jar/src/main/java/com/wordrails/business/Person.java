@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -28,7 +29,8 @@ import java.util.Set;
 @Table(name = "person", uniqueConstraints={
 		@UniqueConstraint(columnNames={"user_id", "username"})
 })
-public class Person {
+public class Person implements Serializable{
+
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@NumericField

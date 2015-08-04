@@ -95,6 +95,7 @@ public class Network implements Serializable{
 	@OneToOne
 	public Image logo;
 	public Integer logoId;
+	public Integer logoSmallId;
 	
 	@OneToOne
 	public Image favicon;
@@ -107,6 +108,7 @@ public class Network implements Serializable{
 	@OneToOne
 	public Image loginImage;
 	public Integer loginImageId;
+	public Integer loginImageSmallId;
 	
 	@Column(columnDefinition = "varchar(255) default 'D'", nullable = false)
 	public String defaultReadMode;
@@ -167,8 +169,10 @@ public class Network implements Serializable{
 
 		if(loginImage != null && loginImage.original != null){
 			loginImageId = loginImage.original.id;
+			loginImageSmallId = loginImage.original.id;
 		}else{
 			loginImageId = null;
+			loginImageSmallId = null;
 		}
 	}
 	
@@ -181,6 +185,7 @@ public class Network implements Serializable{
 		updatedAt = new Date();
 		if(logo != null && logo.original != null){
 			logoId = logo.original.id;
+			logoSmallId = logo.small.id;
 		}else{
 			logoId = null;
 		}

@@ -123,9 +123,12 @@ function getCustomStyle(color, perspective, header) {
 	  "color: "+ color +";\n"+
 	  "background: "+ color +";\n"+
 	"}\n"+*/
+	".nav-tabs li a{"+
+	"border-bottom: 1px !important"+
+	"}"+
 
 	".nav-tabs li.custom-active a{"+
-	"border-bottom-color:" +color+ "!important"+
+	"border-bottom: 2px solid " +color+ "!important"+
 	"}"+
 
 	".redactor-editor a, .redactor-editor a:hover {color:"+ color +"}\n"+

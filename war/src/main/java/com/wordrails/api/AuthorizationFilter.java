@@ -535,6 +535,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetStationNetworkAuthorized(Integer stationId) {
+		return true;
+	}
+
+	@Override
 	protected boolean isGetStationPersonsStationRolesAuthorized(Integer stationId) {
 		boolean authorized = false;
 		Station station = stationRepository.findOne(stationId);

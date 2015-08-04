@@ -60,6 +60,9 @@ public class Station {
 	@ManyToMany
 	public Set<Network> networks;
 
+	@ManyToOne
+	public Network network;
+
 	@OneToMany(mappedBy="station", cascade=CascadeType.REMOVE)
 	public Set<StationRole> personsStationRoles;
 
