@@ -3,6 +3,7 @@ package com.wordrails.api;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -15,10 +16,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.business.Post;
+import com.wordrails.converter.PostConverter;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.WordrailsService;
@@ -52,6 +57,7 @@ public class TermResource {
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired TermRepository termRepository;
 	private @Autowired TermConverter termConverter;
+	private @Autowired PostConverter postConverter;
 
 	@GET
 	@Path("/termTree")
@@ -85,4 +91,18 @@ public class TermResource {
 		return response;
 	}
 
+	@GET
+	@Path("/tags/{tagName}")
+	public ContentResponse<List<PostView>> getTermTree(@QueryParam("tagName") String tagName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+		org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
+
+		Pageable pageable = new PageRequest(page, size);
+		List<Post> posts = termRepository.findPostsByTagAndStationId(tagName, stationId, pageable);
+
+		List<PostView> postViews = postConverter.convertToViews(posts);
+
+		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
+	}
 }

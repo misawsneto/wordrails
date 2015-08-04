@@ -371,14 +371,13 @@ angular.module('app')
                   controller: 'UserCtrl'
               })
               .state('app.tagspage', {
-                  url: '/tag/{tagId}',
+                  url: '/tag/{tagName}',
                   templateUrl: 'tpl/tags_page.html',
                   // use resolve to load other dependences
                    resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad ){
                           return $ocLazyLoad.load([
-                            'angularFileUpload',
                             'js/controllers/tags.js?' + GLOBAL_URL_HASH])
                       }]
                   },

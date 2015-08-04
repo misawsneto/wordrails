@@ -82,10 +82,10 @@
                 <div class="redactor-editor" style="min-height: 50px;" bind-html-unsafe="app.nowReading.body">
                 </div>
                 <div class="p-t p-b">
-                  <button ng-repeat="term in app.nowReading.terms"
+                  <a ng-repeat="term in app.nowReading.terms" ui-sref="app.tagspage({'tagName': term.name})"
                     class="btn btn-rounded btn-stroke btn-term text-md m-r-sm m-b">
                     {{term.name}}
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
