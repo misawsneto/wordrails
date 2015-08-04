@@ -152,6 +152,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isDeleteImagesAuthorized(List<Integer> ids) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetImageCommentAuthorized(Integer imageId) {
 		return canVisualizeImages(imageId);
 	}

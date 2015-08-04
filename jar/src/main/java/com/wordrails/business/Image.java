@@ -1,22 +1,13 @@
 package com.wordrails.business;
 
+import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -97,6 +88,15 @@ public class Image {
 	public Integer postId;
 	
 	public Integer commentId;
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable=false)
+	public Date createdAt;
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date updatedAt;
 	
 	@PrePersist
 	public void onCreate(){
@@ -105,6 +105,8 @@ public class Image {
 		
 		if(comment!=null)
 			commentId = comment.id;
+
+		createdAt = updatedAt = new Date();
 	}
 	
 	@PreUpdate
@@ -114,6 +116,8 @@ public class Image {
 		
 		if(comment!=null)
 			commentId = comment.id;
+
+		updatedAt = new Date();
 	}
 
 	public static boolean containsType(String string) {
