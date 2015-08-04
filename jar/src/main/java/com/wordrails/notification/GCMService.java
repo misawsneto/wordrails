@@ -1,4 +1,4 @@
-package com.wordrails;
+package com.wordrails.notification;
 
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
@@ -24,13 +24,9 @@ import com.wordrails.business.Network;
 import com.wordrails.business.Notification;
 import com.wordrails.business.Person;
 import com.wordrails.business.PersonNetworkRegId;
-import com.wordrails.business.PersonNetworkToken;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
-import com.wordrails.persistence.PersonNetworkTokenRepository;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.StationRepository;
 import com.wordrails.util.NotificationDto;
 import com.wordrails.util.WordrailsUtil;
 
@@ -42,11 +38,8 @@ public class GCMService {
 	private Sender sender;
 	private final int GCM_WINDOW_SIZE = 1000;
 
-	@Autowired private PersonRepository personRepository;
 	@Autowired private NetworkRepository networkRepository;
-	@Autowired private StationRepository stationRepository;
 	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository;
-	@Autowired private PersonNetworkTokenRepository personNetworkTokenRepository; 
 	@Autowired private NotificationRepository notificationRepository; 
 	private ObjectMapper mapper;
 
@@ -73,7 +66,6 @@ public class GCMService {
 					it.remove();
 			}
 		}
-		
 	}
 
 	public void sendToNetwork(Integer networkId, Notification notification){
@@ -84,7 +76,8 @@ public class GCMService {
 	@Async
 	@Transactional
 	public void sendToNetwork(Network network, Notification notification){
-		List<PersonNetworkRegId> personNetworkRegIds = personNetworkRegIdRepository.findByNetwork(network);
+		List<PersonNetworkRegId> personNetworkRegIds = personNetworkRegIdRepository
+				.findByNetwork(network);
 		try {
 			removeNotificationProducer(personNetworkRegIds, notification);
 			gcmNotify(personNetworkRegIds, notification);
@@ -105,7 +98,8 @@ public class GCMService {
 		}
 	}
 
-	public void gcmNotify(List<PersonNetworkRegId> personNetworkRegIds, final Notification notification) throws Exception{
+	private void gcmNotify(List<PersonNetworkRegId> personNetworkRegIds,
+	                      final Notification notification) throws Exception{
 
 		if(personNetworkRegIds == null || notification == null)
 			throw new UnexpectedException("Erro inesperado...");
@@ -228,26 +222,5 @@ public class GCMService {
 		}catch(Exception e){
 			System.out.println(e.getLocalizedMessage());
 		}
-	}
-
-	public void updateIosToken(Network network, Person person, String token, Double lat, Double lng){
-		try{
-			PersonNetworkToken pToken = personNetworkTokenRepository.findOneByToken(token);
-			if(token == null || pToken.token == null){
-				pToken = new PersonNetworkToken();
-				pToken.token = token;
-			}
-
-			pToken.network = network;
-			pToken.person = person;
-			if(lat != null && lng != null){
-				pToken.lat = lat;
-				pToken.lng = lng;
-			}
-			personNetworkTokenRepository.save(pToken);
-		}catch(Exception e){
-			System.out.println(e.getLocalizedMessage());
-		}
-		
 	}
 }

@@ -4,35 +4,73 @@ import com.relayrides.pushy.apns.ApnsEnvironment;
 import com.relayrides.pushy.apns.PushManager;
 import com.relayrides.pushy.apns.PushManagerConfiguration;
 import com.relayrides.pushy.apns.util.*;
+import com.wordrails.business.Network;
+import com.wordrails.business.Notification;
+import com.wordrails.business.Person;
+import com.wordrails.business.PersonNetworkToken;
+import com.wordrails.persistence.NetworkRepository;
+import com.wordrails.persistence.PersonNetworkTokenRepository;
+import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.StationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.rmi.UnexpectedException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.SynchronousQueue;
 
 /**
  * Created by jonas on 24/07/15.
  */
+@Component
 public class APNService {
 
-	private PushManager<SimpleApnsPushNotification> pushManager = null;
-	private final ApnsPayloadBuilder payloadBuilder = new ApnsPayloadBuilder();
+	@Autowired private PersonNetworkTokenRepository personNetworkTokenRepository;
+	@Autowired private NetworkRepository networkRepository;
+	@Autowired private StationRepository stationRepository;
+	private PushManager<SimpleApnsPushNotification> pushManager;
+	private SynchronousQueue sq;
 
-	public APNService(){ }
+	private void init(String networkName){
+		String passwordFilename = networkName.replace(" ", "_").toLowerCase() + ".passwd";
+		String certFilename = networkName.replace(" ", "").toLowerCase() + ".p12";
+		String certPassword = "";
 
-	private void init(String networkCert, String certPassword){
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(passwordFilename));
+
+			for(String line = ""; line != null; line = br.readLine()){
+				certPassword += line;
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		sq = new SynchronousQueue();
 		try {
 			this.pushManager = new PushManager<SimpleApnsPushNotification>(
 					ApnsEnvironment.getSandboxEnvironment(),
-					SSLContextUtil.createDefaultSSLContext(networkCert + ".p12", certPassword),
+					SSLContextUtil.createDefaultSSLContext(certFilename, certPassword),
 					null, // Optional: custom event loop group
 					null, // Optional: custom ExecutorService for calling listeners
-					null, // Optional: custom BlockingQueue implementation
+					sq, // Optional: custom BlockingQueue implementation
 					new PushManagerConfiguration(),
-					"ExamplePushManager");
+					networkName);
+			pushManager.start();
 		} catch (KeyStoreException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
@@ -46,11 +84,9 @@ public class APNService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		pushManager.start();
 	}
 
-	public void shutdown(){
+	private void shutdown(){
 		try {
 			pushManager.shutdown();
 		} catch (InterruptedException e) {
@@ -58,15 +94,107 @@ public class APNService {
 		}
 	}
 
-	public void add2Queue(String deviceToken, String notifyMsg) throws InterruptedException, MalformedTokenStringException {
-		final byte[] token = TokenUtil.tokenStringToByteArray(
-				"<5f6aa01d 8e335894 9b7c25d4 61bb78ad 740f4707 462c7eaf bebcf74f a5ddb387>");
+	@Async
+	@Transactional
+	public void sendToStation(Integer stationId, Notification notification) throws UnexpectedException {
+		List<PersonNetworkToken> personNetworkTokens = personNetworkTokenRepository
+				.findTokenByStationId(stationId);
 
-		payloadBuilder.addCustomProperty("msg", notifyMsg);
+		Network network;
+		if((network = stationRepository.findNetworkByStationId(stationId)) == null){
+			throw new UnexpectedException("There is no such network...");
+		}
 
-		String payload = payloadBuilder.buildWithDefaultMaximumLength();
+		try {
+			removeNotificationProducer(personNetworkTokens, notification);
+			apnNotify(personNetworkTokens, notification, network);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 
-		pushManager.getQueue().put(new SimpleApnsPushNotification(token, payload));
+	}
+
+	public void sendToNetwork(Integer networkId, Notification notification){
+		Network network = networkRepository.findOne(networkId);
+		sendToNetwork(network, notification);
+	}
+
+	@Async
+	@Transactional
+	public void sendToNetwork(Network network, Notification notification){
+		List<PersonNetworkToken> personNetworkTokens = personNetworkTokenRepository
+				.findByNetwork(network);
+		try {
+			removeNotificationProducer(personNetworkTokens, notification);
+			apnNotify(personNetworkTokens, notification, network);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void apnNotify(List<PersonNetworkToken> personNetworkTokens,
+	                      final Notification notification, Network network)
+			throws UnexpectedException, MalformedTokenStringException, InterruptedException {
+
+		if(personNetworkTokens == null || notification == null){
+			throw new UnexpectedException("Unexpected error...");
+		}
+		if(personNetworkTokens.size() == 0) return;
+
+		init(network.name);
+
+		ApnsPayloadBuilder payloadBuilder = new ApnsPayloadBuilder();
+		payloadBuilder.setBadgeNumber(1);
+		payloadBuilder.setSoundFileName("default");
+		payloadBuilder.addCustomProperty("postId", notification.postId);
+		payloadBuilder.addCustomProperty("stationName", notification.station.name);
+		payloadBuilder.setAlertTitle(notification.station.name);
+		payloadBuilder.setAlertBody(notification.message);
+
+		for(PersonNetworkToken personToken: personNetworkTokens){
+			pushManager.getQueue().put(new SimpleApnsPushNotification(
+					TokenUtil.tokenStringToByteArray(personToken.token),
+					payloadBuilder.buildWithDefaultMaximumLength()
+			));
+		}
+
+		shutdown();
+
+	}
+
+	private void removeNotificationProducer(
+			List<PersonNetworkToken> personNetworkTokens,
+			Notification notification){
+		if(personNetworkTokens != null && notification.person.id != null){
+			Iterator<PersonNetworkToken> it = personNetworkTokens.iterator();
+			while(it.hasNext()){
+				PersonNetworkToken token = it.next();
+				if(token.person != null && token.person.id.equals(notification.person.id)){
+					it.remove();
+				}
+			}
+		}
+	}
+
+	public void updateIosToken(Network network, Person person, String token,
+	                           Double lat, Double lng){
+		try{
+			PersonNetworkToken pToken = personNetworkTokenRepository.findOneByToken(token);
+			if(token == null || pToken.token == null){
+				pToken = new PersonNetworkToken();
+				pToken.token = token;
+			}
+
+			pToken.network = network;
+			pToken.person = person;
+			if(lat != null && lng != null){
+				pToken.lat = lat;
+				pToken.lng = lng;
+			}
+			personNetworkTokenRepository.save(pToken);
+		}catch(Exception e){
+			System.out.println(e.getLocalizedMessage());
+		}
 	}
 
 }

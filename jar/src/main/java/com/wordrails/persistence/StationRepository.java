@@ -1,5 +1,6 @@
 package com.wordrails.persistence;
 
+import com.wordrails.business.Network;
 import com.wordrails.business.Station;
 
 import java.util.List;
@@ -46,6 +47,10 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
     @RestResource(exported=false)
     @Query("select network.stations from Network network where network.id = :networkId")
 	public List<Station> findByNetworkId(@Param("networkId") Integer networkId);
+
+	@RestResource(exported = false)
+	@Query("select network.name from Network network where network.id = (select networks_id from station_network where stations_id = :stationId)")
+	public Network findNetworkByStationId(@Param("stationId") Integer stationId);
 
     @RestResource(exported=false)
     @Query("select str.station from StationRole str where str.id in (:stationRolesIds) group by str.station.id")

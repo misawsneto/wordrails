@@ -22,12 +22,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.wordrails.notification.NotificationManager;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.GCMService;
+import com.wordrails.notification.APNService;
+import com.wordrails.notification.GCMService;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.BadRequestException;
@@ -54,17 +54,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,7 +79,7 @@ public class PersonsResource {
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired PersonNetworkRegIdRepository pnrRepository;
 	private @Autowired GCMService gcmService;
-	private @Autowired NotificationManager notificationManager;
+	private @Autowired APNService apnService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
 
@@ -155,7 +147,7 @@ public class PersonsResource {
 	public Response putToken(@FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
 		Person person = authProvider.getLoggedPerson();
-		gcmService.updateIosToken(network, person, token, lat, lng);
+		apnService.updateIosToken(network, person, token, lat, lng);
 		return Response.status(Status.OK).build();
 	}
 

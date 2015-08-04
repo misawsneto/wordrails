@@ -1,6 +1,7 @@
 package com.wordrails.business;
 
-import com.wordrails.GCMService;
+import com.wordrails.notification.APNService;
+import com.wordrails.notification.GCMService;
 import com.wordrails.jobs.PostScheduleJob;
 import com.wordrails.persistence.PostDraftRepository;
 import com.wordrails.persistence.PostRepository;
@@ -27,16 +28,12 @@ public class PostService {
 
 	private static final Logger log = LoggerFactory.getLogger(PostService.class);
 
-	@Autowired
-	private QueryPersistence queryPersistence;
-	@Autowired
-	private Scheduler scheduler;
-	@Autowired
-	private GCMService gcmService;
-	@Autowired
-	private PostRepository postRepository;
-	@Autowired
-	private StationRepository stationRepository;
+	@Autowired private QueryPersistence queryPersistence;
+	@Autowired private Scheduler scheduler;
+	@Autowired private GCMService gcmService;
+	@Autowired private APNService apnService;
+	@Autowired private PostRepository postRepository;
+	@Autowired private StationRepository stationRepository;
 	
 	@Autowired private PostDraftRepository postDraftRepository;
 	
@@ -121,6 +118,7 @@ public class PostService {
 			if (post.station != null && post.station.networks != null) {
 				Station station = stationRepository.findOne(post.station.id);
 				gcmService.sendToStation(station.id, notification);
+				apnService.sendToStation(station.id, notification);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
