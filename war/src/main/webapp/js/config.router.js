@@ -95,6 +95,17 @@ angular.module('app')
                   },
                   controller: 'TagsPageCtrl'
               })
+              .state('app.tagspage.read', {
+                  url: '/:slug',
+                  template: '',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/read.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  },
+                  controller:'ReadCtrl'
+              })
               .state('app.search.read', {
                   url: '/:slug',
                   template: '',
