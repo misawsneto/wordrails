@@ -119,10 +119,10 @@ app.directive('backImgCover', function(TRIX){
             element.css({
               'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
             });
-          // }else{
-          //   element.css({
-          //     'background-image': 'url(../img/abstract-cover-orig.png)'
-          //   });
+          }else{
+            element.css({
+              'background-image': 'url(../img/abstract-cover-orig.png)'
+            });
           }
         });
     };
