@@ -3,7 +3,6 @@ package com.wordrails.resource;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.Network;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
@@ -24,7 +23,7 @@ public class AuthResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/signin")
-	public Response signin(@FormParam("providerId") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
+	public Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
 		Network network = authProvider.getNetwork();
 
 		if (!network.allowSocialLogin) {

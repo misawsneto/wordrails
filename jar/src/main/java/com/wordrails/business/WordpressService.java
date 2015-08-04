@@ -445,9 +445,9 @@ public class WordpressService {
 	private void createImages(Image image) throws SQLException, IOException {
 		com.wordrails.business.File original = image.original;
 
-		String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
 
 		if (original != null) {
+			String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
 			com.wordrails.business.File small = new File();
 			small.type = File.INTERNAL_FILE;
 			small.mime = image.original.mime != null ? image.original.mime : MIME;

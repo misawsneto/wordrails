@@ -758,7 +758,7 @@ angular.module('app')
                             } else {
                                 $scope.app.cancelModal();
                             }
-                        });
+                        }, {scope: 'public_profile,email'});
                     }
                 });
 

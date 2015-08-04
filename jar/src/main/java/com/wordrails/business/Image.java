@@ -24,7 +24,7 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 @Entity
 public class Image {
 
-	public enum Type {FAVICON, SPLASH, LOGIN, POST}
+	public enum Type {FAVICON, SPLASH, LOGIN, POST, COVER, PROFILE_PICTURE}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -69,7 +69,7 @@ public class Image {
 	public Sponsor publicitySponsor;
 	
 	@NotNull
-	@ManyToOne(cascade=CascadeType.REMOVE)
+	@ManyToOne(cascade=CascadeType.ALL)
 	public File original;
 	
 	@NotNull
