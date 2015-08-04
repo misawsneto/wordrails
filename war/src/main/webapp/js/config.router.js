@@ -82,6 +82,19 @@ angular.module('app')
                   },
                   controller:'SearchCtrl'
               })
+              .state('app.tagspage', {
+                  url: '/tag/{tagName}',
+                  templateUrl: 'tpl/tags_page.html',
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load([
+                            'js/controllers/tags.js?' + GLOBAL_URL_HASH])
+                      }]
+                  },
+                  controller: 'TagsPageCtrl'
+              })
               .state('app.search.read', {
                   url: '/:slug',
                   template: '',
@@ -369,19 +382,6 @@ angular.module('app')
                       }]
                   },
                   controller: 'UserCtrl'
-              })
-              .state('app.tagspage', {
-                  url: '/tag/{tagName}',
-                  templateUrl: 'tpl/tags_page.html',
-                  // use resolve to load other dependences
-                   resolve: {
-                      deps: ['$ocLazyLoad',
-                        function( $ocLazyLoad ){
-                          return $ocLazyLoad.load([
-                            'js/controllers/tags.js?' + GLOBAL_URL_HASH])
-                      }]
-                  },
-                  controller: 'TagsPageCtrl'
               })
               .state('app.publications.read', {
                   url: '/:slug',

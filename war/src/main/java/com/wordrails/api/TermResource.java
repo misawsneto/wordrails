@@ -92,8 +92,8 @@ public class TermResource {
 	}
 
 	@GET
-	@Path("/tags/{tagName}")
-	public ContentResponse<List<PostView>> getTermTree(@QueryParam("tagName") String tagName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+	@Path("/search/findPostsByTagAndStationId")
+	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tagName") String tagName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
 
 		Pageable pageable = new PageRequest(page, size);

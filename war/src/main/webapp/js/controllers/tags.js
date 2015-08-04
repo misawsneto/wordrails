@@ -1,6 +1,6 @@
 app.controller('TagsPageCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', '$mdToast',
 	function($scope, $log, $timeout, $rootScope, $state, trix, $mdToast) {
-	var tagName = $state.params.tagName;
+	var tagName = $scope.tagName = $state.params.tagName;
 	var page = 0;
 
 	if(tagName){
@@ -21,17 +21,17 @@ app.controller('TagsPageCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$st
 		// })// end of success
 		
 		trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, page, 10, "id,desc").success(function(response){
-			console.log(response);
+			$scope.postViews = response;
 		})
 
 	}else{
 		// TODO error
 	}
 
-	$scope.$watch('app.nowReading', function(postView){
+	/*$scope.$watch('app.nowReading', function(postView){
 		if(postView){
 			$("body").addClass("show-post")
 		}
-	})
+	})*/
 
 }])

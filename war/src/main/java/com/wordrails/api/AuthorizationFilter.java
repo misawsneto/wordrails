@@ -1516,11 +1516,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindPostsByTagAndStationIdAuthorized(String tagName, Integer stationId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
 	protected boolean isCountByDistinctSessionidAuthorized(Date dateIni, Date dateEnd) {
 		return true;
 	}
