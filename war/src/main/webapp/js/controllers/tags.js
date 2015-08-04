@@ -20,7 +20,7 @@ app.controller('TagsPageCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$st
 		// 	//console.log($scope.app.nowReading);
 		// })// end of success
 		
-		trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, page, 10).success(function(response){
+		trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, page, 10, "id,desc").success(function(response){
 			console.log(response);
 		})
 

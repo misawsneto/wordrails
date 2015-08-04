@@ -35,7 +35,7 @@
 </head>
 <body ng-controller="AppCtrl" ng-cloak>
   <offcanvas></offcanvas>
-  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.post', 'bg-perspective': $state.includes('app.stations'), 'bg-light-grey': $state.includes('app.settings') || $state.includes('app.bookmarks') || $state.includes('app.search') || $state.includes('app.notifications') || $state.includes('app.user') || $state.includes('app.publications') || $state.includes('app.userstats')}" ui-view></div>
+  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.post', 'bg-perspective': $state.includes('app.stations'), 'bg-light-grey': $state.includes('app.settings') || $state.includes('app.bookmarks') || $state.includes('app.search') || $state.includes('app.notifications') || $state.includes('app.user') || $state.includes('app.publications') || $state.includes('app.userstats')} || $state.includes('app.tagspage')" ui-view></div>
 
 
   <!-- jQuery -->

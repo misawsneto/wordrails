@@ -112,25 +112,25 @@ angular.module('app')
     return t;
   }(document, "script", "twitter-wjs"));*/
 
-  TW = new Codebird;
-  TW.setConsumerKey("c9GcdgHslRJRAqeCXlxHpZ5SG", "8CPD6QaES1ZFqD2JVVOxNV1vixEYqcLs0s6dYdHvkqag49fOx1");
+  /*TW = new Codebird;
+  TW.setConsumerKey("c9GcdgHslRJRAqeCXlxHpZ5SG");
 
   TW.__call(
     "oauth_requestToken",
     {oauth_callback: "oob"},
     function (reply) {
         // stores it
-        cb.setToken(reply.oauth_token, reply.oauth_token_secret);
+        TW.setToken(reply.oauth_token, reply.oauth_token_secret);
 
         // gets the authorize screen URL
-        cb.__call(
+        TW.__call(
             "oauth_authorize",
             {},
             function (auth_url) {
                 window.codebird_auth = window.open(auth_url);
             }
         );
-    }
-);
+    }*/
+    //);
 
 });
