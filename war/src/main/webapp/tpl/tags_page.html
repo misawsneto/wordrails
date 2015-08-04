@@ -15,7 +15,7 @@
 			<ul class="b-none no-padding m-b-none ls-style-none">
 				<li ng-repeat="postView in postViews">
 					<div ng-class="{'b-t': !$first}"></div>
-					<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+					<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.tagspage')">
 						<!-- image -->
 						<a class="block-image m-l m-t" ng-if="postView.mediumId" >
 							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
