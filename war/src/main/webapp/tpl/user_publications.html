@@ -21,7 +21,7 @@
 				<ul class="nav nav-tabs text-lg" role="tablist">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
 						<a class="text-u-c" ng-click="app.goToUserPublications($event); allLoaded = false;">
-							Minhas publicações
+							Publicados
 						</a>
 					</li>
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 1}">
@@ -31,7 +31,7 @@
 					</li>
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 2}">
 						<a class="text-u-c" ng-click="app.goToUserDrafts($event); allLoaded = false;">
-							Meus rascunhos
+							Rascunhos
 						</a>
 					</li>
 					<!-- <li ng-show="app.networkAdmin || app.adminStations.length > 0 || app.editorStations > 0"

@@ -115,9 +115,15 @@ app.directive('backImg', function(TRIX){
 app.directive('backImgCover', function(TRIX){
     return function(scope, element, attrs){
         attrs.$observe('backImgCover', function(value) {
+          if(value){
             element.css({
               'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
             });
+          // }else{
+          //   element.css({
+          //     'background-image': 'url(../img/abstract-cover-orig.png)'
+          //   });
+          }
         });
     };
 })

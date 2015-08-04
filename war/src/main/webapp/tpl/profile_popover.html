@@ -18,7 +18,7 @@
 				<a class="m-b-xs" ng-class="{'block-item': app.writableStations && app.writableStations.length > 0}" ng-click="app.goToProfile($event, app.initData.person.username)"><i class="mdi mdi-account"></i> Perfil</a>
 
 				<a class="m-b-xs" ng-class="{'block-item': app.writableStations && app.writableStations.length > 0, 'hide':
-				!(app.writableStations && app.writableStations.length > 0)}" ng-click="app.goToUserDrafts($event)"><i class="mdi mdi-newspaper"></i> Publicações</a>
+				!(app.writableStations && app.writableStations.length > 0)}" ng-click="app.goToUserPublications($event)"><i class="mdi mdi-newspaper"></i> Publicações</a>
 
 				<a  ng-class="{'hide': !(app.writableStations && app.writableStations.length > 0)}"
 				ng-click="app.goToUserStats($event, app.initData.person.username)"><i class="mdi mdi-chart-bar"></i> Estatísticas</a>
