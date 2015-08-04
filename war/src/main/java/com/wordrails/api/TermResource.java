@@ -24,6 +24,7 @@ import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.WordrailsService;
@@ -96,7 +97,8 @@ public class TermResource {
 	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tagName") String tagName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
 
-		Pageable pageable = new PageRequest(page, size);
+		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
+
 		List<Post> posts = termRepository.findPostsByTagAndStationId(tagName, stationId, pageable);
 
 		List<PostView> postViews = postConverter.convertToViews(posts);

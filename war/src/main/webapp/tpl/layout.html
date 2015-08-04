@@ -10,7 +10,7 @@
 
   <!-- view -->
   <div class="app-content" ng-class="{'m-n': app.hideAside, 'h-full': app.hideFooter }">
-    <div class="app-content-body fade-in" ng-class="{'h-full': app.hideFooter, 'no-header-space': $state.includes('app.search') || $state.includes('app.stations') || $state.includes('app.notifications') || $state.includes('app.bookmarks') || $state.includes('app.settings') || $state.includes('app.user') || $state.includes('app.tagspage') || $state.includes('app.publications') || $state.includes('app.userstats'), 'app-content-full': (!$state.includes('app.stations') && !$state.includes('app.search') && !$state.includes('app.user') && !$state.includes('app.bookmarks') && !$state.includes('app.notifications') && !$state.includes('app.publications') ) && !$state.includes('app.userstats')}" ui-view>
+    <div class="app-content-body fade-in" ng-class="{'h-full': app.hideFooter, 'no-header-space': $state.includes('app.search') || $state.includes('app.stations') || $state.includes('app.notifications') || $state.includes('app.bookmarks') || $state.includes('app.settings') || $state.includes('app.user') || $state.includes('app.tagspage') || $state.includes('app.publications') || $state.includes('app.userstats'), 'app-content-full': (!$state.includes('app.stations') && !$state.includes('app.search') && !$state.includes('app.user') && !$state.includes('app.bookmarks') && !$state.includes('app.tagspage') && !$state.includes('app.notifications') && !$state.includes('app.publications') ) && !$state.includes('app.userstats')}" ui-view>
     </div>
   </div>
   <!-- / view -->

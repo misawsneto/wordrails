@@ -1,32 +1,53 @@
 app.controller('TagsPageCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', '$mdToast',
 	function($scope, $log, $timeout, $rootScope, $state, trix, $mdToast) {
 	var tagName = $scope.tagName = $state.params.tagName;
-	var page = 0;
+	$scope.postsPage = 0;
 
 	if(tagName){
-		// trix.findBySlug(slug, 'postProjection').success(function(response){
-		// 	if(response){
-		// 		$scope.app.nowReading = response.posts[0]
-		// 		$scope.app.nowReading.postId = $scope.app.nowReading.id;
-		// 		$scope.app.addPostRead($scope.app.nowReading.postId)
-		// 		$scope.app.nowReadingAuthor = {
-		//             authorId: $scope.app.nowReading.author.id,
-		//             imageSmallId: $scope.app.nowReading.author.imageSmallId,
-		//             coverMediumId: $scope.app.nowReading.author.coverMediumId,
-		//             authorName: $scope.app.nowReading.author.name
-		//         }
-		// 	}
-		// 	$("title").html($scope.app.nowReading.title);
-		// 	//console.log($scope.app.nowReading);
-		// })// end of success
 		
-		trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, page, 10, "id,desc").success(function(response){
+		trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, $scope.postsPage, 10, "id,desc").success(function(response){
 			$scope.postViews = response;
+			if($scope.postViews && $scope.postViews.length > 0)
+				$scope.postsPage++;
 		})
 
 	}else{
 		// TODO error
 	}
+
+	$scope.paginate = function(){
+
+		if(!$scope.postViews || $scope.postViews.length == 0)
+			return;
+
+		if($scope.allLoaded)
+			return;
+
+		if(!$scope.loadingPage){
+			$scope.loadingPage = true;
+			trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, $scope.postsPage, 10, "id,desc").success(function(posts){
+				$scope.loadingPage = false;
+				$scope.postsPage = $scope.postsPage + 1;
+
+				if(!posts || posts.length == 0){
+					$scope.allLoaded = true;
+					return;
+				}
+
+				if(!$scope.postViews)
+					$scope.postViews = []
+
+				posts && posts.forEach(function(element, index){
+					$scope.postViews.push(element)
+				}); 
+
+			})
+			.error(function(){
+				$scope.loadingPage = false;
+			})
+		}
+	}
+
 
 	/*$scope.$watch('app.nowReading', function(postView){
 		if(postView){
