@@ -33,7 +33,6 @@ import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -245,7 +244,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPersonCommentsAuthorized(Integer personId) {
-		return authProvider.areYouLogged(personId);
+		return authProvider.isLogged(personId);
 	}
 
 	@Override
@@ -260,12 +259,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPersonPostsAuthorized(Integer personId) {
-		return authProvider.areYouLogged(personId);
+		return authProvider.isLogged(personId);
 	}
 
 	@Override
 	protected boolean isGetPersonPromotionsAuthorized(Integer personId) {
-		return authProvider.areYouLogged(personId);
+		return authProvider.isLogged(personId);
 	}
 
 	@Override
@@ -1106,6 +1105,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isExistsByUsernameAndNetworkIdAuthorized(String username, Integer networkId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetUserNetworkAuthorized(Integer userId) {
 		return false;
 	}
@@ -1117,6 +1121,26 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetUserAuthoritiesAuthorized(Integer userId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserUserConnectionsAuthorized(Integer userId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserConnectionsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserConnectionAuthorized(Integer userConnectionId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetUserConnectionUserAuthorized(Integer userConnectionId) {
 		return false;
 	}
 

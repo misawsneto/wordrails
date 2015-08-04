@@ -83,7 +83,7 @@ public class Person implements Serializable{
 	public String bio;
 
 	@NotNull
-	@Column(unique=true)
+	@Column
 	@Email
 	public String email;
 

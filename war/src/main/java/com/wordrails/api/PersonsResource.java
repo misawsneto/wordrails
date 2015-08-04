@@ -61,8 +61,6 @@ public class PersonsResource {
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
-	private @Autowired TaxonomyRepository taxonomyRepository;
-	private @Autowired PersonNetworkRegIdRepository pnrRepository;
 	private @Autowired GCMService gcmService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
@@ -79,8 +77,6 @@ public class PersonsResource {
 
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private UserGrantedAuthorityRepository userGrantedAuthorityRepository;
 
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired StationRoleEventHandler stationRoleEventHandler;
@@ -139,10 +135,8 @@ public class PersonsResource {
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password) {
-		Network network = wordrailsService.getNetworkFromHost(request);
-
 		try{
-			authProvider.authenticate(username, password, network);
+			authProvider.passwordAuthentication(username, password, authProvider.getNetwork());
 			return Response.status(Status.OK).build();
 		}catch(BadCredentialsException | UsernameNotFoundException e){
 			return Response.status(Status.UNAUTHORIZED).build();
@@ -161,7 +155,7 @@ public class PersonsResource {
 
 		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
 
-		List<Integer> stationIds = new ArrayList<Integer>();
+		List<Integer> stationIds = new ArrayList<>();
 		if(permissions != null && permissions.size() > 0){
 			for (StationPermission stationPermission : permissions) {
 				stationIds.add(stationPermission.stationId);
@@ -452,21 +446,23 @@ public class PersonsResource {
 		Network network = wordrailsService.getNetworkFromHost(request);
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
 
-		for(Person person: persons){
-			if(!person.user.network.id.equals(network.id))
+		if(persons != null && persons.size() > 0) {
+			for (Person person : persons) {
+				if (!person.user.network.id.equals(network.id)) return Response.status(Status.UNAUTHORIZED).build();
+			}
+
+			if (networkSecurityChecker.isNetworkAdmin(network)) {
+				for (Person person : persons) {
+					personEventHandler.handleBeforeDelete(person);
+				}
+
+				personRepository.delete(persons);
+			} else {
 				return Response.status(Status.UNAUTHORIZED).build();
+			}
 		}
 
-		if(persons != null && persons.size() > 0 && networkSecurityChecker.isNetworkAdmin(network)){
-		for(Person person: persons){
-			personEventHandler.handleBeforeDelete(person);
-		}
-
-		personRepository.delete(persons);
 		return Response.status(Status.OK).build();
-		}else{
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
 	}
 
 	@DELETE
