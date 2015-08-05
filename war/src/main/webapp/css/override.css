@@ -3710,6 +3710,7 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 #my-profile-popover .profile-popover .cover-abstract-mask{position: absolute; width: 100%; top: 0; bottom: 35px;}
 
 #login-error{min-height: 25px;}
+.max-logo{max-height: 150px;}
 /* /layout.html*/
 
 /* aside.html */

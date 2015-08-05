@@ -140,6 +140,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 				var myLoginImage = TRIX.baseUrl + "/api/images/" + imageId;
 				$scope.network.loginImage = myLoginImage;
 				trix.putNetwork($scope.network).success(function(){
+					$scope.app.initData.network.loginImageId = $scope.loginImage.id
 				})
 			})
 		}
@@ -149,6 +150,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 				var mySplashImage = TRIX.baseUrl + "/api/images/" + imageId;
 				$scope.network.splashImage = mySplashImage;
 				trix.putNetwork($scope.network).success(function(){
+					$scope.app.initData.network.splashImageId = $scope.splashImage.id
 				})
 			})
 		}
@@ -158,6 +160,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 				var myFavicon = TRIX.baseUrl + "/api/images/" + imageId;
 				$scope.network.favicon = myFavicon;
 				trix.putNetwork($scope.network).success(function(){
+					$scope.app.initData.network.faviconImageId = $scope.faviconImage.id
 				})
 			})
 		}

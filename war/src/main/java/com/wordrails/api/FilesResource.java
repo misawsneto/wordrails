@@ -145,7 +145,7 @@ public class FilesResource {
 	@Path("/contents/simple")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response postPersonFileContents(@Context HttpServletRequest request) throws FileUploadException, IOException {
+	public Response postSimpleFileContents(@Context HttpServletRequest request) throws FileUploadException, IOException {
 		com.wordrails.business.File file = new File();
 		file.type = File.INTERNAL_FILE;
 		fileRepository.save(file);
