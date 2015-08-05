@@ -132,8 +132,12 @@ angular.module('app')
                 $scope.app.checkIfLogged();
             }
 
-            if(initData.network.loginImageId)
-                initData.network.loginImageLink = TRIX.baseUrl + "/api/files/" + initData.network.loginImageId + "/contents"
+            function checkLoginImage(){
+                if(initData.network.loginImageId)
+                    initData.network.loginImageLink = TRIX.baseUrl + "/api/files/" + initData.network.loginImageId + "/contents"
+            }
+
+            checkLoginImage();
 
             $scope.app.initData = angular.copy(initData);
 
@@ -475,6 +479,7 @@ angular.module('app')
             $scope.app.getInitData = function(){
                 trix.allInitData().success(function(response){
                     initData = response;
+                    checkLoginImage();
                     $scope.app.initData = angular.copy(initData);
                     $scope.app.loginError = false;
                     $scope.app.refreshData();
@@ -519,6 +524,7 @@ angular.module('app')
                 trix.logout().success(function(){
                     trix.allInitData().success(function(response){
                         initData = response;
+                        checkLoginImage();
                         $scope.app.initData = angular.copy(initData);
                         $scope.app.profilepopover.open = false;
                         if($scope.$state.current.name != "app.stations" && $scope.$state.current.name != "app.search"){
