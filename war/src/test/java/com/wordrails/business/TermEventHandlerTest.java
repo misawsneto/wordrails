@@ -13,13 +13,13 @@ public class TermEventHandlerTest extends AbstractTest {
 	
 	@Test
 	public void test() throws Exception {		
-		Network network = new Network();
-		network.name = "Network";
-		networkEventHandler.handleBeforeCreate(network);
-
-		Taxonomy taxonomy = new Taxonomy();
-		taxonomy.owningNetwork = network;
-		taxonomy.type = Taxonomy.NETWORK_TAXONOMY;
-		taxonomy = context.getBean(TaxonomyRepository.class).save(taxonomy);
+//		Network network = new Network();
+//		network.name = "Network";
+//		networkEventHandler.handleBeforeCreate(network);
+//
+//		Taxonomy taxonomy = new Taxonomy();
+//		taxonomy.owningNetwork = network;
+//		taxonomy.type = Taxonomy.NETWORK_TAXONOMY;
+//		taxonomy = context.getBean(TaxonomyRepository.class).save(taxonomy);
 	}
 }

@@ -30,7 +30,7 @@ public class UtilResourcesTest extends AbstractTest {
 	@Test
 	public void testResources() throws Exception {
 //		utilResource.updateStationTaxonomies(null);
-		List<Taxonomy> taxonomy = taxonomyRepository.findStationTaxonomy(9);
-		taxonomy.size();
+//		List<Taxonomy> taxonomy = taxonomyRepository.findStationTaxonomy(9);
+//		taxonomy.size();
 	}
 }
