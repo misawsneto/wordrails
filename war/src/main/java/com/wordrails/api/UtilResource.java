@@ -733,4 +733,21 @@ public class UtilResource {
 			sched.scheduleJob(job, trigger);
 		}
 	}
+
+	@GET
+	@Path("/updateUserNetwork")
+	public void updateUserNetwork(@Context HttpServletRequest request) {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+			List<Person> persons = manager.createQuery("SELECT person FROM Person person JOIN FETCH person.user user JOIN FETCH user.network network").getResultList();
+			for(Person person : persons){
+				person.networkId = person.user.network.id;
+				person.email = person.email != null ? person.email.trim().toLowerCase() : null;
+				if(!Pattern.matches("^[a-z0-9\\._-]{3,50}$", person.username)){
+					person.username = WordrailsUtil.generateRandomString(10, "a");
+				}
+			}
+			personRepository.save(persons);
+		}
+	}
 }
