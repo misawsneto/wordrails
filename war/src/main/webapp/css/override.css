@@ -4653,6 +4653,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   margin-bottom: 0px;
   list-style: none;
   border: 1px dashed #CCC;
+  visibility: visible!important;
 }
 
 #perspective-editor-terms .sortable-term {

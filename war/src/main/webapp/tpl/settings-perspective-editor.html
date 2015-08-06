@@ -73,14 +73,14 @@
 
 <div>
 	<div id="perspective-editor-terms" class="customizer">
-		<div class="display-t-c p-r">
+		<div class="display-t-c p-r pull-left">
 			<ul class="no-style">
 				<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="text-md text-white wrapper-xxs">
 					{{$index + 1}}ª
 				</li>
 			</ul>
 		</div>
-		<div class="display-t-c p-r-sm">
+		<div class="display-t-c p-r-sm pull-right">
 			<!-- <ul class="no-style" ui-jq="sortable" id="sortable"> -->
 			<ul class="no-style" ui-sortable ng-model="termPerspectiveView.ordinaryRows">
 				<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="sortable-term text-md text-white wrapper-xxs">
