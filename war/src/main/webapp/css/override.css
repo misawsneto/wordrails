@@ -2771,6 +2771,7 @@ button, select, html, textarea, input{
   animation-duration: 0.2s;
 }
 
+.custom-fab-button.animated,
 #settings>div.animated,
 #settings-network .animated,
 #settings-stations-perspectives .animated,
@@ -4657,6 +4658,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 
 #perspective-editor-terms .sortable-term {
+  cursor: all-scroll;
   cursor: -webkit-grab;
   cursor: -moz-grab;
 }

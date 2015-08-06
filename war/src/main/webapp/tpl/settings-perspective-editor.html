@@ -20,7 +20,7 @@
 							<div ng-if="isMobile" ng-repeat="ordinaryRow in termPerspectiveView.ordinaryRows" class="ordinary-row" ng-if="ordinaryRow.cells && ordinaryRow.cells.length">
 
 								<div ng-if="ordinaryRow.cells" data-term-id="{{::ordinaryRow.termId}}" class="wrap info-flow-wrap" 
-								scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" style="margin:0" sly-scroll>
+								scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" style="margin:0" >
 								<div class="h4 wrapper-xs text-u-c">
 									<a>{{::ordinaryRow.termName}}</a>
 								</div>
@@ -93,11 +93,11 @@
 
 	<md-button ng-hide="creating || editing"
 	id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-	ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
-	tooltip="Novo usuário" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
-	aria-label="Novo usuário">
-	<i class="mdi mdi-plus"></i>
-</md-button>
+	ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+	tooltip="Salvar alterações" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+	aria-label="Salvar alterações">
+	<i class="mdi mdi-content-save"></i>
+	</md-button>
 
 
 </div>
