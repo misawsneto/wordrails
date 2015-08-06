@@ -207,7 +207,7 @@ angular.module('app')
                   , controller:'SettingsStationsPerspectivesCtrl'
               })
               .state('app.settings.perspectiveeditor', {
-                  url: '/perspectiveeditor?stationId?',
+                  url: '/perspectiveeditor?stationId?perspectiveId',
                   templateUrl: 'tpl/settings-perspective-editor.html',
                   /*resolve: {
                     deps: ['$ocLazyLoad',
@@ -220,11 +220,21 @@ angular.module('app')
                       function( $ocLazyLoad ){
                         return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/interact.min.js'])
                         .then(function(){
-                            return $ocLazyLoad.load(['ui.slimscroll','color-selector', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH])
+                            return $ocLazyLoad.load(['ui.slimscroll', 'ui.sortable','color-selector', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH])
                           });
                     }]
                   }
                   , controller:'SettingsPerspectiveEditorCtrl'
+              })//app.settings.perspectives
+              .state('app.settings.perspectives', {
+                  url: '/perspectives?stationId',
+                  templateUrl: 'tpl/settings-perspectives.html',
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  }, controller:'SettingsPerspectiveListCtrl'
               })
               .state('app.settings.sponsors', {
                   url: '/sponsor',

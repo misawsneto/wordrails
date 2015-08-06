@@ -71,14 +71,33 @@
 	</ul>
 </div>
 
-<div id="order-selector" class="customizer" >
-	<ul class="color-tool">
-		<li class="text-2x text-white">
-			<div class="m-t-n-xs">
-				<i class="mdi mdi-sort"></i>
-			</div>
-		</li>
-	</ul>
+<div>
+	<div id="perspective-editor-terms" class="customizer">
+		<div class="display-t-c p-r">
+			<ul class="no-style">
+				<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="text-md text-white wrapper-xxs">
+					{{$index + 1}}ª
+				</li>
+			</ul>
+		</div>
+		<div class="display-t-c p-r-sm">
+			<!-- <ul class="no-style" ui-jq="sortable" id="sortable"> -->
+			<ul class="no-style" ui-sortable ng-model="termPerspectiveView.ordinaryRows">
+				<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="sortable-term text-md text-white wrapper-xxs">
+					{{row.termName}}
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- <div id="order-selector" class="customizer" >
+		<ul class="color-tool">
+			<li class="text-2x text-white">
+				<div class="m-t-n-xs m-l-n-xs">
+					<i class="fa fa-sitemap fa-fw"></i>
+				</div>
+			</li>
+		</ul>
+	</div> -->
 </div>
 
 <div>

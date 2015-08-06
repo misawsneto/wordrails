@@ -2773,6 +2773,7 @@ button, select, html, textarea, input{
 
 #settings>div.animated,
 #settings-network .animated,
+#settings-stations-perspectives .animated,
 #user-stats .animated,
 #settings-stations-users .animated,
 #settings-stations-categories .animated,
@@ -4640,6 +4641,31 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 
 /* /settings-colors */
+
+/* settings-perspective */
+#perspective-editor-terms .sortable-placeholder{
+  min-height: 28px!important;
+  margin-bottom: 0px;
+}
+
+#perspective-editor-terms .ui-sortable-placeholder {
+  min-height: 28px!important;
+  margin-bottom: 0px;
+  list-style: none;
+  border: 1px dashed #CCC;
+}
+
+#perspective-editor-terms .sortable-term {
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+}
+
+#perspective-editor-terms .ui-sortable-helper {
+  opacity: 0.5
+}
+
+
+/* /settings-perspective */
 
 /* splash */
 /* Slideshow style */
