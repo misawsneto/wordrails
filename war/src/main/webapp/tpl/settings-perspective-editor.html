@@ -54,55 +54,51 @@
 
 					</div>
 					<!-- /mockup-grid -->
-				<!-- <md-button class="custom-fab-button md-fab pos-abt bottom-0 right-0 m-r m-b" aria-label="demo">
-			</md-button> -->
-			<!-- /mockup-browser -->
-		</section>
-	</div>
-</div><!-- /content -->
-<div id="device-selector" class="customizer" >
-	<ul class="color-tool">
-		<li class="text-2x text-white">
-			<div class="m-t-n-sm" ng-click="isMobile = true;"><i class="mdi mdi-cellphone"></i></div>
-		</li>
-		<li class="text-2x text-white">
-			<div class="" ng-click="isMobile = false;"><i class="mdi mdi-desktop-mac"></i></div>
-		</li>
-	</ul>
-</div>
+					<!-- /mockup-browser -->
+				</section>
+			</div>
+		</div><!-- /content -->
+		<div id="device-selector" class="customizer" >
+			<ul class="color-tool">
+				<li class="text-2x text-white">
+					<div class="m-t-n-sm" ng-click="isMobile = true;"><i class="mdi mdi-cellphone"></i></div>
+				</li>
+				<li class="text-2x text-white">
+					<div class="" ng-click="isMobile = false;"><i class="mdi mdi-desktop-mac"></i></div>
+				</li>
+			</ul>
+		</div>
 
-<div>
-	<div id="perspective-editor-terms" class="customizer">
-		<div class="display-t-c p-r pull-left">
-			<ul class="no-style">
-				<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="text-md text-white wrapper-xxs">
-					{{$index + 1}}ª
-				</li>
-			</ul>
-		</div>
-		<div class="display-t-c p-r-sm pull-right">
-			<!-- <ul class="no-style" ui-jq="sortable" id="sortable"> -->
-			<ul class="no-style" ui-sortable ng-model="termPerspectiveView.ordinaryRows">
-				<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="sortable-term text-md text-white wrapper-xxs">
-					{{row.termName}}
-				</li>
-			</ul>
-		</div>
-	</div>
-	<!-- <div id="order-selector" class="customizer" >
-		<ul class="color-tool">
-			<li class="text-2x text-white">
-				<div class="m-t-n-xs m-l-n-xs">
-					<i class="fa fa-sitemap fa-fw"></i>
+		<div>
+			<div id="perspective-editor-terms" class="customizer">
+				<div class="display-t-c p-r pull-left">
+					<ul class="no-style">
+						<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="text-md text-white wrapper-xxs">
+							{{$index + 1}}ª
+						</li>
+					</ul>
 				</div>
-			</li>
-		</ul>
-	</div> -->
-</div>
+				<div class="display-t-c p-r-sm pull-right">
+					<!-- <ul class="no-style" ui-jq="sortable" id="sortable"> -->
+					<ul class="no-style" ui-sortable ng-model="termPerspectiveView.ordinaryRows">
+						<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="sortable-term text-md text-white wrapper-xxs">
+							{{row.termName}}
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
 
-<div>
-	
-</div>
-</div><!-- /container -->
+	</div><!-- /container -->
+
+	<md-button ng-hide="creating || editing"
+	id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+	ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+	tooltip="Novo usuário" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+	aria-label="Novo usuário">
+	<i class="mdi mdi-plus"></i>
+</md-button>
+
+
 </div>
 </div>
