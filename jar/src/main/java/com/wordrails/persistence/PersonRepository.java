@@ -1,6 +1,5 @@
 package com.wordrails.persistence;
 
-import com.wordrails.business.Network;
 import com.wordrails.business.Person;
 import com.wordrails.business.User;
 import org.joda.time.DateTime;

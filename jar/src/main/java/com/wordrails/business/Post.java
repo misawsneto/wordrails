@@ -87,6 +87,7 @@ import java.util.Set;
 public class Post {
 
 	public static final String STATE_DRAFT = "DRAFT";
+	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
 	public static final String STATE_TRASH = "TRASH";
 	public static final String STATE_HISTORY = "HISTORY";
 	public static final String STATE_PUBLISHED = "PUBLISHED";

@@ -81,7 +81,6 @@ public class WordpressResource {
 	}
 
 	@PUT
-	@POST
 	@Path("/post")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response post(WordpressPost wpPost) {

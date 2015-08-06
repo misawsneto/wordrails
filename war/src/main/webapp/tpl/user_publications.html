@@ -17,7 +17,7 @@
 			<i class="mdi mdi-plus"></i>
 		</md-button>
 		<div class="w-full panel panel-card animated zoomIn" infinite-scroll="paginate()" infinite-scroll-distance="1">
-			<div class="nav-tabs-alt" ng-show="app.publicationsCtrl.publications" >
+			<div class="nav-tabs-alt box-shadow" ng-show="app.publicationsCtrl.publications" >
 				<ul class="nav nav-tabs text-lg" role="tablist">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
 						<a class="text-u-c" ng-click="app.goToUserPublications($event); allLoaded = false;">
@@ -49,7 +49,7 @@
 
 			<!-- posts -->
 			<ul class="b-none no-padding m-b-none ls-style-none">
-				<li ng-repeat="publication in app.publicationsCtrl.publications" class="p-l p-r">
+				<li ng-repeat="publication in app.publicationsCtrl.publications" class="p-l p-r animated fadeIn">
 					<div ng-class="{'b-t': !$first}"></div>
 					<div class="clear p-t-sm p post-list news-item">
 						<!-- image -->

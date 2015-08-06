@@ -50,6 +50,7 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -689,6 +690,36 @@ public class UtilResource {
 	}
 
 	@GET
+	@Path("/removeOldImages")
+	@Transactional
+	@Modifying
+	public void removeOldImages(@Context HttpServletRequest request) throws SchedulerException {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+			DateTime dateTime = new DateTime().minusDays(30);
+
+			List<Post> posts = manager.createQuery("select post from Post post where post.featuredImage is not null and date(post.date) < :dateTime AND post.state = 'PUBLISHED'").setParameter("dateTime",dateTime.toDate()).getResultList();
+			List<Integer> ids = new ArrayList<Integer>();
+
+			List<Image> images = new ArrayList<Image>();
+
+			for(Post post: posts){
+				images.add(post.featuredImage);
+				ids.add(post.id);
+			}
+
+			List<Integer> imgIds = new ArrayList<Integer>();
+			for(Image image: images){
+				imgIds.add(image.id);
+			}
+
+			postRepository.updateFeaturedImagesToNull(images);
+			imageRepository.deleteImages(imgIds);
+		}
+	}
+
+
+	@GET
 	@Path("/testQuartz")
 	public void testQuartz(@Context HttpServletRequest request) throws SchedulerException {
 		String host = request.getHeader("Host");
@@ -700,6 +731,23 @@ public class UtilResource {
 			Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").startAt(runTime).build();
 
 			sched.scheduleJob(job, trigger);
+		}
+	}
+
+	@GET
+	@Path("/updateUserNetwork")
+	public void updateUserNetwork(@Context HttpServletRequest request) {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+			List<Person> persons = manager.createQuery("SELECT person FROM Person person JOIN FETCH person.user user JOIN FETCH user.network network").getResultList();
+			for(Person person : persons){
+				person.networkId = person.user.network.id;
+				person.email = person.email != null ? person.email.trim().toLowerCase() : null;
+				if(!Pattern.matches("^[a-z0-9\\._-]{3,50}$", person.username)){
+					person.username = WordrailsUtil.generateRandomString(10, "a");
+				}
+			}
+			personRepository.save(persons);
 		}
 	}
 }

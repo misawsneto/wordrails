@@ -1,13 +1,9 @@
 package com.wordrails.business;
 
-import org.hibernate.annotations.*;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.social.UserIdSource;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +16,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")//, uniqueConstraints = @UniqueConstraint(columnNames = {"username", "network_id"}))
-public class User implements UserDetails {
+public class User implements UserDetails, UserIdSource {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,24 +25,26 @@ public class User implements UserDetails {
 	@Size(max = 50)
 	public String username;
 
-	@NotNull
 	@Size(max = 500)
 	public String password;
 
 	public boolean enabled;
 
 	@ManyToOne
-	@JoinColumn(name="network_id")
+	@JoinColumn(name = "network_id")
 	public Network network;
 
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
 	public Person person;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserGrantedAuthority> authorities;
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
+	public Set<UserConnection> userConnections;
+
 	public void addAuthority(UserGrantedAuthority authority) {
-		if(authorities == null) authorities = new HashSet<>();
+		if (authorities == null) authorities = new HashSet<>();
 
 		authorities.add(authority);
 	}
@@ -88,5 +86,10 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	@Override
+	public String getUserId() {
+		return this.id + "_" + this.network.id;
 	}
 }

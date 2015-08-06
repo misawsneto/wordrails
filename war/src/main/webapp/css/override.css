@@ -2790,6 +2790,7 @@ button, select, html, textarea, input{
 #bookmarks .animated,
 #notifications .animated,
 #user-profile .animated,
+#tag-posts .animated,
 #publications .animated,
 #notifications .animated,
 #post-left-content .animated,
@@ -3205,6 +3206,16 @@ background: rgba(0,0,0,0.7);
 a.underline-hover:hover{
   text-decoration: underline;
 }
+
+/* tagspage */
+.tag-page-tag{
+  border: 1px solid #999;
+  border-radius: 50px;
+  display: inline-block;
+  padding: 5px 15px;
+  text-decoration: none;
+}
+/* /tagspage*/
 
 /* /user_profile */
 
@@ -3699,6 +3710,7 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 #my-profile-popover .profile-popover .cover-abstract-mask{position: absolute; width: 100%; top: 0; bottom: 35px;}
 
 #login-error{min-height: 25px;}
+.max-logo{max-height: 150px;}
 /* /layout.html*/
 
 /* aside.html */

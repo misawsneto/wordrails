@@ -1,10 +1,9 @@
 <div id="tag-posts" class="hbox" ng-cloak>
 	<!-- cover container -->
-	<div ng-if="showProfile">
-	</div>
-	<div id="editing-user-profile" class="user-details block-600 m-auto animated zoomIn with-cover">
-	</div>
-	<div class="user-bio block-600 m-auto font-thin text-2x text-center m-b-lg">
+	<div class="text-center m-t-xxl">
+		<span class="tag-page-tag box-shadow animated fadeIn text-3x m-auto">
+			{{tagName}}
+		</span>
 	</div>
 	<!-- /conver container -->
 
@@ -12,11 +11,11 @@
 	<!-- posts & recommendation -->
 	<div infinite-scroll="paginate()" infinite-scroll-distance="1">
 		<!-- posts -->
-		<div class="block-800 m-auto m-t-lg m-b-lg" ng-if="postViews && postViews.length > 0 && showProfile">
+		<div class="block-800 m-auto m-t-lg m-b-lg" ng-if="postViews && postViews.length > 0">
 			<ul class="b-none no-padding m-b-none ls-style-none">
 				<li ng-repeat="postView in postViews">
 					<div ng-class="{'b-t': !$first}"></div>
-					<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+					<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.tagspage')">
 						<!-- image -->
 						<a class="block-image m-l m-t" ng-if="postView.mediumId" >
 							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
