@@ -1,5 +1,6 @@
 package com.wordrails.persistence;
 
+import java.sql.Blob;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,4 +35,9 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 	@RestResource(exported=false)
 	Network findByDomain(String domain);
 
+	@RestResource(exported = false)
+	Blob findCertificateIosById(@Param("stationId") Integer stationId);
+
+	@RestResource(exported = false)
+	String findCertificatePasswordById(@Param("stationId") Integer stationId);
 }

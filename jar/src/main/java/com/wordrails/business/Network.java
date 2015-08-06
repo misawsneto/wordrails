@@ -1,6 +1,7 @@
 package com.wordrails.business;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -63,6 +64,12 @@ public class Network implements Serializable{
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
+
+	@Column(name = "certificate_ios")
+	public Blob certificateIos;
+
+	@Column(name = "certificate_password")
+	public String certificatePassword;
 	
 	public String domain;
 

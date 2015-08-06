@@ -18,16 +18,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.rmi.UnexpectedException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
@@ -44,44 +42,32 @@ public class APNService {
 	private PushManager<SimpleApnsPushNotification> pushManager;
 	private SynchronousQueue sq;
 
-	private void init(String networkName){
-		String passwordFilename = networkName.replace(" ", "_").toLowerCase() + ".passwd";
-		String certFilename = networkName.replace(" ", "").toLowerCase() + ".p12";
-		String certPassword = "";
+	private void init(Integer networkId){
+
+		InputStream certificate = null;
+		String certificatePassword = null;
+		sq = new SynchronousQueue();
 
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(passwordFilename));
+			certificate = networkRepository.findCertificateIosById(networkId).getBinaryStream();
+			certificatePassword = networkRepository.findCertificatePasswordById(networkId);
 
-			for(String line = ""; line != null; line = br.readLine()){
-				certPassword += line;
-			}
-			br.close();
-		} catch (IOException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		sq = new SynchronousQueue();
 		try {
 			this.pushManager = new PushManager<SimpleApnsPushNotification>(
 					ApnsEnvironment.getSandboxEnvironment(),
-					SSLContextUtil.createDefaultSSLContext(certFilename, certPassword),
+					SSLContextUtil.createDefaultSSLContext(certificate, certificatePassword),
 					null, // Optional: custom event loop group
 					null, // Optional: custom ExecutorService for calling listeners
 					sq, // Optional: custom BlockingQueue implementation
 					new PushManagerConfiguration(),
-					networkName);
+					"NetworkId_" + String.valueOf(networkId));
 			pushManager.start();
-		} catch (KeyStoreException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (CertificateException e) {
-			e.printStackTrace();
-		} catch (UnrecoverableKeyException e) {
-			e.printStackTrace();
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (IOException | KeyManagementException | UnrecoverableKeyException |
+				CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
 			e.printStackTrace();
 		}
 	}
@@ -101,7 +87,7 @@ public class APNService {
 				.findTokenByStationId(stationId);
 
 		Network network;
-		if((network = stationRepository.findNetworkByStationId(stationId)) == null){
+		if((network = stationRepository.findByStationId(stationId)) == null){
 			throw new UnexpectedException("There is no such network...");
 		}
 
@@ -111,7 +97,6 @@ public class APNService {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-
 	}
 
 	public void sendToNetwork(Integer networkId, Notification notification){
@@ -141,7 +126,7 @@ public class APNService {
 		}
 		if(personNetworkTokens.size() == 0) return;
 
-		init(network.name);
+		init(network.id);
 
 		ApnsPayloadBuilder payloadBuilder = new ApnsPayloadBuilder();
 		payloadBuilder.setBadgeNumber(1);
