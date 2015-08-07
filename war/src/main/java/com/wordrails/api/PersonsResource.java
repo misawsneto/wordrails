@@ -115,9 +115,9 @@ public class PersonsResource {
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = networkRepository.findOne(networkId);
-		Person person = authProvider.getLoggedPerson();
-		gcmService.updateRegId(network, person, regId, lat, lng);
+//		Network network = networkRepository.findOne(networkId);
+//		Person person = authProvider.getLoggedPerson();
+//		gcmService.updateRegId(network, person, regId, lat, lng);
 		return Response.status(Status.OK).build();
 	}
 
@@ -125,9 +125,9 @@ public class PersonsResource {
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = networkRepository.findOne(networkId);
-		Person person = authProvider.getLoggedPerson();
-		gcmService.updateIosToken(network, person, token, lat, lng);
+//		Network network = networkRepository.findOne(networkId);
+//		Person person = authProvider.getLoggedPerson();
+//		gcmService.updateIosToken(network, person, token, lat, lng);
 		return Response.status(Status.OK).build();
 	}
 
