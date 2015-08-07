@@ -238,6 +238,9 @@ angular.module('app')
               },{
                   name: 'pc035860.scrollWatch',
                   files: ['../bower_components/angular-scroll-watch/build/angular-scroll-watch.min.js']
+              },{
+                  name: 'ui.sortable',
+                  files: ['../libs/jquery-ui/jquery-ui.min.js', '../bower_components/angular-ui-sortable/sortable.min.js']
               }
 
           ]

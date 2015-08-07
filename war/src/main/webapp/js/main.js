@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-    .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast',
-        function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast) {
+    .controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast', 'TRIX',
+        function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast, TRIX) {
             // add 'ie' classes to html
             var isIE = !!navigator.userAgent.match(/MSIE/i);
             isIE && angular.element($window.document.body).addClass('ie');
@@ -87,6 +87,10 @@ angular.module('app')
             $scope.app.hideFooter = true;
             // ---------------------
 
+
+            angularHttp = $http;
+            trixSdk = trix;
+
             function loadPopular(){
                 trix.findPopularPosts($scope.app.currentStation.id, 0, 10)
                     .success(function(response){
@@ -131,6 +135,13 @@ angular.module('app')
 
                 $scope.app.checkIfLogged();
             }
+
+            function checkLoginImage(){
+                if(initData.network.loginImageId)
+                    initData.network.loginImageLink = TRIX.baseUrl + "/api/files/" + initData.network.loginImageId + "/contents"
+            }
+
+            checkLoginImage();
 
             $scope.app.initData = angular.copy(initData);
 
@@ -472,6 +483,7 @@ angular.module('app')
             $scope.app.getInitData = function(){
                 trix.allInitData().success(function(response){
                     initData = response;
+                    checkLoginImage();
                     $scope.app.initData = angular.copy(initData);
                     $scope.app.loginError = false;
                     $scope.app.refreshData();
@@ -516,6 +528,7 @@ angular.module('app')
                 trix.logout().success(function(){
                     trix.allInitData().success(function(response){
                         initData = response;
+                        checkLoginImage();
                         $scope.app.initData = angular.copy(initData);
                         $scope.app.profilepopover.open = false;
                         if($scope.$state.current.name != "app.stations" && $scope.$state.current.name != "app.search"){
@@ -778,5 +791,6 @@ angular.module('app')
             $scope.app.refreshData();
             moment.locale('pt')
             /* end of added */
+
 
         }]);

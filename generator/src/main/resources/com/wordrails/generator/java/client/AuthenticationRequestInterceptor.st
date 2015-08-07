@@ -58,8 +58,11 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 	
 	synchronized void logIn() {
 		List<NameValuePair\> form = new ArrayList<NameValuePair\>(2);
-		form.add(new BasicNameValuePair("j_username", username));
-		form.add(new BasicNameValuePair("j_password", password));
+		//form.add(new BasicNameValuePair("j_username", username));
+		//form.add(new BasicNameValuePair("j_password", password));
+
+		form.add(new BasicNameValuePair("username", username));
+		form.add(new BasicNameValuePair("password", password));
 
 		UrlEncodedFormEntity entity;
 		try {
@@ -68,7 +71,8 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 			throw new RuntimeException(e);
 		}
 	
-		HttpPost request = new HttpPost(url + "/j_spring_security_check");
+		//HttpPost request = new HttpPost(url + "/j_spring_security_check");
+		HttpPost request = new HttpPost(url + "/api/persons/login");
 		request.setEntity(entity);
 		
 		BasicCookieStore store = new BasicCookieStore();

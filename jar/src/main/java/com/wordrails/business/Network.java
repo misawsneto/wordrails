@@ -151,8 +151,10 @@ public class Network implements Serializable{
 		
 		if(logo != null && logo.original != null){
 			logoId = logo.original.id;
+			logoSmallId = logo.small.id;
 		}else{
 			logoId = null;
+			logoSmallId = null;
 		}
 
 		if(favicon != null && favicon.original != null){
@@ -169,7 +171,7 @@ public class Network implements Serializable{
 
 		if(loginImage != null && loginImage.original != null){
 			loginImageId = loginImage.original.id;
-			loginImageSmallId = loginImage.original.id;
+			loginImageSmallId = loginImage.small.id;
 		}else{
 			loginImageId = null;
 			loginImageSmallId = null;
@@ -188,6 +190,7 @@ public class Network implements Serializable{
 			logoSmallId = logo.small.id;
 		}else{
 			logoId = null;
+			logoSmallId = null;
 		}
 
 		if(favicon != null && favicon.original != null){
@@ -204,8 +207,10 @@ public class Network implements Serializable{
 
 		if(loginImage != null && loginImage.original != null){
 			loginImageId = loginImage.original.id;
+			loginImageSmallId = loginImage.small.id;
 		}else{
 			loginImageId = null;
+			loginImageSmallId = null;
 		}
 	}
 

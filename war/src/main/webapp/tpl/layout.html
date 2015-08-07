@@ -38,7 +38,10 @@
   <div class="splash-content text-center" ng-cloak>
     <div class="row">
       <div class="col-xs-6 col-xs-offset-3">
-        <div class="p-lg text-color wrapper-lg">
+        <div class="p-lg text-color wrapper-lg" ng-class="{'p-t-xxs': app.initData.network.loginImageLink}">
+          <div class="text-center thumb-lg">
+            <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
+          </div>
           <div id="login-error">
             <span id="login-error" class="text-danger animated" ng-class="{'fadeIn': app.loginError, 'hide': !app.loginError}">
               Usuário ou senha inválidos
@@ -58,9 +61,11 @@
           <button ng-if="app.socialLogin()" ng-click="app.facebookSignIn()" md-ink-ripple type="submit" class="m-t-md btn-blue md-btn text-lg text-u-c btn-block">
             <i class="mdi mdi-facebook m-r-sm"></i> Facebook
           </button>
+          <!--
           <button ng-if="app.socialLogin()" md-ink-ripple type="submit" class="m-t-md btn-info md-btn text-lg text-u-c btn-block">
             <i class="mdi mdi-twitter m-r-sm"></i> Twitter
           </button>
+          -->
         </div>
       </div>
       <div class="col-xs-8 col-xs-offset-2 text-base" ng-bind-html="app.initData.network.loginFooterMessage">

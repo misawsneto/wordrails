@@ -21,6 +21,15 @@ insert into network_taxonomy (networks_id, taxonomies_id) values (1, 1);
 -- update taxonomy set owningNetwork_id = 19 where id = 34;
 -- insert into network_taxonomy (networks_id, taxonomies_id) values (19, 34);
 
+-- Person -> UNIQUE KEY `UK_mjvhigut8lgjs8a6c1df6qt5u` (`username`)
+alter table person drop index UK_mjvhigut8lgjs8a6c1df6qt5u;
+
+-- Person -> UNIQUE KEY `UK_585qcyc8qh7bg1fwgm1pj4fus` (`email`)
+alter table person drop index UK_585qcyc8qh7bg1fwgm1pj4fus
+
+-- Person -> UNIQUE KEY `UK_585qcyc8qh7bg1fwgm1pj4fus` (`username`, `user_id`)
+alter table person drop index UK_mjvhigut8lgjs8a6c1df6qt5u;
+
 
 use wordrails2;
 drop table invitation;

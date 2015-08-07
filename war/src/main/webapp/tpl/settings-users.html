@@ -194,8 +194,8 @@
 							<div class="form-group m-b-n">
 								<label class="col-lg-2 control-label font-bold">Email</label>
 								<div class="col-lg-10">
-									<div class="form-control b-none text-md">
-										{{selectedPerson.email}}
+									<div class="form-control b-none text-md" ng-class="{'font-italic text-muted': !selectedPerson.email}">
+										{{selectedPerson.email ? selectedPerson.email : 'Usuário ainda não forneceu seu email.'}}
 									</div>
 								</div>
 							</div>
@@ -203,7 +203,7 @@
 								<label class="col-lg-2 control-label font-bold">Biografia</label>
 								<div class="col-lg-10">
 									<div class="form-control b-none text-md" ng-class="{'font-italic text-muted': !selectedPerson.bio}">
-										{{selectedPerson.bio ? person.bio : 'Usuário ainda não possui biografia.'}}
+										{{selectedPerson.bio ? selectedPerson.bio : 'Usuário ainda não possui biografia.'}}
 									</div>
 								</div>
 							</div>
