@@ -182,7 +182,7 @@ public class WordrailsService {
 		postRead.person = person;
 		postRead.post = postRepository.findOne(postId);
 		if(postRead.person != null && postRead.person.username.equals("wordrails")) // if user wordrails, include session to uniquely identify the user.
-			person = person
+			person = personRepository.findOne(1);
 			postRead.sessionid = sessionId;
 		try {
 			postReadRepository.save(postRead);

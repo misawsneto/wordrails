@@ -809,7 +809,8 @@ angular.module('app')
                         function( uiLoad ){
                           return uiLoad.load( ['js/controllers/signin.js'] );
                       }]
-                  }
+                  },
+                  controller: 'AppCtrl'
               })
               .state('access.signup', {
                   url: '/signup',
