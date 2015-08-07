@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.ImageType;
 import org.springframework.social.support.URIBuilder;
-import org.springframework.social.twitter.api.Twitter;
+//import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -45,75 +45,75 @@ public class SocialAuthenticationService {
 	@Autowired
 	private FileContentsRepository fileContentsRepository;
 
-	public Person getTwitterUser(Twitter twitter, String userId, Network network) {
-		org.springframework.social.twitter.api.TwitterProfile profile = twitter.userOperations().getUserProfile(userId);
-
-		String email = userId + "@twitter.com";
-		Person person = personRepository.findByEmailAndNetworkId(email, network.id);
-
-		if (person == null) {
-			int i = 1;
-			String originalUsername = profile.getName().toLowerCase();
-			String username = originalUsername;
-			while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
-				username = originalUsername + i++;
-			}
-
-			person = new Person();
-			person.name = profile.getName();
-			person.username = username;
-			person.email = email;
-		}
-
-
-
-		User user = new User();
-
-		UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
-		authority.network = network;
-
-		user.enabled = true;
-		user.username = person.username;
-		user.password = "";
-		user.network = network;
-		authority.user = user;
-		user.addAuthority(authority);
-
-		UserConnection userConnection = new UserConnection();
-		userConnection.providerId = "facebook";
-		userConnection.providerUserId = userId;
-		userConnection.email = email;
-		userConnection.user = user;
-		userConnection.displayName = profile.getName();
-		userConnection.profileUrl = profile.getProfileUrl();
-		userConnection.imageUrl = profile.getProfileImageUrl();
-		user.userConnections = new HashSet<>();
-		user.userConnections.add(userConnection);
-
-		person.user = user;
-
-		if(person.image == null) {
-			try {
-				Image coverPicture = getImageFromBytes(profile.getBackgroundImageUrl(), Image.Type.COVER);
-				imageEventHandler.handleBeforeCreate(coverPicture);
-				imageRepository.save(coverPicture);
-				person.cover = coverPicture;
-			} catch (IOException | SQLException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				Image profilePicture = getImageFromBytes(profile.getProfileImageUrl(), Image.Type.PROFILE_PICTURE);
-				imageEventHandler.handleBeforeCreate(profilePicture);
-				imageRepository.save(profilePicture);
-				person.image = profilePicture;
-			} catch (IOException | SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return person;
-	}
+//	public Person getTwitterUser(Twitter twitter, String userId, Network network) {
+//		org.springframework.social.twitter.api.TwitterProfile profile = twitter.userOperations().getUserProfile(userId);
+//
+//		String email = userId + "@twitter.com";
+//		Person person = personRepository.findByEmailAndNetworkId(email, network.id);
+//
+//		if (person == null) {
+//			int i = 1;
+//			String originalUsername = profile.getName().toLowerCase();
+//			String username = originalUsername;
+//			while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
+//				username = originalUsername + i++;
+//			}
+//
+//			person = new Person();
+//			person.name = profile.getName();
+//			person.username = username;
+//			person.email = email;
+//		}
+//
+//
+//
+//		User user = new User();
+//
+//		UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
+//		authority.network = network;
+//
+//		user.enabled = true;
+//		user.username = person.username;
+//		user.password = "";
+//		user.network = network;
+//		authority.user = user;
+//		user.addAuthority(authority);
+//
+//		UserConnection userConnection = new UserConnection();
+//		userConnection.providerId = "facebook";
+//		userConnection.providerUserId = userId;
+//		userConnection.email = email;
+//		userConnection.user = user;
+//		userConnection.displayName = profile.getName();
+//		userConnection.profileUrl = profile.getProfileUrl();
+//		userConnection.imageUrl = profile.getProfileImageUrl();
+//		user.userConnections = new HashSet<>();
+//		user.userConnections.add(userConnection);
+//
+//		person.user = user;
+//
+//		if(person.image == null) {
+//			try {
+//				Image coverPicture = getImageFromBytes(profile.getBackgroundImageUrl(), Image.Type.COVER);
+//				imageEventHandler.handleBeforeCreate(coverPicture);
+//				imageRepository.save(coverPicture);
+//				person.cover = coverPicture;
+//			} catch (IOException | SQLException e) {
+//				e.printStackTrace();
+//			}
+//
+//			try {
+//				Image profilePicture = getImageFromBytes(profile.getProfileImageUrl(), Image.Type.PROFILE_PICTURE);
+//				imageEventHandler.handleBeforeCreate(profilePicture);
+//				imageRepository.save(profilePicture);
+//				person.image = profilePicture;
+//			} catch (IOException | SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		return person;
+//	}
 
 	public Person getFacebookUser(Facebook facebook, String userId, Network network) {
 		org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
