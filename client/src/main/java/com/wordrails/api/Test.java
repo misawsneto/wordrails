@@ -16,7 +16,7 @@ public class Test {
 		return new WordRails(
 				new MockConnectivityManager(true),
 				new File("."), 0,
-				"http://sport.trix.rocks", "sport", "Sport@dmiN",
+				"http://sport.xarxlocal.com", "wordrails", "wordrails",
 				LogLevel.FULL);
 	}
 
@@ -29,12 +29,14 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		WordRails wordRails = getLocal("sport", "Sport@dmiN");
+		WordRails wordRails = getLocal("wordrails", "wordrails");
 		wordRails.login();
 		wordRails.getInitialData();
 
 		PostView postView = wordRails.getPostViewById(57, true);
 		System.out.println(postView);
+
+		wordRails.putRegId("asdfasd", 2, 0.0, 0.0);
 
 		//createPerson(wordRails);
 

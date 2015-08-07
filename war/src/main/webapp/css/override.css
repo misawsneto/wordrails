@@ -2771,8 +2771,10 @@ button, select, html, textarea, input{
   animation-duration: 0.2s;
 }
 
+.custom-fab-button.animated,
 #settings>div.animated,
 #settings-network .animated,
+#settings-stations-perspectives .animated,
 #user-stats .animated,
 #settings-stations-users .animated,
 #settings-stations-categories .animated,
@@ -4640,6 +4642,33 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 
 /* /settings-colors */
+
+/* settings-perspective */
+#perspective-editor-terms .sortable-placeholder{
+  min-height: 28px!important;
+  margin-bottom: 0px;
+}
+
+#perspective-editor-terms .ui-sortable-placeholder {
+  min-height: 28px!important;
+  margin-bottom: 0px;
+  list-style: none;
+  border: 1px dashed #CCC;
+  visibility: visible!important;
+}
+
+#perspective-editor-terms .sortable-term {
+  cursor: all-scroll;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+}
+
+#perspective-editor-terms .ui-sortable-helper {
+  opacity: 0.5
+}
+
+
+/* /settings-perspective */
 
 /* splash */
 /* Slideshow style */

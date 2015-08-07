@@ -213,7 +213,7 @@ public class GCMService {
 			}
 
 			pnregId.network = network;
-			pnregId.person = person;
+			pnregId.person = person == null || person.username.equals("wordrails") ? null : person;
 			if(lat != null && lng != null){
 				pnregId.lat = lat;
 				pnregId.lng = lng;

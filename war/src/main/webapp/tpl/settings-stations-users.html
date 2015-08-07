@@ -145,7 +145,7 @@
 								<label class="md-check">
 									<input type="radio" name="c" ng-model="person.stationRole.roleString" value="ADMIN" ng-change="changePermission(person)">
 									<i class="blue"></i>
-									Adminastrador
+									Administrador
 								</label>
 							</p>
 						</div>
@@ -214,6 +214,14 @@
 						<div class="col-lg-10">
 							<div class="form-control b-none text-md">
 								{{person.username}}
+							</div>
+						</div>
+					</div>
+					<div class="form-group m-b-n">
+						<label class="col-lg-2 control-label font-bold">Email</label>
+						<div class="col-lg-10">
+							<div class="form-control b-none text-md" ng-class="{'font-italic text-muted': !person.email}">
+								{{person.email ? person.email : 'Usuário ainda não forneceu seu email.'}}
 							</div>
 						</div>
 					</div>
