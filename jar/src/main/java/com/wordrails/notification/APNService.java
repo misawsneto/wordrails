@@ -41,6 +41,7 @@ public class APNService {
 	@Autowired private StationRepository stationRepository;
 	private PushManager<SimpleApnsPushNotification> pushManager;
 	private SynchronousQueue sq;
+	private Integer APN_NOTIFICATION_SENT_LIMIT = 8999;
 
 	private void init(Integer networkId){
 
@@ -65,11 +66,17 @@ public class APNService {
 					sq, // Optional: custom BlockingQueue implementation
 					new PushManagerConfiguration(),
 					"NetworkId_" + String.valueOf(networkId));
-			pushManager.start();
 		} catch (IOException | KeyManagementException | UnrecoverableKeyException |
 				CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
 			e.printStackTrace();
 		}
+		pushManager.start();
+
+		pushManager.registerRejectedNotificationListener(new RejectedNotificationsListener());
+		pushManager.registerFailedConnectionListener(new FailedConnectionsListener()); //it shuts the manager down
+		pushManager.registerExpiredTokenListener(new ExpiredTokensListener()); //it removes expired tokens
+		pushManager.requestExpiredTokens();
+
 	}
 
 	private void shutdown(){
@@ -136,11 +143,19 @@ public class APNService {
 		payloadBuilder.setAlertTitle(notification.station.name);
 		payloadBuilder.setAlertBody(notification.message);
 
+		int notificationsCounter = 0;
 		for(PersonNetworkToken personToken: personNetworkTokens){
 			pushManager.getQueue().put(new SimpleApnsPushNotification(
 					TokenUtil.tokenStringToByteArray(personToken.token),
 					payloadBuilder.buildWithDefaultMaximumLength()
 			));
+
+			//Limit the number of notifications sent to less than 9000 per second, so it's possible to handle errors
+			if(notificationsCounter >= APN_NOTIFICATION_SENT_LIMIT){
+				Thread.sleep(1000);
+				notificationsCounter = 0;
+			}
+			notificationsCounter++;
 		}
 
 		shutdown();

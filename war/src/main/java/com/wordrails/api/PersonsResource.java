@@ -133,7 +133,11 @@ public class PersonsResource {
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
 		Person person = authProvider.getLoggedPerson();
-		gcmService.updateRegId(network, person, regId, lat, lng);
+		if(person.id == 0){
+			gcmService.updateRegId(network, null, regId, lat, lng);
+		} else {
+			gcmService.updateRegId(network, person, regId, lat, lng);
+		}
 		return Response.status(Status.OK).build();
 	}
 
@@ -143,7 +147,11 @@ public class PersonsResource {
 	public Response putToken(@FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
 		Person person = authProvider.getLoggedPerson();
-		apnService.updateIosToken(network, person, token, lat, lng);
+		if(person.id == 0){
+			apnService.updateIosToken(network, null, token, lat, lng);
+		} else {
+			apnService.updateIosToken(network, person, token, lat, lng);
+		}
 		return Response.status(Status.OK).build();
 	}
 
