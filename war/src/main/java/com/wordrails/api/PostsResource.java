@@ -545,7 +545,7 @@ public class PostsResource {
 		Person person = authProvider.getLoggedPerson();
 		String body = postRepository.findPostBodyById(postId);
 
-		//wordrailsService.countPostRead(postId, person, request.getRequestedSessionId());
+		wordrailsService.countPostRead(postId, person, request.getRequestedSessionId());
 
 		StringResponse content = new StringResponse();
 		content.response = body;

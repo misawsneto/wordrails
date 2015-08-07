@@ -68,7 +68,8 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 			throw new RuntimeException(e);
 		}
 	
-		HttpPost request = new HttpPost(url + "/j_spring_security_check");
+		//HttpPost request = new HttpPost(url + "/j_spring_security_check");
+		HttpPost request = new HttpPost(url + "/api/persons/login");
 		request.setEntity(entity);
 		
 		BasicCookieStore store = new BasicCookieStore();
