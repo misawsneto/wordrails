@@ -118,6 +118,7 @@ public class PersonsResource {
 		Network network = networkRepository.findOne(networkId);
 		Person person = authProvider.getLoggedPerson();
 //		if(person.id == 0) person = null;
+		System.out.println("regId: " + regId);
 		gcmService.updateRegId(network, person, regId, lat, lng);
 		return Response.status(Status.OK).build();
 	}
@@ -129,6 +130,7 @@ public class PersonsResource {
 		Network network = networkRepository.findOne(networkId);
 		Person person = authProvider.getLoggedPerson();
 //		if(person.id == 0) person = null;
+		System.out.println("iOS token: " + token);
 		gcmService.updateIosToken(network, person, token, lat, lng);
 		return Response.status(Status.OK).build();
 	}
