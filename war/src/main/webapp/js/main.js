@@ -89,7 +89,7 @@ angular.module('app')
 
 
             angularHttp = $http;
-            trixSdk = trix;
+            trixSdk = trix
 
             function loadPopular(){
                 trix.findPopularPosts($scope.app.currentStation.id, 0, 10)
@@ -786,6 +786,10 @@ angular.module('app')
                 FB.api('/me?fields=id,name,email', function(me) {
                     console.log(me);
                 },{scope: 'public_profile,email', fields: 'id,name,email'});
+            }
+
+            $scope.app.createNetwork = function(createNetworkObject){
+              trix.createNetwork(createNetworkObject);
             }
 
             $scope.app.refreshData();
