@@ -9,13 +9,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 
@@ -44,11 +46,12 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 	
 	synchronized void logOut() {
 		HttpGet request = new HttpGet(url + "/j_spring_security_logout");
-		DefaultHttpClient client = new DefaultHttpClient();
 		BasicHttpContext context = new BasicHttpContext();
+		RequestConfig requestConfig = RequestConfig.custom().build();
+		CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 				
 		try {
-			client.execute(request, context).getEntity().consumeContent();
+			client.execute(request, context).getEntity().getContent().close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -80,10 +83,11 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 		BasicHttpContext context = new BasicHttpContext();
 		context.setAttribute(ClientContext.COOKIE_STORE, store);		
 	
-		DefaultHttpClient client = new DefaultHttpClient();
-		
+		RequestConfig requestConfig = RequestConfig.custom().build();
+		CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+
 		try {
-			client.execute(request, context).getEntity().consumeContent();
+			client.execute(request, context).getEntity().getContent().close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
