@@ -26,6 +26,14 @@ interface I$facade$ {
 	@POST("/batch")
 	Response postBatch(@Body List<Command> batch);
 
+	@GET("/api/terms/search/findPostsByTagAndStationId")
+	ContentResponse<List<PostView\>\> findPostsByTagAndStationId(@Query("tagName")String tagName, @Query("stationId")Integer stationId,
+		@Query("page") int page, @Query("size") int size);
+
+	@GET("/api/terms/search/findPostsByTagAndStationId")
+		ContentResponse<List<PostView\>\> findPostsByTagAndStationId(@Query("tagName")String tagName, @Query("stationId")Integer stationId,
+			@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+
 	@GET("/posts/{stationId}/findPostsAndPostsPromotedByBody")
 	ContentResponse<List<PostView\>\> findPostsAndPostsPromotedByBody(@Path("stationId")Integer stationId, @Query("body") String body, 
 		@Query("page") int page, @Query("size") int size);

@@ -73,15 +73,13 @@ var trix = angular.module('trix', [])
 	  return \$http.post(_config.url + "/api/auth/signin", \$.param({"userId": userId, "accessToken": accessToken, "provider": provider}), config)
 	}
 
-	this.findPostsByTagAndStationId = function(tagName, stationId, page, size, sort, projection) {
+	this.findPostsByTagAndStationId = function(tagName, stationId, page, size, projection) {
 		var config = {};
 		config.params = {
 			tagName: tagName,
 			stationId: stationId,
 			page: page,
 			size: size,
-			sort: sort,
-
 		}
 		config.params["projection"] = projection;
 		return \$http.get(_config.url + "/api/terms/search/findPostsByTagAndStationId",  config)

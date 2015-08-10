@@ -5,7 +5,7 @@ app.controller('TagsPageCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$st
 
 	if(tagName){
 		
-		trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, $scope.postsPage, 10, "id,desc").success(function(response){
+		trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, $scope.postsPage, 10).success(function(response){
 			$scope.postViews = response;
 			if($scope.postViews && $scope.postViews.length > 0)
 				$scope.postsPage++;
@@ -25,7 +25,7 @@ app.controller('TagsPageCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$st
 
 		if(!$scope.loadingPage){
 			$scope.loadingPage = true;
-			trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, $scope.postsPage, 10, "id,desc").success(function(posts){
+			trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, $scope.postsPage, 10).success(function(posts){
 				$scope.loadingPage = false;
 				$scope.postsPage = $scope.postsPage + 1;
 

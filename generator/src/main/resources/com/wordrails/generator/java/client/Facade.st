@@ -98,7 +98,26 @@ public class $facade$ {
 	$entities:{entity | $GetSelf(entity)$}; separator="\n\n"$
 /*---------------------------------------------------------------------------*/	
 
-/*---------------------------------------------------------------------------*/	
+/*---------------------------------------------------------------------------*/
+
+	public List<PostView> findPostsByTagAndStationId(String tagName, Integer stationId, int page, int size){
+		return _facade.findPostsByTagAndStationId(tagName, stationId, page, size).content;
+	}
+
+	public void findPostsByTagAndStationId(String tagName, Integer stationId, int page, int size, final Callback<List<PostView\>\> _callback){
+		_facade.findPostsByTagAndStationId(tagName, stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+			@Override
+			public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+				_callback.success(_t.content, _response);
+			}
+
+			@Override
+			public void failure(RetrofitError _error) {
+				_callback.failure(_error);
+			}
+		});
+	}
+
 	public List<PostView> findPostsAndPostsPromotedByBody(Integer stationId, String body, int page, int size){
 		return _facade.findPostsAndPostsPromotedByBody(stationId, body, page, size).content;
 	}
