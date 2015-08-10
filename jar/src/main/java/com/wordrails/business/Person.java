@@ -27,7 +27,8 @@ import java.util.Set;
 		})
 })
 @Table(name = "person", uniqueConstraints={
-		@UniqueConstraint(columnNames={"user_id", "username", "networkId"})
+		@UniqueConstraint(columnNames={"user_id", "username"}),
+		@UniqueConstraint(columnNames={"username", "networkId"})
 })
 public class Person implements Serializable{
 

@@ -91,6 +91,12 @@ var trix = angular.module('trix', [])
       return \$http.post(_config.url + "/api/persons/create", person, config)
     }
 
+    this.createNetwork = function(createNetwork) {
+	  var config = {};
+	  config.headers = {"Content-Type": "application/json"}
+	  return \$http.post(_config.url + "/api/networks/createNetwork", createNetwork, config)
+	}
+
     this.logout = function() {
     	return \$http.get(_config.url + "/j_spring_security_logout")
     }

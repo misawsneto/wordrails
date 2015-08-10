@@ -150,7 +150,7 @@ public class PersonsResource {
 	@GET
 	@Path("/{personId}/posts")
 	public ContentResponse<List<PostView>> getPersonNetworkPosts(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
-			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+																 @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -176,7 +176,7 @@ public class PersonsResource {
 	@GET
 	@Path("/getPostsByState")
 	public ContentResponse<List<PostView>> getPersonNetworkPostsByState(@Context HttpServletRequest request, @QueryParam("personId") Integer personId, @QueryParam("state") String state,
-								@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+																		@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -190,7 +190,7 @@ public class PersonsResource {
 
 		Network network = authProvider.getNetwork();
 
-			List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id);
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id);
 
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
@@ -209,7 +209,7 @@ public class PersonsResource {
 	@GET
 	@Path("/{personId}/recommends")
 	public ContentResponse<List<PostView>> getPersonNetworkRecommendations(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
-			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+																		   @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -312,35 +312,33 @@ public class PersonsResource {
 
 				throw badRequest;
 			}catch (org.springframework.dao.DataIntegrityViolationException e) {
-				if(e.getCause() != null){
-					if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
-						String errorMsg = e.getCause().getCause().getLocalizedMessage();
-						Pattern p = Pattern.compile("\'([^\']*)\'");
-						Matcher m = p.matcher(errorMsg);
-						String errorVal = "";
-						while (m.find()) {
-							errorVal = m.group(1);
-							break;
-						}
-
-						Person conflictingPerson = null;
-						if(person.email != null && person.email.trim().equals(errorVal)){
-							conflictingPerson = personRepository.findByEmailAndNetworkId(person.email, network.id);
-						}else if(person.username != null && person.username.trim().equals(errorVal)){
-							conflictingPerson = personRepository.findByUsernameAndNetworkId(person.username, network.id);
-						}
-
-						if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
-//							conflictingPerson.id 
-							StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
-							if(str != null)
-								return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
-										+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
-										+ "\"conflictingStationRole\": " + mapper.writeValueAsString(str) +"}").build();
-						}
-
-						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) +"}").build();
+				if(e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
+					String errorMsg = e.getCause().getCause().getLocalizedMessage();
+					Pattern p = Pattern.compile("\'([^\']*)\'");
+					Matcher m = p.matcher(errorMsg);
+					String errorVal = "";
+					while (m.find()) {
+						errorVal = m.group(1);
+						break;
 					}
+
+					Person conflictingPerson = null;
+					if(person.email != null && person.email.trim().equals(errorVal)){
+						conflictingPerson = personRepository.findByEmailAndNetworkId(person.email, network.id);
+					}else if(person.username != null && person.username.trim().equals(errorVal)){
+						conflictingPerson = personRepository.findByUsernameAndNetworkId(person.username, network.id);
+					}
+
+					if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
+//							conflictingPerson.id 
+						StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
+						if(str != null)
+							return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
+									+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
+									+ "\"conflictingStationRole\": " + mapper.writeValueAsString(str) +"}").build();
+					}
+
+					return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) +"}").build();
 				}
 				e.printStackTrace();
 				throw new ConflictException();
@@ -549,7 +547,7 @@ public class PersonsResource {
 		PersonData initData = new PersonData();
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
-		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class); 
+		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes("UTF-8"), NetworkRoleDto.class);
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;
@@ -559,17 +557,17 @@ public class PersonsResource {
 		if(initData.networkRole != null)
 			initData.networkRole.links = networkRole != null ? wordrailsService.generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id) : Arrays.asList(new Link());
 
-			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
-			if(initData.person != null && !initData.person.username.equals("wordrails")){
-				List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
-				List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(initData.person.id, pageable2);
-				List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
-				initData.postsRead = postsRead;
-				initData.bookmarks = bookmarks;
-				initData.recommends = recommends;
-			}
+		Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+		if(initData.person != null && !initData.person.username.equals("wordrails")){
+			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
+			List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(initData.person.id, pageable2);
+			List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
+			initData.postsRead = postsRead;
+			initData.bookmarks = bookmarks;
+			initData.recommends = recommends;
+		}
 
-			return initData;
+		return initData;
 	}
 
 

@@ -542,18 +542,11 @@ angular.module('app')
                 })
             };
 
-            // close post read and go back to previous state
-            $scope.app.closePostRead = function(state){
-                $state.go('^')
-                $timeout(function(){
-                    $scope.app.nowReading = null;
-                }, 300)
-            }
 
             // close post read and go back to previous state
             $scope.app.closePostRead = function(){
-                $state.go('^')
-                /*$window.history.back();*/
+                // $state.go('^')
+                $window.history.back();
                 $timeout(function(){
                     $scope.app.nowReading = null;
                 }, 300)

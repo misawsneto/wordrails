@@ -80,6 +80,7 @@ public class WordrailsService {
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
+	public @Autowired TaxonomyRepository taxonomyRepository;
 	
 	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
 	
@@ -539,5 +540,11 @@ public class WordrailsService {
 	@Transactional
 	public void updateLastLogin(String username) {
 		queryPersistence.updateLastLogin(username);
+	}
+
+	@Async
+	@Transactional
+	public void deleteTaxonomyNetworks(Taxonomy taxonomy){
+		taxonomyRepository.deleteTaxonomyNetworks(taxonomy.id);
 	}
 }

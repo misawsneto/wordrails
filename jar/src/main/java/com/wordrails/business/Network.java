@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -25,7 +26,8 @@ public class Network implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
-	
+
+	@NotNull
 	@Size(min=1, max=100)
 	public String name;
 	
@@ -88,6 +90,7 @@ public class Network implements Serializable{
 	public Double newsFontSize = 1.0;
 	
 	@NotNull
+	@Pattern(regexp = "^((?!-)[A-Za-z0-9-]{1,63})$", message = "Invalid subdomain")
 	public String subdomain;
 	
 	public boolean configured;
