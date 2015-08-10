@@ -87,6 +87,8 @@ angular.module('app')
             $scope.app.hideFooter = true;
             // ---------------------
 
+            if(!initData)
+              return;
 
             angularHttp = $http;
             trixSdk = trix
@@ -777,6 +779,9 @@ angular.module('app')
 
             }
 
+            $scope.app.twitterSignIn = function(){
+            }
+
             function handleFacebookLogin(authResponse){
                 if(authResponse)
                     trix.socialLogin(authResponse.authResponse.userID, authResponse.authResponse.accessToken, "facebook").success(function(){
@@ -786,10 +791,6 @@ angular.module('app')
                 FB.api('/me?fields=id,name,email', function(me) {
                     console.log(me);
                 },{scope: 'public_profile,email', fields: 'id,name,email'});
-            }
-
-            $scope.app.createNetwork = function(createNetworkObject){
-              trix.createNetwork(createNetworkObject);
             }
 
             $scope.app.refreshData();

@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"subdomain"}))
 public class Network implements Serializable{
 
 	private static final long serialVersionUID = 7723825842358687233L;
@@ -87,7 +88,6 @@ public class Network implements Serializable{
 	public Double newsFontSize = 1.0;
 	
 	@NotNull
-	@Column(unique = true)
 	public String subdomain;
 	
 	public boolean configured;

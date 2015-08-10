@@ -22,8 +22,8 @@
   <link rel="stylesheet" href="/css/override.css?${buildNumber}" type="text/css" />
   <script type="text/javascript">
   	var GLOBAL_URL_HASH = "${buildNumber}"
-    var initData = ${personData};
-    var initTermPerspective = ${termPerspectiveView};
+    var initData = ${not empty personData?personData:'\'\''};
+    var initTermPerspective = ${not empty termPerspectiveView?termPerspectiveView:'\'\''};
     var angularHttp = null;
     var trixSdk = null;
   </script>

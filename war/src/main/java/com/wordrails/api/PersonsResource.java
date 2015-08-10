@@ -306,7 +306,6 @@ public class PersonsResource {
 				BadRequestException badRequest = new BadRequestException();
 
 				for (ConstraintViolation violation : e.getConstraintViolations()) {
-//					violation.get
 					FieldError error = new FieldError(violation.getInvalidValue()+"", violation.getInvalidValue()+"", violation.getMessage());
 					badRequest.errors.add(error);
 				}

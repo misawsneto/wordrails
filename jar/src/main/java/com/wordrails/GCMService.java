@@ -162,7 +162,7 @@ public class GCMService {
 			List<List<String>> parts = WordrailsUtil.partition(new ArrayList<String>(devices), GCM_WINDOW_SIZE);
 			for (List<String> part : parts) {
 				sendBulkMessages(message, part, notification.hash);
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			}
 		}catch(Throwable e){
 			System.err.println(notificationJson + " \n RegIds: " + personNetworkRegIds.size());

@@ -117,7 +117,27 @@ public class NetworkResource {
 		nTaxonomy.type = Taxonomy.NETWORK_TAXONOMY;
 
 		taxonomyRepository.save(nTaxonomy);
-		networkRepository.save(network);
+		try {
+			networkRepository.save(network);
+		}catch (javax.validation.ConstraintViolationException e){
+			BadRequestException badRequest = new BadRequestException();
+
+			for (ConstraintViolation violation : e.getConstraintViolations()) {
+				FieldError error = new FieldError(violation.getInvalidValue()+"", violation.getInvalidValue()+"", violation.getMessage());
+				badRequest.errors.add(error);
+			}
+
+			throw badRequest;
+		} catch (org.hibernate.exception.ConstraintViolationException e){
+			BadRequestException badRequest = new BadRequestException();
+
+//				FieldError error = new FieldError(violation.getInvalidValue()+"", violation.getInvalidValue()+"", violation.getMessage());
+//				badRequest.errors.add(error);
+
+			throw badRequest;
+		}
+
+
 		nTaxonomy.owningNetwork = network;
 		taxonomyRepository.save(nTaxonomy);
 
