@@ -233,7 +233,7 @@ public class GCMService {
 	public void updateIosToken(Network network, Person person, String token, Double lat, Double lng){
 		try{
 			PersonNetworkToken pToken = personNetworkTokenRepository.findOneByToken(token);
-			if(token == null || pToken.token == null){
+			if(pToken == null || pToken.token == null){
 				pToken = new PersonNetworkToken();
 				pToken.token = token;
 			}
@@ -246,7 +246,6 @@ public class GCMService {
 			}
 			personNetworkTokenRepository.save(pToken);
 		}catch(Exception e){
-			e.printStackTrace();
 			System.out.println(e.getLocalizedMessage());
 		}
 		
