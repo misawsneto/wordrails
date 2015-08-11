@@ -246,6 +246,7 @@ public class GCMService {
 			}
 			personNetworkTokenRepository.save(pToken);
 		}catch(Exception e){
+			e.printStackTrace();
 			System.out.println(e.getLocalizedMessage());
 		}
 		
