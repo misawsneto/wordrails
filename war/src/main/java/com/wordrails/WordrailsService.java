@@ -22,6 +22,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.wordrails.business.*;
+import com.wordrails.persistence.*;
 import net.coobird.thumbnailator.Thumbnails;
 
 import org.apache.commons.io.FileUtils;
@@ -56,15 +57,6 @@ import com.wordrails.api.StationPermission;
 import com.wordrails.api.StationsPermissions;
 import com.wordrails.api.TermPerspectiveView;
 import com.wordrails.converter.PostConverter;
-import com.wordrails.persistence.FileContentsRepository;
-import com.wordrails.persistence.FileRepository;
-import com.wordrails.persistence.ImageRepository;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.PostReadRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.services.CacheService;
 import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
@@ -80,6 +72,8 @@ public class WordrailsService {
 	private @Autowired FileRepository fileRepository;
 	private @Autowired ImageRepository imageRepository;
 	private @Autowired PostRepository postRepository;
+	private @Autowired
+	PersonRepository personRepository;
 	private @Autowired PerspectiveResource perspectiveResource;
 	private @Autowired PostConverter postConverter;
 	private @Autowired CacheService cacheService;
@@ -171,6 +165,7 @@ public class WordrailsService {
 		postRead.post = post;
 		postRead.sessionid = "0"; // constraint fails if null
 		if(postRead.person != null && postRead.person.username.equals("wordrails")) // if user wordrails, include session to uniquely identify the user.
+			person = personRepository.findOne(1);
 			postRead.sessionid = sessionId;
 		try {
 			postReadRepository.save(postRead);
@@ -187,6 +182,7 @@ public class WordrailsService {
 		postRead.person = person;
 		postRead.post = postRepository.findOne(postId);
 		if(postRead.person != null && postRead.person.username.equals("wordrails")) // if user wordrails, include session to uniquely identify the user.
+			person = personRepository.findOne(1);
 			postRead.sessionid = sessionId;
 		try {
 			postReadRepository.save(postRead);

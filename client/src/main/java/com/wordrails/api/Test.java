@@ -29,7 +29,7 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		WordRails wordRails = getLocal("wordrails", "wordrails");
+		WordRails wordRails = getLocal("sport", "Sport@dmiN");
 		wordRails.login();
 		wordRails.getInitialData();
 

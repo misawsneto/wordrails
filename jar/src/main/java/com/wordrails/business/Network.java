@@ -64,12 +64,6 @@ public class Network implements Serializable{
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
-
-	@Column(name = "certificate_ios")
-	public Blob certificateIos;
-
-	@Column(name = "certificate_password")
-	public String certificatePassword;
 	
 	public String domain;
 

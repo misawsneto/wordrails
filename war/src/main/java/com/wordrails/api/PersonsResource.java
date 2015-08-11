@@ -138,6 +138,8 @@ public class PersonsResource {
 		} else {
 			gcmService.updateRegId(network, person, regId, lat, lng);
 		}
+//		if(person.id == 0) person = null;
+		System.out.println("regId: " + regId);
 		return Response.status(Status.OK).build();
 	}
 
@@ -152,6 +154,8 @@ public class PersonsResource {
 		} else {
 			apnService.updateIosToken(network, person, token, lat, lng);
 		}
+//		if(person.id == 0) person = null;
+		System.out.println("iOS token: " + token);
 		return Response.status(Status.OK).build();
 	}
 

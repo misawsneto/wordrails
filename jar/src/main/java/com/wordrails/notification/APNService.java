@@ -38,10 +38,20 @@ public class APNService {
 
 	@Autowired private PersonNetworkTokenRepository personNetworkTokenRepository;
 	@Autowired private NetworkRepository networkRepository;
-	@Autowired private StationRepository stationRepository;
 	private PushManager<SimpleApnsPushNotification> pushManager;
 	private SynchronousQueue sq;
 	private Integer APN_NOTIFICATION_SENT_LIMIT = 8999;
+
+	public static void main(String[] agrs){
+		Notification n = new Notification();
+		n.person = new Person();
+		n.person.id = 2;
+		n.network = new Network();
+		n.network.id = 1;
+
+		APNService apn = null;
+		apn.sendToNetwork(1, n);
+	}
 
 	private void init(Integer networkId){
 
@@ -90,11 +100,10 @@ public class APNService {
 	@Async
 	@Transactional
 	public void sendToStation(Integer stationId, Notification notification) throws UnexpectedException {
-		List<PersonNetworkToken> personNetworkTokens = personNetworkTokenRepository
-				.findTokenByStationId(stationId);
+		List<PersonNetworkToken> personNetworkTokens = personNetworkTokenRepository.findTokenByStationId(stationId);
 
 		Network network;
-		if((network = stationRepository.findByStationId(stationId)) == null){
+		if((network = personNetworkTokenRepository.findNetworkByStationId(stationId)) == null){
 			throw new UnexpectedException("There is no such network...");
 		}
 

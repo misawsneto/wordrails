@@ -21,6 +21,14 @@ insert into network_taxonomy (networks_id, taxonomies_id) values (1, 1);
 -- update taxonomy set owningNetwork_id = 19 where id = 34;
 -- insert into network_taxonomy (networks_id, taxonomies_id) values (19, 34);
 
+alter table network drop allowComments;
+
+-- drop network defaultTaxonomy_id;
+alter table network drop foreign key FK_aq4tkatkrdlk0q9chpve3yl9l;
+
+-- drop network defaultTaxonomy_id;
+alter table network drop index FK_aq4tkatkrdlk0q9chpve3yl9l;
+
 -- Person -> UNIQUE KEY `UK_mjvhigut8lgjs8a6c1df6qt5u` (`username`)
 alter table person drop index UK_mjvhigut8lgjs8a6c1df6qt5u;
 

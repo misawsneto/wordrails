@@ -36,6 +36,10 @@ public interface PersonNetworkTokenRepository extends JpaRepository<PersonNetwor
 	@Query("SELECT token FROM PersonNetworkToken token join token.person p where p in ( select psr.person from StationRole psr where psr.station.id = :stationId AND psr.person.id != 1 ) OR ( (token.person is null OR token.person.id = 1) and token.network in ( select network from Network network join network.stations s where s.id = :stationId AND s.visibility = 'UNRESTRICTED') )")
 	public List<PersonNetworkToken> findTokenByStationId(@Param("stationId") Integer stationId);
 
+	@RestResource(exported = false)
+	@Query(nativeQuery=true, value="select name from network where id = (select networks_id from station_network where stations_id = ?)")
+	public Network findNetworkByStationId(Integer stationId);
+
 	@RestResource(exported=false)
 	public void deleteByToken(String token);
 

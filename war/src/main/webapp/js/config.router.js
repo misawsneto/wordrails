@@ -804,12 +804,18 @@ angular.module('app')
               .state('access.signin', {
                   url: '/signin',
                   templateUrl: 'tpl/page_signin.html',
+                  controller: 'AppCtrl'
+              })
+              .state('access.createnetwork', {
+                  url: '/createnetwork',
+                  templateUrl: 'tpl/network_create.html',
                   resolve: {
                       deps: ['uiLoad',
                         function( uiLoad ){
-                          return uiLoad.load( ['js/controllers/signin.js'] );
+                          return uiLoad.load( ['js/controllers/settings.js'] );
                       }]
-                  }
+                  },
+                  controller: 'SettingsCtrl'
               })
               .state('access.signup', {
                   url: '/signup',

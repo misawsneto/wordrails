@@ -32,6 +32,7 @@
 		<condition type="request-uri" operator="notequal">^/home(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/404.html$</condition>
 		<condition type="request-uri" operator="notequal">^/505.html$</condition>
+		<condition type="request-uri" operator="notequal">^/access/createnetwork$</condition>
 		<from>^/(.+)$</from>
 		<to last="true">/index.jsp</to>
 	</rule>

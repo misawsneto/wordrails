@@ -87,6 +87,10 @@ angular.module('app')
             $scope.app.hideFooter = true;
             // ---------------------
 
+
+            angularHttp = $http;
+            trixSdk = trix
+
             function loadPopular(){
                 trix.findPopularPosts($scope.app.currentStation.id, 0, 10)
                     .success(function(response){
@@ -784,8 +788,13 @@ angular.module('app')
                 },{scope: 'public_profile,email', fields: 'id,name,email'});
             }
 
+            $scope.app.createNetwork = function(createNetworkObject){
+              trix.createNetwork(createNetworkObject);
+            }
+
             $scope.app.refreshData();
             moment.locale('pt')
             /* end of added */
+
 
         }]);

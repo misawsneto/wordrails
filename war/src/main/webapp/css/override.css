@@ -2305,8 +2305,8 @@ a.text-lgrey:hover {
   font-family: inherit;
 }
 
-.text-shadow-dark{
-  text-shadow: rgba(0, 0, 0, 0.8) 0px 1px 0px;
+.text-shadow-grey{
+  text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 1px;
 }
 
 .text-dg{
@@ -3714,6 +3714,13 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 #login-error{min-height: 25px;}
 .max-logo{max-height: 150px;}
 /* /layout.html*/
+
+/* sigin signup forgot */
+.bg-create-network{
+  background-size: cover;
+  background-image: url('../img/create_network.jpg');
+}
+/* /sigin signup forgot */
 
 /* aside.html */
 
