@@ -45,15 +45,20 @@ To use the directive, include the angular socialshare's javascript file in your 
 </html>
 ```
 
-##Install
+##Installation
 
-###Bower installation
+####Bower
 
 ```
 $ bower install angularjs-socialshare --save
 ```
+####Npm
 
-_then load the js files in your html_
+```
+$ npm install angular-socialshare --save
+```
+
+_then [load](https://github.com/720kb/angular-socialshare#load) it in your html_
 
 ###Add module dependency
 Add the 720kb.socialshare module dependency
@@ -202,7 +207,7 @@ Share me
 </a>
 ```
 
-####Sharing "via"
+####Sharing via
 You can set the twitter via to share using the `socialshare-via=""` attribute
 
 ```html
@@ -290,7 +295,7 @@ socialshare-popup-width="650">
 
 ## Example
 
-###[Live demo](https://720kb.github.io/angular-socialshare)
+####[Live demo](https://720kb.github.io/angular-socialshare)
 
 
 ##Contributing

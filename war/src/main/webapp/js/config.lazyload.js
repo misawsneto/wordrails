@@ -84,7 +84,7 @@ angular.module('app')
               {
                   name:'angularFileUpload',
                   files: [
-                    '../bower_components/angular-file-upload/dist/angular-file-upload.min.js'
+                    '../bower_components/angular-file-upload/angular-file-upload.min.js'
                   ]
               },
               {
@@ -241,6 +241,9 @@ angular.module('app')
               },{
                   name: 'ui.sortable',
                   files: ['../libs/jquery-ui/jquery-ui.min.js', '../bower_components/angular-ui-sortable/sortable.min.js']
+              },{
+                  name: 'angularjs-dropdown-multiselect',
+                  files: ['../bower_components/angularjs-dropdown-multiselect/dist/angularjs-dropdown-multiselect.min.js']
               }
 
           ]

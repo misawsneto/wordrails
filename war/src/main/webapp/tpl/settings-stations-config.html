@@ -67,34 +67,35 @@
             </p>
           </div>
           <div class="col-sm-6">
-            <div class="m-b text-muted text-md text-u-c">Visibilidade</div>
+            <div class="m-b text-muted text-md text-u-c">Leitura</div>
             <p>
               <label class="md-check">
                 <input type="radio" name="c" ng-model="station.visibility" value="UNRESTRICTED">
                 <i class="blue"></i>
-                Pública
+                Qualquer usuário
+                <small>(inclusive usuário não autenticados)</small>
               </label>
             </p>
             <p>
               <label class="md-check">
                 <input type="radio" name="c" ng-model="station.visibility" value="RESTRICTED">
                 <i class="blue"></i>
-                Privada
+                Apenas usuários com permissão
               </label>
             </p>
-            <div class="m-b text-muted text-md text-u-c">Permissões</div>
+            <div class="m-b text-muted text-md text-u-c">Escrita</div>
             <p>
               <label class="md-check">
                 <input type="radio" name="d" ng-model="station.writable" ng-value="false">
                 <i class="blue"></i>
-                Somente leitura
+                Apenas usuários com permissão de escrita
               </label>
             </p>
             <p>
               <label class="md-check">
                 <input type="radio" name="d" ng-model="station.writable" ng-value="true">
                 <i class="blue"></i>
-                Escrita e leitura
+                Todos os usuários autenticados
               </label>
             </p>
             <div class="m-b m-t text-muted text-md text-u-c">Configurações de edição</div>
@@ -116,6 +117,24 @@
             </p>
           </div>
         </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="m-b text-muted text-md text-u-c">Logotipo da Barra superior</div>
+          <div>
+            <div class="bg-cover text-center" src="img/img-stub.png">
+              <div ng-if="logoImage.link" class="text-center w-xxl m-auto">
+                <img class="img-responsive bg-header p-sm r-3x" style="display:block; margin:auto; max-height: 80px;" ng-src="{{logoImage.link}}">
+                <div class="pull-right m-r-n-md m-t-n-xxl">
+                  <a ng-click="logoImage.link = null;"><i class="mdi mdi-close-circle-outline text-2x"></i></a>
+                </div>
+              </div>
+              <button id="logo-upload" md-ink-ripple class="md-btn md-flat m-t m-b btn-fw" ng-if="!logoImage.link">
+                <span class="text-lg v-middle">Adicionar Logotipo</span>
+                <i class="fa-fw mdi mdi-file-image-box text-2x v-bottom"></i>
+                <input id="image-upload" type="file" nv-file-select="" uploader="logo" name="contents" accept="image/*"/>
+              </button>
+            </div>
+          </div>
+          <div class="line line-dashed b-b line-lg pull-in"></div>
       </div>
       <div class="m-t-n-xs text-right text-lg">
         <button ui-sref="app.settings.stations"
