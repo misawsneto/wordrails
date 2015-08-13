@@ -37,8 +37,8 @@ public interface PersonNetworkTokenRepository extends JpaRepository<PersonNetwor
 	public List<PersonNetworkToken> findTokenByStationId(@Param("stationId") Integer stationId);
 
 	@RestResource(exported = false)
-	@Query(nativeQuery=true, value="select name from network where id = (select networks_id from station_network where stations_id = ?)")
-	public Network findNetworkByStationId(Integer stationId);
+	@Query(nativeQuery=true, value="select id from network where id = (select networks_id from station_network where stations_id = ?)")
+	public Integer findNetworkIdByStationId(Integer stationId);
 
 	@RestResource(exported=false)
 	public void deleteByToken(String token);

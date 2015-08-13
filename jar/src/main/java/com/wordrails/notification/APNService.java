@@ -4,14 +4,8 @@ import com.relayrides.pushy.apns.ApnsEnvironment;
 import com.relayrides.pushy.apns.PushManager;
 import com.relayrides.pushy.apns.PushManagerConfiguration;
 import com.relayrides.pushy.apns.util.*;
-import com.wordrails.business.Network;
-import com.wordrails.business.Notification;
-import com.wordrails.business.Person;
-import com.wordrails.business.PersonNetworkToken;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.PersonNetworkTokenRepository;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.StationRepository;
+import com.wordrails.business.*;
+import com.wordrails.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -38,46 +32,30 @@ public class APNService {
 
 	@Autowired private PersonNetworkTokenRepository personNetworkTokenRepository;
 	@Autowired private NetworkRepository networkRepository;
+	@Autowired private CertificateIosRepository certificateIosRepository;
 	private PushManager<SimpleApnsPushNotification> pushManager;
 	private SynchronousQueue sq;
 	private Integer APN_NOTIFICATION_SENT_LIMIT = 8999;
 
-	public static void main(String[] agrs){
-		Notification n = new Notification();
-		n.person = new Person();
-		n.person.id = 2;
-		n.network = new Network();
-		n.network.id = 1;
-
-		APNService apn = null;
-		apn.sendToNetwork(1, n);
-	}
-
 	private void init(Integer networkId){
 
-		InputStream certificate = null;
-		String certificatePassword = null;
+		CertificateIos certificate = null;
 		sq = new SynchronousQueue();
 
-		try {
-			certificate = networkRepository.findCertificateIosById(networkId).getBinaryStream();
-			certificatePassword = networkRepository.findCertificatePasswordById(networkId);
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		certificate = certificateIosRepository.findOne(networkId);
 
 		try {
 			this.pushManager = new PushManager<SimpleApnsPushNotification>(
 					ApnsEnvironment.getSandboxEnvironment(),
-					SSLContextUtil.createDefaultSSLContext(certificate, certificatePassword),
+					SSLContextUtil.createDefaultSSLContext(certificate.certificateIos.getBinaryStream(),
+							certificate.certificatePassword),
 					null, // Optional: custom event loop group
 					null, // Optional: custom ExecutorService for calling listeners
 					sq, // Optional: custom BlockingQueue implementation
 					new PushManagerConfiguration(),
 					"NetworkId_" + String.valueOf(networkId));
 		} catch (IOException | KeyManagementException | UnrecoverableKeyException |
-				CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
+				CertificateException | NoSuchAlgorithmException | SQLException | KeyStoreException e) {
 			e.printStackTrace();
 		}
 		pushManager.start();
@@ -86,7 +64,6 @@ public class APNService {
 		pushManager.registerFailedConnectionListener(new FailedConnectionsListener()); //it shuts the manager down
 		pushManager.registerExpiredTokenListener(new ExpiredTokensListener()); //it removes expired tokens
 		pushManager.requestExpiredTokens();
-
 	}
 
 	private void shutdown(){
@@ -100,10 +77,13 @@ public class APNService {
 	@Async
 	@Transactional
 	public void sendToStation(Integer stationId, Notification notification) throws UnexpectedException {
+		System.out.println("APN sendToStation");
 		List<PersonNetworkToken> personNetworkTokens = personNetworkTokenRepository.findTokenByStationId(stationId);
 
+		Integer networkId = personNetworkTokenRepository.findNetworkIdByStationId(stationId);
 		Network network;
-		if((network = personNetworkTokenRepository.findNetworkByStationId(stationId)) == null){
+
+		if((network = networkRepository.findOne(networkId)) == null){
 			throw new UnexpectedException("There is no such network...");
 		}
 
@@ -174,7 +154,7 @@ public class APNService {
 	private void removeNotificationProducer(
 			List<PersonNetworkToken> personNetworkTokens,
 			Notification notification){
-		if(personNetworkTokens != null && notification.person.id != null){
+		if(personNetworkTokens != null && notification.person != null){
 			Iterator<PersonNetworkToken> it = personNetworkTokens.iterator();
 			while(it.hasNext()){
 				PersonNetworkToken token = it.next();

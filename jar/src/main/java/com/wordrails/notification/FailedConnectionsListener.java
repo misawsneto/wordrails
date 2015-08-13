@@ -15,15 +15,16 @@ public class FailedConnectionsListener implements FailedConnectionListener<Simpl
 	public void handleFailedConnection(final PushManager<? extends SimpleApnsPushNotification> pushManager,
 	                                   final Throwable cause) {
 
-		System.out.println("Calling MyFailedConnectionListener: " + cause.toString());
+		System.err.println("Calling FailedConnectionListener: " + cause.toString());
 
 		if (cause instanceof SSLHandshakeException) {
 			System.out.println("Error -- time to shut it down");
-		}
-		try {
-			pushManager.shutdown();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+
+			try {
+				pushManager.shutdown();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

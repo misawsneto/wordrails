@@ -14,6 +14,9 @@ import com.wordrails.business.Station;
 import com.wordrails.business.Taxonomy;
 
 public interface NetworkRepository extends JpaRepository<Network, Integer>, QueryDslPredicateExecutor<Network> {
+	@RestResource(exported = false)
+	Network findNetworkById(@Param("networkId") Integer networkId);
+
 	@RestResource(exported=false)
 	List<Network> findByStations(Station station);
 
@@ -34,10 +37,10 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 	
 	@RestResource(exported=false)
 	Network findByDomain(String domain);
-
-	@RestResource(exported = false)
-	Blob findCertificateIosById(@Param("stationId") Integer stationId);
-
-	@RestResource(exported = false)
-	String findCertificatePasswordById(@Param("stationId") Integer stationId);
+//
+//	@RestResource(exported = false)
+//	Blob findCertificateIosById(@Param("networkId") Integer networkId);
+//
+//	@RestResource(exported = false)
+//	String findCertificatePasswordById(@Param("stationId") Integer stationId);
 }

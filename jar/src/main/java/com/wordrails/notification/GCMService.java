@@ -47,7 +47,6 @@ public class GCMService {
 	@Transactional
 	public void sendToStation(Integer stationId, Notification notification){
 
-		System.out.println("sendToStation");
 		List<PersonNetworkRegId> personNetworkRegIds = personNetworkRegIdRepository.findRegIdByStationId(stationId);
 		try {
 			removeNotificationProducer(personNetworkRegIds, notification);
@@ -102,8 +101,6 @@ public class GCMService {
 
 	private void gcmNotify(List<PersonNetworkRegId> personNetworkRegIds,
 	                      final Notification notification) throws Exception{
-
-		System.out.println("Sending notifications...");
 
 		if(personNetworkRegIds == null || notification == null)
 			throw new UnexpectedException("Erro inesperado...");
