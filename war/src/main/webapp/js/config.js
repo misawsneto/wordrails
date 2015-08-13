@@ -64,6 +64,10 @@ angular.module('app')
   trixProvider.setConfig({ url: location.protocol + '//' + location.host });
 })
 .run(function($rootScope){
+
+  if(!initData)
+    return;
+
   var backgroundColor = initData.network.backgroundColor
   var navbarColor = initData.network.navbarColor
   var mainColor = initData.network.mainColor

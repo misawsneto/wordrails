@@ -15,17 +15,20 @@ import javax.ws.rs.core.Response.Status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.persistence.*;
 import com.wordrails.util.PersonCreateDto;
 import com.wordrails.util.WordrailsUtil;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.util.NetworkCreateDto;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 
 @Path("/networks")
@@ -45,6 +48,7 @@ public class NetworkResource {
 	private @Autowired PersonRepository personRepository;
 	private @Autowired StationRoleEventHandler stationRoleEventHandler;
 	private @Autowired TermRepository termRepository;
+	private @Autowired WordrailsService wordrailsService;
 
 	public @Autowired @Qualifier("objectMapper")
 	ObjectMapper mapper;
@@ -117,7 +121,88 @@ public class NetworkResource {
 		nTaxonomy.type = Taxonomy.NETWORK_TAXONOMY;
 
 		taxonomyRepository.save(nTaxonomy);
-		networkRepository.save(network);
+		try {
+			networkRepository.save(network);
+		} catch (javax.validation.ConstraintViolationException e) {
+
+			List<FieldError> errors = new ArrayList<FieldError>();
+			for (ConstraintViolation violation : e.getConstraintViolations()) {
+				FieldError error = new FieldError(violation.getRootBean().getClass().getName()+"", violation.getPropertyPath()+"", violation.getMessage());
+				errors.add(error);
+			}
+
+			taxonomyRepository.delete(nTaxonomy);
+			return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + mapper.writeValueAsString(errors) +"}").build();
+		} catch (org.springframework.dao.DataIntegrityViolationException e){
+			taxonomyRepository.delete(nTaxonomy);
+
+			if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+				org.hibernate.exception.ConstraintViolationException ex = (ConstraintViolationException) e.getCause();
+
+				return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"mensage\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
+			}
+
+			throw e;
+		}
+
+		// Create Person ------------------------------
+
+		Person person = networkCreate.person;
+		User user = null;
+
+		try {
+			UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
+			authority.network = network;
+
+			String password = person.password;
+
+			user = new User();
+			user.enabled = true;
+			user.username = person.username;
+			user.password = password;
+			user.network = authority.network;
+			authority.user = user;
+			user.addAuthority(authority);
+
+			person.user = user;
+
+			personRepository.save(person);
+		} catch (javax.validation.ConstraintViolationException e) {
+
+			List<FieldError> errors = new ArrayList<FieldError>();
+			for (ConstraintViolation violation : e.getConstraintViolations()) {
+				FieldError error = new FieldError(violation.getRootBean().getClass().getName()+"", violation.getPropertyPath()+"", violation.getMessage());
+				errors.add(error);
+			}
+
+			taxonomyRepository.delete(nTaxonomy);
+			networkRepository.delete(network);
+
+			return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + mapper.writeValueAsString(errors) +"}").build();
+		} catch (org.springframework.dao.DataIntegrityViolationException e){
+			taxonomyRepository.delete(nTaxonomy);
+			networkRepository.delete(network);
+
+			if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+				org.hibernate.exception.ConstraintViolationException ex = (ConstraintViolationException) e.getCause();
+
+				return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"mensage\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
+			}
+
+			throw e;
+		}
+
+		NetworkRole networkRole = new NetworkRole();
+		networkRole.network = network;
+		networkRole.person = person;
+		networkRole.admin = true;
+		networkRolesRepository.save(networkRole);
+
+		UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
+		user.addAuthority(authority);
+
+		// End Create Person ------------------------------
+
 		nTaxonomy.owningNetwork = network;
 		taxonomyRepository.save(nTaxonomy);
 
@@ -136,9 +221,6 @@ public class NetworkResource {
 		termRepository.save(nterm1);
 		termRepository.save(nterm2);
 		taxonomyRepository.save(nTaxonomy);
-
-		Person person = networkCreate.person;
-		User user = null;
 
 		Station station = new Station();
 		station.name = network.name;
@@ -177,44 +259,6 @@ public class NetworkResource {
 		station.ownedTaxonomies = taxonomies;
 
 		stationRepository.save(station);
-
-		try {
-			UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
-			authority.network = network;
-
-			String password = person.password;
-
-			user = new User();
-			user.enabled = true;
-			user.username = person.username;
-			user.password = password;
-			user.network = authority.network;
-			authority.user = user;
-			user.addAuthority(authority);
-
-			person.user = user;
-
-			personRepository.save(person);
-		} catch (javax.validation.ConstraintViolationException e) {
-			BadRequestException badRequest = new BadRequestException();
-
-			for (ConstraintViolation violation : e.getConstraintViolations()) {
-//					violation.get
-				FieldError error = new FieldError(violation.getInvalidValue() + "", violation.getInvalidValue() + "", violation.getMessage());
-				badRequest.errors.add(error);
-			}
-
-			throw badRequest;
-		}
-
-		NetworkRole networkRole = new NetworkRole();
-		networkRole.network = network;
-		networkRole.person = person;
-		networkRole.admin = true;
-		networkRolesRepository.save(networkRole);
-
-		UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
-		user.addAuthority(authority);
 
 		taxonomies = station.ownedTaxonomies;
 		for (Taxonomy tax: taxonomies){

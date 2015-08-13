@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.wordrails.business.*;
+import com.wordrails.persistence.PersonNetworkTokenRepository;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +22,6 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
-import com.wordrails.business.Network;
-import com.wordrails.business.Notification;
-import com.wordrails.business.Person;
-import com.wordrails.business.PersonNetworkRegId;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
@@ -40,6 +38,7 @@ public class GCMService {
 
 	@Autowired private NetworkRepository networkRepository;
 	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository;
+	@Autowired private PersonNetworkTokenRepository personNetworkTokenRepository;
 	@Autowired private NotificationRepository notificationRepository; 
 	private ObjectMapper mapper;
 
@@ -157,7 +156,7 @@ public class GCMService {
 			List<List<String>> parts = WordrailsUtil.partition(new ArrayList<String>(devices), GCM_WINDOW_SIZE);
 			for (List<String> part : parts) {
 				sendBulkMessages(message, part, notification.hash);
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			}
 		}catch(Throwable e){
 			System.err.println(notificationJson + " \n RegIds: " + personNetworkRegIds.size());
@@ -223,5 +222,26 @@ public class GCMService {
 		}catch(Exception e){
 			System.out.println(e.getLocalizedMessage());
 		}
+	}
+
+	public void updateIosToken(Network network, Person person, String token, Double lat, Double lng){
+		try{
+			PersonNetworkToken pToken = personNetworkTokenRepository.findOneByToken(token);
+			if(pToken == null || pToken.token == null){
+				pToken = new PersonNetworkToken();
+				pToken.token = token;
+			}
+
+			pToken.network = network;
+			pToken.person = person == null || person.username.equals("wordrails") ? null : person;
+			if(lat != null && lng != null){
+				pToken.lat = lat;
+				pToken.lng = lng;
+			}
+			personNetworkTokenRepository.save(pToken);
+		}catch(Exception e){
+			System.out.println(e.getLocalizedMessage());
+		}
+		
 	}
 }

@@ -80,6 +80,7 @@ public class WordrailsService {
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
+	public @Autowired TaxonomyRepository taxonomyRepository;
 	
 	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
 	
@@ -164,9 +165,10 @@ public class WordrailsService {
 		postRead.person = person;
 		postRead.post = post;
 		postRead.sessionid = "0"; // constraint fails if null
-		if(postRead.person != null && postRead.person.username.equals("wordrails")) // if user wordrails, include session to uniquely identify the user.
-			person = personRepository.findOne(1);
+		if(postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
+			postRead.person = null;
 			postRead.sessionid = sessionId;
+		}
 		try {
 			postReadRepository.save(postRead);
 			queryPersistence.incrementReadsCount(post.id);
@@ -181,9 +183,11 @@ public class WordrailsService {
 		PostRead postRead = new PostRead();
 		postRead.person = person;
 		postRead.post = postRepository.findOne(postId);
-		if(postRead.person != null && postRead.person.username.equals("wordrails")) // if user wordrails, include session to uniquely identify the user.
-			person = personRepository.findOne(1);
+		postRead.sessionid = "0"; // constraint fails if null
+		if(postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
+			postRead.person = null;
 			postRead.sessionid = sessionId;
+		}
 		try {
 			postReadRepository.save(postRead);
 			queryPersistence.incrementReadsCount(postId);
@@ -538,5 +542,11 @@ public class WordrailsService {
 	@Transactional
 	public void updateLastLogin(String username) {
 		queryPersistence.updateLastLogin(username);
+	}
+
+	@Async
+	@Transactional
+	public void deleteTaxonomyNetworks(Taxonomy taxonomy){
+		taxonomyRepository.deleteTaxonomyNetworks(taxonomy.id);
 	}
 }
