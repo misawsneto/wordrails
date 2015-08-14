@@ -21,8 +21,10 @@ public class ExpiredTokensListener implements ExpiredTokenListener<SimpleApnsPus
 	public void handleExpiredTokens(final PushManager<? extends SimpleApnsPushNotification> pushManager,
 			final Collection<ExpiredToken> expiredTokens) {
 
+		System.err.println("Problem with tokens: #" + expiredTokens.size());
+
 		for (final ExpiredToken expiredToken : expiredTokens) {
-//			System.out.println("Problem during push notification");
+			System.err.println("Problem during push notification");
 //			System.out.println(expiredToken.getExpiration().toString());
 			personNetworkTokenRepository.deleteByToken(TokenUtil.tokenBytesToString(expiredToken.getToken()));
 		}

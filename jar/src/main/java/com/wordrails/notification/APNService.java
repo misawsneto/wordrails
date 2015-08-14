@@ -46,7 +46,7 @@ public class APNService {
 
 		try {
 			this.pushManager = new PushManager<SimpleApnsPushNotification>(
-					ApnsEnvironment.getSandboxEnvironment(),
+					ApnsEnvironment.getProductionEnvironment(),
 					SSLContextUtil.createDefaultSSLContext(certificate.certificateIos.getBinaryStream(),
 							certificate.certificatePassword),
 					null, // Optional: custom event loop group
@@ -77,15 +77,11 @@ public class APNService {
 	@Async
 	@Transactional
 	public void sendToStation(Integer stationId, Notification notification) throws UnexpectedException {
-		System.out.println("APN sendToStation");
+//		System.out.println("APN sendToStation");
 		List<PersonNetworkToken> personNetworkTokens = personNetworkTokenRepository.findTokenByStationId(stationId);
 
 		Integer networkId = personNetworkTokenRepository.findNetworkIdByStationId(stationId);
-		Network network;
-
-		if((network = networkRepository.findOne(networkId)) == null){
-			throw new UnexpectedException("There is no such network...");
-		}
+		Network network = networkRepository.findOne(networkId);
 
 		try {
 			removeNotificationProducer(personNetworkTokens, notification);
@@ -127,7 +123,7 @@ public class APNService {
 		ApnsPayloadBuilder payloadBuilder = new ApnsPayloadBuilder();
 		payloadBuilder.setBadgeNumber(1);
 		payloadBuilder.setSoundFileName("default");
-		payloadBuilder.addCustomProperty("postId", notification.postId);
+		payloadBuilder.addCustomProperty("postId", notification.post.id);
 		payloadBuilder.addCustomProperty("stationName", notification.station.name);
 		payloadBuilder.setAlertTitle(notification.station.name);
 		payloadBuilder.setAlertBody(notification.message);
@@ -138,6 +134,8 @@ public class APNService {
 					TokenUtil.tokenStringToByteArray(personToken.token),
 					payloadBuilder.buildWithDefaultMaximumLength()
 			));
+
+//			System.out.println(personToken.token);
 
 			//Limit the number of notifications sent to less than 9000 per second, so it's possible to handle errors
 			if(notificationsCounter >= APN_NOTIFICATION_SENT_LIMIT){
