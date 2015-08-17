@@ -97,35 +97,35 @@ angular.module('app')
 })
 
 app.directive('backImg', function(TRIX){
-    return function(scope, element, attrs){
-        attrs.$observe('backImg', function(value) {
-            if(value){
-              element.css({
-                'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
-              });
-            }else{
-              element.css({
-                'background-image': 'url(img/default-user.png)'
-              });
-            }
+  return function(scope, element, attrs){
+    attrs.$observe('backImg', function(value) {
+      if(value){
+        element.css({
+          'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
         });
-    };
+      }else{
+        element.css({
+          'background-image': 'url(img/default-user.png)'
+        });
+      }
+    });
+  };
 })
 
 app.directive('backImgCover', function(TRIX){
-    return function(scope, element, attrs){
-        attrs.$observe('backImgCover', function(value) {
-          if(value){
-            element.css({
-              'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
-            });
-          }else{
-            element.css({
-              'background-image': 'url(../img/abstract-cover-orig.png)'
-            });
-          }
+  return function(scope, element, attrs){
+    attrs.$observe('backImgCover', function(value) {
+      if(value){
+        element.css({
+          'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
         });
-    };
+      }else{
+        element.css({
+          'background-image': 'url(../img/abstract-cover-orig.png)'
+        });
+      }
+    });
+  };
 })
 
 .directive('clamp', function ($timeout) {
@@ -220,6 +220,86 @@ app.directive('backImgCover', function(TRIX){
     }
   };
 })
+
+.directive('dropdownMultiselect', function () {
+  return {
+    restrict: 'E',
+    scope: {
+      model: '=',
+      options: '=',
+    },
+    template:
+    "<div class='btn-group' data-ng-class='{open: open}'>" +
+    "<button class='btn btn-small'>{{printSelected()}}</button>" +
+    "<button class='btn btn-small dropdown-toggle' data-ng-click='openDropdown()'>"+
+    "<span class='caret'></span></button>" +
+    "<ul class='dropdown-menu' aria-labelledby='dropdownMenu'>" +
+    "<li><a data-ng-click='selectAll()'> <span class='' aria-hidden='true'></span> Marcar Todas</a></li>" +
+    "<li><a data-ng-click='deselectAll();'> <span class='' aria-hidden='true'></span> Desmarcar Todas</a></li>" +
+    "<li class='divider'></li>" +
+    "<li data-ng-repeat='option in options'> <a data-ng-click='toggleSelectItem(option)'>"+
+    "<span data-ng-class='getClassName(option)' aria-hidden='true'></span> {{option.name}}</a></li>" +
+    "</ul>" +
+    "</div>",
+    controller: function ($scope) {
+      $scope.openDropdown = function () {
+        $scope.open = !$scope.open;
+      };
+
+      $scope.printSelected = function(){
+        var names = []
+        $scope.model && $scope.model.forEach(function(model, index){
+          $scope.options && $scope.options.forEach(function(option, index){
+            if(option.id == model)
+              names.push(option.name)
+          });
+        });
+        return names.length > 0 ? names.join(", ") : 'Escolha ao menos 1 estação';
+      }
+
+      $scope.selectAll = function () {
+        $scope.model = [];
+        angular.forEach($scope.options, function (item, index) {
+          $scope.model.push(item.id);
+        });
+      };
+
+      $scope.deselectAll = function () {
+        $scope.model = [];
+      };
+
+      $scope.toggleSelectItem = function (option) {
+        var intIndex = -1;
+        angular.forEach($scope.model, function (item, index) {
+          if (item == option.id) {
+            intIndex = index;
+          }
+        });
+
+        if (intIndex >= 0) {
+          $scope.model.splice(intIndex, 1);
+        }
+        else {
+          $scope.model.push(option.id);
+        }
+      };
+
+      $scope.getClassName = function (option) {
+        var varClassName = 'fa fa-fw fa-bla';
+        angular.forEach($scope.model, function (item, index) {
+          if (item == option.id) {
+            varClassName = 'mdi fa-fw mdi-check';
+          }
+        });
+        return (varClassName);
+      };
+    }
+  }
+})
+
+// **************************************************
+        // *** /My AngularJS Directive(s) Application *******
+        // **************************************************
 
 .directive('node', function($compile) {
   return { 

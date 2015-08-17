@@ -4,6 +4,9 @@
     <select ng-class="{'hide': app.editingPost.id}" class="form-control m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
     ng-options="station as station.stationName for station in writableStations track by station.stationId">
     </select>
+
+
+    <dropdown-multiselect model="selectedStations"  options="writableStations"></dropdown-multiselect>
   </div>
   <div class="row-row">
     <div class="cell b-l">

@@ -1,6 +1,6 @@
 {
   "name": "angular-socialshare",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "A social url and content sharing directive for angularjs.",
   "authors": [
     "Filippo Oretti <filippo.oretti@gmail.com",
@@ -23,11 +23,11 @@
     "test",
     "tests"
   ],
-  "_release": "0.1.10",
+  "_release": "0.1.11",
   "_resolution": {
     "type": "version",
-    "tag": "0.1.10",
-    "commit": "9b9f41bf55051c97368f3ffc4ac64a46612a4217"
+    "tag": "0.1.11",
+    "commit": "f969165368d05c479684913edb3cb40679f67556"
   },
   "_source": "git://github.com/720kb/angular-socialshare.git",
   "_target": "~0.1.9",

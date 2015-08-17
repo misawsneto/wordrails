@@ -11,8 +11,8 @@
  * FileUploader.FileDrop
  * FileUploader.FileOver
  */
-angular
-    .module('angularFileUpload', [])
+
+module
 
 
     .value('fileUploaderOptions', {
@@ -326,7 +326,7 @@ angular
              * @private
              */
             FileUploader.prototype._getFilters = function(filters) {
-                if (!filters) return this.filters;
+                if (angular.isUndefined(filters)) return this.filters;
                 if (angular.isArray(filters)) return filters;
                 var names = filters.match(/[^\s,]+/g);
                 return this.filters.filter(function(filter) {
@@ -531,9 +531,6 @@ angular
                 });
 
                 iframe.bind('load', function() {
-                    var html = '';
-                    var status = 200;
-
                     try {
                         // Fix for legacy IE browsers that loads internal error page
                         // when failed WS response received. In consequence iframe
@@ -547,14 +544,10 @@ angular
                         // returning response via same 'success' event handler.
 
                         // fixed angular.contents() for iframes
-                        html = iframe[0].contentDocument.body.innerHTML;
-                    } catch (e) {
-                        // in case we run into the access-is-denied error or we have another error on the server side
-                        // (intentional 500,40... errors), we at least say 'something went wrong' -> 500
-                        status = 500;
-                    }
+                        var html = iframe[0].contentDocument.body.innerHTML;
+                    } catch (e) {}
 
-                    var xhr = {response: html, status: status, dummy: true};
+                    var xhr = {response: html, status: 200, dummy: true};
                     var headers = {};
                     var response = that._transformResponse(xhr.response, headers);
 
@@ -1166,7 +1159,7 @@ angular
              * Event handler
              */
             FileDrop.prototype.onDragLeave = function(event) {
-                if (event.currentTarget === this.element[0]) return;
+                if (event.currentTarget !== this.element[0]) return;
                 this._preventAndStop(event);
                 angular.forEach(this.uploader._directives.over, this._removeOverClass, this);
             };

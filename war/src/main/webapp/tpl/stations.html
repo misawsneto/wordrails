@@ -221,7 +221,10 @@
 <!-- header bar -->
 <div class="collapse pos-rlt navbar-collapse box-shadow nav-down station-header {{::app.settings.navbarCollapseColor}}">
   <div class="nav navbar-nav hidden-xs text-lg w-full wrapper-sm header-font pos-abt">
-    <span class="p-l-xxl m-l-xl">{{app.currentStation.name}}</span>
+    <span ng-if="!app.currentStation.logoId" class="p-l-xxl m-l-lg">{{app.currentStation.name}}</span>
+    <div ng-if="app.currentStation.logoId" class="p-l-xxl m-l-lg m-t-n-sm" style="height:48px;">
+      <img class="img-responsive" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}">
+    </div>
   </div>
   <!-- nabar right -->
   <ul class="nav navbar-nav navbar-right">
