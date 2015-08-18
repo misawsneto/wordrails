@@ -4,8 +4,11 @@ import com.relayrides.pushy.apns.ApnsEnvironment;
 import com.relayrides.pushy.apns.PushManager;
 import com.relayrides.pushy.apns.PushManagerConfiguration;
 import com.relayrides.pushy.apns.util.*;
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -24,23 +27,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
 
-/**
- * Created by jonas on 24/07/15.
- */
 @Component
 public class APNService {
 
 	@Autowired private PersonNetworkTokenRepository personNetworkTokenRepository;
+	@Autowired private StationRepository stationRepository;
 	@Autowired private NetworkRepository networkRepository;
+	@Autowired private TrixAuthenticationProvider authProvider;
 	@Autowired private CertificateIosRepository certificateIosRepository;
 	private PushManager<SimpleApnsPushNotification> pushManager;
-	private SynchronousQueue sq;
-	private Integer APN_NOTIFICATION_SENT_LIMIT = 8999;
+	private static final Integer APN_NOTIFICATION_SENT_LIMIT = 8999;
+
+	private static final Logger log = LoggerFactory.getLogger(APNService.class);
 
 	private void init(Integer networkId){
-
-		CertificateIos certificate = null;
-		sq = new SynchronousQueue();
+		CertificateIos certificate;
+		SynchronousQueue sq = new SynchronousQueue();
 
 		certificate = certificateIosRepository.findOne(networkId);
 
@@ -77,32 +79,15 @@ public class APNService {
 	@Async
 	@Transactional
 	public void sendToStation(Integer stationId, Notification notification) throws UnexpectedException {
-//		System.out.println("APN sendToStation");
-		List<PersonNetworkToken> personNetworkTokens = personNetworkTokenRepository.findTokenByStationId(stationId);
-
-		Integer networkId = personNetworkTokenRepository.findNetworkIdByStationId(stationId);
-		Network network = networkRepository.findOne(networkId);
-
-		try {
-			removeNotificationProducer(personNetworkTokens, notification);
-			apnNotify(personNetworkTokens, notification, network);
-		} catch (Exception e){
-			e.printStackTrace();
+		Network network = authProvider.getNetwork();
+		List<PersonNetworkToken> personNetworkTokens;
+		if(stationRepository.isUnrestricted(stationId)) {
+			personNetworkTokens = personNetworkTokenRepository.findByNetwork(network);
+		} else {
+			personNetworkTokens = personNetworkTokenRepository.findByStationId(stationId);
 		}
-	}
 
-	public void sendToNetwork(Integer networkId, Notification notification){
-		Network network = networkRepository.findOne(networkId);
-		sendToNetwork(network, notification);
-	}
-
-	@Async
-	@Transactional
-	public void sendToNetwork(Network network, Notification notification){
-		List<PersonNetworkToken> personNetworkTokens = personNetworkTokenRepository
-				.findByNetwork(network);
 		try {
-			removeNotificationProducer(personNetworkTokens, notification);
 			apnNotify(personNetworkTokens, notification, network);
 		} catch (Exception e){
 			e.printStackTrace();
@@ -130,6 +115,12 @@ public class APNService {
 
 		int notificationsCounter = 0;
 		for(PersonNetworkToken personToken: personNetworkTokens){
+			log.debug("Sending notification: " + personToken.token);
+
+			if(personToken.person != null && personToken.person.id.equals(notification.person.id)){
+				continue; //this is the person that is producing the notification, don't send to him
+			}
+
 			pushManager.getQueue().put(new SimpleApnsPushNotification(
 					TokenUtil.tokenStringToByteArray(personToken.token),
 					payloadBuilder.buildWithDefaultMaximumLength()
@@ -146,21 +137,6 @@ public class APNService {
 		}
 
 		shutdown();
-
-	}
-
-	private void removeNotificationProducer(
-			List<PersonNetworkToken> personNetworkTokens,
-			Notification notification){
-		if(personNetworkTokens != null && notification.person != null){
-			Iterator<PersonNetworkToken> it = personNetworkTokens.iterator();
-			while(it.hasNext()){
-				PersonNetworkToken token = it.next();
-				if(token.person != null && token.person.id.equals(notification.person.id)){
-					it.remove();
-				}
-			}
-		}
 	}
 
 	public void updateIosToken(Network network, Person person, String token,
