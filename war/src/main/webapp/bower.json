@@ -122,6 +122,7 @@
     "angular-nvd3": "1.0.0-rc.2",
     "angularjs-socialshare": "~0.1.9",
     "angular-drag-and-drop-lists": "~1.2.0",
-    "angular-ui-sortable": "~0.13.4"
+    "angular-ui-sortable": "~0.13.4",
+    "angularjs-dropdown-multiselect": "1.5.2"
   }
 }

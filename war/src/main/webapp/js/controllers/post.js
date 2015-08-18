@@ -8,6 +8,10 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 		$scope.baseUrl = TRIX.baseUrl;
 
+		$scope.selectedStations = [];
+
+		$scope.multiselectCong = {'displayProp': 'stationName', 'idProp': 'stationId'};
+
 		var createPostObject = function(){
 			$scope.app.editingPost = {};
 			$scope.app.editingPost.imageLandscape = true;
@@ -176,6 +180,11 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			  $scope.postCtrl = {}
 	// check if user has permisstion to write
 	$scope.writableStations = trixService.getWritableStations();
+
+	$scope.writableStations && $scope.writableStations.forEach(function(station, index){
+		station.id = station.stationId;
+		station.name = station.stationName;
+  	});
 
 	if(!$scope.writableStations || $scope.writableStations.length == 0){}
 

@@ -2736,6 +2736,10 @@ button, select, html, textarea, input{
   text-shadow:1px 1px 1px #000;
 }
 
+.fileinput-button{
+
+}
+
 /* /general */
 
 /* nvd3 */
@@ -4535,6 +4539,19 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   border-top: 1px solid;
   border-bottom: 1px solid;
   border-color: #dee5e7!important; */
+}
+
+#logo-upload #image-upload{
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 142px;
+  direction: ltr;
+  cursor: pointer;
+  display: block;
 }
 /* /settings */
 

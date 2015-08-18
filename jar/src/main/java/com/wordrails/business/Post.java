@@ -252,6 +252,9 @@ public class Post {
 	@Lob
 	public String imageTitleText;
 
+	@ManyToOne
+	Post post;
+
 	@PrePersist
 	public void onCreate() {
 		if (featuredImage != null && featuredImage.original != null) {

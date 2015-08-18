@@ -1,6 +1,6 @@
 {
   "name": "angular-file-upload",
-  "main": "./dist/angular-file-upload.min.js",
+  "main": "angular-file-upload.min.js",
   "homepage": "https://github.com/nervgh/angular-file-upload",
   "ignore": [
     "examples"
@@ -17,12 +17,12 @@
     "upload",
     "module"
   ],
-  "version": "1.1.8",
-  "_release": "1.1.8",
+  "version": "1.1.6",
+  "_release": "1.1.6",
   "_resolution": {
     "type": "version",
-    "tag": "v1.1.8",
-    "commit": "73903b16c3d7756b779039902bb543b479cc1475"
+    "tag": "v1.1.6",
+    "commit": "1bf43e92ecb1bd46ffe34bbcd10d6173012b1b1d"
   },
   "_source": "git://github.com/nervgh/angular-file-upload.git",
   "_target": "~1.1.1",
