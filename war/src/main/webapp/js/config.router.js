@@ -299,7 +299,7 @@ angular.module('app')
                       function( $ocLazyLoad ){
                         return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/interact.min.js'])
                         .then(function(){
-                            return $ocLazyLoad.load(['color-selector', 'js/controllers/settings-colors.js?' + GLOBAL_URL_HASH])
+                            return $ocLazyLoad.load(['color-selector', 'colorpicker.module', 'js/controllers/settings-colors.js?' + GLOBAL_URL_HASH])
                           });
                     }]
                   }

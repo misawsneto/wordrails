@@ -111,7 +111,7 @@
 	position: relative;
 	max-width: 1800px;
 	margin: 0 auto;
-	background: #fff;
+	/* background: #fff; */
 	border-left: 4px solid #ACADAE;
 	border-right: 4px solid #ACADAE;
 	border-top: 30px solid #ACADAE;
@@ -348,8 +348,8 @@
 	letter-spacing: 2px;
 	font-weight: bold;
 	font-size: 0.85em;
-	padding: 1.5em 2.5em;
-	margin: 20px 0;
+	/* padding: 1.5em 2.5em;
+	margin: 20px 0; */
 	white-space: nowrap;
 }
 

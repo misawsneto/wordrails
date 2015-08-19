@@ -68,7 +68,7 @@
   <script src="/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
   <script src="/bower_components/angular-translate-storage-local/angular-translate-storage-local.js"></script>
   <!-- redactor -->
-  <script src="/bower_components/redactor/redactor.js"></script>
+  <script src="/bower_components/redactor/redactor.min.js"></script>
   <script src="/bower_components/redactor/video.js"></script>
   <script src="/bower_components/redactor/fontsize.js"></script>
   <script src="/bower_components/redactor/counter.js"></script>

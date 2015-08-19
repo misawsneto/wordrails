@@ -2847,7 +2847,7 @@ button, select, html, textarea, input{
 }
 
 .redactor-editor{padding: 0 0 20px 0; }
-#post-placeholder{font-size: 18px; position: absolute; z-index: 2}
+#post-placeholder{font-size: 18px; position: absolute; z-index: 0}
 .post-media-buttons{box-shadow: none; border: 1px solid rgba(0, 0, 0, 0.1);}
 .post-image-cover{
   -moz-background-size: cover;
@@ -2855,6 +2855,10 @@ button, select, html, textarea, input{
   background-size: cover;
   height: 80%;
   background-position: 50% 30%;
+}
+
+#post-editor .redactor-editor, #post-editor  .redactor-box{
+  background:transparent;
 }
 
 .md-dialog-container{position: fixed; z-index: 1055}
@@ -4665,6 +4669,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   height: 476px;
 }
 
+.colorpicker {margin-top: -125px;}
+
 /* /settings-colors */
 
 /* settings-perspective */
@@ -4934,9 +4940,9 @@ body #cdawrap {
 }
 
 @media screen and (max-width: 40em) {
-  body {
+  /* body {
     font-size: 80%;
-  }
+  } */
   .codrops-header h1 {
     font-size: 2.5em;
   }

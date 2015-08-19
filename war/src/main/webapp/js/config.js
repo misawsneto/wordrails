@@ -61,6 +61,8 @@ angular.module('app')
   redactorOptions.buttons = ['html', 'formatting', 'bold', 'italic', 'underline', 'deleted', 
   'fontsize', 'fontcolor', 'unorderedlist', 'orderedlist', 'outdent', 'indent',
   'link', 'image', 'video', 'alignment', 'horizontalrule'];
+  redactorOptions.imagePosition = true;
+  redactorOptions.imageFloatMargin = '20px';
   trixProvider.setConfig({ url: location.protocol + '//' + location.host });
 })
 .run(function($rootScope){
