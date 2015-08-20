@@ -629,9 +629,9 @@ $scope.app.signOut = function(username, password){
               }
 
               /*  angular-material design temp fix */
-              $interval(function(){
+              /*$interval(function(){
                 $("body").removeAttr("style");
-              },2)
+              },2)*/
 
               $scope.goToBookmars = function(){
                 if($scope.app.isLogged)

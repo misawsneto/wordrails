@@ -221,7 +221,7 @@ angular.module('app')
                   name: 'color-selector',
                   files: [
                           '../libs/color-selector.css',
-                          '../libs/color-selector.js',
+                          //'../libs/color-selector.js',
                           '../libs/color-selector-angular.js',
                           ]
               },{
@@ -244,8 +244,11 @@ angular.module('app')
               },{
                   name: 'angularjs-dropdown-multiselect',
                   files: ['../bower_components/angularjs-dropdown-multiselect/dist/angularjs-dropdown-multiselect.min.js']
+              },{
+                name: 'colorpicker.module',
+                files: ['../bower_components/angular-bootstrap-colorpicker/css/colorpicker.min.css',
+                        '../bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js']
               }
-
           ]
       });
   }])

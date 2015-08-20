@@ -30,6 +30,27 @@ function hexToRgb(hex) {
     } : null;
 }
 
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rbgToHex2(rgbString) {
+	var parts = rgbString.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+// parts now should be ["rgb(0, 70, 255", "0", "70", "255"]
+
+	delete (parts[0]);
+	for (var i = 1; i <= 3; ++i) {
+	    parts[i] = parseInt(parts[i]).toString(16);
+	    if (parts[i].length == 1) parts[i] = '0' + parts[i];
+	} 
+	return '#'+parts.join('').toUpperCase(); // "#0070FF"
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
 function textColorEval (hex, hover){
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	var rgb = result ? {

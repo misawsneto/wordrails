@@ -230,16 +230,16 @@ app.directive('backImgCover', function(TRIX){
     },
     template:
     "<div class='btn-group' data-ng-class='{open: open}'>" +
-    "<button class='btn btn-small'>{{printSelected()}}</button>" +
-    "<button class='btn btn-small dropdown-toggle' data-ng-click='openDropdown()'>"+
-    "<span class='caret'></span></button>" +
-    "<ul class='dropdown-menu' aria-labelledby='dropdownMenu'>" +
-    "<li><a data-ng-click='selectAll()'> <span class='' aria-hidden='true'></span> Marcar Todas</a></li>" +
-    "<li><a data-ng-click='deselectAll();'> <span class='' aria-hidden='true'></span> Desmarcar Todas</a></li>" +
-    "<li class='divider'></li>" +
-    "<li data-ng-repeat='option in options'> <a data-ng-click='toggleSelectItem(option)'>"+
-    "<span data-ng-class='getClassName(option)' aria-hidden='true'></span> {{option.name}}</a></li>" +
-    "</ul>" +
+    "<div class='r b b-drk wrapper-sm bg-white text-md' ng-click='openDropdown()' ng-class=\"{'text-danger': model.length == 0}\">"+
+      "{{printSelected()}} <span class='caret'></span>"+
+    "</div>" +
+      "<ul class='dropdown-menu' aria-labelledby='dropdownMenu'>" +
+        "<li><a data-ng-click='selectAll()'> <span class='' aria-hidden='true'></span> Marcar Todas</a></li>" +
+        "<li><a data-ng-click='deselectAll();'> <span class='' aria-hidden='true'></span> Desmarcar Todas</a></li>" +
+        "<li class='divider'></li>" +
+        "<li data-ng-repeat='option in options'> <a data-ng-click='toggleSelectItem(option)'>"+
+        "<span data-ng-class='getClassName(option)' aria-hidden='true'></span> {{option.name}}</a></li>" +
+      "</ul>" +
     "</div>",
     controller: function ($scope) {
       $scope.openDropdown = function () {
@@ -293,6 +293,18 @@ app.directive('backImgCover', function(TRIX){
         });
         return (varClassName);
       };
+    },
+    link: function(scope, element){
+      $(document).bind('click', function(event){
+        var isClickedElementChildOfPopup = element.find(event.target).length > 0;
+
+        if (isClickedElementChildOfPopup)
+            return;
+
+        scope.$apply(function(){
+            scope.open = false;
+        });
+      });
     }
   }
 })
