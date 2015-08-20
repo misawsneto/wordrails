@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class PersonNetworkToken {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)				
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
 
 	@Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
