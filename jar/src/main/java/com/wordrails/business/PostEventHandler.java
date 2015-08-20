@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.persistence.*;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;

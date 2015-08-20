@@ -78,8 +78,7 @@ public class APNService {
 
 	@Async
 	@Transactional
-	public void sendToStation(Integer stationId, Notification notification) throws UnexpectedException {
-		Network network = authProvider.getNetwork();
+	public void sendToStation(Network network, Integer stationId, Notification notification) throws UnexpectedException {
 		List<PersonNetworkToken> personNetworkTokens;
 		if (stationRepository.isUnrestricted(stationId)) {
 			personNetworkTokens = personNetworkTokenRepository.findByNetwork(network);
@@ -87,21 +86,22 @@ public class APNService {
 			personNetworkTokens = personNetworkTokenRepository.findByStationId(stationId);
 		}
 
+		if (personNetworkTokens == null || notification == null) {
+			throw new UnexpectedException("Unexpected error...");
+		}
+
+		if (personNetworkTokens.size() == 0) return;
+
 		try {
-			apnNotify(personNetworkTokens, notification, network);
+			init(network.id);
+
+			apnNotify(personNetworkTokens, notification);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void apnNotify(List<PersonNetworkToken> personNetworkTokens, final Notification notification, Network network) throws UnexpectedException, MalformedTokenStringException, InterruptedException {
-
-		if (personNetworkTokens == null || notification == null) {
-			throw new UnexpectedException("Unexpected error...");
-		}
-		if (personNetworkTokens.size() == 0) return;
-
-		init(network.id);
+	public void apnNotify(List<PersonNetworkToken> personNetworkTokens, final Notification notification) throws UnexpectedException, MalformedTokenStringException, InterruptedException {
 
 		ApnsPayloadBuilder payloadBuilder = new ApnsPayloadBuilder();
 		payloadBuilder.setBadgeNumber(1);

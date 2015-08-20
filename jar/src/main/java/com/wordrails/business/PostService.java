@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.notification.APNService;
 import com.wordrails.notification.GCMService;
 import com.wordrails.jobs.PostScheduleJob;
@@ -40,6 +41,8 @@ public class PostService {
 	@Autowired private PostScheduledRepository postScheduledRepository;
 	
 	@Autowired private PostTrashRepository postTrashRepository;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 
 	@PersistenceContext
 	private EntityManager manager;
@@ -114,11 +117,14 @@ public class PostService {
 		notification.station = post.station;
 		notification.post = post;
 		notification.message = post.title;
+		notification.person = authProvider.getLoggedPerson();
 		try {
 			if (post.station != null && post.station.networks != null) {
 				Station station = stationRepository.findOne(post.station.id);
 				gcmService.sendToStation(station.id, notification);
-				apnService.sendToStation(station.id, notification);
+
+				Network network = authProvider.getNetwork();
+				apnService.sendToStation(network, station.id, notification);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
