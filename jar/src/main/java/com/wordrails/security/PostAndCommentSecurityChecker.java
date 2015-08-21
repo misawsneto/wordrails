@@ -11,7 +11,6 @@ import com.wordrails.business.Comment;
 import com.wordrails.business.Network;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
-import com.wordrails.business.Promotion;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationRole;
 import com.wordrails.persistence.NetworkRepository;
@@ -77,24 +76,25 @@ public class PostAndCommentSecurityChecker {
 
 		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null){
-			if(post.station.visibility.equals(Station.UNRESTRICTED)){
-				canRead = true;
-			}else if(post.station.visibility.equals(Station.RESTRICTED_TO_NETWORKS)){
-				List<Integer> networksId = networkRepository.findIdsByStation(post.station.id);
-				List<Network> belongsToNetworks = networkRepository.belongsToNetworks(personLogged.id, networksId);
-				if(belongsToNetworks != null && belongsToNetworks.size() > 0){
+			switch (post.station.visibility) {
+				case Station.UNRESTRICTED:
 					canRead = true;
-				}
-			}else{
-				List<Integer> stationsId = new ArrayList<Integer>(post.promotions.size() + 1);
-				stationsId.add(post.station.id);
-				for (Promotion promotion : post.promotions) {
-					stationsId.add(promotion.station.id);
-				}
-				List<Station> belongsToStations = stationRepository.belongsToStations(personLogged.id, stationsId);
-				if(belongsToStations != null && belongsToStations.size() > 0){
-					canRead = true;
-				}
+					break;
+				case Station.RESTRICTED_TO_NETWORKS:
+					List<Integer> networksId = networkRepository.findIdsByStation(post.station.id);
+					List<Network> belongsToNetworks = networkRepository.belongsToNetworks(personLogged.id, networksId);
+					if (belongsToNetworks != null && belongsToNetworks.size() > 0) {
+						canRead = true;
+					}
+					break;
+				default:
+					List<Integer> stationsId = new ArrayList<>();
+					stationsId.add(post.station.id);
+					List<Station> belongsToStations = stationRepository.belongsToStations(personLogged.id, stationsId);
+					if (belongsToStations != null && belongsToStations.size() > 0) {
+						canRead = true;
+					}
+					break;
 			}
 		}
 		return canRead;

@@ -172,9 +172,6 @@ public class Post {
 	@IndexedEmbedded(includePaths={"name", "id"})
 	public Person author;
 
-	@OneToMany(mappedBy = "post")
-	public Set<Promotion> promotions;
-
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable = false)

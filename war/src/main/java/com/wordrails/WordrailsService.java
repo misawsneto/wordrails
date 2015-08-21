@@ -464,15 +464,10 @@ public class WordrailsService {
 	}
 	
 	public List<StationPermission> getStationPermissions(String baseUrl, Integer personId, Integer networkId) {
-		return getStationPermissions(baseUrl, personId, networkId, null);
-	}
-
-	public List<StationPermission> getStationPermissions(String baseUrl, Integer personId, Integer networkId, List<StationDto> stationDtos) {
-		List<Station> stations = new ArrayList<Station>();
 		//Stations Permissions
 		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>();
 		try {
-			stations = stationRepository.findByPersonIdAndNetworkId(personId, networkId);
+			List<Station> stations = stationRepository.findByPersonIdAndNetworkId(personId, networkId);
 			for (Station station : stations) {
 				StationPermission stationPermissionDto = new StationPermission();
 				StationDto stationDto = new StationDto();
@@ -504,18 +499,11 @@ public class WordrailsService {
 				}
 
 				stationPermissionDtos.add(stationPermissionDto);
-				if(stationDtos != null)
-					stationDtos.add(stationDto);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return stationPermissionDtos;
-	}
-
-	public void toggleBookmark(Integer id, Integer postId) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public List<Integer> getReadableStationIds(StationsPermissions permissions) {

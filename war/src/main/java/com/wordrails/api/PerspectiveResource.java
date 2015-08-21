@@ -147,7 +147,7 @@ public class PerspectiveResource {
 		StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
 		
 		if(stationPerspective != null){
-			TermPerspective termPerspective = null;
+			TermPerspective termPerspective;
 			if(termPerspectiveId != null){
 				termPerspective = termPerspectiveRepository.findOne(termPerspectiveId);
 			}else{
@@ -244,7 +244,7 @@ public class PerspectiveResource {
 	}
 	
 	private void updateRow(RowView newRowView, TermPerspective termPerspective, String type){
-		Row newRow = null;
+		Row newRow;
 		if(newRowView != null){
 			RowDifference difference = null;
 			newRow = rowConverter.convertToEntity(newRowView);
@@ -255,8 +255,8 @@ public class PerspectiveResource {
 				newRow.splashedPerspective = termPerspective;
 				difference = rowComparator.getDifference(newRow.cells, termPerspective.splashedRow == null ? null : termPerspective.splashedRow.cells);
 			}
-			
-			if(difference.cellsToDelete != null && difference.cellsToDelete.size() > 0){
+
+			if(difference != null && difference.cellsToDelete != null && difference.cellsToDelete.size() > 0){
 				cellRepository.deleteInBatch(difference.cellsToDelete);
 			}
 			newRow.cells = difference.cellsToSave;
@@ -344,7 +344,7 @@ public class PerspectiveResource {
 				List<Post> notPositionedPosts = (postRepository.findPostsNotPositioned(stationId, ids, postPositionedIds, pageable));
 				cells = mergePostsPositionedsNotPositioneds(row, positionedCells, notPositionedPosts, size);
 			}else{
-				List<Post> posts = postRepository.findPostsAndPostsPromoted(stationId, ids, pageable);
+				List<Post> posts = postRepository.findPostsPublished(stationId, ids, pageable);
 				cells = convertPostsToCells(row, posts);
 			}
 		}else{
@@ -447,7 +447,7 @@ public class PerspectiveResource {
 	private RowView convertTermToRow(Term term, List<Integer> termsIds, Integer stationId, int index, String rowType, int page, int size){
 		Pageable pageable = new PageRequest(page, size);
 		
-		List<Post> posts = postRepository.findPostsAndPostsPromoted(stationId, termsIds, pageable);
+		List<Post> posts = postRepository.findPostsPublished(stationId, termsIds, pageable);
 
 		Row row = new Row();
 		row.index = index;

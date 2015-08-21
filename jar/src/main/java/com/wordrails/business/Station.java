@@ -67,9 +67,6 @@ public class Station {
 	@ContainedIn
 	public Set<Post> posts;
 
-	@OneToMany(mappedBy="station", cascade=CascadeType.REMOVE)
-	public Set<Promotion> promotions;
-
 	@Size(min=1)
 	@NotNull
 	@OneToMany(mappedBy="station", cascade=CascadeType.PERSIST)

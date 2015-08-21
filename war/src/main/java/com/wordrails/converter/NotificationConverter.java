@@ -22,12 +22,15 @@ public class NotificationConverter extends AbstractConverter<Notification, Notif
 	@Override
 	public NotificationView convertToView(Notification notification) {
 		NotificationView notificationView = new NotificationView();
+
+		if(notification == null) return null;
+
 		notificationView.id = notification.id;
 		notificationView.hash = notification.hash;
 		notificationView.imageMediumId = notification.post != null ? notification.post.imageMediumId : null;
 		notificationView.imageSmallId = notification.post != null ? notification.post.imageSmallId : null;
 		notificationView.message = notification.message;
-		notificationView.networkId = notification.network != null ? notification.network.id : null; 
+		notificationView.networkId = notification.network != null ? notification.network.id : null;
 		notificationView.networkName = notification.network != null ? notification.network.name : null;
 		notificationView.personId = notification.person != null ? notification.person.id : null;
 		notificationView.post = notification.post != null ? postConverter.convertToView(notification.post) : null;

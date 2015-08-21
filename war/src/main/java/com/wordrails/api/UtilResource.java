@@ -84,7 +84,6 @@ import com.wordrails.persistence.PersonNetworkRegIdRepository;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.PostReadRepository;
 import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.PromotionRepository;
 import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.persistence.RecommendRepository;
 import com.wordrails.persistence.RowRepository;
@@ -95,9 +94,6 @@ import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
 import com.wordrails.persistence.WordpressRepository;
-import com.wordrails.services.AsyncService;
-import com.wordrails.services.WordpressParsedContent;
-import com.wordrails.util.WordrailsUtil;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -108,12 +104,7 @@ public class UtilResource {
 	private @Context HttpRequest httpRequest;
 
 	private @Autowired PersonRepository personRepository;
-
-	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
-	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
@@ -562,7 +553,6 @@ public class UtilResource {
 	private @Autowired CellRepository cellRepository;
 	private @Autowired CommentRepository commentRepository;
 	private @Autowired ImageRepository imageRepository;
-	private @Autowired PromotionRepository promotionRepository;
 	private @Autowired BookmarkRepository bookmarkRepository;
 	private @Autowired RecommendRepository recommendRepository;
 	private @Autowired NotificationRepository notificationRepository;
@@ -595,7 +585,6 @@ public class UtilResource {
 					imageRepository.delete(images);
 					cellRepository.delete(cellRepository.findByPost(post));
 					commentRepository.delete(post.comments);
-					promotionRepository.delete(post.promotions);
 					postReadRepository.deleteByPost(post);
 					notificationRepository.deleteByPost(post);
 					bookmarkRepository.deleteByPost(post);

@@ -26,7 +26,6 @@ public class StationEventHandler {
 	@Autowired StationRolesRepository personStationRolesRepository;
 	@Autowired PostEventHandler postEventHandler;
 	@Autowired PostRepository postRepository;
-	@Autowired PromotionRepository promotionRepository;
 	@Autowired StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired StationRepository stationRepository;
 	@Autowired StationSecurityChecker stationSecurityChecker;
@@ -144,11 +143,6 @@ public class StationEventHandler {
 				}
 			}
 			
-			List<Promotion> promotions = promotionRepository.findByStation(station);
-			if(promotions != null && promotions.size() > 0){
-				promotionRepository.delete(promotions);
-			}
-			
 			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
 			if(stationsRoles != null && stationsRoles.size() > 0){
 				personStationRolesRepository.delete(stationsRoles);
@@ -173,7 +167,6 @@ public class StationEventHandler {
 				queryPersistence.deleteImagesInPosts(ids);
 				queryPersistence.deleteNotificationsInPosts(ids);
 				queryPersistence.deletePostReadsInPosts(ids);
-				queryPersistence.deletePromotionsInPosts(ids);
 				queryPersistence.deleteRecommendsInPosts(ids);
 				
 				postRepository.delete(posts);
