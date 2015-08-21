@@ -35,18 +35,15 @@ public class UserGrantedAuthority implements GrantedAuthority {
 	public Integer id;
 
 	@ManyToOne
-	@JoinColumn(name="user_id")
 	public User user;
 
 	@NotNull
 	public String authority;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="network_id")
+	@ManyToOne
 	public Network network;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="station_id")
+	@ManyToOne
 	public Station station;
 
 	@Override

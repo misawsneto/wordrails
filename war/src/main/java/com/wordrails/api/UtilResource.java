@@ -117,6 +117,8 @@ public class UtilResource {
 
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 
+	public @Autowired FileRepository fileRepository;
+
 	private @PersistenceContext EntityManager manager;
 
 	/**
@@ -703,6 +705,7 @@ public class UtilResource {
 			}
 
 			postRepository.updateFeaturedImagesToNull(images);
+
 			imageRepository.deleteImages(imgIds);
 		}
 	}
