@@ -316,31 +316,14 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return canVisualizeStation(stationId);
 	}
 
-
 	@Override
-	protected boolean isFindPostsAndPostsPromotedAuthorized(Integer stationId,
-			List<Integer> termsIds, Integer page, Integer size, List<String> sort) {
-		return canVisualizeStation(stationId);
+	protected boolean isFindPostsPublishedAuthorized(Integer stationId, List<Integer> termsIds, Integer page, Integer size, List<String> sort) {
+		return false;
 	}
 
 	@Override
 	protected boolean isFindPostsNotPositionedAuthorized(Integer stationId,
 			List<Integer> termsIds, List<Integer> idsToExclude, Integer page, Integer size, List<String> sort) {
-		return canVisualizeStation(stationId);
-	}
-
-	@Override
-	protected boolean isFindDraftsByStationIdAndAuthorIdAuthorized(Integer stationId, Integer authorId, Integer page, Integer size, List<String> sort) {
-		return false;
-	}
-
-	@Override
-	protected boolean isFindScheduledsByStationIdAndAuthorIdAuthorized(Integer stationId, Integer authorId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindPostsAuthorized(Integer stationId, Integer termId, Integer page, Integer size, List<String> sort) {
 		return canVisualizeStation(stationId);
 	}
 
