@@ -161,7 +161,6 @@
 		<dependency>
 			<groupId>com.relayrides</groupId>
 			<artifactId>pushy</artifactId>
-			<version>0.4.3</version>
 		</dependency>
 
 		<dependency>
