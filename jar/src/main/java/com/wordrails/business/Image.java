@@ -1,7 +1,6 @@
 package com.wordrails.business;
 
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -47,12 +46,6 @@ public class Image {
 	@OneToOne(mappedBy="logo")
 	public Network network;
 	
-	@OneToOne(mappedBy="logo")
-	public Sponsor logoSponsor;
-	
-	@ManyToOne
-	public Person owner;
-	
 	@ManyToOne
 	public Station station;
 	
@@ -78,9 +71,6 @@ public class Image {
 	@ManyToOne
 	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})
 	public Post post;
-	
-	@OneToMany(mappedBy="featuredImage")
-	public Set<Post> featuringPosts;		
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean vertical = false;

@@ -127,7 +127,7 @@ public class WordpressResource {
 
 			if (post != null) {
 				postRepository.save(post);
-				wordpressService.processWordpressPost(post);
+				//wordpressService.processWordpressPost(post);
 			}
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity(ExceptionUtils.getStackTrace(e)).build();

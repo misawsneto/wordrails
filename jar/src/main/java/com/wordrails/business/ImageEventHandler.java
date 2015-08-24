@@ -1,6 +1,5 @@
 package com.wordrails.business;
 
-import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
 import net.coobird.thumbnailator.Thumbnails;
 import org.hibernate.Hibernate;

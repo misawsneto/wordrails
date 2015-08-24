@@ -38,13 +38,4 @@ public class AuthResource {
 
 		return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
-
-	final String TWITTER_CONSUMER_KEY      = "xNbHA2FU662x6I2HUEz09quRf";
-	final String TWITTER_CONSUMER_SECRET   = "F7OpmJd20QUAYTW3irutJ3NpPvKFlw4pm9bfoACbDfyzqcXJ3R";
-	final String TWITTER_REQUEST_URL       = "https://api.twitter.com/oauth/request_token";
-	final String TWITTER_ACCESS_URL        = "https://api.twitter.com/oauth/access_token";
-	final String TWITTER_AUTHORIZE_URL     = "https://api.twitter.com/oauth/authorize";
-
-//	@POST
-//	@Consumes
 }

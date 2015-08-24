@@ -42,8 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.business.File;
-import com.wordrails.business.FileContents;
-import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
 
 @Path("/files")
@@ -52,7 +50,6 @@ import com.wordrails.persistence.FileRepository;
 @Component
 public class FilesResource {
 	private @PersistenceContext EntityManager manager;
-	private @Autowired FileContentsRepository contentsRepository;
 	private @Autowired FileRepository fileRepository;
 
 	@PUT
