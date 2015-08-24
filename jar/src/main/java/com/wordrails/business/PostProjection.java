@@ -20,7 +20,6 @@ public interface PostProjection {
 	String getTopper();
 	String getBody();
 	Sponsor getSponsor();
-	Set<Promotion> getPromotions();
 	Person getAuthor();
 	Station getStation();
 	Integer getWordpressId();

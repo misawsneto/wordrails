@@ -1,6 +1,5 @@
 package com.wordrails.business;
 
-import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.persistence.*;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
@@ -30,8 +29,6 @@ public class PostEventHandler {
 	@Autowired
 	private ImageRepository imageRepository;
 	@Autowired
-	private PromotionRepository promotionRepository;
-	@Autowired
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
 	private BookmarkRepository bookmarkRepository;
@@ -39,10 +36,10 @@ public class PostEventHandler {
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
-	
+
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
-		if(post instanceof PostTrash) //post of type Trash is not insertable
+		if (post instanceof PostTrash) //post of type Trash is not insertable
 			throw new BadRequestException();
 
 		if (postAndCommentSecurityChecker.canWrite(post)) {
@@ -100,7 +97,6 @@ public class PostEventHandler {
 			imageRepository.delete(images);
 			cellRepository.delete(cellRepository.findByPost(post));
 			commentRepository.delete(post.comments);
-			promotionRepository.delete(post.promotions);
 			postReadRepository.deleteByPost(post);
 			notificationRepository.deleteByPost(post);
 			bookmarkRepository.deleteByPost(post);

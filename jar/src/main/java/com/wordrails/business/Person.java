@@ -63,9 +63,6 @@ public class Person implements Serializable{
 	@OneToMany(mappedBy="author")
 	public Set<Post> posts;
 
-	@OneToMany(mappedBy="promoter")
-	public Set<Promotion> promotions;
-
 	@OneToMany
 	public Set<Person> following;
 

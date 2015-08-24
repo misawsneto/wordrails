@@ -16,14 +16,9 @@ import java.util.Set;
 public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPredicateExecutor<Post> {
 	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);
 
-	List<Post> findPosts(@Param("stationId") Integer stationId, @Param("termId") Integer termId, Pageable pageable);
-
-	List<Post> findPostsAndPostsPromoted(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);
+	List<Post> findPostsPublished(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);
 
 	List<Post> findPostsNotPositioned(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, @Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);
-
-	@RestResource(exported = false)
-	List<Post> findByFeaturedImages(@Param("featuredImages") List<Image> featuredImage);
 
 	@RestResource(exported = false)
 	List<Post> findByStation(Station station);
@@ -32,28 +27,9 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	Post findByWordpressId(Integer wordpressId);
 
 	@RestResource(exported = false)
-	List<Post> findPostsAndPostsPromotedByBody(@Param("stationId") Integer stationId, @Param("body") String body, Pageable pageable);
-
-	@RestResource(exported = false)
-	List<Post> findPostsAndPostsPromotedByTermId(@Param("stationId") Integer stationId, @Param("termId") Integer termId, Pageable pageable);
-
-	@RestResource(exported = false)
-	List<Post> findPostsAndPostsPromotedByAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
-
-	@RestResource(exported = false)
-	int countSlugPost(@Param("slug") String slug);
-
-	@RestResource(exported = false)
 	@Modifying
 	@Query(value = "UPDATE Post post SET post.featuredImage = null WHERE post.featuredImage IN (:featuredImages)")
 	void updateFeaturedImagesToNull(@Param("featuredImages") List<Image> featuredImage);
-
-	@RestResource(exported = false)
-	List<Post> findPostsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
-
-	List<PostDraft> findDraftsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
-
-	List<PostScheduled> findScheduledsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
 
 	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
 	List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);

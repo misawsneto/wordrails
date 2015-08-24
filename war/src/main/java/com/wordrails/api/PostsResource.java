@@ -177,64 +177,6 @@ public class PostsResource {
 	}
 
 	@GET
-	@Path("/{stationId}/findPostsAndPostsPromotedByBody")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsAndPostsPromotedByBody(@PathParam("stationId") Integer stationId, @QueryParam("body") String body, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-
-		Pageable pageable = new PageRequest(page, size);
-
-		body = "%" + body + "%";
-		List<Post> posts = postRepository.findPostsAndPostsPromotedByBody(stationId, body, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts);
-		return response;
-	}
-
-	@GET
-	@Path("/{stationId}/findPostsByStationIdAndAuthorIdAndState")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsByStationIdAndAuthorIdAndState(@PathParam("stationId") Integer stationId, @QueryParam("authorId") Integer authorId, @QueryParam("state") String state, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-
-		Pageable pageable = new PageRequest(page, size);
-
-		List posts = null;
-		if (state.equals("PUBLISHED"))
-			posts = postRepository.findPostsByStationIdAndAuthorId(stationId, authorId, pageable);
-		if (state.equals("DRAFT"))
-			posts = postRepository.findDraftsByStationIdAndAuthorId(stationId, authorId, pageable);
-		if (state.equals("SCHEDULED"))
-			posts = postRepository.findScheduledsByStationIdAndAuthorId(stationId, authorId, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts);
-		return response;
-	}
-
-	@GET
-	@Path("/{stationId}/findPostsAndPostsPromotedByTermId")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsAndPostsPromotedByTermId(@PathParam("stationId") Integer stationId, @QueryParam("termId") Integer termId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-
-		Pageable pageable = new PageRequest(page, size);
-
-		List<Post> posts = postRepository.findPostsAndPostsPromotedByTermId(stationId, termId, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts);
-		return response;
-	}
-
-	@GET
-	@Path("/{stationId}/findPostsAndPostsPromotedByAuthorId")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsAndPostsPromotedByAuthorId(@PathParam("stationId") Integer stationId, @QueryParam("authorId") Integer authorId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-		Pageable pageable = new PageRequest(page, size);
-
-		List<Post> posts = postRepository.findPostsAndPostsPromotedByAuthorId(stationId, authorId, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-		response.content = postConverter.convertToViews(posts);
-		return response;
-	}
-
-	@GET
 	@Path("/{stationId}/searchPostsFromOrPromotedToStation")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> searchPostsFromOrPromotedToStation(@Context HttpServletRequest request, @PathParam("stationId") Integer stationId, @QueryParam("query") String q, @QueryParam("stationIds") String stationIds, @QueryParam("personId") Integer personId, @QueryParam("publicationType") Integer publicationType, @QueryParam("noHighlight") Boolean noHighlight, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {

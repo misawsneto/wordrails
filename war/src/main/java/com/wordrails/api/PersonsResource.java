@@ -1,38 +1,16 @@
 package com.wordrails.api;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.notification.APNService;
-import com.wordrails.notification.GCMService;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.business.*;
 import com.wordrails.converter.PostConverter;
+import com.wordrails.notification.APNService;
+import com.wordrails.notification.GCMService;
 import com.wordrails.persistence.*;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
@@ -54,9 +32,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -414,48 +400,7 @@ public class PersonsResource {
 		}
 	}
 
-	@GET
-	@Path("/allInit")
-	public PersonData getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
 
-		Integer stationId = wordrailsService.getStationIdFromCookie(request);
-		PersonData personData = getInitialData(request);
-
-		StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
-		Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
-
-		TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
-
-		Pageable pageable = new PageRequest(0, 10);
-		//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
-
-		if(defaultStation != null){
-			//				if(personData.person != null && !personData.person.username.equals("wordrails")){
-			//					List<Integer> postsRead = postRepository.findPostReadByPerson(personData.person.id, pageable2);
-			//					List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(personData.person.id, pageable2);
-			//					List<Integer> recommends = recommendRepository.findRecommendByPerson(personData.person.id, pageable2);
-			//					personData.postsRead = postsRead;
-			//					personData.bookmarks = bookmarks;
-			//					personData.recommends = recommends;
-			//				}
-
-			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
-			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
-			personData.popular = postConverter.convertToViews(popular);
-			personData.recent = postConverter.convertToViews(recent);
-
-		}
-
-		if(setAttributes != null && setAttributes){
-			request.setAttribute("personData", mapper.writeValueAsString(personData));
-			request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView));
-			request.setAttribute("networkName", personData.network.name);
-			request.setAttribute("networkDesciption", "");
-			request.setAttribute("networkKeywords", "");
-		}
-
-		return personData;
-	}
 
 	@Path("/count")
 	@GET
@@ -529,14 +474,37 @@ public class PersonsResource {
 		}
 	}
 
-//	@PUT
-//	@Path("/{id}")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Transactional()
-//	public Response updatePerson(@PathParam("id") Integer personId, Person person){
-//		personRepository.save(sa)
-//		return Response.status(Status.OK).build();
-//	}
+	@GET
+	@Path("/allInit")
+	public PersonData getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+
+		Integer stationId = wordrailsService.getStationIdFromCookie(request);
+		PersonData personData = getInitialData(request);
+
+		StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
+		Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
+
+		TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
+
+		Pageable pageable = new PageRequest(0, 10);
+		//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+
+		List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
+		List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
+		personData.popular = postConverter.convertToViews(popular);
+		personData.recent = postConverter.convertToViews(recent);
+
+
+		if(setAttributes != null && setAttributes){
+			request.setAttribute("personData", mapper.writeValueAsString(personData));
+			request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView));
+			request.setAttribute("networkName", personData.network.name);
+			request.setAttribute("networkDesciption", "");
+			request.setAttribute("networkKeywords", "");
+		}
+
+		return personData;
+	}
 
 	@GET
 	@Path("/init")
@@ -549,11 +517,11 @@ public class PersonsResource {
 			throw new UnauthorizedException("User is not authorized");
 		}
 
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = authProvider.getNetwork();
 
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
-		List<StationDto> stationDtos = new ArrayList<>();
+
 
 		//Network Permissions
 		NetworkPermission networkPermissionDto = new NetworkPermission();
@@ -562,8 +530,19 @@ public class PersonsResource {
 		else
 			networkPermissionDto.admin = false;
 
+
+
+		List<StationDto> stationDtos = new ArrayList<>();
+		List<Station> stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
+		for(Station station : stations) {
+			StationDto stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
+			stationDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/stations/" + station.id);
+			stationDtos.add(stationDto);
+		}
+
+
 		personPermissions.networkPermission = networkPermissionDto;
-		personPermissions.stationPermissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id, stationDtos);
+		personPermissions.stationPermissions = getStationPermissions(stations, person.id);
 		personPermissions.personId = person.id;
 		personPermissions.username = person.username;
 		personPermissions.personName = person.name;
@@ -592,6 +571,39 @@ public class PersonsResource {
 		}
 
 		return initData;
+	}
+
+	private List<StationPermission> getStationPermissions(List<Station> stations, Integer personId) {
+		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>();
+		for (Station station : stations) {
+			StationPermission stationPermissionDto = new StationPermission();
+
+			stationPermissionDto.stationId = station.id;
+			stationPermissionDto.stationName = station.name;
+			stationPermissionDto.writable = station.writable;
+			stationPermissionDto.main = station.main;
+			stationPermissionDto.visibility = station.visibility;
+			stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
+
+			stationPermissionDto.subheading = station.subheading;
+			stationPermissionDto.sponsored = station.sponsored;
+			stationPermissionDto.topper = station.topper;
+
+			stationPermissionDto.allowComments = station.allowComments;
+			stationPermissionDto.allowSocialShare = station.allowSocialShare;
+
+			//StationRoles Fields
+			StationRole stationRole = stationRolesRepository.findByStationAndPersonId(station, personId);
+			if (stationRole != null) {
+				stationPermissionDto.admin = stationRole.admin;
+				stationPermissionDto.editor = stationRole.editor;
+				stationPermissionDto.writer = stationRole.writer;
+			}
+
+			stationPermissionDtos.add(stationPermissionDto);
+		}
+
+		return stationPermissionDtos;
 	}
 
 

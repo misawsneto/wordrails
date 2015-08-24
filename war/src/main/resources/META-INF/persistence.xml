@@ -18,7 +18,6 @@
 		<class>com.wordrails.business.PostScheduled</class>
 		<class>com.wordrails.business.PostDraft</class>
 		<class>com.wordrails.business.PostTrash</class>
-		<class>com.wordrails.business.Promotion</class>
 		<class>com.wordrails.business.Row</class>
 		<class>com.wordrails.business.Station</class>
 		<class>com.wordrails.business.StationPerspective</class>
