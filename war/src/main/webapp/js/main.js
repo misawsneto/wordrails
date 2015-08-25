@@ -364,10 +364,17 @@ angular.module('app')
       }
 
       $scope.openSplash = function(templateId, size){
-        if(templateId === "signin_splash.html")
+        if(templateId === "signin_splash.html"){
+
           $timeout(function(){
             $("#username-input").focus();
           }, 300);
+
+          if($scope.app.isMobile){
+            $state.go('access.signin')
+            return
+          }
+        }
         $scope.modalInstance = $splash.open({
           templateUrl: templateId,
           scope: $scope
