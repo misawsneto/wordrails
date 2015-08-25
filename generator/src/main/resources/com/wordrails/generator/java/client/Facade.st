@@ -263,7 +263,7 @@ public class $facade$ {
 	}
 
 	public Response socialLogin(String provider, String userId, String accessToken){
-		return _facade.socialLogin(provider, userId, accessToken).content;
+		return _facade.socialLogin(provider, userId, accessToken);
 	}
 
 	public void socialLogin(String provider, String userId, String accessToken, Callback<Response> _callback){

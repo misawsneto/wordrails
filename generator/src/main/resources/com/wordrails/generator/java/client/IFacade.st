@@ -99,7 +99,7 @@ interface I$facade$ {
 
 	@POST("/auth/signin")
 	@FormUrlEncoded
-	void socialLogin(@Field("provider") String provider, @Field("userId") String userId, @Field("accessToken") String accessToken);
+	Response socialLogin(@Field("provider") String provider, @Field("userId") String userId, @Field("accessToken") String accessToken);
 
 	@POST("/auth/signin")
 	@FormUrlEncoded
