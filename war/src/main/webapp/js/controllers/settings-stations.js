@@ -27,6 +27,8 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 		if($state.params.stationId){
 			trix.getStation($state.params.stationId, 'stationProjection').success(function(stationResponse){
 				$scope.station = stationResponse;
+        $scope.logoImage = {
+        link: $scope.station.logoMediumId ? TRIX.baseUrl + "/api/files/" + $scope.station.logoMediumId + "/contents" : null}
 			})
 		}else if($state.params.newStation){
 			$scope.creating = true;
@@ -43,6 +45,16 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 				$scope.app.getInitData();
 				$scope.app.showSuccessToast('Alterações realizadas com successo.')
 			});
+
+      if($scope.logoImage && $scope.logoImage.id){
+        var logoImage = { original: TRIX.baseUrl + "/api/files/" + $scope.logoImage.id }
+        trix.postImage(logoImage).success(function(imageId){
+          var myLogoImage = TRIX.baseUrl + "/api/images/" + imageId;
+          $scope.station.logo = myLogoImage;
+          trix.putStation($scope.station).success(function(){
+          })
+        })
+      }
 		}
 
 		$scope.createStation = function(){
@@ -58,6 +70,56 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 				});
 			}
 		}
+
+
+      FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
+          return true; // true|false
+      };
+
+      var logo = $scope.logo = new FileUploader({
+        url: TRIX.baseUrl + "/api/files/contents/simple"
+      });
+
+      var splash = $scope.splash = new FileUploader({
+        url: TRIX.baseUrl + "/api/files/contents/simple"
+      });
+
+      var favicon = $scope.favicon = new FileUploader({
+        url: TRIX.baseUrl + "/api/files/contents/simple"
+      });
+
+      logo.onAfterAddingFile = function(fileItem) {
+        $scope.logoImage = null;
+        logo.uploadAll();
+      };
+
+      logo.onSuccessItem = function(fileItem, response, status, headers) {
+        if(response.filelink){
+          $scope.logoImage = response;
+          $mdToast.hide();
+        }
+      };
+
+      logo.onErrorItem = function(fileItem, response, status, headers) {
+        if(status == 413)
+          $scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+        else
+          $scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+      }
+
+      logo.onProgressItem = function(fileItem, progress) {
+        cfpLoadingBar.start();
+        cfpLoadingBar.set(progress/10)
+        if(progress == 100){
+          cfpLoadingBar.complete()
+          toastPromise = $mdToast.show(
+            $mdToast.simple()
+            .content('Processando...')
+            .position('top right')
+            .hideDelay(false)
+          );
+        }
+      };
 
 	}])
 

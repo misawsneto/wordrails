@@ -39,6 +39,7 @@
 		<class>com.wordrails.business.PersonNetworkRegId</class>
 		<class>com.wordrails.business.PersonNetworkToken</class>
 		<class>com.wordrails.business.Invitation</class>
+		<class>com.wordrails.business.CertificateIos</class>
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>

@@ -54,6 +54,10 @@
 		<security:intercept-url pattern="/read" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 		<security:intercept-url pattern="/read/*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 
+		<security:intercept-url pattern="/api/auth/twitter" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+
+		<security:intercept-url pattern="/networks/createNetwork" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
+
 		<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/>
 
 		<security:custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>

@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.engine.jdbc.LobCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -272,24 +273,24 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		person.user = user;
 
 		if(person.image == null) {
-			try {
-				Image coverPicture = getImageFromBytes(profile.getCover().getSource(), Image.Type.COVER);
-				imageEventHandler.handleBeforeCreate(coverPicture);
-				imageRepository.save(coverPicture);
-				person.cover = coverPicture;
-			} catch (IOException | SQLException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				Image profilePicture = getImageFromBytes(facebook.userOperations().getUserProfileImage(ImageType.LARGE),
-						userConnection.imageUrl, Image.Type.PROFILE_PICTURE);
-				imageEventHandler.handleBeforeCreate(profilePicture);
-				imageRepository.save(profilePicture);
-				person.image = profilePicture;
-			} catch (IOException | SQLException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				Image coverPicture = getImageFromBytes(profile.getCover().getSource(), Image.Type.COVER);
+//				imageEventHandler.handleBeforeCreate(coverPicture);
+//				imageRepository.save(coverPicture);
+//				person.cover = coverPicture;
+//			} catch (IOException | SQLException e) {
+//				e.printStackTrace();
+//			}
+//
+//			try {
+//				Image profilePicture = getImageFromBytes(facebook.userOperations().getUserProfileImage(ImageType.LARGE),
+//						userConnection.imageUrl, Image.Type.PROFILE_PICTURE);
+//				imageEventHandler.handleBeforeCreate(profilePicture);
+//				imageRepository.save(profilePicture);
+//				person.image = profilePicture;
+//			} catch (IOException | SQLException e) {
+//				e.printStackTrace();
+//			}
 		}
 
 		return person;

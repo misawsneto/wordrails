@@ -33,7 +33,7 @@ public interface PersonNetworkRegIdRepository extends JpaRepository<PersonNetwor
 //	 where s.visibility = "UNRESTRICTED"))
 
 	@RestResource(exported=false)
-	@Query("SELECT reg FROM PersonNetworkRegId reg join reg.person p where p in ( select psr.person from StationRole psr where psr.station.id = :stationId AND psr.person.id != 1 ) OR ( (reg.person is null OR reg.person.id = 1) and reg.network in ( select network from Network network join network.stations s where s.id = :stationId AND s.visibility = 'UNRESTRICTED') )")
+	@Query("SELECT reg FROM PersonNetworkRegId reg join reg.person p where p in ( select psr.person from StationRole psr where psr.station.id = :stationId AND psr.person.id != 1 ) OR ( (reg.person is null OR reg.person.id = 1) and reg.network in ( select network from Network network join network.stations s where s.id = :stationId AND s.visibility = 'UNRESTRICTED') ) order by reg.id desc")
 	public List<PersonNetworkRegId> findRegIdByStationId(@Param("stationId") Integer stationId);
 
 	@RestResource(exported=false)

@@ -2305,8 +2305,8 @@ a.text-lgrey:hover {
   font-family: inherit;
 }
 
-.text-shadow-dark{
-  text-shadow: rgba(0, 0, 0, 0.8) 0px 1px 0px;
+.text-shadow-grey{
+  text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 1px;
 }
 
 .text-dg{
@@ -2736,6 +2736,10 @@ button, select, html, textarea, input{
   text-shadow:1px 1px 1px #000;
 }
 
+.fileinput-button{
+
+}
+
 /* /general */
 
 /* nvd3 */
@@ -2771,8 +2775,10 @@ button, select, html, textarea, input{
   animation-duration: 0.2s;
 }
 
+.custom-fab-button.animated,
 #settings>div.animated,
 #settings-network .animated,
+#settings-stations-perspectives .animated,
 #user-stats .animated,
 #settings-stations-users .animated,
 #settings-stations-categories .animated,
@@ -2841,7 +2847,7 @@ button, select, html, textarea, input{
 }
 
 .redactor-editor{padding: 0 0 20px 0; }
-#post-placeholder{font-size: 18px; position: absolute; z-index: 2}
+#post-placeholder{font-size: 18px; position: absolute; z-index: 0}
 .post-media-buttons{box-shadow: none; border: 1px solid rgba(0, 0, 0, 0.1);}
 .post-image-cover{
   -moz-background-size: cover;
@@ -2849,6 +2855,10 @@ button, select, html, textarea, input{
   background-size: cover;
   height: 80%;
   background-position: 50% 30%;
+}
+
+#post-editor .redactor-editor, #post-editor  .redactor-box{
+  background:transparent;
 }
 
 .md-dialog-container{position: fixed; z-index: 1055}
@@ -3710,7 +3720,15 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 #my-profile-popover .profile-popover .cover-abstract-mask{position: absolute; width: 100%; top: 0; bottom: 35px;}
 
 #login-error{min-height: 25px;}
+.max-logo{max-height: 150px;}
 /* /layout.html*/
+
+/* sigin signup forgot */
+.bg-create-network{
+  background-size: cover;
+  background-image: url('../img/create_network.jpg');
+}
+/* /sigin signup forgot */
 
 /* aside.html */
 
@@ -4526,6 +4544,19 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   border-bottom: 1px solid;
   border-color: #dee5e7!important; */
 }
+
+#logo-upload #image-upload{
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 142px;
+  direction: ltr;
+  cursor: pointer;
+  display: block;
+}
 /* /settings */
 
 /* setting-perspective-editor */
@@ -4638,7 +4669,36 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   height: 476px;
 }
 
+.colorpicker {margin-top: -125px;}
+
 /* /settings-colors */
+
+/* settings-perspective */
+#perspective-editor-terms .sortable-placeholder{
+  min-height: 28px!important;
+  margin-bottom: 0px;
+}
+
+#perspective-editor-terms .ui-sortable-placeholder {
+  min-height: 28px!important;
+  margin-bottom: 0px;
+  list-style: none;
+  border: 1px dashed #CCC;
+  visibility: visible!important;
+}
+
+#perspective-editor-terms .sortable-term {
+  cursor: all-scroll;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+}
+
+#perspective-editor-terms .ui-sortable-helper {
+  opacity: 0.5
+}
+
+
+/* /settings-perspective */
 
 /* splash */
 /* Slideshow style */
@@ -4880,9 +4940,9 @@ body #cdawrap {
 }
 
 @media screen and (max-width: 40em) {
-  body {
+  /* body {
     font-size: 80%;
-  }
+  } */
   .codrops-header h1 {
     font-size: 2.5em;
   }

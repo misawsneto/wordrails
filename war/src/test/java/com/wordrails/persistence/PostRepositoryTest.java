@@ -14,18 +14,18 @@ public class PostRepositoryTest extends AbstractTest {
 	
 	@Test
 	public void test() {
-		Pageable pageable = new PageRequest(0, 100);
+//		Pageable pageable = new PageRequest(0, 100);
 //		repository.findPostsFromOrPromotedToStation(1, pageable);
 //		repository.findAll(sort);
-		for (Integer num : repository.findPostReadByPerson(2, pageable)) {
-			System.out.println(num);
-		}
+//		for (Integer num : repository.findPostReadByPerson(2, pageable)) {
+//			System.out.println(num);
+//		}
 	}
 	
 	@Test
 	public void findByStationIdAndTitleTest() {
-		Sort sort = new Sort(Direction.DESC, "date");
-		Pageable pageable = new PageRequest(0, 10, sort);
+//		Sort sort = new Sort(Direction.DESC, "date");
+//		Pageable pageable = new PageRequest(0, 10, sort);
 		//repository.findByStationIdAndTitle(1, "Diogo Peixoto", pageable);
 		//repository.findByStationIdAndTermsId(1, 2, pageable);
 	}

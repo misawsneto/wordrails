@@ -8,6 +8,7 @@ import com.wordrails.business.BadRequestException;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.security.PostAndCommentSecurityChecker;
+import com.wordrails.util.StationTermsDto;
 import com.wordrails.util.WordrailsUtil;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -541,7 +542,6 @@ public class PostsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	public StringResponse getPostBody(@PathParam("postId") Integer postId){
-
 		Person person = authProvider.getLoggedPerson();
 		String body = postRepository.findPostBodyById(postId);
 
@@ -552,4 +552,12 @@ public class PostsResource {
 		return content;
 	}
 
+	@PUT
+	@Path("/{postId}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
+	public Response promote(@PathParam("postId") Integer postId, StationTermsDto stationTerms){
+		return Response.status(Status.OK).build();
+	}
 }

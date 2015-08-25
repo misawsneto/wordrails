@@ -84,7 +84,7 @@ angular.module('app')
               {
                   name:'angularFileUpload',
                   files: [
-                    '../bower_components/angular-file-upload/dist/angular-file-upload.min.js'
+                    '../bower_components/angular-file-upload/angular-file-upload.min.js'
                   ]
               },
               {
@@ -221,7 +221,7 @@ angular.module('app')
                   name: 'color-selector',
                   files: [
                           '../libs/color-selector.css',
-                          '../libs/color-selector.js',
+                          //'../libs/color-selector.js',
                           '../libs/color-selector-angular.js',
                           ]
               },{
@@ -238,8 +238,17 @@ angular.module('app')
               },{
                   name: 'pc035860.scrollWatch',
                   files: ['../bower_components/angular-scroll-watch/build/angular-scroll-watch.min.js']
+              },{
+                  name: 'ui.sortable',
+                  files: ['../libs/jquery-ui/jquery-ui.min.js', '../bower_components/angular-ui-sortable/sortable.min.js']
+              },{
+                  name: 'angularjs-dropdown-multiselect',
+                  files: ['../bower_components/angularjs-dropdown-multiselect/dist/angularjs-dropdown-multiselect.min.js']
+              },{
+                name: 'colorpicker.module',
+                files: ['../bower_components/angular-bootstrap-colorpicker/css/colorpicker.min.css',
+                        '../bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js']
               }
-
           ]
       });
   }])

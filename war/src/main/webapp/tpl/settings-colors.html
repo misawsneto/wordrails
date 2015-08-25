@@ -1,29 +1,34 @@
 <div class="wrapper-md">
-<div class="color-selector-container">
-	<div class="content m-t-md">
-		<div class="mockup-browser animated fadeIn" ng-class="{'mobile': isMobile}">
-			<header class="mockup-header mockup-section--dark paint-area">
-				<div class="mockup-content mockup-grid mockup-grid--spread">
-				</div>
-			</header>
-			<section class="mockup-section paint-area">
-				<div class="mockup-content mockup-grid">
-				</div><!-- /mockup-grid -->
-				<md-button class="md-fab pos-abt bottom-0 right-0 m-r m-b" aria-label="demo">
+	<div class="color-selector-container">
+		<div class="content m-t-md">
+			<div class="mockup-browser animated fadeIn" ng-class="{'mobile': isMobile}">
+				<header id="paint-navbar" class="mockup-header paint-area">
+					<div class="mockup-content mockup-grid mockup-grid--spread">
+					</div>
+				</header>
+				<section id="paint-background" class="mockup-section paint-area">
+					<div class="mockup-content mockup-grid">
+					</div><!-- /mockup-grid -->
+					<md-button md-no-ink id="paint-main" class="md-fab pos-abt bottom-0 right-0 m-r m-b mockup-button paint-area" aria-label="demo">
 				</md-button>
 			</section>
 		</div><!-- /mockup-browser -->
 	</div><!-- /content -->
 	<div class="customizer">
 		<ul class="color-tool">
-			<li class="color-1"><div class="drag-element" data-color="#333"><div class="drop color-1"></div><i class="drop-helper-1 color-1"></i><i class="drop-helper-2 color-1"></i><i class="drop-helper-3 color-1"></i><i class="drop-helper-4 color-1"></i></div></li>
-			<li class="color-2"><div class="drag-element" data-color="#f0f0f0"><div class="drop color-2"></div><i class="drop-helper-1 color-2"></i><i class="drop-helper-2 color-2"></i><i class="drop-helper-3 color-2"></i><i class="drop-helper-4 color-2"></i></div></li>
-			<li class="color-3"><div class="drag-element" data-color="#c0c3d5"><div class="drop color-3"></div><i class="drop-helper-1 color-3"></i><i class="drop-helper-2 color-3"></i><i class="drop-helper-3 color-3"></i><i class="drop-helper-4 color-3"></i></div></li>
-			<li class="color-4"><div class="drag-element" data-color="#5FA1E0"><div class="drop color-4"></div><i class="drop-helper-1 color-4"></i><i class="drop-helper-2 color-4"></i><i class="drop-helper-3 color-4"></i><i class="drop-helper-4 color-4"></i></div></li>
-			<li class="color-5"><div class="drag-element" data-color="#C1D5C0"><div class="drop color-5"></div><i class="drop-helper-1 color-5"></i><i class="drop-helper-2 color-5"></i><i class="drop-helper-3 color-5"></i><i class="drop-helper-4 color-5"></i></div></li>
-			<li class="color-6"><div class="drag-element" data-color="#47AE73"><div class="drop color-6"></div><i class="drop-helper-1 color-6"></i><i class="drop-helper-2 color-6"></i><i class="drop-helper-3 color-6"></i><i class="drop-helper-4 color-6"></i></div></li>
-			<li class="color-7"><div class="drag-element" data-color="#EAE7C4"><div class="drop color-7"></div><i class="drop-helper-1 color-7"></i><i class="drop-helper-2 color-7"></i><i class="drop-helper-3 color-7"></i><i class="drop-helper-4 color-7"></i></div></li>
-			<li class="color-8"><div class="drag-element" data-color="#FB6964"><div class="drop color-8"></div><i class="drop-helper-1 color-8"></i><i class="drop-helper-2 color-8"></i><i class="drop-helper-3 color-8"></i><i class="drop-helper-4 color-8"></i></div></li>
+			<li class="color-1">
+				<div class="drag-element" data-color="{{colors.one}}" colorpicker ng-model="colors.one">
+					<div class="drop color-1"></div>
+					<i class="drop-helper-1 color-1"></i>
+					<i class="drop-helper-2 color-1"></i>
+					<i class="drop-helper-3 color-1"></i>
+					<i class="drop-helper-4 color-1"></i>
+				</div>
+			</li>
+			<li class="color-2"><div data-color="{{colors.two}}" colorpicker ng-model="colors.two" class="drag-element" data-color="{{colors.two}}"><div class="drop color-2"></div><i class="drop-helper-1 color-2"></i><i class="drop-helper-2 color-2"></i><i class="drop-helper-3 color-2"></i><i class="drop-helper-4 color-2"></i></div></li>
+			<li class="color-3"><div data-color="{{colors.three}}" colorpicker ng-model="colors.three" class="drag-element" data-color="{{colors.three}}"><div class="drop color-3"></div><i class="drop-helper-1 color-3"></i><i class="drop-helper-2 color-3"></i><i class="drop-helper-3 color-3"></i><i class="drop-helper-4 color-3"></i></div></li>
+			<li class="color-4"><div data-color="{{colors.four}}" colorpicker ng-model="colors.four" class="drag-element" data-color="{{colors.four}}"><div class="drop color-4"></div><i class="drop-helper-1 color-4"></i><i class="drop-helper-2 color-4"></i><i class="drop-helper-3 color-4"></i><i class="drop-helper-4 color-4"></i></div></li>
+			<li class="color-5"><div data-color="{{colors.five}}" colorpicker ng-model="colors.five" class="drag-element" data-color="{{colors.five}}"><div class="drop color-5"></div><i class="drop-helper-1 color-5"></i><i class="drop-helper-2 color-5"></i><i class="drop-helper-3 color-5"></i><i class="drop-helper-4 color-5"></i></div></li>
 			<li><button class="reset-button" title="Reser colors">Reset colors</button></li>
 		</ul>
 	</div>
@@ -38,4 +43,11 @@
 		</ul>
 	</div>
 </div><!-- /container -->
+<md-button ng-click="saveColors()"
+	id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+	ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+	tooltip="Salvar alterações" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+	aria-label="Salvar alterações">
+	<i class="mdi mdi-content-save"></i>
+	</md-button>
 </div>

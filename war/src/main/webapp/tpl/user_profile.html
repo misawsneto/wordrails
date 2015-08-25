@@ -18,7 +18,7 @@
 		<div id="profile-buttons" class="pos-abt wrapper profile-buttons-cover">
 			<md-button class="md-fab custom-fab-button text-lg animated zoomIn" 
 			tooltip="Editar perfil" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
-			md-no-ink angular-ripple ng-if="person.id == app.initData.person.id" 
+			ng-if="person.id == app.initData.person.id" 
 			ng-click="editProfile()">
 			<i class="mdi mdi-pencil"></i>
 		</md-button>

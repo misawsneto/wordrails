@@ -27,7 +27,8 @@ import java.util.Set;
 		})
 })
 @Table(name = "person", uniqueConstraints={
-		@UniqueConstraint(columnNames={"user_id", "username"})
+		@UniqueConstraint(columnNames={"user_id", "username"}),
+		@UniqueConstraint(columnNames={"username", "networkId"})
 })
 public class Person implements Serializable{
 
@@ -82,7 +83,6 @@ public class Person implements Serializable{
 	@Field
 	public String bio;
 
-	@NotNull
 	@Column
 	@Email
 	public String email;
@@ -94,6 +94,8 @@ public class Person implements Serializable{
 	public Image cover;
 
     public Integer wordpressId;
+
+	public Integer networkId;
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -135,6 +137,10 @@ public class Person implements Serializable{
 			coverId = null;
 			coverLargeId = null;
 			coverMediumId= null;
+		}
+
+		if(user != null){
+			networkId = user.network.id;
 		}
 
 		createdAt = new Date();

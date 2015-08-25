@@ -26,6 +26,14 @@ interface I$facade$ {
 	@POST("/batch")
 	Response postBatch(@Body List<Command> batch);
 
+	@GET("/terms/search/findPostsByTagAndStationId")
+	ContentResponse<List<PostView\>\> findPostsByTagAndStationId(@Query("tagName")String tagName, @Query("stationId")Integer stationId,
+		@Query("page") int page, @Query("size") int size);
+
+	@GET("/terms/search/findPostsByTagAndStationId")
+	void findPostsByTagAndStationId(@Query("tagName")String tagName, @Query("stationId")Integer stationId,
+		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+
 	@GET("/posts/{stationId}/findPostsAndPostsPromotedByBody")
 	ContentResponse<List<PostView\>\> findPostsAndPostsPromotedByBody(@Path("stationId")Integer stationId, @Query("body") String body, 
 		@Query("page") int page, @Query("size") int size);
@@ -52,14 +60,14 @@ interface I$facade$ {
 	ContentResponse<List<PostView\>\> findRecentPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size);
 	
 	@GET("/posts/{stationId}/recent")
-	ContentResponse<List<PostView\>\> findRecentPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size, 
+	void findRecentPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size, 
 	Callback<ContentResponse<List<PostView\>\>\> _callback);
 	
 	@GET("/posts/{stationId}/popular")
 	ContentResponse<List<PostView\>\> findPopularPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size);
 	
 	@GET("/posts/{stationId}/popular")
-	ContentResponse<List<PostView\>\> findPopularPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size, 
+	void findPopularPosts(@Path("stationId") Integer stationId, @Query("page") int page, @Query("size") int size, 
 	Callback<ContentResponse<List<PostView\>\>\> _callback);
 		
 	@GET("/posts/{stationId}/findPostsByStationIdAndAuthorIdAndState")

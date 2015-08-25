@@ -16,7 +16,7 @@ public class Test {
 		return new WordRails(
 				new MockConnectivityManager(true),
 				new File("."), 0,
-				"http://sport.trix.rocks", "sport", "Sport@dmiN",
+				"http://sport.xarxlocal.com", "wordrails", "wordrails",
 				LogLevel.FULL);
 	}
 
@@ -24,17 +24,29 @@ public class Test {
 		return new WordRails(
 				new MockConnectivityManager(true),
 				new File("."), 0,
-				"http://localhost:8080", username, password,
+				"http://demo.xarxlocal.com", username, password,
+				LogLevel.FULL);
+	}
+
+	private static WordRails getTest(String username, String password) throws IOException {
+		return new WordRails(
+				new MockConnectivityManager(true),
+				new File("."), 0,
+				"http://demo.trix.rocks", username, password,
 				LogLevel.FULL);
 	}
 
 	public static void main(String[] args) throws IOException {
-		WordRails wordRails = getLocal("sport", "Sport@dmiN");
+		WordRails wordRails = getTest("demo", "demo");
 		wordRails.login();
 		wordRails.getInitialData();
 
-		PostView postView = wordRails.getPostViewById(57, true);
-		System.out.println(postView);
+		createPost(wordRails);
+
+//		PostView postView = wordRails.getPostViewById(57, true);
+//		System.out.println(postView);
+//
+//		wordRails.putRegId("asdfasd", 2, 0.0, 0.0);
 
 		//createPerson(wordRails);
 
@@ -192,6 +204,7 @@ public class Test {
 		post.author = person;
 		post.station = station;
 		post.date = new Date();
+		post.notify = true;
 		try {
 			wordRails.postPost(post);
 		} catch (RetrofitError err) {

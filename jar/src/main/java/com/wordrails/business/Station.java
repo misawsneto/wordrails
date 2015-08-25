@@ -101,10 +101,11 @@ public class Station {
 
 	@OneToOne
 	public Image logo;
-
 	public Integer logoId;
+	public Integer logoMediumId;
 
 	public Integer defaultPerspectiveId;
+
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -116,20 +117,22 @@ public class Station {
 		createdAt = new Date();
 		if(logo != null && logo.original != null){
 			logoId = logo.original.id;
+			logoMediumId = logo.medium.id;
 		}
 	}
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
 
 	@PreUpdate
 	void onUpdate() {
 		updatedAt = new Date();
 		if(logo != null && logo.original != null){
 			logoId = logo.original.id;
+			logoMediumId = logo.medium.id;
 		}
 	}
+
+	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date updatedAt;
 
 	@Override
 	public int hashCode() {

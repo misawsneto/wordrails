@@ -36,15 +36,18 @@
 <script type="text/ng-template" id="signin_splash.html">
   <a class="splash-close-button" ng-click="cancelModal()">×</a>
   <div class="splash-content text-center" ng-cloak>
-    <div class="row">
+    <div class="row m-t-n-lg">
       <div class="col-xs-6 col-xs-offset-3">
-        <div class="p-lg text-color wrapper-lg">
+        <div class="text-color p-l-lg p-r-lg p-b-sm" ng-class="{'p-t-xxs': app.initData.network.loginImageLink}">
+          <div class="text-center thumb-lg">
+            <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
+          </div>
           <div id="login-error">
             <span id="login-error" class="text-danger animated" ng-class="{'fadeIn': app.loginError, 'hide': !app.loginError}">
               Usuário ou senha inválidos
             </span>
           </div>
-          <form name="form" ng-submit="app.signIn(username, password)">
+          <form name="form" ng-submit="app.signIn(username, password)" class="m-b-sm">
             <div class="md-form-group float-label p-b-sm">
               <input id="username-input" class="md-input" ng-model="username" required>
               <label>Usuário</label>
@@ -53,14 +56,17 @@
               <input type="password" class="md-input" ng-model="password" required>
               <label>Senha</label>
             </div>      
-            <button md-ink-ripple type="submit" class="m-t-md btn-custom md-btn text-lg text-u-c btn-block ">Entrar</button>
+            <button md-ink-ripple type="submit" class="m-t btn-custom md-btn text-lg text-u-c btn-block ">Entrar</button>
           </form>
-          <button ng-if="app.socialLogin()" ng-click="app.facebookSignIn()" md-ink-ripple type="submit" class="m-t-md btn-blue md-btn text-lg text-u-c btn-block">
-            <i class="mdi mdi-facebook m-r-sm"></i> Facebook
-          </button>
-          <button ng-if="app.socialLogin()" md-ink-ripple type="submit" class="m-t-md btn-info md-btn text-lg text-u-c btn-block">
-            <i class="mdi mdi-twitter m-r-sm"></i> Twitter
-          </button>
+          <p class="text-center h5 p-b-sm">Não possui uma conta? <a ui-sref="access.signup" ng-click="app.cancelModal()">clique aqui para cadastra-se.</a></p>
+          <div class="text-md">
+            <button ng-if="app.socialLogin()" ng-click="app.facebookSignIn()" md-ink-ripple type="submit" class="btn-blue md-btn text-u-c btn-block">
+              <i class="mdi mdi-facebook m-r-sm"></i> Facebook
+            </button>
+            <button ng-if="app.socialLogin()" ng-click="app.twitterSignIn()" md-ink-ripple type="submit" class="m-t btn-info md-btn text-u-c btn-block">
+              <i class="mdi mdi-twitter m-r-sm"></i> Twitter
+            </button>
+          </div>
         </div>
       </div>
       <div class="col-xs-8 col-xs-offset-2 text-base" ng-bind-html="app.initData.network.loginFooterMessage">

@@ -1,5 +1,6 @@
 package com.wordrails.persistence;
 
+import com.wordrails.business.Network;
 import com.wordrails.business.Station;
 
 import java.util.List;
@@ -14,9 +15,15 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 public interface StationRepository extends JpaRepository<Station, Integer>, QueryDslPredicateExecutor<Station> {
 	List<Station> findByName(@Param("name") String name);
-    
+
 	@RestResource(exported=false)
 	Station findByWordpressId(@Param("wordpressId") Integer wordpressId);
+
+	@RestResource(exported=false)
+	@Query(value="SELECT CASE WHEN (count(st) > 0) then true else false end FROM Station st WHERE st.id = :stationId AND st.visibility = 'UNRESTRICTED'")
+	boolean isUnrestricted(@Param("stationId") Integer stationId);
+
+
     
 	@RestResource(exported=false)
 	Station findByWordpressToken(@Param("wordpressToken") String wordpressToken);

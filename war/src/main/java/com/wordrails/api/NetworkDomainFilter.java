@@ -44,7 +44,7 @@ public class NetworkDomainFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		String host = request .getHeader("Host");
 
-		if(host.equals("xarx.co")){
+		if(host.equals("xarx.co") || host.equals("trix.rocks") || host.equals("xarxlocal.com")){
 			((HttpServletResponse) res).sendRedirect("/home");
 		}else {
 			Network network = wordrailsService.getNetworkFromHost(req);

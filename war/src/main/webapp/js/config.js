@@ -61,9 +61,15 @@ angular.module('app')
   redactorOptions.buttons = ['html', 'formatting', 'bold', 'italic', 'underline', 'deleted', 
   'fontsize', 'fontcolor', 'unorderedlist', 'orderedlist', 'outdent', 'indent',
   'link', 'image', 'video', 'alignment', 'horizontalrule'];
+  redactorOptions.imagePosition = true;
+  redactorOptions.imageFloatMargin = '20px';
   trixProvider.setConfig({ url: location.protocol + '//' + location.host });
 })
 .run(function($rootScope){
+
+  if(!initData)
+    return;
+
   var backgroundColor = initData.network.backgroundColor
   var navbarColor = initData.network.navbarColor
   var mainColor = initData.network.mainColor
@@ -133,4 +139,21 @@ angular.module('app')
     }*/
     //);
 
+  // window.twttr = (function(d, s, id) {
+  //   var js, fjs = d.getElementsByTagName(s)[0],
+  //     t = window.twttr || {};
+  //   if (d.getElementById(id)) return t;
+  //   js = d.createElement(s);
+  //   js.id = id;
+  //   js.src = "https://platform.twitter.com/widgets.js";
+  //   fjs.parentNode.insertBefore(js, fjs);
+   
+  //   t._e = [];
+  //   t.ready = function(f) {
+  //     t._e.push(f);
+  //   };
+   
+  //   return t;
+  // }(document, "script", "twitter-wjs"));
+  
 });

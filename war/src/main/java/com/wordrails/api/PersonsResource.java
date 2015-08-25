@@ -1,10 +1,33 @@
 package com.wordrails.api;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.GCMService;
+import com.wordrails.notification.APNService;
+import com.wordrails.notification.GCMService;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.BadRequestException;
@@ -31,17 +54,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,6 +77,7 @@ public class PersonsResource {
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired GCMService gcmService;
+	private @Autowired APNService apnService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
 
@@ -117,7 +133,13 @@ public class PersonsResource {
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
 		Person person = authProvider.getLoggedPerson();
-		gcmService.updateRegId(network, person, regId, lat, lng);
+		if(person.id == 0){
+			gcmService.updateRegId(network, null, regId, lat, lng);
+		} else {
+			gcmService.updateRegId(network, person, regId, lat, lng);
+		}
+//		if(person.id == 0) person = null;
+		System.out.println("regId: " + regId);
 		return Response.status(Status.OK).build();
 	}
 
@@ -127,7 +149,13 @@ public class PersonsResource {
 	public Response putToken(@FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Network network = networkRepository.findOne(networkId);
 		Person person = authProvider.getLoggedPerson();
-		gcmService.updateIosToken(network, person, token, lat, lng);
+		if(person.id == 0){
+			apnService.updateIosToken(network, null, token, lat, lng);
+		} else {
+			apnService.updateIosToken(network, person, token, lat, lng);
+		}
+//		if(person.id == 0) person = null;
+		System.out.println("iOS token: " + token);
 		return Response.status(Status.OK).build();
 	}
 
@@ -146,7 +174,7 @@ public class PersonsResource {
 	@GET
 	@Path("/{personId}/posts")
 	public ContentResponse<List<PostView>> getPersonNetworkPosts(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
-			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+																 @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -172,7 +200,7 @@ public class PersonsResource {
 	@GET
 	@Path("/getPostsByState")
 	public ContentResponse<List<PostView>> getPersonNetworkPostsByState(@Context HttpServletRequest request, @QueryParam("personId") Integer personId, @QueryParam("state") String state,
-								@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+																		@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -186,7 +214,7 @@ public class PersonsResource {
 
 		Network network = authProvider.getNetwork();
 
-			List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id);
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id);
 
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
@@ -205,7 +233,7 @@ public class PersonsResource {
 	@GET
 	@Path("/{personId}/recommends")
 	public ContentResponse<List<PostView>> getPersonNetworkRecommendations(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
-			@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+																		   @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -302,42 +330,39 @@ public class PersonsResource {
 				BadRequestException badRequest = new BadRequestException();
 
 				for (ConstraintViolation violation : e.getConstraintViolations()) {
-//					violation.get
 					FieldError error = new FieldError(violation.getInvalidValue()+"", violation.getInvalidValue()+"", violation.getMessage());
 					badRequest.errors.add(error);
 				}
 
 				throw badRequest;
 			}catch (org.springframework.dao.DataIntegrityViolationException e) {
-				if(e.getCause() != null){
-					if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
-						String errorMsg = e.getCause().getCause().getLocalizedMessage();
-						Pattern p = Pattern.compile("\'([^\']*)\'");
-						Matcher m = p.matcher(errorMsg);
-						String errorVal = "";
-						while (m.find()) {
-							errorVal = m.group(1);
-							break;
-						}
-
-						Person conflictingPerson = null;
-						if(person.email != null && person.email.trim().equals(errorVal)){
-							conflictingPerson = personRepository.findByEmailAndNetworkId(person.email, network.id);
-						}else if(person.username != null && person.username.trim().equals(errorVal)){
-							conflictingPerson = personRepository.findByUsernameAndNetworkId(person.username, network.id);
-						}
-
-						if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
-//							conflictingPerson.id 
-							StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
-							if(str != null)
-								return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
-										+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
-										+ "\"conflictingStationRole\": " + mapper.writeValueAsString(str) +"}").build();
-						}
-
-						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) +"}").build();
+				if(e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
+					String errorMsg = e.getCause().getCause().getLocalizedMessage();
+					Pattern p = Pattern.compile("\'([^\']*)\'");
+					Matcher m = p.matcher(errorMsg);
+					String errorVal = "";
+					while (m.find()) {
+						errorVal = m.group(1);
+						break;
 					}
+
+					Person conflictingPerson = null;
+					if(person.email != null && person.email.trim().equals(errorVal)){
+						conflictingPerson = personRepository.findByEmailAndNetworkId(person.email, network.id);
+					}else if(person.username != null && person.username.trim().equals(errorVal)){
+						conflictingPerson = personRepository.findByUsernameAndNetworkId(person.username, network.id);
+					}
+
+					if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
+//							conflictingPerson.id 
+						StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
+						if(str != null)
+							return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
+									+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
+									+ "\"conflictingStationRole\": " + mapper.writeValueAsString(str) +"}").build();
+					}
+
+					return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) +"}").build();
 				}
 				e.printStackTrace();
 				throw new ConflictException();
@@ -546,7 +571,7 @@ public class PersonsResource {
 		PersonData initData = new PersonData();
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
-		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class); 
+		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes("UTF-8"), NetworkRoleDto.class);
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;
@@ -556,17 +581,17 @@ public class PersonsResource {
 		if(initData.networkRole != null)
 			initData.networkRole.links = networkRole != null ? wordrailsService.generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id) : Arrays.asList(new Link());
 
-			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
-			if(initData.person != null && !initData.person.username.equals("wordrails")){
-				List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
-				List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(initData.person.id, pageable2);
-				List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
-				initData.postsRead = postsRead;
-				initData.bookmarks = bookmarks;
-				initData.recommends = recommends;
-			}
+		Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+		if(initData.person != null && !initData.person.username.equals("wordrails")){
+			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
+			List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(initData.person.id, pageable2);
+			List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
+			initData.postsRead = postsRead;
+			initData.bookmarks = bookmarks;
+			initData.recommends = recommends;
+		}
 
-			return initData;
+		return initData;
 	}
 
 

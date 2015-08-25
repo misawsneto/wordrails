@@ -31,7 +31,6 @@ public class PostRead {
 	public Integer id;
 	
 	@ManyToOne
-	@NotNull
 	@IndexedEmbedded(includePaths={"name", "id"})
 	public Person person;
 	

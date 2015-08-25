@@ -1,4 +1,7 @@
-app.controller('SettingsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trixService',
-						function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  trixService){
+app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout', '$interval', 'trix', 'cfpLoadingBar', '$q',
+	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q) {
 
-}])
+		$scope.app.createNetwork = function(createNetworkObject){
+			trix.createNetwork(createNetworkObject);
+		}
+	}])

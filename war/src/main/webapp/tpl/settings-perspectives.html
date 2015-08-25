@@ -1,0 +1,54 @@
+<div id="settings-stations-perspectives">
+
+	<div class="header-custom text-center animated box-shadow">
+	</div>
+
+	<div class="wrapper-lg animated zoomIn m-b-xxl">
+		<!-- start of user panel list -->
+		<div class="panel panel-card block-1000 m-auto" ng-if="!(creating || editing)">
+			<div class="panel-heading h4 wrapper-md">
+				<span>Perspectivas da estação </span><strong>{{thisStation.name}}</strong>
+			</div>
+			<div class="panel-body p-n" style="min-height: 200px;">
+				<div class="table-responsive o-visible text-md">
+					<table class="table b-t b-light">
+						<thead>
+							<tr>
+								<th style="width:10%;">Ativada</th>
+								<th>Nome</th>
+								<th ng-if="app.networkAdmin" style="width:100px;"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="perspective in perspectives" ng-click="loadPerspectives(perspective)">
+								<td>
+									<label class="md-check">
+										<input type="checkbox" ng-change="changeDefaultPerspective(perspective)" ng-model="perspective.selected" ng-click="app.stopPropagation($event)">
+										<i class="blue"></i>
+									</label>
+								</td>
+								<td>{{perspective.name}}</td>
+								<td ng-if="app.networkAdmin">
+									<div class="hidden-sm text-right" ng-click="app.stopPropagation($event)">
+										<a href ng-click="openEditPerspective(perspective)" class="border-radius-50 i-20 mdi-pencil mdi m-r-sm">
+										</a>
+										<a href ng-click="openDeletePerspective(perspective)" class="border-radius-50 i-20 mdi-delete mdi">
+										</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- /end of user panel list -->
+	</div>
+		<md-button ng-hide="creating || editing"
+			id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+			ui-sref="app.settings.users({'newUser': true})" ng-if="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+			tooltip="Nova perspectiva" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+			aria-label="Nova perspectiva">
+			<i class="mdi mdi-plus"></i>
+		</md-button>
+</div>

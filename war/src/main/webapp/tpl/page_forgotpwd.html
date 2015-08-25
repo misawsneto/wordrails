@@ -1,24 +1,29 @@
 <div class="container w-xl w-auto-xs" ng-init="app.settings.container = false;">
-  <a href class="navbar-brand block m-t">{{app.name}}</a>
-  <div class="m-b-lg">
+  <div class="m-b-lg p-t-lg">
     <div class="wrapper text-center">
-      <strong>Input your email to reset your password</strong>
+      <div class="text-center thumb-lg">
+        <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
+      </div>
     </div>
-    <form name="reset" ng-init="isCollapsed=true">
+    <strong>Digite seu email para reconfigurar sua senha</strong>
+    <form class="m-t" name="reset" ng-init="isCollapsed=true">
       <div class="list-group list-group-sm">
         <div class="list-group-item">
           <input type="email" placeholder="Email" ng-model="email" class="form-control no-border" required>
         </div>
       </div>
-      <button type="submit" ng-disabled="reset.$invalid" class="btn btn-lg btn-primary btn-block"  ng-click="isCollapsed = !isCollapsed" >Send</button>
+
+      <div class="text-lg">
+        <button md-ink-ripple type="submit" class="btn-custom md-btn text-u-c btn-block "
+        ng-disabled="reset.$invalid"  ng-click="isCollapsed = !isCollapsed" >Enviar</button>
+      </div>
     </form>
     <div collapse="isCollapsed" class="m-t">
       <div class="alert alert-success">
-        <p>A reset link sent to your email address, please check it in 7 days. <a ui-sref="access.signin" class="btn btn-sm btn-success">Sign in</a></p>
+        <p>Instruções de reconfiguração da senha foram enviadas a seu email. <a ui-sref="access.signin" class="btn btn-sm btn-success">Entrar</a></p>
       </div>
     </div>
   </div>
-  <div class="text-center" ng-include="'tpl/blocks/page_footer.html'">
-    {% include 'blocks/page_footer.html' %}
+  <div class="text-center" ng-bind-html="app.initData.network.loginFooterMessage">
   </div>
 </div>

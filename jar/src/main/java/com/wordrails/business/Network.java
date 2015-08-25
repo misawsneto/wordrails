@@ -1,17 +1,20 @@
 package com.wordrails.business;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"subdomain"}))
 public class Network implements Serializable{
 
 	private static final long serialVersionUID = 7723825842358687233L;
@@ -24,7 +27,8 @@ public class Network implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
-	
+
+	@NotNull
 	@Size(min=1, max=100)
 	public String name;
 	
@@ -87,7 +91,7 @@ public class Network implements Serializable{
 	public Double newsFontSize = 1.0;
 	
 	@NotNull
-	@Column(unique = true)
+	@Pattern(regexp = "^((?!-)[A-Za-z0-9-]{1,63})$", message = "Invalid subdomain")
 	public String subdomain;
 	
 	public boolean configured;
@@ -151,8 +155,10 @@ public class Network implements Serializable{
 		
 		if(logo != null && logo.original != null){
 			logoId = logo.original.id;
+			logoSmallId = logo.small.id;
 		}else{
 			logoId = null;
+			logoSmallId = null;
 		}
 
 		if(favicon != null && favicon.original != null){
@@ -169,7 +175,7 @@ public class Network implements Serializable{
 
 		if(loginImage != null && loginImage.original != null){
 			loginImageId = loginImage.original.id;
-			loginImageSmallId = loginImage.original.id;
+			loginImageSmallId = loginImage.small.id;
 		}else{
 			loginImageId = null;
 			loginImageSmallId = null;
@@ -188,6 +194,7 @@ public class Network implements Serializable{
 			logoSmallId = logo.small.id;
 		}else{
 			logoId = null;
+			logoSmallId = null;
 		}
 
 		if(favicon != null && favicon.original != null){
@@ -204,8 +211,10 @@ public class Network implements Serializable{
 
 		if(loginImage != null && loginImage.original != null){
 			loginImageId = loginImage.original.id;
+			loginImageSmallId = loginImage.small.id;
 		}else{
 			loginImageId = null;
+			loginImageSmallId = null;
 		}
 	}
 

@@ -220,8 +220,11 @@
 
 <!-- header bar -->
 <div class="collapse pos-rlt navbar-collapse box-shadow nav-down station-header {{::app.settings.navbarCollapseColor}}">
-  <div class="nav navbar-nav hidden-xs text-center text-lg w-full wrapper-sm header-font font-thin pos-abt">
-    {{app.currentStation.name}}
+  <div class="nav navbar-nav hidden-xs text-lg w-full wrapper-sm header-font pos-abt">
+    <span ng-if="!app.currentStation.logoId" class="p-l-xxl m-l-lg">{{app.currentStation.name}}</span>
+    <div ng-if="app.currentStation.logoId" class="p-l-xxl m-l-lg m-t-n-sm" style="height:48px;">
+      <img class="img-responsive" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}">
+    </div>
   </div>
   <!-- nabar right -->
   <ul class="nav navbar-nav navbar-right">
@@ -254,7 +257,7 @@
   <div class="divider-v m-r-xs"></div>
 </li>
 <li ng-if="!app.isLogged">
-  <a href class="text-u-c text-center text-lg" ng-click="openSplash('signin_splash.html');">ENTRAR {{app.initData.network.allowSignup ? '/ Cadastrar' : ''}}</a>
+  <a href class="text-u-c text-center text-md" ng-click="openSplash('signin_splash.html');">ENTRAR {{app.initData.network.allowSignup ? '/ Cadastrar-se' : ''}}</a>
 </li>
 </ul>
 </div>
