@@ -99,11 +99,11 @@ interface I$facade$ {
 
 	@Post("/auth/signin")
 	@FormUrlEncoded
-	void socialSignin(@Field("provider") String provider, @Field("userId") String userId, @Field("accessToken") String accessToken);
+	void socialLogin(@Field("provider") String provider, @Field("userId") String userId, @Field("accessToken") String accessToken);
 
 	@Post("/auth/signin")
 	@FormUrlEncoded
-	void socialSignin(@Field("provider") String provider, @Field("userId") String userId, @Field("accessToken") String accessToken, Callback<Response> _callback);
+	void socialLogin(@Field("provider") String provider, @Field("userId") String userId, @Field("accessToken") String accessToken, Callback<Response> _callback);
 	
 	@PUT("/posts/{postId}/convert")
 	@FormUrlEncoded

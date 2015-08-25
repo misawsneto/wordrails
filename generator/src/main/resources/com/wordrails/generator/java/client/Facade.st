@@ -263,11 +263,11 @@ public class $facade$ {
 	}
 
 	public Response socialLogin(String provider, String userId, String accessToken){
-		return _facade.convertPost(provider, userId, accessToken).content;
+		return _facade.socialLogin(provider, userId, accessToken).content;
 	}
 
 	public void socialLogin(String provider, String userId, String accessToken, Callback<Response> _callback){
-		_facade.convertPost(provider, userId, accessToken, _callback);
+		_facade.socialLogin(provider, userId, accessToken, _callback);
 	}
 	
 	public PostView convertPost(Integer postId, String state){
