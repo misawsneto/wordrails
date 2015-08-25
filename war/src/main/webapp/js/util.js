@@ -283,8 +283,12 @@ function getCustomStyle(color, perspective, header) {
 	"}\n"+
 
 	".bg-header{\n"+
-	"  background-color: rgba("+hexToRgb(shadeBlend(0.05,header)).r+", " + hexToRgb(shadeBlend(0.05,header)).g + ", "+ hexToRgb(shadeBlend(0.05,header)).b +", 1);\n"+
-	"  color: " + textColorEval(header) + ";\n"+
+	"  background-color: rgba("+hexToRgb(shadeBlend(0.05,header)).r+", " + hexToRgb(shadeBlend(0.05,header)).g + ", "+ hexToRgb(shadeBlend(0.05,header)).b +", 1)!important;\n"+
+	"  color: " + (textColorEval2(header) ? "#111" : "#fff") +";\n" + "!important;\n"+
+	"}\n"+	
+
+	".bg-header-text{\n"+
+	"  color: " + (textColorEval2(header) ? "#111" : "#fff") +";\n" + "!important;\n"+
 	"}\n"+	
 
 	".station-header .nav > li > a{\n"+

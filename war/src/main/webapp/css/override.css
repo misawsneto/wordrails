@@ -3668,9 +3668,14 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
   max-height: 40px;
 }
 
-.custom-header{
+.custom-header2{
   font-size: 25px;
-  vertical-align: sub;
+  vertical-align: text-bottom;
+}
+
+.custom-header{
+  font-size: 20px;
+  vertical-align: text-bottom;
 }
 
 .new-post-navbar ul li a{
