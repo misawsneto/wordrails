@@ -33,26 +33,26 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 
 	@RestResource(exported = false)
 	@Query("select (select count(*) from PostRead pr where pr.post.author.id = p.id), (select count(*) from Comment comment where comment.post.author.id = p.id), (select count(*) from Recommend recommend where recommend.post.author.id = p.id) from Person p where p.id = :authorId")
-	List<Object[]> findPersonStats(@Param("authorId") Integer authorId);
+	public List<Object[]> findPersonStats(@Param("authorId") Integer authorId);
 
 	@Query("select person from Person person where person.user.network.id = :networkId")
-	List<Person> findAllByNetwork(@Param("networkId") Integer networkId, Pageable pageable);
+	public List<Person> findAllByNetwork(@Param("networkId") Integer networkId, Pageable pageable);
 
 	@Query("select person from Person person where person.user.network.id = :networkId and person.id <> :personId")
-	List<Person> findAllByNetworkExcludingPerson(@Param("networkId") Integer networkId, @Param("personId") Integer personId, Pageable pageable);
+	public List<Person> findAllByNetworkExcludingPerson(@Param("networkId") Integer networkId, @Param("personId") Integer personId, Pageable pageable);
 
 	@Query("select person from Person person where person.user.network.id = :networkId and (person.username = :query OR person.email = :query)")
-	List<Person> findAllByNetworkAndQuery(@Param("networkId") Integer networkId, @Param("query") String query, Pageable pageable);
+	public List<Person> findAllByNetworkAndQuery(@Param("networkId") Integer networkId, @Param("query") String query, Pageable pageable);
 
 	@Query("select person from Person person where person.user.network.id = :networkId and person.id <> :personId and (person.username = :query OR person.email = :query)")
-	List<Person> findAllByNetworkAndQueryExcludingPerson(@Param("networkId") Integer networkId, @Param("personId") Integer personId, @Param("query") String query, Pageable pageable);
+	public List<Person> findAllByNetworkAndQueryExcludingPerson(@Param("networkId") Integer networkId, @Param("personId") Integer personId, @Param("query") String query, Pageable pageable);
 
 	@RestResource(exported = false)
 	@Query("select count(*) from Person person where person.user.network.id = :networkId")
-	Long countPersonsByNetwork(@Param("networkId") Integer networkId);
+	public Long countPersonsByNetwork(@Param("networkId") Integer networkId);
 
 	@Query("select count(*) from StationRole sr, NetworkRole nr where (sr.person.id = :personId AND sr.admin = true) OR (nr.person.id = :personId AND nr.admin = true)")
-	Long isAdmin(@Param("personId") Integer personId);
+	public Long isAdmin(@Param("personId") Integer personId);
 
 	@RestResource(exported = false)
 	@Query("select person from Person person where person.id in (:personIds)")

@@ -29,6 +29,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
+import com.wordrails.business.FileContents;
+import com.wordrails.persistence.FileContentsRepository;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -39,6 +41,7 @@ import org.hibernate.Session;
 import org.hibernate.engine.jdbc.LobCreator;
 import org.jboss.resteasy.annotations.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.business.File;
@@ -51,6 +54,9 @@ import com.wordrails.persistence.FileRepository;
 public class FilesResource {
 	private @PersistenceContext EntityManager manager;
 	private @Autowired FileRepository fileRepository;
+	@Autowired
+	private FileContentsRepository contentsRepository;
+
 
 	@PUT
 	@Path("{id}/contents")

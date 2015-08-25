@@ -182,7 +182,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetImageFeaturingPostsAuthorized(Integer imageId) {
-		return canVisualizeImages(imageId);
+		return false;
 	}
 
 	@Override
@@ -317,6 +317,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindPostsAuthorized(Integer stationId, Integer termId, Integer page, Integer size, List<String> sort) {
+		return false;
+	}
+
+	@Override
 	protected boolean isFindPostsPublishedAuthorized(Integer stationId, List<Integer> termsIds, Integer page, Integer size, List<String> sort) {
 		return false;
 	}
@@ -325,6 +330,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindPostsNotPositionedAuthorized(Integer stationId,
 			List<Integer> termsIds, List<Integer> idsToExclude, Integer page, Integer size, List<String> sort) {
 		return canVisualizeStation(stationId);
+	}
+
+	@Override
+	protected boolean isFindDraftsByStationIdAndAuthorIdAuthorized(Integer stationId, Integer authorId, Integer page, Integer size, List<String> sort) {
+		return false;
+	}
+
+	@Override
+	protected boolean isFindScheduledsByStationIdAndAuthorIdAuthorized(Integer stationId, Integer authorId, Integer page, Integer size, List<String> sort) {
+		return false;
 	}
 
 	@Override
@@ -867,6 +882,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetImageLogoSponsorAuthorized(Integer imageId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetImageOwnerAuthorized(Integer imageId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetNetworkLogoAuthorized(Integer networkId) {
 		return true;
 	}
@@ -926,12 +951,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetSponsorImagesAuthorized(Integer sponsorId) {
-
-		return true;
-	}
-
-	@Override
-	protected boolean isGetImageLogoSponsorAuthorized(Integer imageId) {
 
 		return true;
 	}
@@ -1524,11 +1543,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindByOriginalPostIdAuthorized(Integer originalPostId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetImageOwnerAuthorized(Integer imageId) {
 		return true;
 	}
 

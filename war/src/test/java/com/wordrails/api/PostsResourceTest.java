@@ -1,13 +1,8 @@
 package com.wordrails.api;
 
-import com.wordrails.PermissionId;
-import com.wordrails.business.Network;
-import com.wordrails.business.Person;
 import com.wordrails.business.Post;
 import com.wordrails.test.AbstractTest;
 import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.query.dsl.BooleanJunction;
-import org.hibernate.search.query.dsl.MustJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.junit.Test;
 import org.springframework.stereotype.Component;
@@ -16,11 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import static org.junit.Assert.*;
 
 
 @Component
@@ -52,8 +43,6 @@ public class PostsResourceTest extends AbstractTest {
 //		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
 
 
-
-
 		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
 		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Post.class).get();
 
@@ -66,7 +55,7 @@ public class PostsResourceTest extends AbstractTest {
 
 		javax.persistence.Query persistenceQuery = ftem.createFullTextQuery(t1, Post.class);
 		List<Post> posts = persistenceQuery.getResultList();
-		for(Post p : posts) {
+		for (Post p : posts) {
 			System.out.println(p.title + " : " + p.body);
 		}
 		System.out.println(ftem.createFullTextQuery(t1).getResultSize());

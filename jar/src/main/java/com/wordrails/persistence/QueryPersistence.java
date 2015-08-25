@@ -106,6 +106,11 @@ public class QueryPersistence {
 	}
 	
 	@Transactional
+	public void deletePromotionsInPosts(List<Integer> ids) {
+		manager.createQuery("delete from Promotion promotion where promotion.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+	}
+	
+	@Transactional
 	public void deleteRecommendsInPosts(List<Integer> ids) {
 		manager.createQuery("delete from Recommend recommend where recommend.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
 	}

@@ -62,6 +62,8 @@ public class WordpressService {
 	private StationRepository stationRepository;
 	@Autowired
 	private TaxonomyRepository taxonomyRepository;
+	@Autowired
+	private FileContentsRepository contentsRepository;
 
 	public WordpressPost createPost(Post post, WordpressApi api) throws Exception {
 		WordpressPost wp = new WordpressPost(post.title, post.body, new Date());
@@ -315,7 +317,7 @@ public class WordpressService {
 					posts.add(post);
 				}
 
-				//processWordpressPost(posts);
+				processWordpressPost(posts);
 
 				for (Post post1 : posts) {
 					postRepository.save(post1);
@@ -330,172 +332,172 @@ public class WordpressService {
 		}
 	}
 
-//	@Transactional
-//	public void processWordpressPost(Post post) {
-//		WordpressParsedContent wcp = extractImageFromContent(post.body);
-//		post.body = wcp.content;
-//		post.featuredImage = wcp.image;
-//		post.externalFeaturedImgUrl = wcp.externalImageUrl;
-//	}
-//
-//	@Transactional
-//	public void processWordpressPost(Collection<Post> posts) {
-//		for (Post post : posts) {
-//			WordpressParsedContent wcp = extractImageFromContent(post.body);
-//			post.body = wcp.content;
-//			post.featuredImage = wcp.image;
-//			post.externalFeaturedImgUrl = wcp.externalImageUrl;
-//		}
-//	}
-//
-//	@Transactional
-//	public WordpressParsedContent extractImageFromContent(String content) {
-//		if (content == null || content.isEmpty()) {
-//			content = "";
-//		}
-//		Document doc = Jsoup.parse(content);
-//		// Get all img tags
-//		String featuredImageUrl = null;
-//		Elements imgs = doc.getElementsByTag("img");
-//
-//		WordpressParsedContent wpc = new WordpressParsedContent();
-//
-//		com.wordrails.business.File file = null;
-//
-//		try {
-//			for (Element element : imgs) {
-//				String imageURL = element.attr("src");
-//				if (imageURL != null && !imageURL.isEmpty()) {
-//					URL url;
-//					try {
-//						url = new URL(imageURL);
-//						try (InputStream is = url.openStream()) {
-//							try (ImageInputStream in = ImageIO.createImageInputStream(is)) {
-//								final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
-//								if (readers.hasNext()) {
-//									ImageReader reader = readers.next();
-//									try {
-//										reader.setInput(in);
-//										int dimensions = reader.getWidth(0) * reader.getHeight(0);
-//										if (dimensions > 250000) {
-//											Element parent = element.parent();
-//											if (parent != null && parent.tagName().equals("a")) {
-//												parent.remove();
-//											}
-//											featuredImageUrl = imageURL;
-//
-//											String fileName = FilenameUtils.getBaseName(featuredImageUrl);
-//											String fileFormat = FilenameUtils.getExtension(featuredImageUrl);
-//											String tempFileName = fileName + WordrailsUtil.generateRandomString(5, "Aa#") + "." + fileFormat;
-//
-//											BufferedImage image = null;
-//											image = ImageIO.read(url);
-//											java.io.File dataFile = java.io.File.createTempFile(tempFileName, "." + fileFormat);
-//											ImageIO.write(image, fileFormat, dataFile);
-//
-//											try (InputStream fileIS = new FileInputStream(dataFile)) {
-//												file = new File();
-//												file.type = File.INTERNAL_FILE;
-//												file.mime = file.mime == null || file.mime.isEmpty() ? new Tika().detect(fileIS) : file.mime;
-//												file.name = FilenameUtils.getBaseName(featuredImageUrl) + "." + FilenameUtils.getExtension(featuredImageUrl);
-//												fileRepository.save(file);
-//												Integer id = file.id;
-//
-//												Session session = (Session) manager.getDelegate();
-//												LobCreator creator = Hibernate.getLobCreator(session);
-//												FileContents contents = contentsRepository.findOne(id);
-//
-//												contents.contents = creator.createBlob(FileUtils.readFileToByteArray(dataFile));
-//												contentsRepository.save(contents);
-//
-//												Image img = new Image();
-//												img.original = file;
-//												createImages(img);
-//												imageRepository.save(img);
-//												wpc.image = img;
-//											}
-//
-//											break;
-//										}
-//									} finally {
-//										reader.dispose();
-//									}
-//								}
-//							} catch (IOException e) {
-//							}
-//						} catch (IOException e) {
-//						}
-//					} catch (MalformedURLException e1) {
-//					}
-//				}
-//			}
-//		} catch (Exception e) {
-//		}
-//
-//		wpc.content = doc.text();
-//		wpc.externalImageUrl = featuredImageUrl;
-//		wpc.content = wpc.content.replaceAll("\\[(.*?)\\](.*?)\\[/(.*?)\\]", "");
-//		wpc.content = wpc.content.trim();
-//
-//		return wpc;
-//	}
+	@Transactional
+	public void processWordpressPost(Post post) {
+		WordpressParsedContent wcp = extractImageFromContent(post.body);
+		post.body = wcp.content;
+		post.featuredImage = wcp.image;
+		post.externalFeaturedImgUrl = wcp.externalImageUrl;
+	}
 
-//	private void createImages(Image image) throws SQLException, IOException {
-//		com.wordrails.business.File original = image.original;
-//
-//
-//		if (original != null) {
-//			String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
-//			com.wordrails.business.File small = new File();
-//			small.type = File.INTERNAL_FILE;
-//			small.mime = image.original.mime != null ? image.original.mime : MIME;
-//			small.name = original.name;
-//			fileRepository.save(small);
-//
-//			com.wordrails.business.File medium = new File();
-//			medium.type = File.INTERNAL_FILE;
-//			medium.mime = image.original.mime != null ? image.original.mime : MIME;
-//			medium.name = original.name;
-//			fileRepository.save(medium);
-//
-//			com.wordrails.business.File large = new File();
-//			large.type = File.INTERNAL_FILE;
-//			large.mime = image.original.mime != null ? image.original.mime : MIME;
-//			large.name = original.name;
-//			fileRepository.save(large);
-//
-//			image.small = small;
-//			image.medium = medium;
-//			image.large = large;
-//
-//			BufferedImage bufferedImage;
-//			FileContents contents = contentsRepository.findOne(original.id);
-//			try (InputStream input = contents.contents.getBinaryStream()) {
-//				bufferedImage = ImageIO.read(input);
-//			}
-//			image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
-//			updateContents(small.id, bufferedImage, 150, format);
-//			updateContents(medium.id, bufferedImage, 300, format);
-//			updateContents(large.id, bufferedImage, 1024, format);
-//		}
-//	}
-//
-//	private static final String MIME = "image/jpeg";
-//	private static final String FORMAT = "jpg";
-//	private static final double QUALITY = 1;
-//
-//	private void updateContents(Integer id, BufferedImage image, int size, String format) throws IOException {
-//		format = (format != null ? format : FORMAT);
-//		java.io.File file = java.io.File.createTempFile("image", "." + format);
-//		try {
-//			Thumbnails.of(image).size(size, size).outputFormat(format).outputQuality(QUALITY).toFile(file);
-//			Session session = (Session) manager.getDelegate();
-//			LobCreator creator = Hibernate.getLobCreator(session);
-//			FileContents contents = contentsRepository.findOne(id);
-//			contents.contents = creator.createBlob(FileUtils.readFileToByteArray(file));
-//			contentsRepository.save(contents);
-//		} finally {
-//			file.delete();
-//		}
-//	}
+	@Transactional
+	public void processWordpressPost(Collection<Post> posts) {
+		for (Post post : posts) {
+			WordpressParsedContent wcp = extractImageFromContent(post.body);
+			post.body = wcp.content;
+			post.featuredImage = wcp.image;
+			post.externalFeaturedImgUrl = wcp.externalImageUrl;
+		}
+	}
+
+	@Transactional
+	public WordpressParsedContent extractImageFromContent(String content) {
+		if (content == null || content.isEmpty()) {
+			content = "";
+		}
+		Document doc = Jsoup.parse(content);
+		// Get all img tags
+		String featuredImageUrl = null;
+		Elements imgs = doc.getElementsByTag("img");
+
+		WordpressParsedContent wpc = new WordpressParsedContent();
+
+		com.wordrails.business.File file = null;
+
+		try {
+			for (Element element : imgs) {
+				String imageURL = element.attr("src");
+				if (imageURL != null && !imageURL.isEmpty()) {
+					URL url;
+					try {
+						url = new URL(imageURL);
+						try (InputStream is = url.openStream()) {
+							try (ImageInputStream in = ImageIO.createImageInputStream(is)) {
+								final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
+								if (readers.hasNext()) {
+									ImageReader reader = readers.next();
+									try {
+										reader.setInput(in);
+										int dimensions = reader.getWidth(0) * reader.getHeight(0);
+										if (dimensions > 250000) {
+											Element parent = element.parent();
+											if (parent != null && parent.tagName().equals("a")) {
+												parent.remove();
+											}
+											featuredImageUrl = imageURL;
+
+											String fileName = FilenameUtils.getBaseName(featuredImageUrl);
+											String fileFormat = FilenameUtils.getExtension(featuredImageUrl);
+											String tempFileName = fileName + WordrailsUtil.generateRandomString(5, "Aa#") + "." + fileFormat;
+
+											BufferedImage image = null;
+											image = ImageIO.read(url);
+											java.io.File dataFile = java.io.File.createTempFile(tempFileName, "." + fileFormat);
+											ImageIO.write(image, fileFormat, dataFile);
+
+											try (InputStream fileIS = new FileInputStream(dataFile)) {
+												file = new File();
+												file.type = File.INTERNAL_FILE;
+												file.mime = file.mime == null || file.mime.isEmpty() ? new Tika().detect(fileIS) : file.mime;
+												file.name = FilenameUtils.getBaseName(featuredImageUrl) + "." + FilenameUtils.getExtension(featuredImageUrl);
+												fileRepository.save(file);
+												Integer id = file.id;
+
+												Session session = (Session) manager.getDelegate();
+												LobCreator creator = Hibernate.getLobCreator(session);
+												FileContents contents = contentsRepository.findOne(id);
+
+												contents.contents = creator.createBlob(FileUtils.readFileToByteArray(dataFile));
+												contentsRepository.save(contents);
+
+												Image img = new Image();
+												img.original = file;
+												createImages(img);
+												imageRepository.save(img);
+												wpc.image = img;
+											}
+
+											break;
+										}
+									} finally {
+										reader.dispose();
+									}
+								}
+							} catch (IOException e) {
+							}
+						} catch (IOException e) {
+						}
+					} catch (MalformedURLException e1) {
+					}
+				}
+			}
+		} catch (Exception e) {
+		}
+
+		wpc.content = doc.text();
+		wpc.externalImageUrl = featuredImageUrl;
+		wpc.content = wpc.content.replaceAll("\\[(.*?)\\](.*?)\\[/(.*?)\\]", "");
+		wpc.content = wpc.content.trim();
+
+		return wpc;
+	}
+
+	private void createImages(Image image) throws SQLException, IOException {
+		com.wordrails.business.File original = image.original;
+
+
+		if (original != null) {
+			String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
+			com.wordrails.business.File small = new File();
+			small.type = File.INTERNAL_FILE;
+			small.mime = image.original.mime != null ? image.original.mime : MIME;
+			small.name = original.name;
+			fileRepository.save(small);
+
+			com.wordrails.business.File medium = new File();
+			medium.type = File.INTERNAL_FILE;
+			medium.mime = image.original.mime != null ? image.original.mime : MIME;
+			medium.name = original.name;
+			fileRepository.save(medium);
+
+			com.wordrails.business.File large = new File();
+			large.type = File.INTERNAL_FILE;
+			large.mime = image.original.mime != null ? image.original.mime : MIME;
+			large.name = original.name;
+			fileRepository.save(large);
+
+			image.small = small;
+			image.medium = medium;
+			image.large = large;
+
+			BufferedImage bufferedImage;
+			FileContents contents = contentsRepository.findOne(original.id);
+			try (InputStream input = contents.contents.getBinaryStream()) {
+				bufferedImage = ImageIO.read(input);
+			}
+			image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
+			updateContents(small.id, bufferedImage, 150, format);
+			updateContents(medium.id, bufferedImage, 300, format);
+			updateContents(large.id, bufferedImage, 1024, format);
+		}
+	}
+
+	private static final String MIME = "image/jpeg";
+	private static final String FORMAT = "jpg";
+	private static final double QUALITY = 1;
+
+	private void updateContents(Integer id, BufferedImage image, int size, String format) throws IOException {
+		format = (format != null ? format : FORMAT);
+		java.io.File file = java.io.File.createTempFile("image", "." + format);
+		try {
+			Thumbnails.of(image).size(size, size).outputFormat(format).outputQuality(QUALITY).toFile(file);
+			Session session = (Session) manager.getDelegate();
+			LobCreator creator = Hibernate.getLobCreator(session);
+			FileContents contents = contentsRepository.findOne(id);
+			contents.contents = creator.createBlob(FileUtils.readFileToByteArray(file));
+			contentsRepository.save(contents);
+		} finally {
+			file.delete();
+		}
+	}
 }

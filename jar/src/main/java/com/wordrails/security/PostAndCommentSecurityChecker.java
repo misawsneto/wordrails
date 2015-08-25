@@ -76,25 +76,20 @@ public class PostAndCommentSecurityChecker {
 
 		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null){
-			switch (post.station.visibility) {
-				case Station.UNRESTRICTED:
+			if(post.station.visibility.equals(Station.UNRESTRICTED)){
+				canRead = true;
+			}else if(post.station.visibility.equals(Station.RESTRICTED_TO_NETWORKS)){
+				List<Integer> networksId = networkRepository.findIdsByStation(post.station.id);
+				List<Network> belongsToNetworks = networkRepository.belongsToNetworks(personLogged.id, networksId);
+				if(belongsToNetworks != null && belongsToNetworks.size() > 0){
 					canRead = true;
-					break;
-				case Station.RESTRICTED_TO_NETWORKS:
-					List<Integer> networksId = networkRepository.findIdsByStation(post.station.id);
-					List<Network> belongsToNetworks = networkRepository.belongsToNetworks(personLogged.id, networksId);
-					if (belongsToNetworks != null && belongsToNetworks.size() > 0) {
-						canRead = true;
-					}
-					break;
-				default:
-					List<Integer> stationsId = new ArrayList<>();
-					stationsId.add(post.station.id);
-					List<Station> belongsToStations = stationRepository.belongsToStations(personLogged.id, stationsId);
-					if (belongsToStations != null && belongsToStations.size() > 0) {
-						canRead = true;
-					}
-					break;
+				}
+			}else{
+				List<Integer> stationsId = new ArrayList<Integer>();
+				List<Station> belongsToStations = stationRepository.belongsToStations(personLogged.id, stationsId);
+				if(belongsToStations != null && belongsToStations.size() > 0){
+					canRead = true;
+				}
 			}
 		}
 		return canRead;

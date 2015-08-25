@@ -5,7 +5,6 @@
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:task="http://www.springframework.org/schema/task"
-       xmlns:aws-context="http://www.springframework.org/schema/cloud/aws/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
          				   http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -65,10 +64,4 @@
 	<bean id="corsCustomFilter" class="com.wordrails.api.CORSCustomFilter"/>
 	<bean id="cacheService" class="com.wordrails.services.CacheService" init-method="init"/>
 	<bean id="wordrailsService" class="com.wordrails.WordrailsService" init-method="init"/>
-
-	<aws-context:context-credentials>
-		<aws-context:simple-credentials access-key="AKIAJ2L7I36ADEIBW6FQ" secret-key="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" />
-	</aws-context:context-credentials>
-
-	<aws-context:context-resource-loader/>
 </beans>

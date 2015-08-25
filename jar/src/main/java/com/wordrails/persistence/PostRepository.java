@@ -21,15 +21,28 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	List<Post> findPostsNotPositioned(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, @Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);
 
 	@RestResource(exported = false)
+	List<Post> findByFeaturedImages(@Param("featuredImages") List<Image> featuredImage);
+
+	@RestResource(exported = false)
 	List<Post> findByStation(Station station);
 
 	@RestResource(exported = false)
 	Post findByWordpressId(Integer wordpressId);
 
 	@RestResource(exported = false)
+	int countSlugPost(@Param("slug") String slug);
+
+	@RestResource(exported = false)
 	@Modifying
 	@Query(value = "UPDATE Post post SET post.featuredImage = null WHERE post.featuredImage IN (:featuredImages)")
 	void updateFeaturedImagesToNull(@Param("featuredImages") List<Image> featuredImage);
+
+	@RestResource(exported = false)
+	List<Post> findPostsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
+
+	List<PostDraft> findDraftsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
+
+	List<PostScheduled> findScheduledsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
 
 	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
 	List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);
