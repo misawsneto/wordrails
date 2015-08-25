@@ -4206,6 +4206,8 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
   #perspective-vertical md-tabs .md-header{overflow: hidden;}
 
   #perspective-horizontal, #perspective-vertical {margin-right: 340px}
+  .mobile-screen #perspective-horizontal, .mobile-screen #perspective-vertical {margin-right: 0} 
+  .mobile-screen #perspective-horizontal .block-800, .mobile-screen #perspective-vertical .block-800{padding: 0} 
   #perspective-horizontal .info-flow {margin-top: 0; margin-bottom: 0;}
   #perspective-horizontal .info-flow-wrap {margin-bottom: 20px;}
   #perspective-horizontal .info-flow-wrap .scrollbar {margin-top: 5px; margin-bottom: 0; background: transparent;}
@@ -4230,6 +4232,7 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
   }
 
   #perspective-vertical md-tab-item span {font-size: 22px; letter-spacing: -0.5px; font-weight: 300;}
+  .mobile-screen #perspective-vertical md-tab-item span {font-size: 14px; font-weight: bold!important;}
   /*#perspective-vertical md-tabs .md-ripple-container,
   #station-sidebar md-tabs .md-ripple-container 
   {display: none;} */
