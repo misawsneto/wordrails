@@ -126,7 +126,6 @@ public class GCMService {
 		notification.hash = WordrailsUtil.generateRandomString(10, "Aa#");
 		ArrayList<Notification> notis = new ArrayList<Notification>();
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
-			
 			Notification noti = new Notification();
 			noti.message = notification.message + "";
 			noti.network = pnRegId.network;
@@ -136,9 +135,12 @@ public class GCMService {
 			noti.post = notification.post;
 			noti.type = notification.type + "";
 			noti.hash = notification.hash + "";
-			devices.add(pnRegId.regId);
 			notification.person = pnRegId.person;
-			notis.add(noti);
+
+			devices.add(pnRegId.regId);
+
+			if(pnRegId.person!=null)
+				notis.add(noti);
 		}
 		
 		notificationRepository.save(notis);
