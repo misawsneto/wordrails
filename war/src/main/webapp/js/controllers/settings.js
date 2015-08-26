@@ -40,7 +40,7 @@ app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 			}
 
 			trix.createNetwork(createNetworkObject).success(function(){
-
+				window.location.href = 'http://' + createNetworkObject.subdomain + '.trix.rocks';
 			}).error(function(data, status){
 				if(status == 400){
 					if(data.error && data.error.message && data.error.message.indexOf('Duplicate') > -1
