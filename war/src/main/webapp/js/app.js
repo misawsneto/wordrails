@@ -19,7 +19,7 @@ angular.module('app', [
     'ui.splash',
     'oc.lazyLoad',
     'angular-loading-bar',
-    'pascalprecht.translate',
+//    'pascalprecht.translate',
     'angular-redactor',
     'trix',
 ]);

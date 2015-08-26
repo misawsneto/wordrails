@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-.controller('AppCtrl', ['$scope', '$translate', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast', 'TRIX',
-  function(              $scope,   $translate,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast, TRIX) {
+.controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast', 'TRIX',
+  function(              $scope,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast, TRIX) {
     // add 'ie' classes to html
     var isIE = !!navigator.userAgent.match(/MSIE/i);
     isIE && angular.element($window.document.body).addClass('ie');
@@ -54,17 +54,6 @@ angular.module('app')
         $localStorage.settings = $scope.app.settings;
       }, true);
 
-    // angular translate
-    $scope.lang = { isopen: false };
-    $scope.langs = {en:'English', de_DE:'German', it_IT:'Italian'};
-    $scope.selectLang = $scope.langs[$translate.proposedLanguage()] || "English";
-    $scope.setLang = function(langKey, $event) {
-        // set the current lang
-        $scope.selectLang = $scope.langs[langKey];
-        // You can change the language during runtime
-        $translate.use(langKey);
-        $scope.lang.isopen = !$scope.lang.isopen;
-      };
 
       function isSmartDevice( $window ){
         // Adapted from http://www.detectmobilebrowsers.com

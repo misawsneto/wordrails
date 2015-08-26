@@ -63,10 +63,10 @@
   <!-- lazyload -->
   <script src="/bower_components/oclazyload/dist/ocLazyLoad.js"></script>
   <!-- translate -->
-  <script src="/bower_components/angular-translate/angular-translate.js"></script>
+  <!-- <script src="/bower_components/angular-translate/angular-translate.js"></script>
   <script src="/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
   <script src="/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
-  <script src="/bower_components/angular-translate-storage-local/angular-translate-storage-local.js"></script>
+  <script src="/bower_components/angular-translate-storage-local/angular-translate-storage-local.js"></script> -->
   <!-- redactor -->
   <script src="/bower_components/redactor/redactor.min.js"></script>
   <script src="/bower_components/redactor/video.js"></script>
