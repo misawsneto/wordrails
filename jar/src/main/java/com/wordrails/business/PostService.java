@@ -121,9 +121,10 @@ public class PostService {
 		try {
 			if (post.station != null && post.station.networks != null) {
 				Station station = stationRepository.findOne(post.station.id);
-				gcmService.sendToStation(station.id, notification);
-
 				Network network = authProvider.getNetwork();
+
+				gcmService.sendToStation(network, station, notification);
+
 				apnService.sendToStation(network, station.id, notification);
 			}
 		} catch (Exception e) {

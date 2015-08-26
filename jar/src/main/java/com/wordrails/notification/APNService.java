@@ -92,7 +92,7 @@ public class APNService {
 		if (stationRepository.isUnrestricted(stationId)) {
 			personNetworkTokens = personNetworkTokenRepository.findByNetwork(network);
 		} else {
-			personNetworkTokens = personNetworkTokenRepository.findByStationId(stationId);
+			personNetworkTokens = personNetworkTokenRepository.findTokenByStationId(stationId);
 		}
 
 		if (personNetworkTokens == null || notification == null) {

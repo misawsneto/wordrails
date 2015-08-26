@@ -44,9 +44,18 @@ public class GCMService {
 
 	@Async
 	@Transactional
-	public void sendToStation(Integer stationId, Notification notification){
+	public void sendToStation(Network network, Station station, Notification notification){
 
-		List<PersonNetworkRegId> personNetworkRegIds = personNetworkRegIdRepository.findRegIdByStationId(stationId);
+		Integer stationId = station.id;
+
+		List<PersonNetworkRegId> personNetworkRegIds = new ArrayList<PersonNetworkRegId>();
+
+		if(station.visibility.equals(Station.UNRESTRICTED)){
+			personNetworkRegIds = personNetworkRegIdRepository.findByNetwork(network);
+		}else{
+			personNetworkRegIds = personNetworkRegIdRepository.findRegIdByStationId(stationId);
+		}
+
 		try {
 			removeNotificationProducer(personNetworkRegIds, notification);
 			gcmNotify(personNetworkRegIds, notification);

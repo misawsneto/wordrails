@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -13,7 +14,8 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
 @Entity
-public class Image {
+public class Image implements Serializable{
+	private static final long serialVersionUID = -7728358342673032833L;
 
 	public enum Type {FAVICON, SPLASH, LOGIN, POST, COVER, PROFILE_PICTURE}
 
