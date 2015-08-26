@@ -2334,7 +2334,11 @@ list-style: none; margin: 0; padding: 0;
 }
 
 .post-content-font{
-  font-family: georgia, serif;
+  font-family: georgia, serif!important;
+}
+
+.redactor-editor p{
+   font-family: georgia, serif!important;
 }
 
 .profile-cover{background-position:50% 50%;}
