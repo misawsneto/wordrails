@@ -6,10 +6,10 @@
         <form name="form" class="form-validation">
           <div class="list-group list-group-sm">
             <div class="list-group-item">
-              <input placeholder="Nome" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.name" required>
+              <input placeholder="Nome da rede" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.name" required>
             </div>
             <div class="list-group-item">
-              <input placeholder="Subdomínio" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.subdomain" required>
+              <input placeholder="subdominio.trix.rocks" ng-focus="changeSubdomain()" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.subdomain" required>
             </div>
           </div>
           <div class="wrapper text-center text-xl text-white text-shadow-grey font-bold">
@@ -23,7 +23,7 @@
               <input placeholder="Nome" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.person.name" required>
             </div>
             <div class="list-group-item">
-              <input placeholder="Usuário" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.person.username" required>
+              <input placeholder="Usuário" ng-focus="changePersonName()" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.person.username" required>
             </div>
             <div class="list-group-item">
               <input type="email" placeholder="Email" class="form-control p-n text-lg no-border" ng-model="createNetworkObject.person.email" required>

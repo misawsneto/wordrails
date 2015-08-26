@@ -139,7 +139,7 @@ public class NetworkResource {
 			if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
 				org.hibernate.exception.ConstraintViolationException ex = (ConstraintViolationException) e.getCause();
 
-				return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"mensage\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
+				return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"message\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
 			}
 
 			throw e;

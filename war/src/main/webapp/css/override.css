@@ -3670,7 +3670,7 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 
 .custom-header2{
   font-size: 25px;
-  vertical-align: text-bottom;
+  vertical-align: sub;
 }
 
 .custom-header{
