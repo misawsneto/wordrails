@@ -53,6 +53,8 @@ public class GCMService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		System.out.println("1: " + personNetworkRegIds);
 	}
 
 	private void removeNotificationProducer(
@@ -100,6 +102,8 @@ public class GCMService {
 
 	private void gcmNotify(List<PersonNetworkRegId> personNetworkRegIds,
 	                      final Notification notification) throws Exception{
+
+		System.out.println("2:" + personNetworkRegIds);
 
 		if(personNetworkRegIds == null || notification == null)
 			throw new UnexpectedException("Erro inesperado...");
@@ -151,6 +155,8 @@ public class GCMService {
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 
+		System.out.println("devices: " + devices.size());
+
 		try{
 			Message message = new Message.Builder().addData("message", notificationJson).build();
 			List<List<String>> parts = WordrailsUtil.partition(new ArrayList<String>(devices), GCM_WINDOW_SIZE);
@@ -167,6 +173,7 @@ public class GCMService {
 	private void sendBulkMessages(Message message, List<String> devices, String notificationHash){
 		MulticastResult multicastResult;
 		try {
+			System.out.println("sending messages... " + devices.size() + " hash: " + notificationHash);
 			multicastResult = sender.send(message, devices, 5);
 		} catch (Exception e) {
 			e.printStackTrace();

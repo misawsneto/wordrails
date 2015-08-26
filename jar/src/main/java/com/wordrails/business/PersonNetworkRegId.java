@@ -76,5 +76,13 @@ public class PersonNetworkRegId {
 	void onUpdate() {
 		updatedAt = new Date();
 	}
+
+	@Override
+	public String toString() {
+		if(regId != null)
+			return regId.toString();
+		else
+			return super.toString();
+	}
 }
 

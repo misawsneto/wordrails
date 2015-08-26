@@ -75,5 +75,13 @@ public class PersonNetworkToken {
 	void onUpdate() {
 		updatedAt = new Date();
 	}
+
+	@Override
+	public String toString() {
+		if(token != null)
+			return token.toString();
+		else
+			return super.toString();
+	}
 }
 
