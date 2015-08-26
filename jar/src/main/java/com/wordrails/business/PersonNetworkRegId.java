@@ -28,6 +28,7 @@ import org.hibernate.search.annotations.SpatialMode;
 import org.hibernate.search.annotations.Store;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"network_id", "regId"}))
@@ -40,6 +41,7 @@ public class PersonNetworkRegId {
 	public Integer id;
 
 	@Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
+	@NotEmpty
 	public String regId;
 	
 	@ManyToOne

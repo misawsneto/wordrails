@@ -27,6 +27,7 @@ import org.hibernate.search.annotations.Spatial;
 import org.hibernate.search.annotations.Store;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"network_id", "token"}))
@@ -39,6 +40,7 @@ public class PersonNetworkToken {
 	public Integer id;
 
 	@Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
+	@NotEmpty
 	public String token;
 	
 	@ManyToOne
