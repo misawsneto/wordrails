@@ -44,14 +44,14 @@ public class GCMService {
 
 	@Async
 	@Transactional
-	public void sendToStation(Network network, Station station, Notification notification){
+	public void sendToStation(Integer networkId, Station station, Notification notification){
 
 		Integer stationId = station.id;
 
 		List<PersonNetworkRegId> personNetworkRegIds = new ArrayList<PersonNetworkRegId>();
 
 		if(station.visibility.equals(Station.UNRESTRICTED)){
-			personNetworkRegIds = personNetworkRegIdRepository.findByNetwork(network);
+			personNetworkRegIds = personNetworkRegIdRepository.findRegIdByNetworkId(networkId);
 		}else{
 			personNetworkRegIds = personNetworkRegIdRepository.findRegIdByStationId(stationId);
 		}

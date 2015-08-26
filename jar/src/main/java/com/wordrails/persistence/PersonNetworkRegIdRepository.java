@@ -20,6 +20,10 @@ public interface PersonNetworkRegIdRepository extends JpaRepository<PersonNetwor
 	@RestResource(exported=false)
 	public List<PersonNetworkRegId> findByNetwork(@Param("network") Network network);
 
+	@RestResource(exported = false)
+	@Query("SELECT regId from PersonNetworkRegId regId where regId.network.id = :networkId")
+	public List<PersonNetworkRegId> findRegIdByNetworkId(@Param("networkId") Integer networkId);
+
 //	 SELECT * FROM 
 //	 personnetworkregid reg join person p on reg.person_id = p.id
 //	 where p.id in 

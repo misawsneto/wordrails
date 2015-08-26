@@ -123,7 +123,7 @@ public class PostService {
 				Station station = stationRepository.findOne(post.station.id);
 				Network network = authProvider.getNetwork();
 
-				gcmService.sendToStation(network, station, notification);
+				gcmService.sendToStation(network.id, station, notification);
 
 				apnService.sendToStation(network, station.id, notification);
 			}
