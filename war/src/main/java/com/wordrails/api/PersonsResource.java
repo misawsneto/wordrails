@@ -131,7 +131,7 @@ public class PersonsResource {
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = networkRepository.findOne(networkId);
+		Network network = wordrailsService.getNetworkFromHost(request);
 		Person person = authProvider.getLoggedPerson();
 		if(person.id == 0){
 			gcmService.updateRegId(network, null, regId, lat, lng);
@@ -146,8 +146,8 @@ public class PersonsResource {
 	@PUT
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response putToken(@FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = networkRepository.findOne(networkId);
+	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
+		Network network = wordrailsService.getNetworkFromHost(request);
 		Person person = authProvider.getLoggedPerson();
 		if(person.id == 0){
 			apnService.updateIosToken(network, null, token, lat, lng);
