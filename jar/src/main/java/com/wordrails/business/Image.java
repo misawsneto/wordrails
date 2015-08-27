@@ -58,9 +58,6 @@ public class Image implements Serializable{
 	@ManyToOne
 	public Station station;
 	
-	@ManyToOne
-	public Sponsor publicitySponsor;
-	
 	@NotNull
 	@ManyToOne(cascade=CascadeType.ALL)
 	public File original;

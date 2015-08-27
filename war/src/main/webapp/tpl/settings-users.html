@@ -150,7 +150,8 @@
 			<div class="panel panel-card block-600 m-auto animated fadeIn" ng-if="editing && selectedPerson">
 				<div class="panel-body wrapper-md p-t-none">
 					<div id="editing-user-profile" class="row">
-						<div class="profile-cover abstract-bg bg-cover pos-rlt m-l-n-xs m-r-n-xs o-h" style="border-radius:3px 3px 0 0; {{selectedPerson.coverLargeId | imageLink | bgimg2}}">
+						<div class="profile-cover abstract-bg bg-cover pos-rlt m-l-n-xs m-r-n-xs o-h" style="border-radius:3px 3px 0 0;"
+						back-img-cover="{{selectedPerson.coverMediumId}}">
 							<div class="cover-abstract-mask ng-scope" ng-if="!selectedPerson.coverLargeId">
 							</div>
 							<div back-img="{{selectedPerson.imageSmallId}}" class="bg-cover bg-img-xl bg-cover-round m-l-lg m-t-lg pos-rlt" title="{{selectedPerson.name}}">

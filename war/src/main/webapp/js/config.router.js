@@ -132,13 +132,6 @@ angular.module('app')
                   abstract: true,
                   url: '/settings',
                   templateUrl: 'tpl/settings.html',
-                  resolve: {
-                    deps: ['$ocLazyLoad',
-                      function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/settings.js?' + GLOBAL_URL_HASH]);
-                    }]
-                  }
-                  , controller:'SettingsCtrl'
               })
               .state('app.settings.stations', {
                   url: '/stations',

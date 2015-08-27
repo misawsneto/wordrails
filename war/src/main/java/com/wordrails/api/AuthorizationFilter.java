@@ -983,12 +983,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetImagePublicitySponsorAuthorized(Integer imageId) {
-
-		return true;
-	}
-
-	@Override
 	protected boolean isGetNetworkSponsorsAuthorized(Integer networkId) {
 
 		return true;
@@ -1006,13 +1000,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetSponsorNetworkAuthorized(Integer sponsorId) {
-
-		return true;
+	protected boolean isGetSponsorAdsAuthorized(Integer sponsorId) {
+		return false;
 	}
 
 	@Override
-	protected boolean isGetSponsorImagesAuthorized(Integer sponsorId) {
+	protected boolean isGetSponsorNetworkAuthorized(Integer sponsorId) {
 
 		return true;
 	}
@@ -1367,6 +1360,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindRecommendsByPostIdAuthorized(Integer postId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetAdsAuthorized() {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetAdAuthorized(Integer adId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetAdImageAuthorized(Integer adId) {
 		return true;
 	}
 
