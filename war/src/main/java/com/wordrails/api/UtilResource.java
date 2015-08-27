@@ -15,13 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -52,6 +46,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,28 +103,28 @@ public class UtilResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
 
+	private @Autowired NetworkEventHandler networkEventHandler;
+	private @Autowired PersonEventHandler personEventHandler;
+	private @Autowired TaxonomyEventHandler taxonomyEventHandler;
+	private @Autowired StationEventHandler stationEventHandler;
 	private @Autowired PersonRepository personRepository;
-
+	private @Autowired StationRoleEventHandler stationRoleEventHandler;
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
+	private @Autowired TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired PostRepository postRepository;
-
 	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
 	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
-
 	private @Autowired InvitationRepository invitationRepository;
-
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
-
 	public @Autowired FileRepository fileRepository;
-
 	private @PersistenceContext EntityManager manager;
+
+
 
 	/**
 	 * Method to manually update the Full Text Index. This is not required if inserting entities
@@ -751,6 +747,39 @@ public class UtilResource {
 				}
 			}
 			personRepository.save(persons);
+		}
+	}
+
+	@DELETE
+	@Path("/deleteNetwork/{id}")
+	public void deleteNetwork (@Context HttpServletRequest request, @PathParam("id") Integer networkId) {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+
+			Network network = networkRepository.findOne(networkId);
+
+			NetworkRole nr = personRepository.findNetworkAdmin(networkId);
+
+			User user = nr.person.user;
+
+			Set<GrantedAuthority> authorities = new HashSet<>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+			authProvider.passwordAuthentication(user.username, user.password, network);
+
+			List<Station> stations = stationRepository.findByNetworkId(networkId);
+			for (Station station: stations){
+				stationEventHandler.handleBeforeDelete(station);
+				stationRepository.delete(station);
+			}
+
+			List <Person> persons = personRepository.findAllByNetwork(networkId);
+			for (Person person: persons){
+				personEventHandler.handleBeforeDelete(person);
+				personRepository.delete(person);
+			}
+
+			networkEventHandler.handleBeforeCreate(network);
+			networkRepository.delete(network);
 		}
 	}
 }

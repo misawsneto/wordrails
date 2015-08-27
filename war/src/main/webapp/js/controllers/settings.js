@@ -39,8 +39,9 @@ app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 				return;
 			}
 
-			trix.createNetwork(createNetworkObject).success(function(){
-				window.location.href = 'http://' + createNetworkObject.subdomain + '.trix.rocks';
+			trix.createNetwork(createNetworkObject).success(function(data){
+				console.log(data.token)
+				window.location.href = location.protocol + '//' + createNetworkObject.subdomain + '.' + location.hostname.split('.').reverse()[1] + '.' + location.hostname.split('.').reverse()[0] + '/access/createdNetwork';
 			}).error(function(data, status){
 				if(status == 400){
 					if(data.error && data.error.message && data.error.message.indexOf('Duplicate') > -1

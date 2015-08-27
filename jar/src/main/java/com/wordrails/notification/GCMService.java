@@ -62,8 +62,6 @@ public class GCMService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		System.out.println("1: " + personNetworkRegIds);
 	}
 
 	private void removeNotificationProducer(
@@ -111,8 +109,6 @@ public class GCMService {
 
 	private void gcmNotify(List<PersonNetworkRegId> personNetworkRegIds,
 	                      final Notification notification) throws Exception{
-
-		System.out.println("2:" + personNetworkRegIds);
 
 		if(personNetworkRegIds == null || notification == null)
 			throw new UnexpectedException("Erro inesperado...");
@@ -163,8 +159,6 @@ public class GCMService {
 		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumId : null;
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
-
-		System.out.println("devices: " + devices.size());
 
 		try{
 			Message message = new Message.Builder().addData("message", notificationJson).build();

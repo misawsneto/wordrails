@@ -1,9 +1,6 @@
 package com.wordrails.api;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,8 +37,7 @@ public class NetworkResource {
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
+	private @Autowired TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired StationEventHandler stationEventHandler;
@@ -49,6 +45,8 @@ public class NetworkResource {
 	private @Autowired StationRoleEventHandler stationRoleEventHandler;
 	private @Autowired TermRepository termRepository;
 	private @Autowired WordrailsService wordrailsService;
+	private @Autowired PostRepository postRepository;
+	private @Autowired UserRepository userRepository;
 
 	public @Autowired @Qualifier("objectMapper")
 	ObjectMapper mapper;
@@ -122,6 +120,7 @@ public class NetworkResource {
 
 		taxonomyRepository.save(nTaxonomy);
 		try {
+			network.networkCreationToken = UUID.randomUUID().toString();
 			networkRepository.save(network);
 		} catch (javax.validation.ConstraintViolationException e) {
 
@@ -155,6 +154,9 @@ public class NetworkResource {
 			authority.network = network;
 
 			String password = person.password;
+
+			UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
+			user.addAuthority(nauthority);
 
 			user = new User();
 			user.enabled = true;
@@ -197,9 +199,6 @@ public class NetworkResource {
 		networkRole.person = person;
 		networkRole.admin = true;
 		networkRolesRepository.save(networkRole);
-
-		UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
-		user.addAuthority(authority);
 
 		// End Create Person ------------------------------
 
@@ -261,6 +260,7 @@ public class NetworkResource {
 		stationRepository.save(station);
 
 		taxonomies = station.ownedTaxonomies;
+		Term defaultPostTerm = null;
 		for (Taxonomy tax: taxonomies){
 			if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
 				if(station.tagsTaxonomyId == null)
@@ -272,6 +272,8 @@ public class NetworkResource {
 					// ---- create sample terms...
 					Term term1 = new Term();
 					term1.name = "Categoria 1";
+
+					defaultPostTerm = term1;
 
 					Term term2 = new Term();
 					term2.name = "Categoria 2";
@@ -299,7 +301,16 @@ public class NetworkResource {
 		station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
 		stationRepository.save(station);
 
-		return Response.status(Status.CREATED).build();
+		Post post = new Post();
+
+		post.title = "Bem Vindo a TRIX";
+		post.body = "<p>Trix é uma plataforma para a criação e gestão de redes de informação e pensada primeiramente para dispositivos móveis. Através do editor é possível criar conteúdos baseados em textos, imagens, áudios e vídeos.</p><p>Adicione usuários com permissão de leitura, escrita, edição ou administração e estravés das funções de administração personalize a sua rede.</p>";
+		post.author = person;
+		post.terms = new HashSet<Term>();
+		post.terms.add(defaultPostTerm);
+		postRepository.save(post);
+
+		return Response.status(Status.CREATED).entity("{\"token\": " + network.networkCreationToken +"}").build();
 	}
 
 }
