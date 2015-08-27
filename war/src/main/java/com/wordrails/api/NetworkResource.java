@@ -150,21 +150,17 @@ public class NetworkResource {
 		User user = null;
 
 		try {
-			UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
-			authority.network = network;
-
-			String password = person.password;
-
-			UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
-			user.addAuthority(nauthority);
-
 			user = new User();
 			user.enabled = true;
 			user.username = person.username;
-			user.password = password;
-			user.network = authority.network;
-			authority.user = user;
+			user.password = person.password;
+			user.network = network;
+
+			UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER", network);
+			UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
+
 			user.addAuthority(authority);
+			user.addAuthority(nauthority);
 
 			person.user = user;
 
@@ -192,6 +188,10 @@ public class NetworkResource {
 			}
 
 			throw e;
+		}catch (Exception e){
+			taxonomyRepository.delete(nTaxonomy);
+			networkRepository.delete(network);
+			e.printStackTrace();
 		}
 
 		NetworkRole networkRole = new NetworkRole();
@@ -308,9 +308,10 @@ public class NetworkResource {
 		post.author = person;
 		post.terms = new HashSet<Term>();
 		post.terms.add(defaultPostTerm);
+		post.station = station;
 		postRepository.save(post);
 
-		return Response.status(Status.CREATED).entity("{\"token\": " + network.networkCreationToken +"}").build();
+		return Response.status(Status.CREATED).entity("{\"token\": \"" + network.networkCreationToken +"\"}").build();
 	}
 
 }
