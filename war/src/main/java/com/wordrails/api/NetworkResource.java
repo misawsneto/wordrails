@@ -22,6 +22,8 @@ import com.wordrails.util.WordrailsUtil;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.util.NetworkCreateDto;
@@ -47,6 +49,7 @@ public class NetworkResource {
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired UserRepository userRepository;
+	private @Autowired PostEventHandler postEventHandler;
 
 	public @Autowired @Qualifier("objectMapper")
 	ObjectMapper mapper;
@@ -301,6 +304,11 @@ public class NetworkResource {
 		station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
 		stationRepository.save(station);
 
+		NetworkRole nr = personRepository.findNetworkAdmin(network.id);
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+		authProvider.passwordAuthentication(user.username, user.password, network);
+
 		Post post = new Post();
 
 		post.title = "Bem Vindo a TRIX";
@@ -309,9 +317,10 @@ public class NetworkResource {
 		post.terms = new HashSet<Term>();
 		post.terms.add(defaultPostTerm);
 		post.station = station;
+		postEventHandler.handleBeforeCreate(post);
 		postRepository.save(post);
 
-		return Response.status(Status.CREATED).entity("{\"token\": \"" + network.networkCreationToken +"\"}").build();
+		return Response.status(Status.CREATED).entity("{\"token\": \"" + network.networkCreationToken + "\"}").build();
 	}
 
 }
