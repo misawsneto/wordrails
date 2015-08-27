@@ -179,7 +179,7 @@ public class PersonsResource {
 	public Response tokenSignin(@Context HttpServletRequest request, @FormParam("token") String token) {
 		try{
 			Network network = wordrailsService.getNetworkFromHost(request);
-			if(network.networkCreationToken == null && !network.networkCreationToken.equals(token))
+			if(network.networkCreationToken == null || !network.networkCreationToken.equals(token))
 				throw new BadRequestException("Invalid Token");
 
 			NetworkRole nr = personRepository.findNetworkAdmin(network.id);
