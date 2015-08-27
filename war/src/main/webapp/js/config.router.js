@@ -817,6 +817,17 @@ angular.module('app')
                   },
                   controller: 'SettingsCtrl'
               })
+              .state('access.networkcreated', {
+                  url: '/networkcreated?token',
+                  template: '<div></div>',
+                  resolve: {
+                      deps: ['uiLoad',
+                        function( uiLoad ){
+                          return uiLoad.load( ['js/controllers/settings.js'] );
+                      }]
+                  },
+                  controller: 'NetworkCreatedCtrl'
+              })
               .state('access.signup', {
                   url: '/signup',
                   templateUrl: 'tpl/page_signup.html',

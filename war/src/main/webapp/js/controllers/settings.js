@@ -40,8 +40,8 @@ app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 			}
 
 			trix.createNetwork(createNetworkObject).success(function(data){
-				console.log(data.token)
-				window.location.href = location.protocol + '//' + createNetworkObject.subdomain + '.' + location.hostname.split('.').reverse()[1] + '.' + location.hostname.split('.').reverse()[0] + '/access/createdNetwork';
+				window.location.href = location.protocol + '//' + createNetworkObject.subdomain + '.' + location.hostname.split('.').reverse()[1] + 
+				'.' + location.hostname.split('.').reverse()[0] + '/access/networkcreated?token=' + data.token;
 			}).error(function(data, status){
 				if(status == 400){
 					if(data.error && data.error.message && data.error.message.indexOf('Duplicate') > -1
@@ -82,3 +82,20 @@ app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 			.join(' ');
 		};
 	}])
+
+
+app.controller('NetworkCreatedCtrl', ['$scope', '$log', '$state', '$filter', '$timeout', '$interval', 'trix', 'cfpLoadingBar', '$q', '$mdToast',
+	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q, $mdToast) {
+
+		trix.tokenSignin($state.params.token).success(function(){
+			trix.allInitData().success(function(response){
+          initData = response;
+          $scope.app.initData = angular.copy(initData);
+          $scope.app.loginError = false;
+          $scope.app.refreshData();
+					$state.go('app.settings.stations')
+        })
+		}).error(function(){
+			$state.go('app.stations')
+		})
+}])

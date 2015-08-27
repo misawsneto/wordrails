@@ -49,6 +49,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -165,6 +167,30 @@ public class PersonsResource {
 	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password) {
 		try{
 			authProvider.passwordAuthentication(username, password, authProvider.getNetwork());
+			return Response.status(Status.OK).build();
+		}catch(BadCredentialsException | UsernameNotFoundException e){
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+	}
+
+	@POST
+	@Path("/tokenSignin")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response tokenSignin(@Context HttpServletRequest request, @FormParam("token") String token) {
+		try{
+			Network network = wordrailsService.getNetworkFromHost(request);
+			if(network.networkCreationToken == null && !network.networkCreationToken.equals(token))
+				throw new BadRequestException("Invalid Token");
+
+			NetworkRole nr = personRepository.findNetworkAdmin(network.id);
+			User user = nr.person.user;
+			Set<GrantedAuthority> authorities = new HashSet<>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+			authProvider.passwordAuthentication(user.username, user.password, network);
+
+			network.networkCreationToken = null;
+			networkRepository.save(network);
+
 			return Response.status(Status.OK).build();
 		}catch(BadCredentialsException | UsernameNotFoundException e){
 			return Response.status(Status.UNAUTHORIZED).build();

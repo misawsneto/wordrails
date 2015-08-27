@@ -67,6 +67,12 @@ var trix = angular.module('trix', [])
       return \$http.post(_config.url + "/api/persons/login", \$.param({"username": username, "password": password}), config)
     }
 
+    this.tokenSignin = function(token) {
+	  var config = {};
+	  config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
+	  return \$http.post(_config.url + "/api/persons/tokenSignin", \$.param({"token": token}), config)
+	}
+
     this.socialLogin = function(userId, accessToken, provider) {
 	  var config = {};
 	  config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
