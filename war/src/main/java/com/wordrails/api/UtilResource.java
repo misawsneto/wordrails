@@ -27,8 +27,7 @@ import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.*;
-import com.wordrails.services.AsyncService;
-import com.wordrails.services.WordpressParsedContent;
+import com.wordrails.services.*;
 import com.wordrails.util.WordrailsUtil;
 import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -122,6 +121,9 @@ public class UtilResource {
 	private @Autowired InvitationRepository invitationRepository;
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired FileRepository fileRepository;
+
+	public @Autowired CacheService cacheService;
+
 	private @PersistenceContext EntityManager manager;
 
 
@@ -780,6 +782,9 @@ public class UtilResource {
 
 			networkEventHandler.handleBeforeCreate(network);
 			networkRepository.delete(network);
+
+			cacheService.removeNetwork(networkId);
+			cacheService.removeUser(user.id);
 		}
 	}
 }
