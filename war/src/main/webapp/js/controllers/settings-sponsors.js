@@ -20,6 +20,10 @@ app.controller('SettingsSponsorsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 				$scope.app.showSuccessToast('Alterações realizadas com successo.')
 			})
 		}
+
+            trix.findSponsorByNetworkId($scope.app.initData.network.id).success(function(response){
+                  $scope.sponsors = response.sponsors;
+            })
 	}])
 
 app.controller('SettingsSponsorsConfigCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
@@ -84,7 +88,9 @@ app.controller('SettingsSponsorsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 
 
       $scope.createSponsor = function(){
-      	trix.postSponsor($scope.sponsor).success(function(){
+            var sponsor = angular.copy($scope.sponsor)
+            sponsor.network = TRIX.baseUrl + '/api/networks/' + $scope.app.initData.network.id;
+      	trix.postSponsor(sponsor).success(function(){
       		$scope.app.getInitData();
       		$scope.app.showSuccessToast('Patrocinador criado com successo.')
       	});

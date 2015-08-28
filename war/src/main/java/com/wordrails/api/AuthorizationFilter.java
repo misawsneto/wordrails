@@ -983,6 +983,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindSponsorByNetworkIdAuthorized(Integer networkId) {
+		Network network = networkRepository.findOne(networkId);
+		return networkSecurity.isNetworkAdmin(network);
+	}
+
+	@Override
 	protected boolean isGetNetworkSponsorsAuthorized(Integer networkId) {
 
 		return true;
