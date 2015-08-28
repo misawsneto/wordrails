@@ -22,7 +22,10 @@ app.controller('SettingsSponsorsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 		}
 
             trix.findSponsorByNetworkId($scope.app.initData.network.id).success(function(response){
+                  $scope.sponsorsLoaded = true;
                   $scope.sponsors = response.sponsors;
+            }).error(function(){
+                  $scope.sponsorsLoaded = true;
             })
 	}])
 

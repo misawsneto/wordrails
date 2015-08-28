@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div ng-if="!sponsors || sponsors.length == 0" class="wrapper-xxl text-4x text-center" ng-class="{'hide': app.notificationsCtrl.notifications && app.notificationsCtrl.notifications.length > 0 || app.notificationsCtrl.firstLoad}">
+    <div ng-if="(!sponsors || sponsors.length == 0) && sponsorsLoaded" class="wrapper-xxl text-4x text-center" ng-class="{'hide': app.notificationsCtrl.notifications && app.notificationsCtrl.notifications.length > 0 || app.notificationsCtrl.firstLoad}">
       <i class="mdi mdi-bullhorn text-3x text-muted"></i>
       <p class="h1">Adicione Patrocinadores<i></i></p>
     </div>
