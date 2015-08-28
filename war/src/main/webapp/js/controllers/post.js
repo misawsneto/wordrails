@@ -742,11 +742,12 @@ function createPost(state){
 				}else if(state == "SCHEDULED"){
 					post.state = state;
 
-					var now = new Date().setHours(0,0,0,0);
+					var now = new Date()
+					now.setHours(0,0,0,0);
 
 					//console.log($scope.app.editingPost.scheduledDate.getTime());
 					//console.log($scope.dt.getDate());
-					console.log(new Date($scope.dt.getTime() + ($scope.app.editingPost.scheduledDate.getTime() - now.getTime)));
+					console.log(new Date($scope.dt.getTime() + ($scope.app.editingPost.scheduledDate.getTime() - now.getTime())));
 					post.scheduledDate = $scope.app.editingPost.scheduledDate
 					postSchduled(post)
 				
