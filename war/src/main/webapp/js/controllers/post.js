@@ -741,6 +741,13 @@ function createPost(state){
 					postDraft(post)
 				}else if(state == "SCHEDULED"){
 					post.state = state;
+
+					var now = new Date().setHours(0,0,0,0);
+
+					//console.log($scope.app.editingPost.scheduledDate.getTime());
+					//console.log($scope.dt.getDate());
+					console.log(new Date($scope.dt.getTime() + ($scope.app.editingPost.scheduledDate.getTime() - now.getTime)));
+					post.scheduledDate = $scope.app.editingPost.scheduledDate
 					postSchduled(post)
 				
 				}else{
@@ -758,12 +765,13 @@ function createPost(state){
 			return false;
 		}
 
-		trix.postPostSchduled(post).success(function(postId){
-			$scope.app.showSuccessToast('Rascunho salvo.');
+		trix.postPostScheduled(post).success(function(postId){
+			$scope.app.showSuccessToast('Agendado com sucesso.');
 			// replace url withou state reload
 			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
 			$scope.app.refreshPerspective();
-			trix.getPostDraft(postId, "postProjection").success(function(postResponse){
+			trix.getPostScheduled(postId, "postProjection").success(function(postResponse){
+				$scope.schedulerPopoverOpen = false;
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, postResponse);
 				$timeout(function() {
 					$scope.app.editingPost.editingExisting = false;

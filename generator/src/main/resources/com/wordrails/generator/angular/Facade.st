@@ -23,7 +23,7 @@ var trix = angular.module('trix', [])
 
   \$httpProvider.defaults.useXDomain = true;
 	\$httpProvider.defaults.withCredentials = true;
-	\$httpProvider.interceptors.push(function trix_httpInterceptor(\$q) {
+	\$httpProvider.interceptors.push(function trix_httpInterceptor(\$q, \$rootScope) {
 		var requestInterceptor = {
 		responseError: function(rejection){
 			\$rootScope.\$broadcast('HTTP_ERROR',rejection);
