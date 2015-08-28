@@ -472,12 +472,24 @@ function isTermSelected(terms){
 	return selected;
 }	
 
+	// --------- schedulePost
+
+	$scope.schedulePost = function(){
+		if(isTermSelected($scope.termTree) && !$scope.app.editingPost.id){
+			createPost("SCHEDULED")
+		}else{
+			//$scope.showMoreOptions(ev);
+			$scope.app.hidePostOptions = false;
+			$scope.app.showInfoToast('Escolha uma categoria.')
+		}
+	}
+
 	// --------- publish post
 
 	$scope.publishPost = function(ev){
 		if(isTermSelected($scope.termTree) && !$scope.app.editingPost.id){
 			createPost()
-		}else if($scope.app.editingPost.id){
+		}else if(isTermSelected($scope.termTree) && $scope.app.editingPost.id){
 			updatePost("PUBLISHED")
 		}else{
 			//$scope.showMoreOptions(ev);
@@ -727,6 +739,10 @@ function createPost(state){
 				if(state == "DRAFT"){
 					post.state = state;
 					postDraft(post)
+				}else if(state == "SCHEDULED"){
+					post.state = state;
+					postSchduled(post)
+				
 				}else{
 					postPost(post);
 				}
@@ -735,6 +751,30 @@ function createPost(state){
 			
 		} // end of final else
 	}// end of createPost()
+
+	var postSchduled = function(post){
+		if(post && post.id){
+			window.console && console.log('Erro ao criar post: ' + post.id);
+			return false;
+		}
+
+		trix.postPostSchduled(post).success(function(postId){
+			$scope.app.showSuccessToast('Rascunho salvo.');
+			// replace url withou state reload
+			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
+			$scope.app.refreshPerspective();
+			trix.getPostDraft(postId, "postProjection").success(function(postResponse){
+				$scope.app.editingPost = angular.extend($scope.app.editingPost, postResponse);
+				$timeout(function() {
+					$scope.app.editingPost.editingExisting = false;
+					window.onbeforeunload = null;
+				}, 1000);	
+			}).error(function(data, status, header){
+				if(status == 403)
+					$scope.app.openSplash('signin_splash.html')
+			})
+		})
+	}
 
 	var postDraft = function(post){
 		if(post && post.id){

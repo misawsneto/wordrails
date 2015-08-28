@@ -25,6 +25,10 @@ var trix = angular.module('trix', [])
 	\$httpProvider.defaults.withCredentials = true;
 	\$httpProvider.interceptors.push(function trix_httpInterceptor(\$q) {
 		var requestInterceptor = {
+		responseError: function(rejection){
+			\$rootScope.\$broadcast('HTTP_ERROR',rejection);
+			return \$q.reject(rejection);
+		},
 	    // optional method
 	    response: function(response) {
 	    // do something on success
