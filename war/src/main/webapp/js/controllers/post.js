@@ -742,13 +742,24 @@ function createPost(state){
 				}else if(state == "SCHEDULED"){
 					post.state = state;
 
+					var start = $scope.dt
+					start.setHours(0,0,0,0);
+
 					var now = new Date()
 					now.setHours(0,0,0,0);
 
-					//console.log($scope.app.editingPost.scheduledDate.getTime());
-					//console.log($scope.dt.getDate());
-					console.log(new Date($scope.dt.getTime() + ($scope.app.editingPost.scheduledDate.getTime() - now.getTime())));
-					post.scheduledDate = $scope.app.editingPost.scheduledDate
+					var scheduledDate = new Date(start.getTime() + ($scope.app.editingPost.scheduledDate.getTime() - now.getTime()))
+
+					var diffMs = (scheduledDate - new Date());
+
+					var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+
+					if(diffMins < 15 && (scheduledDate.toDateString() === now.toDateString() || scheduledDate.toDateString() < now.toDateString() )){
+						$scope.app.showErrorToast('Escolha um horário com mínimo<br>15 minutes do horário atual. ');
+						return;
+					}
+
+					post.scheduledDate = scheduledDate;
 					postSchduled(post)
 				
 				}else{
