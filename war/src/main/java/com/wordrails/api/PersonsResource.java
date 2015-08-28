@@ -182,8 +182,8 @@ public class PersonsResource {
 			if(network.networkCreationToken == null || !network.networkCreationToken.equals(token))
 				throw new BadRequestException("Invalid Token");
 
-			NetworkRole nr = personRepository.findNetworkAdmin(network.id);
-			User user = nr.person.user;
+			List<NetworkRole> nr = personRepository.findNetworkAdmin(network.id);
+			User user = nr.get(0).person.user;
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
 			authProvider.passwordAuthentication(user.username, user.password, network);

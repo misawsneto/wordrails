@@ -304,7 +304,6 @@ public class NetworkResource {
 		station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
 		stationRepository.save(station);
 
-		NetworkRole nr = personRepository.findNetworkAdmin(network.id);
 		Set<GrantedAuthority> authorities = new HashSet<>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
 		authProvider.passwordAuthentication(user.username, user.password, network);

@@ -86,6 +86,10 @@ angular.module('app')
 
     }, 100);
 
+    $scope.$on('HTTP_ERROR', function(data){
+      console.log(data);
+    })
+
     if(!initData)
       return;
 
