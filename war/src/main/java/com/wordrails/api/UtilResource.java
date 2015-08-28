@@ -760,9 +760,9 @@ public class UtilResource {
 
 			Network network = networkRepository.findOne(networkId);
 
-			NetworkRole nr = personRepository.findNetworkAdmin(networkId);
+			List<NetworkRole> nr = personRepository.findNetworkAdmin(networkId);
 
-			User user = nr.person.user;
+			User user = nr.get(0).person.user;
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));

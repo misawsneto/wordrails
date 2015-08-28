@@ -66,6 +66,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@RestResource(exported = false)
 
 	@Query("select nr from NetworkRole nr join fetch nr.person person join fetch person.user u where u.network.id = :networkId")
-	NetworkRole findNetworkAdmin(@Param("networkId") Integer networkId);
+	List<NetworkRole> findNetworkAdmin(@Param("networkId") Integer networkId);
 
 }
