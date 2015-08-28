@@ -749,6 +749,13 @@ function createPost(state){
 			$scope.app.refreshPerspective();
 			trix.getPostDraft(postId, "postProjection").success(function(postResponse){
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, postResponse);
+				$timeout(function() {
+					$scope.app.editingPost.editingExisting = false;
+					window.onbeforeunload = null;
+				}, 1000);	
+			}).error(function(data, status, header){
+				if(status == 403)
+					$scope.app.openSplash('signin_splash.html')
 			})
 		})
 	}
@@ -758,15 +765,23 @@ function createPost(state){
 			$scope.app.showSuccessToast('Notícia publicada.');
 			// replace url withou state reload
 			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
+
 			$scope.app.refreshPerspective();
-			$scope.app.editingPost.id = postId;
-			$scope.app.editingPost.state = 'PUBLISHED'
-			//$state.go('app.stations');
-			$timeout(function() {
-				$scope.app.editingPost.editingExisting = false;
-				window.onbeforeunload = null;
-			}, 1000);			
-		})
+			trix.getPost(postId, 'postProjection').success(function(response){
+		  			createPostObject();
+		  			$scope.app.editingPost = angular.extend($scope.app.editingPost, response);
+		  			setWritableStationById(response.station.id)
+		  			updateTermTree();
+		  			$timeout(function() {
+		  				$scope.app.editingPost.editingExisting = false;
+		  				window.onbeforeunload = null;
+		  			}, 1000);
+		  		})
+
+		}).error(function(data, status, header){
+				if(status == 403)
+					$scope.app.openSplash('signin_splash.html')
+			})
 	}
 
 	// {height:'auto', size:'8px', 'railVisible': true}

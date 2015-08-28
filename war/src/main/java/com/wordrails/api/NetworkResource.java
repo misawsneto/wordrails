@@ -312,7 +312,7 @@ public class NetworkResource {
 		Post post = new Post();
 
 		post.title = "Bem Vindo a TRIX";
-		post.body = "<p>Trix é uma plataforma para a criação e gestão de redes de informação e pensada primeiramente para dispositivos móveis. Através do editor é possível criar conteúdos baseados em textos, imagens, áudios e vídeos.</p><p>Adicione usuários com permissão de leitura, escrita, edição ou administração e estravés das funções de administração personalize a sua rede.</p>";
+		post.body = "<p>Trix é uma plataforma para a criação e gestão de redes de informação e pensada primeiramente para dispositivos móveis. Através do editor é possível criar conteúdos baseados em textos, imagens, áudios e vídeos.</p><p>Adicione usuários com permissão de leitura, escrita, edição ou administração e através das funções de administração personalize a sua rede.</p>";
 		post.author = person;
 		post.terms = new HashSet<Term>();
 		post.terms.add(defaultPostTerm);
