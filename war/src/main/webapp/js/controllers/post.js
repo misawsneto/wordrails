@@ -335,6 +335,7 @@ if(newValue && newValue.editingExisting){
 }
 }, true)
 
+// ------------------- image landscape settings ---------
 
 $scope.invertLandscapeSquare = function(){
 	$scope.app.editingPost.imageLandscape = !$scope.app.editingPost.imageLandscape; 
@@ -348,6 +349,10 @@ $scope.checkLandscape = function(){
 		$("#post-media-box").removeAttr('style')
 	}
 }
+
+// ------------------- end of image landscape settings ---------
+
+// ------------------- image uploader -------------
 
 var uploader = $scope.uploader = new FileUploader({
 	url: TRIX.baseUrl + "/api/files/contents/simple"
@@ -399,6 +404,10 @@ uploader.onProgressItem = function(fileItem, progress) {
 	}
 };
 
+// ------------------- end of image uploader -------------
+
+// ------------------- update term tree ---------------
+
 $scope.$watch('app.editingPost.selectedStation', function(newVal){
 	updateTermTree()
 })
@@ -411,15 +420,28 @@ function updateTermTree(){
 		});
 }
 
+// ------------------- end of update term tree ---------------
+
+
+// ------------------- slug watch ------------
+var customSlug = false;
 $scope.$watch('app.editingPost.title', function(newVal){
-	if(newVal && (!$scope.app.editingPost.slug || $scope.app.editingPost.slug.trim() == ''))
+	/*if(newVal && (!$scope.app.editingPost.slug || $scope.app.editingPost.slug.trim() == ''))
+		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';*/
+		if(newVal && !customSlug)
+			$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
+})
+
+$scope.app.changeCustomSlug = function(){
+	customSlug = true
+}
+
+$scope.$watch('app.editingPost.slug', function(newVal){
+	if(newVal && customSlug)
 		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
 })
 
-$scope.$watch('app.editingPost.slug', function(newVal){
-	if(newVal)
-		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
-})
+// ------------------- end of slug watch ------------
 
 	/*function uncheckTerms(terms){
 		terms && terms.forEach(function(term, index){
@@ -737,9 +759,13 @@ function createPost(state){
 			// replace url withou state reload
 			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
 			$scope.app.refreshPerspective();
-			$scope.app.editingPost = null;
-			window.onbeforeunload = null;
-			$state.go('app.stations');
+			$scope.app.editingPost.id = postId;
+			$scope.app.editingPost.state = 'PUBLISHED'
+			//$state.go('app.stations');
+			$timeout(function() {
+				$scope.app.editingPost.editingExisting = false;
+				window.onbeforeunload = null;
+			}, 1000);			
 		})
 	}
 
