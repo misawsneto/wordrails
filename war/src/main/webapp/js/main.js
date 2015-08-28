@@ -445,24 +445,28 @@ angular.module('app')
         }
       }
 
-      $scope.app.openDeletePost = function(id, $event){
+      $scope.app.openDeletePost = function(id, $event, dontChangeState){
         if($event){
           $event.preventDefault();
           $event.stopPropagation();
         }
         $scope.app.deletingPostId = id;
+        $scope.app.changeStateOnDelete = dontChangeState;
         $scope.app.openSplash('confirm_delete_post.html')
       };
 
       $scope.app.deletePost = function(){
         trix.deletePost($scope.app.deletingPostId).success(function(){
+          $scope.$broadcast('POST_REMOVED', $scope.app.deletingPostId)
+
           $scope.app.deletingPostId = null;
           $scope.app.editingPost = null;
           window.onbeforeunload = null;
           $scope.app.showSuccessToast('Notícia removida.')
           $scope.app.cancelModal();
-          if($state.current.name != 'app.stations')
+          if($state.current.name != 'app.stations' && !$scope.app.changeStateOnDelete)
             $state.go('app.stations');
+
 
           $scope.app.refreshPerspective();
         });
