@@ -38,10 +38,6 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -214,7 +210,7 @@ public class WordrailsService {
 
 		WordpressParsedContent wpc = new WordpressParsedContent();
 
-		com.wordrails.business.File file = null;
+		TrixFile trixFile = null;
 
 		try{
 			for (Element element : imgs) {
@@ -248,12 +244,12 @@ public class WordrailsService {
 											ImageIO.write(image, fileFormat, dataFile);
 
 											try(InputStream fileIS = new FileInputStream(dataFile)){
-												file = new File();
-												file.type = File.INTERNAL_FILE;
-												file.mime = file.mime == null || file.mime.isEmpty() ? new Tika().detect(fileIS) : file.mime;    
-												file.name = FilenameUtils.getBaseName(featuredImageUrl) + "." + FilenameUtils.getExtension(featuredImageUrl);
-												fileRepository.save(file);
-												Integer id = file.id;
+												trixFile = new TrixFile();
+												trixFile.type = TrixFile.INTERNAL_FILE;
+												trixFile.mime = trixFile.mime == null || trixFile.mime.isEmpty() ? new Tika().detect(fileIS) : trixFile.mime;
+												trixFile.name = FilenameUtils.getBaseName(featuredImageUrl) + "." + FilenameUtils.getExtension(featuredImageUrl);
+												fileRepository.save(trixFile);
+												Integer id = trixFile.id;
 
 												Session session = (Session) manager.getDelegate();
 												LobCreator creator = Hibernate.getLobCreator(session);
@@ -263,7 +259,7 @@ public class WordrailsService {
 												contentsRepository.save(contents);
 
 												Image img = new Image();
-												img.original = file;
+												img.original = trixFile;
 												createImages(img);
 												imageRepository.save(img);
 												wpc.image = img;
@@ -300,25 +296,25 @@ public class WordrailsService {
 	}
 
 	private void createImages(Image image) throws SQLException, IOException {
-		com.wordrails.business.File original = image.original;
+		TrixFile original = image.original;
 
 		String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
 
 		if (original != null) {
-			com.wordrails.business.File small = new File();
-			small.type = File.INTERNAL_FILE; 
+			TrixFile small = new TrixFile();
+			small.type = TrixFile.INTERNAL_FILE;
 			small.mime = image.original.mime != null ? image.original.mime : MIME;
 			small.name = original.name;			
 			fileRepository.save(small);
 
-			com.wordrails.business.File medium = new File();
-			medium.type = File.INTERNAL_FILE;
+			TrixFile medium = new TrixFile();
+			medium.type = TrixFile.INTERNAL_FILE;
 			medium.mime = image.original.mime != null ? image.original.mime : MIME;
 			medium.name = original.name;			
 			fileRepository.save(medium);
 
-			com.wordrails.business.File large = new File();
-			large.type = File.INTERNAL_FILE;
+			TrixFile large = new TrixFile();
+			large.type = TrixFile.INTERNAL_FILE;
 			large.mime = image.original.mime != null ? image.original.mime : MIME;
 			large.name = original.name;
 			fileRepository.save(large);

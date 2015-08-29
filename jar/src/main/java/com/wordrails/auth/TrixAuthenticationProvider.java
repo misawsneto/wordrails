@@ -4,13 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
 import com.wordrails.services.CacheService;
-import org.apache.commons.io.FileUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.engine.jdbc.LobCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,7 +33,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -294,33 +291,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		}
 
 		return person;
-	}
-
-	private Image getImageFromBytes(String imageUrl, Image.Type type) throws IOException {
-		URL imageURL = new URL(imageUrl);
-		BufferedImage originalImage= ImageIO.read(imageURL);
-		ByteArrayOutputStream baos=new ByteArrayOutputStream();
-		ImageIO.write(originalImage, "jpg", baos );
-		byte[] bytes = baos.toByteArray();
-
-		return getImageFromBytes(bytes, imageUrl, type);
-	}
-
-	private Image getImageFromBytes(byte[] bytes, String imageUrl, Image.Type type) {
-		Image image = new Image();
-		image.type = type.toString();
-		File file = new File();
-		file.type = File.INTERNAL_FILE;
-		file.url = imageUrl;
-
-		fileRepository.save(file);
-		LobCreator creator = Hibernate.getLobCreator((Session) manager.getDelegate());
-		FileContents contents = fileContentsRepository.findOne(file.id);
-		contents.contents = creator.createBlob(bytes);
-		image.original = file;
-		fileContentsRepository.save(contents);
-
-		return image;
 	}
 
 	private static final String GRAPH_API_URL = "http://graph.facebook.com/";

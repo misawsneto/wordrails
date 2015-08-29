@@ -62,19 +62,19 @@ public class Image implements Serializable {
 	
 	@NotNull
 	@ManyToOne(cascade=CascadeType.ALL)
-	public File original;
+	public TrixFile original;
 	
 	@NotNull
 	@ManyToOne(cascade=CascadeType.REMOVE)
-	public File small;
+	public TrixFile small;
 	
 	@NotNull
 	@ManyToOne(cascade=CascadeType.REMOVE)
-	public File medium;
+	public TrixFile medium;
 	
 	@NotNull
 	@ManyToOne(cascade=CascadeType.REMOVE)
-	public File large;
+	public TrixFile large;
 
 	@ManyToOne
 	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})

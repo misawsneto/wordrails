@@ -3,6 +3,8 @@ package com.wordrails.auth;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
+import com.wordrails.services.FileService;
+import org.apache.commons.fileupload.FileUploadException;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.engine.jdbc.LobCreator;
@@ -18,8 +20,10 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.sql.SQLException;
@@ -32,18 +36,13 @@ public class SocialAuthenticationService {
 	private PersonRepository personRepository;
 	@Autowired
 	private UserRepository userRepository;
-
-	@PersistenceContext
-	private EntityManager manager;
 	@Autowired
 	private ImageRepository imageRepository;
 
 	@Autowired
 	private ImageEventHandler imageEventHandler;
 	@Autowired
-	private FileRepository fileRepository;
-	@Autowired
-	private FileContentsRepository fileContentsRepository;
+	private FileService fileService;
 
 //	public Person getTwitterUser(Twitter twitter, String userId, Network network) {
 //		org.springframework.social.twitter.api.TwitterProfile profile = twitter.userOperations().getUserProfile(userId);
@@ -164,21 +163,21 @@ public class SocialAuthenticationService {
 
 		if(person.image == null) {
 			try {
-				Image coverPicture = getImageFromBytes(profile.getCover().getSource(), Image.Type.COVER);
+				Image coverPicture = getImageFromBytes(network.domain, profile.getCover().getSource(), Image.Type.COVER);
 				imageEventHandler.handleBeforeCreate(coverPicture);
 				imageRepository.save(coverPicture);
 				person.cover = coverPicture;
-			} catch (IOException | SQLException e) {
+			} catch (IOException | SQLException | FileUploadException e) {
 				e.printStackTrace();
 			}
 
 			try {
-				Image profilePicture = getImageFromBytes(facebook.userOperations().getUserProfileImage(ImageType.LARGE),
-						userConnection.imageUrl, Image.Type.PROFILE_PICTURE);
+				InputStream is = new ByteArrayInputStream(facebook.userOperations().getUserProfileImage(ImageType.LARGE));
+				Image profilePicture = getImageFromBytes(network.domain, is, Image.Type.PROFILE_PICTURE);
 				imageEventHandler.handleBeforeCreate(profilePicture);
 				imageRepository.save(profilePicture);
 				person.image = profilePicture;
-			} catch (IOException | SQLException e) {
+			} catch (IOException | SQLException | FileUploadException e) {
 				e.printStackTrace();
 			}
 		}
@@ -186,29 +185,20 @@ public class SocialAuthenticationService {
 		return person;
 	}
 
-	private Image getImageFromBytes(String imageUrl, Image.Type type) throws IOException {
-		URL imageURL = new URL(imageUrl);
-		BufferedImage originalImage= ImageIO.read(imageURL);
-		ByteArrayOutputStream baos=new ByteArrayOutputStream();
-		ImageIO.write(originalImage, "jpg", baos );
-		byte[] bytes = baos.toByteArray();
-
-		return getImageFromBytes(bytes, imageUrl, type);
-	}
-
-	private Image getImageFromBytes(byte[] bytes, String imageUrl, Image.Type type) {
+	private Image getImageFromBytes(String domain, InputStream input, Image.Type type) throws IOException, FileUploadException {
 		Image image = new Image();
 		image.type = type.toString();
-		File file = new File();
-		file.type = File.INTERNAL_FILE;
-		file.url = imageUrl;
 
-		fileRepository.save(file);
-		LobCreator creator = Hibernate.getLobCreator((Session) manager.getDelegate());
-		FileContents contents = fileContentsRepository.findOne(file.id);
-		contents.contents = creator.createBlob(bytes);
-		image.original = file;
-		fileContentsRepository.save(contents);
+		image.original = fileService.newFile(input, domain);
+
+		return image;
+	}
+
+	private Image getImageFromBytes(String domain, String imageUrl, Image.Type type) throws IOException, FileUploadException {
+		Image image = new Image();
+		image.type = type.toString();
+
+		image.original = fileService.newFile(imageUrl, domain);
 
 		return image;
 	}

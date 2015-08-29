@@ -121,12 +121,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetFilesAuthorized() {
+	protected boolean isGetTrixFilesAuthorized() {
 		return false;
 	}
 
 	@Override
-	protected boolean isGetFileAuthorized(Integer fileId) {
+	protected boolean isGetTrixFileAuthorized(Integer fileId) {
 		boolean authorized = false;
 		Image image = imageRepository.findByFileId(fileId);
 		if(image != null){
@@ -314,11 +314,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindPostsFromOrPromotedToStationAuthorized(int stationId, Integer page, Integer size, List<String> sort) {
 		return canVisualizeStation(stationId);
-	}
-
-	@Override
-	protected boolean isFindPostsAuthorized(Integer stationId, Integer termId, Integer page, Integer size, List<String> sort) {
-		return false;
 	}
 
 	@Override

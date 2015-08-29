@@ -15,5 +15,5 @@ public class FileContents {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
 
-	public Blob contents;	
+	//public Blob contents;
 }

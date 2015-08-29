@@ -8,7 +8,7 @@
 	<persistence-unit name="wordrails" transaction-type="RESOURCE_LOCAL">
 		<class>com.wordrails.business.Cell</class>
 		<class>com.wordrails.business.Comment</class>
-		<class>com.wordrails.business.File</class>
+		<class>com.wordrails.business.TrixFile</class>
 		<class>com.wordrails.business.FileContents</class>
 		<class>com.wordrails.business.Image</class>
 		<class>com.wordrails.business.Network</class>
