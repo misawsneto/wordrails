@@ -75,6 +75,9 @@ public class Network implements Serializable{
 	public String networkCreationToken;
 
 	@Lob
+	public String info;
+
+	@Lob
 	public String loginFooterMessage;
 	
 //	@Column(columnDefinition="TEXT default '#F3F5F9'")
