@@ -2,11 +2,13 @@ package com.wordrails.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wordrails.business.*;
-import com.wordrails.persistence.*;
+import com.wordrails.persistence.ImageRepository;
+import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.UserConnectionRepository;
+import com.wordrails.persistence.UserRepository;
 import com.wordrails.services.CacheService;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.engine.jdbc.LobCreator;
+import com.wordrails.services.FileService;
+import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -25,14 +27,10 @@ import org.springframework.social.support.URIBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import javax.imageio.ImageIO;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -42,29 +40,20 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class TrixAuthenticationProvider implements AuthenticationProvider {
 
+	private static final String GRAPH_API_URL = "http://graph.facebook.com/";
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private CacheService cacheService;
-
+	@Autowired
+	private FileService fileService;
 	@Qualifier("userConnectionRepository")
 	@Autowired
 	private UserConnectionRepository userConnectionRepository;
-
-	@PersistenceContext
-	private EntityManager manager;
 	@Autowired
 	private ImageRepository imageRepository;
-
-	@Autowired
-	private ImageEventHandler imageEventHandler;
-	@Autowired
-	private FileRepository fileRepository;
-	@Autowired
-	private FileContentsRepository fileContentsRepository;
-
 
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
@@ -213,7 +202,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			}
 		}
 
-		if(user == null) return false;
+		if (user == null) return false;
 
 		Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
@@ -243,7 +232,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		}
 
 
-
 		User user = new User();
 
 		UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
@@ -269,31 +257,37 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 		person.user = user;
 
-		if(person.image == null) {
-//			try {
-//				Image coverPicture = getImageFromBytes(profile.getCover().getSource(), Image.Type.COVER);
-//				imageEventHandler.handleBeforeCreate(coverPicture);
-//				imageRepository.save(coverPicture);
-//				person.cover = coverPicture;
-//			} catch (IOException | SQLException e) {
-//				e.printStackTrace();
-//			}
-//
-//			try {
-//				Image profilePicture = getImageFromBytes(facebook.userOperations().getUserProfileImage(ImageType.LARGE),
-//						userConnection.imageUrl, Image.Type.PROFILE_PICTURE);
-//				imageEventHandler.handleBeforeCreate(profilePicture);
-//				imageRepository.save(profilePicture);
-//				person.image = profilePicture;
-//			} catch (IOException | SQLException e) {
-//				e.printStackTrace();
-//			}
+		if (person.image == null) {
+			try {
+				TrixFile file = fileService.newFile(profile.getCover().getSource(), network.domain);
+
+				Image coverPicture = new Image();
+				coverPicture.type = Image.Type.COVER.toString();
+				coverPicture.original = file;
+
+				imageRepository.save(coverPicture);
+				person.cover = coverPicture;
+			} catch (IOException | FileUploadException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				InputStream is = new ByteArrayInputStream(facebook.userOperations().getUserProfileImage(ImageType.LARGE));
+				TrixFile file = fileService.newFile(is, network.domain);
+
+				Image profilePicture = new Image();
+				profilePicture.type = Image.Type.PROFILE_PICTURE.toString();
+				profilePicture.original = file;
+
+				imageRepository.save(profilePicture);
+				person.image = profilePicture;
+			} catch (IOException | FileUploadException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return person;
 	}
-
-	private static final String GRAPH_API_URL = "http://graph.facebook.com/";
 
 	public String fetchPictureUrl(String userId, ImageType imageType) {
 		URI uri = URIBuilder.fromUri(GRAPH_API_URL + userId + "/picture" +

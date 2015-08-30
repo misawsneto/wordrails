@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
+import com.wordrails.services.FileService;
 import net.coobird.thumbnailator.Thumbnails;
 
 import org.apache.commons.io.FileUtils;
@@ -73,6 +74,8 @@ public class WordrailsService {
 	private @Autowired PerspectiveResource perspectiveResource;
 	private @Autowired PostConverter postConverter;
 	private @Autowired CacheService cacheService;
+	private @Autowired
+	FileService fileService;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
@@ -198,6 +201,7 @@ public class WordrailsService {
 
 	}
 
+	@Deprecated
 	@Transactional
 	public WordpressParsedContent extractImageFromContent(String content){
 		if(content == null || content.isEmpty()){
@@ -214,11 +218,11 @@ public class WordrailsService {
 
 		try{
 			for (Element element : imgs) {
-				String imageURL = element.attr("src");
-				if(imageURL != null && !imageURL.isEmpty()){
+				featuredImageUrl = element.attr("src");
+				if(featuredImageUrl != null && !featuredImageUrl.isEmpty()){
 					URL url;
 					try {
-						url = new URL(imageURL);
+						url = new URL(featuredImageUrl);
 						try(InputStream is = url.openStream()){
 							try(ImageInputStream in = ImageIO.createImageInputStream(is)){
 								final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
@@ -232,41 +236,13 @@ public class WordrailsService {
 											if(parent != null && parent.tagName().equals("a")){
 												parent.remove();
 											}
-											featuredImageUrl = imageURL;
 
-											String fileName = FilenameUtils.getBaseName(featuredImageUrl);
-											String fileFormat = FilenameUtils.getExtension(featuredImageUrl);
-											String tempFileName = fileName + WordrailsUtil.generateRandomString(5, "Aa#") + "." + fileFormat;
-
-											BufferedImage image = null;
-											image = ImageIO.read(url);
-											java.io.File dataFile = java.io.File.createTempFile(tempFileName, "." + fileFormat);
-											ImageIO.write(image, fileFormat, dataFile);
-
-											try(InputStream fileIS = new FileInputStream(dataFile)){
-												trixFile = new TrixFile();
-												trixFile.type = TrixFile.INTERNAL_FILE;
-												trixFile.mime = trixFile.mime == null || trixFile.mime.isEmpty() ? new Tika().detect(fileIS) : trixFile.mime;
-												trixFile.name = FilenameUtils.getBaseName(featuredImageUrl) + "." + FilenameUtils.getExtension(featuredImageUrl);
-												fileRepository.save(trixFile);
-												Integer id = trixFile.id;
-
-												Session session = (Session) manager.getDelegate();
-												LobCreator creator = Hibernate.getLobCreator(session);
-												FileContents contents = contentsRepository.findOne(id);
-
-												contents.contents = creator.createBlob(FileUtils.readFileToByteArray(dataFile));
-												contentsRepository.save(contents);
-
-												Image img = new Image();
-												img.original = trixFile;
-												createImages(img);
-												imageRepository.save(img);
-												wpc.image = img;
-											};
-
-											break;
-										}
+//												Image img = new Image();
+//												img.original = fileService.newFile(featuredImageUrl, "");
+//												createImages(img);
+//												imageRepository.save(img);
+//												wpc.image = img;
+											}
 									} finally {
 										reader.dispose();
 									}
@@ -295,64 +271,64 @@ public class WordrailsService {
 		return wpc;
 	}
 
-	private void createImages(Image image) throws SQLException, IOException {
-		TrixFile original = image.original;
-
-		String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
-
-		if (original != null) {
-			TrixFile small = new TrixFile();
-			small.type = TrixFile.INTERNAL_FILE;
-			small.mime = image.original.mime != null ? image.original.mime : MIME;
-			small.name = original.name;			
-			fileRepository.save(small);
-
-			TrixFile medium = new TrixFile();
-			medium.type = TrixFile.INTERNAL_FILE;
-			medium.mime = image.original.mime != null ? image.original.mime : MIME;
-			medium.name = original.name;			
-			fileRepository.save(medium);
-
-			TrixFile large = new TrixFile();
-			large.type = TrixFile.INTERNAL_FILE;
-			large.mime = image.original.mime != null ? image.original.mime : MIME;
-			large.name = original.name;
-			fileRepository.save(large);
-
-			image.small = small;
-			image.medium = medium;
-			image.large = large;
-
-			BufferedImage bufferedImage;
-			FileContents contents = contentsRepository.findOne(original.id);
-			try (InputStream input = contents.contents.getBinaryStream()) {
-				bufferedImage = ImageIO.read(input);
-			}
-			image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
-			updateContents(small.id, bufferedImage, 150, format);
-			updateContents(medium.id, bufferedImage, 300, format);
-			updateContents(large.id, bufferedImage, 1024, format);
-		}
-	}
-
-	private static final String MIME = "image/jpeg";
-	private static final String FORMAT = "jpg";
-	private static final double QUALITY = 1;
-
-	private void updateContents(Integer id, BufferedImage image, int size, String format) throws IOException {
-		format = (format != null  ? format : FORMAT);
-		java.io.File file = java.io.File.createTempFile("image", "." + format);
-		try {
-			Thumbnails.of(image).size(size, size).outputFormat(format).outputQuality(QUALITY).toFile(file);			
-			Session session = (Session) manager.getDelegate();
-			LobCreator creator = Hibernate.getLobCreator(session);
-			FileContents contents = contentsRepository.findOne(id);
-			contents.contents = creator.createBlob(FileUtils.readFileToByteArray(file));
-			contentsRepository.save(contents);
-		} finally {
-			file.delete();
-		}
-	}
+//	private void createImages(Image image) throws SQLException, IOException {
+//		TrixFile original = image.original;
+//
+//		String format = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
+//
+//		if (original != null) {
+//			TrixFile small = new TrixFile();
+//			small.type = TrixFile.INTERNAL_FILE;
+//			small.mime = image.original.mime != null ? image.original.mime : MIME;
+//			small.name = original.name;
+//			fileRepository.save(small);
+//
+//			TrixFile medium = new TrixFile();
+//			medium.type = TrixFile.INTERNAL_FILE;
+//			medium.mime = image.original.mime != null ? image.original.mime : MIME;
+//			medium.name = original.name;
+//			fileRepository.save(medium);
+//
+//			TrixFile large = new TrixFile();
+//			large.type = TrixFile.INTERNAL_FILE;
+//			large.mime = image.original.mime != null ? image.original.mime : MIME;
+//			large.name = original.name;
+//			fileRepository.save(large);
+//
+//			image.small = small;
+//			image.medium = medium;
+//			image.large = large;
+//
+//			BufferedImage bufferedImage;
+//			FileContents contents = contentsRepository.findOne(original.id);
+//			try (InputStream input = contents.contents.getBinaryStream()) {
+//				bufferedImage = ImageIO.read(input);
+//			}
+//			image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
+//			updateContents(small.id, bufferedImage, 150, format);
+//			updateContents(medium.id, bufferedImage, 300, format);
+//			updateContents(large.id, bufferedImage, 1024, format);
+//		}
+//	}
+//
+//	private static final String MIME = "image/jpeg";
+//	private static final String FORMAT = "jpg";
+//	private static final double QUALITY = 1;
+//
+//	private void updateContents(Integer id, BufferedImage image, int size, String format) throws IOException {
+//		format = (format != null  ? format : FORMAT);
+//		java.io.File file = java.io.File.createTempFile("image", "." + format);
+//		try {
+//			Thumbnails.of(image).size(size, size).outputFormat(format).outputQuality(QUALITY).toFile(file);
+//			Session session = (Session) manager.getDelegate();
+//			LobCreator creator = Hibernate.getLobCreator(session);
+//			FileContents contents = contentsRepository.findOne(id);
+//			contents.contents = creator.createBlob(FileUtils.readFileToByteArray(file));
+//			contentsRepository.save(contents);
+//		} finally {
+//			file.delete();
+//		}
+//	}
 
 	public WordpressParsedContent extractImageFromContent(String body, String externalFeaturedImgUrl) {
 		Pattern urlPattern = Pattern.compile("[^(http\\:\\/\\/[a-zA-Z0-9_\\-]+(?:\\.[a-zA-Z0-9_\\-]+)*\\.[a-zA-Z]{2,4}(?:\\/[a-zA-Z0-9_]+)*(?:\\/[a-zA-Z0-9_]+\\.[a-zA-Z]{2,4}(?:\\?[a-zA-Z0-9_]+\\=[a-zA-Z0-9_]+)?)?(?:\\&[a-zA-Z0-9_]+\\=[a-zA-Z0-9_]+)*)$]", Pattern.CASE_INSENSITIVE);

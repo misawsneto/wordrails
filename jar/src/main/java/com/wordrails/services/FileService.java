@@ -6,17 +6,17 @@ import com.wordrails.persistence.FileRepository;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.*;
 
 @Component
 public class FileService {
@@ -36,11 +36,11 @@ public class FileService {
 	}
 
 	public TrixFile newFile(InputStream input, String domain) throws FileUploadException, IOException {
-		File file = java.io.File.createTempFile("trix", "");
-		FileUtils.copyInputStreamToFile(input, file);
 		String mime = new Tika().detect(input);
 
-		return newFile(input, domain, mime, "", file.length());
+		long byteSize = ((FileInputStream) input).getChannel().size();
+
+		return newFile(input, domain, mime, "", byteSize);
 	}
 
 	public TrixFile newResizedImage(InputStream input, String domain, Integer size, String mime) throws FileUploadException, IOException {
@@ -48,7 +48,9 @@ public class FileService {
 		BufferedImage bi = Thumbnails.of(input).size(size, size).outputFormat(mime).outputQuality(1).asBufferedImage();
 		ImageIO.write(bi, mime, file);
 
-		return newFile(input, domain, mime, "", file.length());
+		long byteSize = new FileInputStream(file).getChannel().size();
+
+		return newFile(input, domain, mime, "", byteSize);
 	}
 
 	public TrixFile newFile(InputStream inputStream, String domain, String mime, String name, Long size) throws FileUploadException, BadRequestException {
