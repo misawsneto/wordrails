@@ -2012,8 +2012,8 @@ a.text-lgrey:hover {
 
 .block-image2{
   display: block;
-  width: 370px;
-  height: 250px;
+  width: 300px;
+  height: 200px;
   float: right;
   border: 1px solid rgba(0,0,0,0.05);
   border-radius: 4px;
@@ -4175,6 +4175,7 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 
   /* stations.html */
   .navbar-nav .divider-v {border-right: 1px solid rgba(0,0,0,0.1);   height: 34px; margin-top: 8px;}
+  .station-header .navbar-nav .divider-v{margin-top: 13px}
   .app-content-body {padding-bottom: 0px;}
 
   .station-header{position: fixed; width: 100%; top: 0; left: 0; margin-left: 0px!important; padding: 0px; padding-right: 15px; z-index: 3;}
@@ -4509,6 +4510,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   right: 18px;
   bottom: 24px;
 }
+
 /* /stations */
 
 /* notifications */
@@ -5714,7 +5716,7 @@ progress[aria-valuenow]:before {
 }
 
 .half-post {
-  padding-bottom: 40px;
+  /* padding-bottom: 40px; */
 }
 
 .half-post .post-meta {

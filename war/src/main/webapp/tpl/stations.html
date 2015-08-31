@@ -1,5 +1,5 @@
 <div class="station-perspectives p-t-50" ng-if="!app.isMobile">
-<div class="container p-t-lg">
+<div class="container p-t-lg p-b-lg">
     <div class="row">
       <div class="col-md-8">
         <!-- BLOG POST -->
@@ -20,18 +20,15 @@
           
           <div ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))"
           ng-repeat="cell in ordinaryRow.cells | limitTo: 3" class="half-post bg-custom">
-            <a ui-sref="app.tagspage({'tagName': ordinaryRow.termName})" ng-click="app.stopPropagation($event)"
-              class="btn btn-rounded btn-stroke btn-term text-md m-r-sm m-b">
-              {{ordinaryRow.termName}}
-            </a>
+            <div class="p-b-md" ng-class="{'b-t m-t-md': !$first}"></div>
             <div class="row">
-              <div class="col-md-6" ng-if="cell.postView.mediumId">
+              <div class="col-md-5" ng-if="cell.postView.mediumId">
                 <a class="block-image2">
                   <div ng-style="getBackgroundImage(cell.postView, 'md')"
                   class="cell-wrap r r-2x" alt=""></div>
                 </a>
               </div>
-              <div ng-class="{'col-md-6':cell.postView.mediumId, 'col-md-12': !cell.postView.mediumId}">
+              <div ng-class="{'col-md-7':cell.postView.mediumId, 'col-md-12': !cell.postView.mediumId}">
                 <a href="blog.html" class="h3 font-bold m-b m-t-sm block">
                 {{::cell.postView.title}}</a>
                 <!-- <div class="post-meta">
@@ -39,6 +36,10 @@
                   <span class="post-tags"><a href="#">Online Marketing</a></span>
                 </div> -->
                 <p class="font-thin text-lg">{{::cell.postView.snippet | characters:150}}</p>
+                <a ui-sref="app.tagspage({'tagName': ordinaryRow.termName})" ng-click="app.stopPropagation($event)"
+                  class="btn btn-rounded btn-stroke btn-term text-md m-r-sm m-b">
+                  {{ordinaryRow.termName}}
+                </a>
               </div>
             </div>
             <div class="m-t">
@@ -505,12 +506,12 @@
   <div class="nav navbar-nav hidden-xs text-lg w-full wrapper-sm header-font pos-abt">
     <span ng-if="!app.currentStation.logoId" class="p-l-xxl m-l-lg">{{app.currentStation.name}}</span>
     <div ng-if="app.currentStation.logoId" class="p-l-xxl m-l-lg m-t-n-sm" style="height:48px;">
-      <img class="post-thumb img-responsive" class="img-responsive" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}">
+      <img class="post-thumb img-responsive m-t-xs" class="img-responsive" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}">
     </div>
   </div>
   <!-- nabar right -->
   <ul class="nav navbar-nav navbar-right">
-    <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown style="opacity: 0">
+    <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown style="opacity: 0; width:1px;">
       <a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-dots-vertical mdi" dropdown-toggle>
       </a>
       <!-- dropdown -->
