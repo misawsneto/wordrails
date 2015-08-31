@@ -351,6 +351,20 @@ function getCustomStyle(color, perspective, header) {
 	"border-color:" + textColorEval(color) +
 	"}"+
 
+	".half-post .post-meta span a,"+
+	".full-post h4 a:hover,"+
+	".half-post h4 a:hover,"+
+	".full-post .post-meta span a,"+
+	".recent-posts ul li:hover .rp-title,"+
+	".rp-meta span a{" +
+	"color: " + color + "!important" +
+	"}"+
+
+	".recent-posts ul li:after{"+
+		"background: " + color + "!important" +
+	"}"+
+
+
 	"";
 	return style
 }
