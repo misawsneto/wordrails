@@ -26,14 +26,14 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.subheading = post.subheading;
 		postView.slug = post.slug;
 		if (post.featuredImage != null) {
-			postView.smallId = post.featuredImage.small.id;
-			postView.mediumId = post.featuredImage.medium.id;
-			postView.largeId = post.featuredImage.large.id;
+			postView.smallId = post.featuredImage.smallId;
+			postView.mediumId = post.featuredImage.mediumId;
+			postView.largeId = post.featuredImage.largeId;
 			
-			postView.imageId = post.imageId;
-			postView.imageSmallId = post.imageSmallId;
-			postView.imageMediumId = post.imageMediumId;
-			postView.imageLargeId = post.imageLargeId;
+			postView.imageId = post.image;
+			postView.imageSmallId = post.imageSmall;
+			postView.imageMediumId = post.imageMedium;
+			postView.imageLargeId = post.imageLarge;
 		}
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;

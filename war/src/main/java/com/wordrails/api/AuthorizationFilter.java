@@ -121,6 +121,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetGlobalParametersAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetGlobalParameterAuthorized(Integer globalParameterId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetTrixFilesAuthorized() {
 		return false;
 	}
@@ -155,25 +165,25 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return canVisualizeImages(imageId);
 	}
 
-	@Override
-	protected boolean isGetImageOriginalAuthorized(Integer imageId) {
-		return canVisualizeImages(imageId);
-	}
-
-	@Override
-	protected boolean isGetImageSmallAuthorized(Integer imageId) {
-		return canVisualizeImages(imageId);
-	}
-
-	@Override
-	protected boolean isGetImageMediumAuthorized(Integer imageId) {
-		return canVisualizeImages(imageId);
-	}
-
-	@Override
-	protected boolean isGetImageLargeAuthorized(Integer imageId) {
-		return canVisualizeImages(imageId);
-	}
+//	@Override
+//	protected boolean isGetImageOriginalAuthorized(Integer imageId) {
+//		return canVisualizeImages(imageId);
+//	}
+//
+//	@Override
+//	protected boolean isGetImageSmallAuthorized(Integer imageId) {
+//		return canVisualizeImages(imageId);
+//	}
+//
+//	@Override
+//	protected boolean isGetImageMediumAuthorized(Integer imageId) {
+//		return canVisualizeImages(imageId);
+//	}
+//
+//	@Override
+//	protected boolean isGetImageLargeAuthorized(Integer imageId) {
+//		return canVisualizeImages(imageId);
+//	}
 
 	@Override
 	protected boolean isGetImagePostAuthorized(Integer imageId) {

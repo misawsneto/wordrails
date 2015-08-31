@@ -50,23 +50,15 @@ public class WordpressService {
 	private EntityManager manager;
 
 	@Autowired
-	private FileService fileService;
-	@Autowired
-	private ImageRepository imageRepository;
-	@Autowired
 	private TermRepository termRepository;
 	@Autowired
 	private PostRepository postRepository;
-	@Autowired
-	private FileRepository fileRepository;
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
 	private TaxonomyRepository taxonomyRepository;
-	@Autowired
-	private FileContentsRepository contentsRepository;
 
 	public WordpressPost createPost(Post post, WordpressApi api) throws Exception {
 		WordpressPost wp = new WordpressPost(post.title, post.body, new Date());

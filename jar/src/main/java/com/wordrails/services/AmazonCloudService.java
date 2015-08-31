@@ -4,6 +4,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import com.wordrails.util.WordrailsUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @Service
 public class AmazonCloudService {
 
-	//IMAGE DIRECTORY PATTERN: {networkDomain}/images/{fileName}
+	//IMAGE DIRECTORY PATTERN: {networkDomain}/images/{fileHash}
 
 	private static final String IMAGE_DIR = "/images/";
 	private static final String PUBLIC_BUCKET = "omega.io";
@@ -29,16 +30,45 @@ public class AmazonCloudService {
 	@Value("${amazon.distributionKey}")
 	String distributionKey;
 
+	private String getUniqueFileName() {
+		return WordrailsUtil.generateRandomString(25, "aA#");
+	}
+
 	public String getURL(String networkDomain, String fileName) throws IOException {
 		return "http://" + CLOUDFRONT_URL + "/" + networkDomain + IMAGE_DIR + fileName;
 	}
 
+	public void uploadPublicImage(InputStream input, Long lenght, String networkDomain, String fileName) throws IOException, AmazonS3Exception {
+		uploadImage(input, lenght, networkDomain, PUBLIC_BUCKET, fileName);
+	}
+
+	public void uploadPrivateImage(InputStream input, Long lenght, String networkDomain, String fileName) throws IOException, AmazonS3Exception {
+		uploadImage(input, lenght, networkDomain, PRIVATE_BUCKET, fileName);
+	}
+
+	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
+		String hash = getUniqueFileName();
+		uploadImage(input, lenght, networkDomain, PUBLIC_BUCKET, hash, size, mime);
+		return hash;
+	}
+
+	public String uploadPrivateImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
+		String hash = getUniqueFileName();
+		uploadImage(input, lenght, networkDomain, PRIVATE_BUCKET, hash, size, mime);
+		return hash;
+	}
+
 	public void uploadPublicImage(InputStream input, Long lenght, String networkDomain, String fileName, String size, String mime) throws IOException, AmazonS3Exception {
-		uploadImage(input, lenght, networkDomain, "omega.io", fileName, size, mime);
+		uploadImage(input, lenght, networkDomain, PUBLIC_BUCKET, fileName, size, mime);
 	}
 
 	public void uploadPrivateImage(InputStream input, Long lenght, String networkDomain, String fileName, String size, String mime) throws IOException, AmazonS3Exception {
-		uploadImage(input, lenght, networkDomain, "private", fileName, size, mime);
+		uploadImage(input, lenght, networkDomain, PRIVATE_BUCKET, fileName, size, mime);
+	}
+
+	private void uploadImage(InputStream input, Long lenght, String networkDomain, String bucketName, String fileName) throws IOException, AmazonS3Exception {
+		String path = networkDomain + "/images/" + fileName;
+		uploadFile(input, lenght, bucketName, path, null);
 	}
 
 	private void uploadImage(InputStream input, Long lenght, String networkDomain, String bucketName, String fileName, String size, String mime) throws IOException, AmazonS3Exception {
@@ -51,6 +81,10 @@ public class AmazonCloudService {
 	}
 
 	private void uploadFile(InputStream input, Long lenght, String bucketName, String keyName, ObjectMetadata metadata) throws IOException, AmazonS3Exception {
+		if (input.available() == 0) {
+			throw new AmazonS3Exception("InputStream is empty");
+		}
+
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, accessSecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(awsCreds);
 
@@ -59,7 +93,9 @@ public class AmazonCloudService {
 		List<PartETag> partETags = new ArrayList<>();
 
 		// Step 1: Initialize.
-		InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucketName, keyName, metadata);
+		InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucketName, keyName);
+		if(metadata != null) initRequest.setObjectMetadata(metadata);
+
 		initRequest.setCannedACL(CannedAccessControlList.PublicRead);
 		InitiateMultipartUploadResult initResponse = s3Client.initiateMultipartUpload(initRequest);
 		long partSize = 3 * 1024 * 1024; // Set part size to 3 MB.

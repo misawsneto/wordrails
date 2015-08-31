@@ -21,6 +21,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
 import com.wordrails.services.FileService;
@@ -62,20 +63,13 @@ import com.wordrails.util.WordrailsUtil;
 public class WordrailsService {
 
 	private @Autowired NetworkRepository networkRepository;
-	private @PersistenceContext EntityManager manager;
 	private @Autowired PostReadRepository postReadRepository;
 	private @Autowired QueryPersistence queryPersistence;
-	private @Autowired FileContentsRepository contentsRepository;
-	private @Autowired FileRepository fileRepository;
-	private @Autowired ImageRepository imageRepository;
 	private @Autowired PostRepository postRepository;
-	private @Autowired
-	PersonRepository personRepository;
 	private @Autowired PerspectiveResource perspectiveResource;
-	private @Autowired PostConverter postConverter;
 	private @Autowired CacheService cacheService;
 	private @Autowired
-	FileService fileService;
+	TrixAuthenticationProvider authProvider;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
@@ -115,10 +109,14 @@ public class WordrailsService {
 		Link link = new Link();
 		link.href = self;
 		link.rel = "self";
-		return Arrays.asList(link);
+		return Collections.singletonList(link);
 	} 
 
 	public Network getNetworkFromHost(ServletRequest srq){
+		Network network = authProvider.getNetwork();
+
+		if(network != null) return network;
+
 		String host = ((HttpServletRequest) srq).getHeader("Host");
 
 		List<Network> networks = new ArrayList<Network>();
@@ -130,7 +128,6 @@ public class WordrailsService {
 			String topDomain = names[names.length - 2] + "." + names[names.length - 1];
 			String subdomain = !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
 			if(subdomain != null && !subdomain.isEmpty()){
-				Network network = null;
 				try {
 					network = cacheService.getNetworkBySubdomain(subdomain);
 				} catch (Exception e) {
@@ -141,19 +138,21 @@ public class WordrailsService {
 			}
 		}
 
-		if(networks == null || networks.size() == 0){
-			//networks = networkRepository.findByDomain(host);
-			Network network = null;
+		if(networks == null)
+			networks = new ArrayList<>();
+
+		if (networks.size() == 0){
 			try {
 				network = cacheService.getNetworkByDomain(host);
 			} catch (Exception e) {
 				// no network found in cache or db.
 			}
 			if(network != null)
-				networks.add(network);
+				return network;
+				//networks.add(network);
 		}
 
-		Network network = (networks != null && networks.size() > 0) ? networks.get(0) : null;
+		network = networks.size() > 0 ? networks.get(0) : null;
 		return network;
 	}
 

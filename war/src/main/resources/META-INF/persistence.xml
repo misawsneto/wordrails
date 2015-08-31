@@ -10,6 +10,7 @@
 		<class>com.wordrails.business.Comment</class>
 		<class>com.wordrails.business.TrixFile</class>
 		<class>com.wordrails.business.FileContents</class>
+		<class>com.wordrails.business.GlobalParameter</class>
 		<class>com.wordrails.business.Image</class>
 		<class>com.wordrails.business.Network</class>
 		<class>com.wordrails.business.NetworkRole</class>

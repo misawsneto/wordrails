@@ -27,8 +27,8 @@ public class NotificationConverter extends AbstractConverter<Notification, Notif
 
 		notificationView.id = notification.id;
 		notificationView.hash = notification.hash;
-		notificationView.imageMediumId = notification.post != null ? notification.post.imageMediumId : null;
-		notificationView.imageSmallId = notification.post != null ? notification.post.imageSmallId : null;
+		notificationView.imageMediumId = notification.post != null ? notification.post.imageMedium : null;
+		notificationView.imageSmallId = notification.post != null ? notification.post.imageSmall : null;
 		notificationView.message = notification.message;
 		notificationView.networkId = notification.network != null ? notification.network.id : null;
 		notificationView.networkName = notification.network != null ? notification.network.name : null;

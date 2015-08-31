@@ -29,8 +29,6 @@ import javax.ws.rs.core.Response.Status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
-import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
 import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.*;
 import com.wordrails.services.AsyncService;
@@ -55,8 +53,6 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.WordrailsService;
 import com.wordrails.business.Image;
 import com.wordrails.business.Invitation;
 import com.wordrails.business.Network;
@@ -71,14 +67,12 @@ import com.wordrails.business.Term;
 import com.wordrails.business.TermPerspective;
 import com.wordrails.business.UnauthorizedException;
 import com.wordrails.business.Wordpress;
-import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.BookmarkRepository;
 import com.wordrails.persistence.CellRepository;
 import com.wordrails.persistence.CommentRepository;
 import com.wordrails.persistence.ImageRepository;
 import com.wordrails.persistence.InvitationRepository;
 import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
 import com.wordrails.persistence.PersonRepository;
@@ -89,7 +83,6 @@ import com.wordrails.persistence.RecommendRepository;
 import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.TaxonomyRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
@@ -201,19 +194,19 @@ public class UtilResource {
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Post> posts = postRepository.findAll();
 			for (Post post : posts) {
-				if(post.featuredImage != null && post.featuredImage.original != null){
-					post.imageId = post.featuredImage.original.id;
-					post.imageSmallId = post.featuredImage.small.id;
-					post.imageMediumId = post.featuredImage.medium.id;
-					post.imageLargeId= post.featuredImage.large.id;
+				if(post.featuredImage != null && post.featuredImage.originalId != null){
+					post.image = post.featuredImage.originalId;
+					post.imageSmall = post.featuredImage.smallId;
+					post.imageMedium = post.featuredImage.mediumId;
+					post.imageLarge = post.featuredImage.largeId;
 					post.imageLandscape= !post.featuredImage.vertical;
 					post.imageCaptionText = post.featuredImage.caption;
 					post.imageCreditsText = post.featuredImage.credits;
 				}else{
-					post.imageId = null;
-					post.imageSmallId = null;
-					post.imageMediumId = null;
-					post.imageLargeId = null;
+					post.image = null;
+					post.imageSmall = null;
+					post.imageMedium = null;
+					post.imageLarge = null;
 				}
 				if(post.comments != null){
 					post.commentsCount = post.comments.size();
@@ -273,11 +266,11 @@ public class UtilResource {
 					it.remove();
 				}
 
-				if(person.image != null && person.image.original != null){
-					person.imageId = person.image.original.id;
-					person.imageSmallId = person.image.small.id;
-					person.imageMediumId = person.image.medium.id;
-					person.imageLargeId = person.image.large.id;
+				if(person.image != null && person.image.originalId != null){
+					person.imageId = person.image.originalId;
+					person.imageSmallId = person.image.smallId;
+					person.imageMediumId = person.image.mediumId;
+					person.imageLargeId = person.image.largeId;
 				}else{
 					person.imageId = null;
 					person.imageSmallId = null;
@@ -285,10 +278,10 @@ public class UtilResource {
 					person.imageLargeId = null;
 				}
 
-				if(person.cover != null && person.cover.original != null){
-					person.coverMediumId = person.cover.medium.id;
-					person.coverLargeId = person.cover.large.id;
-					person.coverMediumId = person.cover.medium.id;
+				if(person.cover != null && person.cover.originalId != null){
+					person.coverMediumId = person.cover.mediumId;
+					person.coverLargeId = person.cover.largeId;
+					person.coverMediumId = person.cover.mediumId;
 				}
 
 				if(person.createdAt == null){

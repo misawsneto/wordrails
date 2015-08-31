@@ -1,13 +1,10 @@
 package com.wordrails.business;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.persistence.FileContentsRepository;
-import com.wordrails.persistence.FileRepository;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.FileService;
-import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.io.FileUtils;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -24,7 +21,6 @@ import java.sql.SQLException;
 @RepositoryEventHandler(Image.class)
 @Component
 public class ImageEventHandler {
-	private static final String MIME = "image/jpeg";
 
 	@Autowired
 	private AmazonCloudService amazonCloudService;
@@ -35,30 +31,30 @@ public class ImageEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Image image) throws IOException, SQLException, FileUploadException {
-		if(image.type == null || image.type.trim().isEmpty())
-			image.type = Image.Type.POST.toString();
+		if (image.type == null || image.type.trim().isEmpty()) image.type = Image.Type.POST.toString();
 
-		if(!Image.containsType(image.type))
-			throw new BadRequestException("Invalid Image Type:" + image.type);
+		if (!Image.containsType(image.type)) throw new BadRequestException("Invalid Image Type:" + image.type);
 
-		TrixFile original = image.original;
+		String original = image.originalId;
 		if (original != null) {
-			String mime = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
-
 			Network network = authProvider.getNetwork();
-			URL fullURL = new URL(amazonCloudService.getURL(network.domain, original.id + ""));
+			URL fullURL = new URL(amazonCloudService.getURL(network.domain, original));
 			HttpURLConnection connection = (HttpURLConnection) fullURL.openConnection();
-			InputStream input =  connection.getInputStream();
+			InputStream input = connection.getInputStream();
 
-			TrixFile small = fileService.newResizedImage(input, network.domain, 150, mime);
-			TrixFile medium = fileService.newResizedImage(input, network.domain, 300, mime);
-			TrixFile large = fileService.newResizedImage(input, network.domain, 1024, mime);
-
-			image.small = small;
-			image.medium = medium;
-			image.large = large;
+			String mime = new Tika().detect(input);
+//			String mime = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
 
 			BufferedImage bufferedImage = ImageIO.read(fullURL);
+
+			String small = fileService.newResizedImage(bufferedImage, network.domain, 150, "small", mime);
+			String medium = fileService.newResizedImage(bufferedImage, network.domain, 300, "medium", mime);
+			String large = fileService.newResizedImage(bufferedImage, network.domain, 1024, "large", mime);
+
+			image.smallId = small;
+			image.mediumId = medium;
+			image.largeId = large;
+
 			image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
 		}
 	}

@@ -98,8 +98,8 @@ public class Station {
 
 	@OneToOne
 	public Image logo;
-	public Integer logoId;
-	public Integer logoMediumId;
+	public String logoId;
+	public String logoMediumId;
 
 	public Integer defaultPerspectiveId;
 
@@ -112,18 +112,18 @@ public class Station {
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
-		if(logo != null && logo.original != null){
-			logoId = logo.original.id;
-			logoMediumId = logo.medium.id;
+		if(logo != null && logo.originalId != null){
+			logoId = logo.originalId;
+			logoMediumId = logo.mediumId;
 		}
 	}
 
 	@PreUpdate
 	void onUpdate() {
 		updatedAt = new Date();
-		if(logo != null && logo.original != null){
-			logoId = logo.original.id;
-			logoMediumId = logo.medium.id;
+		if(logo != null && logo.originalId != null){
+			logoId = logo.originalId;
+			logoMediumId = logo.mediumId;
 		}
 	}
 

@@ -5,9 +5,6 @@ import com.wordrails.business.*;
 import com.wordrails.persistence.*;
 import com.wordrails.services.FileService;
 import org.apache.commons.fileupload.FileUploadException;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.engine.jdbc.LobCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.ImageType;
@@ -16,17 +13,10 @@ import org.springframework.social.support.URIBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.imageio.ImageIO;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
-import java.sql.SQLException;
 import java.util.HashSet;
 
 @Service
@@ -38,9 +28,6 @@ public class SocialAuthenticationService {
 	private UserRepository userRepository;
 	@Autowired
 	private ImageRepository imageRepository;
-
-	@Autowired
-	private ImageEventHandler imageEventHandler;
 	@Autowired
 	private FileService fileService;
 
@@ -117,7 +104,7 @@ public class SocialAuthenticationService {
 	public Person getFacebookUser(Facebook facebook, String userId, Network network) {
 		org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
 
-		String email = profile.getEmail() == null ? userId + "@facebook.com" : profile.getEmail();
+		String email = profile.getEmail() == null ? "" : profile.getEmail();
 		Person person = personRepository.findByEmailAndNetworkId(email, network.id);
 
 		if (person == null) {
@@ -135,7 +122,6 @@ public class SocialAuthenticationService {
 		}
 
 
-
 		User user = new User();
 
 		UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
@@ -151,7 +137,7 @@ public class SocialAuthenticationService {
 		UserConnection userConnection = new UserConnection();
 		userConnection.providerId = "facebook";
 		userConnection.providerUserId = userId;
-		userConnection.email = email;
+		userConnection.email = profile.getEmail();
 		userConnection.user = user;
 		userConnection.displayName = profile.getName();
 		userConnection.profileUrl = profile.getLink();
@@ -161,46 +147,36 @@ public class SocialAuthenticationService {
 
 		person.user = user;
 
-		if(person.image == null) {
+		if (person.image == null) {
 			try {
-				Image coverPicture = getImageFromBytes(network.domain, profile.getCover().getSource(), Image.Type.COVER);
-				imageEventHandler.handleBeforeCreate(coverPicture);
+				String fileHash = fileService.newFile(profile.getCover().getSource(), "image/pgn", network.domain);
+
+				Image coverPicture = new Image();
+				coverPicture.type = Image.Type.COVER.toString();
+				coverPicture.originalId = fileHash;
+
 				imageRepository.save(coverPicture);
 				person.cover = coverPicture;
-			} catch (IOException | SQLException | FileUploadException e) {
+			} catch (IOException | FileUploadException e) {
 				e.printStackTrace();
 			}
 
 			try {
 				InputStream is = new ByteArrayInputStream(facebook.userOperations().getUserProfileImage(ImageType.LARGE));
-				Image profilePicture = getImageFromBytes(network.domain, is, Image.Type.PROFILE_PICTURE);
-				imageEventHandler.handleBeforeCreate(profilePicture);
+				String fileHash = fileService.newFile(is, "image/pgn", network.domain);
+
+				Image profilePicture = new Image();
+				profilePicture.type = Image.Type.PROFILE_PICTURE.toString();
+				profilePicture.originalId = fileHash;
+
 				imageRepository.save(profilePicture);
 				person.image = profilePicture;
-			} catch (IOException | SQLException | FileUploadException e) {
+			} catch (IOException | FileUploadException e) {
 				e.printStackTrace();
 			}
 		}
 
 		return person;
-	}
-
-	private Image getImageFromBytes(String domain, InputStream input, Image.Type type) throws IOException, FileUploadException {
-		Image image = new Image();
-		image.type = type.toString();
-
-		image.original = fileService.newFile(input, domain);
-
-		return image;
-	}
-
-	private Image getImageFromBytes(String domain, String imageUrl, Image.Type type) throws IOException, FileUploadException {
-		Image image = new Image();
-		image.type = type.toString();
-
-		image.original = fileService.newFile(imageUrl, domain);
-
-		return image;
 	}
 
 	private static final String GRAPH_API_URL = "http://graph.facebook.com/";

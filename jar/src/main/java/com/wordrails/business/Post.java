@@ -7,7 +7,6 @@ import org.apache.solr.analysis.*;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Parameter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -254,20 +253,20 @@ public class Post {
 
 	@PrePersist
 	public void onCreate() {
-		if (featuredImage != null && featuredImage.original != null) {
-			imageId = featuredImage.original.id;
-			imageSmallId = featuredImage.small.id;
-			imageMediumId = featuredImage.medium.id;
-			imageLargeId = featuredImage.large.id;
+		if (featuredImage != null && featuredImage.originalId != null) {
+			image = featuredImage.originalId;
+			imageSmall = featuredImage.smallId;
+			imageMedium = featuredImage.mediumId;
+			imageLarge = featuredImage.largeId;
 //			imageLandscape = !featuredImage.vertical;
 			imageCaptionText = featuredImage.caption;
 			imageCreditsText = featuredImage.credits;
 			imageTitleText = featuredImage.title;
 		} else {
-			imageId = null;
-			imageSmallId = null;
-			imageMediumId = null;
-			imageLargeId = null;
+			image = null;
+			imageSmall = null;
+			imageMedium = null;
+			imageLarge = null;
 		}
 
 		readTime = WordrailsUtil.calculateReadTime(body);
@@ -279,20 +278,20 @@ public class Post {
 
 	@PreUpdate
 	public void onUpdate() {
-		if (featuredImage != null && featuredImage.original != null) {
-			imageId = featuredImage.original.id;
-			imageSmallId = featuredImage.small.id;
-			imageMediumId = featuredImage.medium.id;
-			imageLargeId = featuredImage.large.id;
+		if (featuredImage != null && featuredImage.originalId != null) {
+			image = featuredImage.originalId;
+			imageSmall = featuredImage.smallId;
+			imageMedium = featuredImage.mediumId;
+			imageLarge = featuredImage.largeId;
 //			imageLandscape = !featuredImage.vertical;
 			imageCaptionText = featuredImage.caption;
 			imageCreditsText = featuredImage.credits;
 			imageTitleText = featuredImage.title;
 		} else {
-			imageId = null;
-			imageSmallId = null;
-			imageMediumId = null;
-			imageLargeId = null;
+			image = null;
+			imageSmall = null;
+			imageMedium = null;
+			imageLarge = null;
 		}
 
 		updatedAt = new Date();
@@ -319,10 +318,10 @@ public class Post {
 		}
 	}
 
-	public Integer imageId;
-	public Integer imageSmallId;
-	public Integer imageMediumId;
-	public Integer imageLargeId;
+	public String image;
+	public String imageSmall;
+	public String imageMedium;
+	public String imageLarge;
 
 	@Override
 	public String toString() {

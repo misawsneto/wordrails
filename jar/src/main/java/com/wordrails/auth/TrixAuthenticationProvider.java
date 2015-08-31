@@ -54,6 +54,8 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	private UserConnectionRepository userConnectionRepository;
 	@Autowired
 	private ImageRepository imageRepository;
+	@Autowired
+	private SocialAuthenticationService socialAuthenticationService;
 
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
@@ -98,8 +100,8 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			person.password = "wordrails";
 			person.email = "";
 			person.name = "";
-			person.imageId = 0;
-			person.coverId = 0;
+			person.imageId = "";
+			person.coverId = "";
 			person.bookmarks = new HashSet<>();
 			person.recommends = new HashSet<>();
 
@@ -185,7 +187,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		Facebook facebook = new FacebookTemplate(accessToken);
 		if (userConnection == null) {
 			if (providerId.equals("facebook")) {
-				Person person = getFacebookUser(facebook, userId, network);
+				Person person = socialAuthenticationService.getFacebookUser(facebook, userId, network);
 				personRepository.save(person);
 
 				user = person.user;
@@ -209,93 +211,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		SecurityContextHolder.getContext().setAuthentication(auth);
 
 		return true;
-	}
-
-	private Person getFacebookUser(Facebook facebook, String userId, Network network) {
-		org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
-
-		String email = profile.getEmail() == null ? "" : profile.getEmail();
-		Person person = personRepository.findByEmailAndNetworkId(email, network.id);
-
-		if (person == null) {
-			int i = 1;
-			String originalUsername = profile.getFirstName().toLowerCase() + profile.getLastName().toLowerCase();
-			String username = originalUsername;
-			while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
-				username = originalUsername + i++;
-			}
-
-			person = new Person();
-			person.name = profile.getName();
-			person.username = username;
-			person.email = email;
-		}
-
-
-		User user = new User();
-
-		UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
-		authority.network = network;
-
-		user.enabled = true;
-		user.username = person.username;
-		user.password = "";
-		user.network = network;
-		authority.user = user;
-		user.addAuthority(authority);
-
-		UserConnection userConnection = new UserConnection();
-		userConnection.providerId = "facebook";
-		userConnection.providerUserId = userId;
-		userConnection.email = profile.getEmail();
-		userConnection.user = user;
-		userConnection.displayName = profile.getName();
-		userConnection.profileUrl = profile.getLink();
-		userConnection.imageUrl = fetchPictureUrl(userId, ImageType.LARGE);
-		user.userConnections = new HashSet<>();
-		user.userConnections.add(userConnection);
-
-		person.user = user;
-
-		if (person.image == null) {
-			try {
-				TrixFile file = fileService.newFile(profile.getCover().getSource(), network.domain);
-
-				Image coverPicture = new Image();
-				coverPicture.type = Image.Type.COVER.toString();
-				coverPicture.original = file;
-
-				imageRepository.save(coverPicture);
-				person.cover = coverPicture;
-			} catch (IOException | FileUploadException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				InputStream is = new ByteArrayInputStream(facebook.userOperations().getUserProfileImage(ImageType.LARGE));
-				TrixFile file = fileService.newFile(is, network.domain);
-
-				Image profilePicture = new Image();
-				profilePicture.type = Image.Type.PROFILE_PICTURE.toString();
-				profilePicture.original = file;
-
-				imageRepository.save(profilePicture);
-				person.image = profilePicture;
-			} catch (IOException | FileUploadException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return person;
-	}
-
-	public String fetchPictureUrl(String userId, ImageType imageType) {
-		URI uri = URIBuilder.fromUri(GRAPH_API_URL + userId + "/picture" +
-				"?type=" + imageType.toString().toLowerCase() + "&redirect=false").build();
-
-		RestTemplate restTemplate = new RestTemplate();
-		JsonNode response = restTemplate.getForObject(uri, JsonNode.class);
-		return response.get("data").get("url").textValue();
 	}
 
 	public boolean isLogged(Integer personId) {

@@ -114,11 +114,11 @@ public class Person implements Serializable{
 
 	@PrePersist
 	public void onCreate() {
-		if(image != null && image.original != null){
-			imageId = image.original.id;
-			imageSmallId = image.small.id;
-			imageMediumId = image.medium.id;
-			imageLargeId= image.large.id;
+		if(image != null && image.originalId != null){
+			imageId = image.originalId;
+			imageSmallId = image.smallId;
+			imageMediumId = image.mediumId;
+			imageLargeId= image.largeId;
 		}else{
 			imageId = null;
 			imageSmallId = null;
@@ -126,10 +126,10 @@ public class Person implements Serializable{
 			imageLargeId = null;
 		}
 
-		if(cover != null && cover.original != null){
-			coverId = cover.original.id;
-			coverLargeId= cover.large.id;
-			coverMediumId= cover.medium.id;
+		if(cover != null && cover.originalId != null){
+			coverId = cover.originalId;
+			coverLargeId= cover.largeId;
+			coverMediumId= cover.mediumId;
 		}else{
 			coverId = null;
 			coverLargeId = null;
@@ -145,11 +145,11 @@ public class Person implements Serializable{
 
 	@PreUpdate
 	public void onUpdate() {
-		if(image != null && image.original != null){
-			imageId = image.original.id;
-			imageSmallId = image.small.id;
-			imageMediumId = image.medium.id;
-			imageLargeId= image.large.id;
+		if(image != null && image.originalId != null){
+			imageId = image.originalId;
+			imageSmallId = image.smallId;
+			imageMediumId = image.mediumId;
+			imageLargeId= image.largeId;
 		}else{
 			imageId = null;
 			imageSmallId = null;
@@ -157,10 +157,10 @@ public class Person implements Serializable{
 			imageLargeId = null;
 		}
 
-		if(cover != null && cover.original != null){
-			coverId = cover.original.id;
-			coverLargeId= cover.large.id;
-			coverMediumId= cover.medium.id;
+		if(cover != null && cover.originalId != null){
+			coverId = cover.originalId;
+			coverLargeId= cover.largeId;
+			coverMediumId= cover.mediumId;
 		}else{
 			coverId = null;
 			coverLargeId = null;
@@ -170,13 +170,14 @@ public class Person implements Serializable{
 		updatedAt = new Date();
 	}
 
-	public Integer imageId;
-	public Integer imageSmallId;
-	public Integer imageMediumId;
-	public Integer imageLargeId;
+	public String imageId;
+	public String imageSmallId;
+	public String imageMediumId;
+	public String imageLargeId;
 
-	public Integer coverLargeId;
-	public Integer coverId;
+	public String coverLargeId;
+	public String coverMediumId;
+	public String coverId;
 
 	@Transient
 	public String password;
@@ -185,5 +186,4 @@ public class Person implements Serializable{
 
 	public String twitterHandle;
 
-	public Integer coverMediumId;
 }
