@@ -124,6 +124,11 @@ angular.module('app')
       $event.stopPropagation();
     }
 
+    $scope.app.stopPropagationAndPrevent = function($event){
+      $event.stopPropagation();
+      $event.preventDefault();
+    }
+
     $scope.app.changeStation = function(station){
 
       var stationObject = null;

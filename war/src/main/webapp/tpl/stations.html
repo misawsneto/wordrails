@@ -3,127 +3,173 @@
     <div class="row">
       <div class="col-md-8">
         <!-- BLOG POST -->
-        <div class="home-blog">
+        <div class="home-blog bg-custom">
+          <!-- 
           <div class="full-post">
             <a href="blog.html"><img src="images/home/1/1.jpg" class="post-thumb img-responsive" alt=""></a>
             <div class="post-meta">
-              <span class="post-author">Lesly Quintella</span>
+              <span class="post-author a-custom-primary">Lesly Quintella</span>
               <span class="post-tags"><a href="#">Search Engine Optimization</a></span>
             </div>
-            <h4><a href="blog.html">8 Essential Tools to Simplify SEO for Content Marketing</a></h4>
-            <p>Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really want to know.</p>
+            <a href="blog.html" class="h3 font-bold m-b m-t-sm block">8 Essential Tools to Simplify SEO for Content Marketing</a>
+            <p class="font-thin text-lg">Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really want to know.</p>
           </div>
+          -->
+
+          <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" ng-if="ordinaryRow.cells && ordinaryRow.cells.length">
           
-          <div class="half-post">
+          <div ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))"
+          ng-repeat="cell in ordinaryRow.cells | limitTo: 3" class="half-post bg-custom">
+            <a ui-sref="app.tagspage({'tagName': ordinaryRow.termName})" ng-click="app.stopPropagation($event)"
+              class="btn btn-rounded btn-stroke btn-term text-md m-r-sm m-b">
+              {{ordinaryRow.termName}}
+            </a>
             <div class="row">
-              <div class="col-md-6">
-                <a href="blog.html"><img src="images/home/1/2.jpg" class="post-thumb img-responsive" alt=""></a>
+              <div class="col-md-6" ng-if="cell.postView.mediumId">
+                <a class="block-image2">
+                  <div ng-style="getBackgroundImage(cell.postView, 'md')"
+                  class="cell-wrap r r-2x" alt=""></div>
+                </a>
               </div>
-              <div class="col-md-6">
-                <h4><a href="blog.html">4 Elements You Need to Include in Your Online Marketing Campaigns</a></h4>
-                <div class="post-meta">
-                  <span class="post-author">Lavonne Flynn</span>
+              <div ng-class="{'col-md-6':cell.postView.mediumId, 'col-md-12': !cell.postView.mediumId}">
+                <a href="blog.html" class="h3 font-bold m-b m-t-sm block">
+                {{::cell.postView.title}}</a>
+                <!-- <div class="post-meta">
+                  <span class="post-author a-custom-primary">Lavonne Flynn</span>
                   <span class="post-tags"><a href="#">Online Marketing</a></span>
-                </div>
-                <p>Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
+                </div> -->
+                <p class="font-thin text-lg">{{::cell.postView.snippet | characters:150}}</p>
+              </div>
+            </div>
+            <div class="m-t">
+              <div class="display-t-c">
+                <a >
+                  <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                </a>
+              </div>
+              <div class="display-t-c p-l-sm v-middle">
+                <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
+                  {{::cell.postView.authorName}}
+                </a>
+                <br>
+                <span class="text-sm readingTime">
+                  {{::cell.postView.date | fromNow}}
+                </span>
+              </div>
+              <div class="display-t-c v-middle padder">
+                <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
+                  <a href class="text-center text-lg v-middle">
+                    <i class="mdi" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
+                  </a>
+                  <span class="p-b-sm">Recomendar</span>
+                </span>
+                <span class="p-l-sm" ng-click="app.bookmark(cell.postView.postId); app.stopPropagation($event);">
+                  <a href class="text-center text-lg v-middle">
+                    <i class="mdi" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(cell.postView.postId), 'mdi-bookmark-outline': !app.bookmarked(cell.postView.postId)}"></i>
+                  </a>
+                  <span class="p-b-sm">Adicionar a Minha Lista</span>
+                </span>
               </div>
             </div>
           </div>
-          
-          <div class="half-post">
+
+          </div>
+
+          <!--
+          <div class="half-post bg-custom">
             <div class="row">
               <div class="col-md-6">
                 <a href="blog.html"><img src="images/home/1/3.jpg" class="post-thumb img-responsive" alt=""></a>
                 <span class="post-formats video"></span>
               </div>
               <div class="col-md-6">
-                <h4><a href="blog.html">YouTube Newswire Curates Eyewitness Videos</a></h4>
+                <a class="h3 font-bold m-b m-t-sm" href="blog.html">YouTube Newswire Curates Eyewitness Videos</a>
                 <div class="post-meta">
-                  <span class="post-author">Pleasance Noah</span>
+                  <span class="post-author a-custom-primary">Pleasance Noah</span>
                   <span class="post-tags"><a href="#">Video Marketing</a></span>
                 </div>
-                <p>Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
+                <p class="font-thin text-lg">Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
               </div>
             </div>
           </div>
           
-          <div class="half-post">
+          <div class="half-post bg-custom">
             <div class="row">
               <div class="col-md-6">
                 <a href="blog.html"><img src="images/home/1/4.jpg" class="post-thumb img-responsive" alt=""></a>
               </div>
               <div class="col-md-6">
-                <h4><a href="blog.html">Has Google Gone Too Far with the Bias Toward Its Own Content?</a></h4>
+                <a class="h3 font-bold m-b m-t-sm" href="blog.html">Has Google Gone Too Far with the Bias Toward Its Own Content?</a>
                 <div class="post-meta">
-                  <span class="post-author">Morgan Sheri</span>
+                  <span class="post-author a-custom-primary">Morgan Sheri</span>
                   <span class="post-tags"><a href="#">Development</a></span>
                 </div>
-                <p>Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
+                <p class="font-thin text-lg">Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
               </div>
             </div>
           </div>
           
           <div class="sep"></div>
           
-          <div class="full-post">
+          <div class="full-post bg-custom">
             <a href="blog.html"><img src="images/home/1/5.jpg" class="post-thumb img-responsive" alt=""></a>
             <div class="post-meta">
-              <span class="post-author">Sheena Geoffrey</span>
+              <span class="post-author a-custom-primary">Sheena Geoffrey</span>
               <span class="post-tags"><a href="#">Tutorials on Marketing</a></span>
             </div>
-            <h4><a href="blog.html">The Day After: 11 Things to Do After You Publish a Post</a></h4>
+            <a class="h3 font-bold m-b m-t-sm" href="blog.html">The Day After: 11 Things to Do After You Publish a Post</a>
             <p>Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really want to know.</p>
           </div>
           
-          <div class="half-post">
+          <div class="half-post bg-custom">
             <div class="row">
               <div class="col-md-6">
                 <a href="blog.html"><img src="images/home/1/6.jpg" class="post-thumb img-responsive" alt=""></a>
               </div>
               <div class="col-md-6">
-                <h4><a href="blog.html">How to Make Custom Images for Your Blog Posts Without Hiring a Designer</a></h4>
+                <a class="h3 font-bold m-b m-t-sm" href="blog.html">How to Make Custom Images for Your Blog Posts Without Hiring a Designer</a>
                 <div class="post-meta">
-                  <span class="post-author">Edweena Lynne</span>
+                  <span class="post-author a-custom-primary">Edweena Lynne</span>
                   <span class="post-tags"><a href="#">Ideometer</a></span>
                 </div>
-                <p>Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
+                <p class="font-thin text-lg">Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
               </div>
             </div>
           </div>
           
-          <div class="half-post">
+          <div class="half-post bg-custom">
             <div class="row">
               <div class="col-md-6">
                 <a href="blog.html"><img src="images/home/1/7.jpg" class="post-thumb img-responsive" alt=""></a>
                 <span class="post-formats gallery"></span>
               </div>
               <div class="col-md-6">
-                <h4><a href="blog.html">Instagram Makes Content More Accessible</a></h4>
+                <a class="h3 font-bold m-b m-t-sm" href="blog.html">Instagram Makes Content More Accessible</a>
                 <div class="post-meta">
-                  <span class="post-author">Frederica Hayley</span>
+                  <span class="post-author a-custom-primary">Frederica Hayley</span>
                   <span class="post-tags"><a href="#">Development</a></span>
                 </div>
-                <p>Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
+                <p class="font-thin text-lg">Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
               </div>
             </div>
           </div>
           
-          <div class="half-post">
+          <div class="half-post bg-custom">
             <div class="row">
               <div class="col-md-6">
                 <a href="blog.html"><img src="images/home/1/8.jpg" class="post-thumb img-responsive" alt=""></a>
               </div>
               <div class="col-md-6">
-                <h4><a href="blog.html">The 7 Must Have SEO Reports to Meet Today's Search Optimization Challenges</a></h4>
+                <a class="h3 font-bold m-b m-t-sm" href="blog.html">The 7 Must Have SEO Reports to Meet Today's Search Optimization Challenges</a>
                 <div class="post-meta">
-                  <span class="post-author">Edric Franklin</span>
+                  <span class="post-author a-custom-primary">Edric Franklin</span>
                   <span class="post-tags"><a href="#">Search Engine Optimization</a></span>
                 </div>
-                <p>Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
+                <p class="font-thin text-lg">Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         
         <!-- <div class="free-course">
           <h5>Free Course, valued at $299</h5>
@@ -137,49 +183,51 @@
           <span>100% Privacy. We will never spam you!</span>
         </div> -->
         
-        <div class="home-blog">
+        <!-- <div class="home-blog bg-custom">
           <div class="half-post">
             <div class="row">
               <div class="col-md-6">
                 <a href="blog.html"><img src="images/home/1/9.jpg" class="post-thumb img-responsive" alt=""></a>
               </div>
               <div class="col-md-6">
-                <h4><a href="./blog.html">13 Important Questions You Need to Ask Yourself Before Blogging</a></h4>
+                <a class="h3 font-bold m-b m-t-sm" href="./blog.html">13 Important Questions You Need to Ask Yourself Before Blogging</a>
                 <div class="post-meta">
-                  <span class="post-author">Irene Lynnette</span>
+                  <span class="post-author a-custom-primary">Irene Lynnette</span>
                   <span class="post-tags"><a href="#">Blogging</a></span>
                 </div>
-                <p>Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
+                <p class="font-thin text-lg">Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
               </div>
             </div>
           </div>
           
-          <div class="half-post">
+          <div class="half-post bg-custom">
             <div class="row">
               <div class="col-md-6">
                 <a href="blog.html"><img src="images/home/1/10.jpg" class="post-thumb img-responsive" alt=""></a>
                 <span class="post-formats link"></span>
               </div>
               <div class="col-md-6">
-                <h4><a href="./blog.html">Simple SEO Mistakes That Can Cause Damage</a></h4>
+                <a class="h3 font-bold m-b m-t-sm" href="./blog.html">Simple SEO Mistakes That Can Cause Damage</a>
                 <div class="post-meta">
-                  <span class="post-author">Les Cecilia</span>
+                  <span class="post-author a-custom-primary">Les Cecilia</span>
                   <span class="post-tags"><a href="#">Search Engine Optimization</a></span>
                 </div>
-                <p>Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
+                <p class="font-thin text-lg">Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really</p>
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         
         <!-- PAGINATION -->
-        <div class="page_nav">
+        <!-- <div class="page_nav">
           <ul>
             <li class="active"><a href="./index.html">1</a></li>
             <li><a href="./index.html">2</a></li>
             <li><a href="./index.html">3</a></li>
           </ul>
+         -->
         </div>
+
       </div>
       
       <!-- SIDEBAR -->
@@ -195,42 +243,30 @@
           </form>
           <span>100% Privacy. We will never spam you!</span>
         </div> -->
-        <div class="recent-posts side-widget">
+
+        <div class="recent-posts side-widget" id="station-sidebar">
+          <h4>Populares</h4>
+          <ul>
+            <li ng-repeat="post in app.initData.popular | limitTo: 5">
+              <a ng-click="app.setNowReading(post, app.initData.popular)" class="rp-title">
+              {{post.title}}</a>
+              <div class="rp-meta">
+                <span class="post-author a-custom-primary">{{post.date | fromNow}}</span>
+                <!-- <span class="post-tags"><a href="#">Startup</a></span> -->
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="recent-posts side-widget" id="station-sidebar">
           <h4>Mais Lidos</h4>
           <ul>
-            <li>
-              <a href="./blog.html" class="rp-title">9 Things Warren Buffett Says You Should Do to Be Happy and Successful</a>
+            <li ng-repeat="post in app.initData.recent | limitTo: 5">
+              <a ng-click="app.setNowReading(post, app.initData.popular)" class="rp-title">
+              {{post.title}}</a>
               <div class="rp-meta">
-                <span class="post-author">Pearlie Giles</span>
-                <span class="post-tags"><a href="#">Startup</a></span>
-              </div>
-            </li>
-            <li>
-              <a href="./blog.html" class="rp-title">The Dating App That's Hacking Fate Within a 250-Meter Radius</a>
-              <div class="rp-meta">
-                <span class="post-author">Cathleen Rolph</span>
-                <span class="post-tags"><a href="#">Development</a></span>
-              </div>
-            </li>
-            <li>
-              <a href="./blog.html" class="rp-title">MassRoots Becomes the Biggest hit in the Marijuana Business</a>
-              <div class="rp-meta">
-                <span class="post-author">Nigella Esta</span>
-                <span class="post-tags"><a href="#">Online Business</a></span>
-              </div>
-            </li>
-            <li>
-              <a href="./blog.html" class="rp-title">Steal These 5 Secrets From Google, Netflix, Amazon to Improve Your Customer Service</a>
-              <div class="rp-meta">
-                <span class="post-author">Katelynn Sheree</span>
-                <span class="post-tags"><a href="#">Tips &amp; Tricks</a></span>
-              </div>
-            </li>
-            <li>
-              <a href="./blog.html" class="rp-title">8 Stealth Interview Questions That Reveal True Character</a>
-              <div class="rp-meta">
-                <span class="post-author">Zackary Norah</span>
-                <span class="post-tags"><a href="#">Human Resources</a></span>
+                <span class="post-author a-custom-primary">{{post.date | fromNow}}</span>
+                <!-- <span class="post-tags"><a href="#">Startup</a></span> -->
               </div>
             </li>
           </ul>
@@ -257,7 +293,7 @@
         <div class="h3">
           <a ng-if="ordinaryRow.termName" class="animated fadeIn" ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
             <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
-            <span class="m-l-xs font-thin text-u-c" >{{::ordinaryRow.termName}}</span>
+            <span class="m-l-xs font-thin text-lg text-u-c" >{{::ordinaryRow.termName}}</span>
           </a>
         </div>
         <div class="frame info-flow" style="overflow: hidden;">
@@ -266,7 +302,7 @@
               <!-- <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div> -->
               <div class="news-item animated fadeIn o-h" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
                 <div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.mediumId">
-                  <div class="text-md font-thin text-white ls-sm">{{::cell.postView.title}}</div>
+                  <div class="text-md font-thin text-lg text-white ls-sm">{{::cell.postView.title}}</div>
                   <div class="m-t-md" ng-if="cell.postView.mediumId">
                     <div class="display-t-c">
                       <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
@@ -365,10 +401,10 @@
           <!-- /content -->
           <div class="m-t-sm" ng-class="{'content-block': cell.postView.mediumId}">
             <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{::cell.postView.topper}}</span>
-            <a  class="h3 font-bold m-b m-t-sm block">
+            <a  class="h3 font-bold m-b m-t-sm m-b m-t-sm block">
               {{::cell.postView.title}}
             </a>
-            <div class="text-lg font-thin">{{::cell.postView.snippet | characters:170}}</div>
+            <div class="text-lg font-thin text-lg">{{::cell.postView.snippet | characters:170}}</div>
             <div class="m-t">
               <div class="display-t-c">
                 <a >
@@ -417,7 +453,7 @@
 <div ng-if="!app.isMobile" id="station-sidebar" class="b-l animated fadeIn">
   <!-- <div class="vbox"> -->
   <div class="wrapper sidebar-top">
-    <div class="font-thin h4">&nbsp;</div>
+    <div class="font-thin text-lg h4">&nbsp;</div>
   </div>
   <md-tabs style="height: 100%" md-center-tabs md-dynamic-height md-no-ink>
   <md-tab class="bg-custom" label="Populares">
@@ -474,39 +510,39 @@
   </div>
   <!-- nabar right -->
   <ul class="nav navbar-nav navbar-right">
-    <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
+    <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown style="opacity: 0">
       <a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-dots-vertical mdi" dropdown-toggle>
       </a>
       <!-- dropdown -->
-      <ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
-        <!-- <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Marcar como lida</span></li>
-        <li> <a href class="mark-as-read"> Todas</a> </li>
-        <li> <a href class="mark-as-read"> Mais antigas que um dia</a> </li>
-        <li class="divider"></li> -->
-        <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">modo de exibição</span></li>
-        <li> <a ng-click="changeView('horizontal')" href>
-          <span class="mdi mdi-check pull-right m-t-xxs" ng-if="app.viewMode == 'horizontal'"></span>
-          <i class="mdi mdi-swap-horizontal m-r-sm"></i> 
-          Horizontal 
-        </a> 
+        <!-- <ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
+            <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Marcar como lida</span></li>
+            <li> <a href class="mark-as-read"> Todas</a> </li>
+            <li> <a href class="mark-as-read"> Mais antigas que um dia</a> </li>
+            <li class="divider"></li>
+            <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">modo de exibição</span></li>
+            <li> <a ng-click="changeView('horizontal')" href>
+              <span class="mdi mdi-check pull-right m-t-xxs" ng-if="app.viewMode == 'horizontal'"></span>
+              <i class="mdi mdi-swap-horizontal m-r-sm"></i> 
+              Horizontal 
+            </a> 
+          </li>
+          <li> <a ng-click="changeView('vertical')" href> 
+            <span class="mdi mdi-check pull-right m-t-xxs" ng-if="app.viewMode == 'vertical'"></span>
+            <i class="mdi mdi-swap-vertical m-r-sm"></i>
+            Vertical 
+            </a> 
+          </li>
+        </ul> -->
+        <!-- / dropdown -->
       </li>
-      <li> <a ng-click="changeView('vertical')" href> 
-        <span class="mdi mdi-check pull-right m-t-xxs" ng-if="app.viewMode == 'vertical'"></span>
-        <i class="mdi mdi-swap-vertical m-r-sm"></i>
-        Vertical 
-      </a> 
-    </li>
-  </ul>
-  <!-- / dropdown -->
-</li>
-<li ng-if="!app.isLogged">
-  <div class="divider-v m-r-xs"></div>
-</li>
-<li ng-if="!app.isLogged">
-  <a href class="text-u-c text-center text-md" ng-click="openSplash('signin_splash.html');">ENTRAR {{app.initData.network.allowSignup ? '/ Cadastrar-se' : ''}}</a>
-</li>
-</ul>
-</div>
+      <li ng-if="!app.isLogged">
+        <div class="divider-v m-r-xs"></div>
+      </li>
+      <li ng-if="!app.isLogged">
+        <a href class="text-u-c text-center text-md" ng-click="openSplash('signin_splash.html');">ENTRAR {{app.initData.network.allowSignup ? '/ Cadastrar-se' : ''}}</a>
+      </li>
+    </ul>
+  </div>
 
 <div ui-view></div>
 <!-- /header bar-->

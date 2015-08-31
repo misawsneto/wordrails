@@ -2010,6 +2010,18 @@ a.text-lgrey:hover {
   background-position: center;
 }
 
+.block-image2{
+  display: block;
+  width: 370px;
+  height: 250px;
+  float: right;
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 4px;
+  background-origin: border-box;
+  background-size: cover;
+  background-position: center;
+}
+
 .m-auto{
   margin-left: auto;
   margin-right: auto;
@@ -3485,10 +3497,6 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   overflow-y: hidden;
 }
 
-#post-right-content .btn-term{
-
-}
-
 #post-right-content .btn-term.btn-stroke:hover,
 #post-right-content .btn-term.btn-stroke:active,
 #post-right-content .btn-term.btn-stroke.active{
@@ -3714,6 +3722,11 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
   }
   .new-post-navbar .navbar-right{
     margin-right: 10px;
+  }
+
+  .station-header .navbar-nav > li > a {
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 }
 /* header top */
@@ -4186,7 +4199,7 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
     transition: all 0.1s ease-in-out;
   }
   .nav-up .station-header {
-    top: -50px;
+    top: -70px;
     -webkit-transition: all 0.1s ease-in-out;
     -moz-transition: all 0.1s ease-in-out;
     -o-transition: all 0.1s ease-in-out;
@@ -4211,13 +4224,13 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 
   .header-font{font-size: 21px}
 
-  #station-sidebar{
-    width: 340px;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    position: fixed;
-  }
+/* station-sidebar  #station-sidebar{
+  width: 340px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  position: fixed;
+} */
 
   /* #station-sidebar md-tabs{margin-top: 2px;} */
   /* #perspective-vertical .md-header {max-width: 800px; margin-right: auto; margin-left: auto;} */
@@ -4440,7 +4453,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 
 #perspective-sidebar{width: 200px;}
 
-#station-sidebar .popular-posts .tl-wrap{  border-width: 0 2px 0 0;
+/* #station-sidebar .popular-posts .tl-wrap{  border-width: 0 2px 0 0;
   padding: 15px 25px 15px 15px;
   margin-left: 0;
   margin-right: 18px;
@@ -4455,8 +4468,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   width: 30px;
   height: 30px;
 }
-
-#station-sidebar .popular-posts .popular-index{  position: absolute;
+ */
+/* #station-sidebar .popular-posts .popular-index{  position: absolute;
   right: 24px;
   color: #333;
   font-size: 20px;
@@ -4489,7 +4502,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 #station-sidebar a:hover{
   text-decoration: underline;
 }
-
+ */
 #station-fab,
 #sponsor-fab {
   position: fixed;
@@ -5353,8 +5366,7 @@ progress[aria-valuenow]:before {
 .navbar-nav li a {
   font-size: 16px;
   text-transform: uppercase;
-  color: #6a7a89;
-  letter-spacing: 0.05em;
+  color: #6a7a89; 
 }
 
 .navbar-nav li:hover a ,
@@ -5390,7 +5402,6 @@ progress[aria-valuenow]:before {
   background: #E53935;
   padding: 2px 6px;
   font-size: 7px;
-  letter-spacing: 0.05em;
   color: #FFF;
   text-transform: uppercase;
   font-weight: bold;
@@ -5425,7 +5436,6 @@ progress[aria-valuenow]:before {
 .dropdown-menu li a {
   text-transform: none;
   font-size: 13px;
-  letter-spacing: 0.05em;
   border-bottom: 1px solid #e5e5e5;
   padding: 13px 25px;
   color: #999 !important;
@@ -5484,7 +5494,7 @@ progress[aria-valuenow]:before {
 
 .header2 .nav > li > a:focus ,
 .header2 .nav > li > a {
-  color: #6a7a89;
+  /* color: #6a7a89; */
   background:transparent !important;
 }
 
@@ -5603,9 +5613,9 @@ progress[aria-valuenow]:before {
 .top-post span {
   font-size: 13px;
   line-height: 20px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   text-transform: uppercase;
-  color: #6a7a89;
+  /* color: #6a7a89; */
   margin: 0 0 3px;
   display: table;
 }
@@ -5624,7 +5634,7 @@ progress[aria-valuenow]:before {
 
 .top-post h3 a em {
   font-style: normal;
-  color: #6a7a89;
+  /* color: #6a7a89; */
   font-size: 28px;
 }
 
@@ -5657,8 +5667,8 @@ progress[aria-valuenow]:before {
 
 .full-post .post-meta span {
   font-size: 13px;
-  color: #6a7a89;
-  letter-spacing: 0.05em;
+  /* color: #6a7a89; */
+  /* letter-spacing: 0.05em; */
   margin-right: 32px;
   position: relative;
 }
@@ -5697,9 +5707,9 @@ progress[aria-valuenow]:before {
 }
 
 .full-post p {
-  font-size: 16px;
-  color: #6A7A89;
-  letter-spacing: 0.05em;
+  /* font-size: 16px; */
+  /* color: #6A7A89; */
+  /* letter-spacing: 0.05em; */
   margin-bottom: 25px;
 }
 
@@ -5713,8 +5723,8 @@ progress[aria-valuenow]:before {
 
 .half-post .post-meta span {
   font-size: 13px;
-  color: #6a7a89;
-  letter-spacing: 0.05em;
+  /* color: #6a7a89; */
+  /* letter-spacing: 0.05em; */
   margin-right: 32px;
   position: relative;
 }
@@ -5753,11 +5763,11 @@ progress[aria-valuenow]:before {
 }
 
 .half-post p {
-  font-size: 16px;
-  color: #6A7A89;
-  letter-spacing: 0.05em;
-  margin-bottom: 0;
-  line-height: 24px;
+  /* font-size: 16px; */
+  /* color: #6A7A89; */
+  /* letter-spacing: 0.05em; */
+  /* margin-bottom: 0;
+  line-height: 24px; */
 }
 
 .sep {
@@ -5788,7 +5798,7 @@ progress[aria-valuenow]:before {
   font-weight: bold;
   text-transform: uppercase;
   color: #2A3744;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   text-align: center;
 }
 
@@ -5803,9 +5813,9 @@ progress[aria-valuenow]:before {
 
 .free-course p {
   line-height: 25px;
-  color: #6A7A89;
+  /* color: #6A7A89; */
   font-size: 16px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   text-align: center;
   margin: 0 0 33px;
 }
@@ -5819,7 +5829,7 @@ progress[aria-valuenow]:before {
   background-color: #e9edf1;
   float: left;
   padding: 0 20px;
-  color: #6a7a89;
+  /* color: #6a7a89; */
   font-size: 13px;
   border: none;
 }
@@ -5843,8 +5853,8 @@ progress[aria-valuenow]:before {
 
 .free-course span {
   font-size: 13px;
-  color: #6a7a89;
-  letter-spacing: 0.05em;
+  /* color: #6a7a89; */
+  /* letter-spacing: 0.05em; */
   text-align: center;
   width: 100%;
   display: block;
@@ -5904,7 +5914,7 @@ progress[aria-valuenow]:before {
   border-radius: 6px;
   background-color: transparent;
   display: table;
-  color: #6a7a89;
+  /* color: #6a7a89; */
 }
 
 .page_nav ul li.active a,
@@ -5920,9 +5930,9 @@ progress[aria-valuenow]:before {
   -moz-border-radius: 6px;
   border-radius: 6px;
   /* background-color: #fff; */
-  border: 2px solid #E9EDF1;
+  border: 1px solid #dee5e7;
   margin: 18px 0px 31px;
-  padding: 20px 0 30px;
+  padding: 20px 0 10px;
   -webkit-box-shadow: 0 6px 10px rgba(0,0,0,.02);
   -moz-box-shadow: 0 6px 10px rgba(0,0,0,.02);
   box-shadow: 0 6px 10px rgba(0,0,0,.02);
@@ -5932,16 +5942,16 @@ progress[aria-valuenow]:before {
   font-size: 16px;
   font-weight: bold;
   text-transform: uppercase;
-  color: #2A3744;
+  /* color: #2A3744; */
   line-height: 25px;
   margin: 5px 27px 2px;
   letter-spacing: 0.1em;
 }
 
 .recent-posts ul li .rp-title {
-  font-size: 17px;
-  line-height: 30px;
-  color: #2a3744;
+  font-size: 15px;
+  line-height: 20px;
+  /* color: #2a3744; */
   font-weight: 700;
   margin: -5px 0 0;
   display: table;
@@ -5953,7 +5963,7 @@ progress[aria-valuenow]:before {
 
 .rp-meta span {
   font-size: 13px;
-  color: #6A7A89;
+  /* color: #6A7A89; */
   letter-spacing: 0.1em;
   margin-right: 39px;
   position: relative;
@@ -5983,18 +5993,18 @@ progress[aria-valuenow]:before {
 
 .recent-posts ul li {
   border-bottom: 1px solid #e9edf0;
-  padding: 27px 27px;
+  padding: 20px 20px;
   position: relative;
   cursor: pointer;
 }
 
 .recent-posts ul li:after {
   content: "";
-  width: 2px;
+  width: 1px;
   height: 100%;
   background: #2f7af8;
   position: absolute;
-  left: -2px;
+  left: -1px;
   top: 0;
   opacity: 0;
   visibility: hidden;
@@ -6055,7 +6065,7 @@ progress[aria-valuenow]:before {
 .ad-block a {
   font-size: 13px;
   text-transform: uppercase;
-  color: #6A7A89;
+  /* color: #6A7A89; */
   text-align: center;
   letter-spacing: 0.1em;
   display: table;
@@ -6134,16 +6144,16 @@ progress[aria-valuenow]:before {
   font-size: 16px;
   line-height: 25px;
   margin: 0 0 17px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   text-transform: uppercase;
   font-weight: 700;
   color: #2a3744;
 }
 
 .articles p {
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   font-size: 16px;
-  color: #6A7A89;
+  /* color: #6A7A89; */
   line-height: 25px;
 }
 
@@ -6176,8 +6186,8 @@ progress[aria-valuenow]:before {
 
 .articles-list .post-meta span {
   font-size: 13px;
-  color: #6a7a89;
-  letter-spacing: 0.05em;
+  /* color: #6a7a89; */
+  /* letter-spacing: 0.05em; */
   margin-right: 32px;
   position: relative;
 }
@@ -6215,7 +6225,7 @@ progress[aria-valuenow]:before {
 }
 
 .terms-info p.lead {
-  color: #6A7A89;
+  /* color: #6A7A89; */
   font-size: 13px;
   line-height: 20px;
   letter-spacing: 0.08em;
@@ -6231,9 +6241,9 @@ progress[aria-valuenow]:before {
 
 .terms-info p {
   font-size: 16px;
-  color: #6a7a89;
+  /* color: #6a7a89; */
   line-height: 25px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   margin: 0 0 48px;
 }
 
@@ -6261,7 +6271,7 @@ progress[aria-valuenow]:before {
   font-size: 13px;
   line-height: 20px;
   letter-spacing: 0.08em;
-  color: #6A7A89;
+  /* color: #6A7A89; */
   margin: 4px 0px 49px;
 }
 
@@ -6279,7 +6289,7 @@ progress[aria-valuenow]:before {
   font-size: 13px;
   border: none;
   margin: 0 0 30px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
 }
 
 .contact-content form textarea {
@@ -6295,7 +6305,7 @@ progress[aria-valuenow]:before {
   font-size: 13px;
   border: none;
   margin: 0 0 30px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
 }
 
 .contact-content form input::-webkit-input-placeholder {
@@ -6356,8 +6366,8 @@ progress[aria-valuenow]:before {
 
 .contact-content form span {
   font-size: 13px;
-  color: #6A7A89;
-  letter-spacing: 0.05em;
+  /* color: #6A7A89; */
+  /* letter-spacing: 0.05em; */
   line-height: 20px;
   padding: 12px 18px;
   display: table;
@@ -6381,16 +6391,16 @@ progress[aria-valuenow]:before {
   font-size: 16px;
   line-height: 25px;
   margin: 0 0 13px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   text-transform: uppercase;
   font-weight: 700;
   color: #2a3744;
 }
 
 .c-connect p {
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   font-size: 16px;
-  color: #6A7A89;
+  /* color: #6A7A89; */
   line-height: 25px;
   margin: 0 0 19px;
 }
@@ -6450,10 +6460,10 @@ progress[aria-valuenow]:before {
 }
 
 .author-meta-left span {
-  color: #6A7A89;
+  /* color: #6A7A89; */
   font-size: 13px;
   line-height: 20px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   margin: 0px 36px 49px 0;
   position: relative;
 }
@@ -6477,10 +6487,10 @@ progress[aria-valuenow]:before {
 }
 
 .author-meta-right span {
-  color: #6A7A89;
+  /* color: #6A7A89; */
   font-size: 13px;
   line-height: 20px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   margin: 0px 0 49px 36px;
   position: relative;
 }
@@ -6506,8 +6516,8 @@ progress[aria-valuenow]:before {
 .author-info p {
   font-size: 16px;
   line-height: 25px;
-  letter-spacing: 0.05em;
-  color: #6A7A89;
+  /* letter-spacing: 0.05em; */
+  /* color: #6A7A89; */
   margin: 28px 0 31px;
 }
 
@@ -6535,7 +6545,7 @@ progress[aria-valuenow]:before {
   font-size: 16px;
   line-height: 25px;
   letter-spacing: 0.055em;
-  color: #6a7a89;
+  /* color: #6a7a89; */
 }
 
 .error-content a {
@@ -6599,16 +6609,16 @@ progress[aria-valuenow]:before {
   font-size: 16px;
   line-height: 25px;
   margin: 3px 0px -5px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   text-transform: uppercase;
   font-weight: 700;
   color: #2A3744;
 }
 
 .post-author .post-date {
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   font-size: 13px;
-  color: #6A7A89;
+  /* color: #6A7A89; */
   line-height: 25px;
 }
 
@@ -6617,10 +6627,10 @@ progress[aria-valuenow]:before {
 }
 
 .post-tags span {
-  color: #6A7A89;
+  /* color: #6A7A89; */
   font-size: 13px;
   line-height: 20px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   margin: 0px 0 49px 36px;
   position: relative;
 }
@@ -6644,18 +6654,18 @@ progress[aria-valuenow]:before {
 }
 
 .para-md {
-  color: #6A7A89;
+  /* color: #6A7A89; */
   font-size: 20px;
   line-height: 29px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   margin: 29px 0 55px;
 }
 
 .blog-info p {
   font-size: 16px;
-  color: #6a7a89;
+  /* color: #6a7a89; */
   line-height: 25px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   margin: 0 0 24px;
 }
 
@@ -6690,7 +6700,7 @@ progress[aria-valuenow]:before {
 }
 
 .img-copyright {
-  color: #6A7A89;
+  /* color: #6A7A89; */
   font-size: 13px;
   line-height: 20px;
   letter-spacing: 0.06em;
@@ -6708,14 +6718,14 @@ progress[aria-valuenow]:before {
 .bcrumbs li {
   float: left;
   font-size: 13px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   margin-right: 38px;
   position: relative;
-  color: #6a7a89;
+  /* color: #6a7a89; */
 }
 
 .bcrumbs li a {
-  color: #6a7a89;
+  /* color: #6a7a89; */
 }
 
 .bcrumbs li a:hover {
@@ -6747,7 +6757,7 @@ progress[aria-valuenow]:before {
   font-size: 16px;
   line-height: 25px;
   margin: 0 0 33px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   text-transform: uppercase;
   font-weight: 700;
   color: #2a3744;
@@ -6768,10 +6778,10 @@ progress[aria-valuenow]:before {
   background: transparent;
   height: 159px;
   width: 100%;
-  color: #6a7a89;
+  /* color: #6a7a89; */
   font-size: 16px;
   padding: 22px 30px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
 }
 
 .comment-tab textarea::-webkit-input-placeholder {
@@ -6795,8 +6805,8 @@ progress[aria-valuenow]:before {
 }
 
 .comment-tab span {
-  color: #6A7A89;
-  letter-spacing: 0.05em;
+  /* color: #6A7A89; */
+  /* letter-spacing: 0.05em; */
   background: url(../images/other/arrow.png) no-repeat center left;
   float: left;
   margin-left: 30px;
@@ -6809,7 +6819,7 @@ progress[aria-valuenow]:before {
   display: inline-block;
   float: right;
   font-size: 13px;
-  color: #6A7A89;
+  /* color: #6A7A89; */
   padding-right: 28px;
 }
 
@@ -6835,7 +6845,7 @@ progress[aria-valuenow]:before {
 .comments-info li h4 {
   font-size: 16px;
   line-height: 25px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   text-transform: uppercase;
   font-weight: 700;
   color: #2a3744;
@@ -6843,7 +6853,7 @@ progress[aria-valuenow]:before {
 
 .comments-info li h4 span {
   font-size: 13px;
-  color: #6A7A89;
+  /* color: #6A7A89; */
   letter-spacing: 0.1em;
   display: block;
   text-transform: none;
@@ -6853,8 +6863,8 @@ progress[aria-valuenow]:before {
 
 .comments-info li p {
   font-size: 16px;
-  color: #6a7a89;
-  letter-spacing: 0.05em;
+  /* color: #6a7a89; */
+  /* letter-spacing: 0.05em; */
   line-height: 25px;
   margin-bottom: 13px;
 }
@@ -6866,8 +6876,8 @@ progress[aria-valuenow]:before {
 
 .comment-meta span {
   font-size: 13px;
-  color: #6a7a89;
-  letter-spacing: 0.05em;
+  /* color: #6a7a89; */
+  /* letter-spacing: 0.05em; */
   margin-right: 32px;
   position: relative;
 }
@@ -6928,7 +6938,7 @@ progress[aria-valuenow]:before {
   color: #d57309;
   font-size: 13px;
   line-height: 20px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   margin: 0;
 }
 
@@ -6951,24 +6961,24 @@ progress[aria-valuenow]:before {
 .tl-left li {
   float: left;
   font-size: 13px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   margin-right: 26px;
 }
 
-.tl-left li a {
+/* .tl-left li a {
   color: #6a7a89;
-}
+} */
 
 .tl-right li {
   float: left;
   font-size: 13px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   margin-left: 26px;
 }
 
-.tl-right li a {
+/* .tl-right li a {
   color: #6a7a89;
-}
+} */
 
 .tl-left li a:hover,
 .tl-right li a:hover {
@@ -6999,7 +7009,7 @@ progress[aria-valuenow]:before {
   font-size: 16px;
   line-height: 25px;
   margin: 4px 0px -2px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   text-transform: uppercase;
   font-weight: 700;
   color: #2A3744;
@@ -7011,8 +7021,8 @@ progress[aria-valuenow]:before {
 
 .ta-meta span {
   font-size: 13px;
-  color: #6a7a89;
-  letter-spacing: 0.05em;
+  /* color: #6a7a89; */
+  /* letter-spacing: 0.05em; */
   margin-right: 32px;
   position: relative;
 }
@@ -7042,16 +7052,16 @@ footer {
   font-size: 16px;
   line-height: 25px;
   margin: 0 0 17px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   text-transform: uppercase;
   font-weight: 700;
   color: #fff;
 }
 
 .footer-widget p {
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   font-size: 16px;
-  color: #6A7A89;
+  /* color: #6A7A89; */
   line-height: 25px;
 }
 
@@ -7061,7 +7071,7 @@ footer {
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
-  background-color: #6a7a89;
+  /* background-color: #6a7a89; */
   padding: 0 20px;
   color: #fff;
   font-size: 13px;
@@ -7088,10 +7098,10 @@ footer {
 }
 
 .footer-subscribe form span {
-  color: #6A7A89;
+  /* color: #6A7A89; */
   font-size: 13px;
   line-height: 20px;
-  letter-spacing: 0.05em;
+  /* letter-spacing: 0.05em; */
   display: table;
   text-align: center;
   width: 100%;
@@ -7123,8 +7133,8 @@ footer {
 
 .footer-news .post-meta span {
   font-size: 13px;
-  color: #6a7a89;
-  letter-spacing: 0.05em;
+  /* color: #6a7a89; */
+  /* letter-spacing: 0.05em; */
   margin-right: 32px;
   position: relative;
 }
@@ -7158,8 +7168,8 @@ footer {
 
 .footer-bottom p {
   font-size: 16px;
-  color: #6a7a89;
-  letter-spacing: 0.05em;
+  /* color: #6a7a89; */
+  /* letter-spacing: 0.05em; */
   line-height: 25px;
   margin: 0;
 }
