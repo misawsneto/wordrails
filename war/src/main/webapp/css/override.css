@@ -5963,6 +5963,11 @@ progress[aria-valuenow]:before {
   padding: 10px 0px 0;
 }
 
+.home-blog .half-post:first .row{
+  padding-top:0;
+  border-width: 0;
+}
+
 .rp-meta span {
   font-size: 13px;
   /* color: #6A7A89; */
