@@ -5966,7 +5966,7 @@ progress[aria-valuenow]:before {
 .rp-meta span {
   font-size: 13px;
   /* color: #6A7A89; */
-  letter-spacing: 0.1em;
+  /* letter-spacing: 0.1em; */
   margin-right: 39px;
   position: relative;
 }

@@ -787,4 +787,14 @@ public class UtilResource {
 			cacheService.removeUser(user.id);
 		}
 	}
+
+	@PUT
+	@Path("/addCategoryTerm/{id}/{termId}")
+	public void addCategoryTerm (@Context HttpServletRequest request, @PathParam("id") Integer id, @PathParam("termId") Integer termId) {
+		TermPerspective termPerspective = termPerspectiveRepository.findOne(id);
+		Term term = termRepository.findOne(termId);
+
+		termPerspective.categoryTabs.add(term);
+		termPerspectiveRepository.save(termPerspective);
+	}
 }
