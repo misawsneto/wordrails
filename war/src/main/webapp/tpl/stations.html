@@ -245,7 +245,7 @@
           <span>100% Privacy. We will never spam you!</span>
         </div> -->
 
-        <div class="recent-posts side-widget" id="station-sidebar">
+        <div class="recent-posts side-widget" id="station-sidebar" ng-if="app.initData.popular && app.initData.popular.length > 0">
           <h4>Populares</h4>
           <ul>
             <li ng-repeat="post in app.initData.popular | limitTo: 5">
@@ -259,7 +259,7 @@
           </ul>
         </div>
 
-        <div class="recent-posts side-widget" id="station-sidebar">
+        <div class="recent-posts side-widget" id="station-sidebar" ng-if="app.initData.recent && app.initData.recent.length > 0">
           <h4>Mais Lidos</h4>
           <ul>
             <li ng-repeat="post in app.initData.recent | limitTo: 5">

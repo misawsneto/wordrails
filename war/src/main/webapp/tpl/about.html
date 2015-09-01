@@ -1,147 +1,18 @@
 <div id="tag-posts" class="hbox p-t-xxl" ng-cloak>
-	<!-- cover container -->
-	<div class="text-center m-t-xxl">
-		<span class="tag-page-tag box-shadow animated fadeIn text-3x m-auto">
-			{{tagName}}
-		</span>
-	</div>
-	<!-- /conver container -->
-
 
 	<!-- posts & recommendation -->
-	<div infinite-scroll="paginate()" infinite-scroll-distance="1">
-		<!-- posts -->
-		<!-- <div class="block-800 m-auto m-t-lg m-b-lg" ng-if="postViews && postViews.length > 0">
-			<ul class="b-none no-padding m-b-none ls-style-none">
-				<li ng-repeat="postView in postViews">
-					<div ng-class="{'b-t': !$first}"></div>
-					<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.tagspage')">
-						image
-						<a class="block-image m-l m-t" ng-if="postView.mediumId" >
-							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
-							</div>
-						</a>
-						/image
-						/content
-						<div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
-							<span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
-							<a  class="h3 font-bold m-b m-t-sm block">
-								{{postView.title}}
-							</a>
-							<div class="text-lg font-thin">
-								{{postView.snippet | characters:170}}
-							</div>
-							<div class="m-t">
-								<div class="display-t-c">
-									<a >
-										<div back-img="{{postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
-									</a>
-								</div>
-								<div class="display-t-c p-l-sm v-middle">
-									<a ng-click="app.goToProfile($event, postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
-										{{postView.authorName}}
-									</a>
-									<br>
-									<span class="text-sm">
-										<span class="">
-											<span class="readingTime">{{postView.date | fromNow}}</span>
-											<div class="inline text-muted p-l-lg text-u-c" ng-if="postView.authorId == app.initData.person.id">
-												<a ng-click="app.goToEditPost(postView.postId, $event)"
-												class="text-muted p-r underline-hover">editar</a>
-												<a class="text-muted underline-hover" ng-click="app.openDeletePost(postView.postId, $event);
-												">remover</a>
-											</div>
-										</span>
-									</span>
-								</div>
-							</div>
-						</div>
-						/content
-					</div>    
-				</li>
-			</ul>
-		</div> -->
 
-
-		<div class="container p-t-lg p-b-lg">
-		    <div class="row">
-		      <div class="col-md-8 col-md-offset-2">
-		        <!-- BLOG POST -->
-		        <div class="home-blog bg-custom">
-		          <!-- 
-		          <div class="full-post">
-		            <a href=""><img src="images/home/1/1.jpg" class="post-thumb img-responsive" alt=""></a>
-		            <div class="post-meta">
-		              <span class="post-author a-custom-primary">Lesly Quintella</span>
-		              <span class="post-tags"><a href="#">Search Engine Optimization</a></span>
-		            </div>
-		            <a href="" class="h3 font-bold m-b m-t-sm block">8 Essential Tools to Simplify SEO for Content Marketing</a>
-		            <p class="font-thin text-lg">Finding a real star requires going beyond "Tell me about yourself." Here are the questions that will tell you what you really want to know.</p>
-		          </div>
-		          -->
-
-		          
-		          <div ng-click="app.setNowReading(postView, postViews, null, 'app.tagspage')"
-		          ng-repeat="postView in postViews" class="half-post bg-custom">
-		            <div class="p-b-md b-t m-t-md"></div>
-		            <div class="row">
-		              <div class="col-md-5" ng-if="postView.mediumId">
-		                <a class="block-image2">
-		                  <div ng-style="getBackgroundImage(postView, 'md')"
-		                  class="cell-wrap r r-2x" alt=""></div>
-		                </a>
-		              </div>
-		              <div ng-class="{'col-md-7':postView.mediumId, 'col-md-12': !postView.mediumId}">
-		                <a href="" class="h3 font-bold m-b m-t-sm block">
-		                {{::postView.title}}</a>
-		                <!-- <div class="post-meta">
-		                  <span class="post-author a-custom-primary">Lavonne Flynn</span>
-		                  <span class="post-tags"><a href="#">Online Marketing</a></span>
-		                </div> -->
-		                <p class="font-thin text-lg">{{::postView.snippet | characters:150}}</p>
-		              </div>
-		            </div>
-		            <div class="m-t">
-		              <div class="display-t-c">
-		                <a >
-		                  <div back-img="{{postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="postView.authorName"></div>
-		                </a>
-		              </div>
-		              <div class="display-t-c p-l-sm v-middle">
-		                <a ng-click="app.goToProfile($event, postView.authorUsername)" class="a-custom-primary link link link--accent link--darken">
-		                  {{::postView.authorName}}
-		                </a>
-		                <br>
-		                <span class="text-sm readingTime">
-		                  {{::postView.date | fromNow}}
-		                </span>
-		              </div>
-		              <div class="display-t-c v-middle padder">
-		                <span ng-click="app.recommend(postView.postId); app.stopPropagation($event);">
-		                  <a href class="text-center text-lg v-middle">
-		                    <i class="mdi" ng-class="{'mdi-heart animated rubberBand': app.recommended(postView.postId), 'mdi-heart-outline': !app.recommended(postView.postId)}"></i>
-		                  </a>
-		                  <span class="p-b-sm">Recomendar</span>
-		                </span>
-		                <span class="p-l-sm" ng-click="app.bookmark(postView.postId); app.stopPropagation($event);">
-		                  <a href class="text-center text-lg v-middle">
-		                    <i class="mdi" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(postView.postId), 'mdi-bookmark-outline': !app.bookmarked(postView.postId)}"></i>
-		                  </a>
-		                  <span class="p-b-sm">Adicionar a Minha Lista</span>
-		                </span>
-		              </div>
-		            </div>
-		          </div>
-
-		          </div>
-	          </div>
-          </div>
-      </div>
-
-		<!-- /posts -->
-
-		<!-- /pages -->
+	<div class="container p-t-lg p-b-lg">
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2 text-md" ng-bind-html="app.initData.network.info">
+				<!-- BLOG POST -->
+			</div>
+		</div>
 	</div>
+
+	<!-- /posts -->
+
+	<!-- /pages -->
 
 	<div data-ng-include=" 'tpl/blocks/top_header.html' "></div>
 
