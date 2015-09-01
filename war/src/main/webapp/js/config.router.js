@@ -95,6 +95,19 @@ angular.module('app')
                   },
                   controller: 'TagsPageCtrl'
               })
+              .state('app.about', {
+                  url: '/about',
+                  templateUrl: 'tpl/about.html',
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load([
+                            'js/controllers/tags.js?' + GLOBAL_URL_HASH])
+                      }]
+                  },
+                  controller: 'TagsPageCtrl'
+              })
               .state('app.tagspage.read', {
                   url: '/:slug',
                   template: '',

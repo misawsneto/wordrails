@@ -1,6 +1,6 @@
 <div class="collapse pos-rlt navbar-collapse box-shadow nav-down station-header {{::app.settings.navbarCollapseColor}}">
   <div class="nav navbar-nav hidden-xs text-lg w-full wrapper header-font pos-abt">
-    <a ui-sref="app.stations"><span ng-if="!app.currentStation.logoId" class="p-l-xxl m-l-lg">{{app.currentStation.name}}</span></a>
+    <a ui-sref="app.stations" class="bg-header-text"><span ng-if="!app.currentStation.logoId" class="p-l-xxl m-l-lg">{{app.currentStation.name}}</span></a>
     <div ng-if="app.currentStation.logoId" class="p-l-xxl m-l-lg m-t-n-sm" style="height:48px;">
       <a ui-sref="app.stations">
       <img  class="post-thumb img-responsive" class="img-responsive" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}"></a>
