@@ -830,6 +830,7 @@ function createPost(state){
 			trix.getPost(postId, 'postProjection').success(function(response){
 				createPostObject();
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, response);
+				$scope.app.editingPost.uploadedImage = {filelink: TRIX.baseUrl + "/api/files/"+$scope.app.editingPost.imageLargeId+"/contents" }
 				setWritableStationById(response.station.id)
 				updateTermTree();
 				$timeout(function() {
