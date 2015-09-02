@@ -1,9 +1,6 @@
 package com.wordrails.api;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +22,8 @@ import com.wordrails.util.WordrailsUtil;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.util.NetworkCreateDto;
@@ -40,8 +39,7 @@ public class NetworkResource {
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
+	private @Autowired TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired StationEventHandler stationEventHandler;
@@ -49,6 +47,9 @@ public class NetworkResource {
 	private @Autowired StationRoleEventHandler stationRoleEventHandler;
 	private @Autowired TermRepository termRepository;
 	private @Autowired WordrailsService wordrailsService;
+	private @Autowired PostRepository postRepository;
+	private @Autowired UserRepository userRepository;
+	private @Autowired PostEventHandler postEventHandler;
 
 	public @Autowired @Qualifier("objectMapper")
 	ObjectMapper mapper;
@@ -122,6 +123,7 @@ public class NetworkResource {
 
 		taxonomyRepository.save(nTaxonomy);
 		try {
+			network.networkCreationToken = UUID.randomUUID().toString();
 			networkRepository.save(network);
 		} catch (javax.validation.ConstraintViolationException e) {
 
@@ -139,7 +141,7 @@ public class NetworkResource {
 			if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
 				org.hibernate.exception.ConstraintViolationException ex = (ConstraintViolationException) e.getCause();
 
-				return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"mensage\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
+				return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"message\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
 			}
 
 			throw e;
@@ -151,18 +153,17 @@ public class NetworkResource {
 		User user = null;
 
 		try {
-			UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
-			authority.network = network;
-
-			String password = person.password;
-
 			user = new User();
 			user.enabled = true;
 			user.username = person.username;
-			user.password = password;
-			user.network = authority.network;
-			authority.user = user;
+			user.password = person.password;
+			user.network = network;
+
+			UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER", network);
+			UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
+
 			user.addAuthority(authority);
+			user.addAuthority(nauthority);
 
 			person.user = user;
 
@@ -190,6 +191,10 @@ public class NetworkResource {
 			}
 
 			throw e;
+		}catch (Exception e){
+			taxonomyRepository.delete(nTaxonomy);
+			networkRepository.delete(network);
+			e.printStackTrace();
 		}
 
 		NetworkRole networkRole = new NetworkRole();
@@ -197,9 +202,6 @@ public class NetworkResource {
 		networkRole.person = person;
 		networkRole.admin = true;
 		networkRolesRepository.save(networkRole);
-
-		UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
-		user.addAuthority(authority);
 
 		// End Create Person ------------------------------
 
@@ -261,6 +263,7 @@ public class NetworkResource {
 		stationRepository.save(station);
 
 		taxonomies = station.ownedTaxonomies;
+		Term defaultPostTerm = null;
 		for (Taxonomy tax: taxonomies){
 			if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
 				if(station.tagsTaxonomyId == null)
@@ -272,6 +275,8 @@ public class NetworkResource {
 					// ---- create sample terms...
 					Term term1 = new Term();
 					term1.name = "Categoria 1";
+
+					defaultPostTerm = term1;
 
 					Term term2 = new Term();
 					term2.name = "Categoria 2";
@@ -299,7 +304,22 @@ public class NetworkResource {
 		station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
 		stationRepository.save(station);
 
-		return Response.status(Status.CREATED).build();
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+		authProvider.passwordAuthentication(user.username, user.password, network);
+
+		Post post = new Post();
+
+		post.title = "Bem Vindo a TRIX";
+		post.body = "<p>Trix é uma plataforma para a criação e gestão de redes de informação e pensada primeiramente para dispositivos móveis. Através do editor é possível criar conteúdos baseados em textos, imagens, áudios e vídeos.</p><p>Adicione usuários com permissão de leitura, escrita, edição ou administração e através das funções de administração personalize a sua rede.</p>";
+		post.author = person;
+		post.terms = new HashSet<Term>();
+		post.terms.add(defaultPostTerm);
+		post.station = station;
+		postEventHandler.handleBeforeCreate(post);
+		postRepository.save(post);
+
+		return Response.status(Status.CREATED).entity("{\"token\": \"" + network.networkCreationToken + "\"}").build();
 	}
 
 }

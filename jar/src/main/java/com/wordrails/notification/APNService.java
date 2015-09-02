@@ -45,20 +45,27 @@ public class APNService {
 	private CertificateIosRepository certificateIosRepository;
 	private PushManager<SimpleApnsPushNotification> pushManager;
 
-	private void init(Integer networkId) {
+	private boolean init(Integer networkId) {
 		CertificateIos certificate;
 		SynchronousQueue sq = new SynchronousQueue();
 
 		certificate = certificateIosRepository.findOne(networkId);
 
 		try {
-			this.pushManager = new PushManager<SimpleApnsPushNotification>(ApnsEnvironment.getProductionEnvironment(), SSLContextUtil.createDefaultSSLContext(certificate.certificateIos.getBinaryStream(), certificate.certificatePassword), null, // Optional: custom event loop group
-					null, // Optional: custom ExecutorService for calling listeners
-					sq, // Optional: custom BlockingQueue implementation
-					new PushManagerConfiguration(), "NetworkId_" + String.valueOf(networkId));
+			if(certificate.certificateIos.getBinaryStream() != null && certificate.certificatePassword != null){
+				this.pushManager = new PushManager<SimpleApnsPushNotification>(ApnsEnvironment.getProductionEnvironment(), SSLContextUtil.createDefaultSSLContext(certificate.certificateIos.getBinaryStream(), certificate.certificatePassword),
+						null, // Optional: custom event loop group
+						null, // Optional: custom ExecutorService for calling listeners
+						sq, // Optional: custom BlockingQueue implementation
+						new PushManagerConfiguration(), "NetworkId_" + String.valueOf(networkId));
+			} else {
+				return false;
+			}
+
 		} catch (IOException | KeyManagementException | UnrecoverableKeyException |
 				CertificateException | NoSuchAlgorithmException | SQLException | KeyStoreException e) {
 			e.printStackTrace();
+			return false;
 		}
 		pushManager.start();
 
@@ -66,6 +73,8 @@ public class APNService {
 		pushManager.registerFailedConnectionListener(new FailedConnectionsListener()); //it shuts the manager down
 		pushManager.registerExpiredTokenListener(new ExpiredTokensListener()); //it removes expired tokens
 		pushManager.requestExpiredTokens();
+
+		return true;
 	}
 
 	private void shutdown() {
@@ -83,7 +92,7 @@ public class APNService {
 		if (stationRepository.isUnrestricted(stationId)) {
 			personNetworkTokens = personNetworkTokenRepository.findByNetwork(network);
 		} else {
-			personNetworkTokens = personNetworkTokenRepository.findByStationId(stationId);
+			personNetworkTokens = personNetworkTokenRepository.findTokenByStationId(stationId);
 		}
 
 		if (personNetworkTokens == null || notification == null) {
@@ -93,9 +102,9 @@ public class APNService {
 		if (personNetworkTokens.size() == 0) return;
 
 		try {
-			init(network.id);
-
-			apnNotify(personNetworkTokens, notification);
+			if(init(network.id)){
+				apnNotify(personNetworkTokens, notification);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

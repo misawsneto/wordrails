@@ -1,13 +1,31 @@
 package com.wordrails.api;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.WordrailsService;
+import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.business.*;
+import com.wordrails.jobs.SimpleJob;
+import com.wordrails.persistence.*;
+import com.wordrails.services.AmazonCloudService;
+import com.wordrails.services.AsyncService;
+import com.wordrails.services.CacheService;
+import com.wordrails.services.WordpressParsedContent;
+import com.wordrails.util.WordrailsUtil;
+import org.hibernate.search.MassIndexer;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.jboss.resteasy.spi.HttpRequest;
+import org.joda.time.DateTime;
+import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -15,69 +33,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.WordrailsService;
-import com.wordrails.business.*;
-import com.wordrails.jobs.SimpleJob;
-import com.wordrails.persistence.*;
-import com.wordrails.services.AmazonCloudService;
-import com.wordrails.services.AsyncService;
-import com.wordrails.services.WordpressParsedContent;
-import com.wordrails.util.WordrailsUtil;
-import org.apache.tika.Tika;
-import org.hibernate.search.MassIndexer;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
-import org.jboss.resteasy.spi.HttpRequest;
-import org.joda.time.DateTime;
-import org.quartz.DateBuilder;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.querydsl.QPageRequest;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.wordrails.persistence.BookmarkRepository;
-import com.wordrails.persistence.CellRepository;
-import com.wordrails.persistence.CommentRepository;
-import com.wordrails.persistence.ImageRepository;
-import com.wordrails.persistence.InvitationRepository;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NotificationRepository;
-import com.wordrails.persistence.PersonNetworkRegIdRepository;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.PostReadRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.RecommendRepository;
-import com.wordrails.persistence.RowRepository;
-import com.wordrails.persistence.StationPerspectiveRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.TaxonomyRepository;
-import com.wordrails.persistence.TermPerspectiveRepository;
-import com.wordrails.persistence.TermRepository;
-import com.wordrails.persistence.WordpressRepository;
+import java.util.*;
+import java.util.regex.Pattern;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -87,23 +49,31 @@ public class UtilResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
 
+	private @Autowired NetworkEventHandler networkEventHandler;
+	private @Autowired PersonEventHandler personEventHandler;
+	private @Autowired TaxonomyEventHandler taxonomyEventHandler;
+	private @Autowired StationEventHandler stationEventHandler;
 	private @Autowired PersonRepository personRepository;
+	private @Autowired StationRoleEventHandler stationRoleEventHandler;
+	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
+	private @Autowired StationRolesRepository stationRolesRepository;
+	private @Autowired TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired PostRepository postRepository;
-
 	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
 	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
-
 	private @Autowired InvitationRepository invitationRepository;
-
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
-
 	public @Autowired FileRepository fileRepository;
 
+	public @Autowired CacheService cacheService;
+
 	private @PersistenceContext EntityManager manager;
+
+
 
 	/**
 	 * Method to manually update the Full Text Index. This is not required if inserting entities
@@ -724,6 +694,69 @@ public class UtilResource {
 				}
 			}
 			personRepository.save(persons);
+		}
+	}
+
+	@DELETE
+	@Path("/deleteNetwork/{id}")
+	public void deleteNetwork (@Context HttpServletRequest request, @PathParam("id") Integer networkId) {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+
+			Network network = networkRepository.findOne(networkId);
+
+			List<NetworkRole> nr = personRepository.findNetworkAdmin(networkId);
+
+			User user = nr.get(0).person.user;
+
+			Set<GrantedAuthority> authorities = new HashSet<>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+			authProvider.passwordAuthentication(user.username, user.password, network);
+
+			List<Station> stations = stationRepository.findByNetworkId(networkId);
+			for (Station station: stations){
+				stationEventHandler.handleBeforeDelete(station);
+				stationRepository.delete(station);
+			}
+
+			List <Person> persons = personRepository.findAllByNetwork(networkId);
+			for (Person person: persons){
+				personEventHandler.handleBeforeDelete(person);
+				personRepository.delete(person);
+			}
+
+			networkEventHandler.handleBeforeCreate(network);
+			networkRepository.delete(network);
+
+			cacheService.removeNetwork(networkId);
+			cacheService.removeUser(user.id);
+		}
+	}
+
+	@PUT
+	@Path("/addCategoryTerm/{id}/{termId}")
+	public void addCategoryTerm (@Context HttpServletRequest request, @PathParam("id") Integer id, @PathParam("termId") Integer termId) {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+			TermPerspective termPerspective = termPerspectiveRepository.findOne(id);
+			Term term = termRepository.findOne(termId);
+
+			termPerspective.categoryTabs.add(term);
+			termPerspectiveRepository.save(termPerspective);
+		}
+	}
+
+	@GET
+	@Path("/updateCategoryTabs")
+	public void updateCategoryTabs (@Context HttpServletRequest request) {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+			List<TermPerspective> pers = termPerspectiveRepository.findAll();
+			for (TermPerspective per: pers){
+				Taxonomy tax = taxonomyRepository.findOne(per.perspective.taxonomy.id);
+				per.categoryTabs.addAll(tax.terms);
+				termPerspectiveRepository.save(per);
+			}
 		}
 	}
 

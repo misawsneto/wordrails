@@ -27,6 +27,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -117,7 +119,7 @@ public class PersonsResource {
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = networkRepository.findOne(networkId);
+		Network network = wordrailsService.getNetworkFromHost(request);
 		Person person = authProvider.getLoggedPerson();
 		if(person.id == 0){
 			gcmService.updateRegId(network, null, regId, lat, lng);
@@ -132,8 +134,8 @@ public class PersonsResource {
 	@PUT
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response putToken(@FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = networkRepository.findOne(networkId);
+	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
+		Network network = wordrailsService.getNetworkFromHost(request);
 		Person person = authProvider.getLoggedPerson();
 		if(person.id == 0){
 			apnService.updateIosToken(network, null, token, lat, lng);
@@ -151,6 +153,30 @@ public class PersonsResource {
 	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password) {
 		try{
 			authProvider.passwordAuthentication(username, password, authProvider.getNetwork());
+			return Response.status(Status.OK).build();
+		}catch(BadCredentialsException | UsernameNotFoundException e){
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+	}
+
+	@POST
+	@Path("/tokenSignin")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response tokenSignin(@Context HttpServletRequest request, @FormParam("token") String token) {
+		try{
+			Network network = wordrailsService.getNetworkFromHost(request);
+			if(network.networkCreationToken == null || !network.networkCreationToken.equals(token))
+				throw new BadRequestException("Invalid Token");
+
+			List<NetworkRole> nr = personRepository.findNetworkAdmin(network.id);
+			User user = nr.get(0).person.user;
+			Set<GrantedAuthority> authorities = new HashSet<>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+			authProvider.passwordAuthentication(user.username, user.password, network);
+
+			network.networkCreationToken = null;
+			networkRepository.save(network);
+
 			return Response.status(Status.OK).build();
 		}catch(BadCredentialsException | UsernameNotFoundException e){
 			return Response.status(Status.UNAUTHORIZED).build();

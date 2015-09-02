@@ -23,8 +23,12 @@ var trix = angular.module('trix', [])
 
   \$httpProvider.defaults.useXDomain = true;
 	\$httpProvider.defaults.withCredentials = true;
-	\$httpProvider.interceptors.push(function trix_httpInterceptor(\$q) {
+	\$httpProvider.interceptors.push(function trix_httpInterceptor(\$q, \$rootScope) {
 		var requestInterceptor = {
+		responseError: function(rejection){
+			\$rootScope.\$broadcast('HTTP_ERROR',rejection);
+			return \$q.reject(rejection);
+		},
 	    // optional method
 	    response: function(response) {
 	    // do something on success
@@ -66,6 +70,12 @@ var trix = angular.module('trix', [])
       config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
       return \$http.post(_config.url + "/api/persons/login", \$.param({"username": username, "password": password}), config)
     }
+
+    this.tokenSignin = function(token) {
+	  var config = {};
+	  config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
+	  return \$http.post(_config.url + "/api/persons/tokenSignin", \$.param({"token": token}), config)
+	}
 
     this.socialLogin = function(userId, accessToken, provider) {
 	  var config = {};

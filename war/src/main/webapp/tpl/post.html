@@ -239,7 +239,17 @@
       <a class="popover-close-button text-2x" ng-click="schedulerPopoverOpen = false"
       tooltip="Fechar" tooltip-append-to-body="true" tooltip-placement="top">×</a>
       <div style="display:inline-block;" class="m-t">
-        <datepicker ng-model="dt" min-date="minDate" show-weeks="false" format-year="yy" class="datepicker"></datepicker>
+        <div class="timepicker-container m-l-lg" style="margin-bottom: 115px;">
+          <div class="pull-left m-t-xl m-r-sm">horário, </div>
+          <timepicker class="pull-left" ng-model="app.editingPost.scheduledDate" hour-step="1" minute-step="15" show-meridian="false"></timepicker>
+        </div>
+        <div class="b-b"></div>
+        <datepicker style="margin-top: 25px;" ng-model="dt" min-date="minDate" show-weeks="false" format-year="yy" class="datepicker"></datepicker>
+      </div>
+      <div class="b-t m-t wrapper-sm text-center">
+        <button ng-click="schedulePost()" md-ink-ripple class="md-btn md-flat btn-fw" style="font-size: 18px">
+          Agendar
+        </button>
       </div>
     </div>
   </div>

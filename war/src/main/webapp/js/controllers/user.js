@@ -306,6 +306,15 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 					}
 				});
 
+$scope.$on('POST_REMOVED', function(event, postId){
+	if($scope.app.publicationsCtrl && $scope.app.publicationsCtrl.publications){
+		for (var i = $scope.app.publicationsCtrl.publications.length - 1; i >= 0; i--) {
+			if(postId == $scope.app.publicationsCtrl.publications[i].postId)
+			$scope.app.publicationsCtrl.publications.splice(i,1)
+		};
+	}
+})
+
 $scope.paginate = function(){
 
 	if(!$scope.app.publicationsCtrl.publications || $scope.app.publicationsCtrl.publications.length == 0)

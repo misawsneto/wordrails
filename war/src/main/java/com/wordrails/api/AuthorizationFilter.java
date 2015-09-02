@@ -921,9 +921,9 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetImagePublicitySponsorAuthorized(Integer imageId) {
-
-		return true;
+	protected boolean isFindSponsorByNetworkIdAuthorized(Integer networkId) {
+		Network network = networkRepository.findOne(networkId);
+		return networkSecurityChecker.isNetworkAdmin(network);
 	}
 
 	@Override
@@ -944,13 +944,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetSponsorNetworkAuthorized(Integer sponsorId) {
-
-		return true;
+	protected boolean isGetSponsorAdsAuthorized(Integer sponsorId) {
+		return false;
 	}
 
 	@Override
-	protected boolean isGetSponsorImagesAuthorized(Integer sponsorId) {
+	protected boolean isGetSponsorNetworkAuthorized(Integer sponsorId) {
 
 		return true;
 	}
@@ -1293,6 +1292,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetAdsAuthorized() {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetAdAuthorized(Integer adId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetAdImageAuthorized(Integer adId) {
+		return true;
+	}
+
+	@Override
 	protected boolean isGetBookmarksAuthorized() {
 		return false;
 	}
@@ -1552,6 +1566,26 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetImageOriginalAuthorized(Integer imageId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetImageSmallAuthorized(Integer imageId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetImageMediumAuthorized(Integer imageId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetImageLargeAuthorized(Integer imageId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetNetworkFaviconAuthorized(Integer networkId) {
 		return true;
 	}
@@ -1614,5 +1648,8 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return false;
 	}
 
-
+	@Override
+	protected boolean isGetTermPerspectiveCategoryTabsAuthorized(Integer termPerspectiveId) {
+		return true;
+	}
 }

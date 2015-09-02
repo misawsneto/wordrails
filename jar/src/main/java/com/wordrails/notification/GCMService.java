@@ -44,9 +44,18 @@ public class GCMService {
 
 	@Async
 	@Transactional
-	public void sendToStation(Integer stationId, Notification notification){
+	public void sendToStation(Integer networkId, Station station, Notification notification){
 
-		List<PersonNetworkRegId> personNetworkRegIds = personNetworkRegIdRepository.findRegIdByStationId(stationId);
+		Integer stationId = station.id;
+
+		List<PersonNetworkRegId> personNetworkRegIds = new ArrayList<PersonNetworkRegId>();
+
+		if(station.visibility.equals(Station.UNRESTRICTED)){
+			personNetworkRegIds = personNetworkRegIdRepository.findRegIdByNetworkId(networkId);
+		}else{
+			personNetworkRegIds = personNetworkRegIdRepository.findRegIdByStationId(stationId);
+		}
+
 		try {
 			removeNotificationProducer(personNetworkRegIds, notification);
 			gcmNotify(personNetworkRegIds, notification);
@@ -113,9 +122,6 @@ public class GCMService {
 		notification.hash = WordrailsUtil.generateRandomString(10, "Aa#");
 		ArrayList<Notification> notis = new ArrayList<Notification>();
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
-			if(pnRegId.person.id == 1 || pnRegId.person == null)
-				continue;
-			
 			Notification noti = new Notification();
 			noti.message = notification.message + "";
 			noti.network = pnRegId.network;
@@ -125,9 +131,12 @@ public class GCMService {
 			noti.post = notification.post;
 			noti.type = notification.type + "";
 			noti.hash = notification.hash + "";
-			devices.add(pnRegId.regId);
 			notification.person = pnRegId.person;
-			notis.add(noti);
+
+			devices.add(pnRegId.regId);
+
+			if(pnRegId.person!=null)
+				notis.add(noti);
 		}
 		
 		notificationRepository.save(notis);
@@ -167,6 +176,7 @@ public class GCMService {
 	private void sendBulkMessages(Message message, List<String> devices, String notificationHash){
 		MulticastResult multicastResult;
 		try {
+			System.out.println("sending messages... " + devices.size() + " hash: " + notificationHash);
 			multicastResult = sender.send(message, devices, 5);
 		} catch (Exception e) {
 			e.printStackTrace();

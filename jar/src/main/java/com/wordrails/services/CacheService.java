@@ -210,4 +210,25 @@ public class CacheService {
 	public Network getNetworkByDomain(String host) throws ExecutionException {
 		return networks3.get(host);
 	}
+
+	public void removePerson(Integer id){
+		persons.invalidate(id);
+	}
+	public void removePerson(String username){
+		persons2.invalidate(username);
+	}
+
+	public void removeNetwork(Integer id){
+		networks.invalidate(id);
+	}
+	public void removeNetwork(String domain){
+		networks2.invalidate(domain);
+	}
+
+	public void removeUser(Integer id){
+		user.invalidate(id);
+	}
+	public void removeUser(String username){
+		users.invalidate(username);
+	}
 }

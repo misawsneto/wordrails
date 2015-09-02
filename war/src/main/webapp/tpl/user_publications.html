@@ -78,7 +78,7 @@
 									{{publication.recommendsCount}}</span>
 								<div class="inline text-muted p-l text-u-c">
 									<a ui-sref="app.post({'id': publication.postId})" class="text-muted p-r underline-hover">editar</a>
-									<a class="text-muted underline-hover" ng-click="app.openDeletePost(publication.postId);">remover</a>
+									<a class="text-muted underline-hover" ng-click="app.openDeletePost(publication.postId, $vent, true);">remover</a>
 								</div>
 							</div>
 						</div>

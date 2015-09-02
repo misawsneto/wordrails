@@ -96,6 +96,14 @@ interface I$facade$ {
 		
 		@PUT("/posts/{postId}/convert")
 	ContentResponse<PostView\> convertPost(@Path("postId") Integer postId, @Query("state") String state);
+
+	@POST("/auth/signin")
+	@FormUrlEncoded
+	Response socialLogin(@Field("provider") String provider, @Field("userId") String userId, @Field("accessToken") String accessToken);
+
+	@POST("/auth/signin")
+	@FormUrlEncoded
+	void socialLogin(@Field("provider") String provider, @Field("userId") String userId, @Field("accessToken") String accessToken, Callback<Response> _callback);
 	
 	@PUT("/posts/{postId}/convert")
 	@FormUrlEncoded

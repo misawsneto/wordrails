@@ -17,8 +17,21 @@
             </div>
             <div class="md-form-group md-neutral-theme m-t text-md">
               <textarea class="md-input" ng-model="sponsor.keywords" rows="4"></textarea>
-              <label>Detalhes</label>
+              <label>Palavras-chave</label>
             </div>
+          </div>
+          <div class="bg-cover text-center" src="img/img-stub.png">
+            <div ng-if="logoImage.link" class="text-center w-xxl m-auto">
+              <img class="img-responsive p-sm r-3x" style="display:block; margin:auto; max-height: 200px;" ng-src="{{logoImage.link}}">
+              <div class="pull-right m-r-n-md m-t-n-xxl">
+                <a tooltip="remover imagem" ng-click="logoImage.link = null;"><i class="mdi mdi-close-circle-outline text-2x"></i></a>
+              </div>
+            </div>
+            <button id="logo-upload" md-ink-ripple class="md-btn md-flat m-t m-b btn-fw" ng-if="!logoImage.link">
+              <span class="text-lg v-middle">Adicionar Logotipo</span>
+              <i class="fa-fw mdi mdi-file-image-box text-2x v-bottom"></i>
+              <input id="image-upload" type="file" nv-file-select="" uploader="logo" name="contents" accept="image/*"/>
+            </button>
           </div>
         </div>
         <div class="line line-dashed b-b line-lg pull-in"></div>

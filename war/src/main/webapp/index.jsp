@@ -37,7 +37,7 @@
 </head>
 <body ng-controller="AppCtrl" ng-cloak>
   <offcanvas></offcanvas>
-  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.post', 'bg-perspective': $state.includes('app.stations'), 'bg-light-grey': $state.includes('app.settings') || $state.includes('app.bookmarks') || $state.includes('app.search') || $state.includes('app.notifications') || $state.includes('app.user') || $state.includes('app.publications') || $state.includes('app.userstats') || $state.includes('app.tagspage'), 'bg-light': $state.includes('access'), 'bg-create-network': $state.includes('access.createnetwork')}" ui-view></div>
+  <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'is-logged': app.isLogged, 'mobile-screen': app.isMobile, 'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.post', 'bg-perspective': $state.includes('app.stations'), 'bg-light-grey': $state.includes('app.settings') || $state.includes('app.bookmarks') || $state.includes('app.search') || $state.includes('app.notifications') || $state.includes('app.user') || $state.includes('app.publications') || $state.includes('app.userstats') || $state.includes('app.tagspage'), 'bg-light': $state.includes('access'), 'bg-create-network': $state.includes('access.createnetwork')}" ui-view></div>
 
 
   <!-- jQuery -->
@@ -63,10 +63,10 @@
   <!-- lazyload -->
   <script src="/bower_components/oclazyload/dist/ocLazyLoad.js"></script>
   <!-- translate -->
-  <script src="/bower_components/angular-translate/angular-translate.js"></script>
+  <!-- <script src="/bower_components/angular-translate/angular-translate.js"></script>
   <script src="/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
   <script src="/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
-  <script src="/bower_components/angular-translate-storage-local/angular-translate-storage-local.js"></script>
+  <script src="/bower_components/angular-translate-storage-local/angular-translate-storage-local.js"></script> -->
   <!-- redactor -->
   <script src="/bower_components/redactor/redactor.min.js"></script>
   <script src="/bower_components/redactor/video.js"></script>

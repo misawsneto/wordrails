@@ -30,7 +30,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['720kb.socialshare', 'videosharing-embed', 'toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll', 'pc035860.scrollWatch']).then(function(){
+                          return $ocLazyLoad.load(['720kb.socialshare', 'videosharing-embed', 'toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll']).then(function(){
                             // you might call this after your module initalization
                               angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 1000)
                           });
@@ -95,6 +95,19 @@ angular.module('app')
                   },
                   controller: 'TagsPageCtrl'
               })
+              .state('app.about', {
+                  url: '/about',
+                  templateUrl: 'tpl/about.html',
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load([
+                            'js/controllers/tags.js?' + GLOBAL_URL_HASH])
+                      }]
+                  },
+                  controller: 'TagsPageCtrl'
+              })
               .state('app.tagspage.read', {
                   url: '/:slug',
                   template: '',
@@ -132,13 +145,6 @@ angular.module('app')
                   abstract: true,
                   url: '/settings',
                   templateUrl: 'tpl/settings.html',
-                  resolve: {
-                    deps: ['$ocLazyLoad',
-                      function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['js/controllers/settings.js?' + GLOBAL_URL_HASH]);
-                    }]
-                  }
-                  , controller:'SettingsCtrl'
               })
               .state('app.settings.stations', {
                   url: '/stations',
@@ -816,6 +822,17 @@ angular.module('app')
                       }]
                   },
                   controller: 'SettingsCtrl'
+              })
+              .state('access.networkcreated', {
+                  url: '/networkcreated?token',
+                  template: '<div></div>',
+                  resolve: {
+                      deps: ['uiLoad',
+                        function( uiLoad ){
+                          return uiLoad.load( ['js/controllers/settings.js'] );
+                      }]
+                  },
+                  controller: 'NetworkCreatedCtrl'
               })
               .state('access.signup', {
                   url: '/signup',

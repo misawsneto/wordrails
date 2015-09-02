@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.wordrails.converter.TermConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -57,6 +58,7 @@ public class PerspectiveResource {
 	private @Autowired RowConverter rowConverter;
 	private @Autowired CellConverter cellConverter;
 	private @Autowired PostConverter postConverter;
+	private @Autowired TermConverter termConverter;
 	
 	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
 	private @Autowired TaxonomyRepository taxonomyRepository;
@@ -309,6 +311,8 @@ public class PerspectiveResource {
 		termView.ordinaryRows = fillPostsNotPositionedInRow(termPerspective.term ,rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
+		termView.categoryTerms = termConverter.convertToViews(new ArrayList<Term>(termPerspective.categoryTabs));
+		termView.id = termPerspective.id;
 
 		return termView;
 	}

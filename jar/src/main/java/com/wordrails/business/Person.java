@@ -32,6 +32,8 @@ import java.util.Set;
 })
 public class Person implements Serializable{
 
+	private static final long serialVersionUID = 7728358342573034233L;
+
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@NumericField

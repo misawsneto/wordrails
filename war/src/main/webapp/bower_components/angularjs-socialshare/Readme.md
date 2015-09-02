@@ -20,15 +20,9 @@ AngularJS v1.2+
 ###Browser support
 
 
-Chrome  ![ok](http://i.imgur.com/CK8qxk1.png)
-
-Firefox ![ok](http://i.imgur.com/CK8qxk1.png)
-
-Safari ![ok](http://i.imgur.com/CK8qxk1.png)
-
-Opera ![ok](http://i.imgur.com/CK8qxk1.png)
-
-IE    ![mmm](http://i.imgur.com/iAIwqCL.png)
+![Chrome](https://raw.github.com/alrra/browser-logos/master/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/firefox/firefox_48x48.png) | ![IE](https://raw.github.com/alrra/browser-logos/master/internet-explorer/internet-explorer_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/safari/safari_48x48.png)
+--- | --- | --- | --- | --- |
+ ✔ | ✔ | IE9 + | ✔ | ✔ |
 
 
 ## Load
@@ -89,7 +83,7 @@ Angular socialshare allows you to use some options via `attribute` data
 ####Sharing Provider
 You can set the social platform you want to share on using the `socialshare-provider=""` attribute.
 
-###Providers:
+#####Providers:
 
 - facebook
 - twitter
@@ -98,7 +92,7 @@ You can set the social platform you want to share on using the `socialshare-prov
 - pinterest
 - tumblr
 - reddit
-- stubmleupon
+- stumbleupon
 - buffer
 - digg
 - delicious
@@ -137,59 +131,14 @@ Share me
 </a>
 ```
 
-####Sharing type
-You can set the type of sharing window using the `socialshare-type=""` attribute (can be used with Facebook and Tumblr providers)
-
-Valid options for Facebook:
-- sharer (default, because it is the most commonly used)
-- feed (more flexible, for advanced usage like custom images etc)
-
-_Note that when you are using `socialshare-type="feed"` you must also supply your facebook app id using `socialshare-via`, and a redirect uri using `socialshare-redirect-uri`._
-_For more details see https://developers.facebook.com/docs/sharing/reference/feed-dialog/v2.4_
-
-Valid options for Tumblr:
-- link (default)
-- photo (see `socialshare-media`)
-
-```html
-<a href="#"
-socialshare
-socialshare-provider="facebook"
-socialshare-type="feed"
-socialshare-via="145634995501895"
-socialshare-url="http://720kb.net">
-socialshare-redirect-uri="http://720kb.net">
-Share me
-</a>
-```
-
 ####Sharing media
-You can set the media source to share using the `socialshare-media=""` attribute (for example, you will use it for pinterest, or optionally for tumblr or facebook (requires `socialshare-type=feed` to work with facebook)
+You can set the media source to share using the `socialshare-media=""` attribute
 
 ```html
 <a href="#"
 socialshare
 socialshare-provider="pinterest"
 socialshare-media="http://720kb.net/assets/img/logo.png">
-Share me
-</a>
-```
-
-####Sharing caption
-When sharing to Facebook using `socialshare-type="feed"` you can optionally add a caption.
-If a caption is not provided, facebook will show the url instead.
-_(more details at https://developers.facebook.com/docs/sharing/reference/feed-dialog/v2.4)_
-
-```html
-<a href="#"
-socialshare
-socialshare-provider="facebook"
-socialshare-type="feed"
-socialshare-via="145634995501895"
-socialshare-text="720kb"
-socialshare-caption="720kb is awesome"
-socialshare-url="http://720kb.net"
-socialshare-redirect-uri="https://developers.facebook.com/tools/explorer">
 Share me
 </a>
 ```
@@ -221,7 +170,16 @@ Share me
 </a>
 ```
 
-You can also use the `socialshare-via=""` to share to facebook via a facebook app, using the `facebook` provider with `socialshare-type="feed"`
+####Sharing type
+You can set the type of sharing window using the `socialshare-type=""` attribute
+
+At the moment this option is only supported for Facebook feed dialog.
+
+_Note: when you are using `socialshare-type="feed"` you must also supply your facebook app id using `socialshare-via`, and a redirect uri using `socialshare-redirect-uri`._
+
+#####Facebook _Dialog_:
+
+Available options:
 
 ```html
 <a href="#"
@@ -229,14 +187,21 @@ socialshare
 socialshare-provider="facebook"
 socialshare-type="feed"
 socialshare-via="145634995501895"
-socialshare-media="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTWGNvatNjOUyli3tBacDdAHmienfptFVStj_olGCWmaUXoIGYI"
+socialshare-to=""
+socialshare-from=""
+socialshare-ref=""
+socialshare-display="popup"
+socialshare-media="https://avatars0.githubusercontent.com/u/7762645?v=3&s=200"
+socialshare-source=""
+socialshare-description="Yes it's super awesome, seriously!"
 socialshare-text="720kb"
 socialshare-caption="720kb is awesome"
 socialshare-url="http://720kb.net"
 socialshare-redirect-uri="https://developers.facebook.com/tools/explorer">
-Share me
+Share with Fb Dialog
 </a>
 ```
+_For more details see https://developers.facebook.com/docs/sharing/reference/feed-dialog/v2.4_
 
 ####Sharing Event Trigger
 You can choose to bind a different event trigger for showing up the sharer popup using the `socialshare-trigger=""` attribute (you can use any angular `element.bind()` event you want)

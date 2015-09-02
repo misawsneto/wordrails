@@ -12,6 +12,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"subdomain"}))
@@ -69,6 +70,12 @@ public class Network implements Serializable{
 	public boolean allowSponsors;
 	
 	public String domain;
+
+	@JsonIgnore
+	public String networkCreationToken;
+
+	@Lob
+	public String info;
 
 	@Lob
 	public String loginFooterMessage;

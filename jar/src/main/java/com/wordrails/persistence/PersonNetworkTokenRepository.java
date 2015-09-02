@@ -22,7 +22,7 @@ public interface PersonNetworkTokenRepository extends JpaRepository<PersonNetwor
 
 	@RestResource(exported=false)
 	@Query("SELECT token FROM PersonNetworkToken token where token.person in (select psr.person from StationRole psr where psr.station.id = :stationId)")
-	List<PersonNetworkToken> findByStationId(@Param("stationId") Integer stationId);
+	List<PersonNetworkToken> findTokenByStationId(@Param("stationId") Integer stationId);
 
 	@RestResource(exported=false)
 	void deleteByToken(String token);

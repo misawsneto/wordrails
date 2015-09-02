@@ -26,9 +26,18 @@ import retrofit.RequestInterceptor;
 class AuthenticationRequestInterceptor implements RequestInterceptor {
 	IConnectivityManager manager;
 	String url;
+	String cookie;
+	
+	// Traditional Login
 	String username;
 	String password;
-	String cookie;
+	
+	// Social Login
+	String provider;
+	String userId;
+	String accessToken;
+	
+	boolean isSocialLogin;
 	
 	@Override
 	public synchronized void intercept(RequestFacade request) {
@@ -61,11 +70,17 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 	
 	synchronized void logIn() {
 		List<NameValuePair\> form = new ArrayList<NameValuePair\>(2);
-		//form.add(new BasicNameValuePair("j_username", username));
-		//form.add(new BasicNameValuePair("j_password", password));
-
-		form.add(new BasicNameValuePair("username", username));
-		form.add(new BasicNameValuePair("password", password));
+		
+		if(isSocialLogin){
+			form = new ArrayList<NameValuePair\>(3);
+			form.add(new BasicNameValuePair("provider", provider));
+			form.add(new BasicNameValuePair("userId", userId));
+			form.add(new BasicNameValuePair("accessToken", accessToken));
+		} else {
+			form = new ArrayList<NameValuePair\>(2);
+			form.add(new BasicNameValuePair("username", username));
+			form.add(new BasicNameValuePair("password", password));
+		}
 
 		UrlEncodedFormEntity entity;
 		try {
@@ -74,8 +89,8 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 			throw new RuntimeException(e);
 		}
 	
-		//HttpPost request = new HttpPost(url + "/j_spring_security_check");
-		HttpPost request = new HttpPost(url + "/api/persons/login");
+		String requestEndpoint = isSocialLogin ? "/api/auth/signin" : "/api/persons/login";
+		HttpPost request = new HttpPost(url + requestEndpoint);
 		request.setEntity(entity);
 		
 		BasicCookieStore store = new BasicCookieStore();

@@ -20,6 +20,10 @@ public interface PersonNetworkRegIdRepository extends JpaRepository<PersonNetwor
 	@RestResource(exported=false)
 	public List<PersonNetworkRegId> findByNetwork(@Param("network") Network network);
 
+	@RestResource(exported = false)
+	@Query("SELECT regId from PersonNetworkRegId regId where regId.network.id = :networkId")
+	public List<PersonNetworkRegId> findRegIdByNetworkId(@Param("networkId") Integer networkId);
+
 //	 SELECT * FROM 
 //	 personnetworkregid reg join person p on reg.person_id = p.id
 //	 where p.id in 
@@ -32,9 +36,13 @@ public interface PersonNetworkRegIdRepository extends JpaRepository<PersonNetwor
 //	 join station s on sn.stations_id = s.id 
 //	 where s.visibility = "UNRESTRICTED"))
 
+//	@RestResource(exported=false)
+//	@Query("SELECT reg FROM PersonNetworkRegId reg join reg.person p where p in ( select psr.person from StationRole psr where psr.station.id = :stationId AND psr.person.id != 1 ) OR ( (reg.person is null OR reg.person.id = 1) and reg.network in ( select network from Network network join network.stations s where s.id = :stationId AND s.visibility = 'UNRESTRICTED') ) order by reg.id desc")
+//	public List<PersonNetworkRegId> findRegIdByStationId(@Param("stationId") Integer stationId);
+
 	@RestResource(exported=false)
-	@Query("SELECT reg FROM PersonNetworkRegId reg join reg.person p where p in ( select psr.person from StationRole psr where psr.station.id = :stationId AND psr.person.id != 1 ) OR ( (reg.person is null OR reg.person.id = 1) and reg.network in ( select network from Network network join network.stations s where s.id = :stationId AND s.visibility = 'UNRESTRICTED') ) order by reg.id desc")
-	public List<PersonNetworkRegId> findRegIdByStationId(@Param("stationId") Integer stationId);
+	@Query("SELECT token FROM PersonNetworkRegId token where token.person in (select psr.person from StationRole psr where psr.station.id = :stationId)")
+	List<PersonNetworkRegId> findRegIdByStationId(@Param("stationId") Integer stationId);
 
 	@RestResource(exported=false)
 	public void deleteByRegId(String canonicalRegistrationId);

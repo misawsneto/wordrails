@@ -196,20 +196,37 @@ function getCustomStyle(color, perspective, header) {
 	 "background:rgba(0, 0, 0, 0.04)!important;\n"+
 	"}\n"+
 	"#perspective-vertical md-tabs-content-wrapper, #station-sidebar md-tabs-content-wrapper{border-top: 1px solid rgba(0,0,0,0.1); margin-top:-1px;}\n"+
-	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l{\n"+
+	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l, .recent-posts, .recent-posts ul li{\n"+
 	  "border-color:rgba(0,0,0,0.1)\n"+
 	"}\n"+
 	"#station-sidebar .divider{"+
 	"border-top: none;"+
 	"border-color:rgba(0,0,0,0.1)\n"+
 	"}"+
+	".rp-meta span a, .full-post .post-meta span a, .half-post .post-meta span a{\n"+
+	"color: rgba(0,0,0,0.84)\n"+
+	"}"+
+
+	".station-perspectives .btn-term.btn-stroke:hover,"+
+	".station-perspectives .btn-term.btn-stroke:active,"+
+	".station-perspectives .btn-term.btn-stroke.active{"+
+	  "border-color: #111;"+
+	  "color: #111;"+
+	"}"+
+
+	".station-perspectives .btn-term.btn-stroke {"+
+	  "background-color: transparent;"+
+	  "color: #333;"+
+	  "border-color: #333;"+
+	"}"+
+
 	"\n"
 	:
 	// perspective is dark
 	"#station-sidebar .tl-wrap{\n"+
 	"border-color:rgba(255, 255, 255, 0.6)!important;\n"+
 	"}"+
-	"#station-sidebar .popular-posts .popular-index{\n"+
+	"#station-sidebar .popular-posts .popular-index, .rp-meta span a, .full-post .post-meta span a, .half-post .post-meta span a{\n"+
 	"color: rgba(255, 255, 255, 0.86)"+
 	"}"+
 	"#station-sidebar .tl-wrap:before{\n"+
@@ -218,7 +235,7 @@ function getCustomStyle(color, perspective, header) {
 	"#station-sidebar{\n" + 
 	 "background:rgba(255,255,255, 0.04)!important;"+
 	 "box-shadow: -7px 0 9px -7px rgba(0,0,0,0.4);"+
-	 "border-left: 0px;"+
+	 //"border-left: 0px;"+
 	"}\n"+
 	".station-perspectives .angular-ripple, .station-header .angular-ripple{background-color: rgba(255,255,255,0.1);}\n"+
 	"#perspective-vertical md-tabs-content-wrapper, #station-sidebar md-tabs-content-wrapper{box-shadow: inset 0 5px 5px -5px rgba(0,0,0,0.4);}\n"+
@@ -232,7 +249,7 @@ function getCustomStyle(color, perspective, header) {
 	"#station-sidebar .md-tab-content > .b-t{\n"+
 	"border-top: 0px"+
 	"}"+
-	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l{\n"+
+	".bg-perspective .station-perspectives .b-t, .bg-perspective .station-perspectives .b-r, .bg-perspective .station-perspectives .b-b, .bg-perspective .station-perspectives .b-l, .recent-posts, .recent-posts ul li{\n"+
 	 "border-color:rgba(255,255,255, 0.3)\n"+
 	"}\n"+
 	".bg-perspective .station-perspectives a{\n"+
@@ -243,6 +260,21 @@ function getCustomStyle(color, perspective, header) {
 	  "color: rgba(255,255,255, 0.86) ;\n"+
 	  "text-decoration: none;\n"+
 	"}\n"+
+
+
+	".station-perspectives .btn-term.btn-stroke:hover,"+
+	".station-perspectives .btn-term.btn-stroke:active,"+
+	".station-perspectives .btn-term.btn-stroke.active{"+
+	  "border-color: #f9f9f9;"+
+	  "color: #f9f9f9;"+
+	"}"+
+
+	".station-perspectives .btn-term.btn-stroke {"+
+	  "background-color: transparent;"+
+	  "color: #eee;"+
+	  "border-color: #eee;"+
+	"}"+
+
 	"\n"
 	)+
 
@@ -283,8 +315,12 @@ function getCustomStyle(color, perspective, header) {
 	"}\n"+
 
 	".bg-header{\n"+
-	"  background-color: rgba("+hexToRgb(shadeBlend(0.05,header)).r+", " + hexToRgb(shadeBlend(0.05,header)).g + ", "+ hexToRgb(shadeBlend(0.05,header)).b +", 1);\n"+
-	"  color: " + textColorEval(header) + ";\n"+
+	"  background-color: rgba("+hexToRgb(shadeBlend(0.05,header)).r+", " + hexToRgb(shadeBlend(0.05,header)).g + ", "+ hexToRgb(shadeBlend(0.05,header)).b +", 1)!important;\n"+
+	"  color: " + (textColorEval2(header) ? "#111" : "#fff") +";\n" + "!important;\n"+
+	"}\n"+	
+
+	".bg-header-text{\n"+
+	"  color: " + (textColorEval2(header) ? "#111" : "#fff") +";\n" + "!important;\n"+
 	"}\n"+	
 
 	".station-header .nav > li > a{\n"+
@@ -346,6 +382,17 @@ function getCustomStyle(color, perspective, header) {
 	"md-checkbox.md-default-theme.md-checked .md-icon:after{" +
 	"border-color:" + textColorEval(color) +
 	"}"+
+
+	".full-post h4 a:hover,"+
+	".half-post h4 a:hover,"+
+	".recent-posts ul li:hover .rp-title{" +
+	"color: " + color + "!important" +
+	"}"+
+
+	".recent-posts ul li:after{"+
+		"background: " + color + "!important" +
+	"}"+
+
 
 	"";
 	return style

@@ -41,17 +41,45 @@ public class $facade$ {
 					 String _username, 
 					 String _password, 
 					 LogLevel _level) throws IOException {
-		Gson _gson = new GsonBuilder()
-			.registerTypeAdapter(Date.class, new DateJsonSerializer())
-    		.registerTypeAdapter(Date.class, new DateJsonDeserializer())
-			.create();		
-		Converter _converter = new GsonConverter(_gson);
-	
 		_interceptor = new AuthenticationRequestInterceptor();
 		_interceptor.manager = _manager;
 		_interceptor.url = _url;
 		_interceptor.username = _username;
 		_interceptor.password = _password;
+		_interceptor.isSocialLogin = false;
+		
+		initWordRails(_manager, _cacheDirectory, _cacheMaxSize, _url, _level);
+	}
+	
+	public $facade$(IConnectivityManager _manager,
+					 File _cacheDirectory, 
+					 long _cacheMaxSize,
+					 String _url, 
+					 String _provider, 
+					 String _userId, 
+					 String _accessToken, 
+					 LogLevel _level) throws IOException {
+		_interceptor = new AuthenticationRequestInterceptor();
+		_interceptor.manager = _manager;
+		_interceptor.url = _url;
+		_interceptor.provider = _provider;
+		_interceptor.userId = _userId;
+		_interceptor.accessToken = _accessToken;
+		_interceptor.isSocialLogin = true;
+		
+		initWordRails(_manager, _cacheDirectory, _cacheMaxSize, _url, _level);
+	}
+	
+	private void initWordRails(IConnectivityManager _manager,
+					 File _cacheDirectory, 
+					 long _cacheMaxSize,
+					 String _url, 
+					 LogLevel _level) throws IOException {
+		Gson _gson = new GsonBuilder()
+			.registerTypeAdapter(Date.class, new DateJsonSerializer())
+    		.registerTypeAdapter(Date.class, new DateJsonDeserializer())
+			.create();		
+		Converter _converter = new GsonConverter(_gson);		
 		
 		OkHttpClient _okHttpClient = new OkHttpClient();
 
@@ -260,6 +288,14 @@ public class $facade$ {
 				_callback.failure(_error);
 			}		
 		});
+	}
+
+	public Response socialLogin(String provider, String userId, String accessToken){
+		return _facade.socialLogin(provider, userId, accessToken);
+	}
+
+	public void socialLogin(String provider, String userId, String accessToken, Callback<Response> _callback){
+		_facade.socialLogin(provider, userId, accessToken, _callback);
 	}
 	
 	public PostView convertPost(Integer postId, String state){
