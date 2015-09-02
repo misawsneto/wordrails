@@ -125,6 +125,7 @@
     "angular-ui-sortable": "~0.13.4",
     "angularjs-dropdown-multiselect": "1.5.2",
     "angular-bootstrap-colorpicker": "~3.0.18",
-    "angular-slick": "~0.2.1"
+    "angular-slick": "~0.2.1",
+    "angular-ui-ace": "0.2.3"
   }
 }

@@ -260,7 +260,7 @@
         </div>
 
         <div class="recent-posts side-widget" id="station-sidebar" ng-if="app.initData.recent && app.initData.recent.length > 0">
-          <h4>Mais Lidos</h4>
+          <h4>Mais Recentes</h4>
           <ul>
             <li ng-repeat="post in app.initData.recent | limitTo: 5">
               <a ng-click="app.setNowReading(post, app.initData.popular)" class="rp-title">
@@ -395,7 +395,7 @@
          <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
           <!-- image -->
           <a class="block-image m-l m-t" ng-if="cell.postView.mediumId" >
-            <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(cell.postView, 'md')">
+            <div class="cell-wrap r r-2x bg-cover" ng-style="getBackgroundImage(cell.postView, 'md')">
             </div>
           </a>
           <!-- /image -->

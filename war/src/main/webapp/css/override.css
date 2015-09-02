@@ -4511,6 +4511,10 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   bottom: 24px;
 }
 
+.station-perspectives .half-post:first-child .b-t {
+    border: 0;
+}
+
 /* /stations */
 
 /* notifications */
