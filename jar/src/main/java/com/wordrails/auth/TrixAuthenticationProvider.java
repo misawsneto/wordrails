@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.Normalizer;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -216,7 +217,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			}
 		}
 
-		if(user == null) return false;
+		if (user == null) return false;
 
 		Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
@@ -234,7 +235,9 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		if (person == null) {
 			int i = 1;
 			String originalUsername = profile.getFirstName().toLowerCase() + profile.getLastName().toLowerCase();
-			String username = originalUsername;
+			String username = Normalizer
+					.normalize(originalUsername, Normalizer.Form.NFD)
+					.replaceAll("[^\\p{ASCII}]", "");
 			while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
 				username = originalUsername + i++;
 			}
@@ -244,7 +247,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			person.username = username;
 			person.email = email;
 		}
-
 
 
 		User user = new User();
@@ -272,7 +274,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 		person.user = user;
 
-		if(person.image == null) {
+		if (person.image == null) {
 //			try {
 //				Image coverPicture = getImageFromBytes(profile.getCover().getSource(), Image.Type.COVER);
 //				imageEventHandler.handleBeforeCreate(coverPicture);
@@ -298,9 +300,9 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 	private Image getImageFromBytes(String imageUrl, Image.Type type) throws IOException {
 		URL imageURL = new URL(imageUrl);
-		BufferedImage originalImage= ImageIO.read(imageURL);
-		ByteArrayOutputStream baos=new ByteArrayOutputStream();
-		ImageIO.write(originalImage, "jpg", baos );
+		BufferedImage originalImage = ImageIO.read(imageURL);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(originalImage, "jpg", baos);
 		byte[] bytes = baos.toByteArray();
 
 		return getImageFromBytes(bytes, imageUrl, type);
