@@ -1,0 +1,20 @@
+<div id="tag-posts" class="hbox p-t-xxl" ng-cloak>
+
+	<!-- posts & recommendation -->
+
+	<div class="container p-t-lg p-b-lg">
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2 text-md" ng-bind-html="app.initData.network.info">
+				<!-- BLOG POST -->
+			</div>
+		</div>
+	</div>
+
+	<!-- /posts -->
+
+	<!-- /pages -->
+
+	<div data-ng-include=" 'tpl/blocks/top_header.html' "></div>
+
+	<div ui-view></div>
+</div>

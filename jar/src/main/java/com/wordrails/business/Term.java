@@ -96,4 +96,18 @@ public class Term {
 		}
 		updatedAt = new Date();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(id != null)
+			return this.id.equals(((Term)obj).id);
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		if(id != null)
+			return id.hashCode() * 31;
+		return super.hashCode();
+	}
 }

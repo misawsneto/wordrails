@@ -86,6 +86,16 @@ angular.module('app')
 
     }, 100);
 
+    $interval(function(){
+      if(trixService.isLoggedIn()){
+        $scope.app.hideAside = false;
+        $scope.app.isLogged = trixService.isLoggedIn();
+      }else{
+        $scope.app.hideAside = true;
+        $scope.app.isLogged = trixService.isLoggedIn();
+      }
+    }, 200);
+
     $scope.$on('HTTP_ERROR', function(data){
       safeApply($scope, function(){
         cfpLoadingBar.complete()
@@ -112,6 +122,11 @@ angular.module('app')
 
     $scope.app.stopPropagation = function($event){
       $event.stopPropagation();
+    }
+
+    $scope.app.stopPropagationAndPrevent = function($event){
+      $event.stopPropagation();
+      $event.preventDefault();
     }
 
     $scope.app.changeStation = function(station){

@@ -1,5 +1,5 @@
 /*!
-*  angular-leaflet-directive 0.8.6 2015-07-28
+*  angular-leaflet-directive 0.8.7 2015-08-26
 *  angular-leaflet-directive - An AngularJS directive to easily interact with Leaflet maps
 *  git: https://github.com/tombatossals/angular-leaflet-directive
 */
@@ -338,6 +338,7 @@ angular.module("leaflet-directive").factory('leafletControlHelpers', function ($
                 return new L.Control.Search(params);
             }
         },
+        custom: {},
         minimap: {
             isPluginLoaded: function() {
                 if (!angular.isDefined(L.Control.MiniMap)) {
@@ -686,8 +687,6 @@ angular.module("leaflet-directive").factory('leafletHelpers', function ($q, $log
                     id = i;
                 }
             }
-        } else if (Object.keys(d).length === 0) {
-            id = "main";
         } else {
                 $log.error(_errorHeader + "- You have more than 1 map on the DOM, you must provide the map ID to the leafletData.getXXX call");
             }
@@ -837,6 +836,33 @@ angular.module("leaflet-directive").factory('leafletHelpers', function ($q, $log
             is: function(icon) {
                 if (this.isLoaded()) {
                     return icon instanceof L.AwesomeMarkers.Icon;
+                } else {
+                    return false;
+                }
+            },
+            equal: function (iconA, iconB) {
+                if (!this.isLoaded()) {
+                    return false;
+                }
+                if (this.is(iconA)) {
+                    return angular.equals(iconA, iconB);
+                } else {
+                    return false;
+                }
+            }
+        },
+
+        DomMarkersPlugin: {
+            isLoaded: function () {
+                if (angular.isDefined(L.DomMarkers) && angular.isDefined(L.DomMarkers.Icon)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            is: function (icon) {
+                if (this.isLoaded()) {
+                    return icon instanceof L.DomMarkers.Icon;
                 } else {
                     return false;
                 }
@@ -1347,7 +1373,9 @@ angular.module('leaflet-directive').service('leafletIterators', function ($log, 
     }
     if(!_hasErrors(collection, externalCb)){
       for(var key in collection){
-        internalCb(collection[key], key);
+          if (collection.hasOwnProperty(key)) {
+              internalCb(collection[key], key);
+          }
       }
     }
   };
@@ -1431,6 +1459,23 @@ angular.module("leaflet-directive")
                     return;
                 }
                 return new L.TileLayer.GeoJSON(params.url, params.pluginOptions, params.options);
+            }
+        },
+        geoJSONShape: {
+            mustHaveUrl: false,
+            createLayer: function(params) {
+                        return new L.GeoJSON(params.data,
+                            params.options);
+            }
+        },
+        geoJSONAwesomeMarker: {
+            mustHaveUrl: false,
+            createLayer: function(params) {
+                    return new L.geoJson(params.data, {
+                        pointToLayer: function (feature, latlng) {
+                            return L.marker(latlng, {icon: L.AwesomeMarkers.icon(params.icon)});
+                    }
+                });
             }
         },
         utfGrid: {
@@ -1798,6 +1843,7 @@ angular.module("leaflet-directive")
             data: layerDefinition.data,
             options: layerDefinition.layerOptions,
             layer: layerDefinition.layer,
+            icon: layerDefinition.icon,
             type: layerDefinition.layerType,
             bounds: layerDefinition.bounds,
             key: layerDefinition.key,
@@ -2060,6 +2106,7 @@ angular.module("leaflet-directive").service('leafletMarkersHelpers', function ($
         AwesomeMarkersPlugin = leafletHelpers.AwesomeMarkersPlugin,
         MakiMarkersPlugin = leafletHelpers.MakiMarkersPlugin,
         ExtraMarkersPlugin = leafletHelpers.ExtraMarkersPlugin,
+        DomMarkersPlugin = leafletHelpers.DomMarkersPlugin,
         safeApply = leafletHelpers.safeApply,
         Helpers = leafletHelpers,
         isString = leafletHelpers.isString,
@@ -2109,6 +2156,17 @@ angular.module("leaflet-directive").service('leafletMarkersHelpers', function ($
 
         if (isDefined(iconData) && isDefined(iconData.type) && iconData.type === 'div') {
             return new L.divIcon(iconData);
+        }
+
+        if (isDefined(iconData) && isDefined(iconData.type) && iconData.type === 'dom') {
+            if (!DomMarkersPlugin.isLoaded()) {
+                $log.error(errorHeader + 'The DomMarkers Plugin is not loaded.');
+            }
+            var markerScope = angular.isFunction(iconData.getMarkerScope) ? iconData.getMarkerScope() : $rootScope,
+                template = $compile(iconData.template)(markerScope),
+                iconDataCopy = angular.copy(iconData);
+            iconDataCopy.element = template[0];
+            return new L.DomMarkers.icon(iconDataCopy);
         }
 
         // allow for any custom icon to be used... assumes the icon has already been initialized
@@ -2906,6 +2964,7 @@ angular.module("leaflet-directive").directive('bounds', function ($log, $timeout
                     if (emptyBounds(bounds) || scope.settingBoundsFromScope) {
                         return;
                     }
+                    scope.settingBoundsFromLeaflet = true;
                     var newScopeBounds = {
                         northEast: {
                             lat: bounds._northEast.lat,
@@ -2920,10 +2979,15 @@ angular.module("leaflet-directive").directive('bounds', function ($log, $timeout
                     if (!angular.equals(scope.bounds, newScopeBounds)) {
                         scope.bounds = newScopeBounds;
                     }
+                    $timeout( function() {
+                        scope.settingBoundsFromLeaflet = false;
+                    });
                 });
 
                 var lastNominatimQuery;
                 leafletScope.$watch('bounds', function (bounds) {
+                    if (scope.settingBoundsFromLeaflet)
+                        return;
                     if (isDefined(bounds.address) && bounds.address !== lastNominatimQuery) {
                         scope.settingBoundsFromScope = true;
                         nominatimService.query(bounds.address, attrs.id).then(function(data) {
@@ -3056,6 +3120,8 @@ angular.module("leaflet-directive").directive('center',
                 }
 
                 leafletScope.$watch("center", function(center) {
+                    if (scope.settingCenterFromLeaflet)
+                        return;
                     //$log.debug("updated center model...");
                     // The center from the URL has priority
                     if (isDefined(urlCenterHash)) {
@@ -3111,6 +3177,7 @@ angular.module("leaflet-directive").directive('center',
                         //$log.debug("same center in model, no need to update again.");
                         return;
                     }
+                    scope.settingCenterFromLeaflet = true;
                     safeApply(leafletScope, function(scope) {
                         if (!leafletScope.settingCenterFromScope) {
                             //$log.debug("updating center model...", map.getCenter(), map.getZoom());
@@ -3122,6 +3189,9 @@ angular.module("leaflet-directive").directive('center',
                             });
                         }
                         leafletEvents.notifyCenterChangedToBounds(leafletScope, map);
+                        $timeout( function() {
+                            scope.settingCenterFromLeaflet = false;
+                        });
                     });
                 });
 
@@ -3158,6 +3228,7 @@ angular.module("leaflet-directive").directive('controls', function ($log, leafle
             var isValidControlType = leafletControlHelpers.isValidControlType;
             var leafletScope  = controller.getLeafletScope();
             var isDefined = leafletHelpers.isDefined;
+            var isArray = leafletHelpers.isArray;
             var leafletControls = {};
             var errorHeader = leafletHelpers.errorHeader + ' [Controls] ';
 
@@ -3187,12 +3258,21 @@ angular.module("leaflet-directive").directive('controls', function ($log, leafle
 
                         if (controlType !== 'custom') {
                             control = createControl(controlType, newControls[newName]);
+                            map.addControl(control);
+                            leafletControls[newName] = control;
                         } else {
-                            control = newControls[newName];
+                            var customControlValue = newControls[newName];
+                            if (isArray(customControlValue)) {
+                                for (var i in customControlValue) {
+                                    var customControl = customControlValue[i];
+                                    map.addControl(customControl);
+                                    leafletControls[newName] = !isDefined(leafletControls[newName]) ? [customControl] : leafletControls[newName].concat([customControl]);
+                                }
+                            } else {
+                                map.addControl(customControlValue);
+                                leafletControls[newName] = customControlValue;
+                            }
                         }
-                        map.addControl(control);
-
-                        leafletControls[newName] = control;
                     }
 
                 });
@@ -4446,12 +4526,12 @@ angular.module("leaflet-directive").directive('paths', function ($log, $q, leafl
                                     }
 
                                     if (!isDefined(layers.overlays) || !isDefined(layers.overlays[pathData.layer])) {
-                                        $log.error('[AngularJS - Leaflet] A marker can only be added to a layer of type "group"');
+                                        $log.error('[AngularJS - Leaflet] A path can only be added to a layer of type "group"');
                                         continue;
                                     }
                                     var layerGroup = layers.overlays[pathData.layer];
                                     if (!(layerGroup instanceof L.LayerGroup || layerGroup instanceof L.FeatureGroup)) {
-                                        $log.error('[AngularJS - Leaflet] Adding a marker to an overlay needs a overlay of the type "group" or "featureGroup"');
+                                        $log.error('[AngularJS - Leaflet] Adding a path to an overlay needs a overlay of the type "group" or "featureGroup"');
                                         continue;
                                     }
 

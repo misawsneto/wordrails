@@ -787,4 +787,31 @@ public class UtilResource {
 			cacheService.removeUser(user.id);
 		}
 	}
+
+	@PUT
+	@Path("/addCategoryTerm/{id}/{termId}")
+	public void addCategoryTerm (@Context HttpServletRequest request, @PathParam("id") Integer id, @PathParam("termId") Integer termId) {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+			TermPerspective termPerspective = termPerspectiveRepository.findOne(id);
+			Term term = termRepository.findOne(termId);
+
+			termPerspective.categoryTabs.add(term);
+			termPerspectiveRepository.save(termPerspective);
+		}
+	}
+
+	@GET
+	@Path("/updateCategoryTabs")
+	public void updateCategoryTabs (@Context HttpServletRequest request) {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+			List<TermPerspective> pers = termPerspectiveRepository.findAll();
+			for (TermPerspective per: pers){
+				Taxonomy tax = taxonomyRepository.findOne(per.perspective.taxonomy.id);
+				per.categoryTabs.addAll(tax.terms);
+				termPerspectiveRepository.save(per);
+			}
+		}
+	}
 }

@@ -1711,5 +1711,8 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return false;
 	}
 
-
+	@Override
+	protected boolean isGetTermPerspectiveCategoryTabsAuthorized(Integer termPerspectiveId) {
+		return true;
+	}
 }

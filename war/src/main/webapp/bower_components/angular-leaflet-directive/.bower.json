@@ -2,7 +2,7 @@
   "name": "angular-leaflet-directive",
   "author": "https://github.com/tombatossals/angular-leaflet-directive/graphs/contributors",
   "description": "angular-leaflet-directive - An AngularJS directive to easily interact with Leaflet maps",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "homepage": "http://tombatossals.github.io/angular-leaflet-directive/",
   "keywords": [
     "angularjs",
@@ -15,8 +15,7 @@
   ],
   "dependencies": {
     "angular": "1.x",
-    "leaflet": "0.7.x",
-    "font-awesome": "~4.3.x"
+    "leaflet": "0.7.x"
   },
   "devDependencies": {
     "jquery": "*",
@@ -36,6 +35,7 @@
     "leaflet-plugins": "*",
     "esri-leaflet": "*",
     "proj4": "*",
+    "font-awesome": "~4.3.x",
     "proj4leaflet": "*",
     "Leaflet.MakiMarkers": "*",
     "Leaflet.heat": "https://github.com/Leaflet/Leaflet.heat/archive/gh-pages.tar.gz",
@@ -48,11 +48,6 @@
     "esri-leaflet-heatmap-feature-layer": "~1.0.x",
     "leaflet-search": "~1.5.8"
   },
-  "overrides": {
-    "Leaflet.utfgrid": {
-      "main": "dist/leaflet.utfgrid.js"
-    }
-  },
   "ignore": [
     "**/.*",
     "src",
@@ -64,11 +59,11 @@
     "package.json",
     "bower.json"
   ],
-  "_release": "0.8.6",
+  "_release": "0.8.7",
   "_resolution": {
     "type": "version",
-    "tag": "v0.8.6",
-    "commit": "e61e9edae82bc09f416c5ee1cfe87aa2e42bc45c"
+    "tag": "v0.8.7",
+    "commit": "180f90526337289c70f6a794c2f7b109c9bbc999"
   },
   "_source": "git://github.com/tombatossals/angular-leaflet-directive.git",
   "_target": "~0.8.2",
