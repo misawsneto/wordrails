@@ -137,12 +137,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetTrixFileAuthorized(Integer fileId) {
-		boolean authorized = false;
-		Image image = imageRepository.findByFileId(fileId);
-		if(image != null){
-			authorized = canVisualizeImages(image.id);
-		}
-		return authorized;
+		return false;
 	}
 
 	@Override

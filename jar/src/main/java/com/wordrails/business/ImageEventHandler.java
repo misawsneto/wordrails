@@ -35,7 +35,7 @@ public class ImageEventHandler {
 
 		if (!Image.containsType(image.type)) throw new BadRequestException("Invalid Image Type:" + image.type);
 
-		String original = image.originalId;
+		String original = image.originalHash;
 		if (original != null) {
 			Network network = authProvider.getNetwork();
 			URL fullURL = new URL(amazonCloudService.getURL(network.domain, original));
@@ -51,9 +51,9 @@ public class ImageEventHandler {
 			String medium = fileService.newResizedImage(bufferedImage, network.domain, 300, "medium", mime);
 			String large = fileService.newResizedImage(bufferedImage, network.domain, 1024, "large", mime);
 
-			image.smallId = small;
-			image.mediumId = medium;
-			image.largeId = large;
+			image.smallHash = small;
+			image.mediumHash = medium;
+			image.largeHash = large;
 
 			image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
 		}

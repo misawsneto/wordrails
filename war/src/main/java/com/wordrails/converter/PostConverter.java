@@ -26,14 +26,14 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.subheading = post.subheading;
 		postView.slug = post.slug;
 		if (post.featuredImage != null) {
-			postView.smallId = post.featuredImage.smallId;
-			postView.mediumId = post.featuredImage.mediumId;
-			postView.largeId = post.featuredImage.largeId;
+			postView.smallId = post.featuredImage.smallHash;
+			postView.mediumId = post.featuredImage.mediumHash;
+			postView.largeId = post.featuredImage.largeHash;
 			
-			postView.imageId = post.image;
-			postView.imageSmallId = post.imageSmall;
-			postView.imageMediumId = post.imageMedium;
-			postView.imageLargeId = post.imageLarge;
+			postView.imageId = post.imageHash;
+			postView.imageSmallId = post.imageSmallHash;
+			postView.imageMediumId = post.imageMediumHash;
+			postView.imageLargeId = post.imageLargeHash;
 		}
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;
@@ -44,12 +44,12 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.snippet = WordrailsUtil.simpleSnippet(post.body, 100);
 		postView.authorName = post.author != null ? post.author.name : null;
 		postView.authorUsername = post.author != null ? post.author.username : null;
-		postView.authorCoverMediumId = post.author != null ? post.author.coverMediumId : null;
-		postView.authorImageSmallId = post.author != null ? post.author.imageSmallId : null;
+		postView.authorCoverMediumId = post.author != null ? post.author.coverMediumHash : null;
+		postView.authorImageSmallId = post.author != null ? post.author.imageSmallHash : null;
 		postView.authorId = post.author != null ? post.author.id : null;
 		postView.authorEmail = post.author != null ? post.author.email : null;
 		postView.authorTwitter = post.author != null ? post.author.twitterHandle : null;
-		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
+		postView.authorSmallImageId = post.author != null ? post.author.imageSmallHash : null;
 		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
 		postView.externalVideoUrl = post.externalVideoUrl;
 		postView.readTime = post.readTime;

@@ -7,6 +7,7 @@ import org.apache.solr.analysis.*;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Parameter;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -253,20 +254,20 @@ public class Post {
 
 	@PrePersist
 	public void onCreate() {
-		if (featuredImage != null && featuredImage.originalId != null) {
-			image = featuredImage.originalId;
-			imageSmall = featuredImage.smallId;
-			imageMedium = featuredImage.mediumId;
-			imageLarge = featuredImage.largeId;
+		if (featuredImage != null && featuredImage.originalHash != null) {
+			imageHash = featuredImage.originalHash;
+			imageSmallHash = featuredImage.smallHash;
+			imageMediumHash = featuredImage.mediumHash;
+			imageLargeHash = featuredImage.largeHash;
 //			imageLandscape = !featuredImage.vertical;
 			imageCaptionText = featuredImage.caption;
 			imageCreditsText = featuredImage.credits;
 			imageTitleText = featuredImage.title;
 		} else {
-			image = null;
-			imageSmall = null;
-			imageMedium = null;
-			imageLarge = null;
+			imageId = null;
+			imageSmallId = null;
+			imageMediumId = null;
+			imageLargeId = null;
 		}
 
 		readTime = WordrailsUtil.calculateReadTime(body);
@@ -278,20 +279,20 @@ public class Post {
 
 	@PreUpdate
 	public void onUpdate() {
-		if (featuredImage != null && featuredImage.originalId != null) {
-			image = featuredImage.originalId;
-			imageSmall = featuredImage.smallId;
-			imageMedium = featuredImage.mediumId;
-			imageLarge = featuredImage.largeId;
+		if (featuredImage != null && featuredImage.originalHash != null) {
+			imageHash = featuredImage.originalHash;
+			imageSmallHash = featuredImage.smallHash;
+			imageMediumHash = featuredImage.mediumHash;
+			imageLargeHash = featuredImage.largeHash;
 //			imageLandscape = !featuredImage.vertical;
 			imageCaptionText = featuredImage.caption;
 			imageCreditsText = featuredImage.credits;
 			imageTitleText = featuredImage.title;
 		} else {
-			image = null;
-			imageSmall = null;
-			imageMedium = null;
-			imageLarge = null;
+			imageId = null;
+			imageSmallId = null;
+			imageMediumId = null;
+			imageLargeId = null;
 		}
 
 		updatedAt = new Date();
@@ -318,10 +319,15 @@ public class Post {
 		}
 	}
 
-	public String image;
-	public String imageSmall;
-	public String imageMedium;
-	public String imageLarge;
+	public Integer imageId;
+	public Integer imageSmallId;
+	public Integer imageMediumId;
+	public Integer imageLargeId;
+
+	public String imageHash;
+	public String imageSmallHash;
+	public String imageMediumHash;
+	public String imageLargeHash;
 
 	@Override
 	public String toString() {

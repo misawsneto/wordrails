@@ -153,7 +153,7 @@ public class SocialAuthenticationService {
 
 				Image coverPicture = new Image();
 				coverPicture.type = Image.Type.COVER.toString();
-				coverPicture.originalId = fileHash;
+				coverPicture.originalHash = fileHash;
 
 				imageRepository.save(coverPicture);
 				person.cover = coverPicture;
@@ -167,7 +167,7 @@ public class SocialAuthenticationService {
 
 				Image profilePicture = new Image();
 				profilePicture.type = Image.Type.PROFILE_PICTURE.toString();
-				profilePicture.originalId = fileHash;
+				profilePicture.originalHash = fileHash;
 
 				imageRepository.save(profilePicture);
 				person.image = profilePicture;

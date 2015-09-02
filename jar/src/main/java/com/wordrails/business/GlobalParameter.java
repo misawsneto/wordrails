@@ -12,8 +12,8 @@ public class GlobalParameter {
 	public Integer id;
 
 	@NotNull
-	@Column(unique = true)
-	public String name;
+	@Column(unique = true, name = "name")
+	public String parameterName;
 
 	@NotNull
 	public String value;

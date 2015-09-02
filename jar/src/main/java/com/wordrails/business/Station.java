@@ -98,8 +98,11 @@ public class Station {
 
 	@OneToOne
 	public Image logo;
-	public String logoId;
-	public String logoMediumId;
+	public Integer logoId;
+	public Integer logoMediumId;
+
+	public String logoHash;
+	public String logoMediumHash;
 
 	public Integer defaultPerspectiveId;
 
@@ -112,18 +115,18 @@ public class Station {
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
-		if(logo != null && logo.originalId != null){
-			logoId = logo.originalId;
-			logoMediumId = logo.mediumId;
+		if(logo != null && logo.originalHash != null){
+			logoHash = logo.originalHash;
+			logoMediumHash = logo.mediumHash;
 		}
 	}
 
 	@PreUpdate
 	void onUpdate() {
 		updatedAt = new Date();
-		if(logo != null && logo.originalId != null){
-			logoId = logo.originalId;
-			logoMediumId = logo.mediumId;
+		if(logo != null && logo.originalHash != null){
+			logoHash = logo.originalHash;
+			logoMediumHash = logo.mediumHash;
 		}
 	}
 
@@ -166,9 +169,7 @@ public class Station {
 				return false;
 		} else if (!visibility.equals(other.visibility))
 			return false;
-		if (writable != other.writable)
-			return false;
-		return true;
+		return writable == other.writable;
 	}
 
 	@Override

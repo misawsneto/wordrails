@@ -14,7 +14,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.jboss.resteasy.annotations.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContext;
@@ -75,7 +74,7 @@ public class FilesResource {
 		} catch (BadRequestException ue) {
 			return Response.status(Status.BAD_REQUEST).build();
 		} catch (FileUploadException ue) {
-			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximun size is 6MB\", maxMb:6}").build();
+			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximum size is 6MB\", maxMb:6}").build();
 		}
 	}
 
@@ -85,7 +84,7 @@ public class FilesResource {
 		DiskFileItemFactory factory = new DiskFileItemFactory(DiskFileItemFactory.DEFAULT_SIZE_THRESHOLD, repository);
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		List<FileItem> items = upload.parseRequest(request);
-		if(items != null && !items.isEmpty()) {
+		if (items != null && !items.isEmpty()) {
 			return items.get(0);
 		}
 
@@ -112,7 +111,7 @@ public class FilesResource {
 		} catch (BadRequestException ue) {
 			return Response.status(Status.BAD_REQUEST).build();
 		} catch (FileUploadException ue) {
-			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximun size is 6MB\", maxMb:6}").build();
+			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximum size is 6MB\", maxMb:6}").build();
 		}
 	}
 
@@ -138,7 +137,7 @@ public class FilesResource {
 		} catch (BadRequestException ue) {
 			return Response.status(Status.BAD_REQUEST).build();
 		} catch (FileUploadException ue) {
-			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximun size is 6MB\", maxMb:6}").build();
+			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximum size is 6MB\", maxMb:6}").build();
 		}
 	}
 

@@ -1,12 +1,12 @@
 package com.wordrails.api;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.mail.internet.AddressException;
@@ -29,11 +29,14 @@ import javax.ws.rs.core.Response.Status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
+import com.wordrails.business.*;
 import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.*;
+import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.AsyncService;
 import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
+import org.apache.tika.Tika;
 import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
@@ -48,25 +51,13 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wordrails.business.Image;
-import com.wordrails.business.Invitation;
-import com.wordrails.business.Network;
-import com.wordrails.business.Person;
-import com.wordrails.business.PersonNetworkRegId;
-import com.wordrails.business.Post;
-import com.wordrails.business.Row;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationPerspective;
-import com.wordrails.business.Taxonomy;
-import com.wordrails.business.Term;
-import com.wordrails.business.TermPerspective;
-import com.wordrails.business.UnauthorizedException;
-import com.wordrails.business.Wordpress;
 import com.wordrails.persistence.BookmarkRepository;
 import com.wordrails.persistence.CellRepository;
 import com.wordrails.persistence.CommentRepository;
@@ -194,19 +185,19 @@ public class UtilResource {
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Post> posts = postRepository.findAll();
 			for (Post post : posts) {
-				if(post.featuredImage != null && post.featuredImage.originalId != null){
-					post.image = post.featuredImage.originalId;
-					post.imageSmall = post.featuredImage.smallId;
-					post.imageMedium = post.featuredImage.mediumId;
-					post.imageLarge = post.featuredImage.largeId;
+				if(post.featuredImage != null && post.featuredImage.originalHash != null){
+					post.imageHash = post.featuredImage.originalHash;
+					post.imageSmallHash = post.featuredImage.smallHash;
+					post.imageMediumHash = post.featuredImage.mediumHash;
+					post.imageLargeHash = post.featuredImage.largeHash;
 					post.imageLandscape= !post.featuredImage.vertical;
 					post.imageCaptionText = post.featuredImage.caption;
 					post.imageCreditsText = post.featuredImage.credits;
 				}else{
-					post.image = null;
-					post.imageSmall = null;
-					post.imageMedium = null;
-					post.imageLarge = null;
+					post.imageHash = null;
+					post.imageSmallHash = null;
+					post.imageMediumHash = null;
+					post.imageLargeHash = null;
 				}
 				if(post.comments != null){
 					post.commentsCount = post.comments.size();
@@ -266,22 +257,22 @@ public class UtilResource {
 					it.remove();
 				}
 
-				if(person.image != null && person.image.originalId != null){
-					person.imageId = person.image.originalId;
-					person.imageSmallId = person.image.smallId;
-					person.imageMediumId = person.image.mediumId;
-					person.imageLargeId = person.image.largeId;
+				if(person.image != null && person.image.originalHash != null){
+					person.imageHash = person.image.originalHash;
+					person.imageSmallHash = person.image.smallHash;
+					person.imageMediumHash = person.image.mediumHash;
+					person.imageLargeHash = person.image.largeHash;
 				}else{
-					person.imageId = null;
-					person.imageSmallId = null;
-					person.imageMediumId = null;
-					person.imageLargeId = null;
+					person.imageHash = null;
+					person.imageSmallHash = null;
+					person.imageMediumHash = null;
+					person.imageLargeHash = null;
 				}
 
-				if(person.cover != null && person.cover.originalId != null){
-					person.coverMediumId = person.cover.mediumId;
-					person.coverLargeId = person.cover.largeId;
-					person.coverMediumId = person.cover.mediumId;
+				if(person.cover != null && person.cover.originalHash != null){
+					person.coverMediumHash = person.cover.mediumHash;
+					person.coverLargeHash = person.cover.largeHash;
+					person.coverMediumHash = person.cover.mediumHash;
 				}
 
 				if(person.createdAt == null){
@@ -734,5 +725,24 @@ public class UtilResource {
 			}
 			personRepository.save(persons);
 		}
+	}
+
+	@Autowired
+	private AmazonCloudService amazon;
+
+	@POST
+	@Path("/uploadAmazonImages")
+	public void uploadAmazonImages(@Context HttpServletRequest request) {
+		if(isLocal(request.getHeader("Host"))) {
+			amazon.uploadAmazonImages();
+		}
+	}
+
+	private boolean isLocal(String host) {
+		return host.contains("0:0:0:0:0:0:0") ||
+				host.contains("0.0.0.0") ||
+				host.contains("localhost") ||
+				host.contains("127.0.0.1") ||
+				host.contains("xarxlocal.com");
 	}
 }

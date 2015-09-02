@@ -61,16 +61,25 @@ public class Image implements Serializable {
 	public Sponsor publicitySponsor;
 
 	@NotNull
-	public String originalId; //amazonS3Hash
+	@ManyToOne(cascade=CascadeType.ALL)
+	public TrixFile original;
 
 	@NotNull
-	public String smallId; //amazonS3Hash
+	@ManyToOne(cascade=CascadeType.REMOVE)
+	public TrixFile small;
 
 	@NotNull
-	public String mediumId; //amazonS3Hash
+	@ManyToOne(cascade=CascadeType.REMOVE)
+	public TrixFile medium;
 
 	@NotNull
-	public String largeId; //amazonS3Hash
+	@ManyToOne(cascade=CascadeType.REMOVE)
+	public TrixFile large;
+
+	public String originalHash;
+	public String smallHash;
+	public String mediumHash;
+	public String largeHash;
 
 	@ManyToOne
 	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})

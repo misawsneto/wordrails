@@ -1,6 +1,7 @@
 package com.wordrails.business;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -97,21 +98,28 @@ public class Network implements Serializable{
 	
 	@OneToOne
 	public Image logo;
-	public String logoId;
-	public String logoSmallId;
+	public Integer logoId;
+	public Integer logoSmallId;
+
+	public String logoHash;
+	public String logoSmallHash;
+	public String faviconHash;
+	public String splashImageHash;
+	public String loginImageHash;
+	public String loginImageSmallHash;
 	
 	@OneToOne
 	public Image favicon;
-	public String faviconId;
+	public Integer faviconId;
 	
 	@OneToOne
 	public Image splashImage;
-	public String splashImageId;
+	public Integer splashImageId;
 	
 	@OneToOne
 	public Image loginImage;
-	public String loginImageId;
-	public String loginImageSmallId;
+	public Integer loginImageId;
+	public Integer loginImageSmallId;
 	
 	@Column(columnDefinition = "varchar(255) default 'D'", nullable = false)
 	public String defaultReadMode;
@@ -152,32 +160,32 @@ public class Network implements Serializable{
 		if(defaultOrientationMode == null || defaultOrientationMode.isEmpty())
 			defaultOrientationMode = "H";
 		
-		if(logo != null && logo.originalId != null){
-			logoId = logo.originalId;
-			logoSmallId = logo.smallId;
+		if(logo != null && logo.originalHash != null){
+			logoHash = logo.originalHash;
+			logoSmallHash = logo.smallHash;
 		}else{
-			logoId = null;
-			logoSmallId = null;
+			logoHash = null;
+			logoSmallHash = null;
 		}
 
-		if(favicon != null && favicon.originalId != null){
-			faviconId = favicon.originalId;
+		if(favicon != null && favicon.originalHash != null){
+			faviconHash = favicon.originalHash;
 		}else{
-			faviconId = null;
+			faviconHash = null;
 		}
 
-		if(splashImage != null && splashImage.originalId != null){
-			splashImageId = splashImage.originalId;
+		if(splashImage != null && splashImage.originalHash != null){
+			splashImageHash = splashImage.originalHash;
 		}else{
-			splashImageId = null;
+			splashImageHash = null;
 		}
 
-		if(loginImage != null && loginImage.originalId != null){
-			loginImageId = loginImage.originalId;
-			loginImageSmallId = loginImage.smallId;
+		if(loginImage != null && loginImage.originalHash != null){
+			loginImageHash = loginImage.originalHash;
+			loginImageSmallHash = loginImage.smallHash;
 		}else{
-			loginImageId = null;
-			loginImageSmallId = null;
+			loginImageHash = null;
+			loginImageSmallHash = null;
 		}
 	}
 	
@@ -188,32 +196,32 @@ public class Network implements Serializable{
 	@PreUpdate
 	void onUpdate() {
 		updatedAt = new Date();
-		if(logo != null && logo.originalId != null){
-			logoId = logo.originalId;
-			logoSmallId = logo.smallId;
+		if(logo != null && logo.originalHash != null){
+			logoHash = logo.originalHash;
+			logoSmallHash = logo.smallHash;
 		}else{
-			logoId = null;
-			logoSmallId = null;
+			logoHash = null;
+			logoSmallHash = null;
 		}
 
-		if(favicon != null && favicon.originalId != null){
-			faviconId = favicon.originalId;
+		if(favicon != null && favicon.originalHash != null){
+			faviconHash = favicon.originalHash;
 		}else{
-			faviconId = null;
+			faviconHash = null;
 		}
 
-		if(splashImage != null && splashImage.originalId != null){
-			splashImageId = splashImage.originalId;
+		if(splashImage != null && splashImage.originalHash != null){
+			splashImageHash = splashImage.originalHash;
 		}else{
-			splashImageId = null;
+			splashImageHash = null;
 		}
 
-		if(loginImage != null && loginImage.originalId != null){
-			loginImageId = loginImage.originalId;
-			loginImageSmallId = loginImage.smallId;
+		if(loginImage != null && loginImage.originalHash != null){
+			loginImageHash = loginImage.originalHash;
+			loginImageSmallHash = loginImage.smallHash;
 		}else{
-			loginImageId = null;
-			loginImageSmallId = null;
+			loginImageHash = null;
+			loginImageSmallHash = null;
 		}
 	}
 

@@ -100,8 +100,8 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			person.password = "wordrails";
 			person.email = "";
 			person.name = "";
-			person.imageId = "";
-			person.coverId = "";
+			person.imageHash = "";
+			person.coverHash = "";
 			person.bookmarks = new HashSet<>();
 			person.recommends = new HashSet<>();
 
