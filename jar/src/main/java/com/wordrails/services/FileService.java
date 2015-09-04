@@ -1,6 +1,7 @@
 package com.wordrails.services;
 
 import com.wordrails.business.BadRequestException;
+import com.wordrails.util.WordrailsUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,7 @@ public class FileService {
 	private AmazonCloudService amazonCloudService;
 
 	public String newFile(String url, String domain, String mime) throws FileUploadException, IOException {
-		URL fullURL = new URL(url);
-		HttpURLConnection connection = (HttpURLConnection) fullURL.openConnection();
-		InputStream input = connection.getInputStream();
-
-		return newFile(input, domain, mime);
+		return newFile(WordrailsUtil.getStreamFromUrl(url), domain, mime);
 	}
 
 	public String newFile(InputStream input, String domain, String mime) throws FileUploadException, IOException {
@@ -37,6 +34,7 @@ public class FileService {
 
 	public String newResizedImage(BufferedImage image, String domain, Integer size, String sizeType, String mime) throws FileUploadException, IOException {
 		File file = java.io.File.createTempFile("trix", "");
+
 		BufferedImage bi = Thumbnails.of(image).size(size, size).outputFormat(mime).outputQuality(1).asBufferedImage();
 		ImageIO.write(bi, mime, file);
 

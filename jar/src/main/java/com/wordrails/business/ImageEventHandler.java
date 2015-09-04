@@ -1,8 +1,10 @@
 package com.wordrails.business;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.persistence.FileRepository;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.FileService;
+import com.wordrails.util.WordrailsUtil;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class ImageEventHandler {
 	private TrixAuthenticationProvider authProvider;
 	@Autowired
 	private FileService fileService;
+	@Autowired
+	private FileRepository fileRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Image image) throws IOException, SQLException, FileUploadException {
@@ -35,25 +39,53 @@ public class ImageEventHandler {
 
 		if (!Image.containsType(image.type)) throw new BadRequestException("Invalid Image Type:" + image.type);
 
-		String original = image.originalHash;
-		if (original != null) {
+		TrixFile originalFile = image.original;
+		String originalHash = originalFile.hash;
+		if (originalHash != null) {
 			Network network = authProvider.getNetwork();
-			URL fullURL = new URL(amazonCloudService.getURL(network.domain, original));
-			HttpURLConnection connection = (HttpURLConnection) fullURL.openConnection();
-			InputStream input = connection.getInputStream();
+			String url = amazonCloudService.getURL(network.domain, originalHash);
+			InputStream input = WordrailsUtil.getStreamFromUrl(url);
 
 			String mime = new Tika().detect(input);
-//			String mime = original.mime == null || original.mime.isEmpty() ? null : original.mime.split("image\\/").length == 2 ? original.mime.split("image\\/")[1] : null;
+			mime = mime.split("/").length == 2 ? mime.split("/")[1] : "jpeg";
 
-			BufferedImage bufferedImage = ImageIO.read(fullURL);
+			BufferedImage bufferedImage = ImageIO.read(new URL(url));
 
-			String small = fileService.newResizedImage(bufferedImage, network.domain, 150, "small", mime);
-			String medium = fileService.newResizedImage(bufferedImage, network.domain, 300, "medium", mime);
-			String large = fileService.newResizedImage(bufferedImage, network.domain, 1024, "large", mime);
+			int maxSize = Math.max(bufferedImage.getHeight(), bufferedImage.getWidth());
 
-			image.smallHash = small;
-			image.mediumHash = medium;
-			image.largeHash = large;
+			String smallHash = fileService.newResizedImage(bufferedImage, network.domain, Math.max(maxSize, 150), "small", mime);
+			TrixFile small = new TrixFile(smallHash);
+			fileRepository.save(small);
+
+			TrixFile medium;
+			String mediumHash;
+			if(maxSize < 300) {
+				mediumHash = smallHash;
+				medium = small;
+			} else {
+				mediumHash = fileService.newResizedImage(bufferedImage, network.domain, 300, "medium", mime);
+				medium = new TrixFile(mediumHash);
+				fileRepository.save(medium);
+			}
+
+			TrixFile large;
+			String largeHash;
+			if(maxSize < 1024) {
+				largeHash = mediumHash;
+				large = medium;
+			} else {
+				largeHash = fileService.newResizedImage(bufferedImage, network.domain, 300, "medium", mime);
+				large = new TrixFile(largeHash);
+				fileRepository.save(large);
+			}
+
+			image.small = small;
+			image.medium = medium;
+			image.large = large;
+
+			image.smallHash = smallHash;
+			image.mediumHash = mediumHash;
+			image.largeHash = largeHash;
 
 			image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
 		}

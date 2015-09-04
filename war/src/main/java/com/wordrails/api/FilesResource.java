@@ -49,9 +49,6 @@ public class FilesResource {
 	@Autowired
 	private FileService fileService;
 
-	@Autowired
-	private GlobalParameterRepository globalParameterRepository;
-
 
 	@Deprecated
 	@PUT
@@ -67,7 +64,9 @@ public class FilesResource {
 
 		try {
 			FileItem item = getFileFromRequest(request);
-			sendFile(network.domain, item, id + "");
+			trixFile.hash = sendFile(network.domain, item);
+
+			fileRepository.save(trixFile);
 
 			URI location = UriBuilder.fromResource(FilesResource.class).path(id.toString()).path("contents").build();
 			return Response.status(Status.NO_CONTENT).location(location).build();
@@ -92,35 +91,11 @@ public class FilesResource {
 	}
 
 
-	@PUT
-	@Path("{id}/upload")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response upload(@PathParam("id") String id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws FileUploadException, IOException {
-		try {
-			Network network = wordrailsService.getNetworkFromHost(request);
-			FileItem item = getFileFromRequest(request);
-
-			if (item == null) {
-				return Response.noContent().build();
-			}
-
-			sendFile(network.domain, item, id);
-
-			String url = amazonCloudService.getURL(network.domain, id);
-			return Response.ok().entity("{\"url\":\"" + url + "\"").build();
-		} catch (BadRequestException ue) {
-			return Response.status(Status.BAD_REQUEST).build();
-		} catch (FileUploadException ue) {
-			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximum size is 6MB\", maxMb:6}").build();
-		}
-	}
-
-
 	@POST
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadFile(@Context HttpServletRequest request) throws FileUploadException, IOException {
+	public Response upload(@Context HttpServletRequest request) throws FileUploadException, IOException {
 		try {
 			FileItem item = getFileFromRequest(request);
 
@@ -129,11 +104,11 @@ public class FilesResource {
 			}
 
 			Network network = wordrailsService.getNetworkFromHost(request);
-			String trixFile = sendFile(network.domain, item);
+			String trixHash = sendFile(network.domain, item);
+			TrixFile file = new TrixFile(trixHash);
+			fileRepository.save(file);
 
-			String url = amazonCloudService.getURL(network.domain, trixFile);
-			return Response.ok().entity("{\"url\":\"" + url + "\"").build();
-
+			return Response.ok().entity("{\"hash\":" + trixHash + "}").build();
 		} catch (BadRequestException ue) {
 			return Response.status(Status.BAD_REQUEST).build();
 		} catch (FileUploadException ue) {
@@ -142,7 +117,6 @@ public class FilesResource {
 	}
 
 
-	@Deprecated
 	@POST
 	@Path("/contents/simple")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -155,24 +129,20 @@ public class FilesResource {
 				return Response.noContent().build();
 			}
 
-			GlobalParameter parameter = globalParameterRepository.findByParameterName("imageId");
-			Integer nextImageId = Integer.valueOf(parameter.value) + 1;
-			parameter.value = String.valueOf(nextImageId);
-
 			Network network = wordrailsService.getNetworkFromHost(request);
-			sendFile(network.domain, item, parameter.value);
+			String trixHash = sendFile(network.domain, item);
+			TrixFile file = new TrixFile(trixHash);
+			fileRepository.save(file);
 
-			globalParameterRepository.save(parameter);
-
-			URI location = UriBuilder.fromResource(FilesResource.class).path(parameter.value).path("contents").build();
+			URI location = UriBuilder.fromResource(FilesResource.class).path(String.valueOf(file.id)).path("contents").build();
 
 			return Response.ok().entity("{\"filelink\":\"/api" + location + "\", " +
 					"\"link\":\"/api" + location + "\", " +
-					"\"id\":" + parameter.value + "}").build();
+					"\"id\":" + file.id + "}").build();
 		} catch (BadRequestException ue) {
 			return Response.status(Status.BAD_REQUEST).build();
 		} catch (FileUploadException ue) {
-			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximun size is 6MB\", maxMb:6}").build();
+			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximum size is 6MB\", maxMb:6}").build();
 		}
 	}
 
@@ -200,27 +170,13 @@ public class FilesResource {
 		return false;
 	}
 
-	private void sendFile(String domain, FileItem item, String fileName) throws FileUploadException {
-		if (validate(item)) {
-			try {
-				InputStream input = item.getInputStream();
-				fileService.updatePublicFile(input, domain, fileName, item.getSize());
-
-			} catch (Exception e) {
-				e.printStackTrace();
-
-			}
-		}
-
-		throw new BadRequestException();
-	}
-
 	@GET
 	@Path("{id}/contents")
-	@Cache(isPrivate = false, maxAge = 31536000)
-	public Response getFileContents(@PathParam("id") String id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
+	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
 		Network network = wordrailsService.getNetworkFromHost(request);
-		response.sendRedirect(amazonCloudService.getURL(network.domain, id + ""));
+		TrixFile trixFile = fileRepository.findOne(id);
+		if(trixFile != null && trixFile.hash != null)
+			response.sendRedirect(amazonCloudService.getURL(network.domain, trixFile.hash));
 		return Response.ok().build();
 	}
 }

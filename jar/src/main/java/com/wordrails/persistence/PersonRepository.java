@@ -37,7 +37,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	List<Object[]> findPersonStats(@Param("authorId") Integer authorId);
 
 	@RestResource(exported = false)
-	@Query("select person from Person person where person.networkId = :networkId")
+	@Query("select person from Person person where person.user.network.id = :networkId")
 	public List<Person> findAllByNetwork(@Param("networkId") Integer networkId);
 
 	@Query("select person from Person person where person.networkId = :networkId")
@@ -53,7 +53,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	public List<Person> findAllByNetworkAndQueryExcludingPerson(@Param("networkId") Integer networkId, @Param("personId") Integer personId, @Param("query") String query, Pageable pageable);
 
 	@RestResource(exported = false)
-	@Query("select count(*) from Person person where person.networkId = :networkId")
+	@Query("select count(*) from Person person where person.user.network.id = :networkId")
 	public Long countPersonsByNetwork(@Param("networkId") Integer networkId);
 
 	@Query("select count(*) from StationRole sr, NetworkRole nr where (sr.person.id = :personId AND sr.admin = true) OR (nr.person.id = :personId AND nr.admin = true)")

@@ -167,33 +167,7 @@ public class Network implements Serializable{
 		if(defaultOrientationMode == null || defaultOrientationMode.isEmpty())
 			defaultOrientationMode = "H";
 		
-		if(logo != null && logo.originalHash != null){
-			logoHash = logo.originalHash;
-			logoSmallHash = logo.smallHash;
-		}else{
-			logoHash = null;
-			logoSmallHash = null;
-		}
-
-		if(favicon != null && favicon.originalHash != null){
-			faviconHash = favicon.originalHash;
-		}else{
-			faviconHash = null;
-		}
-
-		if(splashImage != null && splashImage.originalHash != null){
-			splashImageHash = splashImage.originalHash;
-		}else{
-			splashImageHash = null;
-		}
-
-		if(loginImage != null && loginImage.originalHash != null){
-			loginImageHash = loginImage.originalHash;
-			loginImageSmallHash = loginImage.smallHash;
-		}else{
-			loginImageHash = null;
-			loginImageSmallHash = null;
-		}
+		onChange();
 	}
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
@@ -203,32 +177,49 @@ public class Network implements Serializable{
 	@PreUpdate
 	void onUpdate() {
 		updatedAt = new Date();
+		onChange();
+	}
+
+	private void onChange() {
 		if(logo != null && logo.originalHash != null){
 			logoHash = logo.originalHash;
 			logoSmallHash = logo.smallHash;
+
+			logoId = logo.original.id;
+			logoSmallId = logo.small.id;
 		}else{
 			logoHash = null;
 			logoSmallHash = null;
+			logoId = null;
+			logoSmallId = null;
 		}
 
 		if(favicon != null && favicon.originalHash != null){
 			faviconHash = favicon.originalHash;
+			faviconId = favicon.original.id;
 		}else{
 			faviconHash = null;
+			faviconId = null;
 		}
 
 		if(splashImage != null && splashImage.originalHash != null){
 			splashImageHash = splashImage.originalHash;
+			splashImageId = splashImage.original.id;
 		}else{
 			splashImageHash = null;
+			splashImageId = null;
 		}
 
 		if(loginImage != null && loginImage.originalHash != null){
 			loginImageHash = loginImage.originalHash;
 			loginImageSmallHash = loginImage.smallHash;
+			loginImageId = loginImage.original.id;
+			loginImageSmallId = loginImage.small.id;
 		}else{
 			loginImageHash = null;
 			loginImageSmallHash = null;
+			loginImageId = null;
+			loginImageSmallId = null;
 		}
 	}
 

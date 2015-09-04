@@ -115,18 +115,22 @@ public class Station {
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
-		if(logo != null && logo.originalHash != null){
-			logoHash = logo.originalHash;
-			logoMediumHash = logo.mediumHash;
-		}
+		onChange();
 	}
 
 	@PreUpdate
 	void onUpdate() {
 		updatedAt = new Date();
+		onChange();
+	}
+
+	void onChange() {
 		if(logo != null && logo.originalHash != null){
 			logoHash = logo.originalHash;
 			logoMediumHash = logo.mediumHash;
+
+			logoId = logo.original.id;
+			logoMediumId = logo.medium.id;
 		}
 	}
 

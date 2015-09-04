@@ -116,12 +116,33 @@ public class Person implements Serializable{
 
 	@PrePersist
 	public void onCreate() {
+		onChange();
+		createdAt = new Date();
+	}
+
+	@PreUpdate
+	public void onUpdate() {
+		onChange();
+		updatedAt = new Date();
+	}
+
+	private void onChange() {
 		if(image != null && image.originalHash != null){
 			imageHash = image.originalHash;
 			imageSmallHash = image.smallHash;
 			imageMediumHash = image.mediumHash;
 			imageLargeHash= image.largeHash;
+
+			imageId = image.original.id;
+			imageSmallId = image.small.id;
+			imageMediumId = image.medium.id;
+			imageLargeId= image.large.id;
 		}else{
+			imageHash = null;
+			imageSmallHash = null;
+			imageMediumHash = null;
+			imageLargeHash = null;
+
 			imageId = null;
 			imageSmallId = null;
 			imageMediumId = null;
@@ -132,44 +153,19 @@ public class Person implements Serializable{
 			coverHash = cover.originalHash;
 			coverLargeHash= cover.largeHash;
 			coverMediumHash= cover.mediumHash;
-		}else{
-			coverId = null;
-			coverLargeId = null;
-			coverMediumId= null;
-		}
 
-		if(user != null){
-			networkId = user.network.id;
-		}
-
-		createdAt = new Date();
-	}
-
-	@PreUpdate
-	public void onUpdate() {
-		if(image != null && image.originalHash != null){
-			imageHash = image.originalHash;
-			imageSmallHash = image.smallHash;
-			imageMediumHash = image.mediumHash;
-			imageLargeHash= image.largeHash;
-		}else{
-			imageHash = null;
-			imageSmallHash = null;
-			imageMediumHash = null;
-			imageLargeHash = null;
-		}
-
-		if(cover != null && cover.originalHash != null){
-			coverHash = cover.originalHash;
-			coverLargeHash= cover.largeHash;
-			coverMediumHash= cover.mediumHash;
+			coverId = cover.original.id;
+			coverLargeId= cover.large.id;
+			coverMediumId= cover.medium.id;
 		}else{
 			coverHash = null;
 			coverLargeHash = null;
 			coverMediumHash = null;
-		}
 
-		updatedAt = new Date();
+			coverId = null;
+			coverLargeId = null;
+			coverMediumId = null;
+		}
 	}
 
 	public Integer imageId;

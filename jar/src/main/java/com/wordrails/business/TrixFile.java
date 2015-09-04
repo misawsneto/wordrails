@@ -8,8 +8,15 @@ import java.sql.Blob;
 @Entity
 @Table(name = "File")
 public class TrixFile {
-	public static final String INTERNAL_FILE = "I";
-	public static final String EXTERNAL_FILE = "E";
+
+	public TrixFile() {
+		type = "E";
+	}
+
+	public TrixFile(String hash) {
+		this();
+		this.hash = hash;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +31,8 @@ public class TrixFile {
 	public String name;
 
 	public String url;
+
+	public String hash;
 
 	public Blob contents;
 }

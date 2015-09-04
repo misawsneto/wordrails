@@ -13,6 +13,7 @@ import javax.imageio.stream.ImageInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.Normalizer;
@@ -48,6 +49,12 @@ public class WordrailsUtil {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
+	}
+
+	public static InputStream getStreamFromUrl(String url) throws IOException {
+		URL fullURL = new URL(url);
+		HttpURLConnection connection = (HttpURLConnection) fullURL.openConnection();
+		return connection.getInputStream();
 	}
 
 	public static String generateRandomString(int length, String chars) {

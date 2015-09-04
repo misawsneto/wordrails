@@ -701,10 +701,10 @@ public class PersonsResource {
 			lastestDay = lastestDay.minusDays(1);
 		}
 
-		List<Object[]> postReadCounts = new ArrayList<Object[]>();
-		List<Object[]> recommendsCounts = new ArrayList<Object[]>();
-		List<Object[]> commentsCounts = new ArrayList<Object[]>();
-		List<Object[]> generalStatus = new ArrayList<Object[]>();
+		List<Object[]> postReadCounts;
+		List<Object[]> recommendsCounts;
+		List<Object[]> commentsCounts;
+		List<Object[]> generalStatus;
 
 		if(person == null) {
 			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());

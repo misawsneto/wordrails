@@ -8,9 +8,12 @@ public class PostView implements Serializable {
 
 	public String title;
 	public Integer postId;
-	public String smallId;
-	public String mediumId;
-	public String largeId;
+	public Integer smallId;
+	public Integer mediumId;
+	public Integer largeId;
+	public String smallHash;
+	public String mediumHash;
+	public String largeHash;
 	public Boolean sponsor;
 	public java.util.Date date;
 	public String snippet;
@@ -23,10 +26,10 @@ public class PostView implements Serializable {
 	public int recommendsCount;
 	public int commentsCount;
 
-	public String imageId;
-	public String imageSmallId;
-	public String imageMediumId;
-	public String imageLargeId;
+	public Integer imageId;
+	public Integer imageSmallId;
+	public Integer imageMediumId;
+	public Integer imageLargeId;
 	public Integer readTime;
 
 	public boolean imageLandscape;
@@ -37,7 +40,11 @@ public class PostView implements Serializable {
 
 	public String authorEmail;
 	public String authorTwitter;
-	public String authorSmallImageId;
+	public Integer authorCoverMediumId;
+	public Integer authorSmallImageId;
+	public Integer authorImageSmallId;
+	public String authorCoverMediumHash;
+	public String authorImageSmallHash;
 	
 	public String stationName;
 	public Integer stationId;
@@ -50,9 +57,7 @@ public class PostView implements Serializable {
 	public String imageCreditsText;
 	public String imageTitleText;
 
-	public String authorCoverMediumId;
 
-	public String authorImageSmallId;
 
 	public Double lat;
 
