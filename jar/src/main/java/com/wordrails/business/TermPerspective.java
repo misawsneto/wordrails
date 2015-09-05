@@ -16,6 +16,9 @@ public class TermPerspective {
 	@OneToOne(mappedBy="splashedPerspective", cascade=CascadeType.REMOVE)
 	public Row splashedRow;
 
+	@OneToMany(mappedBy="homePerspective", cascade=CascadeType.REMOVE)
+	public List<Row> homeRows;
+
 	@OneToOne(mappedBy="featuringPerspective", cascade=CascadeType.REMOVE)
 	public Row featuredRow;
 	
@@ -24,7 +27,13 @@ public class TermPerspective {
 
 	@ManyToMany
 	public Set<Term> categoryTabs;
-	
+
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean showPopular;
+
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean showRecent;
+
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="station_perspective_id")

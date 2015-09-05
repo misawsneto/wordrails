@@ -309,6 +309,65 @@ app.directive('backImgCover', function(TRIX){
   }
 })
 
+.directive('popoverClose', function($timeout){
+  return{
+    scope: {
+      excludeClass: '@'
+    },
+    link: function(scope, element, attrs) {
+      var trigger = document.getElementsByClassName('trigger');
+      
+      function closeTrigger(i) {
+        $timeout(function(){ 
+          angular.element(trigger[0]).triggerHandler('click').removeClass('trigger'); 
+          //$(trigger[0]).on('click').removeClass('trigger'); 
+        });
+      }
+      
+      element.on('click', function(event){
+        var etarget = angular.element(event.target);
+        var tlength = trigger.length;
+        if(!etarget.hasClass('trigger') && !etarget.hasClass(scope.excludeClass)) {
+          for(var i=0; i<tlength; i++) {
+            closeTrigger(i)
+          }
+        }
+      });
+    }
+  };
+})
+
+.directive('popoverElem', function(){
+  return{
+    link: function(scope, element, attrs) {
+      element.on('click', function(){
+        element.addClass('trigger');
+      });
+    }
+  };
+})
+
+.directive('popoverToggle', ['$timeout', function($timeout) {
+    return {
+        restrict: 'A',
+        link: link
+    };
+
+    function link($scope, $element, $attrs) {
+        $attrs.popoverTrigger = 'popoverToggleShow';
+
+        $scope.$watch($attrs.popoverToggle, function(newValue) {
+            $timeout(function(){
+                if(newValue) {
+                    $element.triggerHandler('popoverToggleShow');
+                } else {
+                    $element.triggerHandler('popoverToggleHide');
+                }
+            });
+        })
+    }
+}])
+
 // **************************************************
         // *** /My AngularJS Directive(s) Application *******
         // **************************************************

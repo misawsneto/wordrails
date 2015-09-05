@@ -166,6 +166,7 @@ angular.module('app')
     checkLoginImage();
 
     $scope.app.initData = angular.copy(initData);
+    $scope.app.termPerspectiveView = angular.copy(initTermPerspective);
 
     $scope.app.getLoggedPerson = function(){
       return $scope.app.initData.person;
@@ -354,9 +355,17 @@ angular.module('app')
         return img;
       }
 
+      $scope.app.getBackgroundImage = function(postView, size){
+        return $scope.getBackgroundImage(postView, size);
+      }
+
       $scope.getBackgroundImage2 = function(post, size){
         var img = $filter('pvimageLink2')(post, size);
         return img;
+      }
+
+      $scope.app.getBackgroundImage2 = function(post, size){
+        return $scope.getBackgroundImage2(post, size);
       }
 
       $scope.getImageLink = function(id){
@@ -597,6 +606,10 @@ angular.module('app')
       return cells.map(function(cell){ return cell.postView; });
     }
 
+    $scope.app.reading = function(slug){
+      $state.go('app.read', {'slug': slug})
+    }
+
     /**
      * manage the post that is been read and the view behavior
      * @param {[type]} postView [description]
@@ -821,5 +834,46 @@ angular.module('app')
       moment.locale('pt')
       /* end of added */
 
+      /* header observer */
+
+      var lastScrollTop = 0
+    var didScroll = false;
+    $timeout(function(){
+      lastScrollTop = $(window).scrollTop() ? $(window).scrollTop() : 0;
+    }, 20)
+
+    function checkStationHeaderVisibel(scrollTop){
+        // Make sure they scroll more than delta
+        if(Math.abs(lastScrollTop - scrollTop) <= 5)
+          return;
+        // If they scrolled down and are past the navbar, add class .nav-up.
+        // This is necessary so you never see what is "behind" the navbar.
+        if (scrollTop > lastScrollTop && scrollTop > 50){
+            // Scroll Down
+            $('body').removeClass('nav-down').addClass('nav-up');
+        } else {
+            // Scroll Up
+            if(scrollTop + $(window).height() < $(document).height()) {
+              $('body').removeClass('nav-up').addClass('nav-down');
+            }
+        }
+        lastScrollTop = scrollTop;
+    }
+
+    $timeout(function(){
+      checkStationHeaderVisibel(lastScrollTop);
+      $(window).scroll(function(){
+        didScroll = true;
+      })
+    }, 70);
+
+    $interval(function() {
+      if (didScroll) {
+        checkStationHeaderVisibel($(window).scrollTop());
+        didScroll = false;
+      }
+    }, 250);
+
+    /* end of header observer */
 
 }]);

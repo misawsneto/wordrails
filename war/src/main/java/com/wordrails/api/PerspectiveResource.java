@@ -79,6 +79,7 @@ public class PerspectiveResource {
 //			updateTerm(termPerspective, definition.termId);
 			updateRow(definition.splashedRow, termPerspective, Row.SPLASHED_ROW);
 			updateRow(definition.featuredRow, termPerspective, Row.FEATURED_ROW);
+			//updateRow(definition.homeRows, termPerspective, Row.HOME_ROW);
 			updateOrdinaryRows(definition.ordinaryRows, termPerspective);
 			response = Response.status(Status.CREATED).build();
 		}

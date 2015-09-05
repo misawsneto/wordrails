@@ -22,10 +22,10 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 		// TODO error
 	}
 
-	$scope.$watch('app.nowReading', function(postView){
-		if(postView){
-			$("body").addClass("show-post")
-		}
-	})
+	// $scope.$watch('app.nowReading', function(postView){
+	// 	if(postView){
+	// 		$("body").addClass("show-post")
+	// 	}
+	// })
 
 }])

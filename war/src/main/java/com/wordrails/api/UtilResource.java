@@ -126,6 +126,8 @@ public class UtilResource {
 
 	private @PersistenceContext EntityManager manager;
 
+	private @Autowired PerspectiveResource perspectiveResource;
+
 
 
 	/**
@@ -812,6 +814,35 @@ public class UtilResource {
 				per.categoryTabs.addAll(tax.terms);
 				termPerspectiveRepository.save(per);
 			}
+		}
+	}
+
+	@DELETE
+	@Path("/removeRowFromPerspective/{perspectiveId}/{rowId}")
+	public void removeRowFromPerspective(@Context HttpServletRequest request, @PathParam("perspectiveId") Integer perspectiveId, @PathParam("rowId") Integer rowId) {
+		String host = request.getHeader("Host");
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+
+			Network network = wordrailsService.getNetworkFromHost(request);
+
+			List<NetworkRole> nr = personRepository.findNetworkAdmin(network.id);
+
+			User user = nr.get(0).person.user;
+
+			Set<GrantedAuthority> authorities = new HashSet<>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+			authProvider.passwordAuthentication(user.username, user.password, network);
+
+			TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTermNull(perspectiveId);
+
+//			tp.rows.
+
+			for(Row row: tp.rows){
+				if(row.id.equals(rowId)){
+
+				}
+			}
+
 		}
 	}
 }

@@ -8,9 +8,11 @@ public class PostView implements Serializable {
 
 	public String title;
 	public Integer postId;
-	public Integer smallId;
-	public Integer mediumId;
-	public Integer largeId;
+
+//	public Integer smallId;
+//	public Integer mediumId;
+//	public Integer largeId;
+
 	public Boolean sponsor;
 	public java.util.Date date;
 	public String snippet;

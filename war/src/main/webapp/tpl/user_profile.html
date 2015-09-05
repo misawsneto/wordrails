@@ -61,13 +61,13 @@
 				<div ng-class="{'b-t': !$first}"></div>
 				<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
 					<!-- image -->
-					<a class="block-image m-l m-t" ng-if="postView.mediumId" >
+					<a class="block-image m-l m-t" ng-if="postView.imageMediumId" >
             <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
             </div>
           </a>
 					<!-- /image -->
 					<!-- /content -->
-					<div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
+					<div class="m-t-sm" ng-class="{'content-block': postView.imageMediumId}">
 						<span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
 						<a  class="h3 font-bold m-b m-t-sm block">
 							{{postView.title}}
@@ -132,13 +132,13 @@
 				<div ng-class="{'b-t': !$first || (!recommendations || recommendations.length == 0)}"></div>
 				<div class="m-b panel-card panel animated zoomIn m-b clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
 					<!-- image -->
-					<a class="block-image m-l m-t" ng-if="postView.mediumId" >
+					<a class="block-image m-l m-t" ng-if="postView.imageMediumId" >
             <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
             </div>
           </a>
 					<!-- /image -->
 					<!-- /content -->
-					<div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
+					<div class="m-t-sm" ng-class="{'content-block': postView.imageMediumId}">
 						<span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
 						<a  class="h3 font-bold m-b m-t-sm block">
 							{{postView.title}}

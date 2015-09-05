@@ -1,7 +1,5 @@
 // config
 
-var TW;
-
 var app =  
 angular.module('app')
 .config(
@@ -30,7 +28,16 @@ angular.module('app')
           };
         });
       }
-      ])
+    ])
+
+  .config(['$tooltipProvider', function($tooltipProvider) {
+    var triggers = {};
+    triggers['popoverToggleShow'] = 'popoverToggleHide';
+
+    $tooltipProvider.setTriggers(triggers);
+  }])
+
+
   // .config(['$translateProvider', function($translateProvider){
   //   // Register a loader for the static files
   //   // So, the module will search missing translation tables under the specified urls.
@@ -101,59 +108,5 @@ angular.module('app')
    fjs.parentNode.insertBefore(js, fjs);
  }(document, 'script', 'facebook-jssdk'));
 
-  /*window.twttr = (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0],
-    t = window.twttr || {};
-    if (d.getElementById(id)) return t;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://platform.twitter.com/widgets.js";
-    fjs.parentNode.insertBefore(js, fjs);
-    
-    t._e = [];
-    t.ready = function(f) {
-      t._e.push(f);
-    };
-    
-    return t;
-  }(document, "script", "twitter-wjs"));*/
-
-  /*TW = new Codebird;
-  TW.setConsumerKey("c9GcdgHslRJRAqeCXlxHpZ5SG");
-
-  TW.__call(
-    "oauth_requestToken",
-    {oauth_callback: "oob"},
-    function (reply) {
-        // stores it
-        TW.setToken(reply.oauth_token, reply.oauth_token_secret);
-
-        // gets the authorize screen URL
-        TW.__call(
-            "oauth_authorize",
-            {},
-            function (auth_url) {
-                window.codebird_auth = window.open(auth_url);
-            }
-        );
-    }*/
-    //);
-
-  // window.twttr = (function(d, s, id) {
-  //   var js, fjs = d.getElementsByTagName(s)[0],
-  //     t = window.twttr || {};
-  //   if (d.getElementById(id)) return t;
-  //   js = d.createElement(s);
-  //   js.id = id;
-  //   js.src = "https://platform.twitter.com/widgets.js";
-  //   fjs.parentNode.insertBefore(js, fjs);
-   
-  //   t._e = [];
-  //   t.ready = function(f) {
-  //     t._e.push(f);
-  //   };
-   
-  //   return t;
-  // }(document, "script", "twitter-wjs"));
   
 });
