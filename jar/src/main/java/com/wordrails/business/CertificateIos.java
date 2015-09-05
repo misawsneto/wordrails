@@ -19,4 +19,11 @@ public class CertificateIos {
 	@Column(name = "certificate_password")
 	public String certificatePassword;
 
+	public boolean isValid(){
+		if(this.certificateIos != null && this.certificatePassword != null){
+			return true;
+		}
+		return false;
+	}
+
 }
