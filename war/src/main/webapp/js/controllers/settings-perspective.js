@@ -315,4 +315,45 @@ app.controller('SettingsPerspectiveListCtrl', ['$scope', '$log', '$timeout', '$m
       $state.go('app.settings.perspectiveeditor', {'stationId': $state.params.stationId, 'perspectiveId': perspective.id})
     }
 
+        // perspective editor dialog Controller
+    function DialogController(scope, $mdDialog) {
+      scope.app = $scope.app;
+      scope.pe = $scope.pe;
+
+      scope.hide = function() {
+        $mdDialog.hide();
+      };
+
+      scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+
+      scope.publish = function() {
+        if(isTermSelected($scope.termTree)){
+          createPost($mdDialog)
+        }else{
+          // show alert term message
+        }
+        //$mdDialog.hide();
+      };
+      // check if user has permisstion to write
+    };
+
+    $scope.showAddPerspective = function(ev){
+    // show term alert
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'add_perspective.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+      });
+
+      $scope.cellType = 'FEATURED_POST';
+    }
+
   }]);
