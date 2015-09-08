@@ -111,12 +111,14 @@ angular.module('app')
     function loadPopular(){
       trix.findPopularPosts($scope.app.currentStation.id, 0, 10)
       .success(function(response){
+        $scope.app.initData.popular = response
       })
     }
 
     function loadRecent(){
       trix.findRecentPosts($scope.app.currentStation.id, 0, 10)
       .success(function(response){
+        $scope.app.initData.recent = response
       })
     }
 
@@ -143,8 +145,11 @@ angular.module('app')
         $scope.app.termPerspectiveView = termPerspective
       })
 
+
       $scope.app.currentStation = stationObject;
 
+      loadPopular();
+      loadRecent();
       $scope.app.checkIfLogged();
     }
 

@@ -11,17 +11,36 @@
       <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
         <a class="text-u-c text-center dropdown-toggle" dropdown-toggle>Mais <span class="mdi mdi-chevron-down"></a>
         <!-- dropdown -->
-        <ul class="dropdown-menu dropdown-menu-scale animated pull-right">
-          <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Categorias</span></li>
-          <li ng-repeat="tab in app.termPerspectiveView.ordinaryRows">
-            <a style="padding: 2px 15px" class="mark-as-read" ui-sref="app.tagspage({'tagName': tab.termName})" class="text-u-c">{{tab.termName}}</a>
-          </li>
-          <li ng-if="app.initData.network.info"><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Links</span></li>
-          <li ng-if="app.initData.network.info">
-            <a style="padding: 2px 15px" class="mark-as-read" ui-sref="app.about()" class="text-u-c">Sobre {{app.initData.network.name}}</a>
-          </li>
-
-        </ul>
+        <div id="header-dropdown" class="dropdown-menu dropdown-menu-scale animated pull-right">
+          <div class="display-t-c">
+            <ul class="">
+              <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Categorias</span></li>
+              <li ng-repeat="tab in app.termPerspectiveView.ordinaryRows">
+                <a style="padding: 2px 15px" class="mark-as-read" ui-sref="app.tagspage({'tagName': tab.termName})" class="text-u-c">{{tab.termName}}</a>
+              </li>
+              <li class="m-t-sm" ng-if="app.initData.network.info && app.stationsPermissions.length == 1">
+                <span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Links</span></li>
+              <li ng-if="app.initData.network.info && app.stationsPermissions.length == 1">
+                <a style="padding: 2px 15px" class="mark-as-read" ui-sref="app.about()" class="text-u-c">Sobre {{app.initData.network.name}}</a>
+              </li>
+            </ul>
+          </div>
+          <div class="display-t-c clearfix" ng-if="app.stationsPermissions.length > 1">
+            <ul class="">
+              <li>
+              <span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Estações</span></li>
+              <li ng-repeat="station in app.stationsPermissions">
+                <a style="padding: 2px 15px" class="mark-as-read" class="text-u-c" ng-click="app.changeStation(station);"
+                ng-class="{'font-bold': station.stationId == app.currentStation.id}">
+                {{station.stationName}}</a>
+              </li>
+              <li class="m-t-sm" ng-if="app.initData.network.info"><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Links</span></li>
+              <li ng-if="app.initData.network.info">
+                <a style="padding: 2px 15px" class="mark-as-read" ui-sref="app.about()" class="text-u-c">Sobre {{app.initData.network.name}}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
         <!-- / dropdown -->
       </li>
       <li ng-if="!app.isLogged">

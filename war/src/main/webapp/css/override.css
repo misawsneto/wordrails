@@ -4271,6 +4271,15 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
   /*   width: 175px; */
   }
 
+  #header-dropdown li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+  }
+
   .station-header .dropdown-menu li a:hover,
   .station-header .dropdown-menu li a:focus{
     background: inherit!important;
@@ -6170,9 +6179,9 @@ progress[aria-valuenow]:before {
 /* 8. SIDEBAR */
 
 .recent-posts {
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
   /* background-color: #fff; */
   border: 1px solid #dee5e7;
   margin: 18px 0px 31px;
