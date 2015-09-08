@@ -131,23 +131,25 @@
 	<div class="block-800 m-auto m-t-lg m-b-lg" ng-if="pages && showProfile">
 		<ul class="b-none no-padding m-b-none ls-style-none">
 			<li ng-repeat="postView in pages">
-				<div ng-class="{'b-t': !$first || (!recommendations || recommendations.length == 0)}"></div>
-				<div class="m-b panel-card panel animated zoomIn m-b clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+				<div ng-class="{'b-t': !$first}"></div>
+				<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item">
 					<!-- image -->
-					<a class="block-image m-l m-t" ng-if="postView.imageMediumId" >
-            <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
-            </div>
-          </a>
+					<a ui-sref="app.read({'slug': postView.slug})" class="block-image m-l m-t" ng-if="postView.imageMediumId" >
+			            <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
+			            </div>
+			          </a>
 					<!-- /image -->
 					<!-- /content -->
 					<div class="m-t-sm" ng-class="{'content-block': postView.imageMediumId}">
 						<span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
-						<a  class="h3 font-bold m-b m-t-sm block">
+						<a  class="h3 font-bold m-b m-t-sm block" ui-sref="app.read({'slug': postView.slug})">
 							{{postView.title}}
 						</a>
-						<div class="text-lg font-thin">
-							{{postView.snippet | characters:170}}
-						</div>
+						<a ui-sref="app.read({'slug': postView.slug})">
+							<div class="text-lg font-thin">
+								{{postView.snippet | characters:170}}
+							</div>
+						</a>
 						<div class="m-t">
 							<div class="display-t-c">
 								<a >
@@ -182,5 +184,8 @@
 
 </div>
 
-<div ui-view></div>
+<!-- header bar -->
+<div data-ng-include=" 'tpl/blocks/top_header.html' "></div>
+<!-- /header bar-->
+
 </div>
