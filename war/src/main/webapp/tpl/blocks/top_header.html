@@ -1,39 +1,27 @@
-<div class="collapse pos-rlt navbar-collapse box-shadow nav-down station-header {{::app.settings.navbarCollapseColor}}">
+<div id="top-header" class="collapse pos-rlt navbar-collapse box-shadow nav-down station-header {{::app.settings.navbarCollapseColor}}">
   <div class="nav navbar-nav hidden-xs text-lg w-full wrapper header-font pos-abt">
     <a ui-sref="app.stations" class="bg-header-text"><span ng-if="!app.currentStation.logoId" class="p-l-xxl m-l-lg">{{app.currentStation.name}}</span></a>
     <div ng-if="app.currentStation.logoId" class="p-l-xxl m-l-lg m-t-n-sm" style="height:48px;">
       <a ui-sref="app.stations">
-      <img  class="post-thumb img-responsive" class="img-responsive" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}"></a>
+        <img  class="post-thumb img-responsive" class="img-responsive" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}"></a>
+      </div>
     </div>
-  </div>
-  <!-- nabar right -->
-  <ul class="nav navbar-nav navbar-right" ng-class="{'p-r-md m-r-md': app.isLogged}">
-    <li ng-if="!tab.parentId" ng-repeat="tab in app.termPerspectiveView.ordinaryRows">
-      <a ui-sref="app.tagspage({'tagName': tab.termName})" class="text-u-c">{{tab.termName}}</a>
-    </li>
-    <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown style="opacity: 0; width:1px;">
-      <a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-dots-vertical mdi" dropdown-toggle>
-      </a>
-      <!-- dropdown -->
-        <!-- <ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
-            <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Marcar como lida</span></li>
-            <li> <a href class="mark-as-read"> Todas</a> </li>
-            <li> <a href class="mark-as-read"> Mais antigas que um dia</a> </li>
-            <li class="divider"></li>
-            <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">modo de exibição</span></li>
-            <li> <a ng-click="changeView('horizontal')" href>
-              <span class="mdi mdi-check pull-right m-t-xxs" ng-if="app.viewMode == 'horizontal'"></span>
-              <i class="mdi mdi-swap-horizontal m-r-sm"></i> 
-              Horizontal 
-            </a> 
+    <!-- nabar right -->
+    <ul class="nav navbar-nav navbar-right">
+      <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
+        <a class="text-u-c text-center dropdown-toggle" dropdown-toggle>Mais <span class="mdi mdi-chevron-down"></a>
+        <!-- dropdown -->
+        <ul class="dropdown-menu dropdown-menu-scale animated pull-right">
+          <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Categorias</span></li>
+          <li ng-repeat="tab in app.termPerspectiveView.ordinaryRows">
+            <a style="padding: 2px 15px" class="mark-as-read" ui-sref="app.tagspage({'tagName': tab.termName})" class="text-u-c">{{tab.termName}}</a>
           </li>
-          <li> <a ng-click="changeView('vertical')" href> 
-            <span class="mdi mdi-check pull-right m-t-xxs" ng-if="app.viewMode == 'vertical'"></span>
-            <i class="mdi mdi-swap-vertical m-r-sm"></i>
-            Vertical 
-            </a> 
+          <li ng-if="app.initData.network.info"><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Links</span></li>
+          <li ng-if="app.initData.network.info">
+            <a style="padding: 2px 15px" class="mark-as-read" ui-sref="app.about()" class="text-u-c">Sobre {{app.initData.network.name}}</a>
           </li>
-        </ul> -->
+
+        </ul>
         <!-- / dropdown -->
       </li>
       <li ng-if="!app.isLogged">
@@ -41,6 +29,11 @@
       </li>
       <li ng-if="!app.isLogged">
         <a href class="text-u-c text-center text-md" ng-click="openSplash('signin_splash.html');">ENTRAR {{app.initData.network.allowSignup ? '/ Cadastrar-se' : ''}}</a>
+      </li>
+    </ul>
+    <ul id="top-menu" class="nav navbar-nav navbar-right" ng-class="{'p-r-md m-r-md': app.isLogged}">
+      <li ng-repeat="tab in app.termPerspectiveView.ordinaryRows">
+        <a ui-sref="app.tagspage({'tagName': tab.termName})" class="text-u-c">{{tab.termName}}</a>
       </li>
     </ul>
   </div>

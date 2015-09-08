@@ -8,35 +8,22 @@
         <ul rn-carousel="" rn-carousel-index="carouselIndex2" rn-carousel-auto-slide="10" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="carousel2 ng-scope w-full h-full">
           <li class="w-full h-full" ng-repeat="cell in app.termPerspectiveView.featuredRow.cells">
             <div ng-style="getBackgroundImage(cell.postView, 'lg')" class="cell-wrap bg-cover">
-              
               <!-- title bg-stripe -->
               <div class="pos-abt bottom-0 wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg">
-                  <div class="text-shadow-dark text-2x text-white">{{::cell.postView.title}}</div>
-                  <div class="m-t-sm" ng-if="cell.postView.imageMediumId">
-                    <div class="display-t-c">
+                  <div class="text-shadow-dark h2 text-white">{{::cell.postView.title}}</div>
+                  <div  ng-if="cell.postView.imageMediumId">
+                    <div class="display-t-c pull-right">
                       <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
                         <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
                       </a>
                     </div>
-                    <div class="display-t-c p-l-sm v-middle">
+                    <div class="display-t-c p-r-sm v-middle pull-right">
                       <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="text-white" title="Ir para o perfil de {{::cell.postView.authorName}}" dir="auto">
                         {{::cell.postView.authorName}}
                       </a>
                       <br>
                       <span class="text-sm readingTime">
                         {{::cell.postView.date | fromNow}}
-                      </span>
-                    </div>
-                    <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r">
-                      <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
-                        <a href class="text-center text-lg v-middle">
-                          <i class="mdi text-white link" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
-                        </a>
-                      </span>
-                      <span class="p-l-sm" ng-click="app.bookmark(cell.postView.postId); app.stopPropagation($event);">
-                        <a href class="text-center text-lg v-middle">
-                          <i class="mdi text-white link" ng-class="{'mdi-bookmark animated rubberBand': app.bookmarked(cell.postView.postId), 'mdi-bookmark-outline': !app.bookmarked(cell.postView.postId)}"></i>
-                        </a>
                       </span>
                     </div>
                   </div>

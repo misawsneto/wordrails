@@ -368,6 +368,108 @@ app.directive('backImgCover', function(TRIX){
     }
 }])
 
+.directive('resizeToolbar', ['$window', '$timeout', function ($window, $timeout) {
+    return {
+        restrict: 'A',
+        scope: {
+            onSizeChanged: '&'
+        },
+        link: function (scope, $element, attr) {
+
+            // $('#top-menu li').show();
+            //   var checkWidth = 0;
+
+            //   var count = 0;
+            //   $('#top-menu li').each(function(){
+            //     count++;
+            //   })
+              
+            //   for (var i = 0; i < count; i++) {
+            //       checkWidth = 0;
+            //       $('#top-menu li:visible').each(function() {
+            //           checkWidth += $(this).outerWidth();
+            //       });
+
+            //       var canvasW = $(window).width() - 500;
+            //       if (canvasW < checkWidth) {
+            //         var elem = $('#top-menu li:not(:last-child):visible:last');
+            //         // console.log(elem);
+            //         // elem.hide();
+            //         $('#top-menu li').each(function(no, index){
+            //           $(no).hide();
+            //         });
+            //       } else {
+            //           break;
+            //       }
+            //   }
+
+            var element = $element[0];
+
+            $timeout(function() {
+              checkResize();
+            });
+
+            function checkResize(){
+
+              angular.element(element).find('li').each(function(index, li){
+                angular.element(li).show();
+              });
+
+              angular.element(element).find('li').each(function(index, li){
+                var width = angular.element(element).width()
+                  if (width > 500){
+                    angular.element(li).hide();
+                  }
+              });
+
+              //console.log(angular.element(element).find('li'));
+              // console.log(angular.element(element).width());
+              // angular.element(element).find('li')
+              //for (var i = 0; i < angular.element(element).find('li').length; i++) {
+                  // checkWidth = 0;
+                  // $('#top-menu li:visible').each(function() {
+                  //     checkWidth += $(this).outerWidth();
+                  // });
+
+                  // if (angular.element(element).width() > 500) 
+                  //   angular.element(element).hide()
+                  // else
+                  //   break;
+
+                  // var canvasW = $(window).width() - 500;
+                  // if (canvasW < checkWidth) {
+                  //   var elem = $('#top-menu li:not(:last-child):visible:last');
+                  //   // console.log(elem);
+                  //   // elem.hide();
+                  //   $('#top-menu li').each(function(no, index){
+                  //     $(no).hide();
+                  //   });
+                  // } else {
+                  //     break;
+                  // }
+              //}
+            }
+
+            cacheElementSize(scope, element);
+            $window.addEventListener('resize', onWindowResize);
+
+            function cacheElementSize(scope, element) {
+                scope.cachedElementWidth = element.offsetWidth;
+                scope.cachedElementHeight = element.offsetHeight;
+            }
+
+            function onWindowResize() {
+                console.log(element.offsetWidth);
+
+                var isSizeChanged = scope.cachedElementWidth != element.offsetWidth || scope.cachedElementHeight != element.offsetHeight;
+                if (isSizeChanged) {
+                  checkResize();
+                }
+            };
+        }
+    }
+}])
+
 // **************************************************
         // *** /My AngularJS Directive(s) Application *******
         // **************************************************

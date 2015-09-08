@@ -4268,7 +4268,7 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
   .station-header{position: fixed; width: 100%; top: 0; left: 0; margin-left: 0px!important; padding: 0px; padding-right: 15px; z-index: 3;}
 
   .station-header .dropdown-menu{
-    width: 175px;
+  /*   width: 175px; */
   }
 
   .station-header .dropdown-menu li a:hover,
@@ -4606,6 +4606,29 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
     border: 0;
 }
 
+#top-menu{
+  white-space: nowrap;
+  margin-left: 200px;
+  overflow: hidden;
+  max-height: 60px;
+  max-width: 750px;
+}
+
+@media (max-width: 1200px) {
+  #top-menu{
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 1100px) {
+  #top-menu{
+    max-width: 50%;
+  }
+}
+
+#top-menu > li{
+  display: inline-block!important;
+}
 /* /stations */
 
 /* notifications */
@@ -7433,14 +7456,14 @@ progress[aria-valuenow]:before {
 
 @media only screen and (min-width: 768px)  and (max-width: 1050px)  {
 
-.navbar-nav li a {
+/* .navbar-nav li a {
   font-size: 12px;
 }
 
 .navbar-nav > li {
   float: left;
   margin-right: 23px;
-}
+} */
 
 .search-trigger {
   float: right;
