@@ -2392,6 +2392,11 @@ md-backdrop.md-opaque{
   vertical-align: -15%;
 }
 
+.i-16 {
+  font-size: 18px;
+  vertical-align: -17%;
+}
+
 .i-20 {
   font-size: 20px;
   vertical-align: -19%;
@@ -2801,6 +2806,25 @@ ul, li {
 .opacity-0{
   opacity: 0;
 }
+
+.opacity-05{
+  opacity: 0.5;
+}
+
+.opacity-07{
+  opacity: 0.7;
+}
+
+.term-p{
+  padding: 4px 10px;
+}
+
+.md-tab{padding: 12px;}
+
+.bg-white{
+  background:white!important;
+}
+
 /* /general */
 
 /* nvd3 */
@@ -2884,6 +2908,16 @@ ul, li {
 
 #external-toolbar{
   z-index: 9;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+#external-toolbar.opacity-0{
+  z-index: -1;
+  height: 0;
+  visibility: hidden;
 }
 
 .post-block{
@@ -2940,9 +2974,13 @@ ul, li {
   display: block;
 }
 
+#post-editor .md-btn.md-fab{
+  z-index: 7!important;
+}
+
 #post-editor #video-button a{vertical-align: bottom;}
-#post-editor #video-button :before{color: #aaa}
-#post-editor #video-button:hover :before{color: #888}
+/* #post-editor #video-button :before{color: #aaa}
+#post-editor #video-button:hover :before{color: #888} */
 
 /* #post-editor .redactor-toolbar li span,#post-editor .redactor-toolbar li a.mdi {line-height: 16px;}
 
@@ -3097,6 +3135,10 @@ ul, li {
  overflow: auto; 
 }
 
+#more-options-dialog .info-side-panel{
+  height: 350px!important;
+}
+
 #more-options-dialog .post-general-info{
   min-height: 350px!important;
 }
@@ -3203,7 +3245,7 @@ background: rgba(0,0,0,0.7);
 .redactor-toolbar>li>a.re-icon {
   font-size: 14px;
   border-radius: 50%;
-  border: 1px solid #ccc;
+  /*  border: 1px solid #ccc; */
   margin-right: 5px;
   margin-bottom: 2px;
   width: 13px;
@@ -3528,6 +3570,10 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 
 .show-post, .show-post .app-content-body{
   overflow-y: hidden;
+}
+
+.btn-term{
+  padding: 4px 10px;
 }
 
 #post-right-content .btn-term.btn-stroke:hover, #post-content .btn-term.btn-stroke:hover,
@@ -4853,7 +4899,11 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   transition: all 0.2s ease-in-out;
 }
 
-#perspective-editor-tabs-tab{
+#perspective-editor-webconf{
+  min-height: 200px;
+}
+
+#perspective-editor-webconf-tab{
   margin-top: 70px;
 }
 
@@ -6103,7 +6153,7 @@ progress[aria-valuenow]:before {
   /* background-color: #fff; */
   border: 1px solid #dee5e7;
   margin: 18px 0px 31px;
-  padding: 20px 0 10px;
+  padding: 10px 0 10px;
   -webkit-box-shadow: 0 6px 10px rgba(0,0,0,.02);
   -moz-box-shadow: 0 6px 10px rgba(0,0,0,.02);
   box-shadow: 0 6px 10px rgba(0,0,0,.02);
@@ -6115,7 +6165,7 @@ progress[aria-valuenow]:before {
   text-transform: uppercase;
   /* color: #2A3744; */
   line-height: 25px;
-  margin: 5px 27px 2px;
+  margin: 5px 20px 2px;
   letter-spacing: 0.1em;
 }
 
@@ -7219,10 +7269,10 @@ progress[aria-valuenow]:before {
 
 /* 17. FOOTER */
 
-footer {
+/* footer {
   padding: 73px 0px;
   background: #2a3744;
-}
+} */
 
 .footer-widget h5 {
   font-size: 16px;

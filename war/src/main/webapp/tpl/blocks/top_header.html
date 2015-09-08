@@ -8,7 +8,7 @@
   </div>
   <!-- nabar right -->
   <ul class="nav navbar-nav navbar-right" ng-class="{'p-r-md m-r-md': app.isLogged}">
-    <li ng-if="!tab.parentId" ng-repeat="tab in app.termPerspectiveView.categoryTerms">
+    <li ng-if="!tab.parentId" ng-repeat="tab in app.termPerspectiveView.ordinaryRows">
       <a ui-sref="app.tagspage({'tagName': tab.termName})" class="text-u-c">{{tab.termName}}</a>
     </li>
     <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown style="opacity: 0; width:1px;">

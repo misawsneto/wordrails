@@ -10,61 +10,72 @@
             <div id="post-editor" class="wrapper-md p-r-xxl p-l-xxl">
               <div id="post-media-box" class="post-block" ng-class="{'image-landscape': app.editingPost.imageLandscape && app.editingPost.uploadedImage.filelink}">
                 <div id="post-media" class="pull-left text-2x" ng-class="{'hide': app.editingPost.showInputVideoUrl || app.editingPost.uploadedImage.filelink}">
-                  <div id="image-button-wrapper" class="thumb-xs">
-                    <span id="image-button" class="mdi mdi-file-image-box custom-btn" tooltip="Imagem" tooltip-append-to-body="true" tooltip-placement="top">
-                      <input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
-                    </span>
-                  </div>
-                  <div class="thumb-xs" id="video-button">
-                    <a tooltip="Video" tooltip-placement="top" tooltip-append-to-body="true" href ng-click="toggleVideoUrl()" class="mdi mdi-youtube-play"></a>
-                  </div>
+                  <div id="image-button-wrapper" class="inline">
+                    <span id="image-button" class="p-sm border-radius-50 md-btn md-mini md-fab md-fab-sm bg-white"
+                    style="width:34px;height:34px; padding: 0; line-height: 10px;" angular-ripple tooltip="Imagem" tooltip-append-to-body="true" tooltip-placement="top">
+                    <i class="mdi mdi-file-image-box i-20 text-dg" style="line-height:34px"></i>
+                    <input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+                  </span>
                 </div>
-                <a id="video-remove-button" ng-click="removeVideo()" class="pos-abt h3 m-t-xs" href tooltip="Remover vídeo" tooltip-append-to-body="true" ng-hide="!app.editingPost.showInputVideoUrl">
-                  <i class="mdi mdi-close-circle-outline"></i>
+                <div class="inline" id="video-button">
+                  <a tooltip="Video" class="p-sm border-radius-50 md-btn md-mini md-fab md-fab-sm"
+                  style="width:34px;height:34px; padding: 0; line-height: 10px;" angular-ripple tooltip-placement="top" tooltip-append-to-body="true" href ng-click="toggleVideoUrl()">
+                  <i class="mdi mdi-youtube-play i-20 text-dg" style="line-height:34px"></i>
                 </a>
-                <input id="video-url-input" ng-model="videoUrl" class="form-control text-lg b-none" ng-class="{'hide': !app.editingPost.showInputVideoUrl}" placeholder="Digite o link para um vídeo do YouTube ou Vimeo."/>
-                <div class="video-container" ng-show="app.editingPost.externalVideoUrl">
-                  <embed-video enablejsapi="1" class="video" iframe-id="video1" api="1" player_id="video1" href="{{videoUrl}}" width=800 height=460 ></embed-video>
+              </div>
+            </div>
+            <a id="video-remove-button" ng-click="removeVideo()" class="pos-abt h3 m-t-xs" href tooltip="Remover vídeo" tooltip-append-to-body="true" ng-hide="!app.editingPost.showInputVideoUrl">
+              <i class="mdi mdi-close-circle-outline"></i>
+            </a>
+            <input id="video-url-input" ng-model="videoUrl" class="form-control text-lg b-none" ng-class="{'hide': !app.editingPost.showInputVideoUrl}" placeholder="Digite o link para um vídeo do YouTube ou Vimeo."/>
+            <div class="video-container" ng-show="app.editingPost.externalVideoUrl">
+              <embed-video enablejsapi="1" class="video" iframe-id="video1" api="1" player_id="video1" href="{{videoUrl}}" width=800 height=460 ></embed-video>
+            </div>
+            <!-- /media selection buttons -->
+            <!-- <img src="img/c0.jpg" class="img-full"> -->
+            <div id="image-config" class="text-lg" ng-if="app.editingPost.uploadedImage.filelink" ng-class="{'image-config-full': app.editingPost.imageLandscape}">
+              <div id="image-config-items">
+                <a ng-click="invertLandscapeSquare();"><i class="m-r-xs mdi" ng-class="{'mdi-crop-square': app.editingPost.imageLandscape, 'mdi-crop-landscape': !app.editingPost.imageLandscape}">
+                </i></a> | 
+                <a ng-click="clearImage()">
+                  <i class="m-l-xs mdi mdi-close">
+                  </i></a>
                 </div>
-                <!-- /media selection buttons -->
-                <!-- <img src="img/c0.jpg" class="img-full"> -->
-                <div id="image-config" class="text-lg" ng-if="app.editingPost.uploadedImage.filelink" ng-class="{'image-config-full': app.editingPost.imageLandscape}">
-                  <div id="image-config-items">
-                    <a ng-click="invertLandscapeSquare();"><i class="m-r-xs mdi" ng-class="{'mdi-crop-square': app.editingPost.imageLandscape, 'mdi-crop-landscape': !app.editingPost.imageLandscape}">
-                    </i></a> | 
-                    <a ng-click="clearImage()">
-                      <i class="m-l-xs mdi mdi-close">
-                      </i></a>
-                    </div>
-                  </div>
-                  <!-- <img src="img/c0.jpg" class="img-full"> -->
-                  <img id="image-box-holder" ng-src="{{app.editingPost.uploadedImage.filelink}}" class="img-full" ng-if="app.editingPost.uploadedImage.filelink">
-                </div>
-                <div class="post-block m-t-xs m-b-sm clear" ng-class="{'hide': !app.editingPost.uploadedImage.filelink}">
-                  <input placeholder="Créditos da imagem" ng-model="app.editingPost.imageCaption" class="text-md font-italic b-none w-full back-none">
-                </div>
-                <div ng-show="app.editingPost.selectedStation.topper" id="post-topper-box" class="post-block m-t-md m-b clear" style="min-height:30px;">
-                  <div style="color: transparent!important" ng-show="app.editingPost.topper"
-                  class="post-block text-lg bg-custom-primary pos-abt p-xxs">{{app.editingPost.topper}}</div>
-                  <textarea style="resize: none; opacity:1;" ng-model="app.editingPost.topper" type="text" ng-class="{'text-custom-primary': app.editingPost.topper}" 
-                  class="pos-abt post-block text-lg p-xxs pull-left b-none w-full back-none" placeholder="Chapéu" tabindex="0" aria-invalid="false"></textarea>
-                </div>
-                <div id="post-title-box" class="post-block m-t">
-                  <input ng-model="app.editingPost.title" type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
-                </div>
-                <div ng-show="app.editingPost.selectedStation.subheading" id="post-subheading-box" class="post-block">
-                  <input ng-model="app.editingPost.subheading" type="text" class="b-none text-2x font-thin w-full back-none" placeholder="Subtítulo">
-                </div>
-                <div id="external-toolbar-container" class="post-block bg-white">
-                  <button id="toggle-toolbars" class="post-stroke-btn btn text-md btn m-t btn-icon btn-rounded btn-stroke btn-muted" tooltip="Mostrar/Esconder ferramentas" tooltip-append-to-body="true" ng-click="app.showPostToolbar = !app.showPostToolbar">
+              </div>
+              <!-- <img src="img/c0.jpg" class="img-full"> -->
+              <img id="image-box-holder" ng-src="{{app.editingPost.uploadedImage.filelink}}" class="img-full" ng-if="app.editingPost.uploadedImage.filelink">
+            </div>
+            <div class="post-block m-t-xs m-b-sm clear" ng-class="{'hide': !app.editingPost.uploadedImage.filelink}">
+              <input placeholder="Créditos da imagem" ng-model="app.editingPost.imageCaption" class="text-md font-italic b-none w-full back-none">
+            </div>
+            <div ng-show="app.editingPost.selectedStation.topper" id="post-topper-box" class="post-block m-t-md m-b clear" style="min-height:30px;">
+              <div style="color: transparent!important" ng-show="app.editingPost.topper"
+              class="post-block text-lg bg-custom-primary pos-abt p-xxs">{{app.editingPost.topper}}</div>
+              <textarea style="resize: none; opacity:1;" ng-model="app.editingPost.topper" type="text" ng-class="{'text-custom-primary': app.editingPost.topper}" 
+              class="pos-abt post-block text-lg p-xxs pull-left b-none w-full back-none" placeholder="Chapéu" tabindex="0" aria-invalid="false"></textarea>
+            </div>
+            <div id="post-title-box" class="post-block m-t">
+              <input ng-model="app.editingPost.title" type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
+            </div>
+            <div ng-show="app.editingPost.selectedStation.subheading" id="post-subheading-box" class="post-block">
+              <input ng-model="app.editingPost.subheading" type="text" class="b-none text-2x font-thin w-full back-none" placeholder="Subtítulo">
+            </div>
+            <div id="external-toolbar-container" class="post-block bg-white">
+                  <!-- <button id="toggle-toolbars" class="post-stroke-btn btn text-md btn m-t btn-icon btn-rounded btn-stroke btn-muted" tooltip="Mostrar/Esconder ferramentas" tooltip-append-to-body="true" ng-click="app.showPostToolbar = !app.showPostToolbar">
                     <i class="mdi-pencil mdi"></i>
-                  </button>
-                  <div id="external-toolbar" class="w-full m-b-n-xxs p-t p-b bg-white" ng-class="{'hide': !app.showPostToolbar}"></div>
-                </div>
-                <div class="bg-white-only post-block">
-                  <div id="post-placeholder" class="post-content-font text-muted m-t-xxs" ng-class="{'hide': app.editingPost.body}">Texto...</div>
-                  <textarea ng-model="app.editingPost.body" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
-                </div>
+                  </button> -->
+                  <button id="toggle-toolbars" tooltip="Mostrar/Esconder ferramentas" tooltip-append-to-body="true"
+                  ng-click="app.showPostToolbar = !app.showPostToolbar" md-ink-ripple=""
+                  class="m-t post-stroke-btn md-btn md-mini md-fab md-fab-sm bg-white text-dg"
+                  style="width:34px;height:34px; padding: 0; line-height: 10px;">
+                  <i class="mdi-pencil mdi i-20 text-md" style="line-height:20px"></i>
+                </button>
+                <div id="external-toolbar" class="w-full p-t p-b bg-white" ng-class="{'opacity-0': !app.showPostToolbar}"></div>
+              </div>
+              <div class="bg-white-only post-block">
+                <div id="post-placeholder" class="post-content-font text-muted m-t-xxs" ng-class="{'hide': app.editingPost.body}">Texto...</div>
+                <textarea ng-model="app.editingPost.body" redactor="{initCallback: postCtrl.redactorInit}" redactor style="opacity: 0"></textarea>
+              </div>
             <!-- <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html" 
                 label="Publicar"
                  mfb-menu position="{{chosen.position}}" effect="{{chosen.effect}}"
@@ -102,20 +113,20 @@
       <div class="divider-v" ng-class="{'hide': !showTopOptions()}"></div>
     </li>
     <li>
-      <a tooltip="Informações" ng-click="showPostDetails()" class="animated text-lg" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      <a tooltip="Informações" ng-click="showPostDetails()" class="animated text-lg i-20" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
       href >
       <i class="mdi-information-outline mdi"></i>
     </a>
   </li>
   <li>
-    <a id="scheduler-popover-toggle" class="animated text-lg text-muted" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" ng-click="schedulerPopoverOpen = !schedulerPopoverOpen"
+    <a id="scheduler-popover-toggle" class="animated i-20 text-lg text-muted" ng-class="{'hide': !showTopOptions(), 'bounceIn': showTopOptions()}" ng-click="schedulerPopoverOpen = !schedulerPopoverOpen"
     tooltip="Agendar" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
     popover-trigger="manual" popover-template="scheduling_popover.html" popover-append-to-body="true" popover-placement="bottom">
     <i class="mdi-timer mdi"></i>
   </a>
 </li>
 <li>
-  <a tooltip="Excluir" ng-click="app.openDeletePost(app.editingPost.id);" class="animated text-lg" ng-class="{'hide': !app.editingPost.id, 'bounceIn': app.editingPost.id}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+<a tooltip="Excluir" ng-click="app.openDeletePost(app.editingPost.id);" class=" i-20 animated text-lg" ng-class="{'hide': !app.editingPost.id, 'bounceIn': app.editingPost.id}" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
   href >
   <i class="mdi-delete mdi"></i>
 </a>
@@ -131,35 +142,35 @@
     <div class="dropdown" dropdown>
       <button ng-click="showAddCategorySplash(node)" dropdown-toggle
       md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:34px;height:34px;">
-        <i class="mdi mdi-dots-vertical i-20" style="vertical-align: 44%; line-height: normal;"></i>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
-        <li ng-class="{'disabled': !showTopOptions()}"><a>Pré-visualização</a></li>
-        <li ng-class="{'disabled': !showTopOptions()}"><a href ng-click="savePostAsDraft()">Salvar como rascunho</a></li>
-        <li ng-if="checkState() && app.editingPost.editingExisting" class="divider"></li>
-        <li ng-if="checkState() && app.editingPost.editingExisting">
-          <a ng-click="loadPost(app.editingPost.id)">Descartar altarações</a>
-        </li>
-        <li class="divider"></li>
-        <li><a ng-click="openHelp()" >Ajuda</a></li>
-      </ul>
-    </div>
-  </li>
-  <li>
-    <div class="divider-v"></div>
-  </li>
-  <li>
-    <a tooltip="Opções de publicação" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
-    href class="text-lg" ng-click="app.hidePostOptions = !app.hidePostOptions" style="font-size: 19px;">
-    <i class="mdi mdi-menu"></i>
-  </a>
+      <i class="mdi mdi-dots-vertical i-20" style="vertical-align: 44%; line-height: normal;"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
+      <li ng-class="{'disabled': !showTopOptions()}"><a>Pré-visualização</a></li>
+      <li ng-class="{'disabled': !showTopOptions()}"><a href ng-click="savePostAsDraft()">Salvar como rascunho</a></li>
+      <li ng-if="checkState() && app.editingPost.editingExisting" class="divider"></li>
+      <li ng-if="checkState() && app.editingPost.editingExisting">
+        <a ng-click="loadPost(app.editingPost.id)">Descartar altarações</a>
+      </li>
+      <li class="divider"></li>
+      <li><a ng-click="openHelp()" >Ajuda</a></li>
+    </ul>
+  </div>
+</li>
+<li>
+  <div class="divider-v"></div>
+</li>
+<li>
+  <a tooltip="Opções de publicação" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+  href class="text-lg" ng-click="app.hidePostOptions = !app.hidePostOptions" style="font-size: 19px;">
+  <i class="mdi mdi-menu"></i>
+</a>
 </li>
 <li>
   <div class="divider-v"></div>
 </li>
 <li>
   <a tooltip="Voltar" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
-  href class="text-u-c text-center" style="font-size: 30px;" ng-click="closeNewPost()">×</a>
+  href class="text-u-c text-center" style="font-size: 30px;" ng-click="app.goBack();">×</a>
 </li>
 </ul>
 </div>

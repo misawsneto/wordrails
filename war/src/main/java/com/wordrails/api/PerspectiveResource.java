@@ -312,7 +312,6 @@ public class PerspectiveResource {
 		termView.ordinaryRows = fillPostsNotPositionedInRow(termPerspective.term ,rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
-		termView.categoryTerms = termConverter.convertToViews(new ArrayList<Term>(termPerspective.categoryTabs));
 		termView.id = termPerspective.id;
 
 		return termView;

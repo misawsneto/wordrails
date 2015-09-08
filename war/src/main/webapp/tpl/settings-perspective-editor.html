@@ -8,7 +8,7 @@
 						{{isMobile ? (isVertical ? 'ambiente móvel - modo vertical' : 'ambiente móvel - modo horizontal') : 'ambiente desktop'}}
 					</div>
 
-					<header class="mockup-header station-header paint-area" style="padding:0">
+					<header class="mockup-header bg-light paint-area" style="padding:0">
 						<div class="mockup-content mockup-grid mockup-grid--spread pull-right">
 							<ul class="nav navbar-nav">
 								<li class="hidden-sm">
@@ -19,14 +19,14 @@
 						</div>
 					</header>
 
-					<section class="mockup-section bg-perspective"> 
+					<section class="mockup-section bg-white"> 
 						<div class="mockup-content mockup-grid">
-							<div class="text-center wrapper-sm w-full" ng-if="termPerspectiveView.featuredRow.cells.length == 0">
+							<div class="text-center wrapper-sm w-full" ng-if="!termPerspectiveView.featuredRow.cells || termPerspectiveView.featuredRow.cells.length == 0">
 								<a ng-click="showAddFeaturedPost($event)" href="" class="text-xl"><span class="text-md font-thin">destaques</span> <i class="mdi mdi-plus-circle-outline v-middle"></i></a>
 							</div>
 							<div ng-if="termPerspectiveView.featuredRow.cells.length > 0" class="p-e-carousel">
 								<div class="pos-abt right-0 wrapper-xs z-i-2" ng-class="{'p-r-xxl m-r-xxl': !isMobile}">
-									<a id="pop-overver-btn" popover-class="carousel-popover" popover-placement="bottom" popover-class class="text-shadow-dark perspective-editor-options-button" popover="" popover-template=" 'carousel-template.html' " type="button" popover-append-to-body="true">
+									<a ng-click="app.stopPropagation($event)" popover-class="carousel-popover" popover-placement="bottom" popover-class class="text-shadow-dark perspective-editor-options-button" popover="" popover-template=" 'carousel-template.html' " type="button" popover-append-to-body="true">
 										<i class="i-24 mdi-dots-vertical mdi"></i>
 									</a>
 								</div>
@@ -96,7 +96,7 @@
 		</div>
 
 		<div id="perspective-editor-terms" class="customizer editor-panel"
-			ng-class="{'active': termEditorActive, 'inactive': !termEditorActive && (tabsEditorActive || adsEditorActive)}" 
+			ng-class="{'active': termEditorActive, 'inactive': !termEditorActive && (webconfEditorActive || adsEditorActive)}" 
 			ng-if="termPerspectiveView">
 			<div id="perspective-editor-terms-tab" class="pe-tabs"
 				ng-click="activateTermsPanel()">
@@ -109,41 +109,49 @@
 			<div class="m-b-sm p-l-sm text-md text-white">
 				Ordem das categorias
 			</div>
-			<div class="display-t-c p-r pull-left">
-				<ul class="no-style">
-					<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="text-white wrapper-xxs">
-						{{$index + 1}}ª
-					</li>
-				</ul>
+			<div class="pos-rlt">
+				<div class="display-t-c p-r">
+					<ul class="no-style">
+						<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="text-white wrapper-xxs">
+							{{$index + 1}}ª
+						</li>
+					</ul>
+				</div>
+				<div class="display-t-c clearfix">
+					<!-- <ul class="no-style" ui-jq="sortable" id="sortable"> -->
+					<ul class="no-style" ui-sortable ng-model="termPerspectiveView.ordinaryRows">
+						<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="sortable-term sortable-elem text-white wrapper-xxs">
+							{{row.termName}}
+						</li>
+					</ul>
+				</div>
 			</div>
-			<div class="display-t-c pull-right clearfix">
-				<!-- <ul class="no-style" ui-jq="sortable" id="sortable"> -->
-				<ul class="no-style" ui-sortable ng-model="termPerspectiveView.ordinaryRows">
-					<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="sortable-term sortable-elem text-white wrapper-xxs">
-						{{row.termName}}
-					</li>
-				</ul>
+			<div class="text-right wrapper-xs w-full m-t">
+				<button md-ink-ripple="" class="md-btn-sm md-btn md-raised btn-fw bg-white">
+					Categorias
+				</button>
 			</div>
 		</div>
 
-		<div id="perspective-editor-tabs" class="customizer editor-panel"
-			ng-class="{'active': tabsEditorActive,'inactive': !tabsEditorActive && (termEditorActive || adsEditorActive)}">
-			<div id="perspective-editor-tabs-tab" class="pe-tabs"
+		<div id="perspective-editor-webconf" class="customizer editor-panel"
+			ng-class="{'active': webconfEditorActive,'inactive': !webconfEditorActive && (termEditorActive || adsEditorActive)}">
+			<div id="perspective-editor-webconf-tab" class="pe-tabs"
 				ng-click="activateTabsPanel()">
 				<ul class="color-tool">
 					<li class="text-2x text-white">
-						<div class="m-t-n-xs"><i class="mdi mdi-window-maximize"></i></div>
+						<div class="m-t-n-xs"><i class="mdi mdi-television-guide"></i></div>
 					</li>
 				</ul>
 			</div>
 			<div class="m-b-sm p-l-sm text-md text-white">
-				Ordem das abas
+				Página web
 			</div>
 		</div>
 
 	</div><!-- /container -->
 
-	<md-button ng-hide="creating || editing"
+	<md-button ng-hide="creating || editing" 
+	ng-click="updatePerspective()"
 	id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
 	ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
 	tooltip="Salvar alterações" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
@@ -153,7 +161,8 @@
 
 		<!-- <a class="popover-close-button text-lg pull-right" tooltip="Fechar" tooltip-append-to-body="true" tooltip-placement="top">×</a> -->
 <script type="text/ng-template" id="carousel-template.html">
-	<div id="perspective-editor-popover-id" class="perspective-editor-popover w-xl" >
+	<div id="perspective-editor-popover-id" class="perspective-editor-popover w-xl" click-outside="pe.clickOutside()"
+		outside-if-not="delete-cell">
 		<a ng-click="pe.clickOutside(); app.stopPropagation($event);" class="popover-close-button text-lg pull-right" tooltip="Fechar" tooltip-append-to-body="true" tooltip-placement="top">×</a>
 		<div class="text-center wrapper-xxs text-md m-b">
 			destaques
@@ -204,21 +213,29 @@
 	         </span>
 					</div>
   			</form>
-				<div class="wrapper-xxs perspective-editor-search-results" >
+				<div class="wrapper-xxs perspective-editor-search-results m-t-sm" >
 					<ul class="no-style">
-						<li ng-repeat="postView in pe.searchResults" class="clearfix wrapper-xxs font-thin">
+						<li ng-repeat="postView in pe.searchResults" class="clearfix wrapper-xxs font-thin" ng-class="{'opacity-07 bg-light': !pe.cellAddValidation(postView)}">
               <span ng-if="postView.imageSmallId" style="height: 50px" class="bg-cover pull-left thumb m-r" ng-style="app.getBackgroundImage(postView, 'sm')">
               </span>
-              <span class="pull-right" 
+              <span class="pull-right" ng-if="pe.cellAddValidation(postView)"
               tooltip="Adicionar" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="300">
 								<a ng-click="pe.addCell(postView)" angular-ripple class="border-radius-50 text-lg p-sm mdi-plus mdi"></a>
+							</span>
+							<span class="pull-right" ng-if="!pe.cellAddValidation(postView)">
+								<a ng-click="pe.removeCell(postView)" angular-ripple class="border-radius-50 text-lg p-sm mdi-close mdi animated bounceIn text-danger"></a>
 							</span>
               <span class="clear m-r-xxl">
                 <span>{{postView.title}}</span>
                 <small class="text-muted clear text-ellipsis" ng-bind-html="postView.snippet">
                 </small>
               </span>
-            </a>
+            </li>
+            <li ng-if="pe.searchResults.length > 0">
+            	<div class="wrapper-xs text-center">
+            		<button ng-click="pe.searchMore()" md-ink-ripple class="md-btn md-flat btn-fw" style="font-size: 18px">mais</button>
+            	</div>
+            </li>
 					</ul>
 				</div>
 				<div class="pos-abt bottom-0 right-0 wrapper-sm">

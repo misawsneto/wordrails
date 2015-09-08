@@ -31,7 +31,6 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       if($scope.termPerspectiveView.featuredRow && $scope.termPerspectiveView.featuredRow.cells){ 
         for (var i = $scope.termPerspectiveView.featuredRow.cells.length - 1; i >= 0; i--) {
           if($scope.termPerspectiveView.featuredRow.cells[i].postView.postId == postView.postId){
-            console.log(postView.title)
             $scope.termPerspectiveView.featuredRow.cells.splice(i, 1);
           }
         } // for
@@ -55,6 +54,8 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       }, function() {
       //$scope.alert = 'You cancelled the dialog.';
       });
+
+      $scope.cellType = 'FEATURED_POST';
     }
   // scope variable used in the perspective editor dialog
     $scope.pe = {
@@ -66,10 +67,52 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
     $scope.pe.nonemptySearch = $scope.pe.searchResults ? true : false;
     // -------------
 
-    $scope.pe.addCell = function (postView){
-      $scope.termPerspectiveView.featuredRow.cells.push({
-        'postView': postView
-      })
+    $scope.pe.addCell = function (postView){ // search related add cell to position
+      if($scope.cellType == 'FEATURED_POST'){ // if is featured post
+        if(!$scope.cellAddValidation(postView)){
+          $scope.app.showErrorToast('Esta publicação já está em destaque')
+          return false;
+        }
+        $scope.termPerspectiveView.featuredRow.cells.push({
+          'postView': postView
+        })
+      } // end of if is featured post
+    }
+
+    $scope.pe.removeCell = function (postView){ // search related add cell to position
+      if($scope.cellType == 'FEATURED_POST'){ // if is featured post
+        $scope.removeFeaturedPost(postView)
+      } // end of if is featured post
+    }
+
+    $scope.cellType = null;
+
+    $scope.cellAddValidation = function(postView){
+      if(!$scope.termPerspectiveView.featuredRow || !$scope.termPerspectiveView.featuredRow.cells){
+        $scope.termPerspectiveView.featuredRow = {
+          cells: [],
+          type: 'F',
+          termId: null
+        }
+      }
+      if($scope.cellType == 'FEATURED_POST' && $scope.termPerspectiveView.featuredRow.cells){
+        var cells = $scope.termPerspectiveView.featuredRow.cells;
+        for (var i = cells.length - 1; i >= 0; i--) {
+          if(cells[i].postView && cells[i].postView.postId == postView.postId)
+            return false;
+        };
+
+        // $scope.termPerspectiveView.featuredRow.cells.forEach(function(cell, index){
+        //   if(cell.postView && cell.postView.postId == postView.postId)
+        //     return false;
+        // });
+      }
+
+      return true;
+    }
+
+    $scope.pe.cellAddValidation = function(postView){
+      return $scope.cellAddValidation(postView);
     }
 
     // perspective editor dialog Controller
@@ -151,33 +194,35 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
     }
   }
 
+      // ---------------- paginate search
+
   $scope.carouselPopoverOpen = false;
 
   $scope.$watch('carouselPopoverOpen', function(newVal){
     console.log(newVal);
   });
 
-  $scope.tabsEditorActive = false;
+  $scope.webconfEditorActive = false;
   $scope.termEditorActive = false;
   $scope.adsEditorActive = false;
 
   $scope.activateTermsPanel = function(){
     $scope.termEditorActive = !$scope.termEditorActive;
-    $scope.tabsEditorActive = false;
+    $scope.webconfEditorActive = false;
     $scope.adsEditorActive = false;
-    $scope.isMobile = true;
   }
 
   $scope.activateTabsPanel = function(){
-    $scope.tabsEditorActive = !$scope.tabsEditorActive;
+    $scope.webconfEditorActive = !$scope.webconfEditorActive;
     $scope.termEditorActive = false;
     $scope.adsEditorActive = false;
-    $scope.isMobile = false;
   }
 
   $scope.$watch('termEditorActive', function(){
     console.log($scope.termEditorActive);
   })
+
+  // ---------- hide popovers ------------------
 
   var hidePopover = function(element) {
     //Set the state of the popover in the scope to reflect this
@@ -189,7 +234,7 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
           elementScope.$parent.$parent[key] = false;
         }
       }
-      elementScope.$parent.$parent.$apply();
+      //elementScope.$parent.$parent.$apply();
       //Remove the popover element from the DOM
       $(element).remove();
   };
@@ -200,8 +245,33 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
         hidePopover(this);
     });
   } 
+  // --------------- end of hide popovers ------------------
 
-    // ---------------- paginate search
+  $scope.updatePerspective = function(){
+      
+      if($scope.termPerspectiveView.featuredRow && $scope.termPerspectiveView.featuredRow.cells){
+        $scope.termPerspectiveView.featuredRow.cells.forEach(function(cell, index){
+          cell.index = index;
+          cell.id = null;
+        });
+      }
+
+      if(!$scope.termPerspectiveView.id){
+        createTermPerspective()
+        return;
+      }
+
+      trix.putTermView($scope.termPerspectiveView).success(function(){
+        $scope.app.showSuccessToast('Perspectiva atualizada.')
+      })
+      .error(function(){
+
+      });
+  }
+
+  var createTermPerspective = function(){
+
+  }
 
 
   }]);

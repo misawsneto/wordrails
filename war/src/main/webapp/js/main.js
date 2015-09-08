@@ -205,6 +205,9 @@ angular.module('app')
 
         if(toState.name == "app.stations"){
           $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
+          $timeout(function(){
+            $scope.app.nowReading = null;
+          }, 300)
         }
         else if(toState.name.indexOf("app.post") > -1){
           $("title").html($scope.app.initData.network.name + " | Editor");
@@ -275,6 +278,13 @@ angular.module('app')
         }
       }
     })
+
+      $scope.app.goBack = function(){
+        if($rootScope.previousState)
+          $window.history.back();
+        else
+          $state.go('app.stations');
+      }
 
       $scope.app.socialLogin = function(){
         return $scope.app.initData.network.allowSocialLogin && $scope.app.currentStation.visibility == 'UNRESTRICTED';
@@ -577,7 +587,6 @@ angular.module('app')
               $state.go("app.stations");
             }
             $scope.app.refreshData();
-            $scope.app.showInfoToast('Obrigado e volte sempre...')
           })
         })
       };

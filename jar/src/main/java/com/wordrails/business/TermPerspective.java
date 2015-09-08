@@ -25,9 +25,6 @@ public class TermPerspective {
 	@OneToMany(mappedBy="perspective", cascade=CascadeType.REMOVE)
 	public List<Row> rows;
 
-	@ManyToMany
-	public Set<Term> categoryTabs;
-
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean showPopular;
 
