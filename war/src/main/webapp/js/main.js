@@ -145,8 +145,9 @@ angular.module('app')
         $scope.app.termPerspectiveView = termPerspective
       })
 
-
       $scope.app.currentStation = stationObject;
+
+      $state.go('app.stations')
 
       loadPopular();
       loadRecent();
@@ -208,11 +209,14 @@ angular.module('app')
             $scope.app.nowReading.externalVideoUrl = $scope.app.nowReading.externalVideoUrl.substring(0, $scope.app.nowReading.externalVideoUrl.length - 1) + "0";
         }
 
-        if(toState.name == "app.stations"){
-          $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
+        if(toState.name != "app.read"){
           $timeout(function(){
             $scope.app.nowReading = null;
           }, 300)
+        }
+
+        if(toState.name == "app.stations"){
+          $("title").html($scope.app.currentStation ? $scope.app.initData.network.name + " | " + $scope.app.currentStation.name : $scope.app.initData.network.name);
         }
         else if(toState.name.indexOf("app.post") > -1){
           $("title").html($scope.app.initData.network.name + " | Editor");

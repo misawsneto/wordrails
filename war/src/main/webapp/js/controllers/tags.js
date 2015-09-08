@@ -3,6 +3,8 @@ app.controller('TagsPageCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$st
 	var tagName = $scope.tagName = $state.params.tagName;
 	$scope.postsPage = 0;
 
+	$scope.currentTabWeb = tagName;
+
 	if(tagName){
 		
 		trix.findPostsByTagAndStationId(tagName, $scope.app.currentStation.id, $scope.postsPage, 10).success(function(response){

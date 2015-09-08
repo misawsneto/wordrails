@@ -52,7 +52,8 @@
     </ul>
     <ul id="top-menu" class="nav navbar-nav navbar-right" ng-class="{'p-r-md m-r-md': app.isLogged}">
       <li ng-repeat="tab in app.termPerspectiveView.ordinaryRows">
-        <a ui-sref="app.tagspage({'tagName': tab.termName})" class="text-u-c">{{tab.termName}}</a>
+        <a ng-class="{'active': tab.termName == currentTabWeb}"
+        ui-sref="app.tagspage({'tagName': tab.termName})" class="text-u-c">{{tab.termName}}</a>
       </li>
     </ul>
   </div>
