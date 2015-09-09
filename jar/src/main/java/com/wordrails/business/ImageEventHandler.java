@@ -59,9 +59,9 @@ public class ImageEventHandler {
 
 			TrixFile medium;
 			String mediumHash;
-			if(maxSize < 300) {
-				mediumHash = smallHash;
-				medium = small;
+			if(maxSize < 250) {
+				mediumHash = originalHash;
+				medium = image.original;
 			} else {
 				mediumHash = fileService.newResizedImage(bufferedImage, network.domain, 300, "medium", mime);
 				medium = new TrixFile(mediumHash);
@@ -70,11 +70,18 @@ public class ImageEventHandler {
 
 			TrixFile large;
 			String largeHash;
-			if(maxSize < 1024) {
-				largeHash = mediumHash;
-				large = medium;
+			if(maxSize < 800) {
+				largeHash = originalHash;
+				large = image.original;
 			} else {
-				largeHash = fileService.newResizedImage(bufferedImage, network.domain, 1024, "large", mime);
+				int largeSize = 1024;
+				if(maxSize >= 1200 && maxSize < 1500) {
+					largeSize = 1400;
+				} else if(maxSize >= 1500) {
+					largeSize = 1600;
+				}
+
+				largeHash = fileService.newResizedImage(bufferedImage, network.domain, largeSize, "large", mime);
 				large = new TrixFile(largeHash);
 				fileRepository.save(large);
 			}
