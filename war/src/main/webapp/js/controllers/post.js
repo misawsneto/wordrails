@@ -1,6 +1,6 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$window',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $window){
 
 		FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
 			return true;
@@ -287,10 +287,6 @@ $scope.toggleVideoUrl = function(){
 
 	if($scope.app.editingPost.showInputVideoUrl)
 		$("#video-url-input").focus();
-}
-
-$scope.closeNewPost = function(){
-	$state.go('app.stations')
 }
 
 function doResize(){
@@ -830,6 +826,7 @@ function createPost(state){
 			trix.getPost(postId, 'postProjection').success(function(response){
 				createPostObject();
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, response);
+				if($scope.app.editingPost.imageLargeId)
 				$scope.app.editingPost.uploadedImage = {filelink: TRIX.baseUrl + "/api/files/"+$scope.app.editingPost.imageLargeId+"/contents" }
 				setWritableStationById(response.station.id)
 				updateTermTree();

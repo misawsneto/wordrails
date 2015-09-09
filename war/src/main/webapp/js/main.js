@@ -111,12 +111,14 @@ angular.module('app')
     function loadPopular(){
       trix.findPopularPosts($scope.app.currentStation.id, 0, 10)
       .success(function(response){
+        $scope.app.initData.popular = response
       })
     }
 
     function loadRecent(){
       trix.findRecentPosts($scope.app.currentStation.id, 0, 10)
       .success(function(response){
+        $scope.app.initData.recent = response
       })
     }
 
@@ -145,6 +147,10 @@ angular.module('app')
 
       $scope.app.currentStation = stationObject;
 
+      $state.go('app.stations')
+
+      loadPopular();
+      loadRecent();
       $scope.app.checkIfLogged();
     }
 
@@ -166,6 +172,7 @@ angular.module('app')
     checkLoginImage();
 
     $scope.app.initData = angular.copy(initData);
+    $scope.app.termPerspectiveView = angular.copy(initTermPerspective);
 
     $scope.app.getLoggedPerson = function(){
       return $scope.app.initData.person;
@@ -200,6 +207,12 @@ angular.module('app')
         if(fromState.name == "app.stations.read"){
           if($scope.app.nowReading.externalVideoUrl)
             $scope.app.nowReading.externalVideoUrl = $scope.app.nowReading.externalVideoUrl.substring(0, $scope.app.nowReading.externalVideoUrl.length - 1) + "0";
+        }
+
+        if(toState.name != "app.read"){
+          $timeout(function(){
+            $scope.app.nowReading = null;
+          }, 300)
         }
 
         if(toState.name == "app.stations"){
@@ -274,6 +287,13 @@ angular.module('app')
         }
       }
     })
+
+      $scope.app.goBack = function(){
+        if($rootScope.previousState)
+          $window.history.back();
+        else
+          $state.go('app.stations');
+      }
 
       $scope.app.socialLogin = function(){
         return $scope.app.initData.network.allowSocialLogin && $scope.app.currentStation.visibility == 'UNRESTRICTED';
@@ -354,9 +374,17 @@ angular.module('app')
         return img;
       }
 
+      $scope.app.getBackgroundImage = function(postView, size){
+        return $scope.getBackgroundImage(postView, size);
+      }
+
       $scope.getBackgroundImage2 = function(post, size){
         var img = $filter('pvimageLink2')(post, size);
         return img;
+      }
+
+      $scope.app.getBackgroundImage2 = function(post, size){
+        return $scope.getBackgroundImage2(post, size);
       }
 
       $scope.getImageLink = function(id){
@@ -568,7 +596,6 @@ angular.module('app')
               $state.go("app.stations");
             }
             $scope.app.refreshData();
-            $scope.app.showInfoToast('Obrigado e volte sempre...')
           })
         })
       };
@@ -595,6 +622,10 @@ angular.module('app')
 
     $scope.app.cellsToPostViews = function(cells){
       return cells.map(function(cell){ return cell.postView; });
+    }
+
+    $scope.app.reading = function(slug){
+      $state.go('app.read', {'slug': slug})
     }
 
     /**
@@ -820,6 +851,48 @@ angular.module('app')
       $scope.app.refreshData();
       moment.locale('pt')
       /* end of added */
+
+      /* header observer */
+
+      var lastScrollTop = 0
+    var didScroll = false;
+    $timeout(function(){
+      lastScrollTop = $(window).scrollTop() ? $(window).scrollTop() : 0;
+    }, 20)
+
+    function checkStationHeaderVisibel(scrollTop){
+        // Make sure they scroll more than delta
+        if(Math.abs(lastScrollTop - scrollTop) <= 5)
+          return;
+        // If they scrolled down and are past the navbar, add class .nav-up.
+        // This is necessary so you never see what is "behind" the navbar.
+        if (scrollTop > lastScrollTop && scrollTop > 50){
+            // Scroll Down
+            $('body').removeClass('nav-down').addClass('nav-up');
+        } else {
+            // Scroll Up
+            if(scrollTop + $(window).height() < $(document).height()) {
+              $('body').removeClass('nav-up').addClass('nav-down');
+            }
+        }
+        lastScrollTop = scrollTop;
+    }
+
+    $timeout(function(){
+      checkStationHeaderVisibel(lastScrollTop);
+      $(window).scroll(function(){
+        didScroll = true;
+      })
+    }, 70);
+
+    $interval(function() {
+      if (didScroll) {
+        checkStationHeaderVisibel($(window).scrollTop());
+        didScroll = false;
+      }
+    }, 250);
+
+    /* end of header observer */
 
 
 }]);

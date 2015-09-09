@@ -128,6 +128,11 @@ var trix = angular.module('trix', [])
 		return \$http.put(_config.url + "/api/persons/deleteMany/network", personIds, config)
 	};
 
+	this.putTermView = function (termView) {
+		var config = {"headers": {"Content-Type": "application/json"}}
+    	return \$http.put(_config.url + "/api/perspectives/termPerspectiveDefinitions/" + termView.id , termView, config)
+	}
+
     this.countPersonsByNetwork = function(networkId){
     	var config = {
 			"params": {
@@ -214,12 +219,13 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/persons/"+personId+"/recommends", config)
     }
 
-    this.searchPostsFromOrPromotedToStation = function(stationId, query, _page, _size, params) {
+    this.searchPostsFromStation = function(stationId, query, _page, _size, params) {
 		var config = {
 			"params": {
+				"stationId": stationId,
 				"query": query,
 				"page": _page,
-				"size": _size,
+				"size": _size
 			}
 		}
 

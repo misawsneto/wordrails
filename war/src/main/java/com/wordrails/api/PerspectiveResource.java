@@ -79,6 +79,7 @@ public class PerspectiveResource {
 //			updateTerm(termPerspective, definition.termId);
 			updateRow(definition.splashedRow, termPerspective, Row.SPLASHED_ROW);
 			updateRow(definition.featuredRow, termPerspective, Row.FEATURED_ROW);
+			//updateRow(definition.homeRows, termPerspective, Row.HOME_ROW);
 			updateOrdinaryRows(definition.ordinaryRows, termPerspective);
 			response = Response.status(Status.CREATED).build();
 		}
@@ -311,7 +312,6 @@ public class PerspectiveResource {
 		termView.ordinaryRows = fillPostsNotPositionedInRow(termPerspective.term ,rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
-		termView.categoryTerms = termConverter.convertToViews(new ArrayList<Term>(termPerspective.categoryTabs));
 		termView.id = termPerspective.id;
 
 		return termView;

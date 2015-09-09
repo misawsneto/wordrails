@@ -21,7 +21,8 @@ import javax.validation.constraints.Size;
 public class Row implements Comparable<Row> {
 	public static final String FEATURED_ROW = "F";
 	public static final String ORDINARY_ROW = "O";	
-	public static final String SPLASHED_ROW = "S";	
+	public static final String SPLASHED_ROW = "S";
+	public static final String HOME_ROW = "H";
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)				
@@ -33,8 +34,9 @@ public class Row implements Comparable<Row> {
 	
 	@OneToMany(mappedBy="row", cascade=CascadeType.ALL)
 	public List<Cell> cells;
-	
-	
+
+	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
+	public Integer maxPosts = 0;
 	
 /*--FEATURED_ROW-------------------------------------------------------------*/	
 	@OneToOne
@@ -48,8 +50,13 @@ public class Row implements Comparable<Row> {
 	@OneToOne
 	@JoinColumn(name="splashed_perspective") 
 	public TermPerspective splashedPerspective;
-/*--SPLASHED_ROW-------------------------------------------------------------*/	
+/*--SPLASHED_ROW-------------------------------------------------------------*/
 
+/*--HOME_ROW-------------------------------------------------------------*/
+	@OneToOne
+	@JoinColumn(name="home_perspective")
+	public TermPerspective homePerspective;
+/*--HOME_ROW-------------------------------------------------------------*/
 	
 	
 /*--ORDINARY_ROW-------------------------------------------------------------*/	

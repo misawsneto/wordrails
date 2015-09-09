@@ -452,6 +452,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetRowHomePerspectiveAuthorized(Integer rowId) {
+		return true;
+	}
+
+	@Override
 	protected boolean isGetRowTermAuthorized(Integer rowId) {
 		Row row = rowRepository.findOne(rowId);
 		return (row != null && canVisualizeStation(row.perspective.perspective.station.id));
@@ -731,6 +736,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetTermPerspectiveSplashedRowAuthorized(Integer termPerspectiveId) {
 		TermPerspective termPerspective = termPerspectiveRepository.findOne(termPerspectiveId);
 		return termPerspective != null && canVisualizeStation(termPerspective.perspective.station.id);
+	}
+
+	@Override
+	protected boolean isGetTermPerspectiveHomeRowsAuthorized(Integer termPerspectiveId) {
+		return true;
 	}
 
 	@Override
@@ -1648,8 +1658,4 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return false;
 	}
 
-	@Override
-	protected boolean isGetTermPerspectiveCategoryTabsAuthorized(Integer termPerspectiveId) {
-		return true;
-	}
 }

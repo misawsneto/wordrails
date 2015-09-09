@@ -1,7 +1,42 @@
-<div class="station-perspectives p-t-50" ng-if="!app.isMobile">
-<div class="container p-t-lg p-b-lg">
+<div class="station-perspectives p-t-60" ng-if="!app.isMobile">
+<div class="container p-b-lg p-r-xxl p-l-xxl">
     <div class="row">
-      <div class="col-md-8">
+      <!-- carousel top -->
+      <div class="col-md-12" style="height: 430px;" 
+      ng-if="app.termPerspectiveView.featuredRow.cells && app.termPerspectiveView.featuredRow.cells.length > 0">
+        <!-- carousel list -->
+        <ul rn-carousel="" rn-carousel-index="carouselIndex2" rn-carousel-auto-slide="10" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="carousel2 ng-scope w-full h-full">
+          <li class="w-full h-full" ng-repeat="cell in app.termPerspectiveView.featuredRow.cells">
+            <div ng-style="getBackgroundImage(cell.postView, 'lg')" class="cell-wrap bg-cover">
+              <!-- title bg-stripe -->
+              <div class="pos-abt bottom-0 wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg">
+                  <div class="text-shadow-dark h2 text-white">{{::cell.postView.title}}</div>
+                  <div  ng-if="cell.postView.imageMediumId">
+                    <div class="display-t-c pull-right">
+                      <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
+                        <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                      </a>
+                    </div>
+                    <div class="display-t-c p-r-sm v-middle pull-right">
+                      <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="text-white" title="Ir para o perfil de {{::cell.postView.authorName}}" dir="auto">
+                        {{::cell.postView.authorName}}
+                      </a>
+                      <br>
+                      <span class="text-sm readingTime">
+                        {{::cell.postView.date | fromNow}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <!-- title bg-stripe -->
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8 p-t">
         <!-- BLOG POST -->
         <div class="home-blog bg-custom">
           <!-- 
@@ -18,30 +53,33 @@
 
           <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" ng-if="ordinaryRow.cells && ordinaryRow.cells.length">
           
-          <div ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))"
+          <!-- <div ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))" -->
+          <div 
           ng-repeat="cell in ordinaryRow.cells | limitTo: 3" class="half-post bg-custom">
             <div class="p-b-md b-t m-t-md"></div>
-            <div class="row">
-              <div class="col-md-5" ng-if="cell.postView.mediumId">
-                <a class="block-image2">
-                  <div ng-style="getBackgroundImage(cell.postView, 'md')"
-                  class="cell-wrap r r-2x bg-cover" alt=""></div>
-                </a>
+            <a ui-sref="app.tagspage({'tagName': ordinaryRow.termName})" ng-click="app.stopPropagation($event)"
+              class="btn btn-rounded btn-stroke btn-term m-r-sm m-b-sm">
+              {{ordinaryRow.termName}}
+            </a>
+            <a ui-sref="app.read({'slug': cell.postView.slug})">
+              <div class="row">
+                <div class="col-md-5" ng-if="cell.postView.imageMediumId">
+                  <span class="block-image2">
+                    <div ng-style="getBackgroundImage(cell.postView, 'md')"
+                    class="cell-wrap r r-2x bg-cover" alt=""></div>
+                  </span>
+                </div>
+                <div ng-class="{'col-md-7':cell.postView.imageMediumId, 'col-md-12': !cell.postView.imageMediumId}">
+                  <span href="" class="h3 font-bold m-b block" ng-class="{'m-t-sm': cell.postView.imageMediumId}">
+                  {{::cell.postView.title}}</span>
+                  <!-- <div class="post-meta">
+                    <span class="post-author a-custom-primary">Lavonne Flynn</span>
+                    <span class="post-tags"><a href="#">Online Marketing</a></span>
+                  </div> -->
+                  <p class="font-thin text-lg">{{::cell.postView.snippet | characters:150}}</p>
+                </div>
               </div>
-              <div ng-class="{'col-md-7':cell.postView.mediumId, 'col-md-12': !cell.postView.mediumId}">
-                <a href="" class="h3 font-bold m-b m-t-sm block">
-                {{::cell.postView.title}}</a>
-                <!-- <div class="post-meta">
-                  <span class="post-author a-custom-primary">Lavonne Flynn</span>
-                  <span class="post-tags"><a href="#">Online Marketing</a></span>
-                </div> -->
-                <p class="font-thin text-lg">{{::cell.postView.snippet | characters:150}}</p>
-                <a ui-sref="app.tagspage({'tagName': ordinaryRow.termName})" ng-click="app.stopPropagation($event)"
-                  class="btn btn-rounded btn-stroke btn-term text-md m-r-sm m-b">
-                  {{ordinaryRow.termName}}
-                </a>
-              </div>
-            </div>
+            </a>
             <div class="m-t">
               <div class="display-t-c">
                 <a >
@@ -232,7 +270,7 @@
       </div>
       
       <!-- SIDEBAR -->
-      <aside class="col-md-4">
+      <aside class="col-md-4 p-t-lg">
         <!-- <div class="free-course free-course-aside side-widget">
           <h5>Free Course</h5>
           <h3>"Double Your Traffic in 30 days" + Secret Bonus</h3>
@@ -249,7 +287,7 @@
           <h4>Populares</h4>
           <ul>
             <li ng-repeat="post in app.initData.popular | limitTo: 5">
-              <a ng-click="app.setNowReading(post, app.initData.popular)" class="rp-title">
+              <a ui-sref="app.read({'slug': post.slug})" class="rp-title">
               {{post.title}}</a>
               <div class="rp-meta">
                 <span class="post-author a-custom-primary">{{post.date | fromNow}}</span>
@@ -260,10 +298,10 @@
         </div>
 
         <div class="recent-posts side-widget" id="station-sidebar" ng-if="app.initData.recent && app.initData.recent.length > 0">
-          <h4>Mais Recentes</h4>
+          <h4>Recentes</h4>
           <ul>
             <li ng-repeat="post in app.initData.recent | limitTo: 5">
-              <a ng-click="app.setNowReading(post, app.initData.popular)" class="rp-title">
+              <a ui-sref="app.read({'slug': post.slug})" class="rp-title">
               {{post.title}}</a>
               <div class="rp-meta">
                 <span class="post-author a-custom-primary">{{post.date | fromNow}}</span>
@@ -301,10 +339,10 @@
           <ul class="sly-clearfix info-flow-list" >
             <li class="cell" ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
               <!-- <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div> -->
-              <div class="news-item animated fadeIn o-h" ng-class="{'bg-custom-primary-no-image': !cell.postView.mediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
-                <div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.mediumId">
+              <div class="news-item animated fadeIn o-h" ng-class="{'bg-custom-primary-no-image': !cell.postView.imageMediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+                <div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.imageMediumId">
                   <div class="text-md font-thin text-lg text-white ls-sm">{{::cell.postView.title}}</div>
-                  <div class="m-t-md" ng-if="cell.postView.mediumId">
+                  <div class="m-t-md" ng-if="cell.postView.imageMediumId">
                     <div class="display-t-c">
                       <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
                         <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
@@ -334,14 +372,14 @@
                   </div>
                 </div>
 
-                <div class="wrapper-sm text-lg font-bold" ng-if="!cell.postView.mediumId">
+                <div class="wrapper-sm text-lg font-bold" ng-if="!cell.postView.imageMediumId">
                   {{::cell.postView.title | characters:50}}
                 </div>
-                <div class="wrapper-sm clamped" ng-if="!cell.postView.mediumId">
+                <div class="wrapper-sm clamped" ng-if="!cell.postView.imageMediumId">
                   {{::cell.postView.snippet}}
                 </div>
 
-                <div class="pos-abt bottom-0 wrapper-sm" ng-if="!cell.postView.mediumId">
+                <div class="pos-abt bottom-0 wrapper-sm" ng-if="!cell.postView.imageMediumId">
                   <div class="display-t-c">
                     <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" title="Ir para o perfil de {{::cell.postView.authorName}}">
                       <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
@@ -357,7 +395,7 @@
                     </span>
                   </div>
                 </div>
-                <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r" ng-if="!cell.postView.mediumId">
+                <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r" ng-if="!cell.postView.imageMediumId">
                   <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
                     <a href class="text-center text-lg v-middle">
                       <i class="mdi text-custom-primary link" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
@@ -370,7 +408,7 @@
                   </span>
                 </div>
 
-                <div class="cell-wrap img-bg" ng-if="cell.postView.mediumId" ng-style="getBackgroundImage(cell.postView, 'md')">
+                <div class="cell-wrap img-bg" ng-if="cell.postView.imageMediumId" ng-style="getBackgroundImage(cell.postView, 'md')">
                 </div>
               </div>
             </li>
@@ -391,16 +429,16 @@
       <!-- posts -->
       <ul class="b-none no-padding m-b-none ls-style-none">
         <li ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
-         <div ng-class="{'b-t': !$first}"></div>
+         <div ng-class="b-t"></div>
          <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
           <!-- image -->
-          <a class="block-image m-l m-t" ng-if="cell.postView.mediumId" >
+          <a class="block-image m-l m-t" ng-if="cell.postView.imageMediumId" >
             <div class="cell-wrap r r-2x bg-cover" ng-style="getBackgroundImage(cell.postView, 'md')">
             </div>
           </a>
           <!-- /image -->
           <!-- /content -->
-          <div class="m-t-sm" ng-class="{'content-block': cell.postView.mediumId}">
+          <div class="m-t-sm" ng-class="{'content-block': cell.postView.imageMediumId}">
             <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{::cell.postView.topper}}</span>
             <a  class="h3 font-bold m-b m-t-sm m-b m-t-sm block">
               {{::cell.postView.title}}
@@ -503,6 +541,4 @@
 
 <!-- header bar -->
 <div data-ng-include=" 'tpl/blocks/top_header.html' "></div>
-
-<div ui-view></div>
 <!-- /header bar-->

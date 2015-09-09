@@ -41,12 +41,12 @@ angular.module('app')
 
 .filter('pvimageLink', function pvimageLink(TRIX) {
 	return function(postView, size) {
-		if(postView && postView.largeId && size == "lg"){
-			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.largeId +"/contents)", "background-position": "50% 20%"};
-		}else if(postView && postView.mediumId && size == "md"){
-			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.mediumId +"/contents)", "background-position": "50% 20%"};
-		}else if(postView && postView.smallId && size == "sm"){
-			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.smallId +"/contents)", "background-position": "50% 20%"};
+		if(postView && postView.imageLargeId && size == "lg"){
+			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.imageLargeId +"/contents)", "background-position": "50% 20%"};
+		}else if(postView && postView.imageMediumId && size == "md"){
+			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.imageMediumId +"/contents)", "background-position": "50% 20%"};
+		}else if(postView && postView.imageSmallId && size == "sm"){
+			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.imageSmallId +"/contents)", "background-position": "50% 20%"};
 		}else{
 			//return {"background-image": "url(img/p0.jpg)"};
 			return {};
