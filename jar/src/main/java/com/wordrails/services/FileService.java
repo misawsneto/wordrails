@@ -4,17 +4,13 @@ import com.wordrails.business.BadRequestException;
 import com.wordrails.util.WordrailsUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.*;
 
 @Component
 public class FileService {
@@ -27,8 +23,8 @@ public class FileService {
 	}
 
 	public String newFile(InputStream input, String domain, String mime) throws FileUploadException, IOException {
-		long byteSize = ((FileInputStream) input).getChannel().size();
-
+//		long byteSize = ((FileInputStream) input).getChannel().size();
+		long byteSize = IOUtils.toByteArray(input).length;
 		return newFile(input, domain, mime, byteSize);
 	}
 
