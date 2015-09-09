@@ -174,9 +174,9 @@ public class FilesResource {
 	@Path("{id}/contents")
 	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
 		Network network = wordrailsService.getNetworkFromHost(request);
-		TrixFile trixFile = fileRepository.findOne(id);
-		if(trixFile != null && trixFile.hash != null)
-			response.sendRedirect(amazonCloudService.getURL(network.domain, trixFile.hash));
+		String hash = fileRepository.findHashById(id);
+		if(hash != null)
+			response.sendRedirect(amazonCloudService.getURL(network.domain, hash));
 		return Response.ok().build();
 	}
 }

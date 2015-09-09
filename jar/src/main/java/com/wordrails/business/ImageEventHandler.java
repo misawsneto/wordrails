@@ -74,7 +74,7 @@ public class ImageEventHandler {
 				largeHash = mediumHash;
 				large = medium;
 			} else {
-				largeHash = fileService.newResizedImage(bufferedImage, network.domain, 300, "medium", mime);
+				largeHash = fileService.newResizedImage(bufferedImage, network.domain, 1024, "large", mime);
 				large = new TrixFile(largeHash);
 				fileRepository.save(large);
 			}

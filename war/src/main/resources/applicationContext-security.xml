@@ -33,7 +33,7 @@
 		<security:intercept-url pattern="/api/persons/init" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/api/persons/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 		<security:intercept-url pattern="/api/persons/tokenSignin" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-		<security:intercept-url pattern="/api/files/*/contents" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+		<!--<security:intercept-url pattern="/api/files/*/contents" access="IS_AUTHENTICATED_ANONYMOUSLY"/>-->
 		<!--  <security:intercept-url pattern="/new" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 			<security:intercept-url pattern="/new/index.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER"/> -->
 		<security:intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY"/>

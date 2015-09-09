@@ -1,38 +1,15 @@
 package com.wordrails;
 
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.wordrails.api.*;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
-import com.wordrails.services.FileService;
-import net.coobird.thumbnailator.Thumbnails;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.tika.Tika;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.engine.jdbc.LobCreator;
+import com.wordrails.services.CacheService;
+import com.wordrails.services.WordpressParsedContent;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,21 +20,20 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.wordrails.api.Link;
-import com.wordrails.api.PersonData;
-import com.wordrails.api.PerspectiveResource;
-import com.wordrails.api.StationDto;
-import com.wordrails.api.StationPermission;
-import com.wordrails.api.StationsPermissions;
-import com.wordrails.api.TermPerspectiveView;
-import com.wordrails.converter.PostConverter;
-import com.wordrails.services.CacheService;
-import com.wordrails.services.WordpressParsedContent;
-import com.wordrails.util.WordrailsUtil;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 @Component
 public class WordrailsService {
@@ -115,14 +91,15 @@ public class WordrailsService {
 	public Network getNetworkFromHost(ServletRequest srq){
 		Network network = authProvider.getNetwork();
 
-		if(network != null) return network;
+		if(network != null)
+			return network;
 
 		String host = ((HttpServletRequest) srq).getHeader("Host");
 
-		List<Network> networks = new ArrayList<Network>();
-
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			networks = networkRepository.findAll();
+			List<Network> networks = networkRepository.findAll();
+			if(networks != null)
+				return networks.get(0);
 		}else{
 			String[] names = host.split("\\.");
 			String topDomain = names[names.length - 2] + "." + names[names.length - 1];
@@ -133,27 +110,16 @@ public class WordrailsService {
 				} catch (Exception e) {
 					// no network found in cache or db.
 				}
-				if(network != null)
-					networks.add(network); 
+				if (network != null)
+					return network;
 			}
 		}
 
-		if(networks == null)
-			networks = new ArrayList<>();
-
-		if (networks.size() == 0){
-			try {
-				network = cacheService.getNetworkByDomain(host);
-			} catch (Exception e) {
-				// no network found in cache or db.
-			}
-			if(network != null)
-				return network;
-				//networks.add(network);
+		try {
+			return cacheService.getNetworkByDomain(host);
+		} catch (Exception e) {
+			return null;
 		}
-
-		network = networks.size() > 0 ? networks.get(0) : null;
-		return network;
 	}
 
 	@Async
