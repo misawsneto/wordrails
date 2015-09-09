@@ -180,8 +180,12 @@ public class FilesResource {
 		}
 
 		String hash = fileRepository.findHashById(id);
-		if(hash != null)
-			response.sendRedirect(amazonCloudService.getURL(network.domain, hash));
+		if(hash == null)
+			return Response.status(Status.BAD_REQUEST).entity("file doesnt exist").build();
+		if(hash.isEmpty())
+			return Response.status(Status.BAD_REQUEST).entity("file wasnt uploaded properly").build();
+
+		response.sendRedirect(amazonCloudService.getURL(network.domain, hash));
 		return Response.ok().build();
 	}
 }
