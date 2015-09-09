@@ -4625,8 +4625,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 
 #top-menu a.active{
-  padding-bottom: 17px;
-  border-bottom: 2px solid;
+  padding-bottom: 16px;
+  border-bottom: 4px solid;
 }
 
 @media (max-width: 1200px) {
