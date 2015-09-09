@@ -174,6 +174,11 @@ public class FilesResource {
 	@Path("{id}/contents")
 	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
 		Network network = wordrailsService.getNetworkFromHost(request);
+
+		if(network == null) {
+			return Response.serverError().entity("network of the request is null").build();
+		}
+
 		String hash = fileRepository.findHashById(id);
 		if(hash != null)
 			response.sendRedirect(amazonCloudService.getURL(network.domain, hash));

@@ -141,6 +141,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindHashByIdAuthorized(Integer id) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetImagesAuthorized() {
 		return false;
 	}
