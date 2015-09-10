@@ -34,11 +34,11 @@ public class StationEventHandler {
 	@Autowired TaxonomyRepository taxonomyRepository;
 	@Autowired NotificationRepository notificationRepository;
 	@Autowired PostReadRepository postReadRepository;
-	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	@Autowired private TrixAuthenticationProvider authProvider;
 	@Autowired CacheService cacheService;
 	@Autowired QueryPersistence queryPersistence;
 	@Autowired TermRepository termRepository;
+	@Autowired TermPerspectiveRepository termPerspectiveRepository;
 	
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -118,7 +118,19 @@ public class StationEventHandler {
 		role.admin = true;
 		role.editor = true;
 		personStationRolesRepository.save(role);
-		station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
+
+		StationPerspective stationPerspective = new ArrayList<StationPerspective>(station.stationPerspectives).get(0);
+
+		TermPerspective tp = new TermPerspective();
+		tp.term = null;
+		tp.perspective = stationPerspective;
+		tp.stationId = station.id;
+		stationPerspective.perspectives.add(tp);
+
+		termPerspectiveRepository.save(tp);
+		stationPerspectiveRepository.save(stationPerspective);
+
+		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
 	}
 	

@@ -134,7 +134,7 @@
 				</div>
 			</div>
 			<div class="text-right wrapper-xs w-full m-t">
-				<button ng-click="showAddFeaturedPost($event)"
+				<button ng-click="showConfigCategory($event)"
 					md-ink-ripple="" class="md-btn-sm md-btn md-raised btn-fw bg-white">Categorias</button>
 			</div>
 		</div>
@@ -197,7 +197,7 @@
 			</div>
 		</div>
 		<div class="text-center wrapper-xs w-full b-t m-t-sm">
-			<a href="" class="text-md" ng-click="showAddFeaturedPost($event);pe.clickOutside();">
+			<a href="" class="text-md" ng-click="showAddFeaturedPost();pe.clickOutside();">
 				<span class=" font-thin">adicionar</span>
 				<i class="mdi mdi-plus-circle-outline v-middle"></i>
 			</a>
@@ -252,7 +252,21 @@
 	</md-dialog>
 </script>
 
-
+<script type="text/ng-template" id="config_category.html">
+	<md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
+  	<md-content>
+  		<div class="wrapper">
+  			<form ng-submit="pe.submitSearch()">
+  			</form>
+				<div class="wrapper-xxs perspective-editor-search-results m-t-sm" >
+				</div>
+				<div class="pos-abt bottom-0 right-0 wrapper-sm">
+					<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+				<div>
+			</div>
+	  </md-content>
+	</md-dialog>
+</script>
 
 </div>
 </div>

@@ -59,6 +59,21 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
 
       $scope.cellType = 'FEATURED_POST';
     }
+
+    $scope.showConfigCategory = function(ev){
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'config_category.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
+
   // scope variable used in the perspective editor dialog
     $scope.pe = {
       'thisStation': $scope.thisStation,
@@ -88,6 +103,8 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
     }
 
     $scope.cellType = null;
+    $scope.cellData = {rowIndex: null, cellIndex: null};
+
 
     $scope.cellAddValidation = function(postView){
       if(!$scope.termPerspectiveView.featuredRow || !$scope.termPerspectiveView.featuredRow.cells){
