@@ -126,7 +126,7 @@
 					<!-- <ul class="no-style" ui-jq="sortable" id="sortable"> -->
 					<ul class="no-style" ui-sortable ng-model="termPerspectiveView.ordinaryRows">
 						<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="sortable-term sortable-elem text-white wrapper-xxs">
-							<div ng-click="removeCategory"
+							<div ng-click="removeCategory(row.termId)"
 							class="text-danger pull-right mdi mdi-close i-16 wrapper-xxs"></div>
 							<div class="term-name">{{row.termName}}</div>
 						</li>

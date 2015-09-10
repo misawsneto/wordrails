@@ -127,7 +127,6 @@ public class StationEventHandler {
 		tp.stationId = station.id;
 		stationPerspective.perspectives.add(tp);
 
-		termPerspectiveRepository.save(tp);
 		stationPerspectiveRepository.save(stationPerspective);
 
 		station.defaultPerspectiveId = stationPerspective.id;

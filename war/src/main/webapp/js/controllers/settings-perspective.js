@@ -158,6 +158,21 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       // check if user has permisstion to write
     };
 
+    $scope.removeCategory = function(termId){
+      var perspective = $scope.termPerspectiveView
+      if(perspective.ordinaryRows){
+        var rows = perspective.ordinaryRows
+        for (var i = rows.length - 1; i >= 0; i--) {
+          if(rows[i].termId == termId)
+            rows.splice(i, 1)
+        };
+      }
+
+      perspective.ordinaryRows && perspective.ordinaryRows.forEach(function(row, index){
+        row.index = index;
+      });
+    }
+
 //  -------------- end of perspective editor dialog controller
 
     // submit search
@@ -208,6 +223,9 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       })
       .error(function(){
         $scope.searchLoading = false;
+        $timeout(function() {
+          cfpLoadingBar.complete(); 
+        }, 100);
       })
 
     }
@@ -298,7 +316,9 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
         $scope.app.showSuccessToast('Perspectiva atualizada.')
       })
       .error(function(){
-
+        $timeout(function() {
+          cfpLoadingBar.complete(); 
+        }, 100);
       });
   }
 
@@ -309,7 +329,9 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
         $scope.termPerspectiveView = termPerspective;
       });
     }).error(function(){
-
+      $timeout(function() {
+          cfpLoadingBar.complete(); 
+        }, 100);
     })
   }
 
