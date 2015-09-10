@@ -177,6 +177,8 @@ public class FilesResource {
 
 		if(network == null) {
 			return Response.serverError().entity("network of the request is null").build();
+		} else if(network.domain == null) {
+			return Response.serverError().entity("subdomain of network is null").build();
 		}
 
 		String hash = fileRepository.findHashById(id);
