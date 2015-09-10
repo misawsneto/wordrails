@@ -239,7 +239,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 					.normalize(originalUsername, Normalizer.Form.NFD)
 					.replaceAll("[^\\p{ASCII}]", "");
 			while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
-				username = originalUsername + i++;
+				username = username + i++;
 			}
 
 			person = new Person();
