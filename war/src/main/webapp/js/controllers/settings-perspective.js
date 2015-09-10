@@ -15,7 +15,7 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       }
     });
 
-    trix.findPerspectiveView($state.params.perspectiveId, null, null, 0, 10).success(function(termPerspective){
+    trix.findPerspectiveView($state.params.perspectiveId, null, null, 0, 50).success(function(termPerspective){
       $scope.termPerspectiveView = termPerspective;
       $timeout(function() {
         $('.mockup-section').slimScroll({
