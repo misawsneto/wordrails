@@ -133,6 +133,11 @@ var trix = angular.module('trix', [])
     	return \$http.put(_config.url + "/api/perspectives/termPerspectiveDefinitions/" + termView.id , termView, config)
 	}
 
+	this.postTermView = function (termView) {
+		var config = {"headers": {"Content-Type": "application/json"}}
+		return \$http.post(_config.url + "/api/perspectives/termPerspectiveDefinitions/" + termView.id , termView, config)
+	}
+
     this.countPersonsByNetwork = function(networkId){
     	var config = {
 			"params": {
