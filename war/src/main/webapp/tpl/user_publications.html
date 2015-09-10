@@ -17,6 +17,24 @@
 			<i class="mdi mdi-plus"></i>
 		</md-button>
 		<div class="w-full panel panel-card animated zoomIn" infinite-scroll="paginate()" infinite-scroll-distance="1">
+			<div class="wrapper form-group">
+				<div class="display-t-c col-sm-5 pull-in m-r">
+					<div class="input-group">
+						<input ng-model="pe.searchQuery" class="input-lg form-control" placeholder="Busque por notícias" />
+						<span class="input-group-btn">
+							<button class="btn btn-default btn-lg i-24" type="submit" style="padding: 6px 12px">
+								<i class="mdi mdi-magnify"></i>
+							</button>
+						</span>
+					</div>
+				</div>
+		            <input ui-jq="daterangepicker" class="input-lg w-md form-control" ui-options="{
+		                format: 'YYYY-MM-DD',
+		                startDate: '2013-01-01',
+		                endDate: '2013-12-31'
+		              }" class="form-control w-md" />
+			</div>
+
 			<div class="nav-tabs-alt box-shadow" ng-show="app.publicationsCtrl.publications" >
 				<ul class="nav nav-tabs text-lg" role="tablist">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
@@ -49,14 +67,14 @@
 
 			<!-- posts -->
 			<ul class="b-none no-padding m-b-none ls-style-none">
-				<li ng-repeat="publication in app.publicationsCtrl.publications" class="p-l p-r animated fadeIn">
+				<li ng-repeat="publication in app.publicationsCtrl.publications" class="p-l p-r">
 					<div ng-class="{'b-t': !$first}"></div>
 					<div class="clear p-t-sm p post-list news-item">
 						<!-- image -->
 						<a class="block-image m-l m-t" ng-if="publication.mediumId" >
-              <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'md')">
-              </div>
-            </a>
+							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'md')">
+							</div>
+						</a>
 						<!-- /image -->
 						<!-- /content -->
 						<div ng-class="{'content-block': publication.mediumId}">
@@ -73,23 +91,23 @@
 								<span class="readingTime text-muted p-l text-md">
 									<i class="mdi mdi-comment-text-outline"></i> 
 									{{publication.commentsCount}}</span>
-								<span class="readingTime text-muted p-l text-md">
-									<i class="mdi mdi-heart"></i> 
-									{{publication.recommendsCount}}</span>
-								<div class="inline text-muted p-l text-u-c">
-									<a ui-sref="app.post({'id': publication.postId})" class="text-muted p-r underline-hover">editar</a>
-									<a class="text-muted underline-hover" ng-click="app.openDeletePost(publication.postId, $vent, true);">remover</a>
+									<span class="readingTime text-muted p-l text-md">
+										<i class="mdi mdi-heart"></i> 
+										{{publication.recommendsCount}}</span>
+										<div class="inline text-muted p-l text-u-c">
+											<a ui-sref="app.post({'id': publication.postId})" class="text-muted p-r underline-hover">editar</a>
+											<a class="text-muted underline-hover" ng-click="app.openDeletePost(publication.postId, $vent, true);">remover</a>
+										</div>
+									</div>
 								</div>
-							</div>
-						</div>
-						<!-- /content -->
-					</div>    
-				</li>
-			</ul>
+								<!-- /content -->
+							</div>    
+						</li>
+					</ul>
+				</div>
+				<!-- /posts -->
+			</div>
 		</div>
-		<!-- /posts -->
 	</div>
-</div>
-</div>
 
-<div ui-view></div>
+	<div ui-view></div>

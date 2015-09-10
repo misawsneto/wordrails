@@ -43,7 +43,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['js/controllers/stations.js?' + GLOBAL_URL_HASH]);
+                          return $ocLazyLoad.load(['angular-carousel', 'slick', 'js/controllers/stations.js?' + GLOBAL_URL_HASH]);
                       }]
                   },
                   controller: 'StationsCtrl'
@@ -226,7 +226,7 @@ angular.module('app')
                       function( $ocLazyLoad ){
                         return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/interact.min.js'])
                         .then(function(){
-                            return $ocLazyLoad.load(['ui.slimscroll', 'ui.sortable','color-selector', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH])
+                            return $ocLazyLoad.load(['angular-carousel','ui.slimscroll', 'ui.sortable','color-selector', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH])
                           });
                     }]
                   }
@@ -421,7 +421,18 @@ angular.module('app')
                   },
                   controller:'ReadCtrl'
               })
-              .state('app.stations.read', {
+              .state('app.read', {
+                url: '/:slug',
+                controller: 'ReadCtrl',
+                templateUrl: 'tpl/read.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/read.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  },
+              })
+              /*.state('app.stations.read', {
                 url: ':slug',
                 controller: 'ReadCtrl',
                 template: '',
@@ -431,7 +442,7 @@ angular.module('app')
                         return $ocLazyLoad.load(['js/controllers/read.js?' + GLOBAL_URL_HASH]);
                     }]
                   },
-              })
+              })*/
               .state('app.dashboard-v1', {
                   url: '/dashboard-v1',
                   templateUrl: 'tpl/app_dashboard_v1.html',

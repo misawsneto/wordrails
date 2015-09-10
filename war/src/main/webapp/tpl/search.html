@@ -26,7 +26,7 @@
       <ul class="b-none no-padding m-b-none ls-style-none">
         <li ng-repeat="result in app.searchCtrl.searchResults" ng-class="{'post-read': app.postRead(result.postId)}">
          <div ng-class="{'b-t': !$first}"></div>
-          <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(result,app.searchCtrl.searchResults, null, 'app.search')">
+          <div class="clear p-t-sm padder-v padder-md post-list news-item">
             <!-- image -->
             <a class="block-image m-l m-t" ng-if="result.mediumId" >
               <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(result, 'md')">
@@ -36,10 +36,12 @@
             <!-- /content -->
             <div class="m-t-sm" ng-class="{'content-block': result.mediumId}">
               <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="result.topper">{{result.topper}}</span>
-              <a  class="h3 font-bold m-b m-t-sm block">
+              <a  class="h3 font-bold m-b m-t-sm block" ui-sref="app.read({'slug': result.slug})">
                 {{result.title}}
               </a>
-              <div class="text-lg font-thin" bind-html-unsafe="result.snippet"></div>
+              <a ui-sref="app.read({'slug': result.slug})">
+                <div class="text-lg font-thin" bind-html-unsafe="result.snippet"></div>
+              </a>
               <div class="m-t">
                 <div class="display-t-c">
                   <a >
@@ -67,8 +69,4 @@
     </div>
   </div>
 
-
-
 </div>
-
-<div ui-view></div>

@@ -522,7 +522,7 @@ public class WordrailsService {
 		List<Integer> ids = new ArrayList<Integer>();
 		if(permissions.stationPermissionDtos != null)
 			for (StationPermission sp : permissions.stationPermissionDtos) {
-				if(sp.visibility.equals(Station.UNRESTRICTED) || sp.writer)
+				//if(sp.visibility.equals(Station.UNRESTRICTED) || sp.writer)
 					ids.add(sp.stationId);
 			}
 		return ids;
