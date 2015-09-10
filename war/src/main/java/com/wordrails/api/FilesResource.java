@@ -177,7 +177,7 @@ public class FilesResource {
 
 		if(network == null) {
 			return Response.serverError().entity("network of the request is null").build();
-		} else if(network.domain == null) {
+		} else if(network.subdomain == null) {
 			return Response.serverError().entity("subdomain of network is null").build();
 		}
 
@@ -187,7 +187,7 @@ public class FilesResource {
 		if(hash.isEmpty())
 			return Response.status(Status.BAD_REQUEST).entity("file wasnt uploaded properly").build();
 
-		response.sendRedirect(amazonCloudService.getURL(network.domain, hash));
+		response.sendRedirect(amazonCloudService.getURL(network.subdomain, hash));
 		return Response.ok().build();
 	}
 }
