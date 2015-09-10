@@ -304,7 +304,10 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
 
   var createTermPerspective = function(perspective){
     trix.postTermView(perspective).success(function(){
-      $scope.app.showSuccessToast('Perspectiva atualizada.')
+      trix.findPerspectiveView($state.params.perspectiveId, null, null, 0, 50).success(function(termPerspective){
+        $scope.app.showSuccessToast('Perspectiva atualizada.')
+        $scope.termPerspectiveView = termPerspective;
+      });
     }).error(function(){
 
     })

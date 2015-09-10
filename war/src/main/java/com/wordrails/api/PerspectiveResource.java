@@ -135,7 +135,7 @@ public class PerspectiveResource {
 			}
 			rowRepository.save(rows);
 
-			response = Response.status(Status.CREATED).build();
+			response = Response.status(Status.CREATED).entity("{\"id\": " + termPerspective.id +"}").build();
 		}
 		return response;
 	}
