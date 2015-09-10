@@ -83,7 +83,6 @@ import java.util.Set;
 				charFilters = {@CharFilterDef(factory = HTMLStripCharFilterFactory.class)})
 })
 @Spatial
-//@Table(uniqueConstraints=@UniqueConstraint(columnNames={"slug", "state"}))
 public class Post {
 
 	public static final String STATE_DRAFT = "DRAFT";

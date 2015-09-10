@@ -18,7 +18,7 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
     trix.findPerspectiveView($state.params.perspectiveId, null, null, 0, 10).success(function(termPerspective){
       $scope.termPerspectiveView = termPerspective;
       $timeout(function() {
-        $('.mockup-section.bg-perspective').slimScroll({
+        $('.mockup-section').slimScroll({
          height:'476',
          size:'8px',
          'railVisible': true
@@ -40,6 +40,8 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
     $scope.log = function(data){
       console.log(data);
     }
+
+    $scope.show
 
     $scope.showAddFeaturedPost = function(ev){
     // show term alert
@@ -256,12 +258,26 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
         });
       }
 
-      if(!$scope.termPerspectiveView.id){
-        createTermPerspective()
+      var perspective = angular.copy($scope.termPerspectiveView);
+
+      perspective.ordinaryRows && perspective.ordinaryRows.forEach(function(row, index){
+        row.index = index;
+        for (var i = row.cells.length - 1; i >= 0; i--) {
+          /*test*/
+          // if(i == 0)
+          //   row.cells[0].new = true;
+          /*/test*/
+          if(!(row.cells[i].id || row.cells[i].new))
+            row.cells.splice(i, 1)
+        };
+      });
+
+      if(!perspective.id){
+        createTermPerspective(perspective)
         return;
       }
 
-      trix.putTermView($scope.termPerspectiveView).success(function(){
+      trix.putTermView(perspective).success(function(){
         $scope.app.showSuccessToast('Perspectiva atualizada.')
       })
       .error(function(){
@@ -269,8 +285,12 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       });
   }
 
-  var createTermPerspective = function(){
+  var createTermPerspective = function(perspective){
+    trix.postTermView(perspective).success(function(){
+      $scope.app.showSuccessToast('Perspectiva atualizada.')
+    }).error(function(){
 
+    })
   }
 
 

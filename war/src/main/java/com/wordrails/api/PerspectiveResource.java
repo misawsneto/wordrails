@@ -76,7 +76,7 @@ public class PerspectiveResource {
 
 		TermPerspective termPerspective = termPerspectiveRepository.findOne(id);
 		if(termPerspective != null){
-//			updateTerm(termPerspective, definition.termId);
+			updateTerm(termPerspective, definition.termId);
 			updateRow(definition.splashedRow, termPerspective, Row.SPLASHED_ROW);
 			updateRow(definition.featuredRow, termPerspective, Row.FEATURED_ROW);
 			//updateRow(definition.homeRows, termPerspective, Row.HOME_ROW);
@@ -240,7 +240,7 @@ public class PerspectiveResource {
 	}
 
 	private void updateTerm(TermPerspective termPerspective, Integer termId){
-		if(termPerspective.term.id != termId){
+		if(termPerspective.term != null && termPerspective.term.id != termId){
 			termPerspective.term = termRepository.findOne(termId);
 		}
 		termPerspectiveRepository.save(termPerspective);
