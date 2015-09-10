@@ -120,14 +120,17 @@ public class StationEventHandler {
 		personStationRolesRepository.save(role);
 
 		StationPerspective stationPerspective = new ArrayList<StationPerspective>(station.stationPerspectives).get(0);
-
-		TermPerspective tp = new TermPerspective();
-		tp.term = null;
-		tp.perspective = stationPerspective;
-		tp.stationId = station.id;
-		stationPerspective.perspectives.add(tp);
-
-		stationPerspectiveRepository.save(stationPerspective);
+//
+//		TermPerspective tp = new TermPerspective();
+//		tp.term = null;
+//		tp.perspective = stationPerspective;
+//		tp.stationId = station.id;
+//
+//		stationPerspective = stationPerspectiveRepository.findOne(stationPerspective.id);
+//		stationPerspective.perspectives.add(tp);
+//
+//		termPerspectiveRepository.save(tp);
+//		stationPerspectiveRepository.save(stationPerspective);
 
 		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
