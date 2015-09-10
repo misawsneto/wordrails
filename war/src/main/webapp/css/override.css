@@ -4978,7 +4978,10 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 
 #perspective-editor-terms .sortable-term {
-  width: 100px;
+  width: 200px;
+}
+#perspective-editor-terms .sortable-term .term-name{
+  width: 170px;
   text-align: left;
   text-overflow: ellipsis;
   overflow: hidden;

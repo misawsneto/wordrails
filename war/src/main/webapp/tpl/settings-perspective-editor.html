@@ -54,10 +54,15 @@
 									<ul class="sly-clearfix info-flow-list" data-term-id="{{::ordinaryRow.termId}}">
 										<li class="cell" style="width:130px" ng-repeat="cell in ordinaryRow.cells">
 							
-											<div class="" include=" 'tpl/stations_horizontal_cells.html' "></div>
 											<div style="height:130px" class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.imageMediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+
+												<div class="pos-abt right-0 z-i-4 text-white" ng-class="{'p-r-xxl m-r-xxl': !isMobile}">
+													<a ng-click="app.stopPropagation($event)" popover-class="carousel-popover" popover-placement="bottom" popover-class class="text-shadow-dark perspective-editor-options-button" popover="" popover-template=" 'carousel-template.html' " type="button" popover-append-to-body="true">
+														<i class="i-20 mdi-dots-vertical mdi"></i>
+													</a>
+												</div>
 							
-												<div class="wrapper-xs text-sm font-thin pos-abt top-0 text-shadow-dark text-white" style="z-index:3;">
+												<div class="wrapper-xs text-sm font-thin pos-abt bottom-0 text-shadow-dark text-white" style="z-index:3;">
 													{{::cell.postView.title | characters:60}}
 												</div>
 							
@@ -121,7 +126,9 @@
 					<!-- <ul class="no-style" ui-jq="sortable" id="sortable"> -->
 					<ul class="no-style" ui-sortable ng-model="termPerspectiveView.ordinaryRows">
 						<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="sortable-term sortable-elem text-white wrapper-xxs">
-							{{row.termName}}
+							<div ng-click="removeCategory"
+							class="text-danger pull-right mdi mdi-close i-16 wrapper-xxs"></div>
+							<div class="term-name">{{row.termName}}</div>
 						</li>
 					</ul>
 				</div>
