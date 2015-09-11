@@ -7611,11 +7611,11 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
     bottom: 16px;
   }
 
-  #perspective-vertical .content-block{
+  .content-block{
     margin-right: 0;
   }
 
-  #perspective-vertical a.block-image{
+  a.block-image{
     margin-bottom: 10px;
   }
 }
@@ -7630,4 +7630,9 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
       display: inline-block;
   }
 }
+
+.block-image .cell-wrap{
+  background-size: cover;
+}
+
   /* read */
