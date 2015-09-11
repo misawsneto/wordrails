@@ -81,7 +81,7 @@
 							<div class="m-b-sm" ng-if="publication.topper">
 								<span class="no-radius normal p-xxs topper text-md bg-custom-primary">{{publication.topper}}</span>
 							</div>
-							<a  class="h3 font-bold m-b block" ng-click="app.setNowReading(publication, app.publicationsCtrl.publications, null, 'app.publications')">
+							<a  class="h3 font-bold m-b block" ui-sref="app.read({'slug': publication.slug})">
 								{{publication.title}}
 							</a>
 							<div class="text-lg font-thin" ng-bind-html="publication.snippet | characters: 100 | stripHtml">

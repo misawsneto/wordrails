@@ -7608,7 +7608,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   #perspective-vertical .use-actions{
     position: absolute;
     right: 0;
-    bottom: 16px;
+    margin-top: -30px;
   }
 
   .content-block{
