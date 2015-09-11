@@ -2,6 +2,9 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	function($scope, $log, $timeout, $rootScope, $state, trix, $mdToast) {
 	var slug = $state.params.slug;
 
+	var invitation = $state.params.invitation;
+	var redirect = $state.params.redirect
+
 	if(slug){
 		trix.findBySlug(slug, 'postProjection').success(function(response){
 			if(response){
