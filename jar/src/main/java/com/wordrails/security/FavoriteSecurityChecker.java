@@ -32,7 +32,7 @@ public class FavoriteSecurityChecker {
 		Post post = bookmark.post;
 
 		Person personLogged = authProvider.getLoggedPerson();
-		if(personLogged != null && personLogged.id == bookmark.person.id){
+		if(personLogged != null && personLogged.id.equals(bookmark.person.id)){
 			Station station = post.station;
 			if(station.visibility.equals(Station.UNRESTRICTED) && station.writable){
 				canWrite = true;

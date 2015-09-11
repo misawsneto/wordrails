@@ -29,12 +29,13 @@ public class RowsComparator {
 
 					for(int i = 0; i < newRows.size(); i++){
 						newRow = newRows.get(i);
-						if(newRow.id != null && newRow.id == oldRow.id){
+						if(newRow.id != null && newRow.id.equals(oldRow.id)){
 							contains = true;
 							RowDifference rowDifference = rowComparator.getDifference(newRow.cells, oldRow.cells);
 							boolean cellsDifference = (rowDifference.cellsToSave != null && rowDifference.cellsToSave.size() > 0 ? true : false); 
-							
-							if(!newRow.equals(oldRow) ||  cellsDifference){
+							boolean rowsEquals = !newRow.equals(oldRow);
+
+							if(rowsEquals ||  cellsDifference){
 								difference.rowsToUpdate.add(newRow);
 							}
 							break;
