@@ -7536,7 +7536,6 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 
 @media only screen and (min-width: 200px)  and (max-width: 767px)  {
-
   .top-notify {
     display: none;
   }
@@ -7584,3 +7583,51 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   .top-links {
     display: none;
   }
+}
+
+  .show-xs{
+    display: none;
+  }
+
+  /* general-mobile */
+@media (max-width: 767px) {
+    .hide-xs{
+      display: none;
+    }
+    .show-xs{
+      display: block;
+    }
+}
+  /* /general-mobile */
+
+  /* stations-mobile */
+@media (max-width: 767px) {
+  .block-image{
+    width: 100%
+  }
+  #perspective-vertical .use-actions{
+    position: absolute;
+    right: 0;
+    bottom: 16px;
+  }
+
+  #perspective-vertical .content-block{
+    margin-right: 0;
+  }
+
+  #perspective-vertical a.block-image{
+    margin-bottom: 10px;
+  }
+}
+  /* /stations-mobile */
+
+/* read */
+@media (max-width: 767px) {
+  ul.read-actions li a {
+    padding: 10px;
+  }
+  ul.read-actions li {
+      display: inline-block;
+  }
+}
+  /* read */

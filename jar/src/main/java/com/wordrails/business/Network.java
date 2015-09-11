@@ -136,6 +136,12 @@ public class Network implements Serializable{
 		return Objects.hash(id, name);
 	}
 
+	@Lob
+	public String playStoreAddress;
+
+	@Lob
+	public String appleStoreAddress;
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null) {
