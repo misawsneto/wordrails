@@ -52,7 +52,10 @@ public class FilesResource {
 	@Path("{id}/contents")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response putFileContents(@PathParam("id") Integer id, @Context HttpServletRequest request) throws FileUploadException, IOException {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		String subdomain = getSubdomain(request.getHeader("Host"));
+		if(subdomain == null || subdomain.isEmpty()){
+			return Response.serverError().entity("subdomain of network is null").build();
+		}
 		TrixFile trixFile = fileRepository.findOne(id);
 
 		if (trixFile == null) {
@@ -61,7 +64,7 @@ public class FilesResource {
 
 		try {
 			FileItem item = getFileFromRequest(request);
-			trixFile.hash = sendFile(network.domain, item);
+			trixFile.hash = sendFile(subdomain, item);
 
 			fileRepository.save(trixFile);
 
