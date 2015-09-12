@@ -52,7 +52,7 @@ public class ImageEventHandler {
 		String originalHash = originalFile.hash;
 		if (originalHash != null) {
 			Network network = authProvider.getNetwork();
-			String url = amazonCloudService.getPublicImageURL(network.domain, originalHash);
+			String url = amazonCloudService.getPublicImageURL(network.subdomain, originalHash);
 			InputStream input = WordrailsUtil.getStreamFromUrl(url);
 
 			String mime = new Tika().detect(input);
@@ -62,7 +62,7 @@ public class ImageEventHandler {
 
 			int maxSize = Math.max(bufferedImage.getHeight(), bufferedImage.getWidth());
 
-			String smallHash = fileService.newResizedImage(bufferedImage, network.domain, 150, "small", mime);
+			String smallHash = fileService.newResizedImage(bufferedImage, network.subdomain, 150, "small", mime);
 			TrixFile small = new TrixFile(smallHash);
 			fileRepository.save(small);
 
@@ -72,7 +72,7 @@ public class ImageEventHandler {
 				mediumHash = originalHash;
 				medium = image.original;
 			} else {
-				mediumHash = fileService.newResizedImage(bufferedImage, network.domain, 300, "medium", mime);
+				mediumHash = fileService.newResizedImage(bufferedImage, network.subdomain, 300, "medium", mime);
 				medium = new TrixFile(mediumHash);
 				fileRepository.save(medium);
 			}
@@ -90,7 +90,7 @@ public class ImageEventHandler {
 					largeSize = 1600;
 				}
 
-				largeHash = fileService.newResizedImage(bufferedImage, network.domain, largeSize, "large", mime);
+				largeHash = fileService.newResizedImage(bufferedImage, network.subdomain, largeSize, "large", mime);
 				large = new TrixFile(largeHash);
 				fileRepository.save(large);
 			}
