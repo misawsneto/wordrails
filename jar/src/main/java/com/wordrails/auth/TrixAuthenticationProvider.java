@@ -1,14 +1,13 @@
 package com.wordrails.auth;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.wordrails.business.*;
-import com.wordrails.persistence.ImageRepository;
+import com.wordrails.business.Network;
+import com.wordrails.business.Person;
+import com.wordrails.business.User;
+import com.wordrails.business.UserConnection;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserConnectionRepository;
 import com.wordrails.persistence.UserRepository;
 import com.wordrails.services.CacheService;
-import com.wordrails.services.FileService;
-import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -21,16 +20,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.api.ImageType;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
-import org.springframework.social.support.URIBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -40,20 +32,15 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class TrixAuthenticationProvider implements AuthenticationProvider {
 
-	private static final String GRAPH_API_URL = "http://graph.facebook.com/";
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private CacheService cacheService;
-	@Autowired
-	private FileService fileService;
 	@Qualifier("userConnectionRepository")
 	@Autowired
 	private UserConnectionRepository userConnectionRepository;
-	@Autowired
-	private ImageRepository imageRepository;
 	@Autowired
 	private SocialAuthenticationService socialAuthenticationService;
 

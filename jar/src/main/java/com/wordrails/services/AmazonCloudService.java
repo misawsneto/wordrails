@@ -27,19 +27,20 @@ import java.util.regex.Pattern;
 @Service
 public class AmazonCloudService {
 
-	//IMAGE DIRECTORY PATTERN: {networkDomain}/images/{fileHash}
-
-	private static final String IMAGE_DIR = "/images/";
-	private static final String PUBLIC_BUCKET = "omega.io";
-	private static final String PRIVATE_BUCKET = "private";
-	private static final String CLOUDFRONT_URL = "d224pxtayz8rv6.cloudfront.net";
-
 	@Value("${amazon.accessKey}")
 	String accessKey;
 	@Value("${amazon.accessSecretKey}")
 	String accessSecretKey;
 	@Value("${amazon.distributionKey}")
 	String distributionKey;
+	@Value("${amazon.privateCloudfrontUrl}")
+	String publicCloudfrontUrl;
+	@Value("${amazon.publicCloudfrontUrl}")
+	String privateCloudfrontUrl;
+	@Value("${amazon.publicBucket}")
+	String publicBucket;
+	@Value("${amazon.privateBucket}")
+	String privateBucket;
 
 	private byte[] getBytes(InputStream in) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -47,38 +48,42 @@ public class AmazonCloudService {
 		return baos.toByteArray();
 	}
 
-	public String getURL(String networkDomain, String fileName) throws IOException {
-		return "http://" + CLOUDFRONT_URL + "/" + networkDomain + IMAGE_DIR + fileName;
+	public String getPrivateImageURL(String networkDomain, String fileName) throws IOException {
+		return "http://" + privateCloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
+	}
+
+	public String getPublicImageURL(String networkDomain, String fileName) throws IOException {
+		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
 	}
 
 	public void uploadPublicImage(InputStream input, Long lenght, String networkDomain, String fileName) throws IOException, AmazonS3Exception {
-		uploadImage(input, lenght, networkDomain, PUBLIC_BUCKET, fileName);
+		uploadImage(input, lenght, networkDomain, publicBucket, fileName);
 	}
 
 	public void uploadPrivateImage(InputStream input, Long lenght, String networkDomain, String fileName) throws IOException, AmazonS3Exception {
-		uploadImage(input, lenght, networkDomain, PRIVATE_BUCKET, fileName);
+		uploadImage(input, lenght, networkDomain, privateBucket, fileName);
 	}
 
 	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
 		byte[] bytes = getBytes(input);
 		String hash = DigestUtils.md5Hex(new ByteArrayInputStream(bytes));
-		uploadImage(new ByteArrayInputStream(bytes), lenght, networkDomain, PUBLIC_BUCKET, hash, size, mime);
+		uploadImage(new ByteArrayInputStream(bytes), lenght, networkDomain, publicBucket, hash, size, mime);
 		return hash;
 	}
 
 	public String uploadPrivateImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
 		byte[] bytes = getBytes(input);
 		String hash = DigestUtils.md5Hex(new ByteArrayInputStream(bytes));
-		uploadImage(new ByteArrayInputStream(bytes), lenght, networkDomain, PRIVATE_BUCKET, hash, size, mime);
+		uploadImage(new ByteArrayInputStream(bytes), lenght, networkDomain, privateBucket, hash, size, mime);
 		return hash;
 	}
 
 	public void uploadPublicImage(InputStream input, Long lenght, String networkDomain, String fileName, String size, String mime) throws IOException, AmazonS3Exception {
-		uploadImage(input, lenght, networkDomain, PUBLIC_BUCKET, fileName, size, mime);
+		uploadImage(input, lenght, networkDomain, publicBucket, fileName, size, mime);
 	}
 
 	public void uploadPrivateImage(InputStream input, Long lenght, String networkDomain, String fileName, String size, String mime) throws IOException, AmazonS3Exception {
-		uploadImage(input, lenght, networkDomain, PRIVATE_BUCKET, fileName, size, mime);
+		uploadImage(input, lenght, networkDomain, privateBucket, fileName, size, mime);
 	}
 
 	private void uploadImage(InputStream input, Long lenght, String networkDomain, String bucketName, String fileName) throws IOException, AmazonS3Exception {
@@ -170,7 +175,7 @@ public class AmazonCloudService {
 
 		Blob blob = file.contents;
 		InputStream is;
-		long byteSize = 0;
+		long byteSize;
 
 		if(blob == null) {
 			if(file.url != null) {

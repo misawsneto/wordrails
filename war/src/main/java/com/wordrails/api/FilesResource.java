@@ -1,18 +1,15 @@
 package com.wordrails.api;
 
 import com.wordrails.WordrailsService;
-import com.wordrails.business.GlobalParameter;
 import com.wordrails.business.Network;
 import com.wordrails.business.TrixFile;
 import com.wordrails.persistence.FileRepository;
-import com.wordrails.persistence.GlobalParameterRepository;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.FileService;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.jboss.resteasy.annotations.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +52,7 @@ public class FilesResource {
 	@Path("{id}/contents")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response putFileContents(@PathParam("id") Integer id, @Context HttpServletRequest request) throws FileUploadException, IOException {
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		TrixFile trixFile = fileRepository.findOne(id);
 
 		if (trixFile == null) {
@@ -103,7 +100,7 @@ public class FilesResource {
 				return Response.noContent().build();
 			}
 
-			Network network = wordrailsService.getNetworkFromHost(request);
+			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 			String trixHash = sendFile(network.domain, item);
 			TrixFile file = new TrixFile(trixHash);
 			fileRepository.save(file);
@@ -129,7 +126,7 @@ public class FilesResource {
 				return Response.noContent().build();
 			}
 
-			Network network = wordrailsService.getNetworkFromHost(request);
+			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 			String trixHash = sendFile(network.domain, item);
 			TrixFile file = new TrixFile(trixHash);
 			fileRepository.save(file);
@@ -173,21 +170,27 @@ public class FilesResource {
 	@GET
 	@Path("{id}/contents")
 	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
-		Network network = wordrailsService.getNetworkFromHost(request);
+		String host = request.getHeader("Host");
+		String subdomain = wordrailsService.getSubdomainFromHost(host);
+		if(subdomain == null || subdomain.isEmpty()){
+			Network network = wordrailsService.getNetworkFromHost(host);
 
-		if(network == null) {
-			return Response.serverError().entity("network of the request is null").build();
-		} else if(network.subdomain == null) {
-			return Response.serverError().entity("subdomain of network is null").build();
+			if(network == null) {
+				return Response.serverError().entity("network of the request is null").build();
+			} else if(network.subdomain == null) {
+				return Response.serverError().entity("subdomain of network is null").build();
+			}
+
+			subdomain = network.subdomain;
 		}
 
 		String hash = fileRepository.findHashById(id);
 		if(hash == null)
-			return Response.status(Status.BAD_REQUEST).entity("file doesnt exist").build();
+			return Response.status(Status.NOT_FOUND).entity("file doesnt exist").build();
 		if(hash.isEmpty())
-			return Response.status(Status.BAD_REQUEST).entity("file wasnt uploaded properly").build();
+			return Response.status(Status.NOT_FOUND).entity("file wasnt uploaded properly").build();
 
-		response.sendRedirect(amazonCloudService.getURL(network.subdomain, hash));
+		response.sendRedirect(amazonCloudService.getPublicImageURL(subdomain, hash));
 		return Response.ok().build();
 	}
 }

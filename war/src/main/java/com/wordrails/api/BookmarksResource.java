@@ -70,7 +70,7 @@ public class BookmarksResource {
 		
 		Person person = authProvider.getLoggedPerson();
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		
 		PermissionId pId = new PermissionId();
 		pId.baseUrl = baseUrl;

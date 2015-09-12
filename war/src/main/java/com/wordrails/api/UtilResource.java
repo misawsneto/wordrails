@@ -741,7 +741,7 @@ public class UtilResource {
 		String host = request.getHeader("Host");
 		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
 
-			Network network = wordrailsService.getNetworkFromHost(request);
+			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
 			List<NetworkRole> nr = personRepository.findNetworkAdmin(network.id);
 

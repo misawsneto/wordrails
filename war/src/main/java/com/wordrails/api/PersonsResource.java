@@ -22,6 +22,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -107,7 +108,7 @@ public class PersonsResource {
 	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
 		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network))
 			forward();
@@ -119,7 +120,7 @@ public class PersonsResource {
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = authProvider.getLoggedPerson();
 		if(person.id == 0){
 			gcmService.updateRegId(network, null, regId, lat, lng);
@@ -135,7 +136,7 @@ public class PersonsResource {
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = authProvider.getLoggedPerson();
 		if(person.id == 0){
 			apnService.updateIosToken(network, null, token, lat, lng);
@@ -164,7 +165,7 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response tokenSignin(@Context HttpServletRequest request, @FormParam("token") String token) {
 		try{
-			Network network = wordrailsService.getNetworkFromHost(request);
+			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 			if(network.networkCreationToken == null || !network.networkCreationToken.equals(token))
 				throw new BadRequestException("Invalid Token");
 
@@ -318,7 +319,7 @@ public class PersonsResource {
 				person.password = personCreationObject.password;
 				person.email = personCreationObject.email;
 
-				UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
+				UserGrantedAuthority authority = new UserGrantedAuthority(UserGrantedAuthority.USER);
 				authority.network = network;
 
 				String password = person.password;
@@ -388,7 +389,7 @@ public class PersonsResource {
 				networkRolesRepository.save(networkRole);
 
 				if(networkRole.admin) {
-					UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
+					UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.NETWORK_ADMIN, network);
 					user.addAuthority(authority);
 				}
 			}
@@ -402,15 +403,15 @@ public class PersonsResource {
 					stationRolesRepository.save(stRole);
 
 					if(stRole.admin) {
-						UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_STATION_ADMIN", network, stRole.station);
+						UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.STATION_ADMIN, network, stRole.station);
 						user.addAuthority(authority);
 					}
 					if(stRole.editor) {
-						UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_STATION_EDITOR", network, stRole.station);
+						UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.STATION_EDITOR, network, stRole.station);
 						user.addAuthority(authority);
 					}
 					if(stRole.writer) {
-						UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_STATION_WRITER", network, stRole.station);
+						UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.STATION_WRITER, network, stRole.station);
 						user.addAuthority(authority);
 					}
 				}else{
@@ -439,7 +440,7 @@ public class PersonsResource {
 	@Path("/deleteMany/network")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
 
 		if(persons != null && persons.size() > 0) {
@@ -465,7 +466,7 @@ public class PersonsResource {
 	@Path("/{personId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = personRepository.findOne(personId);
 
 		if(person != null && networkSecurityChecker.isNetworkAdmin(network) && person.user.network.id.equals(network.id)){
@@ -532,6 +533,11 @@ public class PersonsResource {
 		return personData;
 	}
 
+	@Value("${amazon.privateCloudfrontUrl}")
+	String publicCloudfrontUrl;
+	@Value("${amazon.publicCloudfrontUrl}")
+	String privateCloudfrontUrl;
+
 	@GET
 	@Path("/init")
 	public PersonData getInitialData (@Context HttpServletRequest request) throws IOException{
@@ -574,6 +580,9 @@ public class PersonsResource {
 		personPermissions.personName = person.name;
 
 		PersonData initData = new PersonData();
+
+		initData.publicCloudfrontUrl = publicCloudfrontUrl;
+		initData.privateCloudfrontUrl = privateCloudfrontUrl;
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);

@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -86,24 +85,26 @@ public class WordrailsService {
 		link.href = self;
 		link.rel = "self";
 		return Collections.singletonList(link);
-	} 
+	}
 
-	public Network getNetworkFromHost(ServletRequest srq){
+	public String getSubdomainFromHost(String host) {
+		String[] names = host.split("\\.");
+		String topDomain = names[names.length - 2] + "." + names[names.length - 1];
+		return !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
+	}
+
+	public Network getNetworkFromHost(String host){
 		Network network = authProvider.getNetwork();
 
 		if(network != null)
 			return network;
-
-		String host = ((HttpServletRequest) srq).getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Network> networks = networkRepository.findAll();
 			if(networks != null)
 				return networks.get(0);
 		}else{
-			String[] names = host.split("\\.");
-			String topDomain = names[names.length - 2] + "." + names[names.length - 1];
-			String subdomain = !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
+			String subdomain = getSubdomainFromHost(host);
 			if(subdomain != null && !subdomain.isEmpty()){
 				try {
 					network = cacheService.getNetworkBySubdomain(subdomain);

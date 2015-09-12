@@ -187,8 +187,6 @@ public class PostsResource {
 		// or the Lucene programmatic API. The Hibernate Search DSL is recommend though
 		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Post.class).get();
 
-		Network network = wordrailsService.getNetworkFromHost(request);
-
 		org.apache.lucene.search.Query text = null;
 		try {
 			if (q != null) {
@@ -201,7 +199,7 @@ public class PostsResource {
 			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
 			response.content = new SearchView();
 			response.content.hits = 0;
-			response.content.posts = new ArrayList<PostView>();
+			response.content.posts = new ArrayList<>();
 
 			return response;
 		}
@@ -293,7 +291,7 @@ public class PostsResource {
 
 		Person person = authProvider.getLoggedPerson();
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
 		PermissionId pId = new PermissionId();
 		pId.baseUrl = baseUrl;

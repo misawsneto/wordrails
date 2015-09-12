@@ -24,7 +24,7 @@ public class TrixAnonymousAuthenticationFilter extends AnonymousAuthenticationFi
 	}
 
 	public Authentication createAuthentication(HttpServletRequest request) {
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		return authProvider.anonymousAuthentication(network);
 	}
 }

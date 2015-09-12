@@ -1,31 +1,15 @@
 package com.wordrails.api;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
+import com.wordrails.WordrailsService;
+import com.wordrails.business.Network;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.wordrails.business.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-
-import com.wordrails.WordrailsService;
-import com.wordrails.business.Network;
-import com.wordrails.persistence.NetworkRepository;
+import java.io.IOException;
 
 @Component
 public class NetworkDomainFilter implements Filter {
@@ -36,32 +20,30 @@ public class NetworkDomainFilter implements Filter {
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
-	public void doFilter(ServletRequest req, ServletResponse res,FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
-		String host = request .getHeader("Host");
+		HttpServletResponse response = (HttpServletResponse) res;
+		String host = request.getHeader("Host");
 
-		if(host.equals("xarx.co") || host.equals("trix.rocks") || host.equals("xarxlocal.com")){
-			((HttpServletResponse) res).sendRedirect("/home");
-		}else {
-			Network network = wordrailsService.getNetworkFromHost(req);
-			if(network == null){
-				((HttpServletResponse)res).sendRedirect("/404.html");
+		if (host.equals("xarx.co") || host.equals("trix.rocks") || host.equals("xarxlocal.com")) {
+			response.sendRedirect("/home");
+		} else {
+			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+			if (network == null) {
+				response.sendRedirect("/404.html");
 				return;
-			}else{
+			} else {
 				HttpSession session = request.getSession();
-				if (network != null)
-					session.setAttribute("network", network);
+				session.setAttribute("network", network);
 			}
 		}
 
-		HttpServletResponse resp = (HttpServletResponse) res;
-		resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
-		resp.setHeader("Pragma", "no-cache");
-		resp.setDateHeader ("Expires", 0);
+		response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
 
 		chain.doFilter(req, res);
 	}
@@ -70,4 +52,5 @@ public class NetworkDomainFilter implements Filter {
 	public void init(FilterConfig arg0) throws ServletException {
 		// TODO Auto-generated method stub
 
-	}}
+	}
+}

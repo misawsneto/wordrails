@@ -16,5 +16,8 @@ public class PersonData implements Serializable {
 	public List<Integer> postsRead;
 	public List<Integer> bookmarks;
 	public List<Integer> recommends;
+
+	public String publicCloudfrontUrl;
+	public String privateCloudfrontUrl;
 }
 
