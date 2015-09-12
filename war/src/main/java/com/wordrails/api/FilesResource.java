@@ -100,8 +100,11 @@ public class FilesResource {
 				return Response.noContent().build();
 			}
 
-			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-			String trixHash = sendFile(network.domain, item);
+			String subdomain = getSubdomain(request.getHeader("Host"));
+			if(subdomain == null || subdomain.isEmpty()){
+				return Response.serverError().entity("subdomain of network is null").build();
+			}
+			String trixHash = sendFile(subdomain, item);
 			TrixFile file = new TrixFile(trixHash);
 			fileRepository.save(file);
 
@@ -126,8 +129,11 @@ public class FilesResource {
 				return Response.noContent().build();
 			}
 
-			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-			String trixHash = sendFile(network.domain, item);
+			String subdomain = getSubdomain(request.getHeader("Host"));
+			if(subdomain == null || subdomain.isEmpty()){
+				return Response.serverError().entity("subdomain of network is null").build();
+			}
+			String trixHash = sendFile(subdomain, item);
 			TrixFile file = new TrixFile(trixHash);
 			fileRepository.save(file);
 
@@ -167,21 +173,25 @@ public class FilesResource {
 		return false;
 	}
 
-	@GET
-	@Path("{id}/contents")
-	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
-		String host = request.getHeader("Host");
+	private String getSubdomain(String host) {
 		String subdomain = wordrailsService.getSubdomainFromHost(host);
 		if(subdomain == null || subdomain.isEmpty()){
 			Network network = wordrailsService.getNetworkFromHost(host);
 
-			if(network == null) {
-				return Response.serverError().entity("network of the request is null").build();
-			} else if(network.subdomain == null) {
-				return Response.serverError().entity("subdomain of network is null").build();
+			if(network != null) {
+				return network.subdomain;
 			}
+		}
 
-			subdomain = network.subdomain;
+		return null;
+	}
+
+	@GET
+	@Path("{id}/contents")
+	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
+		String subdomain = getSubdomain(request.getHeader("Host"));
+		if(subdomain == null || subdomain.isEmpty()){
+			return Response.serverError().entity("subdomain of network is null").build();
 		}
 
 		String hash = fileRepository.findHashById(id);
