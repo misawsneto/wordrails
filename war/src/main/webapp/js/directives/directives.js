@@ -79,8 +79,8 @@ angular.module('app')
                   // scope.updateRowPage && scope.updateRowPage(termId, function(){
                   //   sly.reload();
                   // });
-            }
-          });
+              }
+            });
           }// execute finished
         }// end of link
      } // end of object to return
