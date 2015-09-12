@@ -183,7 +183,7 @@ public class FilesResource {
 			}
 		}
 
-		return null;
+		return subdomain;
 	}
 
 	@GET
