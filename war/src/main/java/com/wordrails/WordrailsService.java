@@ -180,7 +180,7 @@ public class WordrailsService {
 
 		WordpressParsedContent wpc = new WordpressParsedContent();
 
-		TrixFile trixFile = null;
+		File file = null;
 
 		try{
 			for (Element element : imgs) {

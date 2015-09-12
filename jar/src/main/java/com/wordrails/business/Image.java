@@ -59,19 +59,19 @@ public class Image implements Serializable {
 
 	@NotNull
 	@ManyToOne(cascade=CascadeType.ALL)
-	public TrixFile original;
+	public File original;
 
 	@NotNull
 	@ManyToOne(cascade=CascadeType.REMOVE)
-	public TrixFile small;
+	public File small;
 
 	@NotNull
 	@ManyToOne(cascade=CascadeType.REMOVE)
-	public TrixFile medium;
+	public File medium;
 
 	@NotNull
 	@ManyToOne(cascade=CascadeType.REMOVE)
-	public TrixFile large;
+	public File large;
 
 	public String originalHash;
 	public String smallHash;

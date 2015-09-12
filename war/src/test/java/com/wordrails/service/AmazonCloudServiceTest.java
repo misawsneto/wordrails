@@ -1,6 +1,5 @@
 package com.wordrails.service;
 
-import com.wordrails.business.TrixFile;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.test.AbstractTest;
 import org.junit.Test;

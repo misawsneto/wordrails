@@ -7,13 +7,13 @@ import java.sql.Blob;
 
 @Entity
 @Table(name = "File")
-public class TrixFile {
+public class File {
 
-	public TrixFile() {
+	public File() {
 		type = "E";
 	}
 
-	public TrixFile(String hash) {
+	public File(String hash) {
 		this();
 		this.hash = hash;
 	}

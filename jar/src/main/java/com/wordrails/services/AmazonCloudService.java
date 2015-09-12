@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.wordrails.business.*;
+import com.wordrails.business.File;
 import com.wordrails.persistence.*;
 import com.wordrails.util.WordrailsUtil;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -170,7 +171,7 @@ public class AmazonCloudService {
 	@Autowired
 	private PersonRepository personRepository;
 
-	private String uploadFile(String domain, TrixFile file, String sizeType) throws SQLException, IOException {
+	private String uploadFile(String domain, File file, String sizeType) throws SQLException, IOException {
 		System.out.println("uploading file " + file.id);
 
 		Blob blob = file.contents;

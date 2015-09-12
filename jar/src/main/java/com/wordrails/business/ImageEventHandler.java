@@ -48,7 +48,7 @@ public class ImageEventHandler {
 
 		if (!Image.containsType(image.type)) throw new BadRequestException("Invalid Image Type:" + image.type);
 
-		TrixFile originalFile = image.original;
+		File originalFile = image.original;
 		String originalHash = originalFile.hash;
 		if (originalHash != null) {
 			Network network = authProvider.getNetwork();
@@ -63,21 +63,21 @@ public class ImageEventHandler {
 			int maxSize = Math.max(bufferedImage.getHeight(), bufferedImage.getWidth());
 
 			String smallHash = fileService.newResizedImage(bufferedImage, network.subdomain, 150, "small", mime);
-			TrixFile small = new TrixFile(smallHash);
+			File small = new File(smallHash);
 			fileRepository.save(small);
 
-			TrixFile medium;
+			File medium;
 			String mediumHash;
 			if(maxSize < 250) {
 				mediumHash = originalHash;
 				medium = image.original;
 			} else {
 				mediumHash = fileService.newResizedImage(bufferedImage, network.subdomain, 300, "medium", mime);
-				medium = new TrixFile(mediumHash);
+				medium = new File(mediumHash);
 				fileRepository.save(medium);
 			}
 
-			TrixFile large;
+			File large;
 			String largeHash;
 			if(maxSize < 800) {
 				largeHash = originalHash;
@@ -91,7 +91,7 @@ public class ImageEventHandler {
 				}
 
 				largeHash = fileService.newResizedImage(bufferedImage, network.subdomain, largeSize, "large", mime);
-				large = new TrixFile(largeHash);
+				large = new File(largeHash);
 				fileRepository.save(large);
 			}
 
@@ -114,7 +114,7 @@ public class ImageEventHandler {
 		try {
 			Thumbnails.of(image).size(size, size).outputFormat(format).outputQuality(1.0).toFile(file);
 			try (InputStream input = new FileInputStream(file)) {
-				TrixFile contents = fileRepository.findOne(id);
+				File contents = fileRepository.findOne(id);
 				contents.contents = creator.createBlob(input, file.length());
 				fileRepository.save(contents);
 			}

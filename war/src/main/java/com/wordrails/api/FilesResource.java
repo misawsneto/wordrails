@@ -2,7 +2,7 @@ package com.wordrails.api;
 
 import com.wordrails.WordrailsService;
 import com.wordrails.business.Network;
-import com.wordrails.business.TrixFile;
+import com.wordrails.business.File;
 import com.wordrails.persistence.FileRepository;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.FileService;
@@ -22,7 +22,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -56,17 +55,17 @@ public class FilesResource {
 		if(subdomain == null || subdomain.isEmpty()){
 			return Response.serverError().entity("subdomain of network is null").build();
 		}
-		TrixFile trixFile = fileRepository.findOne(id);
+		File file = fileRepository.findOne(id);
 
-		if (trixFile == null) {
+		if (file == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		try {
 			FileItem item = getFileFromRequest(request);
-			trixFile.hash = sendFile(subdomain, item);
+			file.hash = sendFile(subdomain, item);
 
-			fileRepository.save(trixFile);
+			fileRepository.save(file);
 
 			URI location = UriBuilder.fromResource(FilesResource.class).path(id.toString()).path("contents").build();
 			return Response.status(Status.NO_CONTENT).location(location).build();
@@ -79,7 +78,7 @@ public class FilesResource {
 
 	private FileItem getFileFromRequest(HttpServletRequest request) throws FileUploadException {
 		ServletContext context = request.getServletContext();
-		File repository = (File) context.getAttribute(ServletContext.TEMPDIR);
+		java.io.File repository = (java.io.File) context.getAttribute(ServletContext.TEMPDIR);
 		DiskFileItemFactory factory = new DiskFileItemFactory(DiskFileItemFactory.DEFAULT_SIZE_THRESHOLD, repository);
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		List<FileItem> items = upload.parseRequest(request);
@@ -108,7 +107,7 @@ public class FilesResource {
 				return Response.serverError().entity("subdomain of network is null").build();
 			}
 			String trixHash = sendFile(subdomain, item);
-			TrixFile file = new TrixFile(trixHash);
+			File file = new File(trixHash);
 			fileRepository.save(file);
 
 			return Response.ok().entity("{\"hash\":" + trixHash + "}").build();
@@ -137,7 +136,7 @@ public class FilesResource {
 				return Response.serverError().entity("subdomain of network is null").build();
 			}
 			String trixHash = sendFile(subdomain, item);
-			TrixFile file = new TrixFile(trixHash);
+			File file = new File(trixHash);
 			fileRepository.save(file);
 
 			URI location = UriBuilder.fromResource(FilesResource.class).path(String.valueOf(file.id)).path("contents").build();

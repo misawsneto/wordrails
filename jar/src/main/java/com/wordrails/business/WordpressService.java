@@ -3,17 +3,9 @@ package com.wordrails.business;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.wordrails.persistence.*;
-import com.wordrails.services.FileService;
 import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
-import net.coobird.thumbnailator.Thumbnails;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.tika.Tika;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.engine.jdbc.LobCreator;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,13 +24,10 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.*;
 
 @Service
@@ -357,7 +346,7 @@ public class WordpressService {
 
 		WordpressParsedContent wpc = new WordpressParsedContent();
 
-		TrixFile trixFile = null;
+		File file = null;
 
 		try {
 			for (Element element : imgs) {

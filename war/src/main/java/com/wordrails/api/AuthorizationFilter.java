@@ -121,22 +121,22 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetFilesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetFileAuthorized(Integer fileId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetGlobalParametersAuthorized() {
 		return false;
 	}
 
 	@Override
 	protected boolean isGetGlobalParameterAuthorized(Integer globalParameterId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetTrixFilesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetTrixFileAuthorized(Integer fileId) {
 		return false;
 	}
 
