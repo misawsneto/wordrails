@@ -204,6 +204,20 @@ var trix = angular.module('trix', [])
 	  return \$http.get(_config.url + "/api/persons/me/stats", config)
 	}
 
+	this.getNetworkStats = function(date, postId) {
+		var config = {
+			"params": {
+				"date": date,
+				"postId": postId,
+			}
+		}
+	  return \$http.get(_config.url + "/api/networks/stats", config)
+	}
+
+	this.getNetworkPublicationsCount = function() {
+	  return \$http.get(_config.url + "/api/networks/publicationsCount")
+	}
+
 	this.getPersonPublicationsCount = function(personId) {
 		var config = {
 			"params": {

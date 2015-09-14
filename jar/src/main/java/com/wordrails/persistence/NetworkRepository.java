@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -37,6 +38,10 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 	
 	@RestResource(exported=false)
 	Network findByDomain(String domain);
+
+	@RestResource(exported = false)
+	@Query(value = "select (select count(*) from PostRead pr where pr.post.stationId = s.id), (select count(*) from Comment comment where comment.post.stationId = s.id), (select count(*) from Recommend recommend where recommend.post.stationId = s.id) from Station s join s.networks n where n.id = :networkId")
+	List<Object[]> findNetworkStats(@Param("networkId") Integer networkId);
 //
 //	@RestResource(exported = false)
 //	Blob findCertificateIosById(@Param("networkId") Integer networkId);

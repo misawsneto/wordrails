@@ -286,17 +286,17 @@ angular.module('app')
                   }
                   , controller:'SettingsCategoriesCtrl'
               })
-              .state('app.settings.statistics', {
-                  url: '/statistics',
-                  templateUrl: 'tpl/settings-statistics.html',
-                  resolve: {
-                    deps: ['$ocLazyLoad',
-                      function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-statistics.js?' + GLOBAL_URL_HASH]);
-                    }]
-                  }
-                  , controller:'SettingsStatisticsCtrl'
-              })
+              // .state('app.settings.statistics', {
+              //     url: '/statistics',
+              //     templateUrl: 'tpl/settings-statistics.html',
+              //     resolve: {
+              //       deps: ['$ocLazyLoad',
+              //         function( $ocLazyLoad ){
+              //           return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-statistics.js?' + GLOBAL_URL_HASH]);
+              //       }]
+              //     }
+              //     , controller:'SettingsStatisticsCtrl'
+              // })
               .state('app.settings.colors', {
                   url: '/colors',
                   templateUrl: 'tpl/settings-colors.html',
@@ -381,6 +381,22 @@ angular.module('app')
                           
                   },
                   controller: 'UserStatsCtrl'
+              })
+              .state('app.settings.statistics', {
+                  url: '/networkstats',
+                  templateUrl: 'tpl/network_stats.html',
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['../bower_components/d3/d3.min.js', '../bower_components/nvd3/build/nv.d3.min.css'])
+                        .then(function(){
+                            return $ocLazyLoad.load(['nvd3', 'js/controllers/settings-network.js?' + GLOBAL_URL_HASH])
+                          });
+                      }]
+                          
+                  },
+                  controller: 'NetworkStatsCtrl'
               })
               .state('app.publications', {
                   url: '/publications/@:username?type',
