@@ -736,7 +736,7 @@
 
 @media screen and (max-width: 50em) {
 	body {
-		padding-top: 100px;
+		/* padding-top: 100px; */
 	}
 	.customizer {
 		top: 0;

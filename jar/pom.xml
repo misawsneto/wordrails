@@ -187,5 +187,10 @@
 			<artifactId>twitter4j-core</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.rometools</groupId>
+			<artifactId>rome</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>
