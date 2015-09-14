@@ -40,7 +40,13 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 	Network findByDomain(String domain);
 
 	@RestResource(exported = false)
-	@Query(value = "select (select count(*) from PostRead pr where pr.post.stationId = s.id), (select count(*) from Comment comment where comment.post.stationId = s.id), (select count(*) from Recommend recommend where recommend.post.stationId = s.id) from Station s join s.networks n where n.id = :networkId")
+	@Query(value = "select " +
+			"(select count(*) from PostRead pr where pr.post.stationId = s.id), " +
+			"(select count(*) from Comment comment where comment.post.stationId = s.id), " +
+			"(select count(*) from Recommend recommend where recommend.post.stationId = s.id)," +
+			"(select count(*) from PersonNetworkRegId regId where regId.network.id = :networkId), " +
+			"(select count(*) from PersonNetworkToken token where token.network.id = :networkId)" +
+			" from Station s join s.networks n where n.id = :networkId")
 	List<Object[]> findNetworkStats(@Param("networkId") Integer networkId);
 //
 //	@RestResource(exported = false)

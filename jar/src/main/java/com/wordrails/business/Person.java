@@ -118,6 +118,9 @@ public class Person implements Serializable{
 	public void onCreate() {
 		onChange();
 		createdAt = new Date();
+		if(user != null && user.network != null){
+			networkId = user.network.id;
+		}
 	}
 
 	@PreUpdate
@@ -193,4 +196,6 @@ public class Person implements Serializable{
 	public String twitterHandle;
 
 	public Integer coverMediumId;
+
+
 }

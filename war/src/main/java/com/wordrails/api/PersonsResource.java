@@ -318,6 +318,7 @@ public class PersonsResource {
 				person.username = personCreationObject.username;
 				person.password = personCreationObject.password;
 				person.email = personCreationObject.email;
+				person.networkId = network.id;
 
 				UserGrantedAuthority authority = new UserGrantedAuthority(UserGrantedAuthority.USER);
 				authority.network = network;

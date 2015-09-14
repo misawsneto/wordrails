@@ -561,12 +561,33 @@ angular.module('app')
 
       $scope.app.signIn = function(username, password){
         trix.login(username, password).success(function(){
+          if($state.current.name == 'access.signin'){
+            window.location.href=window.location.protocol + '//' + window.location.host
+            return;
+          }
           handleLoginSuccess();
         }).error(function(){
           $scope.app.loginError = true;
           $scope.app.refreshData();
         })
       };
+
+      $scope.app.signup = function(user){
+        trix.createPerson(user).success(function(response){
+          window.location.href=window.location.protocol + '//' + window.location.host + "?signupSuccess=true"
+          return;
+        }).error(function(data, status, headers, config){
+          if(status == 409){
+            $scope.app.conflictingData = data;
+            $scope.app.conflictingData.role = $scope.person.stationRole.roleString;
+            $scope.openAddUserToStaionSplash()
+          }else
+          $scope.app.showErrorToast('Dados inválidos. Tente novamente')
+          $timeout(function() {
+            cfpLoadingBar.complete(); 
+          }, 100);
+        });
+      }
 
       function handleLoginSuccess (){
         trix.allInitData().success(function(response){

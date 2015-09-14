@@ -262,6 +262,26 @@ app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', 
 			$scope.chartData = [readsCount, recommendsCount, commentsCount]
 		})
 
+		$scope.datePickerOptions = {language: 'pt', format: 'DD/MM/YYYY', startDate: moment().add(-29, 'days').format('DD/MM/YYYY'), endDate: moment().format('DD/MM/YYYY'),
+		language: 'pt',
+		ranges: {
+	           'Hoje': [moment(), moment()],
+	           'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+	           'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+	           'Esse mês': [moment().startOf('month'), moment().endOf('month')],
+	           'Último mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')
+	           ]
+	        }}
+		$scope.datePickerValue = moment().add(-30, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY');
+
+$scope.userCount = 0;
+$scope.totalPublished = 0;
+$scope.totalScheduled = 0
+$scope.totalDrafts = 0;
+
+trix.countPersonsByNetwork($scope.app.initData.network.id).success(function(response){
+	$scope.userCount = response.count;
+})
 
 $scope.page = 0;
 $scope.firstLoad = false
