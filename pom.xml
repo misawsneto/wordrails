@@ -20,7 +20,7 @@
         <module>api</module>
         <module>client</module>
         <module>generator</module>
-	<module>jar</module>		
+	<module>jar</module>
         <module>war</module>
     </modules>
 </project>

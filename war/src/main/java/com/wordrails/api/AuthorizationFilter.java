@@ -885,7 +885,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		boolean authorized = false;
 		
 		Person loggedPerson = authProvider.getLoggedPerson();
-		if(loggedPerson != null && loggedPerson.id == personId){
+		if(loggedPerson != null && loggedPerson.id.equals(personId)){
 			authorized = true;
 		}
 		return authorized;

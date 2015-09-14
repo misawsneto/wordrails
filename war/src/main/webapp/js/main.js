@@ -527,6 +527,14 @@ angular.module('app')
         $scope.app.viewMode = 'vertical';
       }
 
+      $scope.app.changeMobileViewMode = function(){
+        if($scope.app.viewMode == 'vertical') {
+          $scope.app.viewMode = $localStorage.viewMode = 'horizontal'
+        }else{
+          $scope.app.viewMode = $localStorage.viewMode = 'vertical'
+        }
+      }
+
       $scope.changeView = function(view){
         $localStorage.viewMode = $scope.app.viewMode = view;
       }

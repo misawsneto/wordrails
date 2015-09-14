@@ -3,7 +3,7 @@
 
 <div id="post-content" ng-if="app.nowReading.postId || app.nowReading.id" class="container p-t-xxl" ng-class="{'m-t p-t-70': !app.nowReading.imageLargeId && !app.isMobile, 'p-t-xxl': app.isMobile}"> 
 	<div class="row">
-		<div class="img-responsive" ng-if="app.isMobile && (!app.nowReading.imageLandscape && app.nowReading.imageLargeId)" ng-class="{'p-t-xxl m-b-lg': !app.isMobile}">
+		<div class="img-responsive" ng-if="app.isMobile && app.nowReading.imageLargeId">
 			<img ng-src="{{getImageLink(app.nowReading.imageLargeId)}}" class="img-full">
 		</div>
 		<div class="col-md-8 col-md-offset-2 col-sm-12 col-sm-offset-0 p-b-xxl">
@@ -37,11 +37,11 @@
           	<div class="post-block m-t">
           		<span class="text-md font-bold">Por <a ui-sref="app.user({username: app.nowReading.author.username})" class="m-l-xs">{{app.nowReading.author.name}}</a></span>
           		<span class="m-l-sm text-muted text-u-c">em {{ app.nowReading.date | fromNow2 }}</span>
-      				<a ng-if="app.nowReadingAuthor.authorId == app.initData.person.id"
+      				<a ng-if="app.nowReadingAuthor.authorId == app.initData.person.id && !app.isMobile"
                 ui-sref="app.post({'id': app.nowReading.postId})" class="text-center text-lg p-l-lg">
       					<i class="mdi mdi-pencil" ></i>
       				</a>
-      				<a ng-if="app.nowReadingAuthor.authorId == app.initData.person.id"
+      				<a ng-if="app.nowReadingAuthor.authorId == app.initData.person.id && !app.isMobile"
               href class="text-center text-lg p-l" ng-click="app.openDeletePost(app.nowReading.postId);">
         				<i class="mdi mdi-delete"></i>
         			</a>
@@ -56,7 +56,7 @@
           		</a>
           	</div>
           	<div class="p-b-xxl">
-          		<ul class="nav navbar-nav navbar-left">
+          		<ul class="read-actions" ng-class="{'nav navbar-nav navbar-left': !app.isMobile}">
           			<li ng-show="app.currentStation.allowSocialShare">
           				<a class="text-center text-xl" socialshare socialshare-provider="google+" socialshare-text="{{app.nowReading.title}}" socialshare-url="{{app.nowReading.slug}}">
           					<i class="mdi mdi-google-plus"></i>

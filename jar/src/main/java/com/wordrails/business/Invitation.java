@@ -58,7 +58,7 @@ public class Invitation {
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
-		invitationUrl = "http://" + network.subdomain + ".xarx.co/" + "invitation?hash=" + hash; 
+		invitationUrl = "http://" + network.subdomain + ".trix.rocks/" + "invitation?hash=" + hash;
 	}
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)

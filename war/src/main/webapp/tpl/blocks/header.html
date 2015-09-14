@@ -5,14 +5,14 @@
 		<i class="mdi-settings mdi"></i>
 	</button>
 	-->
-	<button class="pull-right visible-xs" ui-toggle-class="off-screen" data-target=".app-aside" ui-scroll-to="app">
+	<button class="pull-right visible-xs" ng-click="app.changeMobileViewMode()">
 		<i class="mdi mdi-view-dashboard custom-header"></i>
-	</button> 
+	</button>
 	<!-- brand -->
 	<button class="pull-left visible-xs">
 		<i class="bg-header-text mdi-menu mdi custom-header"></i>
 	</button> 
-	<a ng-if="app.isMobile" style="padding: 0;" class="navbar-brand text-lt" tooltip="{{app.currentStation.name}}" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
+	<a ng-if="app.isMobile" ui-sref="app.stations" style="padding: 0;" class="navbar-brand text-lt" tooltip="{{app.currentStation.name}}" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
 		<!-- <span class="hidden-folded m-l-xs">{{app.name}}</span> -->
 		<span ng-if="!app.currentStation.logoId" class="hidden-folded bg-header-text" style="font-weight: 400">{{app.currentStation.name}}</span>
 		<div ng-if="app.currentStation.logoId" class="hidden-folded" style="height:48px;">

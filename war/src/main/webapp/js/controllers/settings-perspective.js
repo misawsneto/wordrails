@@ -15,10 +15,10 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       }
     });
 
-    trix.findPerspectiveView($state.params.perspectiveId, null, null, 0, 10).success(function(termPerspective){
+    trix.findPerspectiveView($state.params.perspectiveId, null, null, 0, 50).success(function(termPerspective){
       $scope.termPerspectiveView = termPerspective;
       $timeout(function() {
-        $('.mockup-section.bg-perspective').slimScroll({
+        $('.mockup-section').slimScroll({
          height:'476',
          size:'8px',
          'railVisible': true
@@ -41,6 +41,8 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       console.log(data);
     }
 
+    $scope.show
+
     $scope.showAddFeaturedPost = function(ev){
     // show term alert
       $mdDialog.show({
@@ -57,6 +59,21 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
 
       $scope.cellType = 'FEATURED_POST';
     }
+
+    $scope.showConfigCategory = function(ev){
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'config_category.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
+
   // scope variable used in the perspective editor dialog
     $scope.pe = {
       'thisStation': $scope.thisStation,
@@ -86,6 +103,8 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
     }
 
     $scope.cellType = null;
+    $scope.cellData = {rowIndex: null, cellIndex: null};
+
 
     $scope.cellAddValidation = function(postView){
       if(!$scope.termPerspectiveView.featuredRow || !$scope.termPerspectiveView.featuredRow.cells){
@@ -139,6 +158,21 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       // check if user has permisstion to write
     };
 
+    $scope.removeCategory = function(termId){
+      var perspective = $scope.termPerspectiveView
+      if(perspective.ordinaryRows){
+        var rows = perspective.ordinaryRows
+        for (var i = rows.length - 1; i >= 0; i--) {
+          if(rows[i].termId == termId)
+            rows.splice(i, 1)
+        };
+      }
+
+      perspective.ordinaryRows && perspective.ordinaryRows.forEach(function(row, index){
+        row.index = index;
+      });
+    }
+
 //  -------------- end of perspective editor dialog controller
 
     // submit search
@@ -189,6 +223,9 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       })
       .error(function(){
         $scope.searchLoading = false;
+        $timeout(function() {
+          cfpLoadingBar.complete(); 
+        }, 100);
       })
 
     }
@@ -256,21 +293,46 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
         });
       }
 
-      if(!$scope.termPerspectiveView.id){
-        createTermPerspective()
+      var perspective = angular.copy($scope.termPerspectiveView);
+
+      perspective.ordinaryRows && perspective.ordinaryRows.forEach(function(row, index){
+        row.index = index;
+        for (var i = row.cells.length - 1; i >= 0; i--) {
+          /*test*/
+          // if(i == 0)
+          //   row.cells[0].new = true;
+          /*/test*/
+          if(!(row.cells[i].id || row.cells[i].new))
+            row.cells.splice(i, 1)
+        };
+      });
+
+      if(!perspective.id){
+        createTermPerspective(perspective)
         return;
       }
 
-      trix.putTermView($scope.termPerspectiveView).success(function(){
+      trix.putTermView(perspective).success(function(){
         $scope.app.showSuccessToast('Perspectiva atualizada.')
       })
       .error(function(){
-
+        $timeout(function() {
+          cfpLoadingBar.complete(); 
+        }, 100);
       });
   }
 
-  var createTermPerspective = function(){
-
+  var createTermPerspective = function(perspective){
+    trix.postTermView(perspective).success(function(){
+      trix.findPerspectiveView($state.params.perspectiveId, null, null, 0, 50).success(function(termPerspective){
+        $scope.app.showSuccessToast('Perspectiva atualizada.')
+        $scope.termPerspectiveView = termPerspective;
+      });
+    }).error(function(){
+      $timeout(function() {
+          cfpLoadingBar.complete(); 
+        }, 100);
+    })
   }
 
 

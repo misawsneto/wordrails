@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.ImageType;
 import org.springframework.social.support.URIBuilder;
-//import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.text.Normalizer;
 import java.util.HashSet;
 
 @Service
@@ -110,7 +110,9 @@ public class SocialAuthenticationService {
 		if (person == null) {
 			int i = 1;
 			String originalUsername = profile.getFirstName().toLowerCase() + profile.getLastName().toLowerCase();
-			String username = originalUsername;
+			String username = Normalizer
+					.normalize(originalUsername, Normalizer.Form.NFD)
+					.replaceAll("[^\\p{ASCII}]", "");
 			while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
 				username = originalUsername + i++;
 			}
