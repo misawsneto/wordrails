@@ -25,7 +25,7 @@
 								<a ng-click="showAddFeaturedPost($event)" href="" class="text-xl"><span class="text-md font-thin">destaques</span> <i class="mdi mdi-plus-circle-outline v-middle"></i></a>
 							</div>
 							<div ng-if="termPerspectiveView.featuredRow.cells.length > 0" class="p-e-carousel">
-								<div class="pos-abt right-0 wrapper-xs z-i-2" ng-class="{'p-r-xxl m-r-xxl': !isMobile}">
+								<div class="pos-abt right-0 wrapper-xs z-i-2 text-white" ng-class="{'p-r-xxl m-r-xxl': !isMobile}">
 									<a ng-click="app.stopPropagation($event)" popover-class="carousel-popover" popover-placement="bottom" popover-class class="text-shadow-dark perspective-editor-options-button" popover="" popover-template=" 'carousel-template.html' " type="button" popover-append-to-body="true">
 										<i class="i-24 mdi-dots-vertical mdi"></i>
 									</a>
@@ -37,32 +37,37 @@
 										</div>
 									</li>
 								</ul>
-									<div class="text-center pos-rlt m-t-n-md z-i-2 perspective-editor-options-button">
+									<div class="text-center pos-rlt m-t-n-lg text-md z-i-2 perspective-editor-options-button ">
 										<div rn-carousel-indicators="" ng-if="termPerspectiveView.featuredRow.cells.length > 1" slides="termPerspectiveView.featuredRow.cells" rn-carousel-index="carouselIndex2" class="">
 										</div>
 									</div>
 							</div>
 
-							<!-- <div ng-if="isMobile" ng-repeat="ordinaryRow in termPerspectiveView.ordinaryRows" class="ordinary-row" ng-if="ordinaryRow.cells && ordinaryRow.cells.length">
+							<div ng-if="isMobile" ng-repeat="ordinaryRow in termPerspectiveView.ordinaryRows" class="ordinary-row" ng-if="ordinaryRow.cells && ordinaryRow.cells.length">
 							
 								<div ng-if="ordinaryRow.cells" data-term-id="{{::ordinaryRow.termId}}" class="wrap info-flow-wrap" 
-								scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()"  style="margin:0" >
+								scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" sly-scroll style="margin:0" >
 								<div class="h4 wrapper-xs text-u-c">
-									<a>{{::ordinaryRow.termName}}</a>
+									{{::ordinaryRow.termName}}
 								</div>
 								<div class="frame info-flow" style="overflow: hidden; height:130px">
 									<ul class="sly-clearfix info-flow-list" data-term-id="{{::ordinaryRow.termId}}">
 										<li class="cell" style="width:130px" ng-repeat="cell in ordinaryRow.cells">
 							
-											<div class="" include=" 'tpl/stations_horizontal_cells.html' "></div>
 											<div style="height:130px" class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.imageMediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+
+												<div class="pos-abt right-0 z-i-4 text-white" ng-class="{'p-r-xxl m-r-xxl': !isMobile}">
+													<a ng-click="app.stopPropagation($event)" popover-class="carousel-popover" popover-placement="bottom" popover-class class="text-shadow-dark perspective-editor-options-button" popover="" popover-template=" 'carousel-template.html' " type="button" popover-append-to-body="true">
+														<i class="i-20 mdi-dots-vertical mdi"></i>
+													</a>
+												</div>
 							
-												<div class="wrapper-xs text-sm font-thin pos-abt top-0 text-shadow-dark text-white" style="z-index:3;">
+												<div class="wrapper-xs text-sm font-thin pos-abt bottom-0 text-shadow-dark text-white" style="z-index:3;">
 													{{::cell.postView.title | characters:60}}
 												</div>
 							
 												<div class="cell-wrap" ng-if="cell.postView.imageMediumId">
-													<div ng-style="getBackgroundImage(cell.postView, 'md')"></div>
+													<div class="w-full h-full" ng-style="getBackgroundImage(cell.postView, 'md')"></div>
 												</div>
 											</div>
 							
@@ -76,7 +81,7 @@
 									</div>
 								</div>
 							</div>
-						</div> -->
+						</div>
 
 					</div>
 					<!-- /mockup-grid -->
@@ -121,15 +126,16 @@
 					<!-- <ul class="no-style" ui-jq="sortable" id="sortable"> -->
 					<ul class="no-style" ui-sortable ng-model="termPerspectiveView.ordinaryRows">
 						<li ng-repeat="row in termPerspectiveView.ordinaryRows" class="sortable-term sortable-elem text-white wrapper-xxs">
-							{{row.termName}}
+							<div ng-click="removeCategory(row.termId)"
+							class="text-danger pull-right mdi mdi-close i-16 wrapper-xxs"></div>
+							<div class="term-name">{{row.termName}}</div>
 						</li>
 					</ul>
 				</div>
 			</div>
 			<div class="text-right wrapper-xs w-full m-t">
-				<button md-ink-ripple="" class="md-btn-sm md-btn md-raised btn-fw bg-white">
-					Categorias
-				</button>
+				<button ng-click="showConfigCategory($event)"
+					md-ink-ripple="" class="md-btn-sm md-btn md-raised btn-fw bg-white">Categorias</button>
 			</div>
 		</div>
 
@@ -144,7 +150,7 @@
 				</ul>
 			</div>
 			<div class="m-b-sm p-l-sm text-md text-white">
-				Página web
+				Website
 			</div>
 		</div>
 
@@ -191,7 +197,7 @@
 			</div>
 		</div>
 		<div class="text-center wrapper-xs w-full b-t m-t-sm">
-			<a href="" class="text-md" ng-click="showAddFeaturedPost($event);pe.clickOutside();">
+			<a href="" class="text-md" ng-click="showAddFeaturedPost();pe.clickOutside();">
 				<span class=" font-thin">adicionar</span>
 				<i class="mdi mdi-plus-circle-outline v-middle"></i>
 			</a>
@@ -233,7 +239,7 @@
             </li>
             <li ng-if="pe.searchResults.length > 0">
             	<div class="wrapper-xs text-center">
-            		<button ng-click="pe.searchMore()" md-ink-ripple class="md-btn md-flat btn-fw" style="font-size: 18px">mais</button>
+            		<button ng-click="pe.paginateSearchc()" md-ink-ripple class="md-btn md-flat btn-fw" style="font-size: 18px">mais</button>
             	</div>
             </li>
 					</ul>
@@ -246,7 +252,21 @@
 	</md-dialog>
 </script>
 
-
+<script type="text/ng-template" id="config_category.html">
+	<md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
+  	<md-content>
+  		<div class="wrapper">
+  			<form ng-submit="pe.submitSearch()">
+  			</form>
+				<div class="wrapper-xxs perspective-editor-search-results m-t-sm" >
+				</div>
+				<div class="pos-abt bottom-0 right-0 wrapper-sm">
+					<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+				<div>
+			</div>
+	  </md-content>
+	</md-dialog>
+</script>
 
 </div>
 </div>

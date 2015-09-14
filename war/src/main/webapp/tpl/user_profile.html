@@ -55,7 +55,7 @@
 <!-- posts & recommendation -->
 <div infinite-scroll="paginate()" infinite-scroll-distance="1">
 	<!-- posts -->
-	<div class="block-800 m-auto m-t-lg m-b-lg" ng-if="postViews && postViews.length > 0 && showProfile">
+	<div class="block-800 m-auto m-t-lg m-b-lg" ng-class="{'wrapper-sm': app.isMobile}" ng-if="postViews && postViews.length > 0 && showProfile">
 		<ul class="b-none no-padding m-b-none ls-style-none">
 			<li ng-repeat="postView in postViews">
 				<div ng-class="{'b-t': !$first}"></div>
@@ -128,7 +128,7 @@
 	</div> -->
 
 	<!-- pages -->
-	<div class="block-800 m-auto m-t-lg m-b-lg" ng-if="pages && showProfile">
+	<div class="block-800 m-auto m-t-lg m-b-lg" ng-class="{'wrapper-sm': app.isMobile}" ng-if="pages && showProfile">
 		<ul class="b-none no-padding m-b-none ls-style-none">
 			<li ng-repeat="postView in pages">
 				<div ng-class="{'b-t': !$first}"></div>

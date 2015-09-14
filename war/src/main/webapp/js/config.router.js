@@ -109,7 +109,7 @@ angular.module('app')
                   controller: 'TagsPageCtrl'
               })
               .state('app.tagspage.read', {
-                  url: '/:slug',
+                  url: '/:slug?invitation?redirect',
                   template: '',
                   resolve: {
                     deps: ['$ocLazyLoad',

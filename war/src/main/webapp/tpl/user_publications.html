@@ -16,19 +16,19 @@
 			angular-ripple md-no-ink  aria-label="Nova notícia">
 			<i class="mdi mdi-plus"></i>
 		</md-button>
-		<div class="w-full panel panel-card animated zoomIn" infinite-scroll="paginate()" infinite-scroll-distance="1">
+		<div id="publications-list" class="w-full panel panel-card animated zoomIn" infinite-scroll="paginate()" infinite-scroll-distance="1">
 			<div class="wrapper form-group">
 				<div class="display-t-c col-sm-5 pull-in m-r">
 					<div class="input-group">
-						<input ng-model="pe.searchQuery" class="input-lg form-control" placeholder="Busque por notícias" />
+						<input ng-model="pe.searchQuery" ng-class="{'input-lg': !app.isMobile}" class="form-control" placeholder="Busque por notícias" />
 						<span class="input-group-btn">
-							<button class="btn btn-default btn-lg i-24" type="submit" style="padding: 6px 12px">
+							<button class="btn btn-default" ng-class="{'btn-lg i-24': !app.isMobile}" type="submit" style="padding: 6px 12px">
 								<i class="mdi mdi-magnify"></i>
 							</button>
 						</span>
 					</div>
 				</div>
-		            <input ui-jq="daterangepicker" class="input-lg w-md form-control" ui-options="{
+		            <input ui-jq="daterangepicker" class="input-lg w-md form-control hide-xs" ui-options="{
 		                format: 'YYYY-MM-DD',
 		                startDate: '2013-01-01',
 		                endDate: '2013-12-31'
@@ -36,7 +36,7 @@
 			</div>
 
 			<div class="nav-tabs-alt box-shadow" ng-show="app.publicationsCtrl.publications" >
-				<ul class="nav nav-tabs text-lg" role="tablist">
+				<ul class="nav nav-tabs" role="tablist" ng-class="{'text-lg': !app.isMobile, 'text-sm': app.isMobile}">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
 						<a class="text-u-c" ng-click="app.goToUserPublications($event); allLoaded = false;">
 							Publicados
@@ -81,7 +81,7 @@
 							<div class="m-b-sm" ng-if="publication.topper">
 								<span class="no-radius normal p-xxs topper text-md bg-custom-primary">{{publication.topper}}</span>
 							</div>
-							<a  class="h3 font-bold m-b block" ng-click="app.setNowReading(publication, app.publicationsCtrl.publications, null, 'app.publications')">
+							<a  class="h3 font-bold m-b block" ui-sref="app.read({'slug': publication.slug})">
 								{{publication.title}}
 							</a>
 							<div class="text-lg font-thin" ng-bind-html="publication.snippet | characters: 100 | stripHtml">

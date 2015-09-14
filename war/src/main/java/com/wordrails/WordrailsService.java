@@ -313,7 +313,7 @@ public class WordrailsService {
 			return null;
 
 		for (StationPermission stationPermission : stationPermissions) {
-			if((currentStationId != null && currentStationId == stationPermission.stationId) || stationPermission.main)
+			if((currentStationId != null && currentStationId.equals(stationPermission.stationId)) || stationPermission.main)
 				stationId = stationPermission.stationId;
 		}
 
@@ -336,7 +336,7 @@ public class WordrailsService {
 			}
 
 		for (StationDto station : personData.stations) {
-			if(stationId == station.id){
+			if(stationId.equals(station.id)){
 				return station;
 			}
 		}

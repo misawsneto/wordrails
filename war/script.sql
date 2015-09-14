@@ -39,6 +39,7 @@ alter table person drop index UK_585qcyc8qh7bg1fwgm1pj4fus
 alter table person drop index UK_t1smi3rfq846y5teyf1gcv8ir;
 
 alter table postread modify column person_id int(11) default null;
+
 --------------------------------------------------------------------------
 use wordrails2;
 drop table invitation;
@@ -46,3 +47,8 @@ alter table post drop column imageLandscape;
 
 ALTER TABLE person
 DROP INDEX UK_585qcyc8qh7bg1fwgm1pj4fus;
+
+------------------------------ 11/09/2015
+
+alter table invitation modify column email varchar(255) DEFAULT NULL;
+alter table person modify column email varchar(255) DEFAULT NULL;
