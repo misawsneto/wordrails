@@ -579,10 +579,15 @@ angular.module('app')
         }).error(function(data, status, headers, config){
           if(status == 409){
             $scope.app.conflictingData = data;
-            $scope.app.conflictingData.role = $scope.person.stationRole.roleString;
-            $scope.openAddUserToStaionSplash()
+
+            if($scope.app.conflictingData.value && user.email && $scope.app.conflictingData.value.indexOf(user.email) > -1){
+              $scope.app.showErrorToast('Este email está sendo utilizado. <br>Escolha outro e tente novamente')
+            }else if($scope.app.conflictingData.value && user.username && $scope.app.conflictingData.value.indexOf(user.username) > -1){
+              $scope.app.showErrorToast('Este userário está sendo utilizado. <br>Escolha outro e tente novamente')
+            }
+            $scope.app.showErrorToast('Dados inválidos. Tente novamente')
           }else
-          $scope.app.showErrorToast('Dados inválidos. Tente novamente')
+            $scope.app.showErrorToast('Dados inválidos. Tente novamente')
           $timeout(function() {
             cfpLoadingBar.complete(); 
           }, 100);

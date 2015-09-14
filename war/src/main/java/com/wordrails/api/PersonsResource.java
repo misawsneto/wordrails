@@ -339,6 +339,13 @@ public class PersonsResource {
 
 				person.user = user;
 
+				if(person.email != null && !person.email.isEmpty()){
+					Person personE = personRepository.findByEmailAndNetworkId(person.email, network.id);
+					if(personE != null){
+						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + person.email + "\"}").build();
+					}
+				}
+
 				personRepository.save(person);
 			}catch (javax.validation.ConstraintViolationException e){
 				BadRequestException badRequest = new BadRequestException();

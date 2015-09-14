@@ -257,6 +257,8 @@ app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', 
 				$scope.totalPostsRead = generalStatsJson[0]
 				$scope.totalComments = generalStatsJson[1]
 				$scope.totalRecommends = generalStatsJson[2]
+				$scope.usersAndroid = generalStatsJson[3]
+				$scope.usersIOS = generalStatsJson[4]
 			}
 
 			$scope.chartData = [readsCount, recommendsCount, commentsCount]
@@ -274,13 +276,16 @@ app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', 
 	        }}
 		$scope.datePickerValue = moment().add(-30, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY');
 
-$scope.userCount = 0;
+$scope.usersCount = 0;
+$scope.usersAndroid = 0
+$scope.usersIOS = 0
 $scope.totalPublished = 0;
 $scope.totalScheduled = 0
 $scope.totalDrafts = 0;
+$scope.imagesCount = 0;
 
 trix.countPersonsByNetwork($scope.app.initData.network.id).success(function(response){
-	$scope.userCount = response.count;
+	$scope.usersCount = response.count;
 })
 
 $scope.page = 0;
