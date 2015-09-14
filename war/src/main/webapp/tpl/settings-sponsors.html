@@ -3,10 +3,10 @@
     <div class="row">
       <div class="col-sm-4" ng-repeat="sponsor in sponsors">
         <div class="panel panel-card animated zoomIn">
-          <div class="p">
+          <div class="wrapper">
             <div class="h4 m-b" clamp="1">{{sponsor.name}}</div>
-            <div class="panel panel-default m-b-none">
-              <div class="list-group no-radius alt">
+            <div class="pull-in m-b-none b-r-n b-l-n">
+              <div class="list-group no-radius alt list-group-no-border">
                 <a class="list-group-item text-md" ui-sref="app.settings.sponsorconfig({'sponsorId': sponsor.id})">
                   <i class="mdi mdi-settings fa-fw text-muted"></i> 
                   Configurações

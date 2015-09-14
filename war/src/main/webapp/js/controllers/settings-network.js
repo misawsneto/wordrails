@@ -166,3 +166,109 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 		}
 	}
 }])
+
+app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'TRIX',
+	function($scope ,  $log ,  $timeout ,  $rootScope ,  $state ,  trix , TRIX) {
+		// http://krispo.github.io/angular-nvd3/#/multiBarChart
+		$scope.chartOptions = {
+			"chart": {
+				"type": "multiBarChart",
+				"height": 300,
+				"margin": {
+					"top": 20,
+					"right": 20,
+					"bottom": 60,
+					"left": 45
+				},
+				"clipEdge": true,
+				"staggerLabels": true,
+				"transitionDuration": 500,
+				"stacked": true,
+				"xAxis": {
+					"axisLabel": " ",
+					"showMaxMin": false,
+					"tickFormat": function(d) { 
+						return d3.time.format('%d/%m/%Y')(new Date(d)) 
+					}
+				},
+				"yAxis": {
+					"axisLabel": "Y Axis",
+					"axisLabelDistance": 40,
+					"tickFormat": d3.format("d")
+				},
+				"controlLabels": { "stacked": "Empilhado","grouped": "Agrupado" },
+				"tooltipContent": function(data) {
+					var date = d3.time.format('%d/%m/%Y')(new Date(data.data.x));
+					var val = Math.trunc(data.data.y)
+					return '<table><thead><tr><td colspan="3"><strong class="x-value">' + val + ' em ' + date + '</strong></td></tr></thead><tbody><tr><td class="legend-color-guide"><div style="background-color: ' + data.color + ';"></div></td><td class="key">' + data.data.key + '</td><td class="value"></td></tr></tbody></table>'
+				}
+			}
+		}
+
+		trix.getNetworkPublicationsCount().success(function(response){
+			$scope.totalPublished = response.publicationsCounts[0]
+			$scope.totalDrafts = response.publicationsCounts[1]
+			$scope.totalScheduled = response.publicationsCounts[2]
+		})
+
+
+		trix.getNetworkStats(d3.time.format("%Y-%m-%d")(new Date())).success(function(response){
+
+			var dateStats = response.dateStatsJson
+			var generalStatsJson = response.generalStatsJson && response.generalStatsJson.length > 0 ? response.generalStatsJson : null;
+
+			var readsCount = {"key": "Leituras"}
+			readsCount.values = [];
+
+			for (var property in dateStats) {
+				if (dateStats.hasOwnProperty(property)) {
+					readsCount.values.push({
+						x: parseInt(property),
+						y: dateStats[property].readsCount
+					})
+				}
+			}
+
+			var recommendsCount = {"key": "Recomendações"}
+			recommendsCount.values = [];
+
+			for (var property in dateStats) {
+				if (dateStats.hasOwnProperty(property)) {
+					recommendsCount.values.push({
+						x: parseInt(property),
+						y: dateStats[property].recommendsCount
+					})
+				}
+			}
+
+			var commentsCount = {"key": "Comentários"}
+			commentsCount.values = [];
+
+			for (var property in dateStats) {
+				if (dateStats.hasOwnProperty(property)) {
+					commentsCount.values.push({
+						x: parseInt(property),
+						y: dateStats[property].commentsCount
+					})
+				}
+			}
+
+			if(generalStatsJson && generalStatsJson.length > 0){
+				$scope.totalPostsRead = generalStatsJson[0]
+				$scope.totalComments = generalStatsJson[1]
+				$scope.totalRecommends = generalStatsJson[2]
+			}
+
+			$scope.chartData = [readsCount, recommendsCount, commentsCount]
+		})
+
+
+$scope.page = 0;
+$scope.firstLoad = false
+
+trix.searchPosts(null, $scope.page, 10, {'personId': $scope.app.getLoggedPerson().id,
+	'publicationType': 'PUBLISHED', sortByDate: true}).success(function(response){
+		$scope.publications = response.posts;
+		$scope.firstLoad = true;
+	})
+}])
