@@ -264,8 +264,41 @@ app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', 
 			$scope.chartData = [readsCount, recommendsCount, commentsCount]
 		})
 
-		$scope.datePickerOptions = {language: 'pt', format: 'DD/MM/YYYY', startDate: moment().add(-29, 'days').format('DD/MM/YYYY'), endDate: moment().format('DD/MM/YYYY'),
-		language: 'pt',
+		$scope.datePickerOptions = {
+			"locale": {
+	        "format": "DD/MM/YYYY",
+	        "separator": " - ",
+	        "applyLabel": "Aplicar",
+	        "cancelLabel": "Cancelar",
+	        "fromLabel": "De",
+	        "toLabel": "Até",
+	        "customRangeLabel": "Personalizado",
+	        "daysOfWeek": [
+	            "Dom",
+	            "Seg",
+	            "Ter",
+	            "Qua",
+	            "Qui",
+	            "Sex",
+	            "Sab"
+	        ],
+	        "monthNames": [
+	            "Janeiro",
+	            "Fevereiro",
+	            "Março",
+	            "Abril",
+	            "Maio",
+	            "Junho",
+	            "Julho",
+	            "Agosto",
+	            "Setembro",
+	            "Outubro",
+	            "Novembro",
+	            "Dezembro"
+	        ],
+	        "firstDay": 1
+	    },
+		startDate: moment().add(-29, 'days'), endDate: moment(),
 		ranges: {
 	           'Hoje': [moment(), moment()],
 	           'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -274,7 +307,7 @@ app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', 
 	           'Último mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')
 	           ]
 	        }}
-		$scope.datePickerValue = moment().add(-30, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY');
+		//$scope.datePickerValue = moment().add(-30, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY');
 
 $scope.usersCount = 0;
 $scope.usersAndroid = 0
