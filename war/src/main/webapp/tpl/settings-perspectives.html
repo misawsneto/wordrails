@@ -16,6 +16,7 @@
 							<tr>
 								<th style="width:10%;">Ativada</th>
 								<th>Título</th>
+								<th>Categoria</th>
 								<th ng-if="app.networkAdmin" style="width:100px;"></th>
 							</tr>
 						</thead>
@@ -28,6 +29,7 @@
 									</label>
 								</td>
 								<td>{{perspective.name}}</td>
+								<td>{{perspective.taxonomyType == 'N' ? 'REDE' : 'ESTAÇÂO'}}</td>
 								<td ng-if="app.networkAdmin">
 									<div class="hidden-sm text-right" ng-click="app.stopPropagation($event)">
 										<a href ng-click="openDeletePerspective(perspective)" class="border-radius-50 i-20 mdi-delete mdi">

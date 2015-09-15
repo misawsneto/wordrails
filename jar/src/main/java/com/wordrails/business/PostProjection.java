@@ -1,12 +1,10 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.rest.core.config.Projection;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
-import org.springframework.data.rest.core.config.Projection;
 
 @Projection(types=Post.class)
 public interface PostProjection {

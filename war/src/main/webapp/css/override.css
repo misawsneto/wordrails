@@ -4840,6 +4840,26 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   overflow: auto;
 }
 
+ul.normal-wrap{
+  white-space: normal;
+}
+
+#perspective-editor-dialog .perspective-editor-category-selector{
+  max-height: 290px;
+  overflow: auto;
+}
+
+#perspective-editor-dialog .perspective-editor-category-selector md-checkbox{
+  margin: 0;
+  padding-left: 15px;
+}
+
+#perspective-editor-dialog .perspective-editor-category-selector-list li{
+  display: inline-block;
+  margin-top: 15px;
+  margin-right: 20px;
+}
+
 /* /setting-perspective-editor */
 
 /* settings-categories */

@@ -191,9 +191,12 @@ public class FilesResource {
 	@GET
 	@Path("{id}/contents")
 	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
-		String subdomain = getSubdomain(request.getHeader("Host"));
-		if(subdomain == null || subdomain.isEmpty()){
-			return Response.serverError().entity("subdomain of network is null").build();
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+
+		String subdomain = null;
+		if(network == null){
+			subdomain = network.subdomain;
+			return Response.status(Status.NOT_FOUND).entity("subdomain of network is null").build();
 		}
 
 		String hash = fileRepository.findHashById(id);

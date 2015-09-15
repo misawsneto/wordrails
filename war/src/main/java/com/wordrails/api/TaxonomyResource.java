@@ -81,9 +81,7 @@ public class TaxonomyResource {
 
 		List<Term> categoryTerms = new ArrayList<Term>();
 		for(Term term: category.terms){
-			if(term.parent == null)
-				categoryTerms.add(term);
-
+			categoryTerms.add(term);
 			term.cells = null; term.children = null; term.parent = null; term.posts = null; term.rows = null; term.termPerspectives = null; term.taxonomy = null;
 		}
 
@@ -95,8 +93,7 @@ public class TaxonomyResource {
 
 		List<Term> scategoryTerms = new ArrayList<Term>();
 		for(Term term: scategory.terms){
-			if(term.parent == null)
-				scategoryTerms.add(term);
+			scategoryTerms.add(term);
 			term.cells = null; term.children = null; term.parent = null; term.posts = null; term.rows = null; term.termPerspectives = null; term.taxonomy = null;
 		}
 

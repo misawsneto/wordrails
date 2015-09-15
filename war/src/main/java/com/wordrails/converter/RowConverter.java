@@ -1,14 +1,13 @@
 package com.wordrails.converter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.wordrails.api.RowView;
 import com.wordrails.business.Row;
 import com.wordrails.persistence.CellRepository;
 import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;
 import com.wordrails.persistence.TermRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class RowConverter extends AbstractConverter<Row, RowView>{

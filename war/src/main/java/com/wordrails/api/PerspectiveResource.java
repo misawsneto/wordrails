@@ -312,6 +312,7 @@ public class PerspectiveResource {
 		termView.ordinaryRows = fillPostsNotPositionedInRow(termPerspective.term ,rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
+		termView.taxonomyId = termPerspective.taxonomyId;
 		termView.id = termPerspective.id;
 
 		return termView;
@@ -400,6 +401,7 @@ public class PerspectiveResource {
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null); 
 		termView.termId = termPerspective.term.id;
 		termView.termName = termPerspective.term.name;
+		termView.taxonomyId = termPerspective.taxonomyId;
 		termView.stationId = termPerspective.stationId;
 
 		return termView;

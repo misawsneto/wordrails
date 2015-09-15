@@ -764,6 +764,26 @@ public class UtilResource {
 		}
 	}
 
+	@GET
+	@Path("/updateStationPerspectiveTaxonomyIds")
+	public void updateStationPerspectiveTaxonomyIds(@Context HttpServletRequest request) {
+		if(isLocal(request.getHeader("Host"))) {
+			List<StationPerspective> pers = stationPerspectiveRepository.findAll();
+			for (StationPerspective per: pers){
+				per.taxonomyId = per.taxonomy.id;
+				per.taxonomyName = per.taxonomy.name;
+				per.taxonomyType = per.taxonomy.type;
+				if(per.perspectives != null)
+				for(TermPerspective tper: per.perspectives){
+					tper.taxonomyId = per.taxonomyId;
+				}
+				termPerspectiveRepository.save(per.perspectives);
+			}
+			stationPerspectiveRepository.save(pers);
+
+		}
+	}
+
 	@Autowired
 	private AmazonCloudService amazon;
 
