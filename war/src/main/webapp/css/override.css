@@ -2861,6 +2861,10 @@ md-backdrop.md-opaque{
     text-overflow: ellipsis;
   }
 
+  .md-button.md-fab{
+    z-index: 9;
+  }
+
  /* /general */
 
  /* nvd3 */
@@ -4973,7 +4977,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 }
 
 .editor-panel{
-  z-index: 11!important;
+  z-index: 9!important;
   top: 120px!important;
   webkit-transform: translate3d(0, 0, 0)!important;
   transform: translate3d(0, 0, 0)!important;

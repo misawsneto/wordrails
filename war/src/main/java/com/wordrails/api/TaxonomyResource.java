@@ -1,28 +1,24 @@
 package com.wordrails.api;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.business.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.business.Network;
-import com.wordrails.business.NetworkRole;
-import com.wordrails.business.Person;
-import com.wordrails.business.StationRole;
-import com.wordrails.business.Taxonomy;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.StationRepository;
@@ -35,15 +31,15 @@ import com.wordrails.persistence.TaxonomyRepository;
 @Produces(MediaType.APPLICATION_JSON)
 public class TaxonomyResource {
 	
-	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
-	
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
+	private @Autowired TrixAuthenticationProvider authProvider;
+	private @Autowired WordrailsService wordrailsService;
+	public @Autowired @Qualifier("objectMapper")
+	ObjectMapper mapper;
 
 	@Path("/networks/{networkId}/taxonomiesToEdit")
 	@GET
@@ -70,5 +66,52 @@ public class TaxonomyResource {
 			}
 		}
 		return Response.ok().entity(mapper.writeValueAsString(taxonomies)).build();
+	}
+
+	@Path("/allCategories")
+	@GET
+	public List<Taxonomy> getCategories(@Context HttpServletRequest request, @QueryParam("stationId") Integer stationId) throws JsonProcessingException {
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+
+		Taxonomy category = null;
+		List<Taxonomy> taxonomies = taxonomyRepository.findNetworkCategories(network.id);
+		if(taxonomies != null && taxonomies.size() > 0){
+			category = taxonomies.get(0);
+		}
+
+		List<Term> categoryTerms = new ArrayList<Term>();
+		for(Term term: category.terms){
+			if(term.parent == null)
+				categoryTerms.add(term);
+
+			term.cells = null; term.children = null; term.parent = null; term.posts = null; term.rows = null; term.termPerspectives = null; term.taxonomy = null;
+		}
+
+		Taxonomy scategory = null;
+		List<Taxonomy> staxonomies = taxonomyRepository.findStationTaxonomy(stationId);
+		if(staxonomies != null && staxonomies.size() > 0){
+			scategory = staxonomies.get(0);
+		}
+
+		List<Term> scategoryTerms = new ArrayList<Term>();
+		for(Term term: scategory.terms){
+			if(term.parent == null)
+				scategoryTerms.add(term);
+			term.cells = null; term.children = null; term.parent = null; term.posts = null; term.rows = null; term.termPerspectives = null; term.taxonomy = null;
+		}
+
+		ArrayList<Taxonomy> allTax = new ArrayList<Taxonomy>();
+
+		category.owningNetwork = null; category.owningStation = null; category.networks = null;
+		scategory.owningNetwork = null; scategory.owningStation = null; scategory.networks = null;
+
+		category.terms = new HashSet<Term>(categoryTerms);
+		scategory.terms = new HashSet<Term>(scategoryTerms);
+
+		allTax.add(category);
+		allTax.add(scategory);
+
+		//return Response.status(Response.Status.OK).entity("{\"taxonomies\": " + mapper.writeValueAsString(allTax) +"}").build();
+		return  allTax;
 	}
 }

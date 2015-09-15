@@ -80,6 +80,12 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       'searchedPosts': [],
     }
 
+    $scope.pe = []
+    
+    trix.findAllCategories($scope.thisStation.id).success(function(){
+
+    })
+
     $scope.pe = {searchPage: 0}
     $scope.pe.nonemptySearch = $scope.pe.searchResults ? true : false;
     // -------------
