@@ -4845,7 +4845,7 @@ ul.normal-wrap{
 }
 
 #perspective-editor-dialog .perspective-editor-category-selector{
-  max-height: 290px;
+  min-height: 290px;
   overflow: auto;
 }
 

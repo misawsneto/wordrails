@@ -37,8 +37,15 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       trix.findAllCategories($scope.thisStation.id).success(function(response){
         $scope.pe.taxonomies = response
         $scope.pe.taxonomies.forEach(function(tax, index){
-          if($scope.termPerspectiveView.taxonomyId == tax.id)
+          if($scope.termPerspectiveView.taxonomyId == tax.id){
             $scope.pe.terms = tax.terms;
+            $scope.termPerspectiveView.ordinaryRows && $scope.termPerspectiveView.ordinaryRows.forEach(function(row, index){
+              $scope.pe.terms && $scope.pe.terms.forEach(function(term, index){
+                if(row.termId == term.id)
+                  term.checked = true;
+              });
+            });
+          }
         });
       })
     });
@@ -179,9 +186,43 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
         };
       }
 
+      $scope.pe.terms && $scope.pe.terms.forEach(function(term, index){
+        if(term.id == termId && term.checked)
+          term.checked = false;
+      });
+
       perspective.ordinaryRows && perspective.ordinaryRows.forEach(function(row, index){
         row.index = index;
       });
+    }
+
+    function addCategory(rows, term){
+      var addedRow ={
+        index: rows.length,
+        termId: term.id,
+        termName: term.name,
+        type: 'O'
+      }
+      term.checked = true;
+      trix.getRowView($state.params.perspectiveId, $scope.termPerspectiveView.id, term.id, 0, 10)
+          .success(function(response){
+            if(response.cells && response.cells.length > 0){
+                   addedRow.cells = response.cells;
+                   rows.push(addedRow)
+            }
+        })
+    }    
+
+    $scope.$watch('pe.terms', function(newVal){
+      console.log(newVal);
+    },true)
+
+    $scope.pe.checkCategory = function(term){
+      var perspective = $scope.termPerspectiveView
+      if(term.checked)
+        addCategory(perspective.ordinaryRows, term);
+      else
+        $scope.removeCategory(term.id)
     }
 
 //  -------------- end of perspective editor dialog controller
