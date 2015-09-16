@@ -1,6 +1,7 @@
 package com.wordrails.util;
 
 import com.wordrails.services.WordpressParsedContent;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,6 +11,8 @@ import org.jsoup.select.Elements;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -39,6 +42,21 @@ public class WordrailsUtil {
 		String slug = NONLATIN.matcher(normalized).replaceAll("");
 		slug = slug.trim().replaceAll("-+", "-");
 		return slug.toLowerCase(Locale.ENGLISH);
+	}
+
+	public static byte[] getBytes(InputStream in) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		org.apache.commons.io.IOUtils.copy(in, baos);
+		return baos.toByteArray();
+	}
+
+	public static String getHash(InputStream is) throws IOException {
+		byte[] bytes = getBytes(is);
+		return getHash(bytes);
+	}
+
+	public static String getHash(byte[] bytes) throws IOException {
+		return DigestUtils.md5Hex(new ByteArrayInputStream(bytes));
 	}
 
 	public static Date removeTime(Date date) {

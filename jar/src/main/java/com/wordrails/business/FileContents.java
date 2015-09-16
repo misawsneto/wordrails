@@ -1,15 +1,14 @@
 package com.wordrails.business;
 
+import java.sql.Blob;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "File")
-public class File {
-
-	public static final String INTERNAL = "I";
-	public static final String EXTERNAL = "E";
+@Table(name="File")
+public class FileContents {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +29,6 @@ public class File {
 	public Long size;
 
 	public Integer networkId;
+
+	public Blob contents;
 }

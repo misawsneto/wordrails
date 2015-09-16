@@ -23,9 +23,17 @@ public class FileService {
 	}
 
 	public String newFile(InputStream input, String domain, String mime) throws FileUploadException, IOException {
-//		long byteSize = ((FileInputStream) input).getChannel().size();
 		long byteSize = IOUtils.toByteArray(input).length;
-		return newFile(input, domain, mime, byteSize);
+		return amazonCloudService.uploadPublicImage(input, byteSize, domain, "original", mime);
+	}
+
+	public FileInputStream resizeImage(BufferedImage image, Integer size, String mime) throws IOException {
+		File file = java.io.File.createTempFile("trix", "");
+
+		BufferedImage bi = Thumbnails.of(image).size(size, size).outputFormat(mime).outputQuality(1).asBufferedImage();
+		ImageIO.write(bi, mime, file);
+
+		return new FileInputStream(file);
 	}
 
 	public String newResizedImage(BufferedImage image, String domain, Integer size, String sizeType, String mime) throws FileUploadException, IOException {
@@ -38,21 +46,5 @@ public class FileService {
 		long byteSize = fis.getChannel().size();
 
 		return amazonCloudService.uploadPublicImage(fis, byteSize, domain, sizeType, mime);
-	}
-
-	public String newFile(InputStream inputStream, String domain, String mime, Long size) throws FileUploadException, BadRequestException {
-		try {
-			return amazonCloudService.uploadPublicImage(inputStream, size, domain, "original", mime);
-		} catch (Exception e) {
-			throw new FileUploadException("", e);
-		}
-	}
-
-	public void updatePublicFile(InputStream inputStream, String domain, String fileName, Long size) throws FileUploadException, BadRequestException {
-		try {
-			amazonCloudService.uploadPublicImage(inputStream, size, domain, fileName);
-		} catch (Exception e) {
-			throw new FileUploadException("", e);
-		}
 	}
 }
