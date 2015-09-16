@@ -71,7 +71,7 @@ public class FilesResource {
 
 		String hash = WordrailsUtil.getHash(item.getInputStream());
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		File existingFile = fileRepository.findByHash(hash, network.id);
+		File existingFile = fileRepository.findByHashAndNetworkId(hash, network.id);
 		if(existingFile != null) {
 			return getResponseFromId(existingFile.id);
 		}
@@ -144,7 +144,7 @@ public class FilesResource {
 
 			String hash = WordrailsUtil.getHash(item.getInputStream());
 			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-			File existingFile = fileRepository.findByHash(hash, network.id);
+			File existingFile = fileRepository.findByHashAndNetworkId(hash, network.id);
 			if(existingFile != null) {
 				return getResponseFromId(existingFile.id);
 			}
