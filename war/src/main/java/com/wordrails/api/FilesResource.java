@@ -1,18 +1,26 @@
 package com.wordrails.api;
 
 import com.wordrails.WordrailsService;
-import com.wordrails.business.Network;
 import com.wordrails.business.File;
+import com.wordrails.business.FileContents;
+import com.wordrails.business.Network;
+import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
 import com.wordrails.services.AmazonCloudService;
-import com.wordrails.services.FileService;
+import com.wordrails.util.WordrailsUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.engine.jdbc.LobCreator;
+import org.jboss.resteasy.annotations.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,9 +31,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Path("/files")
@@ -39,11 +49,13 @@ public class FilesResource {
 	@Autowired
 	private FileRepository fileRepository;
 	@Autowired
+	private FileContentsRepository fileContentsRepository;
+	@Autowired
 	private AmazonCloudService amazonCloudService;
 	@Autowired
 	private WordrailsService wordrailsService;
-	@Autowired
-	private FileService fileService;
+	@PersistenceContext
+	private EntityManager manager;
 
 
 	@Deprecated
@@ -51,29 +63,49 @@ public class FilesResource {
 	@Path("{id}/contents")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response putFileContents(@PathParam("id") Integer id, @Context HttpServletRequest request) throws FileUploadException, IOException {
-		String subdomain = getSubdomain(request.getHeader("Host"));
-		if(subdomain == null || subdomain.isEmpty()){
-			return Response.serverError().entity("subdomain of network is null").build();
-		}
-		File file = fileRepository.findOne(id);
+		FileItem item = getFileFromRequest(request);
 
-		if (file == null) {
-			return Response.status(Status.NOT_FOUND).build();
+		if (item == null) {
+			return Response.noContent().build();
+		}
+
+		String hash = WordrailsUtil.getHash(item.getInputStream());
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		File existingFile = fileRepository.findByHash(hash, network.id);
+		if(existingFile != null) {
+			return getResponseFromId(existingFile.id);
 		}
 
 		try {
-			FileItem item = getFileFromRequest(request);
-			file.hash = sendFile(subdomain, item);
+			if (validate(item)) {
+				String subdomain = network.subdomain;
+				if (subdomain == null || subdomain.isEmpty()) {
+					return Response.serverError().entity("subdomain of network is null").build();
+				}
+				FileContents file = fileContentsRepository.findOne(id);
 
-			fileRepository.save(file);
+				if (file == null) {
+					return Response.status(Status.NOT_FOUND).build();
+				}
 
-			URI location = UriBuilder.fromResource(FilesResource.class).path(id.toString()).path("contents").build();
-			return Response.status(Status.NO_CONTENT).location(location).build();
-		} catch (BadRequestException ue) {
-			return Response.status(Status.BAD_REQUEST).build();
+				Session session = (Session) manager.getDelegate();
+				LobCreator creator = Hibernate.getLobCreator(session);
+
+				file.hash = hash;
+				file.type = File.INTERNAL;
+				file.networkId = network.id;
+				file.mime = item.getContentType();
+				file.contents = creator.createBlob(item.getInputStream(), item.getSize());
+				file.size = item.getSize();
+				fileContentsRepository.save(file);
+
+				return getResponseFromId(id);
+			}
 		} catch (FileUploadException ue) {
 			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximum size is 6MB\", maxMb:6}").build();
 		}
+
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	private FileItem getFileFromRequest(HttpServletRequest request) throws FileUploadException {
@@ -89,33 +121,12 @@ public class FilesResource {
 		return null;
 	}
 
+	private Response getResponseFromId(Integer id) {
+		URI location = UriBuilder.fromResource(FilesResource.class).path(id.toString()).path("contents").build();
 
-	@POST
-	@Path("/upload")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response upload(@Context HttpServletRequest request) throws FileUploadException, IOException {
-		try {
-			FileItem item = getFileFromRequest(request);
-
-			if (item == null) {
-				return Response.noContent().build();
-			}
-
-			String subdomain = getSubdomain(request.getHeader("Host"));
-			if(subdomain == null || subdomain.isEmpty()){
-				return Response.serverError().entity("subdomain of network is null").build();
-			}
-			String trixHash = sendFile(subdomain, item);
-			File file = new File(trixHash);
-			fileRepository.save(file);
-
-			return Response.ok().entity("{\"hash\":" + trixHash + "}").build();
-		} catch (BadRequestException ue) {
-			return Response.status(Status.BAD_REQUEST).build();
-		} catch (FileUploadException ue) {
-			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximum size is 6MB\", maxMb:6}").build();
-		}
+		return Response.ok().entity("{\"filelink\":\"/api" + location + "\", " +
+				"\"link\":\"/api" + location + "\", " +
+				"\"id\":" + id + "}").build();
 	}
 
 
@@ -131,37 +142,38 @@ public class FilesResource {
 				return Response.noContent().build();
 			}
 
-			String subdomain = getSubdomain(request.getHeader("Host"));
-			if(subdomain == null || subdomain.isEmpty()){
-				return Response.serverError().entity("subdomain of network is null").build();
+			String hash = WordrailsUtil.getHash(item.getInputStream());
+			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+			File existingFile = fileRepository.findByHash(hash, network.id);
+			if(existingFile != null) {
+				return getResponseFromId(existingFile.id);
 			}
-			String trixHash = sendFile(subdomain, item);
-			File file = new File(trixHash);
-			fileRepository.save(file);
 
-			URI location = UriBuilder.fromResource(FilesResource.class).path(String.valueOf(file.id)).path("contents").build();
+			if (validate(item)) {
+				String subdomain = network.subdomain;
+				if (subdomain == null || subdomain.isEmpty()) {
+					return Response.serverError().entity("subdomain of network is null").build();
+				}
 
-			return Response.ok().entity("{\"filelink\":\"/api" + location + "\", " +
-					"\"link\":\"/api" + location + "\", " +
-					"\"id\":" + file.id + "}").build();
-		} catch (BadRequestException ue) {
-			return Response.status(Status.BAD_REQUEST).build();
+				Session session = (Session) manager.getDelegate();
+				LobCreator creator = Hibernate.getLobCreator(session);
+
+				FileContents file = new FileContents();
+				file.hash = hash;
+				file.type = File.INTERNAL;
+				file.networkId = network.id;
+				file.mime = item.getContentType();
+				file.contents = creator.createBlob(item.getInputStream(), item.getSize());
+				file.size = item.getSize();
+				fileContentsRepository.save(file);
+
+				return getResponseFromId(file.id);
+			}
 		} catch (FileUploadException ue) {
 			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximum size is 6MB\", maxMb:6}").build();
 		}
-	}
 
-	private String sendFile(String domain, FileItem item) throws FileUploadException {
-		if (validate(item)) {
-			try {
-				InputStream input = item.getInputStream();
-				return fileService.newFile(input, domain, item.getContentType(), item.getSize());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		throw new BadRequestException();
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	private boolean validate(FileItem item) throws FileUploadException {
@@ -175,34 +187,51 @@ public class FilesResource {
 		return false;
 	}
 
-	private String getSubdomain(String host) {
-		String subdomain = wordrailsService.getSubdomainFromHost(host);
-		if(subdomain == null || subdomain.isEmpty()){
-			Network network = wordrailsService.getNetworkFromHost(host);
+	private String getSubdomainFromHost(String host) {
+		Network network = wordrailsService.getNetworkFromHost(host);
+		if (network != null) return network.subdomain;
 
-			if(network != null) {
-				return network.subdomain;
-			}
-		}
-
-		return subdomain;
+		return null;
 	}
 
 	@GET
 	@Path("{id}/contents")
+	@Cache(isPrivate = false, maxAge = 31536000)
 	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
-		String subdomain = getSubdomain(request.getHeader("Host"));
-		if(subdomain == null || subdomain.isEmpty()){
+		String subdomain = getSubdomainFromHost(request.getHeader("Host"));
+		if (subdomain == null || subdomain.isEmpty()) {
 			return Response.serverError().entity("subdomain of network is null").build();
 		}
 
-		String hash = fileRepository.findHashById(id);
-		if(hash == null)
-			return Response.status(Status.NOT_FOUND).entity("file doesnt exist").build();
-		if(hash.isEmpty())
-			return Response.status(Status.NOT_FOUND).entity("file wasnt uploaded properly").build();
+		String hash = fileRepository.findExternalHashById(id);
 
-		response.sendRedirect(amazonCloudService.getPublicImageURL(subdomain, hash));
-		return Response.ok().build();
+		FileContents file = null;
+		if (hash == null || hash.isEmpty()) {
+			file = fileContentsRepository.findOne(id);
+			if (file.contents == null) {
+				return Response.status(Status.NO_CONTENT).build();
+			}
+		}
+
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control", "max-age=2592000");
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.add(Calendar.DATE, 30);
+		//HTTP header date format: Thu, 01 Dec 1994 16:00:00 GMT
+		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
+		response.setHeader("Expires", o);
+
+		if (hash != null && !hash.isEmpty()) {
+			response.sendRedirect(amazonCloudService.getPublicImageURL(subdomain, hash));
+			return Response.ok().build();
+		} else if(file != null && file.contents != null) {
+			return Response.ok(file.contents.getBinaryStream(), file.mime).build();
+		}
+
+		return Response.status(Status.NO_CONTENT).build();
 	}
+
+
 }

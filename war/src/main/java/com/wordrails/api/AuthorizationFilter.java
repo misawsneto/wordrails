@@ -141,11 +141,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindHashByIdAuthorized(Integer id) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetImagesAuthorized() {
 		return false;
 	}
@@ -1223,51 +1218,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetPostScheduledTermsAuthorized(Integer postScheduledId) {
 		return canReadPosts(postScheduledId);
-	}
-
-	@Override
-	protected boolean isGetPostTrashsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPostTrashAuthorized(Integer postTrashId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPostTrashSponsorAuthorized(Integer postTrashId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPostTrashCommentsAuthorized(Integer postTrashId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPostTrashFeaturedImageAuthorized(Integer postTrashId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPostTrashImagesAuthorized(Integer postTrashId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPostTrashAuthorAuthorized(Integer postTrashId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPostTrashStationAuthorized(Integer postTrashId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPostTrashTermsAuthorized(Integer postTrashId) {
-		return false;
 	}
 
 	@Override

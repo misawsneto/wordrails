@@ -1,11 +1,12 @@
 package com.wordrails.services;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
-import com.wordrails.business.*;
 import com.wordrails.business.File;
+import com.wordrails.business.*;
 import com.wordrails.persistence.*;
 import com.wordrails.util.WordrailsUtil;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -43,12 +44,6 @@ public class AmazonCloudService {
 	@Value("${amazon.privateBucket}")
 	String privateBucket;
 
-	private byte[] getBytes(InputStream in) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		org.apache.commons.io.IOUtils.copy(in, baos);
-		return baos.toByteArray();
-	}
-
 	public String getPrivateImageURL(String networkDomain, String fileName) throws IOException {
 		return "http://" + privateCloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
 	}
@@ -66,15 +61,15 @@ public class AmazonCloudService {
 	}
 
 	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
-		byte[] bytes = getBytes(input);
-		String hash = DigestUtils.md5Hex(new ByteArrayInputStream(bytes));
+		byte[] bytes = WordrailsUtil.getBytes(input);
+		String hash = WordrailsUtil.getHash(bytes);
 		uploadImage(new ByteArrayInputStream(bytes), lenght, networkDomain, publicBucket, hash, size, mime);
 		return hash;
 	}
 
 	public String uploadPrivateImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
-		byte[] bytes = getBytes(input);
-		String hash = DigestUtils.md5Hex(new ByteArrayInputStream(bytes));
+		byte[] bytes = WordrailsUtil.getBytes(input);
+		String hash = WordrailsUtil.getHash(bytes);
 		uploadImage(new ByteArrayInputStream(bytes), lenght, networkDomain, privateBucket, hash, size, mime);
 		return hash;
 	}
@@ -101,6 +96,15 @@ public class AmazonCloudService {
 		uploadFile(input, lenght, bucketName, path, md);
 	}
 
+	public boolean exists(AmazonS3 s3Client, String bucket, String key) {
+		try {
+			s3Client.getObject(bucket, key);
+		} catch(AmazonServiceException e) {
+			return false;
+		}
+		return true;
+	}
+
 	private void uploadFile(InputStream input, Long lenght, String bucketName, String keyName, ObjectMetadata metadata) throws IOException, AmazonS3Exception {
 		if (input.available() == 0) {
 			throw new AmazonS3Exception("InputStream is empty");
@@ -108,6 +112,10 @@ public class AmazonCloudService {
 
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, accessSecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(awsCreds);
+
+		if(exists(s3Client, bucketName, keyName)) {
+			return;
+		}
 
 		// Create a list of UploadPartResponse objects. You get one of these for
 		// each part upload.
@@ -170,11 +178,13 @@ public class AmazonCloudService {
 	private StationRepository stationRepository;
 	@Autowired
 	private PersonRepository personRepository;
+	@Autowired
+	private FileContentsRepository fileContentsRepository;
 
 	private String uploadFile(String domain, File file, String sizeType) throws SQLException, IOException {
 		System.out.println("uploading file " + file.id);
 
-		Blob blob = file.contents;
+		Blob blob = fileContentsRepository.findOne(file.id).contents;
 		InputStream is;
 		long byteSize;
 
@@ -183,7 +193,7 @@ public class AmazonCloudService {
 				is = WordrailsUtil.getStreamFromUrl(file.url);
 				byteSize = ((FileInputStream) is).getChannel().size();
 			} else {
-				return "";
+				return null;
 			}
 		} else {
 			is = blob.getBinaryStream();
@@ -194,7 +204,7 @@ public class AmazonCloudService {
 
 		if(file.mime == null) file.mime = new Tika().detect(is);
 
-		String hash = "";
+		String hash = null;
 
 		try {
 			hash = uploadPublicImage(is, byteSize, domain, sizeType, file.mime);
@@ -208,26 +218,36 @@ public class AmazonCloudService {
 	}
 
 	private Image uploadImage(Image image, String domain) throws IOException, SQLException {
+		saveFilesHash(image);
+
 		if (image.originalHash != null && image.largeHash != null && image.mediumHash != null && image.smallHash != null) {
 			return image;
 		}
 
+		String hash;
 		if(image.originalHash == null) {
-			image.originalHash = uploadFile(domain, image.original, "original");
+			hash = uploadFile(domain, image.original, "original");
+			image.originalHash = hash != null ? hash : image.original.hash;
+			System.out.println("Upload file " + image.original.id + " hash " + image.originalHash);
 		}
 		if(image.largeHash == null) {
-			image.largeHash = uploadFile(domain, image.large, "large");
+			hash = uploadFile(domain, image.large, "large");
+			image.largeHash = hash != null ? hash : image.large.hash;
+			System.out.println("Upload file " + image.large.id + " hash " + image.largeHash);
 		}
 		if(image.mediumHash == null) {
-			image.mediumHash = uploadFile(domain, image.medium, "medium");
+			hash = uploadFile(domain, image.medium, "medium");
+			image.mediumHash = hash != null ? hash : image.medium.hash;
+			System.out.println("Upload file " + image.medium.id + " hash " + image.mediumHash);
 		}
 		if(image.smallHash == null) {
-			image.smallHash = uploadFile(domain, image.small, "small");
+			hash = uploadFile(domain, image.small, "small");
+			image.smallHash = hash != null ? hash : image.small.hash;
+			System.out.println("Upload file " + image.small.id + " hash " + image.smallHash);
 		}
 
 		imageRepository.save(image);
 
-		saveFilesHash(image);
 		return image;
 	}
 
@@ -246,6 +266,25 @@ public class AmazonCloudService {
 		}
 		if(image.small.hash == null) {
 			image.small.hash = image.smallHash;
+			fileRepository.save(image.small);
+		}
+	}
+
+	private void setNetworkIdOnFiles(Integer networkId, Image image) {
+		if(image.original.networkId == null) {
+			image.original.networkId = networkId;
+			fileRepository.save(image.original);
+		}
+		if(image.large.networkId == null) {
+			image.large.networkId = networkId;
+			fileRepository.save(image.large);
+		}
+		if(image.medium.networkId == null) {
+			image.medium.networkId = networkId;
+			fileRepository.save(image.medium);
+		}
+		if(image.small.networkId == null) {
+			image.small.networkId = networkId;
 			fileRepository.save(image.small);
 		}
 	}
@@ -274,32 +313,27 @@ public class AmazonCloudService {
 							bodyImages.add(imageRepository.findByFileId(id));
 						}
 
-						if(image != null) {
-							if (post.imageHash == null || post.imageLargeHash == null || post.imageMediumHash == null || post.imageSmallHash == null
-									|| image.originalHash == null || image.largeHash == null || image.mediumHash == null || image.smallHash == null) {
-								try {
-									System.out.println("Upload featureImage of post " + post.id);
-									image = uploadImage(image, domain);
+						if (image != null) {
+							try {
+								setNetworkIdOnFiles(network.id, image);
+								image = uploadImage(image, domain);
 
-									post.imageHash = image.originalHash;
-									post.imageLargeHash = image.largeHash;
-									post.imageMediumHash = image.mediumHash;
-									post.imageSmallHash = image.smallHash;
+								post.imageHash = image.originalHash;
+								post.imageLargeHash = image.largeHash;
+								post.imageMediumHash = image.mediumHash;
+								post.imageSmallHash = image.smallHash;
 
-									postRepository.save(post);
-								} catch (SQLException | IOException e) {
-									e.printStackTrace();
-									continue;
-								}
-							} else {
-								saveFilesHash(image);
+								postRepository.save(post);
+							} catch (SQLException | IOException e) {
+								e.printStackTrace();
+								continue;
 							}
 						}
 
 						for (Image img : bodyImages) {
 							try {
 								if(img != null) {
-									System.out.println("Upload body images of post " + post.id);
+									setNetworkIdOnFiles(network.id, img);
 									uploadImage(img, domain);
 								}
 
@@ -312,48 +346,38 @@ public class AmazonCloudService {
 
 				List<Person> people = personRepository.findAllByNetwork(network.id);
 				for (Person person : people) {
-					System.out.println("Upload of person " + person.id);
 					Image cover = person.cover;
 					Image profilePicture = person.image;
 
-					if(cover != null) {
-						if (person.coverMediumHash == null || person.coverLargeHash == null || cover.mediumHash == null || cover.largeHash == null) {
-							try {
-								System.out.println("Upload cover of person " + person.id);
-								cover = uploadImage(cover, domain);
+					if (cover != null) {
+						try {
+							System.out.println("Upload cover of person " + person.id);
+							setNetworkIdOnFiles(network.id, cover);
+							cover = uploadImage(cover, domain);
 
-								person.coverMediumHash = cover.mediumHash;
-								person.coverLargeHash = cover.largeHash;
+							person.coverMediumHash = cover.mediumHash;
+							person.coverLargeHash = cover.largeHash;
 
-								personRepository.save(person);
-							} catch (SQLException | IOException e) {
-								e.printStackTrace();
-							}
-						} else {
-							saveFilesHash(cover);
+							personRepository.save(person);
+						} catch (SQLException | IOException e) {
+							e.printStackTrace();
 						}
 					}
 
-					if(profilePicture != null) {
-						if (person.imageHash == null || person.imageLargeHash == null ||
-								person.imageMediumHash == null || person.imageSmallHash == null ||
-								profilePicture.originalHash == null || profilePicture.largeHash == null ||
-								profilePicture.mediumHash == null || profilePicture.smallHash == null) {
-							try {
-								System.out.println("Upload profilePicture of person " + person.id);
-								profilePicture = uploadImage(profilePicture, domain);
+					if (profilePicture != null) {
+						try {
+							System.out.println("Upload profilePicture of person " + person.id);
+							setNetworkIdOnFiles(network.id, profilePicture);
+							profilePicture = uploadImage(profilePicture, domain);
 
-								person.imageHash = profilePicture.originalHash;
-								person.imageLargeHash = profilePicture.largeHash;
-								person.imageMediumHash = profilePicture.mediumHash;
-								person.imageSmallHash = profilePicture.smallHash;
+							person.imageHash = profilePicture.originalHash;
+							person.imageLargeHash = profilePicture.largeHash;
+							person.imageMediumHash = profilePicture.mediumHash;
+							person.imageSmallHash = profilePicture.smallHash;
 
-								personRepository.save(person);
-							} catch (SQLException | IOException e) {
-								e.printStackTrace();
-							}
-						} else {
-							saveFilesHash(profilePicture);
+							personRepository.save(person);
+						} catch (SQLException | IOException e) {
+							e.printStackTrace();
 						}
 					}
 				}
