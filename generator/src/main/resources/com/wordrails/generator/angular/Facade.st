@@ -401,6 +401,14 @@ var trix = angular.module('trix', [])
 		return \$http.get(_config.url + "/api/posts/" + stationId + "/findPostsByStationIdAndAuthorIdAndState", config)
 	}
 
+	this.findAllCategories = function(stationId) {
+    	var config = {};
+        config.params = {
+    	    stationId: stationId
+        }
+        return \$http.get(_config.url + "/api/taxonomies/allCategories",  config)
+    };
+
   	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
   }
 

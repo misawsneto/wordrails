@@ -1,19 +1,9 @@
 package com.wordrails.business;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Table(name="station_perspective")
@@ -36,11 +26,18 @@ public class StationPerspective {
 	public Set<TermPerspective> perspectives;
 	
 	public Integer stationId;
-	
+	public Integer taxonomyId;
+
+	public String taxonomyName;
+	public String taxonomyType;
+
 	@PreUpdate
 	private void onUpdate() {
 		if(station != null){
 			stationId = station.id;
+			taxonomyId = taxonomy.id;
+			taxonomyName = taxonomy.name;
+			taxonomyType = taxonomy.type;
 		}
 	}
 	
@@ -48,6 +45,9 @@ public class StationPerspective {
 	private void onCreate() {
 		if(station != null){
 			stationId = station.id;
+			taxonomyId = taxonomy.id;
+			taxonomyName = taxonomy.name;
+			taxonomyType = taxonomy.type;
 		}
 	}
 

@@ -318,6 +318,7 @@ public class PersonsResource {
 				person.username = personCreationObject.username;
 				person.password = personCreationObject.password;
 				person.email = personCreationObject.email;
+				person.networkId = network.id;
 
 				UserGrantedAuthority authority = new UserGrantedAuthority(UserGrantedAuthority.USER);
 				authority.network = network;
@@ -337,6 +338,13 @@ public class PersonsResource {
 				user.addAuthority(authority);
 
 				person.user = user;
+
+				if(person.email != null && !person.email.isEmpty()){
+					Person personE = personRepository.findByEmailAndNetworkId(person.email, network.id);
+					if(personE != null){
+						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + person.email + "\"}").build();
+					}
+				}
 
 				personRepository.save(person);
 			}catch (javax.validation.ConstraintViolationException e){

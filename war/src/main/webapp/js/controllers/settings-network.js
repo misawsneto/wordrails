@@ -257,11 +257,69 @@ app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', 
 				$scope.totalPostsRead = generalStatsJson[0]
 				$scope.totalComments = generalStatsJson[1]
 				$scope.totalRecommends = generalStatsJson[2]
+				$scope.usersAndroid = generalStatsJson[3]
+				$scope.usersIOS = generalStatsJson[4]
 			}
 
 			$scope.chartData = [readsCount, recommendsCount, commentsCount]
 		})
 
+		$scope.datePickerOptions = {
+			"locale": {
+	        "format": "DD/MM/YYYY",
+	        "separator": " - ",
+	        "applyLabel": "Aplicar",
+	        "cancelLabel": "Cancelar",
+	        "fromLabel": "De",
+	        "toLabel": "Até",
+	        "customRangeLabel": "Personalizado",
+	        "daysOfWeek": [
+	            "Dom",
+	            "Seg",
+	            "Ter",
+	            "Qua",
+	            "Qui",
+	            "Sex",
+	            "Sab"
+	        ],
+	        "monthNames": [
+	            "Janeiro",
+	            "Fevereiro",
+	            "Março",
+	            "Abril",
+	            "Maio",
+	            "Junho",
+	            "Julho",
+	            "Agosto",
+	            "Setembro",
+	            "Outubro",
+	            "Novembro",
+	            "Dezembro"
+	        ],
+	        "firstDay": 1
+	    },
+		startDate: moment().add(-29, 'days'), endDate: moment(),
+		ranges: {
+	           'Hoje': [moment(), moment()],
+	           'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+	           'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+	           'Esse mês': [moment().startOf('month'), moment().endOf('month')],
+	           'Último mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')
+	           ]
+	        }}
+		//$scope.datePickerValue = moment().add(-30, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY');
+
+$scope.usersCount = 0;
+$scope.usersAndroid = 0
+$scope.usersIOS = 0
+$scope.totalPublished = 0;
+$scope.totalScheduled = 0
+$scope.totalDrafts = 0;
+$scope.imagesCount = 0;
+
+trix.countPersonsByNetwork($scope.app.initData.network.id).success(function(response){
+	$scope.usersCount = response.count;
+})
 
 $scope.page = 0;
 $scope.firstLoad = false

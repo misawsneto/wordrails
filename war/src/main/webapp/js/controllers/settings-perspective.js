@@ -4,19 +4,23 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
 		$scope.isMobile = true;
     $scope.isVertical = false;
 
-		$scope.stationPerspective = null;
+  // scope variable used in the perspective editor dialog
+    $scope.pe = {
+      'searchedPosts': [],
+    }
+		$scope.pe.stationPerspective = null;
 
 		$scope.thisStation = {}
     $scope.app.initData.stations.forEach(function(station, index){
       if($state.params.stationId == station.id){
         $scope.stationName = station.name;
         $scope.stationId = station.id;
-        $scope.thisStation = station;
+        $scope.thisStation = $scope.pe.thisStation = station;
       }
     });
 
     trix.findPerspectiveView($state.params.perspectiveId, null, null, 0, 50).success(function(termPerspective){
-      $scope.termPerspectiveView = termPerspective;
+      $scope.termPerspectiveView = $scope.buffedPerspective = termPerspective;
       $timeout(function() {
         $('.mockup-section').slimScroll({
          height:'476',
@@ -24,7 +28,19 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
          'railVisible': true
          })
       })
-      console.log($scope.termPerspectiveView);
+
+      trix.getStationPerspective($state.params.perspectiveId, 'stationPerspectiveProjection').success(function(stationPerspective){
+        $scope.pe.stationPerspective = stationPerspective;
+      })
+
+      //console.log($scope.termPerspectiveView);
+      trix.findAllCategories($scope.thisStation.id).success(function(response){
+        $scope.pe.taxonomies = response
+        $scope.pe.taxonomies.forEach(function(tax, index){
+          if($scope.termPerspectiveView.taxonomyId == tax.id)
+            $scope.pe.terms = tax.terms;
+        });
+      })
     });
 
     $scope.removeFeaturedPost = function(postView){
@@ -74,13 +90,8 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       });
     }
 
-  // scope variable used in the perspective editor dialog
-    $scope.pe = {
-      'thisStation': $scope.thisStation,
-      'searchedPosts': [],
-    }
-
-    $scope.pe = {searchPage: 0}
+    $scope.pe.taxonomies = []
+    $scope.pe.searchPage = 0;
     $scope.pe.nonemptySearch = $scope.pe.searchResults ? true : false;
     // -------------
 

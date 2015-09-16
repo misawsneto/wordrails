@@ -256,17 +256,27 @@
 	<md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
   	<md-content>
   		<div class="wrapper">
-  			<form ng-submit="pe.submitSearch()">
-  			</form>
-				<div class="wrapper-xxs perspective-editor-search-results m-t-sm" >
+  			<div class="text-lg text-center">Selectione as categorias desejadas</div>
+				<div class="wrapper-xxs perspective-editor-category-selector m-t-sm tree well">
+					<ul class="normal-wrap perspective-editor-category-selector-list">
+						<li ng-repeat="term in pe.terms">
+							<span class="check-term" ng-click="nodeClicked(term)">
+						 		<md-checkbox md-no-ink ng-click="term.checked = !term.checked" class="pull-left"></md-checkbox>
+						 	</span>
+						 	<span class="leaf box-shadow" tooltip="{{term.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
+						 		{{term.name}}
+						 	</span>
+					 	</li>
+				 	</ul>
 				</div>
 				<div class="pos-abt bottom-0 right-0 wrapper-sm">
 					<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
-				<div>
+				</div>
 			</div>
 	  </md-content>
 	</md-dialog>
 </script>
+
 
 </div>
 </div>

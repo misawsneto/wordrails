@@ -45,7 +45,7 @@ angular.module('app')
                           '../bower_components/fullcalendar/dist/fullcalendar.theme.css'],
       daterangepicker:[   '../bower_components/moment/moment.js',
                           '../bower_components/bootstrap-daterangepicker/daterangepicker.js',
-                          '../bower_components/bootstrap-daterangepicker/daterangepicker-bs3.css'],
+                          '../bower_components/bootstrap-daterangepicker/daterangepicker.css'],
       tagsinput:      [   '../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js',
                           '../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css']
                       

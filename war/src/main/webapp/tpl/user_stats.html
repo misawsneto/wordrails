@@ -114,11 +114,13 @@
 									<div class="m-b-sm v-middle display-t-c" ng-if="publication.topper">
 										<span class="no-radius normal p-xxs topper text-md bg-custom-primary">{{publication.topper}}</span>
 									</div>
-									<a  class="h4 font-bold m-b block" href>
+									<a  class="h4 font-bold m-b block" ui-sref="app.read({'slug': publication.slug})">
 										{{publication.title}}
 									</a>
+									<a ui-sref="app.read({'slug': publication.slug})">
 									<div class="text-base font-thin" ng-bind-html="publication.snippet | characters: 100 | stripHtml">
 									</div>
+									</a>
 								</div>
 								<!-- /content -->
 							</div>    

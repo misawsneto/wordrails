@@ -20,6 +20,7 @@ import com.wordrails.persistence.*;
 import com.wordrails.util.ReadsCommentsRecommendsCount;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -344,24 +345,32 @@ public class NetworkResource {
 
 	@GET
 	@Path("/stats")
-	public Response networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("networkId") Integer postId) throws JsonProcessingException{
-		if(date == null)
+	public Response networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("networkId") Integer postId) throws JsonProcessingException {
+		if (date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
 
 		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 
 		Network network = null;
-		if(postId == null || postId == 0) {
+		if (postId == null || postId == 0) {
 			network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		}
 
 		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<Long, ReadsCommentsRecommendsCount>();
 		DateTime firstDay = formatter.parseDateTime(date);
+		DateTime beginningDate;
+
+		int dateDiference = 30;
+
+		if (beginning != null && !beginning.isEmpty()){
+			beginningDate = formatter.parseDateTime(date);
+			dateDiference = Days.daysBetween(beginningDate.toLocalDate(), firstDay.toLocalDate()).getDays();
+		}
 
 		// create date slots
 		DateTime lastestDay = firstDay;
-		while (firstDay.minusDays(30).getMillis() < lastestDay.getMillis()){
-			stats.put(lastestDay. getMillis(), new ReadsCommentsRecommendsCount());
+		while (firstDay.minusDays(dateDiference).getMillis() < lastestDay.getMillis()){
+			stats.put(lastestDay.getMillis(), new ReadsCommentsRecommendsCount());
 			lastestDay = lastestDay.minusDays(1);
 		}
 
@@ -371,14 +380,14 @@ public class NetworkResource {
 		List<Object[]> generalStatus;
 
 		if(network == null) {
-			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			recommendsCounts = recommendRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
+			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			recommendsCounts = recommendRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			generalStatus = postRepository.findPostStats(postId);
 		}else {
-			postReadCounts = postReadRepository.countByNetworkAndDate(network.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			recommendsCounts = recommendRepository.countByNetworkAndDate(network.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			commentsCounts = commentRepository.countByNetworkAndDate(network.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
+			postReadCounts = postReadRepository.countByNetworkAndDate(network.id, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			recommendsCounts = recommendRepository.countByNetworkAndDate(network.id, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			commentsCounts = commentRepository.countByNetworkAndDate(network.id, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			generalStatus = networkRepository.findNetworkStats(network.id);
 		}
 

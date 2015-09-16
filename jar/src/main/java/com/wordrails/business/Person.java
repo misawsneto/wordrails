@@ -193,4 +193,6 @@ public class Person implements Serializable{
 	public String twitterHandle;
 
 	public Integer coverMediumId;
+
+
 }

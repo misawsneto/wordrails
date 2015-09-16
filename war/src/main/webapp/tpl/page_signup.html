@@ -5,7 +5,7 @@
             <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
           </div>
         </div>
-        <form name="form" class="form-validation">
+        <form name="form" class="form-validation" ng-submit="app.signup(user)">
           <div class="text-danger wrapper text-center" ng-show="authError">
               {{authError}}
           </div>
@@ -29,7 +29,7 @@
             </label>
           </div> -->
           <div class="text-lg">
-            <button md-ink-ripple type="submit" class="btn-custom md-btn text-u-c btn-block " ng-click="signup()" ng-disabled='form.$invalid'>Cadastrar</button>
+            <button md-ink-ripple type="submit" class="btn-custom md-btn text-u-c btn-block " ng-disabled='form.$invalid'>Cadastrar</button>
           </div>
           <p class="text-center p-t">Já possui uma conta? <a ui-sref="access.signin">Clique aqui para entrar.</a></p>
         </form>

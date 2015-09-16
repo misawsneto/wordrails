@@ -15,7 +15,7 @@
                   <div  ng-if="cell.postView.imageMediumId">
                     <div class="display-t-c pull-right">
                       <span ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
-                        <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                        <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="{{::cell.postView.authorName}}"></div>
                       </span>
                     </div>
                     <div class="display-t-c p-r-sm v-middle pull-right">
@@ -85,7 +85,7 @@
             <div class="m-t">
               <div class="display-t-c">
                 <a >
-                  <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                  <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="{{::cell.postView.authorName}}"></div>
                 </a>
               </div>
               <div class="display-t-c p-l-sm v-middle">
@@ -347,7 +347,7 @@
                   <div class="m-t-sm" ng-if="cell.postView.imageMediumId">
                     <div class="display-t-c">
                       <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
-                        <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img-xs bg-cover-round" title="cell.postView.authorName"></div>
+                        <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img-xs bg-cover-round" title="{{::cell.postView.authorName}}"></div>
                       </a>
                     </div>
                     <div class="display-t-c p-l-sm v-middle">
@@ -381,7 +381,7 @@
                 <div class="pos-abt bottom-0 wrapper-xs" ng-if="!cell.postView.imageMediumId">
                   <div class="display-t-c">
                     <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" title="Ir para o perfil de {{::cell.postView.authorName}}">
-                      <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img-xs bg-cover-round" title="cell.postView.authorName"></div>
+                      <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img-xs bg-cover-round" title="{{::cell.postView.authorName}}"></div>
                     </a>
                   </div>
                   <div class="display-t-c p-l-sm v-middle">
@@ -447,7 +447,7 @@
             <div class="m-t">
               <div class="display-t-c">
                 <a >
-                  <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
+                  <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="{{::cell.postView.authorName}}"></div>
                 </a>
               </div>
               <div class="display-t-c p-l-sm v-middle">

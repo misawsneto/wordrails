@@ -39,13 +39,16 @@ public class TermPerspective {
 	@ManyToOne
 	@JoinColumn(name="term_id")
 	public Term term;
-	
+
+	public Integer taxonomyId;
+
 	public Integer stationId;
 	
 	@PreUpdate
 	private void onUpdate() {
 		if(perspective != null && perspective.station != null){
 			stationId = perspective.station.id;
+			taxonomyId = perspective.taxonomy.id;
 		}
 	}
 	
@@ -53,6 +56,7 @@ public class TermPerspective {
 	private void onCreate() {
 		if(perspective != null && perspective.station != null){
 			stationId = perspective.station.id;
+			taxonomyId = perspective.taxonomy.id;
 		}
 	}
 }

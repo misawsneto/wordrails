@@ -199,7 +199,7 @@ public class FilesResource {
 	@Cache(isPrivate = false, maxAge = 31536000)
 	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
 		String subdomain = getSubdomainFromHost(request.getHeader("Host"));
-		if (subdomain == null || subdomain.isEmpty()) {
+		if(subdomain == null || subdomain.isEmpty()){
 			return Response.serverError().entity("subdomain of network is null").build();
 		}
 

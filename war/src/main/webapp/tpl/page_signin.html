@@ -5,13 +5,13 @@
         <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
       </div>
     </div>
-    <form name="form" class="form-validation">
+    <form name="form" class="form-validation" ng-submit="app.signIn(user.username, user.password)">
       <span id="login-error" class="text-danger animated" ng-class="{'fadeIn': app.loginError, 'hide': !app.loginError}">
         Usuário ou senha inválidos
       </span>
       <div class="list-group list-group-sm">
         <div class="list-group-item">
-          <input type="text" placeholder="Usuário" class="form-control no-border" ng-model="user.email" required>
+          <input type="text" placeholder="Usuário" class="form-control no-border" ng-model="user.username" required>
         </div>
         <div class="list-group-item">
            <input type="password" placeholder="Senha" class="form-control no-border" ng-model="user.password" required>
