@@ -32,9 +32,12 @@ public class Network implements Serializable{
 	@NotNull
 	@Size(min=1, max=100)
 	public String name;
-	
+
 	@Size(min=1, max=100)
 	public String flurryKey;
+
+	@Size(min=1, max=100)
+	public String flurryAppleKey;
 	
 	@Size(min=1, max=100)	
 	public String trackingId;

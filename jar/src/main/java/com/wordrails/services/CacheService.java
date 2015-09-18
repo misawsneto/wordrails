@@ -1,11 +1,5 @@
 package com.wordrails.services;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -27,35 +21,28 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class CacheService {
-	private LoadingCache<Integer, Person> persons;
-	private LoadingCache<Integer, Network> networks;
-
-	private LoadingCache<String, Set<Person>> persons2;
-	private LoadingCache<String, Network> networks2;
-	private LoadingCache<String, Network> networks3;
-
-	private LoadingCache<Integer, Station> stations;
-
-	private LoadingCache<Integer, User> user;
-
-	private LoadingCache<String, Set<User>> users;
-
 	@Autowired
 	NetworkRepository networkRepository;
 	@Autowired
 	StationRepository stationRepository;
 	@Autowired
 	UserRepository userRepository;
+	private LoadingCache<Integer, Person> persons;
+	private LoadingCache<Integer, Network> networks;
+	private LoadingCache<String, Set<Person>> persons2;
+	private LoadingCache<String, Network> networks2;
+	private LoadingCache<String, Network> networks3;
+	private LoadingCache<Integer, Station> stations;
+	private LoadingCache<Integer, User> user;
+	private LoadingCache<String, Set<User>> users;
 	@Autowired
 	private PersonRepository personRepository;
-	
-	public void init(){
+
+	public void init() {
 		// ------------- init person cache
-		persons = CacheBuilder.newBuilder().maximumSize(1000)
-				.expireAfterWrite(1, TimeUnit.MINUTES)
+		persons = CacheBuilder.newBuilder().maximumSize(1000).expireAfterWrite(1, TimeUnit.MINUTES)
 				//	       .removalListener(MY_LISTENER)
-				.build(
-						new CacheLoader<Integer, Person>() {
+				.build(new CacheLoader<Integer, Person>() {
 							public Person load(Integer id) {
 								return personRepository.findOne(id);
 							}
@@ -63,89 +50,75 @@ public class CacheService {
 
 		// ------------- init network cache
 
-		networks = CacheBuilder.newBuilder().maximumSize(500)
-				.expireAfterWrite(1, TimeUnit.MINUTES)
+		networks = CacheBuilder.newBuilder().maximumSize(500).expireAfterWrite(1, TimeUnit.MINUTES)
 				//	       .removalListener(MY_LISTENER)
-				.build(
-						new CacheLoader<Integer, Network>() {
+				.build(new CacheLoader<Integer, Network>() {
 							public Network load(Integer id) {
 								return networkRepository.findOne(id);
 							}
 						});
 		// ------------- init person cache
-		persons2 = CacheBuilder.newBuilder().maximumSize(1000)
-				.expireAfterWrite(1, TimeUnit.MINUTES)
-						//	       .removalListener(MY_LISTENER)
-				.build(
-						new CacheLoader<String, Set<Person>>() {
+		persons2 = CacheBuilder.newBuilder().maximumSize(1000).expireAfterWrite(1, TimeUnit.MINUTES)
+				//	       .removalListener(MY_LISTENER)
+				.build(new CacheLoader<String, Set<Person>>() {
 							public Set<Person> load(String username) {
 								return personRepository.findByUsername(username);
 							}
 						});
 
 		// ------------- init user cache
-		user = CacheBuilder.newBuilder().maximumSize(1000)
-				.expireAfterWrite(1, TimeUnit.MINUTES)
-				.build(new CacheLoader<Integer, User>() {
-					public User load(Integer id) {
-						User user = userRepository.findOne(id);
-						return user;
-					}
-				});
+		user = CacheBuilder.newBuilder().maximumSize(1000).expireAfterWrite(1, TimeUnit.MINUTES).build(new CacheLoader<Integer, User>() {
+			public User load(Integer id) {
+				User user = userRepository.findOne(id);
+				return user;
+			}
+		});
 
 		// ------------- init user cache
-		users = CacheBuilder.newBuilder().maximumSize(1000)
-				.expireAfterWrite(1, TimeUnit.MINUTES)
-				.build(new CacheLoader<String, Set<User>>() {
-					public Set<User> load(String username) {
-						Set<User> users = userRepository.findByUsernameAndEnabled(username, true);
-						return users;
-					}
-				});
+		users = CacheBuilder.newBuilder().maximumSize(1000).expireAfterWrite(1, TimeUnit.MINUTES).build(new CacheLoader<String, Set<User>>() {
+			public Set<User> load(String username) {
+				Set<User> users = userRepository.findByUsernameAndEnabled(username, true);
+				return users;
+			}
+		});
 
 		// ------------- init network cache
 
-		networks2 = CacheBuilder.newBuilder().maximumSize(100)
-				.expireAfterWrite(1, TimeUnit.MINUTES)
+		networks2 = CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(1, TimeUnit.MINUTES)
 				//	       .removalListener(MY_LISTENER)
-				.build(
-						new CacheLoader<String, Network>() {
+				.build(new CacheLoader<String, Network>() {
 							public Network load(String subdomain) {
 								return networkRepository.findNetworkBySubdomain(subdomain);
 							}
 						});
 
-		networks3 = CacheBuilder.newBuilder().maximumSize(100)
-				.expireAfterWrite(1, TimeUnit.MINUTES)
-						//	       .removalListener(MY_LISTENER)
-				.build(
-						new CacheLoader<String, Network>() {
+		networks3 = CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(1, TimeUnit.MINUTES)
+				//	       .removalListener(MY_LISTENER)
+				.build(new CacheLoader<String, Network>() {
 							public Network load(String host) {
 								return networkRepository.findByDomain(host);
 							}
 						});
-		
-		stations = CacheBuilder.newBuilder().maximumSize(100)
-				.expireAfterWrite(1, TimeUnit.MINUTES)
+
+		stations = CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(1, TimeUnit.MINUTES)
 				//	       .removalListener(MY_LISTENER)
-				.build(
-						new CacheLoader<Integer, Station>() {
+				.build(new CacheLoader<Integer, Station>() {
 							public Station load(Integer id) {
 								return stationRepository.findOne(id);
 							}
 						});
-		
+
 	}
-	
-	public Station getStation(Integer id) throws ExecutionException{
+
+	public Station getStation(Integer id) throws ExecutionException {
 		return stations.get(id);
 	}
-	
-	public void updateStation(Integer id){
+
+	public void updateStation(Integer id) {
 		stations.refresh(id);
 	}
-	
-	public Person getPerson(Integer id) throws ExecutionException{
+
+	public Person getPerson(Integer id) throws ExecutionException {
 		return persons.get(id);
 	}
 
@@ -157,7 +130,7 @@ public class CacheService {
 		Set<Person> persons = persons2.get(username);
 
 		for (Person p : persons) {
-			if((p.user == null && networkId == 0) || p.user != null && p.user.network != null && Objects.equals(p.user.network.id, networkId))
+			if ((p.user == null && networkId == 0) || p.user != null && p.user.network != null && Objects.equals(p.user.network.id, networkId))
 				return p;
 		}
 
@@ -168,7 +141,7 @@ public class CacheService {
 		return users.get(username);
 	}
 
-	public User getUser(Integer id) throws ExecutionException{
+	public User getUser(Integer id) throws ExecutionException {
 		return user.get(id);
 	}
 
@@ -176,30 +149,29 @@ public class CacheService {
 		Set<User> us = users.get(username);
 
 		for (User u : us) {
-			if(u.network != null && Objects.equals(networkId, u.network.id))
-				return u;
+			if (u.network != null && Objects.equals(networkId, u.network.id)) return u;
 		}
 
 		return null;
 	}
-	
-	public void updatePerson(Integer id){
+
+	public void updatePerson(Integer id) {
 		persons.refresh(id);
 	}
-	
-	public void updatePerson(String username){
+
+	public void updatePerson(String username) {
 		persons2.refresh(username);
 	}
-	
-	public Network getNetwork(Integer id) throws ExecutionException{
+
+	public Network getNetwork(Integer id) throws ExecutionException {
 		return networks.get(id);
 	}
-	
-	public void updateNetwork(String subdomain){
+
+	public void updateNetwork(String subdomain) {
 		networks2.refresh(subdomain);
 	}
-	
-	public void updateNetwork(Integer id){
+
+	public void updateNetwork(Integer id) {
 		networks.refresh(id);
 	}
 
@@ -211,24 +183,27 @@ public class CacheService {
 		return networks3.get(host);
 	}
 
-	public void removePerson(Integer id){
+	public void removePerson(Integer id) {
 		persons.invalidate(id);
 	}
-	public void removePerson(String username){
+
+	public void removePerson(String username) {
 		persons2.invalidate(username);
 	}
 
-	public void removeNetwork(Integer id){
+	public void removeNetwork(Integer id) {
 		networks.invalidate(id);
 	}
-	public void removeNetwork(String domain){
+
+	public void removeNetwork(String domain) {
 		networks2.invalidate(domain);
 	}
 
-	public void removeUser(Integer id){
+	public void removeUser(Integer id) {
 		user.invalidate(id);
 	}
-	public void removeUser(String username){
+
+	public void removeUser(String username) {
 		users.invalidate(username);
 	}
 }

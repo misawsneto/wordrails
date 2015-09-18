@@ -9,7 +9,6 @@ import com.wordrails.business.File;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
 import com.wordrails.util.WordrailsUtil;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +19,7 @@ import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -105,13 +102,25 @@ public class AmazonCloudService {
 		return true;
 	}
 
+	public S3Object get(AmazonS3 s3Client, String bucket, String key) {
+		try {
+			return s3Client.getObject(bucket, key);
+		} catch(AmazonServiceException e) {
+			return null;
+		}
+	}
+
+	private AmazonS3 s3() {
+		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, accessSecretKey);
+		return new AmazonS3Client(awsCreds);
+	}
+
 	private void uploadFile(InputStream input, Long lenght, String bucketName, String keyName, ObjectMetadata metadata) throws IOException, AmazonS3Exception {
 		if (input.available() == 0) {
 			throw new AmazonS3Exception("InputStream is empty");
 		}
 
-		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, accessSecretKey);
-		AmazonS3 s3Client = new AmazonS3Client(awsCreds);
+		AmazonS3 s3Client = s3();
 
 		if(exists(s3Client, bucketName, keyName)) {
 			return;
@@ -181,17 +190,20 @@ public class AmazonCloudService {
 	@Autowired
 	private FileContentsRepository fileContentsRepository;
 
-	private String uploadFile(String domain, File file, String sizeType) throws SQLException, IOException {
+	private String uploadFile(String subdomain, File file, String sizeType, Integer networkId) throws SQLException, IOException {
 		System.out.println("uploading file " + file.id);
 
-		Blob blob = fileContentsRepository.findOne(file.id).contents;
+		FileContents fileContents = fileContentsRepository.findOne(file.id);
 		InputStream is;
 		long byteSize;
 
+		Blob blob = fileContents.contents;
 		if(blob == null) {
-			if(file.url != null) {
+			if (file.url != null) {
 				is = WordrailsUtil.getStreamFromUrl(file.url);
 				byteSize = ((FileInputStream) is).getChannel().size();
+			} else if(file.hash != null && !file.hash.isEmpty() && exists(s3(), publicBucket, file.hash)) {
+				return file.hash;
 			} else {
 				return null;
 			}
@@ -200,15 +212,17 @@ public class AmazonCloudService {
 			byteSize = blob.length();
 		}
 
+		if(file.mime == null)
+			file.mime = new Tika().detect(is);
 
-
-		if(file.mime == null) file.mime = new Tika().detect(is);
 
 		String hash = null;
-
 		try {
-			hash = uploadPublicImage(is, byteSize, domain, sizeType, file.mime);
+			hash = uploadPublicImage(is, byteSize, subdomain, sizeType, file.mime);
 			file.hash = hash;
+			file.size = byteSize;
+			file.type = File.EXTERNAL;
+			file.networkId = networkId;
 			fileRepository.save(file);
 		} catch (AmazonS3Exception e) {
 			e.printStackTrace();
@@ -217,7 +231,7 @@ public class AmazonCloudService {
 		return hash;
 	}
 
-	private Image uploadImage(Image image, String domain) throws IOException, SQLException {
+	private Image uploadImage(Image image, String subdomain, Integer networkId) throws IOException, SQLException {
 		saveFilesHash(image);
 
 		if (image.originalHash != null && image.largeHash != null && image.mediumHash != null && image.smallHash != null) {
@@ -226,22 +240,22 @@ public class AmazonCloudService {
 
 		String hash;
 		if(image.originalHash == null) {
-			hash = uploadFile(domain, image.original, "original");
+			hash = uploadFile(subdomain, image.original, "original", networkId);
 			image.originalHash = hash != null ? hash : image.original.hash;
 			System.out.println("Upload file " + image.original.id + " hash " + image.originalHash);
 		}
 		if(image.largeHash == null) {
-			hash = uploadFile(domain, image.large, "large");
+			hash = uploadFile(subdomain, image.large, "large", networkId);
 			image.largeHash = hash != null ? hash : image.large.hash;
 			System.out.println("Upload file " + image.large.id + " hash " + image.largeHash);
 		}
 		if(image.mediumHash == null) {
-			hash = uploadFile(domain, image.medium, "medium");
+			hash = uploadFile(subdomain, image.medium, "medium", networkId);
 			image.mediumHash = hash != null ? hash : image.medium.hash;
 			System.out.println("Upload file " + image.medium.id + " hash " + image.mediumHash);
 		}
 		if(image.smallHash == null) {
-			hash = uploadFile(domain, image.small, "small");
+			hash = uploadFile(subdomain, image.small, "small", networkId);
 			image.smallHash = hash != null ? hash : image.small.hash;
 			System.out.println("Upload file " + image.small.id + " hash " + image.smallHash);
 		}
@@ -295,28 +309,31 @@ public class AmazonCloudService {
 
 			System.out.println("Starting upload of files");
 			for (Network network : networks) {
-				String domain = network.subdomain;
+				String subdomain = network.subdomain;
 
 				List<Station> stations = stationRepository.findByNetworkId(network.id);
 				for (Station station : stations) {
 
-					System.out.println("Upload of station " + station.id + " of network " + domain);
+					System.out.println("Upload of station " + station.id + " of network " + subdomain);
 					List<Post> posts = postRepository.findByStation(station);
 					for (Post post : posts) {
 						System.out.println("Upload of post " + post.id);
 						Image image = post.featuredImage;
 
-						Set<Image> bodyImages = new HashSet<>();
 						Matcher m = Pattern.compile("/api/files/\\d+/contents").matcher(post.body);
 						while (m.find()) {
 							Integer id = Integer.valueOf(m.group().replace("/api/files/", "").replace("/contents", ""));
-							bodyImages.add(imageRepository.findByFileId(id));
+							try {
+								uploadFile(subdomain, fileRepository.findOne(id), "original", network.id);
+							} catch (SQLException | IOException e) {
+								e.printStackTrace();
+							}
 						}
 
 						if (image != null) {
 							try {
 								setNetworkIdOnFiles(network.id, image);
-								image = uploadImage(image, domain);
+								image = uploadImage(image, subdomain, network.id);
 
 								post.imageHash = image.originalHash;
 								post.imageLargeHash = image.largeHash;
@@ -324,19 +341,6 @@ public class AmazonCloudService {
 								post.imageSmallHash = image.smallHash;
 
 								postRepository.save(post);
-							} catch (SQLException | IOException e) {
-								e.printStackTrace();
-								continue;
-							}
-						}
-
-						for (Image img : bodyImages) {
-							try {
-								if(img != null) {
-									setNetworkIdOnFiles(network.id, img);
-									uploadImage(img, domain);
-								}
-
 							} catch (SQLException | IOException e) {
 								e.printStackTrace();
 							}
@@ -353,7 +357,7 @@ public class AmazonCloudService {
 						try {
 							System.out.println("Upload cover of person " + person.id);
 							setNetworkIdOnFiles(network.id, cover);
-							cover = uploadImage(cover, domain);
+							cover = uploadImage(cover, subdomain, network.id);
 
 							person.coverMediumHash = cover.mediumHash;
 							person.coverLargeHash = cover.largeHash;
@@ -368,7 +372,7 @@ public class AmazonCloudService {
 						try {
 							System.out.println("Upload profilePicture of person " + person.id);
 							setNetworkIdOnFiles(network.id, profilePicture);
-							profilePicture = uploadImage(profilePicture, domain);
+							profilePicture = uploadImage(profilePicture, subdomain, network.id);
 
 							person.imageHash = profilePicture.originalHash;
 							person.imageLargeHash = profilePicture.largeHash;

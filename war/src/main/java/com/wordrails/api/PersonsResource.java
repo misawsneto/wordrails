@@ -557,7 +557,7 @@ public class PersonsResource {
 			throw new UnauthorizedException("User is not authorized");
 		}
 
-		Network network = authProvider.getNetwork();
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
