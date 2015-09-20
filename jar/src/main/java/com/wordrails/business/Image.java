@@ -9,9 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.springframework.data.elasticsearch.annotations.Field;
 
 @Entity
 public class Image implements Serializable{
@@ -21,7 +19,7 @@ public class Image implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@DocumentId
+//	@DocumentId
 	public Integer id;
 	
 	@Field
@@ -75,7 +73,7 @@ public class Image implements Serializable{
 	public File large;
 
 	@ManyToOne
-	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})
+//	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})
 	public Post post;
 	
 	@OneToMany(mappedBy="featuredImage")

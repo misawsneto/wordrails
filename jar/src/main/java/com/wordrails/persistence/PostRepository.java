@@ -2,6 +2,7 @@ package com.wordrails.persistence;
 
 import com.wordrails.business.*;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.repository.ElasticsearchCrudRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 import java.util.Set;
 
-public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPredicateExecutor<Post> {
+public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPredicateExecutor<Post>, ElasticsearchCrudRepository<Post, Integer> {
 	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);
 
 	List<Post> findPosts(@Param("stationId") Integer stationId, @Param("termId") Integer termId, Pageable pageable);

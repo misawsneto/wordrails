@@ -1,7 +1,8 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.search.annotations.ContainedIn;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -64,7 +65,7 @@ public class Station {
 	public Set<StationRole> personsStationRoles;
 
 	@OneToMany(mappedBy="station")
-	@ContainedIn
+	@Field(type = FieldType.Nested)
 	public Set<Post> posts;
 
 	@OneToMany(mappedBy="station", cascade=CascadeType.REMOVE)

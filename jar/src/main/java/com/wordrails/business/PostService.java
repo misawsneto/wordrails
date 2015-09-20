@@ -11,11 +11,13 @@ import com.wordrails.persistence.PostTrashRepository;
 import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.persistence.StationRepository;
 
-import org.hibernate.search.jpa.FullTextEntityManager;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.IndexQuery;
+import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,20 +43,28 @@ public class PostService {
 	@Autowired private PostScheduledRepository postScheduledRepository;
 	
 	@Autowired private PostTrashRepository postTrashRepository;
-	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	@Autowired private TrixAuthenticationProvider authProvider;
+
+	@Autowired private ElasticsearchTemplate elasticsearchTemplate;
 
 	@PersistenceContext
 	private EntityManager manager;
 
 	public void removePostIndex(Post post){
-		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
-		ftem.purge(Post.class, post.id);
+//		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
+//		ftem.purge(Post.class, post.id);
+		elasticsearchTemplate.delete(Post.class, String.valueOf(post.id));
 	}
 	
 	public void updatePostIndex (Post post){
-		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
-		ftem.index(post);
+//		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
+//		ftem.index(post);
+		IndexQuery indexQuery = new IndexQueryBuilder()
+				.withId(String.valueOf(post.id))
+				.withObject(post)
+				.build();
+
+		elasticsearchTemplate.index(indexQuery);
 	}
 
 	public Post convertPost(int postId, String state) {

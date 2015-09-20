@@ -3,11 +3,13 @@ package com.wordrails.business;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wordrails.util.WordrailsUtil;
 
-import org.apache.solr.analysis.*;
-import org.hibernate.search.annotations.*;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Parameter;
-import org.hibernate.validator.constraints.NotEmpty;
+//import org.hibernate.search.annotations.*;
+//import org.hibernate.search.annotations.Index;
+//import org.hibernate.search.annotations.Parameter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,73 +19,74 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Indexed(interceptor=PostIndexingInterceptor.class)
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(
-		name="state",
-		discriminatorType=DiscriminatorType.STRING
-)
-@DiscriminatorValue(value="PUBLISHED")
-@AnalyzerDefs({
-		// auto complete 1
-		@AnalyzerDef(name = "autocompleteEdgeAnalyzer",
-				// Split input into tokens according to tokenizer
-				tokenizer = @TokenizerDef(factory = KeywordTokenizerFactory.class),
-
-				filters = {
-						// Normalize token text to lowercase, as the user is unlikely to
-						// care about casing when searching for matches
-						@TokenFilterDef(factory = PatternReplaceFilterFactory.class, params = {
-								@Parameter(name = "pattern", value = "([^a-zA-Z0-9\\.])"),
-								@Parameter(name = "replacement", value = " "),
-								@Parameter(name = "replace", value = "all")}),
-						@TokenFilterDef(factory = LowerCaseFilterFactory.class),
-						@TokenFilterDef(factory = StopFilterFactory.class),
-						// Index partial words starting at the front, so we can provide
-						// Autocomplete functionality
-						@TokenFilterDef(factory = EdgeNGramFilterFactory.class, params = {
-								@Parameter(name = "minGramSize", value = "3"),
-								@Parameter(name = "maxGramSize", value = "50")})
-				},
-				charFilters = {@CharFilterDef(factory = HTMLStripCharFilterFactory.class)}),
-
-		// auto complete 2
-		@AnalyzerDef(name = "autocompleteNGramAnalyzer",
-
-				// Split input into tokens according to tokenizer
-				tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-
-				filters = {
-						// Normalize token text to lowercase, as the user is unlikely to
-						// care about casing when searching for matches
-						@TokenFilterDef(factory = WordDelimiterFilterFactory.class),
-						@TokenFilterDef(factory = LowerCaseFilterFactory.class),
-						@TokenFilterDef(factory = NGramFilterFactory.class, params = {
-								@Parameter(name = "minGramSize", value = "3"),
-								@Parameter(name = "maxGramSize", value = "5")}),
-						@TokenFilterDef(factory = PatternReplaceFilterFactory.class, params = {
-								@Parameter(name = "pattern", value = "([^a-zA-Z0-9\\.])"),
-								@Parameter(name = "replacement", value = " "),
-								@Parameter(name = "replace", value = "all")})
-				},
-				charFilters = {@CharFilterDef(factory = HTMLStripCharFilterFactory.class)}),
-
-		// potuguese, striphtml
-		@AnalyzerDef(name = "customPostAnalyzer",
-
-				tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-				filters = {
-						@TokenFilterDef(factory = WordDelimiterFilterFactory.class),
-						@TokenFilterDef(factory = LowerCaseFilterFactory.class),
-						@TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
-								@Parameter(name = "resource_charset", value = "UTF-8"),
-								@Parameter(name = "language", value = "Portuguese")
-						}),
-				},
-				charFilters = {@CharFilterDef(factory = HTMLStripCharFilterFactory.class)})
-})
-@Spatial
+//@Indexed(interceptor=PostIndexingInterceptor.class)
+//@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn(
+//		name="state",
+//		discriminatorType=DiscriminatorType.STRING
+//)
+//@DiscriminatorValue(value="PUBLISHED")
+//@AnalyzerDefs({
+//		// auto complete 1
+//		@AnalyzerDef(name = "autocompleteEdgeAnalyzer",
+//				// Split input into tokens according to tokenizer
+//				tokenizer = @TokenizerDef(factory = KeywordTokenizerFactory.class),
+//
+//				filters = {
+//						// Normalize token text to lowercase, as the user is unlikely to
+//						// care about casing when searching for matches
+//						@TokenFilterDef(factory = PatternReplaceFilterFactory.class, params = {
+//								@Parameter(name = "pattern", value = "([^a-zA-Z0-9\\.])"),
+//								@Parameter(name = "replacement", value = " "),
+//								@Parameter(name = "replace", value = "all")}),
+//						@TokenFilterDef(factory = LowerCaseFilterFactory.class),
+//						@TokenFilterDef(factory = StopFilterFactory.class),
+//						// Index partial words starting at the front, so we can provide
+//						// Autocomplete functionality
+//						@TokenFilterDef(factory = EdgeNGramFilterFactory.class, params = {
+//								@Parameter(name = "minGramSize", value = "3"),
+//								@Parameter(name = "maxGramSize", value = "50")})
+//				},
+//				charFilters = {@CharFilterDef(factory = HTMLStripCharFilterFactory.class)}),
+//
+//		// auto complete 2
+//		@AnalyzerDef(name = "autocompleteNGramAnalyzer",
+//
+//				// Split input into tokens according to tokenizer
+//				tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+//
+//				filters = {
+//						// Normalize token text to lowercase, as the user is unlikely to
+//						// care about casing when searching for matches
+//						@TokenFilterDef(factory = WordDelimiterFilterFactory.class),
+//						@TokenFilterDef(factory = LowerCaseFilterFactory.class),
+//						@TokenFilterDef(factory = NGramFilterFactory.class, params = {
+//								@Parameter(name = "minGramSize", value = "3"),
+//								@Parameter(name = "maxGramSize", value = "5")}),
+//						@TokenFilterDef(factory = PatternReplaceFilterFactory.class, params = {
+//								@Parameter(name = "pattern", value = "([^a-zA-Z0-9\\.])"),
+//								@Parameter(name = "replacement", value = " "),
+//								@Parameter(name = "replace", value = "all")})
+//				},
+//				charFilters = {@CharFilterDef(factory = HTMLStripCharFilterFactory.class)}),
+//
+//		// potuguese, striphtml
+//		@AnalyzerDef(name = "customPostAnalyzer",
+//
+//				tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+//				filters = {
+//						@TokenFilterDef(factory = WordDelimiterFilterFactory.class),
+//						@TokenFilterDef(factory = LowerCaseFilterFactory.class),
+//						@TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
+//								@Parameter(name = "resource_charset", value = "UTF-8"),
+//								@Parameter(name = "language", value = "Portuguese")
+//						}),
+//				},
+//				charFilters = {@CharFilterDef(factory = HTMLStripCharFilterFactory.class)})
+//})
+//@Spatial
 //@Table(uniqueConstraints=@UniqueConstraint(columnNames={"slug", "state"}))
+@Document(indexName = "posts", type = "Post", shards = 1, indexStoreType = "memory")
 public class Post {
 
 	public static final String STATE_DRAFT = "DRAFT";
@@ -99,44 +102,31 @@ public class Post {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@DocumentId
 	public Integer id;
 
-	@Field
 	public Integer originalPostId;
 
-	@Field
 	public Integer wordpressId;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	@Field(analyze = Analyze.NO)
-	@DateBridge(resolution = Resolution.SECOND)
 	public Date date;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastModificationDate;
 
-	@Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
-	@Analyzer(definition = "customPostAnalyzer")
 	public String title;
 
 	@Lob
-	@Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
-	@Analyzer(definition = "customPostAnalyzer")
 	public String body;
 
 	@Lob
-	@Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
-	@Analyzer(definition = "customPostAnalyzer")
 	@Column(length = 1024)
 	public String topper;
 
 	@Lob
-	@Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
-	@Analyzer(definition = "customPostAnalyzer")
 	@Column(length = 1024)
 	public String subheading;
 
@@ -156,7 +146,6 @@ public class Post {
 	public Set<Comment> comments;
 
 	@Size(min = 1, max = 15)
-	@Field(analyze = Analyze.NO)
 	@Column(insertable = false, updatable = false)
 	public String state;
 
@@ -169,7 +158,6 @@ public class Post {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable = false)
-	@IndexedEmbedded(includePaths={"name", "id"})
 	public Person author;
 
 	@OneToMany(mappedBy = "post")
@@ -180,48 +168,32 @@ public class Post {
 	@JoinColumn(updatable = false)
 	public Station station;
 
-	@Field
-	@NumericField
 	public Integer stationId;
 
-	@Field
-	@NumericField
 	@Column(updatable = false)
 	public int readsCount = 0;
 
-	@Field
-	@NumericField
 	@Column(updatable = false)
 	public int bookmarksCount = 0;
 
-	@Field
-	@NumericField
 	@Column(updatable = false)
 	public int recommendsCount = 0;
 
-	@Field
-	@NumericField
 	@Column(updatable = false)
 	public int commentsCount = 0;
 
 	@ManyToMany
-	@IndexedEmbedded(includePaths={"name", "id", "taxonomyId"})
 	public Set<Term> terms;
 
-	@Field(analyze = Analyze.NO)
 	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean imageLandscape = true;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Field(analyze = Analyze.NO)
-	@DateBridge(resolution = Resolution.SECOND)
 	public Date updatedAt;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Field(analyze = Analyze.NO)
-	@DateBridge(resolution = Resolution.SECOND)
 	@Column(updatable = false)
 	public Date createdAt;
 
@@ -243,10 +215,8 @@ public class Post {
 	@Lob
 	public String imageCreditsText;
 
-	@Latitude
 	public Double lat;
 
-	@Longitude
 	public Double lng;
 
 	@Lob

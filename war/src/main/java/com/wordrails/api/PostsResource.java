@@ -250,7 +250,15 @@ public class PostsResource {
 		org.apache.lucene.search.Query text = null;
 		try {
 			if (q != null) {
-				text = qb.keyword().fuzzy().withThreshold(.8f).withPrefixLength(1).onField("title").boostedTo(5).andField("body").boostedTo(2).andField("topper").andField("subheading").andField("author.name").andField("terms.name").matching(q).createQuery();
+				text = qb.keyword().fuzzy().withThreshold(.8f).withPrefixLength(1)
+						.onField("title")
+						.boostedTo(5)
+						.andField("body")
+						.boostedTo(2)
+						.andField("topper")
+						.andField("subheading")
+						.andField("author.name")
+						.andField("terms.name").matching(q).createQuery();
 			}
 		} catch (Exception e) {
 

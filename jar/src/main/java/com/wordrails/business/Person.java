@@ -1,12 +1,8 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.solr.analysis.LowerCaseFilterFactory;
-import org.apache.solr.analysis.StandardTokenizerFactory;
-import org.apache.solr.analysis.WordDelimiterFilterFactory;
-import org.hibernate.search.annotations.*;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.validator.constraints.Email;
+import org.springframework.data.elasticsearch.annotations.Field;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,15 +13,15 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Indexed
-@AnalyzerDefs({
-		@AnalyzerDef(name = "customAnalyzer",
-		tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-		filters = {
-				@TokenFilterDef(factory = WordDelimiterFilterFactory.class),
-				@TokenFilterDef(factory = LowerCaseFilterFactory.class)
-		})
-})
+//@Indexed
+//@AnalyzerDefs({
+//		@AnalyzerDef(name = "customAnalyzer",
+//		tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+//		filters = {
+//				@TokenFilterDef(factory = WordDelimiterFilterFactory.class),
+//				@TokenFilterDef(factory = LowerCaseFilterFactory.class)
+//		})
+//})
 @Table(name = "person", uniqueConstraints={
 		@UniqueConstraint(columnNames={"user_id", "username"}),
 		@UniqueConstraint(columnNames={"username", "networkId"})
@@ -36,21 +32,23 @@ public class Person implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	@NumericField
+//	@NumericField
 	@Field
 	public Integer id;
 
 	@Size(min=1, max=100)
-	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-	@Analyzer(definition="customAnalyzer")
+//	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
+	@Field
+//	@Analyzer(definition="customAnalyzer")
 	public String name;
 
 	@Size(max=50)
 	@NotNull
 	@Column(unique=true)
 	@Pattern(regexp="^[a-z0-9\\._-]{3,50}$")
-	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-	@Analyzer(definition="customAnalyzer")
+//	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
+//	@Analyzer(definition="customAnalyzer")
+	@Field
 	public String username;
 
 	@OneToMany(mappedBy="author")
@@ -101,20 +99,23 @@ public class Person implements Serializable{
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Field(analyze = Analyze.NO)
-    @DateBridge(resolution = Resolution.SECOND)
+//	@Field(analyze = Analyze.NO)
+//    @DateBridge(resolution = Resolution.SECOND)
+	@Field
 	public Date createdAt;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Field(analyze = Analyze.NO)
-    @DateBridge(resolution = Resolution.SECOND)
+//	@Field(analyze = Analyze.NO)
+//    @DateBridge(resolution = Resolution.SECOND)
+	@Field
 	public Date lastLogin;
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Field(analyze = Analyze.NO)
-    @DateBridge(resolution = Resolution.SECOND)
+//	@Field(analyze = Analyze.NO)
+//    @DateBridge(resolution = Resolution.SECOND)
+	@Field
 	public Date updatedAt;
 
 	@PrePersist

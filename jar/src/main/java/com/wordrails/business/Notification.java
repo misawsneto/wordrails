@@ -15,15 +15,11 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Indexed
 public class Notification {
 	
 	public enum Type{
@@ -32,12 +28,10 @@ public class Notification {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@DocumentId
 	public Integer id;
 	
 	@ManyToOne
 	@NotNull
-	@IndexedEmbedded(includePaths={"name", "id"})
 	public Person person;
 	
 	@ManyToOne
@@ -51,7 +45,7 @@ public class Notification {
 	public Station station;
 	
 	@ManyToOne
-	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})
+//	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"}
 	public Post post;
 	
 	public Integer postId;

@@ -8,12 +8,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonManagedReference;
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.NumericField;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -34,7 +30,7 @@ public class Term {
 	public Set<Cell> cells;
 		
 	@ManyToMany(mappedBy="terms")
-	@ContainedIn
+	@Field(type = FieldType.Nested)
 	public Set<Post> posts;
 	
 	@OneToMany(mappedBy="term")
@@ -44,13 +40,13 @@ public class Term {
 	@ManyToOne	
 	public Taxonomy taxonomy;
 
-	@JsonBackReference
+//	@JsonBackReference
 	@ManyToOne
 	public Term parent;
 	
 	public Integer parentTermId;
 			
-	@JsonManagedReference
+//	@JsonManagedReference
 	@OneToMany(mappedBy="parent")
 	public Set<Term> children;
 	
@@ -58,7 +54,7 @@ public class Term {
 	public Set<TermPerspective> termPerspectives;
 	
 	@Field
-	@NumericField
+//	@NumericField
 	public Integer taxonomyId;
 	
 	public String taxonomyName;
