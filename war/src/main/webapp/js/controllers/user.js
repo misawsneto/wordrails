@@ -1,5 +1,5 @@
-app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast',
-	function($scope ,  $log ,  $timeout ,  $rootScope ,  $state ,  trix ,  FileUploader, TRIX, cfpLoadingBar, $mdToast) {
+app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$mdDialog',
+	function($scope , $log ,  $timeout ,  $rootScope ,  $state ,  trix ,  FileUploader, TRIX, cfpLoadingBar, $mdToast , $mdDialog) {
 
 	// set left side post list to initial scroll
 	//$("#post-left-content .left-content-wrap").scrollTop(0);
@@ -166,6 +166,44 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 			})
 		}
 	}
+
+	        // perspective editor dialog Controller
+    function DialogController(scope, $mdDialog) {
+      scope.app = $scope.app;
+
+      scope.hide = function() {
+        $mdDialog.hide();
+      };
+
+      scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+
+      scope.publish = function() {
+        if(isTermSelected($scope.termTree)){
+          createPost($mdDialog)
+        }else{
+          // show alert term message
+        }
+        //$mdDialog.hide();
+      };
+      // check if user has permisstion to write
+    };
+
+    $scope.showEditProfile = function(ev){
+    // show term alert
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'edit_profile.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
 
 }])
 

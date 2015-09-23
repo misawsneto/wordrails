@@ -13,17 +13,13 @@ import javax.ws.rs.core.Response;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
+import com.wordrails.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.TaxonomyRepository;
 
 @Path("/taxonomies")
 @Component
@@ -34,6 +30,7 @@ public class TaxonomyResource {
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
+	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired TrixAuthenticationProvider authProvider;
@@ -74,10 +71,10 @@ public class TaxonomyResource {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
 		Taxonomy category = null;
-		List<Taxonomy> taxonomies = taxonomyRepository.findNetworkCategories(network.id);
-		if(taxonomies != null && taxonomies.size() > 0){
-			category = taxonomies.get(0);
-		}
+
+		Station station = stationRepository.findOne(stationId);
+		StationPerspective sp = stationPerspectiveRepository.findOne(station.defaultPerspectiveId);
+		category = taxonomyRepository.findOne(sp.taxonomy.id);
 
 		List<Term> categoryTerms = new ArrayList<Term>();
 		for(Term term: category.terms){

@@ -19,7 +19,7 @@
 			<md-button class="md-fab custom-fab-button text-lg animated zoomIn" 
 			tooltip="Editar perfil" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
 			ng-if="person.id == app.initData.person.id" 
-			ng-click="editProfile()">
+			ng-click="showEditProfile($event)">
 			<i class="mdi mdi-pencil"></i>
 		</md-button>
 	</div>
@@ -189,3 +189,28 @@
 <!-- /header bar-->
 
 </div>
+
+<script type="text/ng-template" id="edit_profile.html">
+	<md-dialog aria-label="Adicionar notícia" id="edit-profile-dialog">
+  	<md-content>
+  		<div class="wrapper">
+  			<div class="text-lg text-center">Selectione as categorias desejadas</div>
+				<div class="wrapper-xxs perspective-editor-category-selector m-t-sm tree well">
+					<ul class="normal-wrap perspective-editor-category-selector-list">
+						<li ng-repeat="term in pe.terms">
+							<span class="check-term" ng-click="pe.checkCategory(term)">
+						 		<md-checkbox md-no-ink ng-model="term.checked" class="pull-left"></md-checkbox>
+						 	</span>
+						 	<span class="leaf box-shadow" tooltip="{{term.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
+						 		{{term.name}}
+						 	</span>
+					 	</li>
+				 	</ul>
+				</div>
+				<div class="pos-abt bottom-0 right-0 wrapper-sm">
+					<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+				</div>
+			</div>
+	  </md-content>
+	</md-dialog>
+</script>

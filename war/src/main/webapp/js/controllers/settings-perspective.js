@@ -201,6 +201,7 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
         index: rows.length,
         termId: term.id,
         termName: term.name,
+        termPerspectiveId: $scope.termPerspectiveView.id,
         type: 'O'
       }
       term.checked = true;
@@ -210,7 +211,18 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
                    addedRow.cells = response.cells;
                    rows.push(addedRow)
             }
-        })
+        }).error(function(){
+          trix.findPostsByTagAndStationId(term.name, $scope.stationId, 0, 10).success(function(posts){
+            addedRow.cells = []
+            posts && posts.forEach(function(post, index){
+               addedRow.cells.push({
+                 'index': index,
+                 'postView': post,
+               });
+            });
+            rows.push(addedRow);
+          })
+      })
     }    
 
     $scope.$watch('pe.terms', function(newVal){
