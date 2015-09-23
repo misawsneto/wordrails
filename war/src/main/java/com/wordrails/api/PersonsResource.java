@@ -517,25 +517,32 @@ public class PersonsResource {
 		PersonData personData = getInitialData(request);
 
 		StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
-		Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
 
-		TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
+		if(defaultStation != null){
+			Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
 
-		Pageable pageable = new PageRequest(0, 10);
-		//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
 
-		List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
-		List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
-		personData.popular = postConverter.convertToViews(popular);
-		personData.recent = postConverter.convertToViews(recent);
+			Pageable pageable = new PageRequest(0, 10);
+			//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+
+			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
+			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
+			personData.popular = postConverter.convertToViews(popular);
+			personData.recent = postConverter.convertToViews(recent);
 
 
-		if(setAttributes != null && setAttributes){
+			if(setAttributes != null && setAttributes){
+				request.setAttribute("personData", mapper.writeValueAsString(personData));
+				request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView));
+				request.setAttribute("networkName", personData.network.name);
+				request.setAttribute("networkDesciption", "");
+				request.setAttribute("networkKeywords", "");
+			}
+		}else {
+			personData.noVisibleStation = true;
 			request.setAttribute("personData", mapper.writeValueAsString(personData));
-			request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView));
 			request.setAttribute("networkName", personData.network.name);
-			request.setAttribute("networkDesciption", "");
-			request.setAttribute("networkKeywords", "");
 		}
 
 		return personData;
