@@ -35,10 +35,8 @@ public class StationEventHandler {
 	@Autowired QueryPersistence queryPersistence;
 	@Autowired TermRepository termRepository;
 	@Autowired TermPerspectiveRepository termPerspectiveRepository;
-	@Autowired RowRepository rowPerspective;
+	@Autowired RowRepository rowRepository;
 
-
-	
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
 		if(stationSecurityChecker.canCreate(station)){
@@ -141,8 +139,8 @@ public class StationEventHandler {
 			termPerspectiveRepository.save(tp);
 			row2.perspective = tp;
 			row1.perspective = tp;
-			rowPerspective.save(row1);
-			rowPerspective.save(row2);
+			rowRepository.save(row1);
+			rowRepository.save(row2);
 			stationPerspective.perspectives = new HashSet(Arrays.asList(tp));
 			termPerspectiveRepository.save(tp);
 

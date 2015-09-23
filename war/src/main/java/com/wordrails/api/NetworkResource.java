@@ -55,7 +55,9 @@ public class NetworkResource {
 	private @Autowired RecommendRepository recommendRepository;
 	private @Autowired CommentRepository commentRepository;
 	private @Autowired QueryPersistence queryPersistence;
-
+	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
+	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
+	private @Autowired RowRepository rowRepository;
 
 	public @Autowired @Qualifier("objectMapper")
 	ObjectMapper mapper;
@@ -270,6 +272,8 @@ public class NetworkResource {
 
 		taxonomies = station.ownedTaxonomies;
 		Term defaultPostTerm = null;
+		Term term1 = null;
+		Term term2 = null;
 		for (Taxonomy tax: taxonomies){
 			if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
 				if(station.tagsTaxonomyId == null)
@@ -279,12 +283,12 @@ public class NetworkResource {
 				if(station.categoriesTaxonomyId == null) {
 					station.categoriesTaxonomyId = tax.id;
 					// ---- create sample terms...
-					Term term1 = new Term();
+					term1 = new Term();
 					term1.name = "Categoria 1";
 
 					defaultPostTerm = term1;
 
-					Term term2 = new Term();
+					term2 = new Term();
 					term2.name = "Categoria 2";
 
 					term1.taxonomy = tax;
@@ -308,6 +312,42 @@ public class NetworkResource {
 		role.editor = true;
 		stationRolesRepository.save(role);
 		station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
+		stationRepository.save(station);
+
+		try {
+			TermPerspective tp = new TermPerspective();
+			tp.term = null;
+			tp.perspective = stationPerspective;
+			tp.stationId = station.id;
+
+			tp.rows = new ArrayList<Row>();
+
+			Row row1 = new Row();
+			row1.term = term1;
+			row1.type = Row.ORDINARY_ROW;
+			tp.rows.add(row1);
+
+			Row row2 = new Row();
+			row2.term = term2;
+			row2.type = Row.ORDINARY_ROW;
+			tp.rows.add(row2);
+
+			stationPerspective = stationPerspectiveRepository.findOne(stationPerspective.id);
+
+			termPerspectiveRepository.save(tp);
+			row2.perspective = tp;
+			row1.perspective = tp;
+			rowRepository.save(row1);
+			rowRepository.save(row2);
+			stationPerspective.perspectives = new HashSet(Arrays.asList(tp));
+			termPerspectiveRepository.save(tp);
+
+			stationPerspectiveRepository.save(stationPerspective);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
 
 		Set<GrantedAuthority> authorities = new HashSet<>();

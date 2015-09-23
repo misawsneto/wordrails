@@ -42,17 +42,18 @@ public class RowsComparator {
 						}
 					}
 					
-					for(int i = 0; i < newRows.size(); i++){
-						if(newRow.id == null){
-							difference.rowsToAdd.add(newRow);
-						}
-					}
-					
 					if(!contains){
 						difference.rowsToDelete.add(oldRow);
 					}else{
 						RowDifference rowDifference = rowComparator.getDifference(newRow.cells, oldRow.cells);
 						difference.cellsToDelete.addAll(rowDifference.cellsToDelete);
+					}
+				}
+
+				for(int i = 0; i < newRows.size(); i++){
+					Row newRow = newRows.get(i);
+					if(newRow.id == null){
+						difference.rowsToAdd.add(newRow);
 					}
 				}
 			}else{

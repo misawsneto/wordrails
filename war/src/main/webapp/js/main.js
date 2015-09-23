@@ -105,6 +105,9 @@ angular.module('app')
     if(!initData)
       return;
 
+    $scope.app.initData = angular.copy(initData);
+    $scope.app.termPerspectiveView = angular.copy(initTermPerspective);
+
     angularHttp = $http;
     trixSdk = trix
 
@@ -170,9 +173,6 @@ angular.module('app')
     }
 
     checkLoginImage();
-
-    $scope.app.initData = angular.copy(initData);
-    $scope.app.termPerspectiveView = angular.copy(initTermPerspective);
 
     $scope.app.getLoggedPerson = function(){
       return $scope.app.initData.person;
@@ -254,7 +254,17 @@ angular.module('app')
 
     // deal with unauthorized access
     $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
-      if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications' || toState.name.indexOf('app.settings') > -1) && !trixService.isLoggedIn()){
+
+      if(!(toState.name.indexOf('access.') > -1) && !trixService.isLoggedIn() && initData.noVisibleStation){
+          $mdToast.show({
+              template: '<md-toast style="background-color: rgba(0,85,187,0.95)" ><span flex>Está estação é restrita!<br>Autentique-se para acessar o conteúdo.</span></md-toast>',
+              hideDelay: 3000,
+              position: 'top right'
+            });
+          $timeout(function() {
+            $state.go('access.signin');
+          });
+      }else if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications' || toState.name.indexOf('app.settings') > -1) && !trixService.isLoggedIn()){
         event.preventDefault();
         $scope.app.showInfoToast('Autentique-se para acessar esta função.')
         if(fromState.abstract)
@@ -630,6 +640,8 @@ angular.module('app')
               $state.go("app.stations");
             }
             $scope.app.refreshData();
+            if(initData && initData.noVisibleStation)
+              $state.go('access.signin');
           })
         })
       };

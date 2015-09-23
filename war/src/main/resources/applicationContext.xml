@@ -50,10 +50,10 @@
 		<property name="jdbcUrl" value="jdbc:mysql://localhost/prod_amazon"/>
 		<property name="username" value="wordrails"/>
 		<property name="password" value="wordrails"/>
-		<property name="minConnectionsPerPartition" value="2"/>
-		<property name="maxConnectionsPerPartition" value="15"/>
-		<property name="acquireIncrement" value="2"/>
-		<property name="partitionCount" value="3"/>
+		<!--<property name="minConnectionsPerPartition" value="2"/>-->
+		<!--<property name="maxConnectionsPerPartition" value="15"/>-->
+		<!--<property name="acquireIncrement" value="2"/>-->
+		<!--<property name="partitionCount" value="3"/>-->
 	</bean>
 
 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
