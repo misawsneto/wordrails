@@ -119,7 +119,7 @@ public class WordrailsService {
 		try {
 			return cacheService.getNetworkByDomain(host);
 		} catch (Exception e) {
-			return null;
+			return networkRepository.findOne(1);
 		}
 	}
 
