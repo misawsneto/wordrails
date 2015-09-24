@@ -5,7 +5,7 @@
 
 	<div class="wrapper-lg animated zoomIn m-b-xxl">
 		<!-- start of user panel list -->
-		<div class="panel panel-card block-1000 m-auto" ng-hide="creating || editing">
+		<div class="panel material-shadow-light panel-card block-1000 m-auto" ng-hide="creating || editing">
 			<div class="panel-heading h4 wrapper-md">
 				<a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Permissões da estação <strong>{{stationName}}</strong></span>
 			</div>
@@ -86,7 +86,7 @@
 			<!-- /end of user panel list -->
 
 			<!-- new user panel -->
-			<div class="panel panel-card block-600 m-auto" ng-if="creating">
+			<div class="panel material-shadow-light panel-card block-600 m-auto" ng-if="creating">
 				<div class="panel-heading h4 wrapper-md">
 					<a ui-sref="app.settings.stations">Estações</a>
 					<i class="mdi mdi-chevron-right"></i>
@@ -173,7 +173,7 @@
 			<!-- /new user panel-->
 
 			<!-- editing user panel -->
-			<div class="panel panel-card block-600 m-auto animated fadeIn" ng-show="editing && editingPersonLoaded">
+			<div class="panel material-shadow-light panel-card block-600 m-auto animated fadeIn" ng-show="editing && editingPersonLoaded">
 				<div class="panel-body wrapper-md p-t-none">
 					<div id="editing-user-profile" class="row">
 						<div class="profile-cover abstract-bg bg-cover pos-rlt m-l-n-xs m-r-n-xs o-h" style="border-radius:3px 3px 0 0; {{person.coverLargeId | imageLink | bgimg2}}">

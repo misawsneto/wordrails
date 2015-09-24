@@ -223,7 +223,7 @@ public class PostsResource {
 			else musts.must(person);
 		}
 
-		org.apache.lucene.search.Query full = musts.createQuery(); //qb.bool().must(text).must(station).createQuery();
+		org.apache.lucene.search.Query full = musts.createQuery(); //qb.bool().must(text).must(station).must(person).createQuery();
 
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Post.class);
 
@@ -358,6 +358,9 @@ public class PostsResource {
 		org.apache.lucene.search.Query full = musts.must(stations.createQuery()).createQuery(); //qb.bool().must(text).must(station).createQuery();
 
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Post.class);
+
+		System.out.println(full);
+		System.out.println(ftq);
 
 		org.apache.lucene.search.Sort sort = null; 
 		if(sortByDate != null && sortByDate)
