@@ -16,19 +16,12 @@
 			angular-ripple md-no-ink  aria-label="Nova notícia">
 			<i class="mdi mdi-plus"></i>
 		</md-button>
-		<div id="publications-list" class="w-full panel panel-card animated zoomIn" infinite-scroll="paginate()" infinite-scroll-distance="1">
+		<div id="publications-list" class="w-full panel panel-card animated zoomIn material-shadow-light" infinite-scroll="paginate()" infinite-scroll-distance="1">
 			<div class="wrapper form-group">
 				<div class="display-t-c col-sm-5 pull-in m-r">
-					<div class="input-group">
-						<input ng-model="pe.searchQuery" ng-class="{'input-lg': !app.isMobile}" class="form-control" placeholder="Busque por notícias" />
-						<span class="input-group-btn">
-							<button class="btn btn-default" ng-class="{'btn-lg i-24': !app.isMobile}" type="submit" style="padding: 6px 12px">
-								<i class="mdi mdi-magnify"></i>
-							</button>
-						</span>
-					</div>
+						<input ng-model="pe.searchQuery" ng-class="{'input-lg': !app.isMobile}" class="form-control material-shadow-light b-none" placeholder="Busque por notícias" />
 				</div>
-		            <input ui-jq="daterangepicker" class="input-lg w-md form-control hide-xs" ui-options="datePickerOptions" class="form-control w-md" />
+        <input ui-jq="daterangepicker" class="input-lg w-md form-control hide-xs" ui-options="datePickerOptions" class="form-control w-md" />
 			</div>
 
 			<div class="nav-tabs-alt box-shadow" ng-show="app.publicationsCtrl.publications" >
