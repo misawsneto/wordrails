@@ -21,8 +21,7 @@ public class PostEventHandler {
 
 	@Autowired
 	private PostRepository postRepository;
-	@Autowired
-	private PostReadRepository postReadRepository;
+	@Autowired private PostReadRepository postReadRepository;
 	@Autowired
 	private CellRepository cellRepository;
 	@Autowired

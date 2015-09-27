@@ -33,9 +33,7 @@ public class StationEventHandler {
 	@Autowired TaxonomyEventHandler taxonomyEventHandler;
 	@Autowired TaxonomyRepository taxonomyRepository;
 	@Autowired NotificationRepository notificationRepository;
-	@Autowired PostReadRepository postReadRepository;
-	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	@Autowired private TrixAuthenticationProvider authProvider;
 	@Autowired CacheService cacheService;
 	@Autowired QueryPersistence queryPersistence;
 	@Autowired TermRepository termRepository;
