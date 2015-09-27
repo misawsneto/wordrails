@@ -29,9 +29,9 @@ import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.*;
 import com.wordrails.services.*;
 import com.wordrails.util.WordrailsUtil;
-import org.hibernate.search.MassIndexer;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
+//import org.hibernate.search.MassIndexer;
+//import org.hibernate.search.jpa.FullTextEntityManager;
+//import org.hibernate.search.jpa.Search;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
 import org.quartz.DateBuilder;
@@ -134,54 +134,54 @@ public class UtilResource {
 	 * data inserted using a different method (e.g. pre-existing data, or test data inserted via
 	 * scripts or DbUnit).
 	 */
-	@GET
-	@Path("/updateIndex")
-	public Response updateFullTextIndex(@Context HttpServletRequest request) throws Exception {
-
-		String host = request.getHeader("Host");
-
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-
-			FullTextEntityManager ftem = Search.getFullTextEntityManager(manager);
-			ftem.createIndexer().startAndWait();
-			ftem.flushToIndexes();
-			return Response.status(Status.OK).entity("Updated").build();
-		}
-
-		throw new UnauthorizedException();
-	}
+//	@GET
+//	@Path("/updateIndex")
+//	public Response updateFullTextIndex(@Context HttpServletRequest request) throws Exception {
+//
+//		String host = request.getHeader("Host");
+//
+//		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+//
+//			FullTextEntityManager ftem = Search.getFullTextEntityManager(manager);
+//			ftem.createIndexer().startAndWait();
+//			ftem.flushToIndexes();
+//			return Response.status(Status.OK).entity("Updated").build();
+//		}
+//
+//		throw new UnauthorizedException();
+//	}
 
 	/**
 	 * Regenerates all the indexed class indexes
 	 */
-	@GET
-	@Path("/reindex")
-	public Response reindexAll(@Context HttpServletRequest request) {
-
-		String host = request.getHeader("Host");
-
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			System.out.println("reindex started");
-			FullTextEntityManager ftem = Search.getFullTextEntityManager(manager);
-			MassIndexer massIndexer = ftem.createIndexer();
-			massIndexer.purgeAllOnStart(true)
-			.optimizeAfterPurge(true)
-			.optimizeOnFinish(true)
-			.batchSizeToLoadObjects( 30 )
-			.threadsToLoadObjects( 4 );
-			//		massIndexer.start;
-			try {
-				massIndexer.startAndWait();
-//								massIndexer.start();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-//					ftem.flushToIndexes();
-			System.out.println("reindex finished");
-			return Response.status(Status.OK).entity("Reindexed").build();
-		}
-		throw new UnauthorizedException();
-	}
+//	@GET
+//	@Path("/reindex")
+//	public Response reindexAll(@Context HttpServletRequest request) {
+//
+//		String host = request.getHeader("Host");
+//
+//		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+//			System.out.println("reindex started");
+//			FullTextEntityManager ftem = Search.getFullTextEntityManager(manager);
+//			MassIndexer massIndexer = ftem.createIndexer();
+//			massIndexer.purgeAllOnStart(true)
+//			.optimizeAfterPurge(true)
+//			.optimizeOnFinish(true)
+//			.batchSizeToLoadObjects( 30 )
+//			.threadsToLoadObjects( 4 );
+//			//		massIndexer.start;
+//			try {
+//				massIndexer.startAndWait();
+////								massIndexer.start();
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+////					ftem.flushToIndexes();
+//			System.out.println("reindex finished");
+//			return Response.status(Status.OK).entity("Reindexed").build();
+//		}
+//		throw new UnauthorizedException();
+//	}
 
 	@GET
 	@Path("/updateDefaultStationPerspective")

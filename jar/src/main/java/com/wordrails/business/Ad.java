@@ -1,6 +1,11 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+//import com.wordrails.util.WordrailsUtil;
+//import org.hibernate.search.annotations.Analyze;
+//import org.hibernate.search.annotations.DateBridge;
+//import org.hibernate.search.annotations.Field;
+//import org.hibernate.search.annotations.Resolution;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

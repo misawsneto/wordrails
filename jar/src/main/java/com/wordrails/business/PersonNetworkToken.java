@@ -17,9 +17,17 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+//import org.hibernate.search.annotations.Analyze;
+//import org.hibernate.search.annotations.Field;
+//import org.hibernate.search.annotations.Index;
+//import org.hibernate.search.annotations.Indexed;
+//import org.hibernate.search.annotations.Latitude;
+//import org.hibernate.search.annotations.Longitude;
+//import org.hibernate.search.annotations.Spatial;
+//import org.hibernate.search.annotations.Store;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.elasticsearch.annotations.Field;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"network_id", "token"}))
@@ -32,7 +40,6 @@ public class PersonNetworkToken {
 	public Integer id;
 
 //	@Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
-	@Field
 	@NotEmpty
 	public String token;
 	

@@ -1,8 +1,12 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+//import org.apache.solr.analysis.LowerCaseFilterFactory;
+//import org.apache.solr.analysis.StandardTokenizerFactory;
+//import org.apache.solr.analysis.WordDelimiterFilterFactory;
+//import org.hibernate.search.annotations.*;
+//import org.hibernate.search.annotations.Index;
 import org.hibernate.validator.constraints.Email;
-import org.springframework.data.elasticsearch.annotations.Field;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -33,12 +37,11 @@ public class Person implements Serializable{
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 //	@NumericField
-	@Field
+//	@Field
 	public Integer id;
 
 	@Size(min=1, max=100)
 //	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-	@Field
 //	@Analyzer(definition="customAnalyzer")
 	public String name;
 
@@ -48,7 +51,6 @@ public class Person implements Serializable{
 	@Pattern(regexp="^[a-z0-9\\._-]{3,50}$")
 //	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 //	@Analyzer(definition="customAnalyzer")
-	@Field
 	public String username;
 
 	@OneToMany(mappedBy="author")
@@ -80,7 +82,7 @@ public class Person implements Serializable{
 	public User user;
 
 	@Size(max=2048)
-	@Field
+//	@Field
 	public String bio;
 
 	@Column
@@ -101,21 +103,18 @@ public class Person implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 //	@Field(analyze = Analyze.NO)
 //    @DateBridge(resolution = Resolution.SECOND)
-	@Field
 	public Date createdAt;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 //	@Field(analyze = Analyze.NO)
 //    @DateBridge(resolution = Resolution.SECOND)
-	@Field
 	public Date lastLogin;
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 //	@Field(analyze = Analyze.NO)
 //    @DateBridge(resolution = Resolution.SECOND)
-	@Field
 	public Date updatedAt;
 
 	@PrePersist

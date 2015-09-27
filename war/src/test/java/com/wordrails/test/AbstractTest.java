@@ -21,7 +21,7 @@ import com.wordrails.persistence.StationRepository;
 })
 public abstract class AbstractTest extends AbstractTransactionalJUnit4SpringContextTests {
 	protected @Autowired ApplicationContext context;
-	private @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
+//	private @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	//private @Autowired StationRepository stationRepository;
 	
 	@Test

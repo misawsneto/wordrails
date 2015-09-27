@@ -13,6 +13,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+
+//import org.hibernate.search.annotations.DocumentId;
+//import org.hibernate.search.annotations.Indexed;
+//import org.hibernate.search.annotations.IndexedEmbedded;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -22,6 +27,7 @@ public class PostRead {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+//	@DocumentId
 	public Integer id;
 	
 	@ManyToOne

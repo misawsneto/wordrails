@@ -1,6 +1,6 @@
 package com.wordrails.business;
 
-import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.persistence.*;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.WordrailsUtil;
@@ -39,7 +39,9 @@ public class PostEventHandler {
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
-	
+	@Autowired
+	private PostEsRepository postEsRepository;
+
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
 		if(post instanceof PostTrash) //post of type Trash is not insertable
@@ -78,6 +80,7 @@ public class PostEventHandler {
 		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
 			postService.buildNotification(post);
 		}
+		postEsRepository.save(post);
 	}
 
 	@HandleAfterSave

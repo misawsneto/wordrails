@@ -8,8 +8,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+//import org.codehaus.jackson.annotate.JsonBackReference;
+//import org.codehaus.jackson.annotate.JsonManagedReference;
+//import org.hibernate.search.annotations.ContainedIn;
+//import org.hibernate.search.annotations.DocumentId;
+//import org.hibernate.search.annotations.Field;
+//import org.hibernate.search.annotations.NumericField;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -19,18 +23,18 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 public class Term {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Field
+//	@Field
 	public Integer id;
 	
 	@Size(min=1, max=100)
-	@Field // field used by Post object
+//	@Field // field used by Post object
 	public String name;
 	
 	@OneToMany(mappedBy="term")
 	public Set<Cell> cells;
 		
 	@ManyToMany(mappedBy="terms")
-	@Field(type = FieldType.Nested)
+//	@ContainedIn
 	public Set<Post> posts;
 	
 	@OneToMany(mappedBy="term")
@@ -53,7 +57,7 @@ public class Term {
 	@OneToMany(mappedBy="term")
 	public Set<TermPerspective> termPerspectives;
 	
-	@Field
+//	@Field
 //	@NumericField
 	public Integer taxonomyId;
 	

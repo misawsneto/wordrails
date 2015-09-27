@@ -9,7 +9,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.data.elasticsearch.annotations.Field;
+//import org.hibernate.search.annotations.DocumentId;
+//import org.hibernate.search.annotations.Field;
+//import org.hibernate.search.annotations.IndexedEmbedded;
 
 @Entity
 public class Image implements Serializable{
@@ -22,19 +24,19 @@ public class Image implements Serializable{
 //	@DocumentId
 	public Integer id;
 	
-	@Field
+//	@Field
 	@Size(min=1, max=100)
 	public String title;
 	
 	@Lob
-	@Field
+//	@Field
 	public String caption;
 	
 	@Lob
-	@Field
+//	@Field
 	public String credits;
 
-	@Field
+//	@Field
 	@Column(columnDefinition = "varchar(255) default 'POST'", nullable = false)
 	public String type;
 	

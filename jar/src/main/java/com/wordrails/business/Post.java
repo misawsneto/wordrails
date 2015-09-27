@@ -3,14 +3,6 @@ package com.wordrails.business;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wordrails.util.WordrailsUtil;
 
-//import org.hibernate.search.annotations.*;
-//import org.hibernate.search.annotations.Index;
-//import org.hibernate.search.annotations.Parameter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.annotation.*;
-import org.springframework.data.elasticsearch.annotations.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -20,12 +12,12 @@ import java.util.Set;
 
 @Entity
 //@Indexed(interceptor=PostIndexingInterceptor.class)
-//@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-//@DiscriminatorColumn(
-//		name="state",
-//		discriminatorType=DiscriminatorType.STRING
-//)
-//@DiscriminatorValue(value="PUBLISHED")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+		name="state",
+		discriminatorType=DiscriminatorType.STRING
+)
+@DiscriminatorValue(value="PUBLISHED")
 //@AnalyzerDefs({
 //		// auto complete 1
 //		@AnalyzerDef(name = "autocompleteEdgeAnalyzer",
@@ -86,7 +78,7 @@ import java.util.Set;
 //})
 //@Spatial
 //@Table(uniqueConstraints=@UniqueConstraint(columnNames={"slug", "state"}))
-@Document(indexName = "posts", type = "Post", shards = 1, indexStoreType = "memory")
+//@Document(indexName = "posts", type = "Post", shards = 1, indexStoreType = "memory")
 public class Post {
 
 	public static final String STATE_DRAFT = "DRAFT";
@@ -102,6 +94,7 @@ public class Post {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@DocumentId
 	public Integer id;
 
 	public Integer originalPostId;
@@ -215,8 +208,10 @@ public class Post {
 	@Lob
 	public String imageCreditsText;
 
+//	@Latitude
 	public Double lat;
 
+//	@Longitude
 	public Double lng;
 
 	@Lob
