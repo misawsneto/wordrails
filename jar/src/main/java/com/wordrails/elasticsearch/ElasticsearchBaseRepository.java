@@ -11,17 +11,15 @@ import org.springframework.beans.factory.annotation.Value;
 abstract class ElasticsearchBaseRepository {
 
 	@Value("${elasticsearch.host}")
-	private static String host;
-	@Value("${elasticsearch.cluster_name}")
-	private static String cluster;
+	private String host;
 	@Value("${elasticsearch.port}")
-	private static Integer port;
+	private Integer port;
 
 	private static TransportClient transportClient;
 
-	public static void createClient(){
+	public void createClient(){
 		transportClient = new TransportClient().
-				addTransportAddress(new InetSocketTransportAddress("127.0.0.1", 9300));
+				addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
 
 	public static void closeClient(){
@@ -35,7 +33,7 @@ abstract class ElasticsearchBaseRepository {
 				.actionGet();
 	}
 
-	protected static void _save(String doc, String id, String index, String type){
+	protected void _save(String doc, String id, String index, String type){
 		createClient();
 		index(doc, id, index, type);
 		closeClient();
