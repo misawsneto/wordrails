@@ -80,6 +80,8 @@ public class PersonsResource {
 	private @Autowired QueryPersistence queryPersistence;
 	private @Autowired PersonEventHandler personEventHandler;
 
+	private @Autowired SectionRepository sectionRepository;
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -574,7 +576,6 @@ public class PersonsResource {
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
 
-
 		//Network Permissions
 		NetworkPermission networkPermissionDto = new NetworkPermission();
 		if(networkRole != null)
@@ -582,7 +583,7 @@ public class PersonsResource {
 		else
 			networkPermissionDto.admin = false;
 
-
+		network.sections = sectionRepository.findByNetwork(network);
 
 		List<StationDto> stationDtos = new ArrayList<>();
 		List<Station> stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
