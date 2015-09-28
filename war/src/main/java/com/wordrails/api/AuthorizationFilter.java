@@ -201,6 +201,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindNetworksOrderDescAuthorized(Integer id) {
+		return true;
+	}
+
+	@Override
 	protected boolean isGetNetworkPersonsNetworkRolesAuthorized(Integer networkId) {
 		return isNetworkAdminById(networkId);
 	}
@@ -991,11 +996,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetUserAuthorized(Integer userId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isFindByUsernameAndEnabledAuthorized(String username, boolean enabled) {
 		return false;
 	}
 
