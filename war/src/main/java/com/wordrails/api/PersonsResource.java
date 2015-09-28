@@ -611,6 +611,7 @@ public class PersonsResource {
 		List<SectionDto> sections = new ArrayList<SectionDto>();
 		for(Section section: network.sections){
 			SectionDto sectionDto = mapper.readValue(mapper.writeValueAsString(section).getBytes("UTF-8"), SectionDto.class);
+			sectionDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/sections/" + sectionDto.id);
 			sections.add(sectionDto);
 		}
 
