@@ -583,7 +583,7 @@ public class PersonsResource {
 		else
 			networkPermissionDto.admin = false;
 
-		network.sections = sectionRepository.findByNetwork(network);
+		network.sections = sectionRepository.findSectionByNetwork(network);
 
 		List<StationDto> stationDtos = new ArrayList<>();
 		List<Station> stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
