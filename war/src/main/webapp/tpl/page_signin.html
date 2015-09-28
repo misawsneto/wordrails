@@ -22,7 +22,7 @@
         <button md-ink-ripple type="submit" class="btn-custom md-btn text-u-c btn-block ">Entrar</button>
       </div>
       <div class="text-center m-t m-b"><a ui-sref="access.forgotpwd">Esqueceu sua senha?</a></div>
-      <p class="text-center">Não possui uma conta? <a ui-sref="access.signup">clique aqui para cadastra-se.</a></p>
+      <p ng-if="app.initData.network.allowSignup" class="text-center">Não possui uma conta? <a ui-sref="access.signup">clique aqui para cadastra-se.</a></p>
     </form>
   </div>
   <div class="text-center" ng-bind-html="app.initData.network.loginFooterMessage">

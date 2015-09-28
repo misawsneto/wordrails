@@ -207,4 +207,9 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 		return person != null && Objects.equals(personId, person.id);
 	}
+
+	public void logout() {
+		if(SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
+			SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+	}
 }

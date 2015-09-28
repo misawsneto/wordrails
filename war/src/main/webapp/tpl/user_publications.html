@@ -60,7 +60,7 @@
 					<div ng-class="{'b-t': !$first}"></div>
 					<div class="clear p-t-sm p post-list news-item">
 						<!-- image -->
-						<a class="block-image m-l m-t" ng-if="publication.mediumId" >
+						<a class="block-image m-l m-t" ng-if="publication.mediumId" ui-sref="app.read({'slug': publication.slug})">
 							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'md')">
 							</div>
 						</a>

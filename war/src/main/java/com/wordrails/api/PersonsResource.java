@@ -273,7 +273,12 @@ public class PersonsResource {
 	@Path("/logout")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response logout(){
-		return Response.status(Status.OK).build();
+		try{
+			authProvider.logout();
+			return Response.status(Status.OK).build();
+		}catch(BadCredentialsException | UsernameNotFoundException e){
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
 	}
 
 	@POST

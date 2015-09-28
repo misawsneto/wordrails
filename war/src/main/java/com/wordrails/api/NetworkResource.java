@@ -1,22 +1,13 @@
 package com.wordrails.api;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
+import com.wordrails.business.*;
 import com.wordrails.persistence.*;
+import com.wordrails.util.NetworkCreateDto;
 import com.wordrails.util.ReadsCommentsRecommendsCount;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
@@ -27,9 +18,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import com.wordrails.util.NetworkCreateDto;
 import org.springframework.validation.FieldError;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.*;
 
 @Path("/networks")
 @Component
@@ -230,9 +228,13 @@ public class NetworkResource {
 		nTaxonomy.terms.add(nterm2);
 		termRepository.save(nterm1);
 		termRepository.save(nterm2);
-		taxonomyRepository.save(nTaxonomy);
+        Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
+        nTaxonomies.add(nTaxonomy);
+        taxonomyRepository.save(nTaxonomy);
+        network.ownedTaxonomies = nTaxonomies;
+        networkRepository.save(network);
 
-		Station station = new Station();
+        Station station = new Station();
 		station.name = network.name;
 		station.main = true;
 		station.networks = new HashSet<Network>();
@@ -364,6 +366,8 @@ public class NetworkResource {
 		post.station = station;
 		postEventHandler.handleBeforeCreate(post);
 		postRepository.save(post);
+
+		authProvider.logout();
 
 		return Response.status(Status.CREATED).entity("{\"token\": \"" + network.networkCreationToken + "\"}").build();
 	}

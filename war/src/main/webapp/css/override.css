@@ -1842,6 +1842,7 @@ html{
 body {
   color: #333;
   -webkit-font-smoothing: antialiased;
+  /* font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif; */
 }
 
 a{color: #333}
@@ -3297,7 +3298,7 @@ md-backdrop.md-opaque{
 
 .redactor-toolbar{border: none!important;}
 
-#schedulerPopover{position: fixed; margin-left: 72px; margin-top: 50px;}
+#schedulerPopover{position: fixed; margin-left: 75px; margin-top: 55px;}
 #schedulerPopover .arrow{ left:128px}
 #schedulerPopover .popover-close-button{position: absolute; right: 8px; top: -3px;}
 /* /post */

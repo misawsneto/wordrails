@@ -359,10 +359,7 @@ public class PostsResource {
 
 		FullTextQuery ftq = ftem.createFullTextQuery(full, Post.class);
 
-		System.out.println(full);
-		System.out.println(ftq);
-
-		org.apache.lucene.search.Sort sort = null; 
+		org.apache.lucene.search.Sort sort = null;
 		if(sortByDate != null && sortByDate)
 			sort = new Sort(new SortField("date", SortField.STRING, true));
 		else
