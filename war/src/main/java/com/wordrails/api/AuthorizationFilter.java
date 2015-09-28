@@ -484,11 +484,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindSectionByNetworkAuthorized(Network network) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetSectionNetworkAuthorized(Integer sectionId) {
 		return true;
 	}
