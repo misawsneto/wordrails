@@ -46,6 +46,8 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 		toFormat.remove("imageLargeId");
 		toFormat.remove("id");
 
+		toFormat.put("authorId", post.author.id);
+
 		return toFormat.toJSONString();
 	}
 }
