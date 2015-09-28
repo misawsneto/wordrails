@@ -76,9 +76,10 @@ public class PerspectiveResource {
 
 		TermPerspective termPerspective = termPerspectiveRepository.findOne(id);
 		if(termPerspective != null){
-//			updateTerm(termPerspective, definition.termId);
+			updateTerm(termPerspective, definition.termId);
 			updateRow(definition.splashedRow, termPerspective, Row.SPLASHED_ROW);
 			updateRow(definition.featuredRow, termPerspective, Row.FEATURED_ROW);
+			//updateRow(definition.homeRows, termPerspective, Row.HOME_ROW);
 			updateOrdinaryRows(definition.ordinaryRows, termPerspective);
 			response = Response.status(Status.CREATED).build();
 		}
@@ -134,7 +135,7 @@ public class PerspectiveResource {
 			}
 			rowRepository.save(rows);
 
-			response = Response.status(Status.CREATED).build();
+			response = Response.status(Status.CREATED).entity("{\"id\": " + termPerspective.id +"}").build();
 		}
 		return response;
 	}
@@ -149,7 +150,7 @@ public class PerspectiveResource {
 		StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
 		
 		if(stationPerspective != null){
-			TermPerspective termPerspective = null;
+			TermPerspective termPerspective;
 			if(termPerspectiveId != null){
 				termPerspective = termPerspectiveRepository.findOne(termPerspectiveId);
 			}else{
@@ -239,14 +240,14 @@ public class PerspectiveResource {
 	}
 
 	private void updateTerm(TermPerspective termPerspective, Integer termId){
-		if(termPerspective.term.id != termId){
+		if(termPerspective.term != null && termPerspective.term.id != termId){
 			termPerspective.term = termRepository.findOne(termId);
 		}
 		termPerspectiveRepository.save(termPerspective);
 	}
 	
 	private void updateRow(RowView newRowView, TermPerspective termPerspective, String type){
-		Row newRow = null;
+		Row newRow;
 		if(newRowView != null){
 			RowDifference difference = null;
 			newRow = rowConverter.convertToEntity(newRowView);
@@ -257,8 +258,8 @@ public class PerspectiveResource {
 				newRow.splashedPerspective = termPerspective;
 				difference = rowComparator.getDifference(newRow.cells, termPerspective.splashedRow == null ? null : termPerspective.splashedRow.cells);
 			}
-			
-			if(difference.cellsToDelete != null && difference.cellsToDelete.size() > 0){
+
+			if(difference != null && difference.cellsToDelete != null && difference.cellsToDelete.size() > 0){
 				cellRepository.deleteInBatch(difference.cellsToDelete);
 			}
 			newRow.cells = difference.cellsToSave;
@@ -311,7 +312,7 @@ public class PerspectiveResource {
 		termView.ordinaryRows = fillPostsNotPositionedInRow(termPerspective.term ,rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
-		termView.categoryTerms = termConverter.convertToViews(new ArrayList<Term>(termPerspective.categoryTabs));
+		termView.taxonomyId = termPerspective.taxonomyId;
 		termView.id = termPerspective.id;
 
 		return termView;
@@ -348,7 +349,7 @@ public class PerspectiveResource {
 				List<Post> notPositionedPosts = (postRepository.findPostsNotPositioned(stationId, ids, postPositionedIds, pageable));
 				cells = mergePostsPositionedsNotPositioneds(row, positionedCells, notPositionedPosts, size);
 			}else{
-				List<Post> posts = postRepository.findPostsAndPostsPromoted(stationId, ids, pageable);
+				List<Post> posts = postRepository.findPostsPublished(stationId, ids, pageable);
 				cells = convertPostsToCells(row, posts);
 			}
 		}else{
@@ -400,6 +401,7 @@ public class PerspectiveResource {
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null); 
 		termView.termId = termPerspective.term.id;
 		termView.termName = termPerspective.term.name;
+		termView.taxonomyId = termPerspective.taxonomyId;
 		termView.stationId = termPerspective.stationId;
 
 		return termView;
@@ -451,7 +453,7 @@ public class PerspectiveResource {
 	private RowView convertTermToRow(Term term, List<Integer> termsIds, Integer stationId, int index, String rowType, int page, int size){
 		Pageable pageable = new PageRequest(page, size);
 		
-		List<Post> posts = postRepository.findPostsAndPostsPromoted(stationId, termsIds, pageable);
+		List<Post> posts = postRepository.findPostsPublished(stationId, termsIds, pageable);
 
 		Row row = new Row();
 		row.index = index;

@@ -136,4 +136,12 @@ public class QueryPersistence {
 	public void setNoAuthor(Integer personId) {
 		manager.createNativeQuery("UPDATE Post post SET post.author_id = 1, post.state = 'NOAUTHOR' WHERE post.author_id = :personId").setParameter("personId", personId).executeUpdate();
 	}
+
+	@Transactional
+	public List<Object[]> getStationsPublicationsCount(List<Integer> stationIds) {
+		return manager.createNativeQuery("select (select count(*) from Post po where po.station_id = s.id and po.state = 'PUBLISHED')," +
+				"(select count(*) from Post po where po.station_id = s.id and po.state = 'DRAFT')," +
+				"(select count(*) from Post po where po.station_id = s.id and po.state = 'SCHEDULED')" +
+				"from Station s where s.id in (:stationIds)").setParameter("stationIds", stationIds).getResultList();
+	}
 }

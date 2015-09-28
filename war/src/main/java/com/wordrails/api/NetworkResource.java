@@ -1,34 +1,33 @@
 package com.wordrails.api;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.validation.ConstraintViolation;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
+import com.wordrails.business.*;
 import com.wordrails.persistence.*;
-import com.wordrails.util.PersonCreateDto;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.NetworkCreateDto;
+import com.wordrails.util.ReadsCommentsRecommendsCount;
 import org.hibernate.exception.ConstraintViolationException;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
-import com.wordrails.util.NetworkCreateDto;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.*;
 
 @Path("/networks")
 @Component
@@ -50,6 +49,13 @@ public class NetworkResource {
 	private @Autowired PostRepository postRepository;
 	private @Autowired UserRepository userRepository;
 	private @Autowired PostEventHandler postEventHandler;
+	private @Autowired PostReadRepository postReadRepository;
+	private @Autowired RecommendRepository recommendRepository;
+	private @Autowired CommentRepository commentRepository;
+	private @Autowired QueryPersistence queryPersistence;
+	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
+	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
+	private @Autowired RowRepository rowRepository;
 
 	public @Autowired @Qualifier("objectMapper")
 	ObjectMapper mapper;
@@ -222,9 +228,13 @@ public class NetworkResource {
 		nTaxonomy.terms.add(nterm2);
 		termRepository.save(nterm1);
 		termRepository.save(nterm2);
-		taxonomyRepository.save(nTaxonomy);
+        Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
+        nTaxonomies.add(nTaxonomy);
+        taxonomyRepository.save(nTaxonomy);
+        network.ownedTaxonomies = nTaxonomies;
+        networkRepository.save(network);
 
-		Station station = new Station();
+        Station station = new Station();
 		station.name = network.name;
 		station.main = true;
 		station.networks = new HashSet<Network>();
@@ -264,6 +274,8 @@ public class NetworkResource {
 
 		taxonomies = station.ownedTaxonomies;
 		Term defaultPostTerm = null;
+		Term term1 = null;
+		Term term2 = null;
 		for (Taxonomy tax: taxonomies){
 			if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
 				if(station.tagsTaxonomyId == null)
@@ -273,12 +285,12 @@ public class NetworkResource {
 				if(station.categoriesTaxonomyId == null) {
 					station.categoriesTaxonomyId = tax.id;
 					// ---- create sample terms...
-					Term term1 = new Term();
+					term1 = new Term();
 					term1.name = "Categoria 1";
 
 					defaultPostTerm = term1;
 
-					Term term2 = new Term();
+					term2 = new Term();
 					term2.name = "Categoria 2";
 
 					term1.taxonomy = tax;
@@ -304,6 +316,42 @@ public class NetworkResource {
 		station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
 		stationRepository.save(station);
 
+		try {
+			TermPerspective tp = new TermPerspective();
+			tp.term = null;
+			tp.perspective = stationPerspective;
+			tp.stationId = station.id;
+
+			tp.rows = new ArrayList<Row>();
+
+			Row row1 = new Row();
+			row1.term = term1;
+			row1.type = Row.ORDINARY_ROW;
+			tp.rows.add(row1);
+
+			Row row2 = new Row();
+			row2.term = term2;
+			row2.type = Row.ORDINARY_ROW;
+			tp.rows.add(row2);
+
+			stationPerspective = stationPerspectiveRepository.findOne(stationPerspective.id);
+
+			termPerspectiveRepository.save(tp);
+			row2.perspective = tp;
+			row1.perspective = tp;
+			rowRepository.save(row1);
+			rowRepository.save(row2);
+			stationPerspective.perspectives = new HashSet(Arrays.asList(tp));
+			termPerspectiveRepository.save(tp);
+
+			stationPerspectiveRepository.save(stationPerspective);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		station.defaultPerspectiveId = stationPerspective.id;
+		stationRepository.save(station);
+
 		Set<GrantedAuthority> authorities = new HashSet<>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
 		authProvider.passwordAuthentication(user.username, user.password, network);
@@ -319,7 +367,114 @@ public class NetworkResource {
 		postEventHandler.handleBeforeCreate(post);
 		postRepository.save(post);
 
+		authProvider.logout();
+
 		return Response.status(Status.CREATED).entity("{\"token\": \"" + network.networkCreationToken + "\"}").build();
+	}
+
+	@GET
+	@Path("/publicationsCount")
+	public Response publicationsCount(@Context HttpServletRequest request)throws JsonProcessingException {
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+
+		List<Integer> ids = new ArrayList<Integer>();
+		network = networkRepository.findOne(network.id);
+
+		for (Station station: network.stations){
+			ids.add(station.id);
+		}
+		List<Object[]> counts =  queryPersistence.getStationsPublicationsCount(ids);
+		return Response.status(Status.OK).entity("{\"publicationsCounts\": " + (counts.size() > 0 ? mapper.writeValueAsString(counts.get(0)) : null) + "}").build();
+	}
+
+	@GET
+	@Path("/stats")
+	public Response networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("networkId") Integer postId) throws JsonProcessingException {
+		if (date == null)
+			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
+
+		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+		Network network = null;
+		if (postId == null || postId == 0) {
+			network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		}
+
+		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<Long, ReadsCommentsRecommendsCount>();
+		DateTime firstDay = formatter.parseDateTime(date);
+		DateTime beginningDate;
+
+		int dateDiference = 30;
+
+		if (beginning != null && !beginning.isEmpty()){
+			beginningDate = formatter.parseDateTime(date);
+			dateDiference = Days.daysBetween(beginningDate.toLocalDate(), firstDay.toLocalDate()).getDays();
+		}
+
+		// create date slots
+		DateTime lastestDay = firstDay;
+		while (firstDay.minusDays(dateDiference).getMillis() < lastestDay.getMillis()){
+			stats.put(lastestDay.getMillis(), new ReadsCommentsRecommendsCount());
+			lastestDay = lastestDay.minusDays(1);
+		}
+
+		List<Object[]> postReadCounts;
+		List<Object[]> recommendsCounts;
+		List<Object[]> commentsCounts;
+		List<Object[]> generalStatus;
+
+		if(network == null) {
+			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			recommendsCounts = recommendRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			generalStatus = postRepository.findPostStats(postId);
+		}else {
+			postReadCounts = postReadRepository.countByNetworkAndDate(network.id, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			recommendsCounts = recommendRepository.countByNetworkAndDate(network.id, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			commentsCounts = commentRepository.countByNetworkAndDate(network.id, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			generalStatus = networkRepository.findNetworkStats(network.id);
+		}
+
+		// check date and map counts
+		Iterator it = stats.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
+			long key = (Long)pair.getKey();
+			for(Object[] counts: postReadCounts){
+				long dateLong = ((java.sql.Date) counts[0]).getTime();
+				long count = (long) counts[1];
+				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
+					pair.getValue().readsCount = count;
+			}
+		}
+
+		it = stats.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
+			long key = (Long)pair.getKey();
+			for(Object[] counts: recommendsCounts){
+				long dateLong = ((java.sql.Date) counts[0]).getTime();
+				long count = (long) counts[1];
+				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
+					pair.getValue().recommendsCount = count;
+			}
+		}
+
+		it = stats.entrySet().iterator();
+		while (it.hasNext()){
+			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
+			long key = (Long)pair.getKey();
+			for(Object[] counts: commentsCounts){
+				long dateLong = ((java.sql.Date) counts[0]).getTime();
+				long count = (long) counts[1];
+				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
+					pair.getValue().commentsCount = count;
+			}
+		}
+
+		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
+		String dateStatsJson = mapper.writeValueAsString(stats);
+		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 	}
 
 }

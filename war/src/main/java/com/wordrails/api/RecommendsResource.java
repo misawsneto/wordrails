@@ -22,12 +22,6 @@ import com.wordrails.auth.TrixAuthenticationProvider;
 //import org.hibernate.search.jpa.FullTextEntityManager;
 //import org.hibernate.search.jpa.FullTextQuery;
 //import org.hibernate.search.query.dsl.QueryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
-
-import com.wordrails.WordrailsService;
 import com.wordrails.business.Person;
 import com.wordrails.business.Recommend;
 import com.wordrails.business.UnauthorizedException;
@@ -35,16 +29,28 @@ import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.persistence.RecommendRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/recommends")
 @Consumes(MediaType.WILDCARD)
 @Component
 public class RecommendsResource {
 	private @Context HttpServletRequest request;
-	private @Context UriInfo uriInfo;
 	private @Context HttpServletResponse response;
 
-	private @Autowired WordrailsService wordrailsService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired PostConverter postConverter;
 	private @Autowired RecommendRepository recommendRepository;

@@ -1,9 +1,6 @@
 package com.wordrails.business;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.persistence.*;
@@ -26,18 +23,20 @@ public class StationEventHandler {
 	@Autowired StationRolesRepository personStationRolesRepository;
 	@Autowired PostEventHandler postEventHandler;
 	@Autowired PostRepository postRepository;
-	@Autowired PromotionRepository promotionRepository;
 	@Autowired StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired StationRepository stationRepository;
 	@Autowired StationSecurityChecker stationSecurityChecker;
 	@Autowired TaxonomyEventHandler taxonomyEventHandler;
 	@Autowired TaxonomyRepository taxonomyRepository;
 	@Autowired NotificationRepository notificationRepository;
+	@Autowired PostReadRepository postReadRepository;
 	@Autowired private TrixAuthenticationProvider authProvider;
 	@Autowired CacheService cacheService;
 	@Autowired QueryPersistence queryPersistence;
 	@Autowired TermRepository termRepository;
-	
+	@Autowired TermPerspectiveRepository termPerspectiveRepository;
+	@Autowired RowRepository rowRepository;
+
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
 		if(stationSecurityChecker.canCreate(station)){
@@ -78,6 +77,11 @@ public class StationEventHandler {
 	
 	@HandleAfterCreate
 	public void handleAfterCreate(Station station){
+		Term term1 = new Term();
+		term1.name = "Categoria 1";
+
+		Term term2 = new Term();
+		term2.name = "Categoria 2";
 
 		Set<Taxonomy> taxonomies = station.ownedTaxonomies;
 		for (Taxonomy tax: taxonomies){
@@ -89,12 +93,6 @@ public class StationEventHandler {
 				if(station.categoriesTaxonomyId == null) {
 					station.categoriesTaxonomyId = tax.id;
 					// ---- create sample terms...
-					Term term1 = new Term();
-					term1.name = "Categoria 1";
-
-					Term term2 = new Term();
-					term2.name = "Categoria 2";
-
 					term1.taxonomy = tax;
 					term2.taxonomy = tax;
 
@@ -116,7 +114,42 @@ public class StationEventHandler {
 		role.admin = true;
 		role.editor = true;
 		personStationRolesRepository.save(role);
-		station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
+
+		StationPerspective stationPerspective = new ArrayList<StationPerspective>(station.stationPerspectives).get(0);
+		try {
+			TermPerspective tp = new TermPerspective();
+			tp.term = null;
+			tp.perspective = stationPerspective;
+			tp.stationId = station.id;
+
+			tp.rows = new ArrayList<Row>();
+
+			Row row1 = new Row();
+			row1.term = term1;
+			row1.type = Row.ORDINARY_ROW;
+			tp.rows.add(row1);
+
+			Row row2 = new Row();
+			row2.term = term2;
+			row2.type = Row.ORDINARY_ROW;
+			tp.rows.add(row2);
+
+			stationPerspective = stationPerspectiveRepository.findOne(stationPerspective.id);
+
+			termPerspectiveRepository.save(tp);
+			row2.perspective = tp;
+			row1.perspective = tp;
+			rowRepository.save(row1);
+			rowRepository.save(row2);
+			stationPerspective.perspectives = new HashSet(Arrays.asList(tp));
+			termPerspectiveRepository.save(tp);
+
+			stationPerspectiveRepository.save(stationPerspective);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
 	}
 	
@@ -140,11 +173,6 @@ public class StationEventHandler {
 					taxonomyEventHandler.handleBeforeDelete(taxonomy);
 					taxonomyRepository.delete(taxonomy);
 				}
-			}
-			
-			List<Promotion> promotions = promotionRepository.findByStation(station);
-			if(promotions != null && promotions.size() > 0){
-				promotionRepository.delete(promotions);
 			}
 			
 			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
@@ -171,7 +199,6 @@ public class StationEventHandler {
 				queryPersistence.deleteImagesInPosts(ids);
 				queryPersistence.deleteNotificationsInPosts(ids);
 				queryPersistence.deletePostReadsInPosts(ids);
-				queryPersistence.deletePromotionsInPosts(ids);
 				queryPersistence.deleteRecommendsInPosts(ids);
 				
 				postRepository.delete(posts);

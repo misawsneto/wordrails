@@ -2,11 +2,11 @@
   <div class="wrapper-lg m-b-xxl">
     <div class="row">
       <div class="col-sm-4" ng-repeat="station in app.initData.stations">
-        <div class="panel panel-card animated fadeIn">
-          <div class="p">
+        <div class="panel panel-card animated zoomIn material-shadow-light">
+          <div class="wrapper">
             <div class="h4 m-b" clamp="1">{{station.name}}</div>
-            <div class="panel panel-default m-b-none">
-              <div class="list-group no-radius alt">
+            <div class="pull-in m-b-none b-r-n b-l-n">
+              <div class="list-group no-radius alt list-group-no-border">
                 <a class="list-group-item text-md" ui-sref="app.settings.perspectives({'stationId': station.id})">
                   <i class="mdi mdi-view-quilt fa-fw text-muted"></i> 
                   Perspectivas

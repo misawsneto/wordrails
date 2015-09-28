@@ -5,8 +5,6 @@
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:task="http://www.springframework.org/schema/task"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:elasticsearch="http://www.springframework.org/schema/data/elasticsearch"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -17,56 +15,54 @@
          				   http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
          				   http://www.springframework.org/schema/tx
        					   http://www.springframework.org/schema/tx/spring-tx.xsd
-       					   http://www.springframework.org/schema/util 
-       					   http://www.springframework.org/schema/util/spring-util.xsd
        					   http://www.springframework.org/schema/task
-       					   http://www.springframework.org/schema/task/spring-task.xsd
-       					   http://www.springframework.org/schema/mvc
-       					   http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-       					   
+       					   http://www.springframework.org/schema/task/spring-task.xsd">
+
 	<context:component-scan base-package="com.wordrails">
-	    <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+		<context:include-filter type="annotation"
+		                        expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
 	</context:component-scan>
-	
+
 	<context:property-placeholder location="classpath*:application.properties"/>
 
-	<jpa:repositories base-package="com.wordrails.persistence" transaction-manager-ref="transactionManager" entity-manager-factory-ref="entityManagerFactory"/>	
-	
+	<jpa:repositories base-package="com.wordrails.persistence" transaction-manager-ref="transactionManager"
+	                  entity-manager-factory-ref="entityManagerFactory"/>
+
 	<tx:annotation-driven transaction-manager="transactionManager"/>
-	
+
 	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
 	<task:executor id="myExecutor" pool-size="10"/>
 	<task:scheduler id="myScheduler" pool-size="20"/>
 
-  	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-  		<property name="entityManagerFactory" ref="entityManagerFactory"/>
-                <property name="persistenceUnitName" value="wordrails" />
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+		<property name="persistenceUnitName" value="wordrails"/>
 	</bean>
 
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
-                <property name="persistenceUnitName" value="wordrails" />
+		<property name="persistenceUnitName" value="wordrails"/>
 		<!-- <property name="packagesToScan" value="com.wordrails.business"/> -->
 	</bean>
 
 	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-		<property name="driverClass" value="com.mysql.jdbc.Driver"/>	
+		<property name="driverClass" value="com.mysql.jdbc.Driver"/>
 		<property name="jdbcUrl" value="jdbc:mysql://localhost/wordrails2"/>
-   		<property name="username" value="wordrails"/>
+		<property name="username" value="wordrails"/>
 		<property name="password" value="wordrails"/>
-		<property name="minConnectionsPerPartition" value="2"/>
-		<property name="maxConnectionsPerPartition" value="15"/>
-		<property name="acquireIncrement" value="2"/>
-		<property name="partitionCount" value="3"/>
+		<!--<property name="minConnectionsPerPartition" value="2"/>-->
+		<!--<property name="maxConnectionsPerPartition" value="15"/>-->
+		<!--<property name="acquireIncrement" value="2"/>-->
+		<!--<property name="partitionCount" value="3"/>-->
 	</bean>
-	
+
 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
-	
-	<bean id="postFilter" class="com.wordrails.api.PostFilter"></bean>
-	<bean id="networkDomainFilter" class="com.wordrails.api.NetworkDomainFilter"></bean>
-	<bean id="personDataFilter" class="com.wordrails.api.PersonDataFilter"></bean>
-	<bean id="corsCustomFilter" class="com.wordrails.api.CORSCustomFilter"></bean>
-	<bean id="cacheService" class="com.wordrails.services.CacheService" init-method="init" ></bean>
-	<bean id="wordrailsService" class="com.wordrails.WordrailsService" init-method="init" ></bean>
+
+	<bean id="postFilter" class="com.wordrails.api.PostFilter"/>
+	<bean id="networkDomainFilter" class="com.wordrails.api.NetworkDomainFilter"/>
+	<bean id="personDataFilter" class="com.wordrails.api.PersonDataFilter"/>
+	<bean id="corsCustomFilter" class="com.wordrails.api.CORSCustomFilter"/>
+	<bean id="cacheService" class="com.wordrails.services.CacheService" init-method="init"/>
+	<bean id="wordrailsService" class="com.wordrails.WordrailsService" init-method="init"/>
 </beans>

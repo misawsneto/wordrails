@@ -240,15 +240,6 @@
 			Post p
 			where
 			p.station.id = :stationId
-			) or post.id in (
-			select
-			p.id
-			from
-			Station station
-			join station.promotions promotion
-			join promotion.post p
-			where
-			station.id = :stationId
 			)
 			order by
 			post.date desc
@@ -269,89 +260,18 @@
 			Post p join p.terms t
 			where
 			p.station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)
-			) or post.id in (
-			select
-			p.id
-			from
-			Station station
-			join station.promotions promotion
-			join promotion.post p
-			join p.terms t
-			where
-			station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)
 			)
 			order by
 			post.date desc
 		</query>
 	</named-query>
 
-	<named-query name="Post.findPosts">
+	<named-query name="Post.findPostsPublished">
 		<query>
-			select
-			post
-			from
-			Post post
-			where
-			:termId member of post.terms and post.station.id = :stationId
-			order by
-			post.date desc
-		</query>
-	</named-query>
-
-	<named-query name="Post.findPostsAndPostsPromoted">
-		<query>
-			select
-			post
-			from
-			Post post
-			where
-			post.id in (
-			select
-			p.id
-			from
-			Post p join p.terms t
-			where
-			p.station.id = :stationId and t.id in (:termsIds) and p.state = 'PUBLISHED'
-			) or post.id in (
-			select
-			p.id
-			from
-			Station station
-			join station.promotions promotion
-			join promotion.post p
-			join p.terms t
-			where
-			station.id = :stationId and t.id in (:termsIds) and p.state = 'PUBLISHED'
-			)
-			order by
-			post.date desc
-		</query>
-	</named-query>
-
-	<named-query name="Post.findPostsAndPostsPromotedByBody">
-		<query>
-			select
-			post
-			from
-			Post post
-			where
-			post.id in (
-			select
-			p.id
-			from
-			Post p
-			where
-			p.station.id = :stationId and p.body like :body
-			) or post.id in (
-			select
-			p.id
-			from
-			Station station
-			join station.promotions promotion
-			join promotion.post p
-			where
-			station.id = :stationId and p.body like :body
-			)
+			select post
+			from Post post
+			join post.terms t
+			where post.station.id = :stationId and t.id in (:termsIds) and post.state = 'PUBLISHED'
 			order by
 			post.date desc
 		</query>
@@ -367,64 +287,6 @@
 			p.station.id = :stationId and p.author.id = :authorId
 			order by
 			p.date desc
-		</query>
-	</named-query>
-
-	<named-query name="Post.findPostsAndPostsPromotedByTermId">
-		<query>
-			select
-			post
-			from
-			Post post
-			where
-			post.id in (
-			select
-			p.id
-			from
-			Post p
-			where
-			p.station.id = :stationId and :termId member of p.terms
-			) or post.id in (
-			select
-			p.id
-			from
-			Station station
-			join station.promotions promotion
-			join promotion.post p
-			where
-			station.id = :stationId and :termId member of p.terms
-			)
-			order by
-			post.date desc
-		</query>
-	</named-query>
-
-	<named-query name="Post.findPostsAndPostsPromotedByAuthorId">
-		<query>
-			select
-			post
-			from
-			Post post
-			where
-			post.id in (
-			select
-			p.id
-			from
-			Post p
-			where
-			p.station.id = :stationId and p.author.id = :authorId
-			) or post.id in (
-			select
-			p.id
-			from
-			Station station
-			join station.promotions promotion
-			join promotion.post p
-			where
-			station.id = :stationId and p.author.id = :authorId
-			)
-			order by
-			post.date desc
 		</query>
 	</named-query>
 
@@ -551,7 +413,7 @@
 			large.id = :fileId
 		</query>
 	</named-query>
-	
+
 	<named-query name="Bookmark.findBookmarksByPersonId">
 		<query>
 			select

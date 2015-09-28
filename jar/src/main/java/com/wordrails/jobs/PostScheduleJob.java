@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 @Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
 public class PostScheduleJob extends QuartzJobBean {
@@ -36,6 +38,8 @@ public class PostScheduleJob extends QuartzJobBean {
 				postService.buildNotification(scheduledPost);
 			}
 
+			scheduledPost.date = new Date();
+			postScheduledRepository.save(scheduledPost);
 			postService.convertPost(id, Post.STATE_PUBLISHED);
 		}
 	}

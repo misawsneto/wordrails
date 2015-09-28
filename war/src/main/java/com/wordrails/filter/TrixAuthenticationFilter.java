@@ -22,7 +22,7 @@ public class TrixAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 		String username = super.obtainUsername(request);
 		String password = super.obtainPassword(request);
 
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		if (username.equals("wordrails")) {
 			return authProvider.anonymousAuthentication(network);
 		} else {

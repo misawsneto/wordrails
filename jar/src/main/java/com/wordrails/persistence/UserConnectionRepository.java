@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 
-@Component
 public interface UserConnectionRepository extends JpaRepository<UserConnection, Integer>, QueryDslPredicateExecutor<UserConnection> {
 
 	@RestResource(exported = false)

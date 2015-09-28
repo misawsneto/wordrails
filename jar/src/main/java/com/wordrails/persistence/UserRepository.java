@@ -5,10 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Set;
 
 public interface UserRepository extends JpaRepository<User, Integer>, QueryDslPredicateExecutor<User> {
+
+	@RestResource(exported = false)
 
 	Set<User> findByUsernameAndEnabled(@Param("username") String username, @Param("enabled") boolean b);
 

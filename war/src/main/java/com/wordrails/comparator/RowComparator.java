@@ -21,7 +21,7 @@ public class RowComparator {
 					boolean contains = false;
 					
 					for (Cell newCell : difference.cellsToSave) {
-						if(newCell.id != null && oldCell.id == newCell.id){
+						if(newCell.id != null && oldCell.id.equals(newCell.id)){
 							contains = true;
 							break;
 						}

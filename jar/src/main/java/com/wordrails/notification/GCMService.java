@@ -155,8 +155,8 @@ public class GCMService {
 		notificationDto.postId = notification.post != null ? notification.post.id : null;
 		notificationDto.postTitle = notification.post != null ? notification.post.title : null;;
 		notificationDto.postSnippet = notification.post != null ? WordrailsUtil.simpleSnippet(notification.post.body, 50) : null;
-		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallId : null;
-		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumId : null;
+		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallHash : null;
+		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumHash : null;
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 

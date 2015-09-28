@@ -22,14 +22,14 @@ public class PostEventHandler {
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired private PostReadRepository postReadRepository;
-	@Autowired
-	private CellRepository cellRepository;
+	@Autowired private CellRepository cellRepository;
+
+	@Autowired private PostEsRepository postEsRepository;
+	
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
 	private ImageRepository imageRepository;
-	@Autowired
-	private PromotionRepository promotionRepository;
 	@Autowired
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
@@ -38,9 +38,7 @@ public class PostEventHandler {
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
-	@Autowired
-	private PostEsRepository postEsRepository;
-
+	
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
 		if(post instanceof PostTrash) //post of type Trash is not insertable
@@ -102,7 +100,6 @@ public class PostEventHandler {
 			imageRepository.delete(images);
 			cellRepository.delete(cellRepository.findByPost(post));
 			commentRepository.delete(post.comments);
-			promotionRepository.delete(post.promotions);
 			postReadRepository.deleteByPost(post);
 			notificationRepository.deleteByPost(post);
 			bookmarkRepository.deleteByPost(post);

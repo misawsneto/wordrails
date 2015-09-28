@@ -110,14 +110,14 @@ interface I$facade$ {
 	void convertPost(@Path("postId") Integer postId, @Field("state") String state, Callback<ContentResponse<PostView\>\> _callback);
 		
 	@GET("/posts/search/networkPosts")
-	ContentResponse<SearchView\> searchPosts(@Query("query") String query, @Query("stationIds") String stationIds, @Query("personId") Integer personId, 
-			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight, @Query("sortByDate") Boolean sortByDate,
-			@Query("page") Integer page, @Query("size") Integer size);
+	ContentResponse<SearchView\> searchPosts(@Query("query") String q, @Query("stationIds") String sIds, @Query("personId") Integer pId,
+			@Query("publicationType") String pt, @Query("noHighlight") Boolean nh, @Query("sortByDate") Boolean sd,
+			@Query("page") Integer p, @Query("size") Integer s);
 	
 	@GET("/posts/search/networkPosts")
-	void searchPosts(@Query("query") String query, @Query("stationIds") String stationIds, @Query("personId") Integer personId, 
-			@Query("publicationType") String publicationType, @Query("noHighlight") Boolean noHighlight, @Query("sortByDate") Boolean sortByDate,
-			@Query("page") Integer page, @Query("size") Integer size, Callback<ContentResponse<SearchView\>\> _callback);
+	void searchPosts(@Query("query") String q, @Query("stationIds") String sIds, @Query("personId") Integer pId,
+			@Query("publicationType") String pt, @Query("noHighlight") Boolean nh, @Query("sortByDate") Boolean sd,
+			@Query("page") Integer p, @Query("size") Integer s, Callback<ContentResponse<SearchView\>\> _callback);
 		
 	@GET("/bookmarks/searchBookmarks")
 	ContentResponse<List<PostView\>\> searchBookmarks(@Query("query") String query, @Query("page") int page, @Query("size") int size);

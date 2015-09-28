@@ -65,9 +65,6 @@ public class Person implements Serializable{
 	@OneToMany(mappedBy="author")
 	public Set<Post> posts;
 
-	@OneToMany(mappedBy="promoter")
-	public Set<Promotion> promotions;
-
 	@OneToMany
 	public Set<Person> following;
 
@@ -119,60 +116,56 @@ public class Person implements Serializable{
 
 	@PrePersist
 	public void onCreate() {
-		if(image != null && image.original != null){
-			imageId = image.original.id;
-			imageSmallId = image.small.id;
-			imageMediumId = image.medium.id;
-			imageLargeId= image.large.id;
-		}else{
-			imageId = null;
-			imageSmallId = null;
-			imageMediumId = null;
-			imageLargeId = null;
-		}
-
-		if(cover != null && cover.original != null){
-			coverId = cover.original.id;
-			coverLargeId= cover.large.id;
-			coverMediumId= cover.medium.id;
-		}else{
-			coverId = null;
-			coverLargeId = null;
-			coverMediumId= null;
-		}
-
-		if(user != null){
-			networkId = user.network.id;
-		}
-
+		onChange();
 		createdAt = new Date();
 	}
 
 	@PreUpdate
 	public void onUpdate() {
-		if(image != null && image.original != null){
+		onChange();
+		updatedAt = new Date();
+	}
+
+	private void onChange() {
+		if(image != null && image.originalHash != null){
+			imageHash = image.originalHash;
+			imageSmallHash = image.smallHash;
+			imageMediumHash = image.mediumHash;
+			imageLargeHash= image.largeHash;
+
 			imageId = image.original.id;
 			imageSmallId = image.small.id;
 			imageMediumId = image.medium.id;
 			imageLargeId= image.large.id;
 		}else{
+			imageHash = null;
+			imageSmallHash = null;
+			imageMediumHash = null;
+			imageLargeHash = null;
+
 			imageId = null;
 			imageSmallId = null;
 			imageMediumId = null;
 			imageLargeId = null;
 		}
 
-		if(cover != null && cover.original != null){
+		if(cover != null && cover.originalHash != null){
+			coverHash = cover.originalHash;
+			coverLargeHash= cover.largeHash;
+			coverMediumHash= cover.mediumHash;
+
 			coverId = cover.original.id;
 			coverLargeId= cover.large.id;
 			coverMediumId= cover.medium.id;
 		}else{
+			coverHash = null;
+			coverLargeHash = null;
+			coverMediumHash = null;
+
 			coverId = null;
 			coverLargeId = null;
 			coverMediumId = null;
 		}
-
-		updatedAt = new Date();
 	}
 
 	public Integer imageId;
@@ -183,6 +176,15 @@ public class Person implements Serializable{
 	public Integer coverLargeId;
 	public Integer coverId;
 
+	public String imageHash;
+	public String imageSmallHash;
+	public String imageMediumHash;
+	public String imageLargeHash;
+	public String coverMediumHash;
+
+	public String coverLargeHash;
+	public String coverHash;
+
 	@Transient
 	public String password;
 
@@ -191,4 +193,6 @@ public class Person implements Serializable{
 	public String twitterHandle;
 
 	public Integer coverMediumId;
+
+
 }

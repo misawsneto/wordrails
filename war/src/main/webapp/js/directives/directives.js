@@ -79,8 +79,8 @@ angular.module('app')
                   // scope.updateRowPage && scope.updateRowPage(termId, function(){
                   //   sly.reload();
                   // });
-            }
-          });
+              }
+            });
           }// execute finished
         }// end of link
      } // end of object to return
@@ -308,6 +308,167 @@ app.directive('backImgCover', function(TRIX){
     }
   }
 })
+
+.directive('popoverClose', function($timeout){
+  return{
+    scope: {
+      excludeClass: '@'
+    },
+    link: function(scope, element, attrs) {
+      var trigger = document.getElementsByClassName('trigger');
+      
+      function closeTrigger(i) {
+        $timeout(function(){ 
+          angular.element(trigger[0]).triggerHandler('click').removeClass('trigger'); 
+          //$(trigger[0]).on('click').removeClass('trigger'); 
+        });
+      }
+      
+      element.on('click', function(event){
+        var etarget = angular.element(event.target);
+        var tlength = trigger.length;
+        if(!etarget.hasClass('trigger') && !etarget.hasClass(scope.excludeClass)) {
+          for(var i=0; i<tlength; i++) {
+            closeTrigger(i)
+          }
+        }
+      });
+    }
+  };
+})
+
+.directive('popoverElem', function(){
+  return{
+    link: function(scope, element, attrs) {
+      element.on('click', function(){
+        element.addClass('trigger');
+      });
+    }
+  };
+})
+
+.directive('popoverToggle', ['$timeout', function($timeout) {
+    return {
+        restrict: 'A',
+        link: link
+    };
+
+    function link($scope, $element, $attrs) {
+        $attrs.popoverTrigger = 'popoverToggleShow';
+
+        $scope.$watch($attrs.popoverToggle, function(newValue) {
+            $timeout(function(){
+                if(newValue) {
+                    $element.triggerHandler('popoverToggleShow');
+                } else {
+                    $element.triggerHandler('popoverToggleHide');
+                }
+            });
+        })
+    }
+}])
+
+.directive('resizeToolbar', ['$window', '$timeout', function ($window, $timeout) {
+    return {
+        restrict: 'A',
+        scope: {
+            onSizeChanged: '&'
+        },
+        link: function (scope, $element, attr) {
+
+            // $('#top-menu li').show();
+            //   var checkWidth = 0;
+
+            //   var count = 0;
+            //   $('#top-menu li').each(function(){
+            //     count++;
+            //   })
+              
+            //   for (var i = 0; i < count; i++) {
+            //       checkWidth = 0;
+            //       $('#top-menu li:visible').each(function() {
+            //           checkWidth += $(this).outerWidth();
+            //       });
+
+            //       var canvasW = $(window).width() - 500;
+            //       if (canvasW < checkWidth) {
+            //         var elem = $('#top-menu li:not(:last-child):visible:last');
+            //         // console.log(elem);
+            //         // elem.hide();
+            //         $('#top-menu li').each(function(no, index){
+            //           $(no).hide();
+            //         });
+            //       } else {
+            //           break;
+            //       }
+            //   }
+
+            var element = $element[0];
+
+            $timeout(function() {
+              checkResize();
+            });
+
+            function checkResize(){
+
+              angular.element(element).find('li').each(function(index, li){
+                angular.element(li).show();
+              });
+
+              angular.element(element).find('li').each(function(index, li){
+                var width = angular.element(element).width()
+                  if (width > 500){
+                    angular.element(li).hide();
+                  }
+              });
+
+              //console.log(angular.element(element).find('li'));
+              // console.log(angular.element(element).width());
+              // angular.element(element).find('li')
+              //for (var i = 0; i < angular.element(element).find('li').length; i++) {
+                  // checkWidth = 0;
+                  // $('#top-menu li:visible').each(function() {
+                  //     checkWidth += $(this).outerWidth();
+                  // });
+
+                  // if (angular.element(element).width() > 500) 
+                  //   angular.element(element).hide()
+                  // else
+                  //   break;
+
+                  // var canvasW = $(window).width() - 500;
+                  // if (canvasW < checkWidth) {
+                  //   var elem = $('#top-menu li:not(:last-child):visible:last');
+                  //   // console.log(elem);
+                  //   // elem.hide();
+                  //   $('#top-menu li').each(function(no, index){
+                  //     $(no).hide();
+                  //   });
+                  // } else {
+                  //     break;
+                  // }
+              //}
+            }
+
+            cacheElementSize(scope, element);
+            $window.addEventListener('resize', onWindowResize);
+
+            function cacheElementSize(scope, element) {
+                scope.cachedElementWidth = element.offsetWidth;
+                scope.cachedElementHeight = element.offsetHeight;
+            }
+
+            function onWindowResize() {
+                console.log(element.offsetWidth);
+
+                var isSizeChanged = scope.cachedElementWidth != element.offsetWidth || scope.cachedElementHeight != element.offsetHeight;
+                if (isSizeChanged) {
+                  checkResize();
+                }
+            };
+        }
+    }
+}])
 
 // **************************************************
         // *** /My AngularJS Directive(s) Application *******
