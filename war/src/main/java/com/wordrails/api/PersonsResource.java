@@ -606,6 +606,15 @@ public class PersonsResource {
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
+
+		List<SectionDto> sections = new ArrayList<SectionDto>();
+		for(Section section: network.sections){
+			SectionDto sectionDto = mapper.readValue(mapper.writeValueAsString(section).getBytes("UTF-8"), SectionDto.class);
+			sections.add(sectionDto);
+		}
+
+		initData.sections = sections;
+
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes("UTF-8"), NetworkRoleDto.class);
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;

@@ -59,6 +59,9 @@ public class Network implements Serializable{
 
 	@OneToMany(mappedBy="network")
 	public Set<User> users;
+
+	@OneToMany(mappedBy="network")
+	public Set<Section> sections;
 		
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
