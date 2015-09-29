@@ -19,7 +19,7 @@
 			<md-button class="md-fab custom-fab-button text-lg animated zoomIn" 
 			tooltip="Editar perfil" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
 			ng-if="person.id == app.initData.person.id" 
-			ng-click="editProfile()">
+			ng-click="showEditProfile($event)">
 			<i class="mdi mdi-pencil"></i>
 		</md-button>
 	</div>
@@ -55,26 +55,28 @@
 <!-- posts & recommendation -->
 <div infinite-scroll="paginate()" infinite-scroll-distance="1">
 	<!-- posts -->
-	<div class="block-800 m-auto m-t-lg m-b-lg" ng-if="postViews && postViews.length > 0 && showProfile">
+	<div class="block-800 m-auto m-t-lg m-b-lg" ng-class="{'wrapper-sm': app.isMobile}" ng-if="postViews && postViews.length > 0 && showProfile">
 		<ul class="b-none no-padding m-b-none ls-style-none">
 			<li ng-repeat="postView in postViews">
 				<div ng-class="{'b-t': !$first}"></div>
-				<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+				<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item">
 					<!-- image -->
-					<a class="block-image m-l m-t" ng-if="postView.mediumId" >
-            <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
-            </div>
-          </a>
+					<a ui-sref="app.read({'slug': postView.slug})" class="block-image m-l m-t" ng-if="postView.imageMediumId" >
+			            <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
+			            </div>
+			          </a>
 					<!-- /image -->
 					<!-- /content -->
-					<div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
+					<div class="m-t-sm" ng-class="{'content-block': postView.imageMediumId}">
 						<span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
-						<a  class="h3 font-bold m-b m-t-sm block">
+						<a  class="h3 font-bold m-b m-t-sm block" ui-sref="app.read({'slug': postView.slug})">
 							{{postView.title}}
 						</a>
-						<div class="text-lg font-thin">
-							{{postView.snippet | characters:170}}
-						</div>
+						<a ui-sref="app.read({'slug': postView.slug})">
+							<div class="text-lg font-thin">
+								{{postView.snippet | characters:170}}
+							</div>
+						</a>
 						<div class="m-t">
 							<div class="display-t-c">
 								<a >
@@ -126,26 +128,28 @@
 	</div> -->
 
 	<!-- pages -->
-	<div class="block-800 m-auto m-t-lg m-b-lg" ng-if="pages && showProfile">
+	<div class="block-800 m-auto m-t-lg m-b-lg" ng-class="{'wrapper-sm': app.isMobile}" ng-if="pages && showProfile">
 		<ul class="b-none no-padding m-b-none ls-style-none">
 			<li ng-repeat="postView in pages">
-				<div ng-class="{'b-t': !$first || (!recommendations || recommendations.length == 0)}"></div>
-				<div class="m-b panel-card panel animated zoomIn m-b clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(postView, postViews, null, 'app.user')">
+				<div ng-class="{'b-t': !$first}"></div>
+				<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item">
 					<!-- image -->
-					<a class="block-image m-l m-t" ng-if="postView.mediumId" >
-            <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
-            </div>
-          </a>
+					<a ui-sref="app.read({'slug': postView.slug})" class="block-image m-l m-t" ng-if="postView.imageMediumId" >
+			            <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
+			            </div>
+			          </a>
 					<!-- /image -->
 					<!-- /content -->
-					<div class="m-t-sm" ng-class="{'content-block': postView.mediumId}">
+					<div class="m-t-sm" ng-class="{'content-block': postView.imageMediumId}">
 						<span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
-						<a  class="h3 font-bold m-b m-t-sm block">
+						<a  class="h3 font-bold m-b m-t-sm block" ui-sref="app.read({'slug': postView.slug})">
 							{{postView.title}}
 						</a>
-						<div class="text-lg font-thin">
-							{{postView.snippet | characters:170}}
-						</div>
+						<a ui-sref="app.read({'slug': postView.slug})">
+							<div class="text-lg font-thin">
+								{{postView.snippet | characters:170}}
+							</div>
+						</a>
 						<div class="m-t">
 							<div class="display-t-c">
 								<a >
@@ -180,5 +184,33 @@
 
 </div>
 
-<div ui-view></div>
+<!-- header bar -->
+<div data-ng-include=" 'tpl/blocks/top_header.html' "></div>
+<!-- /header bar-->
+
 </div>
+
+<script type="text/ng-template" id="edit_profile.html">
+	<md-dialog aria-label="Adicionar notícia" id="edit-profile-dialog">
+  	<md-content>
+  		<div class="wrapper">
+  			<div class="text-lg text-center">Selectione as categorias desejadas</div>
+				<div class="wrapper-xxs perspective-editor-category-selector m-t-sm tree well">
+					<ul class="normal-wrap perspective-editor-category-selector-list">
+						<li ng-repeat="term in pe.terms">
+							<span class="check-term" ng-click="pe.checkCategory(term)">
+						 		<md-checkbox md-no-ink ng-model="term.checked" class="pull-left"></md-checkbox>
+						 	</span>
+						 	<span class="leaf box-shadow" tooltip="{{term.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
+						 		{{term.name}}
+						 	</span>
+					 	</li>
+				 	</ul>
+				</div>
+				<div class="pos-abt bottom-0 right-0 wrapper-sm">
+					<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+				</div>
+			</div>
+	  </md-content>
+	</md-dialog>
+</script>

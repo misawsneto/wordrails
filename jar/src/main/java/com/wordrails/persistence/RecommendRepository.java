@@ -38,4 +38,8 @@ public interface RecommendRepository extends JpaRepository<Recommend, Integer>, 
 	@RestResource(exported = false)
 	@Modifying
 	void deleteByPersonId(Integer id);
+
+	@RestResource(exported = false)
+	@Query("select date(rec.createdAt), count(*)  from Recommend rec where rec.post.stationId in (select s.id from Station s join s.networks n where n.id = :networkId ) and (date(rec.createdAt) >= date(:dateStart) and date(rec.createdAt) <= date(:dateEnd)) group by date(rec.createdAt)")
+	List<Object[]> countByNetworkAndDate(@Param("networkId") Integer networkId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
 }

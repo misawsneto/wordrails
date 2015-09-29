@@ -10,6 +10,7 @@
 		<class>com.wordrails.business.Comment</class>
 		<class>com.wordrails.business.File</class>
 		<class>com.wordrails.business.FileContents</class>
+		<class>com.wordrails.business.GlobalParameter</class>
 		<class>com.wordrails.business.Image</class>
 		<class>com.wordrails.business.Network</class>
 		<class>com.wordrails.business.NetworkRole</class>
@@ -18,7 +19,6 @@
 		<class>com.wordrails.business.PostScheduled</class>
 		<class>com.wordrails.business.PostDraft</class>
 		<class>com.wordrails.business.PostTrash</class>
-		<class>com.wordrails.business.Promotion</class>
 		<class>com.wordrails.business.Row</class>
 		<class>com.wordrails.business.Station</class>
 		<class>com.wordrails.business.StationPerspective</class>

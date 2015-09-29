@@ -166,3 +166,167 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 		}
 	}
 }])
+
+app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'TRIX',
+	function($scope ,  $log ,  $timeout ,  $rootScope ,  $state ,  trix , TRIX) {
+		// http://krispo.github.io/angular-nvd3/#/multiBarChart
+		$scope.chartOptions = {
+			"chart": {
+				"type": "multiBarChart",
+				"height": 300,
+				"margin": {
+					"top": 20,
+					"right": 20,
+					"bottom": 60,
+					"left": 45
+				},
+				"clipEdge": true,
+				"staggerLabels": true,
+				"transitionDuration": 500,
+				"stacked": true,
+				"xAxis": {
+					"axisLabel": " ",
+					"showMaxMin": false,
+					"tickFormat": function(d) { 
+						return d3.time.format('%d/%m/%Y')(new Date(d)) 
+					}
+				},
+				"yAxis": {
+					"axisLabel": "Y Axis",
+					"axisLabelDistance": 40,
+					"tickFormat": d3.format("d")
+				},
+				"controlLabels": { "stacked": "Empilhado","grouped": "Agrupado" },
+				"tooltipContent": function(data) {
+					var date = d3.time.format('%d/%m/%Y')(new Date(data.data.x));
+					var val = Math.trunc(data.data.y)
+					return '<table><thead><tr><td colspan="3"><strong class="x-value">' + val + ' em ' + date + '</strong></td></tr></thead><tbody><tr><td class="legend-color-guide"><div style="background-color: ' + data.color + ';"></div></td><td class="key">' + data.data.key + '</td><td class="value"></td></tr></tbody></table>'
+				}
+			}
+		}
+
+		trix.getNetworkPublicationsCount().success(function(response){
+			$scope.totalPublished = response.publicationsCounts[0]
+			$scope.totalDrafts = response.publicationsCounts[1]
+			$scope.totalScheduled = response.publicationsCounts[2]
+		})
+
+
+		trix.getNetworkStats(d3.time.format("%Y-%m-%d")(new Date())).success(function(response){
+
+			var dateStats = response.dateStatsJson
+			var generalStatsJson = response.generalStatsJson && response.generalStatsJson.length > 0 ? response.generalStatsJson : null;
+
+			var readsCount = {"key": "Leituras"}
+			readsCount.values = [];
+
+			for (var property in dateStats) {
+				if (dateStats.hasOwnProperty(property)) {
+					readsCount.values.push({
+						x: parseInt(property),
+						y: dateStats[property].readsCount
+					})
+				}
+			}
+
+			var recommendsCount = {"key": "Recomendações"}
+			recommendsCount.values = [];
+
+			for (var property in dateStats) {
+				if (dateStats.hasOwnProperty(property)) {
+					recommendsCount.values.push({
+						x: parseInt(property),
+						y: dateStats[property].recommendsCount
+					})
+				}
+			}
+
+			var commentsCount = {"key": "Comentários"}
+			commentsCount.values = [];
+
+			for (var property in dateStats) {
+				if (dateStats.hasOwnProperty(property)) {
+					commentsCount.values.push({
+						x: parseInt(property),
+						y: dateStats[property].commentsCount
+					})
+				}
+			}
+
+			if(generalStatsJson && generalStatsJson.length > 0){
+				$scope.totalPostsRead = generalStatsJson[0]
+				$scope.totalComments = generalStatsJson[1]
+				$scope.totalRecommends = generalStatsJson[2]
+				$scope.usersAndroid = generalStatsJson[3]
+				$scope.usersIOS = generalStatsJson[4]
+			}
+
+			$scope.chartData = [readsCount, recommendsCount, commentsCount]
+		})
+
+		$scope.datePickerOptions = {
+			"locale": {
+	        "format": "DD/MM/YYYY",
+	        "separator": " - ",
+	        "applyLabel": "Aplicar",
+	        "cancelLabel": "Cancelar",
+	        "fromLabel": "De",
+	        "toLabel": "Até",
+	        "customRangeLabel": "Personalizado",
+	        "daysOfWeek": [
+	            "Dom",
+	            "Seg",
+	            "Ter",
+	            "Qua",
+	            "Qui",
+	            "Sex",
+	            "Sab"
+	        ],
+	        "monthNames": [
+	            "Janeiro",
+	            "Fevereiro",
+	            "Março",
+	            "Abril",
+	            "Maio",
+	            "Junho",
+	            "Julho",
+	            "Agosto",
+	            "Setembro",
+	            "Outubro",
+	            "Novembro",
+	            "Dezembro"
+	        ],
+	        "firstDay": 1
+	    },
+		startDate: moment().add(-29, 'days'), endDate: moment(),
+		ranges: {
+	           'Hoje': [moment(), moment()],
+	           'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+	           'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+	           'Esse mês': [moment().startOf('month'), moment().endOf('month')],
+	           'Último mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')
+	           ]
+	        }}
+		//$scope.datePickerValue = moment().add(-30, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY');
+
+$scope.usersCount = 0;
+$scope.usersAndroid = 0
+$scope.usersIOS = 0
+$scope.totalPublished = 0;
+$scope.totalScheduled = 0
+$scope.totalDrafts = 0;
+$scope.imagesCount = 0;
+
+trix.countPersonsByNetwork($scope.app.initData.network.id).success(function(response){
+	$scope.usersCount = response.count;
+})
+
+$scope.page = 0;
+$scope.firstLoad = false
+
+trix.searchPosts(null, $scope.page, 10, {'personId': $scope.app.getLoggedPerson().id,
+	'publicationType': 'PUBLISHED', sortByDate: true}).success(function(response){
+		$scope.publications = response.posts;
+		$scope.firstLoad = true;
+	})
+}])

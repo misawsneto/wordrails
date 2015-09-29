@@ -52,7 +52,7 @@ public class APNService {
 		certificate = certificateIosRepository.findOne(networkId);
 
 		try {
-			if(certificate.certificateIos.getBinaryStream() != null && certificate.certificatePassword != null){
+			if(certificate.isValid()){
 				this.pushManager = new PushManager<SimpleApnsPushNotification>(ApnsEnvironment.getProductionEnvironment(), SSLContextUtil.createDefaultSSLContext(certificate.certificateIos.getBinaryStream(), certificate.certificatePassword),
 						null, // Optional: custom event loop group
 						null, // Optional: custom ExecutorService for calling listeners

@@ -16,9 +16,16 @@
 			angular-ripple md-no-ink  aria-label="Nova notícia">
 			<i class="mdi mdi-plus"></i>
 		</md-button>
-		<div class="w-full panel panel-card animated zoomIn" infinite-scroll="paginate()" infinite-scroll-distance="1">
+		<div id="publications-list" class="w-full panel panel-card animated zoomIn material-shadow-light" infinite-scroll="paginate()" infinite-scroll-distance="1">
+			<div class="wrapper form-group">
+				<div class="display-t-c col-sm-5 pull-in m-r">
+						<input ng-model="pe.searchQuery" ng-class="{'input-lg': !app.isMobile}" class="form-control material-shadow-light b-none" placeholder="Busque por notícias" />
+				</div>
+        <input ui-jq="daterangepicker" class="input-lg w-md form-control hide-xs" ui-options="datePickerOptions" class="form-control w-md" />
+			</div>
+
 			<div class="nav-tabs-alt box-shadow" ng-show="app.publicationsCtrl.publications" >
-				<ul class="nav nav-tabs text-lg" role="tablist">
+				<ul class="nav nav-tabs" role="tablist" ng-class="{'text-lg': !app.isMobile, 'text-sm': app.isMobile}">
 					<li ng-class="{'custom-active': app.publicationsCtrl.tabIndex == 0}">
 						<a class="text-u-c" ng-click="app.goToUserPublications($event); allLoaded = false;">
 							Publicados
@@ -49,21 +56,21 @@
 
 			<!-- posts -->
 			<ul class="b-none no-padding m-b-none ls-style-none">
-				<li ng-repeat="publication in app.publicationsCtrl.publications" class="p-l p-r animated fadeIn">
+				<li ng-repeat="publication in app.publicationsCtrl.publications" class="p-l p-r">
 					<div ng-class="{'b-t': !$first}"></div>
 					<div class="clear p-t-sm p post-list news-item">
 						<!-- image -->
-						<a class="block-image m-l m-t" ng-if="publication.mediumId" >
-              <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'md')">
-              </div>
-            </a>
+						<a class="block-image m-l m-t" ng-if="publication.mediumId" ui-sref="app.read({'slug': publication.slug})">
+							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'md')">
+							</div>
+						</a>
 						<!-- /image -->
 						<!-- /content -->
 						<div ng-class="{'content-block': publication.mediumId}">
 							<div class="m-b-sm" ng-if="publication.topper">
 								<span class="no-radius normal p-xxs topper text-md bg-custom-primary">{{publication.topper}}</span>
 							</div>
-							<a  class="h3 font-bold m-b block" ng-click="app.setNowReading(publication, app.publicationsCtrl.publications, null, 'app.publications')">
+							<a  class="h3 font-bold m-b block" ui-sref="app.read({'slug': publication.slug})">
 								{{publication.title}}
 							</a>
 							<div class="text-lg font-thin" ng-bind-html="publication.snippet | characters: 100 | stripHtml">
@@ -73,23 +80,23 @@
 								<span class="readingTime text-muted p-l text-md">
 									<i class="mdi mdi-comment-text-outline"></i> 
 									{{publication.commentsCount}}</span>
-								<span class="readingTime text-muted p-l text-md">
-									<i class="mdi mdi-heart"></i> 
-									{{publication.recommendsCount}}</span>
-								<div class="inline text-muted p-l text-u-c">
-									<a ui-sref="app.post({'id': publication.postId})" class="text-muted p-r underline-hover">editar</a>
-									<a class="text-muted underline-hover" ng-click="app.openDeletePost(publication.postId, $vent, true);">remover</a>
+									<span class="readingTime text-muted p-l text-md">
+										<i class="mdi mdi-heart"></i> 
+										{{publication.recommendsCount}}</span>
+										<div class="inline text-muted p-l text-u-c">
+											<a ui-sref="app.post({'id': publication.postId})" class="text-muted p-r underline-hover">editar</a>
+											<a class="text-muted underline-hover" ng-click="app.openDeletePost(publication.postId, $vent, true);">remover</a>
+										</div>
+									</div>
 								</div>
-							</div>
-						</div>
-						<!-- /content -->
-					</div>    
-				</li>
-			</ul>
+								<!-- /content -->
+							</div>    
+						</li>
+					</ul>
+				</div>
+				<!-- /posts -->
+			</div>
 		</div>
-		<!-- /posts -->
 	</div>
-</div>
-</div>
 
-<div ui-view></div>
+	<div ui-view></div>

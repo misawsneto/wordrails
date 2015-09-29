@@ -43,7 +43,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['js/controllers/stations.js?' + GLOBAL_URL_HASH]);
+                          return $ocLazyLoad.load(['angular-carousel', 'slick', 'js/controllers/stations.js?' + GLOBAL_URL_HASH]);
                       }]
                   },
                   controller: 'StationsCtrl'
@@ -109,7 +109,7 @@ angular.module('app')
                   controller: 'TagsPageCtrl'
               })
               .state('app.tagspage.read', {
-                  url: '/:slug',
+                  url: '/:slug?invitation?redirect',
                   template: '',
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -226,7 +226,7 @@ angular.module('app')
                       function( $ocLazyLoad ){
                         return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/interact.min.js'])
                         .then(function(){
-                            return $ocLazyLoad.load(['ui.slimscroll', 'ui.sortable','color-selector', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH])
+                            return $ocLazyLoad.load(['angular-carousel','ui.slimscroll', 'ui.sortable','color-selector', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH])
                           });
                     }]
                   }
@@ -286,17 +286,17 @@ angular.module('app')
                   }
                   , controller:'SettingsCategoriesCtrl'
               })
-              .state('app.settings.statistics', {
-                  url: '/statistics',
-                  templateUrl: 'tpl/settings-statistics.html',
-                  resolve: {
-                    deps: ['$ocLazyLoad',
-                      function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-statistics.js?' + GLOBAL_URL_HASH]);
-                    }]
-                  }
-                  , controller:'SettingsStatisticsCtrl'
-              })
+              // .state('app.settings.statistics', {
+              //     url: '/statistics',
+              //     templateUrl: 'tpl/settings-statistics.html',
+              //     resolve: {
+              //       deps: ['$ocLazyLoad',
+              //         function( $ocLazyLoad ){
+              //           return $ocLazyLoad.load(['angularFileUpload', 'js/controllers/settings-statistics.js?' + GLOBAL_URL_HASH]);
+              //       }]
+              //     }
+              //     , controller:'SettingsStatisticsCtrl'
+              // })
               .state('app.settings.colors', {
                   url: '/colors',
                   templateUrl: 'tpl/settings-colors.html',
@@ -382,6 +382,22 @@ angular.module('app')
                   },
                   controller: 'UserStatsCtrl'
               })
+              .state('app.settings.statistics', {
+                  url: '/networkstats',
+                  templateUrl: 'tpl/network_stats.html',
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['../bower_components/d3/d3.min.js', '../bower_components/nvd3/build/nv.d3.min.css'])
+                        .then(function(){
+                            return $ocLazyLoad.load(['nvd3', 'js/controllers/settings-network.js?' + GLOBAL_URL_HASH])
+                          });
+                      }]
+                          
+                  },
+                  controller: 'NetworkStatsCtrl'
+              })
               .state('app.publications', {
                   url: '/publications/@:username?type',
                   templateUrl: 'tpl/user_publications.html',
@@ -421,7 +437,18 @@ angular.module('app')
                   },
                   controller:'ReadCtrl'
               })
-              .state('app.stations.read', {
+              .state('app.read', {
+                url: '/:slug',
+                controller: 'ReadCtrl',
+                templateUrl: 'tpl/read.html',
+                resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['js/controllers/read.js?' + GLOBAL_URL_HASH]);
+                    }]
+                  },
+              })
+              /*.state('app.stations.read', {
                 url: ':slug',
                 controller: 'ReadCtrl',
                 template: '',
@@ -431,7 +458,7 @@ angular.module('app')
                         return $ocLazyLoad.load(['js/controllers/read.js?' + GLOBAL_URL_HASH]);
                     }]
                   },
-              })
+              })*/
               .state('app.dashboard-v1', {
                   url: '/dashboard-v1',
                   templateUrl: 'tpl/app_dashboard_v1.html',

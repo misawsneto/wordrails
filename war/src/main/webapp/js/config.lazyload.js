@@ -45,7 +45,7 @@ angular.module('app')
                           '../bower_components/fullcalendar/dist/fullcalendar.theme.css'],
       daterangepicker:[   '../bower_components/moment/moment.js',
                           '../bower_components/bootstrap-daterangepicker/daterangepicker.js',
-                          '../bower_components/bootstrap-daterangepicker/daterangepicker-bs3.css'],
+                          '../bower_components/bootstrap-daterangepicker/daterangepicker.css'],
       tagsinput:      [   '../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js',
                           '../bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css']
                       
@@ -248,6 +248,14 @@ angular.module('app')
                 name: 'colorpicker.module',
                 files: ['../bower_components/angular-bootstrap-colorpicker/css/colorpicker.min.css',
                         '../bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js']
+              },
+              {
+                name: 'slick',
+                files: ['../bower_components/slick-carousel/slick/slick.css','../bower_components/slick-carousel/slick/slick-theme.css',
+                        '../bower_components/slick-carousel/slick/slick.min.js', '../bower_components/angular-slick/dist/slick.js']
+              },{
+                name: 'angular-carousel',
+                files: ['../bower_components/angular-carousel/dist/angular-carousel.min.css', '../bower_components/angular-carousel/dist/angular-carousel.min.js']
               }
           ]
       });

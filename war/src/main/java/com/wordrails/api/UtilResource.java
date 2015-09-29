@@ -1,13 +1,31 @@
 package com.wordrails.api;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordrails.WordrailsService;
+import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.business.*;
+import com.wordrails.jobs.SimpleJob;
+import com.wordrails.persistence.*;
+import com.wordrails.services.AmazonCloudService;
+import com.wordrails.services.AsyncService;
+import com.wordrails.services.CacheService;
+import com.wordrails.services.WordpressParsedContent;
+import com.wordrails.util.WordrailsUtil;
+//import org.hibernate.search.MassIndexer;
+//import org.hibernate.search.jpa.FullTextEntityManager;
+//import org.hibernate.search.jpa.Search;
+import org.jboss.resteasy.spi.HttpRequest;
+import org.joda.time.DateTime;
+import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -20,79 +38,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.WordrailsService;
-import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
-import com.wordrails.jobs.SimpleJob;
-import com.wordrails.persistence.*;
-import com.wordrails.services.*;
-import com.wordrails.util.WordrailsUtil;
-//import org.hibernate.search.MassIndexer;
-//import org.hibernate.search.jpa.FullTextEntityManager;
-//import org.hibernate.search.jpa.Search;
-import org.jboss.resteasy.spi.HttpRequest;
-import org.joda.time.DateTime;
-import org.quartz.DateBuilder;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.WordrailsService;
-import com.wordrails.business.Image;
-import com.wordrails.business.Invitation;
-import com.wordrails.business.Network;
-import com.wordrails.business.Person;
-import com.wordrails.business.PersonNetworkRegId;
-import com.wordrails.business.Post;
-import com.wordrails.business.Row;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationPerspective;
-import com.wordrails.business.Taxonomy;
-import com.wordrails.business.Term;
-import com.wordrails.business.TermPerspective;
-import com.wordrails.business.UnauthorizedException;
-import com.wordrails.business.Wordpress;
-import com.wordrails.jobs.SimpleJob;
-import com.wordrails.persistence.BookmarkRepository;
-import com.wordrails.persistence.CellRepository;
-import com.wordrails.persistence.CommentRepository;
-import com.wordrails.persistence.ImageRepository;
-import com.wordrails.persistence.InvitationRepository;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.NotificationRepository;
-import com.wordrails.persistence.PersonNetworkRegIdRepository;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.PostReadRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.PromotionRepository;
-import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.RecommendRepository;
-import com.wordrails.persistence.RowRepository;
-import com.wordrails.persistence.StationPerspectiveRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.TaxonomyRepository;
-import com.wordrails.persistence.TermPerspectiveRepository;
-import com.wordrails.persistence.TermRepository;
-import com.wordrails.persistence.WordpressRepository;
-import com.wordrails.services.AsyncService;
-import com.wordrails.services.WordpressParsedContent;
-import com.wordrails.util.WordrailsUtil;
+import java.util.*;
+import java.util.regex.Pattern;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -125,6 +72,8 @@ public class UtilResource {
 	public @Autowired CacheService cacheService;
 
 	private @PersistenceContext EntityManager manager;
+
+	private @Autowired PerspectiveResource perspectiveResource;
 
 
 
@@ -208,19 +157,19 @@ public class UtilResource {
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Post> posts = postRepository.findAll();
 			for (Post post : posts) {
-				if(post.featuredImage != null && post.featuredImage.original != null){
-					post.imageId = post.featuredImage.original.id;
-					post.imageSmallId = post.featuredImage.small.id;
-					post.imageMediumId = post.featuredImage.medium.id;
-					post.imageLargeId= post.featuredImage.large.id;
+				if(post.featuredImage != null && post.featuredImage.originalHash != null){
+					post.imageHash = post.featuredImage.originalHash;
+					post.imageSmallHash = post.featuredImage.smallHash;
+					post.imageMediumHash = post.featuredImage.mediumHash;
+					post.imageLargeHash = post.featuredImage.largeHash;
 					post.imageLandscape= !post.featuredImage.vertical;
 					post.imageCaptionText = post.featuredImage.caption;
 					post.imageCreditsText = post.featuredImage.credits;
 				}else{
-					post.imageId = null;
-					post.imageSmallId = null;
-					post.imageMediumId = null;
-					post.imageLargeId = null;
+					post.imageHash = null;
+					post.imageSmallHash = null;
+					post.imageMediumHash = null;
+					post.imageLargeHash = null;
 				}
 				if(post.comments != null){
 					post.commentsCount = post.comments.size();
@@ -280,22 +229,22 @@ public class UtilResource {
 					it.remove();
 				}
 
-				if(person.image != null && person.image.original != null){
-					person.imageId = person.image.original.id;
-					person.imageSmallId = person.image.small.id;
-					person.imageMediumId = person.image.medium.id;
-					person.imageLargeId = person.image.large.id;
+				if(person.image != null && person.image.originalHash != null){
+					person.imageHash = person.image.originalHash;
+					person.imageSmallHash = person.image.smallHash;
+					person.imageMediumHash = person.image.mediumHash;
+					person.imageLargeHash = person.image.largeHash;
 				}else{
-					person.imageId = null;
-					person.imageSmallId = null;
-					person.imageMediumId = null;
-					person.imageLargeId = null;
+					person.imageHash = null;
+					person.imageSmallHash = null;
+					person.imageMediumHash = null;
+					person.imageLargeHash = null;
 				}
 
-				if(person.cover != null && person.cover.original != null){
-					person.coverMediumId = person.cover.medium.id;
-					person.coverLargeId = person.cover.large.id;
-					person.coverMediumId = person.cover.medium.id;
+				if(person.cover != null && person.cover.originalHash != null){
+					person.coverMediumHash = person.cover.mediumHash;
+					person.coverLargeHash = person.cover.largeHash;
+					person.coverMediumHash = person.cover.mediumHash;
 				}
 
 				if(person.createdAt == null){
@@ -562,7 +511,6 @@ public class UtilResource {
 	private @Autowired CellRepository cellRepository;
 	private @Autowired CommentRepository commentRepository;
 	private @Autowired ImageRepository imageRepository;
-	private @Autowired PromotionRepository promotionRepository;
 	private @Autowired BookmarkRepository bookmarkRepository;
 	private @Autowired RecommendRepository recommendRepository;
 	private @Autowired NotificationRepository notificationRepository;
@@ -595,7 +543,6 @@ public class UtilResource {
 					imageRepository.delete(images);
 					cellRepository.delete(cellRepository.findByPost(post));
 					commentRepository.delete(post.comments);
-					promotionRepository.delete(post.promotions);
 					postReadRepository.deleteByPost(post);
 					notificationRepository.deleteByPost(post);
 					bookmarkRepository.deleteByPost(post);
@@ -739,7 +686,7 @@ public class UtilResource {
 	@Path("/updateUserNetwork")
 	public void updateUserNetwork(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
-		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1") || host.contains("xarxlocal.com")) {
 			List<Person> persons = manager.createQuery("SELECT person FROM Person person JOIN FETCH person.user user JOIN FETCH user.network network").getResultList();
 			for(Person person : persons){
 				person.networkId = person.user.network.id;
@@ -788,30 +735,71 @@ public class UtilResource {
 		}
 	}
 
-	@PUT
-	@Path("/addCategoryTerm/{id}/{termId}")
-	public void addCategoryTerm (@Context HttpServletRequest request, @PathParam("id") Integer id, @PathParam("termId") Integer termId) {
+	@DELETE
+	@Path("/removeRowFromPerspective/{perspectiveId}/{rowId}")
+	public void removeRowFromPerspective(@Context HttpServletRequest request, @PathParam("perspectiveId") Integer perspectiveId, @PathParam("rowId") Integer rowId) {
 		String host = request.getHeader("Host");
 		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
-			TermPerspective termPerspective = termPerspectiveRepository.findOne(id);
-			Term term = termRepository.findOne(termId);
 
-			termPerspective.categoryTabs.add(term);
-			termPerspectiveRepository.save(termPerspective);
+			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+
+			List<NetworkRole> nr = personRepository.findNetworkAdmin(network.id);
+
+			User user = nr.get(0).person.user;
+
+			Set<GrantedAuthority> authorities = new HashSet<>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+			authProvider.passwordAuthentication(user.username, user.password, network);
+
+			TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTermNull(perspectiveId);
+
+//			tp.rows.
+
+			for(Row row: tp.rows){
+				if(row.id.equals(rowId)){
+
+				}
+			}
+
 		}
 	}
 
 	@GET
-	@Path("/updateCategoryTabs")
-	public void updateCategoryTabs (@Context HttpServletRequest request) {
-		String host = request.getHeader("Host");
-		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
-			List<TermPerspective> pers = termPerspectiveRepository.findAll();
-			for (TermPerspective per: pers){
-				Taxonomy tax = taxonomyRepository.findOne(per.perspective.taxonomy.id);
-				per.categoryTabs.addAll(tax.terms);
-				termPerspectiveRepository.save(per);
+	@Path("/updateStationPerspectiveTaxonomyIds")
+	public void updateStationPerspectiveTaxonomyIds(@Context HttpServletRequest request) {
+		if(isLocal(request.getHeader("Host"))) {
+			List<StationPerspective> pers = stationPerspectiveRepository.findAll();
+			for (StationPerspective per: pers){
+				per.taxonomyId = per.taxonomy.id;
+				per.taxonomyName = per.taxonomy.name;
+				per.taxonomyType = per.taxonomy.type;
+				if(per.perspectives != null)
+				for(TermPerspective tper: per.perspectives){
+					tper.taxonomyId = per.taxonomyId;
+				}
+				termPerspectiveRepository.save(per.perspectives);
 			}
+			stationPerspectiveRepository.save(pers);
+
 		}
+	}
+
+	@Autowired
+	private AmazonCloudService amazon;
+
+	@POST
+	@Path("/uploadAmazonImages")
+	public void uploadAmazonImages(@Context HttpServletRequest request) {
+		if(isLocal(request.getHeader("Host"))) {
+			amazon.uploadAmazonImages();
+		}
+	}
+
+	private boolean isLocal(String host) {
+		return host.contains("0:0:0:0:0:0:0") ||
+				host.contains("0.0.0.0") ||
+				host.contains("localhost") ||
+				host.contains("127.0.0.1") ||
+				host.contains("xarxlocal.com");
 	}
 }

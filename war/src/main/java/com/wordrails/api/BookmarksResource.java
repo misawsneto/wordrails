@@ -162,6 +162,105 @@ public class BookmarksResource {
 //
 //		return response;
 //	}
+	@GET
+	@Path("/searchBookmarks")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+		
+		Person person = authProvider.getLoggedPerson();
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		
+		PermissionId pId = new PermissionId();
+		pId.baseUrl = baseUrl;
+		pId.networkId = network.id;
+		pId.personId = person.id;
+		
+		StationsPermissions permissions = new StationsPermissions();
+		try {
+			permissions = wordrailsService.getPersonPermissions(pId);
+		} catch (ExecutionException e1) {
+			e1.printStackTrace();
+		}
+		
+		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
+		
+		if(q == null || q.trim().isEmpty()){
+			Pageable pageable = new PageRequest(page, size);
+			
+			ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+			List<Bookmark> pages = bookmarkRepository.findBookmarksByPersonIdOrderByDate(person.id, readableIds, pageable);
+			
+			List<PostView> bookmarks = new ArrayList<PostView>();
+			for (Bookmark bookmark : pages) {
+				bookmarks.add(postConverter.convertToView(bookmark.post));
+			}
+			response.content = bookmarks;
+			return response;
+		}
+		
+		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
+		// create native Lucene query unsing the query DSL
+		// alternatively you can write the Lucene query using the Lucene query parser
+		// or the Lucene programmatic API. The Hibernate Search DSL is recommend though
+		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Bookmark.class).get();
+
+		org.apache.lucene.search.Query text = null;
+		try{
+			
+			text = qb.keyword()
+				.fuzzy()
+				.withThreshold(.8f)
+				.withPrefixLength(1)
+				.onField("post.title").boostedTo(5)
+				.andField("post.body").boostedTo(2)
+				.andField("post.topper")
+				.andField("post.subheading")
+				.andField("post.author.name")
+				.andField("post.terms.name")
+				.matching(q).createQuery();
+		}catch(Exception e){
+			
+			e.printStackTrace();
+			
+			ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+			response.content = new ArrayList<PostView>();
+
+			return response;
+		};
+		
+		org.apache.lucene.search.Query personQuery = qb.keyword().onField("person.id").ignoreAnalyzer().matching(person.id).createQuery();
+		
+		BooleanJunction stations = qb.bool();
+		for (Integer integer : readableIds) {
+			stations.should(qb.keyword().onField("post.stationId").ignoreAnalyzer().matching(integer).createQuery());
+		}
+
+		org.apache.lucene.search.Query full = qb.bool().must(text).must(personQuery).must(stations.createQuery()).createQuery();
+		
+		FullTextQuery ftq = ftem.createFullTextQuery(full, Bookmark.class);
+		org.apache.lucene.search.Sort sort = new Sort( SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
+		ftq.setSort(sort);
+
+		// wrap Lucene query in a javax.persistence.Query
+		javax.persistence.Query persistenceQuery = ftq;
+
+		// execute search
+		List<Bookmark> result = persistenceQuery
+				.setFirstResult(size * page)
+				.setMaxResults(size)
+				.getResultList();
+
+		List<PostView> bookmarks = new ArrayList<PostView>();
+		for (Bookmark bookmark : result) {
+			bookmarks.add(postConverter.convertToView(bookmark.post));
+		}
+
+		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		response.content = bookmarks;
+
+		return response;
+	}
 	
 	@PUT
 	@Path("/toggleBookmark")

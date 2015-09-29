@@ -1,38 +1,16 @@
 package com.wordrails.api;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.notification.APNService;
-import com.wordrails.notification.GCMService;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.business.*;
 import com.wordrails.converter.PostConverter;
+import com.wordrails.notification.APNService;
+import com.wordrails.notification.GCMService;
 import com.wordrails.persistence.*;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
@@ -44,6 +22,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -56,9 +35,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -121,7 +108,7 @@ public class PersonsResource {
 	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
 		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network))
 			forward();
@@ -133,7 +120,7 @@ public class PersonsResource {
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = authProvider.getLoggedPerson();
 		if(person.id == 0){
 			gcmService.updateRegId(network, null, regId, lat, lng);
@@ -149,7 +136,7 @@ public class PersonsResource {
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = authProvider.getLoggedPerson();
 		if(person.id == 0){
 			apnService.updateIosToken(network, null, token, lat, lng);
@@ -178,7 +165,7 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response tokenSignin(@Context HttpServletRequest request, @FormParam("token") String token) {
 		try{
-			Network network = wordrailsService.getNetworkFromHost(request);
+			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 			if(network.networkCreationToken == null || !network.networkCreationToken.equals(token))
 				throw new BadRequestException("Invalid Token");
 
@@ -286,7 +273,12 @@ public class PersonsResource {
 	@Path("/logout")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response logout(){
-		return Response.status(Status.OK).build();
+		try{
+			authProvider.logout();
+			return Response.status(Status.OK).build();
+		}catch(BadCredentialsException | UsernameNotFoundException e){
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
 	}
 
 	@POST
@@ -331,8 +323,9 @@ public class PersonsResource {
 				person.username = personCreationObject.username;
 				person.password = personCreationObject.password;
 				person.email = personCreationObject.email;
+				person.networkId = network.id;
 
-				UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
+				UserGrantedAuthority authority = new UserGrantedAuthority(UserGrantedAuthority.USER);
 				authority.network = network;
 
 				String password = person.password;
@@ -350,6 +343,13 @@ public class PersonsResource {
 				user.addAuthority(authority);
 
 				person.user = user;
+
+				if(person.email != null && !person.email.isEmpty()){
+					Person personE = personRepository.findByEmailAndNetworkId(person.email, network.id);
+					if(personE != null){
+						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + person.email + "\"}").build();
+					}
+				}
 
 				personRepository.save(person);
 			}catch (javax.validation.ConstraintViolationException e){
@@ -402,7 +402,7 @@ public class PersonsResource {
 				networkRolesRepository.save(networkRole);
 
 				if(networkRole.admin) {
-					UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
+					UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.NETWORK_ADMIN, network);
 					user.addAuthority(authority);
 				}
 			}
@@ -416,15 +416,15 @@ public class PersonsResource {
 					stationRolesRepository.save(stRole);
 
 					if(stRole.admin) {
-						UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_STATION_ADMIN", network, stRole.station);
+						UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.STATION_ADMIN, network, stRole.station);
 						user.addAuthority(authority);
 					}
 					if(stRole.editor) {
-						UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_STATION_EDITOR", network, stRole.station);
+						UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.STATION_EDITOR, network, stRole.station);
 						user.addAuthority(authority);
 					}
 					if(stRole.writer) {
-						UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_STATION_WRITER", network, stRole.station);
+						UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.STATION_WRITER, network, stRole.station);
 						user.addAuthority(authority);
 					}
 				}else{
@@ -440,48 +440,7 @@ public class PersonsResource {
 		}
 	}
 
-	@GET
-	@Path("/allInit")
-	public PersonData getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
 
-		Integer stationId = wordrailsService.getStationIdFromCookie(request);
-		PersonData personData = getInitialData(request);
-
-		StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
-		Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
-
-		TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
-
-		Pageable pageable = new PageRequest(0, 10);
-		//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
-
-		if(defaultStation != null){
-			//				if(personData.person != null && !personData.person.username.equals("wordrails")){
-			//					List<Integer> postsRead = postRepository.findPostReadByPerson(personData.person.id, pageable2);
-			//					List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(personData.person.id, pageable2);
-			//					List<Integer> recommends = recommendRepository.findRecommendByPerson(personData.person.id, pageable2);
-			//					personData.postsRead = postsRead;
-			//					personData.bookmarks = bookmarks;
-			//					personData.recommends = recommends;
-			//				}
-
-			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
-			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
-			personData.popular = postConverter.convertToViews(popular);
-			personData.recent = postConverter.convertToViews(recent);
-
-		}
-
-		if(setAttributes != null && setAttributes){
-			request.setAttribute("personData", mapper.writeValueAsString(personData));
-			request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView));
-			request.setAttribute("networkName", personData.network.name);
-			request.setAttribute("networkDesciption", "");
-			request.setAttribute("networkKeywords", "");
-		}
-
-		return personData;
-	}
 
 	@Path("/count")
 	@GET
@@ -494,7 +453,7 @@ public class PersonsResource {
 	@Path("/deleteMany/network")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
 
 		if(persons != null && persons.size() > 0) {
@@ -520,7 +479,7 @@ public class PersonsResource {
 	@Path("/{personId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = personRepository.findOne(personId);
 
 		if(person != null && networkSecurityChecker.isNetworkAdmin(network) && person.user.network.id.equals(network.id)){
@@ -555,14 +514,49 @@ public class PersonsResource {
 		}
 	}
 
-//	@PUT
-//	@Path("/{id}")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Transactional()
-//	public Response updatePerson(@PathParam("id") Integer personId, Person person){
-//		personRepository.save(sa)
-//		return Response.status(Status.OK).build();
-//	}
+	@GET
+	@Path("/allInit")
+	public PersonData getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+
+		Integer stationId = wordrailsService.getStationIdFromCookie(request);
+		PersonData personData = getInitialData(request);
+
+		StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
+
+		if(defaultStation != null){
+			Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
+
+			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
+
+			Pageable pageable = new PageRequest(0, 10);
+			//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
+
+			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
+			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
+			personData.popular = postConverter.convertToViews(popular);
+			personData.recent = postConverter.convertToViews(recent);
+
+
+			if(setAttributes != null && setAttributes){
+				request.setAttribute("personData", mapper.writeValueAsString(personData));
+				request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView));
+				request.setAttribute("networkName", personData.network.name);
+				request.setAttribute("networkDesciption", "");
+				request.setAttribute("networkKeywords", "");
+			}
+		}else {
+			personData.noVisibleStation = true;
+			request.setAttribute("personData", mapper.writeValueAsString(personData));
+			request.setAttribute("networkName", personData.network.name);
+		}
+
+		return personData;
+	}
+
+	@Value("${amazon.privateCloudfrontUrl}")
+	String publicCloudfrontUrl;
+	@Value("${amazon.publicCloudfrontUrl}")
+	String privateCloudfrontUrl;
 
 	@GET
 	@Path("/init")
@@ -575,11 +569,11 @@ public class PersonsResource {
 			throw new UnauthorizedException("User is not authorized");
 		}
 
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
-		List<StationDto> stationDtos = new ArrayList<>();
+
 
 		//Network Permissions
 		NetworkPermission networkPermissionDto = new NetworkPermission();
@@ -588,13 +582,27 @@ public class PersonsResource {
 		else
 			networkPermissionDto.admin = false;
 
+
+
+		List<StationDto> stationDtos = new ArrayList<>();
+		List<Station> stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
+		for(Station station : stations) {
+			StationDto stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
+			stationDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/stations/" + station.id);
+			stationDtos.add(stationDto);
+		}
+
+
 		personPermissions.networkPermission = networkPermissionDto;
-		personPermissions.stationPermissions = wordrailsService.getStationPermissions(baseUrl, person.id, network.id, stationDtos);
+		personPermissions.stationPermissions = getStationPermissions(stations, person.id);
 		personPermissions.personId = person.id;
 		personPermissions.username = person.username;
 		personPermissions.personName = person.name;
 
 		PersonData initData = new PersonData();
+
+		initData.publicCloudfrontUrl = publicCloudfrontUrl;
+		initData.privateCloudfrontUrl = privateCloudfrontUrl;
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
@@ -618,6 +626,39 @@ public class PersonsResource {
 		}
 
 		return initData;
+	}
+
+	private List<StationPermission> getStationPermissions(List<Station> stations, Integer personId) {
+		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>();
+		for (Station station : stations) {
+			StationPermission stationPermissionDto = new StationPermission();
+
+			stationPermissionDto.stationId = station.id;
+			stationPermissionDto.stationName = station.name;
+			stationPermissionDto.writable = station.writable;
+			stationPermissionDto.main = station.main;
+			stationPermissionDto.visibility = station.visibility;
+			stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
+
+			stationPermissionDto.subheading = station.subheading;
+			stationPermissionDto.sponsored = station.sponsored;
+			stationPermissionDto.topper = station.topper;
+
+			stationPermissionDto.allowComments = station.allowComments;
+			stationPermissionDto.allowSocialShare = station.allowSocialShare;
+
+			//StationRoles Fields
+			StationRole stationRole = stationRolesRepository.findByStationAndPersonId(station, personId);
+			if (stationRole != null) {
+				stationPermissionDto.admin = stationRole.admin;
+				stationPermissionDto.editor = stationRole.editor;
+				stationPermissionDto.writer = stationRole.writer;
+			}
+
+			stationPermissionDtos.add(stationPermissionDto);
+		}
+
+		return stationPermissionDtos;
 	}
 
 
@@ -689,10 +730,10 @@ public class PersonsResource {
 			lastestDay = lastestDay.minusDays(1);
 		}
 
-		List<Object[]> postReadCounts = new ArrayList<Object[]>();
-		List<Object[]> recommendsCounts = new ArrayList<Object[]>();
-		List<Object[]> commentsCounts = new ArrayList<Object[]>();
-		List<Object[]> generalStatus = new ArrayList<Object[]>();
+		List<Object[]> postReadCounts;
+		List<Object[]> recommendsCounts;
+		List<Object[]> commentsCounts;
+		List<Object[]> generalStatus;
 
 		if(person == null) {
 			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());

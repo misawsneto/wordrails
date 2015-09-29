@@ -11,7 +11,6 @@ import com.wordrails.business.Comment;
 import com.wordrails.business.Network;
 import com.wordrails.business.Person;
 import com.wordrails.business.Post;
-import com.wordrails.business.Promotion;
 import com.wordrails.business.Station;
 import com.wordrails.business.StationRole;
 import com.wordrails.persistence.NetworkRepository;
@@ -86,11 +85,7 @@ public class PostAndCommentSecurityChecker {
 					canRead = true;
 				}
 			}else{
-				List<Integer> stationsId = new ArrayList<Integer>(post.promotions.size() + 1);
-				stationsId.add(post.station.id);
-				for (Promotion promotion : post.promotions) {
-					stationsId.add(promotion.station.id);
-				}
+				List<Integer> stationsId = new ArrayList<Integer>();
 				List<Station> belongsToStations = stationRepository.belongsToStations(personLogged.id, stationsId);
 				if(belongsToStations != null && belongsToStations.size() > 0){
 					canRead = true;

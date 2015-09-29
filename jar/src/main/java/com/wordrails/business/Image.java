@@ -14,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 //import org.hibernate.search.annotations.IndexedEmbedded;
 
 @Entity
-public class Image implements Serializable{
-	private static final long serialVersionUID = -7728358342673032833L;
+public class Image implements Serializable {
 
 	public enum Type {FAVICON, SPLASH, LOGIN, POST, COVER, PROFILE_PICTURE}
 
@@ -57,22 +56,27 @@ public class Image implements Serializable{
 	
 	@ManyToOne
 	public Station station;
-	
+
 	@NotNull
 	@ManyToOne(cascade=CascadeType.ALL)
 	public File original;
-	
+
 	@NotNull
 	@ManyToOne(cascade=CascadeType.REMOVE)
 	public File small;
-	
+
 	@NotNull
 	@ManyToOne(cascade=CascadeType.REMOVE)
 	public File medium;
-	
+
 	@NotNull
 	@ManyToOne(cascade=CascadeType.REMOVE)
 	public File large;
+
+	public String originalHash;
+	public String smallHash;
+	public String mediumHash;
+	public String largeHash;
 
 	@ManyToOne
 //	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})

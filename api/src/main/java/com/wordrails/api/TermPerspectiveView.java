@@ -12,7 +12,8 @@ public class TermPerspectiveView implements Serializable {
 	public RowView splashedRow;
 	public List<RowView> ordinaryRows;
 	public RowView featuredRow;
+	public List<RowView> homeRows;
 	public Integer stationId;
 	public String termName;
-	public List<TermView> categoryTerms;
+	public Integer taxonomyId;
 }

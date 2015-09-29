@@ -53,11 +53,11 @@ public class StationsResources {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response setMainStation(@PathParam("stationId") Integer stationId, @FormParam("value") boolean value) {
 		Person person = authProvider.getLoggedPerson();
-		Network network = wordrailsService.getNetworkFromHost(request);
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		NetworkRole role = networkRolesRepository.findByNetworkAndPerson(network, person);
 
 		if (role.admin) {
-			network.stations = new HashSet<Station>(stationRepository.findByNetworkId(network.id));
+			network.stations = new HashSet<>(stationRepository.findByNetworkId(network.id));
 			for (Station station : network.stations) {
 				if (station.id.equals(stationId)) station.main = value;
 				else station.main = false;

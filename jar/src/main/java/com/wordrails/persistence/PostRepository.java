@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Set;
@@ -16,9 +15,7 @@ import java.util.Set;
 public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPredicateExecutor<Post> {
 	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);
 
-	List<Post> findPosts(@Param("stationId") Integer stationId, @Param("termId") Integer termId, Pageable pageable);
-
-	List<Post> findPostsAndPostsPromoted(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);
+	List<Post> findPostsPublished(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);
 
 	List<Post> findPostsNotPositioned(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, @Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);
 
@@ -30,15 +27,6 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 
 	@RestResource(exported = false)
 	Post findByWordpressId(Integer wordpressId);
-
-	@RestResource(exported = false)
-	List<Post> findPostsAndPostsPromotedByBody(@Param("stationId") Integer stationId, @Param("body") String body, Pageable pageable);
-
-	@RestResource(exported = false)
-	List<Post> findPostsAndPostsPromotedByTermId(@Param("stationId") Integer stationId, @Param("termId") Integer termId, Pageable pageable);
-
-	@RestResource(exported = false)
-	List<Post> findPostsAndPostsPromotedByAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
 
 	@RestResource(exported = false)
 	int countSlugPost(@Param("slug") String slug);

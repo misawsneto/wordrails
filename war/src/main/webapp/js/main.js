@@ -105,18 +105,23 @@ angular.module('app')
     if(!initData)
       return;
 
+    $scope.app.initData = angular.copy(initData);
+    $scope.app.termPerspectiveView = angular.copy(initTermPerspective);
+
     angularHttp = $http;
     trixSdk = trix
 
     function loadPopular(){
       trix.findPopularPosts($scope.app.currentStation.id, 0, 10)
       .success(function(response){
+        $scope.app.initData.popular = response
       })
     }
 
     function loadRecent(){
       trix.findRecentPosts($scope.app.currentStation.id, 0, 10)
       .success(function(response){
+        $scope.app.initData.recent = response
       })
     }
 
@@ -145,6 +150,10 @@ angular.module('app')
 
       $scope.app.currentStation = stationObject;
 
+      $state.go('app.stations')
+
+      loadPopular();
+      loadRecent();
       $scope.app.checkIfLogged();
     }
 
@@ -164,8 +173,6 @@ angular.module('app')
     }
 
     checkLoginImage();
-
-    $scope.app.initData = angular.copy(initData);
 
     $scope.app.getLoggedPerson = function(){
       return $scope.app.initData.person;
@@ -200,6 +207,12 @@ angular.module('app')
         if(fromState.name == "app.stations.read"){
           if($scope.app.nowReading.externalVideoUrl)
             $scope.app.nowReading.externalVideoUrl = $scope.app.nowReading.externalVideoUrl.substring(0, $scope.app.nowReading.externalVideoUrl.length - 1) + "0";
+        }
+
+        if(toState.name != "app.read"){
+          $timeout(function(){
+            $scope.app.nowReading = null;
+          }, 300)
         }
 
         if(toState.name == "app.stations"){
@@ -241,7 +254,17 @@ angular.module('app')
 
     // deal with unauthorized access
     $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
-      if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications' || toState.name.indexOf('app.settings') > -1) && !trixService.isLoggedIn()){
+
+      if(!(toState.name.indexOf('access.') > -1) && !trixService.isLoggedIn() && initData.noVisibleStation){
+          $mdToast.show({
+              template: '<md-toast style="background-color: rgba(0,85,187,0.95)" ><span flex>Está estação é restrita!<br>Autentique-se para acessar o conteúdo.</span></md-toast>',
+              hideDelay: 3000,
+              position: 'top right'
+            });
+          $timeout(function() {
+            $state.go('access.signin');
+          });
+      }else if((toState.name == 'app.bookmarks' || toState.name == 'app.notifications' || toState.name.indexOf('app.settings') > -1) && !trixService.isLoggedIn()){
         event.preventDefault();
         $scope.app.showInfoToast('Autentique-se para acessar esta função.')
         if(fromState.abstract)
@@ -274,6 +297,13 @@ angular.module('app')
         }
       }
     })
+
+      $scope.app.goBack = function(){
+        if($rootScope.previousState)
+          $window.history.back();
+        else
+          $state.go('app.stations');
+      }
 
       $scope.app.socialLogin = function(){
         return $scope.app.initData.network.allowSocialLogin && $scope.app.currentStation.visibility == 'UNRESTRICTED';
@@ -354,9 +384,17 @@ angular.module('app')
         return img;
       }
 
+      $scope.app.getBackgroundImage = function(postView, size){
+        return $scope.getBackgroundImage(postView, size);
+      }
+
       $scope.getBackgroundImage2 = function(post, size){
         var img = $filter('pvimageLink2')(post, size);
         return img;
+      }
+
+      $scope.app.getBackgroundImage2 = function(post, size){
+        return $scope.getBackgroundImage2(post, size);
       }
 
       $scope.getImageLink = function(id){
@@ -499,6 +537,14 @@ angular.module('app')
         $scope.app.viewMode = 'vertical';
       }
 
+      $scope.app.changeMobileViewMode = function(){
+        if($scope.app.viewMode == 'vertical') {
+          $scope.app.viewMode = $localStorage.viewMode = 'horizontal'
+        }else{
+          $scope.app.viewMode = $localStorage.viewMode = 'vertical'
+        }
+      }
+
       $scope.changeView = function(view){
         $localStorage.viewMode = $scope.app.viewMode = view;
       }
@@ -525,12 +571,38 @@ angular.module('app')
 
       $scope.app.signIn = function(username, password){
         trix.login(username, password).success(function(){
+          if($state.current.name == 'access.signin'){
+            window.location.href=window.location.protocol + '//' + window.location.host
+            return;
+          }
           handleLoginSuccess();
         }).error(function(){
           $scope.app.loginError = true;
           $scope.app.refreshData();
         })
       };
+
+      $scope.app.signup = function(user){
+        trix.createPerson(user).success(function(response){
+          window.location.href=window.location.protocol + '//' + window.location.host + "?signupSuccess=true"
+          return;
+        }).error(function(data, status, headers, config){
+          if(status == 409){
+            $scope.app.conflictingData = data;
+
+            if($scope.app.conflictingData.value && user.email && $scope.app.conflictingData.value.indexOf(user.email) > -1){
+              $scope.app.showErrorToast('Este email está sendo utilizado. <br>Escolha outro e tente novamente')
+            }else if($scope.app.conflictingData.value && user.username && $scope.app.conflictingData.value.indexOf(user.username) > -1){
+              $scope.app.showErrorToast('Este userário está sendo utilizado. <br>Escolha outro e tente novamente')
+            }
+            $scope.app.showErrorToast('Dados inválidos. Tente novamente')
+          }else
+            $scope.app.showErrorToast('Dados inválidos. Tente novamente')
+          $timeout(function() {
+            cfpLoadingBar.complete(); 
+          }, 100);
+        });
+      }
 
       function handleLoginSuccess (){
         trix.allInitData().success(function(response){
@@ -568,7 +640,8 @@ angular.module('app')
               $state.go("app.stations");
             }
             $scope.app.refreshData();
-            $scope.app.showInfoToast('Obrigado e volte sempre...')
+            if(initData && initData.noVisibleStation)
+              $state.go('access.signin');
           })
         })
       };
@@ -595,6 +668,10 @@ angular.module('app')
 
     $scope.app.cellsToPostViews = function(cells){
       return cells.map(function(cell){ return cell.postView; });
+    }
+
+    $scope.app.reading = function(slug){
+      $state.go('app.read', {'slug': slug})
     }
 
     /**
@@ -820,6 +897,48 @@ angular.module('app')
       $scope.app.refreshData();
       moment.locale('pt')
       /* end of added */
+
+      /* header observer */
+
+      var lastScrollTop = 0
+    var didScroll = false;
+    $timeout(function(){
+      lastScrollTop = $(window).scrollTop() ? $(window).scrollTop() : 0;
+    }, 20)
+
+    function checkStationHeaderVisibel(scrollTop){
+        // Make sure they scroll more than delta
+        if(Math.abs(lastScrollTop - scrollTop) <= 5)
+          return;
+        // If they scrolled down and are past the navbar, add class .nav-up.
+        // This is necessary so you never see what is "behind" the navbar.
+        if (scrollTop > lastScrollTop && scrollTop > 50){
+            // Scroll Down
+            $('body').removeClass('nav-down').addClass('nav-up');
+        } else {
+            // Scroll Up
+            if(scrollTop + $(window).height() < $(document).height()) {
+              $('body').removeClass('nav-up').addClass('nav-down');
+            }
+        }
+        lastScrollTop = scrollTop;
+    }
+
+    $timeout(function(){
+      checkStationHeaderVisibel(lastScrollTop);
+      $(window).scroll(function(){
+        didScroll = true;
+      })
+    }, 70);
+
+    $interval(function() {
+      if (didScroll) {
+        checkStationHeaderVisibel($(window).scrollTop());
+        didScroll = false;
+      }
+    }, 250);
+
+    /* end of header observer */
 
 
 }]);

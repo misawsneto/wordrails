@@ -85,7 +85,7 @@ public class Test {
 
 //		WordRails wordRails = new WordRails(
 //			new MockConnectivityManager(true),
-//			new File("."), 
+//			new TrixFile("."),
 //			1024 * 1024, 
 //			"http://localhost:8080", 
 //			"wordrails", 
@@ -147,7 +147,7 @@ public class Test {
 //		file = wordRails.getFile(file.id);
 //		System.out.println(file);
 //
-//		wordRails.putFileContents(file.id, new TypedFile("image/jpeg", new java.io.File("Alice.jpg")));
+//		wordRails.putFileContents(file.id, new TypedFile("image/jpeg", new java.io.TrixFile("Alice.jpg")));
 //		
 //		ImageDto image = new ImageDto();
 //		image.original = wordRails.getSelf(file);

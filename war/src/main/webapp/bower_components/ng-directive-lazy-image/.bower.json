@@ -1,7 +1,7 @@
 {
   "name": "ng-directive-lazy-image",
   "main": "release/lazy-image.js",
-  "version": "0.0.11",
+  "version": "0.1.5",
   "homepage": "https://github.com/afklm/ng-lazy-image",
   "authors": [
     "KLM Royal Dutch Airlines",
@@ -41,13 +41,16 @@
     "angular": "~1.3.0",
     "angular-mocks": "~1.3.0"
   },
-  "_release": "0.0.11",
+  "dependencies": {
+    "angular": "~1.3.0"
+  },
+  "_release": "0.1.5",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.11",
-    "commit": "e0a559f89bb62b50f599f2380bd5ed249a2a44e9"
+    "tag": "0.1.5",
+    "commit": "455832b76c103fcc3dca7400bd865ac29c7a407d"
   },
   "_source": "git://github.com/afklm/ng-directive-lazy-image.git",
-  "_target": "0.0.11",
+  "_target": "0.1.5",
   "_originalSource": "ng-directive-lazy-image"
 }

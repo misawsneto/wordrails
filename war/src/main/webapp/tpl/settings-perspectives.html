@@ -5,7 +5,7 @@
 
 	<div class="wrapper-lg animated zoomIn m-b-xxl">
 		<!-- start of user panel list -->
-		<div class="panel panel-card block-1000 m-auto" ng-if="!(creating || editing)">
+		<div class="panel material-shadow-light panel-card block-1000 m-auto" ng-if="!(creating || editing)">
 			<div class="panel-heading h4 wrapper-md">
 				<span>Perspectivas da estação </span><strong>{{thisStation.name}}</strong>
 			</div>
@@ -15,12 +15,13 @@
 						<thead>
 							<tr>
 								<th style="width:10%;">Ativada</th>
-								<th>Nome</th>
+								<th>Título</th>
+								<th>Categoria</th>
 								<th ng-if="app.networkAdmin" style="width:100px;"></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="perspective in perspectives" ng-click="loadPerspectives(perspective)">
+							<tr ng-repeat="perspective in perspectives" ng-click="openEditPerspective(perspective)">
 								<td>
 									<label class="md-check">
 										<input type="checkbox" ng-change="changeDefaultPerspective(perspective)" ng-model="perspective.selected" ng-click="app.stopPropagation($event)">
@@ -28,10 +29,9 @@
 									</label>
 								</td>
 								<td>{{perspective.name}}</td>
+								<td>{{perspective.taxonomyType == 'N' ? 'REDE' : 'ESTAÇÂO'}}</td>
 								<td ng-if="app.networkAdmin">
 									<div class="hidden-sm text-right" ng-click="app.stopPropagation($event)">
-										<a href ng-click="openEditPerspective(perspective)" class="border-radius-50 i-20 mdi-pencil mdi m-r-sm">
-										</a>
 										<a href ng-click="openDeletePerspective(perspective)" class="border-radius-50 i-20 mdi-delete mdi">
 										</a>
 									</div>
@@ -44,11 +44,29 @@
 		</div>
 		<!-- /end of user panel list -->
 	</div>
-		<md-button ng-hide="creating || editing"
-			id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-			ui-sref="app.settings.users({'newUser': true})" ng-if="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+		<md-button ng-hide="creating || editing" ng-click="showAddPerspective($event)"
+			id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn"
 			tooltip="Nova perspectiva" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
 			aria-label="Nova perspectiva">
 			<i class="mdi mdi-plus"></i>
 		</md-button>
+
+<script type="text/ng-template" id="add_perspective.html">
+	<md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
+  	<md-content>
+  		<div class="wrapper">
+  			<form role="form">
+	            <div class="form-group">
+	              <label class="text-md">Título</label>
+	              <input type="email" class="form-control input-lg" placeholder="Título da perspectiva">
+	            </div>
+          	</form>
+			<div class="pos-abt bottom-0 right-0 wrapper-sm text-md">
+				<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw m-r">Criar</button>
+				<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+			<div>
+		</div>
+	  </md-content>
+	</md-dialog>
+</script>
 </div>

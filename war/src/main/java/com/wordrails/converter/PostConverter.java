@@ -1,12 +1,11 @@
 package com.wordrails.converter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.wordrails.api.PostView;
 import com.wordrails.business.Post;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.util.WordrailsUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class PostConverter extends AbstractConverter<Post, PostView> {
@@ -25,16 +24,20 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.title = post.title;
 		postView.subheading = post.subheading;
 		postView.slug = post.slug;
-		if (post.featuredImage != null) {
-			postView.smallId = post.featuredImage.small.id;
-			postView.mediumId = post.featuredImage.medium.id;
-			postView.largeId = post.featuredImage.large.id;
-			
-			postView.imageId = post.imageId;
-			postView.imageSmallId = post.imageSmallId;
-			postView.imageMediumId = post.imageMediumId;
-			postView.imageLargeId = post.imageLargeId;
-		}
+
+		postView.smallId = post.imageSmallId;
+		postView.mediumId = post.imageMediumId;
+		postView.largeId = post.imageLargeId;
+
+		postView.smallHash = post.imageSmallHash;
+		postView.mediumHash = post.imageMediumHash;
+		postView.largeHash = post.imageLargeHash;
+
+		postView.imageId = post.imageId;
+		postView.imageSmallId = post.imageSmallId;
+		postView.imageMediumId = post.imageMediumId;
+		postView.imageLargeId = post.imageLargeId;
+
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;
 		postView.topper = post.topper;
@@ -46,10 +49,12 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.authorUsername = post.author != null ? post.author.username : null;
 		postView.authorCoverMediumId = post.author != null ? post.author.coverMediumId : null;
 		postView.authorImageSmallId = post.author != null ? post.author.imageSmallId : null;
+		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
+		postView.authorImageSmallHash = post.author != null ? post.author.imageSmallHash : null;
+		postView.authorCoverMediumHash = post.author != null ? post.author.coverMediumHash : null;
 		postView.authorId = post.author != null ? post.author.id : null;
 		postView.authorEmail = post.author != null ? post.author.email : null;
 		postView.authorTwitter = post.author != null ? post.author.twitterHandle : null;
-		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
 		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
 		postView.externalVideoUrl = post.externalVideoUrl;
 		postView.readTime = post.readTime;

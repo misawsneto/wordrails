@@ -109,7 +109,7 @@
 /* Mockup */
 .mockup-browser {
 	position: relative;
-	max-width: 1800px;
+	/* max-width: 1800px; */
 	margin: 0 auto;
 	/* background: #fff; */
 	border-left: 4px solid #ACADAE;
@@ -175,7 +175,7 @@
 }
 
 .mockup-content {
-	max-width: 1100px;
+	/* max-width: 1100px; */
 	margin: 0 auto;
 	padding: 0 2em;
 }
@@ -736,7 +736,7 @@
 
 @media screen and (max-width: 50em) {
 	body {
-		padding-top: 100px;
+		/* padding-top: 100px; */
 	}
 	.customizer {
 		top: 0;

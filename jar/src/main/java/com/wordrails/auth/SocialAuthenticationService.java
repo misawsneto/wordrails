@@ -3,26 +3,20 @@ package com.wordrails.auth;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.engine.jdbc.LobCreator;
+import com.wordrails.services.FileService;
+import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.ImageType;
 import org.springframework.social.support.URIBuilder;
-//import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.imageio.ImageIO;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
-import java.sql.SQLException;
+import java.text.Normalizer;
 import java.util.HashSet;
 
 @Service
@@ -32,18 +26,10 @@ public class SocialAuthenticationService {
 	private PersonRepository personRepository;
 	@Autowired
 	private UserRepository userRepository;
-
-	@PersistenceContext
-	private EntityManager manager;
 	@Autowired
 	private ImageRepository imageRepository;
-
 	@Autowired
-	private ImageEventHandler imageEventHandler;
-	@Autowired
-	private FileRepository fileRepository;
-	@Autowired
-	private FileContentsRepository fileContentsRepository;
+	private FileService fileService;
 
 //	public Person getTwitterUser(Twitter twitter, String userId, Network network) {
 //		org.springframework.social.twitter.api.TwitterProfile profile = twitter.userOperations().getUserProfile(userId);
@@ -118,13 +104,15 @@ public class SocialAuthenticationService {
 	public Person getFacebookUser(Facebook facebook, String userId, Network network) {
 		org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
 
-		String email = profile.getEmail() == null ? userId + "@facebook.com" : profile.getEmail();
+		String email = profile.getEmail() == null ? "" : profile.getEmail();
 		Person person = personRepository.findByEmailAndNetworkId(email, network.id);
 
 		if (person == null) {
 			int i = 1;
 			String originalUsername = profile.getFirstName().toLowerCase() + profile.getLastName().toLowerCase();
-			String username = originalUsername;
+			String username = Normalizer
+					.normalize(originalUsername, Normalizer.Form.NFD)
+					.replaceAll("[^\\p{ASCII}]", "");
 			while (userRepository.existsByUsernameAndNetworkId(username, network.id)) {
 				username = originalUsername + i++;
 			}
@@ -134,7 +122,6 @@ public class SocialAuthenticationService {
 			person.username = username;
 			person.email = email;
 		}
-
 
 
 		User user = new User();
@@ -152,7 +139,7 @@ public class SocialAuthenticationService {
 		UserConnection userConnection = new UserConnection();
 		userConnection.providerId = "facebook";
 		userConnection.providerUserId = userId;
-		userConnection.email = email;
+		userConnection.email = profile.getEmail();
 		userConnection.user = user;
 		userConnection.displayName = profile.getName();
 		userConnection.profileUrl = profile.getLink();
@@ -162,55 +149,36 @@ public class SocialAuthenticationService {
 
 		person.user = user;
 
-		if(person.image == null) {
+		if (person.image == null) {
 			try {
-				Image coverPicture = getImageFromBytes(profile.getCover().getSource(), Image.Type.COVER);
-				imageEventHandler.handleBeforeCreate(coverPicture);
+				String fileHash = fileService.newFile(profile.getCover().getSource(), "image/pgn", network.domain);
+
+				Image coverPicture = new Image();
+				coverPicture.type = Image.Type.COVER.toString();
+				coverPicture.originalHash = fileHash;
+
 				imageRepository.save(coverPicture);
 				person.cover = coverPicture;
-			} catch (IOException | SQLException e) {
+			} catch (IOException | FileUploadException e) {
 				e.printStackTrace();
 			}
 
 			try {
-				Image profilePicture = getImageFromBytes(facebook.userOperations().getUserProfileImage(ImageType.LARGE),
-						userConnection.imageUrl, Image.Type.PROFILE_PICTURE);
-				imageEventHandler.handleBeforeCreate(profilePicture);
+				InputStream is = new ByteArrayInputStream(facebook.userOperations().getUserProfileImage(ImageType.LARGE));
+				String fileHash = fileService.newFile(is, "image/pgn", network.domain);
+
+				Image profilePicture = new Image();
+				profilePicture.type = Image.Type.PROFILE_PICTURE.toString();
+				profilePicture.originalHash = fileHash;
+
 				imageRepository.save(profilePicture);
 				person.image = profilePicture;
-			} catch (IOException | SQLException e) {
+			} catch (IOException | FileUploadException e) {
 				e.printStackTrace();
 			}
 		}
 
 		return person;
-	}
-
-	private Image getImageFromBytes(String imageUrl, Image.Type type) throws IOException {
-		URL imageURL = new URL(imageUrl);
-		BufferedImage originalImage= ImageIO.read(imageURL);
-		ByteArrayOutputStream baos=new ByteArrayOutputStream();
-		ImageIO.write(originalImage, "jpg", baos );
-		byte[] bytes = baos.toByteArray();
-
-		return getImageFromBytes(bytes, imageUrl, type);
-	}
-
-	private Image getImageFromBytes(byte[] bytes, String imageUrl, Image.Type type) {
-		Image image = new Image();
-		image.type = type.toString();
-		File file = new File();
-		file.type = File.INTERNAL_FILE;
-		file.url = imageUrl;
-
-		fileRepository.save(file);
-		LobCreator creator = Hibernate.getLobCreator((Session) manager.getDelegate());
-		FileContents contents = fileContentsRepository.findOne(file.id);
-		contents.contents = creator.createBlob(bytes);
-		image.original = file;
-		fileContentsRepository.save(contents);
-
-		return image;
 	}
 
 	private static final String GRAPH_API_URL = "http://graph.facebook.com/";

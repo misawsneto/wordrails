@@ -316,12 +316,12 @@ public class $facade$ {
 		});
 	}
 	
-	public SearchView searchPosts(String query, String stationIds, Integer personId, String publicationType, Boolean noHighlight, Boolean sortByDate, Integer page, Integer size){
-		return _facade.searchPosts(query, stationIds, personId, publicationType, noHighlight, sortByDate, page, size).content;
+	public SearchView searchPosts(String q, String sIds, Integer pId, String pt, Boolean nh, Boolean sd, Integer p, Integer s){
+		return _facade.searchPosts(q, sIds, pId, pt, nh, sd, p, s).content;
 	}
 	
-	public void searchPosts(String query, String stationIds, Integer personId, String publicationType, Boolean noHighlight, Boolean sortByDate, Integer page, Integer size, final Callback<SearchView\> _callback){
-		_facade.searchPosts(query, stationIds, personId, publicationType, noHighlight, sortByDate, page, size, new Callback<ContentResponse<SearchView\>\>() {
+	public void searchPosts(String q, String sIds, Integer pId, String pt, Boolean nh, Boolean sd, Integer p, Integer s, final Callback<SearchView\> _callback){
+		_facade.searchPosts(q, sIds, pId, pt, nh, sd, p, s, new Callback<ContentResponse<SearchView\>\>() {
 			@Override
 			public void success(ContentResponse<SearchView\> _t, Response _response) {
 				_callback.success(_t.content, _response);

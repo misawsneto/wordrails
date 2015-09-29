@@ -18,6 +18,9 @@ public class Cell {
 	@Min(0)
 	@Column(name="\"index\"")
 	public int index;
+
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean featured;
 	
 	@NotNull
 	@ManyToOne
