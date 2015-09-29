@@ -107,6 +107,7 @@ public class PersonsResource {
 
 	@PUT
 	@Path("/{id}")
+	@Transactional
 	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
