@@ -46,9 +46,6 @@ public class PersonEventHandler {
 	private QueryPersistence queryPersistence;
 
 	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
 	private TermRepository termRepository;
 
 	@Autowired
