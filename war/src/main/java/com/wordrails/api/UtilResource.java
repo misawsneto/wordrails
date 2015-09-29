@@ -134,7 +134,7 @@ public class UtilResource {
 
 	@GET
 	@Path("/updateDefaultStationPerspective")
-	public void updateDefaultStationPerspective(@Context HttpServletRequest request) {
+	public Response updateDefaultStationPerspective(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -147,11 +147,12 @@ public class UtilResource {
 			}
 			stationRepository.save(stations);
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/updatePostFields")
-	public void updatePostFields(@Context HttpServletRequest request) {
+	public Response updatePostFields(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -178,11 +179,12 @@ public class UtilResource {
 			}
 			postRepository.save(posts);
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/updateTermPerspectivesStationIds")
-	public void updateTermPerspectivesStationIds(@Context HttpServletRequest request) {
+	public Response updateTermPerspectivesStationIds(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -198,11 +200,12 @@ public class UtilResource {
 			}
 			stationPerspectiveRepository.save(stationPerspectives);
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/updatePersonFields")
-	public void updatePersonFields(@Context HttpServletRequest request) {
+	public Response updatePersonFields(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -264,11 +267,12 @@ public class UtilResource {
 			}
 
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/recalculateSlug")
-	public void recalculateSlug(@Context HttpServletRequest request){
+	public Response recalculateSlug(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -277,12 +281,13 @@ public class UtilResource {
 				doSlug(post);
 			}
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@POST
 	@Path("/generateInvitations")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void generate(@FormParam("subdomain") String subdomain, @FormParam("stationId") Integer stationId, @FormParam("count") Integer count){
+	public Response generate(@FormParam("subdomain") String subdomain, @FormParam("stationId") Integer stationId, @FormParam("count") Integer count){
 
 		Network network = networkRepository.findOneBySubdomain(subdomain);
 		Station station = stationId != null ? stationRepository.findOne(stationId) : null;
@@ -299,6 +304,7 @@ public class UtilResource {
 		}
 
 		invitationRepository.save(invites);
+		return Response.status(Status.OK).build();
 	}
 
 	private void doSlug(Post post){
@@ -317,19 +323,20 @@ public class UtilResource {
 	@GET
 	@Path("/updateRegIdsAndTokens")
 	@Transactional
-	public void updateRegIdsAndTokens(@Context HttpServletRequest request){
+	public Response updateRegIdsAndTokens(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			manager.createNativeQuery("UPDATE PersonNetworkRegId reg set person_id = null where reg.person_id = 1").executeUpdate();
 			manager.createNativeQuery("UPDATE PersonNetworkToken tok set person_id = null where tok.person_id = 1").executeUpdate();
 		}
+		return Response.status(Status.OK).build();
 	}
 	
 	@GET
 	@Path("/updateNetworkProperties")
 	@Transactional
-	public void updateNetworkProperties(@Context HttpServletRequest request){
+	public Response updateNetworkProperties(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -343,12 +350,13 @@ public class UtilResource {
 			}
 			networkRepository.save(networks);
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/updateNetworkTaxonomies")
 	@Transactional(readOnly=false)
-	public void updateNetworkTaxonomies(@Context HttpServletRequest request){
+	public Response updateNetworkTaxonomies(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
 			List<Network> networks = networkRepository.findAll();
@@ -358,10 +366,8 @@ public class UtilResource {
 					Taxonomy nTaxonomy = new Taxonomy();
 					nTaxonomy.name = "Categoria da Rede " + net.name;
 					nTaxonomy.type = Taxonomy.NETWORK_TAXONOMY;
-					taxonomyRepository.save(nTaxonomy);
 
 					nTaxonomy.owningNetwork = net;
-					taxonomyRepository.save(nTaxonomy);
 
 					Term nterm1 = new Term();
 					nterm1.name = "Categoria 1";
@@ -372,26 +378,66 @@ public class UtilResource {
 					nterm1.taxonomy = nTaxonomy;
 					nterm2.taxonomy = nTaxonomy;
 
+					taxonomyRepository.save(nTaxonomy);
+
 					nTaxonomy.terms = new HashSet<Term>();
 					nTaxonomy.terms.add(nterm1);
 					nTaxonomy.terms.add(nterm2);
 					termRepository.save(nterm1);
 					termRepository.save(nterm2);
+
 					Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
 					nTaxonomies.add(nTaxonomy);
+
 					taxonomyRepository.save(nTaxonomy);
 					net.ownedTaxonomies = nTaxonomies;
 					net.categoriesTaxonomyId = nTaxonomy.id;
 					networkRepository.save(net);
 				}
 			}
-		}
+
+            List<Taxonomy> taxs = manager.createQuery("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'N' and taxonomy.owningNetwork is null").getResultList();
+
+
+            for(Taxonomy tax: taxs) {
+                taxonomyRepository.deleteTaxonomyNetworks(tax.id);
+                for (Term term : termRepository.findRoots(tax.id)) {
+
+                    if(term.termPerspectives != null && term.termPerspectives.size() > 0){
+                        termPerspectiveRepository.delete(term.termPerspectives);
+                    }
+
+                    List<Row> rows = rowRepository.findByTerm(term);
+                    if(rows != null && rows.size() > 0){
+                        rowRepository.delete(rows);
+                    }
+
+                    List<Term> terms = termRepository.findByParent(term);
+                    if(terms != null && terms.size() > 0){
+                        deleteCascade(term);
+                    }
+                    termRepository.deletePostsTerms(term.id);
+                    if(!term.equals(term)){
+                        termRepository.delete(term);
+                    }
+
+                    termRepository.delete(term);
+                }
+                List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByTaxonomy(tax);
+                if(stationsPerspectives != null && stationsPerspectives.size() > 0){
+                    stationPerspectiveRepository.delete(stationsPerspectives);
+                }
+                taxonomyRepository.delete(tax);
+            }
+        }
+
+		return Response.status(Status.OK).build();
 	}
 
     @GET
     @Path("/updateStationTaxonomies")
     @Transactional(readOnly=false)
-    public void updateStationTaxonomies(@Context HttpServletRequest request){
+    public Response updateStationTaxonomies(@Context HttpServletRequest request){
         String host = request.getHeader("Host");
 
         if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -431,12 +477,13 @@ public class UtilResource {
 				}
             }
         }
+		return Response.status(Status.OK).build();
     }
 
 	@GET
 	@Path("/updateStationTagsTaxonomy")
 	@Transactional(readOnly=false)
-	public void updateStationTagsTaxonomy(@Context HttpServletRequest request){
+	public Response updateStationTagsTaxonomy(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -460,12 +507,13 @@ public class UtilResource {
 				}
 			}
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/updateStationTagsCategoriesIds")
 	@Transactional(readOnly=false)
-	public void updateStationTagsCategoriesIds(@Context HttpServletRequest request){
+	public Response updateStationTagsCategoriesIds(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -485,12 +533,13 @@ public class UtilResource {
 				}
 			}
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/updateStationTerm")
 	@Transactional(readOnly=false)
-	public void updateAllTerms(@Context HttpServletRequest request){
+	public Response updateAllTerms(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -500,12 +549,13 @@ public class UtilResource {
 				term.taxonomyName = term.taxonomy.name;
 			}
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/updateAllResources")
 	@Transactional(readOnly=false)
-	public void updateAllResources(@Context HttpServletRequest request){
+	public Response updateAllResources(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -518,11 +568,12 @@ public class UtilResource {
 			updateRegIdsAndTokens(request);
 			updateRegDate(request);
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/updateWordpressPosts")
-	public void updateWordpressPosts(@Context HttpServletRequest request){
+	public Response updateWordpressPosts(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 
 		int count = 0;
@@ -548,6 +599,7 @@ public class UtilResource {
 
 			postRepository.save(posts);
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	private @Autowired PostReadRepository postReadRepository;
@@ -646,7 +698,7 @@ public class UtilResource {
 
 	@GET
 	@Path("/updateRegDate")
-	public void updateRegDate(HttpServletRequest request) {
+	public Response updateRegDate(HttpServletRequest request) {
 		String host = request.getHeader("Host");
 
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
@@ -657,6 +709,8 @@ public class UtilResource {
 			}
 			personNetworkRegIdRepository.save(ids);
 		}
+
+		return Response.status(Status.OK).build();
 	}
 
 	@Autowired private QueryPersistence qp;
@@ -668,7 +722,7 @@ public class UtilResource {
 
 	@GET
 	@Path("/test")
-	public void test(@Context HttpServletRequest request){
+	public Response test(@Context HttpServletRequest request){
 		String host = request.getHeader("Host");
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			reg.findRegIdByStationId(2);
@@ -677,13 +731,14 @@ public class UtilResource {
 			WordpressParsedContent wpc = wordrailsService.extractImageFromContent(content);
 			System.out.println(wpc.content);
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/removeOldImages")
 	@Transactional
 	@Modifying
-	public void removeOldImages(@Context HttpServletRequest request) throws SchedulerException {
+	public Response removeOldImages(@Context HttpServletRequest request) throws SchedulerException {
 		String host = request.getHeader("Host");
 		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
 			DateTime dateTime = new DateTime().minusDays(30);
@@ -707,12 +762,14 @@ public class UtilResource {
 
 			imageRepository.deleteImages(imgIds);
 		}
+
+		return Response.status(Status.OK).build();
 	}
 
 
 	@GET
 	@Path("/testQuartz")
-	public void testQuartz(@Context HttpServletRequest request) throws SchedulerException {
+	public Response testQuartz(@Context HttpServletRequest request) throws SchedulerException {
 		String host = request.getHeader("Host");
 		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
 			JobDetail job = JobBuilder.newJob(SimpleJob.class).withIdentity("job1", "group1").build();
@@ -723,11 +780,12 @@ public class UtilResource {
 
 			sched.scheduleJob(job, trigger);
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/updateUserNetwork")
-	public void updateUserNetwork(@Context HttpServletRequest request) {
+	public Response updateUserNetwork(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
 		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1") || host.contains("xarxlocal.com")) {
 			List<Person> persons = manager.createQuery("SELECT person FROM Person person JOIN FETCH person.user user JOIN FETCH user.network network").getResultList();
@@ -740,11 +798,12 @@ public class UtilResource {
 			}
 			personRepository.save(persons);
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@DELETE
 	@Path("/deleteNetwork/{id}")
-	public void deleteNetwork (@Context HttpServletRequest request, @PathParam("id") Integer networkId) {
+	public Response deleteNetwork (@Context HttpServletRequest request, @PathParam("id") Integer networkId) {
 		String host = request.getHeader("Host");
 		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
 
@@ -776,11 +835,12 @@ public class UtilResource {
 			cacheService.removeNetwork(networkId);
 			cacheService.removeUser(user.id);
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@DELETE
 	@Path("/removeRowFromPerspective/{perspectiveId}/{rowId}")
-	public void removeRowFromPerspective(@Context HttpServletRequest request, @PathParam("perspectiveId") Integer perspectiveId, @PathParam("rowId") Integer rowId) {
+	public Response removeRowFromPerspective(@Context HttpServletRequest request, @PathParam("perspectiveId") Integer perspectiveId, @PathParam("rowId") Integer rowId) {
 		String host = request.getHeader("Host");
 		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
 
@@ -803,13 +863,13 @@ public class UtilResource {
 
 				}
 			}
-
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@GET
 	@Path("/updateStationPerspectiveTaxonomyIds")
-	public void updateStationPerspectiveTaxonomyIds(@Context HttpServletRequest request) {
+	public Response updateStationPerspectiveTaxonomyIds(@Context HttpServletRequest request) {
 		if(isLocal(request.getHeader("Host"))) {
 			List<StationPerspective> pers = stationPerspectiveRepository.findAll();
 			for (StationPerspective per: pers){
@@ -823,8 +883,8 @@ public class UtilResource {
 				termPerspectiveRepository.save(per.perspectives);
 			}
 			stationPerspectiveRepository.save(pers);
-
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	@Autowired
@@ -832,10 +892,11 @@ public class UtilResource {
 
 	@POST
 	@Path("/uploadAmazonImages")
-	public void uploadAmazonImages(@Context HttpServletRequest request) {
+	public Response uploadAmazonImages(@Context HttpServletRequest request) {
 		if(isLocal(request.getHeader("Host"))) {
 			amazon.uploadAmazonImages();
 		}
+		return Response.status(Status.OK).build();
 	}
 
 	private boolean isLocal(String host) {
@@ -845,4 +906,13 @@ public class UtilResource {
 				host.contains("127.0.0.1") ||
 				host.contains("xarxlocal.com");
 	}
+
+    public Response adminAuth(Network network){
+        List<NetworkRole> nr = personRepository.findNetworkAdmin(network.id);
+        User user = nr.get(0).person.user;
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+        authProvider.passwordAuthentication(user.username, user.password, network);
+        return Response.status(Status.OK).build();
+    }
 }
