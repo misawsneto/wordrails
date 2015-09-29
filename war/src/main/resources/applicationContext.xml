@@ -56,6 +56,10 @@
 		<!--<property name="partitionCount" value="3"/>-->
 	</bean>
 
+	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
+
+	<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"/>
+
 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 
 	<bean id="postFilter" class="com.wordrails.api.PostFilter"/>

@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @Configuration
-@EnableRedisHttpSession
+//@EnableRedisHttpSession
 public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 	@Override
 	protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
@@ -25,10 +25,10 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 		config.exposeIdsFor(entities.toArray(new Class<?>[0]));
 	}
 
-	@Bean
-	public JedisConnectionFactory connectionFactory() {
-		return new JedisConnectionFactory();
-	}
+//	@Bean
+//	public JedisConnectionFactory connectionFactory() {
+//		return new JedisConnectionFactory();
+//	}
 	
 //	@Bean
 //    public Validator validator() {

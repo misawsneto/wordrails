@@ -87,6 +87,15 @@
 		<url-pattern>/access/createnetwork</url-pattern>
 	</servlet-mapping>
 
+	<filter>
+		<filter-name>springSessionRepositoryFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSessionRepositoryFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<!-- Spring ORM -->
 	<filter>
 		<filter-name>OpenEntityManagerInViewFilter</filter-name>
