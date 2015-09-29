@@ -113,6 +113,13 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 
 		public boolean notify;
 
+		public PostView makePostView(Post post, boolean addBody) {
+			PostView postView = makePostView(post);
+			if(addBody)
+				postView.body = post.body;
+			return postView;
+		}
+
 		public PostView makePostView(Post post){
 
 			PostView postView = new PostView();
