@@ -65,6 +65,7 @@ public class PersonEventHandler {
 	@Transactional
 	public void handleBeforeSave(Person person) {
 		Person originalPerson = personRepository.findOne(person.id);
+		person.user = originalPerson.user;
 		if (originalPerson != null && !originalPerson.name.equals(person.name)) {
 			termRepository.updateTermsNamesAuthorTaxonomies(person.name, originalPerson.name);
 		}
