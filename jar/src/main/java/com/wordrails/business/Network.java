@@ -139,6 +139,8 @@ public class Network implements Serializable{
 	@Column(columnDefinition = "varchar(255) default 'V'", nullable = false)
 	public String defaultOrientationMode;
 
+	public Integer categoriesTaxonomyId;
+
 	@Override
 	public String toString() {
 		return "Network [id=" + id + ", name=" + name + "]";

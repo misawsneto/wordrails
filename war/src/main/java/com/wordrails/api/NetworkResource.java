@@ -232,6 +232,7 @@ public class NetworkResource {
         nTaxonomies.add(nTaxonomy);
         taxonomyRepository.save(nTaxonomy);
         network.ownedTaxonomies = nTaxonomies;
+		network.categoriesTaxonomyId = nTaxonomy.id;
         networkRepository.save(network);
 
         Station station = new Station();

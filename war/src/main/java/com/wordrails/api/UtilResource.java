@@ -345,6 +345,49 @@ public class UtilResource {
 		}
 	}
 
+	@GET
+	@Path("/updateNetworkTaxonomies")
+	@Transactional(readOnly=false)
+	public void updateNetworkTaxonomies(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+			List<Network> networks = networkRepository.findAll();
+			for(Network net: networks) {
+				List<Taxonomy> taxs = taxonomyRepository.findNetworkCategories(net.id);
+				if(taxs != null && taxs.size() == 0){
+					Taxonomy nTaxonomy = new Taxonomy();
+					nTaxonomy.name = "Categoria da Rede " + net.name;
+					nTaxonomy.type = Taxonomy.NETWORK_TAXONOMY;
+					taxonomyRepository.save(nTaxonomy);
+
+					nTaxonomy.owningNetwork = net;
+					taxonomyRepository.save(nTaxonomy);
+
+					Term nterm1 = new Term();
+					nterm1.name = "Categoria 1";
+
+					Term nterm2 = new Term();
+					nterm2.name = "Categoria 2";
+
+					nterm1.taxonomy = nTaxonomy;
+					nterm2.taxonomy = nTaxonomy;
+
+					nTaxonomy.terms = new HashSet<Term>();
+					nTaxonomy.terms.add(nterm1);
+					nTaxonomy.terms.add(nterm2);
+					termRepository.save(nterm1);
+					termRepository.save(nterm2);
+					Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
+					nTaxonomies.add(nTaxonomy);
+					taxonomyRepository.save(nTaxonomy);
+					net.ownedTaxonomies = nTaxonomies;
+					net.categoriesTaxonomyId = nTaxonomy.id;
+					networkRepository.save(net);
+				}
+			}
+		}
+	}
+
     @GET
     @Path("/updateStationTaxonomies")
     @Transactional(readOnly=false)

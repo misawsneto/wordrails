@@ -7,7 +7,10 @@
 		<!-- start of user panel list -->
 		<div class="panel material-shadow-light panel-card block-1000 m-auto" ng-if="!(creating || editing)">
 			<div class="panel-heading h4 wrapper-md">
-				<span>Perspectivas da estação </span><strong>{{thisStation.name}}</strong>
+				<a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Perspectivas da estação </span><strong>{{thisStation.name}}</strong>
+				<!-- <div class="text-md p-t-lg">
+					Escolha uma perspectiva para definir
+				</div> -->
 			</div>
 			<div class="panel-body p-n" style="min-height: 200px;">
 				<div class="table-responsive o-visible text-md">
@@ -55,14 +58,40 @@
 	<md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
   	<md-content>
   		<div class="wrapper">
+  			<span class="h3">Crie uma nova perspectivas</span>
   			<form role="form">
-	            <div class="form-group">
-	              <label class="text-md">Título</label>
-	              <input type="email" class="form-control input-lg" placeholder="Título da perspectiva">
-	            </div>
-          	</form>
+  				<div class="row row-sm m-t">
+  					<div class="col-sm-8">
+		          <div class="form-group">
+		            <div class="md-form-group float-label text-lg">
+				          <input class="md-input" ng-model="newPerspective.name" required>
+				          <label>Título</label>
+				        </div>
+				        <div class="text-lg">
+				        	<p>
+				            <label class="md-check">
+				              <input type="radio" name="a" ng-model="newPerspective.type" value="ST">
+				              <i class="blue"></i>
+				              Categorias da estação <span class="font-bold">{{thisStation.name}}</span>
+				            </label>
+				          </p>
+				          <p>
+				            <label class="md-check">
+				              <input type="radio" name="a" ng-model="newPerspective.type" value="NET">
+				              <i class="blue"></i>
+				              Categorias da rede
+				            </label>
+				          </p>
+				        </div>
+		          </div>
+	          </div>
+		        <div class="col-sm-12 text-muted">
+		        	Escolha o tipo de categorias que define o conteúdo a ser exibido.
+		        </div>
+          </div>
+      	</form>
 			<div class="pos-abt bottom-0 right-0 wrapper-sm text-md">
-				<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw m-r">Criar</button>
+				<button ng-click="pe.createPerspective(newPerspective)" md-ink-ripple class="md-btn md-flat btn-fw m-r">Criar</button>
 				<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
 			<div>
 		</div>

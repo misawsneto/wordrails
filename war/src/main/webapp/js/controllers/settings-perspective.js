@@ -64,8 +64,6 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       console.log(data);
     }
 
-    $scope.show
-
     $scope.showAddFeaturedPost = function(ev){
     // show term alert
       $mdDialog.show({
@@ -435,16 +433,25 @@ app.controller('SettingsPerspectiveListCtrl', ['$scope', '$log', '$timeout', '$m
         if(perspective.id == $scope.thisStation.defaultPerspectiveId)
           perspective.selected = true;
       });
+
+      console.log(response);
     })
 
     $scope.openEditPerspective = function(perspective){
       $state.go('app.settings.perspectiveeditor', {'stationId': $state.params.stationId, 'perspectiveId': perspective.id})
     }
 
-        // perspective editor dialog Controller
+    $scope.pe = {};
+    $scope.pe.newPerspective = function(perspective){
+
+      //trix.postStationPerspective
+    }
+
+    // perspective editor dialog Controller
     function DialogController(scope, $mdDialog) {
       scope.app = $scope.app;
       scope.pe = $scope.pe;
+      scope.thisStation = $scope.thisStation;
 
       scope.hide = function() {
         $mdDialog.hide();

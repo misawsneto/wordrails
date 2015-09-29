@@ -4819,7 +4819,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 
 #perspective-editor-dialog md-content > div{
  overflow: auto; 
- width: 700px;
+ width: 600px;
  min-height: 400px;
  max-height: 500px;
 }

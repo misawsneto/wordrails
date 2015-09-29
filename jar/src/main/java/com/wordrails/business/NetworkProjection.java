@@ -27,6 +27,8 @@ public interface NetworkProjection {
     String getSecondaryFont();
     String getSubdomain();
     Boolean getConfigured();
+
+    Integer categoriesTaxonomyId();
     
     String getDefaultReadMode();
     String getDefaultOrientationMode();
