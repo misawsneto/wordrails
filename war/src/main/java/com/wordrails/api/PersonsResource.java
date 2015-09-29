@@ -594,7 +594,6 @@ public class PersonsResource {
 			stationDtos.add(stationDto);
 		}
 
-
 		personPermissions.networkPermission = networkPermissionDto;
 		personPermissions.stationPermissions = getStationPermissions(stations, person.id);
 		personPermissions.personId = person.id;
@@ -602,6 +601,10 @@ public class PersonsResource {
 		personPermissions.personName = person.name;
 
 		PersonData initData = new PersonData();
+
+		if(person != null && person.user != null && person.password.equals("")){
+			initData.noPassword = true;
+		}
 
 		initData.publicCloudfrontUrl = publicCloudfrontUrl;
 		initData.privateCloudfrontUrl = privateCloudfrontUrl;
