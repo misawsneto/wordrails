@@ -35,16 +35,4 @@ public class FileService {
 
 		return new FileInputStream(file);
 	}
-
-	public String newResizedImage(BufferedImage image, String domain, Integer size, String sizeType, String mime) throws FileUploadException, IOException {
-		File file = java.io.File.createTempFile("trix", "");
-
-		BufferedImage bi = Thumbnails.of(image).size(size, size).outputFormat(mime).outputQuality(1).asBufferedImage();
-		ImageIO.write(bi, mime, file);
-
-		FileInputStream fis = new FileInputStream(file);
-		long byteSize = fis.getChannel().size();
-
-		return amazonCloudService.uploadPublicImage(fis, byteSize, domain, sizeType, mime);
-	}
 }

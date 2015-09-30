@@ -41,56 +41,31 @@ public class AmazonCloudService {
 	@Value("${amazon.privateBucket}")
 	String privateBucket;
 
-	public String getPrivateImageURL(String networkDomain, String fileName) throws IOException {
-		return "http://" + privateCloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
-	}
-
 	public String getPublicImageURL(String networkDomain, String fileName) throws IOException {
 		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
-	}
-
-	public void uploadPublicImage(InputStream input, Long lenght, String networkDomain, String fileName) throws IOException, AmazonS3Exception {
-		uploadImage(input, lenght, networkDomain, publicBucket, fileName);
-	}
-
-	public void uploadPrivateImage(InputStream input, Long lenght, String networkDomain, String fileName) throws IOException, AmazonS3Exception {
-		uploadImage(input, lenght, networkDomain, privateBucket, fileName);
 	}
 
 	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
 		byte[] bytes = WordrailsUtil.getBytes(input);
 		String hash = WordrailsUtil.getHash(bytes);
-		uploadImage(new ByteArrayInputStream(bytes), lenght, networkDomain, publicBucket, hash, size, mime);
-		return hash;
+
+		return uploadPublicImage(new ByteArrayInputStream(bytes), lenght, networkDomain, hash, size, mime);
 	}
 
-	public String uploadPrivateImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
-		byte[] bytes = WordrailsUtil.getBytes(input);
-		String hash = WordrailsUtil.getHash(bytes);
-		uploadImage(new ByteArrayInputStream(bytes), lenght, networkDomain, privateBucket, hash, size, mime);
-		return hash;
-	}
+	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String hash, String size, String mime) throws IOException, AmazonS3Exception {
+		if(hash == null) {
+			byte[] bytes = WordrailsUtil.getBytes(input);
+			hash = WordrailsUtil.getHash(bytes);
+		}
 
-	public void uploadPublicImage(InputStream input, Long lenght, String networkDomain, String fileName, String size, String mime) throws IOException, AmazonS3Exception {
-		uploadImage(input, lenght, networkDomain, publicBucket, fileName, size, mime);
-	}
-
-	public void uploadPrivateImage(InputStream input, Long lenght, String networkDomain, String fileName, String size, String mime) throws IOException, AmazonS3Exception {
-		uploadImage(input, lenght, networkDomain, privateBucket, fileName, size, mime);
-	}
-
-	private void uploadImage(InputStream input, Long lenght, String networkDomain, String bucketName, String fileName) throws IOException, AmazonS3Exception {
-		String path = networkDomain + "/images/" + fileName;
-		uploadFile(input, lenght, bucketName, path, null);
-	}
-
-	private void uploadImage(InputStream input, Long lenght, String networkDomain, String bucketName, String fileName, String size, String mime) throws IOException, AmazonS3Exception {
 		ObjectMetadata md = new ObjectMetadata();
 		md.setContentType(mime);
 		md.addUserMetadata("size", size);
 
-		String path = networkDomain + "/images/" + fileName;
-		uploadFile(input, lenght, bucketName, path, md);
+		String path = networkDomain + "/images/" + hash;
+		uploadFile(input, lenght, publicBucket, path, md);
+
+		return hash;
 	}
 
 	public boolean exists(AmazonS3 s3Client, String bucket, String key) {
@@ -222,6 +197,7 @@ public class AmazonCloudService {
 			file.hash = hash;
 			file.size = byteSize;
 			file.type = File.EXTERNAL;
+			file.directory = File.DIR_IMAGES;
 			file.networkId = networkId;
 			fileRepository.save(file);
 		} catch (AmazonS3Exception e) {

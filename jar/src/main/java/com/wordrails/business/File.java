@@ -11,6 +11,9 @@ public class File {
 	public static final String INTERNAL = "I";
 	public static final String EXTERNAL = "E";
 
+	public static final String DIR_IMAGES = "images";
+	public static final String DIR_VIDEO = "videos";
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer id;
@@ -18,6 +21,8 @@ public class File {
 	@NotNull
 	@Size(min = 1, max = 1)
 	public String type;
+
+	public String directory;
 
 	public String mime;
 

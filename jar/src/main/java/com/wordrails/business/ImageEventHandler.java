@@ -77,7 +77,8 @@ public class ImageEventHandler {
 
 			int maxSize = Math.max(bufferedImage.getHeight(), bufferedImage.getWidth());
 
-			String originalHash = amazonCloudService.uploadPublicImage(new ByteArrayInputStream(bytes), originalFile.size, network.subdomain, "original", extension);
+			String originalHash = amazonCloudService.uploadPublicImage(new ByteArrayInputStream(bytes), originalFile.size,
+					network.subdomain, originalFile.hash, "original", extension);
 
 			originalFile.contents = null;
 			originalFile.type = File.EXTERNAL;
