@@ -6,6 +6,7 @@ import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.converter.PostConverter;
+import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.StationTermsDto;
@@ -76,6 +77,10 @@ public class PostsResource {
 	@Autowired
 	TrixAuthenticationProvider authProvider;
 
+	private
+	@Autowired
+	PostEsRepository postEsRepository;
+
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
 		request.getServletContext().getRequestDispatcher(path).forward(request, response);
@@ -90,9 +95,6 @@ public class PostsResource {
 	public ContentResponse<PostView> updatePostTerms(@PathParam("postId") Integer postId, List<TermDto> terms) throws ServletException, IOException {
 
 		Post post = postRepository.findOne(postId);
-		if (post == null) {
-
-		}
 
 		ContentResponse<PostView> response = new ContentResponse<PostView>();
 		response.content = postConverter.convertToView(post);
@@ -174,7 +176,11 @@ public class PostsResource {
 	@GET
 	@Path("/{stationId}/findPostsByStationIdAndAuthorIdAndState")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsByStationIdAndAuthorIdAndState(@PathParam("stationId") Integer stationId, @QueryParam("authorId") Integer authorId, @QueryParam("state") String state, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+	public ContentResponse<List<PostView>> findPostsByStationIdAndAuthorIdAndState(@PathParam("stationId") Integer stationId,
+	                                                                               @QueryParam("authorId") Integer authorId,
+	                                                                               @QueryParam("state") String state,
+	                                                                               @QueryParam("page") int page,
+	                                                                               @QueryParam("size") int size) throws ServletException, IOException {
 
 		Pageable pageable = new PageRequest(page, size);
 
@@ -190,21 +196,21 @@ public class PostsResource {
 		return response;
 	}
 
-//	@GET
-//	@Path("/{stationId}/findPostsAndPostsPromotedByTermId")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public ContentResponse<List<PostView>> findPostsAndPostsPromotedByTermId(@PathParam("stationId") Integer stationId,
-//	                                                                         @QueryParam("termId") Integer termId,
-//	                                                                         @QueryParam("page") int page,
-//	                                                                         @QueryParam("size") int size) throws ServletException, IOException {
-//
-//		Pageable pageable = new PageRequest(page, size);
-//
-//		List<Post> posts = postRepository.findPostsAndPostsPromotedByTermId(stationId, termId, pageable);
-//		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-//		response.content = postConverter.convertToViews(posts);
-//		return response;
-//	}
+	@GET
+	@Path("/{stationId}/findPostsAndPostsPromotedByTermId")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ContentResponse<List<PostView>> findPostsAndPostsPromotedByTermId(@PathParam("stationId") Integer stationId,
+	                                                                         @QueryParam("termId") Integer termId,
+	                                                                         @QueryParam("page") int page,
+	                                                                         @QueryParam("size") int size) throws ServletException, IOException {
+
+		Pageable pageable = new PageRequest(page, size);
+
+		List<Post> posts = postEsRepository.findPostsAndPostsPromotedByTermId(stationId, termId, pageable);
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
+	}
 
 //	@GET
 //	@Path("/{stationId}/findPostsAndPostsPromotedByAuthorId")
@@ -498,7 +504,9 @@ public class PostsResource {
 	@GET
 	@Path("/{stationId}/postRead")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size) throws BadRequestException{
+	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId,
+	                                                   @QueryParam("page") Integer page,
+	                                                   @QueryParam("size") Integer size) throws BadRequestException{
 
 		if (stationId == null || page == null || size == null) {
 			throw new BadRequestException("Invalid null parameter(s).");
@@ -529,7 +537,9 @@ public class PostsResource {
 	@GET
 	@Path("/{stationId}/popular")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
+	public ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId,
+	                                                  @QueryParam("page") Integer page,
+	                                                  @QueryParam("size") Integer size) {
 
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPopularPosts(stationId, pageable);
@@ -542,7 +552,9 @@ public class PostsResource {
 	@GET
 	@Path("/{stationId}/recent")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> getRecent(@PathParam("stationId") Integer stationId, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
+	public ContentResponse<List<PostView>> getRecent(@PathParam("stationId") Integer stationId,
+	                                                 @QueryParam("page") Integer page,
+	                                                 @QueryParam("size") Integer size) {
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPostsOrderByDateDesc(stationId, pageable);
 

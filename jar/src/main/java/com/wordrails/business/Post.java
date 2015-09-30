@@ -1,6 +1,7 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.wordrails.util.WordrailsUtil;
 import org.codehaus.jackson.annotate.JsonUnwrapped;
 
@@ -62,7 +63,6 @@ public class Post {
 	@Column(length = 1024)
 	public String subheading;
 
-	@JsonUnwrapped
 	@ManyToOne
 	public Sponsor sponsor;
 

@@ -18,14 +18,14 @@ public class PostEventHandler {
 
 	@Autowired
 	private PostService postService;
-
 	@Autowired
 	private PostRepository postRepository;
-	@Autowired private PostReadRepository postReadRepository;
-	@Autowired private CellRepository cellRepository;
-
-	@Autowired private PostEsRepository postEsRepository;
-	
+	@Autowired
+	private PostReadRepository postReadRepository;
+	@Autowired
+	private CellRepository cellRepository;
+	@Autowired
+	private PostEsRepository postEsRepository;
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired

@@ -3,6 +3,7 @@ package com.wordrails.elasticsearch;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -15,27 +16,43 @@ abstract class ElasticsearchBaseRepository {
 	@Value("${elasticsearch.port}")
 	private Integer port;
 
-	private static TransportClient transportClient;
+	private TransportClient transportClient;
 
 	public void createClient(){
 		transportClient = new TransportClient().
 				addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
 
-	public static void closeClient(){
+	public void closeClient(){
 		transportClient.close();
 	}
 
-	protected static IndexResponse index(String doc, String id, String index, String type){
+	protected IndexResponse index(String doc, String id, String index, String type){
 		return transportClient.prepareIndex(index, type, id)
 				.setSource(doc)
 				.execute()
 				.actionGet();
 	}
 
-	protected void _save(String doc, String id, String index, String type){
+	protected void save(String doc, String id, String index, String type){
 		createClient();
 		index(doc, id, index, type);
+		closeClient();
+	}
+
+	protected void update(String doc, String id, String index, String type){
+		createClient();
+
+
+
+		closeClient();
+	}
+
+	public void delete(String id, String index, String type){
+		createClient();
+		transportClient.prepareDeleteByQuery(index)
+				.setQuery(QueryBuilders.idsQuery(type).addIds(id))
+				.execute();
 		closeClient();
 	}
 }

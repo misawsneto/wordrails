@@ -1,19 +1,24 @@
 package com.wordrails.elasticsearch;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.business.Post;
+import com.wordrails.business.*;
 import com.wordrails.util.WordrailsUtil;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by jonas on 26/09/15.
@@ -27,7 +32,15 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 	@Transactional
 	public void save(Post post){
 
-		_save(formatObjecJson(post), post.id.toString(), "posts", "post");
+		save(formatObjecJson(post), post.id.toString(), "posts", "post");
+	}
+
+	public void delete(Post post){
+		delete(post.id);
+	}
+
+	public void delete(Integer postId){
+		delete(String.valueOf(postId), "posts", "post");
 	}
 
 	public String formatObjecJson(Post post){
@@ -47,6 +60,10 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 		return toFormat.toJSONString();
 	}
 
+	public List<Post> findPostsAndPostsPromotedByTermId(Integer stationId, Integer termId, Pageable pageable){
+		return null;
+	}
+
 	private class PostView {
 
 		public String title;
@@ -58,6 +75,18 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 		public String mediumHash;
 		public String largeHash;
 		public Boolean sponsor;
+		@JsonManagedReference
+		public Sponsor sponsorObj;
+		@JsonManagedReference
+		public Set<Comment> comments;
+		@JsonManagedReference
+		public Set<Image> images;
+		@JsonManagedReference
+		public Person author;
+		@JsonManagedReference
+		public Station station;
+		@JsonManagedReference
+		public Set<Term> terms;
 		@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 		public java.util.Date date;
 		public String snippet;
@@ -128,6 +157,14 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 			postView.subheading = post.subheading;
 			postView.slug = post.slug;
 
+			postView.sponsor = post.sponsor != null;
+			postView.comments = post.comments;
+			postView.images = post.images;
+			postView.author = post.author;
+			postView.station = post.station;
+			postView.terms = post.terms;
+//			postView.sponsorId = post.sponsor != null ? post.sponsor.id : null;
+			postView.sponsorObj = post.sponsor;
 			postView.smallId = post.imageSmallId;
 			postView.mediumId = post.imageMediumId;
 			postView.largeId = post.imageLargeId;

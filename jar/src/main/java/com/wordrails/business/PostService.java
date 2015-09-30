@@ -35,21 +35,12 @@ public class PostService {
 	@Autowired private APNService apnService;
 	@Autowired private PostRepository postRepository;
 	@Autowired private StationRepository stationRepository;
-	
-	@Autowired private PostDraftRepository postDraftRepository;
-	
-	@Autowired private PostScheduledRepository postScheduledRepository;
-	
-	@Autowired private PostTrashRepository postTrashRepository;
-	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	@Autowired private TrixAuthenticationProvider authProvider;
 
 	@PersistenceContext
 	private EntityManager manager;
 
 	public void removePostIndex(Post post){
-//		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
-//		ftem.purge(Post.class, post.id);
 	}
 	
 	public void updatePostIndex (Post post){
