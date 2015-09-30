@@ -232,12 +232,6 @@ public class AmazonCloudService {
 	}
 
 	private Image uploadImage(Image image, String subdomain, Integer networkId) throws IOException, SQLException {
-		saveFilesHash(image);
-
-		if (image.originalHash != null && image.largeHash != null && image.mediumHash != null && image.smallHash != null) {
-			return image;
-		}
-
 		String hash;
 		if(image.originalHash == null) {
 			hash = uploadFile(subdomain, image.original, "original", networkId);
@@ -333,14 +327,17 @@ public class AmazonCloudService {
 						if (image != null) {
 							try {
 								setNetworkIdOnFiles(network.id, image);
-								image = uploadImage(image, subdomain, network.id);
+								saveFilesHash(image);
+								if (image.originalHash == null || image.largeHash == null || image.mediumHash == null || image.smallHash == null) {
+									image = uploadImage(image, subdomain, network.id);
 
-								post.imageHash = image.originalHash;
-								post.imageLargeHash = image.largeHash;
-								post.imageMediumHash = image.mediumHash;
-								post.imageSmallHash = image.smallHash;
+									post.imageHash = image.originalHash;
+									post.imageLargeHash = image.largeHash;
+									post.imageMediumHash = image.mediumHash;
+									post.imageSmallHash = image.smallHash;
 
-								postRepository.save(post);
+									postRepository.save(post);
+								}
 							} catch (SQLException | IOException e) {
 								e.printStackTrace();
 							}
@@ -357,12 +354,15 @@ public class AmazonCloudService {
 						try {
 							System.out.println("Upload cover of person " + person.id);
 							setNetworkIdOnFiles(network.id, cover);
-							cover = uploadImage(cover, subdomain, network.id);
+							saveFilesHash(cover);
+							if (cover.originalHash == null || cover.largeHash == null || cover.mediumHash == null || cover.smallHash == null) {
+								cover = uploadImage(cover, subdomain, network.id);
 
-							person.coverMediumHash = cover.mediumHash;
-							person.coverLargeHash = cover.largeHash;
+								person.coverMediumHash = cover.mediumHash;
+								person.coverLargeHash = cover.largeHash;
 
-							personRepository.save(person);
+								personRepository.save(person);
+							}
 						} catch (SQLException | IOException e) {
 							e.printStackTrace();
 						}
@@ -372,14 +372,18 @@ public class AmazonCloudService {
 						try {
 							System.out.println("Upload profilePicture of person " + person.id);
 							setNetworkIdOnFiles(network.id, profilePicture);
-							profilePicture = uploadImage(profilePicture, subdomain, network.id);
+							saveFilesHash(profilePicture);
+							if (profilePicture.originalHash == null || profilePicture.largeHash == null ||
+									profilePicture.mediumHash == null || profilePicture.smallHash == null) {
+								profilePicture = uploadImage(profilePicture, subdomain, network.id);
 
-							person.imageHash = profilePicture.originalHash;
-							person.imageLargeHash = profilePicture.largeHash;
-							person.imageMediumHash = profilePicture.mediumHash;
-							person.imageSmallHash = profilePicture.smallHash;
+								person.imageHash = profilePicture.originalHash;
+								person.imageLargeHash = profilePicture.largeHash;
+								person.imageMediumHash = profilePicture.mediumHash;
+								person.imageSmallHash = profilePicture.smallHash;
 
-							personRepository.save(person);
+								personRepository.save(person);
+							}
 						} catch (SQLException | IOException e) {
 							e.printStackTrace();
 						}
