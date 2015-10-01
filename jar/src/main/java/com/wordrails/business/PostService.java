@@ -1,6 +1,7 @@
 package com.wordrails.business;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.notification.APNService;
 import com.wordrails.notification.GCMService;
 import com.wordrails.jobs.PostScheduleJob;
@@ -36,16 +37,17 @@ public class PostService {
 	@Autowired private PostRepository postRepository;
 	@Autowired private StationRepository stationRepository;
 	@Autowired private TrixAuthenticationProvider authProvider;
+	@Autowired private PostEsRepository postEsRepository;
 
 	@PersistenceContext
 	private EntityManager manager;
 
 	public void removePostIndex(Post post){
+		postEsRepository.delete(post);
 	}
 	
 	public void updatePostIndex (Post post){
-//		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
-//		ftem.index(post);
+		postEsRepository.update(post);
 	}
 
 	public Post convertPost(int postId, String state) {
@@ -67,7 +69,7 @@ public class PostService {
 
 			queryPersistence.changePostState(postId, state);
 			removePostIndex(dbPost);
-//			updatePostIndex(dbPost);
+			updatePostIndex(dbPost);
 		}
 
 		return dbPost;
@@ -79,6 +81,7 @@ public class PostService {
 		try {
 			scheduler.unscheduleJob(new TriggerKey("trigger-" + postId));
 		} catch (SchedulerException e) {
+			e.printStackTrace();
 		}
 	}
 

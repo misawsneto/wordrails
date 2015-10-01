@@ -40,14 +40,6 @@ abstract class ElasticsearchBaseRepository {
 		closeClient();
 	}
 
-	protected void update(String doc, String id, String index, String type){
-		createClient();
-
-
-
-		closeClient();
-	}
-
 	public void delete(String id, String index, String type){
 		createClient();
 		transportClient.prepareDeleteByQuery(index)

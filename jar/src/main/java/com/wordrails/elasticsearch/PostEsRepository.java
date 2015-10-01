@@ -35,6 +35,10 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 		save(formatObjecJson(post), post.id.toString(), "posts", "post");
 	}
 
+	public void update(Post post){
+		save(post);
+	}
+
 	public void delete(Post post){
 		delete(post.id);
 	}

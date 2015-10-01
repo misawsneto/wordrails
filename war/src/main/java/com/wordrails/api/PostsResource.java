@@ -16,6 +16,8 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.highlight.*;
+import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +42,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 @Path("/posts")
 @Consumes(MediaType.WILDCARD)
@@ -212,138 +216,52 @@ public class PostsResource {
 		return response;
 	}
 
-//	@GET
-//	@Path("/{stationId}/findPostsAndPostsPromotedByAuthorId")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public ContentResponse<List<PostView>> findPostsAndPostsPromotedByAuthorId(@PathParam("stationId") Integer stationId,
-//	                                                                           @QueryParam("authorId") Integer authorId,
-//	                                                                           @QueryParam("page") int page,
-//	                                                                           @QueryParam("size") int size) throws ServletException, IOException {
-//		Pageable pageable = new PageRequest(page, size);
-//
-//		List<Post> posts = postRepository.findPostsAndPostsPromotedByAuthorId(stationId, authorId, pageable);
-//		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
-//		response.content = postConverter.convertToViews(posts);
-//		return response;
-//	}
+	@Path("/search/networkPosts")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request,
+	                                               @QueryParam("query") String q,
+	                                               @QueryParam("stationIds") String stationIds,
+	                                               @QueryParam("personId") Integer personId,
+	                                               @QueryParam("publicationType") String publicationType,
+	                                               @QueryParam("noHighlight") Boolean noHighlight,
+	                                               @QueryParam("sortByDate") Boolean sortByDate,
+	                                               @QueryParam("page") Integer page,
+	                                               @QueryParam("size") Integer size) {
 
-//	@GET
-//	@Path("/{stationId}/searchPostsFromOrPromotedToStation")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public ContentResponse<SearchView> searchPostsFromOrPromotedToStation(@Context HttpServletRequest request,
-//	                                                                      @PathParam("stationId") Integer stationId,
-//	                                                                      @QueryParam("query") String q,
-//	                                                                      @QueryParam("stationIds") String stationIds,
-//	                                                                      @QueryParam("personId") Integer personId,
-//	                                                                      @QueryParam("publicationType") Integer publicationType,
-//	                                                                      @QueryParam("noHighlight") Boolean noHighlight,
-//	                                                                      @QueryParam("page") Integer page,
-//	                                                                      @QueryParam("size") Integer size) {
-//
-//		FullTextEntityManager ftem = org.h3ibernate.search.jpa.Search.getFullTextEntityManager(manager);
-//		// create native Lucene query unsing the query DSL
-//		// alternatively you can write the Lucene query using the Lucene query parser
-//		// or the Lucene programmatic API. The Hibernate Search DSL is recommend though
-//		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Post.class).get();
-//
-//		Network network = wordrailsService.getNetworkFromHost(request);
-//
-//		org.apache.lucene.search.Query text = null;
-//		try {
-//			if (q != null) {
-//				text = qb.keyword().fuzzy().withThreshold(.8f).withPrefixLength(1).onField("title").boostedTo(5).andField("body").boostedTo(2).andField("topper").andField("subheading").andField("author.name").andField("terms.name").matching(q).createQuery();
-//			}
-//		} catch (Exception e) {
-//
-//			e.printStackTrace();
-//
-//			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
-//			response.content = new SearchView();
-//			response.content.hits = 0;
-//			response.content.posts = new ArrayList<PostView>();
-//
-//			return response;
-//		}
-//		;
-//
-//		MustJunction musts = null;
-//
-//		if (q != null) {
-//			musts = qb.bool().must(text);
-//		}
-//
-//		if (stationId != null) {
-//			org.apache.lucene.search.Query station = qb.keyword().onField("stationId").ignoreAnalyzer().matching(stationId).createQuery();
-//			if (musts == null) musts = qb.bool().must(station);
-//			else musts.must(station);
-//		}
-//
-//		if (personId != null) {
-//			org.apache.lucene.search.Query person = qb.keyword().onField("author.id").ignoreAnalyzer().matching(personId).createQuery();
-//			if (musts == null) musts = qb.bool().must(person);
-//			else musts.must(person);
-//		}
-//
-//		org.apache.lucene.search.Query full = musts.createQuery(); //qb.bool().must(text).must(station).createQuery();
-//
-//		FullTextQuery ftq = ftem.createFullTextQuery(full, Post.class);
-//
-//		org.apache.lucene.search.Sort sort = new Sort(SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
-//		ftq.setSort(sort);
-//
-//		int totalHits = ftq.getResultSize();
-//
-//		// wrap Lucene query in a javax.persistence.Query
-//		javax.persistence.Query persistenceQuery = ftq;
-//
-//		// execute search
-//		List<Post> result = persistenceQuery.setFirstResult(size * page).setMaxResults(size).getResultList();
-//
-//		List<PostView> postsViews = postConverter.convertToViews(result);
-//
-//		try {
-//			Fragmenter fragmenter = new SimpleFragmenter(120);
-//			Scorer scorer = new QueryScorer(full);
-//			Encoder encoder = new SimpleHTMLEncoder();
-//			Formatter formatter = new SimpleHTMLFormatter("<b>", "</b>");
-//			if (noHighlight != null && noHighlight) formatter = new SimpleHTMLFormatter("", "");
-//
-//			Highlighter ht = new Highlighter(formatter, encoder, scorer);
-//			ht.setTextFragmenter(fragmenter);
-//
-//			Analyzer analyzer = ftem.getSearchFactory().getAnalyzer(Post.class);
-//
-//			int maxNumFragments = 3;
-//
-//			for (int i = 0; i < result.size(); i++) {
-//				Post post = result.get(i);
-//				String body = Jsoup.parse(post.body).text();
-//				String[] fragments = ht.getBestFragments(analyzer, "body", body, maxNumFragments);
-//				if (fragments != null && fragments.length > 0) {
-//					String snippet = "";
-//					for (int j = 0; j < fragments.length; j++) {
-//						snippet = snippet + fragments[j];
-//						if (j + 1 == fragments.length) break;
-//						snippet = snippet + "... ";
-//					}
-//					postsViews.get(i).snippet = snippet;
-//				} else {
-//					postsViews.get(i).snippet = WordrailsUtil.simpleSnippet(body, 100);
-//				}
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (InvalidTokenOffsetsException e) {
-//			e.printStackTrace();
-//		}
-//
-//		ContentResponse<SearchView> response = new ContentResponse<SearchView>();
-//		response.content = new SearchView();
-//		response.content.hits = totalHits;
-//		response.content.posts = postsViews;
-//
-//		return response;
-//	}
+		Person person = authProvider.getLoggedPerson();
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+
+		PermissionId pId = new PermissionId();
+		pId.baseUrl = baseUrl;
+		pId.networkId = network.id;
+		pId.personId = person.id;
+
+		StationsPermissions permissions = new StationsPermissions();
+		try {
+			permissions = wordrailsService.getPersonPermissions(pId);
+		} catch (ExecutionException e1) {
+			e1.printStackTrace();
+		}
+
+		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
+
+		MultiMatchQueryBuilder text = null;
+
+		if(q != null){
+			text = multiMatchQuery(q)
+					.field("post.snippet^2")
+					.field("post.title^5")
+					.field("post.topper")
+					.field("post.subheading")
+					.field("post.authorName")
+					.field("post.terms")
+					.prefixLength(1)
+					.fuzziness(Fuzziness.AUTO);
+		}
+
+		return null;
+	}
 
 //	@Path("/search/networkPosts")
 //	@Produces(MediaType.APPLICATION_JSON)
@@ -376,9 +294,9 @@ public class PostsResource {
 //		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
 //
 //		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
-//		// create native Lucene query unsing the query DSL
-//		// alternatively you can write the Lucene query using the Lucene query parser
-//		// or the Lucene programmatic API. The Hibernate Search DSL is recommend though
+//		 create native Lucene query unsing the query DSL
+//		 alternatively you can write the Lucene query using the Lucene query parser
+//		 or the Lucene programmatic API. The Hibernate Search DSL is recommend though
 //		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Post.class).get();
 //
 //		org.apache.lucene.search.Query text = null;
@@ -449,10 +367,10 @@ public class PostsResource {
 //
 //		int totalHits = ftq.getResultSize();
 //
-//		// wrap Lucene query in a javax.persistence.Query
+//		 wrap Lucene query in a javax.persistence.Query
 //		javax.persistence.Query persistenceQuery = ftq;
 //
-//		// execute search
+//		 execute search
 //		List<Post> result = persistenceQuery.setFirstResult(size * page).setMaxResults(size).getResultList();
 //
 //		List<PostView> postsViews = postConverter.convertToViews(result);
