@@ -429,8 +429,31 @@ public class UtilResource {
                 }
                 taxonomyRepository.delete(tax);
             }
+
+			taxs = manager.createQuery("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'N' and taxonomy.owningNetwork is not null").getResultList();
+
+			for(Taxonomy tax: taxs){
+				Network net = networkRepository.findOne(tax.owningNetwork.id);
+				net.categoriesTaxonomyId = tax.id;
+				networkRepository.save(net);
+			}
         }
 
+		return Response.status(Status.OK).build();
+	}
+
+	@GET
+	@Path("/deleteTaxonomy/{id}")
+	public Response deleteTaxonomy(@Context HttpServletRequest request, @PathParam("id") Integer id){
+		String host = request.getHeader("Host");
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+			Taxonomy taxonomy = taxonomyRepository.findOne(id);
+			Network net = networkRepository.findOne(taxonomy.owningNetwork.id);
+			adminAuth(net);
+			taxonomyEventHandler.handleBeforeDelete(taxonomy);
+			taxonomyRepository.delete(taxonomy);
+			authProvider.logout();
+		}
 		return Response.status(Status.OK).build();
 	}
 

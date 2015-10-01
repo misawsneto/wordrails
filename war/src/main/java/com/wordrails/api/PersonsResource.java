@@ -108,6 +108,21 @@ public class PersonsResource {
 	@PUT
 	@Path("/{id}")
 	@Transactional
+	public Response findByUsername(@PathParam("id") Integer id) throws ServletException, IOException {
+		Person person = authProvider.getLoggedPerson();
+
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+
+		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network)) {
+			forward();
+			return Response.status(Status.OK).build();
+		}else
+			return Response.status(Status.UNAUTHORIZED).build();
+	}
+
+	@PUT
+	@Path("/{id}")
+	@Transactional
 	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 

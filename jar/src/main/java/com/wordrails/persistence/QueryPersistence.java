@@ -144,4 +144,9 @@ public class QueryPersistence {
 				"(select count(*) from Post po where po.station_id = s.id and po.state = 'SCHEDULED')" +
 				"from Station s where s.id in (:stationIds)").setParameter("stationIds", stationIds).getResultList();
 	}
+
+	@Transactional
+	public void updateDefaultPerspective(Integer id, Integer perspectiveId) {
+		manager.createQuery("update Station set defaultPerspectiveId = :defaultPerspectiveId where id = :id").setParameter("defaultPerspectiveId", perspectiveId).setParameter("id", id).executeUpdate();
+	}
 }
