@@ -120,7 +120,7 @@ public class Network implements Serializable{
 	public String splashImageHash;
 	public String loginImageHash;
 	public String loginImageSmallHash;
-	
+
 	@OneToOne
 	public Image favicon;
 	public Integer faviconId;
