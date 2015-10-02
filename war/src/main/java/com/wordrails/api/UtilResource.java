@@ -12,6 +12,7 @@ import com.wordrails.services.AsyncService;
 import com.wordrails.services.CacheService;
 import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.WordrailsUtil;
+import org.hibernate.CacheMode;
 import org.hibernate.search.MassIndexer;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
@@ -115,9 +116,11 @@ public class UtilResource {
 			MassIndexer massIndexer = ftem.createIndexer();
 			massIndexer.purgeAllOnStart(true)
 			.optimizeAfterPurge(true)
-			.optimizeOnFinish(true)
-			.batchSizeToLoadObjects( 30 )
-			.threadsToLoadObjects( 4 );
+            .cacheMode(CacheMode.IGNORE)
+            .purgeAllOnStart(true)
+            .optimizeOnFinish(true)
+            .batchSizeToLoadObjects(200)
+			.threadsToLoadObjects( 10 );
 			//		massIndexer.start;
 			try {
 				massIndexer.startAndWait();
@@ -353,6 +356,44 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
+    @GET
+    @Path("/updateTermPerspectives")
+    @Transactional(readOnly = false)
+    public Response updateTermPerspectives(@Context HttpServletRequest request){
+        List<StationPerspective> sps = stationPerspectiveRepository.findAll();
+
+        for(StationPerspective stationPerspective: sps) {
+
+            if(stationPerspective.perspectives != null && stationPerspective.perspectives.size() > 0)
+                continue;
+
+            Taxonomy taxonomy = taxonomyRepository.findOne(stationPerspective.taxonomy.id);
+            TermPerspective tp = new TermPerspective();
+            tp.perspective = stationPerspective;
+            tp.stationId = stationPerspective.station.id;
+            tp.rows = new ArrayList<Row>();
+            for (Term term: taxonomy.terms){
+                Row row = new Row();
+                row.term = term;
+                row.type = Row.ORDINARY_ROW;
+                tp.rows.add(row);
+                row.perspective = tp;
+            }
+
+            stationPerspective.perspectives = new HashSet<TermPerspective>();
+            stationPerspective.perspectives.add(tp);
+
+            termPerspectiveRepository.save(tp);
+
+            for(Row row: tp.rows){
+                row.perspective = tp;
+                rowRepository.save(row);
+            }
+        }
+
+        return Response.status(Status.OK).build();
+    }
+
 	@GET
 	@Path("/updateNetworkTaxonomies")
 	@Transactional(readOnly=false)
@@ -434,8 +475,10 @@ public class UtilResource {
 
 			for(Taxonomy tax: taxs){
 				Network net = networkRepository.findOne(tax.owningNetwork.id);
-				net.categoriesTaxonomyId = tax.id;
-				networkRepository.save(net);
+                if(net.categoriesTaxonomyId == null) {
+                    net.categoriesTaxonomyId = tax.id;
+                    networkRepository.save(net);
+                }
 			}
         }
 

@@ -149,4 +149,16 @@ public class QueryPersistence {
 	public void updateDefaultPerspective(Integer id, Integer perspectiveId) {
 		manager.createQuery("update Station set defaultPerspectiveId = :defaultPerspectiveId where id = :id").setParameter("defaultPerspectiveId", perspectiveId).setParameter("id", id).executeUpdate();
 	}
+
+	@Transactional
+	public void deleteFeaturedRow(Integer perspectiveId, Integer notId) {
+		manager.createQuery("delete from Row where type = 'F' and featuringPerspective.id = :perspectiveId and id <> :notId")
+				.setParameter("perspectiveId", perspectiveId).setParameter("notId", notId).executeUpdate();
+	}
+
+	@Transactional
+	public void deleteSplashedRow(Integer perspectiveId, Integer notId) {
+		manager.createQuery("delete from Row where type = 'S' and splashedPerspective.id = :perspectiveId and id <> :notId")
+				.setParameter("perspectiveId", perspectiveId).setParameter("notId", notId).executeUpdate();
+	}
 }

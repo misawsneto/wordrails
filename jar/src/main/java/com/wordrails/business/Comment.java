@@ -85,7 +85,7 @@ public class Comment {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable=false)
-	@IndexedEmbedded(includePaths={"name", "id"})
+	@IndexedEmbedded(depth=1, includePaths={"name", "id"})
 	public Person author;
 	
 	@NotNull

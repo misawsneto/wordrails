@@ -508,7 +508,7 @@ app.controller('SettingsPerspectiveListCtrl', ['$scope', '$log', '$timeout', '$m
         })
       else{
         $mdDialog.cancel();
-        $scope.app.showErrorToast('Não é possível remove uma perspectiva que está ativa.')
+        $scope.app.showErrorToast('Não é possível remover uma perspectiva que está ativa.')
       }
     }
 
