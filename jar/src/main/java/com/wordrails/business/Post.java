@@ -168,7 +168,7 @@ public class Post {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable = false)
-	@IndexedEmbedded(includePaths={"name", "id"})
+	@IndexedEmbedded(depth=1, includePaths={"name", "id"})
 	public Person author;
 
 	@NotNull
@@ -201,7 +201,7 @@ public class Post {
 	public int commentsCount = 0;
 
 	@ManyToMany
-	@IndexedEmbedded(includePaths={"name", "id", "taxonomyId"})
+	@IndexedEmbedded(depth=1, includePaths={"name", "id", "taxonomyId"})
 	public Set<Term> terms;
 
 	@Field(analyze = Analyze.NO)

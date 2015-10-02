@@ -41,7 +41,7 @@ public class Bookmark {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "person_id")
-	@IndexedEmbedded(includePaths={"name", "id"})
+	@IndexedEmbedded(depth=1, includePaths={"name", "id"})
 	public Person person;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)

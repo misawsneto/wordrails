@@ -4804,17 +4804,24 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   height: 180px;
 }
 
-#perspective-editor-dialog{
+#perspective-editor-dialog, #perspective-delete-dialog{
   border: 1px solid #eee;
 }
 
-#perspective-editor-dialog md-content{
+#perspective-editor-dialog md-content, #perspective-delete-dialog md-content{
   padding: 0;
   overflow: hidden;
 }
 
-#perspective-editor-dialog .md-actions{
+#perspective-editor-dialog .md-actions, #perspective-delete-dialog .md-actions{
   border-top: 1px solid #ddd;
+}
+
+#perspective-delete-dialog md-content > div{
+  overflow: auto; 
+  width: 400px;
+  min-height: 200px;
+  max-height: 300px; 
 }
 
 #perspective-editor-dialog md-content > div{

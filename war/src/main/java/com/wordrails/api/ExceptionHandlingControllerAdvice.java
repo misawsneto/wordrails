@@ -1,11 +1,11 @@
 package com.wordrails.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.wordrails.business.*;
+import com.wordrails.util.ErrorResource;
+import com.wordrails.util.FieldErrorResource;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,16 +17,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.wordrails.business.BadRequestException;
-import com.wordrails.business.ConflictException;
-import com.wordrails.business.NotImplementedException;
-import com.wordrails.business.OperationNotSupportedException;
-import com.wordrails.business.UnauthorizedException;
-import com.wordrails.util.ErrorResource;
-import com.wordrails.util.FieldErrorResource;
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
-public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHandler{
+public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(UnauthorizedException.class)
 	public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException exception) {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
@@ -45,15 +40,42 @@ public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHa
 		return new ResponseEntity<>(stackTrace, HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
+	@ExceptionHandler(AmazonServiceException.class)
+	public ResponseEntity<String> handleAmazonServiceException(AmazonServiceException exception) {
+		String stackTrace = ExceptionUtils.getStackTrace(exception);
+		System.out.println("Caught an AmazonServiceException, " +
+				"which means your request made it " +
+				"to Amazon S3, but was rejected with an error response " +
+				"for some reason.");
+		System.out.println("Error Message: " + exception.getMessage());
+		System.out.println("HTTP  Code: "    + exception.getStatusCode());
+		System.out.println("AWS Error Code:" + exception.getErrorCode());
+		System.out.println("Error Type:    " + exception.getErrorType());
+		System.out.println("Request ID:    " + exception.getRequestId());
+		return new ResponseEntity<>(stackTrace, HttpStatus.METHOD_NOT_ALLOWED);
+	}
+
+	@ExceptionHandler(AmazonClientException.class)
+	public ResponseEntity<String> handleAmazonClientException(AmazonClientException exception) {
+		String stackTrace = ExceptionUtils.getStackTrace(exception);
+		System.out.println("Caught an AmazonClientException, " +
+				"which means the client encountered " +
+				"an internal error while trying to communicate" +
+				" with S3, " +
+				"such as not being able to access the network.");
+		System.out.println("Error Message: " + exception.getMessage());
+		return new ResponseEntity<>(stackTrace, HttpStatus.METHOD_NOT_ALLOWED);
+	}
+
 	@ExceptionHandler(ConflictException.class)
 	public ResponseEntity<String> handleConflictException(ConflictException exception) {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
 		return new ResponseEntity<>(stackTrace, HttpStatus.CONFLICT);
 	}
 
-	@ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="IOException occured")
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "IOException occured")
 	@ExceptionHandler(BadRequestException.class)
-	public ResponseEntity<Object> handleBadRequest(Exception e, WebRequest request){
+	public ResponseEntity<Object> handleBadRequest(Exception e, WebRequest request) {
 		BadRequestException badRequest = (BadRequestException) e;
 		List<FieldErrorResource> fieldErrorResources = new ArrayList<>();
 
@@ -74,5 +96,12 @@ public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHa
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		return handleExceptionInternal(e, error, headers, HttpStatus.BAD_REQUEST, request);
+	}
+
+
+	@ExceptionHandler(Throwable.class)
+	public ResponseEntity<String> handleAnyException(Throwable exception) {
+		String stackTrace = ExceptionUtils.getStackTrace(exception);
+		return new ResponseEntity<>(stackTrace, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

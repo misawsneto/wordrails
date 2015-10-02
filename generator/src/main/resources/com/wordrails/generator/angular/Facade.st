@@ -310,6 +310,11 @@ var trix = angular.module('trix', [])
     	return \$http.put(_config.url + "/api/stations/"+stationId+"/setMainStation", \$.param({"value": value}), config)
     };
 
+    this.setDefaultPerspective = function(stationId, perspectiveId) {
+		var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
+		return \$http.put(_config.url + "/api/stations/"+stationId+"/setDefaultPerspective", \$.param({"perspectiveId": perspectiveId}), config)
+	};
+
     this.toggleRecommend = function(postId) {
     	var config = {"headers": {"Content-Type": "application/x-www-form-urlencoded"}}
     	return \$http.put(_config.url + "/api/recommends/toggleRecommend", \$.param({"postId": postId}), config)

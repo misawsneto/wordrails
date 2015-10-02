@@ -17,14 +17,14 @@
 					<table class="table b-t b-light">
 						<thead>
 							<tr>
-								<th style="width:10%;">Ativada</th>
+								<th style="width:10%;">Ativa</th>
 								<th>Título</th>
 								<th>Categoria</th>
 								<th ng-if="app.networkAdmin" style="width:100px;"></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="perspective in perspectives" ng-click="openEditPerspective(perspective)">
+							<tr ng-repeat="perspective in perspectives | orderBy: 'id'" ng-click="openEditPerspective(perspective)">
 								<td>
 									<label class="md-check">
 										<input type="checkbox" ng-change="changeDefaultPerspective(perspective)" ng-model="perspective.selected" ng-click="app.stopPropagation($event)">
@@ -35,7 +35,7 @@
 								<td>{{perspective.taxonomyType == 'N' ? 'REDE' : 'ESTAÇÂO'}}</td>
 								<td ng-if="app.networkAdmin">
 									<div class="hidden-sm text-right" ng-click="app.stopPropagation($event)">
-										<a href ng-click="openDeletePerspective(perspective)" class="border-radius-50 i-20 mdi-delete mdi">
+										<a href ng-click="openDeletePerspective(perspective, $event)" class="border-radius-50 i-20 mdi-delete mdi">
 										</a>
 									</div>
 								</td>
@@ -47,55 +47,67 @@
 		</div>
 		<!-- /end of user panel list -->
 	</div>
-		<md-button ng-hide="creating || editing" ng-click="showAddPerspective($event)"
-			id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn"
-			tooltip="Nova perspectiva" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
-			aria-label="Nova perspectiva">
-			<i class="mdi mdi-plus"></i>
-		</md-button>
-
-<script type="text/ng-template" id="add_perspective.html">
-	<md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
-  	<md-content>
-  		<div class="wrapper">
-  			<span class="h3">Crie uma nova perspectivas</span>
-  			<form role="form">
-  				<div class="row row-sm m-t">
-  					<div class="col-sm-8">
-		          <div class="form-group">
-		            <div class="md-form-group float-label text-lg">
-				          <input class="md-input" ng-model="newPerspective.name" required>
-				          <label>Título</label>
-				        </div>
-				        <div class="text-lg">
-				        	<p>
-				            <label class="md-check">
-				              <input type="radio" name="a" ng-model="newPerspective.type" value="ST">
-				              <i class="blue"></i>
-				              Categorias da estação <span class="font-bold">{{thisStation.name}}</span>
-				            </label>
-				          </p>
-				          <p>
-				            <label class="md-check">
-				              <input type="radio" name="a" ng-model="newPerspective.type" value="NET">
-				              <i class="blue"></i>
-				              Categorias da rede
-				            </label>
-				          </p>
-				        </div>
+	<md-button ng-hide="creating || editing" ng-click="showAddPerspective($event)"
+		id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn"
+		tooltip="Nova perspectiva" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+		aria-label="Nova perspectiva">
+		<i class="mdi mdi-plus"></i>
+	</md-button>
+	<script type="text/ng-template" id="delete_perspective.html">
+		<md-dialog aria-label="Adicionar notícia" id="perspective-delete-dialog">
+	  	<md-content>
+	  		<div class="wrapper-md">
+	  			<div class="h3 wrapper-sm m-t text-center">Tem certeza que deseja remover esta perspectiva?</div>
+					<div class="m-t text-center wrapper-sm text-lg">
+					<button ng-click="pe.deletePerspective()" md-ink-ripple class="md-btn md-flat btn-fw m-r">Remover</button>
+					<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
+				<div>
+			</div>
+		  </md-content>
+		</md-dialog>
+	</script>
+	<script type="text/ng-template" id="add_perspective.html">
+		<md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
+	  	<md-content>
+	  		<div class="wrapper">
+	  			<span class="h3">Crie uma nova perspectivas</span>
+	  			<form role="form">
+	  				<div class="row row-sm m-t">
+	  					<div class="col-sm-8">
+			          <div class="form-group">
+			            <div class="md-form-group float-label text-lg" ng-init="newPerspective = { type: 'ST'}">
+					          <input class="md-input" ng-model="newPerspective.name" required>
+					          <label>Título</label>
+					        </div>
+					        <div class="text-lg">
+					        	<p>
+					            <label class="md-check">
+					              <input type="radio" name="a" ng-model="newPerspective.type" value="ST">
+					              <i class="blue"></i>
+					              Categorias da estação <span class="font-bold">{{thisStation.name}}</span>
+					            </label>
+					          </p>
+					          <p>
+					            <label class="md-check">
+					              <input type="radio" name="a" ng-model="newPerspective.type" value="NET">
+					              <i class="blue"></i>
+					              Categorias da rede
+					            </label>
+					          </p>
+					        </div>
+			          </div>
 		          </div>
+			        <div class="col-sm-12 text-muted">
+			        	Escolha o tipo de categoria que define o conteúdo a ser exibido para esta estação.
+			        </div>
 	          </div>
-		        <div class="col-sm-12 text-muted">
-		        	Escolha o tipo de categorias que define o conteúdo a ser exibido.
-		        </div>
-          </div>
-      	</form>
-			<div class="pos-abt bottom-0 right-0 wrapper-sm text-md">
-				<button ng-click="pe.createPerspective(newPerspective)" md-ink-ripple class="md-btn md-flat btn-fw m-r">Criar</button>
-				<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
-			<div>
-		</div>
-	  </md-content>
-	</md-dialog>
-</script>
+	      	</form>
+				<div class="pos-abt bottom-0 right-0 wrapper-sm text-md">
+					<button ng-click="pe.createPerspective(newPerspective)" md-ink-ripple class="md-btn md-flat btn-fw m-r">Criar</button>
+					<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+				<div>
+			</div>
+		  </md-content>
+		</md-dialog>
+	</script>
 </div>

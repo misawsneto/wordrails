@@ -134,7 +134,7 @@ angular.module('app')
       $event.preventDefault();
     }
 
-    $scope.app.changeStation = function(station){
+    $scope.app.changeStation = function(station, dontChangePage){
 
       var stationObject = null;
       $scope.app.initData.stations.forEach(function(st){
@@ -150,17 +150,20 @@ angular.module('app')
 
       $scope.app.currentStation = stationObject;
 
-      $state.go('app.stations')
+      if(!dontChangePage)
+        $state.go('app.stations')
 
       loadPopular();
       loadRecent();
       $scope.app.checkIfLogged();
     }
 
-    $scope.app.refreshPerspective = function(){
+    $scope.app.refreshPerspective = function(perspectiveId){
       $scope.app.termPerspectiveView = null;
 
-      trix.findPerspectiveView($scope.app.currentStation.defaultPerspectiveId, null, null, 0, 10).success(function(termPerspective){
+      var id = perspectiveId ? perspectiveId : $scope.app.currentStation.defaultPerspectiveId
+
+      trix.findPerspectiveView(id, null, null, 0, 10).success(function(termPerspective){
         $scope.app.termPerspectiveView = termPerspective
       })
 

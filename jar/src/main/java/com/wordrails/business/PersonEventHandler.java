@@ -46,9 +46,6 @@ public class PersonEventHandler {
 	private QueryPersistence queryPersistence;
 
 	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
 	private TermRepository termRepository;
 
 	@Autowired
@@ -60,11 +57,15 @@ public class PersonEventHandler {
 	@Autowired
 	private CacheService cacheService;
 
+	@Autowired
+	private UserRepository userRepository;
+
 
 	@HandleBeforeSave
 	@Transactional
 	public void handleBeforeSave(Person person) {
 		Person originalPerson = personRepository.findOne(person.id);
+		person.user = userRepository.findOne(originalPerson.user.id);
 		if (originalPerson != null && !originalPerson.name.equals(person.name)) {
 			termRepository.updateTermsNamesAuthorTaxonomies(person.name, originalPerson.name);
 		}

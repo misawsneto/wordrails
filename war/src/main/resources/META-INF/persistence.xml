@@ -51,14 +51,10 @@
 			<property name="hibernate.format_sql" value="true"/>
 
 			<property name="hibernate.search.default.directory_provider" value="filesystem"/>
-			<!-- <property name="hibernate.search.default.directory_provider" value="infinispan" />
-			<property name="hibernate.search.infinispan.configuration_resourcename" value="infinispan.xml" />
-			<property name="hibernate.search.infinispan.data_cachename" value="LuceneIndexesData" />
-			<property name="hibernate.search.infinispan.metadata_cachename" value="LuceneIndexesMetadata" />
-			<property name="hibernate.search.infinispan.locking_cachename" value="LuceneIndexesLocking" /> -->
 			<property name="hibernate.search.default.indexBase" value="indexes"/>
-			<!-- <property name="hibernate.search.default.worker.execution" value="async"/> -->
-			<!-- <property name="hibernate.search.worker.thread_pool.size" value="3"/> -->
+			<property name="hibernate.default_batch_fetch_size" value="200" />
+			<property name="hibernate.search.default.worker.execution" value="async"/>
+			<property name="hibernate.search.worker.thread_pool.size" value="3"/>
 		</properties>
 	</persistence-unit>
 </persistence>

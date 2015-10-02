@@ -21,5 +21,7 @@ public class PersonData implements Serializable {
 	public String publicCloudfrontUrl;
 	public String privateCloudfrontUrl;
 	public boolean noVisibleStation = false;
+
+	public boolean noPassword = false;
 }
 
