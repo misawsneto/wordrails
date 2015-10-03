@@ -16,9 +16,9 @@ abstract class ElasticsearchBaseRepository {
 	@Value("${elasticsearch.port}")
 	private Integer port;
 
-	private TransportClient transportClient;
+	protected TransportClient transportClient;
 
-	public void createClient(){
+	public void startEsClient(){
 		transportClient = new TransportClient().
 				addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
@@ -35,13 +35,13 @@ abstract class ElasticsearchBaseRepository {
 	}
 
 	protected void save(String doc, String id, String index, String type){
-		createClient();
+		startEsClient();
 		index(doc, id, index, type);
 		closeClient();
 	}
 
 	public void delete(String id, String index, String type){
-		createClient();
+		startEsClient();
 		transportClient.prepareDeleteByQuery(index)
 				.setQuery(QueryBuilders.idsQuery(type).addIds(id))
 				.execute();

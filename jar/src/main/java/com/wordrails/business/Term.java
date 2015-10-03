@@ -29,14 +29,14 @@ public class Term {
 	@Size(min=1, max=100)
 //	@Field // field used by Post object
 	public String name;
-	
+
 	@OneToMany(mappedBy="term")
 	public Set<Cell> cells;
 		
 	@ManyToMany(mappedBy="terms")
 //	@ContainedIn
 	public Set<Post> posts;
-	
+
 	@OneToMany(mappedBy="term")
 	public Set<Row> rows;	
 	
@@ -53,7 +53,7 @@ public class Term {
 //	@JsonManagedReference
 	@OneToMany(mappedBy="parent")
 	public Set<Term> children;
-	
+
 	@OneToMany(mappedBy="term")
 	public Set<TermPerspective> termPerspectives;
 	

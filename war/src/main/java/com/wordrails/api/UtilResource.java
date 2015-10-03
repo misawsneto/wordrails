@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
+import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.*;
 import com.wordrails.services.AmazonCloudService;
@@ -74,6 +75,9 @@ public class UtilResource {
 	private @PersistenceContext EntityManager manager;
 
 	private @Autowired PerspectiveResource perspectiveResource;
+
+	private @Autowired
+	PostEsRepository postEsRepository;
 
 
 
@@ -801,5 +805,20 @@ public class UtilResource {
 				host.contains("localhost") ||
 				host.contains("127.0.0.1") ||
 				host.contains("xarxlocal.com");
+	}
+
+	@GET
+	@Path("/indexPostsToElastisearch")
+	@Transactional(readOnly=false)
+	public void indexPostsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
+		String host = request.getHeader("Host");
+
+		if(isLocal(request.getHeader("Host"))){
+			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
+			for(int i = 0; i < all.size() % 50; i++){
+				postEsRepository.save(all.get(i));
+				Thread.sleep(100);
+			}
+		}
 	}
 }

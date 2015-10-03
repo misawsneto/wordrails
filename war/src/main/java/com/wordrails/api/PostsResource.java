@@ -1,5 +1,8 @@
 package com.wordrails.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.wordrails.PermissionId;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
@@ -7,17 +10,28 @@ import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.elasticsearch.PostEsRepository;
+import com.wordrails.elasticsearch.PostIndexed;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.StationTermsDto;
 import com.wordrails.util.WordrailsUtil;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.highlight.*;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.common.lucene.Lucene;
 import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -43,6 +57,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 @Path("/posts")
@@ -201,21 +217,6 @@ public class PostsResource {
 	}
 
 	@GET
-	@Path("/{stationId}/findPostsAndPostsPromotedByTermId")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsAndPostsPromotedByTermId(@PathParam("stationId") Integer stationId,
-	                                                                         @QueryParam("termId") Integer termId,
-	                                                                         @QueryParam("page") int page,
-	                                                                         @QueryParam("size") int size) throws ServletException, IOException {
-
-		Pageable pageable = new PageRequest(page, size);
-
-		List<Post> posts = postEsRepository.findPostsAndPostsPromotedByTermId(stationId, termId, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<>();
-		response.content = postConverter.convertToViews(posts);
-		return response;
-	}
-
 	@Path("/search/networkPosts")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request,
@@ -246,178 +247,78 @@ public class PostsResource {
 
 		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
 
-		MultiMatchQueryBuilder text = null;
+		MultiMatchQueryBuilder queryText = null;
+		BoolQueryBuilder mainQuery = boolQuery();
 
 		if(q != null){
-			text = multiMatchQuery(q)
-					.field("post.snippet^2")
-					.field("post.title^5")
+			queryText = multiMatchQuery(q)
+					.field("post.snippet", 2)
+					.field("post.title", 5)
 					.field("post.topper")
 					.field("post.subheading")
 					.field("post.authorName")
 					.field("post.terms")
 					.prefixLength(1)
 					.fuzziness(Fuzziness.AUTO);
+		} else {
+			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
+			response.content = new SearchView();
+			response.content.hits = 0;
+			response.content.posts = new ArrayList<JSONObject>();
+
+			return response;
 		}
 
-		return null;
-	}
+		mainQuery = mainQuery.must(queryText);
 
-//	@Path("/search/networkPosts")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request,
-//	                                               @QueryParam("query") String q,
-//	                                               @QueryParam("stationIds") String stationIds,
-//	                                               @QueryParam("personId") Integer personId,
-//	                                               @QueryParam("publicationType") String publicationType,
-//	                                               @QueryParam("noHighlight") Boolean noHighlight,
-//	                                               @QueryParam("sortByDate") Boolean sortByDate,
-//	                                               @QueryParam("page") Integer page,
-//	                                               @QueryParam("size") Integer size) {
-//
-//		Person person = authProvider.getLoggedPerson();
-//		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-//		Network network = wordrailsService.getNetworkFromHost(request);
-//
-//		PermissionId pId = new PermissionId();
-//		pId.baseUrl = baseUrl;
-//		pId.networkId = network.id;
-//		pId.personId = person.id;
-//
-//		StationsPermissions permissions = new StationsPermissions();
-//		try {
-//			permissions = wordrailsService.getPersonPermissions(pId);
-//		} catch (ExecutionException e1) {
-//			e1.printStackTrace();
-//		}
-//
-//		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
-//
-//		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
-//		 create native Lucene query unsing the query DSL
-//		 alternatively you can write the Lucene query using the Lucene query parser
-//		 or the Lucene programmatic API. The Hibernate Search DSL is recommend though
-//		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Post.class).get();
-//
-//		org.apache.lucene.search.Query text = null;
-//		try {
-//			if (q != null) {
-//				text = qb.keyword()
-//						.fuzzy()
-//						.withThreshold(.8f)
-//						.withPrefixLength(1)
-//						.onField("title")
-//						.boostedTo(5)
-//						.andField("body")
-//						.boostedTo(2)
-//						.andField("topper")
-//						.andField("subheading")
-//						.andField("author.name")
-//						.andField("terms.name")
-//						.matching(q)
-//						.createQuery();
-//			}
-//		} catch (Exception e) {
-//
-//			e.printStackTrace();
-//
-//			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
-//			response.content = new SearchView();
-//			response.content.hits = 0;
-//			response.content.posts = new ArrayList<PostView>();
-//
-//			return response;
-//		}
-//
-//		MustJunction musts = null;
-//
-//		if (q != null) {
-//			musts = qb.bool().must(text);
-//		}
-//
-//		if (personId != null) {
-//			org.apache.lucene.search.Query personQ = qb.keyword().onField("author.id").ignoreAnalyzer().matching(personId).createQuery();
-//			if (musts == null) musts = qb.bool().must(personQ);
-//			else musts.must(personQ);
-//		}
-//
-//		if(publicationType!=null){
-//			musts = musts.must(qb.keyword().onField("state").ignoreAnalyzer().matching(publicationType).createQuery());
-//		}else{
-//			musts = musts.must(qb.keyword().onField("state").ignoreAnalyzer().matching(Post.STATE_PUBLISHED).createQuery());
-//		}
-//
-//
-//		BooleanJunction stations = qb.bool();
-//		for (Integer integer : readableIds) {
-//			stations.should(qb.keyword().onField("stationId").ignoreAnalyzer().matching(integer).createQuery());
-//		}
-//
-//		org.apache.lucene.search.Query full = musts.must(stations.createQuery()).createQuery(); //qb.bool().must(text).must(station).createQuery();
-//
-//		FullTextQuery ftq = ftem.createFullTextQuery(full, Post.class);
-//
-//		org.apache.lucene.search.Sort sort = null;
-//		if(sortByDate != null && sortByDate)
-//			sort = new Sort(new SortField("date", SortField.STRING, true));
-//		else
-//			sort = new Sort(SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
-//
-//		ftq.setSort(sort);
-//
-//		int totalHits = ftq.getResultSize();
-//
-//		 wrap Lucene query in a javax.persistence.Query
-//		javax.persistence.Query persistenceQuery = ftq;
-//
-//		 execute search
-//		List<Post> result = persistenceQuery.setFirstResult(size * page).setMaxResults(size).getResultList();
-//
-//		List<PostView> postsViews = postConverter.convertToViews(result);
-//
-//		try {
-//			Fragmenter fragmenter = new SimpleFragmenter(120);
-//			Scorer scorer = new QueryScorer(full);
-//			Encoder encoder = new SimpleHTMLEncoder();
-//			Formatter formatter = new SimpleHTMLFormatter("<b>", "</b>");
-//			if (noHighlight != null && noHighlight) formatter = new SimpleHTMLFormatter("", "");
-//
-//			Highlighter ht = new Highlighter(formatter, encoder, scorer);
-//			ht.setTextFragmenter(fragmenter);
-//
-//			Analyzer analyzer = ftem.getSearchFactory().getAnalyzer(Post.class);
-//
-//			int maxNumFragments = 3;
-//
-//			for (int i = 0; i < result.size(); i++) {
-//				Post post = result.get(i);
-//				String body = Jsoup.parse(post.body).text();
-//				String[] fragments = ht.getBestFragments(analyzer, "body", body, maxNumFragments);
-//				if (fragments != null && fragments.length > 0) {
-//					String snippet = "";
-//					for (int j = 0; j < fragments.length; j++) {
-//						snippet = snippet + fragments[j];
-//						if (j + 1 == fragments.length) break;
-//						snippet = snippet + "... ";
-//					}
-//					postsViews.get(i).snippet = snippet;
-//				} else {
-//					postsViews.get(i).snippet = WordrailsUtil.simpleSnippet(body, 100);
-//				}
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (InvalidTokenOffsetsException e) {
-//			e.printStackTrace();
-//		}
-//
-//		ContentResponse<SearchView> response = new ContentResponse<SearchView>();
-//		response.content = new SearchView();
-//		response.content.hits = totalHits;
-//		response.content.posts = postsViews;
-//
-//		return response;
-//	}
+		if(personId != null){
+			mainQuery = mainQuery.must(
+					matchQuery("post.authorId", personId));
+		}
+
+		if(publicationType != null){
+			mainQuery = mainQuery.must(
+					matchQuery("post.state", publicationType));
+		} else {
+			mainQuery = mainQuery.must(
+					matchQuery("post.state", Post.STATE_PUBLISHED));
+		}
+
+		BoolQueryBuilder statiosQuery = boolQuery();
+		for(Integer stationId: readableIds){
+			statiosQuery.should(
+					matchQuery("post.stationId", String.valueOf(stationId)));
+		}
+		mainQuery = mainQuery.must(statiosQuery);
+		FieldSortBuilder sort = null;
+
+		if(sortByDate != null && sortByDate){
+			sort = new FieldSortBuilder("post.date")
+					.order(SortOrder.DESC);
+		}
+
+		SearchResponse searchResponse = postEsRepository
+				.runQuery(mainQuery.toString(), sort, size);
+
+		SearchHit[] resultList = searchResponse.getHits().getHits();
+		List<JSONObject> postsViews = new ArrayList<>();
+
+		for(SearchHit hit: resultList){
+			try {
+				postsViews.add(postEsRepository.convertToView(hit.getSourceAsString()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		ContentResponse<SearchView> response = new ContentResponse<SearchView>();
+		response.content = new SearchView();
+		response.content.hits = resultList.length;
+		response.content.posts = postsViews;
+
+		return response;
+
+	}
 
 	@GET
 	@Path("/{stationId}/postRead")

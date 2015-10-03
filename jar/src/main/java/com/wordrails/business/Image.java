@@ -38,19 +38,19 @@ public class Image implements Serializable {
 //	@Field
 	@Column(columnDefinition = "varchar(255) default 'POST'", nullable = false)
 	public String type;
-	
+
 	@ManyToOne
 	public Comment comment;
 
 	@OneToOne(mappedBy="image")
 	public Person person;
-	
+
 	@OneToOne(mappedBy="logo")
 	public Network network;
 	
 	@OneToOne(mappedBy="logo")
 	public Sponsor logoSponsor;
-	
+
 	@ManyToOne
 	public Person owner;
 	
