@@ -2,6 +2,7 @@ package com.wordrails.api;
 
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.Entity;
 
 import com.wordrails.elasticsearch.ElasticsearchService;
@@ -32,6 +33,7 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 	}
 
 	@Bean
+	@PostConstruct
 	public ElasticsearchService elasticsearchService(){
 		return new ElasticsearchService(host, port);
 	}

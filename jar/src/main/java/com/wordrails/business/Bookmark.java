@@ -17,31 +17,24 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-//import org.hibernate.search.annotations.DocumentId;
-//import org.hibernate.search.annotations.Indexed;
-//import org.hibernate.search.annotations.IndexedEmbedded;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-//@Indexed
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"post_id", "person_id"}))
 public class Bookmark {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-//	@DocumentId
 	public Integer id;
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "post_id")
-//	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})
 	public Post post;
+	
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "person_id")
-//	@IndexedEmbedded(includePaths={"name", "id"})
 	public Person person;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)

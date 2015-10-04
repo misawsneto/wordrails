@@ -1,9 +1,7 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.wordrails.util.WordrailsUtil;
-import org.codehaus.jackson.annotate.JsonUnwrapped;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -34,7 +32,6 @@ public class Post {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	@DocumentId
 	public Integer id;
 
 	public Integer originalPostId;
@@ -145,10 +142,8 @@ public class Post {
 	@Lob
 	public String imageCreditsText;
 
-//	@Latitude
 	public Double lat;
 
-//	@Longitude
 	public Double lng;
 
 	@Lob
