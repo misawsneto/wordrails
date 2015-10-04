@@ -17,15 +17,19 @@ import org.springframework.stereotype.Component;
  * Created by jonas on 26/09/15.
  */
 @Component
-public class PostEsRepository extends ElasticsearchBaseRepository {
+public class PostEsRepository{
 	private @Autowired @Qualifier("objectMapper")
 	ObjectMapper objectMapper;
 
+	@Autowired
+	private ElasticsearchService elasticsearchService;
+
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size){
-		startEsClient();
-		SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch("posts")
-				.setTypes("post")
-				.setQuery(query);
+		SearchRequestBuilder searchRequestBuilder = elasticsearchService
+														.getElasticsearchClient()
+														.prepareSearch("posts")
+														.setTypes("post")
+														.setQuery(query);
 
 		if (size != null && size > 0){
 			searchRequestBuilder.setSize(size);
@@ -36,15 +40,11 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 		}
 
 		SearchResponse response = searchRequestBuilder.execute().actionGet();
-		closeClient();
 		return response;
 	}
 
-//	@Async
-//	@Transactional
 	public void save(Post post) {
-
-		save(formatObjecJson(post), post.id.toString(), "posts", "post");
+		elasticsearchService.save(formatObjecJson(post), post.id.toString(), "posts", "post");
 	}
 
 	public void update(Post post){
@@ -56,13 +56,12 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 	}
 
 	public void delete(Integer postId){
-		delete(String.valueOf(postId), "posts", "post");
+		elasticsearchService.delete(String.valueOf(postId), "posts", "post");
 	}
 
 	public String formatObjecJson(Post post){
 
 		String doc = null;
-		PostIndexed postIndexed = new PostIndexed();
 
 		try {
 			doc = objectMapper.writeValueAsString(makePostView(post, true));
@@ -110,7 +109,6 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 		postView.author = post.author;
 		postView.station = post.station;
 		postView.terms = post.terms;
-//			postView.sponsorId = post.sponsor != null ? post.sponsor.id : null;
 		postView.sponsorObj = post.sponsor;
 		postView.smallId = post.imageSmallId;
 		postView.mediumId = post.imageMediumId;

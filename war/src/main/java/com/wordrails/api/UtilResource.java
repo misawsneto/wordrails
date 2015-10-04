@@ -752,9 +752,12 @@ public class UtilResource {
 
 		if(isLocal(request.getHeader("Host"))){
 			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
-			for(int i = 0; i < all.size() % 50; i++){
+			for(int i = 0; i < all.size(); i++){
 				postEsRepository.save(all.get(i));
-				Thread.sleep(100);
+
+				if(i % 50 == 0){
+					Thread.sleep(100);
+				}
 			}
 		}
 	}
