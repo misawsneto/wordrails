@@ -123,11 +123,11 @@
     "simple-line-icons": "*",
     "textAngular": "~1.2.2",
     "venturocket-angular-slider": "~0.3.2",
-    "videogular": "~0.7.0",
-    "videogular-buffering": "~0.7.0",
-    "videogular-controls": "~0.7.0",
-    "videogular-ima-ads": "~0.7.0",
-    "videogular-overlay-play": "~0.7.0",
-    "videogular-poster": "~0.7.0"
+    "videogular": "~1.2.3",
+    "videogular-buffering": "~1.2.3",
+    "videogular-controls": "~1.2.3",
+    "videogular-ima-ads": "~1.2.3",
+    "videogular-overlay-play": "~1.2.3",
+    "videogular-poster": "~1.2.3"
   }
 }

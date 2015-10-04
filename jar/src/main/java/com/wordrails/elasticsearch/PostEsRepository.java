@@ -8,8 +8,10 @@ import com.wordrails.business.*;
 import com.wordrails.util.WordrailsUtil;
 import org.apache.lucene.queryparser.flexible.core.builders.QueryBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -29,13 +31,15 @@ import java.util.Set;
  * Created by jonas on 26/09/15.
  */
 @Component
-public class PostEsRepository extends ElasticsearchBaseRepository {
+public class PostEsRepository{
 	private @Autowired @Qualifier("objectMapper")
 	ObjectMapper objectMapper;
 
+	@Autowired
+	private ElasticsearchService elasticsearchService;
+
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size){
-		startEsClient();
-		SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch("posts")
+		SearchRequestBuilder searchRequestBuilder = elasticsearchService.getElasticsearchClient().prepareSearch("posts")
 				.setTypes("post")
 				.setQuery(query);
 
@@ -48,15 +52,13 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 		}
 
 		SearchResponse response = searchRequestBuilder.execute().actionGet();
-		closeClient();
 		return response;
 	}
 
 //	@Async
 //	@Transactional
 	public void save(Post post) {
-
-		save(formatObjecJson(post), post.id.toString(), "posts", "post");
+		elasticsearchService.save(formatObjecJson(post), post.id.toString(), "posts", "post");
 	}
 
 	public void update(Post post){
@@ -68,7 +70,7 @@ public class PostEsRepository extends ElasticsearchBaseRepository {
 	}
 
 	public void delete(Integer postId){
-		delete(String.valueOf(postId), "posts", "post");
+		elasticsearchService.delete(String.valueOf(postId), "posts", "post");
 	}
 
 	public String formatObjecJson(Post post){

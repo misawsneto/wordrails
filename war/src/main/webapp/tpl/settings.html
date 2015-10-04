@@ -11,7 +11,7 @@
       <div class="cell" id="settings-sidebar">
         <div class="cell-inner">
           <ul class="nav text-lg no-radius p-t-lg">
-            <li ng-if="app.networkAdmin || (app.adminStations && app.adminStations.length > 0)" ng-class="{'active': $state.current.name.indexOf('app.settings.station') > -1}">
+            <li ng-if="app.networkAdmin || (app.adminStations && app.adminStations.length > 0)" ng-class="{'active': $state.current.name.indexOf('app.settings.station') > -1 || $state.current.name.indexOf('app.settings.perspectives') > -1 || $state.current.name.indexOf('app.settings.perspectiveeditor') > -1}">
             <a ui-sref="app.settings.stations" class=" no-border no-radius">
               Estações
             </a>

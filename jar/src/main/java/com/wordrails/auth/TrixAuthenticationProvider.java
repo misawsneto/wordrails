@@ -67,7 +67,15 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	}
 
 	public Network getNetwork() {
-		return getUser().network;
+		try {
+
+			if(getUser() == null || getUser().network == null)
+				return null;
+			
+			return cacheService.getNetwork(getUser().network.id);
+		} catch (ExecutionException e) {
+			return getUser().network;
+		}
 	}
 
 	public Integer getNetworkId() {

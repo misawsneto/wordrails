@@ -2,13 +2,8 @@ package com.wordrails.api;
 
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.Network;
-import com.wordrails.business.NetworkRole;
-import com.wordrails.business.Person;
-import com.wordrails.business.Station;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.QueryPersistence;
-import com.wordrails.persistence.StationRepository;
+import com.wordrails.business.*;
+import com.wordrails.persistence.*;
 import com.wordrails.services.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,9 +30,18 @@ public class StationsResources {
 	private
 	@Autowired
 	NetworkRolesRepository networkRolesRepository;
+
+	@Autowired
+	StationRolesRepository stationRolesRepository;
+
 	private
 	@Autowired
 	StationRepository stationRepository;
+
+	private
+	@Autowired
+	StationPerspectiveRepository stationPerspectiveRepository;
+
 	private
 	@Autowired
 	WordrailsService wordrailsService;
@@ -47,6 +51,25 @@ public class StationsResources {
 	private
 	@Autowired
 	QueryPersistence queryPersistence;
+
+	@PUT
+	@Path("/{stationId}/setDefaultPerspective")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId") Integer perspectiveId) {
+		Person person = authProvider.getLoggedPerson();
+		Station station = stationRepository.findOne(stationId);
+
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		NetworkRole role = networkRolesRepository.findByNetworkAndPerson(network, person);
+
+		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
+
+		if ((role.admin || sRole.admin) && stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
+			queryPersistence.updateDefaultPerspective(station.id, perspectiveId);
+			cacheService.updateStation(station.id);
+			return Response.status(Status.OK).build();
+		} else return Response.status(Status.UNAUTHORIZED).build();
+	}
 
 	@PUT
 	@Path("/{stationId}/setMainStation")

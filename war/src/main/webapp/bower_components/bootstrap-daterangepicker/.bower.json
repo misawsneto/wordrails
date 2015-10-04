@@ -18,12 +18,12 @@
     "moment": ">=2.9.0"
   },
   "homepage": "https://github.com/dangrossman/bootstrap-daterangepicker",
-  "version": "2.0.9",
-  "_release": "2.0.9",
+  "version": "2.0.12",
+  "_release": "2.0.12",
   "_resolution": {
     "type": "version",
-    "tag": "v2.0.9",
-    "commit": "00bec8dedc626d47780e58cc014eb2cc48bf9faa"
+    "tag": "v2.0.12",
+    "commit": "7435612692b33b85c72539d37c59bb7edd420c6f"
   },
   "_source": "git://github.com/dangrossman/bootstrap-daterangepicker.git",
   "_target": "~2.0.9",

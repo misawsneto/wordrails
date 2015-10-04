@@ -26,7 +26,7 @@ angular.module('app')
               .state('app', {
                   abstract: true,
                   url: '',
-                  templateUrl: 'tpl/layout.html',
+                  templateUrl: 'tpl/layout.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -39,7 +39,7 @@ angular.module('app')
               })
               .state('app.stations', {
                   url: '/?stationId',
-                  templateUrl: 'tpl/stations.html',
+                  templateUrl: 'tpl/stations.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -50,7 +50,7 @@ angular.module('app')
               })
               .state('app.post', {
                   url: '/post?id',
-                  templateUrl: 'tpl/post.html',
+                  templateUrl: 'tpl/post.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -73,7 +73,7 @@ angular.module('app')
               })
               .state('app.search', {
                   url: '/search',
-                  templateUrl: 'tpl/search.html',
+                  templateUrl: 'tpl/search.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -84,7 +84,7 @@ angular.module('app')
               })
               .state('app.tagspage', {
                   url: '/tag/{tagName}',
-                  templateUrl: 'tpl/tags_page.html',
+                  templateUrl: 'tpl/tags_page.html?' + GLOBAL_URL_HASH,
                   // use resolve to load other dependences
                    resolve: {
                       deps: ['$ocLazyLoad',
@@ -97,7 +97,7 @@ angular.module('app')
               })
               .state('app.about', {
                   url: '/about',
-                  templateUrl: 'tpl/about.html',
+                  templateUrl: 'tpl/about.html?' + GLOBAL_URL_HASH,
                   // use resolve to load other dependences
                    resolve: {
                       deps: ['$ocLazyLoad',
@@ -144,11 +144,11 @@ angular.module('app')
               .state('app.settings', {
                   abstract: true,
                   url: '/settings',
-                  templateUrl: 'tpl/settings.html',
+                  templateUrl: 'tpl/settings.html?' + GLOBAL_URL_HASH,
               })
               .state('app.settings.stations', {
                   url: '/stations',
-                  templateUrl: 'tpl/settings-stations.html',
+                  templateUrl: 'tpl/settings-stations.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -159,7 +159,7 @@ angular.module('app')
               })
               .state('app.settings.stationconfig', {
                   url: '/stationconfig?stationId?newStation',
-                  templateUrl: 'tpl/settings-stations-config.html',
+                  templateUrl: 'tpl/settings-stations-config.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -170,7 +170,7 @@ angular.module('app')
               })
               .state('app.settings.stationstatistics', {
                   url: '/stationstatistics?stationId',
-                  templateUrl: 'tpl/settings-stations-statistics.html',
+                  templateUrl: 'tpl/settings-stations-statistics.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -181,7 +181,7 @@ angular.module('app')
               })
               .state('app.settings.stationusers', {
                   url: '/stationusers?stationId?newUser?userId',
-                  templateUrl: 'tpl/settings-stations-users.html',
+                  templateUrl: 'tpl/settings-stations-users.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -192,7 +192,7 @@ angular.module('app')
               })
               .state('app.settings.stationcategories', {
                   url: '/stationcategories?stationId?newStation',
-                  templateUrl: 'tpl/settings-categories.html',
+                  templateUrl: 'tpl/settings-categories.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -203,7 +203,7 @@ angular.module('app')
               })
               .state('app.settings.stationperspectives', {
                   url: '/stationperspectives?stationId?newStation',
-                  templateUrl: 'tpl/settings-stations-perspectives.html',
+                  templateUrl: 'tpl/settings-stations-perspectives.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -214,7 +214,7 @@ angular.module('app')
               })
               .state('app.settings.perspectiveeditor', {
                   url: '/perspectiveeditor?stationId?perspectiveId',
-                  templateUrl: 'tpl/settings-perspective-editor.html',
+                  templateUrl: 'tpl/settings-perspective-editor.html?' + GLOBAL_URL_HASH,
                   /*resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -234,7 +234,7 @@ angular.module('app')
               })//app.settings.perspectives
               .state('app.settings.perspectives', {
                   url: '/perspectives?stationId',
-                  templateUrl: 'tpl/settings-perspectives.html',
+                  templateUrl: 'tpl/settings-perspectives.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -244,7 +244,7 @@ angular.module('app')
               })
               .state('app.settings.sponsors', {
                   url: '/sponsor',
-                  templateUrl: 'tpl/settings-sponsors.html',
+                  templateUrl: 'tpl/settings-sponsors.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -255,7 +255,7 @@ angular.module('app')
               })
               .state('app.settings.sponsorconfig', {
                   url: '/sponsorconfig?sponsorId?newSponsor',
-                  templateUrl: 'tpl/settings-sponsors-config.html',
+                  templateUrl: 'tpl/settings-sponsors-config.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -266,7 +266,7 @@ angular.module('app')
               })
               .state('app.settings.users', {
                   url: '/users?userId?newUser',
-                  templateUrl: 'tpl/settings-users.html',
+                  templateUrl: 'tpl/settings-users.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -277,7 +277,7 @@ angular.module('app')
               })
               .state('app.settings.categories', {
                   url: '/categories',
-                  templateUrl: 'tpl/settings-categories.html',
+                  templateUrl: 'tpl/settings-categories.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -288,7 +288,7 @@ angular.module('app')
               })
               // .state('app.settings.statistics', {
               //     url: '/statistics',
-              //     templateUrl: 'tpl/settings-statistics.html',
+              //     templateUrl: 'tpl/settings-statistics.html?' + GLOBAL_URL_HASH,
               //     resolve: {
               //       deps: ['$ocLazyLoad',
               //         function( $ocLazyLoad ){
@@ -299,7 +299,7 @@ angular.module('app')
               // })
               .state('app.settings.colors', {
                   url: '/colors',
-                  templateUrl: 'tpl/settings-colors.html',
+                  templateUrl: 'tpl/settings-colors.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -313,7 +313,7 @@ angular.module('app')
               })
               .state('app.settings.network', {
                   url: '/network',
-                  templateUrl: 'tpl/settings-network.html',
+                  templateUrl: 'tpl/settings-network.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -324,7 +324,7 @@ angular.module('app')
               })
               .state('app.bookmarks', {
                 url: '/bookmarks',
-                  templateUrl: 'tpl/bookmarks.html',
+                  templateUrl: 'tpl/bookmarks.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -335,7 +335,7 @@ angular.module('app')
               })
               .state('app.notifications', {
                 url: '/notifications',
-                  templateUrl: 'tpl/notifications.html',
+                  templateUrl: 'tpl/notifications.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -368,7 +368,7 @@ angular.module('app')
               })
               .state('app.userstats', {
                   url: '/mystats',
-                  templateUrl: 'tpl/user_stats.html',
+                  templateUrl: 'tpl/user_stats.html?' + GLOBAL_URL_HASH,
                   // use resolve to load other dependences
                    resolve: {
                       deps: ['$ocLazyLoad',
@@ -384,7 +384,7 @@ angular.module('app')
               })
               .state('app.settings.statistics', {
                   url: '/networkstats',
-                  templateUrl: 'tpl/network_stats.html',
+                  templateUrl: 'tpl/network_stats.html?' + GLOBAL_URL_HASH,
                   // use resolve to load other dependences
                    resolve: {
                       deps: ['$ocLazyLoad',
@@ -400,7 +400,7 @@ angular.module('app')
               })
               .state('app.publications', {
                   url: '/publications/@:username?type',
-                  templateUrl: 'tpl/user_publications.html',
+                  templateUrl: 'tpl/user_publications.html?' + GLOBAL_URL_HASH,
                   // use resolve to load other dependences
                    resolve: {
                       deps: ['$ocLazyLoad',
@@ -414,7 +414,7 @@ angular.module('app')
               })
               .state('app.user', {
                   url: '/@:username',
-                  templateUrl: 'tpl/user_profile.html',
+                  templateUrl: 'tpl/user_profile.html?' + GLOBAL_URL_HASH,
                   // use resolve to load other dependences
                    resolve: {
                       deps: ['$ocLazyLoad',
@@ -440,7 +440,7 @@ angular.module('app')
               .state('app.read', {
                 url: '/:slug',
                 controller: 'ReadCtrl',
-                templateUrl: 'tpl/read.html',
+                templateUrl: 'tpl/read.html?' + GLOBAL_URL_HASH,
                 resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -461,7 +461,7 @@ angular.module('app')
               })*/
               .state('app.dashboard-v1', {
                   url: '/dashboard-v1',
-                  templateUrl: 'tpl/app_dashboard_v1.html',
+                  templateUrl: 'tpl/app_dashboard_v1.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -471,7 +471,7 @@ angular.module('app')
               })
               .state('app.dashboard-v2', {
                   url: '/dashboard-v2',
-                  templateUrl: 'tpl/app_dashboard_v2.html',
+                  templateUrl: 'tpl/app_dashboard_v2.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
@@ -485,31 +485,31 @@ angular.module('app')
               })
               .state('app.ui.buttons', {
                   url: '/buttons',
-                  templateUrl: 'tpl/ui_buttons.html'
+                  templateUrl: 'tpl/ui_buttons.html?' + GLOBAL_URL_HASH
               })
               .state('app.ui.icons', {
                   url: '/icons',
-                  templateUrl: 'tpl/ui_icons.html'
+                  templateUrl: 'tpl/ui_icons.html?' + GLOBAL_URL_HASH
               })
               .state('app.ui.grid', {
                   url: '/grid',
-                  templateUrl: 'tpl/ui_grid.html'
+                  templateUrl: 'tpl/ui_grid.html?' + GLOBAL_URL_HASH
               })
               .state('app.ui.widgets', {
                   url: '/widgets',
-                  templateUrl: 'tpl/ui_widgets.html'
+                  templateUrl: 'tpl/ui_widgets.html?' + GLOBAL_URL_HASH
               })          
               .state('app.ui.bootstrap', {
                   url: '/bootstrap',
-                  templateUrl: 'tpl/ui_bootstrap.html'
+                  templateUrl: 'tpl/ui_bootstrap.html?' + GLOBAL_URL_HASH
               })
               .state('app.ui.sortable', {
                   url: '/sortable',
-                  templateUrl: 'tpl/ui_sortable.html'
+                  templateUrl: 'tpl/ui_sortable.html?' + GLOBAL_URL_HASH
               })
               .state('app.ui.scroll', {
                   url: '/scroll',
-                  templateUrl: 'tpl/ui_scroll.html',
+                  templateUrl: 'tpl/ui_scroll.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',
                         function( uiLoad){
@@ -519,15 +519,15 @@ angular.module('app')
               })
               .state('app.ui.portlet', {
                   url: '/portlet',
-                  templateUrl: 'tpl/ui_portlet.html'
+                  templateUrl: 'tpl/ui_portlet.html?' + GLOBAL_URL_HASH
               })
               .state('app.ui.timeline', {
                   url: '/timeline',
-                  templateUrl: 'tpl/ui_timeline.html'
+                  templateUrl: 'tpl/ui_timeline.html?' + GLOBAL_URL_HASH
               })
               .state('app.ui.tree', {
                   url: '/tree',
-                  templateUrl: 'tpl/ui_tree.html',
+                  templateUrl: 'tpl/ui_tree.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad ){
@@ -542,7 +542,7 @@ angular.module('app')
               })
               .state('app.ui.toaster', {
                   url: '/toaster',
-                  templateUrl: 'tpl/ui_toaster.html',
+                  templateUrl: 'tpl/ui_toaster.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad){
@@ -556,7 +556,7 @@ angular.module('app')
               })
               .state('app.ui.jvectormap', {
                   url: '/jvectormap',
-                  templateUrl: 'tpl/ui_jvectormap.html',
+                  templateUrl: 'tpl/ui_jvectormap.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad){
@@ -566,7 +566,7 @@ angular.module('app')
               })
               .state('app.ui.googlemap', {
                   url: '/googlemap',
-                  templateUrl: 'tpl/ui_googlemap.html',
+                  templateUrl: 'tpl/ui_googlemap.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',
                         function( uiLoad ){
@@ -583,7 +583,7 @@ angular.module('app')
               })
               .state('app.chart', {
                   url: '/chart',
-                  templateUrl: 'tpl/ui_chart.html',
+                  templateUrl: 'tpl/ui_chart.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',
                         function( uiLoad){
@@ -598,19 +598,19 @@ angular.module('app')
               })
               .state('app.table.static', {
                   url: '/static',
-                  templateUrl: 'tpl/table_static.html'
+                  templateUrl: 'tpl/table_static.html?' + GLOBAL_URL_HASH
               })
               .state('app.table.datatable', {
                   url: '/datatable',
-                  templateUrl: 'tpl/table_datatable.html'
+                  templateUrl: 'tpl/table_datatable.html?' + GLOBAL_URL_HASH
               })
               .state('app.table.footable', {
                   url: '/footable',
-                  templateUrl: 'tpl/table_footable.html'
+                  templateUrl: 'tpl/table_footable.html?' + GLOBAL_URL_HASH
               })
               .state('app.table.grid', {
                   url: '/grid',
-                  templateUrl: 'tpl/table_grid.html',
+                  templateUrl: 'tpl/table_grid.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad ){
@@ -624,7 +624,7 @@ angular.module('app')
               })
               .state('app.table.uigrid', {
                   url: '/uigrid',
-                  templateUrl: 'tpl/table_uigrid.html',
+                  templateUrl: 'tpl/table_uigrid.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad ){
@@ -638,7 +638,7 @@ angular.module('app')
               })
               .state('app.table.editable', {
                   url: '/editable',
-                  templateUrl: 'tpl/table_editable.html',
+                  templateUrl: 'tpl/table_editable.html?' + GLOBAL_URL_HASH,
                   controller: 'XeditableCtrl',
                   resolve: {
                       deps: ['$ocLazyLoad',
@@ -653,7 +653,7 @@ angular.module('app')
               })
               .state('app.table.smart', {
                   url: '/smart',
-                  templateUrl: 'tpl/table_smart.html',
+                  templateUrl: 'tpl/table_smart.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad ){
@@ -678,7 +678,7 @@ angular.module('app')
               })
               .state('app.form.components', {
                   url: '/components',
-                  templateUrl: 'tpl/form_components.html',
+                  templateUrl: 'tpl/form_components.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad', '$ocLazyLoad',
                         function( uiLoad, $ocLazyLoad ){
@@ -698,19 +698,19 @@ angular.module('app')
               })
               .state('app.form.elements', {
                   url: '/elements',
-                  templateUrl: 'tpl/form_elements.html'
+                  templateUrl: 'tpl/form_elements.html?' + GLOBAL_URL_HASH
               })
               .state('app.form.validation', {
                   url: '/validation',
-                  templateUrl: 'tpl/form_validation.html'
+                  templateUrl: 'tpl/form_validation.html?' + GLOBAL_URL_HASH
               })
               .state('app.form.wizard', {
                   url: '/wizard',
-                  templateUrl: 'tpl/form_wizard.html'
+                  templateUrl: 'tpl/form_wizard.html?' + GLOBAL_URL_HASH
               })
               .state('app.form.fileupload', {
                   url: '/fileupload',
-                  templateUrl: 'tpl/form_fileupload.html',
+                  templateUrl: 'tpl/form_fileupload.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad){
@@ -724,7 +724,7 @@ angular.module('app')
               })
               .state('app.form.imagecrop', {
                   url: '/imagecrop',
-                  templateUrl: 'tpl/form_imagecrop.html',
+                  templateUrl: 'tpl/form_imagecrop.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad){
@@ -738,7 +738,7 @@ angular.module('app')
               })
               .state('app.form.select', {
                   url: '/select',
-                  templateUrl: 'tpl/form_select.html',
+                  templateUrl: 'tpl/form_select.html?' + GLOBAL_URL_HASH,
                   controller: 'SelectCtrl',
                   resolve: {
                       deps: ['$ocLazyLoad',
@@ -753,7 +753,7 @@ angular.module('app')
               })
               .state('app.form.slider', {
                   url: '/slider',
-                  templateUrl: 'tpl/form_slider.html',
+                  templateUrl: 'tpl/form_slider.html?' + GLOBAL_URL_HASH,
                   controller: 'SliderCtrl',
                   resolve: {
                       deps: ['$ocLazyLoad',
@@ -768,7 +768,7 @@ angular.module('app')
               })
               .state('app.form.editor', {
                   url: '/editor',
-                  templateUrl: 'tpl/form_editor.html',
+                  templateUrl: 'tpl/form_editor.html?' + GLOBAL_URL_HASH,
                   controller: 'EditorCtrl',
                   resolve: {
                       deps: ['$ocLazyLoad',
@@ -783,7 +783,7 @@ angular.module('app')
               })
               .state('app.form.xeditable', {
                   url: '/xeditable',
-                  templateUrl: 'tpl/form_xeditable.html',
+                  templateUrl: 'tpl/form_xeditable.html?' + GLOBAL_URL_HASH,
                   controller: 'XeditableCtrl',
                   resolve: {
                       deps: ['$ocLazyLoad',
@@ -803,32 +803,32 @@ angular.module('app')
               })
               .state('app.page.profile', {
                   url: '/profile',
-                  templateUrl: 'tpl/page_profile.html'
+                  templateUrl: 'tpl/page_profile.html?' + GLOBAL_URL_HASH
               })
               .state('app.page.post', {
                   url: '/post',
-                  templateUrl: 'tpl/page_post.html'
+                  templateUrl: 'tpl/page_post.html?' + GLOBAL_URL_HASH
               })
               .state('app.page.search', {
                   url: '/search',
-                  templateUrl: 'tpl/page_search.html'
+                  templateUrl: 'tpl/page_search.html?' + GLOBAL_URL_HASH
               })
               .state('app.page.invoice', {
                   url: '/invoice',
-                  templateUrl: 'tpl/page_invoice.html'
+                  templateUrl: 'tpl/page_invoice.html?' + GLOBAL_URL_HASH
               })
               .state('app.page.price', {
                   url: '/price',
-                  templateUrl: 'tpl/page_price.html'
+                  templateUrl: 'tpl/page_price.html?' + GLOBAL_URL_HASH
               })
               .state('app.docs', {
                   url: '/docs',
-                  templateUrl: 'tpl/docs.html'
+                  templateUrl: 'tpl/docs.html?' + GLOBAL_URL_HASH
               })
               // others
               .state('lockme', {
                   url: '/lockme',
-                  templateUrl: 'tpl/page_lockme.html'
+                  templateUrl: 'tpl/page_lockme.html?' + GLOBAL_URL_HASH
               })
               .state('access', {
                   url: '/access',
@@ -836,12 +836,12 @@ angular.module('app')
               })
               .state('access.signin', {
                   url: '/signin',
-                  templateUrl: 'tpl/page_signin.html',
+                  templateUrl: 'tpl/page_signin.html?' + GLOBAL_URL_HASH,
                   controller: 'AppCtrl'
               })
               .state('access.createnetwork', {
                   url: '/createnetwork',
-                  templateUrl: 'tpl/network_create.html',
+                  templateUrl: 'tpl/network_create.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',
                         function( uiLoad ){
@@ -863,7 +863,7 @@ angular.module('app')
               })
               .state('access.signup', {
                   url: '/signup',
-                  templateUrl: 'tpl/page_signup.html',
+                  templateUrl: 'tpl/page_signup.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',
                         function( uiLoad ){
@@ -873,17 +873,17 @@ angular.module('app')
               })
               .state('access.forgotpwd', {
                   url: '/forgotpwd',
-                  templateUrl: 'tpl/page_forgotpwd.html'
+                  templateUrl: 'tpl/page_forgotpwd.html?' + GLOBAL_URL_HASH
               })
               .state('access.404', {
                   url: '/404',
-                  templateUrl: 'tpl/page_404.html'
+                  templateUrl: 'tpl/page_404.html?' + GLOBAL_URL_HASH
               })
 
               // fullCalendar
               .state('app.calendar', {
                   url: '/calendar',
-                  templateUrl: 'tpl/app_calendar.html',
+                  templateUrl: 'tpl/app_calendar.html?' + GLOBAL_URL_HASH,
                   // use resolve to load other dependences
                   resolve: {
                       deps: ['$ocLazyLoad', 'uiLoad',
@@ -903,7 +903,7 @@ angular.module('app')
               .state('app.mail', {
                   abstract: true,
                   url: '/mail',
-                  templateUrl: 'tpl/mail.html',
+                  templateUrl: 'tpl/mail.html?' + GLOBAL_URL_HASH,
                   // use resolve to load other dependences
                   resolve: {
                       deps: ['uiLoad',
@@ -916,30 +916,30 @@ angular.module('app')
               })
               .state('app.mail.list', {
                   url: '/inbox/{fold}',
-                  templateUrl: 'tpl/mail.list.html'
+                  templateUrl: 'tpl/mail.list.html?' + GLOBAL_URL_HASH
               })
               .state('app.mail.detail', {
                   url: '/{mailId:[0-9]{1,4}}',
-                  templateUrl: 'tpl/mail.detail.html'
+                  templateUrl: 'tpl/mail.detail.html?' + GLOBAL_URL_HASH
               })
               .state('app.mail.compose', {
                   url: '/compose',
-                  templateUrl: 'tpl/mail.new.html'
+                  templateUrl: 'tpl/mail.new.html?' + GLOBAL_URL_HASH
               })
 
               .state('layout', {
                   abstract: true,
                   url: '/layout',
-                  templateUrl: 'tpl/layout.html'
+                  templateUrl: 'tpl/layout.html?' + GLOBAL_URL_HASH
               })
               .state('layout.fullwidth', {
                   url: '/fullwidth',
                   views: {
                       '': {
-                          templateUrl: 'tpl/layout_fullwidth.html'
+                          templateUrl: 'tpl/layout_fullwidth.html?' + GLOBAL_URL_HASH
                       },
                       'footer': {
-                          templateUrl: 'tpl/layout_footer_fullwidth.html'
+                          templateUrl: 'tpl/layout_footer_fullwidth.html?' + GLOBAL_URL_HASH
                       }
                   },
                   resolve: {
@@ -953,10 +953,10 @@ angular.module('app')
                   url: '/mobile',
                   views: {
                       '': {
-                          templateUrl: 'tpl/layout_mobile.html'
+                          templateUrl: 'tpl/layout_mobile.html?' + GLOBAL_URL_HASH
                       },
                       'footer': {
-                          templateUrl: 'tpl/layout_footer_mobile.html'
+                          templateUrl: 'tpl/layout_footer_mobile.html?' + GLOBAL_URL_HASH
                       }
                   }
               })
@@ -964,10 +964,10 @@ angular.module('app')
                   url: '/app',
                   views: {
                       '': {
-                          templateUrl: 'tpl/layout_app.html'
+                          templateUrl: 'tpl/layout_app.html?' + GLOBAL_URL_HASH
                       },
                       'footer': {
-                          templateUrl: 'tpl/layout_footer_fullwidth.html'
+                          templateUrl: 'tpl/layout_footer_fullwidth.html?' + GLOBAL_URL_HASH
                       }
                   },
                   resolve: {
@@ -980,11 +980,11 @@ angular.module('app')
               .state('apps', {
                   abstract: true,
                   url: '/apps',
-                  templateUrl: 'tpl/layout.html'
+                  templateUrl: 'tpl/layout.html?' + GLOBAL_URL_HASH
               })
               .state('apps.note', {
                   url: '/note',
-                  templateUrl: 'tpl/apps_note.html',
+                  templateUrl: 'tpl/apps_note.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',
                         function( uiLoad ){
@@ -995,7 +995,7 @@ angular.module('app')
               })
               .state('apps.contact', {
                   url: '/contact',
-                  templateUrl: 'tpl/apps_contact.html',
+                  templateUrl: 'tpl/apps_contact.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',
                         function( uiLoad ){
@@ -1005,7 +1005,7 @@ angular.module('app')
               })
               .state('app.weather', {
                   url: '/weather',
-                  templateUrl: 'tpl/apps_weather.html',
+                  templateUrl: 'tpl/apps_weather.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['$ocLazyLoad',
                         function( $ocLazyLoad ){
@@ -1023,7 +1023,7 @@ angular.module('app')
               })
               .state('app.todo', {
                   url: '/todo',
-                  templateUrl: 'tpl/apps_todo.html',
+                  templateUrl: 'tpl/apps_todo.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',
                         function( uiLoad ){
@@ -1037,7 +1037,7 @@ angular.module('app')
               })
               .state('music', {
                   url: '/music',
-                  templateUrl: 'tpl/music.html',
+                  templateUrl: 'tpl/music.html?' + GLOBAL_URL_HASH,
                   controller: 'MusicCtrl',
                   resolve: {
                       deps: ['$ocLazyLoad',
@@ -1056,27 +1056,27 @@ angular.module('app')
               })
                 .state('music.home', {
                     url: '/home',
-                    templateUrl: 'tpl/music.home.html'
+                    templateUrl: 'tpl/music.home.html?' + GLOBAL_URL_HASH
                 })
                 .state('music.genres', {
                     url: '/genres',
-                    templateUrl: 'tpl/music.genres.html'
+                    templateUrl: 'tpl/music.genres.html?' + GLOBAL_URL_HASH
                 })
                 .state('music.detail', {
                     url: '/detail',
-                    templateUrl: 'tpl/music.detail.html'
+                    templateUrl: 'tpl/music.detail.html?' + GLOBAL_URL_HASH
                 })
                 .state('music.mtv', {
                     url: '/mtv',
-                    templateUrl: 'tpl/music.mtv.html'
+                    templateUrl: 'tpl/music.mtv.html?' + GLOBAL_URL_HASH
                 })
                 .state('music.mtvdetail', {
                     url: '/mtvdetail',
-                    templateUrl: 'tpl/music.mtv.detail.html'
+                    templateUrl: 'tpl/music.mtv.detail.html?' + GLOBAL_URL_HASH
                 })
                 .state('music.playlist', {
                     url: '/playlist/{fold}',
-                    templateUrl: 'tpl/music.playlist.html'
+                    templateUrl: 'tpl/music.playlist.html?' + GLOBAL_URL_HASH
                 })
       }
     ]

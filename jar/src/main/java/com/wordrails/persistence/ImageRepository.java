@@ -16,7 +16,7 @@ public interface ImageRepository extends JpaRepository<Image, Integer>, QueryDsl
 	List<Image> findByPost(Post post);
 
 	@RestResource(exported = false)
-	Image findByFileId(@Param("fileId") Integer fileId);
+	List<Image> findByFileId(@Param("fileId") Integer fileId);
 
 	@RestResource(exported = false)
 	void deleteByPersonId(Integer id);

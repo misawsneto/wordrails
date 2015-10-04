@@ -474,6 +474,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetSectionsAuthorized() {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetSectionAuthorized(Integer sectionId) {
+		return true;
+	}
+
+	@Override
+	protected boolean isGetSectionNetworkAuthorized(Integer sectionId) {
+		return true;
+	}
+
+	@Override
 	protected boolean isGetStationsAuthorized() {
 		return false;
 	}
@@ -950,6 +965,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetNetworkUsersAuthorized(Integer networkId) {
 		return false;
+	}
+
+	@Override
+	protected boolean isGetNetworkSectionsAuthorized(Integer networkId) {
+		return true;
 	}
 
 	@Override
