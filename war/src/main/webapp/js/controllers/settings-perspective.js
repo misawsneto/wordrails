@@ -64,8 +64,6 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       console.log(data);
     }
 
-    $scope.show
-
     $scope.showAddFeaturedPost = function(ev){
     // show term alert
       $mdDialog.show({
@@ -156,6 +154,7 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
     function DialogController(scope, $mdDialog) {
       scope.app = $scope.app;
       scope.pe = $scope.pe;
+      scope.newPerspective = {type:'ST'}
 
       scope.hide = function() {
         $mdDialog.hide();
@@ -422,11 +421,24 @@ app.controller('SettingsPerspectiveListCtrl', ['$scope', '$log', '$timeout', '$m
 
     $scope.changeDefaultPerspective = function(perspective){
       $scope.perspectives.forEach(function(item, index){
-        if(perspective.id == item.id)
-          item.selected = true;
-        else
-          item.selected = false;
+        item.selected = false;
       });
+      trix.setDefaultPerspective($scope.thisStation.id, perspective.id).success(function(){
+        $scope.perspectives.forEach(function(item, index){
+          if(perspective.id == item.id)
+            item.selected = true;
+          else
+            item.selected = false;
+        });
+        $scope.app.getInitData();
+        $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
+        $scope.thisStation.defaultPerspectiveId = perspective.id;
+
+        $scope.app.refreshPerspective($scope.thisStation.defaultPerspectiveId);
+
+      }).error(function(){
+        $scope.app.showErrorToast('Erro. Tente novamente ou entre em contato com a equipe de atendimento.')
+      })
     }
 
     trix.getStationStationPerspectives($scope.thisStation.id).success(function(response){
@@ -441,10 +453,70 @@ app.controller('SettingsPerspectiveListCtrl', ['$scope', '$log', '$timeout', '$m
       $state.go('app.settings.perspectiveeditor', {'stationId': $state.params.stationId, 'perspectiveId': perspective.id})
     }
 
-        // perspective editor dialog Controller
+    $scope.pe = {};
+    $scope.pe.createPerspective = function(perspective){
+      var stationPerspective = {};
+      stationPerspective.name = perspective.name;
+      stationPerspective.station = TRIX.baseUrl + "/api/stations/" + $scope.thisStation.id;
+      if(perspective.type == 'ST')
+        stationPerspective.taxonomy = TRIX.baseUrl + "/api/stations/" + $scope.thisStation.categoriesTaxonomyId;
+      else if(perspective.type == 'NET')
+        stationPerspective.taxonomy = TRIX.baseUrl + "/api/taxonomies/" + $scope.app.initData.network.categoriesTaxonomyId;
+
+
+      trix.postStationPerspective(stationPerspective).success(function(response){
+        trix.getStationStationPerspectives($scope.thisStation.id).success(function(response){
+          $scope.perspectives = response.stationPerspectives;
+          $scope.perspectives.forEach(function(perspective, index){
+            if(perspective.id == $scope.thisStation.defaultPerspectiveId)
+              perspective.selected = true;
+          });
+        })
+        $mdDialog.cancel();
+        $scope.app.showSuccessToast('Perspectiva criada com sucesso.')
+      }).error(function(response){
+
+      })
+    }
+
+    $scope.deletePerspective = null;
+
+    $scope.openDeletePerspective = function(perspective, ev){
+      $scope.deletePerspective = perspective;      
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'delete_perspective.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
+
+    $scope.pe.deletePerspective = function(){
+      if(!$scope.deletePerspective.selected)
+        trix.deleteStationPerspective($scope.deletePerspective.id).success(function(){
+          for (var i = $scope.perspectives.length - 1; i >= 0; i--) {
+            if($scope.perspectives[i].id == $scope.deletePerspective.id)
+              $scope.perspectives.splice(i, 1)
+          };
+          $scope.app.showSuccessToast('Perspectiva removida com sucesso.')
+          $mdDialog.cancel();
+        })
+      else{
+        $mdDialog.cancel();
+        $scope.app.showErrorToast('Não é possível remover uma perspectiva que está ativa.')
+      }
+    }
+
+    // perspective editor dialog Controller
     function DialogController(scope, $mdDialog) {
       scope.app = $scope.app;
       scope.pe = $scope.pe;
+      scope.thisStation = $scope.thisStation;
 
       scope.hide = function() {
         $mdDialog.hide();

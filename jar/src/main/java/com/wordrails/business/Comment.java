@@ -22,23 +22,9 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-//@AnalyzerDef(name = "customCommentAnalyzer",
-//
-//tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-//filters = {
-//		@TokenFilterDef(factory = WordDelimiterFilterFactory.class),
-//		@TokenFilterDef(factory = LowerCaseFilterFactory.class),
-//		@TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
-//				@Parameter(name = "resource_charset", value = "UTF-8"),
-//				@Parameter(name = "language", value = "Portuguese")
-//		}),
-//},
-//charFilters = {@CharFilterDef(factory = HTMLStripCharFilterFactory.class)})
-//@Indexed
 public class Comment {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-//	@DocumentId
 	public Integer id;
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
@@ -56,8 +42,6 @@ public class Comment {
 
 	@Lob
 	@NotNull
-//	@Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
-//	@Analyzer(definition = "customPostAnalyzer")
 	public String body;
 	
 	@OneToMany(mappedBy="comment")
@@ -66,7 +50,6 @@ public class Comment {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable=false)
-//	@IndexedEmbedded(includePaths={"name", "id"})
 	public Person author;
 	
 	@NotNull

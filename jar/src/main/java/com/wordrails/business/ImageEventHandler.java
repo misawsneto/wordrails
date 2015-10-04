@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.List;
 
 @RepositoryEventHandler(Image.class)
 @Component
@@ -52,7 +53,8 @@ public class ImageEventHandler {
 
 		FileContents originalFile = fileContentsRepository.findOne(image.original.id);
 		if (originalFile.type.equals(File.EXTERNAL)) { //if is external, is already uploaded to amazon, so the file was uploaded before
-			Image existingImage = imageRepository.findByFileId(originalFile.id);
+			List<Image> existingImages = imageRepository.findByFileId(originalFile.id);
+			Image existingImage = existingImages.get(0);
 			image.small = existingImage.small;
 			image.medium = existingImage.medium;
 			image.large = existingImage.large;
@@ -77,7 +79,8 @@ public class ImageEventHandler {
 
 			int maxSize = Math.max(bufferedImage.getHeight(), bufferedImage.getWidth());
 
-			String originalHash = amazonCloudService.uploadPublicImage(new ByteArrayInputStream(bytes), originalFile.size, network.subdomain, "original", extension);
+			String originalHash = amazonCloudService.uploadPublicImage(new ByteArrayInputStream(bytes), originalFile.size,
+					network.subdomain, originalFile.hash, "original", extension);
 
 			originalFile.contents = null;
 			originalFile.type = File.EXTERNAL;

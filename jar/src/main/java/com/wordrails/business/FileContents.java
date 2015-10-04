@@ -18,6 +18,8 @@ public class FileContents {
 	@Size(min = 1, max = 1)
 	public String type;
 
+	public String directory;
+
 	public String mime;
 
 	public String name;

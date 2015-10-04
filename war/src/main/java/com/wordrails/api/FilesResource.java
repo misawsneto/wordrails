@@ -93,6 +93,7 @@ public class FilesResource {
 
 				file.hash = hash;
 				file.type = File.INTERNAL;
+				file.directory = File.DIR_IMAGES;
 				file.networkId = network.id;
 				file.mime = item.getContentType();
 				file.contents = creator.createBlob(item.getInputStream(), item.getSize());
@@ -129,6 +130,14 @@ public class FilesResource {
 				"\"id\":" + id + "}").build();
 	}
 
+//	@POST
+//	@Path("/upload/video")
+//	@Consumes(MediaType.MULTIPART_FORM_DATA)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response uploadVideo(@Context HttpServletRequest request) throws FileUploadException, IOException {
+//
+//	}
+
 
 	@POST
 	@Path("/contents/simple")
@@ -161,6 +170,7 @@ public class FilesResource {
 				FileContents file = new FileContents();
 				file.hash = hash;
 				file.type = File.INTERNAL;
+				file.directory = File.DIR_IMAGES;
 				file.networkId = network.id;
 				file.mime = item.getContentType();
 				file.contents = creator.createBlob(item.getInputStream(), item.getSize());

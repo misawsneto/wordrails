@@ -80,6 +80,8 @@ public class PersonsResource {
 	private @Autowired QueryPersistence queryPersistence;
 	private @Autowired PersonEventHandler personEventHandler;
 
+	private @Autowired SectionRepository sectionRepository;
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -105,6 +107,22 @@ public class PersonsResource {
 
 	@PUT
 	@Path("/{id}")
+	@Transactional
+	public Response findByUsername(@PathParam("id") Integer id) throws ServletException, IOException {
+		Person person = authProvider.getLoggedPerson();
+
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+
+		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network)) {
+			forward();
+			return Response.status(Status.OK).build();
+		}else
+			return Response.status(Status.UNAUTHORIZED).build();
+	}
+
+	@PUT
+	@Path("/{id}")
+	@Transactional
 	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
@@ -574,7 +592,6 @@ public class PersonsResource {
 		PersonPermissions personPermissions = new PersonPermissions();
 		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
 
-
 		//Network Permissions
 		NetworkPermission networkPermissionDto = new NetworkPermission();
 		if(networkRole != null)
@@ -582,7 +599,7 @@ public class PersonsResource {
 		else
 			networkPermissionDto.admin = false;
 
-
+		network.sections = sectionRepository.findByNetwork(network);
 
 		List<StationDto> stationDtos = new ArrayList<>();
 		List<Station> stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
@@ -592,7 +609,6 @@ public class PersonsResource {
 			stationDtos.add(stationDto);
 		}
 
-
 		personPermissions.networkPermission = networkPermissionDto;
 		personPermissions.stationPermissions = getStationPermissions(stations, person.id);
 		personPermissions.personId = person.id;
@@ -601,11 +617,25 @@ public class PersonsResource {
 
 		PersonData initData = new PersonData();
 
+		if(person != null && person.user != null && (person.password == null || person.password.equals(""))){
+			initData.noPassword = true;
+		}
+
 		initData.publicCloudfrontUrl = publicCloudfrontUrl;
 		initData.privateCloudfrontUrl = privateCloudfrontUrl;
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
+
+		List<SectionDto> sections = new ArrayList<SectionDto>();
+		for(Section section: network.sections){
+			SectionDto sectionDto = mapper.readValue(mapper.writeValueAsString(section).getBytes("UTF-8"), SectionDto.class);
+			sectionDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/sections/" + sectionDto.id);
+			sections.add(sectionDto);
+		}
+
+		initData.sections = sections;
+
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes("UTF-8"), NetworkRoleDto.class);
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;

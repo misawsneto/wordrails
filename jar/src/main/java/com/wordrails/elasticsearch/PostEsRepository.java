@@ -1,13 +1,9 @@
 package com.wordrails.elasticsearch;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.business.*;
 import com.wordrails.util.WordrailsUtil;
-import org.apache.lucene.queryparser.flexible.core.builders.QueryBuilder;
-import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -15,15 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by jonas on 26/09/15.

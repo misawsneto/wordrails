@@ -59,6 +59,9 @@ public class Network implements Serializable{
 
 	@OneToMany(mappedBy="network")
 	public Set<User> users;
+
+	@OneToMany(mappedBy="network")
+	public Set<Section> sections;
 		
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
@@ -117,7 +120,7 @@ public class Network implements Serializable{
 	public String splashImageHash;
 	public String loginImageHash;
 	public String loginImageSmallHash;
-	
+
 	@OneToOne
 	public Image favicon;
 	public Integer faviconId;
@@ -135,6 +138,8 @@ public class Network implements Serializable{
 	public String defaultReadMode;
 	@Column(columnDefinition = "varchar(255) default 'V'", nullable = false)
 	public String defaultOrientationMode;
+
+	public Integer categoriesTaxonomyId;
 
 	@Override
 	public String toString() {
