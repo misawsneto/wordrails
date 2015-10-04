@@ -3,6 +3,8 @@ package com.wordrails.elasticsearch;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +25,8 @@ public class ElasticsearchService {
 	}
 
 	private void startEsClient(String host, Integer port){
-		transportClient = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
+		Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", "trix").build();
+		transportClient = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
 
 	public IndexResponse index(String doc, String id, String index, String type){
