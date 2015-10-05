@@ -1,14 +1,12 @@
 package com.wordrails.business;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity
-public class Video {
+public class Video extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
+	public Integer duration;
+
+	public File file;
+
 }

@@ -162,6 +162,14 @@ public class Post {
 	@ManyToOne
 	public Image featuredImage;
 
+	@OneToMany
+	@JoinTable(
+			name="post_video",
+			joinColumns = @JoinColumn( name="post_id"),
+			inverseJoinColumns = @JoinColumn( name="video_id")
+	)
+	public Set<Video> videos;
+
 	@OneToMany(mappedBy = "post")
 	public Set<Image> images;
 

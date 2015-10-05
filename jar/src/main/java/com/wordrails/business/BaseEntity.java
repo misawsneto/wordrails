@@ -1,17 +1,33 @@
 package com.wordrails.business;
 
-import org.hibernate.search.annotations.DocumentId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import java.util.Date;
 
 @MappedSuperclass
 public class BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@DocumentId
 	public Integer id;
+
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date updatedAt;
+
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable = false)
+	public Date createdAt;
+
+	@PrePersist
+	public void onCreate() {
+		createdAt = new Date();
+	}
+
+	@PreUpdate
+	public void onUpdate() {
+		updatedAt = new Date();
+	}
 }
