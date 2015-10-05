@@ -297,8 +297,7 @@ public class PostsResource {
 					.order(SortOrder.DESC);
 		}
 
-		SearchResponse searchResponse = postEsRepository
-				.runQuery(mainQuery.toString(), sort, size);
+		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page);
 
 		SearchHit[] resultList = searchResponse.getHits().getHits();
 		List<JSONObject> postsViews = new ArrayList<>();

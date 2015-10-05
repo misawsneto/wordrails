@@ -24,7 +24,7 @@ public class PostEsRepository{
 	@Autowired
 	private ElasticsearchService elasticsearchService;
 
-	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size){
+	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page){
 		SearchRequestBuilder searchRequestBuilder = elasticsearchService
 														.getElasticsearchClient()
 														.prepareSearch("posts")
@@ -33,6 +33,10 @@ public class PostEsRepository{
 
 		if (size != null && size > 0){
 			searchRequestBuilder.setSize(size);
+
+			if (page != null){
+				searchRequestBuilder.setFrom(page * size);
+			}
 		}
 
 		if (sort != null){
