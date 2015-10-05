@@ -52,7 +52,7 @@ public class PostEsRepository{
 	}
 
 	public void update(Post post){
-		save(post);
+		elasticsearchService.update(formatObjecJson(post), post.id.toString(), "post", "post");
 	}
 
 	public void delete(Post post){

@@ -68,7 +68,7 @@ public class PostService {
 			dbPost.state = state;
 
 			queryPersistence.changePostState(postId, state);
-			removePostIndex(dbPost);
+			//removePostIndex(dbPost);
 			updatePostIndex(dbPost);
 		}
 
