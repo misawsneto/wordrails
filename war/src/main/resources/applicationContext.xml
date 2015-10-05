@@ -75,7 +75,7 @@
 	<beans profile="dev_prod">
 		<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
 			<property name="driverClass" value="com.mysql.jdbc.Driver"/>
-			<property name="jdbcUrl" value="jdbc:mysql://localhost/wordrails_prod"/>
+			<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_prod"/>
 			<property name="username" value="wordrails"/>
 			<property name="password" value="wordrails"/>
 		</bean>
@@ -88,7 +88,7 @@
 	<!-- __________________________ DATABASE __________________________ -->
 
 
-	<!-- __________________________ AMAZON __________________________ -->
+	<!-- __________________________ PROPERTIES __________________________ -->
 	<beans profile="dev">
 		<context:property-placeholder location="classpath*:application.properties, classpath*:application_dev.properties"/>
 	</beans>
@@ -96,5 +96,5 @@
 	<beans profile="prod,dev_prod">
 		<context:property-placeholder location="classpath*:application.properties, classpath*:application_prod.properties"/>
 	</beans>
-	<!-- __________________________ AMAZON __________________________ -->
+	<!-- __________________________ PROPERTIES __________________________ -->
 </beans>
