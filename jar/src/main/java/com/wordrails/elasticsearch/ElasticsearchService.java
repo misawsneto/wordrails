@@ -19,6 +19,10 @@ public class ElasticsearchService {
 
 	protected Client client;
 
+	public Client getClient() {
+		return client;
+	}
+
 	public ElasticsearchService(String host, Integer port){
 		startEsClient(host, port);
 	}

@@ -26,13 +26,15 @@ public class PostEsRepository{
 	private @Autowired @Qualifier("objectMapper")
 	ObjectMapper objectMapper;
 
+	private static final String ES_TYPE = "post";
+
 	@Autowired
 	private ElasticsearchService elasticsearchService;
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page){
 		SearchRequestBuilder searchRequestBuilder = elasticsearchService.getElasticsearchClient()
 														.prepareSearch(indexName)
-														.setTypes("post")
+														.setTypes(ES_TYPE)
 														.setQuery(query);
 
 		if (size != null && size > 0){
@@ -52,11 +54,11 @@ public class PostEsRepository{
 	}
 
 	public void save(Post post) {
-		elasticsearchService.save(formatObjecJson(post), post.id.toString(), indexName, "post");
+		elasticsearchService.save(formatObjecJson(post), post.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void update(Post post){
-		elasticsearchService.update(formatObjecJson(post), post.id.toString(), indexName, "post");
+		elasticsearchService.update(formatObjecJson(post), post.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void delete(Post post){
@@ -64,7 +66,7 @@ public class PostEsRepository{
 	}
 
 	public void delete(Integer postId){
-		elasticsearchService.delete(String.valueOf(postId), indexName, "post");
+		elasticsearchService.delete(String.valueOf(postId), indexName, ES_TYPE);
 	}
 
 	public String formatObjecJson(Post post){
@@ -96,7 +98,7 @@ public class PostEsRepository{
 //		jsonObject.remove("author");
 //		jsonObject.remove("station");
 //		jsonObject.remove("terms");
-//		jsonObject.remove("sponsorObj");
+//		jsonObject.remove("sponsor");
 //		jsonObject.remove("comments");
 //		jsonObject.remove("images");
 //		return jsonObject;
@@ -111,13 +113,13 @@ public class PostEsRepository{
 		postView.subheading = post.subheading;
 		postView.slug = post.slug;
 
-		postView.sponsor = post.sponsor != null;
+		postView.sponsored = post.sponsor != null;
 		postView.comments = post.comments;
 		postView.images = post.images;
 		postView.author = post.author;
 		postView.station = post.station;
 		postView.terms = post.terms;
-		postView.sponsorObj = post.sponsor;
+		postView.sponsor = post.sponsor;
 		postView.smallId = post.imageSmallId;
 		postView.mediumId = post.imageMediumId;
 		postView.largeId = post.imageLargeId;

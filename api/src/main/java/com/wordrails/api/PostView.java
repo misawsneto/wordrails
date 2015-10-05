@@ -14,7 +14,7 @@ public class PostView implements Serializable {
 	public String smallHash;
 	public String mediumHash;
 	public String largeHash;
-	public Boolean sponsor;
+	public Boolean sponsored;
 	public java.util.Date date;
 	public String snippet;
 	public String body;
