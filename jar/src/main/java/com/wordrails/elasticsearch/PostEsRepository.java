@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,6 +19,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PostEsRepository{
+
+	@Value("${elasticsearch.index}")
+	private String indexName;
+
 	private @Autowired @Qualifier("objectMapper")
 	ObjectMapper objectMapper;
 
@@ -25,9 +30,8 @@ public class PostEsRepository{
 	private ElasticsearchService elasticsearchService;
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page){
-		SearchRequestBuilder searchRequestBuilder = elasticsearchService
-														.getElasticsearchClient()
-														.prepareSearch("posts")
+		SearchRequestBuilder searchRequestBuilder = elasticsearchService.getElasticsearchClient()
+														.prepareSearch(indexName)
 														.setTypes("post")
 														.setQuery(query);
 
@@ -48,11 +52,11 @@ public class PostEsRepository{
 	}
 
 	public void save(Post post) {
-		elasticsearchService.save(formatObjecJson(post), post.id.toString(), "posts", "post");
+		elasticsearchService.save(formatObjecJson(post), post.id.toString(), indexName, "post");
 	}
 
 	public void update(Post post){
-		elasticsearchService.update(formatObjecJson(post), post.id.toString(), "post", "post");
+		elasticsearchService.update(formatObjecJson(post), post.id.toString(), indexName, "post");
 	}
 
 	public void delete(Post post){
@@ -60,7 +64,7 @@ public class PostEsRepository{
 	}
 
 	public void delete(Integer postId){
-		elasticsearchService.delete(String.valueOf(postId), "posts", "post");
+		elasticsearchService.delete(String.valueOf(postId), indexName, "post");
 	}
 
 	public String formatObjecJson(Post post){
