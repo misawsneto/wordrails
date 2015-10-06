@@ -6,6 +6,8 @@ import com.wordrails.business.*;
 import com.wordrails.util.WordrailsUtil;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.common.text.Text;
+import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * Created by jonas on 26/09/15.
@@ -31,7 +35,7 @@ public class PostEsRepository{
 	@Autowired
 	private ElasticsearchService elasticsearchService;
 
-	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page, boolean highlight){
+	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page, String highlightedField){
 		SearchRequestBuilder searchRequestBuilder = elasticsearchService
 														.getElasticsearchClient()
 														.prepareSearch("posts")
@@ -46,8 +50,8 @@ public class PostEsRepository{
 			}
 		}
 
-		if (highlight){
-			searchRequestBuilder.setHighlighterFragmentSize(150);
+		if (highlightedField != null){
+			searchRequestBuilder.addHighlightedField(highlightedField, 250, 4);
 			searchRequestBuilder.setHighlighterPreTags("<b>");
 			searchRequestBuilder.setHighlighterPostTags("</b>");
 		}
@@ -56,8 +60,7 @@ public class PostEsRepository{
 			searchRequestBuilder.addSort(sort);
 		}
 
-		SearchResponse response = searchRequestBuilder.execute().actionGet();
-		return response;
+		return searchRequestBuilder.execute().actionGet();
 	}
 
 	public void save(Post post) {
@@ -100,16 +103,19 @@ public class PostEsRepository{
 	}
 
 	public JSONObject convertToView(String json){
-
-//		JSONObject jsonObject = (JSONObject) JSONValue.parse(json);
-//		jsonObject.remove("author");
-//		jsonObject.remove("station");
-//		jsonObject.remove("terms");
-//		jsonObject.remove("sponsorObj");
-//		jsonObject.remove("comments");
-//		jsonObject.remove("images");
-//		return jsonObject;
 		return (JSONObject) JSONValue.parse(json);
+	}
+
+	public JSONObject convertToView(String json, Map<String, HighlightField> highlightFieldMap){
+		JSONObject view = (JSONObject) JSONValue.parse(json);
+		for(String key: highlightFieldMap.keySet()){
+			String fragments = "";
+			for(Text fragment: highlightFieldMap.get(key).getFragments()){
+				fragments += fragment.string();
+			}
+			view.put(key, fragments);
+		}
+		return view;
 	}
 
 	public PostIndexed makePostView(Post post){

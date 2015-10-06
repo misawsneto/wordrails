@@ -297,14 +297,15 @@ public class PostsResource {
 					.order(SortOrder.DESC);
 		}
 
-		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, true);
+		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "snippet");
 
-		SearchHit[] resultList = searchResponse.getHits().getHits();
+//		SearchHit[] resultList = searchResponse.getHits().getHits();
 		List<JSONObject> postsViews = new ArrayList<>();
 
-		for(SearchHit hit: resultList){
+		for(SearchHit hit: searchResponse.getHits().getHits()){
 			try {
-				postsViews.add(postEsRepository.convertToView(hit.getSourceAsString()));
+				System.out.println();
+				postsViews.add(postEsRepository.convertToView(hit.getSourceAsString(), hit.getHighlightFields()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -312,7 +313,7 @@ public class PostsResource {
 
 		ContentResponse<SearchView> response = new ContentResponse<SearchView>();
 		response.content = new SearchView();
-		response.content.hits = resultList.length;
+		response.content.hits = postsViews.size();
 		response.content.posts = postsViews;
 
 		return response;
