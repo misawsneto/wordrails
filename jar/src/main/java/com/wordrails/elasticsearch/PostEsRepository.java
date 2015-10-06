@@ -24,7 +24,7 @@ public class PostEsRepository{
 	@Autowired
 	private ElasticsearchService elasticsearchService;
 
-	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page){
+	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page, boolean highlight){
 		SearchRequestBuilder searchRequestBuilder = elasticsearchService
 														.getElasticsearchClient()
 														.prepareSearch("posts")
@@ -37,6 +37,12 @@ public class PostEsRepository{
 			if (page != null){
 				searchRequestBuilder.setFrom(page * size);
 			}
+		}
+
+		if (highlight){
+			searchRequestBuilder.setHighlighterFragmentSize(150);
+			searchRequestBuilder.setHighlighterPreTags("<b>");
+			searchRequestBuilder.setHighlighterPostTags("</b>");
 		}
 
 		if (sort != null){
