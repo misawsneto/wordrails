@@ -5,13 +5,19 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.wordrails.WordrailsService;
+import com.wordrails.business.Network;
+import com.wordrails.util.WordrailsUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -28,6 +34,9 @@ public class AmazonResource {
 	@Value("${amazon.publicBucket}")
 	String publicBucket;
 
+	@Autowired
+	private WordrailsService wordrailsService;
+
 	private AmazonS3 s3() {
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, accessSecretKey);
 		return new AmazonS3Client(awsCreds);
@@ -36,7 +45,10 @@ public class AmazonResource {
 	@GET
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/signedUrl")
-	public Response generateSignedUrl(@FormParam("objectKey") String objectKey) throws IOException {
+	public Response generateSignedUrl(@FormParam("hash") String hash, @FormParam("type") String type, @Context HttpServletRequest request) throws IOException {
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		String objectKey = network.subdomain + "/" + type + "/" + hash;
+
 		System.out.println("Generating pre-signed URL.");
 		java.util.Date expiration = new java.util.Date();
 		long milliSeconds = expiration.getTime();
