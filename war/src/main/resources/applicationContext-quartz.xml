@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-         				   http://www.springframework.org/schema/beans/spring-beans.xsd">
+         				   http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
 
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory"/>
 		<property name="persistenceUnitName" value="wordrails"/>
 	</bean>
 
-	<bean id="quartzDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-		<property name="driverClass" value="com.mysql.jdbc.Driver"/>
-		<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_quartz"/>
-		<property name="username" value="wordrails"/>
-		<property name="password" value="wordrails"/>
-	</bean>
-
 	<bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 
-		<property name="configLocation" value="classpath:quartz.properties"/>
+		<property name="configLocation" value="classpath:application_quartz.properties"/>
 		<property name="dataSource" ref="quartzDataSource"/>
 		<property name="transactionManager" ref="transactionManager"/>
 
@@ -30,4 +23,17 @@
 			<bean class="com.wordrails.scheduler.AutowiringSpringBeanJobFactory"/>
 		</property>
 	</bean>
+
+	<beans profile="dev,dev_prod">
+		<bean id="quartzDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+			<property name="driverClass" value="com.mysql.jdbc.Driver"/>
+			<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_quartz"/>
+			<property name="username" value="wordrails"/>
+			<property name="password" value="wordrails"/>
+		</bean>
+	</beans>
+
+	<beans profile="prod">
+		<jee:jndi-lookup id="quartzDataSource" jndi-name="jdbc/quartz"/>
+	</beans>
 </beans>

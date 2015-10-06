@@ -1,12 +1,6 @@
 package com.wordrails.api;
 
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.persistence.Entity;
-
 import com.wordrails.elasticsearch.ElasticsearchService;
-import com.wordrails.elasticsearch.PostEsRepository;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +9,12 @@ import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.http.MediaType;
 
+import javax.annotation.PostConstruct;
+import javax.persistence.Entity;
+import java.util.Set;
+
 @Configuration
+//@EnableRedisHttpSession
 public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 
 	@Value("${elasticsearch.host}")
@@ -26,7 +25,7 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 	@Override
 	protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
 		config.setDefaultMediaType(MediaType.APPLICATION_JSON);
-		
+
 		Reflections reflections = new Reflections("com.wordrails.business");
 		Set<Class<?>> entities = reflections.getTypesAnnotatedWith(Entity.class);
 		config.exposeIdsFor(entities.toArray(new Class<?>[0]));
@@ -34,9 +33,15 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 
 	@Bean
 	@PostConstruct
-	public ElasticsearchService elasticsearchService(){
+	public ElasticsearchService elasticsearchService() {
 		return new ElasticsearchService(host, port);
 	}
+
+
+//	@Bean
+//	public JedisConnectionFactory connectionFactory() {
+//		return new JedisConnectionFactory();
+//	}
 
 //	@Bean
 //    public Validator validator() {

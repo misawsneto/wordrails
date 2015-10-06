@@ -1,7 +1,12 @@
 package com.wordrails.business;
 
-/**
- * Created by testing on 01/10/15.
- */
-public class Video {
+import javax.persistence.Entity;
+
+@Entity
+public class Video extends BaseEntity {
+
+	public Integer duration;
+
+	public File file;
+
 }

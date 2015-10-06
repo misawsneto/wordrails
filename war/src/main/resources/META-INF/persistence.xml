@@ -42,6 +42,7 @@
 		<class>com.wordrails.business.CertificateIos</class>
 		<class>com.wordrails.business.Ad</class>
 		<class>com.wordrails.business.Section</class>
+		<class>com.wordrails.business.Video</class>
 
 
 		<properties>
