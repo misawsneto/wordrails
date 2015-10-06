@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,8 +19,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PostEsRepository{
+
+	@Value("${elasticsearch.index}")
+	private String indexName;
+
 	private @Autowired @Qualifier("objectMapper")
 	ObjectMapper objectMapper;
+
+	private static final String ES_TYPE = "post";
 
 	@Autowired
 	private ElasticsearchService elasticsearchService;
@@ -54,11 +61,11 @@ public class PostEsRepository{
 	}
 
 	public void save(Post post) {
-		elasticsearchService.save(formatObjecJson(post), post.id.toString(), "posts", "post");
+		elasticsearchService.save(formatObjecJson(post), post.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void update(Post post){
-		save(post);
+		elasticsearchService.update(formatObjecJson(post), post.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void delete(Post post){
@@ -66,7 +73,7 @@ public class PostEsRepository{
 	}
 
 	public void delete(Integer postId){
-		elasticsearchService.delete(String.valueOf(postId), "posts", "post");
+		elasticsearchService.delete(String.valueOf(postId), indexName, ES_TYPE);
 	}
 
 	public String formatObjecJson(Post post){
@@ -113,13 +120,13 @@ public class PostEsRepository{
 		postView.subheading = post.subheading;
 		postView.slug = post.slug;
 
-		postView.sponsor = post.sponsor != null;
+		postView.sponsored = post.sponsor != null;
 		postView.comments = post.comments;
 		postView.images = post.images;
 		postView.author = post.author;
 		postView.station = post.station;
 		postView.terms = post.terms;
-		postView.sponsorObj = post.sponsor;
+		postView.sponsor = post.sponsor;
 		postView.smallId = post.imageSmallId;
 		postView.mediumId = post.imageMediumId;
 		postView.largeId = post.imageLargeId;

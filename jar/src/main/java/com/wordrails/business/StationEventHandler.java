@@ -3,6 +3,7 @@ package com.wordrails.business;
 import java.util.*;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.elasticsearch.PerspectiveEsRepository;
 import com.wordrails.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
@@ -36,6 +37,8 @@ public class StationEventHandler {
 	@Autowired TermRepository termRepository;
 	@Autowired TermPerspectiveRepository termPerspectiveRepository;
 	@Autowired RowRepository rowRepository;
+	@Autowired PerspectiveEsRepository perspectiveEsRepository;
+	@Autowired StationPerspectiveEventHandler stationPerspectiveEventHandler;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -76,6 +79,7 @@ public class StationEventHandler {
 	}
 	
 	@HandleAfterCreate
+	@Transactional
 	public void handleAfterCreate(Station station){
 		Term term1 = new Term();
 		term1.name = "Categoria 1";
@@ -151,22 +155,25 @@ public class StationEventHandler {
 
 		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
+
+		for (TermPerspective tp: stationPerspective.perspectives)
+			perspectiveEsRepository.save(tp);
 	}
 	
 	@HandleBeforeSave
 	public void handleBeforeSave(Station station){
 		station.stationPerspectives = new HashSet<StationPerspective>(stationPerspectiveRepository.findByStationId(station.id));
 	}
-	
+
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Station station) throws UnauthorizedException{
 		if(stationSecurityChecker.canEdit(station)){
 			stationRepository.deleteStationNetwork(station.id);
-			
+
 			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
 			stationPerspectiveRepository.delete(stationsPerspectives);
-			
+
 			List<Taxonomy> taxonomies = taxonomyRepository.findByStationId(station.id);
 			if(taxonomies != null && !taxonomies.isEmpty()){
 				for (Taxonomy taxonomy : taxonomies) {
@@ -174,21 +181,22 @@ public class StationEventHandler {
 					taxonomyRepository.delete(taxonomy);
 				}
 			}
-			
+
 			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
 			if(stationsRoles != null && stationsRoles.size() > 0){
 				personStationRolesRepository.delete(stationsRoles);
 			}
-			
-			
+
+
+
 			List<Post> posts = postRepository.findByStation(station);
-			
+
 			if(posts != null && posts.size() > 0){
 //				for (Post post : posts) {
 //					postEventHandler.handleBeforeDelete(post);
 //					postRepository.delete(posts);
 //				}
-				
+
 				List<Integer> ids = new ArrayList<Integer>();
 				for (Post post : posts) {
 					ids.add(post.id);
@@ -200,19 +208,21 @@ public class StationEventHandler {
 				queryPersistence.deleteNotificationsInPosts(ids);
 				queryPersistence.deletePostReadsInPosts(ids);
 				queryPersistence.deleteRecommendsInPosts(ids);
-				
+
 				postRepository.delete(posts);
 			}
-			
+
 			List<Notification> notifications = notificationRepository.findByStation(station);
 			if(notifications != null && notifications.size() > 0)
 				notificationRepository.delete(notifications);
-			
+
+			//for(StationPerspective p: stationsPerspectives)
+
 		}else{
 			throw new UnauthorizedException();
 		}
 	}
-	
+
 	@HandleAfterSave
 	@Transactional
 	public void handleAfterSave(Station station){

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
+import com.wordrails.elasticsearch.PerspectiveEsRepository;
 import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.*;
@@ -65,6 +66,7 @@ public class UtilResource {
 	private @Autowired InvitationRepository invitationRepository;
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired FileRepository fileRepository;
+	public @Autowired PerspectiveEsRepository perspectiveEsRepository;
 
 	public @Autowired CacheService cacheService;
 
@@ -754,6 +756,42 @@ public class UtilResource {
 			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
 			for(int i = 0; i < all.size(); i++){
 				postEsRepository.save(all.get(i));
+
+				if(i % 50 == 0){
+					Thread.sleep(100);
+				}
+			}
+		}
+	}
+
+	@GET
+	@Path("/indexPerspectivesToElastisearch")
+	@Transactional(readOnly=false)
+	public void indexPerspectivesToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
+		String host = request.getHeader("Host");
+
+		if(isLocal(request.getHeader("Host"))){
+			List<TermPerspective> all = termPerspectiveRepository.findAll();
+			for(int i = 0; i < all.size(); i++){
+				perspectiveEsRepository.save(all.get(i));
+
+				if(i % 50 == 0){
+					Thread.sleep(100);
+				}
+			}
+		}
+	}
+
+	@GET
+	@Path("/deleteAllPerspectivesFromIndex")
+	@Transactional(readOnly=false)
+	public void deleteAllPerspectivesFromIndex(@Context HttpServletRequest request) throws InterruptedException {
+		String host = request.getHeader("Host");
+
+		if(isLocal(request.getHeader("Host"))){
+			List<StationPerspective> all = stationPerspectiveRepository.findAll();
+			for(int i = 0; i < all.size(); i++){
+				perspectiveEsRepository.deleteByStationPerspective(all.get(i).id);
 
 				if(i % 50 == 0){
 					Thread.sleep(100);

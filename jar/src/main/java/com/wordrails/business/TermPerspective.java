@@ -1,5 +1,7 @@
 package com.wordrails.business;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 import java.util.Set;
 

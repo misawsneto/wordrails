@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.wordrails.elasticsearch.PerspectiveEsRepository;
 import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;
 import com.wordrails.persistence.TaxonomyRepository;
@@ -14,6 +15,7 @@ import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @RepositoryEventHandler(StationPerspective.class)
 @Component
@@ -31,13 +33,17 @@ public class StationPerspectiveEventHandler {
 	private @Autowired
 	RowRepository rowRepository;
 
+	private @Autowired
+	PerspectiveEsRepository perspectiveEsRepository;
+
 	@HandleBeforeCreate
 	public void handleBeforeCreate(StationPerspective stationPerspective) {
 		validate(stationPerspective);
 	}
 
 	@HandleAfterCreate
-	public void handleAfterCreat(StationPerspective stationPerspective){
+	@Transactional
+	public void handleAfterCreate(StationPerspective stationPerspective){
 		Taxonomy taxonomy = taxonomyRepository.findOne(stationPerspective.taxonomy.id);
 		TermPerspective tp = new TermPerspective();
 		tp.perspective = stationPerspective;
@@ -61,10 +67,11 @@ public class StationPerspectiveEventHandler {
 			rowRepository.save(row);
 		}
 
-		stationPerspectiveRepository.save(stationPerspective);
+		perspectiveEsRepository.save(tp);
 	}
 
 	@HandleBeforeSave
+	@Transactional
 	public void handleBeforeSave(StationPerspective stationPerspective) {
 		validate(stationPerspective);
 	}

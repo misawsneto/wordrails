@@ -20,9 +20,9 @@ public class PostIndexed {
 	public String smallHash;
 	public String mediumHash;
 	public String largeHash;
-	public Boolean sponsor;
+	public Boolean sponsored;
 	@JsonManagedReference
-	public Sponsor sponsorObj;
+	public Sponsor sponsor;
 	@JsonManagedReference
 	public Set<Comment> comments;
 	@JsonManagedReference

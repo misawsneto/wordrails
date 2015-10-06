@@ -86,6 +86,7 @@ public class PostEventHandler {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			postService.schedule(post.id, post.scheduledDate);
 		}
+		postService.updatePostIndex(post);
 	}
 
 	@HandleBeforeDelete
