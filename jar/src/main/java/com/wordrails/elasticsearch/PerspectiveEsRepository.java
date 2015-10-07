@@ -3,7 +3,6 @@ package com.wordrails.elasticsearch;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.business.TermPerspective;
-import com.wordrails.persistence.TermPerspectiveRepository;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
@@ -19,8 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by jonas on 26/09/15.
@@ -40,10 +37,10 @@ public class PerspectiveEsRepository {
 	private static final String ES_TYPE = "perspective";
 
 	@Autowired
-	private ElasticsearchService elasticsearchService;
+	private ElasticSearchService elasticSearchService;
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page){
-		SearchRequestBuilder searchRequestBuilder = elasticsearchService.getElasticsearchClient()
+		SearchRequestBuilder searchRequestBuilder = elasticSearchService.getElasticsearchClient()
 														.prepareSearch(indexName)
 														.setTypes("term_perspective")
 														.setQuery(query);
@@ -65,11 +62,11 @@ public class PerspectiveEsRepository {
 	}
 
 	public void save(TermPerspective perspective) {
-		elasticsearchService.save(formatObjectJson(perspective), perspective.id.toString(), indexName, ES_TYPE);
+		elasticSearchService.save(formatObjectJson(perspective), perspective.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void update(TermPerspective perspective){
-		elasticsearchService.update(formatObjectJson(perspective), perspective.id.toString(), indexName, ES_TYPE);
+		elasticSearchService.update(formatObjectJson(perspective), perspective.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void delete(TermPerspective perspective){
@@ -77,7 +74,7 @@ public class PerspectiveEsRepository {
 	}
 
 	public void deleteByStationPerspective(Integer stationPerspectiveId){
-		Client client = elasticsearchService.getClient();
+		Client client = elasticSearchService.getClient();
 		SearchResponse response = client.prepareSearch(indexName)
 				.setTypes(ES_TYPE)
 				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
@@ -98,7 +95,7 @@ public class PerspectiveEsRepository {
 	}
 
 	public void delete(Integer perspectiveId){
-		elasticsearchService.delete(String.valueOf(perspectiveId), indexName, ES_TYPE);
+		elasticSearchService.delete(String.valueOf(perspectiveId), indexName, ES_TYPE);
 	}
 
 	public String formatObjectJson(TermPerspective perspective){

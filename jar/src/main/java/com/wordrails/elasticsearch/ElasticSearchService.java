@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by jonas on 26/09/15.
  */
-public class ElasticsearchService {
+public class ElasticSearchService {
 
 	protected Client client;
 
@@ -23,7 +23,7 @@ public class ElasticsearchService {
 		return client;
 	}
 
-	public ElasticsearchService(String host, Integer port){
+	public ElasticSearchService(String host, Integer port){
 		startEsClient(host, port);
 	}
 

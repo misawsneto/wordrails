@@ -33,10 +33,10 @@ public class PostEsRepository{
 	private static final String ES_TYPE = "post";
 
 	@Autowired
-	private ElasticsearchService elasticsearchService;
+	private ElasticSearchService elasticSearchService;
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page, String highlightedField){
-		SearchRequestBuilder searchRequestBuilder = elasticsearchService
+		SearchRequestBuilder searchRequestBuilder = elasticSearchService
 														.getElasticsearchClient()
 														.prepareSearch("posts")
 														.setTypes("post")
@@ -64,11 +64,11 @@ public class PostEsRepository{
 	}
 
 	public void save(Post post) {
-		elasticsearchService.save(formatObjectJson(post), post.id.toString(), indexName, ES_TYPE);
+		elasticSearchService.save(formatObjectJson(post), post.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void update(Post post){
-		elasticsearchService.update(formatObjectJson(post), post.id.toString(), indexName, ES_TYPE);
+		elasticSearchService.update(formatObjectJson(post), post.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void delete(Post post){
@@ -76,7 +76,7 @@ public class PostEsRepository{
 	}
 
 	public void delete(Integer postId){
-		elasticsearchService.delete(String.valueOf(postId), indexName, ES_TYPE);
+		elasticSearchService.delete(String.valueOf(postId), indexName, ES_TYPE);
 	}
 
 	public String formatObjectJson(Post post){
