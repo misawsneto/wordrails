@@ -131,11 +131,13 @@ public class StationEventHandler {
 			Row row1 = new Row();
 			row1.term = term1;
 			row1.type = Row.ORDINARY_ROW;
+			row1.index = 0;
 			tp.rows.add(row1);
 
 			Row row2 = new Row();
 			row2.term = term2;
 			row2.type = Row.ORDINARY_ROW;
+			row2.index = 0;
 			tp.rows.add(row2);
 
 			stationPerspective = stationPerspectiveRepository.findOne(stationPerspective.id);

@@ -799,4 +799,27 @@ public class UtilResource {
 			}
 		}
 	}
+
+	@GET
+	@Path("/updateRowPositions")
+	@Transactional(readOnly=false)
+	public void updateRowPositions(@Context HttpServletRequest request) throws InterruptedException {
+		String host = request.getHeader("Host");
+
+		if(isLocal(request.getHeader("Host"))){
+			List<TermPerspective> tps = termPerspectiveRepository.findAll();
+			for(TermPerspective tp: tps){
+				List<Row> rows = rowRepository.findByPerspective(tp);
+				Collections.sort(rows);
+				int i = 0;
+				for(Row row: rows){
+					if(row.index == null){
+						row.index = i;
+					}
+					i ++;
+				}
+				rowRepository.save(rows);
+			}
+		}
+	}
 }

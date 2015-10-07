@@ -45,11 +45,18 @@ public class TermEventHandler {
 						perspective = termPerspectiveRepository.findPerspectiveAndTermNull(stationPerspective.id);
 					}
 
-					if(perspective != null){
+					if(perspective != null) {
+
+						Row lastRow = rowRepository.findFirstByPerspectiveOrderByIndexDesc(perspective);
+						int lastIndex = 0;
+						if(lastRow != null){
+							lastIndex = lastRow.index == null ? 0 : lastRow.index;
+						}
+
 						Row row = new Row();
 						row.term = term;
 						row.type = Row.ORDINARY_ROW;
-						row.index = rowRepository.findFirstByPerspectiveOrderByIndexDesc(perspective).index + 1;
+						row.index = lastIndex + 1;
 						row.perspective = perspective;
 						rows.add(row);
 					}
