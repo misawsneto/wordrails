@@ -20,12 +20,22 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.elasticsearch.BookmarkEsRespository;
+import com.wordrails.elasticsearch.PostEsRepository;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 //import org.hibernate.search.jpa.FullTextEntityManager;
 //import org.hibernate.search.jpa.FullTextQuery;
 //import org.hibernate.search.query.dsl.BooleanJunction;
 //import org.hibernate.search.query.dsl.QueryBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +53,10 @@ import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.QueryPersistence;
 import com.wordrails.services.CacheService;
 
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+
 @Path("/bookmarks")
 @Consumes(MediaType.WILDCARD)
 @Component
@@ -53,20 +67,114 @@ public class BookmarksResource {
 
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired PostRepository postRepository;
-	private @Autowired PostConverter postConverter;
 	private @Autowired BookmarkRepository bookmarkRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
+	private @Autowired TrixAuthenticationProvider authProvider;
 	private @Autowired QueryPersistence queryPersistence;
 	
 	private @PersistenceContext EntityManager manager;
 	
 	private @Autowired CacheService cacheService;
+	private @Autowired BookmarkEsRespository bookmarkEsRespository;
+	private @Autowired PostEsRepository postEsRepository;
+
+	@GET
+	@Path("/searchBookmarks")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ContentResponse<List<JSONObject>> searchBookmarks(@QueryParam("query") String q,
+	                                                       @QueryParam("page") Integer page,
+	                                                       @QueryParam("size") Integer size){
+		Person person = authProvider.getLoggedPerson();
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+
+		PermissionId pId = new PermissionId();
+		pId.baseUrl = baseUrl;
+		pId.networkId = network.id;
+		pId.personId = person.id;
+
+		StationsPermissions permissions = new StationsPermissions();
+		try {
+			permissions = wordrailsService.getPersonPermissions(pId);
+		} catch (ExecutionException e1) {
+			e1.printStackTrace();
+		}
+
+		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
+
+		if(q == null || q.trim().isEmpty()){
+			Pageable pageable = new PageRequest(page, size);
+
+			ContentResponse<List<JSONObject>> response = new ContentResponse<List<JSONObject>>();
+			List<Bookmark> pages = bookmarkRepository
+					.findBookmarksByPersonIdOrderByDate(person.id, readableIds, pageable);
+
+			List<JSONObject> bookmarks = new ArrayList<JSONObject>();
+			for (Bookmark bookmark : pages) {
+				bookmarks.add(postEsRepository.makeObjectJson(bookmark.post));
+			}
+			response.content = bookmarks;
+			return response;
+		}
+
+		BoolQueryBuilder mainQuery = boolQuery();
+
+		MultiMatchQueryBuilder textQuery = null;
+
+		try {
+			textQuery = multiMatchQuery(q)
+					.field("bookmark.post.title", 5)
+					.field("bookmark.post.body", 2)
+					.field("bookmark.post.topper")
+					.field("bookmark.post.subheading")
+					.field("bookmark.post.author.name")
+					.field("bookmark.post.terms.name")
+					.prefixLength(1)
+					.fuzziness(Fuzziness.AUTO);
+		} catch (Exception e){
+			e.printStackTrace();
+
+			ContentResponse<List<JSONObject>> response = new ContentResponse<List<JSONObject>>();
+			response.content = new ArrayList<JSONObject>();
+
+			return response;
+		}
+
+		MatchQueryBuilder personQuery = matchQuery("bookmark.person.id", person.id);
+		BoolQueryBuilder stationsQuery = boolQuery();
+		for( Integer id: readableIds){
+			stationsQuery.should(matchQuery("bookmark.post.stationId", id));
+		}
+
+		mainQuery = mainQuery
+				.must(textQuery)
+				.must(personQuery)
+				.must(stationsQuery);
+
+		//Sort not defined
+		//FieldSortBuilder sort = new FieldSortBuilder("")
+
+		SearchResponse searchResponse = bookmarkEsRespository.runQuery(mainQuery.toString(), null, size, page);
+
+		List<JSONObject> bookmarks = new ArrayList<>();
+
+		for(SearchHit hit: searchResponse.getHits().getHits()){
+			bookmarks.add(bookmarkEsRespository
+					.convertToPostView(hit.getSourceAsString()));
+		}
+
+		ContentResponse<List<JSONObject>> response = new ContentResponse<List<JSONObject>>();
+		response.content = bookmarks;
+
+		return response;
+	}
+
 
 //	@GET
 //	@Path("/searchBookmarks")
 //	@Produces(MediaType.APPLICATION_JSON)
-//	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q, @QueryParam("page") Integer page, @QueryParam("size") Integer size){
+//	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q,
+//		                                                   @QueryParam("page") Integer page,
+//		                                                   @QueryParam("size") Integer size){
 //
 //		Person person = authProvider.getLoggedPerson();
 //		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -101,14 +209,18 @@ public class BookmarksResource {
 //		}
 //
 //		FullTextEntityManager ftem = org.hibernate.search.jpa.Search.getFullTextEntityManager(manager);
-//		// create native Lucene query unsing the query DSL
-//		// alternatively you can write the Lucene query using the Lucene query parser
-//		// or the Lucene programmatic API. The Hibernate Search DSL is recommend though
-//		QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Bookmark.class).get();
+//		 create native Lucene query unsing the query DSL
+//		 alternatively you can write the Lucene query using the Lucene query parser
+//		 or the Lucene programmatic API. The Hibernate Search DSL is recommend though
+//		QueryBuilder qb = ftem
+//				.getSearchFactory()
+//				.buildQueryBuilder()
+//				.forEntity(Bookmark.class)
+//				.get();
 //
 //		org.apache.lucene.search.Query text = null;
 //		try{
-//
+
 //			text = qb.keyword()
 //				.fuzzy()
 //				.withThreshold(.8f)
@@ -130,23 +242,37 @@ public class BookmarksResource {
 //			return response;
 //		};
 //
-//		org.apache.lucene.search.Query personQuery = qb.keyword().onField("person.id").ignoreAnalyzer().matching(person.id).createQuery();
+//		org.apache.lucene.search.Query personQuery = qb
+//				.keyword()
+//				.onField("person.id")
+//				.ignoreAnalyzer()
+//				.matching(person.id)
+//				.createQuery();
 //
 //		BooleanJunction stations = qb.bool();
 //		for (Integer integer : readableIds) {
-//			stations.should(qb.keyword().onField("post.stationId").ignoreAnalyzer().matching(integer).createQuery());
+//			stations
+//					.should(qb.keyword()
+//							.onField("post.stationId")
+//							.ignoreAnalyzer()
+//							.matching(integer)
+//							.createQuery());
 //		}
 //
-//		org.apache.lucene.search.Query full = qb.bool().must(text).must(personQuery).must(stations.createQuery()).createQuery();
+//		org.apache.lucene.search.Query full = qb.bool()
+//				.must(text)
+//				.must(personQuery)
+//				.must(stations.createQuery()).createQuery();
 //
 //		FullTextQuery ftq = ftem.createFullTextQuery(full, Bookmark.class);
-//		org.apache.lucene.search.Sort sort = new Sort( SortField.FIELD_SCORE, new SortField("id", SortField.INT, true));
+//		org.apache.lucene.search.Sort sort = new Sort( SortField.FIELD_SCORE,
+//				new SortField("id", SortField.INT, true));
 //		ftq.setSort(sort);
 //
-//		// wrap Lucene query in a javax.persistence.Query
+//		 wrap Lucene query in a javax.persistence.Query
 //		javax.persistence.Query persistenceQuery = ftq;
 //
-//		// execute search
+//		 execute search
 //		List<Bookmark> result = persistenceQuery
 //				.setFirstResult(size * page)
 //				.setMaxResults(size)
@@ -162,6 +288,7 @@ public class BookmarksResource {
 //
 //		return response;
 //	}
+
 //	@GET
 //	@Path("/searchBookmarks")
 //	@Produces(MediaType.APPLICATION_JSON)

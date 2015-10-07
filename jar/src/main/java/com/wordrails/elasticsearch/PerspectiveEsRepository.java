@@ -41,8 +41,6 @@ public class PerspectiveEsRepository {
 
 	@Autowired
 	private ElasticsearchService elasticsearchService;
-	@Autowired
-	private TermPerspectiveRepository perspectiveRepository;
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page){
 		SearchRequestBuilder searchRequestBuilder = elasticsearchService.getElasticsearchClient()
@@ -67,11 +65,11 @@ public class PerspectiveEsRepository {
 	}
 
 	public void save(TermPerspective perspective) {
-		elasticsearchService.save(formatObjecJson(perspective), perspective.id.toString(), indexName, ES_TYPE);
+		elasticsearchService.save(formatObjectJson(perspective), perspective.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void update(TermPerspective perspective){
-		elasticsearchService.update(formatObjecJson(perspective), perspective.id.toString(), indexName, ES_TYPE);
+		elasticsearchService.update(formatObjectJson(perspective), perspective.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void delete(TermPerspective perspective){
@@ -103,7 +101,7 @@ public class PerspectiveEsRepository {
 		elasticsearchService.delete(String.valueOf(perspectiveId), indexName, ES_TYPE);
 	}
 
-	public String formatObjecJson(TermPerspective perspective){
+	public String formatObjectJson(TermPerspective perspective){
 
 		String doc = null;
 
@@ -130,14 +128,6 @@ public class PerspectiveEsRepository {
 
 	public JSONObject convertToView(String json){
 
-//		JSONObject jsonObject = (JSONObject) JSONValue.parse(json);
-//		jsonObject.remove("author");
-//		jsonObject.remove("station");
-//		jsonObject.remove("terms");
-//		jsonObject.remove("sponsor");
-//		jsonObject.remove("comments");
-//		jsonObject.remove("images");
-//		return jsonObject;
 		return (JSONObject) JSONValue.parse(json);
 	}
 

@@ -64,11 +64,11 @@ public class PostEsRepository{
 	}
 
 	public void save(Post post) {
-		elasticsearchService.save(formatObjecJson(post), post.id.toString(), indexName, ES_TYPE);
+		elasticsearchService.save(formatObjectJson(post), post.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void update(Post post){
-		elasticsearchService.update(formatObjecJson(post), post.id.toString(), indexName, ES_TYPE);
+		elasticsearchService.update(formatObjectJson(post), post.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void delete(Post post){
@@ -79,7 +79,7 @@ public class PostEsRepository{
 		elasticsearchService.delete(String.valueOf(postId), indexName, ES_TYPE);
 	}
 
-	public String formatObjecJson(Post post){
+	public String formatObjectJson(Post post){
 
 		String doc = null;
 
@@ -93,6 +93,19 @@ public class PostEsRepository{
 		JSONObject toFormat = (JSONObject) JSONValue.parse(doc);
 
 		return toFormat.toJSONString();
+	}
+
+	public JSONObject makeObjectJson(Post post){
+		String doc = null;
+
+		try {
+			doc = objectMapper.writeValueAsString(makePostView(post, true));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return (JSONObject) JSONValue.parse(doc);
 	}
 
 	public PostIndexed makePostView(Post post, boolean addBody) {

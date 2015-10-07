@@ -68,9 +68,11 @@ public class PostsResource {
 	private
 	@Context
 	HttpServletRequest request;
+
 	private
 	@Context
 	UriInfo uriInfo;
+
 	private
 	@Context
 	HttpServletResponse response;
@@ -78,6 +80,7 @@ public class PostsResource {
 	private
 	@Autowired
 	WordrailsService wordrailsService;
+
 	private
 	@Autowired
 	PostRepository postRepository;
@@ -304,7 +307,6 @@ public class PostsResource {
 
 		for(SearchHit hit: searchResponse.getHits().getHits()){
 			try {
-				System.out.println();
 				postsViews.add(postEsRepository.convertToView(hit.getSourceAsString(), hit.getHighlightFields()));
 			} catch (Exception e) {
 				e.printStackTrace();
