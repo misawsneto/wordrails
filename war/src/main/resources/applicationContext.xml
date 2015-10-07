@@ -46,8 +46,6 @@
 		<!-- <property name="packagesToScan" value="com.wordrails.business"/> -->
 	</bean>
 
-
-
 	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
 
 	<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"/>

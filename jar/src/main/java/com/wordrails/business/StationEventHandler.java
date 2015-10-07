@@ -55,7 +55,7 @@ public class StationEventHandler {
 				station.stationPerspectives = perspectives;
 				
 				Set<Taxonomy> taxonomies = new HashSet<Taxonomy>();
-				
+
 				//Station Default Taxonomy
 				Taxonomy sTaxonomy = new Taxonomy();
 				sTaxonomy.name = "Station: " + station.name;
@@ -64,7 +64,7 @@ public class StationEventHandler {
 				taxonomies.add(sTaxonomy);
 				station.ownedTaxonomies = taxonomies;
 				stationPerspective.taxonomy = sTaxonomy;
-				
+
 				//Tag Default Taxonomy
 				Taxonomy tTaxonomy = new Taxonomy();
 				tTaxonomy.name = "Tags " + station.name;
@@ -77,7 +77,7 @@ public class StationEventHandler {
 			throw new UnauthorizedException();
 		}
 	}
-	
+
 	@HandleAfterCreate
 	@Transactional
 	public void handleAfterCreate(Station station){
@@ -160,8 +160,9 @@ public class StationEventHandler {
 
 		for (TermPerspective tp: stationPerspective.perspectives)
 			perspectiveEsRepository.save(tp);
+
 	}
-	
+
 	@HandleBeforeSave
 	public void handleBeforeSave(Station station){
 		station.stationPerspectives = new HashSet<StationPerspective>(stationPerspectiveRepository.findByStationId(station.id));

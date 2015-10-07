@@ -19,21 +19,21 @@ import org.springframework.transaction.annotation.Transactional;
 @RepositoryEventHandler(Term.class)
 @Component
 public class TermEventHandler {
-	
-	private @Autowired TermRepository termRepository; 
-	private @Autowired TermPerspectiveRepository termPerspectiveRepository; 
-	private @Autowired RowRepository rowRepository; 
-	private @Autowired CellRepository cellRepository; 
-	private @Autowired TaxonomySecurityChecker taxonomySecurityChecker; 
-	private @Autowired StationPerspectiveRepository stationPerspectiveRepository; 
-	
+
+	private @Autowired TermRepository termRepository;
+	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
+	private @Autowired RowRepository rowRepository;
+	private @Autowired CellRepository cellRepository;
+	private @Autowired TaxonomySecurityChecker taxonomySecurityChecker;
+	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
+
 	@HandleAfterCreate
 	@Transactional
 	public void handleAfterCreate(Term term) {
 		if(!term.taxonomy.type.equals(Taxonomy.STATION_TAG_TAXONOMY) &&
 				!term.taxonomy.type.equals(Taxonomy.STATION_AUTHOR_TAXONOMY) &&
 				taxonomySecurityChecker.canCreate(term.taxonomy)){
-			
+
 			List<StationPerspective> perspectives = stationPerspectiveRepository.findByTaxonomy(term.taxonomy);
 			if(perspectives != null && perspectives.size() > 0){
 				List<Row> rows = new ArrayList<Row>(perspectives.size());
@@ -67,9 +67,9 @@ public class TermEventHandler {
 			throw new UnauthorizedException();
 		}
 	}
-	
+
 	@HandleBeforeLinkSave
-	public void handleBeforeLinkSave(Term term, Object... parameters) {		
+	public void handleBeforeLinkSave(Term term, Object... parameters) {
 		if (term.parent != null) {
 			Integer termTaxonomyId = term.taxonomy.id;
 			Integer parentTaxonomyId = term.parent.taxonomy.id;
@@ -78,7 +78,7 @@ public class TermEventHandler {
 			}
 		}
 	}
-	
+
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Term term) {
@@ -88,12 +88,12 @@ public class TermEventHandler {
 			throw new UnauthorizedException();
 		}
 	}
-	
+
 	public void deleteCascade(Term termToDelete, Term term){
 		if(term.termPerspectives != null && term.termPerspectives.size() > 0){
 			termPerspectiveRepository.delete(term.termPerspectives);
 		}
-		
+
 		List<Row> rows = rowRepository.findByTerm(term);
 		if(rows != null && rows.size() > 0){
 			rowRepository.delete(rows);
@@ -108,7 +108,7 @@ public class TermEventHandler {
 			termRepository.delete(term);
 		}
 	}
-	
+
 	private void deleteCascade(Term termToDelete, List<Term> terms){
 		for (Term term : terms) {
 			deleteCascade(termToDelete, term);

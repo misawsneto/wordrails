@@ -71,11 +71,11 @@ public class StationPerspectiveEventHandler {
 			rowRepository.save(row);
 		}
 
+		stationPerspectiveRepository.save(stationPerspective);
 		perspectiveEsRepository.save(tp);
 	}
 
 	@HandleBeforeSave
-	@Transactional
 	public void handleBeforeSave(StationPerspective stationPerspective) {
 		validate(stationPerspective);
 	}

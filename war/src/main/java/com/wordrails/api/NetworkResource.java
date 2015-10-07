@@ -228,14 +228,14 @@ public class NetworkResource {
 		nTaxonomy.terms.add(nterm2);
 		termRepository.save(nterm1);
 		termRepository.save(nterm2);
-        Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
-        nTaxonomies.add(nTaxonomy);
-        taxonomyRepository.save(nTaxonomy);
-        network.ownedTaxonomies = nTaxonomies;
+		Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
+		nTaxonomies.add(nTaxonomy);
+		taxonomyRepository.save(nTaxonomy);
+		network.ownedTaxonomies = nTaxonomies;
 		network.categoriesTaxonomyId = nTaxonomy.id;
-        networkRepository.save(network);
+		networkRepository.save(network);
 
-        Station station = new Station();
+		Station station = new Station();
 		station.name = network.name;
 		station.main = true;
 		station.networks = new HashSet<Network>();
