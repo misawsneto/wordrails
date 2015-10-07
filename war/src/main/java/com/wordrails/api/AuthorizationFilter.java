@@ -359,7 +359,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPostVideosAuthorized(Integer postId) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -414,7 +414,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPostDraftVideosAuthorized(Integer postDraftId) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -1141,7 +1141,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetVideosAuthorized() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -1241,7 +1241,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPostScheduledVideosAuthorized(Integer postScheduledId) {
-		return false;
+		return true;
 	}
 
 	@Override
