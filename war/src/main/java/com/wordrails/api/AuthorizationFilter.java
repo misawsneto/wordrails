@@ -358,6 +358,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetPostVideosAuthorized(Integer postId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetPostImagesAuthorized(Integer postId) {
 		return canReadPosts(postId);
 	}
@@ -405,6 +410,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetPostDraftFeaturedImageAuthorized(Integer postDraftId) {
 		return canReadPosts(postDraftId);
+	}
+
+	@Override
+	protected boolean isGetPostDraftVideosAuthorized(Integer postDraftId) {
+		return false;
 	}
 
 	@Override
@@ -1130,6 +1140,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetVideosAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetVideoAuthorized(Integer videoId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isFindByHashAuthorized(String hash) {
 		return true;
 	}
@@ -1217,6 +1237,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetPostScheduledFeaturedImageAuthorized(Integer postScheduledId) {
 		return canReadPosts(postScheduledId);
+	}
+
+	@Override
+	protected boolean isGetPostScheduledVideosAuthorized(Integer postScheduledId) {
+		return false;
 	}
 
 	@Override

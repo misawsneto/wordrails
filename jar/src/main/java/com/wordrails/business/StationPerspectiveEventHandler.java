@@ -49,12 +49,16 @@ public class StationPerspectiveEventHandler {
 		tp.perspective = stationPerspective;
 		tp.stationId = stationPerspective.station.id;
 		tp.rows = new ArrayList<Row>();
+
+		int index = 0;
 		for (Term term: taxonomy.terms){
 			Row row = new Row();
 			row.term = term;
 			row.type = Row.ORDINARY_ROW;
 			tp.rows.add(row);
 			row.perspective = tp;
+			row.index = index;
+			index ++;
 		}
 
 		stationPerspective.perspectives = new HashSet<TermPerspective>();

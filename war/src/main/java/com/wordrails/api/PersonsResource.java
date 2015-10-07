@@ -86,6 +86,8 @@ public class PersonsResource {
 	private UserRepository userRepository;
 
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
+	public @Autowired @Qualifier("simpleMapper") ObjectMapper simpleMapper;
+
 	public @Autowired StationRoleEventHandler stationRoleEventHandler;
 
 	private @Autowired TrixAuthenticationProvider authProvider;
