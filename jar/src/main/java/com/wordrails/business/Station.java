@@ -6,11 +6,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-public class Station {
+public class Station implements Serializable {
+	private static final long serialVersionUID = 7821358742575074731L;
+
 	public static final String RESTRICTED = "RESTRICTED";
 	public static final String RESTRICTED_TO_NETWORKS = "RESTRICTED_TO_NETWORKS";
 	public static final String UNRESTRICTED = "UNRESTRICTED";
