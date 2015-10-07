@@ -228,14 +228,14 @@ public class NetworkResource {
 		nTaxonomy.terms.add(nterm2);
 		termRepository.save(nterm1);
 		termRepository.save(nterm2);
-        Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
-        nTaxonomies.add(nTaxonomy);
-        taxonomyRepository.save(nTaxonomy);
-        network.ownedTaxonomies = nTaxonomies;
+		Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
+		nTaxonomies.add(nTaxonomy);
+		taxonomyRepository.save(nTaxonomy);
+		network.ownedTaxonomies = nTaxonomies;
 		network.categoriesTaxonomyId = nTaxonomy.id;
-        networkRepository.save(network);
+		networkRepository.save(network);
 
-        Station station = new Station();
+		Station station = new Station();
 		station.name = network.name;
 		station.main = true;
 		station.networks = new HashSet<Network>();
@@ -328,11 +328,13 @@ public class NetworkResource {
 			Row row1 = new Row();
 			row1.term = term1;
 			row1.type = Row.ORDINARY_ROW;
+			row1.index = 0;
 			tp.rows.add(row1);
 
 			Row row2 = new Row();
 			row2.term = term2;
 			row2.type = Row.ORDINARY_ROW;
+			row2.index = 1;
 			tp.rows.add(row2);
 
 			stationPerspective = stationPerspectiveRepository.findOne(stationPerspective.id);

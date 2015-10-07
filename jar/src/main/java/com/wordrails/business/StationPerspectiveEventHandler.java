@@ -14,6 +14,7 @@ import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @RepositoryEventHandler(StationPerspective.class)
 @Component
@@ -37,18 +38,23 @@ public class StationPerspectiveEventHandler {
 	}
 
 	@HandleAfterCreate
-	public void handleAfterCreat(StationPerspective stationPerspective){
+	@Transactional
+	public void handleAfterCreate(StationPerspective stationPerspective){
 		Taxonomy taxonomy = taxonomyRepository.findOne(stationPerspective.taxonomy.id);
 		TermPerspective tp = new TermPerspective();
 		tp.perspective = stationPerspective;
 		tp.stationId = stationPerspective.station.id;
 		tp.rows = new ArrayList<Row>();
+
+		int index = 0;
 		for (Term term: taxonomy.terms){
 			Row row = new Row();
 			row.term = term;
 			row.type = Row.ORDINARY_ROW;
 			tp.rows.add(row);
 			row.perspective = tp;
+			row.index = index;
+			index ++;
 		}
 
 		stationPerspective.perspectives = new HashSet<TermPerspective>();
@@ -60,11 +66,10 @@ public class StationPerspectiveEventHandler {
 			row.perspective = tp;
 			rowRepository.save(row);
 		}
-
-		stationPerspectiveRepository.save(stationPerspective);
 	}
 
 	@HandleBeforeSave
+	@Transactional
 	public void handleBeforeSave(StationPerspective stationPerspective) {
 		validate(stationPerspective);
 	}

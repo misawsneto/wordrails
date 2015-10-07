@@ -36,23 +36,24 @@ public class StationEventHandler {
 	@Autowired TermRepository termRepository;
 	@Autowired TermPerspectiveRepository termPerspectiveRepository;
 	@Autowired RowRepository rowRepository;
+	@Autowired StationPerspectiveEventHandler stationPerspectiveEventHandler;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
 		if(stationSecurityChecker.canCreate(station)){
-			if(station.stationPerspectives == null || station.stationPerspectives.size() == 0 
+			if(station.stationPerspectives == null || station.stationPerspectives.size() == 0
 					&& station.networks != null && station.networks.size() > 0){
 				Set<StationPerspective> perspectives = new HashSet<StationPerspective>(1);
-				
+
 				//Perspective Default
 				StationPerspective stationPerspective = new StationPerspective();
 				stationPerspective.station = station;
 				stationPerspective.name = station.name + " (Default)";
 				perspectives.add(stationPerspective);
 				station.stationPerspectives = perspectives;
-				
+
 				Set<Taxonomy> taxonomies = new HashSet<Taxonomy>();
-				
+
 				//Station Default Taxonomy
 				Taxonomy sTaxonomy = new Taxonomy();
 				sTaxonomy.name = "Station: " + station.name;
@@ -61,7 +62,7 @@ public class StationEventHandler {
 				taxonomies.add(sTaxonomy);
 				station.ownedTaxonomies = taxonomies;
 				stationPerspective.taxonomy = sTaxonomy;
-				
+
 				//Tag Default Taxonomy
 				Taxonomy tTaxonomy = new Taxonomy();
 				tTaxonomy.name = "Tags " + station.name;
@@ -74,8 +75,9 @@ public class StationEventHandler {
 			throw new UnauthorizedException();
 		}
 	}
-	
+
 	@HandleAfterCreate
+	@Transactional
 	public void handleAfterCreate(Station station){
 		Term term1 = new Term();
 		term1.name = "Categoria 1";
@@ -127,11 +129,13 @@ public class StationEventHandler {
 			Row row1 = new Row();
 			row1.term = term1;
 			row1.type = Row.ORDINARY_ROW;
+			row1.index = 0;
 			tp.rows.add(row1);
 
 			Row row2 = new Row();
 			row2.term = term2;
 			row2.type = Row.ORDINARY_ROW;
+			row2.index = 0;
 			tp.rows.add(row2);
 
 			stationPerspective = stationPerspectiveRepository.findOne(stationPerspective.id);
@@ -151,22 +155,23 @@ public class StationEventHandler {
 
 		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
+
 	}
-	
+
 	@HandleBeforeSave
 	public void handleBeforeSave(Station station){
 		station.stationPerspectives = new HashSet<StationPerspective>(stationPerspectiveRepository.findByStationId(station.id));
 	}
-	
+
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Station station) throws UnauthorizedException{
 		if(stationSecurityChecker.canEdit(station)){
 			stationRepository.deleteStationNetwork(station.id);
-			
+
 			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
 			stationPerspectiveRepository.delete(stationsPerspectives);
-			
+
 			List<Taxonomy> taxonomies = taxonomyRepository.findByStationId(station.id);
 			if(taxonomies != null && !taxonomies.isEmpty()){
 				for (Taxonomy taxonomy : taxonomies) {
@@ -174,21 +179,22 @@ public class StationEventHandler {
 					taxonomyRepository.delete(taxonomy);
 				}
 			}
-			
+
 			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
 			if(stationsRoles != null && stationsRoles.size() > 0){
 				personStationRolesRepository.delete(stationsRoles);
 			}
-			
-			
+
+
+
 			List<Post> posts = postRepository.findByStation(station);
-			
+
 			if(posts != null && posts.size() > 0){
 //				for (Post post : posts) {
 //					postEventHandler.handleBeforeDelete(post);
 //					postRepository.delete(posts);
 //				}
-				
+
 				List<Integer> ids = new ArrayList<Integer>();
 				for (Post post : posts) {
 					ids.add(post.id);
@@ -200,19 +206,21 @@ public class StationEventHandler {
 				queryPersistence.deleteNotificationsInPosts(ids);
 				queryPersistence.deletePostReadsInPosts(ids);
 				queryPersistence.deleteRecommendsInPosts(ids);
-				
+
 				postRepository.delete(posts);
 			}
-			
+
 			List<Notification> notifications = notificationRepository.findByStation(station);
 			if(notifications != null && notifications.size() > 0)
 				notificationRepository.delete(notifications);
-			
+
+			//for(StationPerspective p: stationsPerspectives)
+
 		}else{
 			throw new UnauthorizedException();
 		}
 	}
-	
+
 	@HandleAfterSave
 	@Transactional
 	public void handleAfterSave(Station station){
