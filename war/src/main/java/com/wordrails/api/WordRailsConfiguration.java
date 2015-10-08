@@ -1,6 +1,6 @@
 package com.wordrails.api;
 
-import com.wordrails.elasticsearch.ElasticsearchService;
+import com.wordrails.elasticsearch.ElasticSearchService;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,8 +33,8 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 
 	@Bean
 	@PostConstruct
-	public ElasticsearchService elasticsearchService() {
-		return new ElasticsearchService(host, port);
+	public ElasticSearchService elasticsearchService() {
+		return new ElasticSearchService(host, port);
 	}
 
 

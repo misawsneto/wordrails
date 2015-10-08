@@ -3,7 +3,6 @@ package com.wordrails.elasticsearch;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.business.Bookmark;
-import com.wordrails.persistence.BookmarkRepository;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -33,13 +32,14 @@ public class BookmarkEsRespository {
 
 	private static final String ES_TYPE = "bookmark";
 
-	private @Autowired ElasticsearchService elasticsearchService;
+	private @Autowired
+	ElasticSearchService elasticSearchService;
 	private @Autowired PostEsRepository postEsRepository;
 
 
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page){
-		SearchRequestBuilder searchRequestBuilder = elasticsearchService.getElasticsearchClient()
+		SearchRequestBuilder searchRequestBuilder = elasticSearchService.getElasticsearchClient()
 				.prepareSearch(indexName)
 				.setTypes(ES_TYPE)
 				.setQuery(query);
@@ -61,11 +61,11 @@ public class BookmarkEsRespository {
 	}
 
 	public void save(Bookmark bookmark) {
-		elasticsearchService.save(formatObjectJson(bookmark), bookmark.id.toString(), indexName, ES_TYPE);
+		elasticSearchService.save(formatObjectJson(bookmark), bookmark.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void update(Bookmark bookmark){
-		elasticsearchService.update(formatObjectJson(bookmark), bookmark.id.toString(), indexName, ES_TYPE);
+		elasticSearchService.update(formatObjectJson(bookmark), bookmark.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void delete(Bookmark bookmark){
@@ -73,7 +73,7 @@ public class BookmarkEsRespository {
 	}
 
 	public void delete(Integer bookmarkId){
-		elasticsearchService.delete(String.valueOf(bookmarkId), indexName, ES_TYPE);
+		elasticSearchService.delete(String.valueOf(bookmarkId), indexName, ES_TYPE);
 	}
 
 	public String formatObjectJson(Bookmark bookmark){
