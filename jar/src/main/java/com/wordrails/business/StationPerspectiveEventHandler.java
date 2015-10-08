@@ -42,7 +42,6 @@ public class StationPerspectiveEventHandler {
 	}
 
 	@HandleAfterCreate
-	@Transactional
 	public void handleAfterCreate(StationPerspective stationPerspective){
 		Taxonomy taxonomy = taxonomyRepository.findOne(stationPerspective.taxonomy.id);
 		TermPerspective tp = new TermPerspective();

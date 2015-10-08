@@ -17,12 +17,10 @@ public class NetworkEventHandler {
 	private CacheService cacheService;  
 	
 	@HandleBeforeCreate
-	@Transactional
 	public void handleBeforeCreate(Network network) {
 	}
 	
 	@HandleAfterSave
-	@Transactional
 	public void handleAfterSave(Network network){
 		cacheService.updateNetwork(network.id);
 		cacheService.updateNetwork(network.subdomain);

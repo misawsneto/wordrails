@@ -70,7 +70,6 @@ public class PostEventHandler {
 	}
 
 	@HandleAfterCreate
-	@Transactional
 	public void handleAfterCreate(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			postService.schedule(post.id, post.scheduledDate);
@@ -81,7 +80,6 @@ public class PostEventHandler {
 	}
 
 	@HandleAfterSave
-	@Transactional
 	public void handleAfterSave(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			postService.schedule(post.id, post.scheduledDate);
@@ -90,7 +88,6 @@ public class PostEventHandler {
 	}
 
 	@HandleBeforeDelete
-	@Transactional
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
 		if (postAndCommentSecurityChecker.canRemove(post)) {
 
