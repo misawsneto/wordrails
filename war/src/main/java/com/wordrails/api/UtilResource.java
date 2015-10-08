@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
+import com.wordrails.elasticsearch.BookmarkEsRespository;
 import com.wordrails.elasticsearch.PerspectiveEsRepository;
 import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.jobs.SimpleJob;
@@ -75,6 +76,9 @@ public class UtilResource {
 
 	private @Autowired
 	PostEsRepository postEsRepository;
+
+	private @Autowired
+	BookmarkEsRespository bookmarkEsRespository;
 
 	@GET
 	@Path("/updateDefaultStationPerspective")
@@ -981,6 +985,25 @@ public class UtilResource {
 			}
 		}
 	}
+
+	@GET
+	@Path("/indexBookmarksToElastisearch")
+	@Transactional(readOnly=false)
+	public void indexBookmarksToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
+		String host = request.getHeader("Host");
+
+		if(isLocal(request.getHeader("Host"))){
+			List<Bookmark> all = bookmarkRepository.findAll();
+			for(int i = 0; i < all.size(); i++){
+				bookmarkEsRespository.save(all.get(i));
+
+				if(i % 50 == 0){
+					Thread.sleep(100);
+				}
+			}
+		}
+	}
+
 
 	@GET
 	@Path("/deleteAllPerspectivesFromIndex")

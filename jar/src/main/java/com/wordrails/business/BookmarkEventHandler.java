@@ -19,6 +19,7 @@ public class BookmarkEventHandler {
 		if(!favoriteSecurityChecker.canWriteBookmark(bookmark)){
 			throw new UnauthorizedException();
 		}
+		bookmarkEsRespository.save(bookmark);
 	}
 
 	@HandleBeforeSave
@@ -33,15 +34,6 @@ public class BookmarkEventHandler {
 		if(!favoriteSecurityChecker.canWriteBookmark(bookmark)){
 			throw new UnauthorizedException();
 		}
-	}
-
-	@HandleAfterCreate
-	public void handleAfterCreate(Bookmark bookmark){
-		bookmarkEsRespository.save(bookmark);
-	}
-
-	@HandleAfterDelete
-	public void handleAfterDelete(Bookmark bookmark){
 		bookmarkEsRespository.delete(bookmark);
 	}
 }
