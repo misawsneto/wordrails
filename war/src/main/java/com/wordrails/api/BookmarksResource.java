@@ -31,6 +31,7 @@ import org.apache.lucene.search.SortField;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchAllQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.SearchHit;
@@ -101,22 +102,30 @@ public class BookmarksResource {
 
 		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
 
-		if(q == null || q.trim().isEmpty()){
-			Pageable pageable = new PageRequest(page, size);
+		BoolQueryBuilder mainQuery = boolQuery();
+		MatchQueryBuilder personQuery = matchQuery("bookmark.person.id", person.id);
+		BoolQueryBuilder stationsQuery = boolQuery();
+		for( Integer id: readableIds){
+			stationsQuery.should(matchQuery("bookmark.post.stationId", id));
+		}
 
-			ContentResponse<List<JSONObject>> response = new ContentResponse<List<JSONObject>>();
-			List<Bookmark> pages = bookmarkRepository
-					.findBookmarksByPersonIdOrderByDate(person.id, readableIds, pageable);
+		if(q == null || q.trim().isEmpty()){
+			ContentResponse<List<JSONObject>> response = new ContentResponse<>();
+
+			mainQuery = mainQuery.must(personQuery).must(stationsQuery);
+
+			SearchResponse searchResponse = bookmarkEsRespository.runQuery(mainQuery.toString(), null, size, page);
 
 			List<JSONObject> bookmarks = new ArrayList<JSONObject>();
-			for (Bookmark bookmark : pages) {
-				bookmarks.add(postEsRepository.makeObjectJson(bookmark.post));
+
+			for(SearchHit hit: searchResponse.getHits().getHits()){
+				bookmarks.add(bookmarkEsRespository
+						.convertToPostView(hit.getSourceAsString()));
 			}
+
 			response.content = bookmarks;
 			return response;
 		}
-
-		BoolQueryBuilder mainQuery = boolQuery();
 
 		MultiMatchQueryBuilder textQuery = null;
 
@@ -139,22 +148,14 @@ public class BookmarksResource {
 			return response;
 		}
 
-		MatchQueryBuilder personQuery = matchQuery("bookmark.person.id", person.id);
-		BoolQueryBuilder stationsQuery = boolQuery();
-		for( Integer id: readableIds){
-			stationsQuery.should(matchQuery("bookmark.post.stationId", id));
-		}
-
 		mainQuery = mainQuery
 				.must(textQuery)
 				.must(personQuery)
 				.must(stationsQuery);
 
 		//Sort not defined
-		//FieldSortBuilder sort = new FieldSortBuilder("")
 
 		SearchResponse searchResponse = bookmarkEsRespository.runQuery(mainQuery.toString(), null, size, page);
-
 		List<JSONObject> bookmarks = new ArrayList<>();
 
 		for(SearchHit hit: searchResponse.getHits().getHits()){

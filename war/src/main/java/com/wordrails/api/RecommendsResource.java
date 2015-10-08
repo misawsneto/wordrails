@@ -57,7 +57,7 @@ public class RecommendsResource {
 	private @Autowired
 	TrixAuthenticationProvider authProvider;
 	private @Autowired QueryPersistence queryPersistence;
-	
+
 	private @PersistenceContext EntityManager manager;
 
 //	@GET
@@ -136,13 +136,13 @@ public class RecommendsResource {
 //
 //		return response;
 //	}
-	
+
 	@PUT
 	@Path("/toggleRecommend")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	public BooleanResponse toggleRecommend(@FormParam("postId") Integer postId){
-		
+
 		Person person = authProvider.getLoggedPerson();
 		if(person == null || person.username.equals("wordrails"))
 			throw new UnauthorizedException();
