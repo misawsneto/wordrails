@@ -980,6 +980,7 @@ public class UtilResource {
 				TermPerspective tp = all.get(i);
 				if(tp.perspective != null && tp.perspective.station != null)
 					perspectiveEsRepository.save(all.get(i));
+				else
 
 				if(i % 50 == 0){
 					Thread.sleep(100);
