@@ -65,7 +65,7 @@
 	<beans profile="dev">
 		<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
 			<property name="driverClass" value="com.mysql.jdbc.Driver"/>
-			<property name="jdbcUrl" value="jdbc:mysql://dbinstance1/trix_dev"/>
+			<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_dev"/>
 			<property name="username" value="wordrails"/>
 			<property name="password" value="wordrails"/>
 		</bean>
@@ -74,7 +74,7 @@
 	<beans profile="dev_prod">
 		<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
 			<property name="driverClass" value="com.mysql.jdbc.Driver"/>
-			<property name="jdbcUrl" value="jdbc:mysql://dbinstance1/trix_prod"/>
+			<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_prod"/>
 			<property name="username" value="wordrails"/>
 			<property name="password" value="wordrails"/>
 		</bean>
