@@ -7,6 +7,7 @@
        xmlns:task="http://www.springframework.org/schema/task"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jee="http://www.springframework.org/schema/jee"
+	   xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
          				   http://www.springframework.org/schema/beans/spring-beans.xsd
          				   http://www.springframework.org/schema/context
@@ -21,8 +22,7 @@
        					   http://www.springframework.org/schema/jee/spring-jee.xsd">
 
 	<context:component-scan base-package="com.wordrails">
-		<context:include-filter type="annotation"
-		                        expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
 	</context:component-scan>
 
 	<jpa:repositories base-package="com.wordrails.persistence" transaction-manager-ref="transactionManager"
@@ -48,7 +48,7 @@
 
 	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
 
-	<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"/>
+	<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:hostName="meminstance1" p:port="6379"/>
 
 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 
