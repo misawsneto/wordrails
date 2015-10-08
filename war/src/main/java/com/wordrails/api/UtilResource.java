@@ -978,7 +978,7 @@ public class UtilResource {
 			List<TermPerspective> all = termPerspectiveRepository.findAll();
 			for(int i = 0; i < all.size(); i++){
 				perspectiveEsRepository.save(all.get(i));
-				
+
 				if(i % 50 == 0){
 					Thread.sleep(100);
 				}

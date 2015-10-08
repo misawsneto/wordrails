@@ -21,9 +21,8 @@
 	</resource-ref>
 
 	<session-config>
-		<session-timeout>2880</session-timeout>
+		<session-timeout>5760</session-timeout>
 	</session-config>
-
 
 	<listener>
 		<listener-class>com.wordrails.ContextServletListener</listener-class>
