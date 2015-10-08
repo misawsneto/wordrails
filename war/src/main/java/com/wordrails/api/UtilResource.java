@@ -977,11 +977,8 @@ public class UtilResource {
 		if(isLocal(request.getHeader("Host"))){
 			List<TermPerspective> all = termPerspectiveRepository.findAll();
 			for(int i = 0; i < all.size(); i++){
-				TermPerspective tp = all.get(i);
-				if(tp.perspective != null && tp.perspective.station != null)
-					perspectiveEsRepository.save(all.get(i));
-				else
-
+				perspectiveEsRepository.save(all.get(i));
+				
 				if(i % 50 == 0){
 					Thread.sleep(100);
 				}
