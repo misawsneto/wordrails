@@ -18,6 +18,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"post_id", "person_id"}))
@@ -31,7 +32,7 @@ public class Bookmark {
 	@ManyToOne
 	@JoinColumn(name = "post_id")
 	public Post post;
-	
+
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "person_id")

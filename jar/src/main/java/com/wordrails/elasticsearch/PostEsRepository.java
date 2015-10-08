@@ -38,7 +38,7 @@ public class PostEsRepository{
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page, String highlightedField){
 		SearchRequestBuilder searchRequestBuilder = elasticSearchService
 														.getElasticsearchClient()
-														.prepareSearch("posts")
+														.prepareSearch(indexName)
 														.setTypes("post")
 														.setQuery(query);
 
@@ -84,7 +84,9 @@ public class PostEsRepository{
 		String doc = null;
 
 		try {
-			doc = objectMapper.writeValueAsString(makePostView(post, true));
+			doc = objectMapper.writeValueAsString(
+					makePostView(post, true)
+			);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return null;

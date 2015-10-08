@@ -34,9 +34,6 @@ public class BookmarkEsRespository {
 
 	private @Autowired
 	ElasticSearchService elasticSearchService;
-	private @Autowired PostEsRepository postEsRepository;
-
-
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page){
 		SearchRequestBuilder searchRequestBuilder = elasticSearchService.getElasticsearchClient()
@@ -81,13 +78,27 @@ public class BookmarkEsRespository {
 		String doc = null;
 
 		try {
-			doc = objectMapper.writeValueAsString(bookmark);
+			doc = objectMapper.writeValueAsString(
+					makeBookmarkView(bookmark)
+			);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return null;
 		}
 
 		return doc;
+	}
+
+	public BookmarkIndexed makeBookmarkView(Bookmark bookmark){
+		BookmarkIndexed bookmarkIndexed = new BookmarkIndexed();
+
+		bookmarkIndexed.id = bookmark.id;
+		bookmarkIndexed.post = bookmark.post;
+		bookmarkIndexed.person = bookmark.person;
+		bookmarkIndexed.createdAt = bookmark.createdAt;
+		bookmarkIndexed.updatedAt = bookmark.updatedAt;
+
+		return bookmarkIndexed;
 	}
 
 	public JSONObject convertToView(String json){
