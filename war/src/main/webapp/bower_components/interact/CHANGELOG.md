@@ -1,4 +1,27 @@
-## Upcomming Changes
+## 1.2.6
+
+### resize.preserveAspectRatio
+
+```javascript
+interact(target).resizable({ preserveAspectRatio: true });
+```
+
+See [PR #260](https://github.com/taye/interact.js/pull/260).
+
+### Deprecated
+ - `interact.margin(number)` - Use `interact(target).resizable({ margin: number });` instead
+
+### Fixed
+
+ - incorrect coordinates of the first movement of every action ([5e5a040](https://github.com/taye/interact.js/commit/5e5a040))
+ - warning about deprecated "webkitForce" event property ([0943290](https://github.com/taye/interact.js/commit/0943290))
+ - bugs with multiple concurrent interactions ([ed53aee](http://github.com/taye/interact.js/commit/ed53aee))
+ - iPad 1, iOS 5.1.1 error "undefined is not a function" when autoScroll is set
+   to true ([PR #194](https://github.com/taye/interact.js/pull/194))
+
+Full list of [changes on Github](https://github.com/taye/interact.js/compare/v1.2.5...master)
+
+## 1.2.5
 
 ### Changed parameters to actionChecker and drop.checker
 
@@ -27,7 +50,8 @@ See https://github.com/taye/interact.js/issues/166#issuecomment-91234390
 ### Fixes
 
  - touch coords on Presto Opera Mobile - see commits [886e54c](https://github.com/taye/interact.js/commit/886e54c) and [5a3a850](https://github.com/taye/interact.js/commit/5a3a850)
- - avoid accessing some recently deprecated event properties in Blink - see
+ - bug with multiple pointers - see commit [64882d3](https://github.com/taye/interact.js/commit/64882d3)
+ - accessing certain recently deprecated event properties in Blink - see
    commits [e91fbc6](https://github.com/taye/interact.js/commit/e91fbc6) and [195cfe9](https://github.com/taye/interact.js/commit/195cfe9)
  - dropzones with `accept: 'pointer'` in scrolled pages on iOS6 and lower - see
    commit [0b94aac](https://github.com/taye/interact.js/commit/0b94aac)

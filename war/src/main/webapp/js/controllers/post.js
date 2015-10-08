@@ -170,16 +170,18 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			return $scope.app.checkState(state);
 		}
 
-		var setWritableStationById = function(id){
-			$scope.writableStations && $scope.writableStations.forEach(function(station, index){
-				if(station.stationId == id)
-					$scope.app.editingPost.selectedStation = station;
-			});
-		}
 
-		$scope.postCtrl = {}
 	// check if user has permisstion to write
 	$scope.writableStations = trixService.getWritableStations();
+
+	var setWritableStationById = function(id){
+		$scope.writableStations && $scope.writableStations.forEach(function(station, index){
+			if(station.stationId == id)
+				$scope.app.editingPost.selectedStation = station;
+		});
+	}
+
+	$scope.postCtrl = {}
 
 	$scope.writableStations && $scope.writableStations.forEach(function(station, index){
 		station.id = station.stationId;
@@ -199,6 +201,9 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 				if(station.stationId == $scope.app.currentStation.id)
 					$scope.app.editingPost.selectedStation = station;
 			});
+
+			if($scope.app.editingPost && !$scope.app.editingPost.selectedStation)
+				$scope.app.editingPost.selectedStation = $scope.writableStations[0];
 
 		$scope.showTopOptions = function(){
 			if($scope.app.editingPost){
@@ -564,7 +569,7 @@ function isTermSelected(terms){
 		};
 
 			// check if user has permisstion to write
-			scope.writableStations = trixService.getWritableStations();
+			// scope.writableStations = trixService.getWritableStations();
 		};
 
 		function selectTerms(terms, termList){
