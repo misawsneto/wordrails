@@ -58,7 +58,7 @@ public class AmazonResource {
 		expiration.setTime(milliSeconds);
 
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(publicBucket, objectKey);
-		generatePresignedUrlRequest.setMethod(HttpMethod.GET);
+		generatePresignedUrlRequest.setMethod(HttpMethod.PUT);
 		generatePresignedUrlRequest.setExpiration(expiration);
 
 		URL url = s3().generatePresignedUrl(generatePresignedUrlRequest);
