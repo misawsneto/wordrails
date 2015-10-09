@@ -558,15 +558,15 @@ public class PersonsResource {
 
 
 			if(setAttributes != null && setAttributes){
-				request.setAttribute("personData", mapper.writeValueAsString(personData).replace("\n", "").replace("\r", ""));
-				request.setAttribute("termPerspectiveView", mapper.writeValueAsString(termPerspectiveView).replace("\n", "").replace("\r", ""));
+				request.setAttribute("personData", simpleMapper.writeValueAsString(personData));
+				request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
 				request.setAttribute("networkName", personData.network.name);
 				request.setAttribute("networkDesciption", "");
 				request.setAttribute("networkKeywords", "");
 			}
 		}else {
 			personData.noVisibleStation = true;
-			request.setAttribute("personData", mapper.writeValueAsString(personData).replace("\n", "").replace("\r", ""));
+			request.setAttribute("personData", simpleMapper.writeValueAsString(personData));
 			request.setAttribute("networkName", personData.network.name);
 		}
 
