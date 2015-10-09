@@ -16,7 +16,7 @@ public class Test {
 		return new WordRails(
 				new MockConnectivityManager(true),
 				new File("."), 0,
-				"http://sport.xarxlocal.com", "wordrails", "wordrails",
+				"http://sport.xarxlocal.com", "sport", "Sport@dmiN",
 				LogLevel.FULL);
 	}
 
@@ -37,7 +37,8 @@ public class Test {
 	}
 
 	public static void main(String[] args) throws IOException {
-		WordRails wordRails = getTest("demo", "demo");
+		//WordRails wordRails = getTest("demo", "demo");
+		WordRails wordRails = getLocal();
 		wordRails.login();
 		wordRails.getInitialData();
 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jee="http://www.springframework.org/schema/jee"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:jee="http://www.springframework.org/schema/jee"
 	   xmlns:p="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
          				   http://www.springframework.org/schema/beans/spring-beans.xsd
          				   http://www.springframework.org/schema/context
          				   http://www.springframework.org/schema/context/spring-context.xsd
@@ -26,7 +26,7 @@
 	</context:component-scan>
 
 	<jpa:repositories base-package="com.wordrails.persistence" transaction-manager-ref="transactionManager"
-	                  entity-manager-factory-ref="entityManagerFactory"/>
+					  entity-manager-factory-ref="entityManagerFactory"/>
 
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 
@@ -59,6 +59,15 @@
 	<bean id="cacheService" class="com.wordrails.services.CacheService" init-method="init"/>
 	<bean id="wordrailsService" class="com.wordrails.WordrailsService" init-method="init"/>
 	<bean id="simpleMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+
+	<bean id="springSessionRepositoryFilter" class="org.springframework.session.web.http.SessionRepositoryFilter">
+		<constructor-arg ref="sessionRepository"/>
+		<property name="httpSessionStrategy">
+			<bean class="org.springframework.session.web.http.CookieHttpSessionStrategy">
+				<property name="cookieName" value="JSESSIONID" />
+			</bean>
+		</property>
+	</bean>
 
 	<!-- __________________________ DATABASE __________________________ -->
 
