@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.wordrails.WordrailsService;
 import com.wordrails.business.Network;
 import com.wordrails.util.WordrailsUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,9 +18,11 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -43,9 +46,8 @@ public class AmazonResource {
 	}
 
 	@GET
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/signedUrl")
-	public Response generateSignedUrl(@FormParam("hash") String hash, @FormParam("type") String type, @Context HttpServletRequest request) throws IOException {
+	public Response generateSignedUrl(@QueryParam("hash") String hash, @QueryParam("type") String type, @Context HttpServletRequest request) throws IOException {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		String objectKey = network.subdomain + "/" + type + "/" + hash;
 
@@ -62,8 +64,8 @@ public class AmazonResource {
 		URL url = s3().generatePresignedUrl(generatePresignedUrlRequest);
 		String signedUrl = url.toString();
 
-		System.out.println("Pre-Signed URL = " + url.toString());
+		System.out.println("Pre-Signed URL = " + signedUrl);
 
-		return Response.ok().entity("{\"signedUrl\":" + signedUrl + "}").build();
+		return Response.ok().entity(signedUrl).build();
 	}
 }

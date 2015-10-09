@@ -547,5 +547,15 @@ public class $facade$ {
 	}
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+	public Response getAmazonSignedUrl(String hash, String type){
+		return _facade.getAmazonSignedUrl(hash, type);
+	}
+	
+	public void getAmazonSignedUrl(String hash, String type, Callback<Response> _callback){
+		_facade.getAmazonSignedUrl(hash, type, _callback);
+	}
+/*---------------------------------------------------------------------------*/
+
 $entities:FacadeMethods(); separator="\n\n"$
 }>>

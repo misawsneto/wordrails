@@ -263,5 +263,13 @@ interface I$facade$ {
 	void getInitialData(Callback<PersonData> _callback);
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+	@GET("/amazon/signedUrl")
+	Response getAmazonSignedUrl(@Query("hash") String hash, @Query("type") String type);
+	
+	@GET("/amazon/signedUrl")
+	void getAmazonSignedUrl(@Query("hash") String hash, @Query("type") String type, Callback<Response> _callback);
+/*---------------------------------------------------------------------------*/
+
 $entities:IFacadeMethods(); separator="\n\n"$
 }>>
