@@ -224,7 +224,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/interact.min.js'])
+                        return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/dist/interact.min.js'])
                         .then(function(){
                             return $ocLazyLoad.load(['angular-carousel','ui.slimscroll', 'ui.sortable','color-selector', 'js/controllers/settings-perspective.js?' + GLOBAL_URL_HASH])
                           });
@@ -303,7 +303,7 @@ angular.module('app')
                   resolve: {
                     deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                        return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/interact.min.js'])
+                        return $ocLazyLoad.load(['../bower_components/modernizr/modernizr.js', '../bower_components/interact/dist/interact.min.js'])
                         .then(function(){
                             return $ocLazyLoad.load(['color-selector', 'colorpicker.module', 'js/controllers/settings-colors.js?' + GLOBAL_URL_HASH])
                           });

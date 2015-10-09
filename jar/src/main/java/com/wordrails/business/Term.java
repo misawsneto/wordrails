@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-//import org.codehaus.jackson.annotate.JsonBackReference;
-//import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 //import org.hibernate.search.annotations.ContainedIn;
 //import org.hibernate.search.annotations.DocumentId;
 //import org.hibernate.search.annotations.Field;
@@ -44,13 +44,13 @@ public class Term {
 	@ManyToOne	
 	public Taxonomy taxonomy;
 
-//	@JsonBackReference
+	@JsonBackReference
 	@ManyToOne
 	public Term parent;
 	
 	public Integer parentTermId;
 			
-//	@JsonManagedReference
+	@JsonManagedReference
 	@OneToMany(mappedBy="parent")
 	public Set<Term> children;
 
