@@ -79,7 +79,6 @@ public class StationEventHandler {
 	}
 
 	@HandleAfterCreate
-	@Transactional
 	public void handleAfterCreate(Station station){
 		Term term1 = new Term();
 		term1.name = "Categoria 1";

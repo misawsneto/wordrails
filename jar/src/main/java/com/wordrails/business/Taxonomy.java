@@ -40,13 +40,13 @@ public class Taxonomy {
 
 /*--NETWORK_TAXONOMY---------------------------------------------------------*/	
 	@ManyToOne
-	@JoinColumn(updatable=false)
+	@JoinColumn(updatable=true)
 	public Network owningNetwork;
 /*--NETWORK_TAXONOMY---------------------------------------------------------*/
 
 /*--STATION_TAXONOMY---------------------------------------------------------*/	
 	@ManyToOne
-	@JoinColumn(updatable=false)
+	@JoinColumn(updatable=true)
 	public Station owningStation;
 /*--STATION_TAXONOMY---------------------------------------------------------*/
 
