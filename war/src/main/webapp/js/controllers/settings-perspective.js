@@ -258,9 +258,6 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
   // paginate search
   $scope.pe.paginateSearch = function(){
 
-    if($scope.app.getCurrentStateName() != 'app.search' || !$scope.pe.searchResults || $scope.pe.searchResults.length == 0)
-      return;
-
     if($scope.pe.allLoaded)
       return;
 
