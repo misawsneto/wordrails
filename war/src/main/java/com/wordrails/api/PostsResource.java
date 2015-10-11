@@ -54,6 +54,8 @@ import javax.ws.rs.core.UriInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -232,6 +234,14 @@ public class PostsResource {
 	                                               @QueryParam("page") Integer page,
 	                                               @QueryParam("size") Integer size) {
 
+		List<Integer> stationIdIntegers = new ArrayList<Integer>();
+
+		if(stationIds != null){
+			List<String> stringIds = Arrays.asList(stationIds.split("\\s*,\\s*"));
+			for (String id: stringIds)
+				stationIdIntegers.add(Integer.parseInt(id));
+		}
+
 		Person person = authProvider.getLoggedPerson();
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
@@ -249,6 +259,19 @@ public class PostsResource {
 		}
 
 		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
+
+		// if user passes a station without permission, remove it
+		if(readableIds.size() > 0 && readableIds.size() > 0) {
+			Iterator<Integer> it = stationIdIntegers.iterator();
+			while (it.hasNext()){
+				Integer stationId = it.next();
+				if (!readableIds.contains(stationId))
+					it.remove();
+			}
+		}
+
+		if(stationIds != null && stationIdIntegers.size() == 0)
+			throw new UnauthorizedException("unauthorizd stations");
 
 		MultiMatchQueryBuilder queryText = null;
 		BoolQueryBuilder mainQuery = boolQuery();
@@ -286,6 +309,9 @@ public class PostsResource {
 			mainQuery = mainQuery.must(
 					matchQuery("post.state", Post.STATE_PUBLISHED));
 		}
+
+		if(stationIdIntegers.size() > 0)
+			readableIds = stationIdIntegers;
 
 		BoolQueryBuilder statiosQuery = boolQuery();
 		for(Integer stationId: readableIds){

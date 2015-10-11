@@ -272,24 +272,6 @@ public class $facade$ {
 		});
 	}
 	
-	public SearchView searchPostsFromOrPromotedToStation(Integer stationId, String query, int page, int size){
-		return _facade.searchPostsFromOrPromotedToStation(stationId, query, page, size).content;
-	}
-	
-	public void searchPostsFromOrPromotedToStation(Integer stationId, String query, int page, int size, final Callback<SearchView\> _callback){
-		_facade.searchPostsFromOrPromotedToStation(stationId, query, page, size, new Callback<ContentResponse<SearchView\>\>() {
-			@Override
-			public void success(ContentResponse<SearchView\> _t, Response _response) {
-				_callback.success(_t.content, _response);
-			}
-
-			@Override
-			public void failure(RetrofitError _error) {
-				_callback.failure(_error);
-			}		
-		});
-	}
-
 	public Response socialLogin(String provider, String userId, String accessToken){
 		return _facade.socialLogin(provider, userId, accessToken);
 	}
