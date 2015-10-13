@@ -379,6 +379,14 @@ function getCustomStyle(color, perspective, header) {
 		"border-color:" + color +
 	"}"+
 
+	"md-select:not([disabled]):focus .md-select-value{" + 
+		"border-bottom-color:" + color +
+	"}"+
+
+	"md-select-menu md-option[selected]{"+
+		"color:" + color + "!important"
+	"}"+
+
 	"md-checkbox.md-default-theme.md-checked .md-icon:after{" +
 	"border-color:" + textColorEval(color) +
 	"}"+

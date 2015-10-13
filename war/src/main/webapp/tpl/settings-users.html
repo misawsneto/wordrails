@@ -8,142 +8,144 @@
 		<div class="panel panel-card block-1000 m-auto material-shadow-light" ng-if="!(creating || editing)">
 			<div class="panel-heading h4 wrapper-md">
 				<span>Usuários</span>
-				<div class="pull-right" ng-if="showProgress" layout="row" layout-sm="column" layout-align="space-around" style="transform: scale(0.5); margin:-15px -15px 0 0">
+				<div class="pos-abt" ng-if="showProgress" layout="row" layout-sm="column" layout-align="space-around" style="transform: scale(0.5); right: 0; margin:-65px 5px 0 0;">
 		      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 		    </div>
 			</div>
 			<div class="panel-body p-n" style="min-height: 200px;">
 				<div class="row wrapper">
 					<div class="col-sm-4 m-b-xs">
-						<select class="form-control w inline v-middle" ng-model="bulkActionSelected" ng-change="selectBulkAction(bulkActionSelected)"
-						ng-options="action as action.name for action in bulkActions track by action.id">
-					</select>
-					<button ng-disabled="bulkActionSelected.id == 0" ng-click="openBulkActionsSplash()" class="btn btn-default">Aplicar</button>                
-				</div>
-				<!-- persons pagination -->
-				<div class="col-sm-4 text-right">
-					<div ng-if="persons && personsCount">
-						<span class="font-bold">
-							{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
-						</span>
-						<span class="p-l-xs p-r-xs">de</span> 
-						<span class="p-r font-bold">
-							{{personsCount - 1}}
-						</span>
-						<div class="btn-group inline">
-		          <a ng-click="paginate('left')" ng-class="{'disabled': beginning}" href class="btn btn-default"><span class="mdi mdi-chevron-left"></span></a>
-		          <a ng-click="paginate('right')" ng-class="{'disabled': allLoaded}" href class="btn btn-default"><span class="mdi mdi-chevron-right"></span></a>
-		        </div>
+						<md-select class="col-sm-8 m-t-none m-b-none" ng-model="bulkActionSelected" ng-change="selectBulkAction(bulkActionSelected)" placeholder="Ações em grupo">
+		          <md-option ng-value="action.name" ng-repeat="action in bulkActions">{{ action.name }}</md-option>
+		        </md-select>
+						<button md-ink-ripple ng-disabled="!bulkActionSelected" ng-click="openBulkActionsSplash()" class="m-t-n-xxs md-btn md-raised bg-white">Aplicar</button>
 					</div>
-				</div>
-				<!-- /persons pagination -->
-				<div class="col-sm-4">
-					<!-- <div class="input-group"> -->
-					<input type="text" class="input-md w-full form-control" placeholder="Busque por usuário, nome ou email">
-							<!-- <span class="input-group-btn">
-								<button class="btn btn-sm text-lg btn-default" type="button">Buscar</button>
-							</span> -->
-							<!-- </div> -->
+					<div class="col-sm-4 text-right">
+						<div ng-if="persons && personsCount">
+							<span class="font-bold">
+								{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
+							</span>
+							<span class="p-l-xs p-r-xs">de</span> 
+							<span class="p-r font-bold">
+								{{personsCount - 1}}
+							</span>
+							<div class="inline">
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('left')" ng-disabled="beginning">
+								<span class="mdi mdi-chevron-left"></span></button>
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('right')" ng-disabled="allLoaded">
+								<span class="mdi mdi-chevron-right"></span></button>
+			        </div>
 						</div>
 					</div>
-					<div class="table-responsive o-visible text-md">
-						<table class="table b-t b-light">
-							<thead>
-								<tr>
-									<th style="width:15px;">
-										<label class="md-check">
-											<input type="checkbox" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
-											<i class="blue"></i>
-										</label>
-									</th>
-									<th>Usuários</th>
-									<th>Nome</th>
-									<th class="text-center">Último login</th>
-									<th ng-if="app.networkAdmin" style="width:30px;"></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="person in persons" ng-click="loadPerson(person)">
-									<td>
-										<label class="md-check">
-											<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
-											<i class="blue"></i>
-										</label>
-									</td>
-									<td>
-										<div back-img="{{person.imageSmallId}}" 
-										class="bg-cover bg-img-xs bg-cover-round pull-left m-r m-t-n-xxs m-b-n-xxs pos-rlt bla-{{person.imageSmallId}}"
-										title="{{person.name}}"></div>
-										{{person.username}}
-									</td>
-									<td>{{person.name}}</td>
-									<td class="text-center" ng-if="!person.lastLogin"> - </td>
-									<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
-									<td ng-if="app.networkAdmin">
-										<div class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-											<a href ng-click="openDeletePerson(person)" angular-ripple class="dropdown-toggle border-radius-50 i-20 mdi-delete mdi">
-											</a>
-											<!-- dropdown -->
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+				<!-- /persons pagination -->
+					<div class="col-sm-4">
+						<div class="md-form-group m-t-n-md float-label">
+							<!-- <i class="mdi mdi-magnify text-muted text-shadow-none pos-abt text-lg m-t-xs"></i> -->
+		          <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstName" required="" tabindex="0" aria-required="true" aria-invalid="true" style="">
+		          <label>
+		          <i class="mdi mdi-magnify"></i>
+		          Busque por usuário, nome ou email</label>
+		        </div>
+	        </div>
+				</div>
+				<div class="table-responsive o-visible text-md">
+					<table class="table b-t b-light">
+						<thead>
+							<tr>
+								<th style="width:15px;">
+									<label class="md-check">
+										<input type="checkbox" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
+										<i class="blue"></i>
+									</label>
+								</th>
+								<th>Usuários</th>
+								<th>Nome</th>
+								<th class="text-center">Último login</th>
+								<th ng-if="app.networkAdmin" style="width:30px;"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="person in persons" ng-click="loadPerson(person)">
+								<td>
+									<label class="md-check">
+										<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
+										<i class="blue"></i>
+									</label>
+								</td>
+								<td>
+									<div back-img="{{person.imageSmallId}}" 
+									class="bg-cover bg-img-xs bg-cover-round pull-left m-r m-t-n-xxs m-b-n-xxs pos-rlt bla-{{person.imageSmallId}}"
+									title="{{person.name}}"></div>
+									{{person.username}}
+								</td>
+								<td>{{person.name}}</td>
+								<td class="text-center" ng-if="!person.lastLogin"> - </td>
+								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
+								<td ng-if="app.networkAdmin">
+									<div class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+										<a href ng-click="openDeletePerson(person)" angular-ripple class="dropdown-toggle border-radius-50 i-20 mdi-delete mdi">
+										</a>
+										<!-- dropdown -->
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
+		</div>
 			<!-- /end of user panel list -->
 
 			<!-- new user panel -->
-			<div class="panel material-shadow-light panel-card block-600 m-auto" ng-if="creating">
-				<div class="panel-heading h4 wrapper-md">
-					<span>Novo usuário</span>
-				</div>
-				<div class="panel-body wrapper-md">
-					<div class="row pos-rlt">
-						<div class="w-xxl m-auto">
-							<div class="md-form-group md-neutral-theme text-lg">
-								<input class="md-input text-xl" ng-model="person.name">
-								<label>Nome completo</label>
-							</div>
-							<div class="md-form-group md-neutral-theme">
-								<input class="md-input" ng-model="person.email" required>
-								<label>Email</label>
-							</div>
-							<div class="md-form-group md-neutral-theme">
-								<input class="md-input" ng-model="person.username" required>
-								<label>Usuário</label>
-							</div>
-							<div class="md-form-group md-neutral-theme">
-								<input type="password" class="md-input" ng-model="person.password" required>
-								<label>Senha</label>
-								<span class="md-input-msg right">(opcional) se não fornecido, criaremos uma senha automaticamente.</span>
-							</div>
+		<div class="panel material-shadow-light panel-card block-600 m-auto" ng-if="creating">
+			<div class="panel-heading h4 wrapper-md">
+				<span>Novo usuário</span>
+			</div>
+			<div class="panel-body wrapper-md">
+				<div class="row pos-rlt">
+					<div class="w-xxl m-auto">
+						<div class="md-form-group md-neutral-theme text-lg">
+							<input class="md-input text-xl" ng-model="person.name">
+							<label>Nome completo</label>
 						</div>
-					</div>
-					<div class="line line-dashed b-b line-lg pull-in"></div>
-					<div class="row">
-						<div class="col-sm-12">
-							<div class="m-b text-muted text-md text-u-c">Notificar usuário</div>
-							<p>
-								<label class="md-switch">
-									<input type="checkbox" ng-model="person.emailNotification"
-									ng-true-value="true" ng-false-value="false">
-									<i class="blue"></i>
-									Enviar link de configuração do perfil via email.
-								</label>
-							</p>
+						<div class="md-form-group md-neutral-theme">
+							<input class="md-input" ng-model="person.email" required>
+							<label>Email</label>
+						</div>
+						<div class="md-form-group md-neutral-theme">
+							<input class="md-input" ng-model="person.username" required>
+							<label>Usuário</label>
+						</div>
+						<div class="md-form-group md-neutral-theme">
+							<input type="password" class="md-input" ng-model="person.password" required>
+							<label>Senha</label>
+							<span class="md-input-msg right">(opcional) se não fornecido, criaremos uma senha automaticamente.</span>
 						</div>
 					</div>
 				</div>
-				<div class="m-t text-right text-lg" >
-					<button ui-sref="app.settings.users({'newUser': null, 'userId': null})"
-					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
-
-					<button ng-click="createPerson()"
-					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="m-b text-muted text-md text-u-c">Notificar usuário</div>
+						<p>
+							<label class="md-switch">
+								<input type="checkbox" ng-model="person.emailNotification"
+								ng-true-value="true" ng-false-value="false">
+								<i class="blue"></i>
+								Enviar link de configuração do perfil via email.
+							</label>
+						</p>
+					</div>
 				</div>
 			</div>
+			<div class="m-t text-right text-lg" >
+				<button ui-sref="app.settings.users({'newUser': null, 'userId': null})"
+				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+
+				<button ng-click="createPerson()"
+				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
+			</div>
+		</div>
 			<!-- /new user panel-->
 
 			<!-- editing user panel -->

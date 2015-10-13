@@ -42,7 +42,7 @@ public class PerspectiveEsRepository {
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page){
 		SearchRequestBuilder searchRequestBuilder = elasticSearchService.getElasticsearchClient()
 														.prepareSearch(indexName)
-														.setTypes("term_perspective")
+														.setTypes("perspective")
 														.setQuery(query);
 
 		if (size != null && size > 0){

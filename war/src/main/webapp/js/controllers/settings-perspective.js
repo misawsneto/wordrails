@@ -245,7 +245,7 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
 
       $scope.pe.searchPage = 0;
       $scope.pe.allLoaded = false;
-      trix.searchPosts($scope.pe.searchQuery, $scope.pe.searchPage, 10, {stationIds: '10'})
+      trix.searchPosts($scope.pe.searchQuery, $scope.pe.searchPage, 10, {stationIds: '10', sortByDate: true})
       .success(function(response){
         $scope.pe.searchHits = response.hits;
         $scope.pe.searchResults = response.posts;
@@ -264,7 +264,7 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
     if(!$scope.searchLoading){
 
       $scope.searchLoading = true;
-      trix.searchPosts($scope.pe.searchQuery, $scope.pe.searchPage + 1, 10, {stationIds: '10'})
+      trix.searchPosts($scope.pe.searchQuery, $scope.pe.searchPage + 1, 10, {stationIds: '10', sortByDate: true})
       .success(function(response){
 
         $scope.searchLoading = false;

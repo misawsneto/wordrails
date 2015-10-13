@@ -2,9 +2,8 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.1
+ * v0.11.2
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 .md-dialog-is-showing {
   max-height: 100%; }
 
@@ -33,7 +32,7 @@ md-dialog {
   max-height: 80%;
   position: relative;
   overflow: auto;
-  box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.14), 0px 16px 24px 2px rgba(0, 0, 0, 0.098), 0px 6px 30px 5px rgba(0, 0, 0, 0.084);
+  box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 13px 19px 2px rgba(0, 0, 0, 0.14), 0px 5px 24px 4px rgba(0, 0, 0, 0.12);
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -81,6 +80,8 @@ md-dialog {
       md-dialog md-dialog-content.sticky-container > div {
         padding: 24px;
         padding-top: 0; }
+    md-dialog md-dialog-content .md-dialog-content-body {
+      width: 100%; }
   md-dialog .md-actions {
     display: -webkit-flex;
     display: -ms-flexbox;

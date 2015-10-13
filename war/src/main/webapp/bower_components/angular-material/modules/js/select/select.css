@@ -2,9 +2,8 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.1
+ * v0.11.2
  */
-/* mixin definition ; sets LTR and RTL within the same style call */
 .md-select-menu-container {
   position: fixed;
   left: 0;
@@ -20,11 +19,11 @@
     opacity: 1; }
     .md-select-menu-container.md-active md-select-menu {
       transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      transition-duration: 200ms; }
+      transition-duration: 150ms; }
       .md-select-menu-container.md-active md-select-menu > * {
         opacity: 1;
         transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-        transition-duration: 200ms;
+        transition-duration: 150ms;
         transition-delay: 100ms; }
   .md-select-menu-container.md-leave {
     opacity: 0;
@@ -42,6 +41,11 @@ md-select {
   display: -ms-flexbox;
   display: flex;
   margin: 20px 0 26px 0; }
+  md-select[disabled] .md-select-value {
+    background-position: 0 bottom;
+    background-size: 4px 1px;
+    background-repeat: repeat-x;
+    margin-bottom: -1px; }
   md-select:focus {
     outline: none; }
   md-select[disabled]:hover {
@@ -66,6 +70,7 @@ md-select {
   padding: 2px 2px 1px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
+  background-color: transparent;
   position: relative;
   box-sizing: content-box;
   min-width: 64px;
@@ -84,6 +89,7 @@ md-select {
     -webkit-transform: translate3d(0, 2px, 0);
             transform: translate3d(0, 2px, 0); }
   .md-select-value .md-select-icon {
+    display: block;
     -webkit-align-items: flex-end;
         -ms-flex-align: end;
             align-items: flex-end;
@@ -119,7 +125,7 @@ md-select-menu {
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.14), 0px 2px 2px 0px rgba(0, 0, 0, 0.098), 0px 1px 5px 0px rgba(0, 0, 0, 0.084);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
   max-height: 256px;
   min-height: 48px;
   overflow-y: hidden;
@@ -136,7 +142,18 @@ md-select-menu {
     padding-bottom: 8px; }
   html[dir=rtl] md-select-menu {
     -webkit-transform-origin: right top;
-            transform-origin: right top; }
+            transform-origin: right top;
+    unicode-bidi: embed; }
+  body[dir=rtl] md-select-menu {
+    -webkit-transform-origin: right top;
+            transform-origin: right top;
+    unicode-bidi: embed; }
+  md-select-menu bdo[dir=rtl] {
+    direction: rtl;
+    unicode-bidi: bidi-override; }
+  md-select-menu bdo[dir=ltr] {
+    direction: ltr;
+    unicode-bidi: bidi-override; }
   md-select-menu md-content {
     min-width: 136px;
     min-height: 48px;
@@ -160,6 +177,12 @@ md-option {
   md-option:focus {
     outline: none; }
   md-option .md-text {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     width: auto;
     white-space: nowrap;
     overflow: hidden;

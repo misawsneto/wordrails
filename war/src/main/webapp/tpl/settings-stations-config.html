@@ -14,10 +14,14 @@
       <div class="panel-body wrapper-md">
         <div class="row pos-rlt">
           <div class="w-xxl m-auto">
-            <div class="md-form-group md-neutral-theme text-lg">
-              <input class="md-input" ng-model="station.name">
-              <label>Nome da estação</label>
-            </div>
+            <!-- <div class="md-neutral-theme text-lg"> -->
+              <!-- <label>Nome da estação</label>
+              <input class="md-input" ng-model="station.name"> -->
+            <!-- </div> -->
+            <md-input-container flex class="md-neutral-theme text-lg" >
+	          <label>Nome da estação</label>
+	          <input ng-model="station.name">
+	        </md-input-container>
           </div>
         </div>
         <div class="line line-dashed b-b line-lg pull-in"></div>

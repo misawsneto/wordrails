@@ -324,6 +324,7 @@ public class PostsResource {
 		if(sortByDate != null && sortByDate){
 			sort = new FieldSortBuilder("post.date")
 					.order(SortOrder.DESC);
+
 		}
 
 		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "snippet");

@@ -42,12 +42,11 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   $scope.bulkActions = [
-    {name:'Ações em grupo', id:0},
     {name:'Alterar permissões', id:1},
     {name:'Remover usuários', id:2}
   ]
 
-  $scope.bulkActionSelected = $scope.bulkActions[0];
+  $scope.bulkActionSelected = null;
 
   $scope.page = 0;
   var loading = false;

@@ -2688,6 +2688,7 @@ md-backdrop.md-opaque{
     border-color: #555!important;
   }
 
+  .md-neutral-theme label,
   .md-neutral-theme .md-input:focus ~ label,
   .md-neutral-theme .md-input.focus ~ label {
     color: #555!important;
@@ -2871,6 +2872,10 @@ md-backdrop.md-opaque{
   }
 
   md-content {
+    text-shadow: none;
+  }
+
+  .text-shadow-none{
     text-shadow: none;
   }
 

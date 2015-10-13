@@ -2,14 +2,13 @@ package com.wordrails.elasticsearch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.business.*;
+import com.wordrails.business.Post;
 import com.wordrails.util.WordrailsUtil;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ import java.util.Map;
  * Created by jonas on 26/09/15.
  */
 @Component
-public class PostEsRepository{
+public class PersonEsRepository {
 
 	@Value("${elasticsearch.index}")
 	private String indexName;
@@ -31,7 +30,7 @@ public class PostEsRepository{
 	private @Autowired @Qualifier("objectMapper")
 	ObjectMapper objectMapper;
 
-	private static final String ES_TYPE = "post";
+	private static final String ES_TYPE = "person";
 
 	@Autowired
 	private ElasticSearchService elasticSearchService;
@@ -58,11 +57,8 @@ public class PostEsRepository{
 		}
 
 		if (sort != null){
-			searchRequestBuilder.addSort(new FieldSortBuilder("_score").order(SortOrder.DESC));
 			searchRequestBuilder.addSort(sort);
 		}
-
-		System.out.println(searchRequestBuilder.toString());
 
 		return searchRequestBuilder.execute().actionGet();
 	}
