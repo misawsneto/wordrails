@@ -619,7 +619,7 @@ public class PersonsResource {
 
 		PersonData initData = new PersonData();
 
-		if(person != null && person.user != null && (person.password == null || person.password.equals(""))){
+		if(person.user != null && (person.password == null || person.password.equals(""))){
 			initData.noPassword = true;
 		}
 
