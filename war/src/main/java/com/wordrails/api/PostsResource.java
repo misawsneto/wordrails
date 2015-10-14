@@ -349,6 +349,8 @@ public class PostsResource {
 						postView.snippet = "";
 					postView.snippet = postView.snippet + " " + fragment.toString();
 				}
+				postView.snippet = WordrailsUtil.htmlStriped(postView.snippet);
+				postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
 				postsViews.add(postView);
 			} catch (Exception e) {
 				e.printStackTrace();

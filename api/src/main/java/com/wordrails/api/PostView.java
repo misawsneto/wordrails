@@ -1,5 +1,7 @@
 package com.wordrails.api;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -26,8 +28,6 @@ public class PostView implements Serializable {
 	public int bookmarksCount;
 	public int recommendsCount;
 	public int commentsCount;
-
-	public Set<TermView> terms;
 
 	public Integer imageId;
 	public Integer imageSmallId;

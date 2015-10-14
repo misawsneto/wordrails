@@ -56,9 +56,9 @@ public class PostEsRepository{
 		}
 
 		if (highlightedField != null){
-			searchRequestBuilder.addHighlightedField(highlightedField, 250, 4);
-			searchRequestBuilder.setHighlighterPreTags("<b>");
-			searchRequestBuilder.setHighlighterPostTags("</b>");
+			searchRequestBuilder.addHighlightedField(highlightedField, 100, 4);
+			searchRequestBuilder.setHighlighterPreTags("{snippet}");
+			searchRequestBuilder.setHighlighterPostTags("{#snippet}");
 		}
 
 		if (sort != null){
