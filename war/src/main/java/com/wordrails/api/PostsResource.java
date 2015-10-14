@@ -359,7 +359,7 @@ public class PostsResource {
 
 		ContentResponse<SearchView> response = new ContentResponse<SearchView>();
 		response.content = new SearchView();
-		response.content.hits = postsViews.size();
+		response.content.hits = (int) searchResponse.getHits().totalHits();
 		response.content.posts = postsViews;
 
 		return response;
