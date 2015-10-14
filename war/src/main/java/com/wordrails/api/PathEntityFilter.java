@@ -23,7 +23,7 @@ public class PathEntityFilter implements Filter{
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
 		HttpServletRequest request = (HttpServletRequest)req;
@@ -31,7 +31,6 @@ public class PathEntityFilter implements Filter{
 		String path = request.getRequestURI();
 
 		String host = request.getHeader("Host");
-		Network network = wordrailsService.getNetworkFromHost(host);
 
 		if(!path.equals("/") && path.split("/").length <= 2 &&
 			!path.equals("/stations") &&
@@ -44,10 +43,10 @@ public class PathEntityFilter implements Filter{
 			!path.equals("/mystats") &&
 			!path.contains("/@")) {
 
+			Network network = wordrailsService.getNetworkFromHost(host);
 //			network.stations
 			postEsRepository.findBySlug(path.replace("/",""));
 		}
-
 
 		chain.doFilter(req, res);
 	}
