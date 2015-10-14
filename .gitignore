@@ -50,3 +50,4 @@ nbactions.xml
 .idea/*
 /target/
 *.dmp
+deploy.sh
