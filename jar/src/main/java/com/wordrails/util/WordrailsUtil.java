@@ -112,6 +112,11 @@ public class WordrailsUtil {
 		return doc.text();
 	}
 
+	public static String htmlStriped(String body) {
+		Document doc = Jsoup.parse(body);
+		return doc.text();
+	}
+
 	/**
 	 * Returns consecutive {@linkplain List#subList(int, int) sublists} of a list,
 	 * each of the same size (the final list may be smaller). For example,

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -30,6 +31,9 @@ public class PostEsRepository{
 
 	private @Autowired @Qualifier("objectMapper")
 	ObjectMapper objectMapper;
+
+	private @Autowired @Qualifier("simpleMapper")
+	ObjectMapper simpleMapper;
 
 	private static final String ES_TYPE = "post";
 
@@ -52,17 +56,15 @@ public class PostEsRepository{
 		}
 
 		if (highlightedField != null){
-			searchRequestBuilder.addHighlightedField(highlightedField, 250, 4);
-			searchRequestBuilder.setHighlighterPreTags("<b>");
-			searchRequestBuilder.setHighlighterPostTags("</b>");
+			searchRequestBuilder.addHighlightedField(highlightedField, 100, 4);
+			searchRequestBuilder.setHighlighterPreTags("{snippet}");
+			searchRequestBuilder.setHighlighterPostTags("{#snippet}");
 		}
 
 		if (sort != null){
 			searchRequestBuilder.addSort(new FieldSortBuilder("_score").order(SortOrder.DESC));
 			searchRequestBuilder.addSort(sort);
 		}
-
-		System.out.println(searchRequestBuilder.toString());
 
 		return searchRequestBuilder.execute().actionGet();
 	}
@@ -84,35 +86,31 @@ public class PostEsRepository{
 	}
 
 	public String formatObjectJson(Post post){
-
 		String doc = null;
-
-		try {
-			doc = objectMapper.writeValueAsString(
-					makePostView(post, true)
-			);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		JSONObject toFormat = (JSONObject) JSONValue.parse(doc);
-
-		return toFormat.toJSONString();
-	}
-
-	public JSONObject makeObjectJson(Post post){
-		String doc = null;
-
 		try {
 			doc = objectMapper.writeValueAsString(makePostView(post, true));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return null;
 		}
+		//JSONObject toFormat = (JSONObject) JSONValue.parse(doc);
+		//return toFormat.toJSONString();
 
-		return (JSONObject) JSONValue.parse(doc);
+		return doc;
 	}
+
+//	public JSONObject makeObjectJson(Post post){
+//		String doc = null;
+//
+//		try {
+//			doc = objectMapper.writeValueAsString(makePostView(post, true));
+//		} catch (JsonProcessingException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//
+//		return (JSONObject) JSONValue.parse(doc);
+//	}
 
 	public PostIndexed makePostView(Post post, boolean addBody) {
 		PostIndexed postView = makePostView(post);
@@ -121,21 +119,29 @@ public class PostEsRepository{
 		return postView;
 	}
 
-	public JSONObject convertToView(String json){
-		return (JSONObject) JSONValue.parse(json);
+	public PostIndexed convertToView(String json){
+		try {
+			return objectMapper.readValue(json, PostIndexed.class);
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
-	public JSONObject convertToView(String json, Map<String, HighlightField> highlightFieldMap){
-		JSONObject view = (JSONObject) JSONValue.parse(json);
-		for(String key: highlightFieldMap.keySet()){
-			String fragments = "";
-			for(Text fragment: highlightFieldMap.get(key).getFragments()){
-				fragments += fragment.string();
-			}
-			view.put(key, fragments);
-		}
-		return view;
-	}
+//	public JSONObject convertToView(String json){
+//		return (JSONObject) JSONValue.parse(json);
+//	}
+
+//	public JSONObject convertToView(String json, Map<String, HighlightField> highlightFieldMap){
+//		JSONObject view = (JSONObject) JSONValue.parse(json);
+//		for(String key: highlightFieldMap.keySet()){
+//			String fragments = "";
+//			for(Text fragment: highlightFieldMap.get(key).getFragments()){
+//				fragments += fragment.string();
+//			}
+//			view.put(key, fragments);
+//		}
+//		return view;
+//	}
 
 	public PostIndexed makePostView(Post post){
 
@@ -171,7 +177,6 @@ public class PostEsRepository{
 		postView.readsCount = post.readsCount;
 		postView.recommendsCount = post.recommendsCount;
 		postView.commentsCount = post.commentsCount;
-		postView.snippet = WordrailsUtil.simpleSnippet(post.body, 100);
 		postView.authorName = post.author != null ? post.author.name : null;
 		postView.authorUsername = post.author != null ? post.author.username : null;
 		postView.authorCoverMediumId = post.author != null ? post.author.coverMediumId : null;
@@ -197,5 +202,10 @@ public class PostEsRepository{
 		postView.notify = post.notify;
 
 		return postView;
+	}
+
+	public PostIndexed findBySlug(String slug) {
+
+		return null;
 	}
 }

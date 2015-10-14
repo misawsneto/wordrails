@@ -1,7 +1,10 @@
 package com.wordrails.api;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 public class PostView implements Serializable {
 	private static final long serialVersionUID = -1474032487285763669L;

@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -20,7 +21,9 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 		@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressSlug"}),
 		@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressId"})
 })
-public class Term {
+public class Term implements Serializable {
+	private static final long serialVersionUID = 7891255759575029731L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 //	@Field

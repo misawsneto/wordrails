@@ -47,6 +47,7 @@ app.controller('SearchCtrl', ['$state', '$scope', '$log', '$timeout', 'trix', fu
 
 				response.posts && response.posts.forEach(function(element, index){
 					$scope.app.searchCtrl.searchResults.push(element)
+					console.log(element);
 				}); 
 				
 				$(".search-results").focus();

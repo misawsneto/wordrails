@@ -1,5 +1,7 @@
 package com.wordrails.api;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,5 +12,6 @@ public class TermView implements Serializable {
 	public String termName;
 	public Integer parentId;
 	public Integer taxonomyId;
+	@JsonManagedReference
 	public List<TermView> children;
 }

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 
 import javax.servlet.http.HttpServletRequest;
@@ -117,262 +118,267 @@ public class NetworkResource {
 	@Path("/createNetwork")
 	@POST
 	public Response createNetwork (NetworkCreateDto networkCreate)  throws ConflictException, BadRequestException, JsonProcessingException {
-
-		Network network = new Network();
-		network.name = networkCreate.name;
-		network.subdomain = networkCreate.subdomain;
-
-		//Station Default Taxonomy
-		Taxonomy nTaxonomy = new Taxonomy();
-		nTaxonomy.name = "Categoria da Rede " + network.name;
-		nTaxonomy.type = Taxonomy.NETWORK_TAXONOMY;
-
-		taxonomyRepository.save(nTaxonomy);
 		try {
-			network.networkCreationToken = UUID.randomUUID().toString();
+			Network network = new Network();
+			network.name = networkCreate.name;
+			network.subdomain = networkCreate.subdomain;
+
+			//Station Default Taxonomy
+			Taxonomy nTaxonomy = new Taxonomy();
+
+			nTaxonomy.name = "Categoria da Rede " + network.name;
+			nTaxonomy.type = Taxonomy.NETWORK_TAXONOMY;
+			taxonomyRepository.save(nTaxonomy);
+
+			try {
+				network.networkCreationToken = UUID.randomUUID().toString();
+				networkRepository.save(network);
+			} catch (javax.validation.ConstraintViolationException e) {
+
+				List<FieldError> errors = new ArrayList<FieldError>();
+				for (ConstraintViolation violation : e.getConstraintViolations()) {
+					FieldError error = new FieldError(violation.getRootBean().getClass().getName()+"", violation.getPropertyPath()+"", violation.getMessage());
+					errors.add(error);
+				}
+
+				taxonomyRepository.delete(nTaxonomy);
+				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + mapper.writeValueAsString(errors) +"}").build();
+			} catch (org.springframework.dao.DataIntegrityViolationException e){
+				taxonomyRepository.delete(nTaxonomy);
+
+				if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+					org.hibernate.exception.ConstraintViolationException ex = (ConstraintViolationException) e.getCause();
+
+					return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"message\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
+				}
+
+				throw e;
+			}
+
+			// Create Person ------------------------------
+
+			Person person = networkCreate.person;
+			User user = null;
+
+			try {
+				user = new User();
+				user.enabled = true;
+				user.username = person.username;
+				user.password = person.password;
+				user.network = network;
+
+				UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER", network);
+				UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
+
+				user.addAuthority(authority);
+				user.addAuthority(nauthority);
+
+				person.user = user;
+
+				personRepository.save(person);
+			} catch (javax.validation.ConstraintViolationException e) {
+
+				List<FieldError> errors = new ArrayList<FieldError>();
+				for (ConstraintViolation violation : e.getConstraintViolations()) {
+					FieldError error = new FieldError(violation.getRootBean().getClass().getName()+"", violation.getPropertyPath()+"", violation.getMessage());
+					errors.add(error);
+				}
+
+				taxonomyRepository.delete(nTaxonomy);
+				networkRepository.delete(network);
+
+				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + mapper.writeValueAsString(errors) +"}").build();
+			} catch (org.springframework.dao.DataIntegrityViolationException e){
+				taxonomyRepository.delete(nTaxonomy);
+				networkRepository.delete(network);
+
+				if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+					org.hibernate.exception.ConstraintViolationException ex = (ConstraintViolationException) e.getCause();
+
+					return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"mensage\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
+				}
+
+				throw e;
+			}catch (Exception e){
+				taxonomyRepository.delete(nTaxonomy);
+				networkRepository.delete(network);
+				e.printStackTrace();
+			}
+
+			NetworkRole networkRole = new NetworkRole();
+			networkRole.network = network;
+			networkRole.person = person;
+			networkRole.admin = true;
+			networkRolesRepository.save(networkRole);
+
+			// End Create Person ------------------------------
+
+			nTaxonomy.owningNetwork = network;
+			taxonomyRepository.save(nTaxonomy);
+
+			Term nterm1 = new Term();
+			nterm1.name = "Categoria 1";
+
+			Term nterm2 = new Term();
+			nterm2.name = "Categoria 2";
+
+			nterm1.taxonomy = nTaxonomy;
+			nterm2.taxonomy = nTaxonomy;
+
+			nTaxonomy.terms = new HashSet<Term>();
+			nTaxonomy.terms.add(nterm1);
+			nTaxonomy.terms.add(nterm2);
+			termRepository.save(nterm1);
+			termRepository.save(nterm2);
+			Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
+			nTaxonomies.add(nTaxonomy);
+			taxonomyRepository.save(nTaxonomy);
+			network.ownedTaxonomies = nTaxonomies;
+			network.categoriesTaxonomyId = nTaxonomy.id;
 			networkRepository.save(network);
-		} catch (javax.validation.ConstraintViolationException e) {
 
-			List<FieldError> errors = new ArrayList<FieldError>();
-			for (ConstraintViolation violation : e.getConstraintViolations()) {
-				FieldError error = new FieldError(violation.getRootBean().getClass().getName()+"", violation.getPropertyPath()+"", violation.getMessage());
-				errors.add(error);
-			}
+			Station station = new Station();
+			station.name = network.name;
+			station.main = true;
+			station.networks = new HashSet<Network>();
+			station.networks.add(network);
+			station.visibility = Station.UNRESTRICTED;
+			station.writable = false;
 
-			taxonomyRepository.delete(nTaxonomy);
-			return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + mapper.writeValueAsString(errors) +"}").build();
-		} catch (org.springframework.dao.DataIntegrityViolationException e){
-			taxonomyRepository.delete(nTaxonomy);
+			Set<StationPerspective> perspectives = new HashSet<StationPerspective>(1);
 
-			if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
-				org.hibernate.exception.ConstraintViolationException ex = (ConstraintViolationException) e.getCause();
+			//Perspective Default
+			StationPerspective stationPerspective = new StationPerspective();
+			stationPerspective.station = station;
+			stationPerspective.name = station.name + " (Default)";
+			perspectives.add(stationPerspective);
+			station.stationPerspectives = perspectives;
 
-				return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"message\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
-			}
+			Set<Taxonomy> taxonomies = new HashSet<Taxonomy>();
 
-			throw e;
-		}
+			//Station Default Taxonomy
+			Taxonomy sTaxonomy = new Taxonomy();
+			sTaxonomy.name = "Station: " + station.name;
+			sTaxonomy.owningStation = station;
+			sTaxonomy.type = Taxonomy.STATION_TAXONOMY;
+			taxonomies.add(sTaxonomy);
+			station.ownedTaxonomies = taxonomies;
+			stationPerspective.taxonomy = sTaxonomy;
 
-		// Create Person ------------------------------
+			//Tag Default Taxonomy
+			Taxonomy tTaxonomy = new Taxonomy();
+			tTaxonomy.name = "Tags " + station.name;
+			tTaxonomy.owningStation = station;
+			tTaxonomy.type = Taxonomy.STATION_TAG_TAXONOMY;
+			taxonomies.add(tTaxonomy);
+			station.ownedTaxonomies = taxonomies;
 
-		Person person = networkCreate.person;
-		User user = null;
+			stationRepository.save(station);
 
-		try {
-			user = new User();
-			user.enabled = true;
-			user.username = person.username;
-			user.password = person.password;
-			user.network = network;
+			taxonomies = station.ownedTaxonomies;
+			Term defaultPostTerm = null;
+			Term term1 = null;
+			Term term2 = null;
+			for (Taxonomy tax: taxonomies){
+				if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
+					if(station.tagsTaxonomyId == null)
+						station.tagsTaxonomyId = tax.id;
+				}
+				if(tax.type.equals(Taxonomy.STATION_TAXONOMY)){
+					if(station.categoriesTaxonomyId == null) {
+						station.categoriesTaxonomyId = tax.id;
+						// ---- create sample terms...
+						term1 = new Term();
+						term1.name = "Categoria 1";
 
-			UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER", network);
-			UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
+						defaultPostTerm = term1;
 
-			user.addAuthority(authority);
-			user.addAuthority(nauthority);
+						term2 = new Term();
+						term2.name = "Categoria 2";
 
-			person.user = user;
+						term1.taxonomy = tax;
+						term2.taxonomy = tax;
 
-			personRepository.save(person);
-		} catch (javax.validation.ConstraintViolationException e) {
-
-			List<FieldError> errors = new ArrayList<FieldError>();
-			for (ConstraintViolation violation : e.getConstraintViolations()) {
-				FieldError error = new FieldError(violation.getRootBean().getClass().getName()+"", violation.getPropertyPath()+"", violation.getMessage());
-				errors.add(error);
-			}
-
-			taxonomyRepository.delete(nTaxonomy);
-			networkRepository.delete(network);
-
-			return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + mapper.writeValueAsString(errors) +"}").build();
-		} catch (org.springframework.dao.DataIntegrityViolationException e){
-			taxonomyRepository.delete(nTaxonomy);
-			networkRepository.delete(network);
-
-			if (e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
-				org.hibernate.exception.ConstraintViolationException ex = (ConstraintViolationException) e.getCause();
-
-				return Response.status(Status.BAD_REQUEST).entity("{\"error\": {" + "\"mensage\": \"" + ex.getCause().getMessage() + "\"}" + "}").build();
-			}
-
-			throw e;
-		}catch (Exception e){
-			taxonomyRepository.delete(nTaxonomy);
-			networkRepository.delete(network);
-			e.printStackTrace();
-		}
-
-		NetworkRole networkRole = new NetworkRole();
-		networkRole.network = network;
-		networkRole.person = person;
-		networkRole.admin = true;
-		networkRolesRepository.save(networkRole);
-
-		// End Create Person ------------------------------
-
-		nTaxonomy.owningNetwork = network;
-		taxonomyRepository.save(nTaxonomy);
-
-		Term nterm1 = new Term();
-		nterm1.name = "Categoria 1";
-
-		Term nterm2 = new Term();
-		nterm2.name = "Categoria 2";
-
-		nterm1.taxonomy = nTaxonomy;
-		nterm2.taxonomy = nTaxonomy;
-
-		nTaxonomy.terms = new HashSet<Term>();
-		nTaxonomy.terms.add(nterm1);
-		nTaxonomy.terms.add(nterm2);
-		termRepository.save(nterm1);
-		termRepository.save(nterm2);
-		Set<Taxonomy> nTaxonomies = new HashSet<Taxonomy>();
-		nTaxonomies.add(nTaxonomy);
-		taxonomyRepository.save(nTaxonomy);
-		network.ownedTaxonomies = nTaxonomies;
-		network.categoriesTaxonomyId = nTaxonomy.id;
-		networkRepository.save(network);
-
-		Station station = new Station();
-		station.name = network.name;
-		station.main = true;
-		station.networks = new HashSet<Network>();
-		station.networks.add(network);
-		station.visibility = Station.UNRESTRICTED;
-		station.writable = false;
-
-		Set<StationPerspective> perspectives = new HashSet<StationPerspective>(1);
-
-		//Perspective Default
-		StationPerspective stationPerspective = new StationPerspective();
-		stationPerspective.station = station;
-		stationPerspective.name = station.name + " (Default)";
-		perspectives.add(stationPerspective);
-		station.stationPerspectives = perspectives;
-
-		Set<Taxonomy> taxonomies = new HashSet<Taxonomy>();
-
-		//Station Default Taxonomy
-		Taxonomy sTaxonomy = new Taxonomy();
-		sTaxonomy.name = "Station: " + station.name;
-		sTaxonomy.owningStation = station;
-		sTaxonomy.type = Taxonomy.STATION_TAXONOMY;
-		taxonomies.add(sTaxonomy);
-		station.ownedTaxonomies = taxonomies;
-		stationPerspective.taxonomy = sTaxonomy;
-
-		//Tag Default Taxonomy
-		Taxonomy tTaxonomy = new Taxonomy();
-		tTaxonomy.name = "Tags " + station.name;
-		tTaxonomy.owningStation = station;
-		tTaxonomy.type = Taxonomy.STATION_TAG_TAXONOMY;
-		taxonomies.add(tTaxonomy);
-		station.ownedTaxonomies = taxonomies;
-
-		stationRepository.save(station);
-
-		taxonomies = station.ownedTaxonomies;
-		Term defaultPostTerm = null;
-		Term term1 = null;
-		Term term2 = null;
-		for (Taxonomy tax: taxonomies){
-			if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
-				if(station.tagsTaxonomyId == null)
-					station.tagsTaxonomyId = tax.id;
-			}
-			if(tax.type.equals(Taxonomy.STATION_TAXONOMY)){
-				if(station.categoriesTaxonomyId == null) {
-					station.categoriesTaxonomyId = tax.id;
-					// ---- create sample terms...
-					term1 = new Term();
-					term1.name = "Categoria 1";
-
-					defaultPostTerm = term1;
-
-					term2 = new Term();
-					term2.name = "Categoria 2";
-
-					term1.taxonomy = tax;
-					term2.taxonomy = tax;
-
-					tax.terms = new HashSet<Term>();
-					tax.terms.add(term1);
-					tax.terms.add(term2);
-					termRepository.save(term1);
-					termRepository.save(term2);
-					taxonomyRepository.save(tax);
+						tax.terms = new HashSet<Term>();
+						tax.terms.add(term1);
+						tax.terms.add(term2);
+						termRepository.save(term1);
+						termRepository.save(term2);
+						taxonomyRepository.save(tax);
+					}
 				}
 			}
-		}
 
-		StationRole role = new StationRole();
-		role.person = person;
-		role.station = station;
-		role.writer = true;
-		role.admin = true;
-		role.editor = true;
-		stationRolesRepository.save(role);
-		station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
-		stationRepository.save(station);
+			StationRole role = new StationRole();
+			role.person = person;
+			role.station = station;
+			role.writer = true;
+			role.admin = true;
+			role.editor = true;
+			stationRolesRepository.save(role);
+			station.defaultPerspectiveId = new ArrayList<StationPerspective>(station.stationPerspectives).get(0).id;
+			stationRepository.save(station);
 
-		try {
-			TermPerspective tp = new TermPerspective();
-			tp.term = null;
-			tp.perspective = stationPerspective;
-			tp.stationId = station.id;
+			try {
+				TermPerspective tp = new TermPerspective();
+				tp.term = null;
+				tp.perspective = stationPerspective;
+				tp.stationId = station.id;
 
-			tp.rows = new ArrayList<Row>();
+				tp.rows = new ArrayList<Row>();
 
-			Row row1 = new Row();
-			row1.term = term1;
-			row1.type = Row.ORDINARY_ROW;
-			row1.index = 0;
-			tp.rows.add(row1);
+				Row row1 = new Row();
+				row1.term = term1;
+				row1.type = Row.ORDINARY_ROW;
+				row1.index = 0;
+				tp.rows.add(row1);
 
-			Row row2 = new Row();
-			row2.term = term2;
-			row2.type = Row.ORDINARY_ROW;
-			row2.index = 1;
-			tp.rows.add(row2);
+				Row row2 = new Row();
+				row2.term = term2;
+				row2.type = Row.ORDINARY_ROW;
+				row2.index = 1;
+				tp.rows.add(row2);
 
-			stationPerspective = stationPerspectiveRepository.findOne(stationPerspective.id);
+				stationPerspective = stationPerspectiveRepository.findOne(stationPerspective.id);
 
-			termPerspectiveRepository.save(tp);
-			row2.perspective = tp;
-			row1.perspective = tp;
-			rowRepository.save(row1);
-			rowRepository.save(row2);
-			stationPerspective.perspectives = new HashSet(Arrays.asList(tp));
-			termPerspectiveRepository.save(tp);
+				termPerspectiveRepository.save(tp);
+				row2.perspective = tp;
+				row1.perspective = tp;
+				rowRepository.save(row1);
+				rowRepository.save(row2);
+				stationPerspective.perspectives = new HashSet(Arrays.asList(tp));
+				termPerspectiveRepository.save(tp);
 
-			stationPerspectiveRepository.save(stationPerspective);
+				stationPerspectiveRepository.save(stationPerspective);
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+
+			station.defaultPerspectiveId = stationPerspective.id;
+			stationRepository.save(station);
+
+			Set<GrantedAuthority> authorities = new HashSet<>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+			authProvider.passwordAuthentication(user.username, user.password, network);
+
+			Post post = new Post();
+
+			post.title = "Bem Vindo a TRIX";
+			post.body = "<p>Trix é uma plataforma para a criação e gestão de redes de informação e pensada primeiramente para dispositivos móveis. Através do editor é possível criar conteúdos baseados em textos, imagens, áudios e vídeos.</p><p>Adicione usuários com permissão de leitura, escrita, edição ou administração e através das funções de administração personalize a sua rede.</p>";
+			post.author = person;
+			post.terms = new HashSet<Term>();
+			post.terms.add(defaultPostTerm);
+			post.station = station;
+			postEventHandler.handleBeforeCreate(post);
+			postRepository.save(post);
+
+			authProvider.logout();
+
+			return Response.status(Status.CREATED).entity("{\"token\": \"" + network.networkCreationToken + "\"}").build();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-
-		station.defaultPerspectiveId = stationPerspective.id;
-		stationRepository.save(station);
-
-		Set<GrantedAuthority> authorities = new HashSet<>();
-		authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-		authProvider.passwordAuthentication(user.username, user.password, network);
-
-		Post post = new Post();
-
-		post.title = "Bem Vindo a TRIX";
-		post.body = "<p>Trix é uma plataforma para a criação e gestão de redes de informação e pensada primeiramente para dispositivos móveis. Através do editor é possível criar conteúdos baseados em textos, imagens, áudios e vídeos.</p><p>Adicione usuários com permissão de leitura, escrita, edição ou administração e através das funções de administração personalize a sua rede.</p>";
-		post.author = person;
-		post.terms = new HashSet<Term>();
-		post.terms.add(defaultPostTerm);
-		post.station = station;
-		postEventHandler.handleBeforeCreate(post);
-		postRepository.save(post);
-
-		authProvider.logout();
-
-		return Response.status(Status.CREATED).entity("{\"token\": \"" + network.networkCreationToken + "\"}").build();
+		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	}
 
 	@GET
@@ -479,5 +485,4 @@ public class NetworkResource {
 		String dateStatsJson = mapper.writeValueAsString(stats);
 		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 	}
-
 }
