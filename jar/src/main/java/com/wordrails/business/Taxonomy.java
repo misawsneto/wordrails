@@ -2,7 +2,6 @@ package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -11,9 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Taxonomy implements Serializable {
-	private static final long serialVersionUID = 7821255752575024731L;
-
+public class Taxonomy {
 	public static final String GLOBAL_TAXONOMY = "G";
 	public static final String NETWORK_TAXONOMY = "N";
 	public static final String STATION_TAXONOMY = "S";
