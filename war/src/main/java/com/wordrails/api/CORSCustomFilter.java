@@ -33,6 +33,7 @@ public class CORSCustomFilter implements Filter{
 		}
 
 		setCorsHeader(reqt, resp);
+
 		chain.doFilter(req, res);
 
 	}

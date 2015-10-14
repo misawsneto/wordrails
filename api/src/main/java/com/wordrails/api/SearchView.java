@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SearchView {
-	public List<JSONObject> posts;
+	public List<PostView> posts;
 	public int hits;
 	//TODO implement facets in search response
 	public Map<TermDto, Integer> facets;

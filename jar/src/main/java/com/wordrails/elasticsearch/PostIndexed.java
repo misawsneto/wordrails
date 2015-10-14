@@ -21,17 +21,11 @@ public class PostIndexed {
 	public String mediumHash;
 	public String largeHash;
 	public Boolean sponsored;
-	@JsonManagedReference
 	public Sponsor sponsor;
-	@JsonManagedReference
 	public Set<Comment> comments;
-	@JsonManagedReference
 	public Set<Image> images;
-	@JsonManagedReference
 	public Person author;
-	@JsonManagedReference
 	public Station station;
-	@JsonManagedReference
 	public Set<Term> terms;
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	public java.util.Date date;

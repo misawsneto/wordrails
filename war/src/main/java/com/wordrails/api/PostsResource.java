@@ -23,17 +23,20 @@ import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.highlight.*;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.lucene.Lucene;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,10 +56,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
@@ -105,6 +105,12 @@ public class PostsResource {
 	private
 	@Autowired
 	PostEsRepository postEsRepository;
+
+	private @Autowired @Qualifier("simpleMapper")
+	ObjectMapper simpleMapper;
+
+	private @Autowired @Qualifier("objectMapper")
+	ObjectMapper objectMapper;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -278,19 +284,20 @@ public class PostsResource {
 
 		if(q != null){
 			queryText = multiMatchQuery(q)
-					.field("post.snippet", 2)
-					.field("post.title", 5)
-					.field("post.topper")
-					.field("post.subheading")
-					.field("post.authorName")
-					.field("post.terms")
+					.field("body", 2)
+					.field("title", 5)
+					.field("topper")
+					.field("subheading")
+					.field("authorName")
+					.field("terms.name")
 					.prefixLength(1)
-					.fuzziness(Fuzziness.AUTO);
+					//.fuzziness(Fuzziness.AUTO)
+					;
 		} else {
 			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
 			response.content = new SearchView();
 			response.content.hits = 0;
-			response.content.posts = new ArrayList<JSONObject>();
+			response.content.posts = new ArrayList<PostView>();
 
 			return response;
 		}
@@ -299,15 +306,15 @@ public class PostsResource {
 
 		if(personId != null){
 			mainQuery = mainQuery.must(
-					matchQuery("post.authorId", personId));
+					matchQuery("authorId", personId));
 		}
 
 		if(publicationType != null){
 			mainQuery = mainQuery.must(
-					matchQuery("post.state", publicationType));
+					matchQuery("state", publicationType));
 		} else {
 			mainQuery = mainQuery.must(
-					matchQuery("post.state", Post.STATE_PUBLISHED));
+					matchQuery("state", Post.STATE_PUBLISHED));
 		}
 
 		if(stationIdIntegers.size() > 0)
@@ -316,25 +323,33 @@ public class PostsResource {
 		BoolQueryBuilder statiosQuery = boolQuery();
 		for(Integer stationId: readableIds){
 			statiosQuery.should(
-					matchQuery("post.stationId", String.valueOf(stationId)));
+					matchQuery("stationId", String.valueOf(stationId)));
 		}
 		mainQuery = mainQuery.must(statiosQuery);
 		FieldSortBuilder sort = null;
 
 		if(sortByDate != null && sortByDate){
-			sort = new FieldSortBuilder("post.date")
+			sort = new FieldSortBuilder("date")
 					.order(SortOrder.DESC);
 
 		}
 
-		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "snippet");
+		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "body");
 
 //		SearchHit[] resultList = searchResponse.getHits().getHits();
-		List<JSONObject> postsViews = new ArrayList<>();
+		List<PostView> postsViews = new ArrayList<PostView>();
 
 		for(SearchHit hit: searchResponse.getHits().getHits()){
 			try {
-				postsViews.add(postEsRepository.convertToView(hit.getSourceAsString(), hit.getHighlightFields()));
+				PostView postView = objectMapper.readValue(objectMapper.writeValueAsString(postEsRepository.convertToView(hit.getSourceAsString())), PostView.class);
+				Map<String, HighlightField> highlights = hit.getHighlightFields();
+				if(highlights != null && highlights.get("body") != null)
+				for (Text fragment:  highlights.get("body").getFragments()) {
+					if(postView.snippet == null)
+						postView.snippet = "";
+					postView.snippet = postView.snippet + " " + fragment.toString();
+				}
+				postsViews.add(postView);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

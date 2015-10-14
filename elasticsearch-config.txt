@@ -1,0 +1,30 @@
+# ------------------ analysis -------------------
+
+index:
+ analysis:
+  analyzer:
+   default:
+    type: standard
+    tokenizer : standard
+    filter : [standard, lowercase, stop]
+
+   strip_html_analyzer:
+    type: custom
+    tokenizer: standard
+    filter: [standard, lowercase]
+    char_filter: html_strip
+
+# ------------------ end of analysis ------------
+
+# ------------------ mapping -------------------
+$ curl -XPUT http://localhost:9200/trix_dev/post/_mapping -d '{
+  "post": {
+    "properties": {
+      "body": {
+        "type": "string",
+        "analyzer": "strip_html_analyzer"
+      }
+    }
+  }
+}'
+

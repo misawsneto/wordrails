@@ -40,7 +40,7 @@
                 {{result.title}}
               </a>
               <a ui-sref="app.read({'slug': result.slug})">
-                <div class="text-lg font-thin" bind-html-unsafe="result.snippet"></div>
+                <div class="text-lg font-thin" ng-bind-html ="result.snippet"></div>
               </a>
               <div class="m-t">
                 <div class="display-t-c">
