@@ -2,10 +2,11 @@ package com.wordrails.business;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "userconnection")
-public class UserConnection {
+public class UserConnection implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,36 +1,6 @@
 package com.wordrails.api;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-import com.wordrails.converter.TermConverter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.wordrails.business.Cell;
-import com.wordrails.business.ConflictException;
-import com.wordrails.business.Post;
-import com.wordrails.business.Row;
-import com.wordrails.business.StationPerspective;
-import com.wordrails.business.Term;
-import com.wordrails.business.TermPerspective;
+import com.wordrails.business.*;
 import com.wordrails.comparator.RowComparator;
 import com.wordrails.comparator.RowDifference;
 import com.wordrails.comparator.RowsComparator;
@@ -38,13 +8,22 @@ import com.wordrails.comparator.RowsDifference;
 import com.wordrails.converter.CellConverter;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.converter.RowConverter;
-import com.wordrails.persistence.CellRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.RowRepository;
-import com.wordrails.persistence.StationPerspectiveRepository;
-import com.wordrails.persistence.TaxonomyRepository;
-import com.wordrails.persistence.TermPerspectiveRepository;
-import com.wordrails.persistence.TermRepository;
+import com.wordrails.converter.TermConverter;
+import com.wordrails.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 @Path("/perspectives")
 @Component

@@ -51,3 +51,4 @@ nbactions.xml
 /target/
 *.dmp
 deploy.sh
+rebel.xml

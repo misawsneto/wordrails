@@ -61,9 +61,9 @@
           </form>
           <p ng-if="app.initData.network.allowSignup" class="text-center h5 p-b-sm">Não possui uma conta? <a ui-sref="access.signup" ng-click="app.cancelModal()">clique aqui para cadastrar-se.</a></p>
           <div class="text-md">
-            <!--<button ng-if="app.socialLogin()" ng-click="app.facebookSignIn()" md-ink-ripple type="submit" class="btn-blue md-btn text-u-c btn-block">-->
-              <!--<i class="mdi mdi-facebook m-r-sm"></i> Facebook-->
-            <!--</button>-->
+            <button ng-if="app.socialLogin()" ng-click="app.facebookSignIn()" md-ink-ripple type="submit" class="btn-blue md-btn text-u-c btn-block">
+              <i class="mdi mdi-facebook m-r-sm"></i> Facebook
+            </button>
             <!--
             <button ng-if="app.socialLogin()" ng-click="app.twitterSignIn()" md-ink-ripple type="submit" class="m-t btn-info md-btn text-u-c btn-block">
               <i class="mdi mdi-twitter m-r-sm"></i> Twitter

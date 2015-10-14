@@ -93,10 +93,9 @@ angular.module('app')
   window.fbAsyncInit = function() {
     FB.init({
       appId: 1540807289473122,
-      status: true, 
       cookie: true, 
       xfbml: true,
-      version: 'v2.4'
+      version: 'v2.5'
     });
   };
 
@@ -107,6 +106,5 @@ angular.module('app')
    js.src = "//connect.facebook.net/en_US/sdk.js";
    fjs.parentNode.insertBefore(js, fjs);
  }(document, 'script', 'facebook-jssdk'));
-
   
 });

@@ -2,6 +2,8 @@ package com.wordrails.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.servlet.ServletException;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
@@ -9,6 +11,8 @@ import org.apache.catalina.startup.Tomcat;
 
 public class RunTomcat {
 	public static void main(String args[]) throws ServletException, LifecycleException, IOException {
+		long timeStart = new Date().getTime();
+
 		Tomcat tomcat = new Tomcat();
 		tomcat.setBaseDir("target");
         
@@ -23,7 +27,11 @@ public class RunTomcat {
 
 		System.out.println("Starting Tomcat");
 		tomcat.start();
-		System.out.println("Tomcat started");
+
+		long timeToStart = new Date().getTime() - timeStart;
+		SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
+
+		System.out.println("Tomcat started in " + sdf.format(new Date(timeToStart)));
 		System.out.println();
 		int c = System.in.read();
 		while (c != -1) {
