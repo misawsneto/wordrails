@@ -8,12 +8,12 @@
   <meta name="keywords" content="${networkKeywords}" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" type="text/css" />
-  <link rel="stylesheet" href="/bower_components/animate.css/animate.css" type="text/css" />
+  <link rel="stylesheet" href="/bower_components/animate.css/animate.min.css" type="text/css" />
   <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css" type="text/css" />
   <link rel="stylesheet" href="/bower_components/simple-line-icons/css/simple-line-icons.css" type="text/css" />
   <link rel="stylesheet" href="/bower_components/redactor/redactor.css" />
   <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.min.css">
-  <link rel="stylesheet" href="/bower_components/angular-material/angular-material.css" type="text/css" />
+  <link rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css" type="text/css" />
 
   <link rel="stylesheet" href="/css/materialdesignicons.css" type="text/css" />
 
@@ -47,12 +47,12 @@
   <script src="/bower_components/angular/angular.js"></script>
   <script src="/bower_components/angular-animate/angular-animate.js"></script>
   <script src="/bower_components/angular-aria/angular-aria.js"></script>
-  <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="/bower_components/angular-cookies/angular-cookies.min.js"></script>
   <script src="/bower_components/angular-messages/angular-messages.js"></script>
   <script src="/bower_components/angular-resource/angular-resource.js"></script>
   <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
   <script src="/bower_components/angular-touch/angular-touch.js"></script>
-  <script src="/bower_components/angular-material/angular-material.js"></script>
+  <script src="/bower_components/angular-material/angular-material.min.js"></script>
 
   <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script> 
   <script src="/bower_components/ngstorage/ngStorage.js"></script>

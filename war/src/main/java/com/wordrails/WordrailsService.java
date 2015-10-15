@@ -49,33 +49,34 @@ public class WordrailsService {
 	private @Autowired StationRolesRepository stationRolesRepository;
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired TaxonomyRepository taxonomyRepository;
-	
+	public @Autowired PersonRepository personRepository;
+
 	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
-	
+
 	public void init(){
 		// ------------- init person cache
 		stationsPermissions = CacheBuilder.newBuilder().maximumSize(1000)
 				.expireAfterWrite(1, TimeUnit.MINUTES)
-				//	       .removalListener(MY_LISTENER)
+						//	       .removalListener(MY_LISTENER)
 				.build(
 						new CacheLoader<PermissionId, StationsPermissions>() {
 							public StationsPermissions load(PermissionId id) {
 								List<StationPermission> permissions = getStationPermissions(id.baseUrl, id.personId, id.networkId);
-								if(permissions != null){
+								if (permissions != null) {
 									StationsPermissions stationsPermissions = new StationsPermissions();
 									stationsPermissions.stationPermissionDtos = permissions;
 									return stationsPermissions;
-								}else{
+								} else {
 									return null;
 								}
 							}
 						});
 	}
-	
+
 	public StationsPermissions getPersonPermissions(PermissionId id) throws ExecutionException{
 		return stationsPermissions.get(id);
 	}
-	
+
 	public void updatePersonPermissions(PermissionId id){
 		stationsPermissions.refresh(id);
 	}
@@ -124,26 +125,27 @@ public class WordrailsService {
 	}
 
 	@Async
-	@Transactional
+	@Transactional(readOnly = false)
 	public void countPostRead(Post post, Person person, String sessionId){
-		PostRead postRead = new PostRead();
-		postRead.person = person;
-		postRead.post = post;
-		postRead.sessionid = "0"; // constraint fails if null
-		if(postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
-			postRead.person = null;
-			postRead.sessionid = sessionId;
-		}
 		try {
+			PostRead postRead = new PostRead();
+			postRead.person = person;
+			postRead.post = post;
+			postRead.sessionid = "0"; // constraint fails if null
+			if(postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
+				postRead.person = null;
+				postRead.sessionid = sessionId;
+			}
+
 			postReadRepository.save(postRead);
 			queryPersistence.incrementReadsCount(post.id);
-		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-//			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
 	@Async
-	@Transactional
+	@Transactional(noRollbackFor = org.springframework.dao.DataIntegrityViolationException.class)
 	public void countPostRead(Integer postId, Person person, String sessionId){
 		PostRead postRead = new PostRead();
 		postRead.person = person;
@@ -208,7 +210,7 @@ public class WordrailsService {
 //												createImages(img);
 //												imageRepository.save(img);
 //												wpc.image = img;
-											}
+										}
 									} finally {
 										reader.dispose();
 									}
@@ -400,7 +402,7 @@ public class WordrailsService {
 		term.cells = null;
 		term.taxonomy = null;
 	}
-	
+
 	public List<StationPermission> getStationPermissions(String baseUrl, Integer personId, Integer networkId) {
 		//Stations Permissions
 		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>();
@@ -449,11 +451,11 @@ public class WordrailsService {
 		if(permissions.stationPermissionDtos != null)
 			for (StationPermission sp : permissions.stationPermissionDtos) {
 				//if(sp.visibility.equals(Station.UNRESTRICTED) || sp.writer)
-					ids.add(sp.stationId);
+				ids.add(sp.stationId);
 			}
 		return ids;
 	}
-	
+
 	public List<Integer> getWritableStationIds(StationsPermissions permissions) {
 		List<Integer> ids = new ArrayList<Integer>();
 		if(permissions.stationPermissionDtos != null)

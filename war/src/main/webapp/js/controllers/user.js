@@ -1,5 +1,5 @@
-app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$mdDialog',
-	function($scope , $log ,  $timeout ,  $rootScope ,  $state ,  trix ,  FileUploader, TRIX, cfpLoadingBar, $mdToast , $mdDialog) {
+app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$mdDialog', '$mdSidenav',
+	function($scope , $log ,  $timeout ,  $rootScope ,  $state ,  trix ,  FileUploader, TRIX, cfpLoadingBar, $mdToast , $mdDialog, $mdSidenav) {
 
 	// set left side post list to initial scroll
 	//$("#post-left-content .left-content-wrap").scrollTop(0);
@@ -191,19 +191,10 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     };
 
     $scope.showEditProfile = function(ev){
-    // show term alert
-      $mdDialog.show({
-        controller: DialogController,
-        templateUrl: 'edit_profile.html',
-        targetEvent: ev,
-        onComplete: function(){}
-      })
-      .then(function(answer) {
-      //$scope.alert = 'You said the information was "' + answer + '".';
-      }, function() {
-      //$scope.alert = 'You cancelled the dialog.';
-      });
+		$mdSidenav('right').toggle();
     }
+
+    $scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
 
 }])
 
@@ -351,7 +342,7 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 	        ],
 	        "firstDay": 1
 	    },
-		startDate: moment().add(-29, 'days'), endDate: moment(), opens: "center",
+		startDate: moment().add(-29, 'days'), endDate: moment(), opens: "left",
 		ranges: {
 	           'Hoje': [moment(), moment()],
 	           'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],

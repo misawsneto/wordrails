@@ -54,7 +54,7 @@
     "angular-leaflet-directive": "~0.8.2",
     "angular-loading-bar": "~0.8.0",
     "angular-masonry": "~0.11.0",
-    "angular-material": "~0.11.2",
+    "angular-material": "0.11.3",
     "angular-messages": "1.4.3",
     "angular-nvd3": "1.0.0-rc.2",
     "angular-popover-toggle": "~0.0.10",
