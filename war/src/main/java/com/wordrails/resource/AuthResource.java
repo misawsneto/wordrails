@@ -26,7 +26,17 @@ public class AuthResource {
 	public Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
 		Network network = authProvider.getNetwork();
 
-		if (!network.allowSocialLogin) {
+		boolean allowSocialLogin = true;
+		switch (providerId) {
+			case "facebook":
+				allowSocialLogin = network.isFacebookLoginAllowed();
+				break;
+			case "google":
+				allowSocialLogin = network.isGoogleLoginAllowed();
+				break;
+		}
+
+		if (!allowSocialLogin) {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 		}
 

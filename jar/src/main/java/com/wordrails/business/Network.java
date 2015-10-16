@@ -68,9 +68,18 @@ public class Network implements Serializable{
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSignup;
-	
+
+	@Deprecated
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSocialLogin;
+
+	public String facebookAppID;
+
+	public String facebookAppSecret;
+
+	public String googleAppID;
+
+	public String googleAppSecret;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
@@ -243,6 +252,18 @@ public class Network implements Serializable{
 
 	public String getName() {
 		return name;
+	}
+
+	public boolean isFacebookLoginAllowed() {
+		return
+				this.facebookAppID != null && !this.facebookAppID.isEmpty() &&
+						this.facebookAppSecret != null && !this.facebookAppSecret.isEmpty();
+	}
+
+	public boolean isGoogleLoginAllowed() {
+		return
+				this.googleAppID != null && !this.googleAppID.isEmpty() &&
+						this.googleAppSecret != null && !this.googleAppSecret.isEmpty();
 	}
 
 }

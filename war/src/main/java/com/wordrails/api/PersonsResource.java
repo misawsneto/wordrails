@@ -561,6 +561,8 @@ public class PersonsResource {
 				request.setAttribute("personData", simpleMapper.writeValueAsString(personData));
 				request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
 				request.setAttribute("networkName", personData.network.name);
+				request.setAttribute("googleAppID", personData.network.googleAppID);
+				request.setAttribute("facebookAppID", personData.network.facebookAppID);
 				request.setAttribute("networkDesciption", "");
 				request.setAttribute("networkKeywords", "");
 			}
