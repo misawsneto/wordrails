@@ -29,9 +29,9 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.mediumId = post.imageMediumId;
 		postView.largeId = post.imageLargeId;
 
-		postView.smallHash = post.imageSmallHash;
-		postView.mediumHash = post.imageMediumHash;
-		postView.largeHash = post.imageLargeHash;
+		postView.imageSmallHash = postView.smallHash = post.imageSmallHash;
+		postView.imageMediumHash = postView.mediumHash = post.imageMediumHash;
+		postView.imageLargeHash = postView.largeHash = post.imageLargeHash;
 
 		postView.imageId = post.imageId;
 		postView.imageSmallId = post.imageSmallId;
