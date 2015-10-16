@@ -2974,9 +2974,20 @@ md-backdrop.md-opaque.ng-leave {
 #publications .animated,
 #notifications .animated,
 #post-left-content .animated,
-#post-right-content .animated{
+#post-right-content .animated,
+.animated3x{
  -webkit-animation-duration: 0.3s!important;
  animation-duration: 0.3s!important; 
+}
+
+.animated5x{
+ -webkit-animation-duration: 0.5s!important;
+ animation-duration: 0.5s!important; 
+}
+
+.animated7x{
+ -webkit-animation-duration: 0.7s!important;
+ animation-duration: 0.7s!important; 
 }
 
 /* /animate */

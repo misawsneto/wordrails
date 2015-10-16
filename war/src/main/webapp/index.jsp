@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.min.css">
   <link rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css" type="text/css" />
 
-  <link rel="stylesheet" href="/css/materialdesignicons.css" type="text/css" />
+  <link rel="stylesheet" href="/css/materialdesignicons.min.css" type="text/css" />
 
   <link rel="stylesheet" href="/css/font.css" type="text/css" />
   <link rel="stylesheet" href="/css/app.css?${buildNumber}" type="text/css" />

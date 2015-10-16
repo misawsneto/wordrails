@@ -32,6 +32,11 @@ public interface PostProjection {
 	Integer getImageSmallId();
 	Integer getImageMediumId();
 	Integer getImageLargeId();
+
+	String getImageSmallHash();
+	String getImageMediumHash();
+	String getImageLargeHash();
+
 	Integer getBookmarksCount();
     Integer getReadsCount();
 	Integer getRecommendsCount();

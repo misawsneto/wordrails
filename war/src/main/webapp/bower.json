@@ -56,7 +56,7 @@
     "angular-masonry": "~0.11.0",
     "angular-material": "0.11.3",
     "angular-messages": "1.4.3",
-    "angular-nvd3": "1.0.0-rc.2",
+    "angular-nvd3": "1.0.2",
     "angular-popover-toggle": "~0.0.10",
     "angular-redactor": "1.1.4",
     "angular-resource": "1.4.3",
