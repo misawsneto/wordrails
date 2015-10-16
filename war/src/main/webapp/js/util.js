@@ -386,7 +386,7 @@ function getCustomStyle(color, perspective, header) {
 	"}"+
 
 	"md-select-menu md-option[selected]{"+
-		"color:" + color + "!important"
+		"color:" + color + "!important"+
 	"}"+
 
 	"md-checkbox.md-default-theme.md-checked .md-icon:after{" +

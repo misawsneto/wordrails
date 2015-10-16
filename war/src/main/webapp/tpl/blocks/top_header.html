@@ -13,14 +13,14 @@
          <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button wrapper-sm">
            <i class="mdi mdi-magnify text-2x"></i>
          </md-button>
-         <md-menu-content class="m-t-n-sm">
+         <md-menu-content class="m-t-n-sm p-b-none">
           <!--  <md-menu-item><md-button ng-click="doSomething()">Do Something</md-button></md-menu-item> -->
           <div class="w-xxl o-h">
             <div class="w-f p-l-sm p-r-sm ">
               <i class="mdi mdi-magnify text-2x v-middle"></i>
-              <input class="p-l-xs b-none input-lg b-none w-lg" placeholder="Buscar"/>
+              <input class="p-l-xs b-none input-lg m-b-sm w-lg" placeholder="Buscar"/>
             </div>
-            <div class="wrapper b-t m-t-sm p-b-xs" ng-if="app.stationsPermissions.length > 1">
+            <div class="wrapper b-t" ng-if="app.stationsPermissions.length > 1">
               <div>
                 <div class="text-xs text-u-c m-t-n-xs p-b-sm">
                   <img style="width: 21px; height:18px; " src="/img/signal.png"> estações</div>
@@ -34,7 +34,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="display-t-c clearfix">
+              <div class="display-t-c clearfix p-r" style="max-width: 155px;">
                 <ul class="text-md font-thin">
                   <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: 3:3">
                     <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ng-click="app.changeStation(station);"
@@ -55,8 +55,12 @@
                 </li>
               </ul> -->
             </div>
-            <div class="wrapper-sm b-t bg-">
-              
+            <div ng-if="app.initData.network.info" class="wrapper-sm b-t bg-light-grey text-center">
+              <ul class="text-u-c text-xs">
+                <li ng-if="app.initData.network.info">
+                  <a style="padding: 2px 15px" class="mark-as-read underline-hover" ui-sref="app.about()" class="text-u-c">Sobre {{app.initData.network.name}}</a>
+                </li>
+              </ul>
             </div>
           </div>
          </md-menu-content>
