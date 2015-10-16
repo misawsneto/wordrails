@@ -26,8 +26,6 @@
     var initTermPerspective = ${not empty termPerspectiveView?termPerspectiveView:'\'\''};
     var angularHttp = null;
     var trixSdk = null;
-    var googleAppID = "${googleAppID}"
-    var facebookAppID = "${facebookAppID}"
   </script>
   <style type="text/css">
       [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {

@@ -90,10 +90,10 @@ angular.module('app')
     window.console && console.error(event)
   });
 
-      if(facebookAppID) {
+      if(initData.network.facebookAppID) {
           window.fbAsyncInit = function() {
             FB.init({
-              appId: facebookAppID,
+              appId: initData.network.facebookAppID,
               cookie: true,
               xfbml: true,
               version: 'v2.5'

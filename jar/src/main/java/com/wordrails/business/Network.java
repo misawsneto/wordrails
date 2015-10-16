@@ -75,10 +75,12 @@ public class Network implements Serializable{
 
 	public String facebookAppID;
 
+	@JsonIgnore
 	public String facebookAppSecret;
 
 	public String googleAppID;
 
+	@JsonIgnore
 	public String googleAppSecret;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
