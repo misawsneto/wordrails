@@ -92,6 +92,10 @@ public class Person implements Serializable{
 	@OneToOne
 	public Image cover;
 
+	public String imageUrl;
+
+	public String coverUrl;
+
     public Integer wordpressId;
 
 	public Integer networkId;

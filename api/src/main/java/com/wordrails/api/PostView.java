@@ -60,7 +60,8 @@ public class PostView implements Serializable {
 	public String imageCreditsText;
 	public String imageTitleText;
 
-
+	public String featuredVideoHash;
+	public String featuredAudioHash;
 
 	public Double lat;
 

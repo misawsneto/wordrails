@@ -218,6 +218,9 @@ public class Post {
 	public String imageMediumHash;
 	public String imageLargeHash;
 
+	public String featuredVideoHash;
+	public String featuredAudioHash;
+
 	@Override
 	public String toString() {
 		return "Post [id=" + id + ", wordpressId=" + wordpressId + ", date=" + date
