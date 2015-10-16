@@ -30,8 +30,11 @@
             <textarea type="text" id="testInput" columns="1" ng-model="editingPerson.bio" md-autofocus></textarea>
           </md-input-container>
         </div>
-        <button md-ink-ripple class="md-btn md-button md-flat btn-fw pull-right" ng-click="saveProfile()">
+        <button md-ink-ripple class="md-btn md-button md-flat btn-fw pull-right" ng-click="saveProfile(editingPerson)">
 	        Salvar
+        </button>
+        <button md-ink-ripple class="md-btn md-button md-flat btn-fw pull-right" ng-click="cancelEditProfile()">
+	        Cancelar
         </button>
       </md-content>
     </md-sidenav>

@@ -1906,6 +1906,7 @@ a.text-lgrey:hover {
 }
 
 .bg-cover{
+  background-color: #333;
   background-size: cover;
 }
 

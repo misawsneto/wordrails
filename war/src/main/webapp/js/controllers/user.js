@@ -196,6 +196,11 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 
     $scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
 
+    $scope.cancelEditProfile = function(){
+    	$scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
+    	$mdSidenav('right').close()
+    }
+
 }])
 
 app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'TRIX',
