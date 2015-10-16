@@ -33,6 +33,6 @@
     "commit": "07245ab85d3f1f9c9794ca07fce26d1b79cdf2e0"
   },
   "_source": "git://github.com/720kb/angular-socialshare.git",
-  "_target": "~0.1.9",
+  "_target": "~0.1.14",
   "_originalSource": "angularjs-socialshare"
 }

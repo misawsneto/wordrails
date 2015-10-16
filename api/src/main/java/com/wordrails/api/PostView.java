@@ -17,6 +17,11 @@ public class PostView implements Serializable {
 	public String smallHash;
 	public String mediumHash;
 	public String largeHash;
+
+	public String imageSmallHash;
+	public String imageMediumHash;
+	public String imageLargeHash;
+
 	public Boolean sponsored;
 	public java.util.Date date;
 	public String snippet;
@@ -60,7 +65,8 @@ public class PostView implements Serializable {
 	public String imageCreditsText;
 	public String imageTitleText;
 
-
+	public String featuredVideoHash;
+	public String featuredAudioHash;
 
 	public Double lat;
 

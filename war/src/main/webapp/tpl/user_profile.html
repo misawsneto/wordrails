@@ -1,4 +1,43 @@
 <div id="user-profile" class="hbox" ng-cloak>
+	<md-sidenav id="edit-profile" ng-if="person.id == app.initData.person.id" class="md-sidenav-right md-whiteframe-z2 w-lg" md-component-id="right">
+      <md-toolbar class="bg-header">
+        <h1 class="md-toolbar-tools bg-header-text">Editar Perfil</h1>
+      </md-toolbar>
+      <md-content layout-padding class="p-l-xl p-r-xl">
+        <div>
+          <md-input-container>
+            <label for="testInput">Nome</label>
+            <input type="text" id="testInput" ng-model="editingPerson.name" md-autofocus>
+          </md-input-container>
+          <md-input-container>
+            <label for="testInput">Usuário</label>
+            <input type="text" id="testInput" ng-model="editingPerson.username" md-autofocus>
+          </md-input-container>
+          <md-input-container>
+            <label for="testInput">Email</label>
+            <input type="text" id="testInput" ng-model="editingPerson.email" md-autofocus>
+          </md-input-container>
+          <md-input-container>
+            <label for="testInput">Senha</label>
+            <input type="password" id="testInput" ng-model="editingPerson.newPass" md-autofocus>
+          </md-input-container>
+          <md-input-container ng-class="{'animated fadeIn': editingPerson.newPass, 'hide': !editingPerson.newPass}">
+            <label for="testInput">Confirmar Senha</label>
+            <input type="password" id="testInput" ng-model="editingPerson.newPass2" md-autofocus>
+          </md-input-container>
+          <md-input-container>
+            <label for="testInput">Biografia</label>
+            <textarea type="text" id="testInput" columns="1" ng-model="editingPerson.bio" md-autofocus></textarea>
+          </md-input-container>
+        </div>
+        <button md-ink-ripple class="md-btn md-button md-flat btn-fw pull-right" ng-click="saveProfile(editingPerson)">
+	        Salvar
+        </button>
+        <button md-ink-ripple class="md-btn md-button md-flat btn-fw pull-right" ng-click="cancelEditProfile()">
+	        Cancelar
+        </button>
+      </md-content>
+    </md-sidenav>
 	<!-- cover container -->
 	<div ng-if="showProfile">
 		<div class="profile-cover abstract-bg bg-cover pos-rlt" back-img-cover="{{person.coverLargeId}}">

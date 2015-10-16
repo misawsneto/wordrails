@@ -89,6 +89,16 @@
                  label="{{button.label}}" ng-repeat="button in buttons"></button>
                </nav> -->
                <!-- /options button -->
+               <div class="post-block">
+                 <md-chips
+                  placeholder="+ Tags"
+                  secondary-placeholder="+ Tag"
+                  ng-model="chipTags.tags"
+                  delete-button-label="Remover tag"
+                  delete-hint="Press delete to remove tag">
+                  </md-chips>
+                </div>
+
              </div>
            </div>
          </div>
@@ -133,7 +143,6 @@
 </li>
 </ul>
 <ul class="nav navbar-nav navbar-right text-lg">
-
   <li style="padding: 6px 0px;">
     <button md-ink-ripple ng-class="{'disabled': !showTopOptions()}" ng-click="publishPost()" style="font-size:16px;" 
     class="md-btn md-raised m-b btn-fw bg-white">{{checkState() == 1 ? 'Atualizar' : 'Publicar'}}</button>
@@ -143,35 +152,35 @@
       <button ng-click="showAddCategorySplash(node)" dropdown-toggle
       md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:34px;height:34px;">
       <i class="mdi mdi-dots-vertical i-20" style="vertical-align: 44%; line-height: normal;"></i>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
-      <!-- <li ng-class="{'disabled': !showTopOptions()}"><a>Pré-visualização</a></li> -->
-      <li ng-class="{'disabled': !showTopOptions()}"><a href ng-click="savePostAsDraft()">Salvar como rascunho</a></li>
-      <li ng-if="checkState() && app.editingPost.editingExisting" class="divider"></li>
-      <li ng-if="checkState() && app.editingPost.editingExisting">
-        <a ng-click="loadPost(app.editingPost.id)">Descartar altarações</a>
-      </li>
-      <li class="divider"></li>
-      <li><a ng-click="openHelp()" >Ajuda</a></li>
-    </ul>
-  </div>
-</li>
-<li>
-  <div class="divider-v"></div>
-</li>
-<li>
-  <a tooltip="Opções de publicação" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
-  href class="text-lg" ng-click="app.hidePostOptions = !app.hidePostOptions" style="font-size: 19px;">
-  <i class="mdi mdi-menu"></i>
-</a>
-</li>
-<li>
-  <div class="divider-v"></div>
-</li>
-<li>
-  <a tooltip="Voltar" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
-  href class="text-u-c text-center" style="font-size: 30px;" ng-click="app.goBack();">×</a>
-</li>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
+        <!-- <li ng-class="{'disabled': !showTopOptions()}"><a>Pré-visualização</a></li> -->
+        <li ng-class="{'disabled': !showTopOptions()}"><a href ng-click="savePostAsDraft()">Salvar como rascunho</a></li>
+        <li ng-if="checkState() && app.editingPost.editingExisting" class="divider"></li>
+        <li ng-if="checkState() && app.editingPost.editingExisting">
+          <a ng-click="loadPost(app.editingPost.id)">Descartar altarações</a>
+        </li>
+        <li class="divider"></li>
+        <li><a ng-click="openHelp()" >Ajuda</a></li>
+      </ul>
+    </div>
+  </li>
+  <li>
+    <div class="divider-v"></div>
+  </li>
+  <li>
+    <a tooltip="Opções de publicação" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+    href class="text-lg" ng-click="app.hidePostOptions = !app.hidePostOptions" style="font-size: 19px;">
+    <i class="mdi mdi-format-list-bulleted"></i>
+  </a>
+  </li>
+  <li>
+    <div class="divider-v"></div>
+  </li>
+  <li>
+    <a tooltip="Voltar" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
+    href class="text-u-c text-center" style="font-size: 30px;" ng-click="app.goBack();">×</a>
+  </li>
 </ul>
 </div>
 <!-- /header navbar -->

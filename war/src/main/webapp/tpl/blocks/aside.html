@@ -61,12 +61,12 @@
         
         <li class="line dk" ng-if="app.isLogged && app.networkAdmin && app.adminStations && app.adminStations.length > 0"></li>
         
-        <li ui-sref-active="active" ng-if="app.stationsPermissions && app.stationsPermissions.length > 1">
+        <!-- <li ui-sref-active="active" ng-if="app.stationsPermissions && app.stationsPermissions.length > 1">
           <a ng-click="toggleMenu($event);" class="border-radius-50" tooltip="Estações" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
             <i class="mdi-library-books mdi text-lgrey text-shadow-dark"></i>
             <span class="font-bold">Estações</span>
           </a>
-        </li>
+        </li> -->
 
         <li ng-class="{'active': $state.includes('app.userstats')}" ng-if="(app.writableStations && app.writableStations.length > 0)">
           <a class="border-radius-50" ui-sref="app.userstats({username: app.getLoggedPerson().username, type: 'publications'})"

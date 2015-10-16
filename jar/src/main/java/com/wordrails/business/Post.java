@@ -157,6 +157,20 @@ public class Post {
 	@Lob
 	public String imageTitleText;
 
+
+	public Integer imageId;
+	public Integer imageSmallId;
+	public Integer imageMediumId;
+	public Integer imageLargeId;
+
+	public String imageHash;
+	public String imageSmallHash;
+	public String imageMediumHash;
+	public String imageLargeHash;
+
+	public String featuredVideoHash;
+	public String featuredAudioHash;
+
 	@ManyToOne
 	Post post;
 
@@ -207,16 +221,6 @@ public class Post {
 			imageLargeHash = null;
 		}
 	}
-
-	public Integer imageId;
-	public Integer imageSmallId;
-	public Integer imageMediumId;
-	public Integer imageLargeId;
-
-	public String imageHash;
-	public String imageSmallHash;
-	public String imageMediumHash;
-	public String imageLargeHash;
 
 	@Override
 	public String toString() {

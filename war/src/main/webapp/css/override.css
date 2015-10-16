@@ -1906,6 +1906,7 @@ a.text-lgrey:hover {
 }
 
 .bg-cover{
+  background-color: #333;
   background-size: cover;
 }
 
@@ -2391,11 +2392,21 @@ ul.no-style{
 .profile-cover{background-position:50% 50%;}
 .text-muted {color: #aaa}
 .pointer{cursor: pointer;}
-md-backdrop.md-opaque.md-default-theme{z-index: 1026}
+md-backdrop.md-opaque.md-default-theme{z-index: 60}
 md-backdrop.md-opaque{
   background-color: rgba(255, 255, 255,0.8);
-  transition: background-color 450ms cubic-bezier(0.55, 0, 0.55, 0.2);
+  /* transition: opacity 450ms cubic-bezier(0.55, 0, 0.55, 0.2);
+  opacity: 1!important; */
+  opacity: 1;
 }
+md-backdrop.md-opaque.ng-enter.md-opaque.ng-enter-active {
+      opacity: 1; }
+md-backdrop.md-opaque.ng-leave {
+      opacity: 1;
+      transition: opacity 400ms; }
+/*md-backdrop.md-opaque{
+  transition: background-color 450ms cubic-bezier(0.55, 0, 0.55, 0.2);
+}*/
 /* md-backdrop {
 }
 */
@@ -2879,6 +2890,30 @@ md-backdrop.md-opaque{
     text-shadow: none;
   }
 
+  md-tab-item{
+  max-width:none !important;
+}
+
+.app-header {
+    z-index: 59;
+}
+
+#user-profile md-sidenav{
+  position: fixed;
+}
+
+@media (min-width: 768px){
+.app-aside-fixed.app-aside-folded .app-aside {
+      z-index: 58;
+    }
+
+  #user-profile md-sidenav {
+    width: 450px;
+    min-width: 450px;
+    max-width: 450px;
+  }
+}
+
  /* /general */
 
  /* nvd3 */
@@ -2939,9 +2974,20 @@ md-backdrop.md-opaque{
 #publications .animated,
 #notifications .animated,
 #post-left-content .animated,
-#post-right-content .animated{
+#post-right-content .animated,
+.animated3x{
  -webkit-animation-duration: 0.3s!important;
  animation-duration: 0.3s!important; 
+}
+
+.animated5x{
+ -webkit-animation-duration: 0.5s!important;
+ animation-duration: 0.5s!important; 
+}
+
+.animated7x{
+ -webkit-animation-duration: 0.7s!important;
+ animation-duration: 0.7s!important; 
 }
 
 /* /animate */
@@ -3310,6 +3356,10 @@ md-backdrop.md-opaque{
 #schedulerPopover{position: fixed; margin-left: 75px; margin-top: 55px;}
 #schedulerPopover .arrow{ left:128px}
 #schedulerPopover .popover-close-button{position: absolute; right: 8px; top: -3px;}
+
+.post-block md-chips-wrap{
+  box-shadow : none!important;
+}
 /* /post */
 
 /* user_profile*/
@@ -3385,6 +3435,8 @@ md-backdrop.md-opaque{
     text-decoration: none;
   }
   /* /tagspage*/
+
+  #edit-profile md-input-container{padding-bottom: 15px;}
 
   /* /user_profile */
 

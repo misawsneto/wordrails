@@ -23,4 +23,8 @@ public interface PersonProjection {
     Integer getImageLargeId();
     Integer getImageMediumId();
     Integer getImageSmallId();
+
+    String getImageLargeHash();
+    String getImageMediumHash();
+    String getImageSmallHash();
 }

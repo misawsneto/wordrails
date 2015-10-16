@@ -2,7 +2,7 @@ package com.wordrails.elasticsearch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.business.Post;
+import com.wordrails.business.Person;
 import com.wordrails.util.WordrailsUtil;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -50,12 +50,6 @@ public class PersonEsRepository {
 			}
 		}
 
-		if (highlightedField != null){
-			searchRequestBuilder.addHighlightedField(highlightedField, 250, 4);
-			searchRequestBuilder.setHighlighterPreTags("<b>");
-			searchRequestBuilder.setHighlighterPostTags("</b>");
-		}
-
 		if (sort != null){
 			searchRequestBuilder.addSort(sort);
 		}
@@ -63,45 +57,63 @@ public class PersonEsRepository {
 		return searchRequestBuilder.execute().actionGet();
 	}
 
-	public void save(Post post) {
-		elasticSearchService.save(formatObjectJson(post), post.id.toString(), indexName, ES_TYPE);
+	public void save(Person person) {
+		elasticSearchService.save(formatObjectJson(person), person.id.toString(), indexName, ES_TYPE);
 	}
 
-	public void update(Post post){
-		elasticSearchService.update(formatObjectJson(post), post.id.toString(), indexName, ES_TYPE);
+	public void update(Person person){
+		elasticSearchService.update(formatObjectJson(person), person.id.toString(), indexName, ES_TYPE);
 	}
 
-	public void delete(Post post){
-		delete(post.id);
+	public void delete(Person person){
+		delete(person.id);
 	}
 
 	public void delete(Integer postId){
 		elasticSearchService.delete(String.valueOf(postId), indexName, ES_TYPE);
 	}
 
-	public String formatObjectJson(Post post){
+	public String formatObjectJson(Person person){
 
 		String doc = null;
+		Person p = new Person();
+		p.id = person.id;
+		p.name = person.name;
+		p.username = person.username;
+		p.bio = person.bio;
+		p.imageHash = person.imageHash;
+		p.coverHash = person.coverHash;
+		p.networkId = person.networkId;
+		p.email = person.email;
+		p.personsNetworkRoles = person.personsNetworkRoles;
 
 		try {
-			doc = objectMapper.writeValueAsString(
-					makePostView(post, true)
-			);
+			doc = objectMapper.writeValueAsString(person);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return null;
 		}
 
-		JSONObject toFormat = (JSONObject) JSONValue.parse(doc);
-
-		return toFormat.toJSONString();
+		return doc;
 	}
 
-	public JSONObject makeObjectJson(Post post){
+	public JSONObject makeObjectJson(Person person){
 		String doc = null;
 
+		Person p = new Person();
+		p.id = person.id;
+		p.name = person.name;
+		p.username = person.username;
+		p.bio = person.bio;
+		p.imageHash = person.imageHash;
+		p.coverHash = person.coverHash;
+		p.networkId = person.networkId;
+		p.email = person.email;
+		p.personsNetworkRoles = person.personsNetworkRoles;
+		p.personsStationPermissions = person.personsStationPermissions;
+
 		try {
-			doc = objectMapper.writeValueAsString(makePostView(post, true));
+			doc = objectMapper.writeValueAsString(p);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			return null;
@@ -110,12 +122,10 @@ public class PersonEsRepository {
 		return (JSONObject) JSONValue.parse(doc);
 	}
 
-	public PostIndexed makePostView(Post post, boolean addBody) {
-		PostIndexed postView = makePostView(post);
-		if(addBody)
-			postView.body = post.body;
-		return postView;
-	}
+//	public PostIndexed makePostView(Person person, boolean addBody) {
+//		PostIndexed postView = makePostView(person);
+//		return postView;
+//	}
 
 	public JSONObject convertToView(String json){
 		return (JSONObject) JSONValue.parse(json);
@@ -133,65 +143,65 @@ public class PersonEsRepository {
 		return view;
 	}
 
-	public PostIndexed makePostView(Post post){
-
-		PostIndexed postView = new PostIndexed();
-		postView.postId = post.id;
-		postView.title = post.title;
-		postView.subheading = post.subheading;
-		postView.slug = post.slug;
-
-		postView.sponsored = post.sponsor != null;
-		postView.comments = post.comments;
-		postView.images = post.images;
-		postView.author = post.author;
-		postView.station = post.station;
-		postView.terms = post.terms;
-		postView.sponsor = post.sponsor;
-		postView.smallId = post.imageSmallId;
-		postView.mediumId = post.imageMediumId;
-		postView.largeId = post.imageLargeId;
-
-		postView.smallHash = post.imageSmallHash;
-		postView.mediumHash = post.imageMediumHash;
-		postView.largeHash = post.imageLargeHash;
-
-		postView.imageId = post.imageId;
-		postView.imageSmallId = post.imageSmallId;
-		postView.imageMediumId = post.imageMediumId;
-		postView.imageLargeId = post.imageLargeId;
-
-		postView.imageLandscape = post.imageLandscape;
-		postView.date = post.date;
-		postView.topper = post.topper;
-		postView.readsCount = post.readsCount;
-		postView.recommendsCount = post.recommendsCount;
-		postView.commentsCount = post.commentsCount;
-		postView.snippet = WordrailsUtil.simpleSnippet(post.body, 100);
-		postView.authorName = post.author != null ? post.author.name : null;
-		postView.authorUsername = post.author != null ? post.author.username : null;
-		postView.authorCoverMediumId = post.author != null ? post.author.coverMediumId : null;
-		postView.authorImageSmallId = post.author != null ? post.author.imageSmallId : null;
-		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
-		postView.authorImageSmallHash = post.author != null ? post.author.imageSmallHash : null;
-		postView.authorCoverMediumHash = post.author != null ? post.author.coverMediumHash : null;
-		postView.authorId = post.author != null ? post.author.id : null;
-		postView.authorEmail = post.author != null ? post.author.email : null;
-		postView.authorTwitter = post.author != null ? post.author.twitterHandle : null;
-		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
-		postView.externalVideoUrl = post.externalVideoUrl;
-		postView.readTime = post.readTime;
-		postView.state = post.state;
-		postView.scheduledDate = post.scheduledDate;
-		postView.lat = post.lat;
-		postView.lng = post.lng;
-		postView.imageCaptionText = post.imageCaptionText;
-		postView.imageCreditsText = post.imageCreditsText;
-		postView.imageTitleText = post.imageTitleText;
-		postView.stationName = post.station.name;
-		postView.stationId = post.station.id;
-		postView.notify = post.notify;
-
-		return postView;
-	}
+//	public PostIndexed makePostView(Person person){
+//
+//		PostIndexed postView = new PostIndexed();
+//		postView.postId = post.id;
+//		postView.title = post.title;
+//		postView.subheading = post.subheading;
+//		postView.slug = post.slug;
+//
+//		postView.sponsored = post.sponsor != null;
+//		postView.comments = post.comments;
+//		postView.images = post.images;
+//		postView.author = post.author;
+//		postView.station = post.station;
+//		postView.terms = post.terms;
+//		postView.sponsor = post.sponsor;
+//		postView.smallId = post.imageSmallId;
+//		postView.mediumId = post.imageMediumId;
+//		postView.largeId = post.imageLargeId;
+//
+//		postView.smallHash = post.imageSmallHash;
+//		postView.mediumHash = post.imageMediumHash;
+//		postView.largeHash = post.imageLargeHash;
+//
+//		postView.imageId = post.imageId;
+//		postView.imageSmallId = post.imageSmallId;
+//		postView.imageMediumId = post.imageMediumId;
+//		postView.imageLargeId = post.imageLargeId;
+//
+//		postView.imageLandscape = post.imageLandscape;
+//		postView.date = post.date;
+//		postView.topper = post.topper;
+//		postView.readsCount = post.readsCount;
+//		postView.recommendsCount = post.recommendsCount;
+//		postView.commentsCount = post.commentsCount;
+//		postView.snippet = WordrailsUtil.simpleSnippet(post.body, 100);
+//		postView.authorName = post.author != null ? post.author.name : null;
+//		postView.authorUsername = post.author != null ? post.author.username : null;
+//		postView.authorCoverMediumId = post.author != null ? post.author.coverMediumId : null;
+//		postView.authorImageSmallId = post.author != null ? post.author.imageSmallId : null;
+//		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
+//		postView.authorImageSmallHash = post.author != null ? post.author.imageSmallHash : null;
+//		postView.authorCoverMediumHash = post.author != null ? post.author.coverMediumHash : null;
+//		postView.authorId = post.author != null ? post.author.id : null;
+//		postView.authorEmail = post.author != null ? post.author.email : null;
+//		postView.authorTwitter = post.author != null ? post.author.twitterHandle : null;
+//		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
+//		postView.externalVideoUrl = post.externalVideoUrl;
+//		postView.readTime = post.readTime;
+//		postView.state = post.state;
+//		postView.scheduledDate = post.scheduledDate;
+//		postView.lat = post.lat;
+//		postView.lng = post.lng;
+//		postView.imageCaptionText = post.imageCaptionText;
+//		postView.imageCreditsText = post.imageCreditsText;
+//		postView.imageTitleText = post.imageTitleText;
+//		postView.stationName = post.station.name;
+//		postView.stationId = post.station.id;
+//		postView.notify = post.notify;
+//
+//		return postView;
+//	}
 }

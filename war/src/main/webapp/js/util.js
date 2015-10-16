@@ -130,11 +130,13 @@ function getCustomStyle(color, perspective, header) {
 	"   border-color: "+ color +";\n"+
 	"}\n"+
 
+	"md-input-container:not(.md-input-invalid):not(.md-default-theme).md-input-focused md-input,"+
 	".md-input:focus,"+
 	".md-input.focus {\n"+
-	  "border-color: "+ color +";\n"+
+	  "border-color: "+ color +"!important;\n"+
 	"}\n"+
 
+	"md-input-container:not(.md-input-invalid).md-input-focused label,"+
 	".md-input:focus ~ label,"+
 	".md-input.focus ~ label {\n"+
 	  "color: "+ color +";\n"+
@@ -384,7 +386,7 @@ function getCustomStyle(color, perspective, header) {
 	"}"+
 
 	"md-select-menu md-option[selected]{"+
-		"color:" + color + "!important"
+		"color:" + color + "!important"+
 	"}"+
 
 	"md-checkbox.md-default-theme.md-checked .md-icon:after{" +

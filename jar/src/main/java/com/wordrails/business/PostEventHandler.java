@@ -88,6 +88,7 @@ public class PostEventHandler {
 	}
 
 	@HandleBeforeDelete
+	@Transactional
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
 		if (postAndCommentSecurityChecker.canRemove(post)) {
 

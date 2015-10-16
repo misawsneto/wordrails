@@ -2,6 +2,7 @@ package com.wordrails.persistence;
 
 import com.wordrails.business.NetworkRole;
 import com.wordrails.business.Person;
+import com.wordrails.business.Post;
 import com.wordrails.business.User;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Pageable;
@@ -68,4 +69,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@Query("select nr from NetworkRole nr join fetch nr.person person join fetch person.user u where u.network.id = :networkId")
 	List<NetworkRole> findNetworkAdmin(@Param("networkId") Integer networkId);
 
+	@RestResource(exported = false)
+	@Query("SELECT person FROM Person person ORDER BY person.id DESC")
+	List<Person> findAllPostsOrderByIdDesc();
 }

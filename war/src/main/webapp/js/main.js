@@ -909,7 +909,7 @@ angular.module('app')
       lastScrollTop = $(window).scrollTop() ? $(window).scrollTop() : 0;
     }, 20)
 
-    function checkStationHeaderVisibel(scrollTop){
+    function checkStationHeaderVisible(scrollTop){
         // Make sure they scroll more than delta
         if(Math.abs(lastScrollTop - scrollTop) <= 5)
           return;
@@ -928,7 +928,7 @@ angular.module('app')
     }
 
     $timeout(function(){
-      checkStationHeaderVisibel(lastScrollTop);
+      checkStationHeaderVisible(lastScrollTop);
       $(window).scroll(function(){
         didScroll = true;
       })
@@ -936,7 +936,7 @@ angular.module('app')
 
     $interval(function() {
       if (didScroll) {
-        checkStationHeaderVisibel($(window).scrollTop());
+        checkStationHeaderVisible($(window).scrollTop());
         didScroll = false;
       }
     }, 250);

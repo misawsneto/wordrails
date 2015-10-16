@@ -969,6 +969,24 @@ public class UtilResource {
 	}
 
 	@GET
+	@Path("/indexPersonsToElastisearch")
+	@Transactional(readOnly=false)
+	public void indexPersonsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
+		String host = request.getHeader("Host");
+
+		if(isLocal(request.getHeader("Host"))){
+			List<Person> all = personRepository.findAllPostsOrderByIdDesc();
+			for(int i = 0; i < all.size(); i++){
+				personRepository.save(all.get(i));
+
+				if(i % 50 == 0){
+					Thread.sleep(100);
+				}
+			}
+		}
+	}
+
+	@GET
 	@Path("/indexPerspectivesToElastisearch")
 	@Transactional(readOnly=false)
 	public void indexPerspectivesToElastisearch(@Context HttpServletRequest request) throws InterruptedException {

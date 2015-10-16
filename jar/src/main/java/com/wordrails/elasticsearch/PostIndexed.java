@@ -61,6 +61,7 @@ public class PostIndexed {
 
 	public String stationName;
 	public Integer stationId;
+	public String stationIdString;
 
 	public String slug;
 	public String externalFeaturedImgUrl;

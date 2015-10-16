@@ -8,9 +8,67 @@
     </div>
     <!-- nabar right -->
     <ul class="nav navbar-nav navbar-right">
-      <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
-        <a class="text-u-c text-center dropdown-toggle" dropdown-toggle>Mais <span class="mdi mdi-chevron-down"></a>
+    <li>
+      <md-menu md-position-mode="target-right target">
+         <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button wrapper-sm">
+           <i class="mdi mdi-magnify text-2x"></i>
+         </md-button>
+         <md-menu-content class="m-t-n-sm p-b-none">
+          <!--  <md-menu-item><md-button ng-click="doSomething()">Do Something</md-button></md-menu-item> -->
+          <div class="w-xxl o-h">
+            <div class="w-f p-l-sm p-r-sm ">
+              <i class="mdi mdi-magnify text-2x v-middle"></i>
+              <input class="p-l-xs b-none input-lg m-b-sm w-lg" placeholder="Buscar"/>
+            </div>
+            <div class="wrapper b-t" ng-if="app.stationsPermissions.length > 1">
+              <div>
+                <div class="text-xs text-u-c m-t-n-xs p-b-sm">
+                  <img style="width: 21px; height:18px; " src="/img/signal.png"> estações</div>
+              </div>
+              <div class="display-t-c" style="width: 155px;">
+                <ul class="text-md font-thin">
+                  <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: 3:0">
+                    <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ng-click="app.changeStation(station);"
+                    ng-class="{'font-bold': station.stationId == app.currentStation.id}">
+                    {{station.stationName}}</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="display-t-c clearfix p-r" style="max-width: 155px;">
+                <ul class="text-md font-thin">
+                  <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: 3:3">
+                    <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ng-click="app.changeStation(station);"
+                    ng-class="{'font-bold': station.stationId == app.currentStation.id}">
+                    {{station.stationName}}</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="wrapper-xs text-xs text-u-c text-center m-t-md" ng-if="app.stationsPermissions.length > 6">
+                <a class="a-custom-primary underline-hover">+ estações</a>
+              </div>
+
+              <!-- <ul class="text-md font-thin">
+                <li ng-repeat="station in app.stationsPermissions | limitTo: 4">
+                  <a style="padding: 2px 15px" class="mark-as-read" class="text-u-c" ng-click="app.changeStation(station);"
+                  ng-class="{'font-bold': station.stationId == app.currentStation.id}">
+                  {{station.stationName}}</a>
+                </li>
+              </ul> -->
+            </div>
+            <div ng-if="app.initData.network.info" class="wrapper-sm b-t bg-light-grey text-center">
+              <ul class="text-u-c text-xs">
+                <li ng-if="app.initData.network.info">
+                  <a style="padding: 2px 15px" class="mark-as-read underline-hover" ui-sref="app.about()" class="text-u-c">Sobre {{app.initData.network.name}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+         </md-menu-content>
+        </md-menu>
+      </li>
         <!-- dropdown -->
+      <!-- <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
+        <a class="text-u-c text-center dropdown-toggle" dropdown-toggle>Mais <span class="mdi mdi-chevron-down"></a>
         <div id="header-dropdown" class="dropdown-menu dropdown-menu-scale animated pull-right">
           <div class="display-t-c">
             <ul class="">
@@ -41,8 +99,8 @@
             </ul>
           </div>
         </div>
+      </li> -->
         <!-- / dropdown -->
-      </li>
       <li ng-if="!app.isLogged">
         <div class="divider-v m-r-xs"></div>
       </li>

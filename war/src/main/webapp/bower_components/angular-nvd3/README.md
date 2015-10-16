@@ -22,8 +22,6 @@ An [angular.js](https://angularjs.org/), [D3.js](http://d3js.org/) and [nvd3.js]
     $ bower install d3
     $ bower install nvd3
 
-> I advise you to use a newer nvd3 assembly rather than the last one installed via bower. A more recent and fixed assembly `nv.d3.js` and `nv.d3.css` you can find in the `lib` directory of this project. Also you can make your own assembly according to nvd3 docs. 
-
 Add dependencies to the `<head>` section of your main html:
 ```html
 <meta charset="utf-8">  <!-- it's important for d3.js -->
@@ -34,7 +32,7 @@ Add dependencies to the `<head>` section of your main html:
 <link rel="stylesheet" href="bower_components/nvd3/nv.d3.css">
 ```
 
-If you don't use bower, you can manually download and unpack directive ([zip](https://github.com/krispo/angular-nvd3/archive/v0.0.3.zip), [tar.gz](https://github.com/krispo/angular-nvd3/archive/v0.0.3.tar.gz)).
+If you don't use bower, you can manually download and unpack directive the latest version ([zip](https://github.com/krispo/angular-nvd3/archive/v1.0.2.zip), [tar.gz](https://github.com/krispo/angular-nvd3/archive/v1.0.2.tar.gz)).
 
 ### Basic usage
 
@@ -125,21 +123,33 @@ Then build using [grunt](http://gruntjs.com/) (*node.js must be installed*):
 
 ## Release Notes
 
-### [1.0.0-rc.2 (current, nvd3 v1.8.1)](https://github.com/krispo/angular-nvd3/releases/tag/v1.0.0-rc.2)
+### [1.0.2 (current, nvd3 v1.8.1)](https://github.com/krispo/angular-nvd3/releases/tag/v1.0.2)
+* Fixed `tooltip` [issue](https://github.com/krispo/angular-nvd3/pull/222) for interactive guideline.
+* Set `deepWatchData` to `false` by default
+* Added `deepWatchOptions` and `deepWatchConfig` properties
+
+### 1.0.1
+* Add support for `Candlestick Chart`, `OHLC Chart`, `Sunburst Chart`, `Pox Plot Chart`
+
+### 1.0.0-rc.2
 * Add support of nvd3 1.8.1
 * Fix [issue](https://github.com/krispo/angular-nvd3/issues/100) with `stacked` parameter
 
-### [1.0.0-rc (current, nvd3 v1.7.1)](https://github.com/krispo/angular-nvd3/releases/tag/v1.0.0-rc)
+### 1.0.0-rc
 * Rename `utils` module to avoid conflicts
 * Fix nvd3 version reference in bower.json
 * Remove usage of reserved word `class`
 * Fix multiple resize event listeners which were causing null pointer exceptions
 * Change bower.json's main property to use regular instead of minified file
 
-### [1.0.0-beta (current, nvd3 v1.7.1)](https://github.com/krispo/angular-nvd3/releases/tag/v1.0.0-beta)
+### 1.0.0-beta (nvd3 v1.7.1)
 Under developing in **master** (1.x) branch
 
-### [0.1.1 (stable, nvd3 v1.1.15-beta)](https://github.com/krispo/angular-nvd3/releases/tag/v0.1.1)
+--
+
+> If you use the old nvd3 version (v1.1.15-beta), I recommend you to use an updated assembly (`nv.d3.js` and `nv.d3.css`, you can find it in the `lib` directory of this project) with some fixes rather than the last one installed via bower.
+
+### [0.1.1 (stable for nvd3 v1.1.15-beta)](https://github.com/krispo/angular-nvd3/releases/tag/v0.1.1)
 Under developing in **0.x** branch
 
 ### 0.1.0

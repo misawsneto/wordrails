@@ -407,6 +407,31 @@ uploader.onProgressItem = function(fileItem, progress) {
 
 // ------------------- end of image uploader -------------
 
+// --------------- chip tags ------------------
+
+ $scope.chipTags = {
+ 	readonly: false,
+    // Lists of fruit names and Vegetable objects
+    fruitNames: ['Apple', 'Banana', 'Orange'],
+    roFruitNames: angular.copy(self.fruitNames),
+    tags: [],
+    vegObjs: [
+      {
+        'name' : 'Broccoli',
+        'type' : 'Brassica'
+      },
+      {
+        'name' : 'Cabbage',
+        'type' : 'Brassica'
+      },
+      {
+        'name' : 'Carrot',
+        'type' : 'Umbelliferous'
+      }
+    ]}
+ 
+// --------------- end of chip tags ------------
+
 // ------------------- update term tree ---------------
 
 $scope.$watch('app.editingPost.selectedStation', function(newVal){
@@ -536,16 +561,13 @@ function isTermSelected(terms){
 		$mdDialog.show({
 			controller: MoreOptionsController,
 			templateUrl: 'tpl/post_more_options.html',
+			parent: angular.element(document.body),
 			targetEvent: ev,
-			onComplete: function(){
+			clickOutsideToClose:true
+			// onComplete: function(){
 
-			}
+			// }
 		})
-		.then(function(answer) {
-			//$scope.alert = 'You said the information was "' + answer + '".';
-		}, function() {
-			//$scope.alert = 'You cancelled the dialog.';
-		});
 	}
 
 	function MoreOptionsController(scope, $mdDialog) {
