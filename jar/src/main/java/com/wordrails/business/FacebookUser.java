@@ -10,7 +10,6 @@ public class FacebookUser {
 
 	public static class Cover {
 		private String id;
-		private int offset_y;
 		private String source;
 
 		public String getId() {
@@ -19,14 +18,6 @@ public class FacebookUser {
 
 		public void setId(String id) {
 			this.id = id;
-		}
-
-		public int getOffset_y() {
-			return offset_y;
-		}
-
-		public void setOffset_y(int offset_y) {
-			this.offset_y = offset_y;
 		}
 
 		public String getSource() {

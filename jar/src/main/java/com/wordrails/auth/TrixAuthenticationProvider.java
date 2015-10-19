@@ -184,17 +184,9 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		UserConnection userConnection = userConnectionRepository.findByProviderIdAndProviderUserId(providerId, userId, network.id);
 
 		User user = null;
-		ObjectMapper mapper = new ObjectMapper();
 		if (userConnection == null) {
 			if (providerId.equals("facebook")) {
-				OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/v2.5/" + userId + "?fields=id,name,email,cover");
-				service.signRequest(token, request);
-				Response response = request.send();
-				System.out.println(response.getBody());
-
-				FacebookUser facebookUser = mapper.readValue(response.getBody(), FacebookUser.class);
-
-				Person person = socialAuthenticationService.getFacebookUser(facebookUser, network);
+				Person person = socialAuthenticationService.getFacebookUser(userId, service, token, network);
 				personRepository.save(person);
 
 				user = person.user;
@@ -202,17 +194,11 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			}
 		} else {
 			if (providerId.equals("facebook")) {
-				OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/v2.5/" + userId + "?fields=id,name,email,cover");
-				service.signRequest(token, request);
-				Response response = request.send();
-				System.out.println(response.getBody());
-
-				try {
-					mapper.readValue(response.getBody(), FacebookUser.class);
-					user = userConnection.user;
-				} catch (IOException e) {
+				if(!socialAuthenticationService.login(userId, service, token)) {
 					return false;
 				}
+
+				user = userConnection.user;
 			} else if (providerId.equals("google")) {
 
 			}
