@@ -7,6 +7,7 @@
   <meta name="description" content="${networkDesciption}" />
   <meta name="keywords" content="${networkKeywords}" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="google-signin-client_id" content="940891630461-0a0krbd2djhnpd0282rskgdsjgi0n018.apps.googleusercontent.com">
   <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" type="text/css" />
   <link rel="stylesheet" href="/bower_components/animate.css/animate.min.css" type="text/css" />
   <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css" type="text/css" />

@@ -182,6 +182,12 @@
 			<artifactId>spring-social-twitter</artifactId>
 		</dependency>
 
+
+		<dependency>
+			<groupId>org.scribe</groupId>
+			<artifactId>scribe</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.twitter4j</groupId>
 			<artifactId>twitter4j-core</artifactId>

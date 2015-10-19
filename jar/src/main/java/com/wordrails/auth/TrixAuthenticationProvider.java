@@ -1,13 +1,17 @@
 package com.wordrails.auth;
 
-import com.wordrails.business.Network;
-import com.wordrails.business.Person;
-import com.wordrails.business.User;
-import com.wordrails.business.UserConnection;
+import com.wordrails.business.*;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserConnectionRepository;
 import com.wordrails.persistence.UserRepository;
 import com.wordrails.services.CacheService;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
+import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -19,10 +23,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -177,27 +180,41 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		return auth;
 	}
 
-	public boolean socialAuthentication(String providerId, String userId, String accessToken, Network network) throws BadCredentialsException {
+	public boolean socialAuthentication(String providerId, OAuthService service, String userId, Token token, Network network) throws BadCredentialsException, IOException {
 		UserConnection userConnection = userConnectionRepository.findByProviderIdAndProviderUserId(providerId, userId, network.id);
 
 		User user = null;
-		Facebook facebook = new FacebookTemplate(accessToken);
+		ObjectMapper mapper = new ObjectMapper();
 		if (userConnection == null) {
 			if (providerId.equals("facebook")) {
-				Person person = socialAuthenticationService.getFacebookUser(facebook, userId, network);
+				OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/v2.5/" + userId + "?fields=id,name,email,cover");
+				service.signRequest(token, request);
+				Response response = request.send();
+				System.out.println(response.getBody());
+
+				FacebookUser facebookUser = mapper.readValue(response.getBody(), FacebookUser.class);
+
+				Person person = socialAuthenticationService.getFacebookUser(facebookUser, network);
 				personRepository.save(person);
 
 				user = person.user;
+			} else if (providerId.equals("google")) {
 			}
 		} else {
 			if (providerId.equals("facebook")) {
-				org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
+				OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/v2.5/" + userId + "?fields=id,name,email,cover");
+				service.signRequest(token, request);
+				Response response = request.send();
+				System.out.println(response.getBody());
 
-				if (profile == null) {
-					return false;
-				} else {
+				try {
+					mapper.readValue(response.getBody(), FacebookUser.class);
 					user = userConnection.user;
+				} catch (IOException e) {
+					return false;
 				}
+			} else if (providerId.equals("google")) {
+
 			}
 		}
 

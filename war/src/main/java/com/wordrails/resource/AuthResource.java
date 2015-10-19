@@ -2,6 +2,11 @@ package com.wordrails.resource;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.Network;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.FacebookApi;
+import org.scribe.builder.api.GoogleApi;
+import org.scribe.model.Token;
+import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +32,26 @@ public class AuthResource {
 		Network network = authProvider.getNetwork();
 
 		boolean allowSocialLogin = true;
+		OAuthService service = null;
+		Token token = null;
 		switch (providerId) {
 			case "facebook":
 				allowSocialLogin = network.isFacebookLoginAllowed();
+				service = new ServiceBuilder()
+						.provider(FacebookApi.class)
+						.apiKey(network.facebookAppID)
+						.apiSecret(network.facebookAppSecret)
+						.build();
+				token = new Token(accessToken, network.facebookAppSecret);
 				break;
 			case "google":
 				allowSocialLogin = network.isGoogleLoginAllowed();
+				service = new ServiceBuilder()
+						.provider(GoogleApi.class)
+						.apiKey(network.googleAppID)
+						.apiSecret(network.googleAppSecret)
+						.build();
+				token = new Token(accessToken, network.googleAppSecret);
 				break;
 		}
 
@@ -40,7 +59,7 @@ public class AuthResource {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 		}
 
-		boolean authorized = authProvider.socialAuthentication(providerId, userId, accessToken, network);
+		boolean authorized = authProvider.socialAuthentication(providerId, service, userId, token, network);
 
 		if (authorized) {
 			return Response.status(Response.Status.OK).build();
