@@ -744,6 +744,10 @@ angular.module('app')
         $("body").removeAttr("style");
       },2)*/
 
+      $scope.app.doSearch = function(query){
+        $state.go('app.search', {'q': query})
+      }
+
       $scope.goToBookmars = function(){
         if($scope.app.isLogged)
           $state.go('app.bookmarks')
@@ -943,5 +947,6 @@ angular.module('app')
 
     /* end of header observer */
 
+    $scope.app.testArray = [1,2,3,4,5,6,7,8,9,0]
 
 }]);

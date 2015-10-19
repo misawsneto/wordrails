@@ -64,7 +64,7 @@
     "angular-sanitize": "1.4.3",
     "angular-scroll-watch": "~0.5.4",
     "angular-slick": "~0.2.1",
-    "angular-slimscroll": "~1.1.3",
+    "angular-slimscroll": "1.1.5",
     "angular-smart-table": "~1.4.9",
     "angular-touch": "1.4.3",
     "angular-tour": "~0.1.1",

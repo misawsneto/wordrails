@@ -8,9 +8,9 @@
     </div>
     <!-- nabar right -->
     <ul class="nav navbar-nav navbar-right">
-    <li>
+    <li class="p-t-xs">
       <md-menu md-position-mode="target-right target">
-         <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button wrapper-sm">
+         <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button p-t-xs">
            <i class="mdi mdi-magnify text-2x"></i>
          </md-button>
          <md-menu-content class="m-t-n-sm p-b-none">
@@ -20,40 +20,34 @@
               <i class="mdi mdi-magnify text-2x v-middle"></i>
               <input class="p-l-xs b-none input-lg m-b-sm w-lg" placeholder="Buscar"/>
             </div>
-            <div class="wrapper b-t" ng-if="app.stationsPermissions.length > 1">
+            <div class="wrapper b-t text-center text-md pointer" md-ink-ripple ng-click="app.openSplash('explore_categories.html')">
+             <i class="mdi mdi-view-grid"></i> EXPLORE
+            </div>
+            <div class="b-t" ng-if="app.stationsPermissions.length > 1">
               <div>
-                <div class="text-xs text-u-c m-t-n-xs p-b-sm">
-                  <img style="width: 21px; height:18px; " src="/img/signal.png"> estações</div>
+                <div class="text-xs text-u-c m-t-n-xs p-b-sm wrapper-sm">
+                  <i class="mdi mdi-radio-tower text-lg v-middle"></i> estações</div>
               </div>
-              <div class="display-t-c" style="width: 155px;">
-                <ul class="text-md font-thin">
-                  <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: 3:0">
-                    <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ng-click="app.changeStation(station);"
-                    ng-class="{'font-bold': station.stationId == app.currentStation.id}">
-                    {{station.stationName}}</a>
-                  </li>
-                </ul>
+              <div  class="scrollable wrapper p-t-none" style="max-height: 100px;">
+                <div class="display-t-c" style="width: 155px;">
+                  <ul class="text-md font-thin">
+                    <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: app.stationsPermissions.length/2:0">
+                      <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ng-click="app.changeStation(station);"
+                      ng-class="{'font-bold': station.stationId == app.currentStation.id}">
+                      {{station.stationName}}</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="display-t-c clearfix p-r" style="max-width: 155px;">
+                  <ul class="text-md font-thin">
+                    <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: (app.stationsPermissions.length/2 + 1):app.stationsPermissions.length/2">
+                      <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ng-click="app.changeStation(station);"
+                      ng-class="{'font-bold': station.stationId == app.currentStation.id}">
+                      {{station.stationName}}</a>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <div class="display-t-c clearfix p-r" style="max-width: 155px;">
-                <ul class="text-md font-thin">
-                  <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: 3:3">
-                    <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ng-click="app.changeStation(station);"
-                    ng-class="{'font-bold': station.stationId == app.currentStation.id}">
-                    {{station.stationName}}</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="wrapper-xs text-xs text-u-c text-center m-t-md" ng-if="app.stationsPermissions.length > 6">
-                <a class="a-custom-primary underline-hover">+ estações</a>
-              </div>
-
-              <!-- <ul class="text-md font-thin">
-                <li ng-repeat="station in app.stationsPermissions | limitTo: 4">
-                  <a style="padding: 2px 15px" class="mark-as-read" class="text-u-c" ng-click="app.changeStation(station);"
-                  ng-class="{'font-bold': station.stationId == app.currentStation.id}">
-                  {{station.stationName}}</a>
-                </li>
-              </ul> -->
             </div>
             <div ng-if="app.initData.network.info" class="wrapper-sm b-t bg-light-grey text-center">
               <ul class="text-u-c text-xs">
@@ -66,41 +60,6 @@
          </md-menu-content>
         </md-menu>
       </li>
-        <!-- dropdown -->
-      <!-- <li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
-        <a class="text-u-c text-center dropdown-toggle" dropdown-toggle>Mais <span class="mdi mdi-chevron-down"></a>
-        <div id="header-dropdown" class="dropdown-menu dropdown-menu-scale animated pull-right">
-          <div class="display-t-c">
-            <ul class="">
-              <li><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Categorias</span></li>
-              <li ng-repeat="tab in app.termPerspectiveView.ordinaryRows">
-                <a style="padding: 2px 15px" class="mark-as-read" ui-sref="app.tagspage({'tagName': tab.termName})" class="text-u-c">{{tab.termName}}</a>
-              </li>
-              <li class="m-t-sm" ng-if="app.initData.network.info && app.stationsPermissions.length == 1">
-                <span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Links</span></li>
-              <li ng-if="app.initData.network.info && app.stationsPermissions.length == 1">
-                <a style="padding: 2px 15px" class="mark-as-read" ui-sref="app.about()" class="text-u-c">Sobre {{app.initData.network.name}}</a>
-              </li>
-            </ul>
-          </div>
-          <div class="display-t-c clearfix" ng-if="app.stationsPermissions.length > 1">
-            <ul class="">
-              <li>
-              <span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Estações</span></li>
-              <li ng-repeat="station in app.stationsPermissions">
-                <a style="padding: 2px 15px" class="mark-as-read" class="text-u-c" ng-click="app.changeStation(station);"
-                ng-class="{'font-bold': station.stationId == app.currentStation.id}">
-                {{station.stationName}}</a>
-              </li>
-              <li class="m-t-sm" ng-if="app.initData.network.info"><span class="text-xs text-u-c m-l-xs font-bold wrapper-xs text-dg">Links</span></li>
-              <li ng-if="app.initData.network.info">
-                <a style="padding: 2px 15px" class="mark-as-read" ui-sref="app.about()" class="text-u-c">Sobre {{app.initData.network.name}}</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </li> -->
-        <!-- / dropdown -->
       <li ng-if="!app.isLogged">
         <div class="divider-v m-r-xs"></div>
       </li>
@@ -115,3 +74,19 @@
       </li>
     </ul>
   </div>
+
+      <script type="text/ng-template" id="explore_categories.html">
+      <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+      <div class="explore-categories" class="pos-fix" ng-cloak>
+        <div class="b-b p-b-md p-t-sm p-l-md p-r-md pos-fix w-full">  
+          <div class="text-xs text-u-c">estações:</div>
+          <div id="explore-stations" class="text-center">
+            <span class="text-lg font-thin p-r p-l text-u-l" ng-repeat="station in app.stationsPermissions">
+              {{station.stationName}}
+            </span>
+          </div>
+        </div>
+        <div class="pos-abt bottom-0 top-0 left-0 right-0 scrollable" style="margin-top: 73px;">
+        </div>
+      </div>
+    </script>

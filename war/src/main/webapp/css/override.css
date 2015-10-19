@@ -4147,6 +4147,19 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 
 /* /aside.html */
 
+/* explore.html */
+.explore-categories{
+  top:0!important;
+  bottom:0!important;
+  left:0!important;
+  right:0!important;
+  position: absolute;
+  margin: 0;
+  background: rgba(255, 255, 255,0.5)
+}
+
+/* /explore.html */
+
 /* search.html */
 
 .search-display{
@@ -4841,6 +4854,10 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
   direction: ltr;
   cursor: pointer;
   display: block;
+}
+
+#settings-stations-config .bg-cover{
+  background-color: transparent;
 }
 /* /settings */
 
