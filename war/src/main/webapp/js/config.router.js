@@ -72,7 +72,7 @@ angular.module('app')
                   controller:'PostCtrl'
               })
               .state('app.search', {
-                  url: '/search',
+                  url: '/search?q',
                   templateUrl: 'tpl/search.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
