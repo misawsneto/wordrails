@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class TaxonomyResource {
+public class TaxonomiesResource {
 	
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired NetworkRolesRepository networkRolesRepository;

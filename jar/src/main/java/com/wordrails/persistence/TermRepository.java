@@ -80,4 +80,7 @@ public interface
 	@RestResource(exported = false)
 	@Query(value="SELECT post FROM Post post left join post.terms term where post.state = 'PUBLISHED' and post.stationId = :stationId and term.name = :tagName")
 	List<Post> findPostsByTagAndStationId(@Param("tagName") String tagName, @Param("stationId")Integer stationId, Pageable pageable);
+
+//	@Query(value="SELECT perspective.defaultImageHash, post. FROM Post post left join post.terms term where post.state = 'PUBLISHED' and post.stationId = :stationId and term.name = :tagName")
+//	String findValidHash(Integer perspectiveId, Integer termId);
 }

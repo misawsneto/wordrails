@@ -42,7 +42,7 @@ import com.wordrails.persistence.TermRepository;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Component
-public class TermResource {
+public class TermsResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
 
