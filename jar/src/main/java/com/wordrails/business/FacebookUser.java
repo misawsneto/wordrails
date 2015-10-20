@@ -1,32 +1,42 @@
 package com.wordrails.business;
 
 
-public class FacebookUser {
+public class FacebookUser implements SocialUser {
+
+	private String providerId;
 
 	private String id;
 	private String name;
 	private String email;
 	private Cover cover;
+	private String profileUrl;
+	private String profileImageUrl;
 
-	public static class Cover {
-		private String id;
-		private String source;
+	@Override
+	public String getProfileImageUrl() {
+		return profileImageUrl;
+	}
 
-		public String getId() {
-			return id;
-		}
+	public void setProfileImageUrl(String profileImageUrl) {
+		this.profileImageUrl = profileImageUrl;
+	}
 
-		public void setId(String id) {
-			this.id = id;
-		}
+	@Override
+	public String getProviderId() {
+		return providerId;
+	}
 
-		public String getSource() {
-			return source;
-		}
+	public void setProviderId(String providerId) {
+		this.providerId = providerId;
+	}
 
-		public void setSource(String source) {
-			this.source = source;
-		}
+	@Override
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+
+	public void setProfileUrl(String profileUrl) {
+		this.profileUrl = profileUrl;
 	}
 
 	public String getId() {
@@ -53,11 +63,37 @@ public class FacebookUser {
 		this.email = email;
 	}
 
+	@Override
+	public String getCoverUrl() {
+		return cover.getSource();
+	}
+
 	public Cover getCover() {
 		return cover;
 	}
 
 	public void setCover(Cover cover) {
 		this.cover = cover;
+	}
+
+	public static class Cover {
+		private String id;
+		private String source;
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public String getSource() {
+			return source;
+		}
+
+		public void setSource(String source) {
+			this.source = source;
+		}
 	}
 }

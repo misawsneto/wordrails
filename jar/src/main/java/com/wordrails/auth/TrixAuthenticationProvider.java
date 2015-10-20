@@ -5,12 +5,7 @@ import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserConnectionRepository;
 import com.wordrails.persistence.UserRepository;
 import com.wordrails.services.CacheService;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
 import org.scribe.model.Token;
-import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -183,25 +178,31 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	public boolean socialAuthentication(String providerId, OAuthService service, String userId, Token token, Network network) throws BadCredentialsException, IOException {
 		UserConnection userConnection = userConnectionRepository.findByProviderIdAndProviderUserId(providerId, userId, network.id);
 
-		User user = null;
+		User user;
 		if (userConnection == null) {
+			SocialUser socialUser = null;
 			if (providerId.equals("facebook")) {
-				Person person = socialAuthenticationService.getFacebookUser(userId, service, token, network);
-				personRepository.save(person);
-
-				user = person.user;
+				socialUser = socialAuthenticationService.getFacebookUserFromOAuth(userId, service, token);
 			} else if (providerId.equals("google")) {
+				socialUser = socialAuthenticationService.getGoogleUserFromOAuth(userId, token.getToken());
 			}
+
+			Person person = socialAuthenticationService.getPersonFromSocialUser(socialUser, network);
+			personRepository.save(person);
+
+			user = person.user;
 		} else {
 			if (providerId.equals("facebook")) {
-				if(!socialAuthenticationService.login(userId, service, token)) {
+				if(!socialAuthenticationService.facebookLogin(userId, service, token)) {
 					return false;
 				}
-
-				user = userConnection.user;
 			} else if (providerId.equals("google")) {
-
+				if (!socialAuthenticationService.googleLogin(userId, token.getToken())) {
+					return false;
+				}
 			}
+
+			user = userConnection.user;
 		}
 
 		if (user == null) return false;

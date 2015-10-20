@@ -53,6 +53,8 @@ public class PostView implements Serializable {
 	public Integer authorImageSmallId;
 	public String authorCoverMediumHash;
 	public String authorImageSmallHash;
+	public String authorCoverUrl;
+	public String authorImageUrl;
 	
 	public String stationName;
 	public Integer stationId;
