@@ -3,6 +3,7 @@ package com.wordrails.auth;
 import com.wordrails.business.*;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserRepository;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -14,7 +15,6 @@ import org.scribe.oauth.OAuthService;
 import org.scribe.utils.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.text.Normalizer;
@@ -23,7 +23,8 @@ import java.util.HashSet;
 @Service
 public class SocialAuthenticationService {
 
-	@Autowired
+	static Logger log = Logger.getLogger(SocialAuthenticationService.class.getName());
+
 	private PersonRepository personRepository;
 	@Autowired
 	private UserRepository userRepository;
@@ -63,16 +64,24 @@ public class SocialAuthenticationService {
 		googleUser.setId(rootNode.get("id").asText());
 		googleUser.setProfileUrl("http://plus.google.com/" + googleUser.getId());
 		googleUser.setName(rootNode.get("name").get("givenName").asText() + " " + rootNode.get("name").get("familyName").asText());
-		googleUser.setCoverUrl(rootNode.get("cover").get("coverPhoto").get("url").asText());
-		googleUser.setProfileImageUrl(rootNode.get("image").get("url").asText());
-
-		//image comes in size 50px. replace the url to show the default sized image
-		if(googleUser.getProfileImageUrl().contains("?sz=50")) {
-			googleUser.setProfileImageUrl(googleUser.getProfileImageUrl().replace("?sz=50", ""));
+		try {
+			googleUser.setCoverUrl(rootNode.get("cover").get("coverPhoto").get("url").asText());
+		} catch (NullPointerException e) {
+			log.debug("user " + googleUser.getId() + " doesnt have cover");
 		}
 
-		for(JsonNode emailNode : rootNode.get("emails")) {
-			if(emailNode.get("type").asText().equals("account")) {
+		try {
+			googleUser.setProfileImageUrl(rootNode.get("image").get("url").asText());
+			//image comes in size 50px. replace the url to show the default sized image
+			if (googleUser.getProfileImageUrl().contains("?sz=50")) {
+				googleUser.setProfileImageUrl(googleUser.getProfileImageUrl().replace("?sz=50", ""));
+			}
+		} catch (NullPointerException e) {
+			log.debug("user " + googleUser.getId() + " doesnt have profile image");
+		}
+
+		for (JsonNode emailNode : rootNode.get("emails")) {
+			if (emailNode.get("type").asText().equals("account")) {
 				googleUser.setEmail(emailNode.get("value").asText());
 			}
 		}
