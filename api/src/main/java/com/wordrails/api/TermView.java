@@ -10,8 +10,11 @@ public class TermView implements Serializable {
 
 	public Integer termId;
 	public String termName;
+	public String name;
+	public Integer id;
 	public Integer parentId;
 	public Integer taxonomyId;
+	public String imageHash;
 	@JsonManagedReference
 	public List<TermView> children;
 }

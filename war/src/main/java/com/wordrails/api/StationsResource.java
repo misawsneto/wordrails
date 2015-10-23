@@ -20,7 +20,7 @@ import java.util.HashSet;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Component
-public class StationsResources {
+public class StationsResource {
 
 	private
 	@Context

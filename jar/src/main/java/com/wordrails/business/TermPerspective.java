@@ -45,6 +45,8 @@ public class TermPerspective {
 	public Integer taxonomyId;
 
 	public Integer stationId;
+
+	public String defaultImageHash;
 	
 	@PreUpdate
 	private void onUpdate() {

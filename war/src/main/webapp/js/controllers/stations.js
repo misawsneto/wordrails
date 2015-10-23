@@ -77,6 +77,14 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
     }
 });
 
+      $timeout(function() {
+          $('#stations-list').slimScroll({
+            height:'100px',
+            size:'8px',
+            'railVisible': true
+          })
+      }, 1000);
+
       $scope.verticalPaginate = function(ordinaryRow){
 
        if($scope.app.viewMode != 'vertical' || ordinaryRow.allLoaded)
