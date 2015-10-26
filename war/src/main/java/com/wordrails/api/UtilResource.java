@@ -1031,6 +1031,9 @@ public class UtilResource {
 			for (Station station: stations){
 //				for(Network network: station.networks)
 //					station.network = network;
+				List<Network> networks = manager.createNativeQuery("select n.* from network n join station_network sn on n.id = sn.networks_id where sn.stations_id = :stationId", Network.class).setParameter("stationId", station.id).getResultList();
+				for(Network network: networks)
+					station.network = network;
 			}
 			stationRepository.save(stations);
 		}
