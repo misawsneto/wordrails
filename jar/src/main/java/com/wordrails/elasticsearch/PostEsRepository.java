@@ -162,9 +162,9 @@ public class PostEsRepository{
 		postView.mediumId = post.imageMediumId;
 		postView.largeId = post.imageLargeId;
 
-		postView.smallHash = post.imageSmallHash;
-		postView.mediumHash = post.imageMediumHash;
-		postView.largeHash = post.imageLargeHash;
+		postView.smallHash = post.imageSmallHash = post.imageSmallHash;
+		postView.mediumHash = post.imageMediumHash = post.imageMediumHash;
+		postView.largeHash = post.imageLargeHash = post.imageLargeHash;
 
 		postView.imageId = post.imageId;
 		postView.imageSmallId = post.imageSmallId;

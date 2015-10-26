@@ -17,9 +17,15 @@ public class PostIndexed {
 	public Integer smallId;
 	public Integer mediumId;
 	public Integer largeId;
+
 	public String smallHash;
 	public String mediumHash;
 	public String largeHash;
+
+	public String imageSmallHash;
+	public String imageMediumHash;
+	public String imageLargeHash;
+
 	public Boolean sponsored;
 	public Sponsor sponsor;
 	public Set<Comment> comments;
