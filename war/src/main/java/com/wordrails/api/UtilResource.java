@@ -14,6 +14,7 @@ import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.AsyncService;
 import com.wordrails.services.CacheService;
 import com.wordrails.services.WordpressParsedContent;
+import com.wordrails.util.Logger;
 import com.wordrails.util.WordrailsUtil;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
@@ -46,8 +47,7 @@ import java.util.regex.Pattern;
 @Produces(MediaType.APPLICATION_JSON)
 @Component
 public class UtilResource {
-	private @Context HttpServletRequest httpServletRequest;
-	private @Context HttpRequest httpRequest;
+	private @Context HttpServletRequest request;
 
 	private @Autowired NetworkEventHandler networkEventHandler;
 	private @Autowired PersonEventHandler personEventHandler;
@@ -169,7 +169,7 @@ public class UtilResource {
 				}
 
 				if(person.email == null || person.email.trim().equals("")){
-					person.email = person.username + WordrailsUtil.generateRandomString(4, "a#")  + "@randomfix.com"; 
+					person.email = person.username + WordrailsUtil.generateRandomString(4, "a#")  + "@randomfix.com";
 				}
 
 				try {
@@ -280,7 +280,7 @@ public class UtilResource {
 		}
 		return Response.status(Status.OK).build();
 	}
-	
+
 	@GET
 	@Path("/updateNetworkProperties")
 	@Transactional
@@ -292,7 +292,7 @@ public class UtilResource {
 			for (Network network : networks) {
 				if(network.defaultOrientationMode == null || network.defaultOrientationMode.isEmpty() || !(network.defaultOrientationMode.equals("H") || network.defaultOrientationMode.equals("V") ))
 					network.defaultOrientationMode = "V";
-				
+
 				if(network.defaultReadMode == null || network.defaultReadMode.isEmpty() || !(network.defaultReadMode.equals("D") || network.defaultReadMode.equals("N") ))
 					network.defaultReadMode = "D";
 			}
@@ -637,7 +637,7 @@ public class UtilResource {
 				return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Something is very wrong:" + token).build();
 			} else if (wp == null) {
 				return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Token invalid:" + token).build();
-			} 
+			}
 
 			List<Post> posts = postRepository.findByStation(station);
 			for (Post post : posts) {
@@ -673,7 +673,7 @@ public class UtilResource {
 		return Response.status(Response.Status.OK).type("text/plain").entity("Posts:"+countPost+" Terms:"+countTerm).build();
 	}
 	@Autowired private TermRepository termRepository;
-	@Autowired private RowRepository rowRepository; 
+	@Autowired private RowRepository rowRepository;
 	@Autowired private WordpressRepository wordpressRepository;
 
 	@Transactional
@@ -705,7 +705,7 @@ public class UtilResource {
 		return countTerm;
 	}
 
-	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository; 
+	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository;
 
 	@GET
 	@Path("/updateRegDate")
@@ -726,7 +726,7 @@ public class UtilResource {
 
 	@Autowired private QueryPersistence qp;
 	@Autowired private PersonNetworkRegIdRepository reg;
-	@Autowired private AsyncService asyncService; 
+	@Autowired private AsyncService asyncService;
 
 	@Autowired
 	private Scheduler sched;
@@ -1007,7 +1007,7 @@ public class UtilResource {
 	@GET
 	@Path("/indexBookmarksToElastisearch")
 	@Transactional(readOnly=false)
-	public void indexBookmarksToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
+	public void indexBookmarksToElastisearch() throws InterruptedException {
 		String host = request.getHeader("Host");
 
 		if(isLocal(request.getHeader("Host"))){
@@ -1019,6 +1019,20 @@ public class UtilResource {
 					Thread.sleep(100);
 				}
 			}
+		}
+	}
+
+	@GET
+	@Path("/stationNetwork")
+	@Transactional
+	public void stationNetwork(){
+		if(isLocal(request.getHeader("Host"))){
+			List<Station> stations = stationRepository.findAll();
+			for (Station station: stations){
+//				for(Network network: station.networks)
+//					station.network = network;
+			}
+			stationRepository.save(stations);
 		}
 	}
 

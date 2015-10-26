@@ -46,7 +46,7 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 			"(select count(*) from Recommend recommend where recommend.post.stationId = s.id)," +
 			"(select count(*) from PersonNetworkRegId regId where regId.network.id = :networkId), " +
 			"(select count(*) from PersonNetworkToken token where token.network.id = :networkId)" +
-			" from Station s join s.networks n where n.id = :networkId")
+			" from Station s where s.network.id = :networkId")
 	List<Object[]> findNetworkStats(@Param("networkId") Integer networkId);
 //
 //	@RestResource(exported = false)

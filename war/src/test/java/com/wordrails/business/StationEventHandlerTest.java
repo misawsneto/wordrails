@@ -52,9 +52,9 @@ public class StationEventHandlerTest extends AbstractTest {
 		
 		Station station = new Station();
 		station.name = STATION_NAME;
-		Set<Network> networks = new HashSet<Network>();
-		networks.add(network);
-		station.networks = networks;
+//		Set<Network> networks = new HashSet<Network>();
+//		networks.add(network);
+		station.network = network;
 		handler.handleBeforeCreate(station);
 		stationRepository.save(station);
 		

@@ -118,8 +118,8 @@
 			t.id IN (select
 			taxonomy.id
 			from
-			Taxonomy taxonomy join taxonomy.owningStation station join station.networks network
-			where network.id = :networkId and taxonomy.type != :type)
+			Taxonomy taxonomy join taxonomy.owningStation station
+			where station.network.id = :networkId and taxonomy.type != :type)
 
 			OR t.id IN (select
 			taxonomy.id
@@ -341,7 +341,7 @@
 			role
 			from StationRole role join role.person person
 			join role.station station
-			where person.id = :personId and :networkId member of station.networks
+			where person.id = :personId and :networkId = station.network.id
 		</query>
 	</named-query>
 	<named-query name="Station.findByPersonIdAndNetworkId">
@@ -358,7 +358,7 @@
 			from
 			Station station join station.personsStationRoles personRoles join personRoles.person person
 			where
-			person.id = :personId and :networkId member of station.networks
+			person.id = :personId and :networkId = station.network.id
 			)
 			or
 
@@ -370,7 +370,7 @@
 			Station station
 			where
 			(station.visibility = 'UNRESTRICTED' or station.visibility = 'RESTRICTED_TO_NETWORKS')
-			and :networkId member of station.networks
+			and :networkId = station.network.id
 			)
 		</query>
 	</named-query>

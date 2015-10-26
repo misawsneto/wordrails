@@ -58,10 +58,14 @@ public class Station implements Serializable {
 	@Column(columnDefinition="varchar(255) default '#5C78B0'")
 	public String primaryColor = "#5C78B0";
 
-	@Size(min=1)
+//	@Size(min=1)
+//	@NotNull
+//	@ManyToMany
+//	public Set<Network> networks;
+
+	@ManyToOne
 	@NotNull
-	@ManyToMany
-	public Set<Network> networks;
+	public Network network;
 
 	@OneToMany(mappedBy="station", cascade=CascadeType.REMOVE)
 	public Set<StationRole> personsStationRoles;
@@ -182,7 +186,7 @@ public class Station implements Serializable {
 	@Override
 	public String toString() {
 		return "Station [id=" + id + ", name=" + name + ", visibility="
-				+ visibility + ", networks=" + networks + "]";
+				+ visibility + "]";
 	}
 	
 }

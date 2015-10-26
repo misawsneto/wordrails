@@ -256,27 +256,30 @@ public class Test {
 
 		StationDto station1 = new StationDto();
 		station1.name = "Estação 1";
-		station1.networks = new HashSet<String>();
-		station1.networks.add(network.getSelf());
+//		station1.networks = new HashSet<String>();
+//		station1.networks.add(network.getSelf());
+		station1.network = network.getSelf();
 		wordRails.postStation(station1);
 
 		StationDto station2 = new StationDto();
 		station2.name = "Estação 2";
-		station2.networks = new HashSet<String>();
-		station2.networks.add(network.getSelf());
+//		station2.networks = new HashSet<String>();
+//		station2.networks.add(network.getSelf());
+		station2.network = network.getSelf();
 		wordRails.postStation(station2);
 
 		StationDto station3 = new StationDto();
 		station3.name = "Estação 3";
-		station3.networks = new HashSet<String>();
-		station3.networks.add(network.getSelf());
+//		station3.networks = new HashSet<String>();
+//		station3.networks.add(network.getSelf());
+		station3.network = network.getSelf();
 		wordRails.postStation(station3);
 
 		List<String> l = new ArrayList<String>();
 		l.add(network.getSelf());
 
-		for (StationDto s : wordRails.getStations(0, 10, null))
-			wordRails.putStationNetworks(s.id, l);
+		for (StationDto s : wordRails.getStations(0, 10, null)){}
+//			wordRails.putStationNetwork(s.id, l);
 
 		TermDto cat1 = new TermDto();
 		cat1.name = "Categoria 1";

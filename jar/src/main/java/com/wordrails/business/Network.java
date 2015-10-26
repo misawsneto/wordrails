@@ -48,7 +48,7 @@ public class Network implements Serializable{
 //	@OneToMany(mappedBy="network")
 //	public Set<Person> persons;
 
-	@ManyToMany(mappedBy="networks")
+	@OneToMany(mappedBy="network", cascade=CascadeType.REMOVE)
 	public Set<Station> stations;
 
 	@ManyToMany

@@ -146,7 +146,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   };
 
   $scope.app.deletePerson = function(){
-    trix.deletePerson($scope.deletePerson.id).success(function(){
+    trix.disablePerson($scope.deletePerson.id).success(function(){
       $scope.app.showSuccessToast('Usuário removido com sucesso.');
       $scope.app.cancelModal();
       for (var i = $scope.persons.length - 1; i >= 0; i--) {

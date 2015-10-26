@@ -95,9 +95,9 @@ public class StationPerspectiveEventHandlerTest extends AbstractTest {
 			
 			Station station = new Station();
 			station.name = STATION_NAME;
-			HashSet<Network> networks = new HashSet<Network>(1);
-			networks.add(network);
-			station.networks = networks;
+//			HashSet<Network> networks = new HashSet<Network>(1);
+//			networks.add(network);
+			station.network = network;
 			stationRepository.save(station);
 			//-------------------- Station --------------------//
 			

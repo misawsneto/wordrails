@@ -66,6 +66,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetStationNetworkAuthorized(Integer id) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetCellAuthorized(Integer cellId) {
 		return canVisualizeCell(cellId);
 	}
@@ -514,7 +519,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
-	@Override
+//	@Override
 	protected boolean isGetStationNetworksAuthorized(Integer stationId) {
 
 		return true;
@@ -527,12 +532,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		if(station != null){
 			authorized = stationSecurityChecker.isStationAdmin(station);
 			if(!authorized){
-				for (Network network: station.networks) {
-					authorized = networkSecurityChecker.isNetworkAdmin(network);
-					if(authorized){
-						break;
-					}
-				}
+//				for (Network network: station.networks) {
+					authorized = networkSecurityChecker.isNetworkAdmin(station.network);
+//					if(authorized){
+//						break;
+//					}
+//				}
 			}
 		}
 		return authorized;
