@@ -18,14 +18,13 @@ import javax.ws.rs.core.Response.Status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.Network;
-import com.wordrails.business.Post;
-import com.wordrails.business.TermPerspective;
+import com.wordrails.business.*;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.persistence.*;
 import com.wordrails.services.AmazonCloudService;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.jboss.resteasy.annotations.cache.Cache;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,7 +34,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.WordrailsService;
-import com.wordrails.business.Term;
 import com.wordrails.converter.TermConverter;
 
 @Path("/terms")
@@ -96,23 +94,17 @@ public class TermsResource {
 		if (network != null)
 			subdomain = network.subdomain;
 
-		response.setHeader("Pragma", "public");
-		response.setHeader("Cache-Control", "max-age=2592000");
-
-		Calendar c = Calendar.getInstance();
-		c.setTime(new Date());
-		c.add(Calendar.DATE, 30);
-		//HTTP header date format: Thu, 01 Dec 1994 16:00:00 GMT
-		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
-		response.setHeader("Expires", o);
-
 		TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTerm(perspectiveId, termId);
 		String hash = ""; // termRepository.findValidHash(perspectiveId, termId);
 
 		if(tp != null && tp.defaultImageHash != null)
 			hash = tp.defaultImageHash;
-		else
-			postRepository.findByFeaturedImageByTermId(termId);
+		else {
+			Pageable page = new PageRequest(0,1, Sort.Direction.DESC, "date");
+			List<Post> posts = postRepository.findByFeaturedImageByTermId(termId, page);
+			if(posts!=null && posts.size()>0)
+				hash = posts.get(0).featuredImage.largeHash;
+		}
 
 		if (hash != null && !hash.isEmpty()) {
 			response.sendRedirect(amazonCloudService.getPublicImageURL(subdomain, hash));

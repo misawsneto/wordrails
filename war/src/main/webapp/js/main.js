@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-.controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast', 'TRIX', 'cfpLoadingBar',
-  function(              $scope,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast, TRIX   ,  cfpLoadingBar) {
+.controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast', 'TRIX', 'cfpLoadingBar', '$q',
+  function(              $scope,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast, TRIX   ,  cfpLoadingBar ,  $q) {
     // add 'ie' classes to html
     var isIE = !!navigator.userAgent.match(/MSIE/i);
     isIE && angular.element($window.document.body).addClass('ie');
@@ -630,6 +630,31 @@ angular.module('app')
 
         $scope.app.checkIfLogged();
         window.console && console.log($scope.app.currentStation, $scope.app.stationsPermissions);
+        trix.getAllTerms($scope.app.currentStation.defaultPerspectiveId).success(function(terms){
+          $scope.app.currentStation.perspectiveTerms = terms;
+          terms && terms.forEach(function(term){
+            // $http.get(TRIX.baseUrl + "/api/terms/" + term.termId + "/image").success(function(data, status, headers){
+            //   if(status == 304)
+            //     console.log(header);
+            // });
+            isImage(TRIX.baseUrl + "/api/terms/" + term.termId + "/image").then(function(test) {
+                console.log(test);
+            });
+          })
+        })
+      }
+
+      function isImage(src) {
+        var deferred = $q.defer();
+        var image = new Image();
+        image.onerror = function() {
+            deferred.resolve(false);
+        };
+        image.onload = function() {
+            deferred.resolve(true);
+        };
+        image.src = src;
+        return deferred.promise;
       }
 
       $scope.app.signOut = function(username, password){

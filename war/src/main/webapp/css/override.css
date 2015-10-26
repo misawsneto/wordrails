@@ -4957,6 +4957,13 @@ ul.normal-wrap{
 /* /settings-categories */
 
 /* settings-users */
+#user-remove-dialog md-content > div{
+  overflow: auto; 
+  width: 400px;
+  min-height: 200px;
+  max-height: 300px; 
+}
+
 #editing-user-profile #image-button{position: relative; overflow: hidden; vertical-align: bottom;}
 #editing-user-profile #image-button #image-upload, 
 #cover-image-button #image-button #image-upload {

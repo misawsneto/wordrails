@@ -1,5 +1,5 @@
-app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar){
+app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog){
 
    FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
@@ -112,10 +112,38 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	$state.go('app.settings.users', {'userId': person.id})
   }
 
-  $scope.openDeletePerson = function(person){
-  	$scope.app.openSplash('confirm_delete_person.html')
-  	$scope.deletePerson = person;
+  $scope.openDeletePerson = function(person, ev){
+  	//$scope.app.openSplash('confirm_delete_person.html')
+  	
+    $mdDialog.show({
+      controller: DialogController,
+      templateUrl: 'confirm_delete_person.html',
+      targetEvent: ev,
+      onComplete: function(){}
+    })
+    .then(function(answer) {
+    //$scope.alert = 'You said the information was "' + answer + '".';
+    }, function() {
+    //$scope.alert = 'You cancelled the dialog.';
+    });
+    $scope.deletePerson = person;
   }
+
+  function DialogController(scope, $mdDialog) {
+    scope.app = $scope.app;
+    scope.pe = $scope.pe;
+    scope.thisStation = $scope.thisStation;
+
+    scope.hide = function() {
+      $mdDialog.hide();
+    };
+
+    scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    // check if user has permisstion to write
+  };
 
   $scope.app.deletePerson = function(){
     trix.deletePerson($scope.deletePerson.id).success(function(){
@@ -127,6 +155,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
           $scope.personsCount--;
         }
       };
+      $mdDialog.cancel();
     })
   }
 

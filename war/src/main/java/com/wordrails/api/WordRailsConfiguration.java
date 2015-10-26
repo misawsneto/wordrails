@@ -37,24 +37,4 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 		return new ElasticSearchService(host, port);
 	}
 
-
-//	@Bean
-//	public JedisConnectionFactory connectionFactory() {
-//		return new JedisConnectionFactory();
-//	}
-
-//	@Bean
-//    public Validator validator() {
-//        return new LocalValidatorFactoryBean();
-//    }
-//
-//    @Bean
-////    @Override
-//    public ValidatingRepositoryEventListener validatingRepositoryEventListener() {
-//        ValidatingRepositoryEventListener listener = new ValidatingRepositoryEventListener();
-//        configureValidatingRepositoryEventListener(listener);
-//        listener.addValidator("afterCreate", validator());
-//        listener.addValidator("beforeCreate", validator());
-//        return listener;
-//    }
 }

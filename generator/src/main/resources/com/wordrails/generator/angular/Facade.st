@@ -327,6 +327,16 @@ var trix = angular.module('trix', [])
       return \$http.get(_config.url + "/api/terms/termTree", config)
     }
 
+    this.getAllTerms = function(perspectiveId, taxonomyId) {
+		var config = {
+			"params": {
+				"perspectiveId": perspectiveId,
+				"taxonomyId": taxonomyId
+			}
+		}
+	  return \$http.get(_config.url + "/api/terms/allTerms", config)
+	}
+
     this.getPostViewBySlug = function(slug, withBody) {
 		var config = {
 			"params": {
