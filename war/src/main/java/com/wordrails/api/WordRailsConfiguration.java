@@ -5,22 +5,36 @@ import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.Topic;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.Entity;
 import java.util.Set;
 
 @Configuration
-//@EnableRedisHttpSession
+@EnableRedisHttpSession
 public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 
-	@Value("${elasticsearch.host}")
-	private String host;
-	@Value("${elasticsearch.port}")
-	private Integer port;
+	@Value("${elasticsearch.host:'localhost'}")
+	private String eshost;
+	@Value("${elasticsearch.port:9300}")
+	private Integer esport;
+
+	@Value("${spring.redis.host:'localhost'}")
+	private String redisHost;
+	@Value("${spring.redis.port:6379}")
+	private Integer redisPort;
 
 	@Override
 	protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
@@ -34,7 +48,49 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 	@Bean
 	@PostConstruct
 	public ElasticSearchService elasticsearchService() {
-		return new ElasticSearchService(host, port);
+		return new ElasticSearchService(eshost, esport);
+	}
+
+	@Bean
+	public MessageListenerAdapter messageListener() {
+		return new MessageListenerAdapter( new WordrailsMessageListener() );
+	}
+
+	@Bean
+	public JedisConnectionFactory connectionFactory() {
+		JedisConnectionFactory jcf = new JedisConnectionFactory();
+		jcf.setHostName(redisHost);
+		jcf.setPort(redisPort);
+		return jcf;
+	}
+
+	@Bean
+	public RedisMessageListenerContainer redisContainer(JedisConnectionFactory jcf) {
+		RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+		container.setTaskExecutor(taskExecutor());
+		container.setConnectionFactory(jcf);
+		container.addMessageListener(messageListener(), topic());
+		return container;
+	}
+
+	@Bean(name = "redisTaskExecutor")
+	public TaskExecutor taskExecutor() {
+		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+		taskExecutor.setQueueCapacity(1);
+		taskExecutor.setCorePoolSize(3);
+		return taskExecutor;
+	}
+
+	@Bean(name = "applicationChannel")
+	public Topic topic() {
+		return new ChannelTopic("pubsub:application");
+	}
+
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jcf) throws Exception {
+		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
+		redisTemplate.setConnectionFactory(jcf);
+		return redisTemplate;
 	}
 
 }

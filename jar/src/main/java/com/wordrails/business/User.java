@@ -28,7 +28,7 @@ public class User implements UserDetails, UserIdSource {
 	@Size(max = 500)
 	public String password;
 
-	public boolean enabled;
+	public Boolean enabled;
 
 	@ManyToOne
 	@JoinColumn(name = "network_id")
@@ -85,7 +85,7 @@ public class User implements UserDetails, UserIdSource {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return enabled;
 	}
 
 	@Override

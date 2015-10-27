@@ -112,12 +112,12 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	$state.go('app.settings.users', {'userId': person.id})
   }
 
-  $scope.openDeletePerson = function(person, ev){
+  $scope.openEnableDisableDialog = function(person, ev){
   	//$scope.app.openSplash('confirm_delete_person.html')
   	
     $mdDialog.show({
       controller: DialogController,
-      templateUrl: 'confirm_delete_person.html',
+      templateUrl: 'confirm_enable_disable_person.html',
       targetEvent: ev,
       onComplete: function(){}
     })
@@ -126,7 +126,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     }, function() {
     //$scope.alert = 'You cancelled the dialog.';
     });
-    $scope.deletePerson = person;
+    $scope.pe = {
+      enableDisablePerson : person};
   }
 
   function DialogController(scope, $mdDialog) {
@@ -145,18 +146,19 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     // check if user has permisstion to write
   };
 
-  $scope.app.deletePerson = function(){
-    trix.deletePerson($scope.deletePerson.id).success(function(){
-      $scope.app.showSuccessToast('Usuário removido com sucesso.');
-      $scope.app.cancelModal();
-      for (var i = $scope.persons.length - 1; i >= 0; i--) {
-        if($scope.persons[i].id == $scope.deletePerson.id){
-          $scope.persons.splice(i,1)
-          $scope.personsCount--;
-        }
-      };
-      $mdDialog.cancel();
-    })
+  $scope.app.enableDisablePerson = function(){
+    if($scope.pe.enableDisablePerson.user.enabled)
+      trix.disablePerson($scope.pe.enableDisablePerson.id).success(function(){
+        $scope.app.showSuccessToast('Usuário desabilitado.');
+        $scope.pe.enableDisablePerson.user.enabled = false;
+        $mdDialog.cancel();
+      })
+    else
+      trix.enablePerson($scope.pe.enableDisablePerson.id).success(function(){
+        $scope.app.showSuccessToast('Usuário desabilitado.');
+        $scope.pe.enableDisablePerson.user.enabled = false;
+        $mdDialog.cancel();
+      })
   }
 
   $scope.createPerson = function(){

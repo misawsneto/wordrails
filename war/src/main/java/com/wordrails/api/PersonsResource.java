@@ -14,6 +14,7 @@ import com.wordrails.notification.GCMService;
 import com.wordrails.persistence.*;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
+import com.wordrails.services.CacheService;
 import com.wordrails.util.PersonCreateDto;
 import com.wordrails.util.ReadsCommentsRecommendsCount;
 import com.wordrails.util.WordrailsUtil;
@@ -81,6 +82,7 @@ public class PersonsResource {
 	private @Autowired PersonEventHandler personEventHandler;
 
 	private @Autowired SectionRepository sectionRepository;
+	private @Autowired CacheService cacheService;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -510,6 +512,24 @@ public class PersonsResource {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
 
+	}
+
+	@PUT
+	@Path("/{personId}/disable")
+	public Response disablePerson(@PathParam("personId") Integer personId){
+		Person person = personRepository.findOne(personId);
+		person.user.enabled = false;
+		personRepository.save(person);
+		return Response.status(Status.CREATED).build();
+	}
+
+	@PUT
+	@Path("/{personId}/enable")
+	public Response enablePerson(@PathParam("personId") Integer personId){
+		Person person = personRepository.findOne(personId);
+		person.user.enabled = true;
+		personRepository.save(person);
+		return Response.status(Status.CREATED).build();
 	}
 
 	@PUT

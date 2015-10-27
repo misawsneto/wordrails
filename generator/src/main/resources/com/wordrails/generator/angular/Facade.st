@@ -128,6 +128,16 @@ var trix = angular.module('trix', [])
 		return \$http.put(_config.url + "/api/persons/deleteMany/network", personIds, config)
 	};
 
+	this.disablePerson = function(personId){
+		var config = {"headers": {"Content-Type": "application/json"}}
+		return \$http.put(_config.url + "/api/persons/" + personId + "/disable", {}, config)
+	}
+
+	this.enablePerson = function(personId){
+		var config = {"headers": {"Content-Type": "application/json"}}
+		return \$http.put(_config.url + "/api/persons/" + personId + "/enable", {}, config)
+	}
+
 	this.putTermView = function (termView) {
 		var config = {"headers": {"Content-Type": "application/json"}}
     	return \$http.put(_config.url + "/api/perspectives/termPerspectiveDefinitions/" + termView.id , termView, config)

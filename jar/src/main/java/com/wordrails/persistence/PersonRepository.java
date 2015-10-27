@@ -44,7 +44,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@Query("select person from Person person where person.networkId = :networkId")
 	public List<Person> findAllByNetwork(@Param("networkId") Integer networkId, Pageable pageable);
 
-	@Query("select person from Person person where person.networkId = :networkId and person.id <> :personId")
+	@Query("select person from Person person join fetch person.user u where person.networkId = :networkId and person.id <> :personId")
 	public List<Person> findAllByNetworkExcludingPerson(@Param("networkId") Integer networkId, @Param("personId") Integer personId, Pageable pageable);
 
 	@Query("select person from Person person where person.networkId = :networkId and (person.username = :query OR person.email = :query)")
