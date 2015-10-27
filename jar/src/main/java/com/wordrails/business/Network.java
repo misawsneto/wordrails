@@ -144,6 +144,10 @@ public class Network implements Serializable{
 	public Image loginImage;
 	public Integer loginImageId;
 	public Integer loginImageSmallId;
+
+	@JsonIgnore
+	@OneToOne
+	public AndroidApp androidApp;
 	
 	@Column(columnDefinition = "varchar(255) default 'D'", nullable = false)
 	public String defaultReadMode;

@@ -218,5 +218,16 @@
 			<artifactId>elasticsearch</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.slugify</groupId>
+			<artifactId>slugify</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+		</dependency>
+
+
 	</dependencies>
 </project>

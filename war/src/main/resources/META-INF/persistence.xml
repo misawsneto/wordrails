@@ -6,6 +6,7 @@
 			 					 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
 	<persistence-unit name="wordrails" transaction-type="RESOURCE_LOCAL">
+		<class>com.wordrails.business.AndroidApp</class>
 		<class>com.wordrails.business.Cell</class>
 		<class>com.wordrails.business.Comment</class>
 		<class>com.wordrails.business.File</class>
