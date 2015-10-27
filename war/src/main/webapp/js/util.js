@@ -181,7 +181,7 @@ function getCustomStyle(color, perspective, header) {
 	"\n"
 	:
 	// header is dark
-	".bg-perspective .station-header .navbar-nav .divider-v{\n"+
+	".station-header .navbar-nav .divider-v{\n"+
 	"border-right: 1px solid rgba(255,255,255,0.3);\n"+
 	"}\n"+
 	"\n") + 

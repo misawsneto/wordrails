@@ -1,5 +1,5 @@
-app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar){
+app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog){
 
    FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
@@ -112,22 +112,53 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	$state.go('app.settings.users', {'userId': person.id})
   }
 
-  $scope.openDeletePerson = function(person){
-  	$scope.app.openSplash('confirm_delete_person.html')
-  	$scope.deletePerson = person;
+  $scope.openEnableDisableDialog = function(person, ev){
+  	//$scope.app.openSplash('confirm_delete_person.html')
+  	
+    $mdDialog.show({
+      controller: DialogController,
+      templateUrl: 'confirm_enable_disable_person.html',
+      targetEvent: ev,
+      onComplete: function(){}
+    })
+    .then(function(answer) {
+    //$scope.alert = 'You said the information was "' + answer + '".';
+    }, function() {
+    //$scope.alert = 'You cancelled the dialog.';
+    });
+    $scope.pe = {
+      enableDisablePerson : person};
   }
 
-  $scope.app.deletePerson = function(){
-    trix.deletePerson($scope.deletePerson.id).success(function(){
-      $scope.app.showSuccessToast('Usuário removido com sucesso.');
-      $scope.app.cancelModal();
-      for (var i = $scope.persons.length - 1; i >= 0; i--) {
-        if($scope.persons[i].id == $scope.deletePerson.id){
-          $scope.persons.splice(i,1)
-          $scope.personsCount--;
-        }
-      };
-    })
+  function DialogController(scope, $mdDialog) {
+    scope.app = $scope.app;
+    scope.pe = $scope.pe;
+    scope.thisStation = $scope.thisStation;
+
+    scope.hide = function() {
+      $mdDialog.hide();
+    };
+
+    scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    // check if user has permisstion to write
+  };
+
+  $scope.app.enableDisablePerson = function(){
+    if($scope.pe.enableDisablePerson.user.enabled)
+      trix.disablePerson($scope.pe.enableDisablePerson.id).success(function(){
+        $scope.app.showSuccessToast('Usuário desabilitado.');
+        $scope.pe.enableDisablePerson.user.enabled = false;
+        $mdDialog.cancel();
+      })
+    else
+      trix.enablePerson($scope.pe.enableDisablePerson.id).success(function(){
+        $scope.app.showSuccessToast('Usuário desabilitado.');
+        $scope.pe.enableDisablePerson.user.enabled = false;
+        $mdDialog.cancel();
+      })
   }
 
   $scope.createPerson = function(){

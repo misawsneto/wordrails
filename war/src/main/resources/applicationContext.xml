@@ -46,9 +46,9 @@
 		<!-- <property name="packagesToScan" value="com.wordrails.business"/> -->
 	</bean>
 
-	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
+	<!--<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
 
-	<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:hostName="meminstance1" p:port="6379"/>
+	<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:hostName="meminstance1" p:port="6379"/>-->
 
 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 

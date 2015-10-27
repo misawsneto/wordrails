@@ -72,6 +72,7 @@ public class PersonEventHandler {
 	}
 
 	@HandleBeforeDelete
+	@Transactional
 	public void handleBeforeDelete(Person person) {
 		networkRolesRepository.deleteByPersonId(person.id);
 		imageRepository.deleteByPersonId(person.id);

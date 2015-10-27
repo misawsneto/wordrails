@@ -121,5 +121,5 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 
 	@RestResource(exported = false)
 	@Query("select post from Post post join post.terms term where term.id in (:termId) and post.featuredImage is not null")
-	List<Post> findByFeaturedImageByTermId(@Param("termId") Integer termId);
+	List<Post> findByFeaturedImageByTermId(@Param("termId") Integer termId, Pageable page);
 }

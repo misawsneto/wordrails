@@ -18,6 +18,12 @@ public class Section implements Serializable {
     public String name;
 
     @Lob
+    public String loggedInUrl;
+
+    @Lob
+    public String anonymousUrl;
+
+    @Lob
     public String content;
 
     @ManyToOne

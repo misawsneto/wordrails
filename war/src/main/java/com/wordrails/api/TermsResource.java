@@ -1,42 +1,40 @@
 package com.wordrails.api;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.Post;
+import com.wordrails.business.*;
 import com.wordrails.converter.PostConverter;
+import com.wordrails.persistence.*;
+import com.wordrails.services.AmazonCloudService;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.jboss.resteasy.annotations.cache.Cache;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.WordrailsService;
-import com.wordrails.business.Term;
 import com.wordrails.converter.TermConverter;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.TaxonomyRepository;
-import com.wordrails.persistence.TermRepository;
 
 @Path("/terms")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -51,19 +49,29 @@ public class TermsResource {
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
+	private @Autowired TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired TaxonomyRepository taxonomyRepository;
 	private @Autowired TermRepository termRepository;
-	private @Autowired TermConverter termConverter;
 	private @Autowired PostConverter postConverter;
+	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
+	private @Autowired
+	TermConverter termConverter;
+	private @Autowired @Qualifier("simpleMapper")
+	ObjectMapper simpleMapper;
+	private @Autowired @Qualifier("objectMapper")
+	ObjectMapper mapper;
+
+	private @Autowired
+	AmazonCloudService amazonCloudService;
+
+	private @Autowired
+	PostRepository postRepository;
 
 	@GET
 	@Path("/termTree")
 	public Response getTermTree(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws JsonGenerationException, JsonMappingException, IOException {
-		org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
 		List<Term> allTerms;
 		if(perspectiveId != null){
 			allTerms = termRepository.findByPerspectiveId(perspectiveId);
@@ -76,7 +84,68 @@ public class TermsResource {
 		String json = mapper.writeValueAsString(roots);
 		return Response.status(Status.OK).entity(json).build();
 	}
-	
+
+	@GET
+	@Path("/{termId}/image")
+	public Response getTermImage(@PathParam("termId") Integer termId, @QueryParam("perspectiveId") Integer perspectiveId, @Context HttpServletResponse response, @Context HttpServletRequest request) throws IOException {
+
+		String subdomain = "";
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		if (network != null)
+			subdomain = network.subdomain;
+
+		TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTerm(perspectiveId, termId);
+		String hash = ""; // termRepository.findValidHash(perspectiveId, termId);
+
+		if(tp != null && tp.defaultImageHash != null)
+			hash = tp.defaultImageHash;
+		else {
+			Pageable page = new PageRequest(0,1, Sort.Direction.DESC, "date");
+			List<Post> posts = postRepository.findByFeaturedImageByTermId(termId, page);
+			if(posts!=null && posts.size()>0)
+				hash = posts.get(0).featuredImage.largeHash;
+		}
+
+		if (hash != null && !hash.isEmpty()) {
+			response.sendRedirect(amazonCloudService.getPublicImageURL(subdomain, hash));
+			return Response.ok().build();
+		}
+
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+//	@GET
+//	@Path("/termWithImage")
+//	public Response getTermTree(@QueryParam("perspectiveId") Integer perspectiveId) throws JsonGenerationException, JsonMappingException, IOException {
+//		List<Term> allTerms = new ArrayList<Term>();
+//		if(perspectiveId != null){
+//			allTerms = termRepository.findByPerspectiveId(perspectiveId);
+//		}
+//
+//		//	TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTerm(perspectiveId, termId);
+//		//
+//		//	String hash = ""; // termRepository.findValidHash(perspectiveId, termId);
+//		//
+//		//	if(tp != null && tp.defaultImageHash != null)
+//		//	hash = tp.defaultImageHash;
+//		//	else
+//		//	postRepository.findByFeaturedImageByTermId(termId);
+//
+//		List<TermView> termViews = new ArrayList<TermView>();
+//		for(Term term: allTerms){
+//			TermView tv = termConverter.convertToView(term);
+//			termViews.add(tv);
+//			TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTerm(perspectiveId, term.id);
+//			if(tp != null && tp.defaultImageHash != null)
+//				tv.imageHash = tp.defaultImageHash;
+//			else
+//				termRepository.findValidHash(perspectiveId, termId, );
+//		}
+//
+//		String json = simpleMapper.writeValueAsString(roots);
+//		return Response.status(Status.OK).entity(json).build();
+//	}
+
 	@GET
 	@Path("/allTerms")
 	public ContentResponse<List<TermView>> getAllTerms(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws JsonGenerationException, JsonMappingException, IOException {
