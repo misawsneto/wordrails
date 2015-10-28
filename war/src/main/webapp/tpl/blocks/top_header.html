@@ -1,10 +1,18 @@
 <div id="top-header" class="collapse pos-rlt navbar-collapse box-shadow3 nav-down station-header {{::app.settings.navbarCollapseColor}}">
-  <div class="nav navbar-nav hidden-xs text-lg w-full wrapper header-font pos-abt">
-    <a ui-sref="app.stations" class="bg-header-text"><span ng-if="!app.currentStation.logoId" class="p-l-xxl m-l-lg">{{app.currentStation.name}}</span></a>
-    <div ng-if="app.currentStation.logoId" class="p-l-xxl m-l-lg m-t-n-sm" style="height:48px;">
-      <a ui-sref="app.stations">
-        <img  class="post-thumb img-responsive" class="img-responsive" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}"></a>
+    <div class="nav navbar-nav hidden-xs text-lg w-full p-l header-font pos-abt">
+      <div class="display-t-c clearfix">
+        <a ng-if="app.stationsPermissions && app.stationsPermissions.length > 1"
+        ng-click="app.toggleSelectStation()" class="bg-header-text">
+          <i class="mdi mdi-menu"></i>
+        </a>
+        <a ui-sref="app.stations" class="bg-header-text">
+          <span ng-if="!app.currentStation.logoId" class="m-l">{{app.currentStation.name}}</span>
+        </a>
       </div>
+        <div ng-if="app.currentStation.logoId" class="m-t-n-sm display-t-c" style="height:48px;">
+          <a ui-sref="app.stations">
+          <img  class="post-thumb" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}"></a>
+        </div>
     </div>
     <!-- nabar right -->
     <ul class="nav navbar-nav navbar-right">
