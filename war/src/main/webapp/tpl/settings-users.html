@@ -83,7 +83,7 @@
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 								<td ng-if="app.networkAdmin">
 									<div class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-										<a href ng-click="openEnableDisableDialog(person, $event)" angular-ripple class="dropdown-toggle border-radius-50 i-20" ng-class="{'text-danger mdi mdi-block-helper': person.user.enabled, 'text-success mdi mdi-check': !person.user.enabled}">
+										<a href ng-click="openEnableDisableDialog(person, $event)" angular-ripple class="dropdown-toggle border-radius-50 i-20" ng-class="{'text-danger mdi mdi-block-helper': !person.user.enabled, 'text-success mdi mdi-check': person.user.enabled}">
 										</a>
 										<!-- dropdown -->
 									</div>

@@ -47,6 +47,8 @@ public class Post {
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastModificationDate;
 
+	@Lob
+	@Column(length = 1024)
 	public String title;
 
 	@Lob
@@ -63,12 +65,14 @@ public class Post {
 	@ManyToOne
 	public Sponsor sponsor;
 
+	@Lob
 	public String originalSlug;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date scheduledDate;
 
+	@Lob
 	@Column(unique = true)
 	public String slug;
 
