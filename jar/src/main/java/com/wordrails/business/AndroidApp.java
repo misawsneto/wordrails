@@ -23,6 +23,16 @@ public class AndroidApp {
 	private String fullDescription;
 	private String videoUrl;
 
+	private String apkUrl;
+
+	public String getApkUrl() {
+		return apkUrl;
+	}
+
+	public void setApkUrl(String apkUrl) {
+		this.apkUrl = apkUrl;
+	}
+
 	public String getProjectName() {
 		return projectName;
 	}

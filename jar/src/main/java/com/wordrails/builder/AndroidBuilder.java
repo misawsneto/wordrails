@@ -5,6 +5,9 @@ import com.wordrails.builder.util.StreamGobbler;
 import com.wordrails.builder.util.Util;
 import com.wordrails.business.AndroidApp;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -23,13 +26,20 @@ public class AndroidBuilder {
 
 	private static final String[] IGNORED_DIRS = {".gradle", ".idea", "build", "libraries"};
 	private static final String RELEASES_DIR = "releases/";
-	private static final String BUILDS_DIR = "builds/";
+	private static final String BUILDS_DIR = "builder/builds/";
+
 
 	public void run(String configPath, AndroidApp androidApp) throws Exception {
 		String separator = "/";
 		if (configPath.endsWith("/")) {
 			separator = "";
 		}
+
+		FileRepository fileRepository = new FileRepository(configPath + separator + ".git");
+		Git git = new Git(fileRepository);
+
+		PullResult pullResult = git.pull().call();
+		System.out.println(pullResult.toString());
 
 		File templateProjectDir = new File(configPath + separator + DEFAULT_PROJECT_NAME);
 		File projectDir = new File(configPath + separator + RELEASES_DIR, androidApp.getProjectName());
@@ -116,8 +126,9 @@ public class AndroidBuilder {
 		cmd = new String[]{"/bin/bash", "-c", "cd " + projectDir.getAbsolutePath() + " && " + "sh gradlew " + task};
 
 		Process process = Runtime.getRuntime().exec(cmd);
-		new StreamGobbler(process.getErrorStream(), false).start();
-		new StreamGobbler(process.getInputStream(), false).start();
+
+		new StreamGobbler(process.getErrorStream(), true).start();
+		new StreamGobbler(process.getInputStream(), true).start();
 		process.waitFor();
 	}
 
