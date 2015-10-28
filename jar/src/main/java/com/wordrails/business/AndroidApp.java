@@ -2,9 +2,10 @@ package com.wordrails.business;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class AndroidApp {
+public class AndroidApp implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

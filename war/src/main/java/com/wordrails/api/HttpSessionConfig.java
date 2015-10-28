@@ -13,10 +13,10 @@ import org.springframework.session.web.http.CookieHttpSessionStrategy;
 import org.springframework.session.web.http.HeaderHttpSessionStrategy;
 import org.springframework.session.web.http.HttpSessionStrategy;
 
-@EnableRedisHttpSession
-public class HttpSessionConfig extends AbstractHttpSessionApplicationInitializer {
-
-    public HttpSessionConfig() {
-        super(HttpSessionConfig.class);
-    }
-}
+//@EnableRedisHttpSession
+//public class HttpSessionConfig extends AbstractHttpSessionApplicationInitializer {
+//
+//    public HttpSessionConfig() {
+//        super(HttpSessionConfig.class);
+//    }
+//}
