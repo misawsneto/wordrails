@@ -1,7 +1,6 @@
 package com.wordrails.business;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.social.UserIdSource;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -16,7 +15,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")//, uniqueConstraints = @UniqueConstraint(columnNames = {"username", "network_id"}))
-public class User implements UserDetails, UserIdSource {
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,10 +85,5 @@ public class User implements UserDetails, UserIdSource {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
-	}
-
-	@Override
-	public String getUserId() {
-		return this.id + "_" + this.network.id;
 	}
 }

@@ -52,6 +52,8 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
 		postView.authorImageSmallHash = post.author != null ? post.author.imageSmallHash : null;
 		postView.authorCoverMediumHash = post.author != null ? post.author.coverMediumHash : null;
+		postView.authorImageUrl = post.author != null ? post.author.imageUrl : null;
+		postView.authorCoverUrl = post.author != null ? post.author.coverUrl : null;
 		postView.authorId = post.author != null ? post.author.id : null;
 		postView.authorEmail = post.author != null ? post.author.email : null;
 		postView.authorTwitter = post.author != null ? post.author.twitterHandle : null;

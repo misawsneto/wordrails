@@ -1,13 +1,12 @@
 package com.wordrails.auth;
 
-import com.wordrails.business.Network;
-import com.wordrails.business.Person;
-import com.wordrails.business.User;
-import com.wordrails.business.UserConnection;
+import com.wordrails.business.*;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserConnectionRepository;
 import com.wordrails.persistence.UserRepository;
 import com.wordrails.services.CacheService;
+import org.scribe.model.Token;
+import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -19,10 +18,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -177,28 +175,34 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		return auth;
 	}
 
-	public boolean socialAuthentication(String providerId, String userId, String accessToken, Network network) throws BadCredentialsException {
+	public boolean socialAuthentication(String providerId, OAuthService service, String userId, Token token, Network network) throws BadCredentialsException, IOException {
 		UserConnection userConnection = userConnectionRepository.findByProviderIdAndProviderUserId(providerId, userId, network.id);
 
-		User user = null;
-		Facebook facebook = new FacebookTemplate(accessToken);
+		User user;
 		if (userConnection == null) {
+			SocialUser socialUser = null;
 			if (providerId.equals("facebook")) {
-				Person person = socialAuthenticationService.getFacebookUser(facebook, userId, network);
-				personRepository.save(person);
-
-				user = person.user;
+				socialUser = socialAuthenticationService.getFacebookUserFromOAuth(userId, service, token);
+			} else if (providerId.equals("google")) {
+				socialUser = socialAuthenticationService.getGoogleUserFromOAuth(userId, token.getToken());
 			}
+
+			Person person = socialAuthenticationService.getPersonFromSocialUser(socialUser, network);
+			personRepository.save(person);
+
+			user = person.user;
 		} else {
 			if (providerId.equals("facebook")) {
-				org.springframework.social.facebook.api.User profile = facebook.userOperations().getUserProfile(userId);
-
-				if (profile == null) {
+				if(!socialAuthenticationService.facebookLogin(userId, service, token)) {
 					return false;
-				} else {
-					user = userConnection.user;
+				}
+			} else if (providerId.equals("google")) {
+				if (!socialAuthenticationService.googleLogin(userId, token.getToken())) {
+					return false;
 				}
 			}
+
+			user = userConnection.user;
 		}
 
 		if (user == null) return false;

@@ -4,11 +4,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
        xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:facebook="http://www.springframework.org/schema/social/facebook"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 								 http://www.springframework.org/schema/beans/spring-beans.xsd
 								 http://www.springframework.org/schema/security
-								 http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/social/facebook http://www.springframework.org/schema/social/spring-social-facebook.xsd">
+								 http://www.springframework.org/schema/security/spring-security.xsd">
 	<security:http pattern="/logIn.jsp" security="none"/>
 	<!-- 	<security:http pattern="/index.jsp" security="none"/> -->
 	<security:http pattern="/app/**" security="none"/>
@@ -69,31 +68,11 @@
 		<security:anonymous enabled="false"/>
 	</security:http>
 
-	<facebook:config app-id="${facebook.app.id}" app-secret="${facebook.app.secret}"/>
-
-
-
-	<bean class="org.springframework.social.connect.support.ConnectionFactoryRegistry" id="connFactoryLocator" />
-	<bean class="com.wordrails.auth.TrixSignInAdapter" id="signInAdapter" />
-
-	<bean class="com.wordrails.auth.SocialUsersConnectionRepository" id="usersConnectionRepository">
-		<constructor-arg name="textEncryptor" ref="textEncryptor" />
-		<constructor-arg name="connectionFactoryLocator" ref="connFactoryLocator" />
-	</bean>
-
-	<bean class="org.springframework.social.connect.web.ProviderSignInController">
-		<constructor-arg name="connectionFactoryLocator" ref="connFactoryLocator" />
-		<constructor-arg name="signInAdapter" ref="signInAdapter" />
-		<constructor-arg name="usersConnectionRepository" ref="usersConnectionRepository" />
-	</bean>
-
 	<bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors"
 	      factory-method="text">
 		<constructor-arg value="${security.encryptPassword}" />
 		<constructor-arg value="${security.encryptSalt}" />
 	</bean>
-
-
 
 	<!--AUTHENTICATION-->
 
