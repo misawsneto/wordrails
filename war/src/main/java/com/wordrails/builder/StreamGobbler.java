@@ -1,11 +1,16 @@
-package com.wordrails.builder.util;
+package com.wordrails.builder;
+
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class StreamGobbler extends Thread {
+public class StreamGobbler implements Runnable {
+
+	Logger log = Logger.getLogger(StreamGobbler.class.getName());
+
 	private InputStream is;
 	private boolean showLog;
 
@@ -21,7 +26,7 @@ public class StreamGobbler extends Thread {
 			String line;
 			while ((line = br.readLine()) != null) {
 				if (showLog) {
-					System.out.println(line);
+					log.trace(line);
 				}
 			}
 		} catch (IOException ioe) {

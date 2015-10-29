@@ -19,6 +19,8 @@ public class BuilderResource {
 
 	@Autowired
 	private WordrailsService wordrailsService;
+	@Autowired
+	private AndroidBuilder builder;
 
 	@GET
 	@Path("/generateApk")
@@ -28,7 +30,7 @@ public class BuilderResource {
 		AndroidApp androidApp = network.androidApp;
 
 		try {
-			new AndroidBuilder().run("/opt/trix_android", androidApp);
+			builder.run("/opt/trix_android", androidApp, network.subdomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

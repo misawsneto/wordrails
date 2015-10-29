@@ -1,42 +1,17 @@
 package com.wordrails.api;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.Cell;
-import com.wordrails.business.Comment;
-import com.wordrails.business.Image;
-import com.wordrails.business.Network;
-import com.wordrails.business.NetworkRole;
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
-import com.wordrails.business.Row;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationPerspective;
-import com.wordrails.business.StationRole;
-import com.wordrails.business.Taxonomy;
-import com.wordrails.business.TermPerspective;
-import com.wordrails.persistence.CellRepository;
-import com.wordrails.persistence.CommentRepository;
-import com.wordrails.persistence.ImageRepository;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.PostRepository;
-import com.wordrails.persistence.RowRepository;
-import com.wordrails.persistence.StationPerspectiveRepository;
-import com.wordrails.persistence.StationRepository;
-import com.wordrails.persistence.StationRolesRepository;
-import com.wordrails.persistence.TaxonomyRepository;
-import com.wordrails.persistence.TermPerspectiveRepository;
+import com.wordrails.business.*;
+import com.wordrails.persistence.*;
 import com.wordrails.security.NetworkSecurityChecker;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.security.StationSecurityChecker;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.ws.rs.Path;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.Path;
+import java.util.Date;
+import java.util.List;
 
 @Path("/")
 @Component
@@ -1316,6 +1291,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetAndroidAppsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAndroidAppAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetBookmarksAuthorized() {
 		return false;
 	}
@@ -1630,6 +1615,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetNetworkLoginImageAuthorized(Integer networkId) {
 		return true;
+	}
+
+	@Override
+	protected boolean isGetNetworkAndroidAppAuthorized(Integer networkId) {
+		return false;
 	}
 
 	@Override

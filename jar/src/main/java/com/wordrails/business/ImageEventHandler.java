@@ -5,9 +5,10 @@ import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
 import com.wordrails.persistence.ImageRepository;
 import com.wordrails.services.AmazonCloudService;
-import com.wordrails.services.FileService;
 import com.wordrails.util.WordrailsUtil;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,8 +28,6 @@ public class ImageEventHandler {
 
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
-	@Autowired
-	private FileService fileService;
 	@Autowired
 	private AmazonCloudService amazonCloudService;
 	@Autowired
@@ -72,88 +70,106 @@ public class ImageEventHandler {
 		try (InputStream input = originalFile.contents.getBinaryStream()) {
 			Network network = authProvider.getNetwork();
 
-			byte[] bytes = WordrailsUtil.getBytes(input);
-			BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
-			String mime = originalFile.mime;
-			String extension = mime.split("/").length == 2 ? mime.split("/")[1] : "jpeg";
+			java.io.File tmpFile = java.io.File.createTempFile(WordrailsUtil.generateRandomString(5, "aA#"), ".tmp");
+			try {
+				FileUtils.copyInputStreamToFile(input, tmpFile);
+				BufferedImage bufferedImage = ImageIO.read(tmpFile);
+				String mime = originalFile.mime;
+				String extension = mime.split("/").length == 2 ? mime.split("/")[1] : "jpeg";
 
-			int maxSize = Math.max(bufferedImage.getHeight(), bufferedImage.getWidth());
+				int maxSize = Math.max(bufferedImage.getHeight(), bufferedImage.getWidth());
 
-			String originalHash = amazonCloudService.uploadPublicImage(new ByteArrayInputStream(bytes), originalFile.size,
-					network.subdomain, originalFile.hash, "original", extension);
+				String originalHash = amazonCloudService.uploadPublicImage(tmpFile, originalFile.size,
+						network.subdomain, originalFile.hash, "original", extension);
 
-			originalFile.contents = null;
-			originalFile.type = File.EXTERNAL;
-			originalFile.hash = originalHash;
-			if (originalFile.networkId == null || originalFile.networkId == 0) {
-				originalFile.networkId = network.id;
-			}
-			fileContentsRepository.save(originalFile);
+				originalFile.contents = null;
+				originalFile.type = File.EXTERNAL;
+				originalFile.hash = originalHash;
+				if (originalFile.networkId == null || originalFile.networkId == 0) {
+					originalFile.networkId = network.id;
+				}
+				fileContentsRepository.save(originalFile);
 
-			FileInputStream smallResizedStream = fileService.resizeImage(bufferedImage, 150, extension);
-			long smallSize = smallResizedStream.getChannel().size();
-			String smallHash = amazonCloudService.uploadPublicImage(smallResizedStream, smallSize, network.subdomain, "small", extension);
-			File small = new File();
-			small.mime = mime;
-			small.type = File.EXTERNAL;
-			small.hash = smallHash;
-			small.size = smallSize;
-			small.networkId = network.id;
-			fileRepository.save(small);
+				FileInputStream smallResizedStream = resizeImage(bufferedImage, 150, extension);
+				long smallSize = smallResizedStream.getChannel().size();
+				String smallHash = amazonCloudService.uploadPublicImage(smallResizedStream, smallSize, network.subdomain, "small", extension);
+				File small = new File();
+				small.mime = mime;
+				small.type = File.EXTERNAL;
+				small.hash = smallHash;
+				small.size = smallSize;
+				small.networkId = network.id;
+				fileRepository.save(small);
 
-			File medium;
-			String mediumHash;
-			if (maxSize < 250) {
-				mediumHash = originalHash;
-				medium = image.original;
-			} else {
-				FileInputStream mediumResizedStream = fileService.resizeImage(bufferedImage, 300, extension);
-				long mediumSize = mediumResizedStream.getChannel().size();
-				mediumHash = amazonCloudService.uploadPublicImage(mediumResizedStream, mediumSize, network.subdomain, "medium", extension);
-				medium = new File();
-				medium.mime = mime;
-				medium.type = File.EXTERNAL;
-				medium.hash = mediumHash;
-				medium.size = mediumSize;
-				medium.networkId = network.id;
-				fileRepository.save(medium);
-			}
-
-			File large;
-			String largeHash;
-			if (maxSize < 800) {
-				largeHash = originalHash;
-				large = image.original;
-			} else {
-				int largeSize = 1024;
-				if (maxSize >= 1200 && maxSize < 1500) {
-					largeSize = 1400;
-				} else if (maxSize >= 1500) {
-					largeSize = 1600;
+				File medium;
+				String mediumHash;
+				if (maxSize < 250) {
+					mediumHash = originalHash;
+					medium = image.original;
+				} else {
+					FileInputStream mediumResizedStream = resizeImage(bufferedImage, 300, extension);
+					long mediumSize = mediumResizedStream.getChannel().size();
+					mediumHash = amazonCloudService.uploadPublicImage(mediumResizedStream, mediumSize, network.subdomain, "medium", extension);
+					medium = new File();
+					medium.mime = mime;
+					medium.type = File.EXTERNAL;
+					medium.hash = mediumHash;
+					medium.size = mediumSize;
+					medium.networkId = network.id;
+					fileRepository.save(medium);
 				}
 
-				FileInputStream largeResizedStream = fileService.resizeImage(bufferedImage, largeSize, extension);
-				long largeLenght = largeResizedStream.getChannel().size();
-				large = new File();
-				large.mime = mime;
-				largeHash = amazonCloudService.uploadPublicImage(largeResizedStream, largeLenght, network.subdomain, "large", extension);
-				large.type = File.EXTERNAL;
-				large.hash = largeHash;
-				large.size = largeLenght;
-				large.networkId = network.id;
-				fileRepository.save(large);
+				File large;
+				String largeHash;
+				if (maxSize < 800) {
+					largeHash = originalHash;
+					large = image.original;
+				} else {
+					int largeSize = 1024;
+					if (maxSize >= 1200 && maxSize < 1500) {
+						largeSize = 1400;
+					} else if (maxSize >= 1500) {
+						largeSize = 1600;
+					}
+
+					FileInputStream largeResizedStream = resizeImage(bufferedImage, largeSize, extension);
+					long largeLenght = largeResizedStream.getChannel().size();
+					large = new File();
+					large.mime = mime;
+					largeHash = amazonCloudService.uploadPublicImage(largeResizedStream, largeLenght, network.subdomain, "large", extension);
+					large.type = File.EXTERNAL;
+					large.hash = largeHash;
+					large.size = largeLenght;
+					large.networkId = network.id;
+					fileRepository.save(large);
+				}
+
+				image.small = small;
+				image.medium = medium;
+				image.large = large;
+
+				image.smallHash = smallHash;
+				image.mediumHash = mediumHash;
+				image.largeHash = largeHash;
+				image.originalHash = originalHash;
+
+				image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
+
+
+			} finally {
+				if(tmpFile.exists()) {
+					tmpFile.delete();
+				}
 			}
-
-			image.small = small;
-			image.medium = medium;
-			image.large = large;
-
-			image.smallHash = smallHash;
-			image.mediumHash = mediumHash;
-			image.largeHash = largeHash;
-			image.originalHash = originalHash;
-
-			image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
 		}
+	}
+
+	public FileInputStream resizeImage(BufferedImage image, Integer size, String mime) throws IOException {
+		java.io.File file = java.io.File.createTempFile("trix", "");
+
+		BufferedImage bi = Thumbnails.of(image).size(size, size).outputFormat(mime).outputQuality(1).asBufferedImage();
+		ImageIO.write(bi, mime, file);
+
+		return new FileInputStream(file);
 	}
 }

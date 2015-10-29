@@ -5,17 +5,20 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
-import com.wordrails.business.File;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
 import com.wordrails.util.WordrailsUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,6 +28,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class AmazonCloudService {
+
+	Logger log = Logger.getLogger(AmazonCloudService.class.getName());
 
 	@Value("${amazon.accessKey}")
 	String accessKey;
@@ -45,17 +50,42 @@ public class AmazonCloudService {
 		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
 	}
 
-	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
-		byte[] bytes = WordrailsUtil.getBytes(input);
-		String hash = WordrailsUtil.getHash(bytes);
-
-		return uploadPublicImage(new ByteArrayInputStream(bytes), lenght, networkDomain, hash, size, mime);
+	public String getPublicApkURL(String networkDomain, String fileName) throws IOException {
+		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/apk/" + fileName;
 	}
 
-	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String hash, String size, String mime) throws IOException, AmazonS3Exception {
+	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
+		java.io.File tmpFile = java.io.File.createTempFile(WordrailsUtil.generateRandomString(5, "aA#"), ".tmp");
+		try {
+			FileUtils.copyInputStreamToFile(input, tmpFile);
+			String hash = WordrailsUtil.getHash(new FileInputStream(tmpFile));
+			uploadPublicImage(tmpFile, lenght, networkDomain, hash, size, mime);
+			return hash;
+		} finally {
+			if(tmpFile.exists()) {
+				tmpFile.delete();
+			}
+		}
+	}
+
+	public String uploadAPK(java.io.File file, Long lenght, String networkDomain, String mime) throws IOException, AmazonS3Exception {
+		log.debug("uploading apk...");
+
+		String hash = WordrailsUtil.getHash(new FileInputStream(file));
+
+		ObjectMetadata md = new ObjectMetadata();
+		md.setContentType(mime);
+
+		String path = networkDomain + "/apk/" + hash;
+
+		uploadFile(file, lenght, publicBucket, path, md);
+
+		return hash;
+	}
+
+	public String uploadPublicImage(java.io.File file, Long lenght, String networkDomain, String hash, String size, String mime) throws IOException, AmazonS3Exception {
 		if(hash == null) {
-			byte[] bytes = WordrailsUtil.getBytes(input);
-			hash = WordrailsUtil.getHash(bytes);
+			hash = WordrailsUtil.getHash(new FileInputStream(file));
 		}
 
 		ObjectMetadata md = new ObjectMetadata();
@@ -63,7 +93,7 @@ public class AmazonCloudService {
 		md.addUserMetadata("size", size);
 
 		String path = networkDomain + "/images/" + hash;
-		uploadFile(input, lenght, publicBucket, path, md);
+		uploadFile(file, lenght, publicBucket, path, md);
 
 		return hash;
 	}
@@ -90,10 +120,8 @@ public class AmazonCloudService {
 		return new AmazonS3Client(awsCreds);
 	}
 
-	private void uploadFile(InputStream input, Long lenght, String bucketName, String keyName, ObjectMetadata metadata) throws IOException, AmazonS3Exception {
-		if (input.available() == 0) {
-			throw new AmazonS3Exception("InputStream is empty");
-		}
+	private void uploadFile(java.io.File file, Long lenght, String bucketName, String keyName, ObjectMetadata metadata) throws IOException, AmazonS3Exception {
+		log.debug("uploading file of lenght " + lenght);
 
 		AmazonS3 s3Client = s3();
 
@@ -111,7 +139,9 @@ public class AmazonCloudService {
 
 		initRequest.setCannedACL(CannedAccessControlList.PublicRead);
 		InitiateMultipartUploadResult initResponse = s3Client.initiateMultipartUpload(initRequest);
-		long partSize = 7 * 1024 * 1024; // Set part size to 7 MB.
+		long partSize = 6 * 1024 * 1024; // Set part size to 7 MB.
+
+
 
 		try {
 			// Step 2: Upload parts.
@@ -120,6 +150,8 @@ public class AmazonCloudService {
 				// Last part can be less than 3 MB. Adjust part size.
 				partSize = Math.min(partSize, (lenght - filePosition));
 
+				log.debug("uploading file part " + i + ", partSize=" + partSize + ", fileposition=" + filePosition);
+
 				// Create request to upload a part.
 				UploadPartRequest uploadRequest = new UploadPartRequest().
 						withBucketName(bucketName).
@@ -127,7 +159,7 @@ public class AmazonCloudService {
 						withUploadId(initResponse.getUploadId()).
 						withPartNumber(i).
 						withFileOffset(filePosition).
-						withInputStream(input).
+						withFile(file).
 						withPartSize(partSize);
 
 				// Upload part and add response to our list.
