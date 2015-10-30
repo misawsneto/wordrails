@@ -1,6 +1,6 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$window',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $window){
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$window', '$mdSidenav',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $window, $mdSidenav) {
 
 		FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
 			return true;
@@ -977,39 +977,9 @@ function createPost(state){
 		return '';
 	};
 	// ----------- end of scheduler date picker ------------
+	
+	$scope.togglePostOptions = function(ev){
+      $mdSidenav('post-options').toggle();
+    }
 
 }]);
-
-
-/* DONT DELETE */
-// $templateCache.put('ng-mfb-menu-md.tpl.html?'+GLOBAL_URL_HASH,
-// 		'<ul class="mfb-component--{{position}} mfb-{{effect}}"' +
-// 		'    data-mfb-toggle="{{togglingMethod}}" data-mfb-state="{{menuState}}">' +
-// 		'  <li class="mfb-component__wrap">' +
-// 		'    <a ng-click="clicked()" ng-mouseenter="hovered()" ng-mouseleave="hovered()"' +
-// 		'       style="background: transparent; box-shadow: none;"' +
-// 		'       ng-attr-data-mfb-label="{{label}}" class="mfb-component__button--main">' +
-// 		'     <md-button class="md-fab md-primary custom-fab-button text-lg" aria-label={{label}} style="position:relative; margin: 0; padding:0;">' +
-// 		'       <i style="left: 0; position: absolute;"' +
-// 		'         class="mfb-component__main-icon--resting {{resting}}"></i>' +
-// 		'       <i style="position:relative;" ' +
-// 		'         class="mfb-component__main-icon--active {{active}}"></i>' +
-// 		'     </md-button>' +
-// 		'    </a>' +
-// 		'    <ul class="mfb-component__list" ng-transclude>' +
-// 		'    </ul>' +
-// 		'</li>' +
-// 		'</ul>'
-// 		);
-
-// 	$templateCache.put('ng-mfb-button-md.tpl.html?'+GLOBAL_URL_HASH,
-// 		'<li>' +
-// 		'  <a href="" data-mfb-label="{{label}}" class="mfb-component__button--child" ' +
-// 		'     style="background: transparent; box-shadow: none;">' +
-// 		'     <md-button style="margin: 0;" class="md-fab md-primary custom-fab-button text-lg" aria-label={{label}}>' +
-// 		'       <i class="{{icon}}"></i>' +
-// 		'     </md-button>' +
-// 		'  </a>' +
-// 		'</li>'
-// 		);
-/* DONT DELETE */
