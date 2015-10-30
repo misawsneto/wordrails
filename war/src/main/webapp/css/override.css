@@ -4147,6 +4147,12 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 
 /* /aside.html */
 
+/* header.html */
+  navbar-brand img {
+    max-height: 32px;
+  }
+/* /header.html */
+
 /* explore.html */
 .explore-categories{
   top:0!important;
