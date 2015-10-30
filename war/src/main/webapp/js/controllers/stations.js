@@ -1,6 +1,6 @@
 // tab controller
-app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout', '$interval', 'trix', 'cfpLoadingBar', '$q', '$mdSidenav',
-	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q, $mdSidenav) {
+app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout', '$interval', 'trix', 'cfpLoadingBar', '$q',
+	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q) {
 
 		$scope.tabs = [true, false];
 		$scope.tab = function(index){
@@ -121,10 +121,5 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
     }
 
 }
-
-    $scope.app.toggleSelectStation = function(ev){
-      $mdSidenav('stations-selector').toggle();
-    }
-
 
 }]);

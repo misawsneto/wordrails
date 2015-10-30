@@ -1,24 +1,4 @@
 <div class="station-perspectives p-t-60" ng-if="!app.isMobile">
-    <md-sidenav id="select-stations" ng-if="app.stationsPermissions && app.stationsPermissions.length > 1" class="md-sidenav-left md-whiteframe-z2 pos-fix" md-component-id="stations-selector">
-      <md-toolbar class="bg-header">
-        <h1 class="md-toolbar-tools bg-header-text"><i class="mdi mdi-radio-tower text-lg p-r-xs"></i>Estações</h1>
-      </md-toolbar>
-      <md-content layout-padding class="p-l-xl p-r-xl">
-        <div class="scrollable">
-          <div ng-repeat="station in app.stationsPermissions" class="wrapper-sm">
-            <a ui-sref="app.stations" ng-class="{'font-bold': station.stationId == app.currentStation.id}" ng-click="app.changeStation(station); toggleMenu();">
-            <span class="text-lg">{{station.stationName}}</span>
-          </a>
-          </div>
-        </div>
-        <!-- <button md-ink-ripple class="md-btn md-button md-flat btn-fw pull-right" ng-click="saveProfile(editingPerson)">
-          Salvar
-        </button>
-        <button md-ink-ripple class="md-btn md-button md-flat btn-fw pull-right" ng-click="cancelEditProfile()">
-          Cancelar
-        </button> -->
-      </md-content>
-    </md-sidenav>
 
 <div class="container p-b-lg p-r-xxl p-l-xxl">
     <div class="row">

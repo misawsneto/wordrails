@@ -1,5 +1,5 @@
 <div id="top-header" class="collapse pos-rlt navbar-collapse box-shadow3 nav-down station-header {{::app.settings.navbarCollapseColor}}">
-    <div id="header-left-btns" ng-class="{'animated': !app.hideAside}" class="nav navbar-nav hidden-xs text-lg w-full p-l header-font pos-abt">
+    <div id="header-left-btns" ng-class="{'logged': app.isLogged}" class="nav navbar-nav hidden-xs text-lg w-full p-l header-font pos-abt">
       <div class="display-t-c clearfix wrapper">
         <a ng-if="app.stationsPermissions && app.stationsPermissions.length > 1"
         ng-click="app.toggleSelectStation()" class="bg-header-text">

@@ -3894,8 +3894,17 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 
 /* header */
 
+  .nav-down .station-header{
+    height: 60px!important;
+  }
+
   #header-left-btns.animated{
     transition: transform .2s ease-in-out;
+    -webkit-transform: translate3d(60px, 0, 0);
+    transform: translate3d(60px, 0, 0);
+  }
+
+  #header-left-btns.logged{
     -webkit-transform: translate3d(60px, 0, 0);
     transform: translate3d(60px, 0, 0);
   }
