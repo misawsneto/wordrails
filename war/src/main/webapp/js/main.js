@@ -312,6 +312,10 @@ angular.module('app')
         return $scope.app.initData.network.allowSocialLogin && $scope.app.currentStation.visibility == 'UNRESTRICTED';
       }
 
+      $scope.app.goToState = function(state, param){
+        $state.go(state,param);
+      }
+
       $scope.app.goToEditPost = function(postId, $event){
         $event.preventDefault();
         $event.stopPropagation();
