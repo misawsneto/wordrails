@@ -149,14 +149,14 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   $scope.app.enableDisablePerson = function(){
     if($scope.pe.enableDisablePerson.user.enabled)
       trix.disablePerson($scope.pe.enableDisablePerson.id).success(function(){
-        $scope.app.showSuccessToast('Usuário desabilitado.');
+        $scope.app.showSuccessToast('Usuário desativado.');
         $scope.pe.enableDisablePerson.user.enabled = false;
         $mdDialog.cancel();
       })
     else
       trix.enablePerson($scope.pe.enableDisablePerson.id).success(function(){
-        $scope.app.showSuccessToast('Usuário desabilitado.');
-        $scope.pe.enableDisablePerson.user.enabled = false;
+        $scope.app.showSuccessToast('Usuário ativado.');
+        $scope.pe.enableDisablePerson.user.enabled = true;
         $mdDialog.cancel();
       })
   }

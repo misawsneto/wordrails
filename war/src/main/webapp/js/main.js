@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-.controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast', 'TRIX', 'cfpLoadingBar', '$q',
-  function(              $scope,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast, TRIX   ,  cfpLoadingBar ,  $q) {
+.controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast', 'TRIX', 'cfpLoadingBar', '$q', '$mdSidenav',
+  function(              $scope,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast, TRIX   ,  cfpLoadingBar ,  $q ,  $mdSidenav) {
     // add 'ie' classes to html
     var isIE = !!navigator.userAgent.match(/MSIE/i);
     isIE && angular.element($window.document.body).addClass('ie');
@@ -156,6 +156,8 @@ angular.module('app')
       loadPopular();
       loadRecent();
       $scope.app.checkIfLogged();
+
+      $scope.app.closeSelectStation();
     }
 
     $scope.app.refreshPerspective = function(perspectiveId){
@@ -976,8 +978,12 @@ angular.module('app')
       }
     }, 250);
 
-    /* end of header observer */
+    $scope.app.toggleSelectStation = function(){
+      $mdSidenav('stations-selector').toggle();
+    }
 
-    $scope.app.testArray = [1,2,3,4,5,6,7,8,9,0]
+    $scope.app.closeSelectStation = function(){
+      $mdSidenav('stations-selector').close();
+    }
 
 }]);
