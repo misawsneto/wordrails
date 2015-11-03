@@ -58,4 +58,9 @@ app.controller('SearchCtrl', ['$state', '$scope', '$log', '$timeout', 'trix', fu
 
 		}
 	}
+
+	if($state.params && $state.params.q){
+		$scope.app.searchCtrl.searchQuery = $state.params.q
+		$scope.submitSearch();
+	}
 }]);

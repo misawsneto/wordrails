@@ -986,4 +986,8 @@ angular.module('app')
       $mdSidenav('stations-selector').close();
     }
 
+    $scope.app.goToSearch = function(searchQuery){
+      $state.go('app.search', {'q': searchQuery});
+    }
+
 }]);
