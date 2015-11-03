@@ -243,7 +243,7 @@ public class PostsResource {
 		List<Integer> stationIdIntegers = new ArrayList<Integer>();
 
 		if(stationIds != null){
-			List<String> stringIds = Arrays.asList(stationIds.split("\\s*,\\s*"));
+			List<String> stringIds = Arrays.asList(stationIds.replaceAll("\\s*", "").split(","));
 			for (String id: stringIds)
 				stationIdIntegers.add(Integer.parseInt(id));
 		}
@@ -265,19 +265,19 @@ public class PostsResource {
 		}
 
 		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
+//
+//		// if user passes a station without permission, remove it
+//		if(readableIds.size() > 0 && readableIds.size() > 0) {
+//			Iterator<Integer> it = stationIdIntegers.iterator();
+//			while (it.hasNext()){
+//				Integer stationId = it.next();
+//				if (!readableIds.contains(stationId))
+//					it.remove();
+//			}
+//		}
 
-		// if user passes a station without permission, remove it
-		if(readableIds.size() > 0 && readableIds.size() > 0) {
-			Iterator<Integer> it = stationIdIntegers.iterator();
-			while (it.hasNext()){
-				Integer stationId = it.next();
-				if (!readableIds.contains(stationId))
-					it.remove();
-			}
-		}
-
-		if(stationIds != null && stationIdIntegers.size() == 0)
-			throw new UnauthorizedException("unauthorizd stations");
+//		if(stationIds != null && stationIdIntegers.size() == 0)
+//			throw new UnauthorizedException("unauthorizd stations");
 
 		MultiMatchQueryBuilder queryText = null;
 		BoolQueryBuilder mainQuery = boolQuery();

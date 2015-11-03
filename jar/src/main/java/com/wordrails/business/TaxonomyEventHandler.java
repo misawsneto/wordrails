@@ -59,7 +59,6 @@ public class TaxonomyEventHandler {
 	}
 
 	@HandleBeforeDelete
-	@Transactional
 	public void handleBeforeDelete(Taxonomy taxonomy) throws UnauthorizedException, OperationNotSupportedException {
 		if(!taxonomySecurityChecker.canEdit(taxonomy)){
 			throw new UnauthorizedException();

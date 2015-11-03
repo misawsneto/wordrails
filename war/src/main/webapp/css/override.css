@@ -3360,6 +3360,14 @@ md-backdrop.md-opaque.ng-leave {
 .post-block md-chips-wrap{
   box-shadow : none!important;
 }
+
+@media (min-width: 768px){
+  md-sidenav#post-options  {
+    width: 350px;
+    min-width: 350px;
+    max-width: 350px;
+  }
+}
 /* /post */
 
 /* user_profile*/
@@ -3886,9 +3894,25 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 
 /* header */
 
-/* .navbar-brand img {
+  .nav-down .station-header{
+    height: 60px!important;
+  }
+
+  #header-left-btns.animated{
+    transition: transform .2s ease-in-out;
+    -webkit-transform: translate3d(60px, 0, 0);
+    transform: translate3d(60px, 0, 0);
+  }
+
+  #header-left-btns.logged{
+    -webkit-transform: translate3d(60px, 0, 0);
+    transform: translate3d(60px, 0, 0);
+  }
+
+
+  .navbar-brand img {
   max-height: 40px;
-  } */
+  }
 
   .custom-header2{
     font-size: 25px;
@@ -4146,6 +4170,12 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 }
 
 /* /aside.html */
+
+/* header.html */
+  navbar-brand img {
+    max-height: 32px;
+  }
+/* /header.html */
 
 /* explore.html */
 .explore-categories{

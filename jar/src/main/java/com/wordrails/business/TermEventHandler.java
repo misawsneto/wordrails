@@ -28,7 +28,6 @@ public class TermEventHandler {
 	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
 
 	@HandleAfterCreate
-	@Transactional
 	public void handleAfterCreate(Term term) {
 		if(!term.taxonomy.type.equals(Taxonomy.STATION_TAG_TAXONOMY) &&
 				!term.taxonomy.type.equals(Taxonomy.STATION_AUTHOR_TAXONOMY) &&

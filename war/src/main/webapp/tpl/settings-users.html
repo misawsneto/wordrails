@@ -83,7 +83,7 @@
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 								<td ng-if="app.networkAdmin">
 									<div class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-										<a href ng-click="openEnableDisableDialog(person, $event)" angular-ripple class="dropdown-toggle border-radius-50 i-20" ng-class="{'text-danger mdi mdi-block-helper': !person.user.enabled, 'text-success mdi mdi-check': person.user.enabled}">
+										<a href ng-click="openEnableDisableDialog(person, $event)" angular-ripple class="dropdown-toggle border-radius-50 i-20" ng-class="{'text-danger mdi mdi-block-helper': person.user.enabled, 'text-success mdi mdi-check': !person.user.enabled}">
 										</a>
 										<!-- dropdown -->
 									</div>
@@ -294,25 +294,24 @@
 
      	<script type="text/ng-template" id="confirm_enable_disable_person.html">
 				<md-dialog aria-label="Adicionar notícia" id="user-remove-dialog">
-			  	<md-content>
-         			<div class="wrapper">
-	         			<div class="h4 wrapper-sm m-t text-center">
-	         				{{pe.enableDisablePerson.user.enabled ? 
-	         				     							'Tem certeza que deseja desativar este usuário? Após ser desativado o usuário não poderá autenticar-se nesta rede.':
-	         				     							'Tem certeza que deseja ativar este usuário? Após ser ativado o usuário poderá autenticar-se nesta rede.'
-	         				     							}}
-	         			</div>
-								<div class="m-t text-center wrapper-sm text-lg">
-								<button ng-click="app.enableDisablePerson()" md-ink-ripple class="md-btn md-flat btn-fw m-r">
-									{{pe.enableDisablePerson.user.enabled ? 
-									     							'Desativar':
-									     							'Ativar'
-									     							}}
-								</button>
-								<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
-								</div>
-							<div>
-				  </md-content>
+				<md-content>
+				<div class="wrapper">
+					<div class="h4 wrapper-sm m-t text-center">
+						{{pe.enableDisablePerson.user.enabled ? 
+						'Tem certeza que deseja desativar este usuário? Após ser desativado o usuário não poderá autenticar-se nesta rede.':
+						'Tem certeza que deseja ativar este usuário? Após ser ativado o usuário poderá autenticar-se nesta rede.'
+					}}
+					<div class="m-t-lg text-center text-lg">
+						<button ng-click="app.enableDisablePerson()" md-ink-ripple class="md-btn md-flat btn-fw m-r">
+							{{pe.enableDisablePerson.user.enabled ? 
+							'Desativar':
+							'Ativar'
+						}}
+					</button>
+					<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
+				</div>
+				</div>
+				</md-content>
 				</md-dialog>
 			</script>
 

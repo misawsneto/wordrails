@@ -1,4 +1,5 @@
 <div class="station-perspectives p-t-60" ng-if="!app.isMobile">
+
 <div class="container p-b-lg p-r-xxl p-l-xxl">
     <div class="row">
       <!-- carousel top -->
@@ -430,9 +431,9 @@
         <!-- ng-class="{'post-read': app.postRead(cell.postView.postId)}" -->
         <li ng-repeat="cell in ordinaryRow.cells">
          <div ng-class="{'b-t': !$first}"></div>
-         <div class="clear p-t-sm padder-v padder-md post-list news-item">
+         <div ng-click="app.goToState('app.read', {'slug': cell.postView.slug})" class="clear p-t-sm padder-v padder-md post-list news-item">
           <!-- image -->
-          <a ui-sref="app.read({'slug': cell.postView.slug})" class="block-image m-l m-t" ng-if="cell.postView.imageMediumId" >
+          <a  class="block-image m-l m-t" ng-if="cell.postView.imageMediumId" >
             <div class="cell-wrap r r-2x bg-cover" ng-style="getBackgroundImage(cell.postView, 'md')">
             </div>
           </a>
@@ -440,10 +441,10 @@
           <!-- /content -->
           <div class="m-t-sm" ng-class="{'content-block': cell.postView.imageMediumId}">
             <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{::cell.postView.topper}}</span>
-            <a ui-sref="app.read({'slug': cell.postView.slug})" class="h3 font-bold m-b m-t-sm m-b m-t-sm block">
+            <a  class="h3 font-bold m-b m-t-sm m-b m-t-sm block">
               {{::cell.postView.title}}
             </a>
-            <a ui-sref="app.read({'slug': cell.postView.slug})" class="text-lg font-thin text-lg">{{::cell.postView.snippet | characters:170}}</a>
+            <a  class="text-lg font-thin text-lg">{{::cell.postView.snippet | characters:170}}</a>
             <div class="m-t">
               <div class="display-t-c">
                 <a >

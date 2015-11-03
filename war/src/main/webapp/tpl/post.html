@@ -1,3 +1,48 @@
+  <md-sidenav id="post-options" class="md-sidenav-right md-whiteframe-z2 pos-fix" md-component-id="post-options">
+    <md-toolbar class="bg-header">
+      <h2 class="md-toolbar-tools bg-header-text"><i class="mdi mdi-format-list-bulleted text-xl p-r-sm"></i>Opções de publicação</h1>
+    </md-toolbar>
+    <md-content class="pos-abt bottom-0 right-0 left-0" style="top:64px">
+      <div id="post-options-sidebar" class="vbox">
+        <div class="wrapper b-b b-l" ng-if="(writableStations && writableStations.length > 0) || app.editingPost.id">
+          <span>Estação: <strong>{{app.editingPost.id ? app.editingPost.selectedStation.stationName : ''}}</strong></span>
+          <select ng-class="{'hide': app.editingPost.id}" class="form-control m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
+          ng-options="station as station.stationName for station in writableStations track by station.stationId">
+          </select>
+          <!--
+          <br>
+           <dropdown-multiselect ng-if="!app.editingPost.id" model="selectedStations"  options="writableStations"></dropdown-multiselect> -->
+        </div>
+        <div class="row-row">
+          <div class="cell b-l">
+            <div class="cell-inner">
+              <div class="wrapper-sm term-tree">
+
+                <div class="span5 article-tree animated fadeIn">
+                  <div ng-style="{'overflow': 'auto'}">
+                    <div class="tree well">
+                      <ul>
+                        <node-tree ng-model="termTree"></node-tree>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="wrapper b-t b-l bg-light lter">
+          tags
+        </div> -->
+        <div md-no-ink angular-ripple class="pointer wrapper b-t b-l bg-light lter text-center text-u-c font-bold" ng-click="showMoreOptions($event)">
+          mais opções
+        </div>
+      </div>
+
+    </md-content>
+  </md-sidenav>
+
 <!-- hbox layout -->
 <div id="post-editor"  class="hbox hbox-auto-xs">
 
@@ -170,7 +215,7 @@
   </li>
   <li>
     <a tooltip="Opções de publicação" tooltip-placement="bottom" tooltip-append-to-body="true" tooltip-popup-delay="700"
-    href class="text-lg" ng-click="app.hidePostOptions = !app.hidePostOptions" style="font-size: 19px;">
+    href class="text-lg" ng-click="togglePostOptions()" style="font-size: 19px;">
     <i class="mdi mdi-format-list-bulleted"></i>
   </a>
   </li>
