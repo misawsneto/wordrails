@@ -1301,6 +1301,36 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetAndroidAppLauncherIconMDPIAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAndroidAppLauncherIconHDPIAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAndroidAppLauncherIconXHDPIAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAndroidAppLauncherIconXXHDPIAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAndroidAppLauncherIconXXXHDPIAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAndroidAppLauncherIconGooglePlayStoreAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetBookmarksAuthorized() {
 		return false;
 	}

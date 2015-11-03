@@ -2,7 +2,7 @@ package com.wordrails.builder;
 
 import com.github.slugify.Slugify;
 import com.google.common.base.Charsets;
-import com.wordrails.business.AndroidApp;
+import com.wordrails.business.*;
 import com.wordrails.persistence.AndroidAppRepository;
 import com.wordrails.services.AmazonCloudService;
 import org.apache.commons.io.FileUtils;
@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.io.File;
 import java.util.Collection;
 
 @Component
@@ -83,7 +84,7 @@ public class AndroidBuilder {
 
 		log.debug(fileUrl);
 
-		System.out.println("Done!");
+		log.debug("Done!");
 	}
 
 	private String uploadApk(File apk, String domain) throws IOException {
@@ -91,7 +92,7 @@ public class AndroidBuilder {
 	}
 
 	private Collection<File> createProject(AndroidApp androidApp, File projectDir, File templateProjectDir, File resourcesDir, String packageName) throws Exception {
-		System.out.println("Creating App \"" + androidApp.appName + "\"...");
+		log.debug("Creating App \"" + androidApp.appName + "\"...");
 
 		if (projectDir.exists()) {
 			FileUtils.deleteDirectory(projectDir);
@@ -109,11 +110,43 @@ public class AndroidBuilder {
 				return true;
 			}
 		});
+
+		File drawableDir = new File(projectDir, "/app/src/main/res");
+
+		if(androidApp.logoActionBar != null) {
+			downloadIconToDir("logo_action_bar.png", new File(drawableDir, "drawable"), androidApp.logoActionBar.url);
+		}
+		if(androidApp.logoLogin != null) {
+			downloadIconToDir("logo_login.png", new File(drawableDir, "drawable"), androidApp.logoLogin.url);
+		}
+		if(androidApp.logoSplash != null) {
+			downloadIconToDir("logo_splash.png", new File(drawableDir, "drawable"), androidApp.logoSplash.url);
+		}
+		if(androidApp.launcherIconMDPI != null) {
+			downloadIconToDir("ic_launcher.png", new File(drawableDir, "drawable-mdpi"), androidApp.launcherIconMDPI.url);
+		}
+		if(androidApp.launcherIconHDPI != null) {
+			downloadIconToDir("ic_launcher.png", new File(drawableDir, "drawable-hdpi"), androidApp.launcherIconHDPI.url);
+		}
+		if(androidApp.launcherIconXHDPI != null) {
+			downloadIconToDir("ic_launcher.png", new File(drawableDir, "drawable-xhdpi"), androidApp.launcherIconXHDPI.url);
+		}
+		if(androidApp.launcherIconXXHDPI != null) {
+			downloadIconToDir("ic_launcher.png", new File(drawableDir, "drawable-xxhdpi"), androidApp.launcherIconXXHDPI.url);
+		}
+		if(androidApp.launcherIconXXXHDPI != null) {
+			downloadIconToDir("ic_launcher.png", new File(drawableDir, "drawable-xxxhdpi"), androidApp.launcherIconXXXHDPI.url);
+		}
+
 		FileUtils.copyDirectory(resourcesDir, new File(projectDir + "/app/src/main/res"));
 		FileUtils.moveDirectory(new File(projectDir.getAbsolutePath() + "/app/src/main/java/" + DEFAULT_PACKAGE_NAME.replaceAll("\\.", "/")), new File(projectDir.getAbsolutePath() + "/app/src/main/java/" + packageName.replaceAll("\\.", "/")));
 		FileUtils.moveFile(new File(projectDir.getAbsolutePath() + "/" + DEFAULT_PROJECT_NAME + ".iml"), new File(projectDir.getAbsolutePath() + "/" + androidApp.projectName + ".iml"));
 
 		return FileUtils.listFiles(new File(projectDir.getAbsolutePath() + "/app"), new String[]{"java", "xml", "gradle", "properties", "iml"}, true);
+	}
+
+	private void downloadIconToDir(String fileName, File dir, String url) {
+
 	}
 
 	private void addGooglePlayInfo(File projectDir, AndroidApp androidApp, String buildPath) throws Exception {
@@ -152,7 +185,7 @@ public class AndroidBuilder {
 	}
 
 	private void buildAndPublish(boolean publish, File projectDir) throws Exception {
-		System.out.println("Building" + (publish ? " and Publishing" : "") + "...");
+		log.debug("Building" + (publish ? " and Publishing" : "") + "...");
 		String task = publish ? "publishProductionRelease" : "assembleProductionRelease";
 		String[] cmd;
 		cmd = new String[]{"/bin/bash", "-c", "cd " + projectDir.getAbsolutePath() + " && " + "sh gradlew " + task};
