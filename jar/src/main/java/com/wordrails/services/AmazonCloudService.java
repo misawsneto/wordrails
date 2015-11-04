@@ -7,7 +7,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.tika.Tika;
@@ -55,10 +55,10 @@ public class AmazonCloudService {
 	}
 
 	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
-		java.io.File tmpFile = java.io.File.createTempFile(WordrailsUtil.generateRandomString(5, "aA#"), ".tmp");
+		java.io.File tmpFile = java.io.File.createTempFile(TrixUtil.generateRandomString(5, "aA#"), ".tmp");
 		try {
 			FileUtils.copyInputStreamToFile(input, tmpFile);
-			String hash = WordrailsUtil.getHash(new FileInputStream(tmpFile));
+			String hash = TrixUtil.getHash(new FileInputStream(tmpFile));
 			uploadPublicImage(tmpFile, lenght, networkDomain, hash, size, mime);
 			return hash;
 		} finally {
@@ -71,7 +71,7 @@ public class AmazonCloudService {
 	public String uploadAPK(java.io.File file, Long lenght, String networkDomain, String mime) throws IOException, AmazonS3Exception {
 		log.debug("uploading apk...");
 
-		String hash = WordrailsUtil.getHash(new FileInputStream(file));
+		String hash = TrixUtil.getHash(new FileInputStream(file));
 
 		ObjectMetadata md = new ObjectMetadata();
 		md.setContentType(mime);
@@ -85,7 +85,7 @@ public class AmazonCloudService {
 
 	public String uploadPublicImage(java.io.File file, Long lenght, String networkDomain, String hash, String size, String mime) throws IOException, AmazonS3Exception {
 		if(hash == null) {
-			hash = WordrailsUtil.getHash(new FileInputStream(file));
+			hash = TrixUtil.getHash(new FileInputStream(file));
 		}
 
 		ObjectMetadata md = new ObjectMetadata();
@@ -207,7 +207,7 @@ public class AmazonCloudService {
 		Blob blob = fileContents.contents;
 		if(blob == null) {
 			if (file.url != null) {
-				is = WordrailsUtil.getStreamFromUrl(file.url);
+				is = TrixUtil.getStreamFromUrl(file.url);
 				byteSize = ((FileInputStream) is).getChannel().size();
 			} else if(file.hash != null && !file.hash.isEmpty() && exists(s3(), publicBucket, file.hash)) {
 				return file.hash;

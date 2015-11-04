@@ -25,6 +25,7 @@ public class SocialAuthenticationService {
 
 	static Logger log = Logger.getLogger(SocialAuthenticationService.class.getName());
 
+	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
 	private UserRepository userRepository;

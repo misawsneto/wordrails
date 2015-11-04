@@ -3,7 +3,7 @@ package com.wordrails.converter;
 import com.wordrails.api.PostView;
 import com.wordrails.business.Post;
 import com.wordrails.persistence.PostRepository;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +44,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.readsCount = post.readsCount;
 		postView.recommendsCount = post.recommendsCount;
 		postView.commentsCount = post.commentsCount;
-		postView.snippet = WordrailsUtil.simpleSnippet(post.body, 100);
+		postView.snippet = TrixUtil.simpleSnippet(post.body, 100);
 		postView.authorName = post.author != null ? post.author.name : null;
 		postView.authorUsername = post.author != null ? post.author.username : null;
 		postView.authorCoverMediumId = post.author != null ? post.author.coverMediumId : null;

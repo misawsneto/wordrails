@@ -1,12 +1,12 @@
 package com.wordrails.converter;
 
+import com.wordrails.util.TrixUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.api.NotificationView;
 import com.wordrails.business.Notification;
 import com.wordrails.persistence.NotificationRepository;
-import com.wordrails.util.WordrailsUtil;
 
 @Component
 public class NotificationConverter extends AbstractConverter<Notification, NotificationView> {
@@ -36,7 +36,7 @@ public class NotificationConverter extends AbstractConverter<Notification, Notif
 		notificationView.post = notification.post != null ? postConverter.convertToView(notification.post) : null;
 		notificationView.postId = notification.post != null ? notification.post.id : null;
 		notificationView.postTitle = notification.post != null ? notification.post.title : null;
-		notificationView.postSnippet = notification.post != null ? WordrailsUtil.simpleSnippet(notification.post.body, 100) : null;
+		notificationView.postSnippet = notification.post != null ? TrixUtil.simpleSnippet(notification.post.body, 100) : null;
 		notificationView.seen = notification.seen;
 		notificationView.stationId = notification != null ? notification.station.id : null;
 		notificationView.stationName = notification.station != null ? notification.station.name : null;

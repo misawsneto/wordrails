@@ -14,7 +14,7 @@ import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.AsyncService;
 import com.wordrails.services.CacheService;
 import com.wordrails.services.WordpressParsedContent;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
 import org.quartz.*;
@@ -123,7 +123,7 @@ public class UtilResource {
 				if(post.comments != null){
 					post.commentsCount = post.comments.size();
 				}
-				post.readTime = WordrailsUtil.calculateReadTime(post.body);
+				post.readTime = TrixUtil.calculateReadTime(post.body);
 			}
 			postRepository.save(posts);
 		}
@@ -169,7 +169,7 @@ public class UtilResource {
 				}
 
 				if(person.email == null || person.email.trim().equals("")){
-					person.email = person.username + WordrailsUtil.generateRandomString(4, "a#")  + "@randomfix.com"; 
+					person.email = person.username + TrixUtil.generateRandomString(4, "a#")  + "@randomfix.com";
 				}
 
 				try {
@@ -247,7 +247,7 @@ public class UtilResource {
 			invitation.network = network;
 			invitation.station = station;
 			invitation.active = true;
-			invitation.hash = WordrailsUtil.generateRandomString(8, "aA#");
+			invitation.hash = TrixUtil.generateRandomString(8, "aA#");
 			invites.add(invitation);
 		}
 
@@ -256,13 +256,13 @@ public class UtilResource {
 	}
 
 	private void doSlug(Post post){
-		String originalSlug = WordrailsUtil.toSlug(post.title);
+		String originalSlug = TrixUtil.toSlug(post.title);
 		post.originalSlug = originalSlug;
 		try {
 			post.slug = originalSlug;
 			postRepository.save(post);
 		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-			String hash = WordrailsUtil.generateRandomString(5, "Aa#");
+			String hash = TrixUtil.generateRandomString(5, "Aa#");
 			post.slug = originalSlug + "-" + hash;
 			postRepository.save(post);
 		}
@@ -804,7 +804,7 @@ public class UtilResource {
 				person.networkId = person.user.network.id;
 				person.email = person.email != null ? person.email.trim().toLowerCase() : null;
 				if(!Pattern.matches("^[a-z0-9\\._-]{3,50}$", person.username)){
-					person.username = WordrailsUtil.generateRandomString(10, "a");
+					person.username = TrixUtil.generateRandomString(10, "a");
 				}
 			}
 			personRepository.save(persons);

@@ -1,9 +1,7 @@
 package com.wordrails.elasticsearch;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.wordrails.business.*;
-import com.wordrails.util.WordrailsUtil;
 
 import java.util.Date;
 import java.util.Set;

@@ -5,7 +5,7 @@ import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
 import com.wordrails.persistence.ImageRepository;
 import com.wordrails.services.AmazonCloudService;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.io.FileUtils;
@@ -70,7 +70,7 @@ public class ImageEventHandler {
 		try (InputStream input = originalFile.contents.getBinaryStream()) {
 			Network network = authProvider.getNetwork();
 
-			java.io.File tmpFile = java.io.File.createTempFile(WordrailsUtil.generateRandomString(5, "aA#"), ".tmp");
+			java.io.File tmpFile = java.io.File.createTempFile(TrixUtil.generateRandomString(5, "aA#"), ".tmp");
 			try {
 				FileUtils.copyInputStreamToFile(input, tmpFile);
 				BufferedImage bufferedImage = ImageIO.read(tmpFile);

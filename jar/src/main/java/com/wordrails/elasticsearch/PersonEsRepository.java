@@ -3,7 +3,6 @@ package com.wordrails.elasticsearch;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.business.Person;
-import com.wordrails.util.WordrailsUtil;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.text.Text;
@@ -177,7 +176,7 @@ public class PersonEsRepository {
 //		postView.readsCount = post.readsCount;
 //		postView.recommendsCount = post.recommendsCount;
 //		postView.commentsCount = post.commentsCount;
-//		postView.snippet = WordrailsUtil.simpleSnippet(post.body, 100);
+//		postView.snippet = TrixUtil.simpleSnippet(post.body, 100);
 //		postView.authorName = post.author != null ? post.author.name : null;
 //		postView.authorUsername = post.author != null ? post.author.username : null;
 //		postView.authorCoverMediumId = post.author != null ? post.author.coverMediumId : null;

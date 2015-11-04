@@ -987,7 +987,8 @@ angular.module('app')
     }
 
     $scope.app.goToSearch = function(searchQuery){
-      $state.go('app.search', {'q': searchQuery});
+      if(searchQuery && searchQuery.trim() != "")
+        $state.go('app.search', {'q': searchQuery});
     }
 
 }]);
