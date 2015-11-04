@@ -1,8 +1,6 @@
 package com.wordrails.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.wordrails.PermissionId;
 import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
@@ -10,31 +8,19 @@ import com.wordrails.business.*;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.converter.PostConverter;
 import com.wordrails.elasticsearch.PostEsRepository;
-import com.wordrails.elasticsearch.PostIndexed;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.security.PostAndCommentSecurityChecker;
 import com.wordrails.util.StationTermsDto;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.highlight.*;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.lucene.Lucene;
 import org.elasticsearch.common.text.Text;
-import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
@@ -349,7 +335,7 @@ public class PostsResource {
 						postView.snippet = "";
 					postView.snippet = postView.snippet + " " + fragment.toString();
 				}
-				postView.snippet = WordrailsUtil.htmlStriped(postView.snippet);
+				postView.snippet = TrixUtil.htmlStriped(postView.snippet);
 				postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
 				postsViews.add(postView);
 			} catch (Exception e) {

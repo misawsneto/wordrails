@@ -4,7 +4,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.wordrails.persistence.*;
 import com.wordrails.services.WordpressParsedContent;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
@@ -293,7 +293,7 @@ public class WordpressService {
 						post.author = author;
 
 						if (!slugs.add(post.slug)) { //if slug already exists in db
-							String hash = WordrailsUtil.generateRandomString(5, "!Aau");
+							String hash = TrixUtil.generateRandomString(5, "!Aau");
 							post.slug = post.slug + "-" + hash;
 						}
 					}

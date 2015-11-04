@@ -1,7 +1,6 @@
 package com.wordrails.services;
 
-import com.wordrails.business.BadRequestException;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.io.IOUtils;
@@ -19,7 +18,7 @@ public class FileService {
 	private AmazonCloudService amazonCloudService;
 
 	public String newFile(String url, String domain, String mime) throws FileUploadException, IOException {
-		return newFile(WordrailsUtil.getStreamFromUrl(url), domain, mime);
+		return newFile(TrixUtil.getStreamFromUrl(url), domain, mime);
 	}
 
 	public String newFile(InputStream input, String domain, String mime) throws FileUploadException, IOException {

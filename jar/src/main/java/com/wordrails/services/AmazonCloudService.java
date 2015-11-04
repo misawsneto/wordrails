@@ -8,7 +8,7 @@ import com.amazonaws.services.s3.model.*;
 import com.wordrails.business.File;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,16 +46,16 @@ public class AmazonCloudService {
 	}
 
 	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
-		byte[] bytes = WordrailsUtil.getBytes(input);
-		String hash = WordrailsUtil.getHash(bytes);
+		byte[] bytes = TrixUtil.getBytes(input);
+		String hash = TrixUtil.getHash(bytes);
 
 		return uploadPublicImage(new ByteArrayInputStream(bytes), lenght, networkDomain, hash, size, mime);
 	}
 
 	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String hash, String size, String mime) throws IOException, AmazonS3Exception {
 		if(hash == null) {
-			byte[] bytes = WordrailsUtil.getBytes(input);
-			hash = WordrailsUtil.getHash(bytes);
+			byte[] bytes = TrixUtil.getBytes(input);
+			hash = TrixUtil.getHash(bytes);
 		}
 
 		ObjectMetadata md = new ObjectMetadata();
@@ -175,7 +175,7 @@ public class AmazonCloudService {
 		Blob blob = fileContents.contents;
 		if(blob == null) {
 			if (file.url != null) {
-				is = WordrailsUtil.getStreamFromUrl(file.url);
+				is = TrixUtil.getStreamFromUrl(file.url);
 				byteSize = ((FileInputStream) is).getChannel().size();
 			} else if(file.hash != null && !file.hash.isEmpty() && exists(s3(), publicBucket, file.hash)) {
 				return file.hash;

@@ -1,7 +1,7 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -197,7 +197,7 @@ public class Post {
 
 	private void onChanges() {
 		stationId = station.id;
-		readTime = WordrailsUtil.calculateReadTime(body);
+		readTime = TrixUtil.calculateReadTime(body);
 
 		if (featuredImage != null && featuredImage.originalHash != null) {
 			imageHash = featuredImage.originalHash;

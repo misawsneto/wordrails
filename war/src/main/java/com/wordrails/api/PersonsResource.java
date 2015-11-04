@@ -17,7 +17,7 @@ import com.wordrails.security.StationSecurityChecker;
 import com.wordrails.services.CacheService;
 import com.wordrails.util.PersonCreateDto;
 import com.wordrails.util.ReadsCommentsRecommendsCount;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -353,7 +353,7 @@ public class PersonsResource {
 				String password = person.password;
 
 				if (password == null || password.trim().equals("")) {
-					password = WordrailsUtil.generateRandomString(8, "a#");
+					password = TrixUtil.generateRandomString(8, "a#");
 				}
 
 				user = new User();

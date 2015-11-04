@@ -3,7 +3,7 @@ package com.wordrails.api;
 import com.google.common.collect.HashBasedTable;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -121,7 +121,7 @@ public class WordpressResource {
 			}
 
 			if (!slugs.add(post.slug)) { //if slug already exists in db
-				String hash = WordrailsUtil.generateRandomString(5, "!Aau");
+				String hash = TrixUtil.generateRandomString(5, "!Aau");
 				post.slug = post.slug + "-" + hash;
 			}
 

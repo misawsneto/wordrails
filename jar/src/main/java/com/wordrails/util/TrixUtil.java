@@ -24,10 +24,12 @@ import java.text.Normalizer.Form;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class WordrailsUtil {
+public class TrixUtil {
 
 	private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
 	private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
+
+	public enum EntityType{POST,PERSON,PERSPECTIVE};
 
 	/**
 	 * Converts a string to a slug version by removing special characters and spaces

@@ -6,7 +6,7 @@ import com.wordrails.persistence.FileRepository;
 import com.wordrails.persistence.ImageRepository;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.FileService;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
@@ -72,7 +72,7 @@ public class ImageEventHandler {
 		try (InputStream input = originalFile.contents.getBinaryStream()) {
 			Network network = authProvider.getNetwork();
 
-			byte[] bytes = WordrailsUtil.getBytes(input);
+			byte[] bytes = TrixUtil.getBytes(input);
 			BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
 			String mime = originalFile.mime;
 			String extension = mime.split("/").length == 2 ? mime.split("/")[1] : "jpeg";

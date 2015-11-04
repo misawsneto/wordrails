@@ -1,9 +1,12 @@
 <%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="com.wordrails.util.TrixUtil"%>
 <!DOCTYPE html>
 <html lang="en" data-ng-app="app">
 <head>
   <meta charset="utf-8" />
   <title>${networkName}</title>
+  ${requestedEntityMetas}
+
   <meta name="description" content="${networkDesciption}" />
   <meta name="keywords" content="${networkKeywords}" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -37,6 +40,7 @@
   <base href="/">
 </head>
 <body ng-controller="AppCtrl" ng-cloak>
+  ${not empty requestedEntityHiddenHtml?requestedEntityHiddenHtml:'\'\''}
   <offcanvas></offcanvas>
   <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'is-logged': app.isLogged, 'mobile-screen': app.isMobile, 'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.post', 'bg-perspective': $state.includes('app.stations'), 'bg-light-grey': $state.includes('app.settings') || $state.includes('app.bookmarks') || $state.includes('app.search') || $state.includes('app.notifications') || $state.includes('app.user') || $state.includes('app.publications') || $state.includes('app.userstats') || $state.includes('app.tagspage'), 'bg-light': $state.includes('access'), 'bg-create-network': $state.includes('access.createnetwork')}" ui-view></div>
 

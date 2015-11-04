@@ -7,7 +7,7 @@ import com.wordrails.business.Network;
 import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
 import com.wordrails.services.AmazonCloudService;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -69,7 +69,7 @@ public class FilesResource {
 			return Response.noContent().build();
 		}
 
-		String hash = WordrailsUtil.getHash(item.getInputStream());
+		String hash = TrixUtil.getHash(item.getInputStream());
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		File existingFile = fileRepository.findByHashAndNetworkId(hash, network.id);
 		if(existingFile != null) {
@@ -151,7 +151,7 @@ public class FilesResource {
 				return Response.noContent().build();
 			}
 
-			String hash = WordrailsUtil.getHash(item.getInputStream());
+			String hash = TrixUtil.getHash(item.getInputStream());
 			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 			File existingFile = fileRepository.findByHashAndNetworkId(hash, network.id);
 			if(existingFile != null) {

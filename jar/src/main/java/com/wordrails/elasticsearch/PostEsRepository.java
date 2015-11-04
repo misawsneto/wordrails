@@ -3,22 +3,21 @@ package com.wordrails.elasticsearch;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordrails.business.*;
-import com.wordrails.util.WordrailsUtil;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.text.Text;
-import org.elasticsearch.search.highlight.HighlightField;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
+
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 /**
  * Created by jonas on 26/09/15.
@@ -205,7 +204,16 @@ public class PostEsRepository{
 		return postView;
 	}
 
-	public PostIndexed findBySlug(String slug) {
+	public PostIndexed findBySlug(String slug, List<Integer> readableIds) {
+
+		BoolQueryBuilder mainQuery = boolQuery();
+		mainQuery = mainQuery.must(matchQuery("slug", slug));
+
+		BoolQueryBuilder statiosQuery = boolQuery();
+		for(Integer stationId: readableIds){
+			statiosQuery.should(
+					matchQuery("stationId", String.valueOf(stationId)));
+		}
 
 		return null;
 	}

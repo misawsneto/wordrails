@@ -26,7 +26,7 @@ import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.NotificationRepository;
 import com.wordrails.persistence.PersonNetworkRegIdRepository;
 import com.wordrails.util.NotificationDto;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 
 @Component
 public class GCMService {
@@ -119,7 +119,7 @@ public class GCMService {
 		// make a copy
 		HashSet<String> devices = new HashSet<String>();
 		
-		notification.hash = WordrailsUtil.generateRandomString(10, "Aa#");
+		notification.hash = TrixUtil.generateRandomString(10, "Aa#");
 		ArrayList<Notification> notis = new ArrayList<Notification>();
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
 			Notification noti = new Notification();
@@ -154,7 +154,7 @@ public class GCMService {
 		notificationDto.stationName = notification.station != null ? notification.station.name : null;
 		notificationDto.postId = notification.post != null ? notification.post.id : null;
 		notificationDto.postTitle = notification.post != null ? notification.post.title : null;;
-		notificationDto.postSnippet = notification.post != null ? WordrailsUtil.simpleSnippet(notification.post.body, 50) : null;
+		notificationDto.postSnippet = notification.post != null ? TrixUtil.simpleSnippet(notification.post.body, 50) : null;
 		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallHash : null;
 		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumHash : null;
 
@@ -162,7 +162,7 @@ public class GCMService {
 
 		try{
 			Message message = new Message.Builder().addData("message", notificationJson).build();
-			List<List<String>> parts = WordrailsUtil.partition(new ArrayList<String>(devices), GCM_WINDOW_SIZE);
+			List<List<String>> parts = TrixUtil.partition(new ArrayList<String>(devices), GCM_WINDOW_SIZE);
 			for (List<String> part : parts) {
 				sendBulkMessages(message, part, notification.hash);
 				Thread.sleep(2000);

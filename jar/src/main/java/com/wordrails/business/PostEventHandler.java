@@ -3,7 +3,7 @@ package com.wordrails.business;
 import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.persistence.*;
 import com.wordrails.security.PostAndCommentSecurityChecker;
-import com.wordrails.util.WordrailsUtil;
+import com.wordrails.util.TrixUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
@@ -51,13 +51,13 @@ public class PostEventHandler {
 			}
 
 			if (post.slug == null || post.slug.isEmpty()) {
-				String originalSlug = WordrailsUtil.toSlug(post.title);
+				String originalSlug = TrixUtil.toSlug(post.title);
 				post.originalSlug = originalSlug;
 				try {
 					post.slug = originalSlug;
 					postRepository.save(post);
 				} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-					String hash = WordrailsUtil.generateRandomString(6, "a#");
+					String hash = TrixUtil.generateRandomString(6, "a#");
 					post.slug = originalSlug + "-" + hash;
 				}
 			} else {
