@@ -1301,6 +1301,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetAndroidAppLogoActionBarAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAndroidAppLogoLoginAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAndroidAppLogoSplashAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetAndroidAppLauncherIconMDPIAuthorized(Integer androidAppId) {
 		return false;
 	}

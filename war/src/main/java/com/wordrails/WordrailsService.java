@@ -10,6 +10,8 @@ import com.wordrails.business.*;
 import com.wordrails.persistence.*;
 import com.wordrails.services.CacheService;
 import com.wordrails.services.WordpressParsedContent;
+import org.apache.log4j.Logger;
+import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,6 +38,8 @@ import java.util.regex.Pattern;
 
 @Component
 public class WordrailsService {
+
+	Logger log = Logger.getLogger(WordrailsService.class.getName());
 
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired PostReadRepository postReadRepository;
@@ -137,7 +141,11 @@ public class WordrailsService {
 				postRead.sessionid = sessionId;
 			}
 
-			postReadRepository.save(postRead);
+			try {
+				postReadRepository.save(postRead);
+			} catch (ConstraintViolationException e) {
+				log.info("user already read this post");
+			}
 			queryPersistence.incrementReadsCount(post.id);
 		} catch (Exception ex) {
 			ex.printStackTrace();
