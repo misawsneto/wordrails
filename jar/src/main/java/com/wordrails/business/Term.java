@@ -113,4 +113,11 @@ public class Term implements Serializable {
 			return id.hashCode() * 31;
 		return super.hashCode();
 	}
+
+	@Override
+	public String toString() {
+		return "Term{" +
+				"name='" + name + '\'' +
+				'}';
+	}
 }

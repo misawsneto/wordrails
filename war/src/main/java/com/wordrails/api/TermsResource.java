@@ -81,7 +81,7 @@ public class TermsResource {
 
 		List<Term> roots =  wordrailsService.createTermTree(allTerms);
 
-		String json = mapper.writeValueAsString(roots);
+		String json = simpleMapper.writeValueAsString(roots);
 		return Response.status(Status.OK).entity(json).build();
 	}
 
