@@ -1,12 +1,11 @@
 package com.wordrails.business;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-public class AndroidApp implements Serializable {
+public class AndroidIcon implements Serializable {
 
 	public static final Integer MDPI_SIZE = 48;
 	public static final Integer HDPI_SIZE = 72;
@@ -19,22 +18,18 @@ public class AndroidApp implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer id;
 
-	public String projectName;
-	public String appName;
-	public String keyAlias;
-	public String packageSuffix;
-	public String host;
-
-	@Lob
-	public String shortDescription;
-
-	@Lob
-	public String fullDescription;
-	public String videoUrl;
-
-	public String apkUrl;
-
 	@NotNull
 	@ManyToOne(cascade = CascadeType.REMOVE)
 	public File icon;
+
+	@Transient
+	public File mdpi;
+	@Transient
+	public File hdpi;
+	@Transient
+	public File xhdpi;
+	@Transient
+	public File xxhdpi;
+	@Transient
+	public File xxxhdpi;
 }

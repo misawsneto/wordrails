@@ -1,9 +1,9 @@
 package com.wordrails.business;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.persistence.AndroidIconRepository;
 import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
-import com.wordrails.persistence.ImageRepository;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.util.TrixUtil;
 import net.coobird.thumbnailator.Thumbnails;
@@ -20,11 +20,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.List;
 
-@RepositoryEventHandler(Image.class)
+@RepositoryEventHandler(AndroidIcon.class)
 @Component
-public class ImageEventHandler {
+public class AndroidIconEventHandler {
 
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
@@ -33,7 +32,7 @@ public class ImageEventHandler {
 	@Autowired
 	private FileRepository fileRepository;
 	@Autowired
-	private ImageRepository imageRepository;
+	private AndroidIconRepository androidIconRepository;
 	@Autowired
 	private FileContentsRepository fileContentsRepository;
 
@@ -43,31 +42,20 @@ public class ImageEventHandler {
 	private String extension;
 
 	@HandleBeforeCreate
-	public void handleBeforeCreate(Image image) throws IOException, SQLException, FileUploadException {
-		if (image.type == null || image.type.trim().isEmpty())
-			image.type = Image.Type.POST.toString();
-
-		if (!Image.containsType(image.type))
-			throw new BadRequestException("Invalid Image Type:" + image.type);
-
-		if (image.original == null) {
-			throw new NullPointerException("original icon can't be null");
+	public void handleBeforeCreate(AndroidIcon icon) throws IOException, SQLException, FileUploadException {
+		if (icon.icon == null) {
+			throw new NullPointerException("icon icon can't be null");
 		}
 
-		FileContents originalFile = fileContentsRepository.findOne(image.original.id);
+		FileContents originalFile = fileContentsRepository.findOne(icon.icon.id);
 		if (originalFile.type.equals(File.EXTERNAL)) { //if is external, is already uploaded to amazon, so the file was uploaded before
-			List<Image> existingImages = imageRepository.findByFileId(originalFile.id);
-			Image existingImage = existingImages.get(0);
-			image.small = existingImage.small;
-			image.medium = existingImage.medium;
-			image.large = existingImage.large;
-
-			image.smallHash = existingImage.smallHash;
-			image.mediumHash = existingImage.mediumHash;
-			image.largeHash = existingImage.largeHash;
-			image.originalHash = existingImage.originalHash;
-
-			image.vertical = existingImage.vertical;
+//			List<AndroidIcon> existingImages = androidIconRepository.findByFile(originalFile.id);
+//			AndroidIcon existingIcon = existingImages.get(0);
+//			icon.mdpi = existingIcon.mdpi;
+//			icon.hdpi = existingIcon.hdpi;
+//			icon.xhdpi = existingIcon.xhdpi;
+//			icon.xxhdpi = existingIcon.xxhdpi;
+//			icon.xxxhdpi = existingIcon.xxxhdpi;
 			return;
 		}
 
@@ -85,7 +73,7 @@ public class ImageEventHandler {
 				int maxSize = Math.max(bufferedImage.getHeight(), bufferedImage.getWidth());
 
 				String originalHash = amazonCloudService.uploadPublicImage(tmpFile, originalFile.size,
-						network.subdomain, originalFile.hash, "original", extension);
+						network.subdomain, originalFile.hash, "icon", extension);
 
 				originalFile.contents = null;
 				originalFile.type = File.EXTERNAL;
@@ -95,41 +83,41 @@ public class ImageEventHandler {
 				}
 				fileContentsRepository.save(originalFile);
 
-				File small = uploadNewResizedImage(150, "small");
+				File mdpi = uploadNewResizedImage(AndroidIcon.MDPI_SIZE, "mdpi");
 
-				File medium;
-				if (maxSize < 250) {
-					medium = image.original;
+				File hdpi;
+				if (maxSize < AndroidIcon.HDPI_SIZE) {
+					hdpi = icon.icon;
 				} else {
-					medium = uploadNewResizedImage(300, "medium");
+					hdpi = uploadNewResizedImage(AndroidIcon.HDPI_SIZE, "hdpi");
 				}
 
-				File large;
-				if (maxSize < 800) {
-					large = image.original;
+				File xhdpi;
+				if (maxSize < AndroidIcon.HDPI_SIZE) {
+					xhdpi = icon.icon;
 				} else {
-					int largeSize = 1024;
-					if (maxSize >= 1200 && maxSize < 1500) {
-						largeSize = 1400;
-					} else if (maxSize >= 1500) {
-						largeSize = 1600;
-					}
-
-					large = uploadNewResizedImage(largeSize, "large");
+					xhdpi = uploadNewResizedImage(AndroidIcon.XHDPI_SIZE, "xhdpi");
 				}
 
-				image.small = small;
-				image.medium = medium;
-				image.large = large;
+				File xxhdpi;
+				if (maxSize < AndroidIcon.HDPI_SIZE) {
+					xxhdpi = icon.icon;
+				} else {
+					xxhdpi = uploadNewResizedImage(AndroidIcon.XXHDPI_SIZE, "xxhdpi");
+				}
 
-				image.smallHash = small.hash;
-				image.mediumHash = medium.hash;
-				image.largeHash = large.hash;
-				image.originalHash = originalHash;
+				File xxxhdpi;
+				if (maxSize < AndroidIcon.HDPI_SIZE) {
+					xxxhdpi = icon.icon;
+				} else {
+					xxxhdpi = uploadNewResizedImage(AndroidIcon.XXXHDPI_SIZE, "xxxhdpi");
+				}
 
-				image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
-
-
+				icon.mdpi = mdpi;
+				icon.hdpi = hdpi;
+				icon.xhdpi = xhdpi;
+				icon.xxhdpi = xxhdpi;
+				icon.xxxhdpi = xxxhdpi;
 			} finally {
 				if(tmpFile.exists()) {
 					tmpFile.delete();

@@ -11,14 +11,13 @@ import org.jsoup.select.Elements;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.*;
@@ -75,6 +74,15 @@ public class TrixUtil {
 		URL fullURL = new URL(url);
 		HttpURLConnection connection = (HttpURLConnection) fullURL.openConnection();
 		return connection.getInputStream();
+	}
+
+	public static File downloadFile(File file, String url) throws IOException {
+		URL website = new URL(url);
+		ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+		FileOutputStream fos = new FileOutputStream(file);
+		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+
+		return file;
 	}
 
 	public static String generateRandomString(int length, String chars) {

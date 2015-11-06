@@ -2,21 +2,27 @@ package com.wordrails.builder;
 
 import com.github.slugify.Slugify;
 import com.google.common.base.Charsets;
-import com.wordrails.business.*;
+import com.wordrails.business.AndroidApp;
 import com.wordrails.persistence.AndroidAppRepository;
 import com.wordrails.services.AmazonCloudService;
+import com.wordrails.util.TrixUtil;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.apache.tika.Tika;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Collection;
 
 @Component
@@ -44,7 +50,7 @@ public class AndroidBuilder {
 
 
 	@Async
-	public void run(String configPath, AndroidApp androidApp, String networkDomain) throws Exception {
+	public void run(String configPath, AndroidApp androidApp, String networkSubdomain) throws Exception {
 		String separator = "/";
 		if (configPath.endsWith("/")) {
 			separator = "";
@@ -65,19 +71,19 @@ public class AndroidBuilder {
 		File apk = new File(projectDir, "/app/build/outputs/apk/app-production-release.apk");
 		String packageName = ROOT_PACKAGE + "." + androidApp.packageSuffix;
 
-		if (pullResult.getMergeResult().getMergeStatus() != MergeResult.MergeStatus.ALREADY_UP_TO_DATE
-				&& !apk.exists()) {
-			Collection<File> filesToRefactor = createProject(androidApp, projectDir, templateProjectDir, resourcesDir, packageName);
+//		if (pullResult.getMergeResult().getMergeStatus() != MergeResult.MergeStatus.ALREADY_UP_TO_DATE
+//				&& !apk.exists()) {
+			Collection<File> filesToRefactor = createProject(androidApp, projectDir, templateProjectDir, resourcesDir, packageName, networkSubdomain);
 			for (File file : filesToRefactor) {
 				refactorFile(file, androidApp, packageName);
 			}
 
 			addGooglePlayInfo(projectDir, androidApp, buildDir.getAbsolutePath());
 			buildAndPublish(false, projectDir);
-		}
+//		}
 
-		String hash = uploadApk(apk, networkDomain);
-		String fileUrl = amazonCloudService.getPublicApkURL(networkDomain, hash);
+		String hash = uploadApk(apk, networkSubdomain);
+		String fileUrl = amazonCloudService.getPublicApkURL(networkSubdomain, hash);
 
 		androidApp.apkUrl = fileUrl;
 		androidAppRepository.save(androidApp);
@@ -91,7 +97,7 @@ public class AndroidBuilder {
 		return amazonCloudService.uploadAPK(apk, apk.length(), domain, "application/vnd.android.package-archive");
 	}
 
-	private Collection<File> createProject(AndroidApp androidApp, File projectDir, File templateProjectDir, File resourcesDir, String packageName) throws Exception {
+	private Collection<File> createProject(AndroidApp androidApp, File projectDir, File templateProjectDir, File resourcesDir, String packageName, String networkSubdomain) throws Exception {
 		log.debug("Creating App \"" + androidApp.appName + "\"...");
 
 		if (projectDir.exists()) {
@@ -113,29 +119,33 @@ public class AndroidBuilder {
 
 		File drawableDir = new File(projectDir, "/app/src/main/res");
 
-		if(androidApp.logoActionBar != null) {
-			downloadIconToDir("logo_action_bar.png", new File(drawableDir, "drawable"), androidApp.logoActionBar.url);
-		}
-		if(androidApp.logoLogin != null) {
-			downloadIconToDir("logo_login.png", new File(drawableDir, "drawable"), androidApp.logoLogin.url);
-		}
-		if(androidApp.logoSplash != null) {
-			downloadIconToDir("logo_splash.png", new File(drawableDir, "drawable"), androidApp.logoSplash.url);
-		}
-		if(androidApp.launcherIconMDPI != null) {
-			downloadIconToDir("ic_launcher.png", new File(drawableDir, "drawable-mdpi"), androidApp.launcherIconMDPI.url);
-		}
-		if(androidApp.launcherIconHDPI != null) {
-			downloadIconToDir("ic_launcher.png", new File(drawableDir, "drawable-hdpi"), androidApp.launcherIconHDPI.url);
-		}
-		if(androidApp.launcherIconXHDPI != null) {
-			downloadIconToDir("ic_launcher.png", new File(drawableDir, "drawable-xhdpi"), androidApp.launcherIconXHDPI.url);
-		}
-		if(androidApp.launcherIconXXHDPI != null) {
-			downloadIconToDir("ic_launcher.png", new File(drawableDir, "drawable-xxhdpi"), androidApp.launcherIconXXHDPI.url);
-		}
-		if(androidApp.launcherIconXXXHDPI != null) {
-			downloadIconToDir("ic_launcher.png", new File(drawableDir, "drawable-xxxhdpi"), androidApp.launcherIconXXXHDPI.url);
+		if(androidApp.icon != null) {
+			String originalUrl = amazonCloudService.getPublicImageURL(networkSubdomain, androidApp.icon.hash);
+			File originalIcon = TrixUtil.downloadFile(new File(drawableDir, "ic_launcher.png"), originalUrl);
+
+			BufferedImage bufferedImage = ImageIO.read(originalIcon);
+			String mime = new Tika().detect(originalIcon);
+
+			File mdpi = new File(drawableDir, "drawable-mdpi/ic_launcher.png");
+			if(mdpi.createNewFile()) {
+				createResizableImage(mdpi, bufferedImage, AndroidApp.MDPI_SIZE, mime);
+			}
+			File hdpi = new File(drawableDir, "drawable-hdpi/ic_launcher.png");
+			if(hdpi.createNewFile()) {
+				createResizableImage(hdpi, bufferedImage, AndroidApp.HDPI_SIZE, mime);
+			}
+			File xhdpi = new File(drawableDir, "drawable-xhdpi/ic_launcher.png");
+			if(xhdpi.createNewFile()) {
+				createResizableImage(xhdpi, bufferedImage, AndroidApp.XHDPI_SIZE, mime);
+			}
+			File xxhdpi = new File(drawableDir, "drawable-xxhdpi/ic_launcher.png");
+			if(xxhdpi.createNewFile()) {
+				createResizableImage(xxhdpi, bufferedImage, AndroidApp.XXHDPI_SIZE, mime);
+			}
+			File xxxhdpi = new File(drawableDir, "drawable-xxxhdpi/ic_launcher.png");
+			if(xxxhdpi.createNewFile()) {
+				createResizableImage(xxxhdpi, bufferedImage, AndroidApp.XXXHDPI_SIZE, mime);
+			}
 		}
 
 		FileUtils.copyDirectory(resourcesDir, new File(projectDir + "/app/src/main/res"));
@@ -145,8 +155,11 @@ public class AndroidBuilder {
 		return FileUtils.listFiles(new File(projectDir.getAbsolutePath() + "/app"), new String[]{"java", "xml", "gradle", "properties", "iml"}, true);
 	}
 
-	private void downloadIconToDir(String fileName, File dir, String url) {
+	private FileInputStream createResizableImage(File file, BufferedImage image, Integer size, String mime) throws IOException {
+		BufferedImage bi = Thumbnails.of(image).size(size, size).outputFormat(mime).outputQuality(1).asBufferedImage();
+		ImageIO.write(bi, mime, file);
 
+		return new FileInputStream(file);
 	}
 
 	private void addGooglePlayInfo(File projectDir, AndroidApp androidApp, String buildPath) throws Exception {

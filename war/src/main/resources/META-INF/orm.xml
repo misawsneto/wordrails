@@ -397,6 +397,27 @@
 		</query>
 	</named-query>
 
+	<!--<named-query name="AndroidIcon.findByFile">-->
+		<!--<query>-->
+			<!--select-->
+			<!--androidicon-->
+			<!--from-->
+			<!--AndroidIcon androidicon-->
+			<!--join androidicon.original original-->
+			<!--join androidicon.mdpi mdpi-->
+			<!--join androidicon.hdpi hdpi-->
+			<!--join androidicon.hdpi xhdpi-->
+			<!--join androidicon.hdpi xxhdpi-->
+			<!--join androidicon.hdpi xxxhdpi-->
+			<!--where-->
+			<!--mdpi.id = :fileId OR-->
+			<!--hdpi.id = :fileId OR-->
+			<!--xhdpi.id = :fileId OR-->
+			<!--xxhdpi.id = :fileId OR-->
+			<!--xxxhdpi.id = :fileId OR-->
+		<!--</query>-->
+	<!--</named-query>-->
+
 	<named-query name="Image.findByFileId">
 		<query>
 			select
