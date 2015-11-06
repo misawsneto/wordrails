@@ -142,7 +142,7 @@ public class ImageEventHandler {
 	}
 
 	private File uploadNewResizedImage(Integer resizePixels, String sizeTag) throws IOException {
-		FileInputStream stream = resizeImage(bufferedImage, resizePixels, extension);
+		FileInputStream stream = resizeImage(bufferedImage, resizePixels);
 		long size = stream.getChannel().size();
 		String hash = amazonCloudService.uploadPublicImage(stream, size, network.subdomain, sizeTag, extension);
 		File file = new File();
@@ -157,11 +157,11 @@ public class ImageEventHandler {
 		return file;
 	}
 
-	private FileInputStream resizeImage(BufferedImage image, Integer size, String mime) throws IOException {
+	private FileInputStream resizeImage(BufferedImage image, Integer size) throws IOException {
 		java.io.File file = java.io.File.createTempFile("trix", "");
 
-		BufferedImage bi = Thumbnails.of(image).size(size, size).outputFormat(mime).outputQuality(1).asBufferedImage();
-		ImageIO.write(bi, mime, file);
+		BufferedImage bi = Thumbnails.of(image).size(size, size).outputFormat(extension).outputQuality(1).asBufferedImage();
+		ImageIO.write(bi, extension, file);
 
 		return new FileInputStream(file);
 	}

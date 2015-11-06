@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.tika.Tika;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,8 +72,8 @@ public class AndroidBuilder {
 		File apk = new File(projectDir, "/app/build/outputs/apk/app-production-release.apk");
 		String packageName = ROOT_PACKAGE + "." + androidApp.packageSuffix;
 
-//		if (pullResult.getMergeResult().getMergeStatus() != MergeResult.MergeStatus.ALREADY_UP_TO_DATE
-//				&& !apk.exists()) {
+		if (pullResult.getMergeResult().getMergeStatus() != MergeResult.MergeStatus.ALREADY_UP_TO_DATE
+				&& !apk.exists()) {
 			Collection<File> filesToRefactor = createProject(androidApp, projectDir, templateProjectDir, resourcesDir, packageName, networkSubdomain);
 			for (File file : filesToRefactor) {
 				refactorFile(file, androidApp, packageName);
@@ -80,9 +81,13 @@ public class AndroidBuilder {
 
 			addGooglePlayInfo(projectDir, androidApp, buildDir.getAbsolutePath());
 			buildAndPublish(false, projectDir);
-//		}
+		}
 
-		String hash = uploadApk(apk, networkSubdomain);
+		if(!apk.exists()) {
+			throw new Exception("Build failed!");
+		}
+
+		String hash = amazonCloudService.uploadAPK(apk, apk.length(), networkSubdomain, "application/vnd.android.package-archive");
 		String fileUrl = amazonCloudService.getPublicApkURL(networkSubdomain, hash);
 
 		androidApp.apkUrl = fileUrl;
@@ -91,10 +96,6 @@ public class AndroidBuilder {
 		log.debug(fileUrl);
 
 		log.debug("Done!");
-	}
-
-	private String uploadApk(File apk, String domain) throws IOException {
-		return amazonCloudService.uploadAPK(apk, apk.length(), domain, "application/vnd.android.package-archive");
 	}
 
 	private Collection<File> createProject(AndroidApp androidApp, File projectDir, File templateProjectDir, File resourcesDir, String packageName, String networkSubdomain) throws Exception {
@@ -125,26 +126,27 @@ public class AndroidBuilder {
 
 			BufferedImage bufferedImage = ImageIO.read(originalIcon);
 			String mime = new Tika().detect(originalIcon);
+			String extension = mime.split("/").length == 2 ? mime.split("/")[1] : "jpeg";
 
 			File mdpi = new File(drawableDir, "drawable-mdpi/ic_launcher.png");
 			if(mdpi.createNewFile()) {
-				createResizableImage(mdpi, bufferedImage, AndroidApp.MDPI_SIZE, mime);
+				createResizableImage(mdpi, bufferedImage, AndroidApp.MDPI_SIZE, extension);
 			}
 			File hdpi = new File(drawableDir, "drawable-hdpi/ic_launcher.png");
 			if(hdpi.createNewFile()) {
-				createResizableImage(hdpi, bufferedImage, AndroidApp.HDPI_SIZE, mime);
+				createResizableImage(hdpi, bufferedImage, AndroidApp.HDPI_SIZE, extension);
 			}
 			File xhdpi = new File(drawableDir, "drawable-xhdpi/ic_launcher.png");
 			if(xhdpi.createNewFile()) {
-				createResizableImage(xhdpi, bufferedImage, AndroidApp.XHDPI_SIZE, mime);
+				createResizableImage(xhdpi, bufferedImage, AndroidApp.XHDPI_SIZE, extension);
 			}
 			File xxhdpi = new File(drawableDir, "drawable-xxhdpi/ic_launcher.png");
 			if(xxhdpi.createNewFile()) {
-				createResizableImage(xxhdpi, bufferedImage, AndroidApp.XXHDPI_SIZE, mime);
+				createResizableImage(xxhdpi, bufferedImage, AndroidApp.XXHDPI_SIZE, extension);
 			}
 			File xxxhdpi = new File(drawableDir, "drawable-xxxhdpi/ic_launcher.png");
 			if(xxxhdpi.createNewFile()) {
-				createResizableImage(xxxhdpi, bufferedImage, AndroidApp.XXXHDPI_SIZE, mime);
+				createResizableImage(xxxhdpi, bufferedImage, AndroidApp.XXXHDPI_SIZE, extension);
 			}
 		}
 
@@ -155,9 +157,9 @@ public class AndroidBuilder {
 		return FileUtils.listFiles(new File(projectDir.getAbsolutePath() + "/app"), new String[]{"java", "xml", "gradle", "properties", "iml"}, true);
 	}
 
-	private FileInputStream createResizableImage(File file, BufferedImage image, Integer size, String mime) throws IOException {
-		BufferedImage bi = Thumbnails.of(image).size(size, size).outputFormat(mime).outputQuality(1).asBufferedImage();
-		ImageIO.write(bi, mime, file);
+	private FileInputStream createResizableImage(File file, BufferedImage image, Integer size, String extension) throws IOException {
+		BufferedImage bi = Thumbnails.of(image).size(size, size).outputFormat(extension).outputQuality(1).asBufferedImage();
+		ImageIO.write(bi, extension, file);
 
 		return new FileInputStream(file);
 	}

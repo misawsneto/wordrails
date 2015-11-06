@@ -26,7 +26,7 @@ public class StreamGobbler implements Runnable {
 			String line;
 			while ((line = br.readLine()) != null) {
 				if (showLog) {
-					log.trace(line);
+					log.debug(line);
 				}
 			}
 		} catch (IOException ioe) {
