@@ -330,11 +330,15 @@ public class PostsResource {
 				PostView postView = objectMapper.readValue(objectMapper.writeValueAsString(postEsRepository.convertToView(hit.getSourceAsString())), PostView.class);
 				Map<String, HighlightField> highlights = hit.getHighlightFields();
 				if(highlights != null && highlights.get("body") != null)
-				for (Text fragment:  highlights.get("body").getFragments()) {
-					if(postView.snippet == null)
-						postView.snippet = "";
-					postView.snippet = postView.snippet + " " + fragment.toString();
+					for (Text fragment:  highlights.get("body").getFragments()) {
+						if(postView.snippet == null)
+							postView.snippet = "";
+						postView.snippet = postView.snippet + " " + fragment.toString();
+					}
+				else{
+					postView.snippet = TrixUtil.simpleSnippet(postView.body, 100);
 				}
+
 				postView.snippet = TrixUtil.htmlStriped(postView.snippet);
 				postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
 				postsViews.add(postView);
