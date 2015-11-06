@@ -142,7 +142,6 @@ public class AmazonCloudService {
 		long partSize = 6 * 1024 * 1024; // Set part size to 7 MB.
 
 
-
 		try {
 			// Step 2: Upload parts.
 			long filePosition = 0;

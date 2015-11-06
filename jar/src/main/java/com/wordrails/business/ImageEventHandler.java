@@ -1,5 +1,6 @@
 package com.wordrails.business;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
@@ -9,6 +10,7 @@ import com.wordrails.util.TrixUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -25,6 +27,8 @@ import java.util.List;
 @RepositoryEventHandler(Image.class)
 @Component
 public class ImageEventHandler {
+
+	Logger log = Logger.getLogger(ImageEventHandler.class.getName());
 
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
@@ -46,9 +50,6 @@ public class ImageEventHandler {
 	public void handleBeforeCreate(Image image) throws IOException, SQLException, FileUploadException {
 		if (image.type == null || image.type.trim().isEmpty())
 			image.type = Image.Type.POST.toString();
-
-		if (!Image.containsType(image.type))
-			throw new BadRequestException("Invalid Image Type:" + image.type);
 
 		if (image.original == null) {
 			throw new NullPointerException("original icon can't be null");
@@ -84,17 +85,6 @@ public class ImageEventHandler {
 
 				int maxSize = Math.max(bufferedImage.getHeight(), bufferedImage.getWidth());
 
-				String originalHash = amazonCloudService.uploadPublicImage(tmpFile, originalFile.size,
-						network.subdomain, originalFile.hash, "original", extension);
-
-				originalFile.contents = null;
-				originalFile.type = File.EXTERNAL;
-				originalFile.hash = originalHash;
-				if (originalFile.networkId == null || originalFile.networkId == 0) {
-					originalFile.networkId = network.id;
-				}
-				fileContentsRepository.save(originalFile);
-
 				File small = uploadNewResizedImage(150, "small");
 
 				File medium;
@@ -118,6 +108,17 @@ public class ImageEventHandler {
 					large = uploadNewResizedImage(largeSize, "large");
 				}
 
+				String originalHash = amazonCloudService.uploadPublicImage(tmpFile, originalFile.size,
+						network.subdomain, originalFile.hash, "original", extension);
+
+				originalFile.contents = null;
+				originalFile.type = File.EXTERNAL;
+				originalFile.hash = originalHash;
+				if (originalFile.networkId == null || originalFile.networkId == 0) {
+					originalFile.networkId = network.id;
+				}
+				fileContentsRepository.save(originalFile);
+
 				image.small = small;
 				image.medium = medium;
 				image.large = large;
@@ -129,7 +130,9 @@ public class ImageEventHandler {
 
 				image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
 
-
+			} catch(AmazonS3Exception e) {
+				log.error("Error uploading image to s3", e);
+				throw e;
 			} finally {
 				if(tmpFile.exists()) {
 					tmpFile.delete();
@@ -147,6 +150,7 @@ public class ImageEventHandler {
 		file.type = File.EXTERNAL;
 		file.hash = hash;
 		file.size = size;
+		file.directory = "images";
 		file.networkId = network.id;
 		fileRepository.save(file);
 

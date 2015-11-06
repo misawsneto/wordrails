@@ -218,7 +218,7 @@ public class FilesResource {
 		FileContents file = null;
 		if (hash == null || hash.isEmpty()) {
 			file = fileContentsRepository.findOne(id);
-			if (file.contents == null) {
+			if (file == null || file.contents == null) {
 				return Response.status(Status.NO_CONTENT).build();
 			}
 		}
