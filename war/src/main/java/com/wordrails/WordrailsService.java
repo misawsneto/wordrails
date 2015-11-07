@@ -383,6 +383,10 @@ public class WordrailsService {
 		for (Term term : allTerms) {
 			if(term.parent != null && parent.id.equals(term.parent.id)){
 				parent.children.add(term);
+				term.parent = null;
+				term.cells = null;
+				term.termPerspectives = null;
+				term.posts = null;
 			}
 		}
 

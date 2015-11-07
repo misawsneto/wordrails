@@ -201,6 +201,9 @@ public class PerspectiveResource {
 
 				Row row = rowRepository.findByPerspectiveAndTerm(termPerspective, term);
 
+				if(row == null)
+					return rowView;
+
 				List<Cell> cells = fillPostsNotPositionedInRow(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				rowView = new RowView();
 				rowView.id = row.id;
