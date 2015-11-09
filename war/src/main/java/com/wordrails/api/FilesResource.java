@@ -72,7 +72,7 @@ public class FilesResource {
 		String hash = TrixUtil.getHash(item.getInputStream());
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		File existingFile = fileRepository.findByHashAndNetworkId(hash, network.id);
-		if(existingFile != null) {
+		if (existingFile != null) {
 			return getResponseFromId(existingFile.id);
 		}
 
@@ -130,14 +130,6 @@ public class FilesResource {
 				"\"id\":" + id + "}").build();
 	}
 
-//	@POST
-//	@Path("/upload/video")
-//	@Consumes(MediaType.MULTIPART_FORM_DATA)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response uploadVideo(@Context HttpServletRequest request) throws FileUploadException, IOException {
-//
-//	}
-
 
 	@POST
 	@Path("/contents/simple")
@@ -147,27 +139,40 @@ public class FilesResource {
 		try {
 			FileItem item = getFileFromRequest(request);
 
+			if (!validate(item)) {
+				return Response.status(Status.BAD_REQUEST).build();
+			}
+
 			if (item == null) {
 				return Response.noContent().build();
 			}
 
+			Session session = (Session) manager.getDelegate();
+			LobCreator creator = Hibernate.getLobCreator(session);
+
+			FileContents file;
 			String hash = TrixUtil.getHash(item.getInputStream());
 			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-			File existingFile = fileRepository.findByHashAndNetworkId(hash, network.id);
-			if(existingFile != null) {
-				return getResponseFromId(existingFile.id);
-			}
+			FileContents existingFile = fileContentsRepository.findByHashAndNetworkId(hash, network.id);
+			if (existingFile != null) {
+				if (existingFile.type.equals(File.EXTERNAL)) {
+					if (!amazonCloudService.exists(network.subdomain, existingFile.hash)) {
+						existingFile.size = item.getSize();
+						existingFile.type = File.INTERNAL;
+						existingFile.contents = creator.createBlob(item.getInputStream(), item.getSize());
+						fileContentsRepository.save(existingFile);
+					}
+				}
 
-			if (validate(item)) {
+				return getResponseFromId(existingFile.id);
+			} else {
 				String subdomain = network.subdomain;
 				if (subdomain == null || subdomain.isEmpty()) {
 					return Response.serverError().entity("subdomain of network is null").build();
 				}
 
-				Session session = (Session) manager.getDelegate();
-				LobCreator creator = Hibernate.getLobCreator(session);
 
-				FileContents file = new FileContents();
+				file = new FileContents();
 				file.hash = hash;
 				file.type = File.INTERNAL;
 				file.directory = File.DIR_IMAGES;
@@ -178,12 +183,11 @@ public class FilesResource {
 				fileContentsRepository.save(file);
 
 				return getResponseFromId(file.id);
+
 			}
 		} catch (FileUploadException ue) {
 			return Response.status(Status.REQUEST_ENTITY_TOO_LARGE).entity("{\"message\":\"TrixFile's maximum size is 6MB\", maxMb:6}").build();
 		}
-
-		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	private boolean validate(FileItem item) throws FileUploadException {
@@ -209,7 +213,7 @@ public class FilesResource {
 	@Cache(isPrivate = false, maxAge = 31536000)
 	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
 		String subdomain = getSubdomainFromHost(request.getHeader("Host"));
-		if(subdomain == null || subdomain.isEmpty()){
+		if (subdomain == null || subdomain.isEmpty()) {
 			return Response.serverError().entity("subdomain of network is null").build();
 		}
 
@@ -236,7 +240,7 @@ public class FilesResource {
 		if (hash != null && !hash.isEmpty()) {
 			response.sendRedirect(amazonCloudService.getPublicImageURL(subdomain, hash));
 			return Response.ok().build();
-		} else if(file != null && file.contents != null) {
+		} else if (file != null && file.contents != null) {
 			return Response.ok(file.contents.getBinaryStream(), file.mime).build();
 		}
 

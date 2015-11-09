@@ -55,8 +55,10 @@ public class ImageEventHandler {
 			throw new NullPointerException("original icon can't be null");
 		}
 
+		network = authProvider.getNetwork();
 		FileContents originalFile = fileContentsRepository.findOne(image.original.id);
-		if (originalFile.type.equals(File.EXTERNAL)) { //if is external, is already uploaded to amazon, so the file was uploaded before
+		//if is external, is already uploaded to amazon, so the file was uploaded before
+		if (originalFile.type.equals(File.EXTERNAL) && amazonCloudService.exists(network.subdomain, originalFile.hash)) {
 			List<Image> existingImages = imageRepository.findByFileId(originalFile.id);
 			Image existingImage = existingImages.get(0);
 			image.small = existingImage.small;
@@ -74,7 +76,6 @@ public class ImageEventHandler {
 
 		//if it's running here, this is a new image and needs to upload all sizes
 		try (InputStream input = originalFile.contents.getBinaryStream()) {
-			network = authProvider.getNetwork();
 
 			java.io.File tmpFile = java.io.File.createTempFile(TrixUtil.generateRandomString(5, "aA#"), ".tmp");
 			try {

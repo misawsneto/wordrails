@@ -58,6 +58,7 @@
 	<bean id="corsCustomFilter" class="com.wordrails.api.CORSCustomFilter"/>
 	<bean id="PathEntityFilter" class="com.wordrails.api.PathEntityFilter"/>
 	<bean id="cacheService" class="com.wordrails.services.CacheService" init-method="init"/>
+	<bean id="amazonCloudService" class="com.wordrails.services.AmazonCloudService" init-method="init"/>
 	<bean id="wordrailsService" class="com.wordrails.WordrailsService" init-method="init"/>
 	<bean id="simpleMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
 

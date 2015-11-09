@@ -2,7 +2,6 @@ package com.wordrails.services;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.wordrails.business.*;
@@ -14,7 +13,7 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service
+@Component
 public class AmazonCloudService {
 
 	Logger log = Logger.getLogger(AmazonCloudService.class.getName());
@@ -45,6 +44,13 @@ public class AmazonCloudService {
 	String publicBucket;
 	@Value("${amazon.privateBucket}")
 	String privateBucket;
+
+	private AmazonS3Client s3Client;
+
+	public void init() {
+		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, accessSecretKey);
+		s3Client = new AmazonS3Client(awsCreds);
+	}
 
 	public String getPublicImageURL(String networkDomain, String fileName) throws IOException {
 		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
@@ -83,14 +89,14 @@ public class AmazonCloudService {
 		return hash;
 	}
 
-	public String uploadPublicImage(java.io.File file, Long lenght, String networkDomain, String hash, String size, String mime) throws IOException, AmazonS3Exception {
+	public String uploadPublicImage(java.io.File file, Long lenght, String networkDomain, String hash, String sizeTag, String mime) throws IOException, AmazonS3Exception {
 		if(hash == null) {
 			hash = TrixUtil.getHash(new FileInputStream(file));
 		}
 
 		ObjectMetadata md = new ObjectMetadata();
 		md.setContentType(mime);
-		md.addUserMetadata("size", size);
+		md.addUserMetadata("size", sizeTag);
 
 		String path = networkDomain + "/images/" + hash;
 		uploadFile(file, lenght, publicBucket, path, md);
@@ -98,7 +104,7 @@ public class AmazonCloudService {
 		return hash;
 	}
 
-	public boolean exists(AmazonS3 s3Client, String bucket, String key) {
+	public boolean exists(String bucket, String key) {
 		try {
 			s3Client.getObject(bucket, key);
 		} catch(AmazonServiceException e) {
@@ -107,7 +113,7 @@ public class AmazonCloudService {
 		return true;
 	}
 
-	public S3Object get(AmazonS3 s3Client, String bucket, String key) {
+	public S3Object get(String bucket, String key) {
 		try {
 			return s3Client.getObject(bucket, key);
 		} catch(AmazonServiceException e) {
@@ -115,17 +121,10 @@ public class AmazonCloudService {
 		}
 	}
 
-	private AmazonS3 s3() {
-		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, accessSecretKey);
-		return new AmazonS3Client(awsCreds);
-	}
-
 	private void uploadFile(java.io.File file, Long lenght, String bucketName, String keyName, ObjectMetadata metadata) throws IOException, AmazonS3Exception {
 		log.debug("uploading file of lenght " + lenght);
 
-		AmazonS3 s3Client = s3();
-
-		if(exists(s3Client, bucketName, keyName)) {
+		if(exists(bucketName, keyName)) {
 			return;
 		}
 
@@ -208,7 +207,7 @@ public class AmazonCloudService {
 			if (file.url != null) {
 				is = TrixUtil.getStreamFromUrl(file.url);
 				byteSize = ((FileInputStream) is).getChannel().size();
-			} else if(file.hash != null && !file.hash.isEmpty() && exists(s3(), publicBucket, file.hash)) {
+			} else if(file.hash != null && !file.hash.isEmpty() && exists(publicBucket, file.hash)) {
 				return file.hash;
 			} else {
 				return null;

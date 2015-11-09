@@ -1,21 +1,15 @@
 package com.wordrails.security;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.business.*;
+import com.wordrails.persistence.NetworkRepository;
+import com.wordrails.persistence.NetworkRolesRepository;
 import com.wordrails.persistence.PersonRepository;
+import com.wordrails.persistence.StationRolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.wordrails.business.Network;
-import com.wordrails.business.NetworkRole;
-import com.wordrails.business.Person;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationRole;
-import com.wordrails.persistence.NetworkRepository;
-import com.wordrails.persistence.NetworkRolesRepository;
-import com.wordrails.persistence.StationRolesRepository;
+import java.util.List;
 
 @Component
 public class StationSecurityChecker {
