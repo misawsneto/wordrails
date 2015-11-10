@@ -1291,21 +1291,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetAndroidAppsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetAndroidAppAuthorized(Integer androidAppId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetAndroidAppIconAuthorized(Integer androidAppId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetAndroidIconsAuthorized() {
 		return false;
 	}
