@@ -1305,7 +1305,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
         return false;
     }
 
-    @Override   
+    @Override
     protected boolean isGetBookmarksAuthorized() {
 		return false;
 	}
