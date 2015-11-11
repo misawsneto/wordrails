@@ -226,6 +226,7 @@
 		<url-pattern>/publications/*</url-pattern>
 		<url-pattern>/user/*</url-pattern>
 		<url-pattern>/read/*</url-pattern>
+		<url-pattern>/api/*</url-pattern>
 		<url-pattern>/mystats/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>

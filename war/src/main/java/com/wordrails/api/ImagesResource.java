@@ -64,8 +64,8 @@ public class ImagesResource {
 
 		Set<Picture> pictures = Sets.newHashSet();
 		String hash = FilesUtil.getHash(item.getInputStream());
-		Integer networkId = (Integer) request.getAttribute("networkId");
-		String networkSubdomain = (String) request.getAttribute("networkSubdomain");
+		Integer networkId = (Integer) request.getSession().getAttribute("networkId");
+		String networkSubdomain = (String) request.getSession().getAttribute("networkSubdomain");
 
 		Image existingImage = null;
 		Set<Image> images = imageRepository.findByFileHashFetchPictures(hash);
@@ -136,6 +136,7 @@ public class ImagesResource {
 								imageFile.file.length(), networkSubdomain, imageFile.hash, pic.sizeTag, pic.file.getExtension(), false);
 					}
 
+					pic.file.size = imageFile.file.length();
 					pic.file.hash = imageFile.hash;
 					pic.height = imageFile.height;
 					pic.width = imageFile.width;
@@ -161,6 +162,7 @@ public class ImagesResource {
 								imageFile.file.length(), networkSubdomain, imageFile.hash, pic.sizeTag, pic.file.getExtension(), false);
 					}
 
+					pic.file.size = imageFile.file.length();
 					pic.file.hash = imageFile.hash;
 					pic.height = imageFile.height;
 					pic.width = imageFile.width;
@@ -184,14 +186,23 @@ public class ImagesResource {
 		Picture mediumPicture = newImage.getPicture(Image.SIZE_MEDIUM);
 		Picture smallPicture = newImage.getPicture(Image.SIZE_MEDIUM);
 
-		if(largePicture == null) newImage.large = newImage.original;
-		else newImage.large = largePicture.file;
+		if(largePicture == null) {
+			newImage.large = newImage.original;
+		} else {
+			newImage.large = largePicture.file;
+		}
 
-		if(mediumPicture == null) newImage.medium = newImage.large;
-		else newImage.medium = mediumPicture.file;
+		if(mediumPicture == null) {
+			newImage.medium = newImage.large;
+		} else {
+			newImage.medium = mediumPicture.file;
+		}
 
-		if(smallPicture == null) newImage.small = newImage.medium;
-		else newImage.small = smallPicture.file;
+		if(smallPicture == null) {
+			newImage.small = newImage.medium;
+		} else {
+			newImage.small = smallPicture.file;
+		}
 
 		imageRepository.save(newImage);
 

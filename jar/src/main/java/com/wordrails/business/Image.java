@@ -132,22 +132,28 @@ public class Image implements Serializable {
 	
 	@PrePersist
 	public void onCreate(){
-		if(post!=null)
-			postId = post.id;
-		
-		if(comment!=null)
-			commentId = comment.id;
+		if (post != null) postId = post.id;
+
+		if (comment != null) commentId = comment.id;
+
+		smallHash = small.hash;
+		mediumHash = medium.hash;
+		largeHash = large.hash;
+		originalHash = original.hash;
 
 		createdAt = updatedAt = new Date();
 	}
 	
 	@PreUpdate
 	public void onUpdate(){
-		if(post!=null)
-			postId = post.id;
-		
-		if(comment!=null)
-			commentId = comment.id;
+		if (post != null) postId = post.id;
+
+		if (comment != null) commentId = comment.id;
+
+		smallHash = small.hash;
+		mediumHash = medium.hash;
+		largeHash = large.hash;
+		originalHash = original.hash;
 
 		updatedAt = new Date();
 	}
