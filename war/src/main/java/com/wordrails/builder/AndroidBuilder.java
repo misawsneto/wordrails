@@ -5,7 +5,7 @@ import com.google.common.base.Charsets;
 import com.wordrails.business.AndroidApp;
 import com.wordrails.persistence.AndroidAppRepository;
 import com.wordrails.services.AmazonCloudService;
-import com.wordrails.util.TrixUtil;
+import com.wordrails.util.FilesUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -87,7 +87,7 @@ public class AndroidBuilder {
 			throw new Exception("Build failed!");
 		}
 
-		String hash = amazonCloudService.uploadAPK(apk, apk.length(), networkSubdomain, "application/vnd.android.package-archive");
+		String hash = amazonCloudService.uploadAPK(apk, apk.length(), networkSubdomain, "application/vnd.android.package-archive", false);
 		String fileUrl = amazonCloudService.getPublicApkURL(networkSubdomain, hash);
 
 		androidApp.apkUrl = fileUrl;
@@ -122,7 +122,7 @@ public class AndroidBuilder {
 
 		if(androidApp.icon != null) {
 			String originalUrl = amazonCloudService.getPublicImageURL(networkSubdomain, androidApp.icon.hash);
-			File originalIcon = TrixUtil.downloadFile(new File(drawableDir, "ic_launcher.png"), originalUrl);
+			File originalIcon = FilesUtil.downloadFile(new File(drawableDir, "ic_launcher.png"), originalUrl);
 
 			BufferedImage bufferedImage = ImageIO.read(originalIcon);
 			String mime = new Tika().detect(originalIcon);

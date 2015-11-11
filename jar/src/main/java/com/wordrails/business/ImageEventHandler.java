@@ -22,7 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
 
 @RepositoryEventHandler(Image.class)
 @Component
@@ -59,8 +59,8 @@ public class ImageEventHandler {
 		FileContents originalFile = fileContentsRepository.findOne(image.original.id);
 		//if is external, is already uploaded to amazon, so the file was uploaded before
 		if (originalFile.type.equals(File.EXTERNAL) && amazonCloudService.exists(network.subdomain, originalFile.hash)) {
-			List<Image> existingImages = imageRepository.findByFileId(originalFile.id);
-			Image existingImage = existingImages.get(0);
+			Set<Image> existingImages = imageRepository.findByFileId(originalFile.id);
+			Image existingImage = existingImages.iterator().next();
 			image.small = existingImage.small;
 			image.medium = existingImage.medium;
 			image.large = existingImage.large;
@@ -82,7 +82,7 @@ public class ImageEventHandler {
 				FileUtils.copyInputStreamToFile(input, tmpFile);
 				bufferedImage = ImageIO.read(tmpFile);
 				mime = originalFile.mime;
-				extension = mime.split("/").length == 2 ? mime.split("/")[1] : "jpeg";
+				extension = originalFile.getExtension();
 
 				int maxSize = Math.max(bufferedImage.getHeight(), bufferedImage.getWidth());
 
@@ -110,7 +110,7 @@ public class ImageEventHandler {
 				}
 
 				String originalHash = amazonCloudService.uploadPublicImage(tmpFile, originalFile.size,
-						network.subdomain, originalFile.hash, "original", extension);
+						network.subdomain, originalFile.hash, "original", extension, true);
 
 				originalFile.contents = null;
 				originalFile.type = File.EXTERNAL;
@@ -118,7 +118,11 @@ public class ImageEventHandler {
 				if (originalFile.networkId == null || originalFile.networkId == 0) {
 					originalFile.networkId = network.id;
 				}
+
 				fileContentsRepository.save(originalFile);
+				fileRepository.save(small);
+				fileRepository.save(medium);
+				fileRepository.save(large);
 
 				image.small = small;
 				image.medium = medium;
@@ -130,14 +134,9 @@ public class ImageEventHandler {
 				image.originalHash = originalHash;
 
 				image.vertical = bufferedImage.getHeight() > bufferedImage.getWidth();
-
 			} catch(AmazonS3Exception e) {
 				log.error("Error uploading image to s3", e);
 				throw e;
-			} finally {
-				if(tmpFile.exists()) {
-					tmpFile.delete();
-				}
 			}
 		}
 	}
@@ -153,13 +152,12 @@ public class ImageEventHandler {
 		file.size = size;
 		file.directory = "images";
 		file.networkId = network.id;
-		fileRepository.save(file);
 
 		return file;
 	}
 
 	private FileInputStream resizeImage(BufferedImage image, Integer size) throws IOException {
-		java.io.File file = java.io.File.createTempFile("trix", "");
+		java.io.File file = java.io.File.createTempFile(TrixUtil.generateRandomString(5, "aA#"), ".tmp");
 
 		BufferedImage bi = Thumbnails.of(image).size(size, size).outputFormat(extension).outputQuality(1).asBufferedImage();
 		ImageIO.write(bi, extension, file);

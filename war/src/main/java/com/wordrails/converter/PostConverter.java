@@ -45,18 +45,22 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.recommendsCount = post.recommendsCount;
 		postView.commentsCount = post.commentsCount;
 		postView.snippet = TrixUtil.simpleSnippet(post.body, 100);
-		postView.authorName = post.author != null ? post.author.name : null;
-		postView.authorUsername = post.author != null ? post.author.username : null;
-		postView.authorCoverMediumId = post.author != null ? post.author.coverMediumId : null;
-		postView.authorImageSmallId = post.author != null ? post.author.imageSmallId : null;
-		postView.authorSmallImageId = post.author != null ? post.author.imageSmallId : null;
-		postView.authorImageSmallHash = post.author != null ? post.author.imageSmallHash : null;
-		postView.authorCoverMediumHash = post.author != null ? post.author.coverMediumHash : null;
-		postView.authorImageUrl = post.author != null ? post.author.imageUrl : null;
-		postView.authorCoverUrl = post.author != null ? post.author.coverUrl : null;
-		postView.authorId = post.author != null ? post.author.id : null;
-		postView.authorEmail = post.author != null ? post.author.email : null;
-		postView.authorTwitter = post.author != null ? post.author.twitterHandle : null;
+
+		if (post.author != null) {
+			postView.authorName = post.author.name;
+			postView.authorUsername = post.author.username;
+			postView.authorCoverMediumId = post.author.coverMediumId;
+			postView.authorImageSmallId = post.author.imageSmallId;
+			postView.authorSmallImageId = post.author.imageSmallId;
+			postView.authorImageSmallHash = post.author.imageSmallHash;
+			postView.authorCoverMediumHash = post.author.coverMediumHash;
+			postView.authorImageUrl = post.author.imageUrl;
+			postView.authorCoverUrl = post.author.coverUrl;
+			postView.authorId = post.author.id;
+			postView.authorEmail = post.author.email;
+			postView.authorTwitter = post.author.twitterHandle;
+		}
+
 		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
 		postView.externalVideoUrl = post.externalVideoUrl;
 		postView.readTime = post.readTime;

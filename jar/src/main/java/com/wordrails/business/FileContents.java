@@ -1,10 +1,9 @@
 package com.wordrails.business;
 
-import java.sql.Blob;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.sql.Blob;
 
 @Entity
 @Table(name="File")
@@ -33,4 +32,11 @@ public class FileContents {
 	public Integer networkId;
 
 	public Blob contents;
+
+	public String getExtension() {
+		if (mime != null && mime.split("/").length == 2)
+			return mime.split("/")[1];
+
+		return null;
+	}
 }

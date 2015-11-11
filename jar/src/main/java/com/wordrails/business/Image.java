@@ -1,41 +1,68 @@
 package com.wordrails.business;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-//import org.hibernate.search.annotations.DocumentId;
-//import org.hibernate.search.annotations.Field;
-//import org.hibernate.search.annotations.IndexedEmbedded;
+import java.io.Serializable;
+import java.util.*;
 
 @Entity
 public class Image implements Serializable {
 
-	public enum Type {FAVICON, SPLASH, LOGIN, POST, COVER, PROFILE_PICTURE}
+	public static final String SIZE_SMALL = "small";
+	public static final String SIZE_MEDIUM = "medium";
+	public static final String SIZE_LARGE = "large";
+	public static final String SIZE_ORIGINAL = "original";
+
+	public enum Type {
+		FAVICON(0, new HashMap<String, Integer[]>() {{put(SIZE_SMALL, new Integer[]{32,32});}}),
+		SPLASH(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 250000);}}),
+		LOGIN(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 250000);}}),
+		POST(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 90000);put(SIZE_LARGE, 655360);}}),
+		COVER(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 90000);put(SIZE_LARGE, 655360);}}),
+		PROFILE_PICTURE(new HashMap<String, Integer>() {{put(SIZE_SMALL, 10000);put(SIZE_MEDIUM, 250000);}});
+
+		public Map<String, Integer[]> sizes; //height & width
+		public Map<String, Integer> qualities; //height * width
+
+		Type(Map<String, Integer> qualities) {
+			this.qualities = qualities;
+		}
+
+		//first integer is just to create this second constructor. its not elegant, but we can't do much with enum
+		Type(Integer x, Map<String, Integer[]> sizes) {
+			this.sizes = sizes;
+		}
+
+		public static Type findByAbbr(String abbr){
+			for(Type v : values()){
+				if( v.toString().equals(abbr)){
+					return v;
+				}
+			}
+			return null;
+		}
+	}
+
+	public Image() {
+		this.pictures = new HashSet<>();
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-//	@DocumentId
 	public Integer id;
-	
-//	@Field
+
 	@Size(min=1, max=100)
 	public String title;
 	
 	@Lob
-//	@Field
 	public String caption;
 	
 	@Lob
-//	@Field
 	public String credits;
 
-//	@Field
 	@Column(columnDefinition = "varchar(255) default 'POST'", nullable = false)
 	public String type;
 
@@ -56,6 +83,9 @@ public class Image implements Serializable {
 	
 	@ManyToOne
 	public Station station;
+
+	@OneToMany(mappedBy = "image")
+	public Set<Picture> pictures;
 
 	@NotNull
 	@ManyToOne(cascade=CascadeType.ALL)
@@ -79,11 +109,10 @@ public class Image implements Serializable {
 	public String largeHash;
 
 	@ManyToOne
-//	@IndexedEmbedded(depth=1, includePaths={"author.name", "author.id", "terms.name", "terms.id"})
 	public Post post;
 	
 	@OneToMany(mappedBy="featuredImage")
-	public Set<Post> featuringPosts;		
+	public Set<Post> featuringPosts;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean vertical = false;
@@ -130,5 +159,13 @@ public class Image implements Serializable {
 			}
 		}
 		return false;
+	}
+
+	public Picture getPicture(String sizeTag) {
+		for(Picture pic : pictures) {
+			if(pic.sizeTag.equals(sizeTag)) return pic;
+		}
+
+		return null;
 	}
 }

@@ -45,21 +45,6 @@ public class TrixUtil {
 		return slug.toLowerCase(Locale.ENGLISH);
 	}
 
-	public static byte[] getBytes(InputStream in) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		org.apache.commons.io.IOUtils.copy(in, baos);
-		return baos.toByteArray();
-	}
-
-	public static String getHash(InputStream is) throws IOException {
-		byte[] bytes = getBytes(is);
-		return getHash(bytes);
-	}
-
-	public static String getHash(byte[] bytes) throws IOException {
-		return DigestUtils.md5Hex(new ByteArrayInputStream(bytes));
-	}
-
 	public static Date removeTime(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -68,21 +53,6 @@ public class TrixUtil {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
-	}
-
-	public static InputStream getStreamFromUrl(String url) throws IOException {
-		URL fullURL = new URL(url);
-		HttpURLConnection connection = (HttpURLConnection) fullURL.openConnection();
-		return connection.getInputStream();
-	}
-
-	public static File downloadFile(File file, String url) throws IOException {
-		URL website = new URL(url);
-		ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-		FileOutputStream fos = new FileOutputStream(file);
-		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-
-		return file;
 	}
 
 	public static String generateRandomString(int length, String chars) {

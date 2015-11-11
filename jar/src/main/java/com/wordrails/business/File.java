@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "File")
-public class File implements Serializable{
+public class File implements Serializable, MultiTenantEntity {
 	private static final long serialVersionUID = 7828358342575034733L;
 
 	public static final String INTERNAL = "I";
@@ -37,4 +37,21 @@ public class File implements Serializable{
 	public Long size;
 
 	public Integer networkId;
+
+	public String getExtension() {
+		if (mime != null && mime.split("/").length == 2)
+			return mime.split("/")[1];
+
+		return null;
+	}
+
+	@Override
+	public Integer getNetworkId() {
+		return networkId;
+	}
+
+	@Override
+	public void setNetworkId(Integer networkId) {
+		this.networkId = networkId;
+	}
 }

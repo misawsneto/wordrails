@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
+import com.wordrails.util.FilesUtil;
 import com.wordrails.util.TrixUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -62,36 +63,46 @@ public class AmazonCloudService {
 
 	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
 		java.io.File tmpFile = java.io.File.createTempFile(TrixUtil.generateRandomString(5, "aA#"), ".tmp");
-		try {
-			FileUtils.copyInputStreamToFile(input, tmpFile);
-			String hash = TrixUtil.getHash(new FileInputStream(tmpFile));
-			uploadPublicImage(tmpFile, lenght, networkDomain, hash, size, mime);
-			return hash;
-		} finally {
-			if(tmpFile.exists()) {
-				tmpFile.delete();
-			}
-		}
+
+		FileUtils.copyInputStreamToFile(input, tmpFile);
+		String hash = FilesUtil.getHash(new FileInputStream(tmpFile));
+		uploadPublicImage(tmpFile, lenght, networkDomain, hash, size, mime, true);
+		return hash;
 	}
 
-	public String uploadAPK(java.io.File file, Long lenght, String networkDomain, String mime) throws IOException, AmazonS3Exception {
+	public String uploadAPK(java.io.File file, Long lenght, String networkDomain, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
 		log.debug("uploading apk...");
 
-		String hash = TrixUtil.getHash(new FileInputStream(file));
+		String hash = FilesUtil.getHash(new FileInputStream(file));
 
 		ObjectMetadata md = new ObjectMetadata();
 		md.setContentType(mime);
 
 		String path = networkDomain + "/apk/" + hash;
 
-		uploadFile(file, lenght, publicBucket, path, md);
+		uploadFile(file, lenght, publicBucket, path, md, deleteFileAfterUpload);
 
 		return hash;
 	}
 
-	public String uploadPublicImage(java.io.File file, Long lenght, String networkDomain, String hash, String sizeTag, String mime) throws IOException, AmazonS3Exception {
+
+	/**
+	 * send hash null if needs to generate it
+	 * @param file
+	 * @param lenght
+	 * @param networkDomain
+	 * @param hash
+	 * @param sizeTag
+	 * @param mime
+	 * @param deleteFileAfterUpload
+	 * @return
+	 * @throws IOException
+	 * @throws AmazonS3Exception
+	 */
+	public String uploadPublicImage(java.io.File file, Long lenght, String networkDomain, String hash,
+	                                String sizeTag, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
 		if(hash == null) {
-			hash = TrixUtil.getHash(new FileInputStream(file));
+			hash = FilesUtil.getHash(new FileInputStream(file));
 		}
 
 		ObjectMetadata md = new ObjectMetadata();
@@ -99,7 +110,7 @@ public class AmazonCloudService {
 		md.addUserMetadata("size", sizeTag);
 
 		String path = networkDomain + "/images/" + hash;
-		uploadFile(file, lenght, publicBucket, path, md);
+		uploadFile(file, lenght, publicBucket, path, md, deleteFileAfterUpload);
 
 		return hash;
 	}
@@ -121,7 +132,7 @@ public class AmazonCloudService {
 		}
 	}
 
-	private void uploadFile(java.io.File file, Long lenght, String bucketName, String keyName, ObjectMetadata metadata) throws IOException, AmazonS3Exception {
+	private void uploadFile(java.io.File file, Long lenght, String bucketName, String keyName, ObjectMetadata metadata, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
 		log.debug("uploading file of lenght " + lenght);
 
 		if(exists(bucketName, keyName)) {
@@ -174,6 +185,10 @@ public class AmazonCloudService {
 			s3Client.abortMultipartUpload(new AbortMultipartUploadRequest(bucketName, keyName, initResponse.getUploadId()));
 
 			throw new AmazonS3Exception("Error uploading file to Amazon S3", e);
+		} finally {
+			if(deleteFileAfterUpload && file.exists()) {
+				file.delete();
+			}
 		}
 	}
 
@@ -205,7 +220,7 @@ public class AmazonCloudService {
 		Blob blob = fileContents.contents;
 		if(blob == null) {
 			if (file.url != null) {
-				is = TrixUtil.getStreamFromUrl(file.url);
+				is = FilesUtil.getStreamFromUrl(file.url);
 				byteSize = ((FileInputStream) is).getChannel().size();
 			} else if(file.hash != null && !file.hash.isEmpty() && exists(publicBucket, file.hash)) {
 				return file.hash;

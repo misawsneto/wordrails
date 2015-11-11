@@ -7,11 +7,10 @@ import com.wordrails.business.Network;
 import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.persistence.FileRepository;
 import com.wordrails.services.AmazonCloudService;
-import com.wordrails.util.TrixUtil;
+import com.wordrails.util.FileUtil;
+import com.wordrails.util.FilesUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.engine.jdbc.LobCreator;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -36,7 +34,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @Path("/files")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -63,13 +60,13 @@ public class FilesResource {
 	@Path("{id}/contents")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response putFileContents(@PathParam("id") Integer id, @Context HttpServletRequest request) throws FileUploadException, IOException {
-		FileItem item = getFileFromRequest(request);
+		FileItem item = FileUtil.getFileFromRequest(request);
 
 		if (item == null) {
 			return Response.noContent().build();
 		}
 
-		String hash = TrixUtil.getHash(item.getInputStream());
+		String hash = FilesUtil.getHash(item.getInputStream());
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		File existingFile = fileRepository.findByHashAndNetworkId(hash, network.id);
 		if (existingFile != null) {
@@ -109,19 +106,6 @@ public class FilesResource {
 		return Response.status(Status.BAD_REQUEST).build();
 	}
 
-	private FileItem getFileFromRequest(HttpServletRequest request) throws FileUploadException {
-		ServletContext context = request.getServletContext();
-		java.io.File repository = (java.io.File) context.getAttribute(ServletContext.TEMPDIR);
-		DiskFileItemFactory factory = new DiskFileItemFactory(DiskFileItemFactory.DEFAULT_SIZE_THRESHOLD, repository);
-		ServletFileUpload upload = new ServletFileUpload(factory);
-		List<FileItem> items = upload.parseRequest(request);
-		if (items != null && !items.isEmpty()) {
-			return items.get(0);
-		}
-
-		return null;
-	}
-
 	private Response getResponseFromId(Integer id) {
 		URI location = UriBuilder.fromResource(FilesResource.class).path(id.toString()).path("contents").build();
 
@@ -137,7 +121,7 @@ public class FilesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response postSimpleFileContents(@Context HttpServletRequest request) throws FileUploadException, IOException {
 		try {
-			FileItem item = getFileFromRequest(request);
+			FileItem item = FileUtil.getFileFromRequest(request);
 
 			if (!validate(item)) {
 				return Response.status(Status.BAD_REQUEST).build();
@@ -151,7 +135,7 @@ public class FilesResource {
 			LobCreator creator = Hibernate.getLobCreator(session);
 
 			FileContents file;
-			String hash = TrixUtil.getHash(item.getInputStream());
+			String hash = FilesUtil.getHash(item.getInputStream());
 			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 			FileContents existingFile = fileContentsRepository.findByHashAndNetworkId(hash, network.id);
 			if (existingFile != null) {

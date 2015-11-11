@@ -7,7 +7,6 @@
              version="2.1">
 	<persistence-unit name="wordrails" transaction-type="RESOURCE_LOCAL">
 		<class>com.wordrails.business.AndroidApp</class>
-		<class>com.wordrails.business.AndroidIcon</class>
 		<class>com.wordrails.business.Cell</class>
 		<class>com.wordrails.business.Comment</class>
 		<class>com.wordrails.business.File</class>
@@ -37,6 +36,7 @@
 		<class>com.wordrails.business.Notification</class>
 		<class>com.wordrails.business.Recommend</class>
 		<class>com.wordrails.business.Bookmark</class>
+		<class>com.wordrails.business.Picture</class>
 		<class>com.wordrails.business.PostRead</class>
 		<class>com.wordrails.business.PersonNetworkRegId</class>
 		<class>com.wordrails.business.PersonNetworkToken</class>

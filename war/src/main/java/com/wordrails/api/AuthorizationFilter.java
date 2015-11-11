@@ -126,34 +126,9 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isDeleteImagesAuthorized(List<Integer> ids) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetImageCommentAuthorized(Integer imageId) {
 		return canVisualizeImages(imageId);
 	}
-
-//	@Override
-//	protected boolean isGetImageOriginalAuthorized(Integer imageId) {
-//		return canVisualizeImages(imageId);
-//	}
-//
-//	@Override
-//	protected boolean isGetImageSmallAuthorized(Integer imageId) {
-//		return canVisualizeImages(imageId);
-//	}
-//
-//	@Override
-//	protected boolean isGetImageMediumAuthorized(Integer imageId) {
-//		return canVisualizeImages(imageId);
-//	}
-//
-//	@Override
-//	protected boolean isGetImageLargeAuthorized(Integer imageId) {
-//		return canVisualizeImages(imageId);
-//	}
 
 	@Override
 	protected boolean isGetImagePostAuthorized(Integer imageId) {
@@ -1565,6 +1540,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetImagePicturesAuthorized(Integer imageId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetImageOriginalAuthorized(Integer imageId) {
 		return false;
 	}
@@ -1609,6 +1589,26 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetPersonNetworkTokenNetworkAuthorized(
 			Integer personNetworkTokenId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPicturesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPictureAuthorized(Integer pictureId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPictureFileAuthorized(Integer pictureId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPictureImageAuthorized(Integer pictureId) {
 		return false;
 	}
 
