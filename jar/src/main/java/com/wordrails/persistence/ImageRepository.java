@@ -26,17 +26,17 @@ public interface ImageRepository extends JpaRepository<Image, Integer>, QueryDsl
 
 	@RestResource(exported = false)
 	@Query("select image from Image image " +
-			"join fetch image.pictures pictures " +
-			"join fetch pictures.file file " +
+			"left join image.pictures pictures " +
+			"left join pictures.file file " +
 			"where file.id = :fileId")
 	Set<Image> findByFileIdFetchPictures(@Param("fileId") Integer fileId);
 
 	@RestResource(exported = false)
 	@Query("select image from Image image " +
-			"join fetch image.pictures picture " +
-			"join fetch picture.file file " +
-			"where file.hash = :hash")
-	Set<Image> findByFileHashFetchPictures(@Param("hash") String hash);
+			"left join fetch image.pictures picture " +
+			"left join fetch picture.file file " +
+			"where file.hash = :hash and file.networkId = :networkId")
+	Set<Image> findByFileHashFetchPictures(@Param("hash") String hash, @Param("networkId") Integer networkId);
 
 	@Modifying
 	@RestResource(exported = false)

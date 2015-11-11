@@ -18,6 +18,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -143,7 +144,7 @@ public class WordrailsService {
 
 			try {
 				postReadRepository.save(postRead);
-			} catch (ConstraintViolationException e) {
+			} catch (ConstraintViolationException | DataIntegrityViolationException e) {
 				log.info("user already read this post");
 			}
 			queryPersistence.incrementReadsCount(post.id);

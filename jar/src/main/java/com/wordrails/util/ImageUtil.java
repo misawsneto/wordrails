@@ -58,7 +58,7 @@ public class ImageUtil {
 		return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FilesUtil.getHash(new FileInputStream(newFile)));
 	}
 
-	public static ImageFile getMeasuredImageFile(java.io.File file) throws IOException {
+	public static ImageFile getImageFile(java.io.File file) throws IOException {
 		BufferedImage bi = ImageIO.read(file);
 		return new ImageFile(file, bi.getHeight(), bi.getWidth(), FilesUtil.getHash(new FileInputStream(file)));
 	}
@@ -68,12 +68,14 @@ public class ImageUtil {
 		public Integer height;
 		public Integer width;
 		public String hash;
+		public boolean vertical;
 
 		public ImageFile(java.io.File file, Integer height, Integer width, String hash) {
 			this.file = file;
 			this.height = height;
 			this.width = width;
 			this.hash = hash;
+			this.vertical = height > width;
 		}
 	}
 }

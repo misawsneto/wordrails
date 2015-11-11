@@ -44,6 +44,11 @@ public class Image implements Serializable {
 			}
 			return null;
 		}
+
+		public Integer count() {
+			if(sizes != null) return sizes.size();
+			else return qualities.size();
+		}
 	}
 
 	public Image() {
@@ -84,23 +89,27 @@ public class Image implements Serializable {
 	@ManyToOne
 	public Station station;
 
-	@OneToMany(mappedBy = "image")
+	@OneToMany(mappedBy = "image", cascade = CascadeType.ALL)
 	public Set<Picture> pictures;
 
+	@Deprecated
 	@NotNull
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	public File original;
 
+	@Deprecated
 	@NotNull
-	@ManyToOne(cascade=CascadeType.REMOVE)
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	public File small;
 
+	@Deprecated
 	@NotNull
-	@ManyToOne(cascade=CascadeType.REMOVE)
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	public File medium;
 
+	@Deprecated
 	@NotNull
-	@ManyToOne(cascade=CascadeType.REMOVE)
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	public File large;
 
 	public String originalHash;

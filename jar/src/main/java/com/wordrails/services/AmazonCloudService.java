@@ -117,9 +117,13 @@ public class AmazonCloudService {
 
 	public boolean exists(String bucket, String key) {
 		try {
-			s3Client.getObject(bucket, key);
+			s3Client.getObjectMetadata(bucket, key);
 		} catch(AmazonServiceException e) {
-			return false;
+			if (e.getStatusCode() == 403 || e.getStatusCode() == 404) {
+				return false;
+			} else {
+				throw e;
+			}
 		}
 		return true;
 	}

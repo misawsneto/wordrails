@@ -18,7 +18,7 @@ public class Picture implements MultiTenantEntity, Serializable {
 	public String sizeTag;
 
 	@NotNull
-	@ManyToOne(cascade=CascadeType.REMOVE)
+	@ManyToOne(cascade=CascadeType.PERSIST)
 	public File file;
 
 	@ManyToOne

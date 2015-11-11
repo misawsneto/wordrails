@@ -1,7 +1,6 @@
 package com.wordrails.util;
 
 import com.wordrails.services.WordpressParsedContent;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,13 +10,12 @@ import org.jsoup.select.Elements;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.*;
@@ -53,6 +51,15 @@ public class TrixUtil {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
+	}
+
+	public static boolean urlExists(String urlString) throws IOException {
+		URL u = new URL(urlString);
+		HttpURLConnection.setFollowRedirects(false);
+		HttpURLConnection huc =  (HttpURLConnection)  u.openConnection();
+		huc.setRequestMethod("HEAD");
+		huc.connect();
+		return (huc.getResponseCode() == HttpURLConnection.HTTP_OK);
 	}
 
 	public static String generateRandomString(int length, String chars) {
