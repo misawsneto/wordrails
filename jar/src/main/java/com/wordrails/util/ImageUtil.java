@@ -30,10 +30,11 @@ public class ImageUtil {
 	}
 
 	public static ImageFile resizeImage(java.io.File file, Integer height, Integer width, String extension) throws IOException {
-		BufferedImage bi = Thumbnails.of(file).forceSize(width, height).outputFormat(extension).outputQuality(1).asBufferedImage();
-		ImageIO.write(bi, extension, file);
+		java.io.File newFile = FilesUtil.createNewTempFile();
+		BufferedImage bi = Thumbnails.of(file).forceSize(width, height).outputFormat("png").outputQuality(1).asBufferedImage();
+		ImageIO.write(bi, "png", newFile);
 
-		return new ImageFile(file, bi.getHeight(), bi.getWidth(), FilesUtil.getHash(new FileInputStream(file)));
+		return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FilesUtil.getHash(new FileInputStream(newFile)));
 	}
 
 	public static ImageFile resizeImage(InputStream inputStream, Integer quality, String extension, boolean resizeUp, boolean resizeDown) throws IOException {
@@ -42,16 +43,19 @@ public class ImageUtil {
 	}
 
 	public static ImageFile resizeImage(java.io.File file, Integer quality, String extension, boolean resizeUp, boolean resizeDown) throws IOException {
+		java.io.File newFile = FilesUtil.createNewTempFile();
 		BufferedImage bi = ImageIO.read(file);
-		Long currentQuality = (long) (bi.getHeight() * bi.getWidth());
+		Double currentQuality = Math.sqrt(bi.getHeight() * bi.getWidth());
 		if ((resizeUp && quality > currentQuality) || (resizeDown && quality < currentQuality)) {
 			Double pctResize = new BigDecimal(quality).divide(new BigDecimal(currentQuality), 5, BigDecimal.ROUND_HALF_UP).doubleValue();
 
-			bi = Thumbnails.of(bi).scale(pctResize).outputFormat(extension).outputQuality(1).asBufferedImage();
-			ImageIO.write(bi, extension, file);
+			bi = Thumbnails.of(bi).scale(pctResize).outputFormat("png").asBufferedImage();
+			ImageIO.write(bi, "png", newFile);
+		} else {
+			newFile = file;
 		}
 
-		return new ImageFile(file, bi.getHeight(), bi.getWidth(), FilesUtil.getHash(new FileInputStream(file)));
+		return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FilesUtil.getHash(new FileInputStream(newFile)));
 	}
 
 	public static ImageFile getMeasuredImageFile(java.io.File file) throws IOException {

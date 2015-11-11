@@ -121,7 +121,7 @@ public class ImagesResource {
 				Map<String, Integer> qualities = imageType.qualities;
 				for (Map.Entry<String, Integer> entry : qualities.entrySet()) {
 					Picture pic = new Picture();
-					pic.file = ImageUtil.createNewImageTrixFile(networkId, item.getContentType(), item.getSize());
+					pic.file = ImageUtil.createNewImageTrixFile(networkId, "image/png", item.getSize());
 					pic.sizeTag = entry.getKey();
 					pic.networkId = networkId;
 
@@ -147,7 +147,7 @@ public class ImagesResource {
 				Map<String, Integer[]> sizes = imageType.sizes;
 				for (Map.Entry<String, Integer[]> entry : sizes.entrySet()) {
 					Picture pic = new Picture();
-					pic.file = ImageUtil.createNewImageTrixFile(networkId, item.getContentType(), item.getSize());
+					pic.file = ImageUtil.createNewImageTrixFile(networkId, "image/png", item.getSize());
 					pic.sizeTag = entry.getKey();
 					pic.networkId = networkId;
 
@@ -177,10 +177,6 @@ public class ImagesResource {
 				originalFile.delete();
 		}
 
-		for(Picture pic : pictures) {
-			pictureRepository.save(pic);
-		}
-
 		newImage.original = newImage.getPicture(Image.SIZE_ORIGINAL).file;
 		Picture largePicture = newImage.getPicture(Image.SIZE_LARGE);
 		Picture mediumPicture = newImage.getPicture(Image.SIZE_MEDIUM);
@@ -205,6 +201,11 @@ public class ImagesResource {
 		}
 
 		imageRepository.save(newImage);
+
+		for(Picture pic : pictures) {
+			pic.image = newImage;
+			pictureRepository.save(pic);
+		}
 
 		return Response.ok().entity("{\"hash\":\"" + hash + "\", \"imageId\":" + newImage.id + "}").build();
 	}

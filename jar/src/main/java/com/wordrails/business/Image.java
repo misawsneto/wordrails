@@ -18,11 +18,11 @@ public class Image implements Serializable {
 
 	public enum Type {
 		FAVICON(0, new HashMap<String, Integer[]>() {{put(SIZE_SMALL, new Integer[]{32,32});}}),
-		SPLASH(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 250000);}}),
-		LOGIN(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 250000);}}),
-		POST(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 90000);put(SIZE_LARGE, 655360);}}),
-		COVER(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 90000);put(SIZE_LARGE, 655360);}}),
-		PROFILE_PICTURE(new HashMap<String, Integer>() {{put(SIZE_SMALL, 10000);put(SIZE_MEDIUM, 250000);}});
+		SPLASH(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 500);}}),
+		LOGIN(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 500);}}),
+		POST(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 400);put(SIZE_LARGE, 1024);}}),
+		COVER(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 400);put(SIZE_LARGE, 1024);}}),
+		PROFILE_PICTURE(new HashMap<String, Integer>() {{put(SIZE_SMALL, 100);put(SIZE_MEDIUM, 500);}});
 
 		public Map<String, Integer[]> sizes; //height & width
 		public Map<String, Integer> qualities; //height * width
