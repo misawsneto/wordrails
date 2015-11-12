@@ -1,10 +1,8 @@
 package com.wordrails.api;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
+import java.util.Map;
 
 public class PostView implements Serializable {
 	private static final long serialVersionUID = -1474032487285763669L;
@@ -39,6 +37,10 @@ public class PostView implements Serializable {
 	public Integer imageMediumId;
 	public Integer imageLargeId;
 	public Integer readTime;
+
+	public Integer f;
+
+	public Map<String, String> featuredImage;
 
 	public boolean imageLandscape;
 

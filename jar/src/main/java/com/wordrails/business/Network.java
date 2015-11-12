@@ -1,18 +1,17 @@
 package com.wordrails.business;
 
-import java.io.Serializable;
-import java.sql.Blob;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"subdomain"}))
@@ -155,6 +154,20 @@ public class Network implements Serializable{
 	public String defaultOrientationMode;
 
 	public Integer categoriesTaxonomyId;
+
+
+	@ElementCollection
+	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "logo_id"))
+	@MapKeyColumn(name="sizeTag", nullable = false)
+	@Column(name="hash", nullable = false)
+	public Map<String, String> logoHashes;
+
+
+	@ElementCollection
+	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "favicon_id"))
+	@MapKeyColumn(name="sizeTag", nullable = false)
+	@Column(name="hash", nullable = false)
+	public Map<String, String> faviconHashes;
 
 	@Override
 	public String toString() {

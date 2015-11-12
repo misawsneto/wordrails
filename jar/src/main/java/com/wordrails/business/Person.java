@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 //import org.apache.solr.analysis.WordDelimiterFilterFactory;
 //import org.hibernate.search.annotations.*;
 //import org.hibernate.search.annotations.Index;
+import com.google.common.collect.Maps;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -117,6 +119,18 @@ public class Person implements Serializable{
 //	@Field(analyze = Analyze.NO)
 //    @DateBridge(resolution = Resolution.SECOND)
 	public Date updatedAt;
+
+	@ElementCollection()
+	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "coverId"))
+	@MapKeyColumn(name="sizeTag", nullable = false)
+	@Column(name="hash", nullable = false)
+	public Map<String, String> coverHashes;
+
+	@ElementCollection()
+	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "imageId"))
+	@MapKeyColumn(name="sizeTag", nullable = false)
+	@Column(name="hash", nullable = false)
+	public Map<String, String> imageHashes;
 
 	@PrePersist
 	public void onCreate() {

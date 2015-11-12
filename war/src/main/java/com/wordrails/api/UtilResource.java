@@ -10,6 +10,7 @@ import com.wordrails.elasticsearch.PerspectiveEsRepository;
 import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.*;
+import com.wordrails.script.ImageScript;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.AsyncService;
 import com.wordrails.services.CacheService;
@@ -1038,6 +1039,18 @@ public class UtilResource {
 					Thread.sleep(100);
 				}
 			}
+		}
+	}
+
+	@Autowired
+	private ImageScript imageScript;
+
+	@POST
+	@Path("/addPicturesToImages")
+	@Transactional(readOnly=false)
+	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {
+		if(isLocal(request.getHeader("Host"))){
+			imageScript.addPicturesToImages();
 		}
 	}
 

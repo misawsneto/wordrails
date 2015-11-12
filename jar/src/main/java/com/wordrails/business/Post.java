@@ -7,7 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -17,7 +19,7 @@ import java.util.Set;
 		discriminatorType=DiscriminatorType.STRING
 )
 @DiscriminatorValue(value="PUBLISHED")
-public class Post {
+public class Post implements Serializable {
 
 	public static final String STATE_DRAFT = "DRAFT";
 	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
@@ -83,8 +85,15 @@ public class Post {
 	@Column(insertable = false, updatable = false)
 	public String state;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
+
+
+	@ElementCollection
+	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "featuredImage_id"))
+	@MapKeyColumn(name="sizeTag", nullable = false)
+	@Column(name="hash", nullable = false)
+	public Map<String, String> featuredImageHashes;
 
 	@OneToMany
 	@JoinTable(

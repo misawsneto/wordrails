@@ -1,6 +1,7 @@
 package com.wordrails.converter;
 
 import com.wordrails.api.PostView;
+import com.wordrails.business.Image;
 import com.wordrails.business.Post;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.util.TrixUtil;
@@ -29,14 +30,18 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.mediumId = post.imageMediumId;
 		postView.largeId = post.imageLargeId;
 
-		postView.imageSmallHash = postView.smallHash = post.imageSmallHash;
-		postView.imageMediumHash = postView.mediumHash = post.imageMediumHash;
-		postView.imageLargeHash = postView.largeHash = post.imageLargeHash;
+		if (post.featuredImage != null) {
+			postView.imageSmallHash = post.featuredImage.hashs.get(Image.SIZE_SMALL);
+			postView.imageMediumHash = post.featuredImage.hashs.get(Image.SIZE_MEDIUM);
+			postView.imageLargeHash = post.featuredImage.hashs.get(Image.SIZE_LARGE);
+		}
 
 		postView.imageId = post.imageId;
 		postView.imageSmallId = post.imageSmallId;
 		postView.imageMediumId = post.imageMediumId;
 		postView.imageLargeId = post.imageLargeId;
+
+		postView.featuredImage = post.featuredImageHashes;
 
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;
@@ -51,9 +56,14 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.authorUsername = post.author.username;
 			postView.authorCoverMediumId = post.author.coverMediumId;
 			postView.authorImageSmallId = post.author.imageSmallId;
-			postView.authorSmallImageId = post.author.imageSmallId;
+			postView.authorSmallImageId = post.author.imageSmallId; //is this being used?
+
+			if(post.author.cover != null) {
+				postView.authorCoverMediumHash = post.author.coverMediumHash;
+			}
 			postView.authorImageSmallHash = post.author.imageSmallHash;
-			postView.authorCoverMediumHash = post.author.coverMediumHash;
+
+
 			postView.authorImageUrl = post.author.imageUrl;
 			postView.authorCoverUrl = post.author.coverUrl;
 			postView.authorId = post.author.id;

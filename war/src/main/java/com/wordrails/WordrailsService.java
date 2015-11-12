@@ -144,10 +144,10 @@ public class WordrailsService {
 
 			try {
 				postReadRepository.save(postRead);
+				queryPersistence.incrementReadsCount(post.id);
 			} catch (ConstraintViolationException | DataIntegrityViolationException e) {
 				log.info("user already read this post");
 			}
-			queryPersistence.incrementReadsCount(post.id);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

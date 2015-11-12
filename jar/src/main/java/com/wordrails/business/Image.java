@@ -9,7 +9,20 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-public class Image implements Serializable {
+public class Image implements Serializable, MultiTenantEntity {
+
+	public Integer networkId;
+
+	@Override
+	public Integer getNetworkId() {
+		return networkId;
+	}
+
+	@Override
+	public void setNetworkId(Integer networkId) {
+		this.networkId = networkId;
+	}
+
 
 	public static final String SIZE_SMALL = "small";
 	public static final String SIZE_MEDIUM = "medium";
@@ -36,13 +49,18 @@ public class Image implements Serializable {
 			this.sizes = sizes;
 		}
 
+		public Set<String> getSizeTags() {
+			if(qualities != null) return qualities.keySet();
+			else return sizes.keySet();
+		}
+
 		public static Type findByAbbr(String abbr){
 			for(Type v : values()){
 				if( v.toString().equals(abbr)){
 					return v;
 				}
 			}
-			return null;
+			return POST;
 		}
 
 		public Integer count() {
@@ -53,6 +71,7 @@ public class Image implements Serializable {
 
 	public Image() {
 		this.pictures = new HashSet<>();
+		this.hashs = new HashMap<>();
 	}
 
 	@Id
@@ -92,24 +111,30 @@ public class Image implements Serializable {
 	@OneToMany(mappedBy = "image", cascade = CascadeType.ALL)
 	public Set<Picture> pictures;
 
+	@ElementCollection
+	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id"))
+	@MapKeyColumn(name="sizeTag", nullable = false)
+	@Column(name="hash", nullable = false)
+	public Map<String, String> hashs;
+
 	@Deprecated
 	@NotNull
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@ManyToOne(cascade=CascadeType.MERGE)
 	public File original;
 
 	@Deprecated
 	@NotNull
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@ManyToOne(cascade=CascadeType.MERGE)
 	public File small;
 
 	@Deprecated
 	@NotNull
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@ManyToOne(cascade=CascadeType.MERGE)
 	public File medium;
 
 	@Deprecated
 	@NotNull
-	@ManyToOne(cascade=CascadeType.PERSIST)
+	@ManyToOne(cascade=CascadeType.MERGE)
 	public File large;
 
 	public String originalHash;
@@ -119,7 +144,7 @@ public class Image implements Serializable {
 
 	@ManyToOne
 	public Post post;
-	
+
 	@OneToMany(mappedBy="featuredImage")
 	public Set<Post> featuringPosts;
 	
@@ -141,39 +166,64 @@ public class Image implements Serializable {
 	
 	@PrePersist
 	public void onCreate(){
-		if (post != null) postId = post.id;
-
-		if (comment != null) commentId = comment.id;
-
-		smallHash = small.hash;
-		mediumHash = medium.hash;
-		largeHash = large.hash;
-		originalHash = original.hash;
-
-		createdAt = updatedAt = new Date();
+		createOrUpdate();
+		setDeprecatedAttributes();
+		createdAt = new Date();
 	}
-	
+
 	@PreUpdate
 	public void onUpdate(){
-		if (post != null) postId = post.id;
+		createOrUpdate();
+	}
 
+	private void createOrUpdate() {
+		if (post != null) postId = post.id;
 		if (comment != null) commentId = comment.id;
 
-		smallHash = small.hash;
-		mediumHash = medium.hash;
-		largeHash = large.hash;
-		originalHash = original.hash;
+		for(Picture pic : pictures) {
+			hashs.put(pic.sizeTag, pic.file.hash);
+			switch (pic.sizeTag) {
+				case SIZE_SMALL:
+					smallHash = pic.file.hash;
+					break;
+				case SIZE_MEDIUM:
+					mediumHash = pic.file.hash;
+					break;
+				case SIZE_LARGE:
+					largeHash = pic.file.hash;
+					break;
+				case SIZE_ORIGINAL:
+					originalHash = pic.file.hash;
+					break;
+			}
+		}
 
 		updatedAt = new Date();
 	}
 
-	public static boolean containsType(String string) {
-		for (Image.Type type : Image.Type.values()) {
-			if (type.name().equals(string)) {
-				return true;
-			}
+	private void setDeprecatedAttributes() {
+		this.original = this.getPicture(Image.SIZE_ORIGINAL).file;
+		Picture largePicture = this.getPicture(Image.SIZE_LARGE);
+		Picture mediumPicture = this.getPicture(Image.SIZE_MEDIUM);
+		Picture smallPicture = this.getPicture(Image.SIZE_SMALL);
+
+		if(largePicture == null) {
+			this.large = this.original;
+		} else {
+			this.large = largePicture.file;
 		}
-		return false;
+
+		if(mediumPicture == null) {
+			this.medium = this.large;
+		} else {
+			this.medium = mediumPicture.file;
+		}
+
+		if(smallPicture == null) {
+			this.small = this.medium;
+		} else {
+			this.small = smallPicture.file;
+		}
 	}
 
 	public Picture getPicture(String sizeTag) {

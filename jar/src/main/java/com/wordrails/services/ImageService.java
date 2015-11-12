@@ -91,8 +91,6 @@ public class ImageService {
 		if(originalFile.exists())
 			originalFile.delete();
 
-		setDeprecatedAttributes(newImage);
-
 
 		for(Picture pic : pictures) {
 			pic.image = newImage;
@@ -138,38 +136,11 @@ public class ImageService {
 
 		newImage.vertical = existingImage.vertical;
 
-		setDeprecatedAttributes(newImage);
-
 		if (persistOnDatabase) {
 			imageRepository.save(newImage);
 		}
 
 		return newImage;
-	}
-
-	private void setDeprecatedAttributes(Image newImage) {
-		newImage.original = newImage.getPicture(Image.SIZE_ORIGINAL).file;
-		Picture largePicture = newImage.getPicture(Image.SIZE_LARGE);
-		Picture mediumPicture = newImage.getPicture(Image.SIZE_MEDIUM);
-		Picture smallPicture = newImage.getPicture(Image.SIZE_SMALL);
-
-		if(largePicture == null) {
-			newImage.large = newImage.original;
-		} else {
-			newImage.large = largePicture.file;
-		}
-
-		if(mediumPicture == null) {
-			newImage.medium = newImage.large;
-		} else {
-			newImage.medium = mediumPicture.file;
-		}
-
-		if(smallPicture == null) {
-			newImage.small = newImage.medium;
-		} else {
-			newImage.small = smallPicture.file;
-		}
 	}
 
 	private Picture getOriginalPicture(String networkSubdomain, String mime, Integer networkId, String hash, java.io.File originalFile, ImageUtil.ImageFile imageFile) throws IOException {

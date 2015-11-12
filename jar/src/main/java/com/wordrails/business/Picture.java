@@ -7,22 +7,15 @@ import java.io.Serializable;
 @Entity
 public class Picture implements MultiTenantEntity, Serializable {
 
-	@Id
-	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	public Integer id;
+	public Picture() {
+	}
 
-	public Integer height;
-
-	public Integer width;
-
-	public String sizeTag;
-
-	@NotNull
-	@ManyToOne(cascade=CascadeType.PERSIST)
-	public File file;
-
-	@ManyToOne
-	public Image image;
+	public Picture(Integer networkId, String sizeTag, File file, Image image) {
+		this.networkId = networkId;
+		this.sizeTag = sizeTag;
+		this.file = file;
+		this.image = image;
+	}
 
 	@NotNull
 	public Integer networkId;
@@ -36,4 +29,21 @@ public class Picture implements MultiTenantEntity, Serializable {
 	public void setNetworkId(Integer networkId) {
 		this.networkId = networkId;
 	}
+
+	@Id
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	public Integer id;
+
+	public Integer height;
+
+	public Integer width;
+
+	public String sizeTag;
+
+	@NotNull
+	@ManyToOne(cascade=CascadeType.MERGE)
+	public File file;
+
+	@ManyToOne
+	public Image image;
 }
