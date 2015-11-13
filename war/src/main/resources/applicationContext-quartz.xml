@@ -20,7 +20,7 @@
 		<property name="applicationContextSchedulerContextKey" value="applicationContext"/>
 
 		<property name="jobFactory">
-			<bean class="com.wordrails.scheduler.AutowiringSpringBeanJobFactory"/>
+			<bean class="co.xarx.trix.scheduler.AutowiringSpringBeanJobFactory"/>
 		</property>
 	</bean>
 

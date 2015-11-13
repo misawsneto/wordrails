@@ -21,11 +21,11 @@
        					   http://www.springframework.org/schema/jee
        					   http://www.springframework.org/schema/jee/spring-jee.xsd">
 
-	<context:component-scan base-package="com.wordrails">
+	<context:component-scan base-package="co.xarx.trix">
 		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
 	</context:component-scan>
 
-	<jpa:repositories base-package="com.wordrails.persistence" transaction-manager-ref="transactionManager"
+	<jpa:repositories base-package="co.xarx.trix.persistence" transaction-manager-ref="transactionManager"
 					  entity-manager-factory-ref="entityManagerFactory"/>
 
 	<tx:annotation-driven transaction-manager="transactionManager"/>
@@ -43,7 +43,7 @@
 		<property name="dataSource" ref="dataSource"/>
 		<property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
 		<property name="persistenceUnitName" value="wordrails"/>
-		<!-- <property name="packagesToScan" value="com.wordrails.domain> -->
+		<!-- <property name="packagesToScan" value="co.xarx.trix.domain> -->
 	</bean>
 
 	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
@@ -52,14 +52,14 @@
 
 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 
-	<bean id="postFilter" class="com.wordrails.web.filter.PostFilter"/>
-	<bean id="networkDomainFilter" class="com.wordrails.web.filter.NetworkDomainFilter"/>
-	<bean id="personDataFilter" class="com.wordrails.web.filter.PersonDataFilter"/>
-	<bean id="corsCustomFilter" class="com.wordrails.web.filter.CORSCustomFilter"/>
-	<bean id="PathEntityFilter" class="com.wordrails.web.filter.PathEntityFilter"/>
-	<bean id="cacheService" class="com.wordrails.services.CacheService" init-method="init"/>
-	<bean id="amazonCloudService" class="com.wordrails.services.AmazonCloudService" init-method="init"/>
-	<bean id="wordrailsService" class="com.wordrails.WordrailsService" init-method="init"/>
+	<bean id="postFilter" class="co.xarx.trix.web.filter.PostFilter"/>
+	<bean id="networkDomainFilter" class="co.xarx.trix.web.filter.NetworkDomainFilter"/>
+	<bean id="personDataFilter" class="co.xarx.trix.web.filter.PersonDataFilter"/>
+	<bean id="corsCustomFilter" class="co.xarx.trix.web.filter.CORSCustomFilter"/>
+	<bean id="PathEntityFilter" class="co.xarx.trix.web.filter.PathEntityFilter"/>
+	<bean id="cacheService" class="co.xarx.trix.services.CacheService" init-method="init"/>
+	<bean id="amazonCloudService" class="co.xarx.trix.services.AmazonCloudService" init-method="init"/>
+	<bean id="wordrailsService" class="co.xarx.trix.WordrailsService" init-method="init"/>
 	<bean id="simpleMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
 
 	<bean id="springSessionRepositoryFilter" class="org.springframework.session.web.http.SessionRepositoryFilter">

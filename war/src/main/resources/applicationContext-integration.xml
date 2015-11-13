@@ -19,7 +19,7 @@
 	</int:channel>
 	 -->
 	<!-- <int:service-activator input-channel="sendHitChannel">
-		<bean class="com.wordrails.ga.SendHitService"/>
+		<bean class="SendHitService"/>
 	</int:service-activator> -->
 <!-- ###################################################################### -->
 

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-    	<groupId>co.xarx</groupId>
-    	<artifactId>trix-parent</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    	<relativePath>../parent/pom.xml</relativePath>
-    </parent>
+	<parent>
+		<groupId>co.xarx</groupId>
+		<artifactId>trix-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../parent/pom.xml</relativePath>
+	</parent>
 
-    <artifactId>trix-client</artifactId>
+	<artifactId>trix-client</artifactId>
 
 	<packaging>jar</packaging>
 
@@ -24,37 +24,37 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-                                        <debug>true</debug>
+					<debug>true</debug>
 				</configuration>
 			</plugin>
-						
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.3.2</version>			
+				<version>1.3.2</version>
 				<executions>
 					<execution>
-						<phase>generate-sources</phase>					
+						<phase>generate-sources</phase>
 						<goals>
 							<goal>java</goal>
-						</goals>						
-					</execution>        				
+						</goals>
+					</execution>
 				</executions>
 				<configuration>
-					<mainClass>com.wordrails.generator.JavaClientGenerator</mainClass>
+					<mainClass>co.xarx.trix.generator.JavaClientGenerator</mainClass>
 					<arguments>
-						<argument>${project.build.directory}/generated-sources/java</argument>						
+						<argument>${project.build.directory}/generated-sources/java</argument>
 					</arguments>
 					<includePluginDependencies>true</includePluginDependencies>
 				</configuration>
 			</plugin>
-									
+
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
 				<artifactId>apt-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -84,18 +84,18 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	
-	<dependencies>		
+
+	<dependencies>
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.squareup.okhttp</groupId>
 			<artifactId>okhttp-urlconnection</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.squareup.picasso</groupId>
 			<artifactId>picasso</artifactId>
@@ -105,18 +105,17 @@
 			<groupId>com.squareup.retrofit</groupId>
 			<artifactId>retrofit</artifactId>
 		</dependency>
-		
-		
-		
+
+
 		<dependency>
 			<groupId>co.xarx</groupId>
 			<artifactId>trix-api</artifactId>
-		</dependency>								
+		</dependency>
 
 		<dependency>
 			<groupId>co.xarx</groupId>
 			<artifactId>trix-generator</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-	</dependencies>	
+	</dependencies>
 </project>

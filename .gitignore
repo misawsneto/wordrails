@@ -41,8 +41,8 @@ client/.gitignore
 generator/.gitignore
 spring-data-rest/spring-data-rest-core/.gitignore
 spring-data-rest/spring-data-rest-webmvc/.gitignore
-war/com.wordrails.business.Post/segments.gen
-war/com.wordrails.business.Post/*
+war/co.xarx.trix.business.Post/segments.gen
+war/co.xarx.trix.business.Post/*
 client/journal
 war/nb-configuration.xml
 nbactions.xml

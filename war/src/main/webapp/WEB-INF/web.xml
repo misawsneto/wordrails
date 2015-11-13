@@ -25,7 +25,7 @@
 	</session-config>
 
 	<listener>
-		<listener-class>com.wordrails.ContextServletListener</listener-class>
+		<listener-class>co.xarx.trix.ContextServletListener</listener-class>
 	</listener>
 
 	<!-- RESTEasy -->
@@ -48,7 +48,7 @@
 	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class> 
 		</listener> -->
 	<listener>
-		<listener-class>com.wordrails.api.WordRailsContextLoaderListener</listener-class>
+		<listener-class>co.xarx.trix.api.WordRailsContextLoaderListener</listener-class>
 	</listener>
 
 	<context-param>
@@ -136,7 +136,7 @@
 	<!-- Cache -->
 	<filter>
 		<filter-name>CacheFilter</filter-name>
-		<filter-class>com.wordrails.web.filter.CacheFilter</filter-class>
+		<filter-class>co.xarx.trix.web.filter.CacheFilter</filter-class>
 	</filter>
 	<!-- Cache -->
 

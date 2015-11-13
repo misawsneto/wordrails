@@ -29,7 +29,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>com.wordrails.generator.ImplementationGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.ImplementationGenerator</mainClass>
 							<arguments>
 								<argument>${project.build.directory}/generated-sources/java</argument>
 							</arguments>
@@ -44,7 +44,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>com.wordrails.generator.JavaScriptClientGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.JavaScriptClientGenerator</mainClass>
 							<arguments>
 								<argument>${basedir}/src/main/webapp/js</argument>
 							</arguments>
@@ -58,7 +58,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>com.wordrails.generator.AngularClientGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.AngularClientGenerator</mainClass>
 							<arguments>
 								<argument>${basedir}/src/main/webapp/js</argument>
 							</arguments>

@@ -14,7 +14,7 @@
  - No Arch Linux: sudo systemctl start redis && sudo systemctl start elasticsearch
   
  - Para rodar a aplicação:
-    - rodar a classe RunTomcat que se encontra no modulo trix-war, pacote com.wordrails.test
+    - rodar a classe RunTomcat que se encontra no modulo trix-war, pacote co.xarx.trix.test
     ou
     - executar mvn tomcat7:run
 

@@ -76,11 +76,11 @@
 
 	<!--AUTHENTICATION-->
 
-	<bean id="anonymousAuthenticationFilter" class="com.wordrails.web.filter.TrixAnonymousAuthenticationFilter">
+	<bean id="anonymousAuthenticationFilter" class="co.xarx.trix.web.filter.TrixAnonymousAuthenticationFilter">
 		<constructor-arg name="key" value="anonymousKey" />
 	</bean>
 
-	<bean id="authenticationFilter" class="com.wordrails.web.filter.TrixAuthenticationFilter"
+	<bean id="authenticationFilter" class="co.xarx.trix.web.filter.TrixAuthenticationFilter"
 	            p:authenticationManager-ref="trixAuthenticationManager"/>
 
 	<bean id="authenticationEntryPoint"
