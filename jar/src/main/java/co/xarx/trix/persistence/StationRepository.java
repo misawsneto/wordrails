@@ -18,7 +18,7 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
 	@Query(value="SELECT CASE WHEN (count(st) > 0) then true else false end FROM Station st WHERE st.id = :stationId AND st.visibility = 'UNRESTRICTED'")
 	boolean isUnrestricted(@Param("stationId") Integer stationId);
 
-	@Query("select station from Station station where station.id IN(select station.id from Station station join station.personsStationRoles personRoles join personRoles.person person where person.id = :personId and :networkId = station.network.id)or station.id IN(select station.id from Station station where(station.visibility = 'UNRESTRICTED' or station.visibility = 'RESTRICTED_TO_NETWORKS')and :networkId = station.network.id")
+	@Query("select station from Station station where station.id IN (select station.id from Station station join station.personsStationRoles personRoles join personRoles.person person where person.id = :personId and :networkId = station.network.id) or station.id IN (select station.id from Station station where (station.visibility = 'UNRESTRICTED' or station.visibility = 'RESTRICTED_TO_NETWORKS') and :networkId = station.network.id)")
 	List<Station> findByPersonIdAndNetworkId(@Param("personId") Integer personId, @Param("networkId") Integer networkId);
 
 	@Query("select station from Station station join station.personsStationRoles personRoles join personRoles.person person " +

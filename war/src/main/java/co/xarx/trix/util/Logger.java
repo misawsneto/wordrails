@@ -1,4 +1,4 @@
-package com.wordrails.util;
+package co.xarx.trix.util;
 
 import org.slf4j.LoggerFactory;
 
