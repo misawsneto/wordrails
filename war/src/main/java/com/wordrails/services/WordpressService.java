@@ -1,10 +1,11 @@
-package com.wordrails.business;
+package com.wordrails.services;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
+import com.wordrails.business.*;
 import com.wordrails.persistence.*;
-import com.wordrails.services.WordpressParsedContent;
 import com.wordrails.util.TrixUtil;
+import com.wordrails.util.WordpressParsedContent;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;

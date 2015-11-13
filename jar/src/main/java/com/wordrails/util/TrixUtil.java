@@ -1,6 +1,5 @@
 package com.wordrails.util;
 
-import com.wordrails.services.WordpressParsedContent;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;

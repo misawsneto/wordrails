@@ -13,7 +13,7 @@ import com.wordrails.persistence.*;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.AsyncService;
 import com.wordrails.services.CacheService;
-import com.wordrails.services.WordpressParsedContent;
+import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.TrixUtil;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;

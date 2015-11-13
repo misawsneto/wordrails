@@ -9,7 +9,7 @@ import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
 import com.wordrails.services.CacheService;
-import com.wordrails.services.WordpressParsedContent;
+import com.wordrails.util.WordpressParsedContent;
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
