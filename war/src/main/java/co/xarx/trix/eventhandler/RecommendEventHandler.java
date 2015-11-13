@@ -1,7 +1,7 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.Recommend;
-import co.xarx.trix.domain.UnauthorizedException;
+import co.xarx.trix.exception.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterDelete;

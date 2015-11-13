@@ -1,7 +1,8 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.domain.*;
-import co.xarx.trix.domain.BadRequestException;
+import co.xarx.trix.exception.BadRequestException;
+import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

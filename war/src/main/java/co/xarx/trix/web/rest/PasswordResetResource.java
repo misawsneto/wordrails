@@ -31,7 +31,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import co.xarx.trix.WordrailsService;
-import co.xarx.trix.domain.EmailService;
+import co.xarx.trix.services.EmailService;
 import co.xarx.trix.domain.PasswordReset;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.User;

@@ -1,6 +1,6 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.domain.UnauthorizedException;
+import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.domain.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;

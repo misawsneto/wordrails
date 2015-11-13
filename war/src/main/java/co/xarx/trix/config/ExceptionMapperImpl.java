@@ -1,8 +1,8 @@
 package co.xarx.trix.config;
 
-import co.xarx.trix.domain.ConflictException;
-import co.xarx.trix.domain.OperationNotSupportedException;
-import co.xarx.trix.domain.UnauthorizedException;
+import co.xarx.trix.exception.ConflictException;
+import co.xarx.trix.exception.OperationNotSupportedException;
+import co.xarx.trix.exception.UnauthorizedException;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
 

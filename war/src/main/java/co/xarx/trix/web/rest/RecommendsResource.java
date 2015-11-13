@@ -19,7 +19,7 @@ import co.xarx.trix.auth.TrixAuthenticationProvider;
 //import org.hibernate.search.query.dsl.QueryBuilder;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Recommend;
-import co.xarx.trix.domain.UnauthorizedException;
+import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;

@@ -1,8 +1,6 @@
 package co.xarx.trix.config;
 
-import co.xarx.trix.domain.*;
-import co.xarx.trix.exception.ErrorResource;
-import co.xarx.trix.exception.FieldErrorResource;
+import co.xarx.trix.exception.*;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import org.apache.commons.lang.exception.ExceptionUtils;

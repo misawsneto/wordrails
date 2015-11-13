@@ -25,7 +25,7 @@ import co.xarx.trix.api.StationsPermissions;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.Bookmark;
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.UnauthorizedException;
+import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.persistence.BookmarkRepository;
 import co.xarx.trix.persistence.PostRepository;

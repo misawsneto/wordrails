@@ -1,9 +1,11 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.exception;
 
-import java.io.IOException;
+import co.xarx.trix.domain.RestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.ClientHttpResponse;
+
+import java.io.IOException;
 
 public class ResponseErrorHandler implements org.springframework.web.client.ResponseErrorHandler {
     private static final Logger log = LoggerFactory.getLogger(ResponseErrorHandler.class);

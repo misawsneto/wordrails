@@ -6,6 +6,8 @@ import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.StationRoleEventHandler;
+import co.xarx.trix.exception.*;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.notification.APNService;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
@@ -151,7 +153,7 @@ public class PersonsResource {
 		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network))
 			forward();
 		else
-			throw new co.xarx.trix.domain.BadRequestException();
+			throw new co.xarx.trix.exception.BadRequestException();
 	}
 
 	@PUT
@@ -205,7 +207,7 @@ public class PersonsResource {
 		try{
 			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 			if(network.networkCreationToken == null || !network.networkCreationToken.equals(token))
-				throw new co.xarx.trix.domain.BadRequestException("Invalid Token");
+				throw new BadRequestException("Invalid Token");
 
 			List<NetworkRole> nr = personRepository.findNetworkAdmin(network.id);
 			User user = nr.get(0).person.user;
@@ -349,7 +351,7 @@ public class PersonsResource {
 
 	@POST
 	@Path("/create")
-	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, co.xarx.trix.domain.BadRequestException, JsonProcessingException{
+	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, JsonProcessingException{
 		Network network = authProvider.getNetwork();
 
 		Person person = null;
@@ -391,7 +393,7 @@ public class PersonsResource {
 
 				personRepository.save(person);
 			}catch (javax.validation.ConstraintViolationException e){
-				co.xarx.trix.domain.BadRequestException badRequest = new co.xarx.trix.domain.BadRequestException();
+				BadRequestException badRequest = new BadRequestException();
 
 				for (ConstraintViolation violation : e.getConstraintViolations()) {
 					FieldError error = new FieldError(violation.getInvalidValue()+"", violation.getInvalidValue()+"", violation.getMessage());
@@ -466,7 +468,7 @@ public class PersonsResource {
 						user.addAuthority(authority);
 					}
 				}else{
-					throw new co.xarx.trix.domain.BadRequestException();
+					throw new BadRequestException();
 				}
 			}
 
@@ -474,7 +476,7 @@ public class PersonsResource {
 
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
 		}else{
-			throw new co.xarx.trix.domain.BadRequestException();
+			throw new BadRequestException();
 		}
 	}
 
@@ -779,7 +781,7 @@ public class PersonsResource {
 	@Path("/me/stats")
 	public Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws JsonProcessingException{
 		if(date == null)
-			throw new co.xarx.trix.domain.BadRequestException("Invalid date. Expected yyyy-MM-dd");
+			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
 
 		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 

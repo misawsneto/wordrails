@@ -3,6 +3,8 @@ package co.xarx.trix.eventhandler;
 import java.util.List;
 
 import co.xarx.trix.domain.*;
+import co.xarx.trix.exception.OperationNotSupportedException;
+import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.TaxonomyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
