@@ -27,7 +27,6 @@
 		<class>co.xarx.trix.domain.Taxonomy</class>
 		<class>co.xarx.trix.domain.Term</class>
 		<class>co.xarx.trix.domain.TermPerspective</class>
-		<class>co.xarx.trix.domain.Wordpress</class>
 		<class>co.xarx.trix.domain.User</class>
 		<class>co.xarx.trix.domain.UserConnection</class>
 		<class>co.xarx.trix.domain.UserGrantedAuthority</class>

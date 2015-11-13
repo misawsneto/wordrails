@@ -1356,31 +1356,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetInvitationsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetInvitationAuthorized(Integer invitationId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isFindByInvitationHashAuthorized(String hash) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetInvitationStationAuthorized(Integer invitationId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetInvitationNetworkAuthorized(Integer invitationId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isFindOneBySubdomainAuthorized(String subdomain) {
 		return true;
 	}
