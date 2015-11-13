@@ -24,7 +24,7 @@ public class StationSecurityChecker {
 	
 	public boolean canCreate(Station station){
 		Person personLogged = authProvider.getLoggedPerson();
-		NetworkRole networkRole = networkRolesRepository.findByNetworkAndPerson(station.networks.iterator().next(), personLogged);
+		NetworkRole networkRole = networkRolesRepository.findByNetworkAndPerson(station.network, personLogged);
 		return (networkRole != null && networkRole.admin);
 	}
 	
@@ -101,13 +101,13 @@ public class StationSecurityChecker {
 	
 	private boolean isNetworkAdmin(Station station, Person person){
 		boolean isAdmin = false;
-		for (Network network : station.networks) {
-			NetworkRole networkRole = networkRolesRepository.findByNetworkAndPerson(network, person);
+//		for (Network network : station.networks) {
+			NetworkRole networkRole = networkRolesRepository.findByNetworkAndPerson(station.network, person);
 			if(networkRole != null && networkRole.admin){
 				isAdmin = true;
-				break;
+//				break;
 			}
-		}
+//		}
 		return isAdmin;
 	}
 

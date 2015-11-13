@@ -233,6 +233,13 @@
 	</filter-mapping>
 
 	<filter-mapping>
+		<filter-name>PathEntityFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
 		<filter-name>PersonDataFilter</filter-name>
 		<url-pattern>/index.jsp</url-pattern>
 		<url-pattern>/search/*</url-pattern>

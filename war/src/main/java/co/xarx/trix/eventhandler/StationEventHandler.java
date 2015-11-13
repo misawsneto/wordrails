@@ -53,7 +53,7 @@ public class StationEventHandler {
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
 		if(stationSecurityChecker.canCreate(station)){
 			if(station.stationPerspectives == null || station.stationPerspectives.size() == 0 
-					&& station.networks != null && station.networks.size() > 0){
+					&& station.network != null){
 				Set<StationPerspective> perspectives = new HashSet<StationPerspective>(1);
 				
 				//Perspective Default

@@ -114,7 +114,7 @@ public class PostService {
 		notification.message = post.title;
 		notification.person = authProvider.getLoggedPerson();
 		try {
-			if (post.station != null && post.station.networks != null) {
+			if (post.station != null && post.station.network != null) {
 				Station station = stationRepository.findOne(post.station.id);
 				Network network = authProvider.getNetwork();
 
