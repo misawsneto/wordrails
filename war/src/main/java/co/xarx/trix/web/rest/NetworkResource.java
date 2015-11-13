@@ -13,7 +13,7 @@ import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.eventhandler.StationEventHandler;
 import co.xarx.trix.eventhandler.StationRoleEventHandler;
-import co.xarx.trix.util.NetworkCreateDto;
+import co.xarx.trix.dto.NetworkCreateDto;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.notification.GCMService;
-import co.xarx.trix.util.PersonCreateDto;
+import co.xarx.trix.dto.PersonCreateDto;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;

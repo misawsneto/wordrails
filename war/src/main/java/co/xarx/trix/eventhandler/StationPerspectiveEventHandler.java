@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import co.xarx.trix.domain.*;
-import co.xarx.trix.elasticsearch.PerspectiveEsRepository;
+import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
 import co.xarx.trix.persistence.RowRepository;
 import co.xarx.trix.persistence.StationPerspectiveRepository;
 import co.xarx.trix.persistence.TaxonomyRepository;

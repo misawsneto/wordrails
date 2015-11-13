@@ -2,11 +2,10 @@ package co.xarx.trix.web.filter;
 
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Wordpress;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.WordpressRepository;
-import co.xarx.trix.services.WordpressService;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,9 +26,6 @@ public class PostFilter implements Filter {
 
 	@Autowired
 	private WordpressRepository wordpressRepository;
-
-	@Autowired
-	private WordpressService wordpressService;
 
 	@Autowired
 	private WordrailsService wordrailsService;
@@ -78,16 +74,6 @@ public class PostFilter implements Filter {
 					handleAfterRead(post, wp);
 					wordrailsService.countPostRead(post, authProvider.getLoggedPerson(), rq.getRequestedSessionId());
 				}
-			} else if (rq.getMethod().toLowerCase().equals("post") && res.containsHeader("Location")) {
-				postId = getPostId(res.getHeader("Location"));
-				Post post = postRepository.findOne(postId);
-				Wordpress wp = wordpressRepository.findByStation(post.station);
-				handleAfterCreate(post, wp);
-			} else if (rq.getMethod().toLowerCase().equals("put") && NumberUtils.isNumber(urlParts[urlParts.length - 1])) {
-				postId = getPostId(rq.getRequestURI());
-				Post post = postRepository.findOne(postId);
-				Wordpress wp = wordpressRepository.findByStation(post.station);
-				handleAfterUpdate(post, wp);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,26 +93,6 @@ public class PostFilter implements Filter {
 	private Integer getPostId(String location) throws Exception {
 		String[] strings = location.split("/");
 		return Integer.parseInt(strings[strings.length - 1]);
-	}
-
-	@Transactional
-	private void handleAfterCreate(Post post, Wordpress wp) throws Exception {
-		if (wp != null && wp.domain != null && wp.username != null && wp.password != null) {
-			WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
-			WordpressPost wpPost = wordpressService.createPost(post, api);
-			post.wordpressId = wpPost.id;
-			postRepository.save(post);
-		}
-	}
-
-	@Transactional
-	private void handleAfterUpdate(Post post, Wordpress wp) throws Exception {
-		if (post != null) {
-			if (wp != null && wp.domain != null && wp.username != null && wp.password != null) {
-				WordpressApi api = ServiceGenerator.createService(WordpressApi.class, wp.domain, wp.username, wp.password);
-				wordpressService.updatePost(post, api);
-			}
-		}
 	}
 
 }

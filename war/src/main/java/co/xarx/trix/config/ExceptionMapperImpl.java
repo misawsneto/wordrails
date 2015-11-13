@@ -1,16 +1,16 @@
-package co.xarx.trix.api;
+package co.xarx.trix.config;
 
 import co.xarx.trix.domain.ConflictException;
 import co.xarx.trix.domain.OperationNotSupportedException;
 import co.xarx.trix.domain.UnauthorizedException;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.springframework.stereotype.Component;
 
 @Provider
 @Component

@@ -5,7 +5,7 @@ import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.elasticsearch.PostEsRepository;
+import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.util.TrixUtil;

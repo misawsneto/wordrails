@@ -1,9 +1,9 @@
-package co.xarx.trix.builder;
+package co.xarx.trix.services;
 
 import co.xarx.trix.domain.AndroidApp;
 import co.xarx.trix.persistence.AndroidAppRepository;
-import co.xarx.trix.services.AmazonCloudService;
-import co.xarx.trix.util.FilesUtil;
+import co.xarx.trix.util.FileUtil;
+import co.xarx.trix.util.StreamGobbler;
 import com.github.slugify.Slugify;
 import com.google.common.base.Charsets;
 import net.coobird.thumbnailator.Thumbnails;
@@ -27,9 +27,9 @@ import java.io.IOException;
 import java.util.Collection;
 
 @Component
-public class AndroidBuilder {
+public class AndroidBuilderService {
 
-	Logger log = Logger.getLogger(AndroidBuilder.class.getName());
+	Logger log = Logger.getLogger(AndroidBuilderService.class.getName());
 
 	private static final String ROOT_PACKAGE = "co.xarx.trix";
 
@@ -122,7 +122,7 @@ public class AndroidBuilder {
 
 		if(androidApp.icon != null) {
 			String originalUrl = amazonCloudService.getPublicImageURL(networkSubdomain, androidApp.icon.hash);
-			File originalIcon = FilesUtil.downloadFile(new File(drawableDir, "ic_launcher.png"), originalUrl);
+			File originalIcon = FileUtil.downloadFile(new File(drawableDir, "ic_launcher.png"), originalUrl);
 
 			BufferedImage bufferedImage = ImageIO.read(originalIcon);
 			String mime = new Tika().detect(originalIcon);

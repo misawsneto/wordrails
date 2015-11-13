@@ -1,4 +1,4 @@
-package co.xarx.trix.api;
+package co.xarx.trix.config;
 
 import javax.servlet.ServletContext;
 

@@ -3,7 +3,6 @@ package co.xarx.trix.web.rest;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
-import co.xarx.trix.util.FilesUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,7 @@ public class ImagesResource {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 
-		String hash = FilesUtil.getHash(item.getInputStream());
+		String hash = FileUtil.getHash(item.getInputStream());
 		Integer networkId = (Integer) request.getSession().getAttribute("networkId");
 		String networkSubdomain = (String) request.getSession().getAttribute("networkSubdomain");
 

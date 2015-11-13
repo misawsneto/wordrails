@@ -48,7 +48,7 @@
 	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class> 
 		</listener> -->
 	<listener>
-		<listener-class>co.xarx.trix.api.WordRailsContextLoaderListener</listener-class>
+		<listener-class>co.xarx.trix.config.WordRailsContextLoaderListener</listener-class>
 	</listener>
 
 	<context-param>

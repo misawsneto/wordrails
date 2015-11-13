@@ -1,4 +1,4 @@
-package co.xarx.trix.util;
+package co.xarx.trix.dto;
 
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;

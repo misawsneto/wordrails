@@ -1,4 +1,4 @@
-package co.xarx.trix.elasticsearch;
+package co.xarx.trix.persistence.elasticsearch;
 
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.update.UpdateRequest;

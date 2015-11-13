@@ -1,4 +1,4 @@
-package co.xarx.trix.util;
+package co.xarx.trix.dto;
 
 import java.io.Serializable;
 import java.util.Set;

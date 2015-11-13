@@ -13,7 +13,7 @@ import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.persistence.PersonNetworkRegIdRepository;
 import co.xarx.trix.persistence.PersonNetworkTokenRepository;
-import co.xarx.trix.util.NotificationDto;
+import co.xarx.trix.dto.NotificationDto;
 import co.xarx.trix.util.TrixUtil;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;

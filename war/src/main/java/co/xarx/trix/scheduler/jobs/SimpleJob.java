@@ -1,4 +1,4 @@
-package co.xarx.trix.jobs;
+package co.xarx.trix.scheduler.jobs;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;

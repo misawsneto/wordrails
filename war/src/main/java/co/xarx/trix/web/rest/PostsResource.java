@@ -8,11 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.elasticsearch.PostEsRepository;
+import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.services.PostService;
-import co.xarx.trix.util.StationTermsDto;
+import co.xarx.trix.dto.StationTermsDto;
 import co.xarx.trix.util.TrixUtil;
 
 import org.elasticsearch.action.search.SearchResponse;

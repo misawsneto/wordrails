@@ -4,18 +4,17 @@ package co.xarx.trix.web.rest;
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.elasticsearch.PerspectiveEsRepository;
+import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
 import co.xarx.trix.eventhandler.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.AmazonCloudService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import co.xarx.trix.elasticsearch.BookmarkEsRespository;
-import co.xarx.trix.elasticsearch.PostEsRepository;
-import co.xarx.trix.jobs.SimpleJob;
+import co.xarx.trix.persistence.elasticsearch.BookmarkEsRespository;
+import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
+import co.xarx.trix.scheduler.jobs.SimpleJob;
 import co.xarx.trix.script.ImageScript;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
-import co.xarx.trix.util.WordpressParsedContent;
 import co.xarx.trix.util.TrixUtil;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
@@ -597,99 +596,10 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@GET
-	@Path("/updateWordpressPosts")
-	public Response updateWordpressPosts(@Context HttpServletRequest request){
-		String host = request.getHeader("Host");
-
-		int count = 0;
-
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
-			List<Post> posts = new ArrayList<>();
-			for (Post post : all) {
-				if(post.wordpressId != null && post.featuredImage == null){
-					WordpressParsedContent wpc = wordrailsService.extractImageFromContent(post.body, post.externalFeaturedImgUrl);
-					post.body = wpc.content;
-					post.featuredImage = wpc.image;
-					post.externalFeaturedImgUrl = wpc.externalImageUrl;
-					System.out.println(post.id + " " + (wpc.image != null ? wpc.image.id : "") + " " + post.externalFeaturedImgUrl);
-					if(post.externalFeaturedImgUrl != null){
-						count++;
-						posts.add(post);
-					}
-				}
-				if(count > 100)
-					break;
-			}
-
-			postRepository.save(posts);
-		}
-		return Response.status(Status.OK).build();
-	}
-
-	private @Autowired PostReadRepository postReadRepository;
-	private @Autowired CellRepository cellRepository;
-	private @Autowired CommentRepository commentRepository;
 	private @Autowired ImageRepository imageRepository;
 	private @Autowired BookmarkRepository bookmarkRepository;
-	private @Autowired RecommendRepository recommendRepository;
-	private @Autowired NotificationRepository notificationRepository;
-
-	@GET
-	@Path("/removeWordpress")
-	public Response removeWordpress(@Context HttpServletRequest request, @QueryParam("token") String token){
-		int countPost = 0;
-		int countTerm = 0;
-		String host = request.getHeader("Host");
-
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			Wordpress wp = wordpressRepository.findByToken(token);
-
-			Station station = stationRepository.findByWordpressToken(token);
-
-			if(station == null) {
-				return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Something is very wrong:" + token).build();
-			} else if (wp == null) {
-				return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Token invalid:" + token).build();
-			} 
-
-			List<Post> posts = postRepository.findByStation(station);
-			for (Post post : posts) {
-				if(post.wordpressId != null){
-					List<Image> images = imageRepository.findByPost(post);
-					if (images != null && images.size() > 0) {
-						postRepository.updateFeaturedImagesToNull(images);
-					}
-					imageRepository.delete(images);
-					cellRepository.delete(cellRepository.findByPost(post));
-					commentRepository.delete(post.comments);
-					postReadRepository.deleteByPost(post);
-					notificationRepository.deleteByPost(post);
-					bookmarkRepository.deleteByPost(post);
-					recommendRepository.deleteByPost(post);
-					postRepository.delete(post);
-
-					countPost++;
-				}
-			}
-			Taxonomy categoryTaxonomy = taxonomyRepository.findByWordpress(wp);
-			Taxonomy tagTaxonomy = taxonomyRepository.findTypeTByWordpress(wp);
-			List<Term> terms = new ArrayList<>();
-			terms.addAll(termRepository.findByTaxonomy(tagTaxonomy));
-			terms.addAll(termRepository.findByTaxonomy(categoryTaxonomy));
-			for (Term term : terms) {
-				if(term.wordpressId != null){
-					countTerm += deleteCascade(term);
-				}
-			}
-		}
-
-		return Response.status(Response.Status.OK).type("text/plain").entity("Posts:"+countPost+" Terms:"+countTerm).build();
-	}
 	@Autowired private TermRepository termRepository;
-	@Autowired private RowRepository rowRepository; 
-	@Autowired private WordpressRepository wordpressRepository;
+	@Autowired private RowRepository rowRepository;
 
 	@Transactional
 	public int deleteCascade(Term term){
@@ -745,20 +655,6 @@ public class UtilResource {
 
 	@Autowired
 	private Scheduler sched;
-
-	@GET
-	@Path("/test")
-	public Response test(@Context HttpServletRequest request){
-		String host = request.getHeader("Host");
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			reg.findRegIdByStationId(2);
-			asyncService.test();
-			String content = "<div class='text-black pt-serif blue ng-binding' ng-style='app.customStyle.secondaryFont' bind-html-unsafe='post.body' style='font-family: 'PT Serif', sans-serif;'>[caption id='attachment_66378' align='alignnone' width='770']<a href='http://cockpitblogs.ne10.com.br/torcedor/wp-content/uploads/2015/04/marcelo-770.jpg'><img class='size-full wp-image-66378' src='http://cockpitblogs.ne10.com.br/torcedor/wp-content/uploads/2015/04/marcelo-770.jpg' alt='Foto: Divulgação/FPF' width='770' height='416'></a> Foto: Divulgação/FPF[/caption] Marcelo de Lima Henrique é quem vai comandar o primeiro jogo da decisão entre Salgueiro e Santa Cruz, no Cornélio de Barros, na próxima quarta-feira, às 22h. Ele será auxiliado por Clóvis Amaral e Fernanda Colombo. Já a volta terá Emerson Sobral como árbitro principal ao lado de Albert Júnior e Elan Vieira. O segundo jogo será no domingo, às 16h, no Arruda. A Federação Pernambucana também definiu quem apita os jogos entre Sport e Central. Sebastião Rufino Filho comanda a primeira partida, no Lacerdão, enquanto Giorgio Wilton o segundo, na Ilha do Retiro.</div>";
-			WordpressParsedContent wpc = wordrailsService.extractImageFromContent(content);
-			System.out.println(wpc.content);
-		}
-		return Response.status(Status.OK).build();
-	}
 
 	@GET
 	@Path("/removeOldImages")

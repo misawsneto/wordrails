@@ -4,7 +4,7 @@ import java.util.*;
 
 import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.elasticsearch.PerspectiveEsRepository;
+import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
 import org.springframework.beans.factory.annotation.Autowired;

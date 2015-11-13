@@ -2,7 +2,7 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.util.FilesUtil;
+import co.xarx.trix.util.FileUtil;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -65,7 +65,7 @@ public class AmazonCloudService {
 		java.io.File tmpFile = java.io.File.createTempFile(TrixUtil.generateRandomString(5, "aA#"), ".tmp");
 
 		FileUtils.copyInputStreamToFile(input, tmpFile);
-		String hash = FilesUtil.getHash(new FileInputStream(tmpFile));
+		String hash = FileUtil.getHash(new FileInputStream(tmpFile));
 		uploadPublicImage(tmpFile, lenght, networkDomain, hash, size, mime, true);
 		return hash;
 	}
@@ -73,7 +73,7 @@ public class AmazonCloudService {
 	public String uploadAPK(java.io.File file, Long lenght, String networkDomain, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
 		log.debug("uploading apk...");
 
-		String hash = FilesUtil.getHash(new FileInputStream(file));
+		String hash = FileUtil.getHash(new FileInputStream(file));
 
 		ObjectMetadata md = new ObjectMetadata();
 		md.setContentType(mime);
@@ -102,7 +102,7 @@ public class AmazonCloudService {
 	public String uploadPublicImage(java.io.File file, Long lenght, String networkDomain, String hash,
 	                                String sizeTag, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
 		if(hash == null) {
-			hash = FilesUtil.getHash(new FileInputStream(file));
+			hash = FileUtil.getHash(new FileInputStream(file));
 		}
 
 		ObjectMetadata md = new ObjectMetadata();
@@ -224,7 +224,7 @@ public class AmazonCloudService {
 		Blob blob = fileContents.contents;
 		if(blob == null) {
 			if (file.url != null) {
-				is = FilesUtil.getStreamFromUrl(file.url);
+				is = FileUtil.getStreamFromUrl(file.url);
 				byteSize = ((FileInputStream) is).getChannel().size();
 			} else if(file.hash != null && !file.hash.isEmpty() && exists(publicBucket, file.hash)) {
 				return file.hash;

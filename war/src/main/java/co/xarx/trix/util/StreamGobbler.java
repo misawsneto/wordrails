@@ -1,4 +1,4 @@
-package co.xarx.trix.builder;
+package co.xarx.trix.util;
 
 import org.apache.log4j.Logger;
 

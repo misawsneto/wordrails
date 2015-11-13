@@ -1,4 +1,4 @@
-package co.xarx.trix.util;
+package co.xarx.trix.exception;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

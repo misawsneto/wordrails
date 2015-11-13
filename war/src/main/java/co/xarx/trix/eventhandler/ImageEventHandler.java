@@ -5,7 +5,7 @@ import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.FileContentsRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
-import co.xarx.trix.util.FilesUtil;
+import co.xarx.trix.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -46,7 +46,7 @@ public class ImageEventHandler {
 			Image existingImage = imageService.getImageFromHashAndType(image.type, originalFile.hash, network.id);
 
 			java.io.File tempOriginalFile =
-					FilesUtil.downloadFile(FilesUtil.createNewTempFile(), amazonCloudService.getPublicImageURL(network.subdomain, originalFile.hash));
+					FileUtil.downloadFile(FileUtil.createNewTempFile(), amazonCloudService.getPublicImageURL(network.subdomain, originalFile.hash));
 
 			newImage = imageService.createNewImageFromExistingImage(network.subdomain, false, existingImage, tempOriginalFile);
 		} else {

@@ -1,4 +1,4 @@
-package co.xarx.trix.elasticsearch;
+package co.xarx.trix.persistence.elasticsearch;
 
 import co.xarx.trix.domain.*;
 import com.fasterxml.jackson.annotation.JsonFormat;

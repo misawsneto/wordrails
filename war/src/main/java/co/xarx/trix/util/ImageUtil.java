@@ -25,25 +25,25 @@ public class ImageUtil {
 	}
 
 	public static ImageFile resizeImage(InputStream inputStream, Integer height, Integer width, String extension) throws IOException {
-		java.io.File file = FilesUtil.createNewTempFile(inputStream);
+		java.io.File file = FileUtil.createNewTempFile(inputStream);
 		return resizeImage(file, height, width, extension);
 	}
 
 	public static ImageFile resizeImage(java.io.File file, Integer height, Integer width, String extension) throws IOException {
-		java.io.File newFile = FilesUtil.createNewTempFile();
+		java.io.File newFile = FileUtil.createNewTempFile();
 		BufferedImage bi = Thumbnails.of(file).forceSize(width, height).outputFormat("png").outputQuality(1).asBufferedImage();
 		ImageIO.write(bi, "png", newFile);
 
-		return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FilesUtil.getHash(new FileInputStream(newFile)));
+		return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FileUtil.getHash(new FileInputStream(newFile)));
 	}
 
 	public static ImageFile resizeImage(InputStream inputStream, Integer quality, String extension, boolean resizeUp, boolean resizeDown) throws IOException {
-		java.io.File file = FilesUtil.createNewTempFile(inputStream);
+		java.io.File file = FileUtil.createNewTempFile(inputStream);
 		return resizeImage(file, quality, extension, resizeUp, resizeDown);
 	}
 
 	public static ImageFile resizeImage(java.io.File file, Integer quality, String extension, boolean resizeUp, boolean resizeDown) throws IOException {
-		java.io.File newFile = FilesUtil.createNewTempFile();
+		java.io.File newFile = FileUtil.createNewTempFile();
 		BufferedImage bi = ImageIO.read(file);
 		Double currentQuality = Math.sqrt(bi.getHeight() * bi.getWidth());
 		if ((resizeUp && quality > currentQuality) || (resizeDown && quality < currentQuality)) {
@@ -55,12 +55,12 @@ public class ImageUtil {
 			newFile = file;
 		}
 
-		return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FilesUtil.getHash(new FileInputStream(newFile)));
+		return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FileUtil.getHash(new FileInputStream(newFile)));
 	}
 
 	public static ImageFile getImageFile(java.io.File file) throws IOException {
 		BufferedImage bi = ImageIO.read(file);
-		return new ImageFile(file, bi.getHeight(), bi.getWidth(), FilesUtil.getHash(new FileInputStream(file)));
+		return new ImageFile(file, bi.getHeight(), bi.getWidth(), FileUtil.getHash(new FileInputStream(file)));
 	}
 
 	public static class ImageFile {

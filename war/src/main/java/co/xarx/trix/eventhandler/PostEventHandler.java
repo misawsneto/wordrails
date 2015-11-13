@@ -1,7 +1,7 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.*;
-import co.xarx.trix.elasticsearch.PostEsRepository;
+import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.services.PostService;

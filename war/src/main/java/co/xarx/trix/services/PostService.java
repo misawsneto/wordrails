@@ -8,9 +8,9 @@ import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Notification;
-import co.xarx.trix.elasticsearch.PostEsRepository;
+import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.notification.GCMService;
-import co.xarx.trix.jobs.PostScheduleJob;
+import co.xarx.trix.scheduler.jobs.PostScheduleJob;
 import co.xarx.trix.persistence.QueryPersistence;
 
 //import org.hibernate.search.jpa.FullTextEntityManager;

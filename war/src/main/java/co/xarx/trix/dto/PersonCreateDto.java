@@ -1,4 +1,4 @@
-package co.xarx.trix.util;
+package co.xarx.trix.dto;
 
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.StationRole;

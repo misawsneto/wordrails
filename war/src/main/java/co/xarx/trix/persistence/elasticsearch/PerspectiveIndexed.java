@@ -1,4 +1,4 @@
-package co.xarx.trix.elasticsearch;
+package co.xarx.trix.persistence.elasticsearch;
 
 /**
  * Created by misael on 05/10/2015.

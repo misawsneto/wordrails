@@ -8,7 +8,7 @@ import co.xarx.trix.domain.Picture;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
-import co.xarx.trix.util.FilesUtil;
+import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.TrixUtil;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.google.common.collect.Sets;
@@ -46,8 +46,8 @@ public class ImageService {
 
 		Set<Picture> pictures = Sets.newHashSet();
 
-		java.io.File originalFile = FilesUtil.createNewTempFile(inputStream);
-		String hash = FilesUtil.getHash(new FileInputStream(originalFile));
+		java.io.File originalFile = FileUtil.createNewTempFile(inputStream);
+		String hash = FileUtil.getHash(new FileInputStream(originalFile));
 
 		Image existingImage = getImageFromHashAndType(type, hash, networkId);
 		if (existingImage != null) {
@@ -122,7 +122,7 @@ public class ImageService {
 
 		for (Picture pic : existingImage.pictures) {
 			if (!TrixUtil.urlExists(amazonCloudService.getPublicImageURL(networkSubdomain, pic.file.hash))) { //if image doesnt exist on amazon servers, upload it. it should exist
-				java.io.File tmpFile = FilesUtil.createNewTempFile(new FileInputStream(originalFile));
+				java.io.File tmpFile = FileUtil.createNewTempFile(new FileInputStream(originalFile));
 				try {
 					amazonCloudService.uploadPublicImage(tmpFile, pic.file.size,
 							networkSubdomain, pic.file.hash, pic.sizeTag, pic.file.getExtension(), true);

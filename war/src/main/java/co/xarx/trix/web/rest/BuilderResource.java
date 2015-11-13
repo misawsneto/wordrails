@@ -1,7 +1,7 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
-import co.xarx.trix.builder.AndroidBuilder;
+import co.xarx.trix.services.AndroidBuilderService;
 import co.xarx.trix.domain.AndroidApp;
 import co.xarx.trix.domain.Network;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class BuilderResource {
 	@Autowired
 	private WordrailsService wordrailsService;
 	@Autowired
-	private AndroidBuilder builder;
+	private AndroidBuilderService builder;
 
 	@GET
 	@Path("/generateApk")

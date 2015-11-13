@@ -1,4 +1,4 @@
-package co.xarx.trix.util;
+package co.xarx.trix.dto;
 
 public class NotificationDto {
 

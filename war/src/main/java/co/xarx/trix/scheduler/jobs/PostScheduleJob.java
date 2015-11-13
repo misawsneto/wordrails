@@ -1,4 +1,4 @@
-package co.xarx.trix.jobs;
+package co.xarx.trix.scheduler.jobs;
 
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostScheduled;

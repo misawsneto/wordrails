@@ -1,14 +1,13 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.persistence.FileRepository;
-import co.xarx.trix.util.FilesUtil;
+import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.domain.File;
 import co.xarx.trix.domain.FileContents;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.FileContentsRepository;
 import co.xarx.trix.services.AmazonCloudService;
-import co.xarx.trix.util.FileUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.hibernate.Hibernate;
@@ -66,7 +65,7 @@ public class FilesResource {
 			return Response.noContent().build();
 		}
 
-		String hash = FilesUtil.getHash(item.getInputStream());
+		String hash = FileUtil.getHash(item.getInputStream());
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		File existingFile = fileRepository.findByHashAndNetworkId(hash, network.id);
 		if (existingFile != null) {
@@ -135,7 +134,7 @@ public class FilesResource {
 			LobCreator creator = Hibernate.getLobCreator(session);
 
 			FileContents file;
-			String hash = FilesUtil.getHash(item.getInputStream());
+			String hash = FileUtil.getHash(item.getInputStream());
 			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 			FileContents existingFile = fileContentsRepository.findByHashAndNetworkId(hash, network.id);
 			if (existingFile != null) {
