@@ -1,4 +1,4 @@
-package com.wordrails.services;
+package com.wordrails.util;
 
 import com.wordrails.business.Image;
 

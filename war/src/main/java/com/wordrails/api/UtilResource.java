@@ -14,7 +14,7 @@ import com.wordrails.script.ImageScript;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.AsyncService;
 import com.wordrails.services.CacheService;
-import com.wordrails.services.WordpressParsedContent;
+import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.util.TrixUtil;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
@@ -124,7 +124,7 @@ public class UtilResource {
 				if(post.comments != null){
 					post.commentsCount = post.comments.size();
 				}
-				post.readTime = TrixUtil.calculateReadTime(post.body);
+				post.readTime = Post.calculateReadTime(post.body);
 			}
 			postRepository.save(posts);
 		}

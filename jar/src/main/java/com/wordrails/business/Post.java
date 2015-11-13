@@ -1,7 +1,8 @@
 package com.wordrails.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wordrails.util.TrixUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -206,7 +207,7 @@ public class Post implements Serializable {
 
 	private void onChanges() {
 		stationId = station.id;
-		readTime = TrixUtil.calculateReadTime(body);
+		readTime = calculateReadTime(body);
 
 		if (featuredImage != null && featuredImage.originalHash != null) {
 			imageHash = featuredImage.originalHash;
@@ -241,5 +242,20 @@ public class Post implements Serializable {
 				+ ", lastModificationDate=" + lastModificationDate + ", title="
 				+ title + ", state=" + state + "]";
 	}
+
+    public static int countWords(String string) {
+        if (string == null || string.isEmpty()) return 0;
+
+        Document doc = Jsoup.parse(string);
+        string = doc.text();
+        String[] wordArray = string.split("\\s+");
+        return wordArray.length;
+    }
+
+    public static int calculateReadTime(String string) {
+        int words = countWords(string);
+        int minutes = 5 * words / 398;
+        return minutes;
+    }
 
 }

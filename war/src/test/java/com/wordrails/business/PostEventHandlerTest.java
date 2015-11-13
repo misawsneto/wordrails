@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.wordrails.WordrailsService;
-import com.wordrails.services.WordpressParsedContent;
+import com.wordrails.util.WordpressParsedContent;
 import com.wordrails.test.AbstractTest;
 
 public class PostEventHandlerTest extends AbstractTest {

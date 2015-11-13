@@ -1,6 +1,6 @@
 package com.wordrails.util;
 
-import com.wordrails.services.WordpressParsedContent;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -191,21 +191,6 @@ public class TrixUtil {
 		wpc.content = wpc.content.trim();
 
 		return wpc;
-	}
-
-	public static int countWords(String string) {
-		if (string == null || string.isEmpty()) return 0;
-
-		Document doc = Jsoup.parse(string);
-		string = doc.text();
-		String[] wordArray = string.split("\\s+");
-		return wordArray.length;
-	}
-
-	public static int calculateReadTime(String string) {
-		int words = countWords(string);
-		int minutes = 5 * words / 398;
-		return minutes;
 	}
 
 	private static class Partition<T> extends AbstractList<List<T>> {

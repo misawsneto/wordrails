@@ -5,6 +5,7 @@ import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.*;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.persistence.WordpressRepository;
+import com.wordrails.services.WordpressService;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,6 +3,7 @@ package com.wordrails.api;
 import com.google.common.collect.HashBasedTable;
 import com.wordrails.business.*;
 import com.wordrails.persistence.*;
+import com.wordrails.services.WordpressService;
 import com.wordrails.util.TrixUtil;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Level;
