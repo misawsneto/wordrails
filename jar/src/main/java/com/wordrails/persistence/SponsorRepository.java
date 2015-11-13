@@ -3,7 +3,7 @@ package com.wordrails.persistence;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
-import com.wordrails.business.Sponsor;
+import com.wordrails.domain.Sponsor;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;

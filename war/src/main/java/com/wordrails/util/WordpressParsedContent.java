@@ -1,6 +1,6 @@
 package com.wordrails.util;
 
-import com.wordrails.business.Image;
+import com.wordrails.domain.Image;
 
 public class WordpressParsedContent {
 

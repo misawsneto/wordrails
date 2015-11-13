@@ -2,7 +2,7 @@ package com.wordrails.builder;
 
 import com.github.slugify.Slugify;
 import com.google.common.base.Charsets;
-import com.wordrails.business.AndroidApp;
+import com.wordrails.domain.AndroidApp;
 import com.wordrails.persistence.AndroidAppRepository;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.util.FilesUtil;

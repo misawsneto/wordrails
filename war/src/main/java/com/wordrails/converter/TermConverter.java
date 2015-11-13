@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.api.TermView;
-import com.wordrails.business.Term;
+import com.wordrails.domain.Term;
 import com.wordrails.persistence.TermRepository;
 
 @Component

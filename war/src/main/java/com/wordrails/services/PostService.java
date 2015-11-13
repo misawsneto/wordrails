@@ -1,10 +1,10 @@
 package com.wordrails.services;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.Network;
-import com.wordrails.business.Notification;
-import com.wordrails.business.Post;
-import com.wordrails.business.Station;
+import com.wordrails.domain.Network;
+import com.wordrails.domain.Notification;
+import com.wordrails.domain.Post;
+import com.wordrails.domain.Station;
 import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.notification.APNService;
 import com.wordrails.notification.GCMService;

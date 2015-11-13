@@ -10,8 +10,8 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.wordrails.business.Bookmark;
-import com.wordrails.business.Post;
+import com.wordrails.domain.Bookmark;
+import com.wordrails.domain.Post;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Integer>, QueryDslPredicateExecutor<Bookmark> {
 

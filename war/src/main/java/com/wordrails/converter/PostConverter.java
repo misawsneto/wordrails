@@ -1,8 +1,8 @@
 package com.wordrails.converter;
 
 import com.wordrails.api.PostView;
-import com.wordrails.business.Image;
-import com.wordrails.business.Post;
+import com.wordrails.domain.Image;
+import com.wordrails.domain.Post;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.util.TrixUtil;
 import org.springframework.beans.factory.annotation.Autowired;

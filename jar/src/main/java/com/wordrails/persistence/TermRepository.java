@@ -1,9 +1,9 @@
 package com.wordrails.persistence;
 
-import com.wordrails.business.Post;
-import com.wordrails.business.Taxonomy;
-import com.wordrails.business.Term;
-import com.wordrails.business.Wordpress;
+import com.wordrails.domain.Post;
+import com.wordrails.domain.Taxonomy;
+import com.wordrails.domain.Term;
+import com.wordrails.domain.Wordpress;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

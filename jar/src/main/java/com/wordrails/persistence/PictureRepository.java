@@ -1,8 +1,8 @@
 package com.wordrails.persistence;
 
-import com.wordrails.business.File;
-import com.wordrails.business.Image;
-import com.wordrails.business.Picture;
+import com.wordrails.domain.File;
+import com.wordrails.domain.Image;
+import com.wordrails.domain.Picture;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;

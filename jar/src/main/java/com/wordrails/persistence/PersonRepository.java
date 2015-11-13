@@ -1,10 +1,8 @@
 package com.wordrails.persistence;
 
-import com.wordrails.business.NetworkRole;
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
-import com.wordrails.business.User;
-import org.joda.time.DateTime;
+import com.wordrails.domain.NetworkRole;
+import com.wordrails.domain.Person;
+import com.wordrails.domain.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

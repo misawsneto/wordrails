@@ -10,8 +10,8 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.wordrails.business.Comment;
-import com.wordrails.business.Post;
+import com.wordrails.domain.Comment;
+import com.wordrails.domain.Post;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer>, QueryDslPredicateExecutor<Comment> {
 	@RestResource(exported=false)

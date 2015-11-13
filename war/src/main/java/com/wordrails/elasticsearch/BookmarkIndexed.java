@@ -2,8 +2,8 @@ package com.wordrails.elasticsearch;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
+import com.wordrails.domain.Person;
+import com.wordrails.domain.Post;
 
 /**
  * Created by jonas on 08/10/15.

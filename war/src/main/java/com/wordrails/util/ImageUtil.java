@@ -1,7 +1,7 @@
 package com.wordrails.util;
 
 
-import com.wordrails.business.File;
+import com.wordrails.domain.File;
 import net.coobird.thumbnailator.Thumbnails;
 
 import javax.imageio.ImageIO;

@@ -9,9 +9,9 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.wordrails.business.Network;
-import com.wordrails.business.Person;
-import com.wordrails.business.PersonNetworkToken;
+import com.wordrails.domain.Network;
+import com.wordrails.domain.Person;
+import com.wordrails.domain.PersonNetworkToken;
 
 public interface PersonNetworkTokenRepository extends JpaRepository<PersonNetworkToken, Integer>, QueryDslPredicateExecutor<PersonNetworkToken> {
 	@RestResource(exported=false)

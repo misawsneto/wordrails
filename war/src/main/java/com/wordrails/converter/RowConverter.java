@@ -1,7 +1,7 @@
 package com.wordrails.converter;
 
 import com.wordrails.api.RowView;
-import com.wordrails.business.Row;
+import com.wordrails.domain.Row;
 import com.wordrails.persistence.CellRepository;
 import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.TermPerspectiveRepository;

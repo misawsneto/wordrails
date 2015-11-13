@@ -1,6 +1,6 @@
 package com.wordrails.persistence;
 
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

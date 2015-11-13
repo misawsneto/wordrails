@@ -7,8 +7,8 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.wordrails.business.StationPerspective;
-import com.wordrails.business.Taxonomy;
+import com.wordrails.domain.StationPerspective;
+import com.wordrails.domain.Taxonomy;
 
 public interface StationPerspectiveRepository extends JpaRepository<StationPerspective, Integer>, QueryDslPredicateExecutor<StationPerspective> {
 	@RestResource(exported=true, path="findStationPerspectivesByStation")

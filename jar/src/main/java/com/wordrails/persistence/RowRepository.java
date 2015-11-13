@@ -7,9 +7,9 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.wordrails.business.Row;
-import com.wordrails.business.Term;
-import com.wordrails.business.TermPerspective;
+import com.wordrails.domain.Row;
+import com.wordrails.domain.Term;
+import com.wordrails.domain.TermPerspective;
 
 public interface RowRepository extends JpaRepository<Row, Integer>, QueryDslPredicateExecutor<Row> {
 	@RestResource(exported=false)

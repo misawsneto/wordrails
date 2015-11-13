@@ -1,7 +1,7 @@
 package com.wordrails.security;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.persistence.NetworkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

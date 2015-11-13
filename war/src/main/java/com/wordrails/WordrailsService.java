@@ -6,10 +6,11 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.wordrails.api.*;
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.persistence.*;
 import com.wordrails.services.CacheService;
 import com.wordrails.util.WordpressParsedContent;
+import com.wordrails.web.rest.PerspectiveResource;
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
@@ -46,7 +47,8 @@ public class WordrailsService {
 	private @Autowired PostReadRepository postReadRepository;
 	private @Autowired QueryPersistence queryPersistence;
 	private @Autowired PostRepository postRepository;
-	private @Autowired PerspectiveResource perspectiveResource;
+	private @Autowired
+	PerspectiveResource perspectiveResource;
 	private @Autowired CacheService cacheService;
 	private @Autowired
 	TrixAuthenticationProvider authProvider;

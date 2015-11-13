@@ -5,7 +5,7 @@ import com.relayrides.pushy.apns.PushManager;
 import com.relayrides.pushy.apns.PushManagerConfiguration;
 import com.relayrides.pushy.apns.util.*;
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.persistence.CertificateIosRepository;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.PersonNetworkTokenRepository;

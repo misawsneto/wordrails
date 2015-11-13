@@ -7,7 +7,7 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.wordrails.business.Invitation;
+import com.wordrails.domain.Invitation;
 
 public interface InvitationRepository extends JpaRepository<Invitation, Integer>, QueryDslPredicateExecutor<Invitation> {
 	@RestResource(exported=true)

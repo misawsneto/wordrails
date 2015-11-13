@@ -1,7 +1,7 @@
 package com.wordrails.persistence;
 
-import com.wordrails.business.Post;
-import com.wordrails.business.PostRead;
+import com.wordrails.domain.Post;
+import com.wordrails.domain.PostRead;
 
 import java.util.Date;
 import java.util.List;

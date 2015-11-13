@@ -1,6 +1,6 @@
 package com.wordrails.comparator;
 
-import com.wordrails.business.TermPerspective;
+import com.wordrails.domain.TermPerspective;
 
 public class TermPerspectiveComparator {
 

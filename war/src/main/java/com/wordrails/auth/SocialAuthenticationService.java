@@ -1,6 +1,6 @@
 package com.wordrails.auth;
 
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserRepository;
 import org.apache.log4j.Logger;

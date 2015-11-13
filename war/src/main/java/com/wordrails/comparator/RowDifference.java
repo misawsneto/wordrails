@@ -2,7 +2,7 @@ package com.wordrails.comparator;
 
 import java.util.List;
 
-import com.wordrails.business.Cell;
+import com.wordrails.domain.Cell;
 
 public class RowDifference {
 	public List<Cell> cellsToDelete;

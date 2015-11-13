@@ -4,7 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.persistence.*;
 import com.wordrails.util.FilesUtil;
 import com.wordrails.util.TrixUtil;

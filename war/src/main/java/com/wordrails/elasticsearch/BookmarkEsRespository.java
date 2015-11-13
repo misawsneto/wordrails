@@ -2,7 +2,7 @@ package com.wordrails.elasticsearch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wordrails.business.Bookmark;
+import com.wordrails.domain.Bookmark;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.sort.FieldSortBuilder;

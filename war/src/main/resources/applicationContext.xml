@@ -43,7 +43,7 @@
 		<property name="dataSource" ref="dataSource"/>
 		<property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
 		<property name="persistenceUnitName" value="wordrails"/>
-		<!-- <property name="packagesToScan" value="com.wordrails.business"/> -->
+		<!-- <property name="packagesToScan" value="com.wordrails.domain> -->
 	</bean>
 
 	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
@@ -52,11 +52,11 @@
 
 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 
-	<bean id="postFilter" class="com.wordrails.api.PostFilter"/>
-	<bean id="networkDomainFilter" class="com.wordrails.api.NetworkDomainFilter"/>
-	<bean id="personDataFilter" class="com.wordrails.api.PersonDataFilter"/>
-	<bean id="corsCustomFilter" class="com.wordrails.api.CORSCustomFilter"/>
-	<bean id="PathEntityFilter" class="com.wordrails.api.PathEntityFilter"/>
+	<bean id="postFilter" class="com.wordrails.web.filter.PostFilter"/>
+	<bean id="networkDomainFilter" class="com.wordrails.web.filter.NetworkDomainFilter"/>
+	<bean id="personDataFilter" class="com.wordrails.web.filter.PersonDataFilter"/>
+	<bean id="corsCustomFilter" class="com.wordrails.web.filter.CORSCustomFilter"/>
+	<bean id="PathEntityFilter" class="com.wordrails.web.filter.PathEntityFilter"/>
 	<bean id="cacheService" class="com.wordrails.services.CacheService" init-method="init"/>
 	<bean id="amazonCloudService" class="com.wordrails.services.AmazonCloudService" init-method="init"/>
 	<bean id="wordrailsService" class="com.wordrails.WordrailsService" init-method="init"/>

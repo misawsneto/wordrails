@@ -8,9 +8,9 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.wordrails.business.Network;
-import com.wordrails.business.NetworkRole;
-import com.wordrails.business.Person;
+import com.wordrails.domain.Network;
+import com.wordrails.domain.NetworkRole;
+import com.wordrails.domain.Person;
 
 public interface NetworkRolesRepository extends JpaRepository<NetworkRole, Integer>, QueryDslPredicateExecutor<NetworkRole> {
 	@RestResource(exported=false)

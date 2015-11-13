@@ -1,7 +1,7 @@
 package com.wordrails.persistence;
 
-import com.wordrails.business.Image;
-import com.wordrails.business.Post;
+import com.wordrails.domain.Image;
+import com.wordrails.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

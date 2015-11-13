@@ -7,9 +7,9 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.wordrails.business.Cell;
-import com.wordrails.business.Post;
-import com.wordrails.business.Row;
+import com.wordrails.domain.Cell;
+import com.wordrails.domain.Post;
+import com.wordrails.domain.Row;
 
 public interface CellRepository extends JpaRepository<Cell, Integer>, QueryDslPredicateExecutor<Cell> {
 	@RestResource(exported=false)

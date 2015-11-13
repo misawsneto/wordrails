@@ -10,10 +10,9 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.wordrails.business.Bookmark;
-import com.wordrails.business.Notification;
-import com.wordrails.business.Post;
-import com.wordrails.business.Station;
+import com.wordrails.domain.Notification;
+import com.wordrails.domain.Post;
+import com.wordrails.domain.Station;
 
 public interface NotificationRepository extends JpaRepository<Notification, Integer>, QueryDslPredicateExecutor<Notification> {
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.persistence.PersonNetworkTokenRepository;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;

@@ -1,8 +1,8 @@
 package com.wordrails.api;
 
-import com.wordrails.business.ConflictException;
-import com.wordrails.business.OperationNotSupportedException;
-import com.wordrails.business.UnauthorizedException;
+import com.wordrails.domain.ConflictException;
+import com.wordrails.domain.OperationNotSupportedException;
+import com.wordrails.domain.UnauthorizedException;
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;

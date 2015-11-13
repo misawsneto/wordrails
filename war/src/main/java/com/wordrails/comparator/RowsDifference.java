@@ -2,8 +2,8 @@ package com.wordrails.comparator;
 
 import java.util.List;
 
-import com.wordrails.business.Cell;
-import com.wordrails.business.Row;
+import com.wordrails.domain.Cell;
+import com.wordrails.domain.Row;
 
 public class RowsDifference {
 	public List<Row> rowsToDelete;

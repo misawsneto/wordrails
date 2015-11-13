@@ -3,7 +3,7 @@ package com.wordrails.eventhandler;
 import java.util.*;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.elasticsearch.PerspectiveEsRepository;
 import com.wordrails.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;

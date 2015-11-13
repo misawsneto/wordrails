@@ -1,6 +1,6 @@
 package com.wordrails.auth;
 
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.persistence.PersonRepository;
 import com.wordrails.persistence.UserConnectionRepository;
 import com.wordrails.persistence.UserRepository;

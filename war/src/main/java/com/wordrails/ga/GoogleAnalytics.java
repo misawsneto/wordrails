@@ -1,26 +1,5 @@
 package com.wordrails.ga;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.support.GenericMessage;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.github.tasubo.jgmp.Document;
-import com.github.tasubo.jgmp.PageView;
-import com.github.tasubo.jgmp.Sendable;
-import com.github.tasubo.jgmp.Session;
-import com.wordrails.business.Network;
-import com.wordrails.business.NetworkRole;
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
-import com.wordrails.persistence.PersonRepository;
-import com.wordrails.persistence.PostRepository;
-
 //@Component
 public class GoogleAnalytics {
 //	private @Autowired PersonRepository personRepository;	

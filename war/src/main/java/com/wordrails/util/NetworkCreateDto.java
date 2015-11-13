@@ -1,8 +1,7 @@
 package com.wordrails.util;
 
-import com.wordrails.business.Network;
-import com.wordrails.business.Person;
-import com.wordrails.business.Taxonomy;
+import com.wordrails.domain.Network;
+import com.wordrails.domain.Person;
 
 public class NetworkCreateDto extends Network {
 	

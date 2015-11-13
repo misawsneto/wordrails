@@ -2,7 +2,7 @@ package com.wordrails.api;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.util.ErrorResource;
 import com.wordrails.util.FieldErrorResource;
 import org.apache.commons.lang.exception.ExceptionUtils;

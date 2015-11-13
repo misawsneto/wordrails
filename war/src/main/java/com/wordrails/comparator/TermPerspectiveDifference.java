@@ -2,8 +2,8 @@ package com.wordrails.comparator;
 
 import java.util.List;
 
-import com.wordrails.business.Post;
-import com.wordrails.business.Row;
+import com.wordrails.domain.Post;
+import com.wordrails.domain.Row;
 
 public class TermPerspectiveDifference {
 	

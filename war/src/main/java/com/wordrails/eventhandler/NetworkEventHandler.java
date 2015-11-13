@@ -1,12 +1,11 @@
 package com.wordrails.eventhandler;
 
-import com.wordrails.business.Network;
+import com.wordrails.domain.Network;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.services.CacheService;
 

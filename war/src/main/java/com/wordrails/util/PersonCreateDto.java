@@ -1,7 +1,7 @@
 package com.wordrails.util;
 
-import com.wordrails.business.Person;
-import com.wordrails.business.StationRole;
+import com.wordrails.domain.Person;
+import com.wordrails.domain.StationRole;
 
 public class PersonCreateDto extends Person{
 

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.wordrails.api.NotificationView;
-import com.wordrails.business.Notification;
+import com.wordrails.domain.Notification;
 import com.wordrails.persistence.NotificationRepository;
 
 @Component

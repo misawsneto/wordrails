@@ -1,6 +1,6 @@
 package com.wordrails.persistence;
 
-import com.wordrails.business.PostDraft;
+import com.wordrails.domain.PostDraft;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 

@@ -3,10 +3,10 @@ package com.wordrails.services;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.google.common.collect.Sets;
-import com.wordrails.business.BadRequestException;
-import com.wordrails.business.File;
-import com.wordrails.business.Image;
-import com.wordrails.business.Picture;
+import com.wordrails.domain.BadRequestException;
+import com.wordrails.domain.File;
+import com.wordrails.domain.Image;
+import com.wordrails.domain.Picture;
 import com.wordrails.persistence.FileRepository;
 import com.wordrails.persistence.ImageRepository;
 import com.wordrails.persistence.PictureRepository;

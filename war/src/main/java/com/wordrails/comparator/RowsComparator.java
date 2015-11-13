@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.wordrails.business.Cell;
-import com.wordrails.business.Row;
+import com.wordrails.domain.Cell;
+import com.wordrails.domain.Row;
 
 @Component
 public class RowsComparator {

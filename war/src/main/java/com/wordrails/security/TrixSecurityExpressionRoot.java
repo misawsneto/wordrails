@@ -2,7 +2,7 @@ package com.wordrails.security;
 
 
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.StationRepository;
 import com.wordrails.persistence.StationRolesRepository;

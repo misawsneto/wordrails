@@ -7,12 +7,12 @@ import com.wordrails.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.wordrails.business.Comment;
-import com.wordrails.business.Network;
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationRole;
+import com.wordrails.domain.Comment;
+import com.wordrails.domain.Network;
+import com.wordrails.domain.Person;
+import com.wordrails.domain.Post;
+import com.wordrails.domain.Station;
+import com.wordrails.domain.StationRole;
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.StationRolesRepository;
 import com.wordrails.persistence.PostRepository;

@@ -1,7 +1,7 @@
 package com.wordrails.eventhandler;
 
-import com.wordrails.business.Comment;
-import com.wordrails.business.UnauthorizedException;
+import com.wordrails.domain.Comment;
+import com.wordrails.domain.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;

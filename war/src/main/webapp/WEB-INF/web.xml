@@ -136,7 +136,7 @@
 	<!-- Cache -->
 	<filter>
 		<filter-name>CacheFilter</filter-name>
-		<filter-class>com.wordrails.api.CacheFilter</filter-class>
+		<filter-class>com.wordrails.web.filter.CacheFilter</filter-class>
 	</filter>
 	<!-- Cache -->
 

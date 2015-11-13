@@ -1,7 +1,7 @@
 package com.wordrails.jobs;
 
-import com.wordrails.business.Post;
-import com.wordrails.business.PostScheduled;
+import com.wordrails.domain.Post;
+import com.wordrails.domain.PostScheduled;
 import com.wordrails.services.PostService;
 import com.wordrails.persistence.PostScheduledRepository;
 import org.quartz.JobDataMap;

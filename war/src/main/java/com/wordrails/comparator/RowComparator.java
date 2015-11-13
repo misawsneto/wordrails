@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.wordrails.business.Cell;
+import com.wordrails.domain.Cell;
 
 @Component
 public class RowComparator {

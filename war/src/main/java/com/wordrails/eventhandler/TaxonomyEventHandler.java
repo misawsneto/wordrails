@@ -2,7 +2,7 @@ package com.wordrails.eventhandler;
 
 import java.util.List;
 
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;

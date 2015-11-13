@@ -5,15 +5,11 @@ package com.wordrails.elasticsearch;
  */
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.wordrails.business.Row;
-import com.wordrails.business.StationPerspective;
-import com.wordrails.business.Term;
+import com.wordrails.domain.Row;
+import com.wordrails.domain.StationPerspective;
+import com.wordrails.domain.Term;
 
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import java.util.List;
-import java.util.Set;
 
 public class PerspectiveIndexed {
     public Integer id;

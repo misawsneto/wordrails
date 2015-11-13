@@ -1,7 +1,7 @@
 package com.wordrails.eventhandler;
 
-import com.wordrails.business.Person;
-import com.wordrails.business.Post;
+import com.wordrails.domain.Person;
+import com.wordrails.domain.Post;
 import com.wordrails.persistence.*;
 import com.wordrails.services.CacheService;
 import com.wordrails.services.PostService;

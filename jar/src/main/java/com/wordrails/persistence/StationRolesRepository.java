@@ -10,9 +10,9 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import com.wordrails.business.Person;
-import com.wordrails.business.Station;
-import com.wordrails.business.StationRole;
+import com.wordrails.domain.Person;
+import com.wordrails.domain.Station;
+import com.wordrails.domain.StationRole;
 
 public interface StationRolesRepository extends JpaRepository<StationRole, Integer>, QueryDslPredicateExecutor<StationRole> {
 	@RestResource(exported=false)

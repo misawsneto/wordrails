@@ -1,6 +1,6 @@
 package com.wordrails.eventhandler;
 
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.persistence.*;
 import com.wordrails.security.PostAndCommentSecurityChecker;

@@ -26,7 +26,7 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 	protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
 		config.setDefaultMediaType(MediaType.APPLICATION_JSON);
 
-		Reflections reflections = new Reflections("com.wordrails.business");
+		Reflections reflections = new Reflections("com.wordrails.domain");
 		Set<Class<?>> entities = reflections.getTypesAnnotatedWith(Entity.class);
 		config.exposeIdsFor(entities.toArray(new Class<?>[0]));
 	}

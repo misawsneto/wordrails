@@ -1,7 +1,7 @@
 package com.wordrails.eventhandler;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.persistence.FileContentsRepository;
 import com.wordrails.services.AmazonCloudService;
 import com.wordrails.services.ImageService;

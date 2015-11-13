@@ -1,6 +1,6 @@
 package com.wordrails.services.querydsl;
 
-import com.wordrails.business.QPost;
+import com.wordrails.domain.QPost;
 
 public class PostQueryDslService extends AbstractQueryDslService {
 

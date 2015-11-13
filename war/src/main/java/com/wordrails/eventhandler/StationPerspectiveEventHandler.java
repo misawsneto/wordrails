@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.elasticsearch.PerspectiveEsRepository;
 import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;
@@ -16,7 +16,6 @@ import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @RepositoryEventHandler(StationPerspective.class)
 @Component

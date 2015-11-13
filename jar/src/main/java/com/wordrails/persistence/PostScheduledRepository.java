@@ -1,6 +1,6 @@
 package com.wordrails.persistence;
 
-import com.wordrails.business.PostScheduled;
+import com.wordrails.domain.PostScheduled;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 

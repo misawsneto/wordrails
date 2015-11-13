@@ -2,7 +2,7 @@ package com.wordrails.services;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
-import com.wordrails.business.*;
+import com.wordrails.domain.*;
 import com.wordrails.persistence.*;
 import com.wordrails.util.TrixUtil;
 import com.wordrails.util.WordpressParsedContent;
