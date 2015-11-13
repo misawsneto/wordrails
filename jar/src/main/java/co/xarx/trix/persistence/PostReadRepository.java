@@ -48,7 +48,7 @@ public interface PostReadRepository extends JpaRepository<PostRead, Integer>, Qu
 	void deleteByPersonId(Integer id);
 
 	@RestResource(exported = false)
-	@Query("select date(pr.createdAt), count(*) from PostRead pr where pr.post.stationId in (select s.id from Station s join s.networks n where n.id = :networkId ) and (date(pr.createdAt) >= date(:dateStart) and date(pr.createdAt) <= date(:dateEnd)) group by date(pr.createdAt)")
+	@Query("select date(pr.createdAt), count(*) from PostRead pr where pr.post.stationId in (select s.id from Station s where s.network.id = :networkId ) and (date(pr.createdAt) >= date(:dateStart) and date(pr.createdAt) <= date(:dateEnd)) group by date(pr.createdAt)")
 	List<Object[]> countByNetworkAndDate(@Param("networkId") Integer networkId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
 }
 

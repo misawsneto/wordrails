@@ -47,8 +47,7 @@ import java.util.regex.Pattern;
 @Produces(MediaType.APPLICATION_JSON)
 @Component
 public class UtilResource {
-	private @Context HttpServletRequest httpServletRequest;
-	private @Context HttpRequest httpRequest;
+	private @Context HttpServletRequest request;
 
 	private @Autowired
 	NetworkEventHandler networkEventHandler;
@@ -294,7 +293,7 @@ public class UtilResource {
 		}
 		return Response.status(Status.OK).build();
 	}
-	
+
 	@GET
 	@Path("/updateNetworkProperties")
 	@Transactional
@@ -306,7 +305,7 @@ public class UtilResource {
 			for (Network network : networks) {
 				if(network.defaultOrientationMode == null || network.defaultOrientationMode.isEmpty() || !(network.defaultOrientationMode.equals("H") || network.defaultOrientationMode.equals("V") ))
 					network.defaultOrientationMode = "V";
-				
+
 				if(network.defaultReadMode == null || network.defaultReadMode.isEmpty() || !(network.defaultReadMode.equals("D") || network.defaultReadMode.equals("N") ))
 					network.defaultReadMode = "D";
 			}
@@ -630,7 +629,7 @@ public class UtilResource {
 		return countTerm;
 	}
 
-	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository; 
+	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository;
 
 	@GET
 	@Path("/updateRegDate")
@@ -651,7 +650,7 @@ public class UtilResource {
 
 	@Autowired private QueryPersistence qp;
 	@Autowired private PersonNetworkRegIdRepository reg;
-	@Autowired private AsyncService asyncService; 
+	@Autowired private AsyncService asyncService;
 
 	@Autowired
 	private Scheduler sched;
@@ -918,7 +917,7 @@ public class UtilResource {
 	@GET
 	@Path("/indexBookmarksToElastisearch")
 	@Transactional(readOnly=false)
-	public void indexBookmarksToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
+	public void indexBookmarksToElastisearch() throws InterruptedException {
 		String host = request.getHeader("Host");
 
 		if(isLocal(request.getHeader("Host"))){
@@ -930,6 +929,23 @@ public class UtilResource {
 					Thread.sleep(100);
 				}
 			}
+		}
+	}
+
+	@GET
+	@Path("/stationNetwork")
+	@Transactional
+	public void stationNetwork(){
+		if(isLocal(request.getHeader("Host"))){
+			List<Station> stations = stationRepository.findAll();
+			for (Station station: stations){
+//				for(Network network: station.networks)
+//					station.network = network;
+				List<Network> networks = manager.createNativeQuery("select n.* from network n join station_network sn on n.id = sn.networks_id where sn.stations_id = :stationId", Network.class).setParameter("stationId", station.id).getResultList();
+				for(Network network: networks)
+					station.network = network;
+			}
+			stationRepository.save(stations);
 		}
 	}
 
