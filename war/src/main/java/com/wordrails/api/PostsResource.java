@@ -10,6 +10,7 @@ import com.wordrails.converter.PostConverter;
 import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.persistence.PostRepository;
 import com.wordrails.security.PostAndCommentSecurityChecker;
+import com.wordrails.services.PostService;
 import com.wordrails.util.StationTermsDto;
 import com.wordrails.util.TrixUtil;
 

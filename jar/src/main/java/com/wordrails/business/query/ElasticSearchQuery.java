@@ -3,7 +3,7 @@ package com.wordrails.business.query;
 import javax.persistence.*;
 
 @Entity
-public class ElasticSearchQuery {
+public class ElasticSearchQuery implements Query {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,4 +11,9 @@ public class ElasticSearchQuery {
 
 	@Lob
 	public String query;
+
+	@Override
+	public String getQuery() {
+		return query;
+	}
 }

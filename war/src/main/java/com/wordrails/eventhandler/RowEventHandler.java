@@ -1,5 +1,6 @@
-package com.wordrails.business;
+package com.wordrails.eventhandler;
 
+import com.wordrails.business.Row;
 import com.wordrails.persistence.QueryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;

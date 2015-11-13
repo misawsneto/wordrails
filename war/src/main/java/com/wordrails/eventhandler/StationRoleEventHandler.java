@@ -1,6 +1,7 @@
-package com.wordrails.business;
+package com.wordrails.eventhandler;
 
 import com.wordrails.auth.TrixAuthenticationProvider;
+import com.wordrails.business.StationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;

@@ -6,6 +6,9 @@ import com.wordrails.WordrailsService;
 import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.business.*;
+import com.wordrails.eventhandler.PostEventHandler;
+import com.wordrails.eventhandler.StationEventHandler;
+import com.wordrails.eventhandler.StationRoleEventHandler;
 import com.wordrails.persistence.*;
 import com.wordrails.util.NetworkCreateDto;
 import com.wordrails.util.ReadsCommentsRecommendsCount;
@@ -41,14 +44,17 @@ public class NetworkResource {
 	private @Autowired TrixAuthenticationProvider authProvider;
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired TaxonomyRepository taxonomyRepository;
-	private @Autowired StationEventHandler stationEventHandler;
+	private @Autowired
+	StationEventHandler stationEventHandler;
 	private @Autowired PersonRepository personRepository;
-	private @Autowired StationRoleEventHandler stationRoleEventHandler;
+	private @Autowired
+	StationRoleEventHandler stationRoleEventHandler;
 	private @Autowired TermRepository termRepository;
 	private @Autowired WordrailsService wordrailsService;
 	private @Autowired PostRepository postRepository;
 	private @Autowired UserRepository userRepository;
-	private @Autowired PostEventHandler postEventHandler;
+	private @Autowired
+	PostEventHandler postEventHandler;
 	private @Autowired PostReadRepository postReadRepository;
 	private @Autowired RecommendRepository recommendRepository;
 	private @Autowired CommentRepository commentRepository;

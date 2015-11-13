@@ -1,6 +1,8 @@
 package com.wordrails.business.page;
 
-public interface QueryableSection<T> {
+import com.wordrails.business.query.Query;
 
-	T getQueryDslService();
+public interface QueryableSection<T extends Query> {
+
+	T getQuery();
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.wordrails.business.ImageEventHandler;
+import com.wordrails.eventhandler.ImageEventHandler;
 import com.wordrails.persistence.FileRepository;
 import com.wordrails.persistence.ImageRepository;
 

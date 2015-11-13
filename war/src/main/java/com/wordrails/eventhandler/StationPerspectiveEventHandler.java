@@ -1,9 +1,10 @@
-package com.wordrails.business;
+package com.wordrails.eventhandler;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.wordrails.business.*;
 import com.wordrails.elasticsearch.PerspectiveEsRepository;
 import com.wordrails.persistence.RowRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;

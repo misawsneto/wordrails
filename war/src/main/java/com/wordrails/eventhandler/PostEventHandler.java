@@ -1,8 +1,10 @@
-package com.wordrails.business;
+package com.wordrails.eventhandler;
 
+import com.wordrails.business.*;
 import com.wordrails.elasticsearch.PostEsRepository;
 import com.wordrails.persistence.*;
 import com.wordrails.security.PostAndCommentSecurityChecker;
+import com.wordrails.services.PostService;
 import com.wordrails.util.TrixUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;

@@ -1,5 +1,6 @@
-package com.wordrails.business;
+package com.wordrails.eventhandler;
 
+import com.wordrails.business.Network;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;

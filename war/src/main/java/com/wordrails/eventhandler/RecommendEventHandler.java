@@ -1,5 +1,7 @@
-package com.wordrails.business;
+package com.wordrails.eventhandler;
 
+import com.wordrails.business.Recommend;
+import com.wordrails.business.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterDelete;

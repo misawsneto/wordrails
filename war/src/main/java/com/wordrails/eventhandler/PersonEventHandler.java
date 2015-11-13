@@ -1,7 +1,10 @@
-package com.wordrails.business;
+package com.wordrails.eventhandler;
 
+import com.wordrails.business.Person;
+import com.wordrails.business.Post;
 import com.wordrails.persistence.*;
 import com.wordrails.services.CacheService;
+import com.wordrails.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;

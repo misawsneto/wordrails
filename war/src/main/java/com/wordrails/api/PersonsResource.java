@@ -9,6 +9,8 @@ import com.wordrails.auth.TrixAuthenticationProvider;
 import com.wordrails.business.BadRequestException;
 import com.wordrails.business.*;
 import com.wordrails.converter.PostConverter;
+import com.wordrails.eventhandler.PersonEventHandler;
+import com.wordrails.eventhandler.StationRoleEventHandler;
 import com.wordrails.notification.APNService;
 import com.wordrails.notification.GCMService;
 import com.wordrails.persistence.*;
@@ -79,7 +81,8 @@ public class PersonsResource {
 	private @Autowired NetworkSecurityChecker networkSecurityChecker;
 	private @Autowired StationSecurityChecker stationSecurityChecker;
 	private @Autowired QueryPersistence queryPersistence;
-	private @Autowired PersonEventHandler personEventHandler;
+	private @Autowired
+	PersonEventHandler personEventHandler;
 
 	private @Autowired SectionRepository sectionRepository;
 	private @Autowired CacheService cacheService;
@@ -90,7 +93,8 @@ public class PersonsResource {
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired @Qualifier("simpleMapper") ObjectMapper simpleMapper;
 
-	public @Autowired StationRoleEventHandler stationRoleEventHandler;
+	public @Autowired
+	StationRoleEventHandler stationRoleEventHandler;
 
 	private @Autowired TrixAuthenticationProvider authProvider;
 

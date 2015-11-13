@@ -8,6 +8,7 @@ import com.wordrails.business.*;
 import com.wordrails.elasticsearch.BookmarkEsRespository;
 import com.wordrails.elasticsearch.PerspectiveEsRepository;
 import com.wordrails.elasticsearch.PostEsRepository;
+import com.wordrails.eventhandler.*;
 import com.wordrails.jobs.SimpleJob;
 import com.wordrails.persistence.*;
 import com.wordrails.script.ImageScript;
@@ -50,12 +51,17 @@ public class UtilResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
 
-	private @Autowired NetworkEventHandler networkEventHandler;
-	private @Autowired PersonEventHandler personEventHandler;
-	private @Autowired TaxonomyEventHandler taxonomyEventHandler;
-	private @Autowired StationEventHandler stationEventHandler;
+	private @Autowired
+	NetworkEventHandler networkEventHandler;
+	private @Autowired
+	PersonEventHandler personEventHandler;
+	private @Autowired
+	TaxonomyEventHandler taxonomyEventHandler;
+	private @Autowired
+	StationEventHandler stationEventHandler;
 	private @Autowired PersonRepository personRepository;
-	private @Autowired StationRoleEventHandler stationRoleEventHandler;
+	private @Autowired
+	StationRoleEventHandler stationRoleEventHandler;
 	private @Autowired NetworkRolesRepository networkRolesRepository;
 	private @Autowired StationRepository stationRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;

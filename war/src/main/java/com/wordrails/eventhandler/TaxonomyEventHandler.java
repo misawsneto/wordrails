@@ -1,7 +1,8 @@
-package com.wordrails.business;
+package com.wordrails.eventhandler;
 
 import java.util.List;
 
+import com.wordrails.business.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
@@ -9,7 +10,6 @@ import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.wordrails.persistence.NetworkRepository;
 import com.wordrails.persistence.StationPerspectiveRepository;
