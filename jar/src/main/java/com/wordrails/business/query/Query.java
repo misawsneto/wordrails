@@ -1,4 +1,4 @@
 package com.wordrails.business.query;
 
-public class PostEsQuery {
+public interface Query {
 }

@@ -1,4 +1,6 @@
-package com.wordrails.business;
+package com.wordrails.business.page;
+
+import com.wordrails.business.Post;
 
 public class PostCell implements CellItem<Post> {
 

@@ -1,4 +1,4 @@
-package com.wordrails.business;
+package com.wordrails.business.page;
 
 public interface CellItem<T> {
 

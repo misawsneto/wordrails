@@ -1,4 +1,4 @@
-package com.wordrails.business;
+package com.wordrails.business.page;
 
 import com.wordrails.services.querydsl.QueryDslService;
 
