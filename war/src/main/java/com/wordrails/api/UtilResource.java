@@ -123,7 +123,7 @@ public class UtilResource {
 				if(post.comments != null){
 					post.commentsCount = post.comments.size();
 				}
-				post.readTime = TrixUtil.calculateReadTime(post.body);
+				post.readTime = Post.calculateReadTime(post.body);
 			}
 			postRepository.save(posts);
 		}
