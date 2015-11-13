@@ -956,11 +956,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindBySubdomainAuthorized(String subdomain) {
-		return true;
-	}
-
-	@Override
 	protected boolean isGetPostSponsorAuthorized(Integer postId) {
 		return true;
 	}
@@ -1221,26 +1216,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetStationWordpressAuthorized(Integer stationId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetWordpressAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetWordpressAuthorized(Integer wordpressId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetWordpressStationAuthorized(Integer wordpressId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isGetStationLogoAuthorized(Integer stationId) {
 		return true;
 	}
@@ -1406,16 +1381,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetStationRoleWordpressAuthorized(Integer stationRoleId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindByTokenAuthorized(String token) {
-		return true;
-	}
-
-	@Override
 	protected boolean isFindOneBySubdomainAuthorized(String subdomain) {
 		return true;
 	}
@@ -1461,31 +1426,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindPostsOrderByMostReadAuthorsAuthorized(Integer stationId, String dateIni, String dateEnd) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindPostsOrderByFavoritesAuthorized(Integer stationId, String dateIni, String dateEnd) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindPostsOrderByReadsAuthorized(Integer stationId, String dateIni, String dateEnd) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindPostsOrderByRecommendsAuthorized(Integer stationId, String dateIni, String dateEnd) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindPostsOrderByCommentsAuthorized(Integer stationId, String dateIni, String dateEnd) {
-		return true;
-	}
-
-	@Override
 	protected boolean isFindBookmarksByPersonIdAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
@@ -1523,11 +1463,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 			authorized = postAndCommentSecurityChecker.canRead(post);
 		}
 		return authorized;
-	}
-
-	@Override
-	protected boolean isFindPersonByIdAuthorized(Integer personId) {
-		return stationSecurityChecker.isAdmin();
 	}
 
 	@Override

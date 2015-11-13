@@ -19,9 +19,6 @@ import java.util.List;
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
-/**
- * Created by jonas on 26/09/15.
- */
 @Component
 public class PostEsRepository{
 

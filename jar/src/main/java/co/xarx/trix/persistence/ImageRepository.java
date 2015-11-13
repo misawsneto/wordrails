@@ -22,7 +22,7 @@ public interface ImageRepository extends JpaRepository<Image, Integer>, QueryDsl
 			"where " +
 			"original.id = :fileId OR small.id = :fileId OR medium.id = :fileId OR large.id = :fileId")
 	@RestResource(exported = false)
-	List<Image> findByFileId(@Param("fileId") Integer fileId);
+	Set<Image> findByFileId(@Param("fileId") Integer fileId);
 
 	@RestResource(exported = false)
 	void deleteByPersonId(Integer id);

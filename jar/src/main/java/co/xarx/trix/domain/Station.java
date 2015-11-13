@@ -99,9 +99,6 @@ public class Station implements Serializable {
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 		public boolean showAuthorSocialData;
-	
-	@OneToOne
-	public Wordpress wordpress;
 
 	@OneToOne
 	public Image logo;

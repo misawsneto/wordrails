@@ -13,7 +13,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import java.util.List;
 import java.util.Set;
 
-interface PersonRepository extends JpaRepository<Person, Integer>, QueryDslPredicateExecutor<Person> {
+public interface PersonRepository extends JpaRepository<Person, Integer>, QueryDslPredicateExecutor<Person> {
 
 	Set<Person> findByUsername(@Param("username") String username);
 
