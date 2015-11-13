@@ -10,26 +10,24 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
-import java.util.Set;
 
 public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPredicateExecutor<Post> {
+
+	@Query("select post from Post post where post.id in ( select p.id from Post p where p.station.id = :stationId ) order by post.date desc")
 	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);
 
+	@Query("select post from Post post join post.terms t where " +
+			"post.station.id = :stationId and t.id in (:termsIds) and post.state = 'PUBLISHED' order by post.date desc")
 	List<Post> findPostsPublished(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);
 
+	@Query("select post from Post post " +
+			"where post.id in " +
+			"(select p.id from Post p join p.terms t where p.station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)) " +
+			"order by post.date desc")
 	List<Post> findPostsNotPositioned(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, @Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);
 
 	@RestResource(exported = false)
-	List<Post> findByFeaturedImages(@Param("featuredImages") List<Image> featuredImage);
-
-	@RestResource(exported = false)
 	List<Post> findByStation(Station station);
-
-	@RestResource(exported = false)
-	Post findByWordpressId(Integer wordpressId);
-
-	@RestResource(exported = false)
-	int countSlugPost(@Param("slug") String slug);
 
 	@RestResource(exported = false)
 	@Modifying
@@ -37,6 +35,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	void updateFeaturedImagesToNull(@Param("featuredImages") List<Image> featuredImage);
 
 	@RestResource(exported = false)
+	@Query("select p from Post p where p.station.id = :stationId and p.author.id = :authorId order by p.date desc")
 	List<Post> findPostsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
 
 	List<PostDraft> findDraftsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
@@ -47,9 +46,15 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);
 
 	@RestResource(exported = false)
+	@Query("select post from Post post join post.station station " +
+			"where station.id = :stationId and post.id not in" +
+			"(select pr.id from PostRead pr join pr.person person where person.id=:personId)")
 	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId, Pageable pageable);
 
 	@RestResource(exported = false)
+	@Query("select post from Post post join post.station station where " +
+			"station.id = :stationId and post.id not in " +
+			"(select pr.id from PostRead pr join pr.person person where person.id=:personId)")
 	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 
 	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
@@ -58,10 +63,6 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported = false)
 	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.id DESC")
 	List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
-
-	@RestResource(exported = false)
-	@Query("SELECT slug FROM Post")
-	Set<String> findSlugs();
 
 	Post findByOriginalPostId(@Param("originalPostId") Integer originalPostId);
 
@@ -74,46 +75,32 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	List<Post> findAllPostsOrderByIdDesc();
 
 	@RestResource(exported = false)
-	@Query("SELECT wordpressId FROM Post post where post.station.id = :stationId")
-	Set<Integer> findWordpressIdsByStation(@Param("stationId") Integer stationId);
-
-	@Query(value = "SELECT *, count(*), sum(readsCount) FROM post, station where station.id = :stationId AND " + "date BETWEEN :dateIni AND :dateEnd group by author_id ORDER BY sum(readsCount) DESC", nativeQuery = true)
-	List<Object[]> findPostsOrderByMostReadAuthors(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
-
-	@Query(value = "SELECT * FROM post, station where station.id = :stationId AND date BETWEEN :dateIni AND :dateEnd ORDER BY favoritesCount DESC, date DESC", nativeQuery = true)
-	List<Post> findPostsOrderByFavorites(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
-
-	@Query(value = "SELECT * FROM post, station where station.id = :stationId AND date BETWEEN :dateIni AND :dateEnd ORDER BY readsCount DESC, date DESC", nativeQuery = true)
-	List<Post> findPostsOrderByReads(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
-
-	@Query(value = "SELECT * FROM post, station where station.id = :stationId AND date BETWEEN :dateIni AND :dateEnd ORDER BY recommendsCount DESC, date DESC", nativeQuery = true)
-	List<Post> findPostsOrderByRecommends(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
-
-	@Query(value = "SELECT * FROM post, station where station.id = :stationId AND date BETWEEN :dateIni AND :dateEnd ORDER BY commentsCount DESC, date DESC", nativeQuery = true)
-	List<Post> findPostsOrderByComments(@Param("stationId") Integer stationId, @Param("dateIni") String dateIni, @Param("dateEnd") String dateEnd);
-
-	@RestResource(exported = false)
-	@Query("SELECT post FROM Post post where post.author.id = :personId AND post.state = 'PUBLISHED' AND post.station.id in (:stationIds) order by post.id DESC")
+	@Query("SELECT post FROM Post post where " +
+			"post.author.id = :personId AND post.state = 'PUBLISHED' AND post.station.id in (:stationIds) order by post.id DESC")
 	List<Post> findPostByPersonIdAndStations(@Param("personId") Integer personId, @Param("stationIds") List<Integer> stationIds, Pageable pageable);
 
 	@RestResource(exported = false)
-	@Query("SELECT post FROM Post post where post.author.id = :personId AND post.state = :state AND post.station.id in (:stationIds) order by post.id DESC")
-	List<Post> findPostByPersonIdAndStationsAndState(@Param("personId") Integer personId, @Param("state") String state, @Param("stationIds") List<Integer> stationIds, Pageable pageable);
+	@Query("SELECT post FROM Post post where " +
+			"post.author.id = :personId AND post.state = :state AND post.station.id in (:stationIds) order by post.id DESC")
+	List<Post> findPostByPersonIdAndStationsAndState(@Param("personId") Integer personId, @Param("state") String state,
+	                                                 @Param("stationIds") List<Integer> stationIds, Pageable pageable);
 
 	@RestResource(exported = false)
-	@Query("SELECT post FROM Recommend recommend join recommend.post post where recommend.person.id = :personId AND post.station.id in (:stationIds) order by recommend.id DESC")
+	@Query("SELECT post FROM Recommend recommend join recommend.post post where " +
+			"recommend.person.id = :personId AND post.station.id in (:stationIds) order by recommend.id DESC")
 	List<Post> findRecommendationsByPersonIdAndStations(Integer personId, List<Integer> stationIds, Pageable pageable);
 
 	@RestResource(exported = false)
-	@Query("select (select count(*) from PostRead pr where pr.post.id = p.id), (select count(*) from Comment comment where comment.post.id = p.id), (select count(*) from Recommend recommend where recommend.post.id = p.id) from Post p where p.id = :postId")
-	public List<Object[]> findPostStats(@Param("postId") Integer postId);
+	@Query("select " +
+			"(select count(*) from PostRead pr where pr.post.id = p.id), " +
+			"(select count(*) from Comment comment where comment.post.id = p.id), " +
+			"(select count(*) from Recommend recommend where recommend.post.id = p.id) " +
+			"from Post p where p.id = :postId")
+	List<Object[]> findPostStats(@Param("postId") Integer postId);
 
 	@RestResource(exported = false)
 	@Query("select post.body from Post post where post.id=:postId")
-	public String findPostBodyById(@Param("postId") Integer postId);
-
-	@Query("select person from Person person where person.id = :personId")
-	public Person findPersonById(@Param("personId") Integer personId);
+	String findPostBodyById(@Param("postId") Integer postId);
 
 	@RestResource(exported = false)
 	@Query("select post from Post post where post.author.id = :personId")

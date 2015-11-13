@@ -1,6 +1,5 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.Network;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,20 +14,16 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 	@Query("from Network where id > :id order by id desc")
 	List<Network> findNetworksOrderDesc(@Param("id") Integer id);
 
-	@RestResource(exported = false)
-	Network findNetworkById(@Param("networkId") Integer networkId);
-
-	@RestResource(exported = false)
-	List<Network> findByStations(Station station);
-
+	@Query("select n.id from Network n join n.stations s where s.id = :stationId")
 	@RestResource(exported = false)
 	List<Integer> findIdsByStation(@Param("stationId") Integer stationId);
 
+	@Query("select network from Network network " +
+			"join network.personsNetworkRoles personRoles " +
+			"join personRoles.person person " +
+			"where person.id = :personId and network.id IN (:networksId)")
 	@RestResource(exported = false)
 	List<Network> belongsToNetworks(@Param("personId") Integer personId, @Param("networksId") List<Integer> networksId);
-
-	@RestResource(exported = true)
-	List<Network> findBySubdomain(@Param("subdomain") String subdomain);
 
 	@RestResource(exported = false)
 	Network findNetworkBySubdomain(@Param("subdomain") String subdomain);
@@ -46,12 +41,6 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 			"(select count(*) from Recommend recommend where recommend.post.stationId = s.id)," +
 			"(select count(*) from PersonNetworkRegId regId where regId.network.id = :networkId), " +
 			"(select count(*) from PersonNetworkToken token where token.network.id = :networkId)" +
-			" from Station s join s.networks n where n.id = :networkId")
+			" from Station s where s.network.id = :networkId")
 	List<Object[]> findNetworkStats(@Param("networkId") Integer networkId);
-//
-//	@RestResource(exported = false)
-//	Blob findCertificateIosById(@Param("networkId") Integer networkId);
-//
-//	@RestResource(exported = false)
-//	String findCertificatePasswordById(@Param("stationId") Integer stationId);
 }
