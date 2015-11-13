@@ -1,6 +1,5 @@
 package com.wordrails.api;
 
-import com.wordrails.util.PersonCreateDto;
 import org.joda.time.DateTime;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.RetrofitError;
@@ -177,22 +176,22 @@ public class Test {
 //		}
 	}
 
-	private static void createPerson(WordRails wordRails) {
-		String person = wordRails.getSelf(wordRails.getPerson(2));
-		String station = wordRails.getSelf(wordRails.getStation(2));
-
-
-		PersonCreateDto personObject = new PersonCreateDto();//.getPostDraft(1598);
-		personObject.name = "arthur";
-		personObject.username = "arthur";
-		personObject.password = "password";
-		personObject.email = "email";
-//		try {
-//			wordRails.(post);
-//		} catch (RetrofitError err) {
-//			printServerError(err);
-//		}
-	}
+//	private static void createPerson(WordRails wordRails) {
+//		String person = wordRails.getSelf(wordRails.getPerson(2));
+//		String station = wordRails.getSelf(wordRails.getStation(2));
+//
+//
+//		PersonCreateDto personObject = new PersonCreateDto();//.getPostDraft(1598);
+//		personObject.name = "arthur";
+//		personObject.username = "arthur";
+//		personObject.password = "password";
+//		personObject.email = "email";
+////		try {
+////			wordRails.(post);
+////		} catch (RetrofitError err) {
+////			printServerError(err);
+////		}
+//	}
 
 	private static void createPost(WordRails wordRails) {
 		String person = wordRails.getSelf(wordRails.getPerson(2));

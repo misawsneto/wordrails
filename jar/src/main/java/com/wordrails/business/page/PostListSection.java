@@ -1,18 +1,11 @@
 package com.wordrails.business.page;
 
-import com.wordrails.services.querydsl.PostQueryDslService;
-
 import java.util.List;
 
-public class PostListSection implements ListSection<PostCell>, QueryableSection<PostQueryDslService> {
+public class PostListSection implements ListSection<PostCell> {
 
 	@Override
 	public List<PostCell> getCells() {
-		return null;
-	}
-
-	@Override
-	public PostQueryDslService getQueryDslService() {
 		return null;
 	}
 }
