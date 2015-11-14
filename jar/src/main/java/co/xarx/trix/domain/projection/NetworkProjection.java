@@ -1,5 +1,6 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.domain.projection;
 
+import co.xarx.trix.domain.Network;
 import org.springframework.data.rest.core.config.Projection;
 
 @Projection(types=Network.class)

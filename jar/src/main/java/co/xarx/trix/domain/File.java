@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "File")
-public class File implements Serializable, MultiTenantEntity {
+public class File extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 7828358342575034733L;
 
 	public static final String INTERNAL = "I";
@@ -15,10 +15,6 @@ public class File implements Serializable, MultiTenantEntity {
 
 	public static final String DIR_IMAGES = "images";
 	public static final String DIR_VIDEO = "videos";
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
 
 	@NotNull
 	@Size(min = 1, max = 1)
@@ -35,18 +31,6 @@ public class File implements Serializable, MultiTenantEntity {
 	public String hash;
 
 	public Long size;
-
-	public Integer networkId;
-
-	@Override
-	public Integer getNetworkId() {
-		return networkId;
-	}
-
-	@Override
-	public void setNetworkId(Integer networkId) {
-		this.networkId = networkId;
-	}
 
 	public String getExtension() {
 		if (mime != null && mime.split("/").length == 2)

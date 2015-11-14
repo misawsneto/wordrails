@@ -6,12 +6,11 @@ import javax.persistence.*;
 import java.util.Date;
 
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity implements MultiTenantEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="protectIdsSequence")
-	@SequenceGenerator(name="protectIdsSequence", sequenceName="hibernate_sequence")
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	public Integer id;
 
 	@Version
 	@Column(columnDefinition = "integer DEFAULT 0", nullable = false)
@@ -26,12 +25,25 @@ public class BaseEntity {
 	@Column(updatable = false)
 	private Date createdAt;
 
-	public Long getId() {
+	@Column(columnDefinition = "int(11) DEFAULT 0")
+	private Integer networkId;
+
+	@Override
+	public Integer getNetworkId() {
+		return networkId;
+	}
+
+	@Override
+	public void setNetworkId(Integer networkId) {
+		this.networkId = networkId;
+	}
+
+	public Integer getId() {
 		return id;
 	}
 
 	@SuppressWarnings("unused")
-	private void setId(Long id) {
+	private void setId(Integer id) {
 		this.id = id;
 	}
 

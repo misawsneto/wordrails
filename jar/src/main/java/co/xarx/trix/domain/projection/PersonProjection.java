@@ -1,5 +1,9 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.domain.projection;
 
+import co.xarx.trix.domain.NetworkRole;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.StationRole;
+import co.xarx.trix.domain.User;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.util.Set;

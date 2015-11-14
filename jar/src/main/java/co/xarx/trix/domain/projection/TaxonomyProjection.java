@@ -1,7 +1,11 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.domain.projection;
 
 import java.util.Set;
 
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.Taxonomy;
+import co.xarx.trix.domain.Term;
 import org.springframework.data.rest.core.config.Projection;
 
 @Projection(types=Taxonomy.class)

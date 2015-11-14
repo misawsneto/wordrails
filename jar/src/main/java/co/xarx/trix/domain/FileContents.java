@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Blob;
 
+@Deprecated
 @Entity
 @Table(name="File")
 public class FileContents {

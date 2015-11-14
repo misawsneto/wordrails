@@ -16,7 +16,7 @@ public class ImageUtil {
 	public static File createNewImageTrixFile(Integer networkId, String mime, Long size) {
 		File file = new File();
 		file.directory = File.DIR_IMAGES;
-		file.networkId = networkId;
+		file.setNetworkId(networkId);
 		file.type = File.EXTERNAL;
 		file.mime = mime;
 		file.size = size;

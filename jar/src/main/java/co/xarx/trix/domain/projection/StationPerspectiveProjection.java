@@ -1,5 +1,9 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.domain.projection;
 
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.StationPerspective;
+import co.xarx.trix.domain.Taxonomy;
+import co.xarx.trix.domain.TermPerspective;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.util.Set;

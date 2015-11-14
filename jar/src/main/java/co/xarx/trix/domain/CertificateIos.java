@@ -3,9 +3,7 @@ package co.xarx.trix.domain;
 import javax.persistence.*;
 import java.sql.Blob;
 
-/**
- * Created by jonas on 10/08/15.
- */
+
 @Entity
 @Table(name="Network")
 public class CertificateIos {
@@ -20,10 +18,7 @@ public class CertificateIos {
 	public String certificatePassword;
 
 	public boolean isValid(){
-		if(this.certificateIos != null && this.certificatePassword != null){
-			return true;
-		}
-		return false;
+		return this.certificateIos != null && this.certificatePassword != null;
 	}
 
 }

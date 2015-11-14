@@ -61,6 +61,7 @@
 	<bean id="amazonCloudService" class="co.xarx.trix.services.AmazonCloudService" init-method="init"/>
 	<bean id="wordrailsService" class="co.xarx.trix.WordrailsService" init-method="init"/>
 	<bean id="simpleMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+	<bean id="multitenantRepositoryAspect" class="co.xarx.trix.aspect.MultitenantRepositoryAspect"/>
 
 	<bean id="springSessionRepositoryFilter" class="org.springframework.session.web.http.SessionRepositoryFilter">
 		<constructor-arg ref="sessionRepository"/>

@@ -247,7 +247,7 @@ public class AmazonCloudService {
 			file.size = byteSize;
 			file.type = File.EXTERNAL;
 			file.directory = File.DIR_IMAGES;
-			file.networkId = networkId;
+			file.setNetworkId(networkId);
 			fileRepository.save(file);
 		} catch (AmazonS3Exception e) {
 			e.printStackTrace();
@@ -304,20 +304,20 @@ public class AmazonCloudService {
 	}
 
 	private void setNetworkIdOnFiles(Integer networkId, Image image) {
-		if(image.original.networkId == null) {
-			image.original.networkId = networkId;
+		if(image.original.getNetworkId() == null) {
+			image.original.setNetworkId(networkId);
 			fileRepository.save(image.original);
 		}
-		if(image.large.networkId == null) {
-			image.large.networkId = networkId;
+		if(image.large.getNetworkId() == null) {
+			image.large.setNetworkId(networkId);
 			fileRepository.save(image.large);
 		}
-		if(image.medium.networkId == null) {
-			image.medium.networkId = networkId;
+		if(image.medium.getNetworkId() == null) {
+			image.medium.setNetworkId(networkId);
 			fileRepository.save(image.medium);
 		}
-		if(image.small.networkId == null) {
-			image.small.networkId = networkId;
+		if(image.small.getNetworkId() == null) {
+			image.small.setNetworkId(networkId);
 			fileRepository.save(image.small);
 		}
 	}

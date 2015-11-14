@@ -18,11 +18,6 @@ import java.util.Set;
 public class Network implements Serializable{
 
 	private static final long serialVersionUID = 7723825842358687233L;
-
-//	public String NIGHT_READ_MODE = "N";
-//	public String DAY_READ_MODE = "D";
-//	public String VERTICAL_ORIENTATION_MODE = "V";
-//	public String HORIZONTAL_ORIENTATION_MODE = "H";
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -43,9 +38,6 @@ public class Network implements Serializable{
 
 	@OneToMany(mappedBy="network")
 	public Set<NetworkRole> personsNetworkRoles;
-
-//	@OneToMany(mappedBy="network")
-//	public Set<Person> persons;
 
 	@OneToMany(mappedBy="network", cascade=CascadeType.REMOVE)
 	public Set<Station> stations;

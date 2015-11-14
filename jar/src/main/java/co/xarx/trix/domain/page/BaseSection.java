@@ -18,7 +18,7 @@ public abstract class BaseSection extends BaseEntity implements Section {
 	private String layout;
 
 	@ManyToOne
-	private Page page;
+	private BasePage page;
 
 	public void setTitle(String title) {
 		this.title = title;
@@ -40,12 +40,12 @@ public abstract class BaseSection extends BaseEntity implements Section {
 	}
 
 	@Override
-	public Page getPage() {
+	public BasePage getPage() {
 		return page;
 	}
 
 	@Override
 	public void setPage(Page page) {
-		this.page = page;
+		this.page = (BasePage) page;
 	}
 }

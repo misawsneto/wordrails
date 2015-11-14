@@ -9,20 +9,7 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-public class Image implements Serializable, MultiTenantEntity {
-
-	public Integer networkId;
-
-	@Override
-	public Integer getNetworkId() {
-		return networkId;
-	}
-
-	@Override
-	public void setNetworkId(Integer networkId) {
-		this.networkId = networkId;
-	}
-
+public class Image extends BaseEntity implements Serializable {
 
 	public static final String SIZE_SMALL = "small";
 	public static final String SIZE_MEDIUM = "medium";
@@ -73,10 +60,6 @@ public class Image implements Serializable, MultiTenantEntity {
 		this.pictures = new HashSet<>();
 		this.hashs = new HashMap<>();
 	}
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public Integer id;
 
 	@Size(min=1, max=100)
 	public String title;
@@ -137,9 +120,13 @@ public class Image implements Serializable, MultiTenantEntity {
 	@ManyToOne(cascade=CascadeType.MERGE)
 	public File large;
 
+	@Deprecated
 	public String originalHash;
+	@Deprecated
 	public String smallHash;
+	@Deprecated
 	public String mediumHash;
+	@Deprecated
 	public String largeHash;
 
 	@ManyToOne
@@ -154,25 +141,15 @@ public class Image implements Serializable, MultiTenantEntity {
 	public Integer postId;
 	
 	public Integer commentId;
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date createdAt;
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
 	
 	@PrePersist
-	public void onCreate(){
+	public void create(){
 		createOrUpdate();
 		setDeprecatedAttributes();
-		createdAt = new Date();
 	}
 
 	@PreUpdate
-	public void onUpdate(){
+	public void update(){
 		createOrUpdate();
 	}
 
@@ -197,8 +174,6 @@ public class Image implements Serializable, MultiTenantEntity {
 					break;
 			}
 		}
-
-		updatedAt = new Date();
 	}
 
 	private void setDeprecatedAttributes() {
