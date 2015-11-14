@@ -9,17 +9,58 @@ import java.util.Date;
 public class BaseEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="protectIdsSequence")
+	@SequenceGenerator(name="protectIdsSequence", sequenceName="hibernate_sequence")
+	private Long id;
+
+	@Version
+	@Column(columnDefinition = "integer DEFAULT 0", nullable = false)
+	private int version;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
+	private Date updatedAt;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable = false)
-	public Date createdAt;
+	private Date createdAt;
+
+	public Long getId() {
+		return id;
+	}
+
+	@SuppressWarnings("unused")
+	private void setId(Long id) {
+		this.id = id;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	@SuppressWarnings("unused")
+	private void setVersion(int version) {
+		this.version = version;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	@SuppressWarnings("unused")
+	private void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	@SuppressWarnings("unused")
+	private void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
 
 	@PrePersist
 	public void onCreate() {
