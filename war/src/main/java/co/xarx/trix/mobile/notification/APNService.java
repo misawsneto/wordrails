@@ -1,4 +1,4 @@
-package co.xarx.trix.notification;
+package co.xarx.trix.mobile.notification;
 
 import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;

@@ -3,13 +3,13 @@ package co.xarx.trix.services;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
-import co.xarx.trix.notification.APNService;
+import co.xarx.trix.mobile.notification.APNService;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
-import co.xarx.trix.notification.GCMService;
+import co.xarx.trix.mobile.notification.GCMService;
 import co.xarx.trix.scheduler.jobs.PostScheduleJob;
 import co.xarx.trix.persistence.QueryPersistence;
 

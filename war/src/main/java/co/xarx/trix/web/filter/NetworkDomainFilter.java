@@ -36,6 +36,7 @@ public class NetworkDomainFilter implements Filter {
 				response.sendRedirect("/404.html");
 				return;
 			} else {
+				request.setAttribute("networkId", network.id);
 				//where should always enter in trix
 				HttpSession session = request.getSession();
 				session.setAttribute("network", network);

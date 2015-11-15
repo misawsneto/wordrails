@@ -1,4 +1,4 @@
-package co.xarx.trix.notification;
+package co.xarx.trix.mobile.notification;
 
 import co.xarx.trix.persistence.PersonNetworkTokenRepository;
 import com.relayrides.pushy.apns.ExpiredToken;

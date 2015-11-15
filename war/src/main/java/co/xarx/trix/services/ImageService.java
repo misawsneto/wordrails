@@ -147,7 +147,6 @@ public class ImageService {
 		Picture originalPic = new Picture();
 		originalPic.file = ImageUtil.createNewImageTrixFile(networkId, mime, originalFile.length());
 		originalPic.sizeTag = Image.SIZE_ORIGINAL;
-		originalPic.setNetworkId(networkId);
 
 		File existingFile = fileRepository.findByHashAndNetworkId(imageFile.hash, networkId);
 		if(existingFile != null) {
@@ -168,7 +167,6 @@ public class ImageService {
 		Picture pic = new Picture();
 		pic.file = ImageUtil.createNewImageTrixFile(networkId, "image/png", originalFile.length());
 		pic.sizeTag = entry.getKey();
-		pic.setNetworkId(networkId);
 
 		Integer[] xy = entry.getValue();
 		imageFile = ImageUtil.resizeImage(originalFile, xy[0], xy[1], pic.file.getExtension());
@@ -194,7 +192,6 @@ public class ImageService {
 		Picture pic = new Picture();
 		pic.file = ImageUtil.createNewImageTrixFile(networkId, "image/png", originalFile.length());
 		pic.sizeTag = entry.getKey();
-		pic.setNetworkId(networkId);
 
 		Integer quality = entry.getValue();
 		imageFile = ImageUtil.resizeImage(originalFile, quality, pic.file.getExtension(), false, true);

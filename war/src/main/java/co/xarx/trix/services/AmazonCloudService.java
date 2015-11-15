@@ -247,7 +247,6 @@ public class AmazonCloudService {
 			file.size = byteSize;
 			file.type = File.EXTERNAL;
 			file.directory = File.DIR_IMAGES;
-			file.setNetworkId(networkId);
 			fileRepository.save(file);
 		} catch (AmazonS3Exception e) {
 			e.printStackTrace();
@@ -303,25 +302,6 @@ public class AmazonCloudService {
 		}
 	}
 
-	private void setNetworkIdOnFiles(Integer networkId, Image image) {
-		if(image.original.getNetworkId() == null) {
-			image.original.setNetworkId(networkId);
-			fileRepository.save(image.original);
-		}
-		if(image.large.getNetworkId() == null) {
-			image.large.setNetworkId(networkId);
-			fileRepository.save(image.large);
-		}
-		if(image.medium.getNetworkId() == null) {
-			image.medium.setNetworkId(networkId);
-			fileRepository.save(image.medium);
-		}
-		if(image.small.getNetworkId() == null) {
-			image.small.setNetworkId(networkId);
-			fileRepository.save(image.small);
-		}
-	}
-
 	@Async
 	public void uploadAmazonImages() {
 			List<Network> networks = networkRepository.findAll();
@@ -351,7 +331,6 @@ public class AmazonCloudService {
 
 						if (image != null) {
 							try {
-								setNetworkIdOnFiles(network.id, image);
 								saveFilesHash(image);
 								if (image.originalHash == null || image.largeHash == null || image.mediumHash == null || image.smallHash == null) {
 									image = uploadImage(image, subdomain, network.id);
@@ -378,7 +357,6 @@ public class AmazonCloudService {
 					if (cover != null) {
 						try {
 							System.out.println("Upload cover of person " + person.id);
-							setNetworkIdOnFiles(network.id, cover);
 							saveFilesHash(cover);
 							if (cover.originalHash == null || cover.largeHash == null || cover.mediumHash == null || cover.smallHash == null) {
 								cover = uploadImage(cover, subdomain, network.id);
@@ -396,7 +374,6 @@ public class AmazonCloudService {
 					if (profilePicture != null) {
 						try {
 							System.out.println("Upload profilePicture of person " + person.id);
-							setNetworkIdOnFiles(network.id, profilePicture);
 							saveFilesHash(profilePicture);
 							if (profilePicture.originalHash == null || profilePicture.largeHash == null ||
 									profilePicture.mediumHash == null || profilePicture.smallHash == null) {

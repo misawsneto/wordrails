@@ -1,4 +1,4 @@
-package co.xarx.trix.notification;
+package co.xarx.trix.mobile.notification;
 
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package co.xarx.trix.notification;
+package co.xarx.trix.mobile.notification;
 
 import com.relayrides.pushy.apns.FailedConnectionListener;
 import com.relayrides.pushy.apns.PushManager;
