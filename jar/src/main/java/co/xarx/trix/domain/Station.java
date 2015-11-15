@@ -1,7 +1,6 @@
 package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-//import org.hibernate.search.annotations.ContainedIn;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,6 +8,8 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+
+//import org.hibernate.search.annotations.ContainedIn;
 
 @Entity
 public class Station implements Serializable {
