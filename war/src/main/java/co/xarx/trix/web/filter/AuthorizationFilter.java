@@ -514,6 +514,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetStationPagesAuthorized(Integer stationId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetStationStationPerspectivesAuthorized(Integer stationId) {
 		return canVisualizeStation(stationId);
 	}
@@ -1164,6 +1169,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPageSectionsAuthorized(Integer pageId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPageStationAuthorized(Integer pageId) {
 		return false;
 	}
 
