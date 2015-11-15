@@ -4,21 +4,25 @@ import co.xarx.trix.domain.page.interfaces.ListSection;
 import co.xarx.trix.domain.page.interfaces.QueryableSection;
 import co.xarx.trix.domain.query.ElasticSearchQuery;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
+@PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class PostListSection extends BaseSection implements ListSection<PostBlock>, QueryableSection<ElasticSearchQuery> {
 
 	public static final String TYPE = "POST_LIST_SECTION";
 
 	@Transient
-	private List<PostBlock> blocks;
+	public List<PostBlock> blocks;
 
 	@NotNull
 	@OneToOne
-	private ElasticSearchQuery query;
+	public ElasticSearchQuery query;
 
 	@Override
 	public List<PostBlock> getBlocks() {

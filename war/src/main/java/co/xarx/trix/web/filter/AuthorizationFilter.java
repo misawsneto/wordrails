@@ -18,24 +18,39 @@ import java.util.List;
 @Component
 public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
-	@Autowired private CellRepository cellRepository;
-	@Autowired private RowRepository rowRepository;
-	@Autowired private PostRepository postRepository;
-	@Autowired private StationRepository stationRepository;
-	@Autowired private StationRolesRepository personStationRolesRepository;
-	@Autowired private NetworkRepository networkRepository;
-	@Autowired private NetworkRolesRepository personNetworkRolesRepository;
-	@Autowired private StationPerspectiveRepository stationPerspectiveRepository;
-	@Autowired private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
-	@Autowired private StationSecurityChecker stationSecurityChecker;
-	@Autowired private NetworkSecurityChecker networkSecurityChecker;
-	@Autowired private TaxonomyRepository taxonomyRepository;
-	@Autowired private TermPerspectiveRepository termPerspectiveRepository;
-	@Autowired private ImageRepository imageRepository;
-	@Autowired private CommentRepository commentRepository;
+	@Autowired
+	private CellRepository cellRepository;
+	@Autowired
+	private RowRepository rowRepository;
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private StationRolesRepository personStationRolesRepository;
+	@Autowired
+	private NetworkRepository networkRepository;
+	@Autowired
+	private NetworkRolesRepository personNetworkRolesRepository;
+	@Autowired
+	private StationPerspectiveRepository stationPerspectiveRepository;
+	@Autowired
+	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
+	@Autowired
+	private StationSecurityChecker stationSecurityChecker;
+	@Autowired
+	private NetworkSecurityChecker networkSecurityChecker;
+	@Autowired
+	private TaxonomyRepository taxonomyRepository;
+	@Autowired
+	private TermPerspectiveRepository termPerspectiveRepository;
+	@Autowired
+	private ImageRepository imageRepository;
+	@Autowired
+	private CommentRepository commentRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
-	
+
 	@Override
 	protected boolean isGetCellsAuthorized() {
 		return false;
@@ -80,7 +95,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindPostCommentsOrderByDateAuthorized(Integer postId, Integer page, Integer size, List<String> sort) {
 		boolean authorized = false;
 		Post post = postRepository.findOne(postId);
-		if(post != null){
+		if (post != null) {
 			authorized = postAndCommentSecurityChecker.canRead(post);
 		}
 		return authorized;
@@ -271,7 +286,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetPostAuthorized(Integer postId) {
 		boolean authorized = false;
 		Post post = postRepository.findOne(postId);
-		if(post != null){
+		if (post != null) {
 			authorized = postAndCommentSecurityChecker.canRead(post);
 		}
 		return authorized;
@@ -288,8 +303,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindPostsNotPositionedAuthorized(Integer stationId,
-			List<Integer> termsIds, List<Integer> idsToExclude, Integer page, Integer size, List<String> sort) {
+	protected boolean isFindPostsNotPositionedAuthorized(Integer stationId, List<Integer> termsIds, List<Integer> idsToExclude, Integer page, Integer size, List<String> sort) {
 		return canVisualizeStation(stationId);
 	}
 
@@ -332,7 +346,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetPostStationAuthorized(Integer postId) {
 		boolean authorized = false;
 		Post post = postRepository.findOne(postId);
-		if(post != null && canVisualizeStation(post.station.id)){
+		if (post != null && canVisualizeStation(post.station.id)) {
 			authorized = true;
 		}
 		return authorized;
@@ -470,7 +484,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
-//	@Override
+	//	@Override
 	protected boolean isGetStationNetworksAuthorized(Integer stationId) {
 
 		return true;
@@ -480,11 +494,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetStationPersonsStationRolesAuthorized(Integer stationId) {
 		boolean authorized = false;
 		Station station = stationRepository.findOne(stationId);
-		if(station != null){
+		if (station != null) {
 			authorized = stationSecurityChecker.isStationAdmin(station);
-			if(!authorized){
+			if (!authorized) {
 //				for (Network network: station.networks) {
-					authorized = networkSecurityChecker.isNetworkAdmin(station.network);
+				authorized = networkSecurityChecker.isNetworkAdmin(station.network);
 //					if(authorized){
 //						break;
 //					}
@@ -508,7 +522,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetStationOwnedTaxonomiesAuthorized(Integer stationId) {
 		boolean authorized = false;
 		Station station = stationRepository.findOne(stationId);
-		if(station != null){
+		if (station != null) {
 			authorized = stationSecurityChecker.isStationAdminOrEditor(station);
 		}
 		return authorized;
@@ -523,7 +537,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetStationPerspectiveAuthorized(Integer stationPerspectiveId) {
 		boolean authorized = false;
 		StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
-		if(stationPerspective != null){
+		if (stationPerspective != null) {
 			authorized = canVisualizeStation(stationPerspective.station.id);
 		}
 		return authorized;
@@ -538,7 +552,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetStationPerspectiveStationAuthorized(Integer stationPerspectiveId) {
 		boolean authorized = false;
 		StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
-		if(stationPerspective != null){
+		if (stationPerspective != null) {
 			authorized = canVisualizeStation(stationPerspective.station.id);
 		}
 		return authorized;
@@ -548,7 +562,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetStationPerspectiveTaxonomyAuthorized(Integer stationPerspectiveId) {
 		boolean authorized = false;
 		StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
-		if(stationPerspective != null){
+		if (stationPerspective != null) {
 			authorized = canVisualizeStation(stationPerspective.station.id);
 		}
 		return authorized;
@@ -558,7 +572,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetStationPerspectivePerspectivesAuthorized(Integer stationPerspectiveId) {
 		boolean authorized = false;
 		StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
-		if(stationPerspective != null){
+		if (stationPerspective != null) {
 			authorized = canVisualizeStation(stationPerspective.station.id);
 		}
 		return authorized;
@@ -646,8 +660,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindTermsByParentIdAuthorized(Integer termId,
-			Integer page, Integer size, List<String> sort) {
+	protected boolean isFindTermsByParentIdAuthorized(Integer termId, Integer page, Integer size, List<String> sort) {
 
 		return true;
 	}
@@ -659,8 +672,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindRootsPageAuthorized(Integer taxonomyId,
-			Integer page, Integer size, List<String> sort) {
+	protected boolean isFindRootsPageAuthorized(Integer taxonomyId, Integer page, Integer size, List<String> sort) {
 
 		return true;
 	}
@@ -753,97 +765,97 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return termPerspective != null && canVisualizeStation(termPerspective.perspective.station.id);
 	}
 
-	private boolean canReadComments(Integer commentId){
+	private boolean canReadComments(Integer commentId) {
 		boolean authorized = false;
 		Comment comment = commentRepository.findOne(commentId);
-		if(comment != null){
+		if (comment != null) {
 			authorized = postAndCommentSecurityChecker.canRead(comment);
 		}
 		return authorized;
 	}
 
-	private boolean canReadPosts(Integer postId){
+	private boolean canReadPosts(Integer postId) {
 		boolean authorized = false;
 		Post post = postRepository.findOne(postId);
-		if(post != null){
+		if (post != null) {
 			authorized = postAndCommentSecurityChecker.canRead(post);
 		}
 		return authorized;
 	}
 
-	private boolean canVisualizeCell(Integer cellId){
+	private boolean canVisualizeCell(Integer cellId) {
 		boolean authorized = false;
 		Cell cell = cellRepository.findOne(cellId);
-		if(cell != null){
+		if (cell != null) {
 			authorized = canReadPosts(cell.post.id);
 		}
 		return authorized;
 	}
 
-	private boolean canVisualizeImages(Integer imageId){
+	private boolean canVisualizeImages(Integer imageId) {
 		boolean authorized = false;
-		Image  image = imageRepository.findOne(imageId);
-		if(image != null){
-			if(image.post != null){
+		Image image = imageRepository.findOne(imageId);
+		if (image != null) {
+			if (image.post != null) {
 				authorized = postAndCommentSecurityChecker.canRead(image.post);
-			}else if(image.comment != null){
+			} else if (image.comment != null) {
 				authorized = postAndCommentSecurityChecker.canRead(image.comment);
-			}else{
+			} else {
 				authorized = true;
 			}
 		}
 		return authorized;
 	}
 
-	private boolean canVisualizeStation(Integer stationId){
+	private boolean canVisualizeStation(Integer stationId) {
 		boolean authorized = false;
 		Station station = stationRepository.findOne(stationId);
-		if(station != null){
+		if (station != null) {
 			authorized = stationSecurityChecker.canVisualize(station);
 		}
 		return authorized;
 	}
 
-	private boolean isStationAdminByPersonStationRoles(Integer personStationRolesId){
+	private boolean isStationAdminByPersonStationRoles(Integer personStationRolesId) {
 		boolean authorized = false;
 		StationRole personStationRole = personStationRolesRepository.findOne(personStationRolesId);
-		if(personStationRole != null && stationSecurityChecker.isStationAdmin(personStationRole.station)){
+		if (personStationRole != null && stationSecurityChecker.isStationAdmin(personStationRole.station)) {
 			authorized = true;
 		}
 		return authorized;
 	}
 
-	private boolean isStationAdminById(Integer stationId){
+	private boolean isStationAdminById(Integer stationId) {
 		boolean authorized = false;
 		Station station = stationRepository.findOne(stationId);
-		if(station != null){
+		if (station != null) {
 			authorized = stationSecurityChecker.isStationAdmin(station);
 		}
 		return authorized;
 	}
 
-	private boolean isNetworkAdminById(Integer networkId){
+	private boolean isNetworkAdminById(Integer networkId) {
 		boolean authorized = false;
 		Network network = networkRepository.findOne(networkId);
-		if(network != null){
+		if (network != null) {
 			authorized = networkSecurityChecker.isNetworkAdmin(network);
 		}
 		return authorized;
 	}
 
-	private boolean isNetworkAdminByPersonNetworkRoles(Integer personNetworkRolesId){
+	private boolean isNetworkAdminByPersonNetworkRoles(Integer personNetworkRolesId) {
 		boolean authorized = false;
 		NetworkRole personNetworkRole = personNetworkRolesRepository.findOne(personNetworkRolesId);
-		if(personNetworkRole != null && networkSecurityChecker.isNetworkAdmin(personNetworkRole.network)){
+		if (personNetworkRole != null && networkSecurityChecker.isNetworkAdmin(personNetworkRole.network)) {
 			authorized = true;
 		}
 		return authorized;
 	}
 
-	private boolean belongsToNetwork(Integer networkId){
+	private boolean belongsToNetwork(Integer networkId) {
 		boolean authorized = false;
 		Network network = networkRepository.findOne(networkId);
-		if(network != null){
+		if (network != null) {
 			authorized = networkSecurityChecker.belongsToNetwork(network);
 		}
 		return authorized;
@@ -864,9 +876,9 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindByPersonIdAndNetworkIdAuthorized(Integer personId, Integer networkId) {
 		boolean authorized = false;
-		
+
 		Person loggedPerson = authProvider.getLoggedPerson();
-		if(loggedPerson != null && loggedPerson.id.equals(personId)){
+		if (loggedPerson != null && loggedPerson.id.equals(personId)) {
 			authorized = true;
 		}
 		return authorized;
@@ -1141,6 +1153,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetPagesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPageAuthorized(Integer pageId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPageSectionsAuthorized(Integer pageId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetPostReadsAuthorized() {
 		return false;
 	}
@@ -1221,8 +1248,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindRecommendsByPersonIdOrderByDateAuthorized(
-			Integer personId, Integer page, Integer size, List<String> sort) {
+	protected boolean isFindRecommendsByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
 
@@ -1246,23 +1272,38 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
-    @Override
-    protected boolean isGetAndroidAppsAuthorized() {
-        return false;
-    }
+	@Override
+	protected boolean isGetAndroidAppsAuthorized() {
+		return false;
+	}
 
-    @Override
-    protected boolean isGetAndroidAppAuthorized(Integer androidAppId) {
-        return false;
-    }
+	@Override
+	protected boolean isGetAndroidAppAuthorized(Integer androidAppId) {
+		return false;
+	}
 
-    @Override
-    protected boolean isGetAndroidAppIconAuthorized(Integer androidAppId) {
-        return false;
-    }
+	@Override
+	protected boolean isGetAndroidAppIconAuthorized(Integer androidAppId) {
+		return false;
+	}
 
-    @Override
-    protected boolean isGetBookmarksAuthorized() {
+	@Override
+	protected boolean isGetBaseSectionsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetBaseSectionAuthorized(Integer baseSectionId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetBaseSectionPageAuthorized(Integer baseSectionId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetBookmarksAuthorized() {
 		return false;
 	}
 
@@ -1272,8 +1313,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindBookmarksByPersonIdOrderByDateAuthorized(
-			Integer personId, Integer page, Integer size, List<String> sort) {
+	protected boolean isFindBookmarksByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
 
@@ -1338,20 +1378,17 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPersonNetworkRegIdAuthorized(
-			Integer personNetworkRegIdId) {
+	protected boolean isGetPersonNetworkRegIdAuthorized(Integer personNetworkRegIdId) {
 		return true;
 	}
 
 	@Override
-	protected boolean isGetPersonNetworkRegIdPersonAuthorized(
-			Integer personNetworkRegIdId) {
+	protected boolean isGetPersonNetworkRegIdPersonAuthorized(Integer personNetworkRegIdId) {
 		return true;
 	}
 
 	@Override
-	protected boolean isGetPersonNetworkRegIdNetworkAuthorized(
-			Integer personNetworkRegIdId) {
+	protected boolean isGetPersonNetworkRegIdNetworkAuthorized(Integer personNetworkRegIdId) {
 		return true;
 	}
 
@@ -1379,7 +1416,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindTermsByPostSlugAuthorized(String slug) {
 		boolean authorized = false;
 		Post post = postRepository.findBySlug(slug);
-		if(post != null){
+		if (post != null) {
 			authorized = postAndCommentSecurityChecker.canRead(post);
 		}
 		return authorized;
@@ -1406,12 +1443,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindBookmarkByPersonIdAndPostIdAuthorized( Integer personId, Integer postId) {
+	protected boolean isFindBookmarkByPersonIdAndPostIdAuthorized(Integer personId, Integer postId) {
 		return true;
 	}
 
 	@Override
-	protected boolean isFindRecommendByPersonIdAndPostIdAuthorized( Integer personId, Integer postId) {
+	protected boolean isFindRecommendByPersonIdAndPostIdAuthorized(Integer personId, Integer postId) {
 		return true;
 	}
 
@@ -1434,7 +1471,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindPostBySlugAuthorized(String slug) {
 		boolean authorized = false;
 		Post post = postRepository.findBySlug(slug);
-		if(post != null){
+		if (post != null) {
 			authorized = postAndCommentSecurityChecker.canRead(post);
 		}
 		return authorized;
@@ -1491,20 +1528,17 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPersonNetworkTokenAuthorized(
-			Integer personNetworkTokenId) {
+	protected boolean isGetPersonNetworkTokenAuthorized(Integer personNetworkTokenId) {
 		return false;
 	}
 
 	@Override
-	protected boolean isGetPersonNetworkTokenPersonAuthorized(
-			Integer personNetworkTokenId) {
+	protected boolean isGetPersonNetworkTokenPersonAuthorized(Integer personNetworkTokenId) {
 		return false;
 	}
 
 	@Override
-	protected boolean isGetPersonNetworkTokenNetworkAuthorized(
-			Integer personNetworkTokenId) {
+	protected boolean isGetPersonNetworkTokenNetworkAuthorized(Integer personNetworkTokenId) {
 		return false;
 	}
 
@@ -1544,25 +1578,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByStationIdsAndNameOrUseranmeOrEmailAuthorized(
-			List<Integer> stationIds, String nameOrUseranmeOrEmail,
-			Integer page, Integer size, List<String> sort) {
+	protected boolean isFindByStationIdsAndNameOrUseranmeOrEmailAuthorized(List<Integer> stationIds, String nameOrUseranmeOrEmail, Integer page, Integer size, List<String> sort) {
 
 		return stationSecurityChecker.isStationsAdmin(stationIds);
 	}
 
 	@Override
-	protected boolean isFindByStationIdsAuthorized(List<Integer> stationIds,
-			Integer page, Integer size, List<String> sort) {
+	protected boolean isFindByStationIdsAuthorized(List<Integer> stationIds, Integer page, Integer size, List<String> sort) {
 
 		return stationSecurityChecker.isStationsAdmin(stationIds);
 	}
 
 	@Override
-	protected boolean isFindByStationIdAndPersonIdAuthorized(Integer stationId,
-			Integer personId) {
+	protected boolean isFindByStationIdAndPersonIdAuthorized(Integer stationId, Integer personId) {
 		Station station = stationRepository.findOne(stationId);
-		if(station != null && stationSecurityChecker.isStationAdmin(station)){
+		if (station != null && stationSecurityChecker.isStationAdmin(station)) {
 			return true;
 		}
 		return false;

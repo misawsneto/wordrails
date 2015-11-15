@@ -1,30 +1,5 @@
 package co.xarx.trix.generator;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import org.reflections.Reflections;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,16 +8,23 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.data.rest.core.config.Projection;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
+import java.util.*;
+
 public class PersistenceUnitDescription {
 	private static final String ENCODING = "UTF-8";
 	private static final String JAVA_LANG = "java.lang.";
-	
+
 	public List<EntityDescription> entities;
-	
+
 	public PersistenceUnitDescription(String prefix) {
 		Reflections reflections = new Reflections(prefix);
 
-		Map<Class<?>, Class<? extends JpaRepository>> entityRepository = new HashMap<>(); 
+		Map<Class<?>, Class<? extends JpaRepository>> entityRepository = new HashMap<>();
 		Map<Class<?>, List<QueryDescription>> entityQueries = new HashMap<>();
 		Set<Class<? extends JpaRepository>> classes = reflections.getSubTypesOf(JpaRepository.class);
 		for (Class<? extends JpaRepository> repositoryClass : classes) {
@@ -64,15 +46,15 @@ public class PersistenceUnitDescription {
 									RestResource methodResource = method.getAnnotation(RestResource.class);
 									if (methodResource == null || methodResource.exported()) {
 										QueryDescription query = new QueryDescription();
-										query.collection = Collection.class.isAssignableFrom(method.getReturnType());										
+										query.collection = Collection.class.isAssignableFrom(method.getReturnType());
 										if (methodResource == null || "".equals(methodResource.path())) {
 											query.name = method.getName();
 											query.nameUppercase = getNameUppercase(query.name);
- 										} else {
- 											query.name = methodResource.path();
- 											query.nameUppercase = getNameUppercase(query.name);
- 										}
-										
+										} else {
+											query.name = methodResource.path();
+											query.nameUppercase = getNameUppercase(query.name);
+										}
+
 										Annotation[][] annotations = method.getParameterAnnotations();
 										Type[] types = method.getGenericParameterTypes();
 										for (int i = 0; i < types.length; ++i) {
@@ -81,20 +63,20 @@ public class PersistenceUnitDescription {
 												page.name = "page";
 												page.type = getType(Integer.class);
 												query.parameters.add(page);
-												
+
 												FieldDescription size = new FieldDescription();
 												size.name = "size";
 												size.type = getType(Integer.class);
 												query.parameters.add(size);
-										
+
 												FieldDescription sort = new FieldDescription();
 												sort.name = "sort";
 												sort.type = "List<String>";
 												query.parameters.add(sort);
-											
-											} else {										
+
+											} else {
 												FieldDescription parameter = new FieldDescription();
-												parameter.type = getType(types[i]);	
+												parameter.type = getType(types[i]);
 												for (int j = 0; j < annotations[i].length; ++j) {
 													if (annotations[i][j] instanceof Param) {
 														Param param = (Param) annotations[i][j];
@@ -102,7 +84,7 @@ public class PersistenceUnitDescription {
 													}
 												}
 												query.parameters.add(parameter);
-											}										
+											}
 										}
 										queries.add(query);
 									}
@@ -122,17 +104,24 @@ public class PersistenceUnitDescription {
 				EntityDescription entity = new EntityDescription();
 				entity.fullName = entityClass.getName();
 				entity.name = entityClass.getSimpleName();
-				entity.nameLowercase = getLowercase(entity.name);				
+				entity.nameLowercase = getLowercase(entity.name);
 				entity.repositoryFullName = repositoryClass.getName();
 				entity.repositoryName = repositoryClass.getSimpleName();
 				entity.queries = entityQueries.get(entityClass);
-	
+
 				String plural = getPlural(entity.name);
 				entity.plural = plural;
 				entity.pluralLowercase = getLowercase(plural);
-	
+
 				Field[] fields = entityClass.getFields();
+//				Field[] allFields = entityClass.getDeclaredFields();
+//				Set<Field> fieldSet = new HashSet<>();
+//				fieldSet.addAll(Arrays.asList(fields));
+//				fieldSet.addAll(Arrays.asList(allFields));
 				for (Field field : fields) {
+//					if(Modifier.isFinal(field.getModifiers())) {
+//						field.setAccessible(true);
+//					}
 					if (!Modifier.isStatic(field.getModifiers()) && !field.isAnnotationPresent(Transient.class)) {
 						if (field.isAnnotationPresent(Id.class)) {
 							FieldDescription id = new FieldDescription();
@@ -146,7 +135,7 @@ public class PersistenceUnitDescription {
 							Type[] actualTypeArguments = parameterizedGenericType.getActualTypeArguments();
 							Type actualTypeArgument = actualTypeArguments[0];
 							Class<?> type = (Class<?>) actualTypeArgument;
-							
+
 							if (field.isAnnotationPresent(NotNull.class)) {
 								Size size = field.getAnnotation(Size.class);
 								if (size != null && size.min() > 0) {
@@ -160,36 +149,34 @@ public class PersistenceUnitDescription {
 								}
 							}
 
-							FieldDescription relationship = new FieldDescription();														
-							relationship.type = "List<" + type.getSimpleName() + "Dto>";						
+							FieldDescription relationship = new FieldDescription();
+							relationship.type = "List<" + type.getSimpleName() + "Dto>";
 							relationship.name = field.getName();
 							relationship.nameUppercase = getNameUppercase(field);
 							relationship.entity = new EntityDescription();
 							relationship.entity.name = type.getSimpleName();
 							relationship.collection = true;
-							relationship.mappedBy = (field.isAnnotationPresent(OneToMany.class) && !"".equals(field.getAnnotation(OneToMany.class).mappedBy())) 
-														|| (field.isAnnotationPresent(ManyToMany.class) && !"".equals(field.getAnnotation(ManyToMany.class).mappedBy()));
+							relationship.mappedBy = (field.isAnnotationPresent(OneToMany.class) && !"".equals(field.getAnnotation(OneToMany.class).mappedBy())) || (field.isAnnotationPresent(ManyToMany.class) && !"".equals(field.getAnnotation(ManyToMany.class).mappedBy()));
 //							relationship.collectionType = field.getType().getName();
 							relationship.collectionType = List.class.getName();
 							relationship.elementType = type.getSimpleName();
 							entity.relationships.add(relationship);
 						} else {
-							if (field.isAnnotationPresent(ManyToOne.class)
-									|| field.isAnnotationPresent(OneToOne.class)) {
+							if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(OneToOne.class)) {
 								FieldDescription relationshipDescription = new FieldDescription();
 								relationshipDescription.type = field.getType().getSimpleName() + "Dto";
 								relationshipDescription.name = field.getName();
 								relationshipDescription.nameUppercase = getNameUppercase(field);
 								relationshipDescription.entity = new EntityDescription();
-								relationshipDescription.entity.name = field.getType().getSimpleName();								
-								entity.relationships.add(relationshipDescription);							
+								relationshipDescription.entity.name = field.getType().getSimpleName();
+								entity.relationships.add(relationshipDescription);
 								if (field.isAnnotationPresent(NotNull.class)) {
 									FieldDescription fieldDescription = new FieldDescription();
 									fieldDescription.type = "String";
 									fieldDescription.name = field.getName();
 									fieldDescription.nameUppercase = getNameUppercase(field);
 									fieldDescription.entity = new EntityDescription();
-									fieldDescription.entity.name = field.getType().getSimpleName();																		
+									fieldDescription.entity.name = field.getType().getSimpleName();
 									entity.fields.add(fieldDescription);
 								}
 							} else {
@@ -253,8 +240,7 @@ public class PersistenceUnitDescription {
 					collectionType = null;
 				}
 				String type = returnType.getName();
-				if (returnType.isAnnotationPresent(Entity.class) 
-						|| returnType.isAnnotationPresent(Projection.class)) {
+				if (returnType.isAnnotationPresent(Entity.class) || returnType.isAnnotationPresent(Projection.class)) {
 					type = returnType.getSimpleName() + "Dto";
 				}
 				if (collectionType != null) {
@@ -266,9 +252,9 @@ public class PersistenceUnitDescription {
 				if (fieldDescription.name.startsWith("get")) {
 					fieldDescription.name = getLowercase(fieldDescription.name.substring("get".length()));
 				}
-				projection.fields.add(fieldDescription);				
+				projection.fields.add(fieldDescription);
 			}
-			Class<?>[] entityClasses = projectionAnnotation.types();			
+			Class<?>[] entityClasses = projectionAnnotation.types();
 			for (Class<?> entityClass : entityClasses) {
 				EntityDescription entity = entityMap.get(entityClass);
 				entity.projections.add(projection);
@@ -287,15 +273,15 @@ public class PersistenceUnitDescription {
 		}
 		return noun;
 	}
-	
+
 	private String getLowercase(String name) {
 		return name.substring(0, 1).toLowerCase() + name.substring(1);
 	}
-		
+
 	private String getType(Field field) {
 		return getType(field.getType());
 	}
-	
+
 	private String getType(Class<?> type) {
 		String simpleName;
 		String name = type.getName();
@@ -304,9 +290,9 @@ public class PersistenceUnitDescription {
 		} else {
 			simpleName = name;
 		}
-		return simpleName;		
+		return simpleName;
 	}
-	
+
 	private String getType(Type type) {
 		if (type instanceof Class) {
 			Class<?> _class = (Class<?>) type;
@@ -315,13 +301,13 @@ public class PersistenceUnitDescription {
 			return type.toString();
 		}
 	}
-	
+
 	private String getNameUppercase(Field field) {
-		String name = field.getName();		
+		String name = field.getName();
 		return getNameUppercase(name);
 	}
-	
+
 	private String getNameUppercase(String name) {
-		return name.substring(0, 1).toUpperCase() + name.substring(1);		
+		return name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
 }

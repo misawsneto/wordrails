@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.domain.page.Page;
 import com.fasterxml.jackson.annotation.JsonFormat;
 //import org.hibernate.search.annotations.ContainedIn;
 
@@ -73,6 +74,9 @@ public class Station implements Serializable {
 	@OneToMany(mappedBy="station")
 //	@ContainedIn
 	public Set<Post> posts;
+
+	@OneToMany(mappedBy = "station")
+	public Set<Page> pages;
 
 	@Size(min=1)
 	@NotNull

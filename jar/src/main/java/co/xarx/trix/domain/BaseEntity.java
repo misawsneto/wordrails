@@ -9,7 +9,7 @@ import java.util.Date;
 public abstract class BaseEntity implements MultiTenantEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
 	@Version
@@ -19,15 +19,15 @@ public abstract class BaseEntity implements MultiTenantEntity {
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-	private Date updatedAt;
+	public Date updatedAt;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private Date createdAt;
+	public Date createdAt;
 
 	@Column(columnDefinition = "int(11) DEFAULT 0")
-	private Integer networkId;
+	public Integer networkId;
 
 	@Override
 	public Integer getNetworkId() {
@@ -64,5 +64,15 @@ public abstract class BaseEntity implements MultiTenantEntity {
 	@SuppressWarnings("unused")
 	private void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	@PrePersist
+	public void onCreate() {
+		createdAt = new Date();
+	}
+
+	@PreUpdate
+	public void onUpdate() {
+		updatedAt = new Date();
 	}
 }
