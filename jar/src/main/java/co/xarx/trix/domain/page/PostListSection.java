@@ -18,11 +18,11 @@ public class PostListSection extends BaseSection implements ListSection<PostBloc
 	public static final String TYPE = "POST_LIST_SECTION";
 
 	@Transient
-	private List<PostBlock> blocks;
+	public List<PostBlock> blocks;
 
 	@NotNull
 	@OneToOne
-	private ElasticSearchQuery query;
+	public ElasticSearchQuery query;
 
 	@Override
 	public List<PostBlock> getBlocks() {

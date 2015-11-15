@@ -10,12 +10,12 @@ import java.io.Serializable;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class BaseSection extends BaseEntity implements Section, Serializable {
 
-	private String title;
+	public String title;
 
-	private String layout;
+	public String layout;
 
 	@ManyToOne
-	private Page page;
+	public Page page;
 
 	public void setTitle(String title) {
 		this.title = title;

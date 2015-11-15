@@ -18,15 +18,16 @@ public abstract class BaseEntity implements MultiTenantEntity {
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date updatedAt;
+	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+	public Date updatedAt;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable = false)
-	private Date createdAt;
+	@Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	public Date createdAt;
 
 	@Column(columnDefinition = "int(11) DEFAULT 0")
-	private Integer networkId;
+	public Integer networkId;
 
 	@Override
 	public Integer getNetworkId() {

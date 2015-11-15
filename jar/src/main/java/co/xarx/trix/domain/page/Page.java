@@ -1,18 +1,23 @@
 package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.BaseEntity;
+import co.xarx.trix.domain.Station;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.List;
 
 @Entity
 public class Page extends BaseEntity {
 
-	private String title;
+	public String title;
 
 	@OneToMany(mappedBy = "page")
-	private List<BaseSection> sections;
+	public List<BaseSection> sections;
+
+	@ManyToOne
+	public Station station;
 
 	public String getTitle() {
 		return title;

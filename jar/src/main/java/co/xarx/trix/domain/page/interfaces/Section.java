@@ -13,7 +13,7 @@ public interface Section {
 
 	Page getPage();
 
-	void setPage(co.xarx.trix.domain.page.Page page);
+	void setPage(Page page);
 
 	void setTitle(String title);
 
