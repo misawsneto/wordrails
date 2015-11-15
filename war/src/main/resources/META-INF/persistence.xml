@@ -18,7 +18,7 @@
 		<class>co.xarx.trix.domain.Person</class>
 		<class>co.xarx.trix.domain.Post</class>
 		<class>co.xarx.trix.domain.page.BaseSection</class>
-		<class>co.xarx.trix.domain.page.BasePage</class>
+		<class>co.xarx.trix.domain.page.Page</class>
 		<class>co.xarx.trix.domain.page.PostListSection</class>
 		<class>co.xarx.trix.domain.query.ElasticSearchQuery</class>
 		<class>co.xarx.trix.domain.PostScheduled</class>

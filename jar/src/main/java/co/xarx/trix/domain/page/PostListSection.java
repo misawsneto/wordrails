@@ -6,11 +6,13 @@ import co.xarx.trix.domain.query.ElasticSearchQuery;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
+@PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class PostListSection extends BaseSection implements ListSection<PostBlock>, QueryableSection<ElasticSearchQuery> {
 
 	public static final String TYPE = "POST_LIST_SECTION";

@@ -1,24 +1,21 @@
 package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.BaseEntity;
-import co.xarx.trix.domain.page.interfaces.Page;
 import co.xarx.trix.domain.page.interfaces.Section;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class BaseSection extends BaseEntity implements Section {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class BaseSection extends BaseEntity implements Section, Serializable {
 
 	private String title;
 
 	private String layout;
 
 	@ManyToOne
-	private BasePage page;
+	private Page page;
 
 	public void setTitle(String title) {
 		this.title = title;
@@ -40,12 +37,12 @@ public abstract class BaseSection extends BaseEntity implements Section {
 	}
 
 	@Override
-	public BasePage getPage() {
+	public Page getPage() {
 		return page;
 	}
 
 	@Override
 	public void setPage(Page page) {
-		this.page = (BasePage) page;
+		this.page = page;
 	}
 }

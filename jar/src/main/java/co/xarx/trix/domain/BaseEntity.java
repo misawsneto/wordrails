@@ -9,7 +9,7 @@ import java.util.Date;
 public abstract class BaseEntity implements MultiTenantEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
 	@Version
@@ -36,15 +36,6 @@ public abstract class BaseEntity implements MultiTenantEntity {
 	@Override
 	public void setNetworkId(Integer networkId) {
 		this.networkId = networkId;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	@SuppressWarnings("unused")
-	private void setId(Integer id) {
-		this.id = id;
 	}
 
 	public int getVersion() {
