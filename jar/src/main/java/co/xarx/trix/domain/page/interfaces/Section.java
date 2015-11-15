@@ -1,6 +1,8 @@
 package co.xarx.trix.domain.page.interfaces;
 
 
+import co.xarx.trix.domain.page.Page;
+
 public interface Section {
 
 	String getTitle();

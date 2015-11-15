@@ -4,9 +4,7 @@ import co.xarx.trix.domain.page.interfaces.ListSection;
 import co.xarx.trix.domain.page.interfaces.QueryableSection;
 import co.xarx.trix.domain.query.ElasticSearchQuery;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
