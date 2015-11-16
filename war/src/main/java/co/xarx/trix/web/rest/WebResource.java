@@ -1,8 +1,8 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.File;
-import co.xarx.trix.persistence.FileRepository;
+import co.xarx.trix.domain.page.Page;
+import co.xarx.trix.domain.page.QPage;
+import co.xarx.trix.persistence.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.List;
 
 @Path("/web")
 @Component
@@ -22,12 +22,13 @@ public class WebResource {
 	@Context
 	private HttpServletRequest request;
 	@Autowired
-	private FileRepository personRepository;
+	private PageRepository pageRepository;
 
 	@GET
-	@Path("/pages")
-	public Response getPages() throws IOException {
-
+	@Path("/{stationId}/pages")
+	public Response getPages(@PathParam("stationId") Integer stationId) throws IOException {
+		QPage qPage = QPage.page;
+		Iterable<Page> pages = pageRepository.findAll(qPage.station.id.eq(stationId));
 
 		return Response.ok().build();
 	}
@@ -35,6 +36,8 @@ public class WebResource {
 	@POST
 	@Path("/page")
 	public Response postPage() {
+		Page page = new Page();
+		page.setTitle("Home");
 
 		return Response.ok().build();
 	}

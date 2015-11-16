@@ -5,6 +5,8 @@ import co.xarx.trix.domain.page.interfaces.Block;
 
 public class PostBlock implements Block<Post> {
 
+	public static final String TYPE = "block_post";
+
 	public Post post;
 
 	@Override
@@ -14,6 +16,6 @@ public class PostBlock implements Block<Post> {
 
 	@Override
 	public String getType() {
-		return "block_post";
+		return TYPE;
 	}
 }

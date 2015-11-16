@@ -7,40 +7,31 @@ import co.xarx.trix.domain.query.ElasticSearchQuery;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
-public class PostListSection extends BaseSection implements ListSection<PostBlock>, QueryableSection<ElasticSearchQuery> {
+public class PostListSection extends BaseSection implements ListSection<PostBlock>, QueryableSection<ElasticSearchQuery<PostBlock>> {
 
-	public static final String TYPE = "POST_LIST_SECTION";
-
-	@Transient
-	public List<PostBlock> blocks;
+	public static final String TYPE = "post_list_section";
 
 	@NotNull
 	@OneToOne
-	public ElasticSearchQuery query;
+	public ElasticSearchQuery<PostBlock> query;
 
 	@Override
 	public List<PostBlock> getBlocks() {
-		return blocks;
+		return query.getResults();
 	}
 
 	@Override
-	public ElasticSearchQuery getQuery() {
+	public ElasticSearchQuery<PostBlock> getQuery() {
 		return query;
 	}
 
 	@Override
-	public void setBlocks(List<PostBlock> blocks) {
-		this.blocks = blocks;
-	}
-
-	@Override
-	public void setQuery(ElasticSearchQuery query) {
+	public void setQuery(ElasticSearchQuery<PostBlock> query) {
 		this.query = query;
 	}
 
