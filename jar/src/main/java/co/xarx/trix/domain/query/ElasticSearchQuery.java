@@ -1,33 +1,51 @@
 package co.xarx.trix.domain.query;
 
 import co.xarx.trix.domain.BaseEntity;
+import co.xarx.trix.domain.page.interfaces.Block;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.persistence.Transient;
 import java.util.List;
 
 @Entity
-public class ElasticSearchQuery<T> extends BaseEntity implements Query<T> {
+public class ElasticSearchQuery extends BaseEntity implements Query {
+
+	@Transient
+	private Integer size;
+
+	@Transient
+	private Integer page;
 
 	@Lob
 	public String query;
-
-	private QueryExecutor<T, ElasticSearchQuery<T>> executor;
 
 	@Override
 	public String getQuery() {
 		return query;
 	}
 
-	public void setExecutor(QueryExecutor<T, ElasticSearchQuery<T>> executor) {
-		this.executor = executor;
+	@Override
+	public Integer getSize() {
+		return size;
 	}
 
-	public QueryExecutor<T, ElasticSearchQuery<T>> getExecutor() {
-		return executor;
+	@Override
+	public Integer getPage() {
+		return page;
 	}
 
-	public List<T> getResults() {
-		return getExecutor().execute(this);
+	@Override
+	public void setSize(Integer size) {
+		this.size = size;
+	}
+
+	@Override
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public List<Block> getResults(QueryExecutor executor) {
+		return executor.execute(this);
 	}
 }

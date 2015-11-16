@@ -1,8 +1,10 @@
 package co.xarx.trix.domain.query;
 
+import co.xarx.trix.domain.page.interfaces.Block;
+
 import java.util.List;
 
-public interface QueryExecutor<K, T extends Query<K>> {
+public interface QueryExecutor {
 
-	List<K> execute(T query);
+	List<Block> execute(ElasticSearchQuery query);
 }
