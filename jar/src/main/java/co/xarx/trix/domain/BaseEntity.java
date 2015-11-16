@@ -1,33 +1,41 @@
 package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.Filters;
+import org.hibernate.annotations.ParamDef;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @MappedSuperclass
+@FilterDef(name = "networkFilter", parameters = @ParamDef(name = "networkId", type = "integer"))
+@Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
 public abstract class BaseEntity implements MultiTenantEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
-	@Version
-	@Column(columnDefinition = "integer DEFAULT 0", nullable = false)
-	private int version;
-
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+	@LastModifiedDate
 	public Date updatedAt;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@CreatedDate
 	public Date createdAt;
 
 	@Column(columnDefinition = "int(11) DEFAULT 0")
 	public Integer networkId;
+
+	@Version
+	@Column(columnDefinition = "integer DEFAULT 0", nullable = false)
+	private int version;
 
 	@Override
 	public Integer getNetworkId() {

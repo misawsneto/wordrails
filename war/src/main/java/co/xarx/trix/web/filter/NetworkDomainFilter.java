@@ -1,6 +1,7 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.WordrailsService;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,8 @@ public class NetworkDomainFilter implements Filter {
 				response.sendRedirect("/404.html");
 				return;
 			} else {
+				TenantContextHolder.setCurrentTenantId(network.id);
+				TenantContextHolder.setCurrentTenantSubdomain(network.subdomain);
 				request.setAttribute("networkId", network.id);
 				//where should always enter in trix
 				HttpSession session = request.getSession();

@@ -6,6 +6,8 @@
 			 					 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
 	<persistence-unit name="wordrails" transaction-type="RESOURCE_LOCAL">
+		<provider>co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence</provider>
+
 		<class>co.xarx.trix.domain.AndroidApp</class>
 		<class>co.xarx.trix.domain.Cell</class>
 		<class>co.xarx.trix.domain.Comment</class>
@@ -61,6 +63,7 @@
 			<property name="hibernate.default_batch_fetch_size" value="200" />
 			<property name="hibernate.search.default.worker.execution" value="async"/>
 			<property name="hibernate.search.worker.thread_pool.size" value="3"/>
+			<property name="hibernate.current_session_context_class" value="thread"/>
 			<property name="hibernate.classloading.use_current_tccl_as_parent" value="false"/>
 		</properties>
 	</persistence-unit>
