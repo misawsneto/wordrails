@@ -1,5 +1,6 @@
 package co.xarx.trix.web.rest;
 
+import co.xarx.trix.aspect.annotations.Profile;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.page.BaseSection;
 import co.xarx.trix.domain.page.Page;
@@ -41,6 +42,7 @@ public class WebResource {
 	@Autowired
 	private QueryExecutor queryExecutor;
 
+	@Profile
 	@GET
 	@Path("/{stationId}/pages")
 	public Response getPages(@PathParam("stationId") Integer stationId) throws IOException {
