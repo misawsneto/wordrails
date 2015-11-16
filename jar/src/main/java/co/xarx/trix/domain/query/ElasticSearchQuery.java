@@ -12,25 +12,22 @@ public class ElasticSearchQuery<T> extends BaseEntity implements Query<T> {
 	@Lob
 	public String query;
 
-	private QueryExecutor executor;
+	private QueryExecutor<T, ElasticSearchQuery<T>> executor;
 
 	@Override
 	public String getQuery() {
 		return query;
 	}
 
-	@Override
-	public QueryExecutor getExecutor() {
+	public void setExecutor(QueryExecutor<T, ElasticSearchQuery<T>> executor) {
+		this.executor = executor;
+	}
+
+	public QueryExecutor<T, ElasticSearchQuery<T>> getExecutor() {
 		return executor;
 	}
 
-
 	public List<T> getResults() {
 		return getExecutor().execute(this);
-	}
-
-	@Override
-	public void setExecutor(QueryExecutor executor) {
-		this.executor = executor;
 	}
 }

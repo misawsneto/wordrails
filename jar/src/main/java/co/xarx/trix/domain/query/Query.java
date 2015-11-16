@@ -8,10 +8,6 @@ public interface Query<T> {
 
 	String getQuery();
 
-	QueryExecutor getExecutor();
-
-	void setExecutor(QueryExecutor executor);
-
 	List<T> getResults();
 
 	default String getClassName() {

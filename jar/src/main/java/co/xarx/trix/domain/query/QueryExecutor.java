@@ -2,7 +2,7 @@ package co.xarx.trix.domain.query;
 
 import java.util.List;
 
-public interface QueryExecutor {
+public interface QueryExecutor<K, T extends Query<K>> {
 
-	<T> List<T> execute(Query<T> query);
+	List<K> execute(T query);
 }

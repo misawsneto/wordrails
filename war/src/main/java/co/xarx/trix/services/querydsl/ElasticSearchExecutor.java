@@ -1,15 +1,16 @@
 package co.xarx.trix.services.querydsl;
 
-import co.xarx.trix.domain.query.Query;
+import co.xarx.trix.domain.page.PostBlock;
+import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.domain.query.QueryExecutor;
 
 import java.util.List;
 
-public class ElasticSearchExecutor implements QueryExecutor {
+public class ElasticSearchExecutor implements QueryExecutor<PostBlock, ElasticSearchQuery<PostBlock>> {
 
 
 	@Override
-	public <T> List<T> execute(Query<T> query) {
+	public List<PostBlock> execute(ElasticSearchQuery<PostBlock> query) {
 		return null;
 	}
 }
