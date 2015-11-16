@@ -62,7 +62,7 @@ public class WebResource {
 	@Path("/page")
 	public Response postPage() {
 		ElasticSearchQuery query = new ElasticSearchQuery();
-		query.setQueryString("{\"query\":{\"bool\":{\"must\":[{\"term\":{\"post.terms.id\":\"4\"}}],\"must_not\":[],\"should\":[]}},\"from\":0,\"size\":50,\"sort\":[],\"facets\":{}}");
+		query.setQueryString("{\"bool\" : {\"must\" : [ {\"multi_match\" : {\"query\" : \"dilma\",\"fields\" : [ \"body^2.0\", \"title^5.0\", \"topper\", \"subheading\", \"authorName\", \"terms.name\" ],\"prefix_length\" : 1}}, {\"match\" : {\"state\" : {\"query\" : \"PUBLISHED\",\"type\" : \"boolean\"}}}, {\"bool\" : {\"should\" : [ {\"match\" : {\"stationId\" : {\"query\" : \"11\",\"type\" : \"boolean\"}}}, {\"match\" : {\"stationId\" : {\"query\" : \"14\",\"type\" : \"boolean\"}}}, {\"match\" : {\"stationId\" : {\"query\" : \"55\",\"type\" : \"boolean\"}}}, {\"match\" : {\"stationId\" : {\"query\" : \"75\",\"type\" : \"boolean\"}}}, {\"match\" : {\"stationId\" : {\"query\" : \"76\",\"type\" : \"boolean\"}}}, {\"match\" : {\"stationId\" : {\"query\" : \"77\",\"type\" : \"boolean\"}}}, {\"match\" : {\"stationId\" : {\"query\" : \"137\",\"type\" : \"boolean\"}}} ]}} ]}}");
 
 
 		Station station = stationRepository.findOne(11);
