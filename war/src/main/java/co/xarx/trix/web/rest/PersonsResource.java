@@ -622,19 +622,6 @@ public class PersonsResource {
 	public PersonData getInitialData (@Context HttpServletRequest request) throws IOException{
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-		List<Person> people = personRepository.findAll();
-
-		Integer networkId = (Integer) request.getAttribute("networkId");
-
-		for(Person person : people) {
-			if(person.getNetworkId() != null && person.getNetworkId().equals(networkId)) {
-				System.out.println("Multi tenancy failed");
-				break;
-			}
-		}
-
-		System.out.println("Done!");
-
 		Person person = authProvider.getLoggedPerson();
 
 		if(person == null){

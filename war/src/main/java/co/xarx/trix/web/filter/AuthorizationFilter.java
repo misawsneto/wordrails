@@ -1298,6 +1298,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetBaseQueriesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetBaseQueryAuthorized(Integer baseQueryId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetBaseSectionsAuthorized() {
 		return false;
 	}

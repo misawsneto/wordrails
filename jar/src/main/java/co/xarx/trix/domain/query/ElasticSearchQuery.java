@@ -1,51 +1,36 @@
 package co.xarx.trix.domain.query;
 
-import co.xarx.trix.domain.BaseEntity;
-import co.xarx.trix.domain.page.interfaces.Block;
-
 import javax.persistence.Entity;
 import javax.persistence.Lob;
-import javax.persistence.Transient;
-import java.util.List;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
-public class ElasticSearchQuery extends BaseEntity implements Query {
-
-	@Transient
-	private Integer size;
-
-	@Transient
-	private Integer page;
+@PrimaryKeyJoinColumn(name = "query_id", referencedColumnName = "id")
+public class ElasticSearchQuery extends BaseQuery implements Query {
 
 	@Lob
-	public String query;
+	public String queryString;
 
-	@Override
-	public String getQuery() {
-		return query;
+	public String type;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getQueryString() {
+		return queryString;
+	}
+
+	public void setQueryString(String query) {
+		this.queryString = query;
 	}
 
 	@Override
-	public Integer getSize() {
-		return size;
-	}
-
-	@Override
-	public Integer getPage() {
-		return page;
-	}
-
-	@Override
-	public void setSize(Integer size) {
-		this.size = size;
-	}
-
-	@Override
-	public void setPage(Integer page) {
-		this.page = page;
-	}
-
-	public List<Block> getResults(QueryExecutor executor) {
-		return executor.execute(this);
+	public void fetch(QueryExecutor executor) {
+		setBlocks(executor.execute(this));
 	}
 }

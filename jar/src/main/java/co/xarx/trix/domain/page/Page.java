@@ -3,6 +3,7 @@ package co.xarx.trix.domain.page;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.Station;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -13,11 +14,19 @@ public class Page extends BaseEntity {
 
 	public String title;
 
-	@OneToMany(mappedBy = "page")
+	@OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
 	public List<BaseSection> sections;
 
 	@ManyToOne
 	public Station station;
+
+	public Station getStation() {
+		return station;
+	}
+
+	public void setStation(Station station) {
+		this.station = station;
+	}
 
 	public String getTitle() {
 		return title;

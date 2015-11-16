@@ -6,16 +6,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.Set;
 
-/**
- * Created by jonas on 03/10/15.
- */
+
 public class PostIndexed {
+
 	public String title;
 	public Integer postId;
 	public Integer smallId;
 	public Integer mediumId;
 	public Integer largeId;
-
 	public String smallHash;
 	public String mediumHash;
 	public String largeHash;

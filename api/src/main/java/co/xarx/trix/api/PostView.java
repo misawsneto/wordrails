@@ -1,8 +1,11 @@
 package co.xarx.trix.api;
 
+import co.xarx.trix.domain.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 public class PostView implements Serializable {
 	private static final long serialVersionUID = -1474032487285763669L;
@@ -21,6 +24,12 @@ public class PostView implements Serializable {
 	public String imageLargeHash;
 
 	public Boolean sponsored;
+	public Sponsor sponsor;
+	public Set<Comment> comments;
+	public Set<Image> images;
+	public Person author;
+	public Station station;
+	public Set<Term> terms;
 	public java.util.Date date;
 	public String snippet;
 	public String body;
@@ -38,10 +47,6 @@ public class PostView implements Serializable {
 	public Integer imageLargeId;
 	public Integer readTime;
 
-	public Integer f;
-
-	public Map<String, String> featuredImage;
-
 	public boolean imageLandscape;
 
 	public String authorName;
@@ -57,9 +62,10 @@ public class PostView implements Serializable {
 	public String authorImageSmallHash;
 	public String authorCoverUrl;
 	public String authorImageUrl;
-	
+
 	public String stationName;
 	public Integer stationId;
+	public String stationIdString;
 
 	public String slug;
 	public String externalFeaturedImgUrl;
@@ -81,4 +87,8 @@ public class PostView implements Serializable {
 	public Date scheduledDate;
 
 	public boolean notify;
+
+	public Integer f;
+
+	public Map<String, String> featuredImage;
 }

@@ -1,11 +1,16 @@
 package co.xarx.trix.persistence.elasticsearch;
 
+import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +19,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
@@ -63,6 +70,40 @@ public class PostEsRepository{
 		}
 
 		return searchRequestBuilder.execute().actionGet();
+	}
+
+	public List<PostView> getViews(SearchHit... hits) {
+		List<PostView> views = new ArrayList<>();
+
+		for (SearchHit hit : hits) {
+			try {
+				ObjectMapper objectMapper = new ObjectMapper();
+				final PostView postView = objectMapper.readValue(
+						objectMapper.writeValueAsString(
+								objectMapper.readValue(
+										hit.getSourceAsString(), PostView.class)), PostView.class);
+
+				Map<String, HighlightField> highlights = hit.getHighlightFields();
+				if (highlights != null && highlights.get("body") != null) {
+					StringBuilder sb = new StringBuilder();
+					for (Text fragment : highlights.get("body").getFragments()) {
+						sb.append(fragment.toString()).append(" ");
+					}
+
+					postView.snippet = sb.toString();
+				} else {
+					postView.snippet = TrixUtil.simpleSnippet(postView.body, 100);
+				}
+
+				postView.snippet = TrixUtil.htmlStriped(postView.snippet);
+				postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
+				views.add(postView);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return views;
 	}
 
 	public void save(Post post) {

@@ -1,13 +1,10 @@
 package co.xarx.trix.domain.query;
 
 import co.xarx.trix.domain.page.interfaces.Block;
-import org.springframework.core.GenericTypeResolver;
 
 import java.util.List;
 
 public interface Query {
-
-	String getQuery();
 
 	Integer getSize();
 
@@ -17,9 +14,7 @@ public interface Query {
 
 	void setPage(Integer page);
 
-	List<Block> getResults(QueryExecutor executor);
+	List<Block> getResults();
 
-	default String getClassName() {
-		return GenericTypeResolver.resolveTypeArgument(getClass(), Query.class).getSimpleName();
-	}
+	void fetch(QueryExecutor executor); //visitor design pattern
 }
