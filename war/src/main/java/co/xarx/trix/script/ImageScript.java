@@ -30,9 +30,9 @@ public class ImageScript {
 
 	@Async
 	public void addPicturesToImages() {
-		BooleanExpression b1 = QFile.file.name.eq("dsnias");
-		BooleanExpression b2 = QFile.file.name.eq("dsnias");
-		Iterable<File> fs = fileRepository.findAll(b1.and(b2));
+//		BooleanExpression b1 = QFile.file.name.eq("dsnias");
+//		BooleanExpression b2 = QFile.file.name.eq("dsnias");
+		Iterable<File> fs = fileRepository.findAll();
 		Set<Integer> fileIdsAlreadySaved = Sets.newHashSet();
 
 		Map<Integer, File> files = Maps.newHashMap();
@@ -46,8 +46,10 @@ public class ImageScript {
 				continue;
 			Set<Image> images = imageRepository.findByFileId(file.id);
 			for(Image image : images) {
-				if(image.hashs != null && !image.hashs.isEmpty()) continue;
-				Map<String, String> hashs = Maps.newHashMap();
+                Map<String, String> hashs = Maps.newHashMap();
+
+                if(image.hashs != null && !image.hashs.isEmpty()) continue;
+
 				Set<Picture> pictures = Sets.newHashSet();
 				Set<String> type = Sets.newHashSet();
 				type.addAll(Image.Type.findByAbbr(image.type).getSizeTags());

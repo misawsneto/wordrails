@@ -13,16 +13,12 @@ import java.util.Set;
 //import org.hibernate.search.annotations.ContainedIn;
 
 @Entity
-public class Station implements Serializable {
+public class Station extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = 7821358742575074731L;
 
 	public static final String RESTRICTED = "RESTRICTED";
 	public static final String RESTRICTED_TO_NETWORKS = "RESTRICTED_TO_NETWORKS";
 	public static final String UNRESTRICTED = "UNRESTRICTED";
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
 
 	@Size(min = 1, max = 100)
 	@NotNull
@@ -115,24 +111,6 @@ public class Station implements Serializable {
 
 	public Integer defaultPerspectiveId;
 
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date createdAt;
-
-	@PrePersist
-	void onCreate() {
-		createdAt = new Date();
-		onChange();
-	}
-
-	@PreUpdate
-	void onUpdate() {
-		updatedAt = new Date();
-		onChange();
-	}
-
 	void onChange() {
 		if(logo != null && logo.originalHash != null){
 			logoHash = logo.originalHash;
@@ -142,10 +120,6 @@ public class Station implements Serializable {
 			logoMediumId = logo.medium.id;
 		}
 	}
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
 
 	@Override
 	public int hashCode() {
