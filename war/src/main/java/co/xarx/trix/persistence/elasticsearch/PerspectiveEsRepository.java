@@ -144,7 +144,7 @@ public class PerspectiveEsRepository {
 
 		perspectiveView.id = perspective.id;
 		perspectiveView.featuredRow = perspective.featuredRow;
-		perspectiveView.homeRows = perspective.homeRows;
+		perspectiveView.homeRow = perspective.homeRow;
 		perspectiveView.splashedRow = perspective.splashedRow;
 		perspectiveView.perspective = perspective.perspective;
 		perspectiveView.rows = perspective.rows;

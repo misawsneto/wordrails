@@ -15,8 +15,8 @@ public class TermPerspective {
 	@OneToOne(mappedBy="splashedPerspective", cascade=CascadeType.REMOVE)
 	public Row splashedRow;
 
-	@OneToMany(mappedBy="homePerspective", cascade=CascadeType.REMOVE)
-	public List<Row> homeRows;
+	@OneToOne(mappedBy="homePerspective", cascade=CascadeType.REMOVE)
+	public Row homeRow;
 
 	@OneToOne(mappedBy="featuringPerspective", cascade=CascadeType.REMOVE)
 	public Row featuredRow;

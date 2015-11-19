@@ -645,9 +645,9 @@ angular.module('app')
             //   if(status == 304)
             //     console.log(header);
             // });
-            isImage(TRIX.baseUrl + "/api/terms/" + term.termId + "/image").then(function(test) {
-                console.log(test);
-            });
+            // isImage(TRIX.baseUrl + "/api/terms/" + term.termId + "/image").then(function(test) {
+            //     console.log(test);
+            // });
           })
         })
       }
@@ -989,6 +989,27 @@ angular.module('app')
     $scope.app.goToSearch = function(searchQuery){
       if(searchQuery && searchQuery.trim() != "")
         $state.go('app.search', {'q': searchQuery});
+    }
+
+    var homeSettingsAnimateTimeout = null;
+
+    $scope.app.animateHomeSettings = function(){
+      if(homeSettingsAnimateTimeout){
+        homeSettingsAnimateTimeout.cancel();
+        $scope.app.homeSettingsAnimate = false
+      }
+
+      $scope.app.homeSettingsAnimate = true
+      $timeout(function() {
+        $scope.app.homeSettingsAnimate = false;
+      }, 1000);
+    }
+
+    $scope.app.goToHomeOrSettings = function(){
+      if($state.includes('app.settings'))
+        $state.go('app.stations')
+      else
+        $scope.app.changeToSettings()
     }
 
 }]);

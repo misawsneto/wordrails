@@ -955,7 +955,7 @@ public class UtilResource {
 	@Autowired
 	private ImageScript imageScript;
 
-	@POST
+	@GET
 	@Path("/addPicturesToImages")
 	@Transactional(readOnly=false)
 	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {

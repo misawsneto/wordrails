@@ -25,10 +25,10 @@
     <div class="panel-heading h4 wrapper-md">
       Configurações de Rede
     </div>
-    <div class="pos-abt top-0 right-0 text-lg m-t">
+    <!-- <div class="pos-abt top-0 right-0 text-lg m-t">
       <button ng-click="saveChanges()"
       md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
-    </div>
+    </div> -->
     <div class="panel-body wrapper-md">
       <!-- /main settings settings -->
       <div class="row">
@@ -192,10 +192,17 @@
       </div>
       <!-- /analytics settings -->
     </div>
-    <div class="m-t text-right text-lg">
+    <!-- <div class="m-t text-right text-lg">
       <button ng-click="saveChanges()"
       md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
-    </div>
+    </div> -->
   </div>
 </div>
+    <md-button ng-click="saveChanges()"
+      id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+      ng-if="app.networkAdmin && app.isLogged"
+      tooltip="Salvar" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      aria-label="Salvar">
+      <i class="mdi mdi-content-save"></i>
+    </md-button>
 </div>

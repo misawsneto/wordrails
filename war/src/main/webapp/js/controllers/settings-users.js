@@ -43,7 +43,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   $scope.bulkActions = [
     {name:'Alterar permissões', id:1},
-    {name:'Remover usuários', id:2}
+    {name:'Ativar usuários', id:2},
+    {name:'Desativar usuários', id:3}
   ]
 
   $scope.bulkActionSelected = null;
@@ -146,18 +147,25 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     // check if user has permisstion to write
   };
 
-  $scope.app.enableDisablePerson = function(){
-    if($scope.pe.enableDisablePerson.user.enabled)
+  $scope.app.enableDisablePerson = function(person){
+    if(person)
+      $scope.pe = {enableDisablePerson : person};
+
+    if(!$scope.pe.enableDisablePerson.user.enabled)
       trix.disablePerson($scope.pe.enableDisablePerson.id).success(function(){
         $scope.app.showSuccessToast('Usuário desativado.');
         $scope.pe.enableDisablePerson.user.enabled = false;
-        $mdDialog.cancel();
+      }).error(function(){
+        $scope.app.showErrorToast('Erro ao alterar usuário.');
+        $scope.pe.enableDisablePerson.user.enabled = !$scope.pe.enableDisablePerson.user.enabled;
       })
     else
       trix.enablePerson($scope.pe.enableDisablePerson.id).success(function(){
         $scope.app.showSuccessToast('Usuário ativado.');
         $scope.pe.enableDisablePerson.user.enabled = true;
-        $mdDialog.cancel();
+      }).error(function(){
+        $scope.app.showErrorToast('Erro ao alterar usuário.');
+        $scope.pe.enableDisablePerson.user.enabled = !$scope.pe.enableDisablePerson.user.enabled;
       })
   }
 
