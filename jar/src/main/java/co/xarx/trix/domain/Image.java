@@ -1,12 +1,13 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
 public class Image extends BaseEntity implements Serializable {
@@ -95,9 +96,9 @@ public class Image extends BaseEntity implements Serializable {
 	public Set<Picture> pictures;
 
 	@ElementCollection
-	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id"))
-	@MapKeyColumn(name="sizeTag", nullable = false)
-	@Column(name="hash", nullable = false)
+	@JoinTable(name = "image_hash", joinColumns = @JoinColumn(name = "image_id"))
+	@MapKeyColumn(name = "sizeTag", nullable = false)
+	@Column(name = "hash", nullable = false)
 	public Map<String, String> hashs;
 
 	@Deprecated

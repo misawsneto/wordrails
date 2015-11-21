@@ -1,36 +1,85 @@
 package co.xarx.trix.domain.query;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.PrimaryKeyJoinColumn;
+import co.xarx.trix.domain.BaseEntity;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 @Entity
-@PrimaryKeyJoinColumn(name = "query_id", referencedColumnName = "id")
-public class ElasticSearchQuery extends BaseQuery implements Query {
+@Table(name = "esquery")
+public class ElasticSearchQuery<T> extends BaseEntity {
 
 	@Lob
+	@NotNull
 	public String queryString;
 
-	public String type;
+	@ElementCollection
+	@JoinTable(name = "es_sorts", joinColumns = @JoinColumn(name = "query_id"))
+	@Column(name = "sort_string", nullable = false)
+	public List<String> sortStrings;
 
-	public String getType() {
-		return type;
+	public String highlightedField;
+
+	@Transient
+	private BoolQueryBuilder boolQueryBuilder;
+
+	@Transient
+	private List<FieldSortBuilder> fieldSortBuilders;
+
+	@NotNull
+	public String objectName;
+
+	public void setQueryString(String queryString) {
+		this.queryString = queryString;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setSortStrings(List<String> sortStrings) {
+		this.sortStrings = sortStrings;
 	}
 
-	public String getQueryString() {
-		return queryString;
+	public String getObjectName() {
+		return objectName;
 	}
 
-	public void setQueryString(String query) {
-		this.queryString = query;
+	public void setObjectName(String objectName) {
+		this.objectName = objectName;
 	}
 
-	@Override
-	public void fetch(QueryExecutor executor) {
-		setBlocks(executor.execute(this));
+	public List<FieldSortBuilder> getFieldSortBuilders() {
+		if(fieldSortBuilders == null && sortStrings != null && !sortStrings.isEmpty()) {
+			fieldSortBuilders = new ArrayList<>();
+			sortStrings.stream().forEach(sort -> fieldSortBuilders.add(SortBuilders.fieldSort(sort)));
+		}
+
+		return fieldSortBuilders;
+	}
+
+	public BoolQueryBuilder getBoolQueryBuilder() {
+		if(boolQueryBuilder == null && queryString != null && !queryString.isEmpty()) {
+			boolQueryBuilder = boolQuery();
+			boolQueryBuilder.must(multiMatchQuery(queryString));
+		}
+
+		return boolQueryBuilder;
+	}
+
+	public String getHighlightedField() {
+		return highlightedField;
+	}
+
+	public void setHighlightedField(String highlightedField) {
+		this.highlightedField = highlightedField;
+	}
+
+	public List<T> execute(ElasticSearchExecutor<T> executor, Integer size, Integer from) {
+		return executor.execute(this, size, from);
 	}
 }

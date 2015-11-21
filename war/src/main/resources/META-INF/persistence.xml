@@ -21,7 +21,7 @@
 		<class>co.xarx.trix.domain.Post</class>
 		<class>co.xarx.trix.domain.page.BaseSection</class>
 		<class>co.xarx.trix.domain.page.Page</class>
-		<class>co.xarx.trix.domain.page.PostListSection</class>
+		<class>co.xarx.trix.domain.page.QueryableListSection</class>
 		<class>co.xarx.trix.domain.query.ElasticSearchQuery</class>
 		<class>co.xarx.trix.domain.PostScheduled</class>
 		<class>co.xarx.trix.domain.PostDraft</class>
@@ -50,6 +50,8 @@
 		<class>co.xarx.trix.domain.Ad</class>
 		<class>co.xarx.trix.domain.Section</class>
 		<class>co.xarx.trix.domain.Video</class>
+		<class>co.xarx.trix.domain.query.FixedQuery</class>
+		<class>co.xarx.trix.domain.query.PageableQuery</class>
 
 
 		<properties>

@@ -1,10 +1,12 @@
 package co.xarx.trix.domain.query;
 
-import co.xarx.trix.domain.page.interfaces.Block;
+import co.xarx.trix.domain.page.Block;
 
-import java.util.List;
+import java.util.Map;
 
 public interface QueryExecutor {
 
-	List<Block> execute(ElasticSearchQuery query);
+	Map<Integer, Block> execute(FixedQuery query);
+
+	Map<Integer, Block> execute(PageableQuery query);
 }

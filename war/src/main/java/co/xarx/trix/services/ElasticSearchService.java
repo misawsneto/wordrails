@@ -1,4 +1,4 @@
-package co.xarx.trix.persistence.elasticsearch;
+package co.xarx.trix.services;
 
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -12,9 +12,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 
 import java.util.concurrent.ExecutionException;
 
-/**
- * Created by jonas on 26/09/15.
- */
 public class ElasticSearchService {
 
 	protected Client client;

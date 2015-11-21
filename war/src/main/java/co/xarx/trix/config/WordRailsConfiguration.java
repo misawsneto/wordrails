@@ -1,6 +1,6 @@
 package co.xarx.trix.config;
 
-import co.xarx.trix.persistence.elasticsearch.ElasticSearchService;
+import co.xarx.trix.services.ElasticSearchService;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

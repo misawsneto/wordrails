@@ -1,20 +1,19 @@
 package co.xarx.trix.domain.query;
 
-import co.xarx.trix.domain.page.interfaces.Block;
+import co.xarx.trix.domain.page.Block;
 
-import java.util.List;
+import javax.persistence.MappedSuperclass;
+import java.util.Map;
+import java.util.Set;
 
+@MappedSuperclass
 public interface Query {
 
-	Integer getSize();
+	Set<Integer> getIndexes();
 
-	Integer getPage();
+	void setElasticSearchQuery(ElasticSearchQuery query);
 
-	void setSize(Integer size);
+	ElasticSearchQuery getElasticSearchQuery();
 
-	void setPage(Integer page);
-
-	List<Block> getResults();
-
-	void fetch(QueryExecutor executor); //visitor design pattern
+	Map<Integer, Block> fetch(QueryExecutor executor); //visitor design pattern
 }

@@ -1,45 +1,59 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.api.PostView;
-import co.xarx.trix.domain.page.interfaces.Block;
-import co.xarx.trix.domain.query.ElasticSearchQuery;
-import co.xarx.trix.domain.query.QueryExecutor;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
-import org.elasticsearch.action.search.SearchResponse;
+import co.xarx.trix.domain.page.Block;
+import co.xarx.trix.domain.query.*;
+import co.xarx.trix.factory.ElasticSearchExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Identifiable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class QueryExecutorService implements QueryExecutor {
 
 	@Autowired
-	private PostEsRepository postEsRepository;
+	private ElasticSearchExecutorFactory elasticSearchExecutorFactory;
 
-	@Override
-	public List<Block> execute(ElasticSearchQuery query) {
-		List<Block> blocks = new ArrayList<>();
+	private Map<Integer, Block> getBlocks(Iterator<Identifiable> itens, Iterator<Integer> indexes, String objectName) {
+		Map<Integer, Block> blocks = new TreeMap<>();
 
-		if(query.getType().equals("post")) {
-			SearchResponse searchResponse = postEsRepository.runQuery(query.getQueryString(), null, query.getSize(), query.getPage(), "body");
-			List<PostView> views = postEsRepository.getViews(searchResponse.getHits().hits());
-			for(final PostView view : views) {
-				blocks.add(new Block<PostView>() {
-					@Override
-					public PostView getObject() {
-						return view;
-					}
+		while (itens.hasNext() && indexes.hasNext()) {
+			Block block = new Block() {
+				@Override
+				public Identifiable getObject() {
+					return itens.next();
+				}
 
-					@Override
-					public String getType() {
-						return Block.POST_BLOCK;
-					}
-				});
-			}
+				@Override
+				public String getObjectName() {
+					return objectName;
+				}
+			};
+
+			blocks.put(indexes.next(), block);
 		}
 
 		return blocks;
+	}
+
+	@Override
+	public Map<Integer, Block> execute(FixedQuery query) {
+		ElasticSearchQuery esQuery = query.getElasticSearchQuery();
+		ElasticSearchExecutor executor = elasticSearchExecutorFactory.getElasticSearchExecutor(esQuery.getObjectName() + "_executor");
+
+		Set<Integer> indexes = query.getIndexes();
+		List<Identifiable> itens = executor.execute(esQuery, indexes.size(), 0);
+		return getBlocks(itens.iterator(), indexes.iterator(), esQuery.getObjectName());
+	}
+
+	@Override
+	public Map<Integer, Block> execute(PageableQuery query) {
+		ElasticSearchQuery esQuery = query.getElasticSearchQuery();
+		ElasticSearchExecutor executor = elasticSearchExecutorFactory.getElasticSearchExecutor(esQuery.getObjectName() + "_executor");
+
+		Set<Integer> indexes = query.getIndexes();
+		List<Identifiable> itens = executor.execute(esQuery, query.getSize(), query.getFrom());
+		return getBlocks(itens.iterator(), indexes.iterator(), esQuery.getObjectName());
 	}
 }

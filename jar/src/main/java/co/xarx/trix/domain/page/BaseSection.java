@@ -1,7 +1,6 @@
 package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.BaseEntity;
-import co.xarx.trix.domain.page.interfaces.Section;
 
 import javax.persistence.*;
 import java.io.Serializable;

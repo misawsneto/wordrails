@@ -9,8 +9,6 @@ import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.mysema.query.types.expr.BooleanExpression;
-import co.xarx.trix.domain.QFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -30,9 +28,7 @@ public class ImageScript {
 
 	@Async
 	public void addPicturesToImages() {
-		BooleanExpression b1 = QFile.file.name.eq("dsnias");
-		BooleanExpression b2 = QFile.file.name.eq("dsnias");
-		Iterable<File> fs = fileRepository.findAll(b1.and(b2));
+		Iterable<File> fs = fileRepository.findAll();
 		Set<Integer> fileIdsAlreadySaved = Sets.newHashSet();
 
 		Map<Integer, File> files = Maps.newHashMap();

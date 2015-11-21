@@ -2,9 +2,13 @@ package co.xarx.trix.persistence.elasticsearch;
 
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.query.ElasticSearchExecutor;
+import co.xarx.trix.domain.query.ElasticSearchQuery;
+import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rometools.utils.Lists;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.text.Text;
@@ -26,8 +30,8 @@ import java.util.Map;
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
-@Component
-public class PostEsRepository{
+@Component("post_executor")
+public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 
 	@Value("${elasticsearch.index}")
 	private String indexName;
@@ -35,13 +39,33 @@ public class PostEsRepository{
 	private @Autowired @Qualifier("objectMapper")
 	ObjectMapper objectMapper;
 
-	private @Autowired @Qualifier("simpleMapper")
-	ObjectMapper simpleMapper;
-
 	private static final String ES_TYPE = "post";
 
 	@Autowired
 	private ElasticSearchService elasticSearchService;
+
+	public List<PostView> execute(ElasticSearchQuery query, Integer size, Integer from) {
+		SearchRequestBuilder searchRequestBuilder = elasticSearchService
+				.getElasticsearchClient()
+				.prepareSearch(indexName)
+				.setTypes(ES_TYPE)
+				.setQuery(query.getBoolQueryBuilder())
+				.setSize(size)
+				.setFrom(from);
+
+		searchRequestBuilder.addHighlightedField(query.getHighlightedField(), 100, 4);
+		searchRequestBuilder.setHighlighterPreTags("{snippet}");
+		searchRequestBuilder.setHighlighterPostTags("{#snippet}");
+
+		if (Lists.isNotEmpty(query.getFieldSortBuilders())){
+			searchRequestBuilder.addSort(new FieldSortBuilder("_score").order(SortOrder.DESC));
+			List<FieldSortBuilder> sortBuilders = query.getFieldSortBuilders();
+			sortBuilders.stream().forEach(searchRequestBuilder::addSort);
+		}
+
+		SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
+		return getViews(searchResponse.getHits().hits());
+	}
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page, String highlightedField){
 		SearchRequestBuilder searchRequestBuilder = elasticSearchService
@@ -123,7 +147,7 @@ public class PostEsRepository{
 	}
 
 	public String formatObjectJson(Post post){
-		String doc = null;
+		String doc;
 		try {
 			doc = objectMapper.writeValueAsString(makePostView(post, true));
 		} catch (JsonProcessingException e) {

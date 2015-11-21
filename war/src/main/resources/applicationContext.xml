@@ -24,6 +24,7 @@
        					   http://www.springframework.org/schema/aop
        					   http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+
 	<aop:aspectj-autoproxy>
 		<aop:include name="profilerAspect" />
 		<aop:include name="multitenantRepositoryAspect" />
@@ -37,12 +38,22 @@
 
 	<jpa:repositories base-package="co.xarx.trix.persistence" transaction-manager-ref="transactionManager"
 					  entity-manager-factory-ref="entityManagerFactory"/>
+	<jpa:auditing date-time-provider-ref="dateTimeProvider"/>
+	<bean id="dateTimeProvider"
+	      class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<property name="staticField"
+		          value="org.springframework.data.auditing.CurrentDateTimeProvider.INSTANCE"/>
+	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 
 	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
 	<task:executor id="myExecutor" pool-size="10"/>
 	<task:scheduler id="myScheduler" pool-size="20"/>
+
+	<bean class="org.springframework.beans.factory.config.ServiceLocatorFactoryBean" id="elasticSearchExecutorFactory">
+		<property name="serviceLocatorInterface" value="co.xarx.trix.factory.ElasticSearchExecutorFactory"/>
+	</bean>
 
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory"/>

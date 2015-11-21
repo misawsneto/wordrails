@@ -1,7 +1,5 @@
-package co.xarx.trix.domain.page.interfaces;
+package co.xarx.trix.domain.page;
 
-
-import co.xarx.trix.domain.page.Page;
 
 public interface Section {
 

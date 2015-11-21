@@ -1,6 +1,7 @@
 package co.xarx.trix.persistence.elasticsearch;
 
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.services.ElasticSearchService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.search.SearchRequestBuilder;

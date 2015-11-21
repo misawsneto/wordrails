@@ -1,0 +1,92 @@
+package co.xarx.trix.domain.page;
+
+import co.xarx.trix.domain.query.FixedQuery;
+import co.xarx.trix.domain.query.PageableQuery;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
+@Entity
+@PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
+public class QueryableListSection extends BaseSection implements ListSection, QueryableSection {
+
+	public static final String TYPE = "queryable_list_section";
+
+	@NotNull
+	@JoinTable(name = "section_fixedquery",
+			joinColumns = @JoinColumn(name = "section_id"),
+			inverseJoinColumns = @JoinColumn(name = "query_id"))
+	@OneToMany(cascade = CascadeType.ALL)
+	public List<FixedQuery> fixedQueries;
+
+	@OneToOne
+	public PageableQuery pageableQuery;
+
+	@Transient
+	public List<Block> blocks;
+
+	@NotNull
+	public boolean isPageable = false;
+
+	public Integer size;
+
+	@Override
+	public PageableQuery getPageableQuery() {
+		pageableQuery.setFrom(0);
+		pageableQuery.setSize(this.getSize());
+		return pageableQuery;
+	}
+
+	@Override
+	public void setPageableQuery(PageableQuery pageableQuery) {
+		this.pageableQuery = pageableQuery;
+	}
+
+	@Override
+	public List<FixedQuery> getFixedQueries() {
+		return fixedQueries;
+	}
+
+	@Override
+	public void setFixedQueries(List<FixedQuery> fixedQueries) {
+		this.fixedQueries = fixedQueries;
+	}
+
+	@Override
+	public boolean isPageable() {
+		return isPageable;
+	}
+
+	public void setPageable(boolean pageable) {
+		isPageable = pageable;
+	}
+
+	public Integer getSize() {
+		return size;
+	}
+
+	public void setSize(Integer pageSize) {
+		this.size = pageSize;
+	}
+
+	@Override
+	public List<Block> getBlocks() {
+		return blocks;
+	}
+
+	public void setBlocks(List<Block> blocks) {
+		this.blocks = blocks;
+	}
+
+	@Override
+	public String getType() {
+		return TYPE;
+	}
+
+	@PrePersist
+	public void onCreate() {
+		if (isPageable && size == null || size == 0)
+			throw new PersistenceException("Can't create a pageable section with no default size");
+	}
+}

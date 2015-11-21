@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 
 @Aspect
 public class ProfilerAspect {
@@ -14,7 +15,7 @@ public class ProfilerAspect {
 	@Around("@annotation(profile)")
 	public Object profile(ProceedingJoinPoint pjp, Profile profile) throws Throwable {
 		long start = System.currentTimeMillis();
-		log.debug("@ profile - Calling method at " + start);
+		log.debug("@ profile - Calling method " + ((MethodSignature)pjp.getSignature()).getMethod());
 		Object output = pjp.proceed();
 		long finish = System.currentTimeMillis();
 		long elapsedTime = finish - start;

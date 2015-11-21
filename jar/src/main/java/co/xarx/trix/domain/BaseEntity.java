@@ -1,17 +1,16 @@
 package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.Filters;
-import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 @FilterDef(name = "networkFilter", parameters = @ParamDef(name = "networkId", type = "integer"))
 @Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
 public abstract class BaseEntity implements MultiTenantEntity {
@@ -34,7 +33,7 @@ public abstract class BaseEntity implements MultiTenantEntity {
 	public Integer networkId;
 
 	@Version
-	@Column(columnDefinition = "integer DEFAULT 0", nullable = false)
+	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
 	private int version;
 
 	@Override
@@ -72,15 +71,5 @@ public abstract class BaseEntity implements MultiTenantEntity {
 	@SuppressWarnings("unused")
 	private void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
-	}
-
-	@PrePersist
-	public void onCreate() {
-		createdAt = new Date();
-	}
-
-	@PreUpdate
-	public void onUpdate() {
-		updatedAt = new Date();
 	}
 }
