@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class PageService {
@@ -24,24 +23,31 @@ public class PageService {
 	public Map<Integer, Block> fetchQueries(QueryableSection section, Integer from) {
 		Map<Integer, Block> blocks = new TreeMap<>();
 
+		PageableQuery pageableQuery = section.getPageableQuery();
 		List<FixedQuery> fixedQueries = section.getFixedQueries();
 		Map<Integer, Block> fixedBlocks = new TreeMap<>();
-		fixedQueries.stream()
+		fixedQueries.stream() //fetch all fixed blocks from all fixedqueries
 				.forEach(fixedQuery -> fixedBlocks.putAll(fixedQuery.fetch(queryExecutor)));
 
-		fixedBlocks.keySet().stream()
-				.filter(index -> index >= from && index < from + section.getSize())
-				.forEach(index -> blocks.put(index, fixedBlocks.get(index)));
+		AtomicInteger pageableFrom = new AtomicInteger(from);
+		fixedBlocks.keySet().stream() //get all fixedblocks that are going to show on this page
+				.forEach(index -> {
+					if (index < from) {
+						pageableFrom.decrementAndGet();
+					}
+					if (index >= from && index < from + section.getSize()) {
+						blocks.put(index, fixedBlocks.get(index));
+						pageableQuery.addIndexException(index);
+					}
 
-		PageableQuery pageableQuery = section.getPageableQuery();
-		pageableQuery.setFrom(from);
+				});
+
+		pageableQuery.setFrom(pageableFrom.get());
 
 		//add boolean queries to the pageable stream avoid the items that were already got
 		fixedBlocks.values().stream()
 				.filter(block -> Objects.equals(block.getObjectName(), pageableQuery.getElasticSearchQuery().getObjectName()))
-				.forEach(block ->
-						pageableQuery.getElasticSearchQuery().getBoolQueryBuilder().mustNot(matchQuery("id", block.getId()))
-				);
+				.forEach(block -> pageableQuery.addIdException(block.getId()));
 
 		Map<Integer, Block> pageBlocks = pageableQuery.fetch(queryExecutor);
 		//add all elements that don't don't clash with some index

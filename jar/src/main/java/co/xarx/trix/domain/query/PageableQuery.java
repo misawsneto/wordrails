@@ -7,9 +7,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Entity
 public class PageableQuery extends BaseEntity implements Query {
@@ -38,19 +41,26 @@ public class PageableQuery extends BaseEntity implements Query {
 
 	@Override
 	public Set<Integer> getIndexes() {
-		Set<Integer> indexes = new TreeSet<>();
-		for (int i = from; i < from + size; i++) {
-			if(!indexExceptions.contains(i)) indexes.add(i);
-		}
+		Set<Integer> tmpIndexes = IntStream.rangeClosed(from, from+size-1).boxed().collect(Collectors.toSet());
+		Set<Integer> indexes = new TreeSet<>(tmpIndexes);
+		tmpIndexes.stream().filter(index -> indexExceptions != null && indexExceptions.contains(index))
+				.forEach(indexes::remove);
 		return indexes;
 	}
 
-	public void setIndexExceptions(Set<Integer> indexExceptions) {
-		this.indexExceptions = indexExceptions;
+	public void addIndexException(Integer indexException) {
+		if(this.indexExceptions == null)
+			indexExceptions = new TreeSet<>();
+
+		this.indexExceptions.add(indexException);
+	}
+
+	public void addIdException(Serializable id) {
+		this.getElasticSearchQuery().addIdException(id);
 	}
 
 	public Integer getSize() {
-		return size;
+		return size - indexExceptions.size();
 	}
 
 	public void setSize(Integer size) {

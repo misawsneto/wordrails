@@ -7,6 +7,7 @@ import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rometools.utils.Lists;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -102,6 +103,7 @@ public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 		for (SearchHit hit : hits) {
 			try {
 				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 				final PostView postView = objectMapper.readValue(
 						objectMapper.writeValueAsString(
 								objectMapper.readValue(

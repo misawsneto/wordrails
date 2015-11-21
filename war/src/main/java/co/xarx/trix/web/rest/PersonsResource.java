@@ -582,7 +582,7 @@ public class PersonsResource {
 
 		StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
 
-		if(defaultStation != null){
+			if(defaultStation != null){
 			Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
 
 			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);

@@ -1,17 +1,26 @@
 package co.xarx.trix.domain.query;
 
 import co.xarx.trix.domain.BaseEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.elasticsearch.common.xcontent.ToXContent;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.WrapperQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.*;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.wrapperQuery;
 
 @Entity
 @Table(name = "esquery")
@@ -19,7 +28,7 @@ public class ElasticSearchQuery<T> extends BaseEntity {
 
 	@Lob
 	@NotNull
-	public String queryString;
+	public String boolQueryString;
 
 	@ElementCollection
 	@JoinTable(name = "es_sorts", joinColumns = @JoinColumn(name = "query_id"))
@@ -27,18 +36,67 @@ public class ElasticSearchQuery<T> extends BaseEntity {
 	public List<String> sortStrings;
 
 	public String highlightedField;
-
+	@NotNull
+	public String objectName;
 	@Transient
 	private BoolQueryBuilder boolQueryBuilder;
-
 	@Transient
 	private List<FieldSortBuilder> fieldSortBuilders;
 
-	@NotNull
-	public String objectName;
+	private static Map<String, Iterable<Object>> fromSource(String source, String value) {
+		byte[] data = source.getBytes();
+		Map<String, Object> values = XContentHelper.convertToMap(data, 0, data.length, true).v2();
+		for (String s : values.keySet()) {
+			if(s.equals(value) && values.get(s) instanceof Map){
+				return (Map<String, Iterable<Object>>) values.get(s);
+			}
+		}
+		return null;
+	}
 
-	public void setQueryString(String queryString) {
-		this.queryString = queryString;
+	private static BoolQueryBuilder getBoolQuery(Map<String, Iterable<Object>> source) {
+		BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+
+		ObjectMapper m = new ObjectMapper();
+		for (Map.Entry<String, Iterable<Object>> entry : source.entrySet()) {
+			if(entry.getKey().equals("must")) {
+				entry.getValue().forEach(
+								value -> {
+									try {
+										boolQuery.must(wrapperQuery(m.writeValueAsString(value)));
+									} catch (JsonProcessingException e) {
+										e.printStackTrace();
+									}
+								}
+						);
+			} else if(entry.getKey().equals("must_not")) {
+					entry.getValue().forEach(
+							value -> {
+								try {
+									boolQuery.mustNot(wrapperQuery(m.writeValueAsString(value)));
+									} catch (JsonProcessingException e) {
+										e.printStackTrace();
+									}
+								}
+						);
+			} else if(entry.getKey().equals("should")) {
+						entry.getValue().forEach(
+								value -> {
+									try {
+										boolQuery.should(wrapperQuery(m.writeValueAsString(value)));
+									} catch (JsonProcessingException e) {
+										e.printStackTrace();
+									}
+								}
+						);
+			}
+		}
+
+		return boolQuery;
+	}
+
+	public void setQueryString(String boolQueryString) {
+		this.boolQueryString = boolQueryString;
 	}
 
 	public void setSortStrings(List<String> sortStrings) {
@@ -54,7 +112,7 @@ public class ElasticSearchQuery<T> extends BaseEntity {
 	}
 
 	public List<FieldSortBuilder> getFieldSortBuilders() {
-		if(fieldSortBuilders == null && sortStrings != null && !sortStrings.isEmpty()) {
+		if (fieldSortBuilders == null && sortStrings != null && !sortStrings.isEmpty()) {
 			fieldSortBuilders = new ArrayList<>();
 			sortStrings.stream().forEach(sort -> fieldSortBuilders.add(SortBuilders.fieldSort(sort)));
 		}
@@ -63,12 +121,15 @@ public class ElasticSearchQuery<T> extends BaseEntity {
 	}
 
 	public BoolQueryBuilder getBoolQueryBuilder() {
-		if(boolQueryBuilder == null && queryString != null && !queryString.isEmpty()) {
-			boolQueryBuilder = boolQuery();
-			boolQueryBuilder.must(multiMatchQuery(queryString));
+		if (boolQueryBuilder == null && boolQueryString != null && !boolQueryString.isEmpty()) {
+			boolQueryBuilder = getBoolQuery(fromSource(boolQueryString, "bool"));
 		}
 
 		return boolQueryBuilder;
+	}
+
+	public void addIdException(Serializable id) {
+		this.getBoolQueryBuilder().mustNot(matchQuery(this.getObjectName() + "._id", id));
 	}
 
 	public String getHighlightedField() {

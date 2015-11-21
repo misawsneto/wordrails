@@ -309,12 +309,12 @@ public class PostsResource {
 		if(stationIdIntegers.size() > 0)
 			readableIds = stationIdIntegers;
 
-		BoolQueryBuilder statiosQuery = boolQuery();
+		BoolQueryBuilder stationQuery = boolQuery();
 		for(Integer stationId: readableIds){
-			statiosQuery.should(
+			stationQuery.should(
 					matchQuery("stationId", String.valueOf(stationId)));
 		}
-		mainQuery = mainQuery.must(statiosQuery);
+		mainQuery = mainQuery.must(stationQuery);
 		FieldSortBuilder sort = null;
 
 		if(sortByDate != null && sortByDate){
