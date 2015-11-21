@@ -9,14 +9,14 @@ import co.xarx.trix.domain.page.QueryableSection;
 import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
+import co.xarx.trix.persistence.FixedQueryRepository;
 import co.xarx.trix.persistence.PageRepository;
-import co.xarx.trix.persistence.QueryRepository;
+import co.xarx.trix.persistence.PageableQueryRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.services.PageService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,12 +36,10 @@ public class WebResource {
 	private HttpServletRequest request;
 	@Autowired
 	private PageRepository pageRepository;
-	@Qualifier("fixedQueryRepository")
 	@Autowired
-	private QueryRepository fixedQueryRepository;
-	@Qualifier("pageableQueryRepository")
+	private FixedQueryRepository fixedQueryRepository;
 	@Autowired
-	private QueryRepository pageableQueryRepository;
+	private PageableQueryRepository pageableQueryRepository;
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
