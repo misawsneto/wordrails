@@ -42,8 +42,10 @@ public class ImageScript {
 				continue;
 			Set<Image> images = imageRepository.findByFileId(file.id);
 			for(Image image : images) {
-				if(image.hashs != null && !image.hashs.isEmpty()) continue;
-				Map<String, String> hashs = Maps.newHashMap();
+                Map<String, String> hashs = Maps.newHashMap();
+
+                if(image.hashs != null && !image.hashs.isEmpty()) continue;
+
 				Set<Picture> pictures = Sets.newHashSet();
 				Set<String> type = Sets.newHashSet();
 				type.addAll(Image.Type.findByAbbr(image.type).getSizeTags());

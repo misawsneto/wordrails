@@ -18,7 +18,7 @@ public class PerspectiveIndexed {
     public Row splashedRow;
 
     @JsonManagedReference
-    public List<Row> homeRows;
+    public Row homeRow;
 
     @JsonManagedReference
     public Row featuredRow;
