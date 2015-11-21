@@ -1,7 +1,29 @@
 package co.xarx.trix.web.rest;
 
-import java.io.IOException;
-import java.util.List;
+import co.xarx.trix.WordrailsService;
+import co.xarx.trix.api.ContentResponse;
+import co.xarx.trix.api.PostView;
+import co.xarx.trix.api.TermView;
+import co.xarx.trix.converter.PostConverter;
+import co.xarx.trix.converter.TermConverter;
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Term;
+import co.xarx.trix.domain.TermPerspective;
+import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.TermPerspectiveRepository;
+import co.xarx.trix.persistence.TermRepository;
+import co.xarx.trix.services.AmazonCloudService;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jboss.resteasy.spi.HttpRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,30 +33,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.api.ContentResponse;
-import co.xarx.trix.api.PostView;
-import co.xarx.trix.api.TermView;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
-import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.converter.TermConverter;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.Term;
-import co.xarx.trix.domain.TermPerspective;
-import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.AmazonCloudService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.jboss.resteasy.spi.HttpRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
+import java.io.IOException;
+import java.util.List;
 
 @Path("/terms")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -43,23 +43,8 @@ import org.springframework.stereotype.Component;
 public class TermsResource {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context HttpRequest httpRequest;
-
-	private @Autowired
-	PersonRepository personRepository;
-
-	private @Autowired
-	NetworkRolesRepository networkRolesRepository;
-	private @Autowired
-	StationRepository stationRepository;
-	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
-	private @Autowired
-	NetworkRepository networkRepository;
 	private @Autowired
 	WordrailsService wordrailsService;
-	private @Autowired
-	TaxonomyRepository taxonomyRepository;
 	private @Autowired TermRepository termRepository;
 	private @Autowired
 	PostConverter postConverter;
@@ -68,8 +53,6 @@ public class TermsResource {
 	TermConverter termConverter;
 	private @Autowired @Qualifier("simpleMapper")
 	ObjectMapper simpleMapper;
-	private @Autowired @Qualifier("objectMapper")
-	ObjectMapper mapper;
 
 	private @Autowired
 	AmazonCloudService amazonCloudService;
@@ -156,7 +139,7 @@ public class TermsResource {
 
 	@GET
 	@Path("/allTerms")
-	public ContentResponse<List<TermView>> getAllTerms(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws JsonGenerationException, JsonMappingException, IOException {
+	public ContentResponse<List<TermView>> getAllTerms(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws IOException {
 		List<Term> allTerms;
 		if(perspectiveId != null){
 			allTerms = termRepository.findByPerspectiveId(perspectiveId);
@@ -164,7 +147,7 @@ public class TermsResource {
 			allTerms = termRepository.findByTaxonomyId(taxonomyId);
 		}
 
-		ContentResponse<List<TermView>> response = new ContentResponse<List<TermView>>();
+		ContentResponse<List<TermView>> response = new ContentResponse<>();
 		response.content = termConverter.convertToViews(allTerms);
 		return response;
 	}
@@ -172,7 +155,7 @@ public class TermsResource {
 	@GET
 	@Path("/search/findPostsByTagAndStationId")
 	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tagName") String tagName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-		org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper();
 
 		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
 
@@ -180,7 +163,7 @@ public class TermsResource {
 
 		List<PostView> postViews = postConverter.convertToViews(posts);
 
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}

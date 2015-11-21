@@ -1,32 +1,26 @@
 package co.xarx.trix.mobile.notification;
 
-import java.rmi.UnexpectedException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
 import co.xarx.trix.domain.*;
+import co.xarx.trix.dto.NotificationDto;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.persistence.PersonNetworkRegIdRepository;
 import co.xarx.trix.persistence.PersonNetworkTokenRepository;
-import co.xarx.trix.dto.NotificationDto;
 import co.xarx.trix.util.TrixUtil;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gcm.server.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.google.android.gcm.server.Constants;
-import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.MulticastResult;
-import com.google.android.gcm.server.Result;
-import com.google.android.gcm.server.Sender;
+import javax.transaction.Transactional;
+import java.rmi.UnexpectedException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 @Component
 public class GCMService {
@@ -102,8 +96,8 @@ public class GCMService {
 
 		if(mapper == null){
 			mapper = new ObjectMapper();
-			mapper.setSerializationInclusion(Inclusion.NON_EMPTY);
-			mapper.setSerializationInclusion(Inclusion.NON_DEFAULT);
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
 		}
 	}
 

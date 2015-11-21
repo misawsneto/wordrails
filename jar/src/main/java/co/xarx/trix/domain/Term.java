@@ -1,20 +1,15 @@
 package co.xarx.trix.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonManagedReference;
-//import org.hibernate.search.annotations.ContainedIn;
-//import org.hibernate.search.annotations.DocumentId;
-//import org.hibernate.search.annotations.Field;
-//import org.hibernate.search.annotations.NumericField;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {

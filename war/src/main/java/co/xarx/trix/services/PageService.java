@@ -47,7 +47,7 @@ public class PageService {
 		//add boolean queries to the pageable stream avoid the items that were already got
 		fixedBlocks.values().stream()
 				.filter(block -> Objects.equals(block.getObjectName(), pageableQuery.getElasticSearchQuery().getObjectName()))
-				.forEach(block -> pageableQuery.addIdException(block.getId()));
+				.forEach(block -> pageableQuery.addIdException(block.getObject().getId()));
 
 		Map<Integer, Block> pageBlocks = pageableQuery.fetch(queryExecutor);
 		//add all elements that don't don't clash with some index
