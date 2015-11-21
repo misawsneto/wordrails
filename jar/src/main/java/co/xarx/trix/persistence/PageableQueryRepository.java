@@ -1,6 +1,8 @@
 package co.xarx.trix.persistence;
 
 import co.xarx.trix.domain.query.PageableQuery;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
-public interface PageableQueryRepository extends QueryRepository<PageableQuery> {
+public interface PageableQueryRepository extends JpaRepository<PageableQuery, Integer>, QueryDslPredicateExecutor<PageableQuery> {
 }

@@ -12,23 +12,12 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-//import org.apache.solr.analysis.LowerCaseFilterFactory;
-//import org.apache.solr.analysis.StandardTokenizerFactory;
-//import org.apache.solr.analysis.WordDelimiterFilterFactory;
-//import org.hibernate.search.annotations.*;
-//import org.hibernate.search.annotations.Index;
-
 @Entity
-//@Indexed
-//@AnalyzerDefs({
-//		@AnalyzerDef(name = "customAnalyzer",
-//		tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-//		filters = {
-//				@TokenFilterDef(factory = WordDelimiterFilterFactory.class),
-//				@TokenFilterDef(factory = LowerCaseFilterFactory.class)
-//		})
-//})
-@Table(name = "person", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "username"}), @UniqueConstraint(columnNames = {"username", "networkId"})})
+@Table(name = "person",
+		uniqueConstraints = {
+				@UniqueConstraint(columnNames = {"user_id", "username"}),
+				@UniqueConstraint(columnNames = {"username", "networkId"})
+		})
 public class Person extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7728358342573034233L;

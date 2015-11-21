@@ -117,12 +117,37 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetElasticSearchQueriesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetElasticSearchQueryAuthorized(Integer elasticSearchQueryId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetFilesAuthorized() {
 		return false;
 	}
 
 	@Override
 	protected boolean isGetFileAuthorized(Integer fileId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetFixedQueriesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetFixedQueryAuthorized(Integer fixedQueryId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetFixedQueryElasticSearchQueryAuthorized(Integer fixedQueryId) {
 		return false;
 	}
 
@@ -1174,6 +1199,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPageStationAuthorized(Integer pageId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPageableQueriesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPageableQueryAuthorized(Integer pageableQueryId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPageableQueryQueryAuthorized(Integer pageableQueryId) {
 		return false;
 	}
 
