@@ -1,11 +1,13 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Image;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.PostTrash;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.services.PostService;
 import co.xarx.trix.util.TrixUtil;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -97,7 +99,7 @@ public class PostEventHandler {
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
 		if (postAndCommentSecurityChecker.canRemove(post)) {
 
-			List<Image> images = imageRepository.findByPost(post);
+			Set<Image> images = post.images;
 			if (images != null && images.size() > 0) {
 				postRepository.updateFeaturedImagesToNull(images);
 			}

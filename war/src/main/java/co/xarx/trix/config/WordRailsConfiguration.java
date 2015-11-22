@@ -14,7 +14,6 @@ import javax.persistence.Entity;
 import java.util.Set;
 
 @Configuration
-//@EnableRedisHttpSession
 public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 
 	@Value("${elasticsearch.host:'localhost'}")

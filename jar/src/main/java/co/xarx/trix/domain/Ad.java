@@ -1,79 +1,73 @@
 package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-//import co.xarx.trix.util.TrixUtil;
-//import org.hibernate.search.annotations.Analyze;
-//import org.hibernate.search.annotations.DateBridge;
-//import org.hibernate.search.annotations.Field;
-//import org.hibernate.search.annotations.Resolution;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-/**
- * Created by misael on 27/08/2015.
- */
+
 @Entity
 public class Ad {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
 
-    @OneToOne
-    public Image image;
-    public Integer imageId;
-    public Integer imageSmallId;
-    public Integer imageMediumId;
-    public Integer imageLargeId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer id;
 
-    @NotNull
-    @ManyToOne
-    Sponsor sponsor;
+	@OneToOne
+	public Image image;
+	public Integer imageId;
+	public Integer imageSmallId;
+	public Integer imageMediumId;
+	public Integer imageLargeId;
 
-    @Lob
-    public String link;
+	@Lob
+	public String link;
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date updatedAt;
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date updatedAt;
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(updatable = false)
-    public Date createdAt;
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable = false)
+	public Date createdAt;
 
-    @PrePersist
-    public void onCreate() {
-        if (image != null && image.original != null) {
-            imageId = image.original.id;
-            imageSmallId = image.small.id;
-            imageMediumId = image.medium.id;
-            imageLargeId = image.large.id;
-        } else {
-            imageId = null;
-            imageSmallId = null;
-            imageMediumId = null;
-            imageLargeId = null;
-        }
+	@NotNull
+	@ManyToOne
+	Sponsor sponsor;
 
-        createdAt = updatedAt = new Date();
-    }
+	@PrePersist
+	public void onCreate() {
+		if (image != null && image.original != null) {
+			imageId = image.original.id;
+			imageSmallId = image.small.id;
+			imageMediumId = image.medium.id;
+			imageLargeId = image.large.id;
+		} else {
+			imageId = null;
+			imageSmallId = null;
+			imageMediumId = null;
+			imageLargeId = null;
+		}
 
-    @PreUpdate
-    public void onUpdate() {
-        if (image != null && image.original != null) {
-            imageId = image.original.id;
-            imageSmallId = image.small.id;
-            imageMediumId = image.medium.id;
-            imageLargeId = image.large.id;
-        } else {
-            imageId = null;
-            imageSmallId = null;
-            imageMediumId = null;
-            imageLargeId = null;
-        }
+		createdAt = updatedAt = new Date();
+	}
 
-        updatedAt = new Date();
-    }
+	@PreUpdate
+	public void onUpdate() {
+		if (image != null && image.original != null) {
+			imageId = image.original.id;
+			imageSmallId = image.small.id;
+			imageMediumId = image.medium.id;
+			imageLargeId = image.large.id;
+		} else {
+			imageId = null;
+			imageSmallId = null;
+			imageMediumId = null;
+			imageLargeId = null;
+		}
+
+		updatedAt = new Date();
+	}
 }

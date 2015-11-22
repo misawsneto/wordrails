@@ -1,12 +1,10 @@
 package co.xarx.trix.api;
 
-import co.xarx.trix.domain.*;
 import org.springframework.hateoas.Identifiable;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 public class PostView implements Serializable, Identifiable {
 	private static final long serialVersionUID = -1474032487285763669L;
@@ -30,12 +28,6 @@ public class PostView implements Serializable, Identifiable {
 	public String imageLargeHash;
 
 	public Boolean sponsored;
-	public Sponsor sponsor;
-	public Set<Comment> comments;
-	public Set<Image> images;
-	public Person author;
-	public Station station;
-	public Set<Term> terms;
 	public java.util.Date date;
 	public String snippet;
 	public String body;

@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -14,7 +15,6 @@ public class NetworkRole {
 	@NotNull
 	@JoinColumn(name = "network_id")
 	public Network network;
-
 
 	@ManyToOne
 	@NotNull

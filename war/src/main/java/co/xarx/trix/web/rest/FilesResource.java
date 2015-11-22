@@ -1,13 +1,13 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.persistence.FileRepository;
-import co.xarx.trix.util.FileUtil;
-import co.xarx.trix.WordrailsService;
 import co.xarx.trix.domain.File;
 import co.xarx.trix.domain.FileContents;
-import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.QFile;
+import co.xarx.trix.domain.QFileContents;
 import co.xarx.trix.persistence.FileContentsRepository;
+import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.util.FileUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.hibernate.Hibernate;
@@ -48,8 +48,6 @@ public class FilesResource {
 	private FileContentsRepository fileContentsRepository;
 	@Autowired
 	private AmazonCloudService amazonCloudService;
-	@Autowired
-	private WordrailsService wordrailsService;
 	@PersistenceContext
 	private EntityManager manager;
 
@@ -66,18 +64,13 @@ public class FilesResource {
 		}
 
 		String hash = FileUtil.getHash(item.getInputStream());
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		File existingFile = fileRepository.findByHashAndNetworkId(hash, network.id);
+		File existingFile = fileRepository.findOne(QFile.file.hash.eq(hash));
 		if (existingFile != null) {
 			return getResponseFromId(existingFile.id);
 		}
 
 		try {
 			if (validate(item)) {
-				String subdomain = network.subdomain;
-				if (subdomain == null || subdomain.isEmpty()) {
-					return Response.serverError().entity("subdomain of network is null").build();
-				}
 				FileContents file = fileContentsRepository.findOne(id);
 
 				if (file == null) {
@@ -90,7 +83,6 @@ public class FilesResource {
 				file.hash = hash;
 				file.type = File.INTERNAL;
 				file.directory = File.DIR_IMAGES;
-				file.networkId = network.id;
 				file.mime = item.getContentType();
 				file.contents = creator.createBlob(item.getInputStream(), item.getSize());
 				file.size = item.getSize();
@@ -133,13 +125,11 @@ public class FilesResource {
 			Session session = (Session) manager.getDelegate();
 			LobCreator creator = Hibernate.getLobCreator(session);
 
-			FileContents file;
 			String hash = FileUtil.getHash(item.getInputStream());
-			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-			FileContents existingFile = fileContentsRepository.findByHashAndNetworkId(hash, network.id);
+			FileContents existingFile = fileContentsRepository.findOne(QFileContents.fileContents.hash.eq(hash));
 			if (existingFile != null) {
 				if (existingFile.type.equals(File.EXTERNAL)) {
-					if (!amazonCloudService.exists(network.subdomain, existingFile.hash)) {
+					if (!amazonCloudService.exists(AmazonCloudService.IMAGE_DIR, existingFile.hash)) {
 						existingFile.size = item.getSize();
 						existingFile.type = File.INTERNAL;
 						existingFile.contents = creator.createBlob(item.getInputStream(), item.getSize());
@@ -149,17 +139,10 @@ public class FilesResource {
 
 				return getResponseFromId(existingFile.id);
 			} else {
-				String subdomain = network.subdomain;
-				if (subdomain == null || subdomain.isEmpty()) {
-					return Response.serverError().entity("subdomain of network is null").build();
-				}
-
-
-				file = new FileContents();
+				FileContents file = new FileContents();
 				file.hash = hash;
 				file.type = File.INTERNAL;
 				file.directory = File.DIR_IMAGES;
-				file.networkId = network.id;
 				file.mime = item.getContentType();
 				file.contents = creator.createBlob(item.getInputStream(), item.getSize());
 				file.size = item.getSize();
@@ -184,22 +167,10 @@ public class FilesResource {
 		return false;
 	}
 
-	private String getSubdomainFromHost(String host) {
-		Network network = wordrailsService.getNetworkFromHost(host);
-		if (network != null) return network.subdomain;
-
-		return null;
-	}
-
 	@GET
 	@Path("{id}/contents")
 	@Cache(isPrivate = false, maxAge = 31536000)
-	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response, @Context HttpServletRequest request) throws SQLException, IOException {
-		String subdomain = getSubdomainFromHost(request.getHeader("Host"));
-		if (subdomain == null || subdomain.isEmpty()) {
-			return Response.serverError().entity("subdomain of network is null").build();
-		}
-
+	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response) throws SQLException, IOException {
 		String hash = fileRepository.findExternalHashById(id);
 
 		FileContents file = null;
@@ -221,7 +192,7 @@ public class FilesResource {
 		response.setHeader("Expires", o);
 
 		if (hash != null && !hash.isEmpty()) {
-			response.sendRedirect(amazonCloudService.getPublicImageURL(subdomain, hash));
+			response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
 			return Response.ok().build();
 		} else if (file != null && file.contents != null) {
 			return Response.ok(file.contents.getBinaryStream(), file.mime).build();

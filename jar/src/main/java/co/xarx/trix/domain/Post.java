@@ -7,7 +7,6 @@ import org.jsoup.nodes.Document;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
@@ -25,7 +24,6 @@ public class Post implements Serializable {
 	public static final String STATE_DRAFT = "DRAFT";
 	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
 	public static final String STATE_TRASH = "TRASH";
-	public static final String STATE_HISTORY = "HISTORY";
 	public static final String STATE_PUBLISHED = "PUBLISHED";
 	public static final String STATE_SCHEDULED = "SCHEDULED";
 
@@ -38,8 +36,6 @@ public class Post implements Serializable {
 	public Integer id;
 
 	public Integer originalPostId;
-
-	public Integer wordpressId;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@NotNull
@@ -104,7 +100,8 @@ public class Post implements Serializable {
 	)
 	public Set<Video> videos;
 
-	@OneToMany(mappedBy = "post")
+	@OneToMany
+	@JoinTable(name = "post_image")
 	public Set<Image> images;
 
 	@NotNull
@@ -186,9 +183,6 @@ public class Post implements Serializable {
 	public String featuredVideoHash;
 	public String featuredAudioHash;
 
-	@ManyToOne
-	Post post;
-
 	@PrePersist
 	public void onCreate() {
 		onChanges();
@@ -237,26 +231,25 @@ public class Post implements Serializable {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return "Post [id=" + id + ", wordpressId=" + wordpressId + ", date=" + date
-				+ ", lastModificationDate=" + lastModificationDate + ", title="
-				+ title + ", state=" + state + "]";
+	public static int countWords(String string) {
+		if (string == null || string.isEmpty()) return 0;
+
+		Document doc = Jsoup.parse(string);
+		string = doc.text();
+		String[] wordArray = string.split("\\s+");
+		return wordArray.length;
 	}
 
-    public static int countWords(String string) {
-        if (string == null || string.isEmpty()) return 0;
+	public static int calculateReadTime(String string) {
+		int words = countWords(string);
+		int minutes = 5 * words / 398;
+		return minutes;
+	}
 
-        Document doc = Jsoup.parse(string);
-        string = doc.text();
-        String[] wordArray = string.split("\\s+");
-        return wordArray.length;
-    }
-
-    public static int calculateReadTime(String string) {
-        int words = countWords(string);
-        int minutes = 5 * words / 398;
-        return minutes;
-    }
+	@Override
+	public String toString() {
+		return "Post [id=" + id + ", date=" + date
+				+ ", lastModificationDate=" + lastModificationDate + ", title=" + title + ", state=" + state + "]";
+	}
 
 }

@@ -120,16 +120,20 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	}
 
 	public Authentication anonymousAuthentication(Network network) {
-		User user = new User();
-		user.username = "wordrails";
-		user.network = network;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-		Set<GrantedAuthority> authorities = new HashSet<>();
-		authorities.add(new SimpleGrantedAuthority("ROLE_ANONYMOUS"));
+		if(auth == null || auth.getPrincipal() == null || !((User) auth.getPrincipal()).isAnonymous()) {
+			User user = new User();
+			user.username = "wordrails";
+			user.network = network;
 
-		Authentication auth = new AnonymousAuthenticationToken("anonymousKey", user, authorities);
+			Set<GrantedAuthority> authorities = new HashSet<>();
+			authorities.add(new SimpleGrantedAuthority("ROLE_ANONYMOUS"));
 
-		SecurityContextHolder.getContext().setAuthentication(auth);
+			auth = new AnonymousAuthenticationToken("anonymousKey", user, authorities);
+
+			SecurityContextHolder.getContext().setAuthentication(auth);
+		}
 
 		return auth;
 	}

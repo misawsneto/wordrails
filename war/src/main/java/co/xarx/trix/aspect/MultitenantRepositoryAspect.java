@@ -23,13 +23,12 @@ public class MultitenantRepositoryAspect {
 	@Before("bean(*Repository) && execution(* *..save(*)) && args(entity)")
 	public void checkMultitenantEntity(MultiTenantEntity entity) throws Throwable {
 		if (entity != null && entity.getNetworkId() == null) {
-			log.info("@ checkMultitenantEntity " + entity.getClass().getSimpleName());
 			Integer networkId = TenantContextHolder.getCurrentTenantId();
 			entity.setNetworkId(networkId);
 			for(MultiTenantEntity mte : getFields(MultiTenantEntity.class, entity)) {
 				checkMultitenantEntity(mte);
 			}
-			log.warn("@ checkMultitenantEntity - saving " + networkId);
+			log.info("@ checkMultitenantEntity " + entity.getClass().getSimpleName() + " - saving " + networkId);
 		}
 	}
 

@@ -1,5 +1,6 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.util.FileUtil;
@@ -29,6 +30,9 @@ import java.util.regex.Pattern;
 @Component
 public class AmazonCloudService {
 
+	public static final String APK_DIR = "apk";
+	public static final String IMAGE_DIR = "images";
+
 	Logger log = Logger.getLogger(AmazonCloudService.class.getName());
 
 	@Value("${amazon.accessKey}")
@@ -37,14 +41,10 @@ public class AmazonCloudService {
 	String accessSecretKey;
 	@Value("${amazon.distributionKey}")
 	String distributionKey;
-	@Value("${amazon.privateCloudfrontUrl}")
-	String publicCloudfrontUrl;
 	@Value("${amazon.publicCloudfrontUrl}")
-	String privateCloudfrontUrl;
+	String publicCloudfrontUrl;
 	@Value("${amazon.publicBucket}")
 	String publicBucket;
-	@Value("${amazon.privateBucket}")
-	String privateBucket;
 
 	private AmazonS3Client s3Client;
 
@@ -53,24 +53,26 @@ public class AmazonCloudService {
 		s3Client = new AmazonS3Client(awsCreds);
 	}
 
-	public String getPublicImageURL(String networkDomain, String fileName) throws IOException {
+	public String getPublicImageURL(String fileName) throws IOException {
+		String networkDomain = TenantContextHolder.getCurrentTenantSubdomain();
 		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
 	}
 
-	public String getPublicApkURL(String networkDomain, String fileName) throws IOException {
+	public String getPublicApkURL(String fileName) throws IOException {
+		String networkDomain = TenantContextHolder.getCurrentTenantSubdomain();
 		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/apk/" + fileName;
 	}
 
-	public String uploadPublicImage(InputStream input, Long lenght, String networkDomain, String size, String mime) throws IOException, AmazonS3Exception {
+	public String uploadPublicImage(InputStream input, Long lenght, String size, String mime) throws IOException, AmazonS3Exception {
 		java.io.File tmpFile = java.io.File.createTempFile(TrixUtil.generateRandomString(5, "aA#"), ".tmp");
 
 		FileUtils.copyInputStreamToFile(input, tmpFile);
 		String hash = FileUtil.getHash(new FileInputStream(tmpFile));
-		uploadPublicImage(tmpFile, lenght, networkDomain, hash, size, mime, true);
+		uploadPublicImage(tmpFile, lenght, hash, size, mime, true);
 		return hash;
 	}
 
-	public String uploadAPK(java.io.File file, Long lenght, String networkDomain, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
+	public String uploadAPK(java.io.File file, Long lenght, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
 		log.debug("uploading apk...");
 
 		String hash = FileUtil.getHash(new FileInputStream(file));
@@ -78,9 +80,9 @@ public class AmazonCloudService {
 		ObjectMetadata md = new ObjectMetadata();
 		md.setContentType(mime);
 
-		String path = networkDomain + "/apk/" + hash;
+		String path = getKey(APK_DIR, hash);
 
-		uploadFile(file, lenght, publicBucket, path, md, deleteFileAfterUpload);
+		uploadFile(file, lenght, path, md, deleteFileAfterUpload);
 
 		return hash;
 	}
@@ -88,18 +90,8 @@ public class AmazonCloudService {
 
 	/**
 	 * send hash null if needs to generate it
-	 * @param file
-	 * @param lenght
-	 * @param networkDomain
-	 * @param hash
-	 * @param sizeTag
-	 * @param mime
-	 * @param deleteFileAfterUpload
-	 * @return
-	 * @throws IOException
-	 * @throws AmazonS3Exception
 	 */
-	public String uploadPublicImage(java.io.File file, Long lenght, String networkDomain, String hash,
+	public String uploadPublicImage(java.io.File file, Long lenght, String hash,
 	                                String sizeTag, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
 		if(hash == null) {
 			hash = FileUtil.getHash(new FileInputStream(file));
@@ -109,15 +101,23 @@ public class AmazonCloudService {
 		md.setContentType(mime);
 		md.addUserMetadata("size", sizeTag);
 
-		String path = networkDomain + "/images/" + hash;
-		uploadFile(file, lenght, publicBucket, path, md, deleteFileAfterUpload);
+		String path = getKey(IMAGE_DIR, hash);
+		uploadFile(file, lenght, path, md, deleteFileAfterUpload);
 
 		return hash;
 	}
 
-	public boolean exists(String bucket, String key) {
+	private String getKey(String directory, String hash) {
+		return TenantContextHolder.getCurrentTenantSubdomain() + "/" + directory + "/" + hash;
+	}
+
+	public boolean exists(String directory, String hash) {
+		return exists(getKey(directory, hash));
+	}
+
+	public boolean exists(String key) {
 		try {
-			s3Client.getObjectMetadata(bucket, key);
+			s3Client.getObjectMetadata(publicBucket, key);
 		} catch(AmazonServiceException e) {
 			if (e.getStatusCode() == 403 || e.getStatusCode() == 404) {
 				return false;
@@ -136,10 +136,10 @@ public class AmazonCloudService {
 		}
 	}
 
-	private void uploadFile(java.io.File file, Long lenght, String bucketName, String keyName, ObjectMetadata metadata, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
+	private void uploadFile(java.io.File file, Long lenght, String keyName, ObjectMetadata metadata, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
 		log.debug("uploading file of lenght " + lenght);
 
-		if(exists(bucketName, keyName)) {
+		if(exists(keyName)) {
 			return;
 		}
 
@@ -148,7 +148,7 @@ public class AmazonCloudService {
 		List<PartETag> partETags = new ArrayList<>();
 
 		// Step 1: Initialize.
-		InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucketName, keyName);
+		InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(publicBucket, keyName);
 		if(metadata != null) initRequest.setObjectMetadata(metadata);
 
 		initRequest.setCannedACL(CannedAccessControlList.PublicRead);
@@ -167,7 +167,7 @@ public class AmazonCloudService {
 
 				// Create request to upload a part.
 				UploadPartRequest uploadRequest = new UploadPartRequest().
-						withBucketName(bucketName).
+						withBucketName(publicBucket).
 						withKey(keyName).
 						withUploadId(initResponse.getUploadId()).
 						withPartNumber(i).
@@ -182,11 +182,11 @@ public class AmazonCloudService {
 			}
 
 			// Step 3: Complete.
-			CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(bucketName, keyName, initResponse.getUploadId(), partETags);
+			CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(publicBucket, keyName, initResponse.getUploadId(), partETags);
 
 			s3Client.completeMultipartUpload(compRequest);
 		} catch (Exception e) {
-			s3Client.abortMultipartUpload(new AbortMultipartUploadRequest(bucketName, keyName, initResponse.getUploadId()));
+			s3Client.abortMultipartUpload(new AbortMultipartUploadRequest(publicBucket, keyName, initResponse.getUploadId()));
 
 			throw new AmazonS3Exception("Error uploading file to Amazon S3", e);
 		} finally {
@@ -214,7 +214,7 @@ public class AmazonCloudService {
 	@Autowired
 	private FileContentsRepository fileContentsRepository;
 
-	private String uploadFile(String subdomain, File file, String sizeType, Integer networkId) throws SQLException, IOException {
+	private String uploadFile(File file, String sizeType) throws SQLException, IOException {
 		System.out.println("uploading file " + file.id);
 
 		FileContents fileContents = fileContentsRepository.findOne(file.id);
@@ -226,7 +226,7 @@ public class AmazonCloudService {
 			if (file.url != null) {
 				is = FileUtil.getStreamFromUrl(file.url);
 				byteSize = ((FileInputStream) is).getChannel().size();
-			} else if(file.hash != null && !file.hash.isEmpty() && exists(publicBucket, file.hash)) {
+			} else if(file.hash != null && !file.hash.isEmpty() && exists(getKey(IMAGE_DIR, file.hash))) {
 				return file.hash;
 			} else {
 				return null;
@@ -242,7 +242,7 @@ public class AmazonCloudService {
 
 		String hash = null;
 		try {
-			hash = uploadPublicImage(is, byteSize, subdomain, sizeType, file.mime);
+			hash = uploadPublicImage(is, byteSize, sizeType, file.mime);
 			file.hash = hash;
 			file.size = byteSize;
 			file.type = File.EXTERNAL;
@@ -255,25 +255,25 @@ public class AmazonCloudService {
 		return hash;
 	}
 
-	private Image uploadImage(Image image, String subdomain, Integer networkId) throws IOException, SQLException {
+	private Image uploadImage(Image image) throws IOException, SQLException {
 		String hash;
 		if(image.originalHash == null) {
-			hash = uploadFile(subdomain, image.original, "original", networkId);
+			hash = uploadFile(image.original, "original");
 			image.originalHash = hash != null ? hash : image.original.hash;
 			System.out.println("Upload file " + image.original.id + " hash " + image.originalHash);
 		}
 		if(image.largeHash == null) {
-			hash = uploadFile(subdomain, image.large, "large", networkId);
+			hash = uploadFile(image.large, "large");
 			image.largeHash = hash != null ? hash : image.large.hash;
 			System.out.println("Upload file " + image.large.id + " hash " + image.largeHash);
 		}
 		if(image.mediumHash == null) {
-			hash = uploadFile(subdomain, image.medium, "medium", networkId);
+			hash = uploadFile(image.medium, "medium");
 			image.mediumHash = hash != null ? hash : image.medium.hash;
 			System.out.println("Upload file " + image.medium.id + " hash " + image.mediumHash);
 		}
 		if(image.smallHash == null) {
-			hash = uploadFile(subdomain, image.small, "small", networkId);
+			hash = uploadFile(image.small, "small");
 			image.smallHash = hash != null ? hash : image.small.hash;
 			System.out.println("Upload file " + image.small.id + " hash " + image.smallHash);
 		}
@@ -323,7 +323,7 @@ public class AmazonCloudService {
 						while (m.find()) {
 							Integer id = Integer.valueOf(m.group().replace("/api/files/", "").replace("/contents", ""));
 							try {
-								uploadFile(subdomain, fileRepository.findOne(id), "original", network.id);
+								uploadFile(fileRepository.findOne(id), "original");
 							} catch (SQLException | IOException e) {
 								e.printStackTrace();
 							}
@@ -333,7 +333,7 @@ public class AmazonCloudService {
 							try {
 								saveFilesHash(image);
 								if (image.originalHash == null || image.largeHash == null || image.mediumHash == null || image.smallHash == null) {
-									image = uploadImage(image, subdomain, network.id);
+									image = uploadImage(image);
 
 									post.imageHash = image.originalHash;
 									post.imageLargeHash = image.largeHash;
@@ -359,7 +359,7 @@ public class AmazonCloudService {
 							System.out.println("Upload cover of person " + person.id);
 							saveFilesHash(cover);
 							if (cover.originalHash == null || cover.largeHash == null || cover.mediumHash == null || cover.smallHash == null) {
-								cover = uploadImage(cover, subdomain, network.id);
+								cover = uploadImage(cover);
 
 								person.coverMediumHash = cover.mediumHash;
 								person.coverLargeHash = cover.largeHash;
@@ -377,7 +377,7 @@ public class AmazonCloudService {
 							saveFilesHash(profilePicture);
 							if (profilePicture.originalHash == null || profilePicture.largeHash == null ||
 									profilePicture.mediumHash == null || profilePicture.smallHash == null) {
-								profilePicture = uploadImage(profilePicture, subdomain, network.id);
+								profilePicture = uploadImage(profilePicture);
 
 								person.imageHash = profilePicture.originalHash;
 								person.imageLargeHash = profilePicture.largeHash;

@@ -3,10 +3,10 @@ package co.xarx.trix.auth;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserRepository;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
@@ -149,7 +149,7 @@ public class SocialAuthenticationService {
 		System.out.println(response.getBody());
 
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 		FacebookUser fbUser = mapper.readValue(response.getBody(), FacebookUser.class);
 		fbUser.setProviderId("facebook");

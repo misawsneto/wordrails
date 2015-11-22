@@ -1,16 +1,12 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.domain.page.Page;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
-
-//import org.hibernate.search.annotations.ContainedIn;
 
 @Entity
 public class Station extends BaseEntity implements Serializable{
@@ -56,11 +52,6 @@ public class Station extends BaseEntity implements Serializable{
 	@Column(columnDefinition="varchar(255) default '#5C78B0'")
 	public String primaryColor = "#5C78B0";
 
-//	@Size(min=1)
-//	@NotNull
-//	@ManyToMany
-//	public Set<Network> networks;
-
 	@ManyToOne
 	@NotNull
 	public Network network;
@@ -69,7 +60,6 @@ public class Station extends BaseEntity implements Serializable{
 	public Set<StationRole> personsStationRoles;
 
 	@OneToMany(mappedBy="station")
-//	@ContainedIn
 	public Set<Post> posts;
 
 	@OneToMany(mappedBy = "station")

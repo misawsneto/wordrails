@@ -13,7 +13,6 @@ import com.google.common.cache.LoadingCache;
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -31,25 +30,30 @@ public class WordrailsService {
 
 	Logger log = Logger.getLogger(WordrailsService.class.getName());
 
-	private @Autowired NetworkRepository networkRepository;
-	private @Autowired
-	PostReadRepository postReadRepository;
-	private @Autowired
-	QueryPersistence queryPersistence;
-	private @Autowired
-	PostRepository postRepository;
-	private @Autowired
-	PerspectiveResource perspectiveResource;
-	private @Autowired CacheService cacheService;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
-	private @Autowired StationRepository stationRepository;
-	private @Autowired
-	StationRolesRepository stationRolesRepository;
-	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
-	public @Autowired
-	TaxonomyRepository taxonomyRepository;
-	public @Autowired PersonRepository personRepository;
+	@Autowired
+	public ObjectMapper objectMapper;
+	@Autowired
+	public TaxonomyRepository taxonomyRepository;
+	@Autowired
+	public PersonRepository personRepository;
+	@Autowired
+	private NetworkRepository networkRepository;
+	@Autowired
+	private PostReadRepository postReadRepository;
+	@Autowired
+	private QueryPersistence queryPersistence;
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private PerspectiveResource perspectiveResource;
+	@Autowired
+	private CacheService cacheService;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private StationRolesRepository stationRolesRepository;
 
 	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
 
@@ -276,7 +280,7 @@ public class WordrailsService {
 
 	public List<StationPermission> getStationPermissions(String baseUrl, Integer personId, Integer networkId) {
 		//Stations Permissions
-		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>();
+		List<StationPermission> stationPermissionDtos = new ArrayList<>();
 		try {
 			List<Station> stations = stationRepository.findByPersonIdAndNetworkId(personId, networkId);
 			for (Station station : stations) {
@@ -299,7 +303,7 @@ public class WordrailsService {
 				stationPermissionDto.allowComments = station.allowComments;
 				stationPermissionDto.allowSocialShare = station.allowSocialShare;
 
-				stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
+				stationDto = objectMapper.readValue(objectMapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
 				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
 				//StationRoles Fields
 				StationRole stationRole = stationRolesRepository.findByStationAndPersonId(station, personId);

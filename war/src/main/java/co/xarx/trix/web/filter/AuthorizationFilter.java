@@ -45,8 +45,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Autowired
 	private TermPerspectiveRepository termPerspectiveRepository;
 	@Autowired
-	private ImageRepository imageRepository;
-	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
@@ -99,11 +97,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 			authorized = postAndCommentSecurityChecker.canRead(post);
 		}
 		return authorized;
-	}
-
-	@Override
-	protected boolean isGetCommentImagesAuthorized(Integer commentId) {
-		return canReadComments(commentId);
 	}
 
 	@Override
@@ -168,22 +161,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetImageAuthorized(Integer imageId) {
-		return canVisualizeImages(imageId);
-	}
-
-	@Override
-	protected boolean isGetImageCommentAuthorized(Integer imageId) {
-		return canVisualizeImages(imageId);
-	}
-
-	@Override
-	protected boolean isGetImagePostAuthorized(Integer imageId) {
-		return canVisualizeImages(imageId);
-	}
-
-	@Override
-	protected boolean isGetImageFeaturingPostsAuthorized(Integer imageId) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -823,21 +801,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return authorized;
 	}
 
-	private boolean canVisualizeImages(Integer imageId) {
-		boolean authorized = false;
-		Image image = imageRepository.findOne(imageId);
-		if (image != null) {
-			if (image.post != null) {
-				authorized = postAndCommentSecurityChecker.canRead(image.post);
-			} else if (image.comment != null) {
-				authorized = postAndCommentSecurityChecker.canRead(image.comment);
-			} else {
-				authorized = true;
-			}
-		}
-		return authorized;
-	}
-
 	private boolean canVisualizeStation(Integer stationId) {
 		boolean authorized = false;
 		Station station = stationRepository.findOne(stationId);
@@ -899,12 +862,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetImagePersonAuthorized(Integer imageId) {
-
-		return false;
-	}
-
-	@Override
 	protected boolean isFindByPersonIdAndNetworkIdAuthorized(Integer personId, Integer networkId) {
 		boolean authorized = false;
 
@@ -913,21 +870,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 			authorized = true;
 		}
 		return authorized;
-	}
-
-	@Override
-	protected boolean isGetImageNetworkAuthorized(Integer imageId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetImageLogoSponsorAuthorized(Integer imageId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetImageOwnerAuthorized(Integer imageId) {
-		return false;
 	}
 
 	@Override
@@ -1539,11 +1481,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetImageStationAuthorized(Integer imageId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isGetImagePicturesAuthorized(Integer imageId) {
 		return false;
 	}
@@ -1605,11 +1542,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPictureFileAuthorized(Integer pictureId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPictureImageAuthorized(Integer pictureId) {
 		return false;
 	}
 

@@ -9,6 +9,7 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPredicateExecutor<Post> {
@@ -32,7 +33,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported = false)
 	@Modifying
 	@Query(value = "UPDATE Post post SET post.featuredImage = null WHERE post.featuredImage IN (:featuredImages)")
-	void updateFeaturedImagesToNull(@Param("featuredImages") List<Image> featuredImage);
+	void updateFeaturedImagesToNull(@Param("featuredImages") Collection<Image> featuredImage);
 
 	@RestResource(exported = false)
 	@Query("select p from Post p where p.station.id = :stationId and p.author.id = :authorId order by p.date desc")

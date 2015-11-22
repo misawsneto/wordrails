@@ -1,15 +1,15 @@
 package co.xarx.trix.domain;
 
-import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name="term_perspective",uniqueConstraints = {@UniqueConstraint(columnNames={"station_perspective_id","term_id"})})
 public class TermPerspective {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)				
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
 
 	@OneToOne(mappedBy="splashedPerspective", cascade=CascadeType.REMOVE)
@@ -20,7 +20,7 @@ public class TermPerspective {
 
 	@OneToOne(mappedBy="featuringPerspective", cascade=CascadeType.REMOVE)
 	public Row featuredRow;
-	
+
 	@OneToMany(mappedBy="perspective", cascade=CascadeType.REMOVE)
 	public List<Row> rows;
 

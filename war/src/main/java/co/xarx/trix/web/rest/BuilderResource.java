@@ -26,11 +26,10 @@ public class BuilderResource {
 	@Path("/generateApk")
 	public Response getApk(@Context HttpServletRequest request) {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-
 		AndroidApp androidApp = network.androidApp;
 
 		try {
-			builder.run("/opt/trix_android", androidApp, network.subdomain);
+			builder.run("/opt/trix_android", androidApp);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

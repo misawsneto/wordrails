@@ -2,7 +2,10 @@ package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Entity

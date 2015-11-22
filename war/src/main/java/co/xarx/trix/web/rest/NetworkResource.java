@@ -1,27 +1,25 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.domain.*;
-import co.xarx.trix.exception.BadRequestException;
-import co.xarx.trix.exception.ConflictException;
-import co.xarx.trix.persistence.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.NetworkPermission;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.domain.*;
+import co.xarx.trix.dto.NetworkCreateDto;
 import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.eventhandler.StationEventHandler;
 import co.xarx.trix.eventhandler.StationRoleEventHandler;
-import co.xarx.trix.dto.NetworkCreateDto;
+import co.xarx.trix.exception.BadRequestException;
+import co.xarx.trix.exception.ConflictException;
+import co.xarx.trix.persistence.*;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -34,6 +32,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.io.IOException;
 import java.util.*;
 
 @Path("/networks")
@@ -72,8 +71,8 @@ public class NetworkResource {
 	private @Autowired
 	RowRepository rowRepository;
 
-	public @Autowired @Qualifier("objectMapper")
-	ObjectMapper mapper;
+	@Autowired
+	public ObjectMapper objectMapper;
 
 	@Path("/{id}/permissions")
 	@GET
@@ -131,7 +130,7 @@ public class NetworkResource {
 
 	@Path("/createNetwork")
 	@POST
-	public Response createNetwork (NetworkCreateDto networkCreate)  throws ConflictException, BadRequestException, JsonProcessingException {
+	public Response createNetwork (NetworkCreateDto networkCreate)  throws ConflictException, BadRequestException, IOException {
 		try {
 			Network network = new Network();
 			network.name = networkCreate.name;
@@ -156,7 +155,7 @@ public class NetworkResource {
 				}
 
 				taxonomyRepository.delete(nTaxonomy);
-				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + mapper.writeValueAsString(errors) +"}").build();
+				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + objectMapper.writeValueAsString(errors) +"}").build();
 			} catch (org.springframework.dao.DataIntegrityViolationException e){
 				taxonomyRepository.delete(nTaxonomy);
 
@@ -201,7 +200,7 @@ public class NetworkResource {
 				taxonomyRepository.delete(nTaxonomy);
 				networkRepository.delete(network);
 
-				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + mapper.writeValueAsString(errors) +"}").build();
+				return Response.status(Status.BAD_REQUEST).entity("{\"errors\": " + objectMapper.writeValueAsString(errors) +"}").build();
 			} catch (org.springframework.dao.DataIntegrityViolationException e){
 				taxonomyRepository.delete(nTaxonomy);
 				networkRepository.delete(network);
@@ -398,7 +397,7 @@ public class NetworkResource {
 
 	@GET
 	@Path("/publicationsCount")
-	public Response publicationsCount(@Context HttpServletRequest request)throws JsonProcessingException {
+	public Response publicationsCount(@Context HttpServletRequest request)throws IOException {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
 		List<Integer> ids = new ArrayList<Integer>();
@@ -408,12 +407,12 @@ public class NetworkResource {
 			ids.add(station.id);
 		}
 		List<Object[]> counts =  queryPersistence.getStationsPublicationsCount(ids);
-		return Response.status(Status.OK).entity("{\"publicationsCounts\": " + (counts.size() > 0 ? mapper.writeValueAsString(counts.get(0)) : null) + "}").build();
+		return Response.status(Status.OK).entity("{\"publicationsCounts\": " + (counts.size() > 0 ? objectMapper.writeValueAsString(counts.get(0)) : null) + "}").build();
 	}
 
 	@GET
 	@Path("/stats")
-	public Response networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("networkId") Integer postId) throws JsonProcessingException {
+	public Response networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("networkId") Integer postId) throws IOException {
 		if (date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
 
@@ -496,8 +495,8 @@ public class NetworkResource {
 			}
 		}
 
-		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
-		String dateStatsJson = mapper.writeValueAsString(stats);
+		String generalStatsJson = objectMapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
+		String dateStatsJson = objectMapper.writeValueAsString(stats);
 		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 	}
 }

@@ -1,30 +1,21 @@
 package co.xarx.trix.domain;
 
-import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 public class Row implements Comparable<Row> {
 	public static final String FEATURED_ROW = "F";
-	public static final String ORDINARY_ROW = "O";	
+	public static final String ORDINARY_ROW = "O";
 	public static final String SPLASHED_ROW = "S";
 	public static final String HOME_ROW = "H";
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)				
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
 	
 	@NotNull
@@ -39,7 +30,7 @@ public class Row implements Comparable<Row> {
 	
 /*--FEATURED_ROW-------------------------------------------------------------*/	
 	@OneToOne
-	@JoinColumn(name="featuring_perspective") 
+	@JoinColumn(name="featuring_perspective")
 	public TermPerspective featuringPerspective;
 /*--FEATURED_ROW-------------------------------------------------------------*/	
 
@@ -47,7 +38,7 @@ public class Row implements Comparable<Row> {
 	
 /*--SPLASHED_ROW-------------------------------------------------------------*/	
 	@OneToOne
-	@JoinColumn(name="splashed_perspective") 
+	@JoinColumn(name="splashed_perspective")
 	public TermPerspective splashedPerspective;
 /*--SPLASHED_ROW-------------------------------------------------------------*/
 

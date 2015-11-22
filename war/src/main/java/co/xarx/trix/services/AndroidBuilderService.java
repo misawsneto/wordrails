@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collection;
@@ -51,7 +50,7 @@ public class AndroidBuilderService {
 
 
 	@Async
-	public void run(String configPath, AndroidApp androidApp, String networkSubdomain) throws Exception {
+	public void run(String configPath, AndroidApp androidApp) throws Exception {
 		String separator = "/";
 		if (configPath.endsWith("/")) {
 			separator = "";
@@ -74,7 +73,7 @@ public class AndroidBuilderService {
 
 		if (pullResult.getMergeResult().getMergeStatus() != MergeResult.MergeStatus.ALREADY_UP_TO_DATE
 				&& !apk.exists()) {
-			Collection<File> filesToRefactor = createProject(androidApp, projectDir, templateProjectDir, resourcesDir, packageName, networkSubdomain);
+			Collection<File> filesToRefactor = createProject(androidApp, projectDir, templateProjectDir, resourcesDir, packageName);
 			for (File file : filesToRefactor) {
 				refactorFile(file, androidApp, packageName);
 			}
@@ -87,8 +86,8 @@ public class AndroidBuilderService {
 			throw new Exception("Build failed!");
 		}
 
-		String hash = amazonCloudService.uploadAPK(apk, apk.length(), networkSubdomain, "application/vnd.android.package-archive", false);
-		String fileUrl = amazonCloudService.getPublicApkURL(networkSubdomain, hash);
+		String hash = amazonCloudService.uploadAPK(apk, apk.length(), "application/vnd.android.package-archive", false);
+		String fileUrl = amazonCloudService.getPublicApkURL(hash);
 
 		androidApp.apkUrl = fileUrl;
 		androidAppRepository.save(androidApp);
@@ -98,7 +97,7 @@ public class AndroidBuilderService {
 		log.debug("Done!");
 	}
 
-	private Collection<File> createProject(AndroidApp androidApp, File projectDir, File templateProjectDir, File resourcesDir, String packageName, String networkSubdomain) throws Exception {
+	private Collection<File> createProject(AndroidApp androidApp, File projectDir, File templateProjectDir, File resourcesDir, String packageName) throws Exception {
 		log.debug("Creating App \"" + androidApp.appName + "\"...");
 
 		if (projectDir.exists()) {
@@ -106,22 +105,19 @@ public class AndroidBuilderService {
 		}
 		projectDir.mkdirs();
 
-		FileUtils.copyDirectory(templateProjectDir, projectDir, new FileFilter() {
-			@Override
-			public boolean accept(File pathname) {
-				for (String dirName : IGNORED_DIRS) {
-					if (pathname.isDirectory() && pathname.getAbsolutePath().endsWith(dirName)) {
-						return false;
-					}
+		FileUtils.copyDirectory(templateProjectDir, projectDir, pathname -> {
+			for (String dirName : IGNORED_DIRS) {
+				if (pathname.isDirectory() && pathname.getAbsolutePath().endsWith(dirName)) {
+					return false;
 				}
-				return true;
 			}
+			return true;
 		});
 
 		File drawableDir = new File(projectDir, "/app/src/main/res");
 
 		if(androidApp.icon != null) {
-			String originalUrl = amazonCloudService.getPublicImageURL(networkSubdomain, androidApp.icon.hash);
+			String originalUrl = amazonCloudService.getPublicImageURL(androidApp.icon.hash);
 			File originalIcon = FileUtil.downloadFile(new File(drawableDir, "ic_launcher.png"), originalUrl);
 
 			BufferedImage bufferedImage = ImageIO.read(originalIcon);

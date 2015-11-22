@@ -1,42 +1,19 @@
 package co.xarx.trix.web.rest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
 import co.xarx.trix.PermissionId;
 import co.xarx.trix.WordrailsService;
+import co.xarx.trix.api.BooleanResponse;
+import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.StationsPermissions;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.Bookmark;
+import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.persistence.BookmarkRepository;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.services.CacheService;
-import co.xarx.trix.api.BooleanResponse;
-import co.xarx.trix.api.ContentResponse;
+import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.persistence.elasticsearch.BookmarkEsRespository;
-//import org.hibernate.search.jpa.FullTextEntityManager;
-//import org.hibernate.search.jpa.FullTextQuery;
-//import org.hibernate.search.query.dsl.BooleanJunction;
-//import org.hibernate.search.query.dsl.QueryBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -47,38 +24,41 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.persistence.QueryPersistence;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Path("/bookmarks")
 @Consumes(MediaType.WILDCARD)
 @Component
 public class BookmarksResource {
-	private @Context HttpServletRequest request;
-	private @Context UriInfo uriInfo;
-	private @Context HttpServletResponse response;
 
-	private @Autowired
-	WordrailsService wordrailsService;
-	private @Autowired
-	PostRepository postRepository;
-	private @Autowired
-	BookmarkRepository bookmarkRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
-	private @Autowired QueryPersistence queryPersistence;
-	
-	private @PersistenceContext EntityManager manager;
-	
-	private @Autowired
-	CacheService cacheService;
-	private @Autowired BookmarkEsRespository bookmarkEsRespository;
-	private @Autowired
-	PostEsRepository postEsRepository;
+	@Context
+	private HttpServletRequest request;
+	@Context
+	private UriInfo uriInfo;
+	@Context
+	private HttpServletResponse response;
+	@Autowired
+	private WordrailsService wordrailsService;
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private BookmarkRepository bookmarkRepository;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private QueryPersistence queryPersistence;
+	@Autowired
+	private BookmarkEsRespository bookmarkEsRespository;
 
 	@GET
 	@Path("/searchBookmarks")
@@ -118,7 +98,7 @@ public class BookmarksResource {
 
 			SearchResponse searchResponse = bookmarkEsRespository.runQuery(mainQuery.toString(), null, size, page);
 
-			List<JSONObject> bookmarks = new ArrayList<JSONObject>();
+			List<JSONObject> bookmarks = new ArrayList<>();
 
 			for(SearchHit hit: searchResponse.getHits().getHits()){
 				bookmarks.add(bookmarkEsRespository
@@ -129,7 +109,7 @@ public class BookmarksResource {
 			return response;
 		}
 
-		MultiMatchQueryBuilder textQuery = null;
+		MultiMatchQueryBuilder textQuery;
 
 		try {
 			textQuery = multiMatchQuery(q)
@@ -144,8 +124,8 @@ public class BookmarksResource {
 		} catch (Exception e){
 			e.printStackTrace();
 
-			ContentResponse<List<JSONObject>> response = new ContentResponse<List<JSONObject>>();
-			response.content = new ArrayList<JSONObject>();
+			ContentResponse<List<JSONObject>> response = new ContentResponse<>();
+			response.content = new ArrayList<>();
 
 			return response;
 		}
@@ -165,7 +145,7 @@ public class BookmarksResource {
 					.convertToPostView(hit.getSourceAsString()));
 		}
 
-		ContentResponse<List<JSONObject>> response = new ContentResponse<List<JSONObject>>();
+		ContentResponse<List<JSONObject>> response = new ContentResponse<>();
 		response.content = bookmarks;
 
 		return response;

@@ -1,6 +1,7 @@
 package co.xarx.trix.services;
 
 
+import co.xarx.trix.domain.QFile;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.domain.File;
 import co.xarx.trix.domain.Image;
@@ -35,7 +36,7 @@ public class ImageService {
 	@Autowired
 	private PictureRepository pictureRepository;
 
-	public Image createNewImage(String type, String networkSubdomain, InputStream inputStream, String mime, Integer networkId, boolean persistOnDatabase, boolean returnDuplicateIfExists) throws IOException, FileUploadException {
+	public Image createNewImage(String type, InputStream inputStream, String mime, boolean persistOnDatabase, boolean returnDuplicateIfExists) throws IOException, FileUploadException {
 		Image newImage = new Image();
 		newImage.type = type;
 
@@ -47,39 +48,35 @@ public class ImageService {
 		Set<Picture> pictures = Sets.newHashSet();
 
 		java.io.File originalFile = FileUtil.createNewTempFile(inputStream);
-		String hash = FileUtil.getHash(new FileInputStream(originalFile));
+		ImageUtil.ImageFile imageFile = ImageUtil.getImageFile(originalFile);
 
-		Image existingImage = getImageFromHashAndType(type, hash, networkId);
+		Image existingImage = getImageFromHashAndType(type, imageFile.hash);
 		if (existingImage != null) {
-			existingImage.pictures = pictureRepository.findByImage(existingImage);
 			if(existingImage.pictures != null && !existingImage.pictures.isEmpty() &&
 					existingImage.pictures.size() == imageType.count()+1) { //+1 because original
 //				if(returnDuplicateIfExists) //uncomment when images become unique (when old image upload dies)
 //					return existingImage;
 //				else
-					return createNewImageFromExistingImage(networkSubdomain, persistOnDatabase, existingImage, originalFile);
+					return createNewImageFromExistingImage(persistOnDatabase, existingImage, originalFile);
 			}
 
 		}
 
-
-
-		ImageUtil.ImageFile imageFile = ImageUtil.getImageFile(originalFile);
-		Picture originalPic = getOriginalPicture(networkSubdomain, mime, networkId, hash, originalFile, imageFile);
+		Picture originalPic = getOriginalPicture(mime, originalFile, imageFile);
 		pictures.add(originalPic);
 		fileRepository.save(originalPic.file);
 
 		if (imageType.qualities != null) {
 			Map<String, Integer> qualities = imageType.qualities;
 			for (Map.Entry<String, Integer> entry : qualities.entrySet()) {
-				Picture pic = getPictureByQuality(networkSubdomain, networkId, originalFile, entry);
+				Picture pic = getPictureByQuality(originalFile, entry);
 				pictures.add(pic);
 				fileRepository.save(pic.file);
 			}
 		} else if (imageType.sizes != null) {
 			Map<String, Integer[]> sizes = imageType.sizes;
 			for (Map.Entry<String, Integer[]> entry : sizes.entrySet()) {
-				Picture pic = getPictureBySize(networkSubdomain, networkId, originalFile, entry);
+				Picture pic = getPictureBySize(originalFile, entry);
 				pictures.add(pic);
 				fileRepository.save(pic.file);
 			}
@@ -91,10 +88,10 @@ public class ImageService {
 		if(originalFile.exists())
 			originalFile.delete();
 
-
-		for(Picture pic : pictures) {
-			pic.image = newImage;
+		for (Picture picture : pictures) {
+			pictureRepository.save(picture);
 		}
+
 
 		if (persistOnDatabase) {
 			imageRepository.save(newImage);
@@ -103,9 +100,9 @@ public class ImageService {
 		return newImage;
 	}
 
-	public Image getImageFromHashAndType(String type, String hash, Integer networkId) {
+	public Image getImageFromHashAndType(String type, String hash) {
 		Image existingImage = null;
-		Set<Image> images = imageRepository.findByFileHashFetchPictures(hash, networkId);
+		Set<Image> images = imageRepository.findByFileHashFetchPictures(hash);
 		if (images != null && !images.isEmpty()) {
 			for(Image i : images) {
 				if(i.type.equals(type)) {
@@ -116,16 +113,16 @@ public class ImageService {
 		return existingImage;
 	}
 
-	public Image createNewImageFromExistingImage(String networkSubdomain, boolean persistOnDatabase, Image existingImage, java.io.File originalFile) throws IOException, FileUploadException {
+	public Image createNewImageFromExistingImage(boolean persistOnDatabase, Image existingImage, java.io.File originalFile) throws IOException, FileUploadException {
 		Image newImage = new Image();
 		newImage.type = existingImage.type;
 
 		for (Picture pic : existingImage.pictures) {
-			if (!TrixUtil.urlExists(amazonCloudService.getPublicImageURL(networkSubdomain, pic.file.hash))) { //if image doesnt exist on amazon servers, upload it. it should exist
+			if (!TrixUtil.urlExists(amazonCloudService.getPublicImageURL(pic.file.hash))) { //if image doesnt exist on amazon servers, upload it. it should exist
 				java.io.File tmpFile = FileUtil.createNewTempFile(new FileInputStream(originalFile));
 				try {
 					amazonCloudService.uploadPublicImage(tmpFile, pic.file.size,
-							networkSubdomain, pic.file.hash, pic.sizeTag, pic.file.getExtension(), true);
+							pic.file.hash, pic.sizeTag, pic.file.getExtension(), true);
 				} catch (AmazonS3Exception e) {
 					throw new FileUploadException("Error uploading image to s3", e);
 				}
@@ -143,40 +140,46 @@ public class ImageService {
 		return newImage;
 	}
 
-	private Picture getOriginalPicture(String networkSubdomain, String mime, Integer networkId, String hash, java.io.File originalFile, ImageUtil.ImageFile imageFile) throws IOException {
+	private Picture getOriginalPicture(String mime, java.io.File originalFile, ImageUtil.ImageFile imageFile) throws IOException {
 		Picture originalPic = new Picture();
-		originalPic.file = ImageUtil.createNewImageTrixFile(networkId, mime, originalFile.length());
+		originalPic.file = ImageUtil.createNewImageTrixFile(mime, originalFile.length());
 		originalPic.sizeTag = Image.SIZE_ORIGINAL;
 
-		File existingFile = fileRepository.findByHashAndNetworkId(imageFile.hash, networkId);
+		File existingFile = fileRepository.findOne(QFile.file.hash.eq(imageFile.hash));
 		if(existingFile != null) {
 			originalPic.file = existingFile;
-		} else {
-			hash = amazonCloudService.uploadPublicImage(originalFile, originalFile.length(), networkSubdomain, null, originalPic.sizeTag, originalPic.file.getExtension(), false);
 		}
 
-		originalPic.file.hash = hash;
+		String hash = null;
+		if(originalPic.file.id == null || originalPic.file.type.equals(File.INTERNAL)) {
+			hash = amazonCloudService.uploadPublicImage(originalFile, originalFile.length(), null, originalPic.sizeTag, originalPic.file.getExtension(), false);
+		}
+
+		if(originalPic.file.hash == null || originalPic.file.hash.isEmpty()) {
+			originalPic.file.hash = hash;
+		}
+
 		originalPic.height = imageFile.height;
 		originalPic.width = imageFile.width;
 		return originalPic;
 	}
 
-	private Picture getPictureBySize(String networkSubdomain, Integer networkId, java.io.File originalFile, Map.Entry<String, Integer[]> entry) throws IOException {
+	private Picture getPictureBySize(java.io.File originalFile, Map.Entry<String, Integer[]> entry) throws IOException {
 		ImageUtil.ImageFile imageFile;
 		File existingFile;
 		Picture pic = new Picture();
-		pic.file = ImageUtil.createNewImageTrixFile(networkId, "image/png", originalFile.length());
+		pic.file = ImageUtil.createNewImageTrixFile("image/png", originalFile.length());
 		pic.sizeTag = entry.getKey();
 
 		Integer[] xy = entry.getValue();
 		imageFile = ImageUtil.resizeImage(originalFile, xy[0], xy[1], pic.file.getExtension());
 
-		existingFile = fileRepository.findByHashAndNetworkId(imageFile.hash, networkId);
+		existingFile = fileRepository.findOne(QFile.file.hash.eq(imageFile.hash).and(QFile.file.type.eq(File.EXTERNAL)));
 		if(existingFile != null) {
 			pic.file = existingFile;
 		} else {
 			amazonCloudService.uploadPublicImage(imageFile.file,
-					imageFile.file.length(), networkSubdomain, imageFile.hash, pic.sizeTag, pic.file.getExtension(), false);
+					imageFile.file.length(), imageFile.hash, pic.sizeTag, pic.file.getExtension(), false);
 		}
 
 		pic.file.size = imageFile.file.length();
@@ -186,22 +189,22 @@ public class ImageService {
 		return pic;
 	}
 
-	private Picture getPictureByQuality(String networkSubdomain, Integer networkId, java.io.File originalFile, Map.Entry<String, Integer> entry) throws IOException {
+	private Picture getPictureByQuality(java.io.File originalFile, Map.Entry<String, Integer> entry) throws IOException {
 		ImageUtil.ImageFile imageFile;
 		File existingFile;
 		Picture pic = new Picture();
-		pic.file = ImageUtil.createNewImageTrixFile(networkId, "image/png", originalFile.length());
+		pic.file = ImageUtil.createNewImageTrixFile("image/png", originalFile.length());
 		pic.sizeTag = entry.getKey();
 
 		Integer quality = entry.getValue();
 		imageFile = ImageUtil.resizeImage(originalFile, quality, pic.file.getExtension(), false, true);
 
-		existingFile = fileRepository.findByHashAndNetworkId(imageFile.hash, networkId);
+		existingFile = fileRepository.findOne(QFile.file.hash.eq(imageFile.hash).and(QFile.file.type.eq(File.EXTERNAL)));
 		if(existingFile != null) {
 			pic.file = existingFile;
 		} else {
 			amazonCloudService.uploadPublicImage(imageFile.file,
-					imageFile.file.length(), networkSubdomain, imageFile.hash, pic.sizeTag, pic.file.getExtension(), false);
+					imageFile.file.length(), imageFile.hash, pic.sizeTag, pic.file.getExtension(), false);
 		}
 
 		pic.file.size = imageFile.file.length();

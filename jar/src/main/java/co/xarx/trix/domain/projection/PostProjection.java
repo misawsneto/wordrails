@@ -29,8 +29,6 @@ public interface PostProjection {
 
 	Station getStation();
 
-	Integer getWordpressId();
-
 	String getSlug();
 
 	String getOriginalSlug();

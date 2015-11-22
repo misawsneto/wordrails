@@ -1,42 +1,39 @@
 package co.xarx.trix.persistence.elasticsearch;
 
-/**
- * Created by misael on 05/10/2015.
- */
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import co.xarx.trix.domain.Row;
 import co.xarx.trix.domain.StationPerspective;
 import co.xarx.trix.domain.Term;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.List;
 
 public class PerspectiveIndexed {
-    public Integer id;
 
-    @JsonManagedReference
-    public Row splashedRow;
+	public Integer id;
 
-    @JsonManagedReference
-    public Row homeRow;
+	@JsonManagedReference
+	public Row splashedRow;
 
-    @JsonManagedReference
-    public Row featuredRow;
+	@JsonManagedReference
+	public Row homeRow;
 
-    @JsonManagedReference
-    public List<Row> rows;
+	@JsonManagedReference
+	public Row featuredRow;
 
-    public boolean showPopular;
+	@JsonManagedReference
+	public List<Row> rows;
 
-    public boolean showRecent;
+	public boolean showPopular;
 
-    @JsonManagedReference
-    public StationPerspective perspective;
+	public boolean showRecent;
 
-    @JsonManagedReference
-    public Term term;
+	@JsonManagedReference
+	public StationPerspective perspective;
 
-    public Integer taxonomyId;
+	@JsonManagedReference
+	public Term term;
 
-    public Integer stationId;
+	public Integer taxonomyId;
+
+	public Integer stationId;
 }

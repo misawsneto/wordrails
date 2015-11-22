@@ -1,6 +1,7 @@
 package co.xarx.trix.persistence.elasticsearch;
 
 import co.xarx.trix.api.PostView;
+import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.query.ElasticSearchExecutor;
 import co.xarx.trix.domain.query.ElasticSearchQuery;
@@ -13,13 +14,11 @@ import com.rometools.utils.Lists;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.text.Text;
-import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -28,17 +27,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-
 @Component("post_executor")
 public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 
 	@Value("${elasticsearch.index}")
 	private String indexName;
 
-	private @Autowired @Qualifier("objectMapper")
-	ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@Autowired
+	private PostConverter postConverter;
 
 	private static final String ES_TYPE = "post";
 
@@ -162,19 +161,6 @@ public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 		return doc;
 	}
 
-//	public JSONObject makeObjectJson(Post post){
-//		String doc = null;
-//
-//		try {
-//			doc = objectMapper.writeValueAsString(makePostView(post, true));
-//		} catch (JsonProcessingException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//
-//		return (JSONObject) JSONValue.parse(doc);
-//	}
-
 	public PostIndexed makePostView(Post post, boolean addBody) {
 		PostIndexed postView = makePostView(post);
 		if(addBody)
@@ -189,22 +175,6 @@ public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 			return null;
 		}
 	}
-
-//	public JSONObject convertToView(String json){
-//		return (JSONObject) JSONValue.parse(json);
-//	}
-
-//	public JSONObject convertToView(String json, Map<String, HighlightField> highlightFieldMap){
-//		JSONObject view = (JSONObject) JSONValue.parse(json);
-//		for(String key: highlightFieldMap.keySet()){
-//			String fragments = "";
-//			for(Text fragment: highlightFieldMap.get(key).getFragments()){
-//				fragments += fragment.string();
-//			}
-//			view.put(key, fragments);
-//		}
-//		return view;
-//	}
 
 	public PostIndexed makePostView(Post post){
 
@@ -266,19 +236,5 @@ public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 		postView.notify = post.notify;
 
 		return postView;
-	}
-
-	public PostIndexed findBySlug(String slug, List<Integer> readableIds) {
-
-		BoolQueryBuilder mainQuery = boolQuery();
-		mainQuery = mainQuery.must(matchQuery("slug", slug));
-
-		BoolQueryBuilder statiosQuery = boolQuery();
-		for(Integer stationId: readableIds){
-			statiosQuery.should(
-					matchQuery("stationId", String.valueOf(stationId)));
-		}
-
-		return null;
 	}
 }

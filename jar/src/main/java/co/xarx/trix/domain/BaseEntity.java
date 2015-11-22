@@ -1,6 +1,7 @@
 package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.Filters;
@@ -12,7 +13,6 @@ import javax.persistence.*;
 import java.util.Date;
 
 @MappedSuperclass
-//@EntityListeners(AuditingEntityListener.class)
 @FilterDef(name = "networkFilter", parameters = @ParamDef(name = "networkId", type = "integer"))
 @Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
 public abstract class BaseEntity implements MultiTenantEntity {
@@ -35,6 +35,7 @@ public abstract class BaseEntity implements MultiTenantEntity {
 	public Integer networkId;
 
 	@Version
+	@JsonIgnore
 	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
 	private int version;
 

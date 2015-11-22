@@ -3,7 +3,6 @@ package co.xarx.trix.web.filter;
 
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
-import co.xarx.trix.domain.Network;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
@@ -22,7 +21,6 @@ public class TrixAnonymousAuthenticationFilter extends AnonymousAuthenticationFi
 	}
 
 	public Authentication createAuthentication(HttpServletRequest request) {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		return authProvider.anonymousAuthentication(network);
+		return authProvider.anonymousAuthentication(wordrailsService.getNetworkFromHost(request.getHeader("Host")));
 	}
 }

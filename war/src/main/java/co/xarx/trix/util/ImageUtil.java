@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 
 public class ImageUtil {
 
-	public static File createNewImageTrixFile(Integer networkId, String mime, Long size) {
+	public static File createNewImageTrixFile(String mime, Long size) {
 		File file = new File();
 		file.directory = File.DIR_IMAGES;
 		file.type = File.EXTERNAL;

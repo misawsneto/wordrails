@@ -7,12 +7,8 @@ import java.sql.Blob;
 
 @Deprecated
 @Entity
-@Table(name="File")
-public class FileContents {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
+@Table(name="file")
+public class FileContents extends BaseEntity {
 
 	@NotNull
 	@Size(min = 1, max = 1)
@@ -30,14 +26,5 @@ public class FileContents {
 
 	public Long size;
 
-	public Integer networkId;
-
 	public Blob contents;
-
-	public String getExtension() {
-		if (mime != null && mime.split("/").length == 2)
-			return mime.split("/")[1];
-
-		return null;
-	}
 }

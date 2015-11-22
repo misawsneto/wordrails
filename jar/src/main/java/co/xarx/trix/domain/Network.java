@@ -33,7 +33,7 @@ public class Network implements Serializable{
 	@Size(min=1, max=100)
 	public String flurryAppleKey;
 	
-	@Size(min=1, max=100)	
+	@Size(min=1, max=100)
 	public String trackingId;
 
 	@OneToMany(mappedBy="network")
@@ -53,7 +53,7 @@ public class Network implements Serializable{
 
 	@OneToMany(mappedBy="network")
 	public Set<Section> sections;
-		
+
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
 	

@@ -4,22 +4,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@ActiveProfiles(profiles = "dev")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({
-		"classpath:applicationContext.xml",
+		"classpath:applicationContext-test.xml",
 		"classpath:applicationContext-quartz.xml",
 		"classpath:applicationContext-integration.xml",
-		"classpath:applicationContext-security.xml",
+		"classpath:applicationContext-security.xml"
 })
 public abstract class AbstractTest extends AbstractTransactionalJUnit4SpringContextTests {
-	protected
+
 	@Autowired
-	ApplicationContext context;
-//	private @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
+	protected ApplicationContext context;
+//	private @Autowired  ObjectMapper objectMapper;
 	//private @Autowired StationRepository stationRepository;
 
 	@Test

@@ -16,12 +16,8 @@ import co.xarx.trix.mobile.notification.GCMService;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
-import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.TrixUtil;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
@@ -97,31 +93,23 @@ public class PersonsResource {
 	private @Autowired
 	PersonEventHandler personEventHandler;
 
-	private @Autowired SectionRepository sectionRepository;
-	private @Autowired
-	CacheService cacheService;
-
-	@Autowired
-	private UserRepository userRepository;
-
 	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired @Qualifier("simpleMapper") ObjectMapper simpleMapper;
+	@Autowired
+	public StationRoleEventHandler stationRoleEventHandler;
+	@Autowired
+	private SectionRepository sectionRepository;
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 
-	public @Autowired
-	StationRoleEventHandler stationRoleEventHandler;
-
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
-
-	private
 	@Context
-	HttpServletRequest request;
-	private
+	private HttpServletRequest request;
 	@Context
-	UriInfo uriInfo;
-	private
+	private UriInfo uriInfo;
 	@Context
-	HttpServletResponse response;
+	private HttpServletResponse response;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -352,7 +340,7 @@ public class PersonsResource {
 
 	@POST
 	@Path("/create")
-	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, JsonProcessingException{
+	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, IOException{
 		Network network = authProvider.getNetwork();
 
 		Person person = null;
@@ -519,7 +507,7 @@ public class PersonsResource {
 	@DELETE
 	@Path("/{personId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws IOException {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = personRepository.findOne(personId);
 
@@ -555,7 +543,7 @@ public class PersonsResource {
 	@Path("/deletePersonStationRoles")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Transactional(readOnly = false)
-	public Response deletePersonStationRoles(List<Integer> stationRolesIds) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+	public Response deletePersonStationRoles(List<Integer> stationRolesIds) throws IOException{
 
 		List<Station> stations = stationRepository.findByStationRolesIds(stationRolesIds);
 
@@ -575,7 +563,7 @@ public class PersonsResource {
 
 	@GET
 	@Path("/allInit")
-	public PersonData getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws JsonParseException, JsonMappingException, JsonProcessingException, IOException{
+	public PersonData getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws IOException {
 
 		Integer stationId = wordrailsService.getStationIdFromCookie(request);
 		PersonData personData = getInitialData(request);
@@ -612,10 +600,8 @@ public class PersonsResource {
 		return personData;
 	}
 
-	@Value("${amazon.privateCloudfrontUrl}")
-	String publicCloudfrontUrl;
 	@Value("${amazon.publicCloudfrontUrl}")
-	String privateCloudfrontUrl;
+	String publicCloudfrontUrl;
 
 	@GET
 	@Path("/init")
@@ -663,12 +649,12 @@ public class PersonsResource {
 		}
 
 		initData.publicCloudfrontUrl = publicCloudfrontUrl;
-		initData.privateCloudfrontUrl = privateCloudfrontUrl;
+		initData.privateCloudfrontUrl = publicCloudfrontUrl;
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
 
-		List<SectionDto> sections = new ArrayList<SectionDto>();
+		List<SectionDto> sections = new ArrayList<>();
 		for(Section section: network.sections){
 			SectionDto sectionDto = mapper.readValue(mapper.writeValueAsString(section).getBytes("UTF-8"), SectionDto.class);
 			sectionDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/sections/" + sectionDto.id);
@@ -700,7 +686,7 @@ public class PersonsResource {
 	}
 
 	private List<StationPermission> getStationPermissions(List<Station> stations, Integer personId) {
-		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>();
+		List<StationPermission> stationPermissionDtos = new ArrayList<>();
 		for (Station station : stations) {
 			StationPermission stationPermissionDto = new StationPermission();
 
@@ -737,7 +723,7 @@ public class PersonsResource {
 	@Path("/me/bookmarkedRecommended")
 	public ContentResponse<List<BooleanResponse>> checkBookmarkedRecommendedByMe(@QueryParam("postId") Integer postId){
 		Person person = authProvider.getLoggedPerson();
-		List<BooleanResponse> resp = new ArrayList<BooleanResponse>();
+		List<BooleanResponse> resp = new ArrayList<>();
 
 		if(bookmarkRepository.findBookmarkByPersonIdAndPostId(person.id, postId)!=null){
 			BooleanResponse bool = new BooleanResponse();
@@ -759,14 +745,14 @@ public class PersonsResource {
 			resp.add(bool);
 		}
 
-		ContentResponse<List<BooleanResponse>> response = new ContentResponse<List<BooleanResponse>>();
+		ContentResponse<List<BooleanResponse>> response = new ContentResponse<>();
 		response.content = resp;
 		return response;
 	}
 
 	@GET
 	@Path("/me/publicationsCount")
-	public Response publicationsCount(@QueryParam("personId") Integer personId)throws JsonProcessingException {
+	public Response publicationsCount(@QueryParam("personId") Integer personId)throws IOException {
 		Person person = null;
 		if(personId != null){
 			person = personRepository.findOne(personId);
@@ -780,7 +766,7 @@ public class PersonsResource {
 
 	@GET
 	@Path("/me/stats")
-	public Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws JsonProcessingException{
+	public Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException{
 		if(date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
 
@@ -791,7 +777,7 @@ public class PersonsResource {
 			person = authProvider.getLoggedPerson();
 		}
 
-		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<Long, ReadsCommentsRecommendsCount>();
+		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
 		DateTime firstDay = formatter.parseDateTime(date);
 
 		// create date slots

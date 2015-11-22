@@ -1,8 +1,9 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,57 +14,45 @@ import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {
-		@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressSlug"}),
-		@UniqueConstraint(columnNames={"taxonomy_id","name","wordpressId"})
+		@UniqueConstraint(columnNames={"taxonomy_id","name"})
 })
 public class Term implements Serializable {
 	private static final long serialVersionUID = 7891255759575029731L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-//	@Field
 	public Integer id;
 	
 	@Size(min=1, max=100)
-//	@Field // field used by Post object
 	public String name;
 
 	@OneToMany(mappedBy="term")
 	public Set<Cell> cells;
 		
 	@ManyToMany(mappedBy="terms")
-//	@ContainedIn
 	public Set<Post> posts;
 
 	@OneToMany(mappedBy="term")
-	public Set<Row> rows;	
+	public Set<Row> rows;
 	
 	@NotNull
-	@ManyToOne	
+	@ManyToOne
 	public Taxonomy taxonomy;
 
 	@JsonBackReference
 	@ManyToOne
 	public Term parent;
-	
-	public Integer parentTermId;
-			
+
 	@JsonManagedReference
 	@OneToMany(mappedBy="parent")
 	public Set<Term> children;
 
 	@OneToMany(mappedBy="term")
 	public Set<TermPerspective> termPerspectives;
-	
-//	@Field
-//	@NumericField
+
 	public Integer taxonomyId;
 	
 	public String taxonomyName;
-	
-	public String wordpressSlug;
-    
-    public Integer wordpressId;
     
     public String color;
 

@@ -48,7 +48,7 @@ public class WebResource {
 	@Profile
 	@GET
 	@Path("/{stationId}/pages")
-	public Response getPages(@PathParam("stationId") Integer stationId) throws IOException {
+	public Iterable<Page> getPages(@PathParam("stationId") Integer stationId) throws IOException {
 		QPage qPage = QPage.page;
 		Iterable<Page> pages = pageRepository.findAll(qPage.station.id.eq(stationId));
 
@@ -58,7 +58,7 @@ public class WebResource {
 			});
 		}
 
-		return Response.ok().build();
+		return pages;
 	}
 
 	@POST

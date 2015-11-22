@@ -1,7 +1,7 @@
 package co.xarx.trix.config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.ext.ContextResolver;
@@ -15,7 +15,7 @@ public class JerseyObjectMapperProvider implements ContextResolver<ObjectMapper>
 	public ObjectMapper getContext(Class<?> type) {
 
 		ObjectMapper result = new ObjectMapper();
-		result.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		result.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		return result;
 	}
 }

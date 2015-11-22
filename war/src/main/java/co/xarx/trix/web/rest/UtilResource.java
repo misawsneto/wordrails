@@ -15,11 +15,9 @@ import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.TrixUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.security.core.GrantedAuthority;
@@ -77,7 +75,6 @@ public class UtilResource {
 	TermPerspectiveRepository termPerspectiveRepository;
 	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
 	private @Autowired InvitationRepository invitationRepository;
-	public @Autowired @Qualifier("objectMapper") ObjectMapper mapper;
 	public @Autowired FileRepository fileRepository;
 	public @Autowired
 	PerspectiveEsRepository perspectiveEsRepository;

@@ -14,8 +14,6 @@ import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.TermPerspectiveRepository;
 import co.xarx.trix.persistence.TermRepository;
 import co.xarx.trix.services.AmazonCloudService;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,18 +39,23 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Component
 public class TermsResource {
-	private @Context HttpServletRequest httpServletRequest;
-	private @Context HttpRequest httpRequest;
-	private @Autowired
-	WordrailsService wordrailsService;
-	private @Autowired TermRepository termRepository;
-	private @Autowired
-	PostConverter postConverter;
-	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
-	private @Autowired
-	TermConverter termConverter;
-	private @Autowired @Qualifier("simpleMapper")
-	ObjectMapper simpleMapper;
+	@Context
+	private HttpServletRequest httpServletRequest;
+	@Context
+	private HttpRequest httpRequest;
+	@Autowired
+	private WordrailsService wordrailsService;
+	@Autowired
+	private TermRepository termRepository;
+	@Autowired
+	private PostConverter postConverter;
+	@Autowired
+	private TermPerspectiveRepository termPerspectiveRepository;
+	@Autowired
+	private TermConverter termConverter;
+	@Autowired
+	@Qualifier("simpleMapper")
+	private ObjectMapper simpleMapper;
 
 	private @Autowired
 	AmazonCloudService amazonCloudService;
@@ -62,7 +65,7 @@ public class TermsResource {
 
 	@GET
 	@Path("/termTree")
-	public Response getTermTree(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws JsonGenerationException, JsonMappingException, IOException {
+	public Response getTermTree(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws IOException {
 		List<Term> allTerms;
 		if(perspectiveId != null){
 			allTerms = termRepository.findByPerspectiveId(perspectiveId);
@@ -98,44 +101,12 @@ public class TermsResource {
 		}
 
 		if (hash != null && !hash.isEmpty()) {
-			response.sendRedirect(amazonCloudService.getPublicImageURL(subdomain, hash));
+			response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
 			return Response.ok().build();
 		}
 
 		return Response.status(Status.NO_CONTENT).build();
 	}
-
-//	@GET
-//	@Path("/termWithImage")
-//	public Response getTermTree(@QueryParam("perspectiveId") Integer perspectiveId) throws JsonGenerationException, JsonMappingException, IOException {
-//		List<Term> allTerms = new ArrayList<Term>();
-//		if(perspectiveId != null){
-//			allTerms = termRepository.findByPerspectiveId(perspectiveId);
-//		}
-//
-//		//	TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTerm(perspectiveId, termId);
-//		//
-//		//	String hash = ""; // termRepository.findValidHash(perspectiveId, termId);
-//		//
-//		//	if(tp != null && tp.defaultImageHash != null)
-//		//	hash = tp.defaultImageHash;
-//		//	else
-//		//	postRepository.findByFeaturedImageByTermId(termId);
-//
-//		List<TermView> termViews = new ArrayList<TermView>();
-//		for(Term term: allTerms){
-//			TermView tv = termConverter.convertToView(term);
-//			termViews.add(tv);
-//			TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTerm(perspectiveId, term.id);
-//			if(tp != null && tp.defaultImageHash != null)
-//				tv.imageHash = tp.defaultImageHash;
-//			else
-//				termRepository.findValidHash(perspectiveId, termId, );
-//		}
-//
-//		String json = simpleMapper.writeValueAsString(roots);
-//		return Response.status(Status.OK).entity(json).build();
-//	}
 
 	@GET
 	@Path("/allTerms")
@@ -155,13 +126,9 @@ public class TermsResource {
 	@GET
 	@Path("/search/findPostsByTagAndStationId")
 	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tagName") String tagName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
-
 		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
 
 		List<Post> posts = termRepository.findPostsByTagAndStationId(tagName, stationId, pageable);
-
-		List<PostView> postViews = postConverter.convertToViews(posts);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);

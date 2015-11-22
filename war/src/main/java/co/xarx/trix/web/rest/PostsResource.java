@@ -1,21 +1,24 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.PermissionId;
-import co.xarx.trix.api.*;
-import co.xarx.trix.domain.*;
-import co.xarx.trix.exception.BadRequestException;
-import co.xarx.trix.exception.UnauthorizedException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import co.xarx.trix.WordrailsService;
+import co.xarx.trix.api.*;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.dto.StationTermsDto;
+import co.xarx.trix.exception.BadRequestException;
+import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.services.PostService;
-import co.xarx.trix.dto.StationTermsDto;
 import co.xarx.trix.util.TrixUtil;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -25,15 +28,12 @@ import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,63 +43,41 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Path("/posts")
 @Consumes(MediaType.WILDCARD)
 @Component
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PostsResource {
-	private
+
 	@Context
-	HttpServletRequest request;
-
-	private
+	private HttpServletRequest request;
 	@Context
-	UriInfo uriInfo;
-
-	private
+	private UriInfo uriInfo;
 	@Context
-	HttpServletResponse response;
-
-	private
+	private HttpServletResponse response;
 	@Autowired
-	WordrailsService wordrailsService;
-
-	private
+	private WordrailsService wordrailsService;
 	@Autowired
-	PostRepository postRepository;
-	private
+	private PostRepository postRepository;
 	@Autowired
-	PostConverter postConverter;
-	
-	private
+	private PostConverter postConverter;
 	@Autowired
-	PostAndCommentSecurityChecker postAndCommentSecurityChecker;
-
-	private
-	@PersistenceContext
-	EntityManager manager;
-
-	private
+	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
-	TrixAuthenticationProvider authProvider;
-
-	private
+	private TrixAuthenticationProvider authProvider;
 	@Autowired
-	PostEsRepository postEsRepository;
-
-	private @Autowired @Qualifier("simpleMapper")
-	ObjectMapper simpleMapper;
-
-	private @Autowired @Qualifier("objectMapper")
-	ObjectMapper objectMapper;
+	private PostEsRepository postEsRepository;
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -116,7 +94,7 @@ public class PostsResource {
 
 		Post post = postRepository.findOne(postId);
 
-		ContentResponse<PostView> response = new ContentResponse<PostView>();
+		ContentResponse<PostView> response = new ContentResponse<>();
 		response.content = postConverter.convertToView(post);
 		return response;
 	}
@@ -172,7 +150,7 @@ public class PostsResource {
 		Post post = postRepository.findOne(postId);
 		if(post != null && postAndCommentSecurityChecker.canWrite(post)){
 			post = postService.convertPost(postId, state);
-			ContentResponse<PostView> response = new ContentResponse<PostView>();
+			ContentResponse<PostView> response = new ContentResponse<>();
 			response.content = postConverter.convertToView(post);
 			return response;
 		}else{
@@ -254,21 +232,8 @@ public class PostsResource {
 		}
 
 		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
-//
-//		// if user passes a station without permission, remove it
-//		if(readableIds.size() > 0 && readableIds.size() > 0) {
-//			Iterator<Integer> it = stationIdIntegers.iterator();
-//			while (it.hasNext()){
-//				Integer stationId = it.next();
-//				if (!readableIds.contains(stationId))
-//					it.remove();
-//			}
-//		}
 
-//		if(stationIds != null && stationIdIntegers.size() == 0)
-//			throw new UnauthorizedException("unauthorizd stations");
-
-		MultiMatchQueryBuilder queryText = null;
+		MultiMatchQueryBuilder queryText;
 		BoolQueryBuilder mainQuery = boolQuery();
 
 		if(q != null){
@@ -325,12 +290,11 @@ public class PostsResource {
 
 		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "body");
 
-//		SearchHit[] resultList = searchResponse.getHits().getHits();
-		List<PostView> postsViews = new ArrayList<PostView>();
+		List<PostView> postsViews = new ArrayList<>();
 
 		for(SearchHit hit: searchResponse.getHits().getHits()){
 			try {
-				PostView postView = objectMapper.readValue(objectMapper.writeValueAsString(postEsRepository.convertToView(hit.getSourceAsString())), PostView.class);
+				PostView postView = objectMapper.readValue(hit.getSourceAsString(), PostView.class);
 				Map<String, HighlightField> highlights = hit.getHighlightFields();
 				if(highlights != null && highlights.get("body") != null)
 					for (Text fragment:  highlights.get("body").getFragments()) {
@@ -350,7 +314,7 @@ public class PostsResource {
 			}
 		}
 
-		ContentResponse<SearchView> response = new ContentResponse<SearchView>();
+		ContentResponse<SearchView> response = new ContentResponse<>();
 		response.content = new SearchView();
 		response.content.hits = (int) searchResponse.getHits().totalHits();
 		response.content.posts = postsViews;

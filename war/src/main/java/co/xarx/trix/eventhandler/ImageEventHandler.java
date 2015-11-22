@@ -2,6 +2,7 @@ package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.FileContentsRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
@@ -39,29 +40,26 @@ public class ImageEventHandler {
 		}
 
 		Image newImage;
-		Network network = authProvider.getNetwork();
 		FileContents originalFile = fileContentsRepository.findOne(image.original.id);
 		//if is external, is already uploaded to amazon, so the file was uploaded before
-		if (originalFile.type.equals(File.EXTERNAL) && amazonCloudService.exists(network.subdomain, originalFile.hash)) {
-			Image existingImage = imageService.getImageFromHashAndType(image.type, originalFile.hash, network.id);
+		if (originalFile.type.equals(File.EXTERNAL) && amazonCloudService.exists(AmazonCloudService.IMAGE_DIR, originalFile.hash)) {
+			Image existingImage = imageService.getImageFromHashAndType(image.type, originalFile.hash);
 
 			java.io.File tempOriginalFile =
-					FileUtil.downloadFile(FileUtil.createNewTempFile(), amazonCloudService.getPublicImageURL(network.subdomain, originalFile.hash));
+					FileUtil.downloadFile(FileUtil.createNewTempFile(), amazonCloudService.getPublicImageURL(originalFile.hash));
 
-			newImage = imageService.createNewImageFromExistingImage(network.subdomain, false, existingImage, tempOriginalFile);
-		} else {
+			newImage = imageService.createNewImageFromExistingImage(false, existingImage, tempOriginalFile);
+		} else if (originalFile.type.equals(File.INTERNAL)) {
 			//if it's running here, this is a new image and needs to upload all sizes
 			try (InputStream inputStream = originalFile.contents.getBinaryStream()) {
-				newImage = imageService.createNewImage(image.type, network.subdomain, inputStream, originalFile.mime, network.id, false, true);
+				newImage = imageService.createNewImage(image.type, inputStream, originalFile.mime, false, true);
 				originalFile.contents = null;
 				originalFile.type = File.EXTERNAL;
 			} catch (Exception e) {
 				throw new Exception("something bad happened uploading new image", e);
 			}
-		}
-
-		for(Picture p : newImage.pictures) {
-			p.image = image;
+		} else {
+			throw new BadRequestException("Image is stored in database but doesn't exist on amazon servers. Upload the image again");
 		}
 
 		image.pictures = newImage.pictures;

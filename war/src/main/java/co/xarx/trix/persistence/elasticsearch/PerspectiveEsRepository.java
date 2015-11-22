@@ -3,7 +3,6 @@ package co.xarx.trix.persistence.elasticsearch;
 
 import co.xarx.trix.domain.TermPerspective;
 import co.xarx.trix.services.ElasticSearchService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -15,26 +14,20 @@ import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-/**
- * Created by jonas on 26/09/15.
- */
+
 @Component
 public class PerspectiveEsRepository {
 
 	@Value("${elasticsearch.index}")
 	private String indexName;
 
-	private @Autowired @Qualifier("simpleMapper")
-	ObjectMapper simpleMapper;
-
-	private @Autowired @Qualifier("objectMapper")
-	ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	private static final String ES_TYPE = "perspective";
 
@@ -114,7 +107,7 @@ public class PerspectiveEsRepository {
 
 			doc = objectMapper.writeValueAsString(makeTermPerspectiveView(perspective));
 			doc = doc == null ? null : doc;
-		} catch (JsonProcessingException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -133,7 +126,7 @@ public class PerspectiveEsRepository {
 	public TermPerspective convertToViewObject(String json){
 		TermPerspective tp = null;
 		try {
-			tp = simpleMapper.readValue(json, TermPerspective.class);
+			tp = objectMapper.readValue(json, TermPerspective.class);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

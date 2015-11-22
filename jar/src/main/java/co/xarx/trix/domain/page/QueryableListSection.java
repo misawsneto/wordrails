@@ -2,6 +2,7 @@ package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 
 	public static final String TYPE = "queryable_list_section";
 
+	@JsonIgnore
 	@NotNull
 	@JoinTable(name = "section_fixedquery",
 			joinColumns = @JoinColumn(name = "section_id"),
@@ -20,6 +22,7 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 	@OneToMany(cascade = CascadeType.ALL)
 	public List<FixedQuery> fixedQueries;
 
+	@JsonIgnore
 	@OneToOne
 	public PageableQuery pageableQuery;
 

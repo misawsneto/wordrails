@@ -1,13 +1,10 @@
 package co.xarx.trix.persistence.elasticsearch;
 
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import co.xarx.trix.domain.Person;
 
-/**
- * Created by jonas on 08/10/15.
- */
 public class BookmarkIndexed {
 	public Integer id;
 	@JsonManagedReference

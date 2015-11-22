@@ -1,55 +1,50 @@
 package co.xarx.trix.web.rest;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.domain.*;
+import co.xarx.trix.persistence.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
-import co.xarx.trix.domain.*;
-import co.xarx.trix.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/taxonomies")
 @Component
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class TaxonomiesResource {
-	
-	private @Autowired NetworkRepository networkRepository;
-	private @Autowired
-	NetworkRolesRepository networkRolesRepository;
-	private @Autowired
-	StationRepository stationRepository;
-	private @Autowired
-	StationPerspectiveRepository stationPerspectiveRepository;
-	private @Autowired
-	TaxonomyRepository taxonomyRepository;
-	private @Autowired
-	StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
-	private @Autowired
-	WordrailsService wordrailsService;
-	public @Autowired @Qualifier("objectMapper")
-	ObjectMapper mapper;
+	@Autowired
+	public ObjectMapper objectMapper;
+	@Autowired
+	private NetworkRepository networkRepository;
+	@Autowired
+	private NetworkRolesRepository networkRolesRepository;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private StationPerspectiveRepository stationPerspectiveRepository;
+	@Autowired
+	private TaxonomyRepository taxonomyRepository;
+	@Autowired
+	private StationRolesRepository stationRolesRepository;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
 
 	@Path("/networks/{networkId}/taxonomiesToEdit")
 	@GET
-	public Response getTaxonomiesToEdit(@PathParam("networkId") Integer networkId) throws JsonProcessingException{
+	public Response getTaxonomiesToEdit(@PathParam("networkId") Integer networkId) throws IOException {
 		List<Taxonomy> taxonomies = null;
-		
+
 		Network network = networkRepository.findOne(networkId);
 		if(network != null){
 			Person personLogged = authProvider.getLoggedPerson();
@@ -58,32 +53,29 @@ public class TaxonomiesResource {
 				taxonomies = taxonomyRepository.findNetworkOrStationTaxonomiesByNetworkIdExcludeType(networkId, Taxonomy.STATION_AUTHOR_TAXONOMY);
 			}else{
 				List<StationRole> stationRoles = stationRolesRepository.findByPersonIdAndNetworkId(personLogged.id, network.id);
-				List<Integer> stationsIds = new ArrayList<Integer>(stationRoles.size());
-				for (StationRole stationRole : stationRoles) {
-					if(stationRole.admin){
-						stationsIds.add(stationRole.station.id);
-					}
-				}
+				List<Integer> stationsIds = new ArrayList<>(stationRoles.size());
+				stationsIds.addAll(stationRoles.stream()
+						.filter(stationRole -> stationRole.admin)
+						.map(stationRole -> stationRole.station.id)
+						.collect(Collectors.toList()));
 				if(!stationsIds.isEmpty()){
 					taxonomies = taxonomyRepository.findByStationsIds(stationsIds);
 				}
 			}
 		}
-		return Response.ok().entity(mapper.writeValueAsString(taxonomies)).build();
+		return Response.ok().entity(objectMapper.writeValueAsString(taxonomies)).build();
 	}
 
 	@Path("/allCategories")
 	@GET
-	public List<Taxonomy> getCategories(@Context HttpServletRequest request, @QueryParam("stationId") Integer stationId) throws JsonProcessingException {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-
-		Taxonomy category = null;
+	public List<Taxonomy> getCategories(@Context HttpServletRequest request, @QueryParam("stationId") Integer stationId) throws IOException {
+		Taxonomy category;
 
 		Station station = stationRepository.findOne(stationId);
 		StationPerspective sp = stationPerspectiveRepository.findOne(station.defaultPerspectiveId);
 		category = taxonomyRepository.findOne(sp.taxonomy.id);
 
-		List<Term> categoryTerms = new ArrayList<Term>();
+		List<Term> categoryTerms = new ArrayList<>();
 		for(Term term: category.terms){
 			categoryTerms.add(term);
 			term.cells = null; term.children = null; term.parent = null; term.posts = null; term.rows = null; term.termPerspectives = null; term.taxonomy = null;
@@ -95,24 +87,23 @@ public class TaxonomiesResource {
 			scategory = staxonomies.get(0);
 		}
 
-		List<Term> scategoryTerms = new ArrayList<Term>();
+		List<Term> scategoryTerms = new ArrayList<>();
 		for(Term term: scategory.terms){
 			scategoryTerms.add(term);
 			term.cells = null; term.children = null; term.parent = null; term.posts = null; term.rows = null; term.termPerspectives = null; term.taxonomy = null;
 		}
 
-		ArrayList<Taxonomy> allTax = new ArrayList<Taxonomy>();
+		ArrayList<Taxonomy> allTax = new ArrayList<>();
 
 		category.owningNetwork = null; category.owningStation = null; category.networks = null;
 		scategory.owningNetwork = null; scategory.owningStation = null; scategory.networks = null;
 
-		category.terms = new HashSet<Term>(categoryTerms);
-		scategory.terms = new HashSet<Term>(scategoryTerms);
+		category.terms = new HashSet<>(categoryTerms);
+		scategory.terms = new HashSet<>(scategoryTerms);
 
 		allTax.add(category);
 		allTax.add(scategory);
 
-		//return Response.status(Response.Status.OK).entity("{\"taxonomies\": " + mapper.writeValueAsString(allTax) +"}").build();
 		return  allTax;
 	}
 }

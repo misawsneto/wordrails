@@ -12,6 +12,8 @@ import java.util.Set;
 @Entity
 public class Image extends BaseEntity implements Serializable {
 
+	private static final long serialVersionUID = -6607038985063216969L;
+
 	public static final String SIZE_SMALL = "small";
 	public static final String SIZE_MEDIUM = "medium";
 	public static final String SIZE_LARGE = "large";
@@ -74,25 +76,8 @@ public class Image extends BaseEntity implements Serializable {
 	@Column(columnDefinition = "varchar(255) default 'POST'", nullable = false)
 	public String type;
 
-	@ManyToOne
-	public Comment comment;
-
-	@OneToOne(mappedBy="image")
-	public Person person;
-
-	@OneToOne(mappedBy="logo")
-	public Network network;
-	
-	@OneToOne(mappedBy="logo")
-	public Sponsor logoSponsor;
-
-	@ManyToOne
-	public Person owner;
-	
-	@ManyToOne
-	public Station station;
-
-	@OneToMany(mappedBy = "image", cascade = CascadeType.ALL)
+	@ManyToMany
+	@JoinTable(name = "image_picture", joinColumns = @JoinColumn(name = "image_id"))
 	public Set<Picture> pictures;
 
 	@ElementCollection
@@ -129,20 +114,12 @@ public class Image extends BaseEntity implements Serializable {
 	public String mediumHash;
 	@Deprecated
 	public String largeHash;
-
-	@ManyToOne
-	public Post post;
-
-	@OneToMany(mappedBy="featuredImage")
-	public Set<Post> featuringPosts;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean vertical = false;
 	
 	public Integer postId;
-	
-	public Integer commentId;
-	
+
 	@PrePersist
 	public void create(){
 		createOrUpdate();
@@ -155,9 +132,6 @@ public class Image extends BaseEntity implements Serializable {
 	}
 
 	private void createOrUpdate() {
-		if (post != null) postId = post.id;
-		if (comment != null) commentId = comment.id;
-
 		for(Picture pic : pictures) {
 			hashs.put(pic.sizeTag, pic.file.hash);
 			switch (pic.sizeTag) {

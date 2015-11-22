@@ -69,7 +69,7 @@ public class ImageScript {
 							continue;
 					}
 
-					Picture pic = new Picture(file.getNetworkId(), sizeTag, imageFile, image);
+					Picture pic = new Picture(sizeTag, imageFile);
 					pictureRepository.save(pic);
 					pictures.add(pic);
 					hashs.put(sizeTag, imageFile.hash);

@@ -2,26 +2,24 @@ package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Taxonomy implements Serializable {
 	private static final long serialVersionUID = 7821255752575024731L;
 
-	public static final String GLOBAL_TAXONOMY = "G";
 	public static final String NETWORK_TAXONOMY = "N";
 	public static final String STATION_TAXONOMY = "S";
 	public static final String STATION_AUTHOR_TAXONOMY = "A";
 	public static final String STATION_TAG_TAXONOMY = "T";
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)				
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
 
 	@NotNull
@@ -31,15 +29,13 @@ public class Taxonomy implements Serializable {
 
 	@Size(min=1, max=100)
 	public String name;
-	
+
 	@ManyToMany(mappedBy="taxonomies")
 	public Set<Network> networks;
-	
+
 	@OneToMany(mappedBy="taxonomy")
 	public Set<Term> terms;
-		
-/*--GLOBAL_TAXONOMY----------------------------------------------------------*/	
-/*--GLOBAL_TAXONOMY----------------------------------------------------------*/
+
 
 /*--NETWORK_TAXONOMY---------------------------------------------------------*/	
 	@ManyToOne

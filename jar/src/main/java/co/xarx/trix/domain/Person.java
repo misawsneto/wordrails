@@ -1,6 +1,6 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -72,8 +72,6 @@ public class Person extends BaseEntity implements Serializable {
 	public String imageUrl;
 
 	public String coverUrl;
-
-	public Integer wordpressId;
 
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)

@@ -39,10 +39,9 @@ public class ImagesResource {
 		}
 
 		String hash = FileUtil.getHash(item.getInputStream());
-		Integer networkId = (Integer) request.getSession().getAttribute("networkId");
-		String networkSubdomain = (String) request.getSession().getAttribute("networkSubdomain");
 
-		Image newImage = imageService.createNewImage(type, networkSubdomain, item.getInputStream(), item.getContentType(), networkId, true, true);
+
+		Image newImage = imageService.createNewImage(type, item.getInputStream(), item.getContentType(), true, true);
 
 		return Response.ok().entity("{\"hash\":\"" + hash + "\", \"imageId\":" + newImage.id + "}").build();
 	}

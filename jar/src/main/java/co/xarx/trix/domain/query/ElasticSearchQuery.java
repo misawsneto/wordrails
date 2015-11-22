@@ -1,15 +1,10 @@
 package co.xarx.trix.domain.query;
 
 import co.xarx.trix.domain.BaseEntity;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.elasticsearch.common.xcontent.ToXContent;
-import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.WrapperQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 
@@ -17,7 +12,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.wrapperQuery;
@@ -64,7 +61,7 @@ public class ElasticSearchQuery<T> extends BaseEntity {
 								value -> {
 									try {
 										boolQuery.must(wrapperQuery(m.writeValueAsString(value)));
-									} catch (JsonProcessingException e) {
+									} catch (IOException e) {
 										e.printStackTrace();
 									}
 								}
@@ -74,7 +71,7 @@ public class ElasticSearchQuery<T> extends BaseEntity {
 							value -> {
 								try {
 									boolQuery.mustNot(wrapperQuery(m.writeValueAsString(value)));
-									} catch (JsonProcessingException e) {
+									} catch (IOException e) {
 										e.printStackTrace();
 									}
 								}
@@ -84,7 +81,7 @@ public class ElasticSearchQuery<T> extends BaseEntity {
 								value -> {
 									try {
 										boolQuery.should(wrapperQuery(m.writeValueAsString(value)));
-									} catch (JsonProcessingException e) {
+									} catch (IOException e) {
 										e.printStackTrace();
 									}
 								}

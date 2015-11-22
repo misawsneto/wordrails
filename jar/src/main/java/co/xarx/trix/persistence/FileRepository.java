@@ -12,8 +12,5 @@ public interface FileRepository extends JpaRepository<File, Integer>, QueryDslPr
 	@RestResource(exported = false)
 	@Query("select hash from File where id=:id and type='E'")
 	String findExternalHashById(@Param("id") Integer id);
-
-	@RestResource(exported = false)
-	File findByHashAndNetworkId(@Param("hash") String hash, @Param("networkId") Integer networkId);
 }
 

@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
