@@ -80,7 +80,7 @@ public class Image extends BaseEntity implements Serializable {
 	@JoinTable(name = "image_picture", joinColumns = @JoinColumn(name = "image_id"))
 	public Set<Picture> pictures;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "image_hash", joinColumns = @JoinColumn(name = "image_id"))
 	@MapKeyColumn(name = "sizeTag", nullable = false)
 	@Column(name = "hash", nullable = false)

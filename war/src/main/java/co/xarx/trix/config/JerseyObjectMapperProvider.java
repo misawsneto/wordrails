@@ -1,7 +1,8 @@
 package co.xarx.trix.config;
 
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.ext.ContextResolver;
@@ -13,9 +14,12 @@ public class JerseyObjectMapperProvider implements ContextResolver<ObjectMapper>
 
 	@Override
 	public ObjectMapper getContext(Class<?> type) {
-
 		ObjectMapper result = new ObjectMapper();
-		result.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		result.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		Hibernate4Module hbModule = new Hibernate4Module();
+		hbModule.configure(Hibernate4Module.Feature.FORCE_LAZY_LOADING, true);
+		hbModule.configure(Hibernate4Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS, true);
+		result.registerModule(new Hibernate4Module());
 		return result;
 	}
 }

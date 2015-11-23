@@ -214,6 +214,16 @@ public class Network implements Serializable{
 		onChange();
 	}
 
+	@PostLoad //lazy initialize the maps. we need to do this hack because hibernate 4 has a bug to fetch eager null references
+	void onPostLoad() {
+		if(logo != null) {
+			this.logoHashes.size();
+		}
+		if(favicon != null) {
+			this.faviconHashes.size();
+		}
+	}
+
 	private void onChange() {
 		if(logo != null && logo.originalHash != null){
 			logoHash = logo.originalHash;

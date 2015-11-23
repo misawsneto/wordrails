@@ -7,9 +7,9 @@ import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.persistence.PersonNetworkRegIdRepository;
 import co.xarx.trix.persistence.PersonNetworkTokenRepository;
 import co.xarx.trix.util.TrixUtil;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.*;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -96,8 +96,8 @@ public class GCMService {
 
 		if(mapper == null){
 			mapper = new ObjectMapper();
-			mapper.setSerializationInclusion(Inclusion.NON_EMPTY);
-			mapper.setSerializationInclusion(Inclusion.NON_DEFAULT);
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
 		}
 	}
 

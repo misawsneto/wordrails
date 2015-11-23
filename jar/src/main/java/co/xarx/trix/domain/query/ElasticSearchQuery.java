@@ -1,7 +1,7 @@
 package co.xarx.trix.domain.query;
 
 import co.xarx.trix.domain.BaseEntity;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;

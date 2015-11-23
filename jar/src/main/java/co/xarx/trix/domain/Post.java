@@ -200,6 +200,13 @@ public class Post implements Serializable {
 		lastModificationDate = updatedAt;
 	}
 
+	@PostLoad //lazy initialize the maps. we need to do this hack because hibernate 4 has a bug to fetch eager null references
+	void onPostLoad() {
+		if(featuredImage != null) {
+			this.featuredImageHashes.size();
+		}
+	}
+
 	private void onChanges() {
 		stationId = station.id;
 		readTime = calculateReadTime(body);

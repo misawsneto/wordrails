@@ -6,7 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
          				   http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean name="objectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
+	<bean name="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
 
 	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
 		<property name="driverClass" value="org.h2.Driver"/>
