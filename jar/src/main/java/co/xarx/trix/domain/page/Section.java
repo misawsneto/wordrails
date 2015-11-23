@@ -13,6 +13,10 @@ public interface Section {
 
 	void setPage(Page page);
 
+	Integer getIndex();
+
+	void setIndex(Integer index);
+
 	void setTitle(String title);
 
 	void setLayout(String style);

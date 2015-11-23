@@ -2,22 +2,24 @@ package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.Station;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.util.List;
+import javax.persistence.*;
+import java.util.Map;
 
 @Entity
+@JsonIgnoreProperties({"updatedAt", "createdAt"})
 public class Page extends BaseEntity {
 
 	public String title;
 
 	@OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
-	public List<BaseSection> sections;
+	@MapKeyJoinColumn(name = "index", referencedColumnName = "index", nullable = false)
+	public Map<Integer, BaseSection> sections;
 
 	@ManyToOne
+	@JsonBackReference("station")
 	public Station station;
 
 	public Station getStation() {
@@ -36,11 +38,11 @@ public class Page extends BaseEntity {
 		this.title = title;
 	}
 
-	public List<BaseSection> getSections() {
+	public Map<Integer, BaseSection> getSections() {
 		return sections;
 	}
 
-	public void setSections(List<BaseSection> sections) {
+	public void setSections(Map<Integer, BaseSection> sections) {
 		this.sections = sections;
 	}
 }

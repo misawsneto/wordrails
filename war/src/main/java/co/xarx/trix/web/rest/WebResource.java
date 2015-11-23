@@ -2,10 +2,7 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.aspect.annotations.Profile;
 import co.xarx.trix.domain.Station;
-import co.xarx.trix.domain.page.Page;
-import co.xarx.trix.domain.page.QPage;
-import co.xarx.trix.domain.page.QueryableListSection;
-import co.xarx.trix.domain.page.QueryableSection;
+import co.xarx.trix.domain.page.*;
 import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
@@ -27,6 +24,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Path("/web")
 @Component
@@ -53,9 +52,15 @@ public class WebResource {
 		Iterable<Page> pages = pageRepository.findAll(qPage.station.id.eq(stationId));
 
 		for (Page page : pages) {
-			page.getSections().stream().filter(section -> section instanceof QueryableSection).forEach(section -> {
-				pageService.fetchQueries((QueryableListSection) section, 0);
-			});
+			page.getSections().values().stream()
+					.filter(section -> section != null)
+					.filter(section -> section instanceof QueryableSection)
+					.forEach(section -> {
+						Map<Integer, Block> blocks = pageService.fetchQueries((QueryableListSection) section, 0);
+						if (section instanceof ListSection) {
+							((ListSection) section).setBlocks(blocks);
+						}
+					});
 		}
 
 		return pages;
@@ -80,9 +85,15 @@ public class WebResource {
 		q2.setHighlightedField("body");
 		FixedQuery fixedQuery1 = new FixedQuery();
 		fixedQuery1.setElasticSearchQuery(q2);
-		fixedQuery1.setIndexes(Sets.newHashSet(1, 2, 3));
+		fixedQuery1.setIndexes(Sets.newHashSet(0, 2, 3));
 
 		fixedQueryRepository.save(fixedQuery1);
+
+		FixedQuery fixedQuery2 = new FixedQuery();
+		fixedQuery2.setElasticSearchQuery(q2);
+		fixedQuery2.setIndexes(Sets.newHashSet(0, 1, 2, 3, 4));
+
+		fixedQueryRepository.save(fixedQuery2);
 
 		Station station = stationRepository.findOne(11);
 		Page page = new Page();
@@ -97,7 +108,14 @@ public class WebResource {
 		section1.setPageableQuery(pageableQuery);
 		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
 
-		page.setSections(Lists.newArrayList(section1));
+		QueryableListSection section2 = new QueryableListSection();
+		section1.setTitle("Section 2");
+		section1.setPage(page);
+		section1.setSize(5);
+		section1.setPageable(false);
+		section1.setFixedQueries(Lists.newArrayList(fixedQuery2));
+
+		page.setSections(new TreeMap<Integer, BaseSection>() {{put(0, section1); put(1, section2);}});
 
 		pageRepository.save(page);
 

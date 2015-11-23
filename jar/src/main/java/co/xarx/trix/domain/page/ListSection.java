@@ -1,9 +1,11 @@
 package co.xarx.trix.domain.page;
 
 
-import java.util.List;
+import java.util.Map;
 
 public interface ListSection extends Section {
 
-	List<Block> getBlocks();
+	Map<Integer, Block> getBlocks();
+
+	void setBlocks(Map<Integer, Block> blocks);
 }

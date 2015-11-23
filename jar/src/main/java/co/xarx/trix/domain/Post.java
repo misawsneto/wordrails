@@ -101,7 +101,7 @@ public class Post implements Serializable {
 	public Set<Video> videos;
 
 	@OneToMany
-	@JoinTable(name = "post_image")
+	@JoinTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
 	public Set<Image> images;
 
 	@NotNull

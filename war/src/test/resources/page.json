@@ -1,0 +1,29 @@
+{
+  "id": null,
+  "networkId": null,
+  "title": "Home",
+  "sections": {
+	"0": {
+	  "id": null,
+	  "networkId": null,
+	  "title": "Section 1",
+	  "layout": "vertical_list",
+	  "blocks": null,
+	  "isPageable": true,
+	  "size": 10,
+	  "type": "queryable_list_section",
+	  "pageable": true
+	},
+	"1": {
+	  "id": null,
+	  "networkId": null,
+	  "title": "Section 2",
+	  "layout": "vertical_list",
+	  "blocks": null,
+	  "isPageable": false,
+	  "size": 5,
+	  "type": "queryable_list_section",
+	  "pageable": false
+	}
+  }
+}

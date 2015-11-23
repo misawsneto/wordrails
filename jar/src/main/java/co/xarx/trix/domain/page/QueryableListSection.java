@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
@@ -15,7 +16,6 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 	public static final String TYPE = "queryable_list_section";
 
 	@JsonIgnore
-	@NotNull
 	@JoinTable(name = "section_fixedquery",
 			joinColumns = @JoinColumn(name = "section_id"),
 			inverseJoinColumns = @JoinColumn(name = "query_id"))
@@ -27,11 +27,12 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 	public PageableQuery pageableQuery;
 
 	@Transient
-	public List<Block> blocks;
+	public Map<Integer, Block> blocks;
 
 	@NotNull
 	public boolean isPageable = false;
 
+	@NotNull
 	public Integer size;
 
 	@Override
@@ -74,11 +75,11 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 	}
 
 	@Override
-	public List<Block> getBlocks() {
+	public Map<Integer, Block> getBlocks() {
 		return blocks;
 	}
 
-	public void setBlocks(List<Block> blocks) {
+	public void setBlocks(Map<Integer, Block> blocks) {
 		this.blocks = blocks;
 	}
 
