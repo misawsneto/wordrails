@@ -3,7 +3,6 @@ package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -39,11 +38,10 @@ public class Term implements Serializable {
 	@ManyToOne
 	public Taxonomy taxonomy;
 
-	@JsonBackReference
+	@JsonBackReference("parent")
 	@ManyToOne
 	public Term parent;
 
-	@JsonManagedReference
 	@OneToMany(mappedBy="parent")
 	public Set<Term> children;
 

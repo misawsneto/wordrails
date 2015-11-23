@@ -1,9 +1,6 @@
 package co.xarx.trix.test;
 
-import co.xarx.trix.domain.File;
-import co.xarx.trix.domain.Image;
-import co.xarx.trix.domain.Picture;
-import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import org.junit.Assert;
@@ -26,6 +23,13 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 
 	@Autowired
 	ObjectMapper objectMapper;
+
+	@Test
+	public void termTest() throws IOException {
+		Term term = objectMapper.readValue(new java.io.File("src/test/resources/term.json"), Term.class);
+
+		System.out.println(term);
+	}
 
 	@Test
 	public void imageTest() throws IOException {
