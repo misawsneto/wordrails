@@ -133,7 +133,7 @@ public class PersistenceUnitDescription {
 							Type genericType = field.getGenericType();
 							ParameterizedType parameterizedGenericType = (ParameterizedType) genericType;
 							Type[] actualTypeArguments = parameterizedGenericType.getActualTypeArguments();
-							Type actualTypeArgument = actualTypeArguments[0];
+							Type actualTypeArgument = actualTypeArguments[actualTypeArguments.length-1];
 							Class<?> type = (Class<?>) actualTypeArgument;
 
 							if (field.isAnnotationPresent(NotNull.class)) {

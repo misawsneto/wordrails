@@ -1,19 +1,18 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.mobile.notification.APNService;
-import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.persistence.StationRepository;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Notification;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.mobile.notification.GCMService;
-import co.xarx.trix.scheduler.jobs.PostScheduleJob;
+import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-
-//import org.hibernate.search.jpa.FullTextEntityManager;
+import co.xarx.trix.persistence.StationRepository;
+import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
+import co.xarx.trix.scheduler.jobs.PostScheduleJob;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,25 +22,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 @Service
 public class PostService {
 
 	private static final Logger log = LoggerFactory.getLogger(PostService.class);
 
-	@Autowired private QueryPersistence queryPersistence;
-	@Autowired private Scheduler scheduler;
-	@Autowired private GCMService gcmService;
-	@Autowired private APNService apnService;
-	@Autowired private PostRepository postRepository;
-	@Autowired private StationRepository stationRepository;
-	@Autowired private TrixAuthenticationProvider authProvider;
-	@Autowired private PostEsRepository postEsRepository;
-
-	@PersistenceContext
-	private EntityManager manager;
+	@Autowired
+	private QueryPersistence queryPersistence;
+	@Autowired
+	private Scheduler scheduler;
+	@Autowired
+	private GCMService gcmService;
+	@Autowired
+	private APNService apnService;
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private PostEsRepository postEsRepository;
 
 	public void removePostIndex(Post post){
 		postEsRepository.delete(post);
@@ -105,6 +106,9 @@ public class PostService {
 		}
 	}
 
+	@Autowired
+	private CacheService cacheService;
+
 	@Transactional
 	public void buildNotification(Post post) {
 		Notification notification = new Notification();
@@ -116,10 +120,10 @@ public class PostService {
 		try {
 			if (post.station != null && post.station.network != null) {
 				Station station = stationRepository.findOne(post.station.id);
-				Network network = authProvider.getNetwork();
+				Network network = cacheService.getNetwork(TenantContextHolder.getCurrentTenantId());
 
-				gcmService.sendToStation(network.id, station, notification);
 
+				gcmService.sendToStation(station, notification);
 				apnService.sendToStation(network, station.id, notification);
 			}
 		} catch (Exception e) {

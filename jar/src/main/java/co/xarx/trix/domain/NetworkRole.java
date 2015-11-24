@@ -6,10 +6,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "person_network_role", uniqueConstraints = {@UniqueConstraint(columnNames = {"person_id", "network_id"})})
-public class NetworkRole {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
+public class NetworkRole extends BaseEntity {
 
 	@ManyToOne
 	@NotNull

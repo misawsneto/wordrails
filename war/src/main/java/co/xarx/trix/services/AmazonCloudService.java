@@ -349,7 +349,7 @@ public class AmazonCloudService {
 					}
 				}
 
-				List<Person> people = personRepository.findAllByNetwork(network.id);
+				List<Person> people = personRepository.findAll();
 				for (Person person : people) {
 					Image cover = person.cover;
 					Image profilePicture = person.image;

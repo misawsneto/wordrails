@@ -101,16 +101,14 @@ public class SocialAuthenticationService {
 		return userConnection;
 	}
 
-	private User newUser(Network network, String username) {
+	private User newUser(String username) {
 		User user = new User();
 
-		UserGrantedAuthority authority = new UserGrantedAuthority("ROLE_USER");
-		authority.network = network;
+		UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER");
 
 		user.enabled = true;
 		user.username = username;
 		user.password = "";
-		user.network = network;
 		user.userConnections = new HashSet<>();
 		authority.user = user;
 		user.addAuthority(authority);
@@ -118,15 +116,15 @@ public class SocialAuthenticationService {
 		return user;
 	}
 
-	private Person findExistingUser(SocialUser socialUser, int networkId) {
+	private Person findExistingUser(SocialUser socialUser) {
 		String email = socialUser.getEmail() == null ? "" : socialUser.getEmail();
-		Person person = personRepository.findByEmailAndNetworkId(email, networkId);
+		Person person = personRepository.findByEmail(email);
 
 		if (person == null) {
 			int i = 1;
 			String originalUsername = socialUser.getName().toLowerCase().replace(" ", "");
 			String username = Normalizer.normalize(originalUsername, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
-			while (userRepository.existsByUsernameAndNetworkId(username, networkId)) {
+			while (userRepository.existsByUsername(username)) {
 				username = originalUsername + i++;
 			}
 
@@ -136,7 +134,6 @@ public class SocialAuthenticationService {
 			person.email = email;
 			person.coverUrl = socialUser.getCoverUrl();
 			person.imageUrl = socialUser.getProfileImageUrl();
-			person.networkId = networkId;
 		}
 
 		return person;
@@ -158,11 +155,11 @@ public class SocialAuthenticationService {
 		return fbUser;
 	}
 
-	public Person getPersonFromSocialUser(SocialUser socialUser, Network network) throws IOException {
-		Person person = findExistingUser(socialUser, network.id);
+	public Person getPersonFromSocialUser(SocialUser socialUser) throws IOException {
+		Person person = findExistingUser(socialUser);
 		User user;
 		if (person.user == null) {
-			user = newUser(network, person.username);
+			user = newUser(person.username);
 		} else {
 			user = person.user;
 		}

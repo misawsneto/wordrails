@@ -49,9 +49,6 @@ public class Network implements Serializable{
 	public Set<Sponsor> sponsors;
 
 	@OneToMany(mappedBy="network")
-	public Set<User> users;
-
-	@OneToMany(mappedBy="network")
 	public Set<Section> sections;
 
 	@OneToMany(mappedBy="owningNetwork")

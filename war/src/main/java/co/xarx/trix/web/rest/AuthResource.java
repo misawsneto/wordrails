@@ -1,7 +1,9 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
+import co.xarx.trix.services.CacheService;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.builder.api.GoogleApi;
@@ -23,13 +25,15 @@ import java.io.IOException;
 public class AuthResource {
 
 	@Autowired
+	private CacheService cacheService;
+	@Autowired
 	private TrixAuthenticationProvider authProvider;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/signin")
 	public Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
-		Network network = authProvider.getNetwork();
+		Network network = cacheService.getNetwork(TenantContextHolder.getCurrentTenantId());
 
 		boolean allowSocialLogin = true;
 		OAuthService service = null;
@@ -59,7 +63,7 @@ public class AuthResource {
 			return Response.status(Response.Status.NOT_ACCEPTABLE).build();
 		}
 
-		boolean authorized = authProvider.socialAuthentication(providerId, service, userId, token, network);
+		boolean authorized = authProvider.socialAuthentication(providerId, service, userId, token);
 
 		if (authorized) {
 			return Response.status(Response.Status.OK).build();

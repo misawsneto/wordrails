@@ -25,16 +25,9 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 
 	Person findByEmail(@Param("email") String email);
 
-	@Query("SELECT person FROM Person person where person.email = :email and person.networkId = :networkId")
-	Person findByEmailAndNetworkId(@Param("email") String email, @Param("networkId") Integer networkId);
-
 	@RestResource(exported = false)
 	@Query("select (select count(*) from PostRead pr where pr.post.author.id = p.id), (select count(*) from Comment comment where comment.post.author.id = p.id), (select count(*) from Recommend recommend where recommend.post.author.id = p.id) from Person p where p.id = :authorId")
 	List<Object[]> findPersonStats(@Param("authorId") Integer authorId);
-
-	@RestResource(exported = false)
-	@Query("select person from Person person where person.user.network.id = :networkId")
-	List<Person> findAllByNetwork(@Param("networkId") Integer networkId);
 
 	@Query("select person from Person person where person.networkId = :networkId")
 	List<Person> findAllByNetwork(@Param("networkId") Integer networkId, Pageable pageable);
@@ -49,8 +42,8 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	List<Person> findAllByNetworkAndQueryExcludingPerson(@Param("networkId") Integer networkId, @Param("personId") Integer personId, @Param("query") String query, Pageable pageable);
 
 	@RestResource(exported = false)
-	@Query("select count(*) from Person person where person.user.network.id = :networkId")
-	Long countPersonsByNetwork(@Param("networkId") Integer networkId);
+	@Query("select count(*) from Person person")
+	Long countPersons();
 
 	@Query("select count(*) from StationRole sr, NetworkRole nr where (sr.person.id = :personId AND sr.admin = true) OR (nr.person.id = :personId AND nr.admin = true)")
 	Long isAdmin(@Param("personId") Integer personId);
@@ -61,8 +54,8 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 
 	@RestResource(exported = false)
 
-	@Query("select nr from NetworkRole nr join fetch nr.person person join fetch person.user u where u.network.id = :networkId")
-	List<NetworkRole> findNetworkAdmin(@Param("networkId") Integer networkId);
+	@Query("select nr from NetworkRole nr join fetch nr.person person join fetch person.user u")
+	List<NetworkRole> findNetworkAdmin();
 
 	@RestResource(exported = false)
 	@Query("SELECT person FROM Person person ORDER BY person.id DESC")

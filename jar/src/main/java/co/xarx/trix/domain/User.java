@@ -14,12 +14,8 @@ import java.util.Set;
  * @author misael
  */
 @Entity
-@Table(name = "users")//, uniqueConstraints = @UniqueConstraint(columnNames = {"username", "network_id"}))
-public class User implements UserDetails {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
+@Table(name = "users")
+public class User extends BaseEntity implements UserDetails {
 
 	@Size(max = 50)
 	public String username;
@@ -28,10 +24,6 @@ public class User implements UserDetails {
 	public String password;
 
 	public Boolean enabled;
-
-	@ManyToOne
-	@JoinColumn(name = "network_id")
-	public Network network;
 
 	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
 	public Person person;

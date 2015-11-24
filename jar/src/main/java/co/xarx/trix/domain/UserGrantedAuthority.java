@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="authorities")
-public class UserGrantedAuthority implements GrantedAuthority {
+public class UserGrantedAuthority extends BaseEntity implements GrantedAuthority {
 
 	public static final String USER = "ROLE_USER";
 	public static final String NETWORK_ADMIN = "ROLE_NETWORK_ADMIN";
@@ -17,29 +17,19 @@ public class UserGrantedAuthority implements GrantedAuthority {
 	public static final String STATION_WRITER = "ROLE_STATION_WRITER";
 
 	public UserGrantedAuthority() {
-		this(USER);
+		this(null, USER);
 	}
 
-	public UserGrantedAuthority(String authority) {
-		this.authority = authority;
-	}
-
-	public UserGrantedAuthority(User user, String authority, Network network) {
+	public UserGrantedAuthority(User user, String authority) {
 		this.user = user;
 		this.authority = authority;
-		this.network = network;
 	}
 
-	public UserGrantedAuthority(User user, String authority, Network network, Station station) {
+	public UserGrantedAuthority(User user, String authority, Station station) {
 		this.user = user;
 		this.authority = authority;
-		this.network = network;
 		this.station = station;
 	}
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public Integer id;
 
 	@ManyToOne
 	public User user;
@@ -48,13 +38,12 @@ public class UserGrantedAuthority implements GrantedAuthority {
 	public String authority;
 
 	@ManyToOne
-	public Network network;
-
-	@ManyToOne
 	public Station station;
 
 	@Override
 	public String getAuthority() {
-		return authority;
+		String stationString = "";
+		if(station != null) stationString = "_" + station.id;
+		return authority + stationString;
 	}
 }

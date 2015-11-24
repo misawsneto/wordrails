@@ -8,7 +8,6 @@ import co.xarx.trix.services.CacheService;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,7 +35,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	private UserRepository userRepository;
 	@Autowired
 	private CacheService cacheService;
-	@Qualifier("userConnectionRepository")
 	@Autowired
 	private UserConnectionRepository userConnectionRepository;
 	@Autowired
@@ -64,24 +62,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		return (User) auth.getPrincipal();
 	}
 
-	public Network getNetwork() {
-		try {
-
-			if(getUser() == null || getUser().network == null)
-				return null;
-			
-			return cacheService.getNetwork(getUser().network.id);
-		} catch (ExecutionException e) {
-			return getUser().network;
-		}
-	}
-
-	public Integer getNetworkId() {
-		if (getUser().isAnonymous() || getUser().network == null) return 0;
-
-		return getUser().network.id;
-	}
-
 	public Person getLoggedPerson() {
 		User user = getUser();
 
@@ -104,7 +84,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		}
 
 		try {
-			person = cacheService.getPersonByUsernameAndNetworkId(user.username, getNetworkId());
+			person = cacheService.getPersonByUsername(user.username);
 		} catch (ExecutionException e) {
 			person = personRepository.findByUser(user);
 		}
@@ -119,13 +99,12 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		return !getUser().isAnonymous();
 	}
 
-	public Authentication anonymousAuthentication(Network network) {
+	public Authentication anonymousAuthentication() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		if(auth == null || auth.getPrincipal() == null || !((User) auth.getPrincipal()).isAnonymous()) {
 			User user = new User();
 			user.username = "wordrails";
-			user.network = network;
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_ANONYMOUS"));
@@ -138,49 +117,26 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		return auth;
 	}
 
-	public Authentication passwordAuthentication(String username, String password, Network network) throws BadCredentialsException {
-		Set<User> users;
+	public Authentication passwordAuthentication(String username, String password) throws BadCredentialsException {
+		User user;
 		try {
-			users = cacheService.getUsersByUsername(username);
+			user = cacheService.getUserByUsername(username);
 		} catch (ExecutionException e) {
-			users = userRepository.findByUsernameAndEnabled(username, true);
+			user = userRepository.findOne(QUser.user.username.eq(username).and(QUser.user.enabled.eq(true)));
 		}
 
-		if (users == null || users.isEmpty()) {
+		if (user == null) {
 			throw new BadCredentialsException("Wrong username");
 		}
 
-		User user = null;
-		for (User u : users) {
-			if (u.network != null) { //find by network
-				if (Objects.equals(u.network.id, network.id) && password.equals(u.password)) { //if this is the user for this network, is the password right?
-					user = u;
-					break;
-				}
-			} else if (password.equals(u.password)) { //find by password, if it enters here, the network is not set
-				user = u;
-				break;
-			}
-		}
-
-		if (user == null) { //didn't find by password or network.
-			throw new BadCredentialsException("Wrong password");
-		}
-
-		if (user.network == null || Objects.equals(user.network.id, 0)) {
-			user.network = getNetwork();
-			userRepository.save(user);
-		}
-
 		Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
-
 		SecurityContextHolder.getContext().setAuthentication(auth);
 
 		return auth;
 	}
 
-	public boolean socialAuthentication(String providerId, OAuthService service, String userId, Token token, Network network) throws BadCredentialsException, IOException {
-		UserConnection userConnection = userConnectionRepository.findByProviderIdAndProviderUserId(providerId, userId, network.id);
+	public boolean socialAuthentication(String providerId, OAuthService service, String userId, Token token) throws BadCredentialsException, IOException {
+		UserConnection userConnection = userConnectionRepository.findByProviderIdAndProviderUserId(providerId, userId);
 
 		User user;
 		if (userConnection == null) {
@@ -191,7 +147,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 				socialUser = socialAuthenticationService.getGoogleUserFromOAuth(userId, token.getToken());
 			}
 
-			Person person = socialAuthenticationService.getPersonFromSocialUser(socialUser, network);
+			Person person = socialAuthenticationService.getPersonFromSocialUser(socialUser);
 			personRepository.save(person);
 
 			user = person.user;

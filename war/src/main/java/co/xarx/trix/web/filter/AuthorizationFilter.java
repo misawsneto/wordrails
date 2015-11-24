@@ -914,11 +914,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetNetworkUsersAuthorized(Integer networkId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetNetworkSectionsAuthorized(Integer networkId) {
 		return true;
 	}
@@ -981,11 +976,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByEmailAndNetworkIdAuthorized(String email, Integer networkId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isFindAllByNetworkExcludingPersonAuthorized(Integer networkId, Integer personId, Integer page, Integer size, List<String> sort) {
 		return stationSecurityChecker.isAdmin();
 	}
@@ -1001,22 +991,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByNetworkIdAndEnabledAuthorized(Integer networkId, boolean enabled) {
-		return false;
-	}
-
-	@Override
-	protected boolean isFindByUsernameAndEnabledAndNetworkIdAuthorized(String username, boolean enabled, Integer networkId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isExistsByUsernameAndNetworkIdAuthorized(String username, Integer networkId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserNetworkAuthorized(Integer userId) {
+	protected boolean isExistsByUsernameAuthorized(String username) {
 		return false;
 	}
 
@@ -1062,11 +1037,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetUserGrantedAuthorityUserAuthorized(Integer userGrantedAuthorityId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserGrantedAuthorityNetworkAuthorized(Integer userGrantedAuthorityId) {
 		return false;
 	}
 

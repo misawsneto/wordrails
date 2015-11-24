@@ -1,6 +1,7 @@
 package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.BaseEntity;
+import co.xarx.trix.domain.GeneratorIgnore;
 import co.xarx.trix.domain.Station;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,6 +15,7 @@ public class Page extends BaseEntity {
 
 	public String title;
 
+	@GeneratorIgnore
 	@OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
 	@MapKeyJoinColumn(name = "index", referencedColumnName = "index", nullable = false)
 	public Map<Integer, BaseSection> sections;

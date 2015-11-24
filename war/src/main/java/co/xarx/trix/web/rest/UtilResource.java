@@ -3,21 +3,18 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.persistence.elasticsearch.BookmarkEsRespository;
 import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
-import co.xarx.trix.scheduler.jobs.SimpleJob;
 import co.xarx.trix.script.ImageScript;
 import co.xarx.trix.services.AmazonCloudService;
-import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.TrixUtil;
 import org.joda.time.DateTime;
-import org.quartz.*;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
@@ -39,6 +36,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Path("/util")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -446,8 +444,7 @@ public class UtilResource {
 		String host = request.getHeader("Host");
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			Taxonomy taxonomy = taxonomyRepository.findOne(id);
-			Network net = networkRepository.findOne(taxonomy.owningNetwork.id);
-			adminAuth(net);
+			adminAuth();
 			taxonomyEventHandler.handleBeforeDelete(taxonomy);
 			taxonomyRepository.delete(taxonomy);
 			authProvider.logout();
@@ -645,13 +642,6 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@Autowired private QueryPersistence qp;
-	@Autowired private PersonNetworkRegIdRepository reg;
-	@Autowired private AsyncService asyncService;
-
-	@Autowired
-	private Scheduler sched;
-
 	@GET
 	@Path("/removeOldImages")
 	@Transactional
@@ -662,19 +652,18 @@ public class UtilResource {
 			DateTime dateTime = new DateTime().minusDays(30);
 
 			List<Post> posts = manager.createQuery("select post from Post post where post.featuredImage is not null and date(post.date) < :dateTime AND post.state = 'PUBLISHED'").setParameter("dateTime",dateTime.toDate()).getResultList();
-			List<Integer> ids = new ArrayList<Integer>();
+			List<Integer> ids = new ArrayList<>();
 
-			List<Image> images = new ArrayList<Image>();
+			List<Image> images = new ArrayList<>();
 
 			for(Post post: posts){
 				images.add(post.featuredImage);
 				ids.add(post.id);
 			}
 
-			List<Integer> imgIds = new ArrayList<Integer>();
-			for(Image image: images){
-				imgIds.add(image.id);
-			}
+			List<Integer> imgIds = images.stream()
+					.map(image -> image.id)
+					.collect(Collectors.toList());
 
 			postRepository.updateFeaturedImagesToNull(images);
 
@@ -684,31 +673,14 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-
-	@GET
-	@Path("/testQuartz")
-	public Response testQuartz(@Context HttpServletRequest request) throws SchedulerException {
-		String host = request.getHeader("Host");
-		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
-			JobDetail job = JobBuilder.newJob(SimpleJob.class).withIdentity("job1", "group1").build();
-
-			Date runTime = DateBuilder.evenMinuteDate(new Date());
-			// Trigger the job to run on the next round minute
-			Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").startAt(runTime).build();
-
-			sched.scheduleJob(job, trigger);
-		}
-		return Response.status(Status.OK).build();
-	}
-
 	@GET
 	@Path("/updateUserNetwork")
 	public Response updateUserNetwork(@Context HttpServletRequest request) {
 		String host = request.getHeader("Host");
 		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1") || host.contains("xarxlocal.com")) {
-			List<Person> persons = manager.createQuery("SELECT person FROM Person person JOIN FETCH person.user user JOIN FETCH user.network network").getResultList();
+			List<Person> persons = manager.createQuery("SELECT person FROM Person person JOIN FETCH person.user user").getResultList();
 			for(Person person : persons){
-				person.networkId = person.user.network.id;
+				person.networkId = person.user.networkId;
 				person.email = person.email != null ? person.email.trim().toLowerCase() : null;
 				if(!Pattern.matches("^[a-z0-9\\._-]{3,50}$", person.username)){
 					person.username = TrixUtil.generateRandomString(10, "a");
@@ -727,13 +699,13 @@ public class UtilResource {
 
 			Network network = networkRepository.findOne(networkId);
 
-			List<NetworkRole> nr = personRepository.findNetworkAdmin(networkId);
+			List<NetworkRole> nr = personRepository.findNetworkAdmin();
 
 			User user = nr.get(0).person.user;
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password, network);
+			authProvider.passwordAuthentication(user.username, user.password);
 
 			List<Station> stations = stationRepository.findByNetworkId(networkId);
 			for (Station station: stations){
@@ -741,7 +713,7 @@ public class UtilResource {
 				stationRepository.delete(station);
 			}
 
-			List <Person> persons = personRepository.findAllByNetwork(networkId);
+			List <Person> persons = personRepository.findAll();
 			for (Person person: persons){
 				personEventHandler.handleBeforeDelete(person);
 				personRepository.delete(person);
@@ -751,7 +723,6 @@ public class UtilResource {
 			networkRepository.delete(network);
 
 			cacheService.removeNetwork(networkId);
-			cacheService.removeUser(user.id);
 		}
 		return Response.status(Status.OK).build();
 	}
@@ -761,16 +732,13 @@ public class UtilResource {
 	public Response removeRowFromPerspective(@Context HttpServletRequest request, @PathParam("perspectiveId") Integer perspectiveId, @PathParam("rowId") Integer rowId) {
 		String host = request.getHeader("Host");
 		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
-
-			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-
-			List<NetworkRole> nr = personRepository.findNetworkAdmin(network.id);
+			List<NetworkRole> nr = personRepository.findNetworkAdmin();
 
 			User user = nr.get(0).person.user;
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password, network);
+			authProvider.passwordAuthentication(user.username, user.password);
 
 			TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTermNull(perspectiveId);
 
@@ -825,12 +793,12 @@ public class UtilResource {
 				host.contains("xarxlocal.com");
 	}
 
-    public Response adminAuth(Network network){
-        List<NetworkRole> nr = personRepository.findNetworkAdmin(network.id);
+    public Response adminAuth(){
+        List<NetworkRole> nr = personRepository.findNetworkAdmin();
         User user = nr.get(0).person.user;
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-        authProvider.passwordAuthentication(user.username, user.password, network);
+        authProvider.passwordAuthentication(user.username, user.password);
         return Response.status(Status.OK).build();
     }
 

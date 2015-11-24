@@ -1,7 +1,6 @@
 package co.xarx.trix;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.CacheService;
@@ -49,8 +48,6 @@ public class WordrailsService {
 	@Autowired
 	private CacheService cacheService;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
-	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
@@ -81,10 +78,6 @@ public class WordrailsService {
 		return stationsPermissions.get(id);
 	}
 
-	public void updatePersonPermissions(PermissionId id){
-		stationsPermissions.refresh(id);
-	}
-
 	public List<Link> generateSelfLinks(String self){
 		Link link = new Link();
 		link.href = self;
@@ -99,11 +92,7 @@ public class WordrailsService {
 	}
 
 	public Network getNetworkFromHost(String host){
-		Network network = authProvider.getNetwork();
-
-		if(network != null)
-			return network;
-
+		Network network = null;
 		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
 			List<Network> networks = networkRepository.findAll();
 			if(networks != null)

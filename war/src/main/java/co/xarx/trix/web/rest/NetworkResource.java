@@ -8,8 +8,6 @@ import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.dto.NetworkCreateDto;
 import co.xarx.trix.eventhandler.PostEventHandler;
-import co.xarx.trix.eventhandler.StationEventHandler;
-import co.xarx.trix.eventhandler.StationRoleEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
@@ -41,38 +39,44 @@ import java.util.*;
 @Produces(MediaType.APPLICATION_JSON)
 public class NetworkResource {
 
-	private @Autowired NetworkRolesRepository networkRolesRepository;
-	private @Autowired StationRepository stationRepository;
-	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired TrixAuthenticationProvider authProvider;
-	private @Autowired NetworkRepository networkRepository;
-	private @Autowired TaxonomyRepository taxonomyRepository;
-	private @Autowired
-	StationEventHandler stationEventHandler;
-	private @Autowired PersonRepository personRepository;
-	private @Autowired
-	StationRoleEventHandler stationRoleEventHandler;
-	private @Autowired
-	TermRepository termRepository;
-	private @Autowired WordrailsService wordrailsService;
-	private @Autowired PostRepository postRepository;
-	private @Autowired
-	UserRepository userRepository;
-	private @Autowired
-	PostEventHandler postEventHandler;
-	private @Autowired PostReadRepository postReadRepository;
-	private @Autowired
-	RecommendRepository recommendRepository;
-	private @Autowired CommentRepository commentRepository;
-	private @Autowired
-	QueryPersistence queryPersistence;
-	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
-	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
-	private @Autowired
-	RowRepository rowRepository;
-
 	@Autowired
 	public ObjectMapper objectMapper;
+	@Autowired
+	private NetworkRolesRepository networkRolesRepository;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private StationRolesRepository stationRolesRepository;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private NetworkRepository networkRepository;
+	@Autowired
+	private TaxonomyRepository taxonomyRepository;
+	@Autowired
+	private PersonRepository personRepository;
+	@Autowired
+	private TermRepository termRepository;
+	@Autowired
+	private WordrailsService wordrailsService;
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private PostEventHandler postEventHandler;
+	@Autowired
+	private PostReadRepository postReadRepository;
+	@Autowired
+	private RecommendRepository recommendRepository;
+	@Autowired
+	private CommentRepository commentRepository;
+	@Autowired
+	private QueryPersistence queryPersistence;
+	@Autowired
+	private StationPerspectiveRepository stationPerspectiveRepository;
+	@Autowired
+	private TermPerspectiveRepository termPerspectiveRepository;
+	@Autowired
+	private RowRepository rowRepository;
 
 	@Path("/{id}/permissions")
 	@GET
@@ -178,10 +182,9 @@ public class NetworkResource {
 				user.enabled = true;
 				user.username = person.username;
 				user.password = person.password;
-				user.network = network;
 
-				UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER", network);
-				UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN", network);
+				UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER");
+				UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN");
 
 				user.addAuthority(authority);
 				user.addAuthority(nauthority);
@@ -373,7 +376,7 @@ public class NetworkResource {
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password, network);
+			authProvider.passwordAuthentication(user.username, user.password);
 
 			Post post = new Post();
 
@@ -423,7 +426,7 @@ public class NetworkResource {
 			network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		}
 
-		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<Long, ReadsCommentsRecommendsCount>();
+		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
 		DateTime firstDay = formatter.parseDateTime(date);
 		DateTime beginningDate;
 
