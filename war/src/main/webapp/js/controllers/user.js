@@ -223,7 +223,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     	}).success(function(){
     		$scope.editingPerson.password = null;
     		$scope.editingPerson.passwordConfirm = null;
-    		$scope.app.initData.person = $scope.editingPerson;
+    		$scope.person = $scope.app.initData.person = $scope.editingPerson;
 				$scope.app.showSuccessToast('Alterações realizadas com successo')    		
     	});
     }

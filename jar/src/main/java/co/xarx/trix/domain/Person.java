@@ -214,5 +214,13 @@ public class Person implements Serializable{
 
 	public Integer coverMediumId;
 
-
+    @PostLoad //lazy initialize the maps. we need to do this hack because hibernate 4 has a bug to fetch eager null references
+    void onPostLoad() {
+        if(image != null) {
+            this.imageHashes.size();
+        }
+        if(cover != null) {
+            this.coverHashes.size();
+        }
+    }
 }
