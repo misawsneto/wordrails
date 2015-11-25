@@ -152,7 +152,7 @@ public class PersonsResource {
         if(person.id == null || !person.id.equals(loggedPerson.id))
             throw new UnauthorizedException();
 
-        if(person.password != null && !person.password.isEmpty() && person.passwordReseted != null && !person.password.equals(person.passwordConfirm))
+        if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
             throw new BadRequestException("Password no equal");
 
         if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
