@@ -19,7 +19,18 @@ public final class Constants {
 		}
 
 	}
+
+	public static class Section {
+		public static final String QUERYABLE_LIST = "queryable_list";
+		public static final String CONTAINER = "container";
+
+		public static final String VERTICAL_LIST = "vertical_list";
+	}
+
 	public static class Layout {
+		public static final String HORIZONTAL_ORIENTATION = "horizontal";
+		public static final String VERTICAL_ORIENTATION = "vertical";
+
 		public static final String VERTICAL_LIST = "vertical_list";
 	}
 

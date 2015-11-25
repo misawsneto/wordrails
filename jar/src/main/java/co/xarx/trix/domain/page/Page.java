@@ -17,7 +17,7 @@ public class Page extends BaseEntity {
 
 	@GeneratorIgnore
 	@OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
-	@MapKeyJoinColumn(name = "index", referencedColumnName = "index", nullable = false)
+	@MapKeyJoinColumn(name = "list_index", referencedColumnName = "list_index", nullable = false)
 	public Map<Integer, BaseSection> sections;
 
 	@ManyToOne

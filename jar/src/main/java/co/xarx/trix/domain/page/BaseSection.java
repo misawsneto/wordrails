@@ -1,15 +1,11 @@
 package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.BaseEntity;
-import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -20,13 +16,14 @@ public abstract class BaseSection extends BaseEntity implements Section, Seriali
 
 	@JsonIgnore
 	@NotNull
+	@Column(name = "list_index")
 	public Integer index;
 
 	@NotNull
 	public String title;
 
 	@NotNull
-	public String layout = Constants.Layout.VERTICAL_LIST;
+	public String layout;
 
 	@ManyToOne
 	@JsonBackReference("page")

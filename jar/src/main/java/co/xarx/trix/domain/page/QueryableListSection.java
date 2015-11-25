@@ -2,6 +2,7 @@ package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
+import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -12,8 +13,6 @@ import java.util.Map;
 @Entity
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class QueryableListSection extends BaseSection implements ListSection, QueryableSection {
-
-	public static final String TYPE = "queryable_list_section";
 
 	@JsonIgnore
 	@JoinTable(name = "section_fixedquery",
@@ -85,7 +84,7 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 
 	@Override
 	public String getType() {
-		return TYPE;
+		return Constants.Section.QUERYABLE_LIST;
 	}
 
 	@PrePersist

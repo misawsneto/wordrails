@@ -19,16 +19,16 @@ public class FixedQuery extends BaseEntity implements Query {
 	public Set<Integer> indexes;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	public ElasticSearchQuery elasticSearchQuery;
+	public ElasticSearchQuery query;
 
 	@Override
 	public ElasticSearchQuery getElasticSearchQuery() {
-		return elasticSearchQuery;
+		return query;
 	}
 
 	@Override
 	public void setElasticSearchQuery(ElasticSearchQuery elasticSearchQuery) {
-		this.elasticSearchQuery = elasticSearchQuery;
+		this.query = elasticSearchQuery;
 	}
 
 	@Override

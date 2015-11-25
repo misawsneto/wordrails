@@ -22,6 +22,7 @@
 		<class>co.xarx.trix.domain.page.BaseSection</class>
 		<class>co.xarx.trix.domain.page.Page</class>
 		<class>co.xarx.trix.domain.page.QueryableListSection</class>
+		<class>co.xarx.trix.domain.page.ContainerSection</class>
 		<class>co.xarx.trix.domain.query.ElasticSearchQuery</class>
 		<class>co.xarx.trix.domain.PostScheduled</class>
 		<class>co.xarx.trix.domain.PostDraft</class>
