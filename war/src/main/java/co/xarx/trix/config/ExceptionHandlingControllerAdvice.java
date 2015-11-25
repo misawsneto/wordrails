@@ -97,9 +97,9 @@ public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHa
 	}
 
 
-//	@ExceptionHandler(Throwable.class)
-//	public ResponseEntity<String> handleAnyException(Throwable exception) {
-//		String stackTrace = ExceptionUtils.getStackTrace(exception);
-//		return new ResponseEntity<>(stackTrace, HttpStatus.INTERNAL_SERVER_ERROR);
-//	}
+	@ExceptionHandler(Throwable.class)
+	public ResponseEntity<String> handleAnyException(Throwable exception) {
+		String stackTrace = ExceptionUtils.getStackTrace(exception);
+		return new ResponseEntity<>(stackTrace, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

@@ -104,6 +104,8 @@ public class Person extends BaseEntity implements Serializable {
 	public String coverHash;
 	@Transient
 	public String password;
+	@Transient
+	public String passwordConfirm;
 	public Boolean passwordReseted = false;
 	public String twitterHandle;
 	public Integer coverMediumId;
@@ -169,6 +171,4 @@ public class Person extends BaseEntity implements Serializable {
 			coverMediumId = null;
 		}
 	}
-
-
 }

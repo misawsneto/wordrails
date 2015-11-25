@@ -1,11 +1,10 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.domain.Image;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.PostTrash;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
+import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;

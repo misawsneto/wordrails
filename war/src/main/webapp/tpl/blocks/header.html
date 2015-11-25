@@ -19,9 +19,12 @@
 			<img class="img-responsive" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}">
 		</div>
 	</a>
-	<a ng-if="!app.isMobile" class="navbar-brand text-lt" ui-sref="app.stations">
+	<a ng-if="!app.isMobile" class="navbar-brand text-lt" style="padding: 5px;" ui-sref="app.stations">
 	   <i class="mdi-home mdi text-lgrey text-shadow-dark custom-header2"></i>
 	</a>
+	<!-- <a ng-if="!app.isMobile" class="navbar-brand text-lt" ng-click="app.animateHomeSettings(); app.goToHomeOrSettings()">
+	   <i class="mdi text-lgrey text-shadow-dark custom-header2 animated" ng-class="{'rubberBand': app.homeSettingsAnimate, 'mdi-settings': !$state.includes('app.settings'), 'mdi-home': $state.includes('app.settings')}"></i>
+	</a> -->
 	<!-- / brand -->
 </div>
 <!-- / navbar header -->

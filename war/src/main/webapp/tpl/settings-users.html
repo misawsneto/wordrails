@@ -61,7 +61,9 @@
 								<th>Usuários</th>
 								<th>Nome</th>
 								<th class="text-center">Último login</th>
-								<th ng-if="app.networkAdmin" style="width:30px;"></th>
+								<th ng-if="app.networkAdmin" style="max-width:130px;">
+									Ativar/Desativar Usuário
+								</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -81,11 +83,15 @@
 								<td>{{person.name}}</td>
 								<td class="text-center" ng-if="!person.lastLogin"> - </td>
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
-								<td ng-if="app.networkAdmin">
+								<td class="text-center" ng-if="app.networkAdmin">
 									<div class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-										<a href ng-click="openEnableDisableDialog(person, $event)" angular-ripple class="dropdown-toggle border-radius-50 i-20" ng-class="{'text-danger mdi mdi-block-helper': person.user.enabled, 'text-success mdi mdi-check': !person.user.enabled}">
-										</a>
+										<!-- <a href ng-click="openEnableDisableDialog(person, $event)" angular-ripple class="dropdown-toggle border-radius-50 i-20" ng-class="{'text-danger mdi mdi-block-helper': person.user.enabled, 'text-success mdi mdi-check': !person.user.enabled}">
+										</a> -->
 										<!-- dropdown -->
+										 <label class="md-switch">
+							              <input type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
+							              <i class="blue"></i>
+							            </label>
 									</div>
 								</td>
 							</tr>

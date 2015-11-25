@@ -140,7 +140,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetFixedQueryElasticSearchQueryAuthorized(Integer fixedQueryId) {
+	protected boolean isGetFixedQueryQueryAuthorized(Integer fixedQueryId) {
 		return false;
 	}
 
@@ -748,7 +748,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
     protected boolean isGetTermPerspectiveHomeRowAuthorized(Integer termPerspectiveId) {
         return false;
     }
-
 
 	@Override
 	protected boolean isGetTermPerspectiveFeaturedRowAuthorized(Integer termPerspectiveId) {

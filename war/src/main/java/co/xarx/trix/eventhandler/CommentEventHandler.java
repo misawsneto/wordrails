@@ -1,5 +1,6 @@
 package co.xarx.trix.eventhandler;
 
+import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.domain.Comment;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.QueryPersistence;

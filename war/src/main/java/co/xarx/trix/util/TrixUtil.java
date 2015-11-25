@@ -11,6 +11,7 @@ import java.net.URL;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TrixUtil {
@@ -19,6 +20,39 @@ public class TrixUtil {
 	private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
 
 	public enum EntityType{POST,PERSON,PERSPECTIVE};
+
+    private static final Pattern emailPattern = Pattern.compile("^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Z]{2,4}$", Pattern.CASE_INSENSITIVE);
+
+    private static final Pattern hostPattern = Pattern.compile("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\\-]*[A-Za-z0-9])$", Pattern.CASE_INSENSITIVE);
+
+    private static final Pattern fqdnPattern = Pattern.compile("(?=^.{1,254}$)(^(?:(?!\\d+\\.|-)[a-zA-Z0-9_\\-]{1,63}(?<!-)\\.?)+(?:[a-zA-Z]{2,})$)", Pattern.CASE_INSENSITIVE);
+
+    public static boolean isEmailAddr(String emailAddr){
+        try {
+            Matcher matcher = emailPattern.matcher(emailAddr);
+            return matcher.matches();
+        } catch (Exception e){
+        }
+        return false;
+    }
+
+    public static boolean isFQDN(String fqdnVal){
+        try {
+            Matcher matcher = fqdnPattern.matcher(fqdnVal);
+            return matcher.matches();
+        } catch (Exception e){
+        }
+        return false;
+    }
+
+    public static boolean isHost (String hostname){
+        try {
+            Matcher matcher = hostPattern.matcher(hostname);
+            return matcher.matches();
+        } catch (Exception e){
+        }
+        return false;
+    }
 
 	/**
 	 * Converts a string to a slug version by removing special characters and spaces

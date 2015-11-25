@@ -126,7 +126,7 @@ public class PersonsResource {
 		request.getServletContext().getRequestDispatcher(path).forward(request, response);
 	}
 
-	@PUT
+	@GET
 	@Path("/{id}")
 	@Transactional
 	public Response findByUsername(@PathParam("id") Integer id) throws ServletException, IOException {
@@ -141,6 +141,62 @@ public class PersonsResource {
 			return Response.status(Status.UNAUTHORIZED).build();
 	}
 
+    @PUT
+    @Path("/update")
+    @Transactional
+    public Response update(Person person){
+        Person loggedPerson = authProvider.getLoggedPerson();
+
+        Person loadedPerson = personRepository.findOne(person.id);
+
+        if(person.id == null || !person.id.equals(loggedPerson.id))
+            throw new UnauthorizedException();
+
+        if(person.password != null && !person.password.isEmpty() && person.passwordReseted != null && !person.password.equals(person.passwordConfirm))
+            throw new BadRequestException("Password no equal");
+
+        if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
+            throw new BadRequestException("Invalid Password");
+
+        if(!TrixUtil.isEmailAddr(person.email))
+            throw new BadRequestException("Not email");
+
+        if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !TrixUtil.isFQDN(person.username))
+            throw new BadRequestException("Invalid username");
+
+        if(person.bio != null && !person.bio.isEmpty())
+            loadedPerson.bio = person.bio;
+        else
+            loadedPerson.bio = null;
+
+        loadedPerson.email = person.email;
+        loadedPerson.name = person.name;
+
+        User user = null;
+        if(!person.username.equals(loggedPerson.username)){
+            loadedPerson.user.username = person.username;
+            loadedPerson.username = person.username;
+            user = userRepository.findOne(loadedPerson.user.id);
+            user.username = person.username;
+            userRepository.save(user);
+            personRepository.save(loadedPerson);
+        }
+
+        if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
+            loadedPerson.user.password = person.password;
+            user = userRepository.findOne(loadedPerson.user.id);
+            user.password = person.password;
+            userRepository.save(user);
+            personRepository.save(loadedPerson);
+        }
+
+        personRepository.save(loadedPerson);
+
+        authProvider.updateLoggedPerson(loadedPerson);
+
+        return Response.status(Status.OK).build();
+    }
+
 	@PUT
 	@Path("/{id}")
 	@Transactional
@@ -152,7 +208,7 @@ public class PersonsResource {
 		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network))
 			forward();
 		else
-			throw new co.xarx.trix.exception.BadRequestException();
+			throw new BadRequestException();
 	}
 
 	@PUT

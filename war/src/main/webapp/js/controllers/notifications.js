@@ -5,8 +5,10 @@ app.controller('NotificationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 		if(!$scope.app.notificationsCtrl)
 			$scope.app.notificationsCtrl = {page: 0, firstLoad: false};
 
-		console.log($scope.app.notificationsCtrl);
 
-		trix.searchNotifications('',0,5);
+		trix.searchNotifications('',0,5).success(function(data){
+			if(data && data.length > 0)
+			$scope.app.notificationsCtrl.notifications = data
+		});
 
 }]);

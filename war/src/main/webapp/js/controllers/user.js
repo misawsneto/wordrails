@@ -6,183 +6,183 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	//
 	FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
 	    return true; // true|false
-	};
+	  };
 
-	var cover = $scope.cover = new FileUploader({
-		url: TRIX.baseUrl + "/api/files/contents/simple"
-	});
+	  var cover = $scope.cover = new FileUploader({
+	  	url: TRIX.baseUrl + "/api/files/contents/simple"
+	  });
 
-	var image = $scope.image = new FileUploader({
-		url: TRIX.baseUrl + "/api/files/contents/simple"
-	});
+	  var image = $scope.image = new FileUploader({
+	  	url: TRIX.baseUrl + "/api/files/contents/simple"
+	  });
 
-	cover.onAfterAddingFile = function(fileItem) {
-		$scope.userCover = null;
-		cover.uploadAll();
-	};
+	  cover.onAfterAddingFile = function(fileItem) {
+	  	$scope.userCover = null;
+	  	cover.uploadAll();
+	  };
 
-	cover.onSuccessItem = function(fileItem, response, status, headers) {
-		if(response.filelink){
-			$scope.userCover = response;
-			var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userCover.id }
-			trix.postImage(imageObject).success(function(imageId){
-				var myCoverImage = TRIX.baseUrl + "/api/images/" + imageId;
-				$scope.person.cover = myCoverImage
-				trix.putPerson($scope.person).success(function(){
-					$scope.app.initData.person.coverLargeId = $scope.person.coverLargeId = $scope.userCover.id;
-					$scope.app.initData.person.coverMediumId = $scope.person.coverMediumId = $scope.userCover.id;
-					$mdToast.hide();
-				})
-			})
-		}
-	};
+	  cover.onSuccessItem = function(fileItem, response, status, headers) {
+	  	if(response.filelink){
+	  		$scope.userCover = response;
+	  		var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userCover.id }
+	  		trix.postImage(imageObject).success(function(imageId){
+	  			var myCoverImage = TRIX.baseUrl + "/api/images/" + imageId;
+	  			$scope.person.cover = myCoverImage
+	  			trix.putPerson($scope.person).success(function(){
+	  				$scope.app.initData.person.coverLargeId = $scope.person.coverLargeId = $scope.userCover.id;
+	  				$scope.app.initData.person.coverMediumId = $scope.person.coverMediumId = $scope.userCover.id;
+	  				$mdToast.hide();
+	  			})
+	  		})
+	  	}
+	  };
 
-	cover.onErrorItem = function(fileItem, response, status, headers) {
-		if(status == 413)
-			$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
-		else
-			$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
-	}
+	  cover.onErrorItem = function(fileItem, response, status, headers) {
+	  	if(status == 413)
+	  		$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+	  	else
+	  		$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+	  }
 
-	cover.onProgressItem = function(fileItem, progress) {
-		cfpLoadingBar.start();
-		cfpLoadingBar.set(progress/10)
-		if(progress == 100){
-			cfpLoadingBar.complete()
-			toastPromise = $mdToast.show(
-				$mdToast.simple()
-				.content('Processando...')
-				.position('top right')
-				.hideDelay(false)
-				);
-		}
-	};
+	  cover.onProgressItem = function(fileItem, progress) {
+	  	cfpLoadingBar.start();
+	  	cfpLoadingBar.set(progress/10)
+	  	if(progress == 100){
+	  		cfpLoadingBar.complete()
+	  		toastPromise = $mdToast.show(
+	  			$mdToast.simple()
+	  			.content('Processando...')
+	  			.position('top right')
+	  			.hideDelay(false)
+	  			);
+	  	}
+	  };
 
-	image.onAfterAddingFile = function(fileItem) {
-		$scope.userImage = null;
-		image.uploadAll();
-	};
+	  image.onAfterAddingFile = function(fileItem) {
+	  	$scope.userImage = null;
+	  	image.uploadAll();
+	  };
 
-	image.onSuccessItem = function(fileItem, response, status, headers) {
-		if(response.filelink){
-			$scope.userImage = response;
-			var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userImage.id }
-			trix.postImage(imageObject).success(function(imageId){
-				var myImageImage = TRIX.baseUrl + "/api/images/" + imageId;
-				$scope.person.image = myImageImage
-				trix.putPerson($scope.person).success(function(){
-					$scope.app.initData.person.imageMediumId = $scope.person.imageMediumId = $scope.userImage.id;
-					$scope.app.initData.person.imageSmallId = $scope.person.imageSmallId = $scope.userImage.id;
-					$mdToast.hide();
-				})
-			})
-		}
-	};
+	  image.onSuccessItem = function(fileItem, response, status, headers) {
+	  	if(response.filelink){
+	  		$scope.userImage = response;
+	  		var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userImage.id }
+	  		trix.postImage(imageObject).success(function(imageId){
+	  			var myImageImage = TRIX.baseUrl + "/api/images/" + imageId;
+	  			$scope.person.image = myImageImage
+	  			trix.putPerson($scope.person).success(function(){
+	  				$scope.app.initData.person.imageMediumId = $scope.person.imageMediumId = $scope.userImage.id;
+	  				$scope.app.initData.person.imageSmallId = $scope.person.imageSmallId = $scope.userImage.id;
+	  				$mdToast.hide();
+	  			})
+	  		})
+	  	}
+	  };
 
-	image.onErrorItem = function(fileItem, response, status, headers) {
-		if(status == 413)
-			$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
-		else
-			$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
-	}
+	  image.onErrorItem = function(fileItem, response, status, headers) {
+	  	if(status == 413)
+	  		$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+	  	else
+	  		$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+	  }
 
-	image.onProgressItem = function(fileItem, progress) {
-		cfpLoadingBar.start();
-		cfpLoadingBar.set(progress/10)
-		if(progress == 100){
-			cfpLoadingBar.complete()
-			toastPromise = $mdToast.show(
-				$mdToast.simple()
-				.content('Processando...')
-				.position('top right')
-				.hideDelay(false)
-				);
-		}
-	};
+	  image.onProgressItem = function(fileItem, progress) {
+	  	cfpLoadingBar.start();
+	  	cfpLoadingBar.set(progress/10)
+	  	if(progress == 100){
+	  		cfpLoadingBar.complete()
+	  		toastPromise = $mdToast.show(
+	  			$mdToast.simple()
+	  			.content('Processando...')
+	  			.position('top right')
+	  			.hideDelay(false)
+	  			);
+	  	}
+	  };
 
-	var username = $state.params.username
+	  var username = $state.params.username
 
-	if(username == null){
-		$state.go('access.404')
-	}
+	  if(username == null){
+	  	$state.go('access.404')
+	  }
 
-	trix.findByUsername(username).success(function(response){
-		try{
-			$scope.showProfile = true;
-			$scope.person = response.persons[0];
-		}catch(e){
-			$state.go('access.404')
-		}
-		$scope.findUserPosts($scope.person);
-	}).error(function(){
-		$state.go('access.404')
-	})
+	  trix.findByUsername(username).success(function(response){
+	  	try{
+	  		$scope.showProfile = true;
+	  		$scope.person = response.persons[0];
+	  	}catch(e){
+	  		$state.go('access.404')
+	  	}
+	  	$scope.findUserPosts($scope.person);
+	  }).error(function(){
+	  	$state.go('access.404')
+	  })
 
-	$scope.postsPage = 0;
-	$scope.postViews = [];
-	$scope.findUserPosts = function(person){
-		trix.getPersonNetworkPosts(person.id, $scope.app.initData.network.id,$scope.postsPage, 5).success(function(posts){
-			if(posts && posts.length > 0)
-				$scope.postViews = posts;
-		})
+	  $scope.postsPage = 0;
+	  $scope.postViews = [];
+	  $scope.findUserPosts = function(person){
+	  	trix.getPersonNetworkPosts(person.id, $scope.app.initData.network.id,$scope.postsPage, 5).success(function(posts){
+	  		if(posts && posts.length > 0)
+	  			$scope.postViews = posts;
+	  	})
 
-		trix.findRecommendsByPersonIdOrderByDate(person.id, 0, 6, null, "recommendProjection").success(function(response){
-			if(response.recommends && response.recommends.length > 0)
-				$scope.recommendations = response.recommends;
-		})
-	}
+	  	trix.findRecommendsByPersonIdOrderByDate(person.id, 0, 6, null, "recommendProjection").success(function(response){
+	  		if(response.recommends && response.recommends.length > 0)
+	  			$scope.recommendations = response.recommends;
+	  	})
+	  }
 
-	$scope.paginate = function(){
+	  $scope.paginate = function(){
 
-		if(!$scope.postViews || $scope.postViews.length == 0)
-			return;
+	  	if(!$scope.postViews || $scope.postViews.length == 0)
+	  		return;
 
-		if($scope.allLoaded)
-			return;
+	  	if($scope.allLoaded)
+	  		return;
 
-		if(!$scope.loadingPage){
-			$scope.loadingPage = true;
-			trix.getPersonNetworkPosts($scope.person.id, $scope.app.initData.network.id,$scope.postsPage + 1, 5)
-			.success(function(posts){
-				$scope.loadingPage = false;
-				$scope.postsPage = $scope.postsPage + 1;
+	  	if(!$scope.loadingPage){
+	  		$scope.loadingPage = true;
+	  		trix.getPersonNetworkPosts($scope.person.id, $scope.app.initData.network.id,$scope.postsPage + 1, 5)
+	  		.success(function(posts){
+	  			$scope.loadingPage = false;
+	  			$scope.postsPage = $scope.postsPage + 1;
 
-				if(!posts || posts.length == 0){
-					$scope.allLoaded = true;
-					return;
-				}
+	  			if(!posts || posts.length == 0){
+	  				$scope.allLoaded = true;
+	  				return;
+	  			}
 
-				if(!$scope.pages)
-					$scope.pages = []
+	  			if(!$scope.pages)
+	  				$scope.pages = []
 
-				posts && posts.forEach(function(element, index){
-					$scope.pages.push(element)
-				}); 
+	  			posts && posts.forEach(function(element, index){
+	  				$scope.pages.push(element)
+	  			}); 
 
-				$(".search-results").focus();
-			})
-			.error(function(){
-				$scope.loadingPage = false;
-			})
-		}
-	}
+	  			$(".search-results").focus();
+	  		})
+	  		.error(function(){
+	  			$scope.loadingPage = false;
+	  		})
+	  	}
+	  }
 
 	        // perspective editor dialog Controller
-    function DialogController(scope, $mdDialog) {
-      scope.app = $scope.app;
+	        function DialogController(scope, $mdDialog) {
+	        	scope.app = $scope.app;
 
-      scope.hide = function() {
-        $mdDialog.hide();
-      };
+	        	scope.hide = function() {
+	        		$mdDialog.hide();
+	        	};
 
-      scope.cancel = function() {
-        $mdDialog.cancel();
-      };
+	        	scope.cancel = function() {
+	        		$mdDialog.cancel();
+	        	};
 
-      scope.publish = function() {
-        if(isTermSelected($scope.termTree)){
-          createPost($mdDialog)
-        }else{
+	        	scope.publish = function() {
+	        		if(isTermSelected($scope.termTree)){
+	        			createPost($mdDialog)
+	        		}else{
           // show alert term message
         }
         //$mdDialog.hide();
@@ -191,7 +191,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     };
 
     $scope.showEditProfile = function(ev){
-		$mdSidenav('right').toggle();
+    	$mdSidenav('right').toggle();
     }
 
     $scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
@@ -201,7 +201,34 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     	$mdSidenav('right').close()
     }
 
-}])
+    $scope.saveProfile = function(){
+    	trix.updatePerson($scope.editingPerson).error(function(data, status, header){
+
+    		var error = data.error;
+
+    		if(error.indexOf('Password no equal') > -1)
+    			$scope.app.showErrorToast('Confirme que as senhas sejam iguais e tente novamente')
+
+    		if(error.indexOf('UnauthorizedException') > -1)
+    			$scope.app.showErrorToast('Você não tem permissão para realizar esta operação')
+
+    		if(error.indexOf('Invalid Password') > -1)
+    			$scope.app.showErrorToast('A senha deve ter mais de 5 caractéres')
+
+    		if(error.indexOf('Not email') > -1)
+    			$scope.app.showErrorToast('Email inválido')
+
+    		if(error.indexOf('Invalid username') > -1)
+    			$scope.app.showErrorToast('Nome do usuário deve ter ao menos 3 caractéres,<br> não possuir espaços ou caractéres caractéres especiais')
+    	}).success(function(){
+    		$scope.editingPerson.password = null;
+    		$scope.editingPerson.passwordConfirm = null;
+    		$scope.person = $scope.app.initData.person = $scope.editingPerson;
+				$scope.app.showSuccessToast('Alterações realizadas com successo')    		
+    	});
+    }
+
+  }])
 
 app.controller('UserStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'TRIX',
 	function($scope ,  $log ,  $timeout ,  $rootScope ,  $state ,  trix , TRIX) {
@@ -311,54 +338,54 @@ trix.searchPosts(null, $scope.page, 10, {'personId': $scope.app.getLoggedPerson(
 app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout', '$interval', 'trix', 'cfpLoadingBar', '$q',
 	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q) {
 		
-	$scope.app.publicationsCtrl = {page: 0, firstLoad: false};
+		$scope.app.publicationsCtrl = {page: 0, firstLoad: false};
 
-	$scope.datePickerOptions = {
+		$scope.datePickerOptions = {
 			"locale": {
-	        "format": "DD/MM/YYYY",
-	        "separator": " - ",
-	        "applyLabel": "Aplicar",
-	        "cancelLabel": "Cancelar",
-	        "fromLabel": "De",
-	        "toLabel": "Até",
-	        "customRangeLabel": "Personalizado",
-	        "daysOfWeek": [
-	            "Dom",
-	            "Seg",
-	            "Ter",
-	            "Qua",
-	            "Qui",
-	            "Sex",
-	            "Sab"
-	        ],
-	        "monthNames": [
-	            "Janeiro",
-	            "Fevereiro",
-	            "Março",
-	            "Abril",
-	            "Maio",
-	            "Junho",
-	            "Julho",
-	            "Agosto",
-	            "Setembro",
-	            "Outubro",
-	            "Novembro",
-	            "Dezembro"
-	        ],
-	        "firstDay": 1
-	    },
-		startDate: moment().add(-29, 'days'), endDate: moment(), opens: "left",
-		ranges: {
-	           'Hoje': [moment(), moment()],
-	           'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-	           'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-	           'Esse mês': [moment().startOf('month'), moment().endOf('month')],
-	           'Último mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')
-	           ]
-	        }}
+				"format": "DD/MM/YYYY",
+				"separator": " - ",
+				"applyLabel": "Aplicar",
+				"cancelLabel": "Cancelar",
+				"fromLabel": "De",
+				"toLabel": "Até",
+				"customRangeLabel": "Personalizado",
+				"daysOfWeek": [
+				"Dom",
+				"Seg",
+				"Ter",
+				"Qua",
+				"Qui",
+				"Sex",
+				"Sab"
+				],
+				"monthNames": [
+				"Janeiro",
+				"Fevereiro",
+				"Março",
+				"Abril",
+				"Maio",
+				"Junho",
+				"Julho",
+				"Agosto",
+				"Setembro",
+				"Outubro",
+				"Novembro",
+				"Dezembro"
+				],
+				"firstDay": 1
+			},
+			startDate: moment().add(-29, 'days'), endDate: moment(), opens: "left",
+			ranges: {
+				'Hoje': [moment(), moment()],
+				'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+				'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+				'Esse mês': [moment().startOf('month'), moment().endOf('month')],
+				'Último mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')
+				]
+			}}
 
-	$scope.$watch('$state.params.type', function(){
-		if($state.params.type == "drafts"){
+			$scope.$watch('$state.params.type', function(){
+				if($state.params.type == "drafts"){
 			// trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
 				// 'publicationType': 'DRAFT', sortByDate: true}).success(function(response){
 					trix.getPersonNetworkPostsByState(null, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
@@ -383,60 +410,60 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 				}
 			});
 
-		$scope.$on('POST_REMOVED', function(event, postId){
-			if($scope.app.publicationsCtrl && $scope.app.publicationsCtrl.publications){
-				for (var i = $scope.app.publicationsCtrl.publications.length - 1; i >= 0; i--) {
-					if(postId == $scope.app.publicationsCtrl.publications[i].postId)
-					$scope.app.publicationsCtrl.publications.splice(i,1)
-				};
-			}
-		})
+$scope.$on('POST_REMOVED', function(event, postId){
+	if($scope.app.publicationsCtrl && $scope.app.publicationsCtrl.publications){
+		for (var i = $scope.app.publicationsCtrl.publications.length - 1; i >= 0; i--) {
+			if(postId == $scope.app.publicationsCtrl.publications[i].postId)
+				$scope.app.publicationsCtrl.publications.splice(i,1)
+		};
+	}
+})
 
-		$scope.paginate = function(){
+$scope.paginate = function(){
 
-			if(!$scope.app.publicationsCtrl.publications || $scope.app.publicationsCtrl.publications.length == 0)
-				return;
+	if(!$scope.app.publicationsCtrl.publications || $scope.app.publicationsCtrl.publications.length == 0)
+		return;
 
-			if($scope.allLoaded)
-				return;
+	if($scope.allLoaded)
+		return;
 
-			var type = '';
-			if($state.params.type == "drafts"){
-				type = 'DRAFT'
-			}else if($state.params.type == "publications"){
-				type = 'PUBLISHED'
-			}else if($state.params.type == "scheduled"){
-				type = 'SCHEDULED'
-			}
+	var type = '';
+	if($state.params.type == "drafts"){
+		type = 'DRAFT'
+	}else if($state.params.type == "publications"){
+		type = 'PUBLISHED'
+	}else if($state.params.type == "scheduled"){
+		type = 'SCHEDULED'
+	}
 
-			if(!$scope.loadingPage){
-				$scope.loadingPage = true;
+	if(!$scope.loadingPage){
+		$scope.loadingPage = true;
 				/*trix.searchPosts(null, $scope.app.publicationsCtrl.page + 1, 10, {'personId': $scope.app.getLoggedPerson().id,
 					'publicationType': type, sortByDate: true}).success(function(response){*/
 
-					trix.getPersonNetworkPostsByState(null, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
-						var posts = response;
+						trix.getPersonNetworkPostsByState(null, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
+							var posts = response;
 
-						$scope.loadingPage = false;
-						$scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
+							$scope.loadingPage = false;
+							$scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
 
-						if(!posts || posts.length == 0){
-							$scope.allLoaded = true;
-							return;
-						}
+							if(!posts || posts.length == 0){
+								$scope.allLoaded = true;
+								return;
+							}
 
-						if(!$scope.pages)
-							$scope.pages = []
+							if(!$scope.pages)
+								$scope.pages = []
 
-						posts && posts.forEach(function(element, index){
-							$scope.app.publicationsCtrl.publications.push(element)
-						}); 
+							posts && posts.forEach(function(element, index){
+								$scope.app.publicationsCtrl.publications.push(element)
+							}); 
 
-					})
-					.error(function(){
-						$scope.loadingPage = false;
-					})
+						})
+						.error(function(){
+							$scope.loadingPage = false;
+						})
+					}
 				}
-			}
 
-}])		
+			}])		

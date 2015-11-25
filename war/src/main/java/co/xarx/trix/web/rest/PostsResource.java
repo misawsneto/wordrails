@@ -1,6 +1,11 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.PermissionId;
+import co.xarx.trix.api.*;
+import co.xarx.trix.domain.*;
+import co.xarx.trix.exception.BadRequestException;
+import co.xarx.trix.exception.UnauthorizedException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
