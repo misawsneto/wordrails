@@ -902,7 +902,7 @@ public class UtilResource {
 	@Transactional
 	public void stationNetwork(){
 		if(isLocal(request.getHeader("Host"))){
-			List<Station> stations = stationRepository.findAll();
+			List<Station> stations = manager.createNativeQuery("select s.* from station s", Station.class).getResultList();
 			for (Station station: stations){
 //				for(Network network: station.networks)
 //					station.network = network;
