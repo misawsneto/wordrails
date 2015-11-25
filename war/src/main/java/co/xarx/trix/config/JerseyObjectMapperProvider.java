@@ -17,7 +17,7 @@ public class JerseyObjectMapperProvider implements ContextResolver<ObjectMapper>
 		ObjectMapper result = new ObjectMapper();
 		result.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		Hibernate4Module hbModule = new Hibernate4Module();
-		hbModule.configure(Hibernate4Module.Feature.FORCE_LAZY_LOADING, true);
+		hbModule.configure(Hibernate4Module.Feature.FORCE_LAZY_LOADING, false);
 		hbModule.configure(Hibernate4Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS, true);
         hbModule.configure(Hibernate4Module.Feature.USE_TRANSIENT_ANNOTATION, false);
 		result.registerModule(hbModule);
