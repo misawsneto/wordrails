@@ -11,6 +11,7 @@ import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.converter.RowConverter;
 import co.xarx.trix.converter.TermConverter;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

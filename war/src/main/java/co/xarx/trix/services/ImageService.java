@@ -1,7 +1,7 @@
 package co.xarx.trix.services;
 
 
-import co.xarx.trix.domain.BadRequestException;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.domain.File;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Picture;

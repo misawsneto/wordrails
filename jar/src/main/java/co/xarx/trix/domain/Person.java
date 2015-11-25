@@ -205,6 +205,9 @@ public class Person implements Serializable{
 	@Transient
 	public String password;
 
+    @Transient
+    public String passwordConfirm;
+
 	public Boolean passwordReseted = false;
 
 	public String twitterHandle;

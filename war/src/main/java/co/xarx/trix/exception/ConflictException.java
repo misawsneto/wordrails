@@ -1,4 +1,4 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.exception;
 
 public class ConflictException extends Exception{
 

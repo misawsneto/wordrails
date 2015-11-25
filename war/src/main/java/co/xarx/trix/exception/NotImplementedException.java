@@ -1,4 +1,4 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.exception;
 
 public class NotImplementedException extends RuntimeException {
 	private static final long serialVersionUID = 3233326293313822599L;

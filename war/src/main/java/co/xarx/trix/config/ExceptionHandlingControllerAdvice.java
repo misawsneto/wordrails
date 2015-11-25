@@ -1,8 +1,6 @@
 package co.xarx.trix.config;
 
-import co.xarx.trix.domain.*;
-import co.xarx.trix.exception.ErrorResource;
-import co.xarx.trix.exception.FieldErrorResource;
+import co.xarx.trix.exception.*;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -99,9 +97,9 @@ public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHa
 	}
 
 
-//	@ExceptionHandler(Throwable.class)
-//	public ResponseEntity<String> handleAnyException(Throwable exception) {
-//		String stackTrace = ExceptionUtils.getStackTrace(exception);
-//		return new ResponseEntity<>(stackTrace, HttpStatus.INTERNAL_SERVER_ERROR);
-//	}
+	@ExceptionHandler(Throwable.class)
+	public ResponseEntity<String> handleAnyException(Throwable exception) {
+		String stackTrace = ExceptionUtils.getStackTrace(exception);
+		return new ResponseEntity<>(stackTrace, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

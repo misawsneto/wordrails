@@ -1,6 +1,8 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.config;
 
 import java.io.IOException;
+
+import co.xarx.trix.domain.RestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.ClientHttpResponse;

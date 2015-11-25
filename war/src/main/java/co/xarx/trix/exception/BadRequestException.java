@@ -1,4 +1,4 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.exception;
 
 import java.util.ArrayList;
 import java.util.List;

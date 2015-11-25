@@ -52,7 +52,7 @@
     "angular-drag-and-drop-lists": "~1.2.0",
     "angular-file-upload": "~1.1.1",
     "angular-leaflet-directive": "~0.8.2",
-    "angular-loading-bar": "~0.8.0",
+    "angular-loading-bar": "0.8.0",
     "angular-masonry": "~0.11.0",
     "angular-material": "0.11.3",
     "angular-messages": "1.4.3",

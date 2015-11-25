@@ -1,6 +1,7 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.*;
+import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.CellRepository;
 import co.xarx.trix.persistence.RowRepository;
 import co.xarx.trix.persistence.StationPerspectiveRepository;
