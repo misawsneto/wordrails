@@ -105,6 +105,15 @@ public class AndroidBuilderService {
 		}
 		projectDir.mkdirs();
 
+//        FileUtils.copyDirectory(templateProjectDir, projectDir, new File (String pathname) {
+//			for (String dirName : IGNORED_DIRS) {
+//				if (pathname.isDirectory() && pathname.getAbsolutePath().endsWith(dirName)) {
+//					return false;
+//				}
+//			}
+//			return true;
+//		});
+
 		FileUtils.copyDirectory(templateProjectDir, projectDir, pathname -> {
 			for (String dirName : IGNORED_DIRS) {
 				if (pathname.isDirectory() && pathname.getAbsolutePath().endsWith(dirName)) {

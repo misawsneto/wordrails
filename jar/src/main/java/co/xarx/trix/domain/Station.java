@@ -53,7 +53,6 @@ public class Station extends BaseEntity implements Serializable{
 	public String primaryColor = "#5C78B0";
 
 	@ManyToOne
-	@NotNull
 	public Network network;
 
 	@OneToMany(mappedBy="station", cascade=CascadeType.REMOVE)
