@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -23,6 +24,9 @@ public class ExceptionMapperImpl implements ExceptionMapper<Throwable> {
 	@Override
 	public Response toResponse(Throwable throwable) {
 		Status status;
+
+        log.error(throwable.getMessage(), throwable);
+
 		if (throwable instanceof EntityNotFoundException) {
 			status = Status.NOT_FOUND;
 		} else if (throwable instanceof UnauthorizedException) {
@@ -33,13 +37,13 @@ public class ExceptionMapperImpl implements ExceptionMapper<Throwable> {
 			status = Status.CONFLICT;
         } else if (throwable instanceof BadRequestException){
             status = Status.BAD_REQUEST;
+        } else if (throwable instanceof ClientErrorException){
+            status =  Status.fromStatusCode(((ClientErrorException) throwable).getResponse().getStatus());
 		} else {
 			status = Status.INTERNAL_SERVER_ERROR;
 		}
 
-        log.error(throwable.getMessage(), throwable);
-
 //		String stackTrace = ExceptionUtils.getStackTrace(throwable);
-		return Response.status(status).entity("{\"error\": \"" + throwable.getClass() + " - " + throwable.getMessage() +"\"}").type(MediaType.APPLICATION_JSON).build();
+		return Response.status(status).entity("{\"error\": \"" + throwable.getClass() + " - " + throwable.getMessage().replaceAll("\"", "\\\"") +"\"}").type(MediaType.APPLICATION_JSON).build();
     }
 }
