@@ -127,10 +127,6 @@ public class QueryPersistence {
 										"(select count(*) from Post po where po.author_id = p.id and po.state = 'SCHEDULED')" +
 				"from Person p where p.id = :personId").setParameter("personId", personId).getResultList();
 	}
-	public void updateLastLogin(String username) {
-		// TODO Auto-generated method stub
-		manager.createQuery("update Person person set person.lastLogin = :date where person.username = :username").setParameter("username", username).setParameter("date", new Date()).executeUpdate();
-	}
 
 	@Transactional
 	public void setNoAuthor(Integer personId) {

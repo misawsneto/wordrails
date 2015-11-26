@@ -4,10 +4,7 @@ import co.xarx.trix.exception.*;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,9 +95,17 @@ public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHa
 	}
 
 
-	@ExceptionHandler(Throwable.class)
-	public ResponseEntity<String> handleAnyException(Throwable exception) {
-		String stackTrace = ExceptionUtils.getStackTrace(exception);
-		return new ResponseEntity<>(stackTrace, HttpStatus.INTERNAL_SERVER_ERROR);
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<Object> handleAnyException(HttpServletRequest req, WebRequest request, Exception exception) {
+		logger.error("Request: " + req.getRequestURL() + " raised " + ExceptionUtils.getStackTrace(exception));
+
+		ErrorResource error = new ErrorResource("Generic Exception", ExceptionUtils.getRootCauseMessage(exception));
+		error.setStacktrace(ExceptionUtils.getStackTrace(exception));
+		error.setType(exception.toString());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		return handleExceptionInternal(exception, error, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
 	}
 }

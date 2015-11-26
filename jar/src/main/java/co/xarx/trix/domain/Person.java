@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,10 +71,6 @@ public class Person extends BaseEntity implements Serializable {
 	public String imageUrl;
 
 	public String coverUrl;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date lastLogin;
 
 	@ElementCollection()
 	@JoinTable(name = "image_hash", joinColumns = @JoinColumn(name = "image_id", referencedColumnName = "coverId"))

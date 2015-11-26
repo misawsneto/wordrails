@@ -14,7 +14,7 @@ import java.util.Set;
  * @author misael
  */
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "networkId"}))
 public class User extends BaseEntity implements UserDetails {
 
 	@Size(max = 50)

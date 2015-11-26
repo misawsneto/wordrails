@@ -319,26 +319,4 @@ public class WordrailsService {
 			}
 		return ids;
 	}
-
-	public List<Integer> getWritableStationIds(StationsPermissions permissions) {
-		List<Integer> ids = new ArrayList<Integer>();
-		if(permissions.stationPermissionDtos != null)
-			for (StationPermission sp : permissions.stationPermissionDtos) {
-				if(sp.writable || sp.writer || sp.editor)
-					ids.add(sp.stationId);
-			}
-		return ids;
-	}
-
-	@Async
-	@Transactional
-	public void updateLastLogin(String username) {
-		queryPersistence.updateLastLogin(username);
-	}
-
-	@Async
-	@Transactional
-	public void deleteTaxonomyNetworks(Taxonomy taxonomy){
-		taxonomyRepository.deleteTaxonomyNetworks(taxonomy.id);
-	}
 }
