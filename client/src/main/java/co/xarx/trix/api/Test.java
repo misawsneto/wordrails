@@ -257,21 +257,21 @@ public class Test {
 		station1.name = "Estação 1";
 //		station1.networks = new HashSet<String>();
 //		station1.networks.add(network.getSelf());
-		station1.network = network.getSelf();
+//		station1.network = network.getSelf();
 		wordRails.postStation(station1);
 
 		StationDto station2 = new StationDto();
 		station2.name = "Estação 2";
 //		station2.networks = new HashSet<String>();
 //		station2.networks.add(network.getSelf());
-		station2.network = network.getSelf();
+//		station2.network = network.getSelf();
 		wordRails.postStation(station2);
 
 		StationDto station3 = new StationDto();
 		station3.name = "Estação 3";
 //		station3.networks = new HashSet<String>();
 //		station3.networks.add(network.getSelf());
-		station3.network = network.getSelf();
+//		station3.network = network.getSelf();
 		wordRails.postStation(station3);
 
 		List<String> l = new ArrayList<String>();
