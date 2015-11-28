@@ -1,6 +1,6 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.FileContentsRepository;

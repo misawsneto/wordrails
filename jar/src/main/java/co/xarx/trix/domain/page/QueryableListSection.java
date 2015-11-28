@@ -4,9 +4,11 @@ import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +27,14 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 	@OneToOne
 	public PageableQuery pageableQuery;
 
+	@JsonIgnore
 	@Transient
 	public Map<Integer, Block> blocks;
+
+	@JsonProperty("blocks")
+	public Collection<Block> getBlockList() {
+		return blocks.values();
+	}
 
 	@NotNull
 	public boolean isPageable = false;
@@ -36,6 +44,8 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 
 	@Override
 	public PageableQuery getPageableQuery() {
+		if(pageableQuery == null) return null;
+
 		pageableQuery.setFrom(0);
 		pageableQuery.setSize(this.getSize());
 		return pageableQuery;

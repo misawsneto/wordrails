@@ -1,34 +1,23 @@
 package co.xarx.trix.web.rest;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import co.xarx.trix.api.ContentResponse;
+import co.xarx.trix.api.NotificationView;
+import co.xarx.trix.converter.NotificationConverter;
+import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.persistence.NotificationRepository;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.api.ContentResponse;
-import co.xarx.trix.api.NotificationView;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
-import co.xarx.trix.converter.NotificationConverter;
-import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.domain.Notification;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.persistence.NotificationRepository;
-import co.xarx.trix.persistence.PostRepository;
-//import org.hibernate.search.jpa.FullTextEntityManager;
-//import org.hibernate.search.jpa.FullTextQuery;
-//import org.hibernate.search.query.dsl.QueryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
-
-import co.xarx.trix.persistence.QueryPersistence;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,20 +28,10 @@ public class NotificationsResource {
 	private @Context HttpServletRequest request;
 	private @Context UriInfo uriInfo;
 	private @Context HttpServletResponse response;
-
-	private @Autowired
-	WordrailsService wordrailsService;
-	private @Autowired
-	PostRepository postRepository;
-	private @Autowired
-	PostConverter postConverter;
 	private @Autowired
 	NotificationRepository notificationRepository;
 	private @Autowired
 	TrixAuthenticationProvider authProvider;
-	private @Autowired QueryPersistence queryPersistence;
-	
-	private @PersistenceContext EntityManager manager;
 	
 	private @Autowired
 	NotificationConverter notificationConverter;

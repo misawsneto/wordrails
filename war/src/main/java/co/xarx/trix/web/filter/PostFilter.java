@@ -1,7 +1,7 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.WordrailsService;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.domain.page.Page;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -58,6 +59,7 @@ public class Station extends BaseEntity implements Serializable{
 	@OneToMany(mappedBy="station", cascade=CascadeType.REMOVE)
 	public Set<StationRole> personsStationRoles;
 
+	@JsonIgnore
 	@OneToMany(mappedBy="station")
 	public Set<Post> posts;
 

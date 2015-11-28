@@ -8,16 +8,4 @@ public interface Section {
 	String getType();
 
 	String getLayout();
-
-	Page getPage();
-
-	void setPage(Page page);
-
-	Integer getIndex();
-
-	void setIndex(Integer index);
-
-	void setTitle(String title);
-
-	void setLayout(String style);
 }

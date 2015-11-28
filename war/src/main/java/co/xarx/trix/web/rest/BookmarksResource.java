@@ -5,7 +5,7 @@ import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.BooleanResponse;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.StationsPermissions;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.Bookmark;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;

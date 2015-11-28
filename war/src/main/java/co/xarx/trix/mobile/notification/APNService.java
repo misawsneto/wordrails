@@ -1,6 +1,6 @@
 package co.xarx.trix.mobile.notification;
 
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.CertificateIosRepository;
 import co.xarx.trix.persistence.PersonNetworkTokenRepository;

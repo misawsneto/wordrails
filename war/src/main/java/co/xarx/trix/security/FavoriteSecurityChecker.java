@@ -1,22 +1,14 @@
 package co.xarx.trix.security;
 
-import java.util.List;
-
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.NetworkRepository;
-import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import co.xarx.trix.domain.Bookmark;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.Recommend;
-import co.xarx.trix.domain.Station;
-import co.xarx.trix.domain.StationRole;
+import java.util.List;
 
 @Component
 public class FavoriteSecurityChecker {
@@ -26,8 +18,6 @@ public class FavoriteSecurityChecker {
 	NetworkRepository networkRepository;
 	private @Autowired
 	StationRepository stationRepository;
-	private @Autowired
-	PostRepository postRepository;
 	private @Autowired
 	StationRolesRepository personStationRolesRepository;
 

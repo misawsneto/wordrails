@@ -2,7 +2,7 @@ package co.xarx.trix.eventhandler;
 
 import java.util.*;
 
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;

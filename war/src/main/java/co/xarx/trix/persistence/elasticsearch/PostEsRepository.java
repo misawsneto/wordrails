@@ -64,6 +64,7 @@ public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 		}
 
 		SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
+
 		return getViews(searchResponse.getHits().hits());
 	}
 

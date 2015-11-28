@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.services.CacheService;

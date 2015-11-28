@@ -1,10 +1,11 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.domain.Identifiable;
 import co.xarx.trix.domain.page.Block;
+import co.xarx.trix.domain.page.BlockImpl;
 import co.xarx.trix.domain.query.*;
 import co.xarx.trix.factory.ElasticSearchExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Identifiable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,18 +20,7 @@ public class QueryExecutorService implements QueryExecutor {
 		Map<Integer, Block> blocks = new TreeMap<>();
 
 		while (itens.hasNext() && indexes.hasNext()) {
-			Block block = new Block() {
-				@Override
-				public Identifiable getObject() {
-					return itens.next();
-				}
-
-				@Override
-				public String getObjectName() {
-					return objectName;
-				}
-			};
-
+			BlockImpl block = new BlockImpl(itens.next(), objectName);
 			blocks.put(indexes.next(), block);
 		}
 

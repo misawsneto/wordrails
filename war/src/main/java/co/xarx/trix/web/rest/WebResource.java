@@ -6,24 +6,21 @@ import co.xarx.trix.domain.page.*;
 import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
-import co.xarx.trix.persistence.FixedQueryRepository;
-import co.xarx.trix.persistence.PageRepository;
-import co.xarx.trix.persistence.PageableQueryRepository;
-import co.xarx.trix.persistence.StationRepository;
+import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.PageService;
+import co.xarx.trix.util.Constants;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -42,12 +39,15 @@ public class WebResource {
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
+	private BaseSectionRepository sectionRepository;
+	@Autowired
 	private PageService pageService;
 
 	@Profile
 	@GET
 	@Path("/{stationId}/pages")
-	public Iterable<Page> getPages(@PathParam("stationId") Integer stationId) throws IOException {
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Page> getPages(@PathParam("stationId") Integer stationId) throws IOException {
 		QPage qPage = QPage.page;
 		Iterable<Page> pages = pageRepository.findAll(qPage.station.id.eq(stationId));
 
@@ -63,7 +63,8 @@ public class WebResource {
 					});
 		}
 
-		return pages;
+
+		return Lists.newArrayList(pages);
 	}
 
 	@POST
@@ -102,18 +103,20 @@ public class WebResource {
 
 		QueryableListSection section1 = new QueryableListSection();
 		section1.setTitle("Section 1");
-		section1.setPage(page);
 		section1.setSize(10);
 		section1.setPageable(true);
 		section1.setPageableQuery(pageableQuery);
 		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
+		section1.setLayout(Constants.Layout.VERTICAL_LIST);
+		sectionRepository.save(section1);
 
 		QueryableListSection section2 = new QueryableListSection();
-		section1.setTitle("Section 2");
-		section1.setPage(page);
-		section1.setSize(5);
-		section1.setPageable(false);
-		section1.setFixedQueries(Lists.newArrayList(fixedQuery2));
+		section2.setTitle("Section 2");
+		section2.setSize(5);
+		section2.setPageable(false);
+		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));
+		section2.setLayout(Constants.Layout.VERTICAL_LIST);
+		sectionRepository.save(section2);
 
 		page.setSections(new TreeMap<Integer, BaseSection>() {{put(0, section1); put(1, section2);}});
 

@@ -1,7 +1,7 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.CacheService;

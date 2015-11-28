@@ -73,7 +73,6 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 
 		QueryableListSection section1 = new QueryableListSection();
 		section1.setTitle("Section 1");
-		section1.setPage(page);
 		section1.setSize(10);
 		section1.setPageable(true);
 		section1.setPageableQuery(pageableQuery);
@@ -81,7 +80,6 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 
 		QueryableListSection section2 = new QueryableListSection();
 		section2.setTitle("Section 2");
-		section2.setPage(page);
 		section2.setSize(5);
 		section2.setPageable(false);
 		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));

@@ -19,7 +19,7 @@ import java.util.Set;
 		discriminatorType=DiscriminatorType.STRING
 )
 @DiscriminatorValue(value="PUBLISHED")
-public class Post implements Serializable {
+public class Post implements Serializable, Identifiable {
 
 	public static final String STATE_DRAFT = "DRAFT";
 	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
@@ -34,6 +34,11 @@ public class Post implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	public Integer originalPostId;
 

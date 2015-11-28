@@ -1,12 +1,15 @@
 package co.xarx.trix.api;
 
-import org.springframework.hateoas.Identifiable;
+import co.xarx.trix.domain.Identifiable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PostView implements Serializable, Identifiable {
+
 	private static final long serialVersionUID = -1474032487285763669L;
 
 	@Override
@@ -77,15 +80,11 @@ public class PostView implements Serializable, Identifiable {
 	public String featuredAudioHash;
 
 	public Double lat;
-
 	public Double lng;
 
 	public String subheading;
-
 	public Date scheduledDate;
-
 	public boolean notify;
-
 	public Integer f;
 
 	public Map<String, String> featuredImage;

@@ -13,7 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import co.xarx.trix.api.BooleanResponse;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 //import org.hibernate.search.jpa.FullTextEntityManager;
 //import org.hibernate.search.jpa.FullTextQuery;
 //import org.hibernate.search.query.dsl.QueryBuilder;

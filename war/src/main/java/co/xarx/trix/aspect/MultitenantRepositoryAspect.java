@@ -45,20 +45,23 @@ public class MultitenantRepositoryAspect {
 				for (Type genericType : ((ParameterizedType) f.getGenericType()).getActualTypeArguments()) {
 					if(classType.isAssignableFrom(Class.forName(genericType.toString()
 							.replace("class ", "").replace("interface ", "")))) {
-						toReturn.addAll((Collection<T>) f.get(obj));
+						Object o = f.get(obj);
+						if(o != null) toReturn.addAll((Collection<T>) o);
 					}
 				}
 			} else if(Map.class.isAssignableFrom(type)) {
 				Map map = (Map) f.get(obj);
-				for(Object o : map.keySet()) {
-					if(classType.isAssignableFrom(o.getClass())) {
-						toReturn.add((T) o);
-					} else break;
-				}
-				for(Object o : map.values()) {
-					if(classType.isAssignableFrom(o.getClass())) {
-						toReturn.add((T) o);
-					} else break;
+				if (map != null) {
+					for(Object o : map.keySet()) {
+						if(classType.isAssignableFrom(o.getClass())) {
+							toReturn.add((T) o);
+						} else break;
+					}
+					for(Object o : map.values()) {
+						if(classType.isAssignableFrom(o.getClass())) {
+							toReturn.add((T) o);
+						} else break;
+					}
 				}
 			}
 		}

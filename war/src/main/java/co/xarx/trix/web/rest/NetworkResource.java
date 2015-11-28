@@ -4,7 +4,7 @@ import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.NetworkPermission;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.dto.NetworkCreateDto;
 import co.xarx.trix.eventhandler.PostEventHandler;

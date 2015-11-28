@@ -1,7 +1,7 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.api.AbstractAuthorizationFilter;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
@@ -1256,11 +1256,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetBaseSectionAuthorized(Integer baseSectionId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetBaseSectionPageAuthorized(Integer baseSectionId) {
 		return false;
 	}
 
