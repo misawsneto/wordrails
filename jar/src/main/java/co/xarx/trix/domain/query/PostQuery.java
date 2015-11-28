@@ -3,6 +3,7 @@ package co.xarx.trix.domain.query;
 import co.xarx.trix.util.Constants;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -23,9 +24,27 @@ public class PostQuery extends BaseObjectQuery implements ElasticSearchObjectQue
 	@JoinTable(name = "query_object_post_categories")
 	public List<String> categories;
 
+	@Column(name = "author_username")
 	public String authorUsername;
-	public Integer stationId;
+
+	@Column(name = "all_readable_stations")
+	public boolean allReadableStations;
+
+	@NotNull
+	@ElementCollection
+	@JoinTable(name = "query_object_post_stations")
+	public List<Integer> stationIds;
+
+	@Column(name = "rich_text")
 	public String richText;
+
+	public boolean isAllReadableStations() {
+		return allReadableStations;
+	}
+
+	public void setAllReadableStations(boolean allReadableStations) {
+		this.allReadableStations = allReadableStations;
+	}
 
 	public Date getBefore() {
 		return before;
@@ -67,12 +86,12 @@ public class PostQuery extends BaseObjectQuery implements ElasticSearchObjectQue
 		this.authorUsername = authorUsername;
 	}
 
-	public Integer getStationId() {
-		return stationId;
+	public List<Integer> getStationIds() {
+		return stationIds;
 	}
 
-	public void setStationId(Integer stationId) {
-		this.stationId = stationId;
+	public void setStationIds(List<Integer> stationIds) {
+		this.stationIds = stationIds;
 	}
 
 	public String getRichText() {
@@ -85,7 +104,7 @@ public class PostQuery extends BaseObjectQuery implements ElasticSearchObjectQue
 
 	@Override
 	public ElasticSearchQuery build(QueryBuilder builder) {
-		return builder.build(this);
+		return ((ElasticSearchQueryBuilder) builder).build(this);
 	}
 
 	@Override

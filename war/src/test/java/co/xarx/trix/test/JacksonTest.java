@@ -46,14 +46,14 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 	@Test
 	public void serializePage() throws JsonProcessingException, FileNotFoundException {
 		PostQuery postQuery1 = new PostQuery();
-		postQuery1.setStationId(11);
+		postQuery1.setStationIds(Lists.newArrayList(11));
 		postQuery1.setRichText("dilma");
 
 		PageableQuery pageableQuery = new PageableQuery();
 		pageableQuery.setObjectQuery(postQuery1);
 
 		PostQuery postQuery2 = new PostQuery();
-		postQuery2.setStationId(11);
+		postQuery2.setStationIds(Lists.newArrayList(11));
 		postQuery2.setRichText("fhc");
 
 		FixedQuery fixedQuery1 = new FixedQuery();

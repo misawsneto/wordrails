@@ -41,4 +41,12 @@ public final class Constants {
 		public static final String POST = "post";
 		public static final String BOOKMARK = "bookmark";
 	}
+
+	public static class Post {
+		public static final String STATE_DRAFT = "DRAFT";
+		public static final String STATE_NO_AUTHOR = "NOAUTHOR";
+		public static final String STATE_TRASH = "TRASH";
+		public static final String STATE_PUBLISHED = "PUBLISHED";
+		public static final String STATE_SCHEDULED = "SCHEDULED";
+	}
 }

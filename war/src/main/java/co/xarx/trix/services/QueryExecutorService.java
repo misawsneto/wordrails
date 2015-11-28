@@ -14,7 +14,7 @@ import java.util.*;
 public class QueryExecutorService implements QueryExecutor {
 
 	@Autowired
-	private QueryBuilderExecutor queryBuilderExecutor;
+	private ElasticSearchQueryBuilderExecutor elasticSearchQueryBuilderExecutor;
 	@Autowired
 	private ElasticSearchExecutorFactory elasticSearchExecutorFactory;
 
@@ -35,7 +35,7 @@ public class QueryExecutorService implements QueryExecutor {
 		ObjectQuery objectQuery = query.getObjectQuery();
 		if(objectQuery instanceof ElasticSearchObjectQuery) {
 			ElasticSearchExecutor executor = elasticSearchExecutorFactory.getExecutor(objectType + "_executor");
-			itens = executor.execute((ElasticSearchQuery) objectQuery.build(queryBuilderExecutor), size, from);
+			itens = executor.execute((ElasticSearchQuery) objectQuery.build(elasticSearchQueryBuilderExecutor), size, from);
 		}
 
 		return itens;

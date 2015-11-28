@@ -73,7 +73,7 @@ public class WebResource {
 	@Path("/page")
 	public Response postPage() {
 		PostQuery postQuery1 = new PostQuery();
-		postQuery1.setStationId(11);
+		postQuery1.setStationIds(Lists.newArrayList(11));
 		postQuery1.setRichText("dilma");
 		objectQueryRepository.save(postQuery1);
 
@@ -82,7 +82,7 @@ public class WebResource {
 		pageableQueryRepository.save(pageableQuery);
 
 		PostQuery postQuery2 = new PostQuery();
-		postQuery2.setStationId(11);
+		postQuery2.setStationIds(Lists.newArrayList(11));
 		postQuery2.setRichText("fhc");
 		objectQueryRepository.save(postQuery2);
 

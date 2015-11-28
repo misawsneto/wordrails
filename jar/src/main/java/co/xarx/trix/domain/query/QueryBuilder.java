@@ -1,6 +1,6 @@
 package co.xarx.trix.domain.query;
 
-public interface QueryBuilder {
+public interface QueryBuilder<T> {
 
-	ElasticSearchQuery build(PostQuery query);
+	T build(PostQuery query);
 }
