@@ -3,9 +3,9 @@ package co.xarx.trix.web.rest;
 import co.xarx.trix.aspect.annotations.Profile;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.page.*;
-import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
+import co.xarx.trix.domain.query.PostQuery;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.PageService;
 import co.xarx.trix.util.Constants;
@@ -41,6 +41,8 @@ public class WebResource {
 	@Autowired
 	private BaseSectionRepository sectionRepository;
 	@Autowired
+	private BaseObjectQueryRepository objectQueryRepository;
+	@Autowired
 	private PageService pageService;
 
 	@Profile
@@ -70,28 +72,28 @@ public class WebResource {
 	@POST
 	@Path("/page")
 	public Response postPage() {
-		ElasticSearchQuery q1 = new ElasticSearchQuery();
-		q1.setQueryString("{ \"bool\" : { \"must\" : [ { \"multi_match\" : { \"query\" : \"dilma\", \"fields\" : [ \"body^2.0\", \"title^5.0\", \"topper\", \"subheading\", \"authorName\", \"terms.name\" ], \"prefix_length\" : 1 } }, { \"match\" : { \"state\" : { \"query\" : \"PUBLISHED\", \"type\" : \"boolean\" } } }, { \"bool\" : { \"should\" : [ { \"match\" : { \"stationId\" : { \"query\" : \"11\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"14\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"55\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"75\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"76\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"77\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"137\", \"type\": \"boolean\" } } }]} } ]} }");
-		q1.setObjectName("post");
-		q1.setHighlightedField("body");
+		PostQuery postQuery1 = new PostQuery();
+		postQuery1.setStationId(11);
+		postQuery1.setRichText("dilma");
+		objectQueryRepository.save(postQuery1);
 
 		PageableQuery pageableQuery = new PageableQuery();
-		pageableQuery.setElasticSearchQuery(q1);
-
+		pageableQuery.setObjectQuery(postQuery1);
 		pageableQueryRepository.save(pageableQuery);
 
-		ElasticSearchQuery q2 = new ElasticSearchQuery();
-		q2.setQueryString("{ \"bool\" : { \"must\" : [ { \"multi_match\" : { \"query\" : \"fhc\", \"fields\" : [ \"body^2.0\", \"title^5.0\", \"topper\", \"subheading\", \"authorName\", \"terms.name\" ], \"prefix_length\" : 1 } }, { \"match\" : { \"state\" : { \"query\" : \"PUBLISHED\", \"type\" : \"boolean\" } } }, { \"bool\" : { \"should\" : [ { \"match\" : { \"stationId\" : { \"query\" : \"11\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"14\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"55\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"75\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"76\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"77\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"137\", \"type\": \"boolean\" } } }]} } ]} }");
-		q2.setObjectName("post");
-		q2.setHighlightedField("body");
+		PostQuery postQuery2 = new PostQuery();
+		postQuery2.setStationId(11);
+		postQuery2.setRichText("fhc");
+		objectQueryRepository.save(postQuery2);
+
 		FixedQuery fixedQuery1 = new FixedQuery();
-		fixedQuery1.setElasticSearchQuery(q2);
+		fixedQuery1.setObjectQuery(postQuery2);
 		fixedQuery1.setIndexes(Sets.newHashSet(0, 2, 3));
 
 		fixedQueryRepository.save(fixedQuery1);
 
 		FixedQuery fixedQuery2 = new FixedQuery();
-		fixedQuery2.setElasticSearchQuery(q2);
+		fixedQuery2.setObjectQuery(postQuery2);
 		fixedQuery2.setIndexes(Sets.newHashSet(0, 1, 2, 3, 4));
 
 		fixedQueryRepository.save(fixedQuery2);
@@ -107,7 +109,8 @@ public class WebResource {
 		section1.setPageable(true);
 		section1.setPageableQuery(pageableQuery);
 		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
-		section1.setLayout(Constants.Layout.VERTICAL_LIST);
+		section1.setBlockLayout(Constants.Layout.BLOCK_OVER_IMAGE);
+		section1.setSectionLayout(Constants.Layout.SECTION_VERTICAL_LIST);
 		sectionRepository.save(section1);
 
 		QueryableListSection section2 = new QueryableListSection();
@@ -115,7 +118,8 @@ public class WebResource {
 		section2.setSize(5);
 		section2.setPageable(false);
 		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));
-		section2.setLayout(Constants.Layout.VERTICAL_LIST);
+		section2.setBlockLayout(Constants.Layout.BLOCK_OVER_IMAGE);
+		section2.setSectionLayout(Constants.Layout.SECTION_VERTICAL_LIST);
 		sectionRepository.save(section2);
 
 		page.setSections(new TreeMap<Integer, BaseSection>() {{put(0, section1); put(1, section2);}});

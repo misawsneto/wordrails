@@ -7,5 +7,7 @@ public interface Section {
 
 	String getType();
 
-	String getLayout();
+	String getBlockLayout();
+
+	String getSectionLayout();
 }

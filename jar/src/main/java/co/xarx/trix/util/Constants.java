@@ -28,14 +28,17 @@ public final class Constants {
 	}
 
 	public static class Layout {
-		public static final String HORIZONTAL_ORIENTATION = "horizontal";
-		public static final String VERTICAL_ORIENTATION = "vertical";
+		public static final String SECTION_HORIZONTAL_ORIENTATION = "horizontal_orientation";
+		public static final String SECTION_VERTICAL_ORIENTATION = "vertical_orientation";
 
-		public static final String VERTICAL_LIST = "vertical_list";
+		public static final String SECTION_VERTICAL_LIST = "vertical_list";
+
+		public static final String BLOCK_UNDER_IMAGE = "under_image";
+		public static final String BLOCK_OVER_IMAGE = "over_image";
 	}
 
-	public static class ElasticSearch {
-		public static final String TYPE_POST = "post";
-		public static final String TYPE_BOOKMARK = "bookmark";
+	public static class ObjectType {
+		public static final String POST = "post";
+		public static final String BOOKMARK = "bookmark";
 	}
 }

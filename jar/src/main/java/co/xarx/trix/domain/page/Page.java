@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @Entity
+@Table(name = "page")
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
 public class Page extends BaseEntity {
 

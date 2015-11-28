@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "section_base")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
 public abstract class BaseSection extends BaseEntity implements Section, Serializable {
@@ -18,19 +20,31 @@ public abstract class BaseSection extends BaseEntity implements Section, Seriali
 	public String title;
 
 	@NotNull
-	public String layout;
+	public String sectionLayout;
+
+	@NotNull
+	public String blockLayout;
+
+	@Override
+	public String getBlockLayout() {
+		return blockLayout;
+	}
+
+	public void setBlockLayout(String blockLayout) {
+		this.blockLayout = blockLayout;
+	}
 
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-	public void setLayout(String layout) {
-		this.layout = layout;
+	public void setSectionLayout(String layout) {
+		this.sectionLayout = layout;
 	}
 
 	@Override
-	public String getLayout() {
-		return layout;
+	public String getSectionLayout() {
+		return sectionLayout;
 	}
 
 	@Override

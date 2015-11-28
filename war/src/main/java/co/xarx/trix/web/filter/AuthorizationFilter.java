@@ -110,16 +110,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetElasticSearchQueriesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetElasticSearchQueryAuthorized(Integer elasticSearchQueryId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetFilesAuthorized() {
 		return false;
 	}
@@ -140,7 +130,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetFixedQueryQueryAuthorized(Integer fixedQueryId) {
+	protected boolean isGetFixedQueryObjectQueryAuthorized(Integer fixedQueryId) {
 		return false;
 	}
 
@@ -1125,7 +1115,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPageableQueryQueryAuthorized(Integer pageableQueryId) {
+	protected boolean isGetPageableQueryObjectQueryAuthorized(Integer pageableQueryId) {
 		return false;
 	}
 
@@ -1246,6 +1236,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetAndroidAppIconAuthorized(Integer androidAppId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetBaseObjectQueriesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetBaseObjectQueryAuthorized(Integer baseObjectQueryId) {
 		return false;
 	}
 

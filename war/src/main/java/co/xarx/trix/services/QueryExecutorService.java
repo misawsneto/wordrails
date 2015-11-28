@@ -14,6 +14,8 @@ import java.util.*;
 public class QueryExecutorService implements QueryExecutor {
 
 	@Autowired
+	private QueryBuilderExecutor queryBuilderExecutor;
+	@Autowired
 	private ElasticSearchExecutorFactory elasticSearchExecutorFactory;
 
 	private Map<Integer, Block> getBlocks(Iterator<Identifiable> itens, Iterator<Integer> indexes, String objectName) {
@@ -27,23 +29,27 @@ public class QueryExecutorService implements QueryExecutor {
 		return blocks;
 	}
 
+	private List<Identifiable> getItens(Query query, Integer size, Integer from) {
+		List<Identifiable> itens = new ArrayList<>();
+		String objectType = query.getObjectType();
+		ObjectQuery objectQuery = query.getObjectQuery();
+		if(objectQuery instanceof ElasticSearchObjectQuery) {
+			ElasticSearchExecutor executor = elasticSearchExecutorFactory.getExecutor(objectType + "_executor");
+			itens = executor.execute((ElasticSearchQuery) objectQuery.build(queryBuilderExecutor), size, from);
+		}
+
+		return itens;
+	}
+
 	@Override
 	public Map<Integer, Block> execute(FixedQuery query) {
-		ElasticSearchQuery esQuery = query.getElasticSearchQuery();
-		ElasticSearchExecutor executor = elasticSearchExecutorFactory.getElasticSearchExecutor(esQuery.getObjectName() + "_executor");
-
-		Set<Integer> indexes = query.getIndexes();
-		List<Identifiable> itens = executor.execute(esQuery, indexes.size(), 0);
-		return getBlocks(itens.iterator(), indexes.iterator(), esQuery.getObjectName());
+		List<Identifiable> itens = getItens(query, query.getIndexes().size(), 0);
+		return getBlocks(itens.iterator(), query.getIndexes().iterator(), query.getObjectType());
 	}
 
 	@Override
 	public Map<Integer, Block> execute(PageableQuery query) {
-		ElasticSearchQuery esQuery = query.getElasticSearchQuery();
-		ElasticSearchExecutor executor = elasticSearchExecutorFactory.getElasticSearchExecutor(esQuery.getObjectName() + "_executor");
-
-		Set<Integer> indexes = query.getIndexes();
-		List<Identifiable> itens = executor.execute(esQuery, query.getSize(), query.getFrom());
-		return getBlocks(itens.iterator(), indexes.iterator(), esQuery.getObjectName());
+		List<Identifiable> itens = getItens(query, query.getSize(), query.getFrom());
+		return getBlocks(itens.iterator(), query.getIndexes().iterator(), query.getObjectType());
 	}
 }

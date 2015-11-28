@@ -9,10 +9,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Entity
+@Table(name = "section_queryable_list")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class QueryableListSection extends BaseSection implements ListSection, QueryableSection {
 
@@ -33,6 +35,8 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 
 	@JsonProperty("blocks")
 	public Collection<Block> getBlockList() {
+		if(blocks == null) blocks = new HashMap<>();
+
 		return blocks.values();
 	}
 
@@ -67,6 +71,7 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isPageable() {
 		return isPageable;
 	}

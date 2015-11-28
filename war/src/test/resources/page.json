@@ -1,29 +1,23 @@
 {
-  "id": null,
-  "networkId": null,
   "title": "Home",
-  "sections": {
-	"0": {
-	  "id": null,
-	  "networkId": null,
+  "sections": [
+	{
 	  "title": "Section 1",
-	  "layout": "vertical_list",
-	  "blocks": null,
+	  "sectionLayout": "vertical_list",
+	  "blockLayout": "over_image",
 	  "isPageable": true,
 	  "size": 10,
-	  "type": "queryable_list_section",
-	  "pageable": true
+	  "type": "queryable_list",
+	  "blocks": []
 	},
-	"1": {
-	  "id": null,
-	  "networkId": null,
+	{
 	  "title": "Section 2",
-	  "layout": "vertical_list",
-	  "blocks": null,
+	  "sectionLayout": "vertical_list",
+	  "blockLayout": "over_image",
 	  "isPageable": false,
 	  "size": 5,
-	  "type": "queryable_list_section",
-	  "pageable": false
+	  "type": "queryable_list",
+	  "blocks": []
 	}
-  }
+  ]
 }

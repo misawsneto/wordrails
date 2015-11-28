@@ -6,38 +6,21 @@ import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.wrapperQuery;
 
-@Entity
-@Table(name = "esquery")
 public class ElasticSearchQuery<T> extends BaseEntity {
 
-	@Lob
-	@NotNull
 	public String boolQueryString;
-
-	@ElementCollection
-	@JoinTable(name = "es_sorts", joinColumns = @JoinColumn(name = "query_id"))
-	@Column(name = "sort_string", nullable = false)
-	public List<String> sortStrings;
-
 	public String highlightedField;
-	@NotNull
 	public String objectName;
-	@Transient
 	private BoolQueryBuilder boolQueryBuilder;
-	@Transient
 	private List<FieldSortBuilder> fieldSortBuilders;
 
 	private static Map<String, Iterable<Object>> fromSource(String source, String value) {
@@ -92,12 +75,28 @@ public class ElasticSearchQuery<T> extends BaseEntity {
 		return boolQuery;
 	}
 
-	public void setQueryString(String boolQueryString) {
+	public String getBoolQueryString() {
+		return boolQueryString;
+	}
+
+	public void setBoolQueryString(String boolQueryString) {
 		this.boolQueryString = boolQueryString;
 	}
 
-	public void setSortStrings(List<String> sortStrings) {
-		this.sortStrings = sortStrings;
+	public void setBoolQueryBuilder(BoolQueryBuilder boolQueryBuilder) {
+		this.boolQueryBuilder = boolQueryBuilder;
+	}
+
+	public List<FieldSortBuilder> getFieldSortBuilders() {
+		return fieldSortBuilders;
+	}
+
+	public void setFieldSortBuilders(List<FieldSortBuilder> fieldSortBuilders) {
+		this.fieldSortBuilders = fieldSortBuilders;
+	}
+
+	public void setQueryString(String boolQueryString) {
+		this.boolQueryString = boolQueryString;
 	}
 
 	public String getObjectName() {
@@ -108,14 +107,19 @@ public class ElasticSearchQuery<T> extends BaseEntity {
 		this.objectName = objectName;
 	}
 
-	public List<FieldSortBuilder> getFieldSortBuilders() {
-		if (fieldSortBuilders == null && sortStrings != null && !sortStrings.isEmpty()) {
-			fieldSortBuilders = new ArrayList<>();
-			sortStrings.stream().forEach(sort -> fieldSortBuilders.add(SortBuilders.fieldSort(sort)));
-		}
-
-		return fieldSortBuilders;
-	}
+//	public List<FieldSortBuilder> getFieldSortBuilders() {
+//		if (fieldSortBuilders == null && sortStrings != null && !sortStrings.isEmpty()) {
+//			fieldSortBuilders = new ArrayList<>();
+//			sortStrings.keySet().stream().forEach(sort -> {
+//				FieldSortBuilder fsb = SortBuilders.fieldSort(sort);
+//				if(sortStrings.get(sort).equals("desc")) fsb.order(SortOrder.DESC);
+//				else fsb.order(SortOrder.ASC);
+//				fieldSortBuilders.add(SortBuilders.fieldSort(sort));
+//			});
+//		}
+//
+//		return fieldSortBuilders;
+//	}
 
 	public BoolQueryBuilder getBoolQueryBuilder() {
 		if (boolQueryBuilder == null && boolQueryString != null && !boolQueryString.isEmpty()) {

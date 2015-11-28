@@ -9,11 +9,13 @@ import java.util.Set;
 @MappedSuperclass
 public interface Query {
 
+	default String getObjectType() {
+		return getObjectQuery().getObjectType();
+	}
+
 	Set<Integer> getIndexes();
 
-	void setElasticSearchQuery(ElasticSearchQuery query);
-
-	ElasticSearchQuery getElasticSearchQuery();
+	ObjectQuery getObjectQuery();
 
 	Map<Integer, Block> fetch(QueryExecutor executor); //visitor design pattern
 }

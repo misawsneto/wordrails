@@ -1,12 +1,15 @@
 package co.xarx.trix.test;
 
+import co.xarx.trix.api.PageView;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.domain.page.BaseSection;
 import co.xarx.trix.domain.page.Page;
 import co.xarx.trix.domain.page.QueryableListSection;
-import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
+import co.xarx.trix.domain.query.PostQuery;
+import co.xarx.trix.util.Constants;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
@@ -17,11 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.TreeMap;
 
@@ -34,27 +37,73 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 	ObjectMapper objectMapper;
 
 	@Test
-	public void serializePage() throws JsonProcessingException {
-		ElasticSearchQuery q1 = new ElasticSearchQuery();
-		q1.setQueryString("{ \"bool\" : { \"must\" : [ { \"multi_match\" : { \"query\" : \"dilma\", \"fields\" : [ \"body^2.0\", \"title^5.0\", \"topper\", \"subheading\", \"authorName\", \"terms.name\" ], \"prefix_length\" : 1 } }, { \"match\" : { \"state\" : { \"query\" : \"PUBLISHED\", \"type\" : \"boolean\" } } }, { \"bool\" : { \"should\" : [ { \"match\" : { \"stationId\" : { \"query\" : \"11\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"14\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"55\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"75\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"76\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"77\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"137\", \"type\": \"boolean\" } } }]} } ]} }");
-		q1.setObjectName("post");
-		q1.setHighlightedField("body");
+	public void deserializePage() throws IOException {
+		PageView view = objectMapper.readValue(new java.io.File("src/test/resources/page.json"), PageView.class);
+
+		System.out.println(view);
+	}
+
+	@Test
+	public void serializePage() throws JsonProcessingException, FileNotFoundException {
+		PostQuery postQuery1 = new PostQuery();
+		postQuery1.setStationId(11);
+		postQuery1.setRichText("dilma");
 
 		PageableQuery pageableQuery = new PageableQuery();
-		pageableQuery.setElasticSearchQuery(q1);
+		pageableQuery.setObjectQuery(postQuery1);
 
-		ElasticSearchQuery q2 = new ElasticSearchQuery();
-		q2.setQueryString("{ \"bool\" : { \"must\" : [ { \"multi_match\" : { \"query\" : \"fhc\", \"fields\" : [ \"body^2.0\", \"title^5.0\", \"topper\", \"subheading\", \"authorName\", \"terms.name\" ], \"prefix_length\" : 1 } }, { \"match\" : { \"state\" : { \"query\" : \"PUBLISHED\", \"type\" : \"boolean\" } } }, { \"bool\" : { \"should\" : [ { \"match\" : { \"stationId\" : { \"query\" : \"11\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"14\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"55\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"75\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"76\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"77\", \"type\": \"boolean\" } } },{ \"match\" : { \"stationId\" : { \"query\" : \"137\", \"type\": \"boolean\" } } }]} } ]} }");
-		q2.setObjectName("post");
-		q2.setHighlightedField("body");
+		PostQuery postQuery2 = new PostQuery();
+		postQuery2.setStationId(11);
+		postQuery2.setRichText("fhc");
+
 		FixedQuery fixedQuery1 = new FixedQuery();
-		fixedQuery1.setElasticSearchQuery(q2);
+		fixedQuery1.setObjectQuery(postQuery2);
 		fixedQuery1.setIndexes(Sets.newHashSet(0, 2, 3));
 
 		FixedQuery fixedQuery2 = new FixedQuery();
-		fixedQuery2.setElasticSearchQuery(q2);
+		fixedQuery2.setObjectQuery(postQuery2);
 		fixedQuery2.setIndexes(Sets.newHashSet(0, 1, 2, 3, 4));
 
+		Page page = new Page();
+		page.setTitle("Home");
+
+		QueryableListSection section1 = new QueryableListSection();
+		section1.setTitle("Section 1");
+		section1.setSize(10);
+		section1.setPageable(true);
+		section1.setPageableQuery(pageableQuery);
+		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
+		section1.setBlockLayout(Constants.Layout.BLOCK_OVER_IMAGE);
+		section1.setSectionLayout(Constants.Layout.SECTION_VERTICAL_LIST);
+
+		QueryableListSection section2 = new QueryableListSection();
+		section2.setTitle("Section 2");
+		section2.setSize(5);
+		section2.setPageable(false);
+		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));
+		section2.setBlockLayout(Constants.Layout.BLOCK_OVER_IMAGE);
+		section2.setSectionLayout(Constants.Layout.SECTION_VERTICAL_LIST);
+
+		page.setSections(new TreeMap<Integer, BaseSection>() {{put(0, section1); put(1, section2);}});
+
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		String json = objectMapper.writeValueAsString(page);
+
+		writeToFile("page.json", json);
+	}
+
+	private void writeToFile(String fileName, String string) throws FileNotFoundException {
+		PrintWriter writer = new PrintWriter("src/test/resources/" + fileName);
+		writer.print(string);
+		writer.close();
+	}
+
+	static String readFile(String fileName) throws IOException {
+		byte[] encoded = Files.readAllBytes(Paths.get("src/test/resources/" + fileName));
+		return new String(encoded, StandardCharsets.UTF_8);
+	}
+
+	private Station newStation() {
 		Station station = new Station();
 		station.id = 11;
 		station.name = "TUPY";
@@ -66,29 +115,7 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 		station.categoriesTaxonomyId = 140;
 		station.tagsTaxonomyId = 183;
 		station.networkId = 5;
-
-		Page page = new Page();
-		page.setTitle("Home");
-		page.setStation(station);
-
-		QueryableListSection section1 = new QueryableListSection();
-		section1.setTitle("Section 1");
-		section1.setSize(10);
-		section1.setPageable(true);
-		section1.setPageableQuery(pageableQuery);
-		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
-
-		QueryableListSection section2 = new QueryableListSection();
-		section2.setTitle("Section 2");
-		section2.setSize(5);
-		section2.setPageable(false);
-		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));
-
-		page.setSections(new TreeMap<Integer, BaseSection>() {{put(0, section1); put(1, section2);}});
-
-		String json = objectMapper.writeValueAsString(page);
-
-		System.out.println(json);
+		return station;
 	}
 
 	@Test
@@ -108,19 +135,10 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 
 	@Test
 	public void testPost() throws IOException {
-		String json = readFile("src/test/resources/post.json", StandardCharsets.UTF_8);
+		String json = readFile("src/test/resources/post.json");
 		Post post = objectMapper.readValue(json, Post.class);
 
 		Assert.assertNotNull(post);
-	}
-
-	static String readFile(String path, Charset encoding)
-			throws IOException
-	{
-		Path path1 = Paths.get(path);
-		System.out.println(path1.toAbsolutePath().toString());
-		byte[] encoded = Files.readAllBytes(path1);
-		return new String(encoded, encoding);
 	}
 
 	private Image createImage() {

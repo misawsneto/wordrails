@@ -53,6 +53,8 @@
 		<class>co.xarx.trix.domain.Video</class>
 		<class>co.xarx.trix.domain.query.FixedQuery</class>
 		<class>co.xarx.trix.domain.query.PageableQuery</class>
+		<class>co.xarx.trix.domain.query.BaseObjectQuery</class>
+		<class>co.xarx.trix.domain.query.PostQuery</class>
 
 
 		<properties>
