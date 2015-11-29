@@ -123,7 +123,7 @@ public class PostService {
 				Network network = cacheService.getNetwork(TenantContextHolder.getCurrentTenantId());
 
 
-				gcmService.sendToStation(station, notification);
+				gcmService.sendToStation(network, station, notification);
 				apnService.sendToStation(network, station.id, notification);
 			}
 		} catch (Exception e) {
