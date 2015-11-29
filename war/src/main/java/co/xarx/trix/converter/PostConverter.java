@@ -31,23 +31,19 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.mediumId = post.imageMediumId;
 		postView.largeId = post.imageLargeId;
 
+		postView.terms = post.terms;
+
 		if (post.featuredImage != null) {
+			postView.featuredImage = post.featuredImage.hashs;
 			postView.imageSmallHash = post.featuredImage.hashs.get(Image.SIZE_SMALL);
 			postView.imageMediumHash = post.featuredImage.hashs.get(Image.SIZE_MEDIUM);
 			postView.imageLargeHash = post.featuredImage.hashs.get(Image.SIZE_LARGE);
-            if(post.featuredImageHashes != null && post.featuredImageHashes.size() == 0){
-                postView.imageSmallHash = post.imageSmallHash;
-                postView.imageMediumHash = post.imageMediumHash;
-                postView.imageLargeHash = post.imageLargeHash;
-            }
 		}
 
 		postView.imageId = post.imageId;
 		postView.imageSmallId = post.imageSmallId;
 		postView.imageMediumId = post.imageMediumId;
 		postView.imageLargeId = post.imageLargeId;
-
-		postView.featuredImage = post.featuredImageHashes;
 
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;

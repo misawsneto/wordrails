@@ -57,7 +57,7 @@ public class PerspectiveEsRepository {
 	}
 
 	public void save(TermPerspective perspective) {
-		elasticSearchService.save(formatObjectJson(perspective), perspective.id.toString(), indexName, ES_TYPE);
+		elasticSearchService.index(formatObjectJson(perspective), perspective.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void update(TermPerspective perspective){

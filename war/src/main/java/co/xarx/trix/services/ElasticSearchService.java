@@ -34,10 +34,7 @@ public class ElasticSearchService {
 	}
 
 	public IndexResponse index(String doc, String id, String index, String type){
-		return client == null ? null:  client.prepareIndex(index, type, id)
-				.setSource(doc)
-				.execute()
-				.actionGet();
+		return client == null ? null : client.prepareIndex(index, type, id).setSource(doc).execute().actionGet();
 	}
 
 	public UpdateResponse update(String doc, String id, String index, String type){
@@ -48,16 +45,10 @@ public class ElasticSearchService {
 		updateRequest.doc(doc);
 		try {
 			return client.update(updateRequest).get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
+		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	public void save(String doc, String id, String index, String type){
-		index(doc, id, index, type);
 	}
 
 	public void delete(String id, String index, String type){

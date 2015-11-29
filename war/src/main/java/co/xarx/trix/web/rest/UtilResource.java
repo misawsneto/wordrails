@@ -827,10 +827,8 @@ public class UtilResource {
 
 	@GET
 	@Path("/indexPostsToElastisearch")
-	@Transactional(readOnly=false)
+	@Transactional
 	public void indexPostsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
 		if(isLocal(request.getHeader("Host"))){
 			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
 			for(int i = 0; i < all.size(); i++){
@@ -845,7 +843,7 @@ public class UtilResource {
 
 	@GET
 	@Path("/indexPersonsToElastisearch")
-	@Transactional(readOnly=false)
+	@Transactional
 	public void indexPersonsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
 		String host = request.getHeader("Host");
 

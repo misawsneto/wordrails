@@ -55,7 +55,7 @@ public class PersonEsRepository {
 	}
 
 	public void save(Person person) {
-		elasticSearchService.save(formatObjectJson(person), person.id.toString(), indexName, ES_TYPE);
+		elasticSearchService.index(formatObjectJson(person), person.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void update(Person person){

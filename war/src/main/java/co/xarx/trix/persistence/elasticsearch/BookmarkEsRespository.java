@@ -51,7 +51,7 @@ public class BookmarkEsRespository {
 	}
 
 	public void save(Bookmark bookmark) {
-		elasticSearchService.save(formatObjectJson(bookmark), bookmark.id.toString(), indexName, ES_TYPE);
+		elasticSearchService.index(formatObjectJson(bookmark), bookmark.id.toString(), indexName, ES_TYPE);
 	}
 
 	public void update(Bookmark bookmark){

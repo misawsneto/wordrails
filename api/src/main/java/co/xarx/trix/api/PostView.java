@@ -1,11 +1,13 @@
 package co.xarx.trix.api;
 
 import co.xarx.trix.domain.Identifiable;
+import co.xarx.trix.domain.Term;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostView implements Serializable, Identifiable {
@@ -30,6 +32,7 @@ public class PostView implements Serializable, Identifiable {
 	public String imageMediumHash;
 	public String imageLargeHash;
 
+	public Set<Term> terms;
 	public Boolean sponsored;
 	public java.util.Date date;
 	public String snippet;
