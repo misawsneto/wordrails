@@ -22,7 +22,7 @@ public class PostQuery extends BaseObjectQuery implements ElasticSearchObjectQue
 	public List<String> tags;
 	@ElementCollection
 	@JoinTable(name = "query_object_post_categories")
-	public List<String> categories;
+	public List<Integer> categories;
 
 	@Column(name = "author_username")
 	public String authorUsername;
@@ -70,11 +70,11 @@ public class PostQuery extends BaseObjectQuery implements ElasticSearchObjectQue
 		this.tags = tags;
 	}
 
-	public List<String> getCategories() {
+	public List<Integer> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<String> categories) {
+	public void setCategories(List<Integer> categories) {
 		this.categories = categories;
 	}
 

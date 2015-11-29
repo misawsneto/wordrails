@@ -4,6 +4,7 @@ import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.domain.query.ElasticSearchQueryBuilder;
 import co.xarx.trix.domain.query.PostQuery;
 import co.xarx.trix.util.Constants;
+import com.rometools.utils.Lists;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -56,7 +57,7 @@ public class ElasticSearchQueryBuilderExecutor implements ElasticSearchQueryBuil
 					.field("topper")
 					.field("subheading")
 					.field("authorName")
-					.field("terms.name")
+					.field("categories.name")
 					.prefixLength(1);
 
 			mainQuery = mainQuery.must(queryText);
@@ -64,6 +65,12 @@ public class ElasticSearchQueryBuilderExecutor implements ElasticSearchQueryBuil
 		if(query.getAuthorUsername() != null){
 			mainQuery = mainQuery.must(
 					matchQuery("authorUsername", query.getAuthorUsername()));
+		}
+		if(Lists.isNotEmpty(query.getTags())) {
+			mainQuery = mainQuery.should(termsQuery("tags", query.getTags()));
+		}
+		if(Lists.isNotEmpty(query.getCategories())) {
+			mainQuery = mainQuery.should(termsQuery("categories.id", query.getCategories()));
 		}
 
 		esQuery.setBoolQueryBuilder(mainQuery);

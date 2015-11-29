@@ -2,11 +2,14 @@ package co.xarx.trix.converter;
 
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.util.TrixUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
 
 @Component
 public class PostConverter extends AbstractConverter<Post, PostView> {
@@ -31,7 +34,13 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.mediumId = post.imageMediumId;
 		postView.largeId = post.imageLargeId;
 
-		postView.terms = post.terms;
+		postView.tags = post.tags;
+		if(post.terms != null && !post.terms.isEmpty()) {
+			postView.categories = new HashSet<>();
+			for (Term term : post.terms) {
+				postView.categories.add(new PostView.Term(term.id, term.name));
+			}
+		}
 
 		if (post.featuredImage != null) {
 			postView.featuredImage = post.featuredImage.hashs;

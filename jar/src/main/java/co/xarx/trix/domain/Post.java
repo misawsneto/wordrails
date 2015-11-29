@@ -128,6 +128,9 @@ public class Post implements Serializable, Identifiable {
 	@ManyToMany
 	public Set<Term> terms;
 
+	@ElementCollection
+	public Set<String> tags;
+
 	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean imageLandscape = true;
 

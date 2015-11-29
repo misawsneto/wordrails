@@ -1,7 +1,6 @@
 package co.xarx.trix.api;
 
 import co.xarx.trix.domain.Identifiable;
-import co.xarx.trix.domain.Term;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
@@ -13,6 +12,17 @@ import java.util.Set;
 public class PostView implements Serializable, Identifiable {
 
 	private static final long serialVersionUID = -1474032487285763669L;
+
+	public static class Term {
+
+		public Term(Integer id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+
+		public Integer id;
+		public String name;
+	}
 
 	@Override
 	public Serializable getId() {
@@ -32,7 +42,8 @@ public class PostView implements Serializable, Identifiable {
 	public String imageMediumHash;
 	public String imageLargeHash;
 
-	public Set<Term> terms;
+	public Set<PostView.Term> categories;
+	public Set<String> tags;
 	public Boolean sponsored;
 	public java.util.Date date;
 	public String snippet;

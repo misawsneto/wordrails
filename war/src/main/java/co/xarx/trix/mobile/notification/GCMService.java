@@ -1,5 +1,6 @@
 package co.xarx.trix.mobile.notification;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.dto.NotificationDto;
 import co.xarx.trix.persistence.NetworkRepository;
@@ -39,13 +40,14 @@ public class GCMService {
 	@Async
 	@Transactional
 	public void sendToStation(Station station, Notification notification){
+		Integer networkId = TenantContextHolder.getCurrentTenantId();
 
 		Integer stationId = station.id;
 
 		List<PersonNetworkRegId> personNetworkRegIds;
 
 		if(station.visibility.equals(Station.UNRESTRICTED)){
-			personNetworkRegIds = personNetworkRegIdRepository.findAll();
+			personNetworkRegIds = personNetworkRegIdRepository.findRegIdByNetworkId(networkId);
 		}else{
 			personNetworkRegIds = personNetworkRegIdRepository.findRegIdByStationId(stationId);
 		}

@@ -25,12 +25,15 @@ public class Term implements Serializable {
 	@Size(min=1, max=100)
 	public String name;
 
+	@JsonBackReference("cells")
 	@OneToMany(mappedBy="term")
 	public Set<Cell> cells;
-		
+
+	@JsonBackReference("posts")
 	@ManyToMany(mappedBy="terms")
 	public Set<Post> posts;
 
+	@JsonBackReference("rows")
 	@OneToMany(mappedBy="term")
 	public Set<Row> rows;
 	
@@ -45,6 +48,7 @@ public class Term implements Serializable {
 	@OneToMany(mappedBy="parent")
 	public Set<Term> children;
 
+	@JsonBackReference("termPerspectives")
 	@OneToMany(mappedBy="term")
 	public Set<TermPerspective> termPerspectives;
 
