@@ -34,7 +34,7 @@
 
   <md-sidenav id="select-stations" ng-if="app.stationsPermissions && app.stationsPermissions.length > 1" class="md-sidenav-left md-whiteframe-z2 pos-fix" md-component-id="stations-selector">
     <md-toolbar class="bg-header">
-      <h1 class="md-toolbar-tools bg-header-text"><i class="mdi mdi-radio-tower text-lg p-r-xs"></i>Estações</h1>
+      <h1 class="md-toolbar-tools bg-header-text"><i class="mdi mdi-radio-tower text-lg p-r-xs"></i>{{app.initData.network.id == 59 ?  'Idiomas' : 'Estações'}}</h1>
     </md-toolbar>
     <md-content layout-padding class="p-l-xl p-r-xl">
       <div class="scrollable">
@@ -84,7 +84,7 @@
             <button ng-if="app.initData.network.allowSignup && app.initData.network.facebookAppID && app.initData.network.allowSocialLogin" ng-click="app.facebookSignIn()" md-ink-ripple type="submit" class="btn-blue md-btn text-u-c btn-block">
               <i class="mdi mdi-facebook m-r-sm"></i> Facebook
             </button>
-            <button ng-if="app.initData.network.googleAppID" ng-click="app.googleSignIn()" md-ink-ripple type="submit" class="m-t btn-gplus md-btn text-u-c btn-block">
+            <button ng-if="app.initData.network.allowSignup && app.initData.network.googleAppID && app.initData.network.allowSocialLogin" ng-click="app.googleSignIn()" md-ink-ripple type="submit" class="m-t btn-gplus md-btn text-u-c btn-block">
               <i class="mdi mdi-google m-r-sm"></i> Google
             </button>
           </div>

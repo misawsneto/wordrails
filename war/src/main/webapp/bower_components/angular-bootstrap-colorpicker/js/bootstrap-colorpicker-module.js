@@ -11,13 +11,10 @@ angular.module('colorpicker.module', [])
         },
         getOffset: function (elem, fixedPosition) {
           var
-              x = 0,
-              y = 0,
-              scrollX = 0,
-              scrollY = 0;
+            scrollX = 0,
+            scrollY = 0,
+            rect = elem.getBoundingClientRect();
           while (elem && !isNaN(elem.offsetLeft) && !isNaN(elem.offsetTop)) {
-            x += elem.offsetLeft;
-            y += elem.offsetTop;
             if (!fixedPosition && elem.tagName === 'BODY') {
               scrollX += document.documentElement.scrollLeft || elem.scrollLeft;
               scrollY += document.documentElement.scrollTop || elem.scrollTop;
@@ -28,8 +25,8 @@ angular.module('colorpicker.module', [])
             elem = elem.offsetParent;
           }
           return {
-            top: y,
-            left: x,
+            top: rect.top + window.pageYOffset,
+            left: rect.left + window.pageXOffset,
             scrollX: scrollX,
             scrollY: scrollY
           };
@@ -275,7 +272,7 @@ angular.module('colorpicker.module', [])
               fixedPosition = angular.isDefined(attrs.colorpickerFixedPosition) ? attrs.colorpickerFixedPosition : false,
               target = angular.isDefined(attrs.colorpickerParent) ? elem.parent() : angular.element(document.body),
               withInput = angular.isDefined(attrs.colorpickerWithInput) ? attrs.colorpickerWithInput : false,
-              inputTemplate = withInput ? '<input type="text" name="colorpicker-input">' : '',
+              inputTemplate = withInput ? '<input type="text" name="colorpicker-input" spellcheck="false">' : '',
               closeButton = !inline ? '<button type="button" class="close close-colorpicker">&times;</button>' : '',
               template =
                   '<div class="colorpicker dropdown">' +
@@ -387,7 +384,7 @@ angular.module('colorpicker.module', [])
             $scope.$watch(attrs.ngModel, function(newVal) {
               update();
 
-              if (withInput) {
+              if (withInput && pickerColorInput.val()!==newVal) {
                 pickerColorInput.val(newVal);
               }
             });
