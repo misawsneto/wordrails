@@ -10,14 +10,14 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
-@Component
+@Service
 public class ElasticSearchQueryBuilderExecutor implements ElasticSearchQueryBuilder {
 
 	@Override

@@ -6,7 +6,8 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-public class AndroidApp implements Serializable {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "networkId"))
+public class AndroidApp extends BaseEntity implements Serializable {
 
 	public static final Integer MDPI_SIZE = 48;
 	public static final Integer HDPI_SIZE = 72;
@@ -14,10 +15,6 @@ public class AndroidApp implements Serializable {
 	public static final Integer XXHDPI_SIZE = 144;
 	public static final Integer XXXHDPI_SIZE = 192;
 	public static final Integer ORIGINAL_SIZE = 512;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
 
 	public String projectName;
 	public String appName;

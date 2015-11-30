@@ -132,10 +132,6 @@ public class Network implements Serializable{
 	public Image loginImage;
 	public Integer loginImageId;
 	public Integer loginImageSmallId;
-
-	@JsonIgnore
-	@OneToOne
-	public AndroidApp androidApp;
 	
 	@Column(columnDefinition = "varchar(255) default 'D'", nullable = false)
 	public String defaultReadMode;
@@ -143,20 +139,6 @@ public class Network implements Serializable{
 	public String defaultOrientationMode;
 
 	public Integer categoriesTaxonomyId;
-
-
-	@ElementCollection
-	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "logo_id"))
-	@MapKeyColumn(name="sizeTag", nullable = false)
-	@Column(name="hash", nullable = false)
-	public Map<String, String> logoHashes;
-
-
-	@ElementCollection
-	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "favicon_id"))
-	@MapKeyColumn(name="sizeTag", nullable = false)
-	@Column(name="hash", nullable = false)
-	public Map<String, String> faviconHashes;
 
 	@Override
 	public String toString() {
@@ -209,16 +191,6 @@ public class Network implements Serializable{
 	void onUpdate() {
 		updatedAt = new Date();
 		onChange();
-	}
-
-	@PostLoad //lazy initialize the maps. we need to do this hack because hibernate 4 has a bug to fetch eager null references
-	void onPostLoad() {
-		if(logo != null) {
-			this.logoHashes.size();
-		}
-		if(favicon != null) {
-			this.faviconHashes.size();
-		}
 	}
 
 	private void onChange() {

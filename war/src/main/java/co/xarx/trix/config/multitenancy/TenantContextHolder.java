@@ -2,8 +2,8 @@ package co.xarx.trix.config.multitenancy;
 
 public class TenantContextHolder {
 
-	private static final ThreadLocal<Integer> tenantIdStorage = new ThreadLocal<>();
-	private static final ThreadLocal<String> tenantSubdomainStorage = new ThreadLocal<>();
+	private static final ThreadLocal<Integer> tenantIdStorage = new InheritableThreadLocal<>();
+	private static final ThreadLocal<String> tenantSubdomainStorage = new InheritableThreadLocal<>();
 
 	public static Integer getCurrentTenantId() {
 		return tenantIdStorage.get();

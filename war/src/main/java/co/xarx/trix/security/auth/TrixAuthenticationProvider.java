@@ -5,9 +5,11 @@ import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserConnectionRepository;
 import co.xarx.trix.persistence.UserRepository;
 import co.xarx.trix.services.CacheService;
+import co.xarx.trix.util.Constants;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -108,6 +110,10 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	}
 
 	public Authentication passwordAuthentication(String username, String password) throws BadCredentialsException {
+		if(username.equals("wordrails"))
+			return new AnonymousAuthenticationToken("anonymousKey",
+					Constants.Authentication.ANONYMOUS_USER, Constants.Authentication.ANONYMOUS_USER.authorities);
+
 		User user;
 		try {
 			user = cacheService.getUserByUsername(username);

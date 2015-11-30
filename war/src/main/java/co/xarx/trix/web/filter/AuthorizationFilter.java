@@ -1520,11 +1520,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetNetworkAndroidAppAuthorized(Integer networkId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isFindByStationIdsAndNameOrUseranmeOrEmailAuthorized(List<Integer> stationIds, String nameOrUseranmeOrEmail, Integer page, Integer size, List<String> sort) {
 
 		return stationSecurityChecker.isStationsAdmin(stationIds);

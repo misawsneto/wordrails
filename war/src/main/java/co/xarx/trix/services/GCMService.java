@@ -1,20 +1,21 @@
-package co.xarx.trix.mobile.notification;
+package co.xarx.trix.services;
 
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.PersonNetworkRegId;
 import co.xarx.trix.dto.NotificationDto;
-import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.persistence.PersonNetworkRegIdRepository;
-import co.xarx.trix.persistence.PersonNetworkTokenRepository;
+import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.*;
+import com.rometools.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.rmi.UnexpectedException;
@@ -23,53 +24,45 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-@Component
+@Service
 public class GCMService {
 
 	@Value("${gcm.key}")
 	private String GCM_KEY;
+
 	private Sender sender;
 	private final int GCM_WINDOW_SIZE = 1000;
 
-	@Autowired private NetworkRepository networkRepository;
-	@Autowired private PersonNetworkRegIdRepository personNetworkRegIdRepository;
-	@Autowired private PersonNetworkTokenRepository personNetworkTokenRepository;
-	@Autowired private NotificationRepository notificationRepository;
+	@Autowired
+	private PersonNetworkRegIdRepository personNetworkRegIdRepository;
+	@Autowired
+	private NotificationRepository notificationRepository;
+	@Autowired
+	private StationRepository stationRepository;
 	private ObjectMapper mapper;
 
-	@Async
 	@Transactional
-	public void sendToStation(Station station, Notification notification){
-		Integer networkId = TenantContextHolder.getCurrentTenantId();
-
-		Integer stationId = station.id;
-
+	public void sendToStation(Integer stationId, Notification notification){
 		List<PersonNetworkRegId> personNetworkRegIds;
 
-		if(station.visibility.equals(Station.UNRESTRICTED)){
-			personNetworkRegIds = personNetworkRegIdRepository.findRegIdByNetworkId(networkId);
+		if (stationRepository.isUnrestricted(stationId)) {
+			personNetworkRegIds = personNetworkRegIdRepository.findAll();
 		}else{
 			personNetworkRegIds = personNetworkRegIdRepository.findRegIdByStationId(stationId);
 		}
 
 		try {
-			removeNotificationProducer(personNetworkRegIds, notification);
+			if (Lists.isNotEmpty(personNetworkRegIds) && notification.person != null) {
+				Iterator<PersonNetworkRegId> it = personNetworkRegIds.iterator();
+				while (it.hasNext()) {
+					PersonNetworkRegId regId = it.next();
+					if (regId.person != null && regId.person.id.equals(notification.person.id)) it.remove();
+				}
+			}
+
 			gcmNotify(personNetworkRegIds, notification);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	private void removeNotificationProducer(
-			List<PersonNetworkRegId> personNetworkRegIds,
-			Notification notification) {
-		if(personNetworkRegIds !=null && notification.person != null){
-			Iterator<PersonNetworkRegId> it = personNetworkRegIds.iterator();
-			while(it.hasNext()){
-				PersonNetworkRegId regId = it.next();
-				if(regId.person != null && regId.person.id.equals(notification.person.id))
-					it.remove();
-			}
 		}
 	}
 

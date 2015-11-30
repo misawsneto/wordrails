@@ -1,24 +1,25 @@
-package co.xarx.trix.mobile.notification;
+package co.xarx.trix.services;
 
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.mobile.notification.ExpiredTokensListener;
+import co.xarx.trix.mobile.notification.FailedConnectionsListener;
+import co.xarx.trix.mobile.notification.RejectedNotificationsListener;
 import co.xarx.trix.persistence.CertificateIosRepository;
 import co.xarx.trix.persistence.PersonNetworkTokenRepository;
+import co.xarx.trix.persistence.StationRepository;
 import com.relayrides.pushy.apns.ApnsEnvironment;
 import com.relayrides.pushy.apns.PushManager;
 import com.relayrides.pushy.apns.PushManagerConfiguration;
 import com.relayrides.pushy.apns.util.*;
-import co.xarx.trix.persistence.NetworkRepository;
-import co.xarx.trix.persistence.StationRepository;
+import com.rometools.utils.Lists;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.rmi.UnexpectedException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -28,7 +29,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
 
-@Component
+@Service
 public class APNService {
 
 	private static final Integer APN_NOTIFICATION_SENT_LIMIT = 8999;
@@ -37,10 +38,6 @@ public class APNService {
 	private PersonNetworkTokenRepository personNetworkTokenRepository;
 	@Autowired
 	private StationRepository stationRepository;
-	@Autowired
-	private NetworkRepository networkRepository;
-	@Autowired
-	private TrixAuthenticationProvider authProvider;
 	@Autowired
 	private CertificateIosRepository certificateIosRepository;
 	private PushManager<SimpleApnsPushNotification> pushManager;
@@ -85,24 +82,21 @@ public class APNService {
 		}
 	}
 
-	@Async
 	@Transactional
-	public void sendToStation(Network network, Integer stationId, Notification notification) throws UnexpectedException {
+	public void sendToStation(Integer networkId, Integer stationId, @NotNull Notification notification) {
 		List<PersonNetworkToken> personNetworkTokens;
 		if (stationRepository.isUnrestricted(stationId)) {
-			personNetworkTokens = personNetworkTokenRepository.findByNetwork(network);
+			personNetworkTokens = personNetworkTokenRepository.findByNetworkId(networkId);
 		} else {
 			personNetworkTokens = personNetworkTokenRepository.findTokenByStationId(stationId);
 		}
 
-		if (personNetworkTokens == null || notification == null) {
-			throw new UnexpectedException("Unexpected error...");
+		if (Lists.isEmpty(personNetworkTokens)) {
+			return;
 		}
 
-		if (personNetworkTokens.size() == 0) return;
-
 		try {
-			if(init(network.id)){
+			if(init(networkId)){
 				apnNotify(personNetworkTokens, notification);
 			}
 		} catch (Exception e) {
@@ -110,7 +104,7 @@ public class APNService {
 		}
 	}
 
-	public void apnNotify(List<PersonNetworkToken> personNetworkTokens, final Notification notification) throws UnexpectedException, MalformedTokenStringException, InterruptedException {
+	public void apnNotify(List<PersonNetworkToken> personNetworkTokens, final Notification notification) throws MalformedTokenStringException, InterruptedException {
 
 		ApnsPayloadBuilder payloadBuilder = new ApnsPayloadBuilder();
 		payloadBuilder.setBadgeNumber(1);

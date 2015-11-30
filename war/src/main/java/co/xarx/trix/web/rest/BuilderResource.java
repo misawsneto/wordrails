@@ -1,9 +1,9 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.services.AndroidBuilderService;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AndroidApp;
-import co.xarx.trix.domain.Network;
+import co.xarx.trix.persistence.AndroidAppRepository;
+import co.xarx.trix.services.AsyncService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,18 +18,17 @@ import javax.ws.rs.core.Response;
 public class BuilderResource {
 
 	@Autowired
-	private WordrailsService wordrailsService;
+	private AndroidAppRepository androidAppRepository;
 	@Autowired
-	private AndroidBuilderService builder;
+	private AsyncService asyncService;
 
 	@GET
 	@Path("/generateApk")
 	public Response getApk(@Context HttpServletRequest request) {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		AndroidApp androidApp = network.androidApp;
+		AndroidApp androidApp = androidAppRepository.findAll().get(0);
 
 		try {
-			builder.run("/opt/trix_android", androidApp);
+			asyncService.buildAndroidApp(TenantContextHolder.getCurrentTenantId(), "/opt/trix_android", androidApp);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

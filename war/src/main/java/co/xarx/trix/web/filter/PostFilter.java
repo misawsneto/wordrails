@@ -1,9 +1,10 @@
 package co.xarx.trix.web.filter;
 
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.AsyncService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ public class PostFilter implements Filter {
 	private PostRepository postRepository;
 
 	@Autowired
-	private WordrailsService wordrailsService;
+	private AsyncService asyncService;
 
 	@Autowired
 	TrixAuthenticationProvider authProvider;
@@ -52,7 +53,8 @@ public class PostFilter implements Filter {
 					post = postRepository.findBySlug(slug);
 				}
 				if (post != null) {
-					wordrailsService.countPostRead(post, authProvider.getLoggedPerson(), rq.getRequestedSessionId());
+					asyncService.countPostRead(TenantContextHolder.getCurrentTenantId(), post,
+							authProvider.getLoggedPerson(), rq.getRequestedSessionId());
 				}
 			}
 		} catch (Exception e) {

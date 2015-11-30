@@ -2,8 +2,10 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.PermissionId;
 import co.xarx.trix.api.*;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.UnauthorizedException;
+import co.xarx.trix.services.AsyncService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
@@ -64,6 +66,8 @@ public class PostsResource {
 	private UriInfo uriInfo;
 	@Context
 	private HttpServletResponse response;
+	@Autowired
+	private AsyncService asyncService;
 	@Autowired
 	private WordrailsService wordrailsService;
 	@Autowired
@@ -392,8 +396,9 @@ public class PostsResource {
 	public StringResponse getPostBody(@PathParam("postId") Integer postId){
 		Person person = authProvider.getLoggedPerson();
 		String body = postRepository.findPostBodyById(postId);
+		Post post = postRepository.findOne(postId);
 
-		wordrailsService.countPostRead(postId, person, request.getRequestedSessionId());
+		asyncService.countPostRead(TenantContextHolder.getCurrentTenantId(), post, person, request.getRequestedSessionId());
 
 		StringResponse content = new StringResponse();
 		content.response = body;

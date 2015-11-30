@@ -1,7 +1,10 @@
 package co.xarx.trix;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.StationRole;
+import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.web.rest.PerspectiveResource;
@@ -10,12 +13,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.apache.log4j.Logger;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -115,55 +114,6 @@ public class WordrailsService {
 		} catch (Exception e) {
 			return networkRepository.findOne(1);
 		}
-	}
-
-	@Async
-	@Transactional(readOnly = false)
-	public void countPostRead(Post post, Person person, String sessionId){
-		try {
-			PostRead postRead = new PostRead();
-			postRead.person = person;
-			postRead.post = post;
-			postRead.sessionid = "0"; // constraint fails if null
-			if(postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
-				postRead.person = null;
-				postRead.sessionid = sessionId;
-			}
-
-			try {
-				postReadRepository.save(postRead);
-				queryPersistence.incrementReadsCount(post.id);
-			} catch (ConstraintViolationException | DataIntegrityViolationException e) {
-				log.info("user already read this post");
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	@Async
-	@Transactional(noRollbackFor = org.springframework.dao.DataIntegrityViolationException.class)
-	public void countPostRead(Integer postId, Person person, String sessionId){
-		PostRead postRead = new PostRead();
-		postRead.person = person;
-		postRead.post = postRepository.findOne(postId);
-		postRead.sessionid = "0"; // constraint fails if null
-		if(postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
-			postRead.person = null;
-			postRead.sessionid = sessionId;
-		}
-		try {
-			postReadRepository.save(postRead);
-			queryPersistence.incrementReadsCount(postId);
-		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-//			ex.printStackTrace();
-		}
-	}
-
-	@Async
-	@org.springframework.transaction.annotation.Transactional(readOnly=true)
-	public void sendResetEmail(PasswordReset passwordReset) {
-
 	}
 
 	public StationDto getDefaultStation(PersonData personData, Integer currentStationId){

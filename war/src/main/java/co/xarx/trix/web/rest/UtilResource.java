@@ -2,15 +2,14 @@ package co.xarx.trix.web.rest;
 
 
 import co.xarx.trix.WordrailsService;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.persistence.elasticsearch.BookmarkEsRespository;
 import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
-import co.xarx.trix.script.ImageScript;
-import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.TrixUtil;
 import org.joda.time.DateTime;
@@ -773,18 +772,6 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@Autowired
-	private AmazonCloudService amazon;
-
-	@POST
-	@Path("/uploadAmazonImages")
-	public Response uploadAmazonImages(@Context HttpServletRequest request) {
-		if(isLocal(request.getHeader("Host"))) {
-			amazon.uploadAmazonImages();
-		}
-		return Response.status(Status.OK).build();
-	}
-
 	private boolean isLocal(String host) {
 		return host.contains("0:0:0:0:0:0:0") ||
 				host.contains("0.0.0.0") ||
@@ -932,14 +919,17 @@ public class UtilResource {
 	}
 
 	@Autowired
-	private ImageScript imageScript;
+	private AsyncService asyncService;
 
 	@GET
 	@Path("/addPicturesToImages")
-	@Transactional(readOnly=false)
+	@Transactional
 	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {
 		if(isLocal(request.getHeader("Host"))){
-			imageScript.addPicturesToImages();
+			List<Network> networks = networkRepository.findAll();
+			for (Network network : networks) {
+				asyncService.imagePictureScript(network.id);
+			}
 		}
 	}
 

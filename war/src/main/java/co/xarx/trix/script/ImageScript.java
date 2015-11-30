@@ -10,7 +10,6 @@ import co.xarx.trix.persistence.PictureRepository;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -26,31 +25,29 @@ public class ImageScript {
 	@Autowired
 	private PictureRepository pictureRepository;
 
-	@Async
 	public void addPicturesToImages() {
 		Iterable<File> fs = fileRepository.findAll();
 		Set<Integer> fileIdsAlreadySaved = Sets.newHashSet();
 
 		Map<Integer, File> files = Maps.newHashMap();
-		for(File file : fs) {
+		for (File file : fs) {
 			files.put(file.id, file);
 		}
 
 		System.out.println("Starting upload of files");
 		for (File file : files.values()) {
-			if(fileIdsAlreadySaved.contains(file.id) || file.getNetworkId() == null)
-				continue;
+			if (fileIdsAlreadySaved.contains(file.id) || file.getNetworkId() == null) continue;
 			Set<Image> images = imageRepository.findByFileId(file.id);
-			for(Image image : images) {
-                Map<String, String> hashs = Maps.newHashMap();
+			for (Image image : images) {
+				Map<String, String> hashs = Maps.newHashMap();
 
-                if(image.hashs != null && !image.hashs.isEmpty()) continue;
+				if (image.hashs != null && !image.hashs.isEmpty()) continue;
 
 				Set<Picture> pictures = Sets.newHashSet();
 				Set<String> type = Sets.newHashSet();
 				type.addAll(Image.Type.findByAbbr(image.type).getSizeTags());
 				type.add("original");
-				for(String sizeTag : type) {
+				for (String sizeTag : type) {
 					File imageFile;
 					switch (sizeTag) {
 						case "small":

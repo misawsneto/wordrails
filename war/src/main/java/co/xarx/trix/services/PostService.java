@@ -1,22 +1,22 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.Station;
-import co.xarx.trix.mobile.notification.APNService;
-import co.xarx.trix.mobile.notification.GCMService;
+import co.xarx.trix.domain.PostRead;
+import co.xarx.trix.persistence.PostReadRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.scheduler.jobs.PostScheduleJob;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import org.hibernate.exception.ConstraintViolationException;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,13 +32,11 @@ public class PostService {
 	@Autowired
 	private Scheduler scheduler;
 	@Autowired
-	private GCMService gcmService;
+	private AsyncService asyncService;
 	@Autowired
-	private APNService apnService;
+	private PostReadRepository postReadRepository;
 	@Autowired
 	private PostRepository postRepository;
-	@Autowired
-	private StationRepository stationRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
 	@Autowired
@@ -106,10 +104,6 @@ public class PostService {
 		}
 	}
 
-	@Autowired
-	private CacheService cacheService;
-
-	@Transactional
 	public void buildNotification(Post post) {
 		Notification notification = new Notification();
 		notification.type = Notification.Type.POST_ADDED.toString();
@@ -117,17 +111,37 @@ public class PostService {
 		notification.post = post;
 		notification.message = post.title;
 		notification.person = authProvider.getLoggedPerson();
+
 		try {
-			if (post.station != null && post.station.network != null) {
-				Station station = stationRepository.findOne(post.station.id);
-				Network network = cacheService.getNetwork(TenantContextHolder.getCurrentTenantId());
-
-
-				gcmService.sendToStation(station, notification);
-				apnService.sendToStation(network, station.id, notification);
+			if (post.station != null) {
+				asyncService.notifyAndroid(TenantContextHolder.getCurrentTenantId(), post.station.id, notification);
+				asyncService.notifyApple(TenantContextHolder.getCurrentTenantId(), post.station.id, notification);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	@Transactional
+	public void countPostRead(Post post, Person person, String sessionId){
+		try {
+			PostRead postRead = new PostRead();
+			postRead.person = person;
+			postRead.post = post;
+			postRead.sessionid = "0"; // constraint fails if null
+			if(postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
+				postRead.person = null;
+				postRead.sessionid = sessionId;
+			}
+
+			try {
+				postReadRepository.save(postRead);
+				queryPersistence.incrementReadsCount(post.id);
+			} catch (ConstraintViolationException | DataIntegrityViolationException e) {
+				log.info("user already read this post");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 }
