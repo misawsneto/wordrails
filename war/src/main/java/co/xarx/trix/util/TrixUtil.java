@@ -10,10 +10,21 @@ import java.net.URL;
 import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.*;
 
 public class TrixUtil {
 
 	public enum EntityType{POST,PERSON,PERSPECTIVE}
+
+	public static Date removeTime(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
 
 	public static boolean urlExists(String urlString) throws IOException {
 		URL u = new URL(urlString);

@@ -149,6 +149,11 @@
   </div>		
 </div>
 <!-- end of col -->
+  
 </div>
+</div>
+
 <div data-ng-include=" 'tpl/blocks/top_header.html' "></div>
 </div>
+
+<div ng-if="app.nowReading.postId || app.nowReading.id" data-ng-include=" 'tpl/blocks/bottom_footer.html' "></div> 

@@ -118,11 +118,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			return auth;
 		}
 
-
-		Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
-		SecurityContextHolder.getContext().setAuthentication(auth);
-
-		return auth;
+		throw new BadCredentialsException("Wrong password");
 	}
 
 	public Authentication passwordAuthentication(String username, String password) throws BadCredentialsException {

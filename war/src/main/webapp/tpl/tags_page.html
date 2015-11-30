@@ -10,7 +10,7 @@
 	<!-- posts & recommendation -->
 	<div infinite-scroll="paginate()" infinite-scroll-distance="1">
 
-		<div class="container p-b-lg p-t-lg">
+		<div class="container p-b-lg p-t-lg p-b-xl m-b-xl">
 			<div class="row">
 				<div class="col-md-8 col-md-offset-2">
 					<!-- BLOG POST -->
@@ -78,4 +78,5 @@
 
 		<div data-ng-include=" 'tpl/blocks/top_header.html' "></div>
 
+		<div ng-if="postViews != null" class="pos-abt bottom-0 w-full" data-ng-include=" 'tpl/blocks/bottom_footer.html' "></div> 
 	</div>

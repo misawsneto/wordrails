@@ -46,7 +46,7 @@ public class PostEventHandler {
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
-	
+
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
 		if(post instanceof PostTrash) //post of type Trash is not insertable
