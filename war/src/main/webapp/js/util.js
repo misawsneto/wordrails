@@ -403,7 +403,22 @@ function getCustomStyle(color, perspective, header) {
 		"background: " + color + "!important" +
 	"}"+
 
+	".md-default-theme md-tabs md-ink-bar {"+
+	  "color: rgba(0,0,0, 0.84);"+
+	  "background: rgba(0,0,0,0.7);"+
+	"}"+
 
+	".md-default-theme md-tab-item span{"+
+	  "color: rgba(0,0,0, 0.54) !important"+
+	"}"+
+
+	".md-default-theme md-tab-item.md-active span{"+
+	  "color: rgba(0,0,0, 0.84) !important"+
+	"}"+
+
+	".md-default-theme md-tab[disabled]{"+
+	  "background-color: #f9f9f9;"+
+	"}"+
 	"";
 	return style
 }

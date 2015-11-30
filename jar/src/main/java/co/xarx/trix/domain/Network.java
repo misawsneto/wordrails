@@ -68,6 +68,13 @@ public class Network implements Serializable{
 
 	public String googleAppID;
 
+    public String facebookLink;
+    public String youtubeLink;
+    public String googlePlusLink;
+    public String twitterkLink;
+
+    public String webFooter;
+
 	@JsonIgnore
 	public String googleAppSecret;
 	
