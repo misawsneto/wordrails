@@ -1,16 +1,18 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Image;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.PostTrash;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.services.PostService;
-import co.xarx.trix.util.TrixUtil;
+import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,34 +46,36 @@ public class PostEventHandler {
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
-	
+
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
 		if(post instanceof PostTrash) //post of type Trash is not insertable
 			throw new BadRequestException();
 
 		if (postAndCommentSecurityChecker.canWrite(post)) {
-			Date now = new Date();
-			if (post.date == null) {
-				post.date = now;
-			}
-
-			if (post.slug == null || post.slug.isEmpty()) {
-				String originalSlug = TrixUtil.toSlug(post.title);
-				post.originalSlug = originalSlug;
-				try {
-					post.slug = originalSlug;
-					postRepository.save(post);
-				} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-					String hash = TrixUtil.generateRandomString(6, "a#");
-					post.slug = originalSlug + "-" + hash;
-				}
-			} else {
-				post.originalSlug = post.slug;
-			}
-
+			savePost(post);
 		} else {
 			throw new UnauthorizedException();
+		}
+	}
+
+	public void savePost(Post post) {
+		Date now = new Date();
+		if (post.date == null) {
+			post.date = now;
+		}
+
+		if (post.slug == null || post.slug.isEmpty()) {
+			String originalSlug = StringUtil.toSlug(post.title);
+			try {
+				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#");
+				postRepository.save(post);
+			} catch (DataIntegrityViolationException ex) {
+				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#");
+				postRepository.save(post);
+			}
+		} else {
+			post.originalSlug = post.slug;
 		}
 	}
 

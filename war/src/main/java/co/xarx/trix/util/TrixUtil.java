@@ -5,69 +5,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TrixUtil {
 
-	private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
-	private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
-
-	public enum EntityType{POST,PERSON,PERSPECTIVE};
-
-    private static final Pattern emailPattern = Pattern.compile("^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Z]{2,4}$", Pattern.CASE_INSENSITIVE);
-
-    private static final Pattern hostPattern = Pattern.compile("^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\\-]*[A-Za-z0-9])$", Pattern.CASE_INSENSITIVE);
-
-    private static final Pattern fqdnPattern = Pattern.compile("(?=^.{1,254}$)(^(?:(?!\\d+\\.|-)[a-zA-Z0-9_\\-]{1,63}(?<!-)\\.?)+(?:[a-zA-Z]{2,})$)", Pattern.CASE_INSENSITIVE);
-
-    public static boolean isEmailAddr(String emailAddr){
-        try {
-            Matcher matcher = emailPattern.matcher(emailAddr);
-            return matcher.matches();
-        } catch (Exception e){
-        }
-        return false;
-    }
-
-    public static boolean isFQDN(String fqdnVal){
-        try {
-            Matcher matcher = fqdnPattern.matcher(fqdnVal);
-            return matcher.matches();
-        } catch (Exception e){
-        }
-        return false;
-    }
-
-    public static boolean isHost (String hostname){
-        try {
-            Matcher matcher = hostPattern.matcher(hostname);
-            return matcher.matches();
-        } catch (Exception e){
-        }
-        return false;
-    }
-
-	/**
-	 * Converts a string to a slug version by removing special characters and spaces
-	 *
-	 * @param input - the string to be converted
-	 * @return the converted string
-	 */
-	public static String toSlug(String input) {
-		input = input.trim();
-		String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
-		String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
-		String slug = NONLATIN.matcher(normalized).replaceAll("");
-		slug = slug.trim().replaceAll("-+", "-");
-		return slug.toLowerCase(Locale.ENGLISH);
-	}
+	public enum EntityType{POST,PERSON,PERSPECTIVE}
 
 	public static Date removeTime(Date date) {
 		Calendar cal = Calendar.getInstance();
@@ -86,34 +30,6 @@ public class TrixUtil {
 		huc.setRequestMethod("HEAD");
 		huc.connect();
 		return (huc.getResponseCode() == HttpURLConnection.HTTP_OK);
-	}
-
-	public static String generateRandomString(int length, String chars) {
-		String mask = "";
-		if (chars.contains("a")) mask += "abcdefghijklmnopqrstuvwxyz";
-		if (chars.contains("A")) mask += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		if (chars.contains("#")) mask += "0123456789";
-		if (chars.contains("!")) mask += "~`!@#$%^&*()_+-={}[]:\";\'<>?,./|\\";
-		if (chars.contains("u")) mask += "~!@$^*()_+-=:\";\',.|"; //unsafe -> < > # % { } | \ ^ ~ [ ] `
-		String result = "";
-		for (int i = length; i > 0; --i) {
-			int index = (int) Math.round(Math.random() * (mask.length() - 1));
-			result += mask.charAt(index);
-		}
-
-		return result;
-	}
-
-	public static void nullifyProperties(Object o) {
-		for (Field f : o.getClass().getDeclaredFields()) {
-			f.setAccessible(true);
-			try {
-				if (!java.lang.reflect.Modifier.isStatic(f.getModifiers()) && !f.getType().isPrimitive())
-					f.set(o, null);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
 	}
 
 	public static String simpleSnippet(String body, int max) {
