@@ -1,13 +1,17 @@
 @font-face {
   font-family: 'simple-line-icons';
-  src: url('../fonts/Simple-Line-Icons.eot?-i3a2kk');
-  src: url('../fonts/Simple-Line-Icons.eot?#iefix-i3a2kk') format('embedded-opentype'), url('../fonts/Simple-Line-Icons.ttf?-i3a2kk') format('truetype'), url('../fonts/Simple-Line-Icons.woff2?-i3a2kk') format('woff2'), url('../fonts/Simple-Line-Icons.woff?-i3a2kk') format('woff'), url('../fonts/Simple-Line-Icons.svg?-i3a2kk#simple-line-icons') format('svg');
+  src:  url('../fonts/Simple-Line-Icons.eot?v=2.2.2');
+  src:  url('../fonts/Simple-Line-Icons.eot?#iefix&v=2.2.2') format('embedded-opentype'),
+        url('../fonts/Simple-Line-Icons.ttf?v=2.2.2') format('truetype'),
+        url('../fonts/Simple-Line-Icons.woff2?v=2.2.2') format('woff2'),
+        url('../fonts/Simple-Line-Icons.woff?v=2.2.2') format('woff'),
+        url('../fonts/Simple-Line-Icons.svg?v=2.2.2#simple-line-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 /*
  Use the following CSS code if you want to have a class per icon.
- Instead of a list of all class selectors, you can use the generic [class*="icon-"] selector, but it's slower: 
+ Instead of a list of all class selectors, you can use the generic [class*="icon-"] selector, but it's slower:
 */
 .icon-user,
 .icon-people,
@@ -141,7 +145,7 @@
 .icon-volume-1,
 .icon-volume-2,
 .icon-volume-off,
-.icon-calender,
+.icon-calendar,
 .icon-bulb,
 .icon-chart,
 .icon-ban,
@@ -179,7 +183,7 @@
 .icon-social-facebook,
 .icon-social-instagram,
 .icon-social-linkedin,
-.icon-social-pintarest,
+.icon-social-pinterest,
 .icon-social-github,
 .icon-social-gplus,
 .icon-social-reddit,
@@ -599,7 +603,7 @@
 .icon-volume-off:before {
   content: "\e0a1";
 }
-.icon-calender:before {
+.icon-calendar:before {
   content: "\e075";
 }
 .icon-bulb:before {
@@ -713,7 +717,7 @@
 .icon-social-linkedin:before {
   content: "\e60a";
 }
-.icon-social-pintarest:before {
+.icon-social-pinterest:before {
   content: "\e60b";
 }
 .icon-social-github:before {

@@ -505,7 +505,7 @@ function isTermSelected(terms){
 			createPost("SCHEDULED")
 		}else{
 			//$scope.showMoreOptions(ev);
-			$scope.app.hidePostOptions = false;
+			$scope.togglePostOptions();
 			$scope.app.showInfoToast('Escolha uma categoria.')
 		}
 	}
@@ -519,7 +519,7 @@ function isTermSelected(terms){
 			updatePost("PUBLISHED")
 		}else{
 			//$scope.showMoreOptions(ev);
-			$scope.app.hidePostOptions = false;
+			$scope.togglePostOptions();
 			$scope.app.showInfoToast('Escolha uma categoria.')
 		}
 	}

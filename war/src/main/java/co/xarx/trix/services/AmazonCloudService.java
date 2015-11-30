@@ -2,7 +2,7 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.util.FileUtil;
-import co.xarx.trix.util.TrixUtil;
+import co.xarx.trix.util.StringUtil;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -55,7 +55,7 @@ public class AmazonCloudService {
 	}
 
 	public String uploadPublicImage(InputStream input, Long lenght, String size, String mime) throws IOException, AmazonS3Exception {
-		java.io.File tmpFile = java.io.File.createTempFile(TrixUtil.generateRandomString(5, "aA#"), ".tmp");
+		java.io.File tmpFile = java.io.File.createTempFile(StringUtil.generateRandomString(5, "aA#"), ".tmp");
 
 		FileUtils.copyInputStreamToFile(input, tmpFile);
 		String hash = FileUtil.getHash(new FileInputStream(tmpFile));

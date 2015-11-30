@@ -8,6 +8,7 @@ import co.xarx.trix.dto.NotificationDto;
 import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.persistence.PersonNetworkRegIdRepository;
 import co.xarx.trix.persistence.StationRepository;
+import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -90,7 +91,7 @@ public class GCMService {
 		// make a copy
 		HashSet<String> devices = new HashSet<String>();
 		
-		notification.hash = TrixUtil.generateRandomString(10, "Aa#");
+		notification.hash = StringUtil.generateRandomString(10, "Aa#");
 		ArrayList<Notification> notis = new ArrayList<Notification>();
 		for (PersonNetworkRegId pnRegId : personNetworkRegIds) {
 			Notification noti = new Notification();

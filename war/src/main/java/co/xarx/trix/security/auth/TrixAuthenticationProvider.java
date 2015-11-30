@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 
 @Component
@@ -83,7 +82,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 		try {
 			person = cacheService.getPersonByUsername(user.username);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			person = personRepository.findByUser(user);
 		}
 
@@ -97,7 +96,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		logout();
 		try {
 			person = cacheService.getPersonByUsername(person.user.username);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			person = personRepository.findByUser(person.user);
 		}
 
@@ -109,6 +108,23 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		return !getUser().isAnonymous();
 	}
 
+	public Authentication passwordAuthentication(User user, String password) throws BadCredentialsException {
+		if (user == null) {
+			throw new BadCredentialsException("Wrong username");
+		} else if(user.password.equals(password)) {
+			Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(auth);
+
+			return auth;
+		}
+
+
+		Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(auth);
+
+		return auth;
+	}
+
 	public Authentication passwordAuthentication(String username, String password) throws BadCredentialsException {
 		if(username.equals("wordrails"))
 			return new AnonymousAuthenticationToken("anonymousKey",
@@ -117,18 +133,11 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		User user;
 		try {
 			user = cacheService.getUserByUsername(username);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			user = userRepository.findOne(QUser.user.username.eq(username).and(QUser.user.enabled.eq(true)));
 		}
 
-		if (user == null) {
-			throw new BadCredentialsException("Wrong username");
-		}
-
-		Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
-		SecurityContextHolder.getContext().setAuthentication(auth);
-
-		return auth;
+		return passwordAuthentication(user, password);
 	}
 
 	public boolean socialAuthentication(String providerId, OAuthService service, String userId, Token token) throws BadCredentialsException, IOException {

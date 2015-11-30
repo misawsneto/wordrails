@@ -11,7 +11,7 @@ import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
-import co.xarx.trix.util.TrixUtil;
+import co.xarx.trix.util.StringUtil;
 import org.joda.time.DateTime;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -176,7 +176,7 @@ public class UtilResource {
 				}
 
 				if(person.email == null || person.email.trim().equals("")){
-					person.email = person.username + TrixUtil.generateRandomString(4, "a#")  + "@randomfix.com";
+					person.email = person.username + StringUtil.generateRandomString(4, "a#")  + "@randomfix.com";
 				}
 
 				try {
@@ -254,7 +254,7 @@ public class UtilResource {
 			invitation.network = network;
 			invitation.station = station;
 			invitation.active = true;
-			invitation.hash = TrixUtil.generateRandomString(8, "aA#");
+			invitation.hash = StringUtil.generateRandomString(8, "aA#");
 			invites.add(invitation);
 		}
 
@@ -263,13 +263,13 @@ public class UtilResource {
 	}
 
 	private void doSlug(Post post){
-		String originalSlug = TrixUtil.toSlug(post.title);
+		String originalSlug = StringUtil.toSlug(post.title);
 		post.originalSlug = originalSlug;
 		try {
 			post.slug = originalSlug;
 			postRepository.save(post);
 		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-			String hash = TrixUtil.generateRandomString(5, "Aa#");
+			String hash = StringUtil.generateRandomString(5, "Aa#");
 			post.slug = originalSlug + "-" + hash;
 			postRepository.save(post);
 		}
@@ -682,7 +682,7 @@ public class UtilResource {
 				person.networkId = person.user.networkId;
 				person.email = person.email != null ? person.email.trim().toLowerCase() : null;
 				if(!Pattern.matches("^[a-z0-9\\._-]{3,50}$", person.username)){
-					person.username = TrixUtil.generateRandomString(10, "a");
+					person.username = StringUtil.generateRandomString(10, "a");
 				}
 			}
 			personRepository.save(persons);
@@ -704,7 +704,7 @@ public class UtilResource {
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password);
+			authProvider.passwordAuthentication(user, user.password);
 
 			List<Station> stations = stationRepository.findByNetworkId(networkId);
 			for (Station station: stations){
@@ -737,7 +737,7 @@ public class UtilResource {
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password);
+			authProvider.passwordAuthentication(user, user.password);
 
 			TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTermNull(perspectiveId);
 
@@ -785,7 +785,7 @@ public class UtilResource {
         User user = nr.get(0).person.user;
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-        authProvider.passwordAuthentication(user.username, user.password);
+        authProvider.passwordAuthentication(user, user.password);
         return Response.status(Status.OK).build();
     }
 

@@ -18,7 +18,7 @@ import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
-import co.xarx.trix.util.TrixUtil;
+import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
@@ -158,10 +158,10 @@ public class PersonsResource {
         if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
             throw new BadRequestException("Invalid Password");
 
-        if(!TrixUtil.isEmailAddr(person.email))
+        if(!StringUtil.isEmailAddr(person.email))
             throw new BadRequestException("Not email");
 
-        if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !TrixUtil.isFQDN(person.username))
+        if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
             throw new BadRequestException("Invalid username");
 
         if(person.bio != null && !person.bio.isEmpty())
@@ -268,7 +268,7 @@ public class PersonsResource {
 			User user = nr.get(0).person.user;
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password);
+			authProvider.passwordAuthentication(user, user.password);
 
 			network.networkCreationToken = null;
 			networkRepository.save(network);
@@ -419,7 +419,7 @@ public class PersonsResource {
 				String password = person.password;
 
 				if (password == null || password.trim().equals("")) {
-					password = TrixUtil.generateRandomString(8, "a#");
+					password = StringUtil.generateRandomString(8, "a#");
 				}
 
 				user = new User();
