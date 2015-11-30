@@ -139,12 +139,14 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 		if (user == null) {
 			throw new BadCredentialsException("Wrong username");
+		} else if(user.password.equals(password)) {
+			Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(auth);
+
+			return auth;
 		}
 
-		Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
-		SecurityContextHolder.getContext().setAuthentication(auth);
-
-        return auth;
+		throw new BadCredentialsException("Wrong password");
     }
 
 	public boolean socialAuthentication(String providerId, OAuthService service, String userId, Token token) throws BadCredentialsException, IOException {
