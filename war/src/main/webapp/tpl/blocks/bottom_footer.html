@@ -1,6 +1,45 @@
-<div ng-if="!app.isMobile" class="wrapper-sm navbar navbar-fixed-bottom bg-header pos-rlt">
-  asdfasdf <br>
-  asdfasdf <br>
-  asdfasdf <br>
-  asdfasdf <br>
+<div class="z-i-0 wrapper-sm navbar navbar-fixed-bottom bg-header pos-rlt out-top-shadow"
+						ng-if="(app.initData.network.webFooter || 
+												app.initData.network.facebookLink || 
+												app.initData.network.youtubeLink || 
+												app.initData.network.twitterLink || 
+												app.initData.network.googlePlusLink) && !app.isMobile">
+
+	<div class="nav navbar-nav navbar-left m-l-xs" style="margin-right: 204px;" ng-if="app.initData.network.webFooter" bind-html-unsafe="app.initData.network.webFooter">
+	</div>
+
+	<div ng-if="!app.initData.network.webFooter || (app.initData.network.facebookLink || 
+							app.initData.network.youtubeLink || 
+							app.initData.network.twitterLink || 
+							app.initData.network.googlePlusLink)" class="pull-left wrapper">
+								Copyright ©
+							</div>
+
+	<ul class="nav navbar-nav navbar-right m-r-xs"
+			ng-if="app.initData.network.facebookLink || 
+						app.initData.network.youtubeLink || 
+						app.initData.network.twitterLink || 
+						app.initData.network.googlePlusLink">
+
+		<li>
+			<md-button  md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px; text-dark">
+		 		<i class="mdi mdi-twitter i-20 text-black" style="vertical-align: 35%; line-height: normal;"></i>
+		 	</md-button>
+		</li>
+		<li>
+			<md-button  md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px;">
+		 		<i class="mdi mdi-facebook i-20 text-black" style="vertical-align: 35%; line-height: normal;"></i>
+		 	</md-button>
+		</li>
+		<li>
+			<md-button  md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px; text-dark">
+		 		<i class="mdi mdi-google-plus i-20 text-black" style="vertical-align: 35%; line-height: normal;"></i>
+		 	</md-button>
+		</li>
+		<li>
+			<md-button  md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px;">
+		 		<i class="mdi mdi-youtube i-20 text-black" style="vertical-align: 35%; line-height: normal;"></i>
+		 	</md-button>
+		</li>
+	</ul>
 </div>

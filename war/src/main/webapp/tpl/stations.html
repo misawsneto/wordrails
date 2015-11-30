@@ -543,4 +543,4 @@
 <!-- header bar -->
 <div data-ng-include=" 'tpl/blocks/top_header.html' "></div>
 <!-- /header bar-->
-<div data-ng-include=" 'tpl/blocks/bottom_footer.html' "></div>
+<div ng-class="{'pos-abt bottom-0 w-full': !(app.initData.popular && app.initData.popular.length > 0) || !(app.initData.recent && app.initData.recent.length > 0)}" data-ng-include=" 'tpl/blocks/bottom_footer.html' "></div>
