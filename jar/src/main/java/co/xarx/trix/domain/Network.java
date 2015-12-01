@@ -80,8 +80,11 @@ public class Network implements Serializable{
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
-	
-	public String domain;
+
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    public boolean stationMenuName;
+
+    public String domain;
 
 	@JsonIgnore
 	public String networkCreationToken;
