@@ -15,7 +15,7 @@ angular.module('app')
         app.constant   = $provide.constant;
         app.value      = $provide.value;
 
-        cfpLoadingBarProvider.includeSpinner = false;
+        //cfpLoadingBarProvider.includeSpinner = false;
 
         $httpProvider.interceptors.push(function (){
           return {
