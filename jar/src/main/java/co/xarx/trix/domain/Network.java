@@ -81,8 +81,8 @@ public class Network implements Serializable{
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
 
-    @Column(columnDefinition = "boolean default false", nullable = false)
-    public boolean stationMenuName;
+    public String stationMenuName;
+    public String homeTabName;
 
     public String domain;
 
