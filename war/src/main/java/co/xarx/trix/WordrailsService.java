@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class WordrailsService {
 
 	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
 
+	@PostConstruct
 	public void init(){
 		// ------------- init person cache
 		stationsPermissions = CacheBuilder.newBuilder().maximumSize(1000)

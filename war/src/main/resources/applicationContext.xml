@@ -77,14 +77,6 @@
 
 	<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:hostName="meminstance1" p:port="6379"/>
 
-	<bean id="postFilter" class="co.xarx.trix.web.filter.PostFilter"/>
-	<bean id="networkDomainFilter" class="co.xarx.trix.web.filter.NetworkDomainFilter"/>
-	<bean id="personDataFilter" class="co.xarx.trix.web.filter.PersonDataFilter"/>
-	<bean id="corsCustomFilter" class="co.xarx.trix.web.filter.CORSCustomFilter"/>
-	<bean id="PathEntityFilter" class="co.xarx.trix.web.filter.PathEntityFilter"/>
-	<bean id="cacheService" class="co.xarx.trix.services.CacheService" init-method="init"/>
-	<bean id="amazonCloudService" class="co.xarx.trix.services.AmazonCloudService" init-method="init"/>
-	<bean id="wordrailsService" class="co.xarx.trix.WordrailsService" init-method="init"/>
 	<bean id="simpleMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
 
 	<bean id="springSessionRepositoryFilter" class="org.springframework.session.web.http.SessionRepositoryFilter">
