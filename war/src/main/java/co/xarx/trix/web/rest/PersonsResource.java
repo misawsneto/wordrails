@@ -126,10 +126,25 @@ public class PersonsResource {
 		request.getServletContext().getRequestDispatcher(path).forward(request, response);
 	}
 
+//    @GET
+//    @Path("/findByUsername")
+//    @Transactional
+//    public Person findByUsername(@PathParam("username") String username) throws ServletException, IOException {
+//        Person person = authProvider.getLoggedPerson();
+//
+//        Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+//
+//        if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network)) {
+//            forward();
+//            return Response.status(Status.OK).build();
+//        }else
+//            return Response.status(Status.UNAUTHORIZED).build();
+//    }
+
 	@GET
 	@Path("/{id}")
 	@Transactional
-	public Response findByUsername(@PathParam("id") Integer id) throws ServletException, IOException {
+	public Response findPerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
@@ -529,7 +544,7 @@ public class PersonsResource {
 
 
 
-	@Path("/count")
+	@Path("/stats/count")
 	@GET
 	@Produces(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response countPersonsByNetwork(@QueryParam("networkId") Integer networkId){

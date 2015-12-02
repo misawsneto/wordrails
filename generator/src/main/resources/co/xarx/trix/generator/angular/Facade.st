@@ -159,7 +159,7 @@ var trix = angular.module('trix', [])
 				"networkId": networkId
 			}
 		}
-    	return \$http.get(_config.url + "/api/persons/count", config)
+    	return \$http.get(_config.url + "/api/persons/stats/count", config)
     }
 
     this.updatePostTerms = function(postId, terms) {

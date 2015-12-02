@@ -318,6 +318,10 @@ angular.module('app')
         $state.go(state,param);
       }
 
+      $scope.app.goToPage = function(url){
+        window.open(url,'_blank');
+      }
+
       $scope.app.goToEditPost = function(postId, $event){
         $event.preventDefault();
         $event.stopPropagation();
@@ -1012,4 +1016,5 @@ angular.module('app')
         $scope.app.changeToSettings()
     }
 
+    $scope.app.year = moment().format('YYYY')
 }]);

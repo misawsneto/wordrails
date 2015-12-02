@@ -137,7 +137,7 @@ public class WordrailsService {
 				log.info("user already read this post");
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+            co.xarx.trix.util.Logger.error(ex.getMessage());
 		}
 	}
 
