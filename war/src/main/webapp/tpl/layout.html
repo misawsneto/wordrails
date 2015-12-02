@@ -34,7 +34,7 @@
 
   <md-sidenav id="select-stations" ng-if="app.stationsPermissions && app.stationsPermissions.length > 1" class="md-sidenav-left md-whiteframe-z2 pos-fix" md-component-id="stations-selector">
     <md-toolbar class="bg-header">
-      <h1 class="md-toolbar-tools bg-header-text"><i class="mdi mdi-radio-tower text-lg p-r-xs"></i>{{app.initData.network.id == 59 ?  'Idiomas' : 'Estações'}}</h1>
+      <h1 class="md-toolbar-tools bg-header-text"><i class="mdi mdi-radio-tower text-lg p-r-xs"></i>{{app.initData.network.stationMenuName ? app.initData.network.stationMenuName : 'Estações'}}</h1>
     </md-toolbar>
     <md-content layout-padding class="p-l-xl p-r-xl">
       <div class="scrollable">
