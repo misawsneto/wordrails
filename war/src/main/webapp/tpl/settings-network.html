@@ -1,101 +1,84 @@
 <div id="settings-network">
-  <!--   <div class="wrapper-xl">
-  <div class="panel panel-card block-600 m-auto">
-    <div class="panel-heading h3">
-      Configurações Gerais
-    </div>
-    <div class="panel-body">
-      <div class="wrapper-xl">
-        <p>
-          <button class="btn btn-default btn-lg btn-block">Personalização da Rede</button>
-        </p>
-        <p>
-          <button class="btn btn-default btn-lg btn-block">Personalização de Cores</button>
-        </p>
-      </div>
-    </div>
-  </div>
-</div> -->
 
 <div class="header-custom text-center animated box-shadow">
 </div>
 
 <div class="wrapper-lg animated zoomIn">
-
-  <div class="panel panel-card block-600 m-auto pos-rlt material-shadow-light">
+  <div class="panel panel-card block-800 m-auto pos-rlt material-shadow-light">
     <md-content class="md-neutral-theme">
       <md-tabs md-dynamic-height md-border-bottom>
         <md-tab label="Configurações de Rede">
           <md-content class="md-padding">
-            <div class="w-full m-auto p-l-lg p-r-lg">
-          <!-- <div class="md-form-group md-neutral-theme">
-            <input class="md-input" ng-model="network.name">
-            <label>Nome</label>
-          </div> -->
-          <md-input-container class="text-lg">
-            <label>Nome</label>
-            <input ng-model="network.name">
-          </md-input-container>
+            <div class="w-xxl m-auto p-t p-b-xxl">
+		          <md-input-container class="text-xl">
+		            <label>Nome</label>
+		            <input ng-model="network.name">
+		          </md-input-container>
             </div>
             <div class="row">
               <div class="col-sm-6">
-                <div class="m-b text-muted text-md text-u-c">Configurações principais</div>
-                <p>
-                  <label class="md-switch">
-                    <input type="checkbox" ng-model="network.allowSignup"
-                    ng-true-value="true" ng-false-value="false">
-                    <i class="blue"></i>
-                    Permitir cadastro em estações públicas
-                  </label>
-                </p>
-                <p>
-                  <label class="md-switch">
-                    <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.allowSocialLogin"
-                    ng-true-value="true" ng-false-value="false">
-                    <i class="blue"></i>
-                    Autenticação através de redes sociais em estações públicas
-                  </label>
-                </p>
-                <p>
-                  <label class="md-switch">
-                    <input type="checkbox" ng-model="network.allowSponsors"
-                    ng-true-value="true" ng-false-value="false">
-                    <i class="blue"></i>
-                    Ativar/Desativar patrocinadores
-                  </label>
-                </p>
+                <div class="m-l">
+                	<p>
+	                  <label class="md-switch">
+	                    <input type="checkbox" ng-model="network.allowSignup"
+	                    ng-true-value="true" ng-false-value="false">
+	                    <i class="blue"></i>
+	                    Permitir cadastro em estações públicas
+	                  </label>
+	                </p>
+	                <p>
+	                  <label class="md-switch">
+	                    <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.allowSocialLogin"
+	                    ng-true-value="true" ng-false-value="false">
+	                    <i class="blue"></i>
+	                    Autenticação através de redes sociais em estações públicas
+	                  </label>
+	                </p>
+	                <p>
+	                  <label class="md-switch">
+	                    <input type="checkbox" ng-model="network.allowSponsors"
+	                    ng-true-value="true" ng-false-value="false">
+	                    <i class="blue"></i>
+	                    Ativar/Desativar patrocinadores
+	                  </label>
+	                </p>
+                </div>
               </div>
-              <div class="col-sm-6">
+              <div class="col-sm-6 p-l-lg">
                 <div class="m-b text-muted text-md text-u-c">Orientação padrão</div>
-                <p>
-                  <label class="md-check">
-                    <input type="radio" name="a" ng-model="network.defaultOrientationMode" value="H">
-                    <i class="blue"></i>
-                    Horizontal
-                  </label>
-                </p>
-                <p>
-                  <label class="md-check">
-                    <input type="radio" name="a" ng-model="network.defaultOrientationMode" value="V">
-                    <i class="blue"></i>
-                    Vertical
-                  </label>
-                </p>
+                <div class="m-l">
+                	<p>
+	                  <label class="md-check">
+	                    <input type="radio" name="a" ng-model="network.defaultOrientationMode" value="H">
+	                    <i class="blue"></i>
+	                    Horizontal
+	                  </label>
+	                </p>
+	                <p>
+	                  <label class="md-check">
+	                    <input type="radio" name="a" ng-model="network.defaultOrientationMode" value="V">
+	                    <i class="blue"></i>
+	                    Vertical
+	                  </label>
+	                </p>
+                </div>
                 <div class="m-b m-t text-muted text-md text-u-c">Modo de leitura padrão</div>
-                <p>
-                  <label class="md-check">
-                    <input type="radio" name="b" ng-model="network.defaultReadMode" value="N">
-                    <i class="blue"></i>
-                    Modo noturno
-                  </label>
-                </p>
-                <p>
-                  <label class="md-check">
-                    <input type="radio" name="b" ng-model="network.defaultReadMode" value="D">
-                    <i class="blue"></i>
-                    Modo diurno
-                  </label>
-                </p>
+                <div class="m-l">
+	                <p>
+	                  <label class="md-check">
+	                    <input type="radio" name="b" ng-model="network.defaultReadMode" value="N">
+	                    <i class="blue"></i>
+	                    Modo noturno
+	                  </label>
+	                </p>
+	                <p>
+	                  <label class="md-check">
+	                    <input type="radio" name="b" ng-model="network.defaultReadMode" value="D">
+	                    <i class="blue"></i>
+	                    Modo diurno
+	                  </label>
+	                </p>
+                </div>
               </div>
             </div>
           </md-content>
@@ -145,7 +128,7 @@
             <!-- logo section -->
             <ul class="list-group list-group-lg no-bg auto">
               <li class="list-group-item clearfix b-none">
-                <div class="display-t-c thumb-lg">
+                <div class="display-t-c thumb-xl">
                   <img ng-src="{{loginImage.link ? loginImage.link : 'img/img-stub.png'}}" class="b b-a wrapper-xxs bg-white img-responsive" alt="...">
                 </div>
                 <div class="clear display-t-c v-middle p-l">
@@ -156,7 +139,7 @@
                 </div>
               </li>
               <li class="list-group-item clearfix b-none">
-                <div class="display-t-c thumb-lg">
+                <div class="display-t-c thumb-xl">
                   <img ng-src="{{splashImage.link ? splashImage.link : 'img/img-stub.png'}}" class="b b-a wrapper-xxs bg-white img-responsive" alt="...">
                 </div>
                 <div class="clear display-t-c v-middle p-l">
@@ -183,31 +166,52 @@
         <md-tab label="RODAPÉS">
 	        <md-content class="md-padding">
 	        		<div class="m-b text-muted text-md text-u-c">RODAPÉ DA PÁGINA</div>
-              <md-input-container class="">
-                <label>Link da página/perfil do Facebook</label>
-                <input ng-model="network.facebookLink">
-              </md-input-container>
-              <md-input-container class="">
-                <label>Link do perfil do Twitter</label>
-                <input ng-model="network.twitterLink">
-              </md-input-container>
-              <md-input-container class="">
-                <label>Link do canal do Youtube</label>
-                <input ng-model="network.youtubeLink">
-              </md-input-container>
-              <md-input-container class="">
-                <label>Link da página/perfil do Google+</label>
-                <input ng-model="network.googlePlusLink">
-              </md-input-container>
+		        		<div class="p-r-xxl p-l-xxl">
+		        			<div class="p-r-xxl p-l-xxl">
+			              <md-input-container class="">
+			                <label>Link da página/perfil do Facebook</label>
+			                <input ng-model="network.facebookLink">
+			              </md-input-container>
+			              <md-input-container class="">
+			                <label>Link do perfil do Twitter</label>
+			                <input ng-model="network.twitterLink">
+			              </md-input-container>
+			              <md-input-container class="">
+			                <label>Link do canal do Youtube</label>
+			                <input ng-model="network.youtubeLink">
+			              </md-input-container>
+			              <md-input-container class="">
+			                <label>Link da página/perfil do Google+</label>
+			                <input ng-model="network.googlePlusLink">
+			              </md-input-container>
+		              </div>
+			          </div>
 	            <div class="line line-dashed b-b line-lg pull-in"></div>
               <div class="m-b text-muted text-md text-u-c">Rodapé da tela de login</div>
-              <div class="m-t-lg md-form-group md-neutral-theme m-t text-md">
-	              <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="3"></textarea>
-	              <label>Rodapé da tela de login</label>
-	              <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
-	            </div>
+	              <div class="p-r-xxl p-l-xxl">
+			        			<div class="p-r-xxl p-l-xxl">
+			              <div class="m-t-lg md-form-group md-neutral-theme m-t text-md">
+				              <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="3"></textarea>
+				              <label></label>
+				              <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
+				            </div>
+			            </div>
+		            </div>
 	        </md-content>
         </md-tab>
+        <md-tab label="APARÊNCIA & PERSONALIZAÇÃO">
+	        <md-content class="md-padding">
+          	<div class="m-t-xxl text-muted text-md text-u-c">Personalização</div>
+        		<md-input-container class="">
+              <label>Aba de estações</label>
+              <input ng-model="network.stationMenuName">
+            </md-input-container>
+            <md-input-container class="">
+              <label>Aba de início</label>
+              <input ng-model="network.homeTabName">
+            </md-input-container>
+	        </md-content>
+	      </md-tab>
       </md-tabs>
     </md-content>
     <!-- <div class="pos-abt top-0 right-0 text-lg m-t">

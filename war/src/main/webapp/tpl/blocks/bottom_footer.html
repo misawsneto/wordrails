@@ -21,13 +21,13 @@
 						app.initData.network.twitterLink || 
 						app.initData.network.googlePlusLink">
 
-		<li ng-if="app.initData.network.facebookLink">
-			<md-button ng-click="app.goToPage(app.initData.network.facebookLink)" md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px; text-dark">
+		<li ng-if="app.initData.network.twitterLink">
+			<md-button ng-click="app.goToPage(app.initData.network.twitterLink)" md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px; text-dark">
 		 		<i class="mdi mdi-twitter i-20 text-black" style="vertical-align: 35%; line-height: normal;"></i>
 		 	</md-button>
 		</li>
-		<li ng-if="app.initData.network.twitterLink">
-			<md-button ng-click="app.goToPage(app.initData.network.twitterLink)" md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px;">
+		<li ng-if="app.initData.network.facebookLink">
+			<md-button ng-click="app.goToPage(app.initData.network.facebookLink)" md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px;">
 		 		<i class="mdi mdi-facebook i-20 text-black" style="vertical-align: 35%; line-height: normal;"></i>
 		 	</md-button>
 		</li>
