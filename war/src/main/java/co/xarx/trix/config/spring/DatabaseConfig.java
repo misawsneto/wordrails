@@ -1,10 +1,8 @@
 package co.xarx.trix.config.spring;
 
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
-import co.xarx.trix.factory.ElasticSearchExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
-import org.springframework.beans.factory.config.ServiceLocatorFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -44,13 +42,6 @@ public class DatabaseConfig {
 		return factory;
 	}
 
-	@Bean
-	public ServiceLocatorFactoryBean elasticSearchExecutorFactory() {
-		ServiceLocatorFactoryBean serviceLocatorFactoryBean = new ServiceLocatorFactoryBean();
-		serviceLocatorFactoryBean.setServiceLocatorInterface(ElasticSearchExecutorFactory.class);
-
-		return serviceLocatorFactoryBean;
-	}
 
 	@Bean
 	public JpaTransactionManager transactionManager(){

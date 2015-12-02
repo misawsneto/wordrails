@@ -3,12 +3,10 @@ package co.xarx.trix.domain.page;
 import co.xarx.trix.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Map;
 
 @Entity
 @Table(name = "section_base")
@@ -19,32 +17,23 @@ public abstract class BaseSection extends BaseEntity implements Section, Seriali
 	@NotNull
 	public String title;
 
-	@NotNull
-	public String sectionLayout;
-
-	@NotNull
-	public String blockLayout;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "section_properties", joinColumns = @JoinColumn(name = "section_id"))
+	@MapKeyColumn(name = "key", nullable = false)
+	@Column(name = "value", nullable = false)
+	public Map<String, String> properties;
 
 	@Override
-	public String getBlockLayout() {
-		return blockLayout;
+	public Map<String, String> getProperties() {
+		return properties;
 	}
 
-	public void setBlockLayout(String blockLayout) {
-		this.blockLayout = blockLayout;
+	public void setProperties(Map<String, String> properties) {
+		this.properties = properties;
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public void setSectionLayout(String layout) {
-		this.sectionLayout = layout;
-	}
-
-	@Override
-	public String getSectionLayout() {
-		return sectionLayout;
 	}
 
 	@Override
