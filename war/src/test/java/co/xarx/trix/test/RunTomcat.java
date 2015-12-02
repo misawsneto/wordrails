@@ -1,13 +1,14 @@
 package co.xarx.trix.test;
 
+import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.startup.Tomcat;
+
+import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.servlet.ServletException;
-import org.apache.catalina.Context;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.startup.Tomcat;
 
 public class RunTomcat {
 	public static void main(String args[]) throws ServletException, LifecycleException, IOException {
@@ -21,7 +22,7 @@ public class RunTomcat {
         } else {
             tomcat.setPort(8080);
         }
-        
+
 		
 		Context context = tomcat.addWebapp("", new File("src/main/webapp").getAbsolutePath());
 

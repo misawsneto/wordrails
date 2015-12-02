@@ -9,6 +9,7 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
+import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.PostService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import java.util.Set;
 @Component
 public class PostEventHandler {
 
+	@Autowired
+	private MobileService mobileService;
 	@Autowired
 	private PostService postService;
 	@Autowired
@@ -84,7 +87,7 @@ public class PostEventHandler {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			postService.schedule(post.id, post.scheduledDate);
 		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
-			postService.buildNotification(post);
+			mobileService.buildNotification(post);
 		}
 		postEsRepository.save(post);
 	}
