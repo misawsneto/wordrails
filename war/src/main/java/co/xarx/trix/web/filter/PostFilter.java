@@ -12,7 +12,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@Component
+@Component("postFilter")
 public class PostFilter implements Filter {
 
 	@Autowired

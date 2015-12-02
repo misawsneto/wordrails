@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Component("wordrailsService")
 public class WordrailsService {
 
 	Logger log = Logger.getLogger(WordrailsService.class.getName());
@@ -37,12 +37,6 @@ public class WordrailsService {
 	public PersonRepository personRepository;
 	@Autowired
 	private NetworkRepository networkRepository;
-	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
-	private QueryPersistence queryPersistence;
-	@Autowired
-	private PostRepository postRepository;
 	@Autowired
 	private PerspectiveResource perspectiveResource;
 	@Autowired

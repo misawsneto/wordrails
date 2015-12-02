@@ -25,103 +25,100 @@
        					   http://www.springframework.org/schema/aop/spring-aop.xsd"
 >
 
+	<!--<context:annotation-config/>-->
 
-	<aop:aspectj-autoproxy>
-		<aop:include name="profilerAspect" />
-		<aop:include name="multitenantRepositoryAspect" />
-	</aop:aspectj-autoproxy>
-	<bean id="profilerAspect" class="co.xarx.trix.aspect.ProfilerAspect"/>
-	<bean id="multitenantRepositoryAspect" class="co.xarx.trix.aspect.MultitenantRepositoryAspect"/>
+	<!--<aop:aspectj-autoproxy>-->
+		<!--<aop:include name="profilerAspect" />-->
+		<!--<aop:include name="multitenantRepositoryAspect" />-->
+	<!--</aop:aspectj-autoproxy>-->
+	<!--<bean id="profilerAspect" class="co.xarx.trix.aspect.ProfilerAspect"/>-->
+	<!--<bean id="multitenantRepositoryAspect" class="co.xarx.trix.aspect.MultitenantRepositoryAspect"/>-->
 
-	<context:component-scan base-package="co.xarx.trix">
-		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
-	</context:component-scan>
+	<!--<context:component-scan base-package="co.xarx.trix">-->
+		<!--<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>-->
+	<!--</context:component-scan>-->
 
-	<jpa:repositories base-package="co.xarx.trix.persistence" transaction-manager-ref="transactionManager"
-					  entity-manager-factory-ref="entityManagerFactory"/>
-	<jpa:auditing date-time-provider-ref="dateTimeProvider"/>
-	<bean id="dateTimeProvider"
-	      class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
-		<property name="staticField"
-		          value="org.springframework.data.auditing.CurrentDateTimeProvider.INSTANCE"/>
-	</bean>
+	<!--<jpa:auditing date-time-provider-ref="dateTimeProvider"/>-->
+	<!--<bean id="dateTimeProvider"-->
+	      <!--class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">-->
+		<!--<property name="staticField"-->
+		          <!--value="org.springframework.data.auditing.CurrentDateTimeProvider.INSTANCE"/>-->
+	<!--</bean>-->
 
-	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<!--<tx:annotation-driven transaction-manager="transactionManager"/>-->
 
-	<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
-	<task:executor id="myExecutor" pool-size="10"/>
-	<task:scheduler id="myScheduler" pool-size="20"/>
+	<!--<task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>-->
+	<!--<task:executor id="myExecutor" pool-size="10"/>-->
+	<!--<task:scheduler id="myScheduler" pool-size="20"/>-->
 
-	<bean class="org.springframework.beans.factory.config.ServiceLocatorFactoryBean" id="elasticSearchExecutorFactory">
-		<property name="serviceLocatorInterface" value="co.xarx.trix.factory.ElasticSearchExecutorFactory"/>
-	</bean>
+	<!--<bean class="org.springframework.beans.factory.config.ServiceLocatorFactoryBean" id="elasticSearchExecutorFactory">-->
+		<!--<property name="serviceLocatorInterface" value="co.xarx.trix.factory.ElasticSearchExecutorFactory"/>-->
+	<!--</bean>-->
 
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory"/>
-		<property name="persistenceUnitName" value="wordrails"/>
-	</bean>
+	<!--<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">-->
+		<!--<property name="entityManagerFactory" ref="entityManagerFactory"/>-->
+		<!--<property name="persistenceUnitName" value="wordrails"/>-->
+	<!--</bean>-->
 
-	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="dataSource" ref="dataSource"/>
-		<property name="persistenceUnitName" value="wordrails"/>
-		<property name="persistenceProvider">
-			<bean class="co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence"/>
-		</property>
-		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
-		</property>
-		<!-- <property name="packagesToScan" value="co.xarx.trix.domain> -->
-	</bean>
+	<!--<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">-->
+		<!--<property name="dataSource" ref="dataSource"/>-->
+		<!--<property name="persistenceUnitName" value="wordrails"/>-->
+		<!--<property name="persistenceProvider">-->
+			<!--<bean class="co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence"/>-->
+		<!--</property>-->
+		<!--<property name="jpaVendorAdapter">-->
+			<!--<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>-->
+		<!--</property>-->
+		<!--&lt;!&ndash; <property name="packagesToScan" value="co.xarx.trix.domain> &ndash;&gt;-->
+	<!--</bean>-->
 
-	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
+	<!--<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>-->
 
-	<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:hostName="meminstance1" p:port="6379"/>
+	<!--<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:hostName="meminstance1" p:port="6379"/>-->
 
-	<bean id="simpleMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
-
-	<bean id="springSessionRepositoryFilter" class="org.springframework.session.web.http.SessionRepositoryFilter">
-		<constructor-arg ref="sessionRepository"/>
-		<property name="httpSessionStrategy">
-			<bean class="org.springframework.session.web.http.CookieHttpSessionStrategy">
-				<property name="cookieName" value="JSESSIONID" />
-			</bean>
-		</property>
-	</bean>
+	<!--<bean id="springSessionRepositoryFilter" class="org.springframework.session.web.http.SessionRepositoryFilter">-->
+		<!--<constructor-arg ref="sessionRepository"/>-->
+		<!--<property name="httpSessionStrategy">-->
+			<!--<bean class="org.springframework.session.web.http.CookieHttpSessionStrategy">-->
+				<!--<property name="cookieName" value="JSESSIONID" />-->
+			<!--</bean>-->
+		<!--</property>-->
+	<!--</bean>-->
 
 	<!-- __________________________ DATABASE __________________________ -->
 
-	<beans profile="dev">
-		<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-			<property name="driverClass" value="com.mysql.jdbc.Driver"/>
-			<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_dev"/>
-			<property name="username" value="wordrails"/>
-			<property name="password" value="wordrails"/>
-		</bean>
-	</beans>
+	<!--<beans profile="dev">-->
+		<!--<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">-->
+			<!--<property name="driverClass" value="com.mysql.jdbc.Driver"/>-->
+			<!--<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_dev"/>-->
+			<!--<property name="username" value="wordrails"/>-->
+			<!--<property name="password" value="wordrails"/>-->
+		<!--</bean>-->
+	<!--</beans>-->
 
-	<beans profile="dev_prod">
-		<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-			<property name="driverClass" value="com.mysql.jdbc.Driver"/>
-			<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_prod"/>
-			<property name="username" value="wordrails"/>
-			<property name="password" value="wordrails"/>
-		</bean>
-	</beans>
+	<!--<beans profile="dev_prod">-->
+		<!--<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">-->
+			<!--<property name="driverClass" value="com.mysql.jdbc.Driver"/>-->
+			<!--<property name="jdbcUrl" value="jdbc:mysql://localhost/trix_prod"/>-->
+			<!--<property name="username" value="wordrails"/>-->
+			<!--<property name="password" value="wordrails"/>-->
+		<!--</bean>-->
+	<!--</beans>-->
 
-	<beans profile="prod">
-		<jee:jndi-lookup id="dataSource" jndi-name="jdbc/trix"/>
-	</beans>
+	<!--<beans profile="prod">-->
+		<!--<jee:jndi-lookup id="dataSource" jndi-name="jdbc/trix"/>-->
+	<!--</beans>-->
 
 	<!-- __________________________ DATABASE __________________________ -->
 
 
 	<!-- __________________________ PROPERTIES __________________________ -->
-	<beans profile="dev">
-		<context:property-placeholder location="classpath*:application.properties, classpath*:application_dev.properties"/>
-	</beans>
+	<!--<beans profile="dev">-->
+		<!--<context:property-placeholder location="classpath*:application.properties, classpath*:application-dev.properties"/>-->
+	<!--</beans>-->
 
-	<beans profile="prod,dev_prod">
-		<context:property-placeholder location="classpath*:application.properties, classpath*:application_prod.properties"/>
-	</beans>
+	<!--<beans profile="prod,dev_prod">-->
+		<!--<context:property-placeholder location="classpath*:application.properties, classpath*:application-prod.properties"/>-->
+	<!--</beans>-->
 	<!-- __________________________ PROPERTIES __________________________ -->
 </beans>

@@ -331,6 +331,7 @@ public class PerspectiveResource {
 		
 		List<Cell> cells = null;
 
+		List<Term> terms = termRepository.findAll();
 		Term term = termRepository.findTreeByTermId(row.term.id);
 		List<Integer> ids = new ArrayList<Integer>();
 		ids.add(term.id);
