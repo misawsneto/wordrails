@@ -139,29 +139,38 @@
               </div>
           </md-content>
         </md-tab>
-        <md-tab label="LOGOTIPOS & RODAPÉS">
-          <md-content class="md-padding">
-            <div class="md-form-group md-neutral-theme">
+        <md-tab label="RODAPÉS">
+	        <md-content class="md-padding">
+	        		<div class="m-b text-muted text-md text-u-c">RODAPÉ DA PÁGINA</div>
               <md-input-container class="">
-                <label>Nome</label>
-                <input ng-model="network.name">
+                <label>Link da página/perfil do Facebook</label>
+                <input ng-model="network.facebookLink">
               </md-input-container>
-            </div>
-            <div class="md-form-group md-neutral-theme">
-              <md-input-container class="text-lg">
-                <label>Nome</label>
-                <input ng-model="network.name">
+              <md-input-container class="">
+                <label>Link do perfil do Twitter</label>
+                <input ng-model="network.twitterLink">
               </md-input-container>
-            </div>
-            <div class="md-form-group md-neutral-theme m-t text-md">
-              <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="3"></textarea>
-              <label>Rodapé da tela de login</label>
-              <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
-            </div>
+              <md-input-container class="">
+                <label>Link do canal do Youtube</label>
+                <input ng-model="network.youtubeLink">
+              </md-input-container>
+              <md-input-container class="">
+                <label>Link da página/perfil do Google+</label>
+                <input ng-model="network.googlePlusLink">
+              </md-input-container>
+	            <div class="line line-dashed b-b line-lg pull-in"></div>
+              <div class="m-b text-muted text-md text-u-c">Rodapé da tela de login</div>
+              <div class="m-t-lg md-form-group md-neutral-theme m-t text-md">
+	              <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="3"></textarea>
+	              <label>Rodapé da tela de login</label>
+	              <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
+	            </div>
+	        </md-content>
+        </md-tab>
+        <md-tab label="LOGOTIPOS">
+          <md-content class="md-padding">
             <!-- /color preferences -->
             <!-- logo section -->
-            <div class="line line-dashed b-b line-lg pull-in"></div>
-            <div class="m-b text-muted text-md text-u-c">Logotipos</div>
             <ul class="list-group list-group-lg no-bg auto">
               <li class="list-group-item clearfix b-none">
                 <div class="display-t-c thumb-lg">

@@ -71,7 +71,7 @@ public class Network implements Serializable{
     public String facebookLink;
     public String youtubeLink;
     public String googlePlusLink;
-    public String twitterkLink;
+    public String twitterLink;
 
     public String webFooter;
 
@@ -162,11 +162,11 @@ public class Network implements Serializable{
 	public Map<String, String> logoHashes;
 
 
-	@ElementCollection
-	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "favicon_id"))
-	@MapKeyColumn(name="sizeTag", nullable = false)
-	@Column(name="hash", nullable = false)
-	public Map<String, String> faviconHashes;
+//	@ElementCollection'
+//	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "favicon_id"))
+//	@MapKeyColumn(name="sizeTag", nullable = false)
+//	@Column(name="hash", nullable = false)
+//	public Map<String, String> faviconHashes;
 
 	@Override
 	public String toString() {
@@ -226,9 +226,9 @@ public class Network implements Serializable{
 		if(logo != null) {
 			this.logoHashes.size();
 		}
-		if(favicon != null) {
-			this.faviconHashes.size();
-		}
+//		if(favicon != null) {
+//			this.faviconHashes.size();
+//		}
 	}
 
 	private void onChange() {

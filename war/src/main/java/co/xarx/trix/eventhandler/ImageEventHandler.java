@@ -7,6 +7,7 @@ import co.xarx.trix.persistence.FileContentsRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
+import co.xarx.trix.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -56,6 +57,7 @@ public class ImageEventHandler {
 				originalFile.contents = null;
 				originalFile.type = File.EXTERNAL;
 			} catch (Exception e) {
+                Logger.error(e.getMessage(), e);
 				throw new Exception("something bad happened uploading new image", e);
 			}
 		} else {

@@ -621,7 +621,7 @@ public class PersonsResource {
 
 	@GET
 	@Path("/allInit")
-	public PersonData getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws IOException {
+	public PersonData   getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws IOException {
 
 		Integer stationId = wordrailsService.getStationIdFromCookie(request);
 		PersonData personData = getInitialData(request);
@@ -646,6 +646,9 @@ public class PersonsResource {
 				request.setAttribute("personData", simpleMapper.writeValueAsString(personData));
 				request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
 				request.setAttribute("networkName", personData.network.name);
+                request.setAttribute("networkId", personData.network.id);
+                if(personData.network.faviconId != null)
+                    request.setAttribute("faviconLink", "/api/files/" + personData.network.faviconId + "/contents");
 				request.setAttribute("networkDesciption", "");
 				request.setAttribute("networkKeywords", "");
 			}
