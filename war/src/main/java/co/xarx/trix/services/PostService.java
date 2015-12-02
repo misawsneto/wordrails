@@ -1,8 +1,7 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.PostRead;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.PostReadRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
@@ -35,11 +34,11 @@ public class PostService {
 	@Autowired
 	private PostEsRepository postEsRepository;
 
-	public void removePostIndex(Post post){
+	public void removePostIndex(Post post) {
 		postEsRepository.delete(post);
 	}
-	
-	public void updatePostIndex (Post post){
+
+	public void updatePostIndex(Post post) {
 		postEsRepository.update(post);
 	}
 
@@ -97,26 +96,35 @@ public class PostService {
 		}
 	}
 
-	@Transactional
-	public void countPostRead(Post post, Person person, String sessionId){
-		try {
-			PostRead postRead = new PostRead();
-			postRead.person = person;
-			postRead.post = post;
-			postRead.sessionid = "0"; // constraint fails if null
-			if(postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
-				postRead.person = null;
-				postRead.sessionid = sessionId;
+	@Transactional(noRollbackFor = Exception.class)
+	public void countPostRead(Post post, Person person, String sessionId) {
+		QPostRead pr = QPostRead.postRead;
+		if (person == null || person.username.equals("wordrails")) {
+			if(postReadRepository.findAll(pr.sessionid.eq(sessionId).and(pr.post.id.eq(post.id)))
+					.iterator().hasNext()) {
+				return;
 			}
+		} else {
+			if(postReadRepository.findAll(pr.sessionid.eq("0").and(pr.post.id.eq(post.id)).and(pr.person.id.eq(person.id)))
+					.iterator().hasNext()) {
+				return;
+			}
+		}
 
-			try {
-				postReadRepository.save(postRead);
-				queryPersistence.incrementReadsCount(post.id);
-			} catch (ConstraintViolationException | DataIntegrityViolationException e) {
-				log.info("user already read this post");
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		PostRead postRead = new PostRead();
+		postRead.person = person;
+		postRead.post = post;
+		postRead.sessionid = "0"; // constraint fails if null
+		if (postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
+			postRead.person = null;
+			postRead.sessionid = sessionId;
+		}
+
+		try {
+			postReadRepository.save(postRead);
+			queryPersistence.incrementReadsCount(post.id);
+		} catch (ConstraintViolationException | DataIntegrityViolationException e) {
+			log.info("user already read this post");
 		}
 	}
 }

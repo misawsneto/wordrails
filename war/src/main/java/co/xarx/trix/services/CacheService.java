@@ -11,6 +11,7 @@ import com.google.common.cache.LoadingCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +33,7 @@ public class CacheService {
 	@Autowired
 	private PersonRepository personRepository;
 
+	@PostConstruct
 	public void init() {
 		// ------------- init person cache
 		persons = CacheBuilder.newBuilder().maximumSize(1000).expireAfterWrite(1, TimeUnit.MINUTES)

@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -23,7 +24,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Component("wordrailsService")
 public class WordrailsService {
 
 	Logger log = Logger.getLogger(WordrailsService.class.getName());
@@ -37,12 +38,6 @@ public class WordrailsService {
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
-	private QueryPersistence queryPersistence;
-	@Autowired
-	private PostRepository postRepository;
-	@Autowired
 	private PerspectiveResource perspectiveResource;
 	@Autowired
 	private CacheService cacheService;
@@ -53,6 +48,7 @@ public class WordrailsService {
 
 	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
 
+	@PostConstruct
 	public void init(){
 		// ------------- init person cache
 		stationsPermissions = CacheBuilder.newBuilder().maximumSize(1000)

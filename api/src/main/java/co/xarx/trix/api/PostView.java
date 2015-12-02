@@ -13,9 +13,9 @@ public class PostView implements Serializable, Identifiable {
 
 	private static final long serialVersionUID = -1474032487285763669L;
 
-	public static class Term {
+	public static class Category {
 
-		public Term(Integer id, String name) {
+		public Category(Integer id, String name) {
 			this.id = id;
 			this.name = name;
 		}
@@ -42,7 +42,7 @@ public class PostView implements Serializable, Identifiable {
 	public String imageMediumHash;
 	public String imageLargeHash;
 
-	public Set<PostView.Term> categories;
+	public Set<Category> categories;
 	public Set<String> tags;
 	public Boolean sponsored;
 	public java.util.Date date;

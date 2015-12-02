@@ -2,25 +2,19 @@ package co.xarx.trix.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {
 		@UniqueConstraint(columnNames={"taxonomy_id","name"})
 })
-public class Term implements Serializable {
+public class Term extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 7891255759575029731L;
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public Integer id;
 	
 	@Size(min=1, max=100)
 	public String name;
@@ -53,20 +47,7 @@ public class Term implements Serializable {
 	public Set<TermPerspective> termPerspectives;
 
 	public Integer taxonomyId;
-	
 	public String taxonomyName;
-    
-    public String color;
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date createdAt;
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date updatedAt;
 
 	@PrePersist
 	void onCreate(){
@@ -74,7 +55,6 @@ public class Term implements Serializable {
 			taxonomyId = taxonomy.id;
 			taxonomyName = taxonomy.name;
 		}
-		createdAt = new Date();
 	}
 	
 	@PreUpdate
@@ -83,7 +63,6 @@ public class Term implements Serializable {
 			taxonomyId = taxonomy.id;
 			taxonomyName = taxonomy.name;
 		}
-		updatedAt = new Date();
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import java.sql.Blob;
 
 @Deprecated
 @Entity
-@Table(name="file")
+@Table(name="File")
 public class FileContents extends BaseEntity {
 
 	@NotNull
