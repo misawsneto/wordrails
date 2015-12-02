@@ -7,7 +7,9 @@
   <title>${networkName}</title>
   ${requestedEntityMetas}
 
-  <meta name="description" content="${networkDesciption}" />
+    <link rel="shortcut icon" href="${not empty faviconLink?faviconLink:''}" />
+
+    <meta name="description" content="${networkDesciption}" />
   <meta name="keywords" content="${networkKeywords}" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="google-signin-client_id" content="940891630461-0a0krbd2djhnpd0282rskgdsjgi0n018.apps.googleusercontent.com">
@@ -40,7 +42,9 @@
   <base href="/">
 </head>
 <body ng-controller="AppCtrl" ng-cloak>
+
   ${not empty requestedEntityHiddenHtml?requestedEntityHiddenHtml:''}
+
   <div ng-click="contentClick()" class="app content-wrap" id="app" ng-class="{'is-logged': app.isLogged, 'mobile-screen': app.isMobile, 'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container, 'white-bg': $state.current.name == 'app.post', 'bg-perspective': $state.includes('app.stations'), 'bg-light-grey': $state.includes('app.settings') || $state.includes('app.bookmarks') || $state.includes('app.search') || $state.includes('app.notifications') || $state.includes('app.user') || $state.includes('app.publications') || $state.includes('app.userstats') || $state.includes('app.tagspage'), 'bg-light': $state.includes('access'), 'bg-create-network': $state.includes('access.createnetwork')}" ui-view></div>
 
   <!-- Google -->

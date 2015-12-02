@@ -13,7 +13,14 @@ public interface NetworkProjection {
 	Integer getSplashImageId();
 	Integer getLoginImageId();
     Integer getLoginImageSmallId();
-	
+
+    String getStationMenuName();
+    String getHomeTabName();
+
+    String getFacebookLink();
+    String getYoutubeLink();
+    String getGooglePlusLink();
+    String getTwitterLink();
 	
     String getFlurryKey();
     String getTrackingId();

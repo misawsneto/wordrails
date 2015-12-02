@@ -2699,10 +2699,29 @@ md-backdrop.md-opaque.ng-leave {
     border-color: #555!important;
   }
 
-  .md-neutral-theme label,
+  .md-neutral-theme label{
+    color: #888!important;
+  }
   .md-neutral-theme .md-input:focus ~ label,
   .md-neutral-theme .md-input.focus ~ label {
     color: #555!important;
+  }
+
+  .md-default-theme md-tabs md-ink-bar {
+    color: rgba(0,0,0, 0.84);
+    background: rgba(0,0,0,0.7);
+  }
+
+  .md-default-theme md-tab-item span{
+    color: rgba(0,0,0, 0.54) !important
+  }
+
+  .md-default-theme md-tab-item.md-active span{
+    color: rgba(0,0,0, 0.84) !important
+  }
+
+  .md-default-theme md-tab[disabled]{
+    background-color: #f9f9f9;
   }
 
   .b-dark{
@@ -2914,6 +2933,10 @@ md-backdrop.md-opaque.ng-leave {
     min-width: 450px;
     max-width: 450px;
   }
+}
+
+label {
+  margin: margin;
 }
 
  /* /general */

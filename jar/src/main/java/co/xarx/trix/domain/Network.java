@@ -9,7 +9,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -71,7 +70,7 @@ public class Network implements Serializable{
     public String facebookLink;
     public String youtubeLink;
     public String googlePlusLink;
-    public String twitterkLink;
+    public String twitterLink;
 
     public String webFooter;
 
@@ -80,8 +79,11 @@ public class Network implements Serializable{
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
-	
-	public String domain;
+
+    public String stationMenuName;
+    public String homeTabName;
+
+    public String domain;
 
 	@JsonIgnore
 	public String networkCreationToken;

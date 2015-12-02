@@ -12,7 +12,7 @@
 							app.initData.network.youtubeLink || 
 							app.initData.network.twitterLink || 
 							app.initData.network.googlePlusLink)" class="pull-left wrapper">
-								Copyright ©
+								Copyright© {{app.year}}
 							</div>
 
 	<ul class="nav navbar-nav navbar-right m-r-xs"
@@ -21,24 +21,24 @@
 						app.initData.network.twitterLink || 
 						app.initData.network.googlePlusLink">
 
-		<li>
-			<md-button  md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px; text-dark">
+		<li ng-if="app.initData.network.facebookLink">
+			<md-button ng-click="app.goToPage(app.initData.network.facebookLink)" md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px; text-dark">
 		 		<i class="mdi mdi-twitter i-20 text-black" style="vertical-align: 35%; line-height: normal;"></i>
 		 	</md-button>
 		</li>
-		<li>
-			<md-button  md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px;">
+		<li ng-if="app.initData.network.twitterLink">
+			<md-button ng-click="app.goToPage(app.initData.network.twitterLink)" md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px;">
 		 		<i class="mdi mdi-facebook i-20 text-black" style="vertical-align: 35%; line-height: normal;"></i>
 		 	</md-button>
 		</li>
-		<li>
-			<md-button  md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px; text-dark">
+		<li ng-if="app.initData.network.googlePlusLink">
+			<md-button ng-click="app.goToPage(app.initData.network.googlePlusLink)" md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px; text-dark">
 		 		<i class="mdi mdi-google-plus i-20 text-black" style="vertical-align: 35%; line-height: normal;"></i>
 		 	</md-button>
 		</li>
-		<li>
-			<md-button  md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px;">
-		 		<i class="mdi mdi-youtube i-20 text-black" style="vertical-align: 35%; line-height: normal;"></i>
+		<li ng-if="app.initData.network.youtubeLink">
+			<md-button ng-click="app.goToPage(app.initData.network.youtubeLink)" md-ink-ripple class="md-fab bg-white" style="width:35px;height:35px;">
+		 		<i class="fa fa-youtube i-24 text-black" style="vertical-align: 30%; line-height: normal;"></i>
 		 	</md-button>
 		</li>
 	</ul>

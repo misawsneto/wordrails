@@ -90,7 +90,10 @@ public class Station extends BaseEntity implements Serializable{
 	public boolean sponsored;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
-		public boolean showAuthorSocialData;
+    public boolean showAuthorSocialData;
+
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    public boolean showAuthorData;
 
 	@OneToOne
 	public Image logo;
