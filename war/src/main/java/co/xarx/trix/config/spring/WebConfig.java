@@ -8,7 +8,7 @@ import org.springframework.session.web.http.CookieHttpSessionStrategy;
 
 @Configuration
 @EnableRedisHttpSession
-public class WebConfiguration {
+public class WebConfig {
 
 	@Bean
 	public CookieHttpSessionStrategy cookieHttpSessionStrategy() {

@@ -8,7 +8,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 @Configuration
 @PropertySource(value = {
 		"classpath:application.properties",
-		"classpath:application-${spring.profiles.active:default}.properties"
+		"classpath:application_${spring.profiles.active:default}.properties"
 })
 public class PropertyConfig {
 

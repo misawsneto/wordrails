@@ -15,8 +15,10 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.sql.DataSource;
+
 @Configuration
-@EnableTransactionManagement()
+@EnableTransactionManagement
 @EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
 @EnableJpaRepositories(basePackages = "co.xarx.trix.persistence")
 public class DatabaseConfig {
@@ -24,16 +26,15 @@ public class DatabaseConfig {
 	@Autowired
 	Environment env;
 	@Autowired
-	DataSourceConfig dataSourceConfig;
+	DataSource dataSource;
 
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		vendorAdapter.setGenerateDdl(true);
 
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-		factory.setDataSource(dataSourceConfig.dataSource());
+		factory.setDataSource(dataSource);
 		factory.setPersistenceUnitName("wordrails");
 		factory.setPersistenceProviderClass(MultiTenantHibernatePersistence.class);
 		factory.setJpaVendorAdapter(vendorAdapter);
@@ -54,7 +55,7 @@ public class DatabaseConfig {
 	@Bean
 	public JpaTransactionManager transactionManager(){
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-		jpaTransactionManager.setDataSource(dataSourceConfig.dataSource());
+		jpaTransactionManager.setDataSource(dataSource);
 		jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 		return jpaTransactionManager;
 	}

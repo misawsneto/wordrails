@@ -114,11 +114,11 @@
 
 	<!-- __________________________ PROPERTIES __________________________ -->
 	<!--<beans profile="dev">-->
-		<!--<context:property-placeholder location="classpath*:application.properties, classpath*:application-dev.properties"/>-->
+		<!--<context:property-placeholder location="classpath*:application.properties, classpath*:application_dev.properties"/>-->
 	<!--</beans>-->
 
 	<!--<beans profile="prod,dev_prod">-->
-		<!--<context:property-placeholder location="classpath*:application.properties, classpath*:application-prod.properties"/>-->
+		<!--<context:property-placeholder location="classpath*:application.properties, classpath*:application_prod.properties"/>-->
 	<!--</beans>-->
 	<!-- __________________________ PROPERTIES __________________________ -->
 </beans>

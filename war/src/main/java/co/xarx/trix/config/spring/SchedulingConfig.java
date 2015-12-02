@@ -8,12 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
+import javax.sql.DataSource;
+
 @Configuration
 @EnableScheduling
 public class SchedulingConfig {
 
 	@Autowired
-	DataSourceConfig dataSourceConfig;
+	DataSource dataSource;
 	@Autowired
 	private ApplicationContext applicationContext;
 
@@ -21,7 +23,7 @@ public class SchedulingConfig {
 	public SchedulerFactoryBean quartzScheduler() {
 		SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
 		schedulerFactoryBean.setConfigLocation(applicationContext.getResource("classpath:quartz.properties"));
-		schedulerFactoryBean.setDataSource(dataSourceConfig.dataSource());
+		schedulerFactoryBean.setDataSource(dataSource);
 		schedulerFactoryBean.setAutoStartup(true);
 		schedulerFactoryBean.setApplicationContextSchedulerContextKey("applicationContext");
 		schedulerFactoryBean.setJobFactory(new AutowiringSpringBeanJobFactory());

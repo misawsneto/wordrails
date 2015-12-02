@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0" metadata-complete="true">
 
-	<!--<context-param>-->
-		<!--<param-name>spring.profiles.active</param-name>-->
-		<!--<param-value>dev</param-value>-->
-	<!--</context-param>-->
+	<context-param>
+		<param-name>spring.profiles.active</param-name>
+		<param-value>dev</param-value>
+	</context-param>
 
 	<resource-ref>
 		<res-ref-name>jdbc/trix</res-ref-name>
@@ -24,72 +24,70 @@
 		<session-timeout>5760</session-timeout>
 	</session-config>
 
-	<error-page>
-		<error-code>500</error-code>
-		<location>/505.html</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/404.html</location>
-	</error-page>
-
-	<!--<listener>-->
-		<!--<listener-class>co.xarx.trix.ContextServletListener</listener-class>-->
-	<!--</listener>-->
+	<listener>
+		<listener-class>co.xarx.trix.ContextServletListener</listener-class>
+	</listener>
 
 	<!-- RESTEasy -->
-	<!--<listener>-->
-		<!--<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>-->
-	<!--</listener>-->
+	<listener>
+		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+	</listener>
 
-	<!--<context-param>-->
-		<!--<param-name>resteasy.servlet.mapping.prefix</param-name>-->
-		<!--<param-value>/api</param-value>-->
-	<!--</context-param>-->
+	<context-param>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/api</param-value>
+	</context-param>
 
-	<!--<filter>-->
-		<!--<filter-name>FilterDispatcher</filter-name>-->
-		<!--<filter-class>org.jboss.resteasy.plugins.server.servlet.FilterDispatcher</filter-class>-->
-	<!--</filter>-->
+	<filter>
+		<filter-name>FilterDispatcher</filter-name>
+		<filter-class>org.jboss.resteasy.plugins.server.servlet.FilterDispatcher</filter-class>
+	</filter>
 	<!-- RESTEasy -->
 
-	<!--<listener>-->
-		<!--<listener-class>co.xarx.trix.config.WordRailsContextLoaderListener</listener-class>-->
-	<!--</listener>-->
+	<!-- Spring -->
+	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
+		</listener> -->
+	<listener>
+		<listener-class>co.xarx.trix.config.TrixContextLoaderListener</listener-class>
+	</listener>
 
-	<!--<context-param>-->
-		<!--<param-name>contextConfigLocation</param-name>-->
-		<!--<param-value>-->
-			<!--classpath:applicationContext.xml-->
-			<!--classpath:applicationContext-quartz.xml-->
-			<!--classpath:applicationContext-integration.xml-->
-			<!--classpath:applicationContext-security.xml-->
-		<!--</param-value>-->
-	<!--</context-param>-->
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>
+			org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+		</param-value>
+	</context-param>
 
-	<!--<listener>-->
-		<!--<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>-->
-	<!--</listener>-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			co.xarx.trix.config.spring
+		</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
 	<!-- Spring -->
 
 	<!-- Spring Data REST -->
-	<!--<servlet>-->
-		<!--<servlet-name>DispatcherServlet</servlet-name>-->
-		 <!--<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>-->
-		<!--&lt;!&ndash;<servlet-class>org.springframework.data.rest.webmvc.RepositoryRestDispatcherServlet</servlet-class>&ndash;&gt;-->
-		<!--<init-param>-->
-			<!--<param-name>contextConfigLocation</param-name>-->
-			<!--&lt;!&ndash;suppress WebProperties &ndash;&gt;-->
-			<!--<param-value></param-value>-->
-		<!--</init-param>-->
-		<!--<load-on-startup>1</load-on-startup>-->
-	<!--</servlet>-->
+	<servlet>
+		<servlet-name>DispatcherServlet</servlet-name>
+		 <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!--<servlet-class>org.springframework.data.rest.webmvc.RepositoryRestDispatcherServlet</servlet-class>-->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<!--suppress WebProperties -->
+			<param-value></param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
-	<!--<servlet-mapping>-->
-		<!--<servlet-name>DispatcherServlet</servlet-name>-->
-		<!--<url-pattern>/api/*</url-pattern>-->
-	<!--</servlet-mapping>-->
-	<!--&lt;!&ndash; Spring Data REST &ndash;&gt;-->
+	<servlet-mapping>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+	<!-- Spring Data REST -->
 
 	<servlet>
 		<servlet-name>myindex</servlet-name>
@@ -108,180 +106,200 @@
 		<url-pattern>/access/createnetwork</url-pattern>
 	</servlet-mapping>
 
-	<!--<filter>-->
-		<!--<filter-name>springSessionRepositoryFilter</filter-name>-->
-		<!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
-	<!--</filter>-->
-	<!--<filter-mapping>-->
-		<!--<filter-name>springSessionRepositoryFilter</filter-name>-->
-		<!--<url-pattern>/*</url-pattern>-->
-	<!--</filter-mapping>-->
+	<filter>
+		<filter-name>springSessionRepositoryFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSessionRepositoryFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<!-- Spring ORM -->
-	<!--<filter>-->
-		<!--<filter-name>OpenEntityManagerInViewFilter</filter-name>-->
-		<!--<filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>-->
-		<!--<init-param>-->
-			<!--<param-name>entityManagerFactoryBeanName</param-name>-->
-			<!--<param-value>entityManagerFactory</param-value>-->
-		<!--</init-param>-->
-	<!--</filter>-->
-	<!--<filter-mapping>-->
-		<!--<filter-name>OpenEntityManagerInViewFilter</filter-name>-->
-		<!--<url-pattern>/api/*</url-pattern>-->
-		<!--<url-pattern>/index.jsp</url-pattern>-->
-		<!--<url-pattern>/search/*</url-pattern>-->
-		<!--<url-pattern>/post/*</url-pattern>-->
-		<!--<url-pattern>/bookmarks/*</url-pattern>-->
-		<!--<url-pattern>/notifications/*</url-pattern>-->
-		<!--<url-pattern>/settings/*</url-pattern>-->
-		<!--<url-pattern>/publications/*</url-pattern>-->
-		<!--<url-pattern>/user/*</url-pattern>-->
-		<!--<url-pattern>/read/*</url-pattern>-->
-		<!--<url-pattern>/mystats/*</url-pattern>-->
-		<!--<dispatcher>REQUEST</dispatcher>-->
-		<!--<dispatcher>FORWARD</dispatcher>-->
-	<!--</filter-mapping>-->
+	<filter>
+		<filter-name>OpenEntityManagerInViewFilter</filter-name>
+		<filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+		<init-param>
+			<param-name>entityManagerFactoryBeanName</param-name>
+			<param-value>entityManagerFactory</param-value>
+		</init-param>
+	</filter>
 	<!-- Spring ORM -->
 
 	<!-- Spring Security -->
-	<!--<listener>-->
-		<!--<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>-->
-	<!--</listener>-->
+	<listener>
+		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
 
-	<!--<filter>-->
-		<!--<filter-name>springSecurityFilterChain</filter-name>-->
-		<!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
-	<!--</filter>-->
-
-	<!--<filter-mapping>-->
-		<!--<filter-name>springSecurityFilterChain</filter-name>-->
-		<!--<url-pattern>/*</url-pattern>-->
-	<!--</filter-mapping>-->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
 	<!-- Spring Security -->
 
 	<!-- Cache -->
-	<!--<filter>-->
-		<!--<filter-name>CacheFilter</filter-name>-->
-		<!--<filter-class>co.xarx.trix.web.filter.CacheFilter</filter-class>-->
-	<!--</filter>-->
-
-	<!--<filter-mapping>-->
-		<!--<filter-name>CacheFilter</filter-name>-->
-		<!--<url-pattern>/api/*</url-pattern>-->
-	<!--</filter-mapping>-->
+	<filter>
+		<filter-name>CacheFilter</filter-name>
+		<filter-class>co.xarx.trix.web.filter.CacheFilter</filter-class>
+	</filter>
 	<!-- Cache -->
 
-	<!--<filter>-->
-		<!--<filter-name>PostFilter</filter-name>-->
-		<!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
-		<!--<init-param>-->
-			<!--<param-name>targetBeanName</param-name>-->
-			<!--<param-value>postFilter</param-value>-->
-		<!--</init-param>-->
-	<!--</filter>-->
+	<filter>
+		<filter-name>PostFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>postFilter</param-value>
+		</init-param>
+	</filter>
 
-	<!--<filter-mapping>-->
-		<!--<filter-name>PostFilter</filter-name>-->
-		<!--<url-pattern>/api/posts</url-pattern>-->
-		<!--<url-pattern>/api/posts/*</url-pattern>-->
-		<!--<dispatcher>FORWARD</dispatcher>-->
-		<!--<dispatcher>REQUEST</dispatcher>-->
-	<!--</filter-mapping>-->
+	<filter>
+		<filter-name>NetworkDomainFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>networkDomainFilter</param-value>
+		</init-param>
+	</filter>
 
-	<!--<filter>-->
-		<!--<filter-name>NetworkDomainFilter</filter-name>-->
-		<!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
-		<!--<init-param>-->
-			<!--<param-name>targetBeanName</param-name>-->
-			<!--<param-value>networkDomainFilter</param-value>-->
-		<!--</init-param>-->
-	<!--</filter>-->
+	<filter>
+		<filter-name>CORSCustomFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>corsCustomFilter</param-value>
+		</init-param>
+	</filter>
 
-	<!--<filter-mapping>-->
-		<!--<filter-name>NetworkDomainFilter</filter-name>-->
-		<!--<url-pattern>/index.jsp</url-pattern>-->
-		<!--<url-pattern>/search/*</url-pattern>-->
-		<!--<url-pattern>/post/*</url-pattern>-->
-		<!--<url-pattern>/bookmarks/*</url-pattern>-->
-		<!--<url-pattern>/notifications/*</url-pattern>-->
-		<!--<url-pattern>/settings/*</url-pattern>-->
-		<!--<url-pattern>/publications/*</url-pattern>-->
-		<!--<url-pattern>/user/*</url-pattern>-->
-		<!--<url-pattern>/read/*</url-pattern>-->
-		<!--<url-pattern>/api/*</url-pattern>-->
-		<!--<url-pattern>/mystats/*</url-pattern>-->
-		<!--<dispatcher>REQUEST</dispatcher>-->
-		<!--<dispatcher>FORWARD</dispatcher>-->
-	<!--</filter-mapping>-->
+	<filter>
+		<filter-name>PersonDataFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>personDataFilter</param-value>
+		</init-param>
+	</filter>
 
-	<!--<filter>-->
-		<!--<filter-name>CORSCustomFilter</filter-name>-->
-		<!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
-		<!--<init-param>-->
-			<!--<param-name>targetBeanName</param-name>-->
-			<!--<param-value>corsCustomFilter</param-value>-->
-		<!--</init-param>-->
-	<!--</filter>-->
+	<filter>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+		<!--<init-param>
+			<param-name>logLevel</param-name>
+			<param-value>WARN</param-value>
+		</init-param>-->
+	</filter>
 
-	<!--<filter-mapping>-->
-		<!--<filter-name>CORSCustomFilter</filter-name>-->
-		<!--<url-pattern>/*</url-pattern>-->
-	<!--</filter-mapping>-->
+	<filter>
+		<filter-name>PathEntityFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>pathEntityFilter</param-value>
+		</init-param>
+	</filter>
 
-	<!--<filter>-->
-		<!--<filter-name>PersonDataFilter</filter-name>-->
-		<!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
-		<!--<init-param>-->
-			<!--<param-name>targetBeanName</param-name>-->
-			<!--<param-value>personDataFilter</param-value>-->
-		<!--</init-param>-->
-	<!--</filter>-->
+	<filter-mapping>
+		<filter-name>CORSCustomFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
-	<!--<filter-mapping>-->
-		<!--<filter-name>PersonDataFilter</filter-name>-->
-		<!--<url-pattern>/index.jsp</url-pattern>-->
-		<!--<url-pattern>/search/*</url-pattern>-->
-		<!--<url-pattern>/post/*</url-pattern>-->
-		<!--<url-pattern>/bookmarks/*</url-pattern>-->
-		<!--<url-pattern>/notifications/*</url-pattern>-->
-		<!--<url-pattern>/settings/*</url-pattern>-->
-		<!--<url-pattern>/publications/*</url-pattern>-->
-		<!--<url-pattern>/user/*</url-pattern>-->
-		<!--<url-pattern>/read/*</url-pattern>-->
-		<!--<url-pattern>/mystats/*</url-pattern>-->
-		<!--<dispatcher>REQUEST</dispatcher>-->
-		<!--<dispatcher>FORWARD</dispatcher>-->
-	<!--</filter-mapping>-->
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
-	<!--<filter>-->
-		<!--<filter-name>UrlRewriteFilter</filter-name>-->
-		<!--<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>-->
-	<!--</filter>-->
+	<filter-mapping>
+		<filter-name>PathEntityFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
 
-	<!--<filter-mapping>-->
-		<!--<filter-name>UrlRewriteFilter</filter-name>-->
-		<!--<url-pattern>/*</url-pattern>-->
-	<!--</filter-mapping>-->
+	<filter-mapping>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
-	<!--<filter>-->
-		<!--<filter-name>PathEntityFilter</filter-name>-->
-		<!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
-		<!--<init-param>-->
-			<!--<param-name>targetBeanName</param-name>-->
-			<!--<param-value>pathEntityFilter</param-value>-->
-		<!--</init-param>-->
-	<!--</filter>-->
+	<filter-mapping>
+		<filter-name>NetworkDomainFilter</filter-name>
+		<url-pattern>/index.jsp</url-pattern>
+		<url-pattern>/search/*</url-pattern>
+		<url-pattern>/post/*</url-pattern>
+		<url-pattern>/bookmarks/*</url-pattern>
+		<url-pattern>/notifications/*</url-pattern>
+		<url-pattern>/settings/*</url-pattern>
+		<url-pattern>/publications/*</url-pattern>
+		<url-pattern>/user/*</url-pattern>
+		<url-pattern>/read/*</url-pattern>
+		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/mystats/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
 
-	<!--<filter-mapping>-->
-		<!--<filter-name>PathEntityFilter</filter-name>-->
-		<!--<url-pattern>/*</url-pattern>-->
-		<!--<dispatcher>REQUEST</dispatcher>-->
-		<!--<dispatcher>FORWARD</dispatcher>-->
-	<!--</filter-mapping>-->
+	<filter-mapping>
+		<filter-name>PathEntityFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
 
-	<!--<filter-mapping>-->
-		<!--<filter-name>FilterDispatcher</filter-name>-->
-		<!--<url-pattern>/api/*</url-pattern>-->
-	<!--</filter-mapping>-->
+	<filter-mapping>
+		<filter-name>PersonDataFilter</filter-name>
+		<url-pattern>/index.jsp</url-pattern>
+		<url-pattern>/search/*</url-pattern>
+		<url-pattern>/post/*</url-pattern>
+		<url-pattern>/bookmarks/*</url-pattern>
+		<url-pattern>/notifications/*</url-pattern>
+		<url-pattern>/settings/*</url-pattern>
+		<url-pattern>/publications/*</url-pattern>
+		<url-pattern>/user/*</url-pattern>
+		<url-pattern>/read/*</url-pattern>
+		<url-pattern>/mystats/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>OpenEntityManagerInViewFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/index.jsp</url-pattern>
+		<url-pattern>/search/*</url-pattern>
+		<url-pattern>/post/*</url-pattern>
+		<url-pattern>/bookmarks/*</url-pattern>
+		<url-pattern>/notifications/*</url-pattern>
+		<url-pattern>/settings/*</url-pattern>
+		<url-pattern>/publications/*</url-pattern>
+		<url-pattern>/user/*</url-pattern>
+		<url-pattern>/read/*</url-pattern>
+		<url-pattern>/mystats/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>FilterDispatcher</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>PostFilter</filter-name>
+		<url-pattern>/api/posts</url-pattern>
+		<url-pattern>/api/posts/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>CacheFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/505.html</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.html</location>
+	</error-page>
 </web-app>
