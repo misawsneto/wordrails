@@ -4,9 +4,7 @@ import co.xarx.trix.config.TrixContextLoaderListener;
 import co.xarx.trix.config.spring.DatabaseConfig;
 import co.xarx.trix.config.spring.SecurityConfig;
 import co.xarx.trix.web.filter.CORSCustomFilter;
-import co.xarx.trix.web.filter.CacheFilter;
 import co.xarx.trix.web.filter.NetworkDomainFilter;
-import co.xarx.trix.web.filter.PostFilter;
 import org.jboss.resteasy.plugins.server.servlet.FilterDispatcher;
 import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
@@ -70,46 +68,33 @@ public class WebAppInitializer implements WebApplicationInitializer {
 	}
 
 	private void addFilters(ServletContext servletContext) {
-//		FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
-//		springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
+		EnumSet<DispatcherType> reqAndForw = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
 
 		FilterRegistration.Dynamic repositoryFilter = servletContext.addFilter("springSessionRepositoryFilter", DelegatingFilterProxy.class);
 		repositoryFilter.addMappingForUrlPatterns(null, false, "/*");
 
-		FilterRegistration.Dynamic filterDispatcher = servletContext.addFilter("FilterDispatcher", FilterDispatcher.class);
-		filterDispatcher.addMappingForUrlPatterns(null, false, "/api/*");
+		FilterRegistration.Dynamic corsCustomFilter = servletContext.addFilter("corsCustomFilter", CORSCustomFilter.class);
+		corsCustomFilter.setInitParameter("targetBeanName", "corsCustomFilter");
+		corsCustomFilter.addMappingForUrlPatterns(null, false, "/*");
 
-		EnumSet<DispatcherType> reqAndForw = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
-		FilterRegistration.Dynamic inViewFilter = servletContext.addFilter("OpenEntityManagerInViewFilter", OpenEntityManagerInViewFilter.class);
-		inViewFilter.setInitParameter("entityManagerFactoryBeanName", "entityManagerFactory");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/api/*");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/index.jsp");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/search/*");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/post/*");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/bookmarks/*");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/notifications/*");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/settings/*");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/publications/*");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/user/*");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/read/*");
-		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/mystats/*");
+		FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
+		springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
 
-		FilterRegistration.Dynamic postFilter = servletContext.addFilter("postFilter", PostFilter.class);
-		postFilter.setInitParameter("targetBeanName", "postFilter");
-		postFilter.addMappingForUrlPatterns(reqAndForw, false, "/api/posts");
-		postFilter.addMappingForUrlPatterns(reqAndForw, false, "/api/posts/*");
+		FilterRegistration.Dynamic pathEntityFilter = servletContext.addFilter("pathEntityFilter", DelegatingFilterProxy.class);
+		pathEntityFilter.setInitParameter("targetBeanName", "pathEntityFilter");
+		pathEntityFilter.addMappingForUrlPatterns(reqAndForw, false, "/*");
+
+		FilterRegistration.Dynamic urlRewriteFilter = servletContext.addFilter("UrlRewriteFilter", UrlRewriteFilter.class);
+		urlRewriteFilter.setInitParameter("logLevel", "slf4j");
+		urlRewriteFilter.addMappingForUrlPatterns(reqAndForw, false, "/*");
 
 		FilterRegistration.Dynamic networkDomainFilter = servletContext.addFilter("networkDomainFilter", DelegatingFilterProxy.class);
 		networkDomainFilter.setInitParameter("targetBeanName", "networkDomainFilter");
 		networkDomainFilter.addMappingForUrlPatterns(reqAndForw, false, "/*");
 
-		FilterRegistration.Dynamic cacheFilter = servletContext.addFilter("cacheFilter", CacheFilter.class);
-		cacheFilter.setInitParameter("targetBeanName", "cacheFilter");
-		cacheFilter.addMappingForUrlPatterns(null, false, "/api/*");
-
-		FilterRegistration.Dynamic corsCustomFilter = servletContext.addFilter("corsCustomFilter", CORSCustomFilter.class);
-		corsCustomFilter.setInitParameter("targetBeanName", "corsCustomFilter");
-		corsCustomFilter.addMappingForUrlPatterns(null, false, "/*");
+//		FilterRegistration.Dynamic pathEntityFilter2 = servletContext.addFilter("pathEntityFilter", DelegatingFilterProxy.class);
+//		pathEntityFilter2.setInitParameter("targetBeanName", "pathEntityFilter");
+//		pathEntityFilter2.addMappingForUrlPatterns(reqAndForw, false, "/*");
 
 		FilterRegistration.Dynamic personDataFilter = servletContext.addFilter("personDataFilter", DelegatingFilterProxy.class);
 		personDataFilter.setInitParameter("targetBeanName", "personDataFilter");
@@ -124,13 +109,31 @@ public class WebAppInitializer implements WebApplicationInitializer {
 		personDataFilter.addMappingForUrlPatterns(reqAndForw, false, "/read/*");
 		personDataFilter.addMappingForUrlPatterns(reqAndForw, false, "/mystats/*");
 
-		FilterRegistration.Dynamic urlRewriteFilter = servletContext.addFilter("UrlRewriteFilter", UrlRewriteFilter.class);
-		urlRewriteFilter.setInitParameter("logLevel", "slf4j");
-		urlRewriteFilter.addMappingForUrlPatterns(reqAndForw, false, "/*");
+		FilterRegistration.Dynamic inViewFilter = servletContext.addFilter("OpenEntityManagerInViewFilter", OpenEntityManagerInViewFilter.class);
+		inViewFilter.setInitParameter("entityManagerFactoryBeanName", "entityManagerFactory");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/api/*");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/index.jsp");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/search/*");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/post/*");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/bookmarks/*");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/notifications/*");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/settings/*");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/publications/*");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/user/*");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/read/*");
+		inViewFilter.addMappingForUrlPatterns(reqAndForw, false, "/mystats/*");
 
-		FilterRegistration.Dynamic pathEntityFilter = servletContext.addFilter("pathEntityFilter", DelegatingFilterProxy.class);
-		pathEntityFilter.setInitParameter("targetBeanName", "pathEntityFilter");
-		pathEntityFilter.addMappingForUrlPatterns(null, false, "/*");
+		FilterRegistration.Dynamic filterDispatcher = servletContext.addFilter("FilterDispatcher", FilterDispatcher.class);
+		filterDispatcher.addMappingForUrlPatterns(null, false, "/api/*");
+
+		FilterRegistration.Dynamic postFilter = servletContext.addFilter("postFilter", DelegatingFilterProxy.class);
+		postFilter.setInitParameter("targetBeanName", "postFilter");
+		postFilter.addMappingForUrlPatterns(reqAndForw, false, "/api/posts");
+		postFilter.addMappingForUrlPatterns(reqAndForw, false, "/api/posts/*");
+
+		FilterRegistration.Dynamic cacheFilter = servletContext.addFilter("cacheFilter", DelegatingFilterProxy.class);
+		cacheFilter.setInitParameter("targetBeanName", "cacheFilter");
+		cacheFilter.addMappingForUrlPatterns(null, false, "/api/*");
 	}
 
 	private XmlWebApplicationContext getXmlContext() {

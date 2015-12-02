@@ -16,7 +16,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableTransactionManagement
+@EnableTransactionManagement()
 @EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
 @EnableJpaRepositories(basePackages = "co.xarx.trix.persistence")
 public class DatabaseConfig {
@@ -37,7 +37,7 @@ public class DatabaseConfig {
 		factory.setPersistenceUnitName("wordrails");
 		factory.setPersistenceProviderClass(MultiTenantHibernatePersistence.class);
 		factory.setJpaVendorAdapter(vendorAdapter);
-		factory.setPackagesToScan("co.xarx.trix.persistence");
+		factory.setPackagesToScan("co.xarx.trix.domain");
 		factory.afterPropertiesSet();
 
 		return factory;

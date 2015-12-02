@@ -6,11 +6,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import javax.ws.rs.ApplicationPath;
-
 @EnableAsync
 @Configuration
-@ApplicationPath("/index.jsp")
 @ComponentScan(basePackages = "co.xarx.trix")
 public class ApplicationConfig {
 
