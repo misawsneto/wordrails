@@ -68,8 +68,7 @@ public class QueryPersistence {
 	public void changePostState(Integer postId, String state) {
 		manager.createNativeQuery("UPDATE post SET state=:state where id = :postId").setParameter("postId", postId).setParameter("state", state).executeUpdate();
 	}
-	
-	@Async
+
 	@Transactional
 	public void updateCommentsCount(Integer postId) {
 		manager.createNativeQuery("UPDATE Post set commentsCount = (select count(*) FROM comment WHERE post_id = :postId) WHERE id = postId;").setParameter("postId", postId).executeUpdate();

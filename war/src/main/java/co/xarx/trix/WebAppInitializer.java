@@ -86,7 +86,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
 
 		FilterRegistration.Dynamic urlRewriteFilter = servletContext.addFilter("UrlRewriteFilter", UrlRewriteFilter.class);
 		urlRewriteFilter.setInitParameter("logLevel", "slf4j");
-		urlRewriteFilter.addMappingForUrlPatterns(reqAndForw, false, "/*");
+		urlRewriteFilter.addMappingForUrlPatterns(null, false, "/*");
 
 		FilterRegistration.Dynamic networkDomainFilter = servletContext.addFilter("networkDomainFilter", DelegatingFilterProxy.class);
 		networkDomainFilter.setInitParameter("targetBeanName", "networkDomainFilter");
