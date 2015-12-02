@@ -6,7 +6,7 @@
 
 	<context-param>
 		<param-name>spring.profiles.active</param-name>
-		<param-value>dev_prod</param-value>
+		<param-value>dev</param-value>
 	</context-param>
 
 	<resource-ref>
