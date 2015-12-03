@@ -130,7 +130,7 @@ public class FilesResource {
 //			FileContents existingFile = fileContentsRepository.findOne(QFileContents.fileContents.hash.eq(hash));
             FileContents existingFile = null;
             Iterable<FileContents> all = fileContentsRepository.findAll(QFileContents.fileContents.hash.eq(hash));
-            if(all != null)
+            if(all != null && all.iterator().hasNext())
                 existingFile = all.iterator().next();
 			if (existingFile != null) {
 				if (existingFile.type.equals(File.EXTERNAL)) {
