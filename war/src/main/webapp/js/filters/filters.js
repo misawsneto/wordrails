@@ -41,8 +41,8 @@ angular.module('app')
 
 .filter('videoThumb', function videoThumb(){
 	return function(url) {
-		if(externalVideoUrl && externalVideoUrl.indexOf('www.youtube.com') > -1){
-			var url = 'https://i.ytimg.com/vi/' + externalVideoUrl.replace('https://www.youtube.com/watch?v=', '') + '/sddefault_live.jpg';
+		if(url && url.indexOf('www.youtube.com') > -1){
+			var url = 'https://i.ytimg.com/vi/' + url.replace('https://www.youtube.com/watch?v=', '') + '/sddefault_live.jpg';
 			return {"background-image": "url(" + url +")", "background-position": "50% 20%"};
 		}else {
 			return {};
