@@ -394,6 +394,9 @@ angular.module('app')
 
       $scope.getBackgroundImage = function(postView, size){
         var img = $filter('pvimageLink')(postView, size);
+        if(postView.externalVideoUrl){
+          img = $filter('videoThumb')(postView.externalVideoUrl);
+        }
         return img;
       }
 
