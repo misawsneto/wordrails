@@ -37,7 +37,7 @@ public class EntityManagerFactoryDynamicProxy implements InvocationHandler {
 			if(method.getName().equals("createEntityManager")) {
 				Session session = ((EntityManagerImpl) result).getSession();
 
-				Integer tenantId = TenantContextHolder.getCurrentTenantId();
+				Integer tenantId = TenantContextHolder.getCurrentNetworkId();
 				if(tenantId != null) {
 					session.enableFilter("networkFilter").setParameter("networkId", tenantId);
 				}

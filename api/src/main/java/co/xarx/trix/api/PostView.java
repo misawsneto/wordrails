@@ -1,17 +1,38 @@
 package co.xarx.trix.api;
 
-import co.xarx.trix.domain.Identifiable;
+import co.xarx.trix.domain.ElasticSearchEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+@Document(indexName = "test")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PostView implements Serializable, Identifiable {
+public class PostView implements Serializable, ElasticSearchEntity {
 
 	private static final long serialVersionUID = -1474032487285763669L;
+
+	@Override
+	public Serializable getId() {
+		return postId;
+	}
+
+	@Override
+	public String getType() {
+		return "post";
+	}
+
+	@JsonIgnore
+	public String tenantId;
+
+	@Override
+	public String getTenantId() {
+		return tenantId;
+	}
 
 	public static class Category {
 
@@ -24,13 +45,9 @@ public class PostView implements Serializable, Identifiable {
 		public String name;
 	}
 
-	@Override
-	public Serializable getId() {
-		return postId;
-	}
-
 	public String title;
 	public Integer postId;
+
 	public Integer smallId;
 	public Integer mediumId;
 	public Integer largeId;

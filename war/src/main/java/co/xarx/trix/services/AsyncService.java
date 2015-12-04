@@ -27,32 +27,32 @@ public class AsyncService {
 
 	@Async
 	public void imagePictureScript(Integer networkId){
-		TenantContextHolder.setCurrentTenantId(networkId);
+		TenantContextHolder.setCurrentNetworkId(networkId);
 		imageScript.addPicturesToImages();
 	}
 
 	@Async
 	public void notifyAndroid(Integer networkId, Integer stationId, Notification notification){
-		TenantContextHolder.setCurrentTenantId(networkId);
+		TenantContextHolder.setCurrentNetworkId(networkId);
 		gcmService.sendToStation(stationId, notification);
 	}
 
 	@Async
 	public void notifyApple(Integer networkId, Integer stationId, Notification notification){
-		TenantContextHolder.setCurrentTenantId(networkId);
+		TenantContextHolder.setCurrentNetworkId(networkId);
 		apnService.sendToStation(networkId, stationId, notification);
 	}
 
 	@Async
 	public void buildAndroidApp(Integer networkId, String configPath, AndroidApp androidApp) throws Exception {
-		TenantContextHolder.setCurrentTenantId(networkId);
+		TenantContextHolder.setCurrentNetworkId(networkId);
 		androidBuilderService.run(configPath, androidApp);
 	}
 
 	@Async
 	@Transactional
 	public void countPostRead(Integer networkId, Post post, Person person, String sessionId) {
-		TenantContextHolder.setCurrentTenantId(networkId);
+		TenantContextHolder.setCurrentNetworkId(networkId);
 		postService.countPostRead(post, person, sessionId);
 	}
 }

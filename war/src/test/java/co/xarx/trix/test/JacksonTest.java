@@ -1,6 +1,7 @@
 package co.xarx.trix.test;
 
 import co.xarx.trix.api.PageView;
+import co.xarx.trix.config.spring.ApplicationConfig;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.domain.page.BaseSection;
 import co.xarx.trix.domain.page.Page;
@@ -8,7 +9,6 @@ import co.xarx.trix.domain.page.QueryableListSection;
 import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
 import co.xarx.trix.domain.query.PostQuery;
-import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,8 +28,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.TreeMap;
 
-@ContextConfiguration({
-		"classpath:applicationContext-test.xml"
+@ContextConfiguration(classes = {
+		ApplicationConfig.class
 })
 public class JacksonTest extends AbstractJUnit4SpringContextTests {
 
@@ -73,16 +73,12 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 		section1.setPageable(true);
 		section1.setPageableQuery(pageableQuery);
 		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
-		section1.setBlockLayout(Constants.Layout.BLOCK_OVER_IMAGE);
-		section1.setSectionLayout(Constants.Layout.SECTION_VERTICAL_LIST);
 
 		QueryableListSection section2 = new QueryableListSection();
 		section2.setTitle("Section 2");
 		section2.setSize(5);
 		section2.setPageable(false);
 		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));
-		section2.setBlockLayout(Constants.Layout.BLOCK_OVER_IMAGE);
-		section2.setSectionLayout(Constants.Layout.SECTION_VERTICAL_LIST);
 
 		page.setSections(new TreeMap<Integer, BaseSection>() {{put(0, section1); put(1, section2);}});
 

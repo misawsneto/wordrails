@@ -24,8 +24,8 @@ public class MobileService {
 
 		try {
 			if (post.station != null) {
-				asyncService.notifyAndroid(TenantContextHolder.getCurrentTenantId(), post.station.id, notification);
-				asyncService.notifyApple(TenantContextHolder.getCurrentTenantId(), post.station.id, notification);
+				asyncService.notifyAndroid(TenantContextHolder.getCurrentNetworkId(), post.station.id, notification);
+				asyncService.notifyApple(TenantContextHolder.getCurrentNetworkId(), post.station.id, notification);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

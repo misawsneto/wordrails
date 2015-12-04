@@ -40,6 +40,18 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
 	private int version;
 
+	String tenantId;
+
+	@Override
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	@Override
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	@Override
 	public Integer getId() {
 		return id;

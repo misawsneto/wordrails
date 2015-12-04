@@ -19,7 +19,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 	
 	@Override
 	public Post convertToEntity(PostView postView) {
-		return postRepository.findOne(postView.postId);
+		return postRepository.findOne((Integer) postView.getId());
 	}
 
 	@Override

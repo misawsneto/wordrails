@@ -8,7 +8,6 @@ import co.xarx.trix.domain.query.PageableQuery;
 import co.xarx.trix.domain.query.PostQuery;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.PageService;
-import co.xarx.trix.util.Constants;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,8 +108,6 @@ public class WebResource {
 		section1.setPageable(true);
 		section1.setPageableQuery(pageableQuery);
 		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
-		section1.setBlockLayout(Constants.Layout.BLOCK_OVER_IMAGE);
-		section1.setSectionLayout(Constants.Layout.SECTION_VERTICAL_LIST);
 		sectionRepository.save(section1);
 
 		QueryableListSection section2 = new QueryableListSection();
@@ -118,8 +115,6 @@ public class WebResource {
 		section2.setSize(5);
 		section2.setPageable(false);
 		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));
-		section2.setBlockLayout(Constants.Layout.BLOCK_OVER_IMAGE);
-		section2.setSectionLayout(Constants.Layout.SECTION_VERTICAL_LIST);
 		sectionRepository.save(section2);
 
 		page.setSections(new TreeMap<Integer, BaseSection>() {{put(0, section1); put(1, section2);}});

@@ -1,5 +1,6 @@
 package co.xarx.trix.config.spring;
 
+import co.xarx.trix.elasticsearch.ESRepositoryImpl;
 import co.xarx.trix.factory.ElasticSearchExecutorFactory;
 import co.xarx.trix.services.ElasticSearchService;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,13 +14,16 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 import javax.annotation.PostConstruct;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "co.xarx.trix.elasticsearch")
+@EnableElasticsearchRepositories(
+		basePackages = "co.xarx.trix.elasticsearch",
+		repositoryBaseClass = ESRepositoryImpl.class
+)
 public class ElasticSearchConfig {
 
 	@Value("${elasticsearch.host:'localhost'}")
-	private String eshost;
+	private String host;
 	@Value("${elasticsearch.port:9300}")
-	private Integer esport;
+	private Integer port;
 
 
 	@Bean
@@ -33,7 +37,7 @@ public class ElasticSearchConfig {
 	@Bean
 	@PostConstruct
 	public ElasticSearchService elasticsearchService() {
-		return new ElasticSearchService(eshost, esport);
+		return new ElasticSearchService(host, port);
 	}
 
 	@Bean

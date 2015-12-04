@@ -150,7 +150,7 @@ public class NetworkResource {
 				network.networkCreationToken = UUID.randomUUID().toString();
 				networkRepository.save(network);
 
-				TenantContextHolder.setCurrentTenantId(network.id);
+				TenantContextHolder.setCurrentNetworkId(network.id);
 			} catch (javax.validation.ConstraintViolationException e) {
 
 				List<FieldError> errors = new ArrayList<>();

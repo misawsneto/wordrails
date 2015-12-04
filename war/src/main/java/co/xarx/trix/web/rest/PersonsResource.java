@@ -335,7 +335,7 @@ public class PersonsResource {
 			person = personRepository.findOne(personId);
 		}
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, TenantContextHolder.getCurrentTenantId());
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, TenantContextHolder.getCurrentNetworkId());
 
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
@@ -498,7 +498,7 @@ public class PersonsResource {
 			}
 
 			NetworkRole networkRole = new NetworkRole();
-			networkRole.network = networkRepository.findOne(TenantContextHolder.getCurrentTenantId());
+			networkRole.network = networkRepository.findOne(TenantContextHolder.getCurrentNetworkId());
 			networkRole.person = person;
 			networkRole.admin = false;
 			networkRolesRepository.save(networkRole);

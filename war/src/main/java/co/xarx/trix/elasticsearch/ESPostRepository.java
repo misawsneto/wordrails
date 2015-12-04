@@ -1,4 +1,6 @@
 package co.xarx.trix.elasticsearch;
 
-public interface ESPostRepository {
+import co.xarx.trix.api.PostView;
+
+public interface ESPostRepository extends ESRepository<PostView, Integer> {
 }

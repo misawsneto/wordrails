@@ -1,16 +1,15 @@
 package co.xarx.trix.converter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import co.xarx.trix.domain.Cell;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import co.xarx.trix.api.CellView;
+import co.xarx.trix.domain.Cell;
 import co.xarx.trix.domain.Row;
 import co.xarx.trix.persistence.CellRepository;
 import co.xarx.trix.persistence.RowRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class CellConverter extends AbstractConverter<Cell, CellView> {

@@ -28,7 +28,7 @@ public class BuilderResource {
 		AndroidApp androidApp = androidAppRepository.findAll().get(0);
 
 		try {
-			asyncService.buildAndroidApp(TenantContextHolder.getCurrentTenantId(), "/opt/trix_android", androidApp);
+			asyncService.buildAndroidApp(TenantContextHolder.getCurrentNetworkId(), "/opt/trix_android", androidApp);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

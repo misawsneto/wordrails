@@ -2,7 +2,8 @@ package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+@Component("postBean")
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(
@@ -18,7 +20,8 @@ import java.util.Set;
 		discriminatorType=DiscriminatorType.STRING
 )
 @DiscriminatorValue(value="PUBLISHED")
-public class Post implements Serializable, Identifiable {
+@Document(indexName = "test", type = "#{postBean.getType()}")
+public class Post extends BaseEntity implements Serializable, ElasticSearchEntity {
 
 	public static final String STATE_DRAFT = "DRAFT";
 	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
@@ -30,13 +33,9 @@ public class Post implements Serializable, Identifiable {
 		state = Post.STATE_PUBLISHED;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
-
 	@Override
-	public Integer getId() {
-		return id;
+	public String getType() {
+		return "post";
 	}
 
 	public Integer originalPostId;
@@ -134,15 +133,6 @@ public class Post implements Serializable, Identifiable {
 	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean imageLandscape = true;
 
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable = false)
-	public Date createdAt;
-
 	@Column(length = 1024)
 	public String externalFeaturedImgUrl;
 
@@ -168,8 +158,6 @@ public class Post implements Serializable, Identifiable {
 	@Lob
 	public String imageTitleText;
 
-	public Network network;
-
 	public Integer imageId;
 	public Integer imageSmallId;
 	public Integer imageMediumId;
@@ -189,15 +177,13 @@ public class Post implements Serializable, Identifiable {
 
 		if (date == null)
 			date = new Date();
-		createdAt = new Date();
 	}
 
 	@PreUpdate
 	public void onUpdate() {
 		onChanges();
 
-		updatedAt = new Date();
-		lastModificationDate = updatedAt;
+		lastModificationDate = new Date();
 	}
 
 	private void onChanges() {
@@ -234,7 +220,7 @@ public class Post implements Serializable, Identifiable {
 	public static int countWords(String string) {
 		if (string == null || string.isEmpty()) return 0;
 
-		Document doc = Jsoup.parse(string);
+		org.jsoup.nodes.Document doc = Jsoup.parse(string);
 		string = doc.text();
 		String[] wordArray = string.split("\\s+");
 		return wordArray.length;
@@ -251,5 +237,4 @@ public class Post implements Serializable, Identifiable {
 		return "Post [id=" + id + ", date=" + date
 				+ ", lastModificationDate=" + lastModificationDate + ", title=" + title + ", state=" + state + "]";
 	}
-
 }

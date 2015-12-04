@@ -398,7 +398,7 @@ public class PostsResource {
 		String body = postRepository.findPostBodyById(postId);
 		Post post = postRepository.findOne(postId);
 
-		asyncService.countPostRead(TenantContextHolder.getCurrentTenantId(), post, person, request.getRequestedSessionId());
+		asyncService.countPostRead(TenantContextHolder.getCurrentNetworkId(), post, person, request.getRequestedSessionId());
 
 		StringResponse content = new StringResponse();
 		content.response = body;

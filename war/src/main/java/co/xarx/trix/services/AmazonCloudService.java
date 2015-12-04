@@ -47,12 +47,12 @@ public class AmazonCloudService {
 	}
 
 	public String getPublicImageURL(String fileName) throws IOException {
-		String networkDomain = TenantContextHolder.getCurrentTenantSubdomain();
+		String networkDomain = TenantContextHolder.getCurrentTenantId();
 		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
 	}
 
 	public String getPublicApkURL(String fileName) throws IOException {
-		String networkDomain = TenantContextHolder.getCurrentTenantSubdomain();
+		String networkDomain = TenantContextHolder.getCurrentTenantId();
 		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/apk/" + fileName;
 	}
 
@@ -101,7 +101,7 @@ public class AmazonCloudService {
 	}
 
 	private String getKey(String directory, String hash) {
-		return TenantContextHolder.getCurrentTenantSubdomain() + "/" + directory + "/" + hash;
+		return TenantContextHolder.getCurrentTenantId() + "/" + directory + "/" + hash;
 	}
 
 	public boolean exists(String directory, String hash) {

@@ -37,8 +37,8 @@ public class NetworkDomainFilter implements Filter {
 				response.sendRedirect("/404.html");
 				return;
 			} else {
-				TenantContextHolder.setCurrentTenantId(network.id);
-				TenantContextHolder.setCurrentTenantSubdomain(network.subdomain);
+				TenantContextHolder.setCurrentNetworkId(network.id);
+				TenantContextHolder.setCurrentTenantId(network.subdomain);
 				request.setAttribute("networkId", network.id);
 				//where should always enter in trix
 				HttpSession session = request.getSession();
