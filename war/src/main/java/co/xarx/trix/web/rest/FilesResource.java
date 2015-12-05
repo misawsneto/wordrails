@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Path("/files")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -126,7 +127,11 @@ public class FilesResource {
 			LobCreator creator = Hibernate.getLobCreator(session);
 
 			String hash = FileUtil.getHash(item.getInputStream());
-			FileContents existingFile = fileContentsRepository.findOne(QFileContents.fileContents.hash.eq(hash));
+//			FileContents existingFile = fileContentsRepository.findOne(QFileContents.fileContents.hash.eq(hash));
+            FileContents existingFile = null;
+            Iterable<FileContents> all = fileContentsRepository.findAll(QFileContents.fileContents.hash.eq(hash));
+            if(all != null && all.iterator().hasNext())
+                existingFile = all.iterator().next();
 			if (existingFile != null) {
 				if (existingFile.type.equals(File.EXTERNAL)) {
 					if (!amazonCloudService.exists(AmazonCloudService.IMAGE_DIR, existingFile.hash)) {

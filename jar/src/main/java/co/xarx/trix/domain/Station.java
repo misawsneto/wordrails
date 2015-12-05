@@ -105,6 +105,16 @@ public class Station extends BaseEntity implements Serializable{
 
 	public Integer defaultPerspectiveId;
 
+    @PrePersist
+    public void onCreate(){
+        onChange();
+    }
+
+    @PreUpdate
+    public void onUpdate(){
+        onChange();
+    }
+
 	void onChange() {
 		if(logo != null && logo.originalHash != null){
 			logoHash = logo.originalHash;
