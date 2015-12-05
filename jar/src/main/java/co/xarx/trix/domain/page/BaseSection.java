@@ -19,7 +19,7 @@ public abstract class BaseSection extends BaseEntity implements Section, Seriali
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "section_properties", joinColumns = @JoinColumn(name = "section_id"))
-	@MapKeyColumn(name = "key", nullable = false)
+	@MapKeyColumn(name = "property_key", nullable = false)
 	@Column(name = "value", nullable = false)
 	public Map<String, String> properties;
 
