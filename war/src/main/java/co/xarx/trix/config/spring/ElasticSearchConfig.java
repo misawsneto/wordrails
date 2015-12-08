@@ -1,6 +1,6 @@
 package co.xarx.trix.config.spring;
 
-import co.xarx.trix.elasticsearch.ESRepositoryImpl;
+import co.xarx.trix.elasticsearch.CustomGenericRepositoryFactoryBean;
 import co.xarx.trix.factory.ElasticSearchExecutorFactory;
 import co.xarx.trix.services.ElasticSearchService;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ import javax.annotation.PostConstruct;
 @Configuration
 @EnableElasticsearchRepositories(
 		basePackages = "co.xarx.trix.elasticsearch",
-		repositoryBaseClass = ESRepositoryImpl.class
+		repositoryFactoryBeanClass = CustomGenericRepositoryFactoryBean.class
 )
 public class ElasticSearchConfig {
 

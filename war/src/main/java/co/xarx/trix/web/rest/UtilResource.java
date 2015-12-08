@@ -1,13 +1,16 @@
 package co.xarx.trix.web.rest;
 
 
-import co.xarx.trix.WordrailsService;
+import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.eventhandler.*;
+import co.xarx.trix.elasticsearch.ESPostRepository;
+import co.xarx.trix.eventhandler.NetworkEventHandler;
+import co.xarx.trix.eventhandler.PersonEventHandler;
+import co.xarx.trix.eventhandler.StationEventHandler;
+import co.xarx.trix.eventhandler.TaxonomyEventHandler;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.persistence.elasticsearch.BookmarkEsRespository;
 import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
@@ -44,48 +47,44 @@ import java.util.stream.Collectors;
 public class UtilResource {
 	private @Context HttpServletRequest request;
 
-	private @Autowired
-	NetworkEventHandler networkEventHandler;
-	private @Autowired
-	PersonEventHandler personEventHandler;
-	private @Autowired
-	TaxonomyEventHandler taxonomyEventHandler;
-	private @Autowired
-	StationEventHandler stationEventHandler;
-	private @Autowired PersonRepository personRepository;
-	private @Autowired
-	StationRoleEventHandler stationRoleEventHandler;
-	private @Autowired
-	NetworkRolesRepository networkRolesRepository;
-	private @Autowired
-	StationRepository stationRepository;
-	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
-	private @Autowired NetworkRepository networkRepository;
-	private @Autowired
-	WordrailsService wordrailsService;
-	private @Autowired
-	TaxonomyRepository taxonomyRepository;
-	private @Autowired
-	PostRepository postRepository;
-	private @Autowired
-	TermPerspectiveRepository termPerspectiveRepository;
-	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
-	private @Autowired InvitationRepository invitationRepository;
-	public @Autowired FileRepository fileRepository;
-	public @Autowired
-	PerspectiveEsRepository perspectiveEsRepository;
+	@Autowired
+	private NetworkEventHandler networkEventHandler;
+	@Autowired
+	private PersonEventHandler personEventHandler;
+	@Autowired
+	private TaxonomyEventHandler taxonomyEventHandler;
+	@Autowired
+	private StationEventHandler stationEventHandler;
+	@Autowired
+	private PersonRepository personRepository;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private NetworkRepository networkRepository;
+	@Autowired
+	private TaxonomyRepository taxonomyRepository;
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private TermPerspectiveRepository termPerspectiveRepository;
+	@Autowired
+	private StationPerspectiveRepository stationPerspectiveRepository;
+	@Autowired
+	private InvitationRepository invitationRepository;
+	@Autowired
+	private PerspectiveEsRepository perspectiveEsRepository;
 
-	public @Autowired CacheService cacheService;
+	@Autowired
+	private CacheService cacheService;
 
-	private @PersistenceContext EntityManager manager;
+	private
+	@PersistenceContext
+	EntityManager manager;
 
-	private @Autowired
-	PostEsRepository postEsRepository;
-
-	private @Autowired
-	BookmarkEsRespository bookmarkEsRespository;
+	@Autowired
+	private BookmarkEsRespository bookmarkEsRespository;
 
 	@GET
 	@Path("/updateDefaultStationPerspective")
@@ -588,8 +587,8 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-	private @Autowired ImageRepository imageRepository;
-	private @Autowired BookmarkRepository bookmarkRepository;
+	@Autowired private ImageRepository imageRepository;
+	@Autowired private BookmarkRepository bookmarkRepository;
 	@Autowired private TermRepository termRepository;
 	@Autowired private RowRepository rowRepository;
 
@@ -812,18 +811,18 @@ public class UtilResource {
 		}
 	}
 
+	@Autowired
+	private PostConverter postConverter;
+	@Autowired
+	private ESPostRepository esPostRepository;
+
 	@GET
 	@Path("/indexPostsToElastisearch")
-	@Transactional
 	public void indexPostsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-		if(isLocal(request.getHeader("Host"))){
-			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
-			for(int i = 0; i < all.size(); i++){
-				postEsRepository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
+		if (isLocal(request.getHeader("Host"))) {
+			List<Network> networks = networkRepository.findAll();
+			for (Network network : networks) {
+				asyncService.index(network.id, network.subdomain, postRepository, postConverter, esPostRepository);
 			}
 		}
 	}

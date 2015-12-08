@@ -1,13 +1,15 @@
 package co.xarx.trix.eventhandler;
 
+import co.xarx.trix.api.PostView;
+import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostTrash;
+import co.xarx.trix.elasticsearch.ESPostRepository;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.PostService;
@@ -36,7 +38,9 @@ public class PostEventHandler {
 	@Autowired
 	private CellRepository cellRepository;
 	@Autowired
-	private PostEsRepository postEsRepository;
+	private PostConverter postConverter;
+	@Autowired
+	private ESPostRepository esPostRepository;
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
@@ -89,7 +93,8 @@ public class PostEventHandler {
 		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
 			mobileService.buildNotification(post);
 		}
-		postEsRepository.save(post);
+		PostView postView = postConverter.convertToView(post);
+		esPostRepository.save(postView);
 	}
 
 	@HandleAfterSave

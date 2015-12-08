@@ -53,7 +53,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	List<Person> findPersonsByIds(@Param("personIds") List<Integer> personIds);
 
 	@RestResource(exported = false)
-
 	@Query("select nr from NetworkRole nr join fetch nr.person person join fetch person.user u")
 	List<NetworkRole> findNetworkAdmin();
 

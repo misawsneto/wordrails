@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractConverter<Entity, View> {
-	abstract Entity convertToEntity(View v);
-	abstract View convertToView(Entity t);
+	public abstract Entity convertToEntity(View v);
+	public abstract View convertToView(Entity t);
 
 	public List<View> convertToViews(List<Entity> entities){
 		List<View> views = new ArrayList<View>(entities.size());

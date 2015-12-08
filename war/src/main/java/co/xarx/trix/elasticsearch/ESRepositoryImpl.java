@@ -6,12 +6,12 @@ import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.data.elasticsearch.repository.support.AbstractElasticsearchRepository;
 import org.springframework.data.elasticsearch.repository.support.ElasticsearchEntityInformation;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.io.Serializable;
-
-public class ESRepositoryImpl<T extends ElasticSearchEntity, ID extends Serializable>
-		extends AbstractElasticsearchRepository<T, ID> implements ESRepository<T, ID> {
+@Component
+public class ESRepositoryImpl<T extends ElasticSearchEntity>
+		extends AbstractElasticsearchRepository<T, Integer> implements ESRepository<T> {
 
 	public ESRepositoryImpl() {
 	}
@@ -20,12 +20,12 @@ public class ESRepositoryImpl<T extends ElasticSearchEntity, ID extends Serializ
 		super(elasticsearchOperations);
 	}
 
-	public ESRepositoryImpl(ElasticsearchEntityInformation<T, ID> metadata, ElasticsearchOperations elasticsearchOperations) {
+	public ESRepositoryImpl(ElasticsearchEntityInformation<T, Integer> metadata, ElasticsearchOperations elasticsearchOperations) {
 		super(metadata, elasticsearchOperations);
 	}
 
 	@Override
-	protected String stringIdRepresentation(ID id) {
+	protected String stringIdRepresentation(Integer id) {
 		return id.toString();
 	}
 
@@ -40,7 +40,7 @@ public class ESRepositoryImpl<T extends ElasticSearchEntity, ID extends Serializ
 	private IndexQuery createIndexQuery(T entity) {
 		return new IndexQueryBuilder()
 				.withObject(entity)
-				.withId(stringIdRepresentation((ID) entity.getId()))
+				.withId(stringIdRepresentation(entity.getId()))
 				.withType(entity.getType())
 				.withIndexName(entity.getTenantId())
 				.build();

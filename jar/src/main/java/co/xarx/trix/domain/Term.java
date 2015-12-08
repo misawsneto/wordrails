@@ -85,11 +85,4 @@ public class Term extends BaseEntity implements Serializable {
 				"name='" + name + '\'' +
 				'}';
 	}
-
-	String tenantId;
-
-	@Override
-	public String getTenantId() {
-		return null;
-	}
 }

@@ -30,7 +30,7 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 	}
 	
 	@Override
-	Cell convertToEntity(CellView cellView) {
+	public Cell convertToEntity(CellView cellView) {
 		Cell cell = new Cell();
 		if(cellView.id != null){
 			cell = cellRepository.findOne(cellView.id);
@@ -57,20 +57,20 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 		cellView.index = cell.index;
 		if(cell.post != null){
 			cellView.postView = postConverter.convertToView(cell.post, addBody);
-			if(cellView.postView == null || cellView.postView.postId == null)
+			if(cellView.postView == null || cellView.postView.id == null)
 				return null;
 		}else return null;
 		return cellView;
 	}
 
 	@Override
-	CellView convertToView(Cell cell) {
+	public CellView convertToView(Cell cell) {
 		CellView cellView = new CellView();
 		cellView.id = cell.id;
 		cellView.index = cell.index;
 		if(cell.post != null){
 			cellView.postView = postConverter.convertToView(cell.post);
-			if(cellView.postView == null || cellView.postView.postId == null)
+			if(cellView.postView == null || cellView.postView.id == null)
 				return null;
 		}else return null;
 		return cellView;

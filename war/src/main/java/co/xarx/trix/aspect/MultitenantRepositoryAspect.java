@@ -20,7 +20,7 @@ public class MultitenantRepositoryAspect {
 
 	Logger log = Logger.getLogger(this.getClass().getName());
 
-	@Before("bean(*Repository) && execution(* *..save(*)) && args(entity)")
+	@Before("within(org.springframework.data.repository.CrudRepository+) && execution(* *..save(*)) && args(entity)")
 	public void checkMultitenantEntity(MultiTenantEntity entity) throws Throwable {
 		if (entity != null && entity.getNetworkId() == null) {
 			String tenantId = TenantContextHolder.getCurrentTenantId();

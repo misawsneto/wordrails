@@ -25,7 +25,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 	@Override
 	public PostView convertToView(Post post) {
 		PostView postView = new PostView();
-		postView.postId = post.id;
+		postView.id = post.id;
 		postView.title = post.title;
 		postView.subheading = post.subheading;
 		postView.slug = post.slug;

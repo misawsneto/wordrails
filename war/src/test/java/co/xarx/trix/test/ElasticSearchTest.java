@@ -38,12 +38,12 @@ public class ElasticSearchTest {
 	@Test
 	public void testPostIndex() throws Exception {
 		PostView post = new PostView();
-		post.postId = 3;
+		post.id = 3;
 		post.title = "title";
 		post.tenantId = "demo";
 
 		PostView post2 = new PostView();
-		post2.postId = 4;
+		post2.id = 4;
 		post2.title = "title2";
 		post2.tenantId = "demo";
 

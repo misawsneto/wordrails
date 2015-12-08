@@ -52,9 +52,9 @@
 				<plugin>
 					<artifactId>maven-war-plugin</artifactId>
 					<version>2.4</version>
-					<!--<configuration>-->
-						<!--<webXml>../war/src/main/webapp/WEB-INF/web.xml</webXml>-->
-					<!--</configuration>-->
+					<configuration>
+						<outputDirectory>src/main/webapp</outputDirectory>
+					</configuration>
 				</plugin>
 
 				<plugin>
