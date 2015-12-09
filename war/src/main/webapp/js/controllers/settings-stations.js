@@ -36,7 +36,7 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 				'visibility': 'UNRESTRICTED',
 				'writable': false,
 				'main': false,
-				'networks': [TRIX.baseUrl + '/api/networks/' + $scope.app.initData.network.id]
+				'network': TRIX.baseUrl + '/api/networks/' + $scope.app.initData.network.id
 			};
 		}
 

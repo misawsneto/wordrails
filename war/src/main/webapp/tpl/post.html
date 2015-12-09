@@ -17,7 +17,7 @@
           <div class="cell b-l">
             <div class="cell-inner">
 
-              <md-tabs md-dynamic-height md-border-bottom>
+              <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0">
                 <md-tab label="Categorias">
                   <md-content >
                     <!-- list categories -->
@@ -37,15 +37,15 @@
                 </md-tab>
 
                 <md-tab label="Tags">
-                  <div class="post-block">
-                   <md-chips
+                  <md-content>
+                    <md-chips
                     placeholder="+ Tags"
                     secondary-placeholder="+ Tag"
                     ng-model="chipTags.tags"
                     delete-button-label="Remover tag"
                     delete-hint="Press delete to remove tag">
                     </md-chips>
-                  </div>
+                  </md-content>
                 </md-tab>
               </md-tabs>
 
