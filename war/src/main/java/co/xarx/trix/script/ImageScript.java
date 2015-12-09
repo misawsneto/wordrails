@@ -7,12 +7,14 @@ import co.xarx.trix.domain.Picture;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
+import co.xarx.trix.persistence.QueryPersistence;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,6 +27,29 @@ public class ImageScript {
 	private ImageRepository imageRepository;
 	@Autowired
 	private PictureRepository pictureRepository;
+
+	@Autowired
+	private QueryPersistence queryPersistence;
+
+	public void mergeRepeatedImages(){
+		List<List<Object>> repeated = queryPersistence.getRepeatedImage();
+
+		for(List<Object> images: repeated){
+			Integer imageId = (int) images.get(0);
+			String imageHash = (String) images.get(1);
+
+			//Fix post: featuredImage_id reference
+			List<Integer> repeatedImagesIds = queryPersistence.getRepeatedImageHash(imageHash);
+
+			if(repeatedImagesIds.contains(imageId)){
+				repeatedImagesIds.remove(imageId);
+			}
+
+			queryPersistence.updatePostFeaturedImageId(repeatedImagesIds, imageId);
+			imageRepository.deleteImages(repeatedImagesIds);
+		}
+
+	}
 
 	@Async
 	public void addPicturesToImages() {

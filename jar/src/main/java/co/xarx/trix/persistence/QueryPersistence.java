@@ -161,4 +161,25 @@ public class QueryPersistence {
 		manager.createQuery("delete from Row where type = 'S' and splashedPerspective.id = :perspectiveId and id <> :notId")
 				.setParameter("perspectiveId", perspectiveId).setParameter("notId", notId).executeUpdate();
 	}
+
+	@Transactional
+	public List<List<Object>> getRepeatedImage(){
+		return manager.createQuery("SELECT id, originalHash, count(originalHash) AS c FROM Image WHERE originalHash IS NOT NULL GROUP BY originalHash HAVING c > 1").getResultList();
+	}
+
+	@Transactional
+	public List<Integer> getRepeatedImageHash(String hash){
+		return manager.createQuery("select id from Image where originalHash = :hash")
+				.setParameter("hash", hash)
+				.getResultList();
+	}
+
+	@Transactional
+	public void updatePostFeaturedImageId(List<Integer> repeatedImages, Integer imageId){
+		manager.createQuery("update Post set featuredImage.id = :imageId where featuredImage.id in (:repeatedImages)")
+				.setParameter("imageId", imageId)
+				.setParameter("repeatedImages", repeatedImages)
+				.executeUpdate();
+	}
+
 }

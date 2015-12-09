@@ -11,6 +11,7 @@ import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.script.ImageScript;
 import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.StringUtil;
 import org.joda.time.DateTime;
@@ -936,12 +937,26 @@ public class UtilResource {
 	@Autowired
 	private ImageScript imageScript;
 
+	@Autowired
+	private AsyncService asyncService;
+
 	@GET
 	@Path("/addPicturesToImages")
 	@Transactional(readOnly=false)
 	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {
 		if(isLocal(request.getHeader("Host"))){
 			imageScript.addPicturesToImages();
+		}
+	}
+	@GET
+	@Path("/mergeRepeatedImages")
+	@Transactional
+	public void mergeRepeatedImages(@Context HttpServletRequest request) throws InterruptedException {
+		if(isLocal(request.getHeader("Host"))){
+			List<Network> networks = networkRepository.findAll();
+			for (Network network : networks) {
+				asyncService.mergeRepeatedImages(network.id);
+			}
 		}
 	}
 
