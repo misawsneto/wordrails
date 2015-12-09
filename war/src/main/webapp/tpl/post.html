@@ -35,8 +35,17 @@
                     <!-- list categories -->
                   </md-content>
                 </md-tab>
-                
+
                 <md-tab label="Tags">
+                  <div class="post-block">
+                   <md-chips
+                    placeholder="+ Tags"
+                    secondary-placeholder="+ Tag"
+                    ng-model="chipTags.tags"
+                    delete-button-label="Remover tag"
+                    delete-hint="Press delete to remove tag">
+                    </md-chips>
+                  </div>
                 </md-tab>
               </md-tabs>
 
@@ -145,15 +154,6 @@
                  label="{{button.label}}" ng-repeat="button in buttons"></button>
                </nav> -->
                <!-- /options button -->
-               <div class="post-block">
-                 <md-chips
-                  placeholder="+ Tags"
-                  secondary-placeholder="+ Tag"
-                  ng-model="chipTags.tags"
-                  delete-button-label="Remover tag"
-                  delete-hint="Press delete to remove tag">
-                  </md-chips>
-                </div>
 
              </div>
            </div>
