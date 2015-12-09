@@ -16,19 +16,30 @@
         <div class="row-row">
           <div class="cell b-l">
             <div class="cell-inner">
-              <div class="wrapper-sm term-tree">
 
-                <div class="span5 article-tree animated fadeIn">
-                  <div ng-style="{'overflow': 'auto'}">
-                    <div class="tree well">
-                      <ul>
-                        <node-tree ng-model="termTree"></node-tree>
-                      </ul>
+              <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Categorias">
+                  <md-content >
+                    <!-- list categories -->
+                    <div class="wrapper-sm term-tree">
+                      <div class="span5 article-tree animated fadeIn">
+                        <div ng-style="{'overflow': 'auto'}">
+                          <div class="tree well">
+                            <ul>
+                              <node-tree ng-model="termTree"></node-tree>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                    <!-- list categories -->
+                  </md-content>
+                </md-tab>
+                
+                <md-tab label="Tags">
+                </md-tab>
+              </md-tabs>
 
-              </div>
             </div>
           </div>
         </div>
