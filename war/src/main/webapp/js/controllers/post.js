@@ -898,15 +898,15 @@ function createPost(state){
 
 	// ---------- slim scroll --------------
 
-	$timeout(function() {
-		safeApply($scope, function(){
-			$('#post-cell').slimScroll({
-				height:'auto',
-				size:'8px',
-				'railVisible': true
-			})
-		})
-	}, 10);
+	// $timeout(function() {
+	// 	safeApply($scope, function(){
+	// 		$('#post-cell').slimScroll({
+	// 			height:'auto',
+	// 			size:'8px',
+	// 			'railVisible': true
+	// 		})
+	// 	})
+	// }, 10);
 
 	// ---------- end of slim scroll --------------
 

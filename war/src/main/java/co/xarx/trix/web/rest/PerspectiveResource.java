@@ -218,7 +218,7 @@ public class PerspectiveResource {
 				if(row == null)
 					return rowView;
 
-				List<Cell> cells = fillPostsNotPositionedInRow(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+				List<Cell> cells = fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 				rowView = new RowView();
 				rowView.id = row.id;
 				rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
@@ -305,7 +305,7 @@ public class PerspectiveResource {
 		TermPerspectiveView termView = new TermPerspectiveView();
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null);
 		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertToView(termPerspective.featuredRow) : null);
-		termView.ordinaryRows = fillPostsNotPositionedInRow(termPerspective.term ,rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+		termView.ordinaryRows = fillPostsNotPositionedInRows(termPerspective.term, rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
 		termView.taxonomyId = termPerspective.taxonomyId;
@@ -314,19 +314,19 @@ public class PerspectiveResource {
 		return termView;
 	}
 
-	private List<RowView> fillPostsNotPositionedInRow(Term term, List<Row> rows, Integer stationId, int page, int size, int lowerLimit, int upperLimit){
+	private List<RowView> fillPostsNotPositionedInRows(Term term, List<Row> rows, Integer stationId, int page, int size, int lowerLimit, int upperLimit){
 		List<RowView> rowsView = new ArrayList<RowView>(rows.size() + 1);
 		if(term != null){
 			rowsView.add(convertTermToRow(term, loadTermsIds(term), stationId, 0, Row.ORDINARY_ROW, page, size));
 		}
 		for (Row row : rows) {
-			row.cells = fillPostsNotPositionedInRow(row, stationId, page, size, lowerLimit, upperLimit);
+			row.cells = fillPostsNotPositionedInRows(row, stationId, page, size, lowerLimit, upperLimit);
 			rowsView.add(rowConverter.convertToView(row));
 		}
 		return rowsView;
 	}
 
-	private List<Cell> fillPostsNotPositionedInRow(Row row, Integer stationId, int page, int size, int lowerLimit, int upperLimit){
+	private List<Cell> fillPostsNotPositionedInRows(Row row, Integer stationId, int page, int size, int lowerLimit, int upperLimit){
 		List<Cell> positionedCells = cellRepository.findCellsPositioned(row.id, lowerLimit, upperLimit);
 		
 		List<Cell> cells = null;
