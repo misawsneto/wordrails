@@ -51,11 +51,11 @@
               Aplicativos              
             </a>
             </li> -->
-            <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.colors')}">
+            <!-- <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.colors')}">
             <a ui-sref="app.settings.colors" class="no-border no-radius">
               Aparência              
             </a>
-            </li>
+            </li> -->
             <li ng-if="app.networkAdmin" ng-class="{'active': $state.includes('app.settings.sponsors'), 'hide': !app.initData.network.allowSponsors}">
             <a ui-sref="app.settings.sponsors" class="no-border no-radius">
               Patrocinadores
