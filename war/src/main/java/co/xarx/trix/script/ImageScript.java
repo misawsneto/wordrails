@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,11 +33,12 @@ public class ImageScript {
 	private QueryPersistence queryPersistence;
 
 	public void mergeRepeatedImages(){
-		List<List<Object>> repeated = queryPersistence.getRepeatedImage();
+		List<Object[]> repeated = queryPersistence.getRepeatedImage();
+		List<Integer> removeImageList = new ArrayList<>();
 
-		for(List<Object> images: repeated){
-			Integer imageId = (int) images.get(0);
-			String imageHash = (String) images.get(1);
+		for(Object[] image: repeated){
+			Integer imageId = (Integer) image[0];
+			String imageHash = (String) image[1];
 
 			//Fix post: featuredImage_id reference
 			List<Integer> repeatedImagesIds = queryPersistence.getRepeatedImageHash(imageHash);
@@ -46,9 +48,19 @@ public class ImageScript {
 			}
 
 			queryPersistence.updatePostFeaturedImageId(repeatedImagesIds, imageId);
-			imageRepository.deleteImages(repeatedImagesIds);
-		}
+			queryPersistence.updateNetworkLogoId(repeatedImagesIds, imageId);
+			queryPersistence.updateNetworkLoginImageId(repeatedImagesIds, imageId);
+			queryPersistence.updateNetworkFavicon(repeatedImagesIds);
+//			queryPersistence.updateNetworkFaviconId(repeatedImagesIds, imageId);
+			queryPersistence.updateNetworkSplashImageId(repeatedImagesIds, imageId);
+			queryPersistence.updateStationLogo(repeatedImagesIds, imageId);
+//			queryPersistence.updateImagePicture(repeatedImagesIds, imageId);
 
+			removeImageList.addAll(repeatedImagesIds);
+		}
+		queryPersistence.deleteImagePicture(removeImageList);
+		queryPersistence.deleteImageHash(removeImageList);
+		queryPersistence.deleteImageList(removeImageList);
 	}
 
 	@Async

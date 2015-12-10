@@ -953,10 +953,11 @@ public class UtilResource {
 	@Transactional
 	public void mergeRepeatedImages(@Context HttpServletRequest request) throws InterruptedException {
 		if(isLocal(request.getHeader("Host"))){
-			List<Network> networks = networkRepository.findAll();
-			for (Network network : networks) {
-				asyncService.mergeRepeatedImages(network.id);
-			}
+			imageScript.mergeRepeatedImages();
+//			List<Network> networks = networkRepository.findAll();
+//			for (Network network : networks) {
+//				asyncService.mergeRepeatedImages(network.id);
+//			}
 		}
 	}
 
