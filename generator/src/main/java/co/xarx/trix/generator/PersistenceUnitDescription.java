@@ -150,7 +150,7 @@ public class PersistenceUnitDescription {
 							}
 
 							FieldDescription relationship = new FieldDescription();
-							relationship.type = "List<" + type.getSimpleName() + "Dto>";
+							relationship.type = "List<" + type.getSimpleName() + (!isSimpleType(type) ? "Dto" : "") + ">";
 							relationship.name = field.getName();
 							relationship.nameUppercase = getNameUppercase(field);
 							relationship.entity = new EntityDescription();
@@ -164,7 +164,7 @@ public class PersistenceUnitDescription {
 						} else {
 							if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(OneToOne.class)) {
 								FieldDescription relationshipDescription = new FieldDescription();
-								relationshipDescription.type = field.getType().getSimpleName() + "Dto";
+								relationshipDescription.type = field.getType().getSimpleName() + (!isSimpleType(field.getType()) ? "Dto" : "");
 								relationshipDescription.name = field.getName();
 								relationshipDescription.nameUppercase = getNameUppercase(field);
 								relationshipDescription.entity = new EntityDescription();
@@ -241,10 +241,10 @@ public class PersistenceUnitDescription {
 				}
 				String type = returnType.getName();
 				if (returnType.isAnnotationPresent(Entity.class) || returnType.isAnnotationPresent(Projection.class)) {
-					type = returnType.getSimpleName() + "Dto";
+					type = returnType.getSimpleName() + (!isSimpleType(returnType) ? "Dto" : "");
 				}
 				if (collectionType != null) {
-					type = collectionType.getName() + "<" + returnType.getSimpleName() + "Dto>";
+					type = collectionType.getName() + "<" + returnType.getSimpleName() + (!isSimpleType(returnType) ? "Dto" : "") + ">";
 				}
 				FieldDescription fieldDescription = new FieldDescription();
 				fieldDescription.type = type;
@@ -310,4 +310,23 @@ public class PersistenceUnitDescription {
 	private String getNameUppercase(String name) {
 		return name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
+
+    private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
+
+    private static boolean isSimpleType(Class<?> clazz){
+        return WRAPPER_TYPES.contains(clazz) || clazz.equals(String.class);
+    }
+    private static Set<Class<?>> getWrapperTypes(){
+        Set<Class<?>> ret = new HashSet<Class<?>>();
+        ret.add(Boolean.class);
+        ret.add(Character.class);
+        ret.add(Byte.class);
+        ret.add(Short.class);
+        ret.add(Integer.class);
+        ret.add(Long.class);
+        ret.add(Float.class);
+        ret.add(Double.class);
+        ret.add(Void.class);
+        return ret;
+    }
 }

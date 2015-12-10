@@ -87,4 +87,6 @@ public interface PostProjection {
 	Double getLat();
 
 	Double getLng();
+
+    Set<String> getTags();
 }
