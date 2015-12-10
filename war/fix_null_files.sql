@@ -1,4 +1,5 @@
-SELECT s.id from image i, file f, station s WHERE i.original_id = f.id and f.networkId is NULL and s.logo_id = i.id;
+-- Base select
+-- SELECT s.id from image i, file f, station s WHERE i.original_id = f.id and f.networkId is NULL and s.logo_id = i.id;
 
 -- Fix broken logo_id in table network
 UPDATE network n, image i, file f SET n.logo_id = NULL, n.loginImage_id = NULL WHERE i.original_id = f.id and f.networkId is NULL and n.logo_id = i.id;
@@ -17,7 +18,3 @@ UPDATE station s, image i, file f SET s.logo_id = NULL WHERE i.original_id = f.i
 
 -- Delete files and image with null networkId
 DELETE i, f from image i, file f WHERE i.original_id = f.id and f.networkId is NULL;
-
-SELECT id, originalHash, count(originalHash) c FROM image WHERE originalHash IS NOT NULL GROUP BY originalHash HAVING c > 1;
-
-SELECT id, count(originalHash) h, COUNT(networkId) n FROM image WHERE originalHash IS NOT NULL GROUP BY originalHash HAVING h > 1, n > 1;
