@@ -128,6 +128,7 @@
     "videogular-controls": "~1.2.3",
     "videogular-ima-ads": "~1.2.3",
     "videogular-overlay-play": "~1.2.3",
-    "videogular-poster": "~1.2.3"
+    "videogular-poster": "~1.2.3",
+    "sc-date-time": "1.1.6"
   }
 }

@@ -131,6 +131,10 @@ public class Post implements Serializable {
 	@ManyToMany
 	public Set<Term> terms;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
+    public Set<String> tags;
+
 	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean imageLandscape = true;
 
