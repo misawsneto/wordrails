@@ -3754,6 +3754,10 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
   background: inherit;
 }
 
+#post-content md-chips .md-chips{
+  box-shadow: none;
+}
+
 /* /read */
 
 /* redactor */
