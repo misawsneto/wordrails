@@ -129,7 +129,10 @@ public class PersistenceUnitDescription {
 							id.name = field.getName();
 							id.nameUppercase = getNameUppercase(field);
 							entity.id = id;
-						} else if (field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class)) {
+						} else if (field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(ElementCollection.class)) {
+                            if(field.isAnnotationPresent(ElementCollection.class)){
+                                System.out.println("");
+                            }
 							Type genericType = field.getGenericType();
 							ParameterizedType parameterizedGenericType = (ParameterizedType) genericType;
 							Type[] actualTypeArguments = parameterizedGenericType.getActualTypeArguments();
@@ -147,20 +150,31 @@ public class PersistenceUnitDescription {
 									fieldDescription.entity.name = type.getSimpleName();
 									entity.fields.add(fieldDescription);
 								}
-							}
+							} else if(field.isAnnotationPresent(ElementCollection.class)){
+                                FieldDescription fieldDescription = new FieldDescription();
+                                fieldDescription.type =  parameterizedGenericType.toString(); // Arrays.deepToString(actualTypeArguments).replace('[','<').replace(']','>').replaceAll("class ", ""); // field.getType().getName() + "<" + field.getType().getSimpleName() + (!isSimpleType(field.getType()) ? "Dto" : "") + ">";
 
-							FieldDescription relationship = new FieldDescription();
-							relationship.type = "List<" + type.getSimpleName() + (!isSimpleType(type) ? "Dto" : "") + ">";
-							relationship.name = field.getName();
-							relationship.nameUppercase = getNameUppercase(field);
-							relationship.entity = new EntityDescription();
-							relationship.entity.name = type.getSimpleName();
-							relationship.collection = true;
-							relationship.mappedBy = (field.isAnnotationPresent(OneToMany.class) && !"".equals(field.getAnnotation(OneToMany.class).mappedBy())) || (field.isAnnotationPresent(ManyToMany.class) && !"".equals(field.getAnnotation(ManyToMany.class).mappedBy()));
-//							relationship.collectionType = field.getType().getName();
-							relationship.collectionType = List.class.getName();
-							relationship.elementType = type.getSimpleName();
-							entity.relationships.add(relationship);
+                                fieldDescription.name = field.getName();
+                                fieldDescription.nameUppercase = getNameUppercase(field);
+                                fieldDescription.entity = new EntityDescription();
+                                fieldDescription.entity.name = type.getSimpleName();
+                                entity.fields.add(fieldDescription);
+                            }
+
+                            if(!field.isAnnotationPresent(ElementCollection.class)) {
+                                FieldDescription relationship = new FieldDescription();
+                                relationship.type = "List<" + type.getSimpleName() + (!isSimpleType(type) ? "Dto" : "") + ">";
+                                relationship.name = field.getName();
+                                relationship.nameUppercase = getNameUppercase(field);
+                                relationship.entity = new EntityDescription();
+                                relationship.entity.name = type.getSimpleName();
+                                relationship.collection = true;
+                                relationship.mappedBy = (field.isAnnotationPresent(OneToMany.class) && !"".equals(field.getAnnotation(OneToMany.class).mappedBy())) || (field.isAnnotationPresent(ManyToMany.class) && !"".equals(field.getAnnotation(ManyToMany.class).mappedBy()));
+//							    relationship.collectionType = field.getType().getName();
+                                relationship.collectionType = List.class.getName();
+                                relationship.elementType = type.getSimpleName();
+                                entity.relationships.add(relationship);
+                            }
 						} else {
 							if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(OneToOne.class)) {
 								FieldDescription relationshipDescription = new FieldDescription();
