@@ -21,6 +21,6 @@
 Elasticsearch
 
 - Download elasticsearch: https://www.elastic.co/downloads/elasticsearch
-- Intale de acordo com a plataforma e inicie o serviço
+- Instale de acordo com a plataforma e inicie o serviço
 
 * Um tutorial para implantação no servidor: https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-on-an-ubuntu-vps
