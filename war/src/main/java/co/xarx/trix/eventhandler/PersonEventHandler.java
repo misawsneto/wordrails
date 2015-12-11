@@ -90,7 +90,7 @@ public class PersonEventHandler {
 
 		List<Post> posts = postRepository.findAllFromPerson(person.id);
 		for (Post post: posts){
-			postService.removePostIndex(post);
+			postService.deleteIndex(post.id);
 		}
 
 		queryPersistence.setNoAuthor(person.id);

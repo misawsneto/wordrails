@@ -1,12 +1,9 @@
 package co.xarx.trix.domain;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.stereotype.Component;
+import java.io.Serializable;
 
-@Component("elasticSearchEntity")
-public interface ElasticSearchEntity extends Identifiable, MultiTenantEntity {
+public interface ElasticSearchEntity extends Identifiable, MultiTenantEntity, Serializable {
 
-	@Id
 	@Override
 	Integer getId();
 

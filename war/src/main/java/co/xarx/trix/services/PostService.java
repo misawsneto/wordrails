@@ -1,22 +1,22 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.PostRead;
+import co.xarx.trix.domain.QPostRead;
+import co.xarx.trix.elasticsearch.ESPostRepository;
+import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.persistence.PostReadRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
-import co.xarx.trix.scheduler.jobs.PostScheduleJob;
 import org.hibernate.exception.ConstraintViolationException;
-import org.quartz.*;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 @Service
 public class PostService {
@@ -26,20 +26,29 @@ public class PostService {
 	@Autowired
 	private QueryPersistence queryPersistence;
 	@Autowired
-	private Scheduler scheduler;
+	private SchedulerService schedulerService;
 	@Autowired
 	private PostReadRepository postReadRepository;
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
-	private PostEsRepository postEsRepository;
+	private ESPostRepository esPostRepository;
+	@Autowired
+	private ModelMapper modelMapper;
 
-	public void removePostIndex(Post post) {
-		postEsRepository.delete(post);
+//	public void searchIndex(SearchQuery query) {
+//		elasticSearchTemplate.index(indexQuery);
+//		elasticSearchTemplate.refresh(SampleEntity.class, true);
+//
+//	}
+
+	public void saveIndex(Post post) {
+		ESPost esPost = modelMapper.map(post, ESPost.class);
+		esPostRepository.save(esPost);
 	}
 
-	public void updatePostIndex(Post post) {
-		postEsRepository.update(post);
+	public void deleteIndex(Integer postId) {
+		esPostRepository.delete(postId);
 	}
 
 	public Post convertPost(int postId, String state) {
@@ -52,48 +61,18 @@ public class PostService {
 			}
 
 			if (dbPost.state.equals(Post.STATE_SCHEDULED)) { //if converting FROM scheduled, unschedule
-				unschedule(dbPost.id);
+				schedulerService.unschedule(dbPost.id);
 			} else if (state.equals(Post.STATE_SCHEDULED)) { //if converting TO scheduled, schedule
-				schedule(dbPost.id, dbPost.scheduledDate);
+				schedulerService.schedule(dbPost.id, dbPost.scheduledDate);
 			}
 
 			dbPost.state = state;
 
 			queryPersistence.changePostState(postId, state);
-			//removePostIndex(dbPost);
-			updatePostIndex(dbPost);
+			saveIndex(dbPost);
 		}
 
 		return dbPost;
-	}
-
-
-	@Transactional
-	public void unschedule(Integer postId) {
-		try {
-			scheduler.unscheduleJob(new TriggerKey("trigger-" + postId));
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Transactional
-	public void schedule(Integer postId, Date scheduledDate) {
-		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + postId, "schedules").startAt(scheduledDate).build();
-		TriggerKey triggerKey = new TriggerKey("trigger-" + postId);
-
-		try {
-			if (scheduler.checkExists(triggerKey)) {
-				scheduler.rescheduleJob(triggerKey, trigger);
-			} else {
-				JobDetail job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + postId, "schedules").build();
-				job.getJobDataMap().put("postId", String.valueOf(postId)); //must send as string because useProperties is set true
-
-				scheduler.scheduleJob(job, trigger);
-			}
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Transactional(noRollbackFor = Exception.class)

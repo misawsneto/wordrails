@@ -7,6 +7,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface ESRepository<T extends ElasticSearchEntity> extends ElasticsearchRepository<T, Integer> {
 
-	@Override
-	<S extends T> S save(S entity);
+//	@Override
+//	<S extends T> S save(S entity);
 }

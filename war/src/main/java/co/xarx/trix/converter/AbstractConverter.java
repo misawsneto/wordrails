@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractConverter<Entity, View> {
-	public abstract Entity convertToEntity(View v);
-	public abstract View convertToView(Entity t);
+	public abstract Entity convertFrom(View v);
+	public abstract View convertTo(Entity t);
 
 	public List<View> convertToViews(List<Entity> entities){
 		List<View> views = new ArrayList<View>(entities.size());
 		for (Entity entity : entities) {
-			View view = convertToView(entity);
+			View view = convertTo(entity);
 			if(view!=null)
 				views.add(view);
 		}
@@ -20,7 +20,7 @@ public abstract class AbstractConverter<Entity, View> {
 	public List<Entity> convertToEntities(List<View> views){
 		List<Entity> entities = new ArrayList<Entity>(views.size());
 		for (View view : views) {
-			entities.add(convertToEntity(view));
+			entities.add(convertFrom(view));
 		}
 		return entities;
 	}

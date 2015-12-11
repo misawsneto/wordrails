@@ -106,14 +106,14 @@ public class PerspectiveResource {
 			List<Row> rows = new ArrayList<Row>(3);
 			//Adding splashed posts
 			if(definition.splashedRow != null){
-				Row splashedRow = rowConverter.convertToEntity(definition.splashedRow);
+				Row splashedRow = rowConverter.convertFrom(definition.splashedRow);
 				splashedRow.splashedPerspective = termPerspective;
 				rows.add(splashedRow);
 			}
 			
 			//Adding featured row
 			if(definition.featuredRow != null){
-				Row featuredRow = rowConverter.convertToEntity(definition.featuredRow);
+				Row featuredRow = rowConverter.convertFrom(definition.featuredRow);
 				featuredRow.featuringPerspective = termPerspective;
 				rows.add(featuredRow);
 			}
@@ -246,7 +246,7 @@ public class PerspectiveResource {
 		Row newRow;
 		if(newRowView != null){
 			RowDifference difference = null;
-			newRow = rowConverter.convertToEntity(newRowView);
+			newRow = rowConverter.convertFrom(newRowView);
 			if(type.equals(Row.FEATURED_ROW)){
 				newRow.featuringPerspective = termPerspective;
 				difference = rowComparator.getDifference(newRow.cells, termPerspective.featuredRow == null ? null : termPerspective.featuredRow.cells);
@@ -303,8 +303,8 @@ public class PerspectiveResource {
 
 	private TermPerspectiveView convertRowsToTermView(TermPerspective termPerspective, List<Row> rows, int page, int size, int lowerLimit, int upperLimit){
 		TermPerspectiveView termView = new TermPerspectiveView();
-		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null);
-		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertToView(termPerspective.featuredRow) : null);
+		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertTo(termPerspective.splashedRow) : null);
+		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertTo(termPerspective.featuredRow) : null);
 		termView.ordinaryRows = fillPostsNotPositionedInRow(termPerspective.term ,rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
@@ -321,7 +321,7 @@ public class PerspectiveResource {
 		}
 		for (Row row : rows) {
 			row.cells = fillPostsNotPositionedInRow(row, stationId, page, size, lowerLimit, upperLimit);
-			rowsView.add(rowConverter.convertToView(row));
+			rowsView.add(rowConverter.convertTo(row));
 		}
 		return rowsView;
 	}
@@ -393,10 +393,10 @@ public class PerspectiveResource {
 
 	private TermPerspectiveView convertTermToTermView(TermPerspective termPerspective){
 		TermPerspectiveView termView = new TermPerspectiveView();
-		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertToView(termPerspective.featuredRow) : null);
-        termView.featuredRow = (termPerspective.homeRow != null ? rowConverter.convertToView(termPerspective.homeRow) : null);
+		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertTo(termPerspective.featuredRow) : null);
+        termView.featuredRow = (termPerspective.homeRow != null ? rowConverter.convertTo(termPerspective.homeRow) : null);
 		termView.ordinaryRows = (List<RowView>) rowConverter.convertToViews(rowRepository.findByPerspective(termPerspective));
-		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null); 
+		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertTo(termPerspective.splashedRow) : null);
 		termView.termId = termPerspective.term.id;
 		termView.termName = termPerspective.term.name;
 		termView.taxonomyId = termPerspective.taxonomyId;

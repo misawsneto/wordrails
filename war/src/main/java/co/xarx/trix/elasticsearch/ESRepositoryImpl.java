@@ -2,12 +2,9 @@ package co.xarx.trix.elasticsearch;
 
 import co.xarx.trix.domain.ElasticSearchEntity;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.query.IndexQuery;
-import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.data.elasticsearch.repository.support.AbstractElasticsearchRepository;
 import org.springframework.data.elasticsearch.repository.support.ElasticsearchEntityInformation;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 @Component
 public class ESRepositoryImpl<T extends ElasticSearchEntity>
@@ -29,20 +26,26 @@ public class ESRepositoryImpl<T extends ElasticSearchEntity>
 		return id.toString();
 	}
 
-	@Override
-	public <S extends T> S save(S entity) {
-		Assert.notNull(entity, "Cannot save 'null' entity.");
-		elasticsearchOperations.index(createIndexQuery(entity));
-		elasticsearchOperations.refresh(entity.getTenantId(), true);
-		return entity;
-	}
+//	@Override
+//	public <S extends T> S save(S entity) {
+//		Assert.notNull(entity, "Cannot save 'null' entity.");
+//		elasticsearchOperations.index(createIndexQuery(entity));
+//		elasticsearchOperations.refresh(entity.getTenantId(), true);
+//		return entity;
+//	}
 
-	private IndexQuery createIndexQuery(T entity) {
-		return new IndexQueryBuilder()
-				.withObject(entity)
-				.withId(stringIdRepresentation(entity.getId()))
-				.withType(entity.getType())
-				.withIndexName(entity.getTenantId())
-				.build();
-	}
+//	public void delete(String tenant, Integer id) {
+//		Assert.notNull(id, "Cannot delete entity with id 'null'.");
+//		elasticsearchOperations.delete(entityInformation.getIndexName(), entityInformation.getType(), stringIdRepresentation(id));
+//		elasticsearchOperations.refresh(entityInformation.getIndexName(), true);
+//	}
+
+//	private IndexQuery createIndexQuery(T entity) {
+//		return new IndexQueryBuilder()
+//				.withObject(entity)
+//				.withId(stringIdRepresentation(entity.getId()))
+//				.withType(entity.getType())
+//				.withIndexName(entity.getTenantId())
+//				.build();
+//	}
 }

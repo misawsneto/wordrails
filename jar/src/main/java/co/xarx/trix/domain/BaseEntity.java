@@ -40,6 +40,7 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
 	private int version;
 
+	@JsonIgnore
 	String tenantId;
 
 	@Override

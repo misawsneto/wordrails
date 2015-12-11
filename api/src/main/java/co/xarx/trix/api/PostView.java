@@ -1,69 +1,18 @@
 package co.xarx.trix.api;
 
-import co.xarx.trix.domain.ElasticSearchEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-@Document(indexName = "doesntmatter")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PostView implements Serializable, ElasticSearchEntity {
+public class PostView implements Serializable {
 
 	private static final long serialVersionUID = -1474032487285763669L;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
-
-	@Override
-	public String getType() {
-		return "post";
-	}
-
-	@JsonIgnore
-	public String tenantId;
-
-	@JsonIgnore
-	public Integer networkId;
-
-	@Override
-	public String getTenantId() {
-		return tenantId;
-	}
-
-	@Override
-	public Integer getNetworkId() {
-		return networkId;
-	}
-
-	@Override
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
-
-	@Override
-	public void setNetworkId(Integer networkId) {
-		this.networkId = networkId;
-	}
-
-	public static class Category {
-
-		public Category(Integer id, String name) {
-			this.id = id;
-			this.name = name;
-		}
-
-		public Integer id;
-		public String name;
-	}
 
 	public String title;
 
@@ -91,7 +40,6 @@ public class PostView implements Serializable, ElasticSearchEntity {
 	public String topper;
 	public String state;
 	public int readsCount;
-	public int favoritesCount;
 	public int bookmarksCount;
 	public int recommendsCount;
 	public int commentsCount;
@@ -139,7 +87,6 @@ public class PostView implements Serializable, ElasticSearchEntity {
 	public String subheading;
 	public Date scheduledDate;
 	public boolean notify;
-	public Integer f;
 
 	public Map<String, String> featuredImage;
 }

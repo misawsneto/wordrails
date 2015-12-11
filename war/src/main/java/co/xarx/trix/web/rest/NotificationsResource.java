@@ -67,7 +67,7 @@ public class NotificationsResource {
 
 			List<NotificationView> notifications = new ArrayList<>();
 			for (Notification notification : pages) {
-				notifications.add(notificationConverter.convertToView(notification));
+				notifications.add(notificationConverter.convertTo(notification));
 			}
 			response.content = notifications;
 			return response;
@@ -129,7 +129,7 @@ public class NotificationsResource {
 //
 //		List<NotificationView> notifications = new ArrayList<NotificationView>();
 //		for (Notification notification : result) {
-//			notifications.add(notificationConverter.convertToView(notification));
+//			notifications.add(notificationConverter.convertTo(notification));
 //		}
 //
 //		ContentResponse<List<NotificationView>> response = new ContentResponse<List<NotificationView>>();

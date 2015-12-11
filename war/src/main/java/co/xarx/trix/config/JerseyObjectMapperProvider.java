@@ -15,6 +15,10 @@ public class JerseyObjectMapperProvider implements ContextResolver<ObjectMapper>
 
 	@Override
 	public ObjectMapper getContext(Class<?> type) {
+		return getObjectMapper();
+	}
+
+	public static ObjectMapper getObjectMapper() {
 		ObjectMapper result = new ObjectMapper();
 		result.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		result.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);

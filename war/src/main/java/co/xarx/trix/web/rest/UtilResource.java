@@ -1,9 +1,13 @@
 package co.xarx.trix.web.rest;
 
 
-import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.elasticsearch.ESPersonRepository;
 import co.xarx.trix.elasticsearch.ESPostRepository;
+import co.xarx.trix.elasticsearch.ESStationRepository;
+import co.xarx.trix.elasticsearch.domain.ESPerson;
+import co.xarx.trix.elasticsearch.domain.ESPost;
+import co.xarx.trix.elasticsearch.domain.ESStation;
 import co.xarx.trix.eventhandler.NetworkEventHandler;
 import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.eventhandler.StationEventHandler;
@@ -16,6 +20,7 @@ import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.StringUtil;
 import org.joda.time.DateTime;
+import org.modelmapper.ModelMapper;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
@@ -812,7 +817,8 @@ public class UtilResource {
 	}
 
 	@Autowired
-	private PostConverter postConverter;
+	private ModelMapper modelMapper;
+
 	@Autowired
 	private ESPostRepository esPostRepository;
 
@@ -822,7 +828,35 @@ public class UtilResource {
 		if (isLocal(request.getHeader("Host"))) {
 			List<Network> networks = networkRepository.findAll();
 			for (Network network : networks) {
-				asyncService.index(network.id, network.subdomain, postRepository, postConverter, esPostRepository);
+				asyncService.mapThenSave(postRepository, QPost.post.tenantId.eq(network.subdomain), modelMapper, ESPost.class, esPostRepository);
+			}
+		}
+	}
+
+	@Autowired
+	private ESStationRepository esStationRepository;
+
+	@GET
+	@Path("/indexStationsToElastisearch")
+	public void indexStationsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
+		if (isLocal(request.getHeader("Host"))) {
+			List<Network> networks = networkRepository.findAll();
+			for (Network network : networks) {
+				asyncService.mapThenSave(stationRepository, QStation.station.tenantId.eq(network.subdomain), modelMapper, ESStation.class, esStationRepository);
+			}
+		}
+	}
+
+	@Autowired
+	private ESPersonRepository esPersonRepository;
+
+	@GET
+	@Path("/indexPersonToElastisearch")
+	public void indexPersonToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
+		if (isLocal(request.getHeader("Host"))) {
+			List<Network> networks = networkRepository.findAll();
+			for (Network network : networks) {
+				asyncService.mapThenSave(personRepository, QPerson.person.tenantId.eq(network.subdomain), modelMapper, ESPerson.class, esPersonRepository);
 			}
 		}
 	}

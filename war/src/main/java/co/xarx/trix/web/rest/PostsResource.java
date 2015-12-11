@@ -1,37 +1,33 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.PermissionId;
+import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.exception.BadRequestException;
-import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.services.AsyncService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.dto.StationTermsDto;
+import co.xarx.trix.exception.BadRequestException;
+import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.PostService;
-import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.highlight.HighlightField;
+import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +45,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -78,10 +73,6 @@ public class PostsResource {
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
-	@Autowired
-	private PostEsRepository postEsRepository;
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -99,7 +90,7 @@ public class PostsResource {
 		Post post = postRepository.findOne(postId);
 
 		ContentResponse<PostView> response = new ContentResponse<>();
-		response.content = postConverter.convertToView(post);
+		response.content = postConverter.convertTo(post);
 		return response;
 	}
 
@@ -111,7 +102,7 @@ public class PostsResource {
 		Post post = postRepository.findBySlug(slug);
 		PostView postView = null;
 		if (post != null) {
-			postView = postConverter.convertToView(post);
+			postView = postConverter.convertTo(post);
 			if(withBody != null && withBody)
 				postView.body = post.body;
 		}
@@ -127,7 +118,7 @@ public class PostsResource {
 		Post post = postRepository.findOne(postId);
 		PostView postView = null;
 		if (post != null) {
-			postView = postConverter.convertToView(post);
+			postView = postConverter.convertTo(post);
 			if(withBody != null && withBody)
 				postView.body = post.body;
 		}
@@ -155,7 +146,7 @@ public class PostsResource {
 		if(post != null && postAndCommentSecurityChecker.canWrite(post)){
 			post = postService.convertPost(postId, state);
 			ContentResponse<PostView> response = new ContentResponse<>();
-			response.content = postConverter.convertToView(post);
+			response.content = postConverter.convertTo(post);
 			return response;
 		}else{
 			throw new UnauthorizedException();
@@ -292,36 +283,41 @@ public class PostsResource {
 
 		}
 
-		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "body");
+		Pageable pageable = new PageRequest(page, size);
+		SearchQuery query = new NativeSearchQueryBuilder()
+				.withSort(sort)
+				.withPageable(pageable)
+				.withHighlightFields(new HighlightBuilder.Field("body"))
+				.withQuery(mainQuery).build();
 
-		List<PostView> postsViews = new ArrayList<>();
 
-		for(SearchHit hit: searchResponse.getHits().getHits()){
-			try {
-				PostView postView = objectMapper.readValue(hit.getSourceAsString(), PostView.class);
-				Map<String, HighlightField> highlights = hit.getHighlightFields();
-				if(highlights != null && highlights.get("body") != null)
-					for (Text fragment:  highlights.get("body").getFragments()) {
-						if(postView.snippet == null)
-							postView.snippet = "";
-						postView.snippet = postView.snippet + " " + fragment.toString();
-					}
-				else{
-					postView.snippet = TrixUtil.simpleSnippet(postView.body, 100);
-				}
-
-				postView.snippet = TrixUtil.htmlStriped(postView.snippet);
-				postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
-				postsViews.add(postView);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
+//		List<PostView> searchResponse = Lists.newArrayList(postService.searchIndex(query));
+//
+//		for(PostView postView: searchResponse){
+//			try {
+//				Field[] highlights = query.getHighlightFields();
+//				if(highlights != null && highlights.get("body") != null)
+//					for (Text fragment:  highlights.get("body").getFragments()) {
+//						if(postView.snippet == null)
+//							postView.snippet = "";
+//						postView.snippet = postView.snippet + " " + fragment.toString();
+//					}
+//				else{
+//					postView.snippet = TrixUtil.simpleSnippet(postView.body, 100);
+//				}
+//
+//				postView.snippet = TrixUtil.htmlStriped(postView.snippet);
+//				postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
+//				postsViews.add(postView);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
 		ContentResponse<SearchView> response = new ContentResponse<>();
 		response.content = new SearchView();
-		response.content.hits = (int) searchResponse.getHits().totalHits();
-		response.content.posts = postsViews;
+//		response.content.hits = (int) searchResponse.size();
+//		response.content.posts = postsViews;
 
 		return response;
 

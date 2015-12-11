@@ -3,16 +3,10 @@ package co.xarx.trix.test;
 import co.xarx.trix.api.PageView;
 import co.xarx.trix.config.spring.ApplicationConfig;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.domain.page.BaseSection;
 import co.xarx.trix.domain.page.Page;
-import co.xarx.trix.domain.page.QueryableListSection;
-import co.xarx.trix.domain.query.FixedQuery;
-import co.xarx.trix.domain.query.PageableQuery;
-import co.xarx.trix.domain.query.PostQuery;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,7 +20,6 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.TreeMap;
 
 @ContextConfiguration(classes = {
 		ApplicationConfig.class
@@ -45,42 +38,7 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 
 	@Test
 	public void serializePage() throws JsonProcessingException, FileNotFoundException {
-		PostQuery postQuery1 = new PostQuery();
-		postQuery1.setStationIds(Lists.newArrayList(11));
-		postQuery1.setRichText("dilma");
-
-		PageableQuery pageableQuery = new PageableQuery();
-		pageableQuery.setObjectQuery(postQuery1);
-
-		PostQuery postQuery2 = new PostQuery();
-		postQuery2.setStationIds(Lists.newArrayList(11));
-		postQuery2.setRichText("fhc");
-
-		FixedQuery fixedQuery1 = new FixedQuery();
-		fixedQuery1.setObjectQuery(postQuery2);
-		fixedQuery1.setIndexes(Sets.newHashSet(0, 2, 3));
-
-		FixedQuery fixedQuery2 = new FixedQuery();
-		fixedQuery2.setObjectQuery(postQuery2);
-		fixedQuery2.setIndexes(Sets.newHashSet(0, 1, 2, 3, 4));
-
-		Page page = new Page();
-		page.setTitle("Home");
-
-		QueryableListSection section1 = new QueryableListSection();
-		section1.setTitle("Section 1");
-		section1.setSize(10);
-		section1.setPageable(true);
-		section1.setPageableQuery(pageableQuery);
-		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
-
-		QueryableListSection section2 = new QueryableListSection();
-		section2.setTitle("Section 2");
-		section2.setSize(5);
-		section2.setPageable(false);
-		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));
-
-		page.setSections(new TreeMap<Integer, BaseSection>() {{put(0, section1); put(1, section2);}});
+		Page page = TestArtifactsFactory.createPage();
 
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		String json = objectMapper.writeValueAsString(page);
@@ -97,21 +55,6 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 	static String readFile(String fileName) throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get("src/test/resources/" + fileName));
 		return new String(encoded, StandardCharsets.UTF_8);
-	}
-
-	private Station newStation() {
-		Station station = new Station();
-		station.id = 11;
-		station.name = "TUPY";
-		station.visibility = "UNRESTRICTED";
-		station.logo = new Image();
-		station.logo.id = 16119;
-		station.logoId = 3722;
-		station.defaultPerspectiveId = 7;
-		station.categoriesTaxonomyId = 140;
-		station.tagsTaxonomyId = 183;
-		station.networkId = 5;
-		return station;
 	}
 
 	@Test

@@ -1,6 +1,5 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -8,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -72,18 +70,6 @@ public class Person extends BaseEntity implements Serializable {
 
 	public String coverUrl;
 
-	@ElementCollection()
-	@JoinTable(name = "image_hash", joinColumns = @JoinColumn(name = "image_id", referencedColumnName = "coverId"))
-	@MapKeyColumn(name = "sizeTag", nullable = false)
-	@Column(name = "hash", nullable = false)
-	public Map<String, String> coverHashes;
-
-	@ElementCollection()
-	@JoinTable(name = "image_hash", joinColumns = @JoinColumn(name = "image_id", referencedColumnName = "imageId"))
-	@MapKeyColumn(name = "sizeTag", nullable = false)
-	@Column(name = "hash", nullable = false)
-	public Map<String, String> imageHashes;
-
 	public Integer imageId;
 	public Integer imageSmallId;
 	public Integer imageMediumId;
@@ -113,16 +99,6 @@ public class Person extends BaseEntity implements Serializable {
 	@PreUpdate
 	public void onUpdate() {
 		onChange();
-	}
-
-	@PostLoad //lazy initialize the maps. we need to do this hack because hibernate 4 has a bug to fetch eager null references
-	void onPostLoad() {
-		if(image != null) {
-			this.imageHashes.size();
-		}
-		if(cover != null) {
-			this.coverHashes.size();
-		}
 	}
 
 	private void onChange() {

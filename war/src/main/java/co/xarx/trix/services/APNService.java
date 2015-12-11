@@ -12,7 +12,6 @@ import com.relayrides.pushy.apns.PushManager;
 import com.relayrides.pushy.apns.PushManagerConfiguration;
 import com.relayrides.pushy.apns.util.*;
 import com.rometools.utils.Lists;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +82,7 @@ public class APNService {
 	}
 
 	@Transactional
-	public void sendToStation(Integer networkId, Integer stationId, @NotNull Notification notification) {
+	public void sendToStation(Integer networkId, Integer stationId, Notification notification) {
 		List<PersonNetworkToken> personNetworkTokens;
 		if (stationRepository.isUnrestricted(stationId)) {
 			personNetworkTokens = personNetworkTokenRepository.findByNetworkId(networkId);

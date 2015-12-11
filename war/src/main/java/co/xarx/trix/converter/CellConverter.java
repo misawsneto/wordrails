@@ -21,7 +21,7 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 	public List<Cell> convertToEntities(List<CellView> views, Row row){
 		List<Cell> entities = new ArrayList<Cell>();
 		for (CellView cellView : views) {
-			Cell cell = convertToEntity(cellView);
+			Cell cell = convertFrom(cellView);
 			cell.row = row;
 			cell.term = row.term;
 			entities.add(cell);
@@ -30,13 +30,13 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 	}
 	
 	@Override
-	public Cell convertToEntity(CellView cellView) {
+	public Cell convertFrom(CellView cellView) {
 		Cell cell = new Cell();
 		if(cellView.id != null){
 			cell = cellRepository.findOne(cellView.id);
 		}else{
 			cell.index = cellView.index;
-			cell.post = postConverter.convertToEntity(cellView.postView);
+			cell.post = postConverter.convertFrom(cellView.postView);
 		}
 		return cell;
 	}
@@ -64,12 +64,12 @@ public class CellConverter extends AbstractConverter<Cell, CellView> {
 	}
 
 	@Override
-	public CellView convertToView(Cell cell) {
+	public CellView convertTo(Cell cell) {
 		CellView cellView = new CellView();
 		cellView.id = cell.id;
 		cellView.index = cell.index;
 		if(cell.post != null){
-			cellView.postView = postConverter.convertToView(cell.post);
+			cellView.postView = postConverter.convertTo(cell.post);
 			if(cellView.postView == null || cellView.postView.id == null)
 				return null;
 		}else return null;

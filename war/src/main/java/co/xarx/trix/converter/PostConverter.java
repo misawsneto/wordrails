@@ -1,10 +1,11 @@
 package co.xarx.trix.converter;
 
+import co.xarx.trix.api.Category;
+import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.api.PostView;
 import co.xarx.trix.util.TrixUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,12 +19,12 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 	PostRepository postRepository;
 	
 	@Override
-	public Post convertToEntity(PostView postView) {
-		return postRepository.findOne((Integer) postView.getId());
+	public Post convertFrom(PostView postView) {
+		return postRepository.findOne(postView.id);
 	}
 
 	@Override
-	public PostView convertToView(Post post) {
+	public PostView convertTo(Post post) {
 		PostView postView = new PostView();
 		postView.id = post.id;
 		postView.title = post.title;
@@ -38,7 +39,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		if(post.terms != null && !post.terms.isEmpty()) {
 			postView.categories = new HashSet<>();
 			for (Term term : post.terms) {
-				postView.categories.add(new PostView.Category(term.id, term.name));
+				postView.categories.add(new Category(term.id, term.name));
 			}
 		}
 
@@ -100,7 +101,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 	}
 
 	public PostView convertToView(Post post, boolean addBody) {
-		PostView postView = convertToView(post);
+		PostView postView = convertTo(post);
 		if(addBody)
 			postView.body = post.body;
 		return postView;

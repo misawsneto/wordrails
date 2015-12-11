@@ -1,11 +1,8 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.api.PostView;
-import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostTrash;
-import co.xarx.trix.elasticsearch.ESPostRepository;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
@@ -13,6 +10,7 @@ import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.PostService;
+import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +28,8 @@ public class PostEventHandler {
 	@Autowired
 	private MobileService mobileService;
 	@Autowired
+	private SchedulerService schedulerService;
+	@Autowired
 	private PostService postService;
 	@Autowired
 	private PostRepository postRepository;
@@ -37,10 +37,6 @@ public class PostEventHandler {
 	private PostReadRepository postReadRepository;
 	@Autowired
 	private CellRepository cellRepository;
-	@Autowired
-	private PostConverter postConverter;
-	@Autowired
-	private ESPostRepository esPostRepository;
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
@@ -89,20 +85,19 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			postService.schedule(post.id, post.scheduledDate);
+			schedulerService.schedule(post.id, post.scheduledDate);
 		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
 			mobileService.buildNotification(post);
 		}
-		PostView postView = postConverter.convertToView(post);
-		esPostRepository.save(postView);
+		postService.saveIndex(post);
 	}
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			postService.schedule(post.id, post.scheduledDate);
+			schedulerService.schedule(post.id, post.scheduledDate);
 		}
-		postService.updatePostIndex(post);
+		postService.saveIndex(post);
 	}
 
 	@HandleBeforeDelete
@@ -121,7 +116,7 @@ public class PostEventHandler {
 			notificationRepository.deleteByPost(post);
 			bookmarkRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
-			postService.removePostIndex(post); // evitando bug de remoção de post que tiveram post alterado.
+			postService.deleteIndex(post.id); // evitando bug de remoção de post que tiveram post alterado.
 		} else {
 			throw new UnauthorizedException();
 		}

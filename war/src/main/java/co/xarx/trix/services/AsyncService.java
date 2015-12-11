@@ -1,14 +1,16 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.converter.AbstractConverter;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.elasticsearch.ESRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.script.ImageScript;
+import com.google.common.collect.Lists;
+import com.mysema.query.types.Predicate;
 import org.apache.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -37,27 +39,26 @@ public class AsyncService {
 	@Autowired
 	public AndroidBuilderService androidBuilderService;
 
-	private List<ElasticSearchEntity> getESEntities(CrudRepository repository, AbstractConverter converter) {
-		List<ElasticSearchEntity> posts = new ArrayList<>();
-		Iterable<Object> all = repository.findAll();
-		for (Object post : all) {
-			posts.add((ElasticSearchEntity) converter.convertToView(post));
+	@Async
+	public <D extends MultiTenantEntity> void mapThenSave(QueryDslPredicateExecutor repository, Predicate predicate, ModelMapper modelMapper
+			, Class<D> mapTo, CrudRepository esRepository) {
+		int errorCount = 0;
+		List<MultiTenantEntity> itens = Lists.newArrayList(repository.findAll(predicate));
+		List<MultiTenantEntity> entities = new ArrayList<>();
+		for (Object item : itens) {
+			try {
+				entities.add(modelMapper.map(item, mapTo));
+			} catch (Exception e) {
+				errorCount++;
+			}
 		}
 
-		return posts;
-	}
-
-	@Async
-	public void index(Integer networkId, String tenantId, CrudRepository repository,
-	                                                  AbstractConverter converter, ESRepository esRepository) {
-		TenantContextHolder.setCurrentNetworkId(networkId);
-		TenantContextHolder.setCurrentTenantId(tenantId);
-		List<ElasticSearchEntity> esEntities = getESEntities(repository, converter);
-		log.info("indexing " + esEntities.size() + " elements, tenant " + tenantId);
-		esEntities.forEach((entity) -> {
-			esRepository.save(entity);
-			log.debug("index post " + entity.getId() + " on " + entity.getTenantId());
-		});
+		if (itens.size() > 0) {
+			if (errorCount > 0) log.info("mapping of " + errorCount + "/" + itens.size() +
+					" entities on tenant " + itens.get(0).getTenantId() + " threw mapping error");
+			if (entities.size() > 0) log.info("indexing " + entities.size() + " elements on tenant " + itens.get(0).getTenantId());
+		}
+		entities.forEach(esRepository::save);
 	}
 
 	@Async

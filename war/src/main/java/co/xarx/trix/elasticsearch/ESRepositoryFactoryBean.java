@@ -11,7 +11,7 @@ import org.springframework.util.Assert;
 
 import java.io.Serializable;
 
-public class CustomGenericRepositoryFactoryBean extends RepositoryFactoryBeanSupport {
+public class ESRepositoryFactoryBean extends RepositoryFactoryBeanSupport {
 
 	private ElasticsearchOperations operations;
 

@@ -39,6 +39,8 @@ public final class Constants {
 
 	public static class ObjectType {
 		public static final String POST = "post";
+		public static final String PERSON = "person";
+		public static final String STATION = "station";
 		public static final String BOOKMARK = "bookmark";
 	}
 
