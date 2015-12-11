@@ -93,8 +93,12 @@ public class TestArtifactsFactory {
 		person.setNetworkId(NETWORK);
 		person.setTenantId(TENANT);
 		person.id = 10;
+		person.name = "Dummy Person";
 		person.email = "dummy@dummy.com";
 		person.username = "dummyuser";
+		person.twitterHandle = "dummytwitteraccount";
+		person.cover = createImage(Image.Type.COVER);
+		person.image = createImage(Image.Type.PROFILE_PICTURE);
 		return person;
 	}
 

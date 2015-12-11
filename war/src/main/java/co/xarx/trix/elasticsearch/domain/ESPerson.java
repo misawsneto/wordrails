@@ -53,4 +53,56 @@ public class ESPerson implements ElasticSearchEntity {
 	public void setNetworkId(Integer networkId) {
 		this.networkId = networkId;
 	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTwitter() {
+		return twitter;
+	}
+
+	public void setTwitter(String twitter) {
+		this.twitter = twitter;
+	}
+
+	public Map<String, String> getCover() {
+		return cover;
+	}
+
+	public void setCover(Map<String, String> cover) {
+		this.cover = cover;
+	}
+
+	public Map<String, String> getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(Map<String, String> profilePicture) {
+		this.profilePicture = profilePicture;
+	}
 }

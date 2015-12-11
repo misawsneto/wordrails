@@ -1,9 +1,12 @@
 package co.xarx.trix.test;
 
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
+import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.domain.ESStation;
+import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.StationMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +28,7 @@ public class ModelMapperTest {
 		modelMapper = new ModelMapper();
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
+		modelMapper.addMappings(new PersonMap());
 	}
 
 	@Test
@@ -49,5 +53,17 @@ public class ModelMapperTest {
 
 		assertEquals(station.id, esStation.id);
 		assertEquals(station.logo.hashs, esStation.logo);
+	}
+
+	@Test
+	public void testPersonToESPostMapping() throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		Person person = TestArtifactsFactory.createPerson();
+		ESPerson esPerson = modelMapper.map(person, ESPerson.class);
+		System.out.println(objectMapper.writeValueAsString(esPerson));
+
+		assertEquals(person.id, esPerson.id);
+		assertEquals(person.cover.hashs, esPerson.cover);
 	}
 }
