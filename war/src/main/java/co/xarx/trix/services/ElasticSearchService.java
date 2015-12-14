@@ -29,7 +29,12 @@ public class ElasticSearchService {
 	}
 
 	private void startEsClient(String host, Integer port){
-		Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", "trix").build();
+		Settings settings = ImmutableSettings.settingsBuilder()
+				.put("cluster.name", "trix")
+				.put("shield.user", "trix_admin:tr1xsearch")
+				.build();
+
+
 		client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
 

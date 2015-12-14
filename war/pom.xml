@@ -114,6 +114,10 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch-shield</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.github.tasubo</groupId>
 			<artifactId>jgmp</artifactId>
 		</dependency>
