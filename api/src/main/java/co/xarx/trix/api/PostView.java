@@ -4,6 +4,7 @@ import org.springframework.hateoas.Identifiable;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +30,9 @@ public class PostView implements Serializable, Identifiable {
 	public String imageLargeHash;
 
     public Set<String> tags;
+
+    public List<TermView> terms;
+
 	public Boolean sponsored;
 	public java.util.Date date;
 	public String snippet;
