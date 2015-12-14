@@ -87,7 +87,7 @@
         </div>
       </div>
     </div>
-    <div ng-if="app.nowReading.tags">
+    <div ng-if="app.nowReading.tags && app.nowReading.tags.length > 0">
       <span class="text-lg pull-left m-t-sm p-r">Tags: </span>
       <md-chips ng-model="app.nowReading.tags" readonly="true">
       </md-chips>
