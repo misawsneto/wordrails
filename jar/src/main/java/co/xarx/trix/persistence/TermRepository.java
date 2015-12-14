@@ -58,8 +58,12 @@ public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPr
 	@Query(value="SELECT taxonomy.terms FROM StationPerspective sp join sp.taxonomy taxonomy where sp.id = :perspectiveId")
 	List<Term> findByPerspectiveId(@Param("perspectiveId") Integer perspectiveId);
 
+    @RestResource(exported = false)
+    @Query(value="SELECT taxonomy.terms.id FROM Taxonomy taxonomy where taxonomy.id = :taxonomyId")
+    List<Integer> findTermIdsByTaxonomyId(@Param("taxonomyId") Integer taxonomyId);
+
 	@Query(value="SELECT taxonomy.terms FROM Taxonomy taxonomy where taxonomy.id = :taxonomyId")
-	List<Term> findByTaxonomyId(@Param("taxonomyId") Integer perspectiveId);
+	List<Term> findByTaxonomyId(@Param("taxonomyId") Integer taxonomyId);
 
 	@RestResource(exported = false)
 	@Query(value="SELECT post FROM Post post left join post.terms term where post.state = 'PUBLISHED' and post.stationId = :stationId and term.name = :tagName")

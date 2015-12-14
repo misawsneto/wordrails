@@ -61,6 +61,9 @@ public class PerspectiveResource {
 	private @Autowired
 	CellRepository cellRepository;
 
+    private @Autowired
+    TermsResource termsResource;
+
 	@Path("/termPerspectiveDefinitions/{id}")
 	@PUT
 	@Transactional
@@ -72,7 +75,7 @@ public class PerspectiveResource {
 			updateTerm(termPerspective, definition.termId);
 			updateRow(definition.splashedRow, termPerspective, Row.SPLASHED_ROW);
 			updateRow(definition.featuredRow, termPerspective, Row.FEATURED_ROW);
-			//updateRow(definition.homeRows, termPerspective, Row.HOME_ROW);
+			updateRow(definition.homeRow, termPerspective, Row.HOME_ROW);
 			updateOrdinaryRows(definition.ordinaryRows, termPerspective);
 			response = Response.status(Status.CREATED).build();
 		}
@@ -306,6 +309,7 @@ public class PerspectiveResource {
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null);
 		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertToView(termPerspective.featuredRow) : null);
 		termView.ordinaryRows = fillPostsNotPositionedInRows(termPerspective.term, rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+        termView.homeRow = fillPostsNotPositionedInHomeRow(termPerspective.homeRow, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
 		termView.taxonomyId = termPerspective.taxonomyId;
@@ -313,6 +317,38 @@ public class PerspectiveResource {
 
 		return termView;
 	}
+
+    private RowView fillPostsNotPositionedInHomeRow(Row row, Integer stationId, int page, int size, int lowerLimit, int upperLimit){
+        RowView rowView;
+        row.cells = fillPostsNotPositionedInHomeRows(row, stationId, page, size, lowerLimit, upperLimit);
+        rowView = rowConverter.convertToView(row);
+        return rowView;
+    }
+
+    private List<Cell> fillPostsNotPositionedInHomeRows(Row row, Integer stationId, int page, int size, int lowerLimit, int upperLimit){
+        List<Cell> positionedCells = cellRepository.findCellsPositioned(row.id, lowerLimit, upperLimit);
+
+        List<Cell> cells = null;
+
+        List<Integer> ids = termRepository.findTermIdsByTaxonomyId(row.term.taxonomyId);
+
+        int numberPostsNotPositioned = size - positionedCells.size();
+        if(numberPostsNotPositioned > 0){
+            List<Integer> postPositionedIds = convertCellsToPostsIds(positionedCells);
+            Pageable pageable = new PageRequest(page, numberPostsNotPositioned);
+
+            if(postPositionedIds.size() > 0){
+                List<Post> notPositionedPosts = (postRepository.findPostsNotPositioned(stationId, ids, postPositionedIds, pageable));
+                cells = mergePostsPositionedsNotPositioneds(row, positionedCells, notPositionedPosts, size);
+            }else{
+                List<Post> posts = postRepository.findPostsPublished(stationId, ids, pageable);
+                cells = convertPostsToCells(row, posts);
+            }
+        }else{
+            cells = positionedCells;
+        }
+        return cells;
+    }
 
 	private List<RowView> fillPostsNotPositionedInRows(Term term, List<Row> rows, Integer stationId, int page, int size, int lowerLimit, int upperLimit){
 		List<RowView> rowsView = new ArrayList<RowView>(rows.size() + 1);
