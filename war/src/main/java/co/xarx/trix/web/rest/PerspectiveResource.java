@@ -61,9 +61,6 @@ public class PerspectiveResource {
 	private @Autowired
 	CellRepository cellRepository;
 
-    private @Autowired
-    TermsResource termsResource;
-
 	@Path("/termPerspectiveDefinitions/{id}")
 	@PUT
 	@Transactional
@@ -299,6 +296,7 @@ public class PerspectiveResource {
 	private TermPerspectiveView convertRowsToTermViewDefault(Term term, Integer stationId, List<Term> terms, int page, int size){
 		TermPerspectiveView termView = new TermPerspectiveView();
 		termView.ordinaryRows = convertTermsToRows(term, terms, stationId, Row.ORDINARY_ROW, page, size);
+        termView.homeRow = convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(term.taxonomyId), stationId, 0, Row.HOME_ROW, page, size);
 		termView.termId = (term != null ? term.id : null);
 
 		return termView;
@@ -309,7 +307,8 @@ public class PerspectiveResource {
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null);
 		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertToView(termPerspective.featuredRow) : null);
 		termView.ordinaryRows = fillPostsNotPositionedInRows(termPerspective.term, rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
-        termView.homeRow = fillPostsNotPositionedInHomeRow(termPerspective.homeRow, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+        termView.homeRow = termPerspective.homeRow == null ? convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(termPerspective.taxonomyId), termPerspective.stationId, 0, Row.HOME_ROW, page, size) :
+                fillPostsNotPositionedInHomeRow(termPerspective.homeRow, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
 		termView.taxonomyId = termPerspective.taxonomyId;
@@ -495,8 +494,8 @@ public class PerspectiveResource {
 
 		RowView rowView = new RowView();
 		rowView.cells = cellConverter.convertToViews(convertPostsToCells(row, posts)); 
-		rowView.termId = term.id;
-		rowView.termName = term.name;
+		rowView.termId = term != null ? term.id : null;
+		rowView.termName = term != null ? term.name : null;
 		rowView.type = rowType;
 		rowView.id = row.id;
 
