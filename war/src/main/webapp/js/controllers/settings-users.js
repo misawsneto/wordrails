@@ -30,10 +30,10 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	}
   	$scope.editing = false;
   	$scope.creating = true;
-  }else if($state.params.userId){
+  }else if($state.params.username){
   	$scope.editing = true;
   	$scope.creating = false;
-  	trix.findPersonById($state.params.userId, 'personProjection').success(function(response){
+  	trix.findByUsername($state.params.username, 'personProjection').success(function(response){
   		$scope.selectedPerson = response.persons[0];
   	})
   }else{
@@ -110,7 +110,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   $scope.loadPerson = function(person){
-  	$state.go('app.settings.users', {'userId': person.id})
+  	$state.go('app.settings.users', {'username': person.username})
   }
 
   $scope.openEnableDisableDialog = function(person, ev){
@@ -176,7 +176,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       $scope.editingPersonLoaded = true;
       $scope.editing = true;
       $scope.creating = false;
-      $state.go('app.settings.users', {'userId': response.id}, {location: 'replace', inherit: false, notify: false, reload: false})
+      $state.go('app.settings.users', {'username': response.username}, {location: 'replace', inherit: false, notify: false, reload: false})
     }).error(function(data, status, headers, config){
       if(status == 409){
         $scope.app.conflictingData = data;

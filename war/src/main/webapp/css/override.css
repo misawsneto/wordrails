@@ -3483,7 +3483,7 @@ label {
     margin-right: 30px;
   }
   #publications-list{
-    min-height: 300px;
+    min-height: 300px; z-index: 2
   }
   /* /user_publications */
 
@@ -4785,7 +4785,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 #station-fab,
 #sponsor-fab {
   position: fixed;
-  right: 18px;
+  right: 32px;
   bottom: 24px;
 }
 
