@@ -54,15 +54,15 @@
           </div>
           -->
 
-          <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" ng-if="ordinaryRow.cells && ordinaryRow.cells.length">
+          <div ng-if="app.termPerspectiveView.homeRow && app.termPerspectiveView.homeRow.cells && app.termPerspectiveView.homeRow.cells.length">
           
           <!-- <div ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))" -->
           <div 
-          ng-repeat="cell in ordinaryRow.cells | limitTo: 3" class="half-post bg-custom">
+          ng-repeat="cell in app.termPerspectiveView.homeRow.cells" class="half-post bg-custom">
             <div class="p-b-md b-t m-t-md"></div>
-            <a ui-sref="app.tagspage({'tagName': ordinaryRow.termName})" ng-click="app.stopPropagation($event)"
+            <a ng-repeat="term in cell.postView.terms" ui-sref="app.tagspage({'tagName': term.termName})" ng-click="app.stopPropagation($event)"
               class="btn btn-rounded btn-stroke btn-term m-r-sm m-b-sm">
-              {{ordinaryRow.termName}}
+              {{term.termName}}
             </a>
             <a ui-sref="app.read({'slug': cell.postView.slug})">
               <div class="row">
