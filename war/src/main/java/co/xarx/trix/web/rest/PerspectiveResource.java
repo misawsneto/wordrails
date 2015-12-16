@@ -231,7 +231,24 @@ public class PerspectiveResource {
 					rowView = convertTermToRow(term, loadTermsIds(term), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
 				}
 			}
-		}
+		}else if(termPerspectiveId != null){
+            TermPerspective termPerspective = termPerspectiveRepository.findOne(termPerspectiveId);
+            if(termPerspective.homeRow != null){
+                int lowerLimit = (page == 1 ? 0 : (page - 1) * size);
+                int upperLimit = page * size;
+
+                Row row = termPerspective.homeRow;
+
+                List<Cell> cells = fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+                rowView = new RowView();
+                rowView.id = row.id;
+                rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
+                rowView.type = Row.ORDINARY_ROW;
+            }else{
+                StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
+                rowView = convertTermToRow(term, loadTermsIds(term), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
+            }
+        }
 		return rowView;
 	}
 
