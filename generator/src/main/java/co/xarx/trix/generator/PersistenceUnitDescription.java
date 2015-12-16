@@ -130,9 +130,6 @@ public class PersistenceUnitDescription {
 							id.nameUppercase = getNameUppercase(field);
 							entity.id = id;
 						} else if (field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(ElementCollection.class)) {
-                            if(field.isAnnotationPresent(ElementCollection.class)){
-                                System.out.println("");
-                            }
 							Type genericType = field.getGenericType();
 							ParameterizedType parameterizedGenericType = (ParameterizedType) genericType;
 							Type[] actualTypeArguments = parameterizedGenericType.getActualTypeArguments();
