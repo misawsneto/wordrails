@@ -1,7 +1,5 @@
 package co.xarx.trix.api;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,6 +11,5 @@ public class TermView implements Serializable {
 	public Integer parentId;
 	public Integer taxonomyId;
 	public String imageHash;
-	@JsonManagedReference
 	public List<TermView> children;
 }
