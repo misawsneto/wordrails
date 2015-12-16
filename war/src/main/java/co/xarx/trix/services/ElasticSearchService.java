@@ -20,18 +20,18 @@ public class ElasticSearchService {
 		return client;
 	}
 
-	public ElasticSearchService(String host, Integer port){
-		startEsClient(host, port);
+	public ElasticSearchService(String host, Integer port, String user, String password){
+		startEsClient(host, port, user, password);
 	}
 
 	public Client getElasticsearchClient(){
 		return client;
 	}
 
-	private void startEsClient(String host, Integer port){
+	private void startEsClient(String host, Integer port, String user, String password){
 		Settings settings = ImmutableSettings.settingsBuilder()
 				.put("cluster.name", "trix")
-				.put("shield.user", "trix_admin:tr1xsearch")
+				.put("shield.user", user + ":" + password)
 				.build();
 
 
