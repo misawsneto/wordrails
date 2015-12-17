@@ -233,7 +233,7 @@ public class PerspectiveResource {
 			}
 		}else if(termPerspectiveId != null){
             StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
-            TermPerspective termPerspective = stationPerspective.perspectives != null && stationPerspective.perspectives.size() > 0 ? termPerspectiveRepository.findOne(termPerspectiveId) : null;
+            TermPerspective termPerspective = stationPerspective.perspectives != null && stationPerspective.perspectives.size() > 0 ? new ArrayList<TermPerspective>(stationPerspective.perspectives).get(0) : null;
             if(termPerspective != null && termPerspective.homeRow != null){
                 int lowerLimit = (page == 1 ? 0 : (page - 1) * size);
                 int upperLimit = page * size;
