@@ -202,7 +202,7 @@ public class PerspectiveResource {
 
 		RowView rowView = null;
 
-		Term term = termRepository.findOne(childTermId);
+		Term term = childTermId != null ? termRepository.findOne(childTermId) : null;
 		if(term != null){
 			TermPerspective termPerspective = null;
 			if(termPerspectiveId != null){
@@ -246,7 +246,7 @@ public class PerspectiveResource {
                 rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
                 rowView.type = Row.ORDINARY_ROW;
             }else{
-                rowView = convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(term.taxonomyId), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
+                rowView = convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(stationPerspective.taxonomyId), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
             }
         }
 		return rowView;
