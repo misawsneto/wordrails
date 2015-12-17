@@ -232,8 +232,9 @@ public class PerspectiveResource {
 				}
 			}
 		}else if(termPerspectiveId != null){
-            TermPerspective termPerspective = termPerspectiveRepository.findOne(termPerspectiveId);
-            if(termPerspective.homeRow != null){
+            StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
+            TermPerspective termPerspective = stationPerspective.perspectives != null && stationPerspective.perspectives.size() > 0 ? termPerspectiveRepository.findOne(termPerspectiveId) : null;
+            if(termPerspective != null && termPerspective.homeRow != null){
                 int lowerLimit = (page == 1 ? 0 : (page - 1) * size);
                 int upperLimit = page * size;
 
@@ -245,7 +246,6 @@ public class PerspectiveResource {
                 rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
                 rowView.type = Row.ORDINARY_ROW;
             }else{
-                StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
                 rowView = convertTermToRow(term, loadTermsIds(term), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
             }
         }
@@ -326,6 +326,7 @@ public class PerspectiveResource {
 		termView.ordinaryRows = fillPostsNotPositionedInRows(termPerspective.term, rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
         termView.homeRow = termPerspective.homeRow == null ? convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(termPerspective.taxonomyId), termPerspective.stationId, 0, Row.HOME_ROW, page, size) :
                 fillPostsNotPositionedInHomeRow(termPerspective.homeRow, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+        termView.homeRow.termPerspectiveId = termPerspective.id;
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
 		termView.taxonomyId = termPerspective.taxonomyId;
