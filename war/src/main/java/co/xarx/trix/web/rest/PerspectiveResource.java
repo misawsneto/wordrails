@@ -240,13 +240,13 @@ public class PerspectiveResource {
 
                 Row row = termPerspective.homeRow;
 
-                List<Cell> cells = fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+                List<Cell> cells = fillPostsNotPositionedInRows(row, stationPerspectiveId, page, size, lowerLimit, upperLimit);
                 rowView = new RowView();
                 rowView.id = row.id;
                 rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
                 rowView.type = Row.ORDINARY_ROW;
             }else{
-                rowView = convertTermToRow(term, loadTermsIds(term), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
+                rowView = convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(term.taxonomyId), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
             }
         }
 		return rowView;
