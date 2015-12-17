@@ -231,7 +231,7 @@ public class PerspectiveResource {
 					rowView = convertTermToRow(term, loadTermsIds(term), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
 				}
 			}
-		}else if(termPerspectiveId != null){
+		}else if(stationPerspectiveId != null){
             StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
             TermPerspective termPerspective = stationPerspective.perspectives != null && stationPerspective.perspectives.size() > 0 ? new ArrayList<TermPerspective>(stationPerspective.perspectives).get(0) : null;
             if(termPerspective != null && termPerspective.homeRow != null){
