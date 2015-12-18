@@ -3,6 +3,7 @@ package co.xarx.trix.web.filter;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class PathEntityFilter implements Filter {
 
 		html = html + "<meta property=\"og:url\" content=\"" + request.getRequestURL() + "\" />";
 		html = html + "<meta property=\"og:title\" content=\"" + post.title + "\" />";
-		html = html + "<meta property=\"og:description\" content=\"" + TrixUtil.simpleSnippet(post.body, 100) + "\" />";
+		html = html + "<meta property=\"og:description\" content=\"" + StringUtil.simpleSnippet(post.body) + "\" />";
 		if (post.imageLargeHash != null)
 			html = html + "<meta property=\"og:image\" content=\"" + amazonCloudService.getPublicImageURL(post.imageLargeHash) + "\" />";
 

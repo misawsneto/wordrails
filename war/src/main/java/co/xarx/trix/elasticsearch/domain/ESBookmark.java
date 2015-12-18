@@ -5,18 +5,16 @@ import co.xarx.trix.util.Constants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import java.util.Map;
-
 @Document(indexName = "${elasticsearch.index}", type = Constants.ObjectType.STATION)
-public class ESStation implements ElasticSearchEntity {
+public class ESBookmark implements ElasticSearchEntity {
 
 	@Id
 	public Integer id;
 	public String tenantId;
 	public Integer networkId;
 
-	public String name;
-	public Map<String, String> logo;
+	public Integer postId;
+	public Integer personId;
 
 	@Id
 	@Override
@@ -24,9 +22,13 @@ public class ESStation implements ElasticSearchEntity {
 		return id;
 	}
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	@Override
 	public String getType() {
-		return Constants.ObjectType.STATION;
+		return Constants.ObjectType.BOOKMARK;
 	}
 
 	@Override
@@ -49,23 +51,19 @@ public class ESStation implements ElasticSearchEntity {
 		this.networkId = networkId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public Integer getPostId() {
+		return postId;
 	}
 
-	public String getName() {
-		return name;
+	public void setPostId(Integer postId) {
+		this.postId = postId;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public Integer getPersonId() {
+		return personId;
 	}
 
-	public Map<String, String> getLogo() {
-		return logo;
-	}
-
-	public void setLogo(Map<String, String> logo) {
-		this.logo = logo;
+	public void setPersonId(Integer personId) {
+		this.personId = personId;
 	}
 }

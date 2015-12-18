@@ -2,15 +2,19 @@ package co.xarx.trix.elasticsearch.domain;
 
 import co.xarx.trix.api.Category;
 import co.xarx.trix.domain.ElasticSearchEntity;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.util.Constants;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-@Document(indexName = "trix", type = Constants.ObjectType.POST)
+@Document(indexName = "${elasticsearch.index}", type = Constants.ObjectType.POST)
 public class ESPost implements ElasticSearchEntity {
 
 	@Id
@@ -19,7 +23,13 @@ public class ESPost implements ElasticSearchEntity {
 	public Integer networkId;
 
 	public Integer authorId;
+
+	@JsonIgnore
+	@Field(index = FieldIndex.not_analyzed)
+	public Person author;
+
 	public Integer stationId;
+	public String stationName;
 
 	public String title;
 
@@ -63,6 +73,22 @@ public class ESPost implements ElasticSearchEntity {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Person getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(Person author) {
+		this.author = author;
+	}
+
+	public String getStationName() {
+		return stationName;
+	}
+
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
 	}
 
 	@Override

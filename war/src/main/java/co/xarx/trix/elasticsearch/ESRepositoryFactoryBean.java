@@ -15,6 +15,7 @@ public class ESRepositoryFactoryBean extends RepositoryFactoryBeanSupport {
 
 	private ElasticsearchOperations operations;
 
+	//DON'T DELETE THIS METHOD
 	public void setElasticsearchOperations(ElasticsearchOperations operations) {
 		Assert.notNull(operations);
 		this.operations = operations;

@@ -6,7 +6,7 @@ import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.util.TrixUtil;
+import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,10 +31,6 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.subheading = post.subheading;
 		postView.slug = post.slug;
 
-		postView.smallId = post.imageSmallId;
-		postView.mediumId = post.imageMediumId;
-		postView.largeId = post.imageLargeId;
-
 		postView.tags = post.tags;
 		if(post.terms != null && !post.terms.isEmpty()) {
 			postView.categories = new HashSet<>();
@@ -50,25 +46,17 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.imageLargeHash = post.featuredImage.hashs.get(Image.SIZE_LARGE);
 		}
 
-		postView.imageId = post.imageId;
-		postView.imageSmallId = post.imageSmallId;
-		postView.imageMediumId = post.imageMediumId;
-		postView.imageLargeId = post.imageLargeId;
-
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;
 		postView.topper = post.topper;
 		postView.readsCount = post.readsCount;
 		postView.recommendsCount = post.recommendsCount;
 		postView.commentsCount = post.commentsCount;
-		postView.snippet = TrixUtil.simpleSnippet(post.body, 100);
+		postView.snippet = StringUtil.simpleSnippet(post.body);
 
 		if (post.author != null) {
 			postView.authorName = post.author.name;
 			postView.authorUsername = post.author.username;
-			postView.authorCoverMediumId = post.author.coverMediumId;
-			postView.authorImageSmallId = post.author.imageSmallId;
-			postView.authorSmallImageId = post.author.imageSmallId; //is this being used?
 
 			if(post.author.cover != null) {
 				postView.authorCoverMediumHash = post.author.coverMediumHash;

@@ -20,14 +20,11 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -202,7 +199,7 @@ public class PostsResource {
 	                                               @QueryParam("page") Integer page,
 	                                               @QueryParam("size") Integer size) {
 
-		List<Integer> stationIdIntegers = new ArrayList<Integer>();
+		List<Integer> stationIdIntegers = new ArrayList<>();
 
 		if(stationIds != null){
 			List<String> stringIds = Arrays.asList(stationIds.replaceAll("\\s*", "").split(","));
@@ -243,10 +240,10 @@ public class PostsResource {
 					//.fuzziness(Fuzziness.AUTO)
 					;
 		} else {
-			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
+			ContentResponse<SearchView> response = new ContentResponse<>();
 			response.content = new SearchView();
 			response.content.hits = 0;
-			response.content.posts = new ArrayList<PostView>();
+			response.content.posts = new ArrayList<>();
 
 			return response;
 		}
@@ -280,44 +277,17 @@ public class PostsResource {
 		if(sortByDate != null && sortByDate){
 			sort = new FieldSortBuilder("date")
 					.order(SortOrder.DESC);
-
 		}
 
 		Pageable pageable = new PageRequest(page, size);
-		SearchQuery query = new NativeSearchQueryBuilder()
-				.withSort(sort)
-				.withPageable(pageable)
-				.withHighlightFields(new HighlightBuilder.Field("body"))
-				.withQuery(mainQuery).build();
 
 
-//		List<PostView> searchResponse = Lists.newArrayList(postService.searchIndex(query));
-//
-//		for(PostView postView: searchResponse){
-//			try {
-//				Field[] highlights = query.getHighlightFields();
-//				if(highlights != null && highlights.get("body") != null)
-//					for (Text fragment:  highlights.get("body").getFragments()) {
-//						if(postView.snippet == null)
-//							postView.snippet = "";
-//						postView.snippet = postView.snippet + " " + fragment.toString();
-//					}
-//				else{
-//					postView.snippet = TrixUtil.simpleSnippet(postView.body, 100);
-//				}
-//
-//				postView.snippet = TrixUtil.htmlStriped(postView.snippet);
-//				postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
-//				postsViews.add(postView);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
+		List<PostView> postsViews = postService.searchIndex(mainQuery, pageable, sort);
+
 		ContentResponse<SearchView> response = new ContentResponse<>();
 		response.content = new SearchView();
-//		response.content.hits = (int) searchResponse.size();
-//		response.content.posts = postsViews;
+		response.content.hits = postsViews.size();
+		response.content.posts = postsViews;
 
 		return response;
 

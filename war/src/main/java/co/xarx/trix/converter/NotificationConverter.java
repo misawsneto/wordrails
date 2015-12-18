@@ -1,7 +1,7 @@
 package co.xarx.trix.converter;
 
 import co.xarx.trix.api.NotificationView;
-import co.xarx.trix.util.TrixUtil;
+import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +36,7 @@ public class NotificationConverter extends AbstractConverter<Notification, Notif
 		notificationView.post = notification.post != null ? postConverter.convertTo(notification.post) : null;
 		notificationView.postId = notification.post != null ? notification.post.id : null;
 		notificationView.postTitle = notification.post != null ? notification.post.title : null;
-		notificationView.postSnippet = notification.post != null ? TrixUtil.simpleSnippet(notification.post.body, 100) : null;
+		notificationView.postSnippet = notification.post != null ? StringUtil.simpleSnippet(notification.post.body) : null;
 		notificationView.seen = notification.seen;
 		notificationView.stationId = notification != null ? notification.station.id : null;
 		notificationView.stationName = notification.station != null ? notification.station.name : null;

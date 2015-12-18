@@ -3,6 +3,7 @@ package co.xarx.trix.config.spring;
 import co.xarx.trix.config.JerseyObjectMapperProvider;
 import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
+import co.xarx.trix.elasticsearch.mapper.PostViewMap;
 import co.xarx.trix.elasticsearch.mapper.StationMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
@@ -34,6 +35,7 @@ public class ApplicationConfig {
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
 		modelMapper.addMappings(new PersonMap());
+		modelMapper.addMappings(new PostViewMap());
 		return modelMapper;
 	}
 }

@@ -6,7 +6,7 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.query.ElasticSearchExecutor;
 import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.services.ElasticSearchService;
-import co.xarx.trix.util.TrixUtil;
+import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -115,10 +115,10 @@ public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 
 					postView.snippet = sb.toString();
 				} else {
-					postView.snippet = TrixUtil.simpleSnippet(postView.body, 100);
+					postView.snippet = StringUtil.simpleSnippet(postView.body);
 				}
 
-				postView.snippet = TrixUtil.htmlStriped(postView.snippet);
+				postView.snippet = StringUtil.htmlStriped(postView.snippet);
 				postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
 				views.add(postView);
 			} catch (Exception e) {

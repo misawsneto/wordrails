@@ -1,16 +1,12 @@
 package co.xarx.trix.util;
 
-import org.apache.commons.lang.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.AbstractList;
-import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.*;
 
 public class TrixUtil {
 
@@ -33,19 +29,6 @@ public class TrixUtil {
 		huc.setRequestMethod("HEAD");
 		huc.connect();
 		return (huc.getResponseCode() == HttpURLConnection.HTTP_OK);
-	}
-
-	public static String simpleSnippet(String body, int max) {
-		String[] splitPhrase = body.split("\\s+");
-		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
-		String string = StringUtils.join(Arrays.copyOfRange(splitPhrase, 0, limit), " ");
-		Document doc = Jsoup.parse(string);
-		return doc.text();
-	}
-
-	public static String htmlStriped(String body) {
-		Document doc = Jsoup.parse(body);
-		return doc.text();
 	}
 
 	/**
