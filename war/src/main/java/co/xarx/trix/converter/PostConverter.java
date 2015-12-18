@@ -1,9 +1,9 @@
 package co.xarx.trix.converter;
 
+import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.api.PostView;
 import co.xarx.trix.util.TrixUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,11 +35,11 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.imageSmallHash = post.featuredImage.hashs.get(Image.SIZE_SMALL);
 			postView.imageMediumHash = post.featuredImage.hashs.get(Image.SIZE_MEDIUM);
 			postView.imageLargeHash = post.featuredImage.hashs.get(Image.SIZE_LARGE);
-            if(post.featuredImageHashes != null && post.featuredImageHashes.size() == 0){
-                postView.imageSmallHash = post.imageSmallHash;
-                postView.imageMediumHash = post.imageMediumHash;
-                postView.imageLargeHash = post.imageLargeHash;
-            }
+			if (post.featuredImage != null && post.featuredImage.hashs != null && post.featuredImage.hashs.size() == 0) {
+				postView.imageSmallHash = post.imageSmallHash;
+				postView.imageMediumHash = post.imageMediumHash;
+				postView.imageLargeHash = post.imageLargeHash;
+			}
 		}
 
 		postView.imageId = post.imageId;
@@ -47,7 +47,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.imageMediumId = post.imageMediumId;
 		postView.imageLargeId = post.imageLargeId;
 
-		postView.featuredImage = post.featuredImageHashes;
+		postView.featuredImage = post.featuredImage.hashs;
 
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;

@@ -85,13 +85,6 @@ public class Post implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
 
-
-	@ElementCollection
-	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "featuredImage_id"))
-	@MapKeyColumn(name="sizeTag", nullable = false)
-	@Column(name="hash", nullable = false)
-	public Map<String, String> featuredImageHashes;
-
 	@OneToMany
 	@JoinTable(
 			name="post_video",
@@ -198,13 +191,6 @@ public class Post implements Serializable {
 
 		updatedAt = new Date();
 		lastModificationDate = updatedAt;
-	}
-
-	@PostLoad //lazy initialize the maps. we need to do this hack because hibernate 4 has a bug to fetch eager null references
-	void onPostLoad() {
-		if(featuredImage != null) {
-			this.featuredImageHashes.size();
-		}
 	}
 
 	private void onChanges() {
