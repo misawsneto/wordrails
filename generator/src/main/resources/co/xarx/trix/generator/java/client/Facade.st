@@ -539,5 +539,15 @@ public class $facade$ {
 	}
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+	public Response postImageUpload(String imageType, TypedInput contents){
+		return _facade.postImageUpload(imageType, contents);
+	}
+	
+	public void postImageUpload(String imageType, TypedInput contents, Callback<Response> _callback){
+		_facade.postImageUpload(imageType, contents, _callback);
+	}
+/*---------------------------------------------------------------------------*/
+
 $entities:FacadeMethods(); separator="\n\n"$
 }>>

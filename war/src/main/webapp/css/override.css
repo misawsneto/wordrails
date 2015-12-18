@@ -3483,7 +3483,7 @@ label {
     margin-right: 30px;
   }
   #publications-list{
-    min-height: 300px;
+    min-height: 300px; z-index: 2
   }
   /* /user_publications */
 
@@ -3752,6 +3752,10 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 #post-content .nav .open > a:hover, .post-read-header .nav .open > a:hover,
 #post-content .nav .open > a:focus, .post-read-header .nav .open > a:focus {
   background: inherit;
+}
+
+#post-content md-chips .md-chips{
+  box-shadow: none;
 }
 
 /* /read */
@@ -4781,7 +4785,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000FF, endC
 #station-fab,
 #sponsor-fab {
   position: fixed;
-  right: 18px;
+  right: 32px;
   bottom: 24px;
 }
 

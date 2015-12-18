@@ -350,7 +350,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return canReadPosts(postId);
 	}
 
-	@Override
+    @Override
 	protected boolean isGetPostDraftsAuthorized() {
 		return false;
 	}
@@ -400,7 +400,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return canReadPosts(postDraftId);
 	}
 
-	@Override
+    @Override
 	protected boolean isGetRowsAuthorized() {
 		return false;
 	}
@@ -1194,7 +1194,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return canReadPosts(postScheduledId);
 	}
 
-	@Override
+    @Override
 	protected boolean isGetStationLogoAuthorized(Integer stationId) {
 		return true;
 	}

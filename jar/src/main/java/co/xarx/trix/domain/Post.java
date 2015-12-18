@@ -123,8 +123,9 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@ManyToMany(fetch = FetchType.EAGER)
 	public Set<Term> terms;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	public Set<String> tags;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
+    public Set<String> tags;
 
 	@Column(columnDefinition = "boolean default true", nullable = false)
 	public boolean imageLandscape = true;

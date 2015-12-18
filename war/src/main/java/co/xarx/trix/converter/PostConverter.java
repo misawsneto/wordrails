@@ -2,6 +2,7 @@ package co.xarx.trix.converter;
 
 import co.xarx.trix.api.Category;
 import co.xarx.trix.api.PostView;
+import co.xarx.trix.api.TermView;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
@@ -10,6 +11,10 @@ import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import java.util.HashSet;
 
 @Component
@@ -17,11 +22,14 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 
 	@Autowired
 	PostRepository postRepository;
-	
+
 	@Override
 	public Post convertFrom(PostView postView) {
 		return postRepository.findOne(postView.id);
 	}
+
+    @Autowired
+    TermConverter termConverter;
 
 	@Override
 	public PostView convertTo(Post post) {
@@ -71,6 +79,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.authorTwitter = post.author.twitterHandle;
 		}
 
+        postView.terms = getTermViews(post.terms);
 		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
 		postView.externalVideoUrl = post.externalVideoUrl;
 		postView.readTime = post.readTime;
@@ -84,7 +93,8 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.stationName = post.station.name;
 		postView.stationId = post.station.id;
 		postView.notify = post.notify;
-		
+        postView.tags = post.tags;
+
 		return postView;
 	}
 
@@ -94,4 +104,10 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.body = post.body;
 		return postView;
 	}
+
+    public List<TermView> getTermViews(Collection<Term> terms){
+        if(terms != null && terms.size() > 0)
+            return termConverter.convertToViews(new ArrayList<>(terms));
+        return  null;
+    }
 }
