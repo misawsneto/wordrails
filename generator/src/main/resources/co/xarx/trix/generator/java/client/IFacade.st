@@ -271,5 +271,15 @@ interface I$facade$ {
 	void getAmazonSignedUrl(@Query("hash") String hash, @Query("type") String type, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+	@POST("/images/upload")
+	@Multipart
+	Response postImageUpload(@Query("imageType") String imageType, @Part("contents") TypedInput contents);
+
+	@POST("/images/upload")
+	@Multipart
+	void postImageUpload(@Query("imageType") String imageType, @Part("contents") TypedInput contents, Callback<Response> _callback);
+/*---------------------------------------------------------------------------*/
+
 $entities:IFacadeMethods(); separator="\n\n"$
 }>>

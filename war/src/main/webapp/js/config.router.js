@@ -180,7 +180,7 @@ angular.module('app')
                   , controller:'SettingsStationsStatisticsCtrl'
               })
               .state('app.settings.stationusers', {
-                  url: '/stationusers?stationId?newUser?userId',
+                  url: '/stationusers?stationId?newUser?username',
                   templateUrl: 'tpl/settings-stations-users.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -265,7 +265,7 @@ angular.module('app')
                   , controller:'SettingsSponsorsConfigCtrl'
               })
               .state('app.settings.users', {
-                  url: '/users?userId?newUser',
+                  url: '/users?username?newUser',
                   templateUrl: 'tpl/settings-users.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',

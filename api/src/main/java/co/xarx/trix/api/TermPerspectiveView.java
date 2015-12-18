@@ -10,9 +10,9 @@ public class TermPerspectiveView implements Serializable {
 	public Integer stationPerspectiveId;
 	public Integer termId;
 	public RowView splashedRow;
+    public RowView homeRow;
 	public List<RowView> ordinaryRows;
 	public RowView featuredRow;
-	public List<RowView> homeRows;
 	public Integer stationId;
 	public String termName;
 	public Integer taxonomyId;
