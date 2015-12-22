@@ -6,6 +6,7 @@ import org.springframework.data.rest.core.config.Projection;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Projection(types = Post.class)
 public interface PostProjection {
@@ -87,4 +88,5 @@ public interface PostProjection {
 
 	Double getLng();
 
+    Set<String> getTags();
 }

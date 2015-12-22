@@ -637,6 +637,7 @@ function isTermSelected(terms){
 
 			post.terms = termUris;
 			post.author = TRIX.baseUrl + "/api/authors/" + post.author.id
+			post.tags = $scope.chipTags.tags;
 
 			if(($scope.checkState() == 1 || $scope.checkState() == 3) && (!post.terms || post.terms.length == 0)){
 				$scope.app.showInfoToast('Escolha uma categoria.')
@@ -739,6 +740,7 @@ function createPost(state){
 			post.terms = termUris;
 			post.station = TRIX.baseUrl + "/api/stations/" + $scope.app.editingPost.selectedStation.stationId;
 			post.author = extractSelf($scope.app.getLoggedPerson())
+			post.tags = $scope.chipTags.tags;
 
 			if($scope.app.editingPost.uploadedImage){
 				var featuredImage = { original: TRIX.baseUrl + "/api/files/" + $scope.app.editingPost.uploadedImage.id }
@@ -900,7 +902,7 @@ function createPost(state){
 
 	// $timeout(function() {
 	// 	safeApply($scope, function(){
-	// 		$('#post-cell').slimScroll({
+	// 		$('.tabs-content-scrollable').slimScroll({
 	// 			height:'auto',
 	// 			size:'8px',
 	// 			'railVisible': true

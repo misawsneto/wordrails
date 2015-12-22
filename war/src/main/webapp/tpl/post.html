@@ -17,7 +17,7 @@
           <div class="cell b-l">
             <div class="cell-inner">
 
-              <md-tabs md-dynamic-height md-border-bottom>
+              <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0">
                 <md-tab label="Categorias">
                   <md-content >
                     <!-- list categories -->
@@ -37,15 +37,48 @@
                 </md-tab>
 
                 <md-tab label="Tags">
-                  <div class="post-block">
-                   <md-chips
+                  <md-content>
+                    <md-chips
                     placeholder="+ Tags"
                     secondary-placeholder="+ Tag"
                     ng-model="chipTags.tags"
                     delete-button-label="Remover tag"
                     delete-hint="Press delete to remove tag">
                     </md-chips>
-                  </div>
+                  </md-content>
+                </md-tab>
+
+                <md-tab label="Preferências">
+                  <md-content class="wrapper text-lg">
+                    <div class="wrapper-sm">
+                      <label class="md-check">
+                        <input type="checkbox" ng-model="app.editingPost.imageLandscape">
+                        <i class="md-default-theme"></i>
+                        Imagem Cheia
+                      </label>
+                    </div>
+                    <div class="wrapper-sm">
+                      <label class="md-check">
+                        <input type="checkbox" ng-model="app.editingPost.selectedStation.topper">
+                        <i class="md-default-theme"></i>
+                        Chapéu
+                      </label>
+                    </div>
+                    <div class="wrapper-sm">
+                      <label class="md-check">
+                        <input type="checkbox" ng-model="app.editingPost.selectedStation.subheading">
+                        <i class="md-default-theme"></i>
+                        Subtítulo
+                      </label>
+                    </div>
+                    <div class="wrapper-sm">
+                      <label class="md-check">
+                        <input type="checkbox" ng-model="app.editingPost.notify">
+                        <i class="md-default-theme"></i>
+                        Notificar usuários
+                      </label>
+                    </div>
+                  </md-content>
                 </md-tab>
               </md-tabs>
 
@@ -113,7 +146,7 @@
             <div class="post-block m-t-xs m-b-sm clear" ng-class="{'hide': !app.editingPost.uploadedImage.filelink}">
               <input placeholder="Créditos da imagem" ng-model="app.editingPost.imageCaption" class="text-md font-italic b-none w-full back-none">
             </div>
-            <div ng-show="app.editingPost.selectedStation.topper" id="post-topper-box" class="post-block m-t-md m-b clear" style="min-height:30px;">
+            <div ng-if="app.editingPost.selectedStation.topper" id="post-topper-box" class="post-block m-t-md m-b clear" style="min-height:30px;">
               <div style="color: transparent!important" ng-show="app.editingPost.topper"
               class="post-block text-lg bg-custom-primary pos-abt p-xxs">{{app.editingPost.topper}}</div>
               <textarea style="resize: none; opacity:1;" ng-model="app.editingPost.topper" type="text" ng-class="{'text-custom-primary': app.editingPost.topper}" 
@@ -122,7 +155,7 @@
             <div id="post-title-box" class="post-block m-t">
               <input ng-model="app.editingPost.title" type="text" class="b-none text-3x font-bold w-full back-none" placeholder="Título">
             </div>
-            <div ng-show="app.editingPost.selectedStation.subheading" id="post-subheading-box" class="post-block">
+            <div ng-if="app.editingPost.selectedStation.subheading" id="post-subheading-box" class="post-block">
               <input ng-model="app.editingPost.subheading" type="text" class="b-none text-2x font-thin w-full back-none" placeholder="Subtítulo">
             </div>
             <div id="external-toolbar-container" class="post-block bg-white">

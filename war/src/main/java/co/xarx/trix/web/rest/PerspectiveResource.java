@@ -72,7 +72,7 @@ public class PerspectiveResource {
 			updateTerm(termPerspective, definition.termId);
 			updateRow(definition.splashedRow, termPerspective, Row.SPLASHED_ROW);
 			updateRow(definition.featuredRow, termPerspective, Row.FEATURED_ROW);
-			//updateRow(definition.homeRows, termPerspective, Row.HOME_ROW);
+			updateRow(definition.homeRow, termPerspective, Row.HOME_ROW);
 			updateOrdinaryRows(definition.ordinaryRows, termPerspective);
 			response = Response.status(Status.CREATED).build();
 		}
@@ -202,7 +202,7 @@ public class PerspectiveResource {
 
 		RowView rowView = null;
 
-		Term term = termRepository.findOne(childTermId);
+		Term term = childTermId != null ? termRepository.findOne(childTermId) : null;
 		if(term != null){
 			TermPerspective termPerspective = null;
 			if(termPerspectiveId != null){
@@ -231,7 +231,24 @@ public class PerspectiveResource {
 					rowView = convertTermToRow(term, loadTermsIds(term), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
 				}
 			}
-		}
+		}else if(stationPerspectiveId != null){
+            StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
+            TermPerspective termPerspective = stationPerspective.perspectives != null && stationPerspective.perspectives.size() > 0 ? new ArrayList<TermPerspective>(stationPerspective.perspectives).get(0) : null;
+            if(termPerspective != null && termPerspective.homeRow != null){
+                int lowerLimit = (page == 1 ? 0 : (page - 1) * size);
+                int upperLimit = page * size;
+
+                Row row = termPerspective.homeRow;
+
+                List<Cell> cells = fillPostsNotPositionedInRows(row, stationPerspectiveId, page, size, lowerLimit, upperLimit);
+                rowView = new RowView();
+                rowView.id = row.id;
+                rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
+                rowView.type = Row.ORDINARY_ROW;
+            }else{
+                rowView = convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(stationPerspective.taxonomyId), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
+            }
+        }
 		return rowView;
 	}
 
@@ -296,6 +313,7 @@ public class PerspectiveResource {
 	private TermPerspectiveView convertRowsToTermViewDefault(Term term, Integer stationId, List<Term> terms, int page, int size){
 		TermPerspectiveView termView = new TermPerspectiveView();
 		termView.ordinaryRows = convertTermsToRows(term, terms, stationId, Row.ORDINARY_ROW, page, size);
+        termView.homeRow = convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(term.taxonomyId), stationId, 0, Row.HOME_ROW, page, size);
 		termView.termId = (term != null ? term.id : null);
 
 		return termView;
@@ -306,6 +324,9 @@ public class PerspectiveResource {
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null);
 		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertToView(termPerspective.featuredRow) : null);
 		termView.ordinaryRows = fillPostsNotPositionedInRows(termPerspective.term, rows, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+        termView.homeRow = termPerspective.homeRow == null ? convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(termPerspective.taxonomyId), termPerspective.stationId, 0, Row.HOME_ROW, page, size) :
+                fillPostsNotPositionedInHomeRow(termPerspective.homeRow, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+        termView.homeRow.termPerspectiveId = termPerspective.id;
 		termView.termId = (termPerspective.term != null ? termPerspective.term.id : null);
 		termView.stationId = termPerspective.stationId;
 		termView.taxonomyId = termPerspective.taxonomyId;
@@ -313,6 +334,38 @@ public class PerspectiveResource {
 
 		return termView;
 	}
+
+    private RowView fillPostsNotPositionedInHomeRow(Row row, Integer stationId, int page, int size, int lowerLimit, int upperLimit){
+        RowView rowView;
+        row.cells = fillPostsNotPositionedInHomeRows(row, stationId, page, size, lowerLimit, upperLimit);
+        rowView = rowConverter.convertToView(row);
+        return rowView;
+    }
+
+    private List<Cell> fillPostsNotPositionedInHomeRows(Row row, Integer stationId, int page, int size, int lowerLimit, int upperLimit){
+        List<Cell> positionedCells = cellRepository.findCellsPositioned(row.id, lowerLimit, upperLimit);
+
+        List<Cell> cells = null;
+
+        List<Integer> ids = termRepository.findTermIdsByTaxonomyId(row.term.taxonomyId);
+
+        int numberPostsNotPositioned = size - positionedCells.size();
+        if(numberPostsNotPositioned > 0){
+            List<Integer> postPositionedIds = convertCellsToPostsIds(positionedCells);
+            Pageable pageable = new PageRequest(page, numberPostsNotPositioned);
+
+            if(postPositionedIds.size() > 0){
+                List<Post> notPositionedPosts = (postRepository.findPostsNotPositioned(stationId, ids, postPositionedIds, pageable));
+                cells = mergePostsPositionedsNotPositioneds(row, positionedCells, notPositionedPosts, size);
+            }else{
+                List<Post> posts = postRepository.findPostsPublished(stationId, ids, pageable);
+                cells = convertPostsToCells(row, posts);
+            }
+        }else{
+            cells = positionedCells;
+        }
+        return cells;
+    }
 
 	private List<RowView> fillPostsNotPositionedInRows(Term term, List<Row> rows, Integer stationId, int page, int size, int lowerLimit, int upperLimit){
 		List<RowView> rowsView = new ArrayList<RowView>(rows.size() + 1);
@@ -459,8 +512,8 @@ public class PerspectiveResource {
 
 		RowView rowView = new RowView();
 		rowView.cells = cellConverter.convertToViews(convertPostsToCells(row, posts)); 
-		rowView.termId = term.id;
-		rowView.termName = term.name;
+		rowView.termId = term != null ? term.id : null;
+		rowView.termName = term != null ? term.name : null;
 		rowView.type = rowType;
 		rowView.id = row.id;
 
