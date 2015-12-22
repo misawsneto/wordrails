@@ -1,7 +1,9 @@
 package co.xarx.trix.config.spring;
 
-import co.xarx.trix.config.JerseyObjectMapperProvider;
-import co.xarx.trix.elasticsearch.mapper.*;
+import co.xarx.trix.elasticsearch.mapper.PersonMap;
+import co.xarx.trix.elasticsearch.mapper.PostMap;
+import co.xarx.trix.elasticsearch.mapper.PostViewMap;
+import co.xarx.trix.elasticsearch.mapper.StationMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -21,10 +23,10 @@ public class ApplicationConfig {
 		return new ObjectMapper();
 	}
 
-	@Bean
-	public ObjectMapper objectMapper() {
-		return JerseyObjectMapperProvider.getObjectMapper();
-	}
+//	@Bean
+//	public ObjectMapper objectMapper() {
+//		return JerseyObjectMapperProvider.getObjectMapper();
+//	}
 
 	@Bean
 	public ModelMapper modelMapper() {

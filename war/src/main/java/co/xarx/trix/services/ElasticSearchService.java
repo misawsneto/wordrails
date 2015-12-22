@@ -24,7 +24,6 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -67,12 +66,8 @@ public class ElasticSearchService {
 	@Autowired
 	ElasticsearchTemplate elasticsearchTemplate;
 
-	private boolean hasIndexed = false;
-
-	@PostConstruct
+//	@PostConstruct
 	public void init() {
-		if(hasIndexed) return; //this is a hack to prevent this being called twice (have no idea why it is being called twice)
-
 		log.info("Start indexing of elasticsearch entities with " + this.toString());
 
 		elasticsearchTemplate.deleteIndex(index);
@@ -89,8 +84,6 @@ public class ElasticSearchService {
 		mapThenSave(posts, ESPost.class, esPostRepository);
 		mapThenSave(people, ESPerson.class, esPersonRepository);
 		mapThenSave(bookmarks, ESBookmark.class, esBookmarkRepository);
-
-		hasIndexed = true;
 	}
 
 	public <D extends MultiTenantEntity> void mapThenSave(List<MultiTenantEntity> itens, Class<D> mapTo, CrudRepository esRepository) {

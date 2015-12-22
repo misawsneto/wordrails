@@ -2,7 +2,6 @@ package co.xarx.trix.config.spring;
 
 import co.xarx.trix.elasticsearch.ESRepositoryFactoryBean;
 import co.xarx.trix.factory.ElasticSearchExecutorFactory;
-import co.xarx.trix.services.ElasticSearchService;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
@@ -29,6 +28,8 @@ public class ElasticSearchConfig {
 	private String host;
 	@Value("${elasticsearch.port:9300}")
 	private Integer port;
+	@Value("${elasticsearch.cluster:'trix'}")
+	private String cluster;
 
 	@Bean
 	public ServiceLocatorFactoryBean elasticSearchExecutorFactory() {
@@ -39,13 +40,8 @@ public class ElasticSearchConfig {
 	}
 
 	@Bean
-	public ElasticSearchService elasticsearchService() {
-		return new ElasticSearchService();
-	}
-
-	@Bean
 	public Client elasticSearchClient() {
-		Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", "trix").build();
+		Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", cluster).build();
 		return new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
 

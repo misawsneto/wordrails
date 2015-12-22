@@ -13,9 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
 import java.util.HashSet;
+import java.util.List;
 
 @Component
 public class PostConverter extends AbstractConverter<Post, PostView> {
@@ -52,7 +51,13 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.imageSmallHash = post.featuredImage.hashs.get(Image.SIZE_SMALL);
 			postView.imageMediumHash = post.featuredImage.hashs.get(Image.SIZE_MEDIUM);
 			postView.imageLargeHash = post.featuredImage.hashs.get(Image.SIZE_LARGE);
+			if (post.featuredImage != null && post.featuredImage.hashs != null && post.featuredImage.hashs.size() == 0) {
+				postView.imageSmallHash = post.imageSmallHash;
+				postView.imageMediumHash = post.imageMediumHash;
+				postView.imageLargeHash = post.imageLargeHash;
+			}
 		}
+
 
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;
