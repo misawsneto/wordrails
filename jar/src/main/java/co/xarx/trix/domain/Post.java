@@ -85,13 +85,6 @@ public class Post implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
 
-
-	@ElementCollection
-	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "featuredImage_id"))
-	@MapKeyColumn(name="sizeTag", nullable = false)
-	@Column(name="hash", nullable = false)
-	public Map<String, String> featuredImageHashes;
-
 	@OneToMany
 	@JoinTable(
 			name="post_video",
