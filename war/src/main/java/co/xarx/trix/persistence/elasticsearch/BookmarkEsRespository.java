@@ -29,7 +29,7 @@ public class BookmarkEsRespository {
 	ElasticSearchService elasticSearchService;
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page){
-		SearchRequestBuilder searchRequestBuilder = elasticSearchService.getElasticsearchClient()
+		SearchRequestBuilder searchRequestBuilder = elasticSearchService.getClient()
 				.prepareSearch(indexName)
 				.setTypes(ES_TYPE)
 				.setQuery(query);

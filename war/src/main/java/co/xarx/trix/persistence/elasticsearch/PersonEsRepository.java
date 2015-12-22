@@ -34,7 +34,7 @@ public class PersonEsRepository {
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page, String highlightedField){
 		SearchRequestBuilder searchRequestBuilder = elasticSearchService
-														.getElasticsearchClient()
+														.getClient()
 														.prepareSearch(indexName)
 														.setTypes(ES_TYPE)
 														.setQuery(query);

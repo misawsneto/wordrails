@@ -46,7 +46,7 @@ public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 
 	public List<PostView> execute(ElasticSearchQuery query, Integer size, Integer from) {
 		SearchRequestBuilder searchRequestBuilder = elasticSearchService
-				.getElasticsearchClient()
+				.getClient()
 				.prepareSearch(indexName)
 				.setTypes(ES_TYPE)
 				.setQuery(query.getBoolQueryBuilder())
@@ -70,7 +70,7 @@ public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 
 	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page, String highlightedField){
 		SearchRequestBuilder searchRequestBuilder = elasticSearchService
-														.getElasticsearchClient()
+														.getClient()
 														.prepareSearch(indexName)
 														.setTypes(ES_TYPE)
 														.setQuery(query);

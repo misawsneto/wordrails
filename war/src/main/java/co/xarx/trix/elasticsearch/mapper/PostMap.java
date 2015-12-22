@@ -4,7 +4,7 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import org.modelmapper.PropertyMap;
 
-public class PostMap extends PropertyMap<Post, ESPost> {
+public class PostMap<T extends Post> extends PropertyMap<T, ESPost> {
 
 	@Override
 	protected void configure() {

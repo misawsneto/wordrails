@@ -8,13 +8,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-@Document(indexName = "${elasticsearch.index}", type = Constants.ObjectType.POST)
+@Document(indexName = "#{properties.index}", type = Constants.ObjectType.POST)
 public class ESPost implements ElasticSearchEntity {
 
 	@Id
@@ -25,7 +25,7 @@ public class ESPost implements ElasticSearchEntity {
 	public Integer authorId;
 
 	@JsonIgnore
-	@Field(index = FieldIndex.not_analyzed)
+	@Field(store = false, type = FieldType.Object)
 	public Person author;
 
 	public Integer stationId;

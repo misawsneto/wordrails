@@ -1,10 +1,7 @@
 package co.xarx.trix.config.spring;
 
 import co.xarx.trix.config.JerseyObjectMapperProvider;
-import co.xarx.trix.elasticsearch.mapper.PersonMap;
-import co.xarx.trix.elasticsearch.mapper.PostMap;
-import co.xarx.trix.elasticsearch.mapper.PostViewMap;
-import co.xarx.trix.elasticsearch.mapper.StationMap;
+import co.xarx.trix.elasticsearch.mapper.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +30,7 @@ public class ApplicationConfig {
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.addMappings(new PostMap());
+//		modelMapper.addMappings(new PostDraftMap());
 		modelMapper.addMappings(new StationMap());
 		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostViewMap());

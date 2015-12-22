@@ -5,7 +5,7 @@ import co.xarx.trix.util.Constants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-@Document(indexName = "${elasticsearch.index}", type = Constants.ObjectType.STATION)
+@Document(indexName = "#{properties.index}", type = Constants.ObjectType.BOOKMARK)
 public class ESBookmark implements ElasticSearchEntity {
 
 	@Id

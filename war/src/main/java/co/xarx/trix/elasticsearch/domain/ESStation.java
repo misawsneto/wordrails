@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.Map;
 
-@Document(indexName = "${elasticsearch.index}", type = Constants.ObjectType.STATION)
+@Document(indexName = "#{properties.index}", type = Constants.ObjectType.STATION)
 public class ESStation implements ElasticSearchEntity {
 
 	@Id

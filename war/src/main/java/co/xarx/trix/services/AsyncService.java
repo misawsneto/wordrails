@@ -2,22 +2,17 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.AndroidApp;
+import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.script.ImageScript;
-import com.google.common.collect.Lists;
-import com.mysema.query.types.Predicate;
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class AsyncService {
@@ -25,7 +20,7 @@ public class AsyncService {
 	Logger log = Logger.getLogger(this.getClass().getName());
 
 	@Autowired
-	public ImageScript imageScript;
+	public ModelMapper modelMapper;
 	@Autowired
 	public GCMService gcmService;
 	@Autowired
@@ -38,33 +33,24 @@ public class AsyncService {
 	public PostConverter postConverter;
 	@Autowired
 	public AndroidBuilderService androidBuilderService;
+	@Autowired
+	public ElasticSearchService elasticSearchService;
+
+//	@Async
+//	public <D extends MultiTenantEntity> void mapThenSave(QueryDslPredicateExecutor repository, Predicate predicate, Class<D> mapTo, CrudRepository esRepository) {
+//		List<MultiTenantEntity> itens = Lists.newArrayList(repository.findAll(predicate));
+//		mapThenSave(itens, mapTo, esRepository);
+//	}
 
 	@Async
-	public <D extends MultiTenantEntity> void mapThenSave(QueryDslPredicateExecutor repository, Predicate predicate, ModelMapper modelMapper
-			, Class<D> mapTo, CrudRepository esRepository) {
-		int errorCount = 0;
-		List<MultiTenantEntity> itens = Lists.newArrayList(repository.findAll(predicate));
-		List<MultiTenantEntity> entities = new ArrayList<>();
-		for (Object item : itens) {
-			try {
-				entities.add(modelMapper.map(item, mapTo));
-			} catch (Exception e) {
-				errorCount++;
-			}
-		}
-
-		if (itens.size() > 0) {
-			if (errorCount > 0) log.info("mapping of " + errorCount + "/" + itens.size() +
-					" entities on tenant " + itens.get(0).getTenantId() + " threw mapping error");
-			if (entities.size() > 0) log.info("indexing " + entities.size() + " elements on tenant " + itens.get(0).getTenantId());
-		}
-		entities.forEach(esRepository::save);
+	public void run(Runnable runnable) {
+		runnable.run();
 	}
 
 	@Async
-	public void imagePictureScript(Integer networkId) {
+	public void run(Integer networkId, Runnable runnable) {
 		TenantContextHolder.setCurrentNetworkId(networkId);
-		imageScript.addPicturesToImages();
+		runnable.run();
 	}
 
 	@Async
