@@ -20,6 +20,8 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 	private String eshost;
 	@Value("${elasticsearch.port:9300}")
 	private Integer esport;
+    @Value("${elasticsearch.cluster:'trix'}")
+    private String escluster;
 
 	@Override
 	protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
@@ -33,7 +35,7 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 	@Bean
 	@PostConstruct
 	public ElasticSearchService elasticsearchService() {
-		return new ElasticSearchService(eshost, esport);
+		return new ElasticSearchService(escluster, eshost, esport);
 	}
 
 //	@Bean

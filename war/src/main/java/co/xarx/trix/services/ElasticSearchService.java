@@ -9,6 +9,8 @@ import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutionException;
 
@@ -20,16 +22,16 @@ public class ElasticSearchService {
 		return client;
 	}
 
-	public ElasticSearchService(String host, Integer port){
-		startEsClient(host, port);
+	public ElasticSearchService(String cluster,  String host, Integer port){
+		startEsClient(cluster, host, port);
 	}
 
 	public Client getElasticsearchClient(){
 		return client;
 	}
 
-	private void startEsClient(String host, Integer port){
-		Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", "trix").build();
+	private void startEsClient(String cluster, String host, Integer port){
+		Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", cluster).build();
 		client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
 
