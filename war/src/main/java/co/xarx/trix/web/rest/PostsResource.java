@@ -50,10 +50,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -418,13 +415,14 @@ public class PostsResource {
 	}
 
     @GET
-    @Path("/search/findPostsByTag")
+    @Path("/search/findPostsByTags")
+    @Produces(MediaType.APPLICATION_JSON)
     public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tags") String tagsString, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
         if(tagsString == null || !tagsString.isEmpty()){
             // TODO: throw badrequest
         }
 
-        List<String> tags = Arrays.asList(tagsString.split(","));
+        Set<String> tags = new HashSet<String>(Arrays.asList(tagsString.split(",")));
 
         List<Post> posts = queryPersistence.findPostsByTag(tags, stationId, page, size);
 

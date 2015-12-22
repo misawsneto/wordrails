@@ -2,6 +2,7 @@ package co.xarx.trix.persistence;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -164,8 +165,8 @@ public class QueryPersistence {
 				.setParameter("perspectiveId", perspectiveId).setParameter("notId", notId).executeUpdate();
 	}
 
-    public List<Post> findPostsByTag(List<String> tags, Integer stationId, int page, int size) {
-        return manager.createQuery("select p from Post p where p.tags in(:tags) and p.station.id = :stationId", Post.class)
+    public List<Post> findPostsByTag(Set<String> tags, Integer stationId, int page, int size) {
+        return manager.createQuery("select p from Post p join p.tags tgs where tgs in :tags and p.station.id = :stationId", Post.class)
                 .setParameter("tags", tags).setParameter("stationId", stationId)
                 .setMaxResults(size)
                 .setFirstResult(page * size)
