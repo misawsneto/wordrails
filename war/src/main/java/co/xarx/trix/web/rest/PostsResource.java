@@ -5,6 +5,7 @@ import co.xarx.trix.api.*;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.UnauthorizedException;
+import co.xarx.trix.persistence.QueryPersistence;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
@@ -83,6 +84,8 @@ public class PostsResource {
 	private PostEsRepository postEsRepository;
 	@Autowired
 	private ObjectMapper objectMapper;
+    @Autowired
+    private QueryPersistence queryPersistence;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -413,4 +416,20 @@ public class PostsResource {
 	public Response promote(@PathParam("postId") Integer postId, StationTermsDto stationTerms){
 		return Response.status(Status.OK).build();
 	}
+
+    @GET
+    @Path("/search/findPostsByTag")
+    public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tags") String tagsString, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+        if(tagsString == null || !tagsString.isEmpty()){
+            // TODO: throw badrequest
+        }
+
+        List<String> tags = Arrays.asList(tagsString.split(","));
+
+        List<Post> posts = queryPersistence.findPostsByTag(tags, stationId, page, size);
+
+        ContentResponse<List<PostView>> response = new ContentResponse<>();
+        response.content = postConverter.convertToViews(posts);
+        return response;
+    }
 }
