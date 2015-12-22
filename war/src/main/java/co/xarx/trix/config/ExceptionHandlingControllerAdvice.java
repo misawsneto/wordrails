@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,7 +96,6 @@ public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHa
 
 		return handleExceptionInternal(e, error, headers, HttpStatus.BAD_REQUEST, request);
 	}
-
 
 	@ExceptionHandler(Throwable.class)
 	public ResponseEntity<String> handleAnyException(Throwable exception) {

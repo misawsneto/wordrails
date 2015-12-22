@@ -134,4 +134,18 @@ public class TermsResource {
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
+
+    @GET
+    @Path("/search/findPostsByTagAndStationId")
+    public ContentResponse<List<PostView>> findPostsByCategory(@QueryParam("categoryName") String categoryName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+        Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
+
+        List<Post> posts = termRepository.findPostsByTagAndStationId(categoryName, stationId, pageable);
+
+        ContentResponse<List<PostView>> response = new ContentResponse<>();
+        response.content = postConverter.convertToViews(posts);
+        return response;
+    }
+
+
 }
