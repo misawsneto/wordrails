@@ -5,9 +5,9 @@ import co.xarx.trix.domain.UserGrantedAuthority;
 
 public final class Constants {
 
+
 	private Constants() {
 	}
-
 
 
 	public static class Authentication {

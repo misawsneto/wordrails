@@ -20,16 +20,18 @@ public class ElasticSearchService {
 		return client;
 	}
 
-	public ElasticSearchService(String host, Integer port){
-		startEsClient(host, port);
+	public ElasticSearchService(String host, Integer port, String cluster){
+		startEsClient(host, port, cluster);
 	}
 
 	public Client getElasticsearchClient(){
 		return client;
 	}
 
-	private void startEsClient(String host, Integer port){
-		Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", "trix").build();
+	private void startEsClient(String host, Integer port, String cluster){
+		Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", cluster).build();
+
+
 		client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
 
