@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -91,29 +93,27 @@ public class WordrailsService {
 		return !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
 	}
 
+    @Autowired
+    private HttpServletResponse response;
+
 	public Network getNetworkFromHost(String host){
 		Network network = null;
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Network> networks = networkRepository.findAll();
-			if(networks != null)
-				return networks.get(0);
-		}else{
-			String subdomain = getSubdomainFromHost(host);
-			if(subdomain != null && !subdomain.isEmpty()){
-				try {
-					network = cacheService.getNetworkBySubdomain(subdomain);
-				} catch (Exception e) {
-					// no network found in cache or db.
-				}
-				if (network != null)
-					return network;
-			}
-		}
+        String subdomain = getSubdomainFromHost(host);
+        if(subdomain != null && !subdomain.isEmpty()){
+            try {
+                network = cacheService.getNetworkBySubdomain(subdomain);
+            } catch (Exception e) {
+                // no network found in cache or db.
+            }
+            if (network != null)
+                return network;
+        }
 
 		try {
+            response.setStatus(400);
 			return cacheService.getNetworkByDomain(host);
 		} catch (Exception e) {
-			return networkRepository.findOne(1);
+            throw new NotFoundException();
 		}
 	}
 
