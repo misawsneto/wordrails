@@ -952,10 +952,7 @@ public class UtilResource {
 	@Transactional
 	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {
 		if(isLocal(request.getHeader("Host"))){
-			List<Network> networks = networkRepository.findAll();
-			for (Network network : networks) {
-				asyncService.run(network.id, () -> imageScript.addPicturesToImages());
-			}
+			asyncService.run(() -> imageScript.addPicturesToImages());
 		}
 	}
 

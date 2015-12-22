@@ -18,6 +18,7 @@ import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.PostService;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.apache.commons.lang3.tuple.Pair;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -236,9 +237,7 @@ public class PostsResource {
 					.field("subheading")
 					.field("authorName")
 					.field("terms.name")
-					.prefixLength(1)
-					//.fuzziness(Fuzziness.AUTO)
-					;
+					.prefixLength(1);
 		} else {
 			ContentResponse<SearchView> response = new ContentResponse<>();
 			response.content = new SearchView();
@@ -282,12 +281,12 @@ public class PostsResource {
 		Pageable pageable = new PageRequest(page, size);
 
 
-		List<PostView> postsViews = postService.searchIndex(mainQuery, pageable, sort);
+		Pair<Integer, List<PostView>> postsViews = postService.searchIndex(mainQuery, pageable, sort);
 
 		ContentResponse<SearchView> response = new ContentResponse<>();
 		response.content = new SearchView();
-		response.content.hits = postsViews.size();
-		response.content.posts = postsViews;
+		response.content.hits = postsViews.getLeft();
+		response.content.posts = postsViews.getRight();
 
 		return response;
 

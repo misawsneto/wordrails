@@ -6,13 +6,18 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostRead;
 import co.xarx.trix.domain.QPostRead;
+import co.xarx.trix.elasticsearch.ESPersonRepository;
 import co.xarx.trix.elasticsearch.ESPostRepository;
+import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.persistence.PostReadRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
@@ -33,9 +38,12 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
@@ -55,13 +63,15 @@ public class PostService {
 	@Autowired
 	private ESPostRepository esPostRepository;
 	@Autowired
+	private ESPersonRepository esPersonRepository;
+	@Autowired
 	private ObjectMapper objectMapper;
 	@Autowired
 	private ModelMapper modelMapper;
 	@Autowired
 	private ElasticsearchTemplate elasticsearchTemplate;
 
-	public List<PostView> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
+	public Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
 		boolQuery.must(matchQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 		if(sort != null) nativeSearchQueryBuilder.withSort(sort);
@@ -70,11 +80,32 @@ public class PostService {
 				.withHighlightFields(new HighlightBuilder.Field("body"))
 				.withQuery(boolQuery).build();
 
+		Long[] totalHits = new Long[1];
 		ResultsExtractor<List<PostView>> resultsExtractor = response -> {
+			totalHits[0] = response.getHits().totalHits();
 			List<PostView> postsViews = new ArrayList<>();
-			for (SearchHit hit : response.getHits().getHits()) {
+			SearchHit[] hits = response.getHits().getHits();
+			List<ESPost> posts = new ArrayList<>();
+
+			for (SearchHit hit : hits) {
 				try {
-					ESPost esPost = objectMapper.readValue(hit.getSourceAsString(), ESPost.class);
+					posts.add(objectMapper.readValue(hit.getSourceAsString(), ESPost.class));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			Set<Integer> authorIds = posts.stream().map(view -> view.authorId).collect(Collectors.toSet());
+			Map<Integer, ESPerson> authors = Maps.uniqueIndex(esPersonRepository.findAll(authorIds), ESPerson::getId);
+
+			for (ESPost post : posts) {
+				post.setAuthor(authors.get(post.authorId));
+			}
+
+			for (int i = 0; i < hits.length; i++) {
+				try {
+					SearchHit hit = hits[i];
+					ESPost esPost = posts.get(i);
 					PostView postView = modelMapper.map(esPost, PostView.class);
 					Map<String, HighlightField> highlights = hit.getHighlightFields();
 					if (highlights != null && highlights.get("body") != null) {
@@ -96,7 +127,9 @@ public class PostService {
 			return postsViews;
 		};
 
-		return elasticsearchTemplate.query(query, resultsExtractor);
+		List<PostView> postView = elasticsearchTemplate.query(query, resultsExtractor);
+		int total = totalHits[0].intValue();
+		return new ImmutablePair(total, postView);
 	}
 
 	public void saveIndex(Post post) {

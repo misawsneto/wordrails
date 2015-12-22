@@ -2,7 +2,6 @@ package co.xarx.trix.elasticsearch.domain;
 
 import co.xarx.trix.api.Category;
 import co.xarx.trix.domain.ElasticSearchEntity;
-import co.xarx.trix.domain.Person;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
@@ -26,7 +25,7 @@ public class ESPost implements ElasticSearchEntity {
 
 	@JsonIgnore
 	@Field(store = false, type = FieldType.Object)
-	public Person author;
+	public ESPerson author;
 
 	public Integer stationId;
 	public String stationName;
@@ -75,11 +74,11 @@ public class ESPost implements ElasticSearchEntity {
 		this.id = id;
 	}
 
-	public Person getAuthor() {
+	public ESPerson getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(Person author) {
+	public void setAuthor(ESPerson author) {
 		this.author = author;
 	}
 

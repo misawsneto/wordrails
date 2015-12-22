@@ -9,6 +9,7 @@ import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,8 @@ import java.util.Set;
 
 @Component
 public class ImageScript {
+
+	Logger log = Logger.getLogger(this.getClass().getName());
 
 	@Autowired
 	private FileRepository fileRepository;
@@ -34,7 +37,9 @@ public class ImageScript {
 			files.put(file.id, file);
 		}
 
-		System.out.println("Starting upload of files");
+		int imageCount = 0;
+
+		log.debug("Starting upload of files");
 		for (File file : files.values()) {
 			if (fileIdsAlreadySaved.contains(file.id) || file.getNetworkId() == null) continue;
 			Set<Image> images = imageRepository.findByFileId(file.id);
@@ -67,19 +72,22 @@ public class ImageScript {
 					}
 
 					Picture pic = new Picture(sizeTag, imageFile);
+					pic.setNetworkId(image.getNetworkId());
+					pic.setTenantId(image.getTenantId());
 					pictureRepository.save(pic);
 					pictures.add(pic);
 					hashs.put(sizeTag, imageFile.hash);
 					fileIdsAlreadySaved.add(imageFile.id);
 				}
 
-				System.out.println("saving image " + image.id + " type " + image.type);
+				imageCount++;
+//				System.out.println("saving image " + image.id + " type " + image.type);
 				image.pictures = pictures;
 				image.hashs = hashs;
 				imageRepository.save(image);
 			}
 		}
 
-		System.out.println("Done");
+		log.debug("Picture script done. imageCount: " + imageCount);
 	}
 }

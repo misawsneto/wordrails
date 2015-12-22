@@ -24,6 +24,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -66,7 +67,7 @@ public class ElasticSearchService {
 	@Autowired
 	ElasticsearchTemplate elasticsearchTemplate;
 
-//	@PostConstruct
+	@PostConstruct
 	public void init() {
 		log.info("Start indexing of elasticsearch entities with " + this.toString());
 
