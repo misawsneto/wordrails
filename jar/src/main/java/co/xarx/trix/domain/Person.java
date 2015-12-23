@@ -77,17 +77,17 @@ public class Person extends BaseEntity implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastLogin;
 
-	@ElementCollection()
-	@JoinTable(name = "image_hash", joinColumns = @JoinColumn(name = "image_id", referencedColumnName = "coverId"))
-	@MapKeyColumn(name = "sizeTag", nullable = false)
-	@Column(name = "hash", nullable = false)
-	public Map<String, String> coverHashes;
-
-	@ElementCollection()
-	@JoinTable(name = "image_hash", joinColumns = @JoinColumn(name = "image_id", referencedColumnName = "imageId"))
-	@MapKeyColumn(name = "sizeTag", nullable = false)
-	@Column(name = "hash", nullable = false)
-	public Map<String, String> imageHashes;
+//	@ElementCollection()
+//	@JoinTable(name = "image_hash", joinColumns = @JoinColumn(name = "image_id", referencedColumnName = "coverId"))
+//	@MapKeyColumn(name = "sizeTag", nullable = false)
+//	@Column(name = "hash", nullable = false)
+//	public Map<String, String> coverHashes;
+//
+//	@ElementCollection()
+//	@JoinTable(name = "image_hash", joinColumns = @JoinColumn(name = "image_id", referencedColumnName = "imageId"))
+//	@MapKeyColumn(name = "sizeTag", nullable = false)
+//	@Column(name = "hash", nullable = false)
+//	public Map<String, String> imageHashes;
 
 	public Integer imageId;
 	public Integer imageSmallId;
@@ -122,12 +122,12 @@ public class Person extends BaseEntity implements Serializable {
 
 	@PostLoad //lazy initialize the maps. we need to do this hack because hibernate 4 has a bug to fetch eager null references
 	void onPostLoad() {
-		if(image != null) {
-			this.imageHashes.size();
-		}
-		if(cover != null) {
-			this.coverHashes.size();
-		}
+//		if(image != null) {
+//			this.imageHashes.size();
+//		}
+//		if(cover != null) {
+//			this.coverHashes.size();
+//		}
 	}
 
 	private void onChange() {
