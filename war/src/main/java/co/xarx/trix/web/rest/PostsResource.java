@@ -238,9 +238,39 @@ public class PostsResource {
 
 		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
 
-		MultiMatchQueryBuilder queryText;
 		BoolQueryBuilder mainQuery = boolQuery();
 
+        if(personId != null){
+            mainQuery = mainQuery.must(
+                    matchQuery("authorId", personId));
+        }
+
+        if(publicationType != null){
+            mainQuery = mainQuery.must(
+                    matchQuery("state", publicationType));
+        } else {
+            mainQuery = mainQuery.must(
+                    matchQuery("state", Post.STATE_PUBLISHED));
+        }
+
+        if(stationIdIntegers.size() > 0)
+            readableIds = stationIdIntegers;
+
+        BoolQueryBuilder stationQuery = boolQuery();
+        for(Integer stationId: readableIds){
+            stationQuery.should(
+                    matchQuery("stationId", String.valueOf(stationId)));
+        }
+        mainQuery = mainQuery.must(stationQuery);
+        FieldSortBuilder sort = null;
+
+        if(sortByDate != null && sortByDate){
+            sort = new FieldSortBuilder("date")
+                    .order(SortOrder.DESC);
+
+        }
+
+        MultiMatchQueryBuilder queryText;
 		if(q != null){
 			queryText = multiMatchQuery(q)
 					.field("body", 2)
@@ -252,46 +282,17 @@ public class PostsResource {
 					.prefixLength(1)
 					//.fuzziness(Fuzziness.AUTO)
 					;
-		} else {
-			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
-			response.content = new SearchView();
-			response.content.hits = 0;
-			response.content.posts = new ArrayList<PostView>();
-
-			return response;
+            mainQuery = mainQuery.must(queryText);
+//		} else {
+//			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
+//			response.content = new SearchView();
+//			response.content.hits = 0;
+//			response.content.posts = new ArrayList<PostView>();
+//            SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "body");
+//
+//			return response;
 		}
 
-		mainQuery = mainQuery.must(queryText);
-
-		if(personId != null){
-			mainQuery = mainQuery.must(
-					matchQuery("authorId", personId));
-		}
-
-		if(publicationType != null){
-			mainQuery = mainQuery.must(
-					matchQuery("state", publicationType));
-		} else {
-			mainQuery = mainQuery.must(
-					matchQuery("state", Post.STATE_PUBLISHED));
-		}
-
-		if(stationIdIntegers.size() > 0)
-			readableIds = stationIdIntegers;
-
-		BoolQueryBuilder stationQuery = boolQuery();
-		for(Integer stationId: readableIds){
-			stationQuery.should(
-					matchQuery("stationId", String.valueOf(stationId)));
-		}
-		mainQuery = mainQuery.must(stationQuery);
-		FieldSortBuilder sort = null;
-
-		if(sortByDate != null && sortByDate){
-			sort = new FieldSortBuilder("date")
-					.order(SortOrder.DESC);
-
-		}
 
 		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "body");
 
