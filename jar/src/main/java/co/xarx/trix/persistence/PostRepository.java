@@ -18,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);
 
 	@Query("select post from Post post join post.terms t where " +
-			"post.station.id = :stationId and t.id in (:termsIds) and post.state = 'PUBLISHED' order by post.date desc")
+			"post.station.id = :stationId and t.id in (:termsIds) and post.state = 'PUBLISHED' group by post order by post.date desc")
 	List<Post> findPostsPublished(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);
 
 	@Query("select post from Post post " +
