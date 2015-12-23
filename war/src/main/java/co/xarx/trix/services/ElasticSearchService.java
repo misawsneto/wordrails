@@ -1,14 +1,16 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.domain.ElasticSearchEntity;
 import co.xarx.trix.domain.MultiTenantEntity;
-import co.xarx.trix.elasticsearch.ESBookmarkRepository;
-import co.xarx.trix.elasticsearch.ESPersonRepository;
-import co.xarx.trix.elasticsearch.ESPostRepository;
-import co.xarx.trix.elasticsearch.ESStationRepository;
+import co.xarx.trix.elasticsearch.ESRepository;
 import co.xarx.trix.elasticsearch.domain.ESBookmark;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.domain.ESStation;
+import co.xarx.trix.elasticsearch.repository.ESBookmarkRepository;
+import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
+import co.xarx.trix.elasticsearch.repository.ESPostRepository;
+import co.xarx.trix.elasticsearch.repository.ESStationRepository;
 import co.xarx.trix.persistence.*;
 import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
@@ -104,6 +106,15 @@ public class ElasticSearchService {
 			if (entities.size() > 0) log.info("indexing " + entities.size() + " elements of type " + itens.get(0).getClass().getSimpleName());
 		}
 		entities.forEach(esRepository::save);
+	}
+
+	public <T extends ElasticSearchEntity> void saveIndex(Object object, Class<T> objectClass, ESRepository esRepository) {
+		ElasticSearchEntity esPerson = modelMapper.map(object, objectClass);
+		esRepository.save(esPerson);
+	}
+
+	public void deleteIndex(Integer id, ESRepository esRepository) {
+		esPersonRepository.delete(id);
 	}
 
 	public Client getClient(){

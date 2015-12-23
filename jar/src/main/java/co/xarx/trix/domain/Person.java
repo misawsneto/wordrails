@@ -46,6 +46,15 @@ public class Person extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "person")
 	public Set<Bookmark> bookmarks;
 
+	@OrderColumn(name = "order")
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "person_bookmark",
+			joinColumns = @JoinColumn(name = "person_id")
+
+	)
+	@Column(name = "post_id")
+	public Set<Integer> bookmarkPosts;
+
 	@OneToMany(mappedBy = "person")
 	public Set<Recommend> recommends;
 
@@ -149,6 +158,14 @@ public class Person extends BaseEntity implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Set<Integer> getBookmarkPosts() {
+		return bookmarkPosts;
+	}
+
+	public void setBookmarkPosts(Set<Integer> bookmarkPosts) {
+		this.bookmarkPosts = bookmarkPosts;
 	}
 
 	public String getUsername() {

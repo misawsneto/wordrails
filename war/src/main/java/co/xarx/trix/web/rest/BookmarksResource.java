@@ -2,39 +2,28 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.PermissionId;
 import co.xarx.trix.WordrailsService;
-import co.xarx.trix.api.BooleanResponse;
-import co.xarx.trix.api.ContentResponse;
-import co.xarx.trix.api.StationsPermissions;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
-import co.xarx.trix.domain.Bookmark;
+import co.xarx.trix.api.*;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.BookmarkRepository;
-import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.persistence.elasticsearch.BookmarkEsRespository;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.unit.Fuzziness;
+import co.xarx.trix.persistence.PersonRepository;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.PostService;
+import co.xarx.trix.util.Constants;
+import org.apache.commons.lang3.tuple.Pair;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.search.SearchHit;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Path("/bookmarks")
 @Consumes(MediaType.WILDCARD)
@@ -43,30 +32,31 @@ public class BookmarksResource {
 
 	@Context
 	private HttpServletRequest request;
-	@Context
-	private UriInfo uriInfo;
-	@Context
-	private HttpServletResponse response;
 	@Autowired
 	private WordrailsService wordrailsService;
 	@Autowired
-	private PostRepository postRepository;
+	private PersonService personService;
 	@Autowired
-	private BookmarkRepository bookmarkRepository;
+	private PersonRepository personRepository;
+	@Autowired
+	private PostService postService;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
-	@Autowired
-	private QueryPersistence queryPersistence;
-	@Autowired
-	private BookmarkEsRespository bookmarkEsRespository;
 
 	@GET
 	@Path("/searchBookmarks")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<JSONObject>> searchBookmarks(@QueryParam("query") String q,
+	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q,
 	                                                         @QueryParam("page") Integer page,
 	                                                         @QueryParam("size") Integer size){
 		Person person = authProvider.getLoggedPerson();
+		if(person.getBookmarkPosts().isEmpty()) {
+			ContentResponse<List<PostView>> response = new ContentResponse<>();
+			response.content = new ArrayList<>();
+
+			return response;
+		}
+
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
@@ -75,78 +65,23 @@ public class BookmarksResource {
 		pId.networkId = network.id;
 		pId.personId = person.id;
 
-		StationsPermissions permissions = new StationsPermissions();
+		List<Integer> readableIds = new ArrayList<>();
 		try {
-			permissions = wordrailsService.getPersonPermissions(pId);
+			StationsPermissions permissions = wordrailsService.getPersonPermissions(pId);
+			readableIds = wordrailsService.getReadableStationIds(permissions);
 		} catch (ExecutionException e1) {
 			e1.printStackTrace();
 		}
 
-		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
+		BoolQueryBuilder mainQuery = postService.getBoolQueryBuilder(q, person.getId(), Constants.Post.STATE_PUBLISHED, readableIds, person.bookmarkPosts);
 
-		BoolQueryBuilder mainQuery = boolQuery();
-		MatchQueryBuilder personQuery = matchQuery("bookmark.person.id", person.id);
-		BoolQueryBuilder stationsQuery = boolQuery();
-		for( Integer id: readableIds){
-			stationsQuery.should(matchQuery("bookmark.post.stationId", id));
-		}
+		Pageable pageable = new PageRequest(page, size);
 
-		if(q == null || q.trim().isEmpty()){
-			ContentResponse<List<JSONObject>> response = new ContentResponse<>();
 
-			mainQuery = mainQuery.must(personQuery).must(stationsQuery);
+		Pair<Integer, List<PostView>> postsViews = postService.searchIndex(mainQuery, pageable, null);
 
-			SearchResponse searchResponse = bookmarkEsRespository.runQuery(mainQuery.toString(), null, size, page);
-
-			List<JSONObject> bookmarks = new ArrayList<>();
-
-			for(SearchHit hit: searchResponse.getHits().getHits()){
-				bookmarks.add(bookmarkEsRespository
-						.convertToPostView(hit.getSourceAsString()));
-			}
-
-			response.content = bookmarks;
-			return response;
-		}
-
-		MultiMatchQueryBuilder textQuery;
-
-		try {
-			textQuery = multiMatchQuery(q)
-					.field("bookmark.post.title", 5)
-					.field("bookmark.post.body", 2)
-					.field("bookmark.post.topper")
-					.field("bookmark.post.subheading")
-					.field("bookmark.post.author.name")
-					.field("bookmark.post.terms.name")
-					.prefixLength(1)
-					.fuzziness(Fuzziness.AUTO);
-		} catch (Exception e){
-			e.printStackTrace();
-
-			ContentResponse<List<JSONObject>> response = new ContentResponse<>();
-			response.content = new ArrayList<>();
-
-			return response;
-		}
-
-		mainQuery = mainQuery
-				.must(textQuery)
-				.must(personQuery)
-				.must(stationsQuery);
-
-		//Sort not defined
-
-		SearchResponse searchResponse = bookmarkEsRespository.runQuery(mainQuery.toString(), null, size, page);
-		List<JSONObject> bookmarks = new ArrayList<>();
-
-		for(SearchHit hit: searchResponse.getHits().getHits()){
-			bookmarks.add(bookmarkEsRespository
-					.convertToPostView(hit.getSourceAsString()));
-		}
-
-		ContentResponse<List<JSONObject>> response = new ContentResponse<>();
-		response.content = bookmarks;
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
+		response.content = postsViews.getRight();
 
 		return response;
 	}
@@ -156,27 +91,13 @@ public class BookmarksResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	public BooleanResponse toggleBookmark(@FormParam("postId") Integer postId){
-		
+		BooleanResponse bookmarkInserted = new BooleanResponse();
+
 		Person person = authProvider.getLoggedPerson();
-		if(person == null || person.username.equals("wordrails"))
-			throw new UnauthorizedException();
-		
-		Bookmark bookmark = new Bookmark();
-		bookmark.post = postRepository.findOne(postId);
-		bookmark.person = person;
-		try{
-			bookmarkRepository.save(bookmark);
-			BooleanResponse content = new BooleanResponse();
-			content.response = true;
-			queryPersistence.incrementBookmarksCount(postId);
-			return content;
-		}catch(Exception e){
-			queryPersistence.decrementBookmarksCount(postId);
-			BooleanResponse content = new BooleanResponse();
-			content.response = false;
-			queryPersistence.deleteBookmark(postId, person.id);
-			return content;
-		}
+		person = personRepository.findOne(person.getId());
+		bookmarkInserted.response = personService.toggleBookmark(person, postId);
+
+		return bookmarkInserted;
 	}
-	
+
 }

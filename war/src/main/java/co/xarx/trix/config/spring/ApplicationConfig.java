@@ -23,11 +23,6 @@ public class ApplicationConfig {
 		return new ObjectMapper();
 	}
 
-//	@Bean
-//	public ObjectMapper objectMapper() {
-//		return JerseyObjectMapperProvider.getObjectMapper();
-//	}
-
 	@Bean
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();

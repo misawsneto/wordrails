@@ -1,14 +1,10 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.AndroidApp;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.persistence.PostRepository;
-import org.apache.log4j.Logger;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -17,10 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AsyncService {
 
-	Logger log = Logger.getLogger(this.getClass().getName());
-
-	@Autowired
-	public ModelMapper modelMapper;
 	@Autowired
 	public GCMService gcmService;
 	@Autowired
@@ -28,19 +20,7 @@ public class AsyncService {
 	@Autowired
 	public PostService postService;
 	@Autowired
-	public PostRepository postRepository;
-	@Autowired
-	public PostConverter postConverter;
-	@Autowired
 	public AndroidBuilderService androidBuilderService;
-	@Autowired
-	public ElasticSearchService elasticSearchService;
-
-//	@Async
-//	public <D extends MultiTenantEntity> void mapThenSave(QueryDslPredicateExecutor repository, Predicate predicate, Class<D> mapTo, CrudRepository esRepository) {
-//		List<MultiTenantEntity> itens = Lists.newArrayList(repository.findAll(predicate));
-//		mapThenSave(itens, mapTo, esRepository);
-//	}
 
 	@Async
 	public void run(Runnable runnable) {

@@ -5,7 +5,7 @@ import co.xarx.trix.util.Constants;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "query_object_post")
@@ -19,10 +19,10 @@ public class PostQuery extends BaseObjectQuery implements ElasticSearchObjectQue
 
 	@ElementCollection
 	@JoinTable(name = "query_object_post_tags")
-	public List<String> tags;
+	public Set<String> tags;
 	@ElementCollection
 	@JoinTable(name = "query_object_post_categories")
-	public List<Integer> categories;
+	public Set<Integer> categories;
 
 	@Column(name = "author_username")
 	public String authorUsername;
@@ -33,7 +33,7 @@ public class PostQuery extends BaseObjectQuery implements ElasticSearchObjectQue
 	@NotNull
 	@ElementCollection
 	@JoinTable(name = "query_object_post_stations")
-	public List<Integer> stationIds;
+	public Set<Integer> stationIds;
 
 	@Column(name = "rich_text")
 	public String richText;
@@ -62,19 +62,19 @@ public class PostQuery extends BaseObjectQuery implements ElasticSearchObjectQue
 		this.after = after;
 	}
 
-	public List<String> getTags() {
+	public Set<String> getTags() {
 		return tags;
 	}
 
-	public void setTags(List<String> tags) {
+	public void setTags(Set<String> tags) {
 		this.tags = tags;
 	}
 
-	public List<Integer> getCategories() {
+	public Set<Integer> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<Integer> categories) {
+	public void setCategories(Set<Integer> categories) {
 		this.categories = categories;
 	}
 
@@ -86,11 +86,11 @@ public class PostQuery extends BaseObjectQuery implements ElasticSearchObjectQue
 		this.authorUsername = authorUsername;
 	}
 
-	public List<Integer> getStationIds() {
+	public Set<Integer> getStationIds() {
 		return stationIds;
 	}
 
-	public void setStationIds(List<Integer> stationIds) {
+	public void setStationIds(Set<Integer> stationIds) {
 		this.stationIds = stationIds;
 	}
 

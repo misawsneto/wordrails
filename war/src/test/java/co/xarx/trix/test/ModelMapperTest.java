@@ -49,7 +49,7 @@ public class ModelMapperTest {
 	}
 
 	@Test
-	public void testStationToESPostMapping() throws Exception {
+	public void testStationToESStationMapping() throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		Station station = TestArtifactsFactory.createStation();
@@ -61,7 +61,7 @@ public class ModelMapperTest {
 	}
 
 	@Test
-	public void testPersonToESPostMapping() throws Exception {
+	public void testPersonToESPersonMapping() throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		Person person = TestArtifactsFactory.createPerson();
@@ -93,7 +93,8 @@ public class ModelMapperTest {
 		ESPost esPost = modelMapper.map(post, ESPost.class);
 		System.out.println(objectMapper.writeValueAsString(esPost));
 
-		esPost.author = TestArtifactsFactory.createPerson();
+		Person person = TestArtifactsFactory.createPerson();
+		esPost.author = modelMapper.map(person, ESPerson.class);
 		PostView postView = modelMapper.map(esPost, PostView.class);
 		System.out.println(objectMapper.writeValueAsString(postView));
 

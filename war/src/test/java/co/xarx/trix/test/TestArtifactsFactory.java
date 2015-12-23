@@ -103,6 +103,7 @@ public class TestArtifactsFactory {
 		person.setNetworkId(NETWORK);
 		person.setTenantId(TENANT);
 		person.id = 10;
+		person.bookmarkPosts = Sets.newHashSet(10, 11, 12);
 		person.name = "Dummy Person";
 		person.email = "dummy@dummy.com";
 		person.username = "dummyuser";
@@ -136,14 +137,14 @@ public class TestArtifactsFactory {
 		page.setTitle("Home");
 
 		PostQuery postQuery1 = new PostQuery();
-		postQuery1.setStationIds(Lists.newArrayList(11));
+		postQuery1.setStationIds(Sets.newHashSet(11));
 		postQuery1.setRichText("dilma");
 
 		PageableQuery pageableQuery = new PageableQuery();
 		pageableQuery.setObjectQuery(postQuery1);
 
 		PostQuery postQuery2 = new PostQuery();
-		postQuery2.setStationIds(Lists.newArrayList(11));
+		postQuery2.setStationIds(Sets.newHashSet(11));
 		postQuery2.setRichText("fhc");
 
 		FixedQuery fixedQuery1 = new FixedQuery();

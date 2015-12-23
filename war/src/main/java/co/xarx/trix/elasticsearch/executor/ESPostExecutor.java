@@ -1,16 +1,12 @@
-package co.xarx.trix.persistence.elasticsearch;
+package co.xarx.trix.elasticsearch.executor;
 
 import co.xarx.trix.api.PostView;
-import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.query.ElasticSearchExecutor;
 import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.util.StringUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.rometools.utils.Lists;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -28,16 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 @Component("post_executor")
-public class PostEsRepository implements ElasticSearchExecutor<PostView> {
+public class ESPostExecutor implements ElasticSearchExecutor<PostView> {
 
 	@Value("${elasticsearch.index}")
 	private String indexName;
-
-	@Autowired
-	private ObjectMapper objectMapper;
-
-	@Autowired
-	private PostConverter postConverter;
 
 	private static final String ES_TYPE = "post";
 
@@ -66,35 +56,6 @@ public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 		SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
 
 		return getViews(searchResponse.getHits().hits());
-	}
-
-	public SearchResponse runQuery(String query, FieldSortBuilder sort, Integer size, Integer page, String highlightedField){
-		SearchRequestBuilder searchRequestBuilder = elasticSearchService
-														.getClient()
-														.prepareSearch(indexName)
-														.setTypes(ES_TYPE)
-														.setQuery(query);
-
-		if (size != null && size > 0){
-			searchRequestBuilder.setSize(size);
-
-			if (page != null){
-				searchRequestBuilder.setFrom(page * size);
-			}
-		}
-
-		if (highlightedField != null){
-			searchRequestBuilder.addHighlightedField(highlightedField, 100, 4);
-			searchRequestBuilder.setHighlighterPreTags("{snippet}");
-			searchRequestBuilder.setHighlighterPostTags("{#snippet}");
-		}
-
-		if (sort != null){
-			searchRequestBuilder.addSort(new FieldSortBuilder("_score").order(SortOrder.DESC));
-			searchRequestBuilder.addSort(sort);
-		}
-
-		return searchRequestBuilder.execute().actionGet();
 	}
 
 	public List<PostView> getViews(SearchHit... hits) {
@@ -127,34 +88,5 @@ public class PostEsRepository implements ElasticSearchExecutor<PostView> {
 		}
 
 		return views;
-	}
-
-	public void save(Post post) {
-		elasticSearchService.index(formatObjectJson(post), post.id.toString(), indexName, ES_TYPE);
-	}
-
-	public void update(Post post){
-		elasticSearchService.update(formatObjectJson(post), post.id.toString(), indexName, ES_TYPE);
-	}
-
-	public void delete(Post post){
-		delete(post.id);
-	}
-
-	public void delete(Integer postId){
-		elasticSearchService.delete(String.valueOf(postId), indexName, ES_TYPE);
-	}
-
-	public String formatObjectJson(Post post){
-		String doc;
-		try {
-			objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
-			doc = objectMapper.writeValueAsString(postConverter.convertToView(post, true));
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		return doc;
 	}
 }

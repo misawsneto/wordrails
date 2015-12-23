@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.apache.commons.lang3.tuple.Pair;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +43,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Path("/posts")
 @Consumes(MediaType.WILDCARD)
@@ -200,12 +197,13 @@ public class PostsResource {
 	                                               @QueryParam("page") Integer page,
 	                                               @QueryParam("size") Integer size) {
 
-		List<Integer> stationIdIntegers = new ArrayList<>();
+		if (q == null) {
+			ContentResponse<SearchView> response = new ContentResponse<>();
+			response.content = new SearchView();
+			response.content.hits = 0;
+			response.content.posts = new ArrayList<>();
 
-		if(stationIds != null){
-			List<String> stringIds = Arrays.asList(stationIds.replaceAll("\\s*", "").split(","));
-			for (String id: stringIds)
-				stationIdIntegers.add(Integer.parseInt(id));
+			return response;
 		}
 
 		Person person = authProvider.getLoggedPerson();
@@ -217,60 +215,30 @@ public class PostsResource {
 		pId.networkId = network.id;
 		pId.personId = person.id;
 
-		StationsPermissions permissions = new StationsPermissions();
+		List<Integer> readableIds = new ArrayList<>();
+		List<Integer> stationIdIntegers = new ArrayList<>();
+
 		try {
-			permissions = wordrailsService.getPersonPermissions(pId);
+			if (stationIds != null) {
+				List<String> stringIds = Arrays.asList(stationIds.replaceAll("\\s*", "").split(","));
+				for (String id : stringIds)
+					stationIdIntegers.add(Integer.parseInt(id));
+			}
+
+			if (stationIdIntegers.size() == 0) {
+				StationsPermissions permissions = wordrailsService.getPersonPermissions(pId);
+				readableIds = wordrailsService.getReadableStationIds(permissions);
+			} else {
+				readableIds = stationIdIntegers;
+			}
 		} catch (ExecutionException e1) {
 			e1.printStackTrace();
 		}
 
-		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
 
-		MultiMatchQueryBuilder queryText;
-		BoolQueryBuilder mainQuery = boolQuery();
 
-		if(q != null){
-			queryText = multiMatchQuery(q)
-					.field("body", 2)
-					.field("title", 5)
-					.field("topper")
-					.field("subheading")
-					.field("authorName")
-					.field("terms.name")
-					.prefixLength(1);
-		} else {
-			ContentResponse<SearchView> response = new ContentResponse<>();
-			response.content = new SearchView();
-			response.content.hits = 0;
-			response.content.posts = new ArrayList<>();
 
-			return response;
-		}
-
-		mainQuery = mainQuery.must(queryText);
-
-		if(personId != null){
-			mainQuery = mainQuery.must(
-					matchQuery("authorId", personId));
-		}
-
-		if(publicationType != null){
-			mainQuery = mainQuery.must(
-					matchQuery("state", publicationType));
-		} else {
-			mainQuery = mainQuery.must(
-					matchQuery("state", Post.STATE_PUBLISHED));
-		}
-
-		if(stationIdIntegers.size() > 0)
-			readableIds = stationIdIntegers;
-
-		BoolQueryBuilder stationQuery = boolQuery();
-		for(Integer stationId: readableIds){
-			stationQuery.should(
-					matchQuery("stationId", String.valueOf(stationId)));
-		}
-		mainQuery = mainQuery.must(stationQuery);
+		BoolQueryBuilder mainQuery = postService.getBoolQueryBuilder(q, personId, publicationType, readableIds, null);
 		FieldSortBuilder sort = null;
 
 		if(sortByDate != null && sortByDate){

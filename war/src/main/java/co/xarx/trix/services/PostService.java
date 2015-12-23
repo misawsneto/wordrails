@@ -6,10 +6,10 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostRead;
 import co.xarx.trix.domain.QPostRead;
-import co.xarx.trix.elasticsearch.ESPersonRepository;
-import co.xarx.trix.elasticsearch.ESPostRepository;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
+import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
+import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.persistence.PostReadRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
@@ -18,8 +18,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.highlight.HighlightField;
@@ -45,7 +47,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service
 public class PostService {
@@ -195,5 +197,54 @@ public class PostService {
 		} catch (ConstraintViolationException | DataIntegrityViolationException e) {
 			log.info("user already read this post");
 		}
+	}
+
+	public BoolQueryBuilder getBoolQueryBuilder(String q, Integer personId, String publicationType, Iterable<Integer> stationIds, Iterable<Integer> postIds) {
+		BoolQueryBuilder mainQuery = boolQuery();
+
+		if (Strings.hasText(q)) {
+			MultiMatchQueryBuilder queryText = multiMatchQuery(q)
+					.field("body", 2)
+					.field("title", 5)
+					.field("topper")
+					.field("subheading")
+					.field("authorName")
+					.field("terms.name")
+					.prefixLength(1);
+
+			mainQuery = mainQuery.must(queryText);
+		}
+
+		if(personId != null){
+			mainQuery = mainQuery.must(
+					matchQuery("authorId", personId));
+		}
+
+		if(publicationType != null){
+			mainQuery = mainQuery.must(
+					matchQuery("state", publicationType));
+		} else {
+			mainQuery = mainQuery.must(
+					matchQuery("state", Post.STATE_PUBLISHED));
+		}
+
+		if (postIds != null) {
+			BoolQueryBuilder postQuery = boolQuery();
+			for (Integer postId : postIds) {
+				postQuery.should(matchQuery("id", postId));
+			}
+			mainQuery = mainQuery.must(postQuery);
+		}
+
+		if (stationIds != null) {
+			BoolQueryBuilder stationQuery = boolQuery();
+			for(Integer stationId: stationIds){
+				stationQuery.should(
+						matchQuery("stationId", String.valueOf(stationId)));
+			}
+			mainQuery = mainQuery.must(stationQuery);
+		}
+
+		return mainQuery;
 	}
 }

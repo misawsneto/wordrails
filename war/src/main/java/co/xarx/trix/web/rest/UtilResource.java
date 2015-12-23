@@ -7,8 +7,6 @@ import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.eventhandler.StationEventHandler;
 import co.xarx.trix.eventhandler.TaxonomyEventHandler;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.persistence.elasticsearch.BookmarkEsRespository;
-import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
 import co.xarx.trix.script.ImageScript;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
@@ -72,8 +70,6 @@ public class UtilResource {
 	private StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
 	private InvitationRepository invitationRepository;
-	@Autowired
-	private PerspectiveEsRepository perspectiveEsRepository;
 
 	@Autowired
 	private CacheService cacheService;
@@ -81,9 +77,6 @@ public class UtilResource {
 	private
 	@PersistenceContext
 	EntityManager manager;
-
-	@Autowired
-	private BookmarkEsRespository bookmarkEsRespository;
 
 	@GET
 	@Path("/updateDefaultStationPerspective")
@@ -810,102 +803,6 @@ public class UtilResource {
 		}
 	}
 
-//	@Autowired
-//	private ESPostRepository esPostRepository;
-//
-//	@GET
-//	@Path("/indexPostsToElastisearch")
-//	public void indexPostsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-//		if (isLocal(request.getHeader("Host"))) {
-//			List<Network> networks = networkRepository.findAll();
-//			for (Network network : networks) {
-//				asyncService.mapThenSave(postRepository, QPost.post.tenantId.eq(network.subdomain), ESPost.class, esPostRepository);
-//			}
-//		}
-//	}
-//
-//	@Autowired
-//	private ESStationRepository esStationRepository;
-//
-//	@GET
-//	@Path("/indexStationsToElastisearch")
-//	public void indexStationsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-//		if (isLocal(request.getHeader("Host"))) {
-//			List<Network> networks = networkRepository.findAll();
-//			for (Network network : networks) {
-//				asyncService.mapThenSave(stationRepository, QStation.station.tenantId.eq(network.subdomain), ESStation.class, esStationRepository);
-//			}
-//		}
-//	}
-//
-//	@Autowired
-//	private ESPersonRepository esPersonRepository;
-//
-//	@GET
-//	@Path("/indexPersonToElastisearch")
-//	public void indexPersonToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-//		if (isLocal(request.getHeader("Host"))) {
-//			List<Network> networks = networkRepository.findAll();
-//			for (Network network : networks) {
-//				asyncService.mapThenSave(personRepository, QPerson.person.tenantId.eq(network.subdomain), ESPerson.class, esPersonRepository);
-//			}
-//		}
-//	}
-
-	@GET
-	@Path("/indexPersonsToElastisearch")
-	@Transactional
-	public void indexPersonsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<Person> all = personRepository.findAllPostsOrderByIdDesc();
-			for(int i = 0; i < all.size(); i++){
-				personRepository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
-	@GET
-	@Path("/indexPerspectivesToElastisearch")
-	@Transactional(readOnly=false)
-	public void indexPerspectivesToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<TermPerspective> all = termPerspectiveRepository.findAll();
-			for(int i = 0; i < all.size(); i++){
-				perspectiveEsRepository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
-	@GET
-	@Path("/indexBookmarksToElastisearch")
-	@Transactional(readOnly=false)
-	public void indexBookmarksToElastisearch() throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<Bookmark> all = bookmarkRepository.findAll();
-			for(int i = 0; i < all.size(); i++){
-				bookmarkEsRespository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
 	@GET
 	@Path("/stationNetwork")
 	@Transactional
@@ -920,25 +817,6 @@ public class UtilResource {
 					station.network = network;
 			}
 			stationRepository.save(stations);
-		}
-	}
-
-
-	@GET
-	@Path("/deleteAllPerspectivesFromIndex")
-	@Transactional(readOnly=false)
-	public void deleteAllPerspectivesFromIndex(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<StationPerspective> all = stationPerspectiveRepository.findAll();
-			for(int i = 0; i < all.size(); i++){
-				perspectiveEsRepository.deleteByStationPerspective(all.get(i).id);
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
 		}
 	}
 

@@ -4,7 +4,7 @@ import co.xarx.trix.domain.query.ElasticSearchQuery;
 import co.xarx.trix.domain.query.ElasticSearchQueryBuilder;
 import co.xarx.trix.domain.query.PostQuery;
 import co.xarx.trix.util.Constants;
-import com.rometools.utils.Lists;
+import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -66,10 +66,10 @@ public class ElasticSearchQueryBuilderExecutor implements ElasticSearchQueryBuil
 			mainQuery = mainQuery.must(
 					matchQuery("authorUsername", query.getAuthorUsername()));
 		}
-		if(Lists.isNotEmpty(query.getTags())) {
+		if(CollectionUtils.isNotEmpty(query.getTags())) {
 			mainQuery = mainQuery.should(termsQuery("tags", query.getTags()));
 		}
-		if(Lists.isNotEmpty(query.getCategories())) {
+		if(CollectionUtils.isNotEmpty(query.getCategories())) {
 			mainQuery = mainQuery.should(termsQuery("categories.id", query.getCategories()));
 		}
 

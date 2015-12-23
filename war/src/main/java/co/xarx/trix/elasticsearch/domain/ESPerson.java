@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.Map;
+import java.util.Set;
 
 @Document(indexName = "#{properties.index}", type = Constants.ObjectType.PERSON)
 public class ESPerson implements ElasticSearchEntity {
@@ -20,6 +21,7 @@ public class ESPerson implements ElasticSearchEntity {
 
 	public String email;
 	public String twitter;
+	public Set<Integer> bookmarkPosts;
 	public Map<String, String> cover;
 	public Map<String, String> profilePicture;
 
@@ -32,6 +34,14 @@ public class ESPerson implements ElasticSearchEntity {
 	@Override
 	public String getType() {
 		return Constants.ObjectType.PERSON;
+	}
+
+	public Set<Integer> getBookmarkPosts() {
+		return bookmarkPosts;
+	}
+
+	public void setBookmarkPosts(Set<Integer> bookmarkPosts) {
+		this.bookmarkPosts = bookmarkPosts;
 	}
 
 	@Override

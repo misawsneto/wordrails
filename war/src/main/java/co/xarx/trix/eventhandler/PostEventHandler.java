@@ -3,13 +3,15 @@ package co.xarx.trix.eventhandler;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostTrash;
+import co.xarx.trix.elasticsearch.domain.ESPost;
+import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
+import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.MobileService;
-import co.xarx.trix.services.PostService;
 import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,6 @@ public class PostEventHandler {
 	@Autowired
 	private SchedulerService schedulerService;
 	@Autowired
-	private PostService postService;
-	@Autowired
 	private PostRepository postRepository;
 	@Autowired
 	private PostReadRepository postReadRepository;
@@ -49,6 +49,10 @@ public class PostEventHandler {
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
+	@Autowired
+	private ElasticSearchService elasticSearchService;
+	@Autowired
+	private ESPostRepository esPostRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
@@ -89,7 +93,7 @@ public class PostEventHandler {
 		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
 			mobileService.buildNotification(post);
 		}
-		postService.saveIndex(post);
+		elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 	}
 
 	@HandleAfterSave
@@ -97,7 +101,7 @@ public class PostEventHandler {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			schedulerService.schedule(post.id, post.scheduledDate);
 		}
-		postService.saveIndex(post);
+		elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 	}
 
 	@HandleBeforeDelete
@@ -116,7 +120,7 @@ public class PostEventHandler {
 			notificationRepository.deleteByPost(post);
 			bookmarkRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
-			postService.deleteIndex(post.id); // evitando bug de remoção de post que tiveram post alterado.
+			elasticSearchService.deleteIndex(post.id, esPostRepository); // evitando bug de remoção de post que tiveram post alterado.
 		} else {
 			throw new UnauthorizedException();
 		}

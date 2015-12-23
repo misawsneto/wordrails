@@ -31,3 +31,6 @@ UPDATE post
   JOIN station ON post.station_id = station.id
   JOIN network ON network.id = station.networkId
   SET post.networkId = station.networkId, post.tenantId = network.subdomain;
+
+INSERT INTO person_bookmark (person_id, post_id)
+  SELECT person_id, post_id FROM bookmark;
