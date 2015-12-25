@@ -44,6 +44,8 @@ public class ExceptionMapperImpl implements ExceptionMapper<Throwable> {
 		}
 
 //		String stackTrace = ExceptionUtils.getStackTrace(throwable);
-		return Response.status(status).entity("{\"error\": \"" + throwable.getClass() + " - " + throwable.getMessage().replaceAll("\"", "\\\"") +"\"}").type(MediaType.APPLICATION_JSON).build();
+        String message = throwable.getMessage();
+        message = message != null && !message.isEmpty() ? message.replaceAll("\"", "\\\"") : "";
+		return Response.status(status).entity("{\"error\": \"" + throwable.getClass() + " - " + message +"\"}").type(MediaType.APPLICATION_JSON).build();
     }
 }
