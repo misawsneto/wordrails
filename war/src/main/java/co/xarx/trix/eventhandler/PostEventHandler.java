@@ -44,8 +44,6 @@ public class PostEventHandler {
 	@Autowired
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
-	private BookmarkRepository bookmarkRepository;
-	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
@@ -118,7 +116,6 @@ public class PostEventHandler {
 			commentRepository.delete(post.comments);
 			postReadRepository.deleteByPost(post);
 			notificationRepository.deleteByPost(post);
-			bookmarkRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
 			elasticSearchService.deleteIndex(post.id, esPostRepository); // evitando bug de remoção de post que tiveram post alterado.
 		} else {

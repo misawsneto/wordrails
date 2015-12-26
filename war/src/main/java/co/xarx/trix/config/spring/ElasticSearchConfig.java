@@ -7,6 +7,7 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ServiceLocatorFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -31,13 +32,14 @@ public class ElasticSearchConfig {
 	@Value("${elasticsearch.cluster:'trix'}")
 	private String cluster;
 
-	@Bean
-	public ServiceLocatorFactoryBean elasticSearchExecutorFactory() {
+	@Bean(name = "elasticSearchExecutorFactory")
+	public FactoryBean elasticSearchExecutorFactory() {
 		ServiceLocatorFactoryBean serviceLocatorFactoryBean = new ServiceLocatorFactoryBean();
 		serviceLocatorFactoryBean.setServiceLocatorInterface(ElasticSearchExecutorFactory.class);
 
 		return serviceLocatorFactoryBean;
 	}
+
 
 	@Bean
 	public Client elasticSearchClient() {

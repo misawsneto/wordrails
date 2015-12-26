@@ -11,19 +11,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RunTomcat {
+
 	public static void main(String args[]) throws ServletException, LifecycleException, IOException {
 		long timeStart = new Date().getTime();
 
 		Tomcat tomcat = new Tomcat();
 		tomcat.setBaseDir("target");
-        
-        if(args.length > 0) {
-            tomcat.setPort(Integer.valueOf(args[0]));
-        } else {
-            tomcat.setPort(8080);
-        }
 
-		
+		if (args.length > 0) {
+			tomcat.setPort(Integer.valueOf(args[0]));
+		} else {
+			tomcat.setPort(8080);
+		}
+
+
 		Context context = tomcat.addWebapp("", new File("src/main/webapp").getAbsolutePath());
 
 		System.out.println("Starting Tomcat");

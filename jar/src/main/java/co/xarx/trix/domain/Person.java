@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -161,6 +162,7 @@ public class Person extends BaseEntity implements Serializable {
 	}
 
 	public Set<Integer> getBookmarkPosts() {
+		if(bookmarkPosts == null) return new HashSet();
 		return bookmarkPosts;
 	}
 

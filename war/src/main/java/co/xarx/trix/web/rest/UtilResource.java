@@ -580,7 +580,6 @@ public class UtilResource {
 	}
 
 	@Autowired private ImageRepository imageRepository;
-	@Autowired private BookmarkRepository bookmarkRepository;
 	@Autowired private TermRepository termRepository;
 	@Autowired private RowRepository rowRepository;
 

@@ -6,6 +6,7 @@ import co.xarx.trix.domain.page.BlockImpl;
 import co.xarx.trix.domain.query.*;
 import co.xarx.trix.factory.ElasticSearchExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,6 +17,7 @@ public class QueryExecutorService implements QueryExecutor {
 	@Autowired
 	private ElasticSearchQueryBuilderExecutor elasticSearchQueryBuilderExecutor;
 	@Autowired
+	@Qualifier("elasticSearchExecutorFactory")
 	private ElasticSearchExecutorFactory elasticSearchExecutorFactory;
 
 	private Map<Integer, Block> getBlocks(Iterator<Identifiable> itens, Iterator<Integer> indexes, String objectName) {

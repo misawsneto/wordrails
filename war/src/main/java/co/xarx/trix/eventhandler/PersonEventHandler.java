@@ -13,7 +13,6 @@ import co.xarx.trix.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,8 +22,6 @@ public class PersonEventHandler {
 
 	@Autowired
 	private ImageRepository imageRepository;
-	@Autowired
-	private BookmarkRepository bookmarksRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
@@ -64,7 +61,6 @@ public class PersonEventHandler {
 
 
 	@HandleBeforeSave
-	@Transactional
 	public void handleBeforeSave(Person person) {
 		Person originalPerson = personRepository.findOne(person.id);
 		person.user = userRepository.findOne(originalPerson.user.id);
@@ -74,7 +70,6 @@ public class PersonEventHandler {
 	}
 
 	@HandleBeforeDelete
-	@Transactional
 	public void handleBeforeDelete(Person person) {
 		networkRolesRepository.deleteByPersonId(person.id);
 		stationRolesRepository.deleteByPersonId(person.id);
@@ -83,7 +78,6 @@ public class PersonEventHandler {
 			imageRepository.delete(person.cover);
 		}
 
-		bookmarksRepository.deleteByPersonId(person.id);
 		recommendRepository.deleteByPersonId(person.id);
 		postReadRepository.deleteByPersonId(person.id);
 
@@ -102,7 +96,6 @@ public class PersonEventHandler {
 	}
 
 	@HandleAfterSave
-	@Transactional
 	public void handleAfterSave(Person person) {
 		elasticSearchService.saveIndex(person, ESPerson.class, esPersonRepository);
 		cacheService.updatePerson(person.id);

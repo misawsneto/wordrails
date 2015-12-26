@@ -80,11 +80,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			return person;
 		}
 
-		try {
-			person = cacheService.getPersonByUsername(user.username);
-		} catch (Exception e) {
-			person = personRepository.findByUser(user);
-		}
+		person = personRepository.findByUsername(user.getUsername());
 
 		Authentication auth = new UsernamePasswordAuthenticationToken(user, user.password, user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);

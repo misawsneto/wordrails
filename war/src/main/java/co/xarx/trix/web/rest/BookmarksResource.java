@@ -2,14 +2,19 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.PermissionId;
 import co.xarx.trix.WordrailsService;
-import co.xarx.trix.api.*;
+import co.xarx.trix.api.BooleanResponse;
+import co.xarx.trix.api.ContentResponse;
+import co.xarx.trix.api.PostView;
+import co.xarx.trix.api.StationsPermissions;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.PostService;
 import co.xarx.trix.util.Constants;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +54,8 @@ public class BookmarksResource {
 	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q,
 	                                                         @QueryParam("page") Integer page,
 	                                                         @QueryParam("size") Integer size){
-		Person person = authProvider.getLoggedPerson();
-		if(person.getBookmarkPosts().isEmpty()) {
+		Person person = personRepository.findByUsername(authProvider.getUser().getUsername());
+		if(CollectionUtils.isEmpty(person.getBookmarkPosts())) {
 			ContentResponse<List<PostView>> response = new ContentResponse<>();
 			response.content = new ArrayList<>();
 
@@ -95,6 +100,8 @@ public class BookmarksResource {
 
 		Person person = authProvider.getLoggedPerson();
 		person = personRepository.findOne(person.getId());
+		if (person == null || person.username.equals("wordrails")) throw new UnauthorizedException();
+
 		bookmarkInserted.response = personService.toggleBookmark(person, postId);
 
 		return bookmarkInserted;

@@ -1,7 +1,7 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.exception.UnauthorizedException;
+import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.persistence.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +15,10 @@ public class PersonService {
 
 	@Autowired
 	private PersonRepository personRepository;
+	@Autowired
+	private PersonEventHandler personEventHandler;
 
 	public boolean toggleBookmark(Person person, Integer postId) {
-		if(person == null || person.username.equals("wordrails"))
-			throw new UnauthorizedException();
-
 		boolean bookmarkInserted = false;
 		if(!person.getBookmarkPosts().contains(postId)) {
 			bookmarkInserted = true;
@@ -29,6 +28,7 @@ public class PersonService {
 		}
 
 		personRepository.save(person);
+//		personEventHandler.handleAfterSave(person);
 		return bookmarkInserted;
 	}
 }

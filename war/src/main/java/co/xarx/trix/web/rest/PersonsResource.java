@@ -83,8 +83,6 @@ public class PersonsResource {
 	@Autowired
 	private PostConverter postConverter;
 	@Autowired
-	private BookmarkRepository bookmarkRepository;
-	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private PostReadRepository postReadRepository;
@@ -751,7 +749,7 @@ public class PersonsResource {
 		Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
 		if(initData.person != null && !initData.person.username.equals("wordrails")){
 			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
-			List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(initData.person.id, pageable2);
+			List<Integer> bookmarks = new ArrayList(person.getBookmarkPosts());
 			List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
 			initData.postsRead = postsRead;
 			initData.bookmarks = bookmarks;
@@ -801,7 +799,7 @@ public class PersonsResource {
 		Person person = authProvider.getLoggedPerson();
 		List<BooleanResponse> resp = new ArrayList<>();
 
-		if(bookmarkRepository.findBookmarkByPersonIdAndPostId(person.id, postId)!=null){
+		if(person.getBookmarkPosts().contains(postId)){
 			BooleanResponse bool = new BooleanResponse();
 			bool.response = true;
 			resp.add(bool);

@@ -5,6 +5,7 @@ import co.xarx.trix.domain.MultiTenantEntity;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 
 @Aspect
+@Component
 public class MultitenantRepositoryAspect {
 
 	Logger log = Logger.getLogger(this.getClass().getName());

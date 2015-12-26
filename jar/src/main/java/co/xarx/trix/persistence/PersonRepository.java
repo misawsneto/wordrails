@@ -1,8 +1,10 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.NetworkRole;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.User;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,11 +13,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
-import java.util.Set;
 
 public interface PersonRepository extends JpaRepository<Person, Integer>, QueryDslPredicateExecutor<Person> {
 
-	Set<Person> findByUsername(@Param("username") String username);
+	@Cacheable(value = "person", key = "#p0")
+	Person findByUsername(@Param("username") String username);
+
+	@Override
+	@CachePut(value = "person", key = "#p0.user.username")
+	Person save(Person person);
 
 	@Query("SELECT person FROM Person person where person.username = :username and person.networkId = :networkId")
 	Person findByUsernameAndNetworkId(@Param("username") String username, @Param("networkId") Integer networkId);
