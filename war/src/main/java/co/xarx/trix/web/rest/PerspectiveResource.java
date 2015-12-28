@@ -425,7 +425,7 @@ public class PerspectiveResource {
 				positionedCell = (iteratorPositionedCell.hasNext() ? iteratorPositionedCell.next() : null);
 				if(positionedCell == null){
 					endPostsPositioned = true;
-					if(endPostsNotPositioned && endPostsPositioned){
+					if(endPostsNotPositioned){
 						break;
 					}
 				}
@@ -434,7 +434,7 @@ public class PerspectiveResource {
 				notPositionedPost = (iteratorNotPositionedPost.hasNext() ? iteratorNotPositionedPost.next() :  null);
 				if(notPositionedPost == null){
 					endPostsNotPositioned = true;
-					if(endPostsNotPositioned && endPostsPositioned){
+					if(endPostsPositioned){
 						break;
 					}
 				}
@@ -446,7 +446,7 @@ public class PerspectiveResource {
 	private TermPerspectiveView convertTermToTermView(TermPerspective termPerspective){
 		TermPerspectiveView termView = new TermPerspectiveView();
 		termView.featuredRow = (termPerspective.featuredRow != null ? rowConverter.convertToView(termPerspective.featuredRow) : null);
-        termView.featuredRow = (termPerspective.homeRow != null ? rowConverter.convertToView(termPerspective.homeRow) : null);
+        termView.homeRow = (termPerspective.homeRow != null ? rowConverter.convertToView(termPerspective.homeRow) : null);
 		termView.ordinaryRows = (List<RowView>) rowConverter.convertToViews(rowRepository.findByPerspective(termPerspective));
 		termView.splashedRow = (termPerspective.splashedRow != null ? rowConverter.convertToView(termPerspective.splashedRow) : null); 
 		termView.termId = termPerspective.term.id;

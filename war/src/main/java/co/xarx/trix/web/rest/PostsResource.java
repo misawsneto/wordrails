@@ -50,10 +50,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -241,9 +238,39 @@ public class PostsResource {
 
 		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
 
-		MultiMatchQueryBuilder queryText;
 		BoolQueryBuilder mainQuery = boolQuery();
 
+        if(personId != null){
+            mainQuery = mainQuery.must(
+                    matchQuery("authorId", personId));
+        }
+
+        if(publicationType != null){
+            mainQuery = mainQuery.must(
+                    matchQuery("state", publicationType));
+        } else {
+            mainQuery = mainQuery.must(
+                    matchQuery("state", Post.STATE_PUBLISHED));
+        }
+
+        if(stationIdIntegers.size() > 0)
+            readableIds = stationIdIntegers;
+
+        BoolQueryBuilder stationQuery = boolQuery();
+        for(Integer stationId: readableIds){
+            stationQuery.should(
+                    matchQuery("stationId", String.valueOf(stationId)));
+        }
+        mainQuery = mainQuery.must(stationQuery);
+        FieldSortBuilder sort = null;
+
+        if(sortByDate != null && sortByDate){
+            sort = new FieldSortBuilder("date")
+                    .order(SortOrder.DESC);
+
+        }
+
+        MultiMatchQueryBuilder queryText;
 		if(q != null){
 			queryText = multiMatchQuery(q)
 					.field("body", 2)
@@ -255,46 +282,17 @@ public class PostsResource {
 					.prefixLength(1)
 					//.fuzziness(Fuzziness.AUTO)
 					;
-		} else {
-			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
-			response.content = new SearchView();
-			response.content.hits = 0;
-			response.content.posts = new ArrayList<PostView>();
-
-			return response;
+            mainQuery = mainQuery.must(queryText);
+//		} else {
+//			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
+//			response.content = new SearchView();
+//			response.content.hits = 0;
+//			response.content.posts = new ArrayList<PostView>();
+//            SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "body");
+//
+//			return response;
 		}
 
-		mainQuery = mainQuery.must(queryText);
-
-		if(personId != null){
-			mainQuery = mainQuery.must(
-					matchQuery("authorId", personId));
-		}
-
-		if(publicationType != null){
-			mainQuery = mainQuery.must(
-					matchQuery("state", publicationType));
-		} else {
-			mainQuery = mainQuery.must(
-					matchQuery("state", Post.STATE_PUBLISHED));
-		}
-
-		if(stationIdIntegers.size() > 0)
-			readableIds = stationIdIntegers;
-
-		BoolQueryBuilder stationQuery = boolQuery();
-		for(Integer stationId: readableIds){
-			stationQuery.should(
-					matchQuery("stationId", String.valueOf(stationId)));
-		}
-		mainQuery = mainQuery.must(stationQuery);
-		FieldSortBuilder sort = null;
-
-		if(sortByDate != null && sortByDate){
-			sort = new FieldSortBuilder("date")
-					.order(SortOrder.DESC);
-
-		}
 
 		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "body");
 
@@ -418,13 +416,14 @@ public class PostsResource {
 	}
 
     @GET
-    @Path("/search/findPostsByTag")
+    @Path("/search/findPostsByTags")
+    @Produces(MediaType.APPLICATION_JSON)
     public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tags") String tagsString, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
         if(tagsString == null || !tagsString.isEmpty()){
             // TODO: throw badrequest
         }
 
-        List<String> tags = Arrays.asList(tagsString.split(","));
+        Set<String> tags = new HashSet<String>(Arrays.asList(tagsString.split(",")));
 
         List<Post> posts = queryPersistence.findPostsByTag(tags, stationId, page, size);
 
