@@ -22,16 +22,21 @@ public class ElasticSearchService {
 		return client;
 	}
 
-	public ElasticSearchService(String cluster,  String host, Integer port){
-		startEsClient(cluster, host, port);
+
+	public ElasticSearchService(String cluster, String host, Integer port, String user, String password){
+		startEsClient(cluster, host, port, user, password);
 	}
 
 	public Client getElasticsearchClient(){
 		return client;
 	}
 
-	private void startEsClient(String cluster, String host, Integer port){
-		Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", cluster).build();
+	private void startEsClient(String cluster, String host, Integer port, String user, String password){
+		Settings settings = ImmutableSettings.settingsBuilder()
+				.put("cluster.name", cluster)
+				.put("shield.user", user + ":" + password)
+				.build();
+
 		client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
 
