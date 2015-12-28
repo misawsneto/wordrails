@@ -24,6 +24,7 @@ public class ElasticSearchService {
 
 
 	public ElasticSearchService(String cluster, String host, Integer port, String user, String password){
+        port = 9300;
 		startEsClient(cluster, host, port, user, password);
 	}
 

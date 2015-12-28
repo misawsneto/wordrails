@@ -110,8 +110,11 @@ public class WordrailsService {
         }
 
 		try {
+            network = cacheService.getNetworkByDomain(host);
+            if(network != null)
+			    return network;
             response.setStatus(400);
-			return cacheService.getNetworkByDomain(host);
+            return null;
 		} catch (Exception e) {
             throw new NotFoundException();
 		}
