@@ -38,3 +38,14 @@ curl -XPUT http://localhost:9200/trix_dev/post/_mapping -d '{
   }
 }'
 
+#----------------- security --------------------
+#Run it from elasticSearch root directory
+
+#Installing
+sudo bin/plugin install elasticsearch/license/latest
+sudo bin/plugin install elasticsearch/shield/latest
+
+#Create user with admin role. Password defined manually
+#password: tr1xsearch
+
+sudo bin/shield/esusers useradd trix_admin -r admin
