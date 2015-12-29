@@ -88,16 +88,6 @@ public class TestArtifactsFactory {
 		return term;
 	}
 
-	public static Bookmark createBookmark() {
-		Bookmark bookmark = new Bookmark();
-		bookmark.setNetworkId(NETWORK);
-		bookmark.setTenantId(TENANT);
-		bookmark.id = 10;
-		bookmark.person = createPerson();
-		bookmark.post = createPost();
-		return bookmark;
-	}
-
 	public static Person createPerson() {
 		Person person = new Person();
 		person.setNetworkId(NETWORK);

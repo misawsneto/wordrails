@@ -20,6 +20,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	Person findByUsername(@Param("username") String username);
 
 	@Override
+	@RestResource(exported = false)
 	@CachePut(value = "person", key = "#p0.user.username")
 	Person save(Person person);
 

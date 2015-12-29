@@ -1,11 +1,9 @@
 package co.xarx.trix.test;
 
 import co.xarx.trix.api.PostView;
-import co.xarx.trix.domain.Bookmark;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
-import co.xarx.trix.elasticsearch.domain.ESBookmark;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.domain.ESStation;
@@ -70,19 +68,6 @@ public class ModelMapperTest {
 
 		assertEquals(person.id, esPerson.id);
 		assertEquals(person.cover.hashs, esPerson.cover);
-	}
-
-	@Test
-	public void testBookmarkToESBookmarkMapping() throws Exception {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		Bookmark bookmark = TestArtifactsFactory.createBookmark();
-		ESBookmark esBookmark = modelMapper.map(bookmark, ESBookmark.class);
-		System.out.println(objectMapper.writeValueAsString(esBookmark));
-
-		assertEquals(bookmark.id, esBookmark.id);
-		assertEquals(bookmark.person.id, esBookmark.personId);
-		assertEquals(bookmark.post.id, esBookmark.postId);
 	}
 
 	@Test

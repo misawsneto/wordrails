@@ -1,4 +1,4 @@
-package co.xarx.trix.config;
+package co.xarx.trix.config.spring;
 
 import org.reflections.Reflections;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +10,7 @@ import javax.persistence.Entity;
 import java.util.Set;
 
 @Configuration
-public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
-
-//	@Value("${elasticsearch.host:'localhost'}")
-//	private String eshost;
-//	@Value("${elasticsearch.port:9300}")
-//	private Integer esport;
+public class RestConfig extends RepositoryRestMvcConfiguration {
 
 	@Override
 	protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
@@ -25,11 +20,4 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 		Set<Class<?>> entities = reflections.getTypesAnnotatedWith(Entity.class);
 		config.exposeIdsFor(entities.toArray(new Class<?>[0]));
 	}
-
-//	@Bean
-//	@PostConstruct
-//	public ElasticSearchService elasticsearchService() {
-//		return new ElasticSearchService(eshost, esport);
-//	}
-
 }

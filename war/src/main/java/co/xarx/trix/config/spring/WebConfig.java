@@ -23,6 +23,8 @@ public class WebConfig {
 		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
 		jedisConnectionFactory.setHostName("meminstance1");
 		jedisConnectionFactory.setPort(6379);
+		jedisConnectionFactory.setPassword("108dbd3786884ddc94ec2669e948273b09828ec44FFd55a6cdd3b007c" +
+				"c018a16e93cb1Fc68060a9c7095324056d1bF9b08Fdd1b78c1c96351ceb129e6e959357");
 		return jedisConnectionFactory;
 	}
 }

@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,9 +46,6 @@ public class Person extends BaseEntity implements Serializable {
 	@OneToMany
 	public Set<Person> following;
 
-	@OneToMany(mappedBy = "person")
-	public Set<Bookmark> bookmarks;
-
 	@OrderColumn(name = "order")
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "person_bookmark",
@@ -79,6 +78,10 @@ public class Person extends BaseEntity implements Serializable {
 	public String imageUrl;
 
 	public String coverUrl;
+
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date lastLogin;
 
 	public Integer imageId;
 	public Integer imageSmallId;
@@ -216,14 +219,6 @@ public class Person extends BaseEntity implements Serializable {
 
 	public void setFollowing(Set<Person> following) {
 		this.following = following;
-	}
-
-	public Set<Bookmark> getBookmarks() {
-		return bookmarks;
-	}
-
-	public void setBookmarks(Set<Bookmark> bookmarks) {
-		this.bookmarks = bookmarks;
 	}
 
 	public Set<Recommend> getRecommends() {

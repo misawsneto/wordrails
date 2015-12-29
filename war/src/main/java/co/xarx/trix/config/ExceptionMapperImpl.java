@@ -43,7 +43,9 @@ public class ExceptionMapperImpl implements ExceptionMapper<Throwable> {
 			status = Status.INTERNAL_SERVER_ERROR;
 		}
 
-		String message = throwable.getMessage() == null ? "" : throwable.getMessage();
-		return Response.status(status).entity("{\"error\": \"" + throwable.getClass() + " - " + message.replaceAll("\"", "\\\"") + "\"}").type(MediaType.APPLICATION_JSON).build();
-	}
+//		String stackTrace = ExceptionUtils.getStackTrace(throwable);
+        String message = throwable.getMessage();
+        message = message != null && !message.isEmpty() ? message.replaceAll("\"", "\\\"") : "";
+		return Response.status(status).entity("{\"error\": \"" + throwable.getClass() + " - " + message +"\"}").type(MediaType.APPLICATION_JSON).build();
+    }
 }

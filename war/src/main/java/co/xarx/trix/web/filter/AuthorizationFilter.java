@@ -1260,41 +1260,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetBookmarksAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetBookmarkAuthorized(Integer bookmarkId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindBookmarksByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindBookmarksByPersonIdAuthorized(Integer personId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindBookmarksByPostIdAuthorized(Integer postId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetBookmarkPostAuthorized(Integer bookmarkId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetBookmarkPersonAuthorized(Integer bookmarkId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isGetRecommendsAuthorized() {
 		return false;
 	}
@@ -1311,11 +1276,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetRecommendPersonAuthorized(Integer recommendId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonBookmarksAuthorized(Integer personId) {
 		return true;
 	}
 
@@ -1395,16 +1355,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindBookmarksByPersonIdAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindBookmarkByPersonIdAndPostIdAuthorized(Integer personId, Integer postId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isFindRecommendByPersonIdAndPostIdAuthorized(Integer personId, Integer postId) {
 		return true;
 	}
@@ -1416,11 +1366,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindRecommendByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindBookmarkByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
 

@@ -31,6 +31,10 @@ public class ElasticSearchConfig {
 	private Integer port;
 	@Value("${elasticsearch.cluster:'trix'}")
 	private String cluster;
+	@Value("${elasticsearch.username:'trix_admin'}")
+	private String user;
+	@Value("${elasticsearch.password}")
+	private String password;
 
 	@Bean(name = "elasticSearchExecutorFactory")
 	public FactoryBean elasticSearchExecutorFactory() {
@@ -43,7 +47,10 @@ public class ElasticSearchConfig {
 
 	@Bean
 	public Client elasticSearchClient() {
-		Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", cluster).build();
+		Settings settings = ImmutableSettings.settingsBuilder()
+				.put("cluster.name", cluster)
+				.put("shield.user", user + ":" + password)
+				.build();
 		return new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(host, port));
 	}
 

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Entity
+//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"type", "networkId", "originalHash"}))
 public class Image extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6607038985063216969L;

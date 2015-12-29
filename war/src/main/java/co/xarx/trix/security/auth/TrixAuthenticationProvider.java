@@ -74,7 +74,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			person.coverId = 0;
 			person.imageHash = "";
 			person.coverHash = "";
-			person.bookmarks = new HashSet<>();
 			person.recommends = new HashSet<>();
 
 			return person;

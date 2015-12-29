@@ -12,6 +12,7 @@ import co.xarx.trix.dto.StationTermsDto;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
@@ -39,9 +40,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Path("/posts")
@@ -62,6 +61,8 @@ public class PostsResource {
 	private WordrailsService wordrailsService;
 	@Autowired
 	private PostRepository postRepository;
+	@Autowired
+	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostConverter postConverter;
 	@Autowired
@@ -345,5 +346,22 @@ public class PostsResource {
 	@Transactional
 	public Response promote(@PathParam("postId") Integer postId, StationTermsDto stationTerms){
 		return Response.status(Status.OK).build();
+	}
+
+	@GET
+	@Path("/search/findPostsByTags")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tags") String tagsString, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+		if (tagsString == null || !tagsString.isEmpty()) {
+			// TODO: throw badrequest
+		}
+
+		Set<String> tags = new HashSet<String>(Arrays.asList(tagsString.split(",")));
+
+		List<Post> posts = queryPersistence.findPostsByTag(tags, stationId, page, size);
+
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
 	}
 }

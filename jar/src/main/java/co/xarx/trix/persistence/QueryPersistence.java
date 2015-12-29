@@ -2,10 +2,13 @@ package co.xarx.trix.persistence;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import co.xarx.trix.domain.Post;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -156,4 +159,12 @@ public class QueryPersistence {
 		manager.createQuery("delete from Row where type = 'S' and splashedPerspective.id = :perspectiveId and id <> :notId")
 				.setParameter("perspectiveId", perspectiveId).setParameter("notId", notId).executeUpdate();
 	}
+
+    public List<Post> findPostsByTag(Set<String> tags, Integer stationId, int page, int size) {
+        return manager.createQuery("select p from Post p join p.tags tgs where tgs in :tags and p.station.id = :stationId", Post.class)
+                .setParameter("tags", tags).setParameter("stationId", stationId)
+                .setMaxResults(size)
+                .setFirstResult(page * size)
+                .getResultList();
+    }
 }

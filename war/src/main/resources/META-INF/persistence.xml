@@ -41,7 +41,6 @@
 		<class>co.xarx.trix.domain.PasswordReset</class>
 		<class>co.xarx.trix.domain.Notification</class>
 		<class>co.xarx.trix.domain.Recommend</class>
-		<class>co.xarx.trix.domain.Bookmark</class>
 		<class>co.xarx.trix.domain.Picture</class>
 		<class>co.xarx.trix.domain.PostRead</class>
 		<class>co.xarx.trix.domain.PersonNetworkRegId</class>
