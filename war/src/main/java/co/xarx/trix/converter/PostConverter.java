@@ -1,11 +1,11 @@
 package co.xarx.trix.converter;
 
+import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.api.PostView;
 import co.xarx.trix.util.TrixUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,7 +56,9 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.imageSmallId = post.imageSmallId;
 		postView.imageMediumId = post.imageMediumId;
 		postView.imageLargeId = post.imageLargeId;
-		
+
+
+
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;
 		postView.topper = post.topper;
@@ -100,7 +102,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.stationId = post.station.id;
 		postView.notify = post.notify;
         postView.tags = post.tags;
-		
+
 		return postView;
 	}
 
