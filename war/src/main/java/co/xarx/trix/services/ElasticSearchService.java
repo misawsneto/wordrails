@@ -77,9 +77,9 @@ public class ElasticSearchService {
 			List<MultiTenantEntity> stations = new ArrayList(stationRepository.findAll());
 			List<MultiTenantEntity> people = new ArrayList(personRepository.findAll());
 			List<MultiTenantEntity> posts = new ArrayList(postRepository.findAll());
-			posts.addAll(postScheduledRepository.findAll());
-			posts.addAll(postTrashRepository.findAll());
-			posts.addAll(postDraftRepository.findAll());
+//			posts.addAll(postScheduledRepository.findAll());
+//			posts.addAll(postTrashRepository.findAll());
+//			posts.addAll(postDraftRepository.findAll());
 
 			mapThenSave(stations, ESStation.class, esStationRepository);
 			mapThenSave(posts, ESPost.class, esPostRepository);

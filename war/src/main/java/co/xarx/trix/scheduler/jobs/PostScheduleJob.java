@@ -2,21 +2,18 @@ package co.xarx.trix.scheduler.jobs;
 
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostScheduled;
+import co.xarx.trix.persistence.PostScheduledRepository;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.PostService;
-import co.xarx.trix.persistence.PostScheduledRepository;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-@Component
-@Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
+@Service
 public class PostScheduleJob extends QuartzJobBean {
 
 	@Autowired

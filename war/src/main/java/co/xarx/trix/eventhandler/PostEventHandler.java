@@ -88,18 +88,22 @@ public class PostEventHandler {
 	public void handleAfterCreate(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			schedulerService.schedule(post.id, post.scheduledDate);
-		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
-			mobileService.buildNotification(post);
+		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
+			if (post.notify) {
+				mobileService.buildNotification(post);
+			}
+
+			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 		}
-		elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 	}
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			schedulerService.schedule(post.id, post.scheduledDate);
+		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
+			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 		}
-		elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 	}
 
 	@HandleBeforeDelete
@@ -117,7 +121,9 @@ public class PostEventHandler {
 			postReadRepository.deleteByPost(post);
 			notificationRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
-			elasticSearchService.deleteIndex(post.id, esPostRepository); // evitando bug de remoção de post que tiveram post alterado.
+			if (post.state.equals(Post.STATE_PUBLISHED)) {
+				elasticSearchService.deleteIndex(post.id, esPostRepository); // evitando bug de remoção de post que tiveram post alterado.
+			}
 		} else {
 			throw new UnauthorizedException();
 		}

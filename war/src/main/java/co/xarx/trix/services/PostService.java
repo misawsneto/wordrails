@@ -72,6 +72,8 @@ public class PostService {
 	private ModelMapper modelMapper;
 	@Autowired
 	private ElasticsearchTemplate elasticsearchTemplate;
+	@Autowired
+	private ElasticSearchService elasticSearchService;
 
 	public Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
 		boolQuery.must(matchQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
@@ -134,15 +136,6 @@ public class PostService {
 		return new ImmutablePair(total, postView);
 	}
 
-	public void saveIndex(Post post) {
-		ESPost esPost = modelMapper.map(post, ESPost.class);
-		esPostRepository.save(esPost);
-	}
-
-	public void deleteIndex(Integer postId) {
-		esPostRepository.delete(postId);
-	}
-
 	public Post convertPost(int postId, String state) {
 		Post dbPost = postRepository.findOne(postId);
 
@@ -161,7 +154,13 @@ public class PostService {
 			dbPost.state = state;
 
 			queryPersistence.changePostState(postId, state);
-			saveIndex(dbPost);
+
+			if (state.equals(Post.STATE_PUBLISHED)) {
+				dbPost = postRepository.findOne(postId); //do it again so modelmapper don't cry... stupid framework
+				elasticSearchService.saveIndex(dbPost, ESPost.class, esPostRepository);
+			} else {
+				elasticSearchService.deleteIndex(postId, esPostRepository);
+			}
 		}
 
 		return dbPost;

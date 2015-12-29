@@ -21,14 +21,13 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 
 	@Autowired
 	PostRepository postRepository;
+	@Autowired
+	TermConverter termConverter;
 
 	@Override
 	public Post convertFrom(PostView postView) {
 		return postRepository.findOne(postView.id);
 	}
-
-    @Autowired
-    TermConverter termConverter;
 
 	@Override
 	public PostView convertTo(Post post) {
@@ -39,7 +38,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.slug = post.slug;
 
 		postView.tags = post.tags;
-		if(post.terms != null && !post.terms.isEmpty()) {
+		if (post.terms != null && !post.terms.isEmpty()) {
 			postView.categories = new HashSet<>();
 			for (Term term : post.terms) {
 				postView.categories.add(new Category(term.id, term.name));
@@ -51,6 +50,9 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.imageSmallHash = post.featuredImage.hashs.get(Image.SIZE_SMALL);
 			postView.imageMediumHash = post.featuredImage.hashs.get(Image.SIZE_MEDIUM);
 			postView.imageLargeHash = post.featuredImage.hashs.get(Image.SIZE_LARGE);
+			postView.imageCaptionText = post.featuredImage.caption;
+			postView.imageCreditsText = post.featuredImage.credits;
+			postView.imageTitleText = post.featuredImage.title;
 			if (post.featuredImage != null && post.featuredImage.hashs != null && post.featuredImage.hashs.size() == 0) {
 				postView.imageSmallHash = post.imageSmallHash;
 				postView.imageMediumHash = post.imageMediumHash;
@@ -71,7 +73,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.authorName = post.author.name;
 			postView.authorUsername = post.author.username;
 
-			if(post.author.cover != null) {
+			if (post.author.cover != null) {
 				postView.authorCoverMediumHash = post.author.coverMediumHash;
 			}
 			postView.authorImageSmallHash = post.author.imageSmallHash;
@@ -84,7 +86,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.authorTwitter = post.author.twitterHandle;
 		}
 
-        postView.terms = getTermViews(post.terms);
+		postView.terms = getTermViews(post.terms);
 		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
 		postView.externalVideoUrl = post.externalVideoUrl;
 		postView.readTime = post.readTime;
@@ -92,27 +94,22 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.scheduledDate = post.scheduledDate;
 		postView.lat = post.lat;
 		postView.lng = post.lng;
-		postView.imageCaptionText = post.imageCaptionText;
-		postView.imageCreditsText = post.imageCreditsText;
-		postView.imageTitleText = post.imageTitleText;
 		postView.stationName = post.station.name;
 		postView.stationId = post.station.id;
 		postView.notify = post.notify;
-        postView.tags = post.tags;
+		postView.tags = post.tags;
 
 		return postView;
 	}
 
 	public PostView convertToView(Post post, boolean addBody) {
 		PostView postView = convertTo(post);
-		if(addBody)
-			postView.body = post.body;
+		if (addBody) postView.body = post.body;
 		return postView;
 	}
 
-    public List<TermView> getTermViews(Collection<Term> terms){
-        if(terms != null && terms.size() > 0)
-            return termConverter.convertToViews(new ArrayList<>(terms));
-        return  null;
-    }
+	public List<TermView> getTermViews(Collection<Term> terms) {
+		if (terms != null && terms.size() > 0) return termConverter.convertToViews(new ArrayList<>(terms));
+		return null;
+	}
 }
