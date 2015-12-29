@@ -19,13 +19,12 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 	@Value("${elasticsearch.host:'localhost'}")
 	private String esHost;
 	@Value("${elasticsearch.port:9300}")
-	private Integer esport;
+    private Integer esPort;
     @Value("${elasticsearch.cluster:'trix'}")
-    private String escluster;
-	private Integer esPort;
-	@Value("${elasticsearch.username:trix_admin}")
+    private String esCluster;
+	@Value("${elasticsearch.username:'trix_admin'}")
 	private String esUser;
-	@Value("${elasticsearch.password:tr1xsearch}")
+	@Value("${elasticsearch.password:'tr1xsearch'}")
 	private String esPassword;
 
 	@Override
@@ -40,7 +39,7 @@ public class WordRailsConfiguration extends RepositoryRestMvcConfiguration {
 	@Bean
 	@PostConstruct
 	public ElasticSearchService elasticsearchService() {
-		return new ElasticSearchService(escluster, esHost, esPort, esUser, esPassword);
+		return new ElasticSearchService(esCluster, esHost, esPort, esUser, esPassword);
 	}
 
 //	@Bean
