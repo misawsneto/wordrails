@@ -392,7 +392,7 @@ function getCustomStyle(color, perspective, header) {
 	"i.md-default-theme{"+
 		"background-color:" + color + ";" +
 		"color:" + textColorEval(color) +
-	"}"
+	"}"+
 
 	"md-checkbox.md-default-theme.md-checked .md-icon:after{" +
 	"border-color:" + textColorEval(color) +
