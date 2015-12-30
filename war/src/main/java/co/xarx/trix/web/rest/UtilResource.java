@@ -694,8 +694,7 @@ public class UtilResource {
 	@DELETE
 	@Path("/deleteNetwork/{id}")
 	public Response deleteNetwork (@Context HttpServletRequest request, @PathParam("id") Integer networkId) {
-		String host = request.getHeader("Host");
-		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")) {
+        if(isLocal(request.getHeader("Host"))) {
 
 			Network network = networkRepository.findOne(networkId);
 
