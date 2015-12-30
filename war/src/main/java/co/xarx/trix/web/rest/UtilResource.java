@@ -3,6 +3,7 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.*;
 import co.xarx.trix.persistence.*;
@@ -697,6 +698,7 @@ public class UtilResource {
         if(isLocal(request.getHeader("Host"))) {
 
 			Network network = networkRepository.findOne(networkId);
+            TenantContextHolder.setCurrentTenantId(network.id);
 
 			List<NetworkRole> nr = personRepository.findNetworkAdmin();
 
