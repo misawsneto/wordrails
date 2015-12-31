@@ -90,6 +90,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 				trix.getPost(postId, 'postProjection').success(function(response){
 					createPostObject();
 					$scope.app.editingPost = angular.extend($scope.app.editingPost, response);
+					customSlug = true;
 					setWritableStationById(response.station.id)
 					updateTermTree();
 					$timeout(function() {
@@ -452,8 +453,6 @@ function updateTermTree(){
 // ------------------- slug watch ------------
 var customSlug = false;
 $scope.$watch('app.editingPost.title', function(newVal){
-	/*if(newVal && (!$scope.app.editingPost.slug || $scope.app.editingPost.slug.trim() == ''))
-	$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';*/
 	if(newVal && !customSlug)
 		$scope.app.editingPost.slug = newVal ? newVal.toSlug() : '';
 })
@@ -810,6 +809,7 @@ function createPost(state){
 			trix.getPostScheduled(postId, "postProjection").success(function(postResponse){
 				$scope.schedulerPopoverOpen = false;
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, postResponse);
+				customSlug = true;
 				$timeout(function() {
 					$scope.app.editingPost.editingExisting = false;
 					window.onbeforeunload = null;
@@ -834,6 +834,7 @@ function createPost(state){
 			$scope.app.refreshPerspective();
 			trix.getPostDraft(postId, "postProjection").success(function(postResponse){
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, postResponse);
+				customSlug = true;
 				$timeout(function() {
 					$scope.app.editingPost.editingExisting = false;
 					window.onbeforeunload = null;
@@ -855,6 +856,7 @@ function createPost(state){
 			trix.getPost(postId, 'postProjection').success(function(response){
 				createPostObject();
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, response);
+				customSlug = true;
 				if($scope.app.editingPost.imageLargeId)
 				$scope.app.editingPost.uploadedImage = {filelink: TRIX.baseUrl + "/api/files/"+$scope.app.editingPost.imageLargeId+"/contents" }
 				setWritableStationById(response.station.id)
