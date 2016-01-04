@@ -2,7 +2,7 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
@@ -12,8 +12,8 @@ import co.xarx.trix.eventhandler.StationRoleEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.mobile.notification.APNService;
-import co.xarx.trix.mobile.notification.GCMService;
+import co.xarx.trix.services.APNService;
+import co.xarx.trix.services.GCMService;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
@@ -82,8 +82,6 @@ public class PersonsResource {
 	private PostRepository postRepository;
 	@Autowired
 	private PostConverter postConverter;
-	@Autowired
-	private BookmarkRepository bookmarkRepository;
 	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
@@ -283,7 +281,7 @@ public class PersonsResource {
 			User user = nr.get(0).person.user;
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password);
+			authProvider.passwordAuthentication(user, user.password);
 
 			network.networkCreationToken = null;
 			networkRepository.save(network);
@@ -335,7 +333,7 @@ public class PersonsResource {
 			person = personRepository.findOne(personId);
 		}
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, TenantContextHolder.getCurrentTenantId());
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, TenantContextHolder.getCurrentNetworkId());
 
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
@@ -498,7 +496,7 @@ public class PersonsResource {
 			}
 
 			NetworkRole networkRole = new NetworkRole();
-			networkRole.network = networkRepository.findOne(TenantContextHolder.getCurrentTenantId());
+			networkRole.network = networkRepository.findOne(TenantContextHolder.getCurrentNetworkId());
 			networkRole.person = person;
 			networkRole.admin = false;
 			networkRolesRepository.save(networkRole);
@@ -751,7 +749,7 @@ public class PersonsResource {
 		Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
 		if(initData.person != null && !initData.person.username.equals("wordrails")){
 			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
-			List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(initData.person.id, pageable2);
+			List<Integer> bookmarks = new ArrayList(person.getBookmarkPosts());
 			List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
 			initData.postsRead = postsRead;
 			initData.bookmarks = bookmarks;
@@ -801,7 +799,7 @@ public class PersonsResource {
 		Person person = authProvider.getLoggedPerson();
 		List<BooleanResponse> resp = new ArrayList<>();
 
-		if(bookmarkRepository.findBookmarkByPersonIdAndPostId(person.id, postId)!=null){
+		if(person.getBookmarkPosts().contains(postId)){
 			BooleanResponse bool = new BooleanResponse();
 			bool.response = true;
 			resp.add(bool);

@@ -1,17 +1,19 @@
 package co.xarx.trix.converter;
 
+import co.xarx.trix.api.Category;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.util.TrixUtil;
+import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Component
@@ -21,24 +23,28 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 	PostRepository postRepository;
 
 	@Override
-	public Post convertToEntity(PostView postView) {
-		return postRepository.findOne(postView.postId);
+	public Post convertFrom(PostView postView) {
+		return postRepository.findOne(postView.id);
 	}
 
     @Autowired
     TermConverter termConverter;
 
 	@Override
-	public PostView convertToView(Post post) {
+	public PostView convertTo(Post post) {
 		PostView postView = new PostView();
-		postView.postId = post.id;
+		postView.id = post.id;
 		postView.title = post.title;
 		postView.subheading = post.subheading;
 		postView.slug = post.slug;
 
-		postView.smallId = post.imageSmallId;
-		postView.mediumId = post.imageMediumId;
-		postView.largeId = post.imageLargeId;
+		postView.tags = post.tags;
+		if(post.terms != null && !post.terms.isEmpty()) {
+			postView.categories = new HashSet<>();
+			for (Term term : post.terms) {
+				postView.categories.add(new Category(term.id, term.name));
+			}
+		}
 
 		if (post.featuredImage != null) {
 			postView.featuredImage = post.featuredImage.hashs;
@@ -52,12 +58,10 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			}
 		}
 
-		postView.imageId = post.imageId;
-		postView.imageSmallId = post.imageSmallId;
-		postView.imageMediumId = post.imageMediumId;
-		postView.imageLargeId = post.imageLargeId;
-
-
+//		postView.imageId = post.imageId;
+//		postView.imageSmallId = post.imageSmallId;
+//		postView.imageMediumId = post.imageMediumId;
+//		postView.imageLargeId = post.imageLargeId;
 
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;
@@ -65,14 +69,11 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.readsCount = post.readsCount;
 		postView.recommendsCount = post.recommendsCount;
 		postView.commentsCount = post.commentsCount;
-		postView.snippet = TrixUtil.simpleSnippet(post.body, 100);
+		postView.snippet = StringUtil.simpleSnippet(post.body);
 
 		if (post.author != null) {
 			postView.authorName = post.author.name;
 			postView.authorUsername = post.author.username;
-			postView.authorCoverMediumId = post.author.coverMediumId;
-			postView.authorImageSmallId = post.author.imageSmallId;
-			postView.authorSmallImageId = post.author.imageSmallId; //is this being used?
 
 			if(post.author.cover != null) {
 				postView.authorCoverMediumHash = post.author.coverMediumHash;
@@ -107,7 +108,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 	}
 
 	public PostView convertToView(Post post, boolean addBody) {
-		PostView postView = convertToView(post);
+		PostView postView = convertTo(post);
 		if(addBody)
 			postView.body = post.body;
 		return postView;

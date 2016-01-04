@@ -1,16 +1,15 @@
 package co.xarx.trix.web.rest;
 
 
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.eventhandler.*;
+import co.xarx.trix.eventhandler.NetworkEventHandler;
+import co.xarx.trix.eventhandler.PersonEventHandler;
+import co.xarx.trix.eventhandler.StationEventHandler;
+import co.xarx.trix.eventhandler.TaxonomyEventHandler;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.persistence.elasticsearch.BookmarkEsRespository;
-import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.script.ImageScript;
-import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.StringUtil;
 import org.joda.time.DateTime;
@@ -45,48 +44,39 @@ import java.util.stream.Collectors;
 public class UtilResource {
 	private @Context HttpServletRequest request;
 
-	private @Autowired
-	NetworkEventHandler networkEventHandler;
-	private @Autowired
-	PersonEventHandler personEventHandler;
-	private @Autowired
-	TaxonomyEventHandler taxonomyEventHandler;
-	private @Autowired
-	StationEventHandler stationEventHandler;
-	private @Autowired PersonRepository personRepository;
-	private @Autowired
-	StationRoleEventHandler stationRoleEventHandler;
-	private @Autowired
-	NetworkRolesRepository networkRolesRepository;
-	private @Autowired
-	StationRepository stationRepository;
-	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
-	private @Autowired NetworkRepository networkRepository;
-	private @Autowired
-	WordrailsService wordrailsService;
-	private @Autowired
-	TaxonomyRepository taxonomyRepository;
-	private @Autowired
-	PostRepository postRepository;
-	private @Autowired
-	TermPerspectiveRepository termPerspectiveRepository;
-	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
-	private @Autowired InvitationRepository invitationRepository;
-	public @Autowired FileRepository fileRepository;
-	public @Autowired
-	PerspectiveEsRepository perspectiveEsRepository;
+	@Autowired
+	private NetworkEventHandler networkEventHandler;
+	@Autowired
+	private PersonEventHandler personEventHandler;
+	@Autowired
+	private TaxonomyEventHandler taxonomyEventHandler;
+	@Autowired
+	private StationEventHandler stationEventHandler;
+	@Autowired
+	private PersonRepository personRepository;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private NetworkRepository networkRepository;
+	@Autowired
+	private TaxonomyRepository taxonomyRepository;
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private TermPerspectiveRepository termPerspectiveRepository;
+	@Autowired
+	private StationPerspectiveRepository stationPerspectiveRepository;
+	@Autowired
+	private InvitationRepository invitationRepository;
 
-	public @Autowired CacheService cacheService;
+	@Autowired
+	private CacheService cacheService;
 
-	private @PersistenceContext EntityManager manager;
-
-	private @Autowired
-	PostEsRepository postEsRepository;
-
-	private @Autowired
-	BookmarkEsRespository bookmarkEsRespository;
+	private
+	@PersistenceContext
+	EntityManager manager;
 
 	@GET
 	@Path("/updateDefaultStationPerspective")
@@ -589,8 +579,7 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-	private @Autowired ImageRepository imageRepository;
-	private @Autowired BookmarkRepository bookmarkRepository;
+	@Autowired private ImageRepository imageRepository;
 	@Autowired private TermRepository termRepository;
 	@Autowired private RowRepository rowRepository;
 
@@ -705,7 +694,7 @@ public class UtilResource {
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password);
+			authProvider.passwordAuthentication(user, user.password);
 
 			List<Station> stations = stationRepository.findByNetworkId(networkId);
 			for (Station station: stations){
@@ -738,7 +727,7 @@ public class UtilResource {
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password);
+			authProvider.passwordAuthentication(user, user.password);
 
 			TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTermNull(perspectiveId);
 
@@ -773,18 +762,6 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@Autowired
-	private AmazonCloudService amazon;
-
-	@POST
-	@Path("/uploadAmazonImages")
-	public Response uploadAmazonImages(@Context HttpServletRequest request) {
-		if(isLocal(request.getHeader("Host"))) {
-			amazon.uploadAmazonImages();
-		}
-		return Response.status(Status.OK).build();
-	}
-
 	private boolean isLocal(String host) {
 		return host.contains("0:0:0:0:0:0:0") ||
 				host.contains("0.0.0.0") ||
@@ -798,7 +775,7 @@ public class UtilResource {
         User user = nr.get(0).person.user;
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-        authProvider.passwordAuthentication(user.username, user.password);
+        authProvider.passwordAuthentication(user, user.password);
         return Response.status(Status.OK).build();
     }
 
@@ -826,78 +803,6 @@ public class UtilResource {
 	}
 
 	@GET
-	@Path("/indexPostsToElastisearch")
-	@Transactional(readOnly=false)
-	public void indexPostsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
-			for(int i = 0; i < all.size(); i++){
-				postEsRepository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
-	@GET
-	@Path("/indexPersonsToElastisearch")
-	@Transactional(readOnly=false)
-	public void indexPersonsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<Person> all = personRepository.findAllPostsOrderByIdDesc();
-			for(int i = 0; i < all.size(); i++){
-				personRepository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
-	@GET
-	@Path("/indexPerspectivesToElastisearch")
-	@Transactional(readOnly=false)
-	public void indexPerspectivesToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<TermPerspective> all = termPerspectiveRepository.findAll();
-			for(int i = 0; i < all.size(); i++){
-				perspectiveEsRepository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
-	@GET
-	@Path("/indexBookmarksToElastisearch")
-	@Transactional(readOnly=false)
-	public void indexBookmarksToElastisearch() throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<Bookmark> all = bookmarkRepository.findAll();
-			for(int i = 0; i < all.size(); i++){
-				bookmarkEsRespository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
-	@GET
 	@Path("/stationNetwork")
 	@Transactional
 	public void stationNetwork(){
@@ -914,34 +819,17 @@ public class UtilResource {
 		}
 	}
 
-
-	@GET
-	@Path("/deleteAllPerspectivesFromIndex")
-	@Transactional(readOnly=false)
-	public void deleteAllPerspectivesFromIndex(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<StationPerspective> all = stationPerspectiveRepository.findAll();
-			for(int i = 0; i < all.size(); i++){
-				perspectiveEsRepository.deleteByStationPerspective(all.get(i).id);
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
 	@Autowired
-	private ImageScript imageScript;
+	private AsyncService asyncService;
+	@Autowired
+	public ImageScript imageScript;
 
 	@GET
 	@Path("/addPicturesToImages")
-	@Transactional(readOnly=false)
+	@Transactional
 	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {
 		if(isLocal(request.getHeader("Host"))){
-			imageScript.addPicturesToImages();
+			asyncService.run(() -> imageScript.addPicturesToImages());
 		}
 	}
 

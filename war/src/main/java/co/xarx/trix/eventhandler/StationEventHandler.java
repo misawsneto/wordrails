@@ -1,53 +1,63 @@
 package co.xarx.trix.eventhandler;
 
-import java.util.*;
-
-import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.elasticsearch.domain.ESStation;
+import co.xarx.trix.elasticsearch.repository.ESStationRepository;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.CacheService;
+import co.xarx.trix.services.ElasticSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.core.annotation.HandleAfterCreate;
-import org.springframework.data.rest.core.annotation.HandleAfterSave;
-import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
-import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
-import org.springframework.data.rest.core.annotation.HandleBeforeSave;
-import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.xarx.trix.services.CacheService;
+import java.util.*;
 
 @RepositoryEventHandler(Station.class)
 @Component
 public class StationEventHandler {
-	@Autowired StationRolesRepository personStationRolesRepository;
-	@Autowired PostEventHandler postEventHandler;
+
+	@Autowired
+	StationRolesRepository personStationRolesRepository;
+	@Autowired
+	PostEventHandler postEventHandler;
 	@Autowired
 	PostRepository postRepository;
-	@Autowired StationPerspectiveRepository stationPerspectiveRepository;
+	@Autowired
+	StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
 	StationRepository stationRepository;
 	@Autowired
 	StationSecurityChecker stationSecurityChecker;
-	@Autowired TaxonomyEventHandler taxonomyEventHandler;
+	@Autowired
+	TaxonomyEventHandler taxonomyEventHandler;
 	@Autowired
 	TaxonomyRepository taxonomyRepository;
-	@Autowired NotificationRepository notificationRepository;
-	@Autowired PostReadRepository postReadRepository;
-	@Autowired private TrixAuthenticationProvider authProvider;
-	@Autowired CacheService cacheService;
-	@Autowired QueryPersistence queryPersistence;
-	@Autowired TermRepository termRepository;
+	@Autowired
+	NotificationRepository notificationRepository;
+	@Autowired
+	PostReadRepository postReadRepository;
+	@Autowired
+	CacheService cacheService;
+	@Autowired
+	QueryPersistence queryPersistence;
+	@Autowired
+	TermRepository termRepository;
 	@Autowired
 	TermPerspectiveRepository termPerspectiveRepository;
 	@Autowired
 	RowRepository rowRepository;
 	@Autowired
-	PerspectiveEsRepository perspectiveEsRepository;
-	@Autowired StationPerspectiveEventHandler stationPerspectiveEventHandler;
+	StationPerspectiveEventHandler stationPerspectiveEventHandler;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private ElasticSearchService elasticSearchService;
+	@Autowired
+	private ESStationRepository esStationRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -165,10 +175,7 @@ public class StationEventHandler {
 
 		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
-
-		for (TermPerspective tp: stationPerspective.perspectives)
-			perspectiveEsRepository.save(tp);
-
+		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
 	}
 
 	@HandleBeforeSave
@@ -227,7 +234,8 @@ public class StationEventHandler {
 			if(notifications != null && notifications.size() > 0)
 				notificationRepository.delete(notifications);
 
-			//for(StationPerspective p: stationsPerspectives)
+
+			elasticSearchService.deleteIndex(station.getId(), esStationRepository);
 
 		}else{
 			throw new UnauthorizedException();
@@ -237,6 +245,7 @@ public class StationEventHandler {
 	@HandleAfterSave
 	@Transactional
 	public void handleAfterSave(Station station){
+		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
 		cacheService.updateStation(station.id);
 	}
 }

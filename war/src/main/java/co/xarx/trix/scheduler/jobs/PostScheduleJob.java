@@ -2,6 +2,7 @@ package co.xarx.trix.scheduler.jobs;
 
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostScheduled;
+import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.PostService;
 import co.xarx.trix.persistence.PostScheduledRepository;
 import org.quartz.JobDataMap;
@@ -19,6 +20,8 @@ import java.util.Date;
 public class PostScheduleJob extends QuartzJobBean {
 
 	@Autowired
+	private MobileService mobileService;
+	@Autowired
 	private PostService postService;
 	@Autowired
 	private PostScheduledRepository postScheduledRepository;
@@ -35,7 +38,7 @@ public class PostScheduleJob extends QuartzJobBean {
 		PostScheduled scheduledPost = postScheduledRepository.findOne(id);
 		if (scheduledPost != null) {
 			if (scheduledPost.notify) {
-				postService.buildNotification(scheduledPost);
+				mobileService.buildNotification(scheduledPost);
 			}
 
 			scheduledPost.date = new Date();

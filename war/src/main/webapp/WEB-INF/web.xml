@@ -45,19 +45,23 @@
 	<!-- RESTEasy -->
 
 	<!-- Spring -->
-	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class> 
+	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
 		</listener> -->
 	<listener>
-		<listener-class>co.xarx.trix.config.WordRailsContextLoaderListener</listener-class>
+		<listener-class>co.xarx.trix.config.TrixContextLoaderListener</listener-class>
 	</listener>
+
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>
+			org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+		</param-value>
+	</context-param>
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath:applicationContext.xml
-			classpath:applicationContext-quartz.xml
-			classpath:applicationContext-integration.xml
-			classpath:applicationContext-security.xml
+			co.xarx.trix.config.spring
 		</param-value>
 	</context-param>
 

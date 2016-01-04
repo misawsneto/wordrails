@@ -3,10 +3,7 @@ package co.xarx.trix.domain.query;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Entity
+@Table(name = "query_pageable")
 public class PageableQuery extends BaseEntity implements Query {
 
 	@Transient
@@ -26,17 +24,17 @@ public class PageableQuery extends BaseEntity implements Query {
 	@Transient
 	private Set<Integer> indexExceptions; //indexes that are already filled
 
+	@JoinColumn(name = "object_query_id")
 	@OneToOne(cascade = CascadeType.ALL)
-	public ElasticSearchQuery query;
+	public BaseObjectQuery objectQuery;
 
 	@Override
-	public ElasticSearchQuery getElasticSearchQuery() {
-		return query;
+	public BaseObjectQuery getObjectQuery() {
+		return objectQuery;
 	}
 
-	@Override
-	public void setElasticSearchQuery(ElasticSearchQuery query) {
-		this.query = query;
+	public void setObjectQuery(ObjectQuery objectQuery) {
+		this.objectQuery = (BaseObjectQuery) objectQuery;
 	}
 
 	@Override
@@ -56,7 +54,7 @@ public class PageableQuery extends BaseEntity implements Query {
 	}
 
 	public void addIdException(Serializable id) {
-		this.getElasticSearchQuery().addIdException(id);
+		this.objectQuery.addIdException(id);
 	}
 
 	public Integer getSize() {

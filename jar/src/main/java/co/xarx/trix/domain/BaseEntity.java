@@ -15,7 +15,7 @@ import java.util.Date;
 @MappedSuperclass
 @FilterDef(name = "networkFilter", parameters = @ParamDef(name = "networkId", type = "integer"))
 @Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
-public abstract class BaseEntity implements MultiTenantEntity {
+public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,6 +31,7 @@ public abstract class BaseEntity implements MultiTenantEntity {
 	@CreatedDate
 	public Date createdAt;
 
+	@JsonIgnore
 	@Column(columnDefinition = "int(11) DEFAULT 0")
 	public Integer networkId;
 
@@ -38,6 +39,24 @@ public abstract class BaseEntity implements MultiTenantEntity {
 	@JsonIgnore
 	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
 	private int version;
+
+	@JsonIgnore
+	String tenantId;
+
+	@Override
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	@Override
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@Override
 	public Integer getNetworkId() {

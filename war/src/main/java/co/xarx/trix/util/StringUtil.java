@@ -1,6 +1,11 @@
 package co.xarx.trix.util;
 
+import org.apache.commons.lang.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import java.text.Normalizer;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,5 +66,18 @@ public class StringUtil {
 		} catch (Exception e) {
 		}
 		return false;
+	}
+
+	public static String simpleSnippet(String body) {
+		String[] splitPhrase = body.split("\\s+");
+		int limit = splitPhrase.length >= 100 ? 100 : splitPhrase.length;
+		String string = StringUtils.join(Arrays.copyOfRange(splitPhrase, 0, limit), " ");
+		Document doc = Jsoup.parse(string);
+		return doc.text();
+	}
+
+	public static String htmlStriped(String body) {
+		Document doc = Jsoup.parse(body);
+		return doc.text();
 	}
 }

@@ -1,26 +1,53 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.Station;
-import co.xarx.trix.mobile.notification.APNService;
-import co.xarx.trix.mobile.notification.GCMService;
+import co.xarx.trix.domain.PostRead;
+import co.xarx.trix.domain.QPostRead;
+import co.xarx.trix.elasticsearch.domain.ESPerson;
+import co.xarx.trix.elasticsearch.domain.ESPost;
+import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
+import co.xarx.trix.elasticsearch.repository.ESPostRepository;
+import co.xarx.trix.persistence.PostReadRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.persistence.StationRepository;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
-import co.xarx.trix.scheduler.jobs.PostScheduleJob;
-import org.quartz.*;
+import co.xarx.trix.util.StringUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.elasticsearch.common.Strings;
+import org.elasticsearch.common.text.Text;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.highlight.HighlightBuilder;
+import org.elasticsearch.search.highlight.HighlightField;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.hibernate.exception.ConstraintViolationException;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.ResultsExtractor;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service
 public class PostService {
@@ -30,26 +57,90 @@ public class PostService {
 	@Autowired
 	private QueryPersistence queryPersistence;
 	@Autowired
-	private Scheduler scheduler;
+	private SchedulerService schedulerService;
 	@Autowired
-	private GCMService gcmService;
-	@Autowired
-	private APNService apnService;
+	private PostReadRepository postReadRepository;
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
-	private StationRepository stationRepository;
+	private ESPostRepository esPostRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private ESPersonRepository esPersonRepository;
 	@Autowired
-	private PostEsRepository postEsRepository;
+	private ObjectMapper objectMapper;
+	@Autowired
+	private ModelMapper modelMapper;
+	@Autowired
+	private ElasticsearchTemplate elasticsearchTemplate;
 
-	public void removePostIndex(Post post){
-		postEsRepository.delete(post);
+	public Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
+		boolQuery.must(matchQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
+		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+		if(sort != null) nativeSearchQueryBuilder.withSort(sort);
+		SearchQuery query = nativeSearchQueryBuilder
+				.withPageable(pageable)
+				.withHighlightFields(new HighlightBuilder.Field("body"))
+				.withQuery(boolQuery).build();
+
+		Long[] totalHits = new Long[1];
+		ResultsExtractor<List<PostView>> resultsExtractor = response -> {
+			totalHits[0] = response.getHits().totalHits();
+			List<PostView> postsViews = new ArrayList<>();
+			SearchHit[] hits = response.getHits().getHits();
+			List<ESPost> posts = new ArrayList<>();
+
+			for (SearchHit hit : hits) {
+				try {
+					posts.add(objectMapper.readValue(hit.getSourceAsString(), ESPost.class));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			Set<Integer> authorIds = posts.stream().map(view -> view.authorId).collect(Collectors.toSet());
+			Map<Integer, ESPerson> authors = Maps.uniqueIndex(esPersonRepository.findAll(authorIds), ESPerson::getId);
+
+			for (ESPost post : posts) {
+				post.setAuthor(authors.get(post.authorId));
+			}
+
+			for (int i = 0; i < hits.length; i++) {
+				try {
+					SearchHit hit = hits[i];
+					ESPost esPost = posts.get(i);
+					PostView postView = modelMapper.map(esPost, PostView.class);
+					Map<String, HighlightField> highlights = hit.getHighlightFields();
+					if (highlights != null && highlights.get("body") != null) {
+						for (Text fragment : highlights.get("body").getFragments()) {
+							if (postView.snippet == null) postView.snippet = "";
+							postView.snippet = postView.snippet + " " + fragment.toString();
+						}
+					} else {
+						postView.snippet = StringUtil.simpleSnippet(postView.body);
+					}
+
+					postView.snippet = StringUtil.htmlStriped(postView.snippet);
+					postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
+					postsViews.add(postView);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return postsViews;
+		};
+
+		List<PostView> postView = elasticsearchTemplate.query(query, resultsExtractor);
+		int total = totalHits[0].intValue();
+		return new ImmutablePair(total, postView);
 	}
-	
-	public void updatePostIndex (Post post){
-		postEsRepository.update(post);
+
+	public void saveIndex(Post post) {
+		ESPost esPost = modelMapper.map(post, ESPost.class);
+		esPostRepository.save(esPost);
+	}
+
+	public void deleteIndex(Integer postId) {
+		esPostRepository.delete(postId);
 	}
 
 	public Post convertPost(int postId, String state) {
@@ -62,72 +153,98 @@ public class PostService {
 			}
 
 			if (dbPost.state.equals(Post.STATE_SCHEDULED)) { //if converting FROM scheduled, unschedule
-				unschedule(dbPost.id);
+				schedulerService.unschedule(dbPost.id);
 			} else if (state.equals(Post.STATE_SCHEDULED)) { //if converting TO scheduled, schedule
-				schedule(dbPost.id, dbPost.scheduledDate);
+				schedulerService.schedule(dbPost.id, dbPost.scheduledDate);
 			}
 
 			dbPost.state = state;
 
 			queryPersistence.changePostState(postId, state);
-			//removePostIndex(dbPost);
-			updatePostIndex(dbPost);
+			saveIndex(dbPost);
 		}
 
 		return dbPost;
 	}
 
+	@Transactional(noRollbackFor = Exception.class)
+	public void countPostRead(Post post, Person person, String sessionId) {
+		QPostRead pr = QPostRead.postRead;
+		if (person == null || person.username.equals("wordrails")) {
+			if(postReadRepository.findAll(pr.sessionid.eq(sessionId).and(pr.post.id.eq(post.id)))
+					.iterator().hasNext()) {
+				return;
+			}
+		} else {
+			if(postReadRepository.findAll(pr.sessionid.eq("0").and(pr.post.id.eq(post.id)).and(pr.person.id.eq(person.id)))
+					.iterator().hasNext()) {
+				return;
+			}
+		}
 
-	@Transactional
-	public void unschedule(Integer postId) {
+		PostRead postRead = new PostRead();
+		postRead.person = person;
+		postRead.post = post;
+		postRead.sessionid = "0"; // constraint fails if null
+		if (postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
+			postRead.person = null;
+			postRead.sessionid = sessionId;
+		}
+
 		try {
-			scheduler.unscheduleJob(new TriggerKey("trigger-" + postId));
-		} catch (SchedulerException e) {
-			e.printStackTrace();
+			postReadRepository.save(postRead);
+			queryPersistence.incrementReadsCount(post.id);
+		} catch (ConstraintViolationException | DataIntegrityViolationException e) {
+			log.info("user already read this post");
 		}
 	}
 
-	@Transactional
-	public void schedule(Integer postId, Date scheduledDate) {
-		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger-" + postId, "schedules").startAt(scheduledDate).build();
-		TriggerKey triggerKey = new TriggerKey("trigger-" + postId);
+	public BoolQueryBuilder getBoolQueryBuilder(String q, Integer personId, String publicationType, Iterable<Integer> stationIds, Iterable<Integer> postIds) {
+		BoolQueryBuilder mainQuery = boolQuery();
 
-		try {
-			if (scheduler.checkExists(triggerKey)) {
-				scheduler.rescheduleJob(triggerKey, trigger);
-			} else {
-				JobDetail job = JobBuilder.newJob(PostScheduleJob.class).withIdentity("schedule-" + postId, "schedules").build();
-				job.getJobDataMap().put("postId", String.valueOf(postId)); //must send as string because useProperties is set true
+		if (Strings.hasText(q)) {
+			MultiMatchQueryBuilder queryText = multiMatchQuery(q)
+					.field("body", 2)
+					.field("title", 5)
+					.field("topper")
+					.field("subheading")
+					.field("authorName")
+					.field("terms.name")
+					.prefixLength(1);
 
-				scheduler.scheduleJob(job, trigger);
-			}
-		} catch (SchedulerException e) {
-			e.printStackTrace();
+			mainQuery = mainQuery.must(queryText);
 		}
-	}
 
-	@Autowired
-	private CacheService cacheService;
-
-	@Transactional
-	public void buildNotification(Post post) {
-		Notification notification = new Notification();
-		notification.type = Notification.Type.POST_ADDED.toString();
-		notification.station = post.station;
-		notification.post = post;
-		notification.message = post.title;
-		notification.person = authProvider.getLoggedPerson();
-		try {
-			if (post.station != null && post.station.network != null) {
-				Station station = stationRepository.findOne(post.station.id);
-				Network network = cacheService.getNetwork(TenantContextHolder.getCurrentTenantId());
-
-
-				gcmService.sendToStation(network, station, notification);
-				apnService.sendToStation(network, station.id, notification);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(personId != null){
+			mainQuery = mainQuery.must(
+					matchQuery("authorId", personId));
 		}
+
+		if(publicationType != null){
+			mainQuery = mainQuery.must(
+					matchQuery("state", publicationType));
+		} else {
+			mainQuery = mainQuery.must(
+					matchQuery("state", Post.STATE_PUBLISHED));
+		}
+
+		if (postIds != null) {
+			BoolQueryBuilder postQuery = boolQuery();
+			for (Integer postId : postIds) {
+				postQuery.should(matchQuery("id", postId));
+			}
+			mainQuery = mainQuery.must(postQuery);
+		}
+
+		if (stationIds != null) {
+			BoolQueryBuilder stationQuery = boolQuery();
+			for(Integer stationId: stationIds){
+				stationQuery.should(
+						matchQuery("stationId", String.valueOf(stationId)));
+			}
+			mainQuery = mainQuery.must(stationQuery);
+		}
+
+		return mainQuery;
 	}
 }
