@@ -9,6 +9,7 @@ import javax.validation.constraints.Min;
 import java.util.Map;
 
 @Entity
+@Table(name = "section_container")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class ContainerSection extends BaseSection {
 
@@ -17,11 +18,11 @@ public class ContainerSection extends BaseSection {
 	public ContainerSection parent;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "containersection_section", joinColumns = @JoinColumn(name = "containersection_id"))
+	@JoinTable(name = "section_section_container", joinColumns = @JoinColumn(name = "container_id"))
 	@MapKeyJoinColumn(name = "list_index", referencedColumnName = "list_index", nullable = false)
 	public Map<Integer, BaseSection> children;
 
-	public String orientation = Constants.Layout.HORIZONTAL_ORIENTATION;
+	public String orientation = Constants.Layout.SECTION_HORIZONTAL_ORIENTATION;
 
 	@Min(value = 1)
 	@Max(value = 100)

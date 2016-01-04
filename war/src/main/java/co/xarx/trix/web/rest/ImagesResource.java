@@ -28,17 +28,17 @@ public class ImagesResource {
 	@Autowired
 	private ImageService imageService;
 
-    @Context
-    private HttpServletRequest request;
-    @Context
-    private UriInfo uriInfo;
-    @Context
-    private HttpServletResponse response;
+	@Context
+	private HttpServletRequest request;
+	@Context
+	private UriInfo uriInfo;
+	@Context
+	private HttpServletResponse response;
 
-    private void forward() throws ServletException, IOException {
-        String path = request.getServletPath() + uriInfo.getPath();
-        request.getServletContext().getRequestDispatcher(path).forward(request, response);
-    }
+	private void forward() throws ServletException, IOException {
+		String path = request.getServletPath() + uriInfo.getPath();
+		request.getServletContext().getRequestDispatcher(path).forward(request, response);
+	}
 
 	@POST
 	@Path("/upload")

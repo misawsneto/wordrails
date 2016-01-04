@@ -1,14 +1,9 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.PermissionId;
-import co.xarx.trix.api.*;
-import co.xarx.trix.domain.*;
-import co.xarx.trix.exception.BadRequestException;
-import co.xarx.trix.exception.UnauthorizedException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
@@ -17,19 +12,15 @@ import co.xarx.trix.dto.StationTermsDto;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
+import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.PostService;
-import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.text.Text;
+import org.apache.commons.lang3.tuple.Pair;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +40,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Path("/posts")
 @Consumes(MediaType.WILDCARD)
@@ -70,19 +56,19 @@ public class PostsResource {
 	@Context
 	private HttpServletResponse response;
 	@Autowired
+	private AsyncService asyncService;
+	@Autowired
 	private WordrailsService wordrailsService;
 	@Autowired
 	private PostRepository postRepository;
+	@Autowired
+	private QueryPersistence queryPersistence;
 	@Autowired
 	private PostConverter postConverter;
 	@Autowired
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
-	@Autowired
-	private PostEsRepository postEsRepository;
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -100,7 +86,7 @@ public class PostsResource {
 		Post post = postRepository.findOne(postId);
 
 		ContentResponse<PostView> response = new ContentResponse<>();
-		response.content = postConverter.convertToView(post);
+		response.content = postConverter.convertTo(post);
 		return response;
 	}
 
@@ -112,7 +98,7 @@ public class PostsResource {
 		Post post = postRepository.findBySlug(slug);
 		PostView postView = null;
 		if (post != null) {
-			postView = postConverter.convertToView(post);
+			postView = postConverter.convertTo(post);
 			if(withBody != null && withBody)
 				postView.body = post.body;
 		}
@@ -128,7 +114,7 @@ public class PostsResource {
 		Post post = postRepository.findOne(postId);
 		PostView postView = null;
 		if (post != null) {
-			postView = postConverter.convertToView(post);
+			postView = postConverter.convertTo(post);
 			if(withBody != null && withBody)
 				postView.body = post.body;
 		}
@@ -156,7 +142,7 @@ public class PostsResource {
 		if(post != null && postAndCommentSecurityChecker.canWrite(post)){
 			post = postService.convertPost(postId, state);
 			ContentResponse<PostView> response = new ContentResponse<>();
-			response.content = postConverter.convertToView(post);
+			response.content = postConverter.convertTo(post);
 			return response;
 		}else{
 			throw new UnauthorizedException();
@@ -212,12 +198,13 @@ public class PostsResource {
 	                                               @QueryParam("page") Integer page,
 	                                               @QueryParam("size") Integer size) {
 
-		List<Integer> stationIdIntegers = new ArrayList<Integer>();
+		if (q == null) {
+			ContentResponse<SearchView> response = new ContentResponse<>();
+			response.content = new SearchView();
+			response.content.hits = 0;
+			response.content.posts = new ArrayList<>();
 
-		if(stationIds != null){
-			List<String> stringIds = Arrays.asList(stationIds.replaceAll("\\s*", "").split(","));
-			for (String id: stringIds)
-				stationIdIntegers.add(Integer.parseInt(id));
+			return response;
 		}
 
 		Person person = authProvider.getLoggedPerson();
@@ -229,100 +216,46 @@ public class PostsResource {
 		pId.networkId = network.id;
 		pId.personId = person.id;
 
-		StationsPermissions permissions = new StationsPermissions();
+		List<Integer> readableIds = new ArrayList<>();
+		List<Integer> stationIdIntegers = new ArrayList<>();
+
 		try {
-			permissions = wordrailsService.getPersonPermissions(pId);
+			if (stationIds != null) {
+				List<String> stringIds = Arrays.asList(stationIds.replaceAll("\\s*", "").split(","));
+				for (String id : stringIds)
+					stationIdIntegers.add(Integer.parseInt(id));
+			}
+
+			if (stationIdIntegers.size() == 0) {
+				StationsPermissions permissions = wordrailsService.getPersonPermissions(pId);
+				readableIds = wordrailsService.getReadableStationIds(permissions);
+			} else {
+				readableIds = stationIdIntegers;
+			}
 		} catch (ExecutionException e1) {
 			e1.printStackTrace();
 		}
 
-		List<Integer> readableIds = wordrailsService.getReadableStationIds(permissions);
 
-		MultiMatchQueryBuilder queryText;
-		BoolQueryBuilder mainQuery = boolQuery();
 
-		if(q != null){
-			queryText = multiMatchQuery(q)
-					.field("body", 2)
-					.field("title", 5)
-					.field("topper")
-					.field("subheading")
-					.field("authorName")
-					.field("terms.name")
-					.prefixLength(1)
-					//.fuzziness(Fuzziness.AUTO)
-					;
-		} else {
-			ContentResponse<SearchView> response = new ContentResponse<SearchView>();
-			response.content = new SearchView();
-			response.content.hits = 0;
-			response.content.posts = new ArrayList<PostView>();
 
-			return response;
-		}
-
-		mainQuery = mainQuery.must(queryText);
-
-		if(personId != null){
-			mainQuery = mainQuery.must(
-					matchQuery("authorId", personId));
-		}
-
-		if(publicationType != null){
-			mainQuery = mainQuery.must(
-					matchQuery("state", publicationType));
-		} else {
-			mainQuery = mainQuery.must(
-					matchQuery("state", Post.STATE_PUBLISHED));
-		}
-
-		if(stationIdIntegers.size() > 0)
-			readableIds = stationIdIntegers;
-
-		BoolQueryBuilder stationQuery = boolQuery();
-		for(Integer stationId: readableIds){
-			stationQuery.should(
-					matchQuery("stationId", String.valueOf(stationId)));
-		}
-		mainQuery = mainQuery.must(stationQuery);
+		BoolQueryBuilder mainQuery = postService.getBoolQueryBuilder(q, personId, publicationType, readableIds, null);
 		FieldSortBuilder sort = null;
 
 		if(sortByDate != null && sortByDate){
 			sort = new FieldSortBuilder("date")
 					.order(SortOrder.DESC);
-
 		}
 
-		SearchResponse searchResponse = postEsRepository.runQuery(mainQuery.toString(), sort, size, page, "body");
+		Pageable pageable = new PageRequest(page, size);
 
-		List<PostView> postsViews = new ArrayList<>();
 
-		for(SearchHit hit: searchResponse.getHits().getHits()){
-			try {
-				PostView postView = objectMapper.readValue(hit.getSourceAsString(), PostView.class);
-				Map<String, HighlightField> highlights = hit.getHighlightFields();
-				if(highlights != null && highlights.get("body") != null)
-					for (Text fragment:  highlights.get("body").getFragments()) {
-						if(postView.snippet == null)
-							postView.snippet = "";
-						postView.snippet = postView.snippet + " " + fragment.toString();
-					}
-				else{
-					postView.snippet = TrixUtil.simpleSnippet(postView.body, 100);
-				}
-
-				postView.snippet = TrixUtil.htmlStriped(postView.snippet);
-				postView.snippet = postView.snippet.replaceAll("\\{snippet\\}", "<b>").replaceAll("\\{#snippet\\}", "</b>");
-				postsViews.add(postView);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		Pair<Integer, List<PostView>> postsViews = postService.searchIndex(mainQuery, pageable, sort);
 
 		ContentResponse<SearchView> response = new ContentResponse<>();
 		response.content = new SearchView();
-		response.content.hits = (int) searchResponse.getHits().totalHits();
-		response.content.posts = postsViews;
+		response.content.hits = postsViews.getLeft();
+		response.content.posts = postsViews.getRight();
 
 		return response;
 
@@ -397,8 +330,9 @@ public class PostsResource {
 	public StringResponse getPostBody(@PathParam("postId") Integer postId){
 		Person person = authProvider.getLoggedPerson();
 		String body = postRepository.findPostBodyById(postId);
+		Post post = postRepository.findOne(postId);
 
-		wordrailsService.countPostRead(postId, person, request.getRequestedSessionId());
+		asyncService.countPostRead(TenantContextHolder.getCurrentNetworkId(), post, person, request.getRequestedSessionId());
 
 		StringResponse content = new StringResponse();
 		content.response = body;
@@ -412,5 +346,22 @@ public class PostsResource {
 	@Transactional
 	public Response promote(@PathParam("postId") Integer postId, StationTermsDto stationTerms){
 		return Response.status(Status.OK).build();
+	}
+
+	@GET
+	@Path("/search/findPostsByTags")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tags") String tagsString, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+		if (tagsString == null || !tagsString.isEmpty()) {
+			// TODO: throw badrequest
+		}
+
+		Set<String> tags = new HashSet<String>(Arrays.asList(tagsString.split(",")));
+
+		List<Post> posts = queryPersistence.findPostsByTag(tags, stationId, page, size);
+
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
+		response.content = postConverter.convertToViews(posts);
+		return response;
 	}
 }

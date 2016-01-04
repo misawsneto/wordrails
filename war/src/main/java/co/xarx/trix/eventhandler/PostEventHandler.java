@@ -3,13 +3,16 @@ package co.xarx.trix.eventhandler;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostTrash;
+import co.xarx.trix.elasticsearch.domain.ESPost;
+import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
-import co.xarx.trix.services.PostService;
+import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.MobileService;
+import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,7 +28,9 @@ import java.util.Set;
 public class PostEventHandler {
 
 	@Autowired
-	private PostService postService;
+	private MobileService mobileService;
+	@Autowired
+	private SchedulerService schedulerService;
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
@@ -33,19 +38,19 @@ public class PostEventHandler {
 	@Autowired
 	private CellRepository cellRepository;
 	@Autowired
-	private PostEsRepository postEsRepository;
-	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
 	private ImageRepository imageRepository;
 	@Autowired
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
-	private BookmarkRepository bookmarkRepository;
-	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
+	@Autowired
+	private ElasticSearchService elasticSearchService;
+	@Autowired
+	private ESPostRepository esPostRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
@@ -82,19 +87,23 @@ public class PostEventHandler {
 	@HandleAfterCreate
 	public void handleAfterCreate(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			postService.schedule(post.id, post.scheduledDate);
-		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
-			postService.buildNotification(post);
+			schedulerService.schedule(post.id, post.scheduledDate);
+		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
+			if (post.notify) {
+				mobileService.buildNotification(post);
+			}
+
+			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 		}
-		postEsRepository.save(post);
 	}
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
-			postService.schedule(post.id, post.scheduledDate);
+			schedulerService.schedule(post.id, post.scheduledDate);
+		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
+			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 		}
-		postService.updatePostIndex(post);
 	}
 
 	@HandleBeforeDelete
@@ -111,9 +120,10 @@ public class PostEventHandler {
 			commentRepository.delete(post.comments);
 			postReadRepository.deleteByPost(post);
 			notificationRepository.deleteByPost(post);
-			bookmarkRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
-			postService.removePostIndex(post); // evitando bug de remoção de post que tiveram post alterado.
+			if (post.state.equals(Post.STATE_PUBLISHED)) {
+				elasticSearchService.deleteIndex(post.id, esPostRepository); // evitando bug de remoção de post que tiveram post alterado.
+			}
 		} else {
 			throw new UnauthorizedException();
 		}

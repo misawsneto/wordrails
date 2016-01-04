@@ -25,4 +25,5 @@ public class NotificationView implements Serializable {
 	public String imageSmallId;
 	public String imageMediumId;
 	public PostView post;
+    public boolean test = true;
 }

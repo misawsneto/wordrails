@@ -779,8 +779,8 @@ function createPost(state){
 
 					var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
 
-					if(diffMins < 15 && (scheduledDate.toDateString() === now.toDateString() || scheduledDate.toDateString() < now.toDateString() )){
-						$scope.app.showErrorToast('Escolha um horário com mínimo<br>15 minutes do horário atual. ');
+					if(diffMins < 1 && (scheduledDate.toDateString() === now.toDateString() || scheduledDate.toDateString() < now.toDateString() )){
+						$scope.app.showErrorToast('Escolha um horário com mínimo<br>1 minutes do horário atual. ');
 						return;
 					}
 

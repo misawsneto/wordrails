@@ -134,4 +134,10 @@ public class TermsResource {
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
+
+    @GET
+    @Path("/search/findPostsByCategory")
+    public ContentResponse<List<PostView>> findPostsByCategory(@QueryParam("categoryName") String categoryName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+        return findPostsByTagAndStationId(categoryName, stationId, page, size);
+    }
 }

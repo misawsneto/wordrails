@@ -18,3 +18,6 @@ UPDATE station s, image i, file f SET s.logo_id = NULL WHERE i.original_id = f.i
 
 -- Delete files and image with null networkId
 DELETE i, f from image i, file f WHERE i.original_id = f.id and f.networkId is NULL;
+
+ALTER TABLE post DROP FOREIGN KEY FK_eolhsgjjrm4w3rxg9q84vebfn;
+ALTER TABLE post DROP INDEX FK_eolhsgjjrm4w3rxg9q84vebfn;

@@ -20,7 +20,7 @@ public class RowConverter extends AbstractConverter<Row, RowView>{
 	@Autowired RowRepository rowRepository;
 	
 	@Override
-	public Row convertToEntity(RowView rowView) {
+	public Row convertFrom(RowView rowView) {
 		Row row = new Row();
 		if(rowView.termPerspectiveId != null){
 			if(rowView.type.equals(Row.FEATURED_ROW)){
@@ -44,7 +44,7 @@ public class RowConverter extends AbstractConverter<Row, RowView>{
 	}
 
 	@Override
-	public RowView convertToView(Row row) {
+	public RowView convertTo(Row row) {
 		RowView rowView = new RowView();
 		rowView.id = row.id;
 		rowView.termId = (row.term != null ? row.term.id : null);

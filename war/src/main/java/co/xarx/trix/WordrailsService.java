@@ -1,7 +1,10 @@
 package co.xarx.trix;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.StationRole;
+import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.web.rest.PerspectiveResource;
@@ -10,21 +13,20 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.apache.log4j.Logger;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Component("wordrailsService")
 public class WordrailsService {
 
 	Logger log = Logger.getLogger(WordrailsService.class.getName());
@@ -38,12 +40,6 @@ public class WordrailsService {
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
-	private QueryPersistence queryPersistence;
-	@Autowired
-	private PostRepository postRepository;
-	@Autowired
 	private PerspectiveResource perspectiveResource;
 	@Autowired
 	private CacheService cacheService;
@@ -54,6 +50,7 @@ public class WordrailsService {
 
 	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
 
+	@PostConstruct
 	public void init(){
 		// ------------- init person cache
 		stationsPermissions = CacheBuilder.newBuilder().maximumSize(1000)
@@ -91,79 +88,31 @@ public class WordrailsService {
 		return !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
 	}
 
+    @Autowired
+    private HttpServletResponse response;
+
 	public Network getNetworkFromHost(String host){
 		Network network = null;
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Network> networks = networkRepository.findAll();
-			if(networks != null)
-				return networks.get(0);
-		}else{
-			String subdomain = getSubdomainFromHost(host);
-			if(subdomain != null && !subdomain.isEmpty()){
-				try {
-					network = cacheService.getNetworkBySubdomain(subdomain);
-				} catch (Exception e) {
-					// no network found in cache or db.
-				}
-				if (network != null)
-					return network;
-			}
-		}
+        String subdomain = getSubdomainFromHost(host);
+        if(subdomain != null && !subdomain.isEmpty()){
+            try {
+                network = cacheService.getNetworkBySubdomain(subdomain);
+            } catch (Exception e) {
+                // no network found in cache or db.
+            }
+            if (network != null)
+                return network;
+        }
 
 		try {
-			return cacheService.getNetworkByDomain(host);
+            network = cacheService.getNetworkByDomain(host);
+            if(network != null)
+			    return network;
+            response.setStatus(400);
+            return null;
 		} catch (Exception e) {
-			return networkRepository.findOne(1);
+            throw new NotFoundException();
 		}
-	}
-
-	@Async
-	@Transactional(readOnly = false)
-	public void countPostRead(Post post, Person person, String sessionId){
-		try {
-			PostRead postRead = new PostRead();
-			postRead.person = person;
-			postRead.post = post;
-			postRead.sessionid = "0"; // constraint fails if null
-			if(postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
-				postRead.person = null;
-				postRead.sessionid = sessionId;
-			}
-
-			try {
-				postReadRepository.save(postRead);
-				queryPersistence.incrementReadsCount(post.id);
-			} catch (ConstraintViolationException | DataIntegrityViolationException e) {
-				log.info("user already read this post");
-			}
-		} catch (Exception ex) {
-            co.xarx.trix.util.Logger.error(ex.getMessage());
-		}
-	}
-
-	@Async
-	@Transactional(noRollbackFor = org.springframework.dao.DataIntegrityViolationException.class)
-	public void countPostRead(Integer postId, Person person, String sessionId){
-		PostRead postRead = new PostRead();
-		postRead.person = person;
-		postRead.post = postRepository.findOne(postId);
-		postRead.sessionid = "0"; // constraint fails if null
-		if(postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
-			postRead.person = null;
-			postRead.sessionid = sessionId;
-		}
-		try {
-			postReadRepository.save(postRead);
-			queryPersistence.incrementReadsCount(postId);
-		} catch (org.springframework.dao.DataIntegrityViolationException ex) {
-//			ex.printStackTrace();
-		}
-	}
-
-	@Async
-	@org.springframework.transaction.annotation.Transactional(readOnly=true)
-	public void sendResetEmail(PasswordReset passwordReset) {
-
 	}
 
 	public StationDto getDefaultStation(PersonData personData, Integer currentStationId){
@@ -318,27 +267,5 @@ public class WordrailsService {
 				ids.add(sp.stationId);
 			}
 		return ids;
-	}
-
-	public List<Integer> getWritableStationIds(StationsPermissions permissions) {
-		List<Integer> ids = new ArrayList<Integer>();
-		if(permissions.stationPermissionDtos != null)
-			for (StationPermission sp : permissions.stationPermissionDtos) {
-				if(sp.writable || sp.writer || sp.editor)
-					ids.add(sp.stationId);
-			}
-		return ids;
-	}
-
-	@Async
-	@Transactional
-	public void updateLastLogin(String username) {
-		queryPersistence.updateLastLogin(username);
-	}
-
-	@Async
-	@Transactional
-	public void deleteTaxonomyNetworks(Taxonomy taxonomy){
-		taxonomyRepository.deleteTaxonomyNetworks(taxonomy.id);
 	}
 }

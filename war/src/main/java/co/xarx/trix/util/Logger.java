@@ -2,10 +2,9 @@ package co.xarx.trix.util;
 
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by misael on 24/10/2015.
- */
+
 public class Logger {
+
     final static org.slf4j.Logger logger = LoggerFactory.getLogger(Logger.class);
     /**
      * Get the underlying SLF4J logger.

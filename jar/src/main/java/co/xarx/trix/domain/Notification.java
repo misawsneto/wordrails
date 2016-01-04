@@ -50,6 +50,8 @@ public class Notification {
 	public Integer postId;
 	
 	public boolean seen = false;
+
+    public boolean test = true;
 	
 	@NotNull
 	@NotEmpty
