@@ -361,11 +361,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
     @Override
-    protected boolean isGetPostNetworkAuthorized(Integer postId) {
-        return false;
-    }
-
-    @Override
 	protected boolean isGetPostDraftsAuthorized() {
 		return false;
 	}
@@ -414,11 +409,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetPostDraftTermsAuthorized(Integer postDraftId) {
 		return canReadPosts(postDraftId);
 	}
-
-    @Override
-    protected boolean isGetPostDraftNetworkAuthorized(Integer postDraftId) {
-        return false;
-    }
 
     @Override
 	protected boolean isGetRowsAuthorized() {
@@ -1213,11 +1203,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetPostScheduledTermsAuthorized(Integer postScheduledId) {
 		return canReadPosts(postScheduledId);
 	}
-
-    @Override
-    protected boolean isGetPostScheduledNetworkAuthorized(Integer postScheduledId) {
-        return false;
-    }
 
     @Override
 	protected boolean isGetStationLogoAuthorized(Integer stationId) {

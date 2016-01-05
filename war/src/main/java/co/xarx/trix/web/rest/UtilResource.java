@@ -5,6 +5,7 @@ import co.xarx.trix.WordrailsService;
 import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Image;
 import co.xarx.trix.eventhandler.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.persistence.elasticsearch.BookmarkEsRespository;
@@ -13,7 +14,11 @@ import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.script.ImageScript;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.CacheService;
+import co.xarx.trix.services.EmailService;
 import co.xarx.trix.util.StringUtil;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import org.joda.time.DateTime;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +40,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.awt.*;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -803,6 +815,21 @@ public class UtilResource {
         return Response.status(Status.OK).build();
     }
 
+    public Response adminAuth(Integer networkId){
+        List<NetworkRole> nrs = personRepository.findNetworkAdmin();
+        User user = null;
+        for (NetworkRole nr: nrs) {
+            if(nr.network.id.equals(networkId) && nr.admin) {
+                user = nr.person.user;
+                break;
+            }
+        }
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+        authProvider.passwordAuthentication(user.username, user.password);
+        return Response.status(Status.OK).build();
+    }
+
 	@GET
 	@Path("/updateRowPositions")
 	@Transactional(readOnly=false)
@@ -945,5 +972,74 @@ public class UtilResource {
 			imageScript.addPicturesToImages();
 		}
 	}
+
+    @Autowired
+    public EmailService emailService;
+
+    @GET
+    @Path("/testEmail/{networkId}")
+    @Transactional
+    public void testEmail(@PathParam("networkId") Integer networkId){
+        Network network = networkRepository.findOne(networkId);
+        if(isLocal(request.getHeader("Host"))){
+            try {
+                String filePath = getClass().getClassLoader().getResource("tpl/invitation-email.html").getFile();
+
+                filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
+
+                byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+                String template = new String(bytes, Charset.forName("UTF-8"));
+
+                Color c1 = Color.decode(network.mainColor);
+                Color c2 = Color.decode(network.navbarColor);
+
+                HashMap<String, Object> scopes = new HashMap<String, Object>();
+                scopes.put("name", "Test Name");
+                scopes.put("networkName", network.name);
+                scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", "+ c1.getBlue() +" )");
+                scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", "+ c2.getBlue() +" )");
+                scopes.put("link", "http://"+network.subdomain+".trix.rocks");
+                scopes.put("networkSubdomain", network.subdomain);
+                scopes.put("passwordReset", "hash");
+
+
+                Person person = authProvider.getLoggedPerson();
+                if (person != null) scopes.put("inviterName", person.name);
+                else scopes.put("inviterName", "");
+
+                StringWriter writer = new StringWriter();
+
+                MustacheFactory mf = new DefaultMustacheFactory();
+
+                Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
+                mustache.execute(writer, scopes);
+                writer.flush();
+
+                String emailBody = writer.toString();
+                String subject = "[ Test ]" + " Cadastro de senha";
+                emailService.sendSimpleMail("misawsneto@gmail.com", subject, emailBody);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Autowired
+    public PostEventHandler postEventHandler;
+
+    @DELETE
+    @Path("/deleteNetworkPosts/{id}")
+    public void deleteNetworkPosts(@PathParam("id") Integer networkId){
+        if(isLocal(request.getHeader("Host"))){
+            adminAuth(networkId);
+            Network network = networkRepository.findOne(networkId);
+            for(Station station: network.stations){
+                for(Post post: station.posts){
+                    postEventHandler.handleBeforeDelete(post);
+                    postRepository.delete(post.id);
+                }
+            }
+        }
+    }
 
 }
