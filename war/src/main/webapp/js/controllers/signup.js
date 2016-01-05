@@ -4,6 +4,7 @@
 app.controller('SignupFormController', ['$scope', '$http', '$state', function($scope, $http, $state) {
     $scope.user = {};
     $scope.authError = null;
+    //$state.params.
     $scope.signup = function() {
       $scope.authError = null;
       // Try to create

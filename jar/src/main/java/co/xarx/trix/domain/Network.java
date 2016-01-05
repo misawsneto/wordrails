@@ -154,6 +154,8 @@ public class Network implements Serializable{
 
 	public Integer categoriesTaxonomyId;
 
+    @Lob
+    public String invitationMessage;
 
 	@ElementCollection
 	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "logo_id"))
