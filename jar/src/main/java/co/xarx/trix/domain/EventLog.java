@@ -34,10 +34,6 @@ public abstract class EventLog {
 		this.eventName = eventName;
 	}
 
-	public int getId() {
-		return id;
-	}
-
 	public void setId(int id) {
 		this.id = id;
 	}

@@ -13,7 +13,7 @@ public class PostEventLog extends EventLog {
 		setEntityName("POST");
 		setPostId(post.id);
 		setAuthorId(post.author.id);
-		setNetworkId(post.network.id);
+//		setNetworkId(post.network.id);
 		setEventName(event);
 	}
 
@@ -27,11 +27,8 @@ public class PostEventLog extends EventLog {
 	public Integer networkId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable = false)
-	public Date createdAt;
+	public Date happendAt;
 
 	public Integer getPostId() {
 		return postId;
@@ -57,19 +54,11 @@ public class PostEventLog extends EventLog {
 		this.networkId = networkId;
 	}
 
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
 	public Date getCreatedAt() {
-		return createdAt;
+		return happendAt;
 	}
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
+	public void setCreatedAt(Date happendAt) {
+		this.happendAt = happendAt;
 	}
 }
