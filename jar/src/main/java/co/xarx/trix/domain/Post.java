@@ -165,9 +165,6 @@ public class Post implements Serializable {
     @Lob
     public String imageTitleText;
 
-    @ManyToOne
-    public Network network;
-
     public Integer imageId;
     public Integer imageSmallId;
     public Integer imageMediumId;
