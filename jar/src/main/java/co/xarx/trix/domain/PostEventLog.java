@@ -15,6 +15,7 @@ public class PostEventLog extends EventLog {
 		setAuthorId(post.author.id);
 //		setNetworkId(post.network.id);
 		setEventName(event);
+		this.happendAt = new Date();
 	}
 
 	public PostEventLog() {
