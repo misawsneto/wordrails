@@ -9,10 +9,8 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
-public class Comment {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public Integer id;
+public class Comment extends BaseEntity {
+
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@NotNull

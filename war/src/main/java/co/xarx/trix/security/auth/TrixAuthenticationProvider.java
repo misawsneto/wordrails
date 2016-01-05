@@ -1,6 +1,7 @@
 package co.xarx.trix.security.auth;
 
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.social.SocialUser;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserConnectionRepository;
 import co.xarx.trix.persistence.UserRepository;

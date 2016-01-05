@@ -135,16 +135,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetGlobalParametersAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetGlobalParameterAuthorized(Integer globalParameterId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetImagesAuthorized() {
 		return false;
 	}

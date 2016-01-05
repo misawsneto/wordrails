@@ -1,26 +1,19 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
-public class Taxonomy implements Serializable {
+public class Taxonomy extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 7821255752575024731L;
 
 	public static final String NETWORK_TAXONOMY = "N";
 	public static final String STATION_TAXONOMY = "S";
 	public static final String STATION_AUTHOR_TAXONOMY = "A";
 	public static final String STATION_TAG_TAXONOMY = "T";
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public Integer id;
 
 	@NotNull
 	@Size(min=1, max=1)
@@ -37,38 +30,13 @@ public class Taxonomy implements Serializable {
 	public Set<Term> terms;
 
 
-/*--NETWORK_TAXONOMY---------------------------------------------------------*/	
 	@ManyToOne
 	@JoinColumn(updatable=true)
 	public Network owningNetwork;
-/*--NETWORK_TAXONOMY---------------------------------------------------------*/
 
-/*--STATION_TAXONOMY---------------------------------------------------------*/	
 	@ManyToOne
 	@JoinColumn(updatable=true)
 	public Station owningStation;
-/*--STATION_TAXONOMY---------------------------------------------------------*/
-
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date createdAt;
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date updatedAt;
-
-	@PrePersist
-	void onCreate() {
-		createdAt = new Date();
-	}
-
-	@PreUpdate
-	void onUpdate() {
-		updatedAt = new Date();
-	}
 
 	@Override
 	public int hashCode() {

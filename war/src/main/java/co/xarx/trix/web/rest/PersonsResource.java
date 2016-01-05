@@ -2,7 +2,6 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
@@ -12,11 +11,12 @@ import co.xarx.trix.eventhandler.StationRoleEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.services.APNService;
-import co.xarx.trix.services.GCMService;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.APNService;
+import co.xarx.trix.services.GCMService;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -154,61 +154,57 @@ public class PersonsResource {
 			return Response.status(Status.UNAUTHORIZED).build();
 	}
 
-    @PUT
-    @Path("/update")
-    @Transactional
-    public Response update(Person person){
-        Person loggedPerson = authProvider.getLoggedPerson();
+	@PUT
+	@Path("/update")
+	@Transactional
+	public Response update(Person person) {
+		Person loggedPerson = authProvider.getLoggedPerson();
 
-        Person loadedPerson = personRepository.findOne(person.id);
+		Person loadedPerson = personRepository.findOne(person.id);
 
-        if(person.id == null || !person.id.equals(loggedPerson.id))
-            throw new UnauthorizedException();
+		if (person.id == null || !person.id.equals(loggedPerson.id)) throw new UnauthorizedException();
 
-        if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
-            throw new BadRequestException("Password no equal");
+		if (person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
+			throw new BadRequestException("Password no equal");
 
-        if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
-            throw new BadRequestException("Invalid Password");
+		if ((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
+			throw new BadRequestException("Invalid Password");
 
-        if(!StringUtil.isEmailAddr(person.email))
-            throw new BadRequestException("Not email");
+		if (!StringUtil.isEmailAddr(person.email)) throw new BadRequestException("Not email");
 
-        if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
-            throw new BadRequestException("Invalid username");
+		if (person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
+			throw new BadRequestException("Invalid username");
 
-        if(person.bio != null && !person.bio.isEmpty())
-            loadedPerson.bio = person.bio;
-        else
-            loadedPerson.bio = null;
+		if (person.bio != null && !person.bio.isEmpty()) loadedPerson.bio = person.bio;
+		else loadedPerson.bio = null;
 
-        loadedPerson.email = person.email;
-        loadedPerson.name = person.name;
+		loadedPerson.email = person.email;
+		loadedPerson.name = person.name;
 
-        User user = null;
-        if(!person.username.equals(loggedPerson.username)){
-            loadedPerson.user.username = person.username;
-            loadedPerson.username = person.username;
-            user = userRepository.findOne(loadedPerson.user.id);
-            user.username = person.username;
-            userRepository.save(user);
-            personRepository.save(loadedPerson);
-        }
+		User user = null;
+		if (!person.username.equals(loggedPerson.username)) {
+			loadedPerson.user.username = person.username;
+			loadedPerson.username = person.username;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.username = person.username;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
 
-        if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
-            loadedPerson.user.password = person.password;
-            user = userRepository.findOne(loadedPerson.user.id);
-            user.password = person.password;
-            userRepository.save(user);
-            personRepository.save(loadedPerson);
-        }
+		if ((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)) {
+			loadedPerson.user.password = person.password;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.password = person.password;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
 
-        personRepository.save(loadedPerson);
+		personRepository.save(loadedPerson);
 
-        authProvider.updateLoggedPerson(loadedPerson);
+		authProvider.updateLoggedPerson(loadedPerson);
 
-        return Response.status(Status.OK).build();
-    }
+		return Response.status(Status.OK).build();
+	}
 
 	@PUT
 	@Path("/{id}")
@@ -558,7 +554,7 @@ public class PersonsResource {
 
 		if(persons != null && persons.size() > 0) {
 			for (Person person : persons) {
-				if (!person.user.networkId.equals(network.id)) return Response.status(Status.UNAUTHORIZED).build();
+				if (!person.user.getTenantId().equals(network.subdomain)) return Response.status(Status.UNAUTHORIZED).build();
 			}
 
 			if (networkSecurityChecker.isNetworkAdmin(network)) {
@@ -582,7 +578,7 @@ public class PersonsResource {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = personRepository.findOne(personId);
 
-		if(person != null && networkSecurityChecker.isNetworkAdmin(network) && person.user.networkId.equals(network.id)){
+		if(person != null && networkSecurityChecker.isNetworkAdmin(network) && person.user.getTenantId().equals(network.subdomain)){
 			personEventHandler.handleBeforeDelete(person);
 			personRepository.delete(person.id);
 			return Response.status(Status.OK).build();

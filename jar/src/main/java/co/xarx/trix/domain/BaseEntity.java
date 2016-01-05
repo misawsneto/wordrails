@@ -13,8 +13,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 @MappedSuperclass
-@FilterDef(name = "networkFilter", parameters = @ParamDef(name = "networkId", type = "integer"))
-@Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
+@FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = "string"))
+@Filters(@Filter(name = "tenantFilter", condition = "tenantId = :tenantId"))
 public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 
 	@Id
@@ -31,16 +31,13 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 	@CreatedDate
 	public Date createdAt;
 
-	@JsonIgnore
-	@Column(columnDefinition = "int(11) DEFAULT 0")
-	public Integer networkId;
-
 	@Version
 	@JsonIgnore
 	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
 	private int version;
 
 	@JsonIgnore
+	@Column(columnDefinition = "VARCHAR(255) DEFAULT ''")
 	String tenantId;
 
 	@Override
@@ -56,16 +53,6 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 	@Override
 	public Integer getId() {
 		return id;
-	}
-
-	@Override
-	public Integer getNetworkId() {
-		return networkId;
-	}
-
-	@Override
-	public void setNetworkId(Integer networkId) {
-		this.networkId = networkId;
 	}
 
 	public int getVersion() {

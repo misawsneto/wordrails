@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "networkId"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "tenantId"}))
 public class File extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 7828358342575034733L;
 

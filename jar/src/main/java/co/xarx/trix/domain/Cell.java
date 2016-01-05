@@ -6,11 +6,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Cell {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public Integer id;
-	
+public class Cell extends BaseEntity {
+
 	@Min(0)
 	@Column(name="\"index\"")
 	public int index;

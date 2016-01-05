@@ -669,7 +669,7 @@ public class UtilResource {
 		if (host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1") || host.contains("xarxlocal.com")) {
 			List<Person> persons = manager.createQuery("SELECT person FROM Person person JOIN FETCH person.user user").getResultList();
 			for(Person person : persons){
-				person.networkId = person.user.networkId;
+				person.setTenantId(person.user.getTenantId());
 				person.email = person.email != null ? person.email.trim().toLowerCase() : null;
 				if(!Pattern.matches("^[a-z0-9\\._-]{3,50}$", person.username)){
 					person.username = StringUtil.generateRandomString(10, "a");

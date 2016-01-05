@@ -13,7 +13,6 @@
 		<class>co.xarx.trix.domain.Comment</class>
 		<class>co.xarx.trix.domain.File</class>
 		<class>co.xarx.trix.domain.FileContents</class>
-		<class>co.xarx.trix.domain.GlobalParameter</class>
 		<class>co.xarx.trix.domain.Image</class>
 		<class>co.xarx.trix.domain.Network</class>
 		<class>co.xarx.trix.domain.NetworkRole</class>

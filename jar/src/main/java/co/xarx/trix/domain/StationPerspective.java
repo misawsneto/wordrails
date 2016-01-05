@@ -8,11 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name="station_perspective")
-public class StationPerspective {
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public Integer id;
+public class StationPerspective extends BaseEntity {
 
 	@Size(min=1, max=100)
 	public String name;

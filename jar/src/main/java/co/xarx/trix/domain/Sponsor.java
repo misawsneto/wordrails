@@ -1,18 +1,13 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
-public class Sponsor {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
+public class Sponsor extends BaseEntity {
+
 
 	@NotNull
 	@ManyToOne
@@ -36,15 +31,6 @@ public class Sponsor {
 	@OneToMany
 	public Set<Ad> ads;
 
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable = false)
-	public Date createdAt;
-
 	@PrePersist
 	public void onCreate() {
 		if (logo != null && logo.original != null) {
@@ -56,8 +42,6 @@ public class Sponsor {
 			logoMediumId = null;
 			logoLargeId = null;
 		}
-
-		createdAt = updatedAt = new Date();
 	}
 
 	@PreUpdate
@@ -71,7 +55,5 @@ public class Sponsor {
 			logoMediumId = null;
 			logoLargeId = null;
 		}
-
-		updatedAt = new Date();
 	}
 }

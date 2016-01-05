@@ -78,7 +78,7 @@ public class ImageScript {
 
 		log.debug("Starting upload of files");
 		for (File file : files.values()) {
-			if (fileIdsAlreadySaved.contains(file.id) || file.getNetworkId() == null) continue;
+			if (fileIdsAlreadySaved.contains(file.id) || file.getTenantId() == null) continue;
 			Set<Image> images = imageRepository.findByFileId(file.id);
 			for (Image image : images) {
 				Map<String, String> hashs = Maps.newHashMap();
@@ -109,7 +109,6 @@ public class ImageScript {
 					}
 
 					Picture pic = new Picture(sizeTag, imageFile);
-					pic.setNetworkId(image.getNetworkId());
 					pic.setTenantId(image.getTenantId());
 					pictureRepository.save(pic);
 					pictures.add(pic);

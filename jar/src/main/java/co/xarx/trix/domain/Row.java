@@ -8,15 +8,11 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
-public class Row implements Comparable<Row> {
+public class Row extends BaseEntity implements Comparable<Row> {
 	public static final String FEATURED_ROW = "F";
 	public static final String ORDINARY_ROW = "O";
 	public static final String SPLASHED_ROW = "S";
 	public static final String HOME_ROW = "H";
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public Integer id;
 	
 	@NotNull
 	@Size(min=1, max=1)

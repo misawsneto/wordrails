@@ -16,7 +16,7 @@ import java.util.Set;
 @Table(name = "person",
 		uniqueConstraints = {
 				@UniqueConstraint(columnNames = {"user_id", "username"}),
-				@UniqueConstraint(columnNames = {"username", "networkId"})
+				@UniqueConstraint(columnNames = {"username", "tenantId"})
 		})
 public class Person extends BaseEntity implements Serializable {
 
@@ -27,7 +27,6 @@ public class Person extends BaseEntity implements Serializable {
 
 	@Size(max = 50)
 	@NotNull
-	@Column(unique = true)
 	@Pattern(regexp = "^[a-z0-9\\._-]{3,50}$")
 	public String username;
 

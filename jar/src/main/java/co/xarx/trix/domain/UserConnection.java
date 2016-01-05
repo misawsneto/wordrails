@@ -6,11 +6,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "userconnection")
-public class UserConnection implements Serializable {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
+public class UserConnection extends BaseEntity implements Serializable {
 
 	@Column(unique = true)
 	public String accessToken;
@@ -32,10 +28,4 @@ public class UserConnection implements Serializable {
 	public String email;
 
 	public String imageUrl;
-
-	public String secret;
-
-	public String refreshToken;
-
-	public Long expireTime;
 }

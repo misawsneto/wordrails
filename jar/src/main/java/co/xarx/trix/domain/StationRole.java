@@ -6,10 +6,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "person_station_role", uniqueConstraints = {@UniqueConstraint(columnNames = {"person_id", "station_id"})})
-public class StationRole {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
+public class StationRole extends BaseEntity {
+
 
 	@NotNull
 	@ManyToOne

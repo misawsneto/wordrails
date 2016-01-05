@@ -1,6 +1,9 @@
 package co.xarx.trix.security.auth;
 
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.social.FacebookUser;
+import co.xarx.trix.domain.social.GoogleUser;
+import co.xarx.trix.domain.social.SocialUser;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;

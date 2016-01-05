@@ -1,18 +1,11 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 
 @Entity
-public class Ad {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
+public class Ad extends BaseEntity {
 
 	@OneToOne
 	public Image image;
@@ -23,15 +16,6 @@ public class Ad {
 
 	@Lob
 	public String link;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable = false)
-	public Date createdAt;
 
 	@NotNull
 	@ManyToOne
@@ -50,8 +34,6 @@ public class Ad {
 			imageMediumId = null;
 			imageLargeId = null;
 		}
-
-		createdAt = updatedAt = new Date();
 	}
 
 	@PreUpdate
@@ -67,7 +49,5 @@ public class Ad {
 			imageMediumId = null;
 			imageLargeId = null;
 		}
-
-		updatedAt = new Date();
 	}
 }

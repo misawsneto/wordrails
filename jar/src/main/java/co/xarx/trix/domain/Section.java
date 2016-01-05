@@ -1,32 +1,29 @@
 package co.xarx.trix.domain;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
-/**
- * Created by misael on 28/09/2015.
- */
+
 @Entity
-public class Section implements Serializable {
+public class Section extends BaseEntity implements Serializable {
 
-    private static final long serialVersionUID = 7424825842348684233L;
+	private static final long serialVersionUID = 7424825842348684233L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
+	public String name;
 
-    public String name;
+	@Lob
+	public String loggedInUrl;
 
-    @Lob
-    public String loggedInUrl;
+	@Lob
+	public String anonymousUrl;
 
-    @Lob
-    public String anonymousUrl;
+	@Lob
+	public String content;
 
-    @Lob
-    public String content;
-
-    @ManyToOne
-    @JoinColumn(name = "network_id")
-    public Network network;
+	@ManyToOne
+	@JoinColumn(name = "network_id")
+	public Network network;
 }

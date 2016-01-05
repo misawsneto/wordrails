@@ -9,11 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "network_id"}))
-public class Invitation {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer id;
+public class Invitation extends BaseEntity {
 
 	@NotNull
 	@Column(unique = true)
@@ -35,14 +31,6 @@ public class Invitation {
 	@ManyToOne
 	@JoinColumn(name = "network_id")
 	public Network network;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable = false)
-	public Date createdAt;
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
 
 	@PrePersist
 	void onCreate() {
