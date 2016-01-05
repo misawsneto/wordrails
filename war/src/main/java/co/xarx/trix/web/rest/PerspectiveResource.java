@@ -352,7 +352,7 @@ public class PerspectiveResource {
 
         List<Cell> cells = null;
 
-        List<Integer> ids = termRepository.findTermIdsByTaxonomyId(row.term.taxonomyId);
+        List<Integer> ids = termRepository.findTermIdsByTaxonomyId(row.homePerspective.taxonomyId);
 
         int numberPostsNotPositioned = size - positionedCells.size();
         if(numberPostsNotPositioned > 0){
