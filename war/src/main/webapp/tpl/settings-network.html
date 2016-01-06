@@ -26,6 +26,14 @@
 	                    Permitir cadastro em estações públicas
 	                  </label>
 	                </p>
+                  <p>
+                    <label class="md-check p-l-lg">
+                      <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.addStationRolesOnSignup"
+                      ng-true-value="true" ng-false-value="false">
+                      <i class="blue"></i>
+                      Adicionar os usuários cadastrados em todas as estações
+                    </label>
+                  </p>
 	                <p>
 	                  <label class="md-switch">
 	                    <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.allowSocialLogin"
