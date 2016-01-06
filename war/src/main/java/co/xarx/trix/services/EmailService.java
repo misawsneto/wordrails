@@ -2,14 +2,11 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.domain.Invitation;
 import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Person;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
 import com.amazonaws.services.simpleemail.model.*;
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -104,17 +101,13 @@ public class EmailService {
             scopes.put("networkName", network.name);
             scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", "+ c1.getBlue() +" )");
             scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", "+ c2.getBlue() +" )");
-            scopes.put("link", "http://"+network.subdomain+".trix.rocks");
+            scopes.put("link", "http://"+ (network.domain != null ? network.domain : network.subdomain+".trix.rocks"));
             scopes.put("invitationUrl", invitation.getInvitationUrl());
             scopes.put("networkSubdomain", network.subdomain);
             scopes.put("network", network);
             scopes.put("hash", invitation.hash);
 
             StringWriter writer = new StringWriter();
-
-            Handlebars handlebars = new Handlebars();
-
-            Template hTemplate = handlebars.compileInline("Hello {{this}}!");
 
             MustacheFactory mf = new DefaultMustacheFactory();
 
@@ -123,8 +116,8 @@ public class EmailService {
             writer.flush();
 
             String emailBody = writer.toString();
-            String subject = "[ Test ]" + " Cadastro de senha";
-            sendSimpleMail("misawsneto@gmail.com", subject, emailBody);
+            String subject = "[ "+ network.name +" ]" + " Convite ";
+            sendSimpleMail(invitation.email, subject, emailBody);
         }catch (Exception e){
             e.printStackTrace();
         }

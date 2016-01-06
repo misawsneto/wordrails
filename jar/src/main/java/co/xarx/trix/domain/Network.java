@@ -186,6 +186,9 @@ public class Network implements Serializable{
 	@Lob
 	public String appleStoreAddress;
 
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    public boolean addStationRolesOnSignup;
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null) {

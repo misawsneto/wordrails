@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Email;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "network_id"}))
@@ -28,9 +29,8 @@ public class Invitation {
 
 	public boolean active = true;
 
-	@ManyToOne
-	@JoinColumn(name = "station_id")
-	public Station station;
+    @OneToMany
+	public Set<Station> stations;
 
 	@ManyToOne
 	@JoinColumn(name = "network_id")

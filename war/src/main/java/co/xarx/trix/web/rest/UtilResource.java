@@ -266,7 +266,6 @@ public class UtilResource {
 		for (int i = 0; i < count; i++) {
 			Invitation invitation =  new Invitation();
 			invitation.network = network;
-			invitation.station = station;
 			invitation.active = true;
 			invitation.hash = StringUtil.generateRandomString(8, "aA#");
 			invites.add(invitation);
