@@ -92,9 +92,9 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	)
 	public Set<Video> videos;
 
-    @OneToMany
-    @JoinTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
-    public Set<Image> images;
+//    @OneToMany
+//    @JoinTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
+//    public Set<Image> images;
 
     @NotNull
     @ManyToOne
@@ -373,14 +373,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	public void setVideos(Set<Video> videos) {
 		this.videos = videos;
-	}
-
-	public Set<Image> getImages() {
-		return images;
-	}
-
-	public void setImages(Set<Image> images) {
-		this.images = images;
 	}
 
 	public Person getAuthor() {

@@ -1,8 +1,5 @@
-DROP TABLE section_fixedquery;
-DROP TABLE person_bookmark;
-DELETE FROM image_hash;
-DELETE FROM image_picture;
-DELETE FROM picture;
+DROP TABLE IF EXISTS section_fixedquery;
+DROP TABLE IF EXISTS person_bookmark;
 
 CREATE TABLE `person_bookmark` (
   `person_id` INT(11) NOT NULL,

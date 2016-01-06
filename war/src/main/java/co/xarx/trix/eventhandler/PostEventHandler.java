@@ -1,6 +1,5 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostTrash;
 import co.xarx.trix.elasticsearch.domain.ESPost;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.Set;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -111,11 +109,6 @@ public class PostEventHandler {
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
 		if (postAndCommentSecurityChecker.canRemove(post)) {
 
-			Set<Image> images = post.images;
-			if (images != null && images.size() > 0) {
-				postRepository.updateFeaturedImagesToNull(images);
-			}
-			imageRepository.delete(images);
 			cellRepository.delete(cellRepository.findByPost(post));
 			commentRepository.delete(post.comments);
 			postReadRepository.deleteByPost(post);
