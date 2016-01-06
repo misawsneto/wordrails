@@ -3,8 +3,9 @@ package co.xarx.trix.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-@MappedSuperclass
-public abstract class EventLog {
+@Entity
+@Table(name = "event_log")
+public class EventLog {
 
 	public static final String EVENT_CREATE = "CREATE";
 	public static final String EVENT_UPDATE = "UPDATE";
@@ -15,12 +16,21 @@ public abstract class EventLog {
 	public Integer id;
 
 	@NotNull
-	@Column
+	public Integer entityId;
+
+	@NotNull
 	public String entityName;
 
 	@NotNull
-	@Column
 	public String eventName;
+
+	public Integer getEntityId() {
+		return entityId;
+	}
+
+	public void setEntityId(Integer entityId) {
+		this.entityId = entityId;
+	}
 
 	public void setId(Integer id) {
 		this.id = id;

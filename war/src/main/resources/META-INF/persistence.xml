@@ -11,7 +11,7 @@
 		<class>co.xarx.trix.domain.AndroidApp</class>
 		<class>co.xarx.trix.domain.Cell</class>
 		<class>co.xarx.trix.domain.Comment</class>
-		<class>co.xarx.trix.domain.PostEventLog</class>
+		<class>co.xarx.trix.domain.EventLog</class>
 		<class>co.xarx.trix.domain.File</class>
 		<class>co.xarx.trix.domain.FileContents</class>
 		<class>co.xarx.trix.domain.GlobalParameter</class>

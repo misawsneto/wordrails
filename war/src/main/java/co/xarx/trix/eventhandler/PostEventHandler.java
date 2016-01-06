@@ -9,7 +9,6 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
-import co.xarx.trix.services.LogService;
 import co.xarx.trix.services.PostService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +46,6 @@ public class PostEventHandler {
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
-	@Autowired
-	private LogService logService;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
@@ -89,7 +86,6 @@ public class PostEventHandler {
 		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
 			postService.buildNotification(post);
 		}
-		logService.logPostCreation(post);
 		postEsRepository.save(post);
 	}
 

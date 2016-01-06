@@ -13,6 +13,7 @@ import co.xarx.trix.script.ImageScript;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.StringUtil;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -942,6 +943,17 @@ public class UtilResource {
 	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {
 		if(isLocal(request.getHeader("Host"))){
 			imageScript.addPicturesToImages();
+		}
+	}
+
+	Logger log = Logger.getLogger(this.getClass().getName());
+
+	@GET
+	@Path("/testLog")
+	@Transactional(readOnly=false)
+	public void testLog(@Context HttpServletRequest request) throws InterruptedException {
+		if(isLocal(request.getHeader("Host"))){
+			log.info("testLog");
 		}
 	}
 
