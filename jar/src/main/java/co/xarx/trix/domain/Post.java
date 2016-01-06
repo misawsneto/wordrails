@@ -143,7 +143,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
     public boolean notify = false;
 
 	@Lob
-	@Deprecated
 	public String imageCaptionText;
 
 	@Lob

@@ -332,7 +332,7 @@ public class PostsResource {
 		String body = postRepository.findPostBodyById(postId);
 		Post post = postRepository.findOne(postId);
 
-		asyncService.countPostRead(TenantContextHolder.getCurrentNetworkId(), post, person, request.getRequestedSessionId());
+		asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> postService.countPostRead(post, person, request.getRequestedSessionId()));
 
 		StringResponse content = new StringResponse();
 		content.response = body;

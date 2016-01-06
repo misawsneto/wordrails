@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.aspect.annotations.Profile;
+import co.xarx.trix.aspect.annotations.TimeIt;
 import co.xarx.trix.domain.page.*;
 import co.xarx.trix.persistence.PageRepository;
 import co.xarx.trix.services.PageService;
@@ -26,7 +26,7 @@ public class WebResource {
 	@Autowired
 	private PageService pageService;
 
-	@Profile
+	@TimeIt
 	@GET
 	@Path("/{stationId}/pages")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -33,7 +33,7 @@ public class AuthResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/signin")
 	public Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
-		Network network = cacheService.getNetwork(TenantContextHolder.getCurrentNetworkId());
+		Network network = cacheService.getNetworkBySubdomain(TenantContextHolder.getCurrentTenantId());
 
 		boolean allowSocialLogin = true;
 		OAuthService service = null;

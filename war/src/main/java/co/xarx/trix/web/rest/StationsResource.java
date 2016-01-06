@@ -1,9 +1,9 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.HashSet;
 
 @Path("/stations")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -59,8 +58,7 @@ public class StationsResource {
 		Person person = authProvider.getLoggedPerson();
 		Station station = stationRepository.findOne(stationId);
 
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		NetworkRole role = networkRolesRepository.findByNetworkAndPerson(network, person);
+		NetworkRole role = networkRolesRepository.findByPerson(person);
 
 		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
 
@@ -76,12 +74,10 @@ public class StationsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response setMainStation(@PathParam("stationId") Integer stationId, @FormParam("value") boolean value) {
 		Person person = authProvider.getLoggedPerson();
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		NetworkRole role = networkRolesRepository.findByNetworkAndPerson(network, person);
+		NetworkRole role = networkRolesRepository.findByPerson(person);
 
 		if (role.admin) {
-			network.stations = new HashSet<>(stationRepository.findByNetworkId(network.id));
-			for (Station station : network.stations) {
+			for (Station station : stationRepository.findAll()) {
 				if (station.id.equals(stationId)) station.main = value;
 				else station.main = false;
 

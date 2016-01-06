@@ -7,6 +7,7 @@ import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.CacheService;
+import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.PerspectiveResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.CacheBuilder;
@@ -59,7 +60,7 @@ public class WordrailsService {
 				.build(
 						new CacheLoader<PermissionId, StationsPermissions>() {
 							public StationsPermissions load(PermissionId id) {
-								List<StationPermission> permissions = getStationPermissions(id.baseUrl, id.personId, id.networkId);
+								List<StationPermission> permissions = getStationPermissions(id.baseUrl, id.personId);
 								if (permissions != null) {
 									StationsPermissions stationsPermissions = new StationsPermissions();
 									stationsPermissions.stationPermissionDtos = permissions;
@@ -82,36 +83,28 @@ public class WordrailsService {
 		return Collections.singletonList(link);
 	}
 
-	public String getSubdomainFromHost(String host) {
-		String[] names = host.split("\\.");
-		String topDomain = names[names.length - 2] + "." + names[names.length - 1];
-		return !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
-	}
+	@Autowired
+	private HttpServletResponse response;
 
-    @Autowired
-    private HttpServletResponse response;
-
-	public Network getNetworkFromHost(String host){
+	public Network getNetworkFromHost(String host) {
 		Network network = null;
-        String subdomain = getSubdomainFromHost(host);
-        if(subdomain != null && !subdomain.isEmpty()){
-            try {
-                network = cacheService.getNetworkBySubdomain(subdomain);
-            } catch (Exception e) {
-                // no network found in cache or db.
-            }
-            if (network != null)
-                return network;
-        }
+		String subdomain = StringUtil.getSubdomainFromHost(host);
+		if (subdomain != null && !subdomain.isEmpty()) {
+			try {
+				network = cacheService.getNetworkBySubdomain(subdomain);
+			} catch (Exception e) {
+				// no network found in cache or db.
+			}
+			if (network != null) return network;
+		}
 
 		try {
-            network = cacheService.getNetworkByDomain(host);
-            if(network != null)
-			    return network;
-            response.setStatus(400);
-            return null;
+			network = cacheService.getNetworkByDomain(host);
+			if (network != null) return network;
+			response.setStatus(400);
+			return null;
 		} catch (Exception e) {
-            throw new NotFoundException();
+			throw new NotFoundException();
 		}
 	}
 
@@ -216,11 +209,11 @@ public class WordrailsService {
 		term.taxonomy = null;
 	}
 
-	public List<StationPermission> getStationPermissions(String baseUrl, Integer personId, Integer networkId) {
+	public List<StationPermission> getStationPermissions(String baseUrl, Integer personId) {
 		//Stations Permissions
 		List<StationPermission> stationPermissionDtos = new ArrayList<>();
 		try {
-			List<Station> stations = stationRepository.findByPersonIdAndNetworkId(personId, networkId);
+			List<Station> stations = stationRepository.findByPersonId(personId);
 			for (Station station : stations) {
 				StationPermission stationPermissionDto = new StationPermission();
 				StationDto stationDto = new StationDto();

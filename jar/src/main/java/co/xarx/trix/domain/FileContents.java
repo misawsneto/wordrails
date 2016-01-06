@@ -27,4 +27,10 @@ public class FileContents extends BaseEntity {
 	public Long size;
 
 	public Blob contents;
+
+	public String getExtension() {
+		if (mime != null && mime.split("/").length == 2) return mime.split("/")[1];
+
+		return null;
+	}
 }

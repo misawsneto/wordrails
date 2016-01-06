@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @MappedSuperclass
@@ -37,8 +38,9 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 	private int version;
 
 	@JsonIgnore
+	@NotNull
 	@Column(columnDefinition = "VARCHAR(255) DEFAULT ''")
-	String tenantId;
+	public String tenantId;
 
 	@Override
 	public String getTenantId() {

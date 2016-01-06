@@ -30,5 +30,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>, Quer
 
 	@RestResource(exported = false)
 	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.stationId in (select s.id from Station s where s.network.id = :networkId ) and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")
-	List<Object[]> countByNetworkAndDate(@Param("networkId") Integer networkId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
+	List<Object[]> countByDate(@Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
 }

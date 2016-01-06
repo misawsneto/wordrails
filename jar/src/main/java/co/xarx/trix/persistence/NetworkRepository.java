@@ -8,28 +8,27 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
+import java.util.Set;
 
 public interface NetworkRepository extends JpaRepository<Network, Integer>, QueryDslPredicateExecutor<Network> {
 
 	@Query("from Network where id > :id order by id desc")
 	List<Network> findNetworksOrderDesc(@Param("id") Integer id);
 
-	@Query("select n.id from Network n join n.stations s where s.id = :stationId")
 	@RestResource(exported = false)
+	@Query("select n.id from Network n join n.stations s where s.id = :stationId")
 	List<Integer> findIdsByStation(@Param("stationId") Integer stationId);
 
+	@RestResource(exported = false)
 	@Query("select network from Network network " +
 			"join network.personsNetworkRoles personRoles " +
 			"join personRoles.person person " +
 			"where person.id = :personId and network.id IN (:networksId)")
-	@RestResource(exported = false)
 	List<Network> belongsToNetworks(@Param("personId") Integer personId, @Param("networksId") List<Integer> networksId);
 
 	@RestResource(exported = false)
-	Network findNetworkBySubdomain(@Param("subdomain") String subdomain);
-
-	@RestResource(exported = true)
-	Network findOneBySubdomain(@Param("subdomain") String subdomain);
+	@Query("select tenantId from Network")
+	Set<String> findTenantIds();
 
 	@RestResource(exported = false)
 	Network findByDomain(String domain);
@@ -39,8 +38,8 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 			"(select count(*) from PostRead pr where pr.post.stationId = s.id), " +
 			"(select count(*) from Comment comment where comment.post.stationId = s.id), " +
 			"(select count(*) from Recommend recommend where recommend.post.stationId = s.id)," +
-			"(select count(*) from PersonNetworkRegId regId where regId.network.id = :networkId), " +
-			"(select count(*) from PersonNetworkToken token where token.network.id = :networkId)" +
-			" from Station s where s.network.id = :networkId")
-	List<Object[]> findNetworkStats(@Param("networkId") Integer networkId);
+			"(select count(*) from PersonNetworkRegId regId), " +
+			"(select count(*) from PersonNetworkToken token)" +
+			" from Station s")
+	List<Object[]> findStats();
 }

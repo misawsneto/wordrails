@@ -23,8 +23,9 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@CachePut(value = "person", key = "#p0.user.username")
 	Person save(Person person);
 
-//	@Query("SELECT person FROM Person person where person.username = :username")
-//	Person findByUsernameAndNetworkId(@Param("username") String username, @Param("networkId") Integer networkId);
+	@Deprecated
+	@Query("SELECT person FROM Person person where person.username = :username and (:networkId is null or :networkId > 0)")
+	Person findByUsernameAndNetworkId(@Param("username") String username, @Param("networkId") Integer networkId);
 
 	@RestResource(exported = false)
 	Person findByUser(@Param("user") User user);

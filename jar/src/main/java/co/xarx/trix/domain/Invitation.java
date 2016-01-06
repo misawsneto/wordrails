@@ -35,7 +35,7 @@ public class Invitation extends BaseEntity {
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
-		invitationUrl = "http://" + network.subdomain + ".trix.rocks/" + "invitation?hash=" + hash;
+		invitationUrl = "http://" + network.getTenantId() + ".trix.rocks/" + "invitation?hash=" + hash;
 	}
 
 	@PreUpdate

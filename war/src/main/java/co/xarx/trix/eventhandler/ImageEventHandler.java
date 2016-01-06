@@ -53,7 +53,7 @@ public class ImageEventHandler {
 		} else if (originalFile.type.equals(File.INTERNAL)) {
 			//if it's running here, this is a new image and needs to upload all sizes
 			try (InputStream inputStream = originalFile.contents.getBinaryStream()) {
-				newImage = imageService.createNewImage(image.type, inputStream, originalFile.mime, false, true);
+				newImage = imageService.createNewImage(image, inputStream, originalFile.mime, false, true);
 				originalFile.contents = null;
 				originalFile.type = File.EXTERNAL;
 			} catch (Exception e) {

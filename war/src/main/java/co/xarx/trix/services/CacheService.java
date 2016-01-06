@@ -74,7 +74,7 @@ public class CacheService {
 				//	       .removalListener(MY_LISTENER)
 				.build(new CacheLoader<String, Network>() {
 							public Network load(String subdomain) {
-								return networkRepository.findNetworkBySubdomain(subdomain);
+								return networkRepository.findOne(QNetwork.network.tenantId.eq(subdomain));
 							}
 						});
 
@@ -131,8 +131,12 @@ public class CacheService {
 		networks.refresh(id);
 	}
 
-	public Network getNetworkBySubdomain(String subdomain) throws ExecutionException {
-		return networks2.get(subdomain);
+	public Network getNetworkBySubdomain(String subdomain) {
+		try {
+			return networks2.get(subdomain);
+		} catch (ExecutionException e) {
+			return networkRepository.findOne(QNetwork.network.tenantId.eq(subdomain));
+		}
 	}
 
 	public Network getNetworkByDomain(String host) throws ExecutionException {

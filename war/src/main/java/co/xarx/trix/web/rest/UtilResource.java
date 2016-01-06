@@ -235,7 +235,7 @@ public class UtilResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response generate(@FormParam("subdomain") String subdomain, @FormParam("stationId") Integer stationId, @FormParam("count") Integer count){
 
-		Network network = networkRepository.findOneBySubdomain(subdomain);
+		Network network = networkRepository.findOne(QNetwork.network.tenantId.eq(subdomain));
 		Station station = stationId != null ? stationRepository.findOne(stationId) : null;
 
 		List<Invitation> invites = new ArrayList<>();
@@ -696,7 +696,7 @@ public class UtilResource {
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
 			authProvider.passwordAuthentication(user, user.password);
 
-			List<Station> stations = stationRepository.findByNetworkId(networkId);
+			List<Station> stations = stationRepository.findAll();
 			for (Station station: stations){
 				stationEventHandler.handleBeforeDelete(station);
 				stationRepository.delete(station);
@@ -708,7 +708,6 @@ public class UtilResource {
 				personRepository.delete(person);
 			}
 
-			networkEventHandler.handleBeforeCreate(network);
 			networkRepository.delete(network);
 
 			cacheService.removeNetwork(networkId);

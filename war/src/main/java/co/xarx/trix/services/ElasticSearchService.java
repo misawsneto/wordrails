@@ -69,9 +69,9 @@ public class ElasticSearchService {
 
 	@PostConstruct
 	public void init() {
-		log.info("Start indexing of elasticsearch entities with " + this.toString());
-
 		if(indexES) {
+			log.info("Start indexing of elasticsearch entities");
+
 			elasticsearchTemplate.deleteIndex(index);
 
 			List<MultiTenantEntity> stations = new ArrayList(stationRepository.findAll());
@@ -84,6 +84,8 @@ public class ElasticSearchService {
 			mapThenSave(stations, ESStation.class, esStationRepository);
 			mapThenSave(posts, ESPost.class, esPostRepository);
 			mapThenSave(people, ESPerson.class, esPersonRepository);
+		} else {
+			log.info("Elasticsearch indexing is disabled");
 		}
 	}
 

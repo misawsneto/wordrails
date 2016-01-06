@@ -1,26 +1,38 @@
 package co.xarx.trix.web.filter;
 
-import co.xarx.trix.WordrailsService;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Network;
+import co.xarx.trix.persistence.NetworkRepository;
+import co.xarx.trix.util.StringUtil;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Set;
 
 @Component("networkDomainFilter")
 public class NetworkDomainFilter implements Filter {
 
 	@Autowired
-	private WordrailsService wordrailsService;
+	private NetworkRepository networkRepository;
+
+	private Set<String> tenantIds;
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
+
+	@PostConstruct //method with no args is required
+	public void init() throws ServletException {
+		tenantIds = Sets.newConcurrentHashSet(networkRepository.findTenantIds());
 	}
 
 	@Override
@@ -32,19 +44,12 @@ public class NetworkDomainFilter implements Filter {
 		if (host.equals("xarx.co") || host.equals("trix.rocks") || host.equals("xarxlocal.com")) {
 			response.sendRedirect("/home");
 		} else {
-			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-			if (network == null) {
+			String subdomain = StringUtil.getSubdomainFromHost(host);
+			if (tenantIds.contains(subdomain)) {
+				TenantContextHolder.setCurrentTenantId(subdomain);
+			} else {
 				response.sendRedirect("/404.html");
 				return;
-			} else {
-				TenantContextHolder.setCurrentNetworkId(network.id);
-				TenantContextHolder.setCurrentTenantId(network.subdomain);
-				request.setAttribute("networkId", network.id);
-				//where should always enter in trix
-				HttpSession session = request.getSession();
-				session.setAttribute("network", network);
-				session.setAttribute("networkId", network.id);
-				session.setAttribute("networkSubdomain", network.subdomain);
 			}
 		}
 
@@ -53,11 +58,5 @@ public class NetworkDomainFilter implements Filter {
 		response.setDateHeader("Expires", 0);
 
 		chain.doFilter(req, res);
-	}
-
-	@Override
-	public void init(FilterConfig arg0) throws ServletException {
-		// TODO Auto-generated method stub
-
 	}
 }

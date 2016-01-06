@@ -70,6 +70,7 @@ public class Image extends BaseEntity implements Serializable {
 	public String title;
 	
 	@Lob
+	@Deprecated
 	public String caption;
 	
 	@Lob
@@ -119,8 +120,6 @@ public class Image extends BaseEntity implements Serializable {
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean vertical = false;
-	
-	public Integer postId;
 
 	@PrePersist
 	public void create(){

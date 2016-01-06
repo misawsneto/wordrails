@@ -186,22 +186,21 @@ public class GCMService {
 	}
 
 	public void updateRegId(Network network, Person person, String regId, Double lat, Double lng) {
-		try{
-
+		try {
 			PersonNetworkRegId pnregId = personNetworkRegIdRepository.findOneByRegId(regId);
-			if(pnregId == null || pnregId.regId == null){
+			if (pnregId == null || pnregId.regId == null) {
 				pnregId = new PersonNetworkRegId();
 				pnregId.regId = regId;
 			}
 
 			pnregId.network = network;
 			pnregId.person = person == null || person.username.equals("wordrails") ? null : person;
-			if(lat != null && lng != null){
+			if (lat != null && lng != null) {
 				pnregId.lat = lat;
 				pnregId.lng = lng;
 			}
 			personNetworkRegIdRepository.save(pnregId);
-		}catch(Exception e){
+		} catch (Exception e) {
 			System.out.println(e.getLocalizedMessage());
 		}
 	}

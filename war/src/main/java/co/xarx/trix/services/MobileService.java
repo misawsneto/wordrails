@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MobileService {
+
+	@Autowired
+	public GCMService gcmService;
+	@Autowired
+	public APNService apnService;
 	@Autowired
 	private AsyncService asyncService;
 	@Autowired
@@ -24,8 +29,8 @@ public class MobileService {
 
 		try {
 			if (post.station != null) {
-				asyncService.notifyAndroid(TenantContextHolder.getCurrentNetworkId(), post.station.id, notification);
-				asyncService.notifyApple(TenantContextHolder.getCurrentNetworkId(), post.station.id, notification);
+				asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> gcmService.sendToStation(post.station.id, notification));
+				asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> apnService.sendToStation(post.station.id, notification));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

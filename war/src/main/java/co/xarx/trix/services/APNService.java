@@ -12,6 +12,7 @@ import com.relayrides.pushy.apns.PushManager;
 import com.relayrides.pushy.apns.PushManagerConfiguration;
 import com.relayrides.pushy.apns.util.*;
 import com.rometools.utils.Lists;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,19 +42,20 @@ public class APNService {
 	private CertificateIosRepository certificateIosRepository;
 	private PushManager<SimpleApnsPushNotification> pushManager;
 
-	private boolean init(Integer networkId) {
-		CertificateIos certificate;
+	private boolean init() {
+		CertificateIos certificate = null;
 		SynchronousQueue sq = new SynchronousQueue();
 
-		certificate = certificateIosRepository.findOne(networkId);
+		List<CertificateIos> certificates = certificateIosRepository.findAll();
+		if(CollectionUtils.isNotEmpty(certificates)) certificate = certificates.get(0); //should have only one anyways
 
 		try {
-			if(certificate.isValid()){
+			if(certificate != null && certificate.isValid()){
 				this.pushManager = new PushManager<SimpleApnsPushNotification>(ApnsEnvironment.getProductionEnvironment(), SSLContextUtil.createDefaultSSLContext(certificate.certificateIos.getBinaryStream(), certificate.certificatePassword),
 						null, // Optional: custom event loop group
 						null, // Optional: custom ExecutorService for calling listeners
 						sq, // Optional: custom BlockingQueue implementation
-						new PushManagerConfiguration(), "NetworkId_" + String.valueOf(networkId));
+						new PushManagerConfiguration(), "NetworkId_" + String.valueOf(certificate.id));
 			} else {
 				return false;
 			}
@@ -82,10 +84,10 @@ public class APNService {
 	}
 
 	@Transactional
-	public void sendToStation(Integer networkId, Integer stationId, Notification notification) {
+	public void sendToStation(Integer stationId, Notification notification) {
 		List<PersonNetworkToken> personNetworkTokens;
 		if (stationRepository.isUnrestricted(stationId)) {
-			personNetworkTokens = personNetworkTokenRepository.findByNetworkId(networkId);
+			personNetworkTokens = personNetworkTokenRepository.findAll();
 		} else {
 			personNetworkTokens = personNetworkTokenRepository.findTokenByStationId(stationId);
 		}
@@ -95,7 +97,7 @@ public class APNService {
 		}
 
 		try {
-			if(init(networkId)){
+			if(init()){
 				apnNotify(personNetworkTokens, notification);
 			}
 		} catch (Exception e) {

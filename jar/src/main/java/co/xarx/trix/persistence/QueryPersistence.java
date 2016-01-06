@@ -189,14 +189,6 @@ public class QueryPersistence {
 	}
 
 	@Transactional
-	public void updateNetworkLogoId(List<Integer> repeatedImages, Integer imageId){
-		manager.createQuery("update Network set logo.id = :imageId where logo.id in (:repeatedImages)")
-				.setParameter("imageId", imageId)
-				.setParameter("repeatedImages", repeatedImages)
-				.executeUpdate();
-	}
-
-	@Transactional
 	public void updateNetworkLoginImageId(List<Integer> repeatedImages, Integer imageId){
 		manager.createQuery("update Network set loginImage.id = :imageId where loginImage.id in (:repeatedImages)")
 				.setParameter("imageId", imageId)

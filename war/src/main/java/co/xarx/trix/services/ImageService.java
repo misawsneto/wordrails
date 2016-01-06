@@ -1,19 +1,19 @@
 package co.xarx.trix.services;
 
 
-import co.xarx.trix.domain.QFile;
-import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.domain.File;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Picture;
+import co.xarx.trix.domain.QFile;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
 import co.xarx.trix.util.FileUtil;
+import co.xarx.trix.util.ImageUtil;
 import co.xarx.trix.util.TrixUtil;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.google.common.collect.Sets;
-import co.xarx.trix.util.ImageUtil;
 import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,11 +40,8 @@ public class ImageService {
 	}
 
 
-	public Image createNewImage(String type, InputStream inputStream, String mime, boolean persistOnDatabase, boolean returnDuplicateIfExists) throws IOException, FileUploadException {
-		Image newImage = new Image();
-		newImage.type = type;
-
-		Image.Type imageType = Image.Type.findByAbbr(type);
+	public Image createNewImage(Image newImage, InputStream inputStream, String mime, boolean persistOnDatabase, boolean returnDuplicateIfExists) throws IOException, FileUploadException {
+		Image.Type imageType = Image.Type.findByAbbr(newImage.type);
 		if (imageType == null) {
 			throw new BadRequestException("Image type is not valid");
 		}
@@ -54,7 +51,7 @@ public class ImageService {
 		java.io.File originalFile = FileUtil.createNewTempFile(inputStream);
 		ImageUtil.ImageFile imageFile = ImageUtil.getImageFile(originalFile);
 
-		Image existingImage = getImageFromHashAndType(type, imageFile.hash);
+		Image existingImage = getImageFromHashAndType(newImage.type, imageFile.hash);
 		if (existingImage != null) {
 			if(existingImage.pictures != null && !existingImage.pictures.isEmpty() &&
 					existingImage.pictures.size() == imageType.count()+1) { //+1 because original
@@ -122,15 +119,8 @@ public class ImageService {
 		newImage.type = existingImage.type;
 
 		for (Picture pic : existingImage.pictures) {
-			if (!TrixUtil.urlExists(amazonCloudService.getPublicImageURL(pic.file.hash))) { //if image doesnt exist on amazon servers, upload it. it should exist
-				java.io.File tmpFile = FileUtil.createNewTempFile(new FileInputStream(originalFile));
-				try {
-					amazonCloudService.uploadPublicImage(tmpFile, pic.file.size,
-							pic.file.hash, pic.sizeTag, pic.file.getExtension(), true);
-				} catch (AmazonS3Exception e) {
-					throw new FileUploadException("Error uploading image to s3", e);
-				}
-			}
+			java.io.File tmpFile = FileUtil.createNewTempFile(new FileInputStream(originalFile));
+			uploadIfDoesntExist(tmpFile, pic.file.hash, pic.file.size, pic.sizeTag, pic.file.getExtension());
 
 			newImage.pictures.add(pic);
 		}
@@ -142,6 +132,20 @@ public class ImageService {
 		}
 
 		return newImage;
+	}
+
+	public void uploadIfDoesntExist(java.io.File file, String hash, Long size, String sizeTag, String extension) throws IOException, FileUploadException {
+		if(hash == null) hash = FileUtil.getHash(new FileInputStream(file));
+		if(size == null) size = file.length();
+		if(extension == null) extension = "png";
+		if (!TrixUtil.urlExists(amazonCloudService.getPublicImageURL(hash))) { //if image doesnt exist on amazon servers, upload it. it should exist
+			try {
+				amazonCloudService.uploadPublicImage(file, size,
+						hash, sizeTag, extension, true);
+			} catch (AmazonS3Exception e) {
+				throw new FileUploadException("Error uploading image to s3", e);
+			}
+		}
 	}
 
 	private Picture getOriginalPicture(String mime, java.io.File originalFile, ImageUtil.ImageFile imageFile) throws IOException {

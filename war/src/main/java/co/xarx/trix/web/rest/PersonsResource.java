@@ -145,9 +145,7 @@ public class PersonsResource {
 	public Response findPerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-
-		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network)) {
+		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin()) {
 			forward();
 			return Response.status(Status.OK).build();
 		}else
@@ -212,9 +210,7 @@ public class PersonsResource {
 	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-
-		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network))
+		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin())
 			forward();
 		else
 			throw new BadRequestException();
@@ -298,7 +294,7 @@ public class PersonsResource {
 
 		Person person = authProvider.getLoggedPerson();
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id);
 
 		List<Integer> stationIds = new ArrayList<>();
 		if(permissions != null && permissions.size() > 0){
@@ -329,7 +325,7 @@ public class PersonsResource {
 			person = personRepository.findOne(personId);
 		}
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, TenantContextHolder.getCurrentNetworkId());
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id);
 
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
@@ -355,7 +351,7 @@ public class PersonsResource {
 
 		Person person = authProvider.getLoggedPerson();
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id);
 
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
@@ -492,7 +488,7 @@ public class PersonsResource {
 			}
 
 			NetworkRole networkRole = new NetworkRole();
-			networkRole.network = networkRepository.findOne(TenantContextHolder.getCurrentNetworkId());
+			networkRole.network = networkRepository.findOne(QNetwork.network.tenantId.eq(TenantContextHolder.getCurrentTenantId()));
 			networkRole.person = person;
 			networkRole.admin = false;
 			networkRolesRepository.save(networkRole);
@@ -549,15 +545,15 @@ public class PersonsResource {
 	@Path("/deleteMany/network")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+//		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
 
 		if(persons != null && persons.size() > 0) {
-			for (Person person : persons) {
-				if (!person.user.getTenantId().equals(network.subdomain)) return Response.status(Status.UNAUTHORIZED).build();
-			}
+//			for (Person person : persons) {
+//				if (!person.user.getTenantId().equals(network.getTenantId())) return Response.status(Status.UNAUTHORIZED).build();
+//			}
 
-			if (networkSecurityChecker.isNetworkAdmin(network)) {
+			if (networkSecurityChecker.isNetworkAdmin()) {
 				for (Person person : persons) {
 					personEventHandler.handleBeforeDelete(person);
 				}
@@ -578,7 +574,7 @@ public class PersonsResource {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = personRepository.findOne(personId);
 
-		if(person != null && networkSecurityChecker.isNetworkAdmin(network) && person.user.getTenantId().equals(network.subdomain)){
+		if(person != null && networkSecurityChecker.isNetworkAdmin() && person.user.getTenantId().equals(network.getTenantId())){
 			personEventHandler.handleBeforeDelete(person);
 			personRepository.delete(person.id);
 			return Response.status(Status.OK).build();
@@ -699,7 +695,7 @@ public class PersonsResource {
 		network.sections = sectionRepository.findByNetwork(network);
 
 		List<StationDto> stationDtos = new ArrayList<>();
-		List<Station> stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
+		List<Station> stations = stationRepository.findByPersonId(person.id);
 		for(Station station : stations) {
 			StationDto stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
 			stationDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/stations/" + station.id);

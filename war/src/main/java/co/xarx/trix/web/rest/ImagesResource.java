@@ -55,8 +55,10 @@ public class ImagesResource {
 
 		String hash = FileUtil.getHash(item.getInputStream());
 
-
-		Image newImage = imageService.createNewImage(type, item.getInputStream(), item.getContentType(), true, true);
+		Image newImage = new Image();
+		newImage.type = type;
+		newImage.title = item.getName();
+		newImage = imageService.createNewImage(newImage, item.getInputStream(), item.getContentType(), true, true);
 
 		return Response.ok().entity("{\"hash\":\"" + hash + "\", \"imageId\":" + newImage.id + "}").build();
 	}
