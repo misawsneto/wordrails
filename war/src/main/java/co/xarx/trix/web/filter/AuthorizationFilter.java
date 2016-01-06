@@ -311,11 +311,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPostImagesAuthorized(Integer postId) {
-		return canReadPosts(postId);
-	}
-
-	@Override
 	protected boolean isGetPostAuthorAuthorized(Integer postId) {
 		return canReadPosts(postId);
 	}
@@ -363,11 +358,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetPostDraftVideosAuthorized(Integer postDraftId) {
 		return true;
-	}
-
-	@Override
-	protected boolean isGetPostDraftImagesAuthorized(Integer postDraftId) {
-		return canReadPosts(postDraftId);
 	}
 
 	@Override
@@ -1123,11 +1113,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPostScheduledImagesAuthorized(Integer postScheduledId) {
-		return canReadPosts(postScheduledId);
-	}
-
-	@Override
 	protected boolean isGetPostScheduledAuthorAuthorized(Integer postScheduledId) {
 		return canReadPosts(postScheduledId);
 	}
@@ -1254,11 +1239,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPersonNetworkRegIdNetworkAuthorized(Integer personNetworkRegIdId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindOneBySubdomainAuthorized(String subdomain) {
 		return true;
 	}
 
