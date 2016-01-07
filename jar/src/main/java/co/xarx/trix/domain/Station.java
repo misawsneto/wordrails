@@ -166,5 +166,5 @@ public class Station extends BaseEntity implements Serializable{
 		return "Station [id=" + id + ", name=" + name + ", visibility="
 				+ visibility + "]";
 	}
-	
+
 }

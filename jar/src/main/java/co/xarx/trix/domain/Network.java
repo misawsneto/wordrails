@@ -154,6 +154,8 @@ public class Network implements Serializable{
 
 	public Integer categoriesTaxonomyId;
 
+    @Lob
+    public String invitationMessage;
 
 	@ElementCollection
 	@JoinTable(name="image_hash", joinColumns=@JoinColumn(name="image_id", referencedColumnName = "logo_id"))
@@ -183,6 +185,9 @@ public class Network implements Serializable{
 
 	@Lob
 	public String appleStoreAddress;
+
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    public boolean addStationRolesOnSignup;
 
 	@Override
 	public boolean equals(Object obj) {

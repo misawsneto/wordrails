@@ -862,7 +862,7 @@ angular.module('app')
                   controller: 'NetworkCreatedCtrl'
               })
               .state('access.signup', {
-                  url: '/signup',
+                  url: '/signup?invitation',
                   templateUrl: 'tpl/page_signup.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',
