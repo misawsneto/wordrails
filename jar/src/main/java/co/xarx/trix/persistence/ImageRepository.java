@@ -13,21 +13,6 @@ import java.util.Set;
 
 public interface ImageRepository extends JpaRepository<Image, Integer>, QueryDslPredicateExecutor<Image> {
 
-	@Query("select image from Image image " +
-			"join image.original original join image.small small join image.medium medium join image.large large " +
-			"where " +
-			"original.id = :fileId OR small.id = :fileId OR medium.id = :fileId OR large.id = :fileId")
-	@RestResource(exported = false)
-	Set<Image> findByFileId(@Param("fileId") Integer fileId);
-
-
-	@RestResource(exported = false)
-	@Query("select image from Image image " +
-			"left join image.pictures pictures " +
-			"left join pictures.file file " +
-			"where file.id = :fileId")
-	Set<Image> findByFileIdFetchPictures(@Param("fileId") Integer fileId);
-
 	@RestResource(exported = false)
 	@Query("select image from Image image " +
 			"left join fetch image.pictures picture " +

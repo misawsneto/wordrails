@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component("networkDomainFilter")
 public class NetworkDomainFilter implements Filter {
@@ -36,7 +35,7 @@ public class NetworkDomainFilter implements Filter {
 	@PostConstruct //method with no args is required
 	public void init() throws ServletException {
 		tenantIds = Sets.newConcurrentHashSet(networkRepository.findTenantIds());
-		domains = new ConcurrentHashMap<>(networkRepository.findDomains());
+//		domains = new ConcurrentHashMap<>(networkRepository.findDomains());
 	}
 
 	@Override

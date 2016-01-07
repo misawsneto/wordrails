@@ -76,7 +76,9 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			if (post.author.cover != null) {
 				postView.authorCoverMediumHash = post.author.cover.get(Image.SIZE_MEDIUM);
 			}
-			postView.authorImageSmallHash = post.author.image.get(Image.SIZE_SMALL);
+			if (post.author.image != null) {
+				postView.authorImageSmallHash = post.author.image.get(Image.SIZE_SMALL);
+			}
 
 
 			postView.authorImageUrl = post.author.imageUrl;
