@@ -92,10 +92,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	)
 	public Set<Video> videos;
 
-//    @OneToMany
-//    @JoinTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
-//    public Set<Image> images;
-
     @NotNull
     @ManyToOne
     @JoinColumn(updatable = false)
@@ -157,20 +153,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Deprecated
 	public String imageTitleText;
 
-	@Deprecated
-	public Integer imageId;
-	@Deprecated
-	public Integer imageSmallId;
-	@Deprecated
-	public Integer imageMediumId;
-	@Deprecated
-	public Integer imageLargeId;
-
-    public String imageHash;
-    public String imageSmallHash;
-    public String imageMediumHash;
-    public String imageLargeHash;
-
     public String featuredVideoHash;
     public String featuredAudioHash;
 
@@ -192,32 +174,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	private void onChanges() {
 		stationId = station.id;
 		readTime = calculateReadTime(body);
-
-        if (featuredImage != null && featuredImage.originalHash != null) {
-            imageHash = featuredImage.originalHash;
-            imageSmallHash = featuredImage.smallHash;
-            imageMediumHash = featuredImage.mediumHash;
-            imageLargeHash = featuredImage.largeHash;
-
-            imageId = featuredImage.original.id;
-            imageSmallId = featuredImage.small.id;
-            imageMediumId = featuredImage.medium.id;
-            imageLargeId = featuredImage.large.id;
-
-            imageCaptionText = featuredImage.caption;
-            imageCreditsText = featuredImage.credits;
-            imageTitleText = featuredImage.title;
-        } else {
-            imageId = null;
-            imageSmallId = null;
-            imageMediumId = null;
-            imageLargeId = null;
-
-            imageHash = null;
-            imageSmallHash = null;
-            imageMediumHash = null;
-            imageLargeHash = null;
-        }
     }
 
     public static int countWords(String string) {
@@ -525,70 +481,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	public void setImageTitleText(String imageTitleText) {
 		this.imageTitleText = imageTitleText;
-	}
-
-	public Integer getImageId() {
-		return imageId;
-	}
-
-	public void setImageId(Integer imageId) {
-		this.imageId = imageId;
-	}
-
-	public Integer getImageSmallId() {
-		return imageSmallId;
-	}
-
-	public void setImageSmallId(Integer imageSmallId) {
-		this.imageSmallId = imageSmallId;
-	}
-
-	public Integer getImageMediumId() {
-		return imageMediumId;
-	}
-
-	public void setImageMediumId(Integer imageMediumId) {
-		this.imageMediumId = imageMediumId;
-	}
-
-	public Integer getImageLargeId() {
-		return imageLargeId;
-	}
-
-	public void setImageLargeId(Integer imageLargeId) {
-		this.imageLargeId = imageLargeId;
-	}
-
-	public String getImageHash() {
-		return imageHash;
-	}
-
-	public void setImageHash(String imageHash) {
-		this.imageHash = imageHash;
-	}
-
-	public String getImageSmallHash() {
-		return imageSmallHash;
-	}
-
-	public void setImageSmallHash(String imageSmallHash) {
-		this.imageSmallHash = imageSmallHash;
-	}
-
-	public String getImageMediumHash() {
-		return imageMediumHash;
-	}
-
-	public void setImageMediumHash(String imageMediumHash) {
-		this.imageMediumHash = imageMediumHash;
-	}
-
-	public String getImageLargeHash() {
-		return imageLargeHash;
-	}
-
-	public void setImageLargeHash(String imageLargeHash) {
-		this.imageLargeHash = imageLargeHash;
 	}
 
 	public String getFeaturedVideoHash() {

@@ -95,33 +95,8 @@ public class Station extends BaseEntity implements Serializable {
 
 	@OneToOne
 	public Image logo;
-	public Integer logoId;
-	public Integer logoMediumId;
-
-	public String logoHash;
-	public String logoMediumHash;
 
 	public Integer defaultPerspectiveId;
-
-	@PrePersist
-	public void onCreate() {
-		onChange();
-	}
-
-	@PreUpdate
-	public void onUpdate() {
-		onChange();
-	}
-
-	void onChange() {
-		if (logo != null && logo.originalHash != null) {
-			logoHash = logo.originalHash;
-			logoMediumHash = logo.mediumHash;
-
-			logoId = logo.original.id;
-			logoMediumId = logo.medium.id;
-		}
-	}
 
 	@Override
 	public int hashCode() {
@@ -363,38 +338,6 @@ public class Station extends BaseEntity implements Serializable {
 
 	public void setLogo(Image logo) {
 		this.logo = logo;
-	}
-
-	public Integer getLogoId() {
-		return logoId;
-	}
-
-	public void setLogoId(Integer logoId) {
-		this.logoId = logoId;
-	}
-
-	public Integer getLogoMediumId() {
-		return logoMediumId;
-	}
-
-	public void setLogoMediumId(Integer logoMediumId) {
-		this.logoMediumId = logoMediumId;
-	}
-
-	public String getLogoHash() {
-		return logoHash;
-	}
-
-	public void setLogoHash(String logoHash) {
-		this.logoHash = logoHash;
-	}
-
-	public String getLogoMediumHash() {
-		return logoMediumHash;
-	}
-
-	public void setLogoMediumHash(String logoMediumHash) {
-		this.logoMediumHash = logoMediumHash;
 	}
 
 	public Integer getDefaultPerspectiveId() {

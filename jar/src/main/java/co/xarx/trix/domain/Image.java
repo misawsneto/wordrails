@@ -88,43 +88,17 @@ public class Image extends BaseEntity implements Serializable {
 	@MapKeyColumn(name = "sizeTag", nullable = false)
 	@Column(name = "hash", nullable = false)
 	public Map<String, String> hashs;
-
-	@Deprecated
-	@NotNull
-	@ManyToOne(cascade=CascadeType.MERGE)
-	public File original;
-
-	@Deprecated
-	@NotNull
-	@ManyToOne(cascade=CascadeType.MERGE)
-	public File small;
-
-	@Deprecated
-	@NotNull
-	@ManyToOne(cascade=CascadeType.MERGE)
-	public File medium;
-
-	@Deprecated
-	@NotNull
-	@ManyToOne(cascade=CascadeType.MERGE)
-	public File large;
-
-	@Deprecated
-	public String originalHash;
-	@Deprecated
-	public String smallHash;
-	@Deprecated
-	public String mediumHash;
-	@Deprecated
-	public String largeHash;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean vertical = false;
 
+	public String get(Object key) {
+		return hashs.get(key);
+	}
+
 	@PrePersist
 	public void create(){
 		createOrUpdate();
-		setDeprecatedAttributes();
 	}
 
 	@PreUpdate
@@ -135,53 +109,6 @@ public class Image extends BaseEntity implements Serializable {
 	private void createOrUpdate() {
 		for(Picture pic : pictures) {
 			hashs.put(pic.sizeTag, pic.file.hash);
-			switch (pic.sizeTag) {
-				case SIZE_SMALL:
-					smallHash = pic.file.hash;
-					break;
-				case SIZE_MEDIUM:
-					mediumHash = pic.file.hash;
-					break;
-				case SIZE_LARGE:
-					largeHash = pic.file.hash;
-					break;
-				case SIZE_ORIGINAL:
-					originalHash = pic.file.hash;
-					break;
-			}
 		}
-	}
-
-	private void setDeprecatedAttributes() {
-		this.original = this.getPicture(Image.SIZE_ORIGINAL).file;
-		Picture largePicture = this.getPicture(Image.SIZE_LARGE);
-		Picture mediumPicture = this.getPicture(Image.SIZE_MEDIUM);
-		Picture smallPicture = this.getPicture(Image.SIZE_SMALL);
-
-		if(largePicture == null) {
-			this.large = this.original;
-		} else {
-			this.large = largePicture.file;
-		}
-
-		if(mediumPicture == null) {
-			this.medium = this.large;
-		} else {
-			this.medium = mediumPicture.file;
-		}
-
-		if(smallPicture == null) {
-			this.small = this.medium;
-		} else {
-			this.small = smallPicture.file;
-		}
-	}
-
-	public Picture getPicture(String sizeTag) {
-		for(Picture pic : pictures) {
-			if(pic.sizeTag.equals(sizeTag)) return pic;
-		}
-
-		return null;
 	}
 }

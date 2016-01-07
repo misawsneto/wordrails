@@ -110,7 +110,6 @@ public class TestArtifactsFactory {
 		station.visibility = "UNRESTRICTED";
 		station.logo = createImage(Image.Type.LOGIN);
 		station.logo.id = 16119;
-		station.logoId = 3722;
 		station.defaultPerspectiveId = 7;
 		station.categoriesTaxonomyId = 140;
 		station.tagsTaxonomyId = 183;

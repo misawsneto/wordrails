@@ -1,3 +1,12 @@
+-- ORDEM PARA RODAR OS SCRIPTS:
+
+-- script.sql
+-- constraints.sql
+-- duplicate_post.sql
+-- multitenant.sql
+-- images.sql
+
+
 DROP TABLE IF EXISTS section_fixedquery;
 DROP TABLE IF EXISTS person_bookmark;
 

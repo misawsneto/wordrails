@@ -12,7 +12,9 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component("networkDomainFilter")
 public class NetworkDomainFilter implements Filter {
@@ -21,6 +23,7 @@ public class NetworkDomainFilter implements Filter {
 	private NetworkRepository networkRepository;
 
 	private Set<String> tenantIds;
+	private Map<String, String> domains;
 
 	@Override
 	public void destroy() {
@@ -33,6 +36,7 @@ public class NetworkDomainFilter implements Filter {
 	@PostConstruct //method with no args is required
 	public void init() throws ServletException {
 		tenantIds = Sets.newConcurrentHashSet(networkRepository.findTenantIds());
+		domains = new ConcurrentHashMap<>(networkRepository.findDomains());
 	}
 
 	@Override
@@ -47,6 +51,8 @@ public class NetworkDomainFilter implements Filter {
 			String subdomain = StringUtil.getSubdomainFromHost(host);
 			if (tenantIds.contains(subdomain)) {
 				TenantContextHolder.setCurrentTenantId(subdomain);
+			} else if(!domains.get(host).isEmpty()) {
+				TenantContextHolder.setCurrentTenantId(domains.get(host));
 			} else {
 				response.sendRedirect("/404.html");
 				return;

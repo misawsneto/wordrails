@@ -8,7 +8,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -34,11 +33,6 @@ public class ImagesResource {
 	private UriInfo uriInfo;
 	@Context
 	private HttpServletResponse response;
-
-	private void forward() throws ServletException, IOException {
-		String path = request.getServletPath() + uriInfo.getPath();
-		request.getServletContext().getRequestDispatcher(path).forward(request, response);
-	}
 
 	@POST
 	@Path("/upload")

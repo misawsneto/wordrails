@@ -54,9 +54,9 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.imageCreditsText = post.featuredImage.credits;
 			postView.imageTitleText = post.featuredImage.title;
 			if (post.featuredImage != null && post.featuredImage.hashs != null && post.featuredImage.hashs.size() == 0) {
-				postView.imageSmallHash = post.imageSmallHash;
-				postView.imageMediumHash = post.imageMediumHash;
-				postView.imageLargeHash = post.imageLargeHash;
+				postView.imageSmallHash = post.featuredImage.get(Image.SIZE_SMALL);
+				postView.imageMediumHash = post.featuredImage.get(Image.SIZE_MEDIUM);
+				postView.imageLargeHash = post.featuredImage.get(Image.SIZE_LARGE);
 			}
 		}
 
@@ -74,9 +74,9 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.authorUsername = post.author.username;
 
 			if (post.author.cover != null) {
-				postView.authorCoverMediumHash = post.author.coverMediumHash;
+				postView.authorCoverMediumHash = post.author.cover.get(Image.SIZE_MEDIUM);
 			}
-			postView.authorImageSmallHash = post.author.imageSmallHash;
+			postView.authorImageSmallHash = post.author.image.get(Image.SIZE_SMALL);
 
 
 			postView.authorImageUrl = post.author.imageUrl;

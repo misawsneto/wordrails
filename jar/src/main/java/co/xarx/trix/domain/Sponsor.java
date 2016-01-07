@@ -24,36 +24,7 @@ public class Sponsor extends BaseEntity {
 
 	@OneToOne
 	public Image logo;
-	public Integer logoId;
-	public Integer logoMediumId;
-	public Integer logoLargeId;
 
 	@OneToMany
 	public Set<Ad> ads;
-
-	@PrePersist
-	public void onCreate() {
-		if (logo != null && logo.original != null) {
-			logoId = logo.original.id;
-			logoMediumId = logo.medium.id;
-			logoLargeId = logo.large.id;
-		} else {
-			logoId = null;
-			logoMediumId = null;
-			logoLargeId = null;
-		}
-	}
-
-	@PreUpdate
-	public void onUpdate() {
-		if (logo != null && logo.original != null) {
-			logoId = logo.original.id;
-			logoMediumId = logo.medium.id;
-			logoLargeId = logo.large.id;
-		} else {
-			logoId = null;
-			logoMediumId = null;
-			logoLargeId = null;
-		}
-	}
 }

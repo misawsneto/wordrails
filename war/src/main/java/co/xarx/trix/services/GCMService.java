@@ -1,9 +1,6 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Notification;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.PersonNetworkRegId;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.dto.NotificationDto;
 import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.persistence.PersonNetworkRegIdRepository;
@@ -127,8 +124,6 @@ public class GCMService {
 		notificationDto.postId = notification.post != null ? notification.post.id : null;
 		notificationDto.postTitle = notification.post != null ? notification.post.title : null;;
 		notificationDto.postSnippet = notification.post != null ? StringUtil.simpleSnippet(notification.post.body) : null;
-		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallHash : null;
-		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumHash : null;
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 

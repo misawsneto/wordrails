@@ -86,18 +86,12 @@ public class Network extends BaseEntity implements Serializable{
 
 	@Lob
 	public String loginFooterMessage;
-	
-//	@Column(columnDefinition="TEXT default '#F3F5F9'")
+
 	public String backgroundColor = "#F3F5F9";
-//	@Column(columnDefinition="TEXT default '#242424'")
 	public String navbarColor = "#242424";
-//	@Column(columnDefinition="TEXT default '#505050'")
 	public String navbarSecondaryColor  = "#505050";
-//	@Column(columnDefinition="TEXT default '#040404'")
 	public String mainColor = "#111111";
-//	@Column(columnDefinition="TEXT default 'Lato'")
 	public String primaryFont = "Lato";
-//	@Column(columnDefinition="TEXT default 'PT Serif'")
 	public String secondaryFont = "PT Serif";
 	@Column(columnDefinition="Decimal(10,2) default '4.0'")
 	public Double titleFontSize = 4.0;
@@ -106,23 +100,14 @@ public class Network extends BaseEntity implements Serializable{
 	
 	public boolean configured;
 
-	public String faviconHash;
-	public String splashImageHash;
-	public String loginImageHash;
-	public String loginImageSmallHash;
-
 	@OneToOne
 	public Image favicon;
-	public Integer faviconId;
 	
 	@OneToOne
 	public Image splashImage;
-	public Integer splashImageId;
 	
 	@OneToOne
 	public Image loginImage;
-	public Integer loginImageId;
-	public Integer loginImageSmallId;
 	
 	@Column(columnDefinition = "varchar(255) default 'D'", nullable = false)
 	public String defaultReadMode;
@@ -152,7 +137,7 @@ public class Network extends BaseEntity implements Serializable{
 		if (obj != null) {
 			try {
 				Network network = (Network) obj;
-				return Objects.equals(id, network.id) && Objects.equals(name, network.name);
+				return Objects.equals(id, network.id) && Objects.equals(tenantId, network.tenantId);
 			} catch (ClassCastException e) {}
 		}
 		return false;
@@ -164,43 +149,6 @@ public class Network extends BaseEntity implements Serializable{
 			defaultReadMode = "D";
 		if(defaultOrientationMode == null || defaultOrientationMode.isEmpty())
 			defaultOrientationMode = "H";
-		
-		onChange();
-	}
-
-	@PreUpdate
-	void onUpdate() {
-		onChange();
-	}
-
-	private void onChange() {
-		if(favicon != null && favicon.originalHash != null){
-			faviconHash = favicon.originalHash;
-			faviconId = favicon.original.id;
-		}else{
-			faviconHash = null;
-			faviconId = null;
-		}
-
-		if(splashImage != null && splashImage.originalHash != null){
-			splashImageHash = splashImage.originalHash;
-			splashImageId = splashImage.original.id;
-		}else{
-			splashImageHash = null;
-			splashImageId = null;
-		}
-
-		if(loginImage != null && loginImage.originalHash != null){
-			loginImageHash = loginImage.originalHash;
-			loginImageSmallHash = loginImage.smallHash;
-			loginImageId = loginImage.original.id;
-			loginImageSmallId = loginImage.small.id;
-		}else{
-			loginImageHash = null;
-			loginImageSmallHash = null;
-			loginImageId = null;
-			loginImageSmallId = null;
-		}
 	}
 
 	public Integer getId() {

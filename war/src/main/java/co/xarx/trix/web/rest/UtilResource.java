@@ -7,9 +7,7 @@ import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.eventhandler.StationEventHandler;
 import co.xarx.trix.eventhandler.TaxonomyEventHandler;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.script.ImageScript;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
-import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.StringUtil;
 import org.joda.time.DateTime;
@@ -22,12 +20,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -96,37 +91,37 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@GET
-	@Path("/updatePostFields")
-	public Response updatePostFields(@Context HttpServletRequest request) {
-		String host = request.getHeader("Host");
-
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Post> posts = postRepository.findAll();
-			for (Post post : posts) {
-				if(post.featuredImage != null && post.featuredImage.originalHash != null){
-					post.imageHash = post.featuredImage.originalHash;
-					post.imageSmallHash = post.featuredImage.smallHash;
-					post.imageMediumHash = post.featuredImage.mediumHash;
-					post.imageLargeHash = post.featuredImage.largeHash;
-					post.imageLandscape= !post.featuredImage.vertical;
-					post.imageCaptionText = post.featuredImage.caption;
-					post.imageCreditsText = post.featuredImage.credits;
-				}else{
-					post.imageHash = null;
-					post.imageSmallHash = null;
-					post.imageMediumHash = null;
-					post.imageLargeHash = null;
-				}
-				if(post.comments != null){
-					post.commentsCount = post.comments.size();
-				}
-				post.readTime = Post.calculateReadTime(post.body);
-			}
-			postRepository.save(posts);
-		}
-		return Response.status(Status.OK).build();
-	}
+//	@GET
+//	@Path("/updatePostFields")
+//	public Response updatePostFields(@Context HttpServletRequest request) {
+//		String host = request.getHeader("Host");
+//
+//		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+//			List<Post> posts = postRepository.findAll();
+//			for (Post post : posts) {
+//				if(post.featuredImage != null && post.featuredImage.originalHash != null){
+//					post.imageHash = post.featuredImage.originalHash;
+//					post.imageSmallHash = post.featuredImage.smallHash;
+//					post.imageMediumHash = post.featuredImage.mediumHash;
+//					post.imageLargeHash = post.featuredImage.largeHash;
+//					post.imageLandscape= !post.featuredImage.vertical;
+//					post.imageCaptionText = post.featuredImage.caption;
+//					post.imageCreditsText = post.featuredImage.credits;
+//				}else{
+//					post.imageHash = null;
+//					post.imageSmallHash = null;
+//					post.imageMediumHash = null;
+//					post.imageLargeHash = null;
+//				}
+//				if(post.comments != null){
+//					post.commentsCount = post.comments.size();
+//				}
+//				post.readTime = Post.calculateReadTime(post.body);
+//			}
+//			postRepository.save(posts);
+//		}
+//		return Response.status(Status.OK).build();
+//	}
 
 	@GET
 	@Path("/updateTermPerspectivesStationIds")
@@ -149,72 +144,72 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@GET
-	@Path("/updatePersonFields")
-	public Response updatePersonFields(@Context HttpServletRequest request) {
-		String host = request.getHeader("Host");
-
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Person> persons = personRepository.findAll();
-
-			Iterator<Person> it = persons.iterator();
-			while (it.hasNext()) {
-				Person person =  it.next();
-
-				if(!Pattern.matches("^[a-z0-9\\._-]{3,50}$", person.username)){
-					System.err.println("Invalid username: "+ person.username + ", skipping");
-					it.remove();
-				}
-
-				if(person.email == null || person.email.trim().equals("")){
-					person.email = person.username + StringUtil.generateRandomString(4, "a#")  + "@randomfix.com";
-				}
-
-				try {
-					InternetAddress emailAddr = new InternetAddress(person.email);
-					emailAddr.validate();
-				} catch (AddressException ex) {
-					System.err.println("Invalid email: "+ person.email + ", skipping");
-					it.remove();
-				}
-
-				if(person.image != null && person.image.originalHash != null){
-					person.imageHash = person.image.originalHash;
-					person.imageSmallHash = person.image.smallHash;
-					person.imageMediumHash = person.image.mediumHash;
-					person.imageLargeHash = person.image.largeHash;
-				}else{
-					person.imageHash = null;
-					person.imageSmallHash = null;
-					person.imageMediumHash = null;
-					person.imageLargeHash = null;
-				}
-
-				if(person.cover != null && person.cover.originalHash != null){
-					person.coverMediumHash = person.cover.mediumHash;
-					person.coverLargeHash = person.cover.largeHash;
-					person.coverMediumHash = person.cover.mediumHash;
-				}
-
-				if(person.createdAt == null){
-					person.createdAt = new DateTime(2015, 1, 17, 10, 31, 2, 0).toDate();
-				}
-
-				person.email = person.email.trim();
-
-				try {
-					personRepository.save(person);
-				}catch (javax.validation.ConstraintViolationException e){
-					for (ConstraintViolation v:  e.getConstraintViolations()){
-						System.out.println(v.getInvalidValue());
-						System.out.println(v.getPropertyPath());
-					}
-				}
-			}
-
-		}
-		return Response.status(Status.OK).build();
-	}
+//	@GET
+//	@Path("/updatePersonFields")
+//	public Response updatePersonFields(@Context HttpServletRequest request) {
+//		String host = request.getHeader("Host");
+//
+//		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+//			List<Person> persons = personRepository.findAll();
+//
+//			Iterator<Person> it = persons.iterator();
+//			while (it.hasNext()) {
+//				Person person =  it.next();
+//
+//				if(!Pattern.matches("^[a-z0-9\\._-]{3,50}$", person.username)){
+//					System.err.println("Invalid username: "+ person.username + ", skipping");
+//					it.remove();
+//				}
+//
+//				if(person.email == null || person.email.trim().equals("")){
+//					person.email = person.username + StringUtil.generateRandomString(4, "a#")  + "@randomfix.com";
+//				}
+//
+//				try {
+//					InternetAddress emailAddr = new InternetAddress(person.email);
+//					emailAddr.validate();
+//				} catch (AddressException ex) {
+//					System.err.println("Invalid email: "+ person.email + ", skipping");
+//					it.remove();
+//				}
+//
+//				if(person.image != null && person.image.originalHash != null){
+//					person.imageHash = person.image.originalHash;
+//					person.imageSmallHash = person.image.smallHash;
+//					person.imageMediumHash = person.image.mediumHash;
+//					person.imageLargeHash = person.image.largeHash;
+//				}else{
+//					person.imageHash = null;
+//					person.imageSmallHash = null;
+//					person.imageMediumHash = null;
+//					person.imageLargeHash = null;
+//				}
+//
+//				if(person.cover != null && person.cover.originalHash != null){
+//					person.coverMediumHash = person.cover.mediumHash;
+//					person.coverLargeHash = person.cover.largeHash;
+//					person.coverMediumHash = person.cover.mediumHash;
+//				}
+//
+//				if(person.createdAt == null){
+//					person.createdAt = new DateTime(2015, 1, 17, 10, 31, 2, 0).toDate();
+//				}
+//
+//				person.email = person.email.trim();
+//
+//				try {
+//					personRepository.save(person);
+//				}catch (javax.validation.ConstraintViolationException e){
+//					for (ConstraintViolation v:  e.getConstraintViolations()){
+//						System.out.println(v.getInvalidValue());
+//						System.out.println(v.getPropertyPath());
+//					}
+//				}
+//			}
+//
+//		}
+//		return Response.status(Status.OK).build();
+//	}
 
 	@GET
 	@Path("/recalculateSlug")
@@ -570,7 +565,7 @@ public class UtilResource {
 			//			reindexAll(request);
 			//			recalculateSlug(request);
 			updateDefaultStationPerspective(request);
-			updatePostFields(request);
+//			updatePostFields(request);
 			updateTermPerspectivesStationIds(request);
 			//updatePersonFields(request);
 			updateRegIdsAndTokens(request);
@@ -815,33 +810,6 @@ public class UtilResource {
 					station.network = network;
 			}
 			stationRepository.save(stations);
-		}
-	}
-
-	@Autowired
-	public ImageScript imageScript;
-
-	@Autowired
-	private AsyncService asyncService;
-
-	@GET
-	@Path("/addPicturesToImages")
-	@Transactional
-	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {
-		if(isLocal(request.getHeader("Host"))){
-			asyncService.run(() -> imageScript.addPicturesToImages());
-		}
-	}
-	@GET
-	@Path("/mergeRepeatedImages")
-	@Transactional
-	public void mergeRepeatedImages(@Context HttpServletRequest request) throws InterruptedException {
-		if(isLocal(request.getHeader("Host"))){
-			imageScript.mergeRepeatedImages();
-//			List<Network> networks = networkRepository.findAll();
-//			for (Network network : networks) {
-//				asyncService.mergeRepeatedImages(network.id);
-//			}
 		}
 	}
 
