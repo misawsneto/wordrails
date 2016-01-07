@@ -194,6 +194,10 @@ UPDATE person
 	JOIN temp_image_duplicated img ON person.image_id = img.id
 SET person.image_id = img.originalId;
 
+UPDATE person
+	JOIN temp_image_duplicated img ON person.cover_id = img.id
+SET person.cover_id = img.originalId;
+
 UPDATE station
 	JOIN temp_image_duplicated img ON station.logo_id = img.id
 SET station.logo_id = img.originalId;
