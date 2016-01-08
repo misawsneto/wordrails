@@ -16,6 +16,7 @@ import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.APNService;
+import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.GCMService;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
@@ -111,6 +112,8 @@ public class PersonsResource {
 	private UserRepository userRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private AmazonCloudService amazonCloudService;
 
 	@Context
 	private HttpServletRequest request;
@@ -628,6 +631,7 @@ public class PersonsResource {
 	@Path("/allInit")
 	public PersonData   getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws IOException {
 
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Integer stationId = wordrailsService.getStationIdFromCookie(request);
 		PersonData personData = getInitialData(request);
 
@@ -651,9 +655,9 @@ public class PersonsResource {
 				request.setAttribute("personData", simpleMapper.writeValueAsString(personData));
 				request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
 				request.setAttribute("networkName", personData.network.name);
-                request.setAttribute("networkId", personData.network.id);
-                if(personData.network.faviconId != null)
-                    request.setAttribute("faviconLink", "/api/files/" + personData.network.faviconId + "/contents");
+				request.setAttribute("networkId", personData.network.id);
+				if(network.favicon != null)
+					request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(network.favicon.get(Image.SIZE_MEDIUM)));
 				request.setAttribute("networkDesciption", "");
 				request.setAttribute("networkKeywords", "");
 			}

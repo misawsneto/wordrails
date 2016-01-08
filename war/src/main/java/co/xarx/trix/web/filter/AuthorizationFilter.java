@@ -1323,26 +1323,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetImageOriginalAuthorized(Integer imageId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetImageSmallAuthorized(Integer imageId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetImageMediumAuthorized(Integer imageId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetImageLargeAuthorized(Integer imageId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetNetworkFaviconAuthorized(Integer networkId) {
 		return true;
 	}
