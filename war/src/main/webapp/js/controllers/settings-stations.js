@@ -201,7 +201,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   };
 
   var uploader = $scope.uploader = new FileUploader({
-  	url: TRIX.baseUrl + "/api/files/contents/simple"
+  	url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
   });
 
   uploader.onAfterAddingFile = function(fileItem) {
