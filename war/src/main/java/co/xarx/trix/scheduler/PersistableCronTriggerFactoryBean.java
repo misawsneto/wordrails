@@ -7,7 +7,11 @@ public class PersistableCronTriggerFactoryBean extends CronTriggerFactoryBean {
 
 	@Override
 	public void afterPropertiesSet() {
-		super.afterPropertiesSet();
+		try {
+			super.afterPropertiesSet();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		//Remove the JobDetail element
 		getJobDataMap().remove(JobDetailAwareTrigger.JOB_DETAIL_KEY);
