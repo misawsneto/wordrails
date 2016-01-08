@@ -1,7 +1,9 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.domain.EventLog;
-import co.xarx.trix.persistence.EventLogRepository;
+import co.xarx.trix.domain.Event;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.PostEvent;
+import co.xarx.trix.persistence.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -10,25 +12,16 @@ import org.springframework.stereotype.Service;
 public class LogService {
 
 	@Autowired
-	private EventLogRepository eventLogRepository;
+	private EventRepository eventRepository;
 
 	@Async
-	public void logtCreation(EventLog event){
-//		PostEventLog postEventLog = new PostEventLog(post, EventLog.EVENT_CREATE);
-		eventLogRepository.save(event);
+	public void logCreation(Post post){
+		eventRepository.save(new PostEvent(post, Event.EVENT_CREATE).build());
 	}
 
 	@Async
-	public void logUpdate(EventLog event){
-//		PostEventLog postEventLog = new PostEventLog(post, EventLog.EVENT_UPDATE);
-		eventLogRepository.save(event);
-	}
-
-	@Async
-	public void logRemoval(EventLog event){
-//		PostEventLog postEventLog = new PostEventLog(post, EventLog.EVENT_UPDATE);
-		eventLogRepository.save(event);
-//		eventLogRepository.delete();
+	public void logRemoval(Post post){
+		eventRepository.save(new PostEvent(post, Event.EVENT_DELETE).build());
 	}
 
 

@@ -9,8 +9,10 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
+import co.xarx.trix.services.LogService;
 import co.xarx.trix.services.PostService;
 import co.xarx.trix.util.StringUtil;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.rest.core.annotation.*;
@@ -46,6 +48,10 @@ public class PostEventHandler {
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
+	@Autowired
+	private LogService logService;
+
+	Logger log = Logger.getLogger(this.getClass().getName());
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
@@ -87,6 +93,8 @@ public class PostEventHandler {
 			postService.buildNotification(post);
 		}
 		postEsRepository.save(post);
+		logService.logCreation(post);
+		log.info("HandleAfterCreate");
 	}
 
 	@HandleAfterSave
@@ -95,6 +103,7 @@ public class PostEventHandler {
 			postService.schedule(post.id, post.scheduledDate);
 		}
 		postService.updatePostIndex(post);
+		log.info("HandleAfterSave");
 	}
 
 	@HandleBeforeDelete
@@ -114,6 +123,7 @@ public class PostEventHandler {
 			bookmarkRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
 			postService.removePostIndex(post); // evitando bug de remoção de post que tiveram post alterado.
+			logService.logRemoval(post);
 		} else {
 			throw new UnauthorizedException();
 		}
