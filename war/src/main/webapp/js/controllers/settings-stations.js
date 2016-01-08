@@ -41,20 +41,16 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 		}
 
 		$scope.updateStation = function(){
-			trix.putStation($scope.station).success(function(){
-				$scope.app.getInitData();
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
-			});
-
-      if($scope.logoImage && $scope.logoImage.id){
-        var logoImage = { original: TRIX.baseUrl + "/api/files/" + $scope.logoImage.id }
-        trix.postImage(logoImage).success(function(imageId){
-          var myLogoImage = TRIX.baseUrl + "/api/images/" + imageId;
-          $scope.station.logo = myLogoImage;
-          trix.putStation($scope.station).success(function(){
-          })
-        })
+      if($scope.logoImage && $scope.logoImage.imageId){
+        // var logoImage = { original: TRIX.baseUrl + "/api/files/" + $scope.logoImage.id }
+        // trix.postImage(logoImage).success(function(imageId){
+        var myLogoImage = TRIX.baseUrl + "/api/images/" + $scope.logoImage.imageId;
+        $scope.station.logo = myLogoImage;
       }
+      trix.putStation($scope.station).success(function(){
+        $scope.app.getInitData();
+        $scope.app.showSuccessToast('Alterações realizadas com successo.')
+      })
 		}
 
 		$scope.createStation = function(){
@@ -77,15 +73,7 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
       };
 
       var logo = $scope.logo = new FileUploader({
-        url: TRIX.baseUrl + "/api/files/contents/simple"
-      });
-
-      var splash = $scope.splash = new FileUploader({
-        url: TRIX.baseUrl + "/api/files/contents/simple"
-      });
-
-      var favicon = $scope.favicon = new FileUploader({
-        url: TRIX.baseUrl + "/api/files/contents/simple"
+        url: TRIX.baseUrl + "/api/images/upload?imageType=LOGO"
       });
 
       logo.onAfterAddingFile = function(fileItem) {
