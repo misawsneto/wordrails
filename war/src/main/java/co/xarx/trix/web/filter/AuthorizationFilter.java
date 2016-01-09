@@ -420,7 +420,17 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
         return false;
     }
 
-    @Override
+	@Override
+	protected boolean isGetPostEventsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetPostEventAuthorized(Integer postEventId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetRowsAuthorized() {
 		return false;
 	}
