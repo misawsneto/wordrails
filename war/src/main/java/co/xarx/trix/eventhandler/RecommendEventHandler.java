@@ -46,7 +46,7 @@ public class RecommendEventHandler {
 	public void handleAfterCreate(Recommend recommend){
 		queryPersistence.incrementRecommendsCount(recommend.post.id);
 	}
-	
+
 	@HandleAfterDelete
 	public void handleAfterDelete(Recommend recommend){
 		queryPersistence.decrementRecommendsCount(recommend.post.id);

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "z_post_event")
+@Table(name = "z_post_events")
 public class PostEvent extends Event {
 
 	@Column(name = "person_id")
@@ -22,6 +22,12 @@ public class PostEvent extends Event {
 	@Column(name = "device")
 	public String device;
 
+	@Column(name = "comment_id")
+	public Integer commentId;
+
+	@Column(name = "recommend_id")
+	public Integer recommendId;
+
 	public PostEvent(Post post, String typeEvent){
 		this.postId = post.id;
 		this.personId = post.author.id;
@@ -35,6 +41,7 @@ public class PostEvent extends Event {
 		this.personId = read.person != null ? read.person.id : null;
 		this.stationId = read.post.stationId;
 		this.typeEvent = Event.EVENT_READ;
+		this.postState = read.post.state;
 		this.sessionId = read.sessionid;
 		this.device = UNKOWN_DEVICE;
 	}
@@ -43,9 +50,20 @@ public class PostEvent extends Event {
 		this.postId = comment.post.id;
 		this.personId = comment.author.id;
 		this.stationId = comment.station.id;
-		this.createdAt = comment.date;
-
+		this.postState = comment.post.state;
+		this.commentId = comment.id;
+		this.device = UNKOWN_DEVICE;
 		this.typeEvent = typeEvent;
+	}
+
+	public PostEvent(Recommend recommend, String typeEvent){
+		this.recommendId = recommend.id;
+		this.postId = recommend.post.id;
+		this.personId = recommend.person.id;
+		this.stationId = recommend.post.stationId;
+		this.postState = recommend.post.state;
+		this.typeEvent = typeEvent;
+		this.device = UNKOWN_DEVICE;
 	}
 
 	public PostEvent() {
@@ -81,5 +99,37 @@ public class PostEvent extends Event {
 
 	public void setPostState(String postState) {
 		this.postState = postState;
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+
+	public String getDevice() {
+		return device;
+	}
+
+	public void setDevice(String device) {
+		this.device = device;
+	}
+
+	public Integer getCommentId() {
+		return commentId;
+	}
+
+	public void setCommentId(Integer commentId) {
+		this.commentId = commentId;
+	}
+
+	public Integer getRecommendId() {
+		return recommendId;
+	}
+
+	public void setRecommendId(Integer recommendId) {
+		this.recommendId = recommendId;
 	}
 }

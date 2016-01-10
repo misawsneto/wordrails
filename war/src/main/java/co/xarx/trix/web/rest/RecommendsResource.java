@@ -1,31 +1,29 @@
 package co.xarx.trix.web.rest;
 
+import co.xarx.trix.api.BooleanResponse;
+import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.converter.PostConverter;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Recommend;
+import co.xarx.trix.exception.UnauthorizedException;
+import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.QueryPersistence;
+import co.xarx.trix.persistence.RecommendRepository;
+import co.xarx.trix.services.LogService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import co.xarx.trix.api.BooleanResponse;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
 //import org.hibernate.search.jpa.FullTextEntityManager;
 //import org.hibernate.search.jpa.FullTextQuery;
 //import org.hibernate.search.query.dsl.QueryBuilder;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Recommend;
-import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.persistence.RecommendRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Path("/recommends")
 @Consumes(MediaType.WILDCARD)
@@ -40,6 +38,8 @@ public class RecommendsResource {
 	private @Autowired
 	TrixAuthenticationProvider authProvider;
 	private @Autowired QueryPersistence queryPersistence;
+	private @Autowired
+	LogService logService;
 
 	private @PersistenceContext EntityManager manager;
 
@@ -138,9 +138,11 @@ public class RecommendsResource {
 			BooleanResponse content = new BooleanResponse();
 			content.response = true;
 			queryPersistence.incrementRecommendsCount(postId);
+			logService.recommend(recommend);
 			return content;
 		}catch(Exception e){
 			BooleanResponse content = new BooleanResponse();
+			logService.unrecommend(recommend);
 			queryPersistence.deleteRecommend(postId, person.id);
 			content = new BooleanResponse();
 			content.response = false;

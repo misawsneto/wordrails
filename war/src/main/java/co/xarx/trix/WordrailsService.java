@@ -140,7 +140,7 @@ public class WordrailsService {
 			try {
 				postReadRepository.save(postRead);
 				queryPersistence.incrementReadsCount(post.id);
-				logService.logPostRead(postRead);
+				logService.postRead(postRead);
 			} catch (ConstraintViolationException | DataIntegrityViolationException e) {
 				log.info("user already read this post");
 			}

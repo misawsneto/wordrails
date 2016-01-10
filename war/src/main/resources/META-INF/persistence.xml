@@ -25,8 +25,8 @@
 		<class>co.xarx.trix.domain.page.QueryableListSection</class>
 		<class>co.xarx.trix.domain.page.ContainerSection</class>
 		<class>co.xarx.trix.domain.query.ElasticSearchQuery</class>
-		<class>co.xarx.trix.domain.PostScheduled</class>
 		<class>co.xarx.trix.domain.PostDraft</class>
+		<class>co.xarx.trix.domain.PostScheduled</class>
 		<class>co.xarx.trix.domain.PostTrash</class>
 		<class>co.xarx.trix.domain.Row</class>
 		<class>co.xarx.trix.domain.Station</class>

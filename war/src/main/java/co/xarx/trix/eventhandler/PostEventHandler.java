@@ -93,7 +93,7 @@ public class PostEventHandler {
 			postService.buildNotification(post);
 		}
 		postEsRepository.save(post);
-		logService.logPostCreation(post);
+		logService.postCreation(post);
 	}
 
 	@HandleAfterSave
@@ -102,7 +102,7 @@ public class PostEventHandler {
 			postService.schedule(post.id, post.scheduledDate);
 		}
 		postService.updatePostIndex(post);
-		logService.logPostUpdate(post);
+		logService.postUpdate(post);
 	}
 
 	@HandleBeforeDelete
@@ -122,7 +122,7 @@ public class PostEventHandler {
 			bookmarkRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
 			postService.removePostIndex(post); // evitando bug de remoção de post que tiveram post alterado.
-			logService.logPostRemoval(post);
+			logService.postRemoval(post);
 		} else {
 			throw new UnauthorizedException();
 		}

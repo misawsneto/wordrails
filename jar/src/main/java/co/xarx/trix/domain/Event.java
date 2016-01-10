@@ -13,6 +13,8 @@ public abstract class Event extends BaseEntity {
 	public static final String EVENT_COMMENT = "COMMENT";
 	public static final String EVENT_UPDATE_COMMENT = "UPDATE_COMMENT";
 	public static final String EVENT_REMOVE_COMMENT = "REMOVE_COMMENT";
+	public static final String EVENT_RECOMMEND = "RECOMMEND";
+	public static final String EVENT_UNRECOMMEND = "UNRECOMMEND";
 
 	public static final String UNKOWN_DEVICE = "UNKOWN";
 

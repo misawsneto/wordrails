@@ -20,13 +20,13 @@ public class PostReadEventHandler {
 
 	@HandleAfterCreate
 	public void handleAfterCreate(PostRead read) {
-		logService.logPostRead(read);
+		logService.postRead(read);
 		log.info("Creating PostRead");
 	}
 
 	@HandleAfterSave
 	public void handleAfterSave(PostRead read) {
-		logService.logPostRead(read);
+		logService.postRead(read);
 		log.info("Updating PostRead");
 	}
 }

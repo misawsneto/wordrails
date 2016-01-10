@@ -6,10 +6,7 @@ import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.services.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
-import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
-import org.springframework.data.rest.core.annotation.HandleBeforeSave;
-import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 
 @RepositoryEventHandler(Comment.class)
@@ -26,7 +23,16 @@ public class CommentEventHandler {
 			throw new UnauthorizedException();
 		}
 		queryPersistence.updateCommentsCount(comment.post.id);
-		logService.logCommentCreation(comment);
+	}
+
+	@HandleAfterCreate
+	public void handleAfterCreate(Comment comment){
+		logService.commentCreation(comment);
+	}
+
+	@HandleAfterSave
+	public void handleAfterSave(Comment comment){
+		logService.commentUpdate(comment);
 	}
 
 	@HandleBeforeSave
@@ -34,12 +40,15 @@ public class CommentEventHandler {
 		if(!postAndCommentSecurityChecker.canEdit(comment)){
 			throw new UnauthorizedException();
 		}
-		logService.logCommentUpdate(comment);
 	}
 
 	@HandleBeforeDelete
 	public void handleBeforeDelete(Comment comment) throws UnauthorizedException {
 		queryPersistence.updateCommentsCount(comment.post.id);
-		logService.logCommentRemoval(comment);
+	}
+
+	@HandleAfterDelete
+	public void handleAfterDelete(Comment comment){
+		logService.commentRemoval(comment);
 	}
 }

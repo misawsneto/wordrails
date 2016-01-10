@@ -1,7 +1,7 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.domain.*;
-import co.xarx.trix.persistence.EventRepository;
+import co.xarx.trix.persistence.PostEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -10,39 +10,50 @@ import org.springframework.stereotype.Service;
 public class LogService {
 
 	@Autowired
-	private EventRepository eventRepository;
+	private PostEventRepository postEventRepository;
 
 	@Async
-	public void logPostCreation(Post post){
-		eventRepository.save(new PostEvent(post, Event.EVENT_CREATE));
+	public void postCreation(Post post){
+		postEventRepository.save(new PostEvent(post, Event.EVENT_CREATE));
 	}
 
 	@Async
-	public void logPostUpdate(Post post){
-		eventRepository.save(new PostEvent(post, Event.EVENT_UPDATE));
+	public void postUpdate(Post post){
+		postEventRepository.save(new PostEvent(post, Event.EVENT_UPDATE));
 	}
 
 	@Async
-	public void logPostRemoval(Post post){
-		eventRepository.save(new PostEvent(post, Event.EVENT_DELETE));
-	}
-
-	public void logPostRead(PostRead read){
-		eventRepository.save(new PostEvent(read));
+	public void postRemoval(Post post){
+		postEventRepository.save(new PostEvent(post, Event.EVENT_DELETE));
 	}
 
 	@Async
-	public void logCommentCreation(Comment comment){
-		eventRepository.save(new PostEvent(comment, Event.EVENT_COMMENT));
+	public void postRead(PostRead read){
+		postEventRepository.save(new PostEvent(read));
 	}
 
 	@Async
-	public void logCommentUpdate(Comment comment){
-		eventRepository.save(new PostEvent(comment, Event.EVENT_UPDATE_COMMENT));
+	public void commentCreation(Comment comment){
+		postEventRepository.save(new PostEvent(comment, Event.EVENT_COMMENT));
 	}
 
 	@Async
-	public void logCommentRemoval(Comment comment){
-		eventRepository.save(new PostEvent(comment, Event.EVENT_REMOVE_COMMENT));
+	public void commentUpdate(Comment comment){
+		postEventRepository.save(new PostEvent(comment, Event.EVENT_UPDATE_COMMENT));
+	}
+
+	@Async
+	public void commentRemoval(Comment comment){
+		postEventRepository.save(new PostEvent(comment, Event.EVENT_REMOVE_COMMENT));
+	}
+
+	@Async
+	public void recommend(Recommend recommend){
+		postEventRepository.save(new PostEvent(recommend, Event.EVENT_RECOMMEND));
+	}
+
+	@Async
+	public void unrecommend(Recommend recommend){
+		postEventRepository.save(new PostEvent(recommend, Event.EVENT_UNRECOMMEND));
 	}
 }
