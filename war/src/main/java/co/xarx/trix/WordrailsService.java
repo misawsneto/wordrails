@@ -4,6 +4,7 @@ import co.xarx.trix.api.*;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.CacheService;
+import co.xarx.trix.services.LogService;
 import co.xarx.trix.web.rest.PerspectiveResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.CacheBuilder;
@@ -53,6 +54,9 @@ public class WordrailsService {
 	private StationRepository stationRepository;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
+
+	@Autowired
+	private LogService logService;
 
 	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
 
@@ -136,6 +140,7 @@ public class WordrailsService {
 			try {
 				postReadRepository.save(postRead);
 				queryPersistence.incrementReadsCount(post.id);
+				logService.logPostRead(postRead);
 			} catch (ConstraintViolationException | DataIntegrityViolationException e) {
 				log.info("user already read this post");
 			}

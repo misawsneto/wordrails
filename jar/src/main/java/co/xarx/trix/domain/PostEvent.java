@@ -10,9 +10,6 @@ public class PostEvent extends Event {
 	@Column(name = "person_id")
 	public Integer personId;
 
-	@Column(name = "station_id")
-	public Integer stationId;
-
 	@Column(name = "post_state")
 	public String postState;
 
@@ -35,11 +32,20 @@ public class PostEvent extends Event {
 
 	public PostEvent(PostRead read){
 		this.postId = read.post.id;
-		this.personId = read.person.id;
+		this.personId = read.person != null ? read.person.id : null;
 		this.stationId = read.post.stationId;
 		this.typeEvent = Event.EVENT_READ;
 		this.sessionId = read.sessionid;
-		this.device = Event.UNKOWN_DEVICE;
+		this.device = UNKOWN_DEVICE;
+	}
+
+	public PostEvent(Comment comment, String typeEvent){
+		this.postId = comment.post.id;
+		this.personId = comment.author.id;
+		this.stationId = comment.station.id;
+		this.createdAt = comment.date;
+
+		this.typeEvent = typeEvent;
 	}
 
 	public PostEvent() {
@@ -67,14 +73,6 @@ public class PostEvent extends Event {
 
 	public void setPersonId(Integer personId) {
 		this.personId = personId;
-	}
-
-	public Integer getStationId() {
-		return stationId;
-	}
-
-	public void setStationId(Integer stationId) {
-		this.stationId = stationId;
 	}
 
 	public String getPostState() {
