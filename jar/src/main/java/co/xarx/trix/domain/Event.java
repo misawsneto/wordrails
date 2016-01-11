@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class Event extends BaseEntity {
+public abstract class Event extends BaseEntity implements EventEntity{
 
 	public static final String EVENT_CREATE = "CREATE";
 	public static final String EVENT_UPDATE = "UPDATE";

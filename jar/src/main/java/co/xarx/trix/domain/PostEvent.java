@@ -132,4 +132,9 @@ public class PostEvent extends Event {
 	public void setRecommendId(Integer recommendId) {
 		this.recommendId = recommendId;
 	}
+
+	@Override
+	public void build(Post post) {
+
+	}
 }
