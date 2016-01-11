@@ -104,7 +104,7 @@ public class QueryPersistence {
 	
 	@Transactional
 	public void deleteImagesInPosts(List<Integer> ids) {
-		manager.createQuery("delete from Image image where image.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
+		manager.createQuery("delete from Image image where image.postId in (:ids)").setParameter("ids", ids).executeUpdate();
 	}
 	
 	@Transactional

@@ -95,6 +95,14 @@ public class WordrailsService {
 		Network network = null;
         String subdomain = getSubdomainFromHost(host);
         if(subdomain != null && !subdomain.isEmpty()){
+
+            if(subdomain.equals("settings")){
+                network = new Network();
+                network.name = "Settings";
+                network.subdomain = "settings";
+                network.id = 0;
+            }
+
             try {
                 network = cacheService.getNetworkBySubdomain(subdomain);
             } catch (Exception e) {

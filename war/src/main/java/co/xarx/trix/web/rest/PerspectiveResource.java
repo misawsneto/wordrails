@@ -270,7 +270,10 @@ public class PerspectiveResource {
 			}else if(type.equals(Row.SPLASHED_ROW)){
 				newRow.splashedPerspective = termPerspective;
 				difference = rowComparator.getDifference(newRow.cells, termPerspective.splashedRow == null ? null : termPerspective.splashedRow.cells);
-			}
+			}else if(type.equals(Row.HOME_ROW)){
+                newRow.homePerspective = termPerspective;
+                difference = rowComparator.getDifference(newRow.cells, termPerspective.homeRow == null ? null : termPerspective.homeRow.cells);
+            }
 
 			if(difference != null && difference.cellsToDelete != null && difference.cellsToDelete.size() > 0){
 				cellRepository.deleteInBatch(difference.cellsToDelete);
@@ -282,7 +285,9 @@ public class PerspectiveResource {
 				rowRepository.delete(termPerspective.featuredRow);
 			}else if(type.equals(Row.SPLASHED_ROW) && termPerspective.splashedRow != null){
 				rowRepository.delete(termPerspective.splashedRow);
-			} 
+            }else if(type.equals(Row.HOME_ROW) && termPerspective.homeRow != null){
+                rowRepository.delete(termPerspective.homeRow);
+            }
 		}
 	}
 	
@@ -347,7 +352,7 @@ public class PerspectiveResource {
 
         List<Cell> cells = null;
 
-        List<Integer> ids = termRepository.findTermIdsByTaxonomyId(row.term.taxonomyId);
+        List<Integer> ids = termRepository.findTermIdsByTaxonomyId(row.homePerspective.taxonomyId);
 
         int numberPostsNotPositioned = size - positionedCells.size();
         if(numberPostsNotPositioned > 0){

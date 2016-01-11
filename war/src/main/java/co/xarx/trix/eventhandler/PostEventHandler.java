@@ -73,10 +73,10 @@ public class PostEventHandler {
 		if (post.slug == null || post.slug.isEmpty()) {
 			String originalSlug = StringUtil.toSlug(post.title);
 			try {
-				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#");
+				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
 				postRepository.save(post);
 			} catch (DataIntegrityViolationException ex) {
-				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#");
+				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
 				postRepository.save(post);
 			}
 		} else {
