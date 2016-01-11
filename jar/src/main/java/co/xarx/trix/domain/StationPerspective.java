@@ -4,11 +4,12 @@ package co.xarx.trix.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name="station_perspective")
-public class StationPerspective {
+public class StationPerspective implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
