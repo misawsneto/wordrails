@@ -363,7 +363,7 @@ public class PerspectiveResource {
                 List<Post> notPositionedPosts = (postRepository.findPostsNotPositioned(stationId, ids, postPositionedIds, pageable));
                 cells = mergePostsPositionedsNotPositioneds(row, positionedCells, notPositionedPosts, size);
             }else{
-                List<Post> posts = postRepository.findPostsPublished(stationId, ids, pageable);
+                List<Post> posts = ids != null && ids.size() > 0 ? postRepository.findPostsPublished(stationId, ids, pageable) : new ArrayList<Post>(); //postRepository.findPostsPublished(stationId, ids, pageable);
                 cells = convertPostsToCells(row, posts);
             }
         }else{
@@ -403,7 +403,7 @@ public class PerspectiveResource {
 				List<Post> notPositionedPosts = (postRepository.findPostsNotPositioned(stationId, ids, postPositionedIds, pageable));
 				cells = mergePostsPositionedsNotPositioneds(row, positionedCells, notPositionedPosts, size);
 			}else{
-				List<Post> posts = postRepository.findPostsPublished(stationId, ids, pageable);
+				List<Post> posts = ids != null && ids.size() > 0 ? postRepository.findPostsPublished(stationId, ids, pageable) : new ArrayList<Post>();// postRepository.findPostsPublished(stationId, ids, pageable);
 				cells = convertPostsToCells(row, posts);
 			}
 		}else{
@@ -508,7 +508,7 @@ public class PerspectiveResource {
 	private RowView convertTermToRow(Term term, List<Integer> termsIds, Integer stationId, int index, String rowType, int page, int size){
 		Pageable pageable = new PageRequest(page, size);
 		
-		List<Post> posts = postRepository.findPostsPublished(stationId, termsIds, pageable);
+		List<Post> posts = termsIds != null && termsIds.size() > 0 ? postRepository.findPostsPublished(stationId, termsIds, pageable) : new ArrayList<Post>();
 
 		Row row = new Row();
 		row.index = index;

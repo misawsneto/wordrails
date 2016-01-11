@@ -100,6 +100,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetCommentStationAuthorized(Integer commentId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetCommentAuthorAuthorized(Integer commentId) {
 		return canReadComments(commentId);
 	}
