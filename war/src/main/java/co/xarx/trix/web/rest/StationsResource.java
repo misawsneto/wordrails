@@ -14,7 +14,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @Path("/stations")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -79,13 +81,15 @@ public class StationsResource {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		NetworkRole role = networkRolesRepository.findByNetworkAndPerson(network, person);
 
+		List<Station> stations = new ArrayList<Station>();
+
 		if (role.admin) {
-			network.stations = new HashSet<>(stationRepository.findByNetworkId(network.id));
-			for (Station station : network.stations) {
+			stations = stationRepository.findByNetworkId(network.id);
+			for (Station station : stations ) {
 				if (station.id.equals(stationId)) station.main = value;
 				else station.main = false;
 
-				queryPersistence.updateMainStation(station.id, station.main);
+				stationRepository.save(station);
 				cacheService.updateStation(station.id);
 			}
 			return Response.status(Status.OK).build();

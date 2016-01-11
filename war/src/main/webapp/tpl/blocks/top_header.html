@@ -33,29 +33,55 @@
             <!-- <div class="wrapper b-t text-center text-md pointer" md-ink-ripple ng-click="app.openSplash('explore_categories.html')">
              <i class="mdi mdi-view-grid"></i> EXPLORE
             </div> -->
-            <div class="b-t" ng-if="app.stationsPermissions.length > 1">
-              <div>
-                <div class="text-xs text-u-c m-t-n-xs p-b-sm wrapper-sm">
-                  <i class="mdi mdi-radio-tower text-lg v-middle"></i> estações</div>
-              </div>
-              <div  class="scrollable wrapper p-t-none" style="max-height: 100px;" >
-                <div class="display-t-c" style="width: 155px;">
-                  <ul class="text-md font-thin">
-                    <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: app.stationsPermissions.length/2:0">
-                      <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ng-click="app.changeStation(station);"
-                      ng-class="{'font-bold': station.stationId == app.currentStation.id}">
-                      {{station.stationName}}</a>
-                    </li>
-                  </ul>
+            <div class="b-t" >
+              <div ng-if="app.stationsPermissions.length > 1">
+                <div>
+                  <div class="text-xs text-u-c m-t-n-xs p-b-sm wrapper-sm">
+                    <i class="mdi mdi-radio-tower text-lg v-middle"></i> estações
+                  </div>
                 </div>
-                <div class="display-t-c clearfix p-r" style="max-width: 155px;">
-                  <ul class="text-md font-thin">
-                    <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: (app.stationsPermissions.length/2 + 1):app.stationsPermissions.length/2">
-                      <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ng-click="app.changeStation(station);"
-                      ng-class="{'font-bold': station.stationId == app.currentStation.id}">
-                      {{station.stationName}}</a>
-                    </li>
-                  </ul>
+                <div  class="scrollable wrapper p-t-none" style="max-height: 100px;"  ng-if="app.stationsPermissions.length > 1">
+                  <div class="display-t-c" style="width: 155px;">
+                    <ul class="text-md font-thin">
+                      <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: app.stationsPermissions.length/2:0">
+                        <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ng-click="app.changeStation(station);"
+                        ng-class="{'font-bold': station.stationId == app.currentStation.id}">
+                        {{station.stationName}}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="display-t-c clearfix p-r" style="max-width: 155px;">
+                    <ul class="text-md font-thin">
+                      <li class="text-ellipsis" ng-repeat="station in app.stationsPermissions | limitTo: (app.stationsPermissions.length/2 + 1):app.stationsPermissions.length/2">
+                        <a style="padding: 2px 15px" class="mark-as-read underline-hover text-u-c" ng-click="app.changeStation(station);"
+                        ng-class="{'font-bold': station.stationId == app.currentStation.id}">
+                        {{station.stationName}}</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div ng-if="app.termPerspectiveView.ordinaryRows.length > 6" class="b-t">
+                <div class="text-xs text-u-c m-t-n-xs p-b-sm wrapper-sm">
+                  <span class="text-u-c p-l">categorias</span>
+                </div>
+                <div  class="scrollable wrapper p-t-none" style="max-height: 100px;" >
+                  <div class="display-t-c" style="width: 155px;">
+                    <ul>
+                      <li class="text-ellipsis" ng-repeat="tab in app.termPerspectiveView.ordinaryRows | limitTo: app.termPerspectiveView.ordinaryRows.length/2:0">
+                        <a style="padding: 2px 15px" class="mark-as-read underline-hover" ui-sref="app.tagspage({'tagName': tab.termName})">
+                        {{tab.termName}}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="display-t-c clearfix p-r" style="max-width: 155px;">
+                    <ul>
+                      <li class="text-ellipsis" ng-repeat="tab in app.termPerspectiveView.ordinaryRows | limitTo: (app.termPerspectiveView.ordinaryRows.length/2 + 1):app.termPerspectiveView.ordinaryRows.length/2">
+                        <a style="padding: 2px 15px" class="mark-as-read underline-hover" class="text-u-c" ui-sref="app.tagspage({'tagName': tab.termName})">
+                        {{tab.termName}}</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>

@@ -94,4 +94,19 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 	private void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
+
+    @Override
+    public boolean equals(Object obj) {
+        if(id != null)
+            return id.equals(((BaseEntity)obj).id);
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
 }

@@ -325,15 +325,10 @@
 			<artifactId>spring-data-jpa</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>com.github.sps.mustache</groupId>
-			<artifactId>mustache-spring-view</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.samskivert</groupId>
-			<artifactId>jmustache</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.github.jknack</groupId>
+            <artifactId>handlebars</artifactId>
+        </dependency>
 
 		<dependency>
 			<groupId>com.github.spullara.mustache.java</groupId>

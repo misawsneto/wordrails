@@ -27,6 +27,8 @@ public class Comment {
 	@Size(min=1, max=100)
 	public String title;
 
+	@ManyToOne
+	@JoinColumn(updatable=false)
 	public Station station;
 
 	@Lob
