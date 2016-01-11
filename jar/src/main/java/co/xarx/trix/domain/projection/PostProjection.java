@@ -38,8 +38,6 @@ public interface PostProjection {
 
 	ImageProjection getFeaturedImage();
 
-	List<ImageProjection> getImages();
-
 	String getState();
 
 	boolean getImageLandscape();

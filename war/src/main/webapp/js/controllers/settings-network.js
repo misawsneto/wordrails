@@ -18,11 +18,11 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 	};
 
 	var login = $scope.login = new FileUploader({
-		url: TRIX.baseUrl + "/api/files/contents/simple"
+		url: TRIX.baseUrl + "/api/images/upload?imageType=LOGIN"
 	});
 
 	var splash = $scope.splash = new FileUploader({
-		url: TRIX.baseUrl + "/api/files/contents/simple"
+		url: TRIX.baseUrl + "/api/images/upload?imageType=SPLASH"
 	});
 
 	var favicon = $scope.favicon = new FileUploader({
@@ -134,25 +134,25 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 			$scope.app.showSuccessToast('Alterações realizadas com successo.')
 		})
 
-		if($scope.loginImage && $scope.loginImage.id){
-			var loginImage = { original: TRIX.baseUrl + "/api/files/" + $scope.loginImage.id }
-			trix.postImage(loginImage).success(function(imageId){
-				var myLoginImage = TRIX.baseUrl + "/api/images/" + imageId;
+		if($scope.loginImage && $scope.loginImage.imageId){
+			// var loginImage = { original: TRIX.baseUrl + "/api/files/" + $scope.loginImage.id }
+			// trix.postImage(loginImage).success(function(imageId){
+				var myLoginImage = TRIX.baseUrl + "/api/images/" + $scope.loginImage.imageId;
 				$scope.network.loginImage = myLoginImage;
 				trix.putNetwork($scope.network).success(function(){
 					$scope.app.initData.network.loginImageId = $scope.loginImage.id
 				})
-			})
+			// })
 		}
-		if($scope.splashImage && $scope.splashImage.id){
-			var splashImage = { original: TRIX.baseUrl + "/api/files/" + $scope.splashImage.id }
-			trix.postImage(splashImage).success(function(imageId){
-				var mySplashImage = TRIX.baseUrl + "/api/images/" + imageId;
+		if($scope.splashImage && $scope.splashImage.imageId){
+			// var splashImage = { original: TRIX.baseUrl + "/api/files/" + $scope.splashImage.id }
+			// trix.postImage(splashImage).success(function(imageId){
+				var mySplashImage = TRIX.baseUrl + "/api/images/" + $scope.splashImage.imageId;
 				$scope.network.splashImage = mySplashImage;
 				trix.putNetwork($scope.network).success(function(){
 					$scope.app.initData.network.splashImageId = $scope.splashImage.id
 				})
-			})
+			// })
 		}
 		if($scope.faviconImage && $scope.faviconImage.id){
 			var favicon = { original: TRIX.baseUrl + "/api/files/" + $scope.faviconImage.id }

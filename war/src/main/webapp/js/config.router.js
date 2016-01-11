@@ -193,7 +193,7 @@ angular.module('app')
                   , controller:'SettingsStationsStatisticsCtrl'
               })
               .state('app.settings.stationusers', {
-                  url: '/stationusers?stationId?newUser?username',
+                  url: '/stationusers?stationId?userId?newUser',
                   templateUrl: 'tpl/settings-stations-users.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
