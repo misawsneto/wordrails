@@ -1026,20 +1026,20 @@ public class UtilResource {
     @Autowired
     public PostEventHandler postEventHandler;
 
-    @DELETE
-    @Path("/deleteNetworkPosts/{id}")
-    public void deleteNetworkPosts(@PathParam("id") Integer networkId){
-        if(isLocal(request.getHeader("Host"))){
-            adminAuth(networkId);
-            Network network = networkRepository.findOne(networkId);
-            for(Station station: network.stations){
-                for(Post post: station.posts){
-                    postEventHandler.handleBeforeDelete(post);
-                    postRepository.delete(post.id);
-                }
-            }
-        }
-    }
+//    @DELETE
+//    @Path("/deleteNetworkPosts/{id}")
+//    public void deleteNetworkPosts(@PathParam("id") Integer networkId){
+//        if(isLocal(request.getHeader("Host"))){
+//            adminAuth(networkId);
+//            Network network = networkRepository.findOne(networkId);
+//            for(Station station: network.stations){
+//                for(Post post: station.posts){
+//                    postEventHandler.handleBeforeDelete(post);
+//                    postRepository.delete(post.id);
+//                }
+//            }
+//        }
+//    }
 
     @GET
     @Path("/testEmail/{networkId}")
