@@ -6,9 +6,9 @@ app.controller('SignupFormController', ['$scope', '$http', '$state', function($s
     $scope.authError = null;
     var invitation = $state.params.invitation
 
-    $state('user.username', function(){
+    // $state('user.username', function(){
       
-    });
+    // });
 
     $scope.signup = function() {
       $scope.authError = null;
