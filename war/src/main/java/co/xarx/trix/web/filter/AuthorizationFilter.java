@@ -603,11 +603,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByStationIdAuthorized(Integer stationId) {
-		return canVisualizeStation(stationId);
-	}
-
-	@Override
 	protected boolean isFindStationTagsAuthorized(Integer stationId) {
 		Station station = stationRepository.findOne(stationId);
 		return stationSecurityChecker.canVisualize(station);
