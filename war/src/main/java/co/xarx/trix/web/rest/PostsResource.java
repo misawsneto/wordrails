@@ -166,10 +166,10 @@ public class PostsResource {
 	@Path("/{stationId}/findPostsByStationIdAndAuthorIdAndState")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> findPostsByStationIdAndAuthorIdAndState(@PathParam("stationId") Integer stationId,
-	                                                                               @QueryParam("authorId") Integer authorId,
-	                                                                               @QueryParam("state") String state,
-	                                                                               @QueryParam("page") int page,
-	                                                                               @QueryParam("size") int size) throws ServletException, IOException {
+																				   @QueryParam("authorId") Integer authorId,
+																				   @QueryParam("state") String state,
+																				   @QueryParam("page") int page,
+																				   @QueryParam("size") int size) throws ServletException, IOException {
 
 		Pageable pageable = new PageRequest(page, size);
 
@@ -189,14 +189,14 @@ public class PostsResource {
 	@Path("/search/networkPosts")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request,
-	                                               @QueryParam("query") String q,
-	                                               @QueryParam("stationIds") String stationIds,
-	                                               @QueryParam("personId") Integer personId,
-	                                               @QueryParam("publicationType") String publicationType,
-	                                               @QueryParam("noHighlight") Boolean noHighlight,
-	                                               @QueryParam("sortByDate") Boolean sortByDate,
-	                                               @QueryParam("page") Integer page,
-	                                               @QueryParam("size") Integer size) {
+												   @QueryParam("query") String q,
+												   @QueryParam("stationIds") String stationIds,
+												   @QueryParam("personId") Integer personId,
+												   @QueryParam("publicationType") String publicationType,
+												   @QueryParam("noHighlight") Boolean noHighlight,
+												   @QueryParam("sortByDate") Boolean sortByDate,
+												   @QueryParam("page") Integer page,
+												   @QueryParam("size") Integer size) {
 
 		if (q == null) {
 			ContentResponse<SearchView> response = new ContentResponse<>();
@@ -265,8 +265,8 @@ public class PostsResource {
 	@Path("/{stationId}/postRead")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId,
-	                                                   @QueryParam("page") Integer page,
-	                                                   @QueryParam("size") Integer size) throws BadRequestException{
+													   @QueryParam("page") Integer page,
+													   @QueryParam("size") Integer size) throws BadRequestException{
 
 		if (stationId == null || page == null || size == null) {
 			throw new BadRequestException("Invalid null parameter(s).");
@@ -298,8 +298,8 @@ public class PostsResource {
 	@Path("/{stationId}/popular")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId,
-	                                                  @QueryParam("page") Integer page,
-	                                                  @QueryParam("size") Integer size) {
+													  @QueryParam("page") Integer page,
+													  @QueryParam("size") Integer size) {
 
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPopularPosts(stationId, pageable);
@@ -313,8 +313,8 @@ public class PostsResource {
 	@Path("/{stationId}/recent")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getRecent(@PathParam("stationId") Integer stationId,
-	                                                 @QueryParam("page") Integer page,
-	                                                 @QueryParam("size") Integer size) {
+													 @QueryParam("page") Integer page,
+													 @QueryParam("size") Integer size) {
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPostsOrderByDateDesc(stationId, pageable);
 
@@ -352,7 +352,7 @@ public class PostsResource {
 	@Path("/search/findPostsByTags")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tags") String tagsString, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-		if (tagsString == null || !tagsString.isEmpty()) {
+		if(tagsString == null || !tagsString.isEmpty()){
 			// TODO: throw badrequest
 		}
 

@@ -9,11 +9,11 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	  };
 
 	  var cover = $scope.cover = new FileUploader({
-	  	url: TRIX.baseUrl + "/api/files/contents/simple"
+	  	url: TRIX.baseUrl + "/api/images/upload?imageType=COVER"
 	  });
 
 	  var image = $scope.image = new FileUploader({
-	  	url: TRIX.baseUrl + "/api/files/contents/simple"
+	  	url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
 	  });
 
 	  cover.onAfterAddingFile = function(fileItem) {
@@ -24,16 +24,16 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	  cover.onSuccessItem = function(fileItem, response, status, headers) {
 	  	if(response.filelink){
 	  		$scope.userCover = response;
-	  		var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userCover.id }
-	  		trix.postImage(imageObject).success(function(imageId){
-	  			var myCoverImage = TRIX.baseUrl + "/api/images/" + imageId;
+	  		// var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userCover.id }
+	  		// trix.postImage(imageObject).success(function(imageId){
+	  			var myCoverImage = TRIX.baseUrl + "/api/images/" + response.imageId;
 	  			$scope.person.cover = myCoverImage
 	  			trix.putPerson($scope.person).success(function(){
-	  				$scope.app.initData.person.coverLargeId = $scope.person.coverLargeId = $scope.userCover.id;
-	  				$scope.app.initData.person.coverMediumId = $scope.person.coverMediumId = $scope.userCover.id;
+	  				$scope.app.initData.person.coverLargeId = $scope.person.coverLargeId = $scope.userCover.imageId;
+	  				$scope.app.initData.person.coverMediumId = $scope.person.coverMediumId = $scope.userCover.imageId;
 	  				$mdToast.hide();
 	  			})
-	  		})
+	  		// })
 	  	}
 	  };
 
@@ -66,16 +66,16 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	  image.onSuccessItem = function(fileItem, response, status, headers) {
 	  	if(response.filelink){
 	  		$scope.userImage = response;
-	  		var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userImage.id }
-	  		trix.postImage(imageObject).success(function(imageId){
-	  			var myImageImage = TRIX.baseUrl + "/api/images/" + imageId;
+	  		// var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userImage.id }
+	  		// trix.postImage(imageObject).success(function(imageId){
+	  			var myImageImage = TRIX.baseUrl + "/api/images/" + response.imageId;
 	  			$scope.person.image = myImageImage
 	  			trix.putPerson($scope.person).success(function(){
-	  				$scope.app.initData.person.imageMediumId = $scope.person.imageMediumId = $scope.userImage.id;
-	  				$scope.app.initData.person.imageSmallId = $scope.person.imageSmallId = $scope.userImage.id;
+	  				$scope.app.initData.person.imageMediumId = $scope.person.imageMediumId = $scope.userImage.imageId;
+	  				$scope.app.initData.person.imageSmallId = $scope.person.imageSmallId = $scope.userImage.imageId;
 	  				$mdToast.hide();
 	  			})
-	  		})
+	  		// })
 	  	}
 	  };
 

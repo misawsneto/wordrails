@@ -1020,4 +1020,8 @@ angular.module('app')
     }
 
     $scope.app.year = moment().format('YYYY')
+
+    $scope.app.mediaUrl = function(hash){
+      return mediaUrl(hash); 
+    }
 }]);

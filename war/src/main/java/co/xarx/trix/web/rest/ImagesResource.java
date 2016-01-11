@@ -1,6 +1,7 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.domain.Image;
+import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
 import org.apache.commons.fileupload.FileItem;
@@ -33,6 +34,16 @@ public class ImagesResource {
 	private UriInfo uriInfo;
 	@Context
 	private HttpServletResponse response;
+	@Autowired
+	private AmazonCloudService amazonCloudService;
+
+	public static class ImageUpload {
+		public String hash;
+		public Integer imageId;
+		public String link;
+		public String fileLink;
+	}
+
 
 	@POST
 	@Path("/upload")
@@ -47,14 +58,19 @@ public class ImagesResource {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 
-		String hash = FileUtil.getHash(item.getInputStream());
 
 		Image newImage = new Image();
 		newImage.type = type;
 		newImage.title = item.getName();
 		newImage = imageService.createNewImage(newImage, item.getInputStream(), item.getContentType(), true, true);
 
-		return Response.ok().entity("{\"hash\":\"" + hash + "\", \"imageId\":" + newImage.id + "}").build();
+		ImageUpload imageUpload = new ImageUpload();
+		imageUpload.hash = FileUtil.getHash(item.getInputStream());
+		imageUpload.imageId = newImage.id;
+		imageUpload.link = amazonCloudService.getPublicImageURL(imageUpload.hash);
+		imageUpload.fileLink = imageUpload.link;
+
+		return Response.ok().entity(imageUpload).build();
 	}
 
 	private boolean validate(FileItem item) throws FileUploadException {

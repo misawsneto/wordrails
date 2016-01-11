@@ -130,7 +130,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 				$("#video-url-input").focus();
 				$scope.videoUrl = $scope.app.editingPost.externalVideoUrl;
 			}else if($scope.app.editingPost.featuredImage){
-				$scope.app.editingPost.uploadedImage = {filelink: TRIX.baseUrl + "/api/files/"+$scope.app.editingPost.imageLargeId+"/contents" }
+				$scope.app.editingPost.uploadedImage = {filelink: $scope.app.mediaUrl($scope.app.editingPost.featuredImage.hashs.large) }
 				$scope.checkLandscape();
 			}
 
@@ -356,7 +356,7 @@ $scope.checkLandscape = function(){
 // ------------------- image uploader -------------
 
 var uploader = $scope.uploader = new FileUploader({
-	url: TRIX.baseUrl + "/api/files/contents/simple"
+	url: TRIX.baseUrl + "/api/images/upload?imageType=POST"
 });
 
 uploader.onAfterAddingFile = function(fileItem) {
@@ -366,7 +366,7 @@ uploader.onAfterAddingFile = function(fileItem) {
 uploader.onSuccessItem = function(fileItem, response, status, headers) {
 	if(response.filelink){
 		$scope.app.editingPost.uploadedImage = response;
-		$scope.app.editingPost.uploadedImage.filelink = TRIX.baseUrl + $scope.app.editingPost.uploadedImage.filelink
+		$scope.app.editingPost.uploadedImage.filelink = $scope.app.editingPost.uploadedImage.filelink
 		$scope.app.editingPost.showMediaButtons = false;
 		$scope.checkLandscape();
 		$("#image-config").removeClass("hide");
@@ -675,18 +675,15 @@ function isTermSelected(terms){
 				});
 			}
 
-			if($scope.app.editingPost.uploadedImage && $scope.app.editingPost.uploadedImage.id){
-				var featuredImage = { original: TRIX.baseUrl + "/api/files/" + $scope.app.editingPost.uploadedImage.id }
-				if($scope.app.editingPost.imageCaption)
-					featuredImage.caption = $scope.app.editingPost.imageCaption
+			if($scope.app.editingPost.uploadedImage && $scope.app.editingPost.uploadedImage.imageId){
+				// if($scope.app.editingPost.imageCaption)
+				// 	featuredImage.caption = $scope.app.editingPost.imageCaption
 
-				if($scope.app.editingPost.imageTitle)
-					featuredImage.caption = $scope.app.editingPost.imageTitle
+				// if($scope.app.editingPost.imageTitle)
+				// 	featuredImage.caption = $scope.app.editingPost.imageTitle
 
-				trix.postImage(featuredImage).success(function(imageId){
-					post.featuredImage = TRIX.baseUrl + "/api/images/" + imageId;
-					doUpdate();
-				})
+				post.featuredImage = TRIX.baseUrl + "/api/images/" + $scope.app.editingPost.uploadedImage.imageId;
+				doUpdate();
 			}else{
 				if(!$scope.app.editingPost.uploadedImage) // remove if no image
 					post.featuredImage = null;
@@ -743,23 +740,14 @@ function createPost(state){
 			post.tags = $scope.chipTags.tags;
 
 			if($scope.app.editingPost.uploadedImage){
-				var featuredImage = { original: TRIX.baseUrl + "/api/files/" + $scope.app.editingPost.uploadedImage.id }
-				if($scope.app.editingPost.imageCaption)
-					featuredImage.caption = $scope.app.editingPost.imageCaption
-
-				if($scope.app.editingPost.imageTitle)
-					featuredImage.caption = $scope.app.editingPost.imageTitle
-
-				trix.postImage(featuredImage).success(function(imageId){
-					post.featuredImage = TRIX.baseUrl + "/api/images/" + imageId;
-					//postPost(post);
-					if(state == "DRAFT"){
-						post.state = state;
-						postDraft(post)
-					}else{
-						postPost(post);
-					}
-				})
+				
+				post.featuredImage = TRIX.baseUrl + "/api/images/" + $scope.app.editingPost.uploadedImage.imageId
+				if(state == "DRAFT"){
+					post.state = state;
+					postDraft(post)
+				}else{
+					postPost(post);
+				}
 			}else{
 				if(state == "DRAFT"){
 					post.state = state;
@@ -856,7 +844,7 @@ function createPost(state){
 				createPostObject();
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, response);
 				if($scope.app.editingPost.imageLargeId)
-				$scope.app.editingPost.uploadedImage = {filelink: TRIX.baseUrl + "/api/files/"+$scope.app.editingPost.imageLargeId+"/contents" }
+				$scope.app.editingPost.uploadedImage = {filelink: $scope.app.mediaUrl($scope.app.editingPost.featuredImage.hashs.large) }
 				setWritableStationById(response.station.id)
 				updateTermTree();
 				$timeout(function() {

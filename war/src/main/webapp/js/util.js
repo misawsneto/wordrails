@@ -459,6 +459,11 @@ String.prototype.stripHtml = function(){
 	return this.replace(/(<([^>]+)>)/ig,"");
 }
 
+var mediaUrl = function(hash){
+	if(initData && initData.publicCloudfrontUrl)
+		return "http://" + initData.publicCloudfrontUrl + (hash ? "/" + initData.network.subdomain + "/images/" + hash : "");
+}
+
 
 /*!
  * classie - class helper functions

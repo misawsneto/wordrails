@@ -114,6 +114,7 @@ public class APNService {
 		payloadBuilder.addCustomProperty("stationName", notification.station.name);
 		payloadBuilder.setAlertTitle(notification.station.name);
 		payloadBuilder.setAlertBody(notification.message);
+		payloadBuilder.setContentAvailable(true);
 
 		int notificationsCounter = 0;
 		for (PersonNetworkToken personToken : personNetworkTokens) {
