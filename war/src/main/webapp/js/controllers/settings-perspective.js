@@ -364,7 +364,7 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       });
 
       if(perspective.homeRow && perspective.homeRow.cells){
-        row perspective.homeRow
+        row = perspective.homeRow
         for (var i = row.cells.length - 1; i >= 0; i--) {
           if(!(row.cells[i].id || row.cells[i].new))
             row.cells.splice(i, 1)
