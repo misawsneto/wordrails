@@ -33,11 +33,11 @@ public class ESRepositoryImpl<T extends ElasticSearchEntity>
 //		elasticsearchOperations.refresh(entity.getTenantId(), true);
 //		return entity;
 //	}
-
-	public void delete(Integer id) {
-		T t = this.findOne(id);
-		this.delete(t);
-	}
+//
+//	public void delete(Integer id) {
+//		T t = this.findOne(id);
+//		this.delete(t);
+//	}
 
 //	private IndexQuery createIndexQuery(T entity) {
 //		return new IndexQueryBuilder()

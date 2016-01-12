@@ -37,4 +37,17 @@ public class LogAspect {
 
 		eventRepository.save(event);
 	}
+
+	@AfterReturning("within(org.springframework.data.repository.CrudRepository+) && execution(* *..delete(*)) && args(entity)")
+	public void logDelete(Loggable entity){
+
+		log.info("---------------------------- Delete ----------------------------");
+
+		Event event = entity.build(Event.EVENT_DELETE, logBuilderExecutor);
+
+		event.setUserId(provider.getUser().id);
+		event.setSessionId(RequestContextHolder.currentRequestAttributes().getSessionId());
+
+		eventRepository.save(event);
+	}
 }
