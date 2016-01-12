@@ -102,9 +102,16 @@ public class PostEventHandler {
 		}
 	}
 
+	@HandleAfterDelete
+	@Transactional
+	public void handleAfterDelete(Post post){
+		System.out.println("------------------- After delete --------------------");
+	}
+
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
+		System.out.println("------------------- Before delete --------------------");
 		if (postAndCommentSecurityChecker.canRemove(post)) {
 
 			cellRepository.delete(cellRepository.findByPost(post));

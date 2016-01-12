@@ -1,6 +1,8 @@
 package co.xarx.trix.generator;
 
+import co.xarx.trix.domain.GeneratorIgnore;
 import org.reflections.Reflections;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
@@ -27,6 +29,14 @@ public class PersistenceUnitDescription {
 		Map<Class<?>, Class<? extends JpaRepository>> entityRepository = new HashMap<>();
 		Map<Class<?>, List<QueryDescription>> entityQueries = new HashMap<>();
 		Set<Class<? extends JpaRepository>> classes = reflections.getSubTypesOf(JpaRepository.class);
+
+		Iterator <Class<? extends JpaRepository>> iterator = classes.iterator();
+		while (iterator.hasNext()){
+			Class<? extends JpaRepository> c = iterator.next();
+			if (AnnotationUtils.isAnnotationDeclaredLocally(GeneratorIgnore.class, c))
+				iterator.remove();
+		}
+
 		for (Class<? extends JpaRepository> repositoryClass : classes) {
 			RepositoryRestResource repositoryResource = repositoryClass.getAnnotation(RepositoryRestResource.class);
 			if (repositoryResource == null || repositoryResource.exported()) {

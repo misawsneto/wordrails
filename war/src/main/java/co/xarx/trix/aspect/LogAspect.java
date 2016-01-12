@@ -38,7 +38,7 @@ public class LogAspect {
 		eventRepository.save(event);
 	}
 
-	@AfterReturning("within(org.springframework.data.repository.CrudRepository+) && execution(* *..delete(*)) && args(entity)")
+	@AfterReturning("within(co.xarx.trix.persistence.LoggableRepository) && execution(* *..delete(*)) && args(entity)")
 	public void logDelete(Loggable entity){
 
 		log.info("---------------------------- Delete ----------------------------");
