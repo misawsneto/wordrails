@@ -2,260 +2,261 @@ package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 import java.util.Set;
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(
-        name="state",
-        discriminatorType=DiscriminatorType.STRING
+		name="state",
+		discriminatorType=DiscriminatorType.STRING
 )
 @DiscriminatorValue(value="PUBLISHED")
-public class Post implements Serializable {
+public class Post extends BaseEntity implements Serializable, ElasticSearchEntity, Loggable {
 
-    public static final String STATE_DRAFT = "DRAFT";
-    public static final String STATE_NO_AUTHOR = "NOAUTHOR";
-    public static final String STATE_TRASH = "TRASH";
-    public static final String STATE_PUBLISHED = "PUBLISHED";
-    public static final String STATE_SCHEDULED = "SCHEDULED";
+	public static final String STATE_DRAFT = "DRAFT";
+	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
+	public static final String STATE_TRASH = "TRASH";
+	public static final String STATE_PUBLISHED = "PUBLISHED";
+	public static final String STATE_SCHEDULED = "SCHEDULED";
 
-    public Post() {
-        state = Post.STATE_PUBLISHED;
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
-    public Integer originalPostId;
+	public Post() {
+		state = Post.STATE_PUBLISHED;
+	}
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date date;
+	@Override
+	public String getType() {
+		return "post";
+	}
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date lastModificationDate;
+	public Integer originalPostId;
 
-    @Lob
-    @Column(length = 1024)
-    public String title;
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date date;
 
-    @Lob
-    public String body;
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date lastModificationDate;
 
-    @Lob
-    @Column(length = 1024)
-    public String topper;
+	@Lob
+	@Column(length = 1024)
+	public String title;
 
-    @Lob
-    @Column(length = 1024)
-    public String subheading;
+	@Lob
+	public String body;
 
-    @ManyToOne
-    public Sponsor sponsor;
+	@Lob
+	@Column(length = 1024)
+	public String topper;
 
-    @Lob
-    public String originalSlug;
+	@Lob
+	@Column(length = 1024)
+	public String subheading;
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date scheduledDate;
+	@ManyToOne
+	public Sponsor sponsor;
 
-    @Lob
-    @Column(unique = true)
-    public String slug;
+	@Lob
+	public String originalSlug;
 
-    @OneToMany(mappedBy = "post")
-    public Set<Comment> comments;
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date scheduledDate;
 
-    @Size(min = 1, max = 15)
-    @Column(insertable = false, updatable = false)
-    public String state;
+	@Lob
+	@Column(unique = true)
+	public String slug;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    public Image featuredImage;
+	@OneToMany(mappedBy = "post")
+	public Set<Comment> comments;
 
-    @OneToMany
-    @JoinTable(
-            name="post_video",
-            joinColumns = @JoinColumn( name="post_id"),
-            inverseJoinColumns = @JoinColumn( name="video_id")
-    )
-    public Set<Video> videos;
+	@Size(min = 1, max = 15)
+	@Column(insertable = false, updatable = false)
+	public String state;
 
-    @OneToMany
-    @JoinTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
-    public Set<Image> images;
+	@ManyToOne(fetch = FetchType.EAGER)
+	public Image featuredImage;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(updatable = false)
-    public Person author;
+	@OneToMany
+	@JoinTable(
+			name="post_video",
+			joinColumns = @JoinColumn( name="post_id"),
+			inverseJoinColumns = @JoinColumn( name="video_id")
+	)
+	public Set<Video> videos;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(updatable = false)
-    public Station station;
+	@OneToMany
+	@JoinTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
+	public Set<Image> images;
 
-    public Integer stationId;
+	@NotNull
+	@ManyToOne
+	@JoinColumn(updatable = false)
+	public Person author;
 
-    @Column(updatable = false)
-    public int readsCount = 0;
+	@NotNull
+	@ManyToOne
+	@JoinColumn(updatable = false)
+	public Station station;
 
-    @Column(updatable = false)
-    public int bookmarksCount = 0;
+	public Integer stationId;
 
-    @Column(updatable = false)
-    public int recommendsCount = 0;
+	@Column(updatable = false)
+	public int readsCount = 0;
 
-    @Column(updatable = false)
-    public int commentsCount = 0;
+	@Column(updatable = false)
+	public int bookmarksCount = 0;
 
-    @ManyToMany
-    public Set<Term> terms;
+	@Column(updatable = false)
+	public int recommendsCount = 0;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @JoinTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
-    public Set<String> tags;
+	@Column(updatable = false)
+	public int commentsCount = 0;
 
-    @Column(columnDefinition = "boolean default true", nullable = false)
-    public boolean imageLandscape = true;
+	@ManyToMany(fetch = FetchType.EAGER)
+	public Set<Term> terms;
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date updatedAt;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
+	public Set<String> tags;
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(updatable = false)
-    public Date createdAt;
+	@Column(columnDefinition = "boolean default true", nullable = false)
+	public boolean imageLandscape = true;
 
-    @Column(length = 1024)
-    public String externalFeaturedImgUrl;
+	@Column(length = 1024)
+	public String externalFeaturedImgUrl;
 
-    @Column(length = 1024)
-    public String externalVideoUrl;
+	@Column(length = 1024)
+	public String externalVideoUrl;
 
-    @Column(columnDefinition = "int(11) DEFAULT 0")
-    public int readTime;
+	@Column(columnDefinition = "int(11) DEFAULT 0")
+	public int readTime;
 
-    @Column(columnDefinition = "boolean DEFAULT false")
-    public boolean notify = false;
+	@Column(columnDefinition = "boolean DEFAULT false")
+	public boolean notify = false;
 
-    @Lob
-    public String imageCaptionText;
+	@Lob
+	@Deprecated
+	public String imageCaptionText;
 
-    @Lob
-    public String imageCreditsText;
+	@Lob
+	@Deprecated
+	public String imageCreditsText;
 
-    public Double lat;
+	public Double lat;
 
-    public Double lng;
+	public Double lng;
 
-    @Lob
-    public String imageTitleText;
+	@Lob
+	@Deprecated
+	public String imageTitleText;
 
-    @ManyToOne
-    public Network network;
+	@Deprecated
+	public Integer imageId;
+	@Deprecated
+	public Integer imageSmallId;
+	@Deprecated
+	public Integer imageMediumId;
+	@Deprecated
+	public Integer imageLargeId;
 
-    public Integer imageId;
-    public Integer imageSmallId;
-    public Integer imageMediumId;
-    public Integer imageLargeId;
+	public String imageHash;
+	public String imageSmallHash;
+	public String imageMediumHash;
+	public String imageLargeHash;
 
-    public String imageHash;
-    public String imageSmallHash;
-    public String imageMediumHash;
-    public String imageLargeHash;
+	public String featuredVideoHash;
+	public String featuredAudioHash;
 
-    public String featuredVideoHash;
-    public String featuredAudioHash;
+	@PrePersist
+	public void onCreate() {
+		onChanges();
 
-    @PrePersist
-    public void onCreate() {
-        onChanges();
+		if (date == null)
+			date = new Date();
+	}
 
-        if (date == null)
-            date = new Date();
-        createdAt = new Date();
-    }
+	@PreUpdate
+	public void onUpdate() {
+		onChanges();
 
-    @PreUpdate
-    public void onUpdate() {
-        onChanges();
+		lastModificationDate = new Date();
+	}
 
-        updatedAt = new Date();
-        lastModificationDate = updatedAt;
-    }
+	private void onChanges() {
+		stationId = station.id;
+		readTime = calculateReadTime(body);
 
-    private void onChanges() {
-        stationId = station.id;
-        readTime = calculateReadTime(body);
+		if (featuredImage != null && featuredImage.originalHash != null) {
+			imageHash = featuredImage.originalHash;
+			imageSmallHash = featuredImage.smallHash;
+			imageMediumHash = featuredImage.mediumHash;
+			imageLargeHash = featuredImage.largeHash;
 
-        if (featuredImage != null && featuredImage.originalHash != null) {
-            imageHash = featuredImage.originalHash;
-            imageSmallHash = featuredImage.smallHash;
-            imageMediumHash = featuredImage.mediumHash;
-            imageLargeHash = featuredImage.largeHash;
+			imageId = featuredImage.original.id;
+			imageSmallId = featuredImage.small.id;
+			imageMediumId = featuredImage.medium.id;
+			imageLargeId = featuredImage.large.id;
 
-            imageId = featuredImage.original.id;
-            imageSmallId = featuredImage.small.id;
-            imageMediumId = featuredImage.medium.id;
-            imageLargeId = featuredImage.large.id;
+			imageCaptionText = featuredImage.caption;
+			imageCreditsText = featuredImage.credits;
+			imageTitleText = featuredImage.title;
+		} else {
+			imageId = null;
+			imageSmallId = null;
+			imageMediumId = null;
+			imageLargeId = null;
 
-            imageCaptionText = featuredImage.caption;
-            imageCreditsText = featuredImage.credits;
-            imageTitleText = featuredImage.title;
-        } else {
-            imageId = null;
-            imageSmallId = null;
-            imageMediumId = null;
-            imageLargeId = null;
+			imageHash = null;
+			imageSmallHash = null;
+			imageMediumHash = null;
+			imageLargeHash = null;
+		}
+	}
 
-            imageHash = null;
-            imageSmallHash = null;
-            imageMediumHash = null;
-            imageLargeHash = null;
-        }
-    }
+	public static int countWords(String string) {
+		if (string == null || string.isEmpty()) return 0;
 
-    public static int countWords(String string) {
-        if (string == null || string.isEmpty()) return 0;
+		org.jsoup.nodes.Document doc = Jsoup.parse(string);
+		string = doc.text();
+		String[] wordArray = string.split("\\s+");
+		return wordArray.length;
+	}
 
-        Document doc = Jsoup.parse(string);
-        string = doc.text();
-        String[] wordArray = string.split("\\s+");
-        return wordArray.length;
-    }
+	public static int calculateReadTime(String string) {
+		int words = countWords(string);
+		int minutes = 5 * words / 398;
+		return minutes;
+	}
 
-    public static int calculateReadTime(String string) {
-        int words = countWords(string);
-        int minutes = 5 * words / 398;
-        return minutes;
-    }
+	@Override
+	public String toString() {
+		return "Post [id=" + id + ", date=" + date
+				+ ", lastModificationDate=" + lastModificationDate + ", title=" + title + ", state=" + state + "]";
+	}
 
-    @Override
-    public String toString() {
-        return "Post [id=" + id + ", date=" + date
-                + ", lastModificationDate=" + lastModificationDate + ", title=" + title + ", state=" + state + "]";
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(id != null)
-            return id.equals(((Post)obj).id);
-        return super.equals(obj);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if(id != null)
+			return id.equals(((Post)obj).id);
+		return super.equals(obj);
+	}
 
     @Override
     public int hashCode() {
@@ -264,4 +265,368 @@ public class Post implements Serializable {
         else
             return super.hashCode();
     }
+	public Integer getOriginalPostId() {
+		return originalPostId;
+	}
+
+	public void setOriginalPostId(Integer originalPostId) {
+		this.originalPostId = originalPostId;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Date getLastModificationDate() {
+		return lastModificationDate;
+	}
+
+	public void setLastModificationDate(Date lastModificationDate) {
+		this.lastModificationDate = lastModificationDate;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getBody() {
+		return body;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
+	}
+
+	public String getTopper() {
+		return topper;
+	}
+
+	public void setTopper(String topper) {
+		this.topper = topper;
+	}
+
+	public String getSubheading() {
+		return subheading;
+	}
+
+	public void setSubheading(String subheading) {
+		this.subheading = subheading;
+	}
+
+	public Sponsor getSponsor() {
+		return sponsor;
+	}
+
+	public void setSponsor(Sponsor sponsor) {
+		this.sponsor = sponsor;
+	}
+
+	public String getOriginalSlug() {
+		return originalSlug;
+	}
+
+	public void setOriginalSlug(String originalSlug) {
+		this.originalSlug = originalSlug;
+	}
+
+	public Date getScheduledDate() {
+		return scheduledDate;
+	}
+
+	public void setScheduledDate(Date scheduledDate) {
+		this.scheduledDate = scheduledDate;
+	}
+
+	public String getSlug() {
+		return slug;
+	}
+
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
+	public Set<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public Image getFeaturedImage() {
+		return featuredImage;
+	}
+
+	public void setFeaturedImage(Image featuredImage) {
+		this.featuredImage = featuredImage;
+	}
+
+	public Set<Video> getVideos() {
+		return videos;
+	}
+
+	public void setVideos(Set<Video> videos) {
+		this.videos = videos;
+	}
+
+	public Set<Image> getImages() {
+		return images;
+	}
+
+	public void setImages(Set<Image> images) {
+		this.images = images;
+	}
+
+	public Person getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(Person author) {
+		this.author = author;
+	}
+
+	public Station getStation() {
+		return station;
+	}
+
+	public void setStation(Station station) {
+		this.station = station;
+	}
+
+	public Integer getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(Integer stationId) {
+		this.stationId = stationId;
+	}
+
+	public int getReadsCount() {
+		return readsCount;
+	}
+
+	public void setReadsCount(int readsCount) {
+		this.readsCount = readsCount;
+	}
+
+	public int getBookmarksCount() {
+		return bookmarksCount;
+	}
+
+	public void setBookmarksCount(int bookmarksCount) {
+		this.bookmarksCount = bookmarksCount;
+	}
+
+	public int getRecommendsCount() {
+		return recommendsCount;
+	}
+
+	public void setRecommendsCount(int recommendsCount) {
+		this.recommendsCount = recommendsCount;
+	}
+
+	public int getCommentsCount() {
+		return commentsCount;
+	}
+
+	public void setCommentsCount(int commentsCount) {
+		this.commentsCount = commentsCount;
+	}
+
+	public Set<Term> getTerms() {
+		return terms;
+	}
+
+	public void setTerms(Set<Term> terms) {
+		this.terms = terms;
+	}
+
+	public Set<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<String> tags) {
+		this.tags = tags;
+	}
+
+	public boolean isImageLandscape() {
+		return imageLandscape;
+	}
+
+	public void setImageLandscape(boolean imageLandscape) {
+		this.imageLandscape = imageLandscape;
+	}
+
+	public String getExternalFeaturedImgUrl() {
+		return externalFeaturedImgUrl;
+	}
+
+	public void setExternalFeaturedImgUrl(String externalFeaturedImgUrl) {
+		this.externalFeaturedImgUrl = externalFeaturedImgUrl;
+	}
+
+	public String getExternalVideoUrl() {
+		return externalVideoUrl;
+	}
+
+	public void setExternalVideoUrl(String externalVideoUrl) {
+		this.externalVideoUrl = externalVideoUrl;
+	}
+
+	public int getReadTime() {
+		return readTime;
+	}
+
+	public void setReadTime(int readTime) {
+		this.readTime = readTime;
+	}
+
+	public boolean isNotify() {
+		return notify;
+	}
+
+	public void setNotify(boolean notify) {
+		this.notify = notify;
+	}
+
+	public String getImageCaptionText() {
+		return imageCaptionText;
+	}
+
+	public void setImageCaptionText(String imageCaptionText) {
+		this.imageCaptionText = imageCaptionText;
+	}
+
+	public String getImageCreditsText() {
+		return imageCreditsText;
+	}
+
+	public void setImageCreditsText(String imageCreditsText) {
+		this.imageCreditsText = imageCreditsText;
+	}
+
+	public Double getLat() {
+		return lat;
+	}
+
+	public void setLat(Double lat) {
+		this.lat = lat;
+	}
+
+	public Double getLng() {
+		return lng;
+	}
+
+	public void setLng(Double lng) {
+		this.lng = lng;
+	}
+
+	public String getImageTitleText() {
+		return imageTitleText;
+	}
+
+	public void setImageTitleText(String imageTitleText) {
+		this.imageTitleText = imageTitleText;
+	}
+
+	public Integer getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(Integer imageId) {
+		this.imageId = imageId;
+	}
+
+	public Integer getImageSmallId() {
+		return imageSmallId;
+	}
+
+	public void setImageSmallId(Integer imageSmallId) {
+		this.imageSmallId = imageSmallId;
+	}
+
+	public Integer getImageMediumId() {
+		return imageMediumId;
+	}
+
+	public void setImageMediumId(Integer imageMediumId) {
+		this.imageMediumId = imageMediumId;
+	}
+
+	public Integer getImageLargeId() {
+		return imageLargeId;
+	}
+
+	public void setImageLargeId(Integer imageLargeId) {
+		this.imageLargeId = imageLargeId;
+	}
+
+	public String getImageHash() {
+		return imageHash;
+	}
+
+	public void setImageHash(String imageHash) {
+		this.imageHash = imageHash;
+	}
+
+	public String getImageSmallHash() {
+		return imageSmallHash;
+	}
+
+	public void setImageSmallHash(String imageSmallHash) {
+		this.imageSmallHash = imageSmallHash;
+	}
+
+	public String getImageMediumHash() {
+		return imageMediumHash;
+	}
+
+	public void setImageMediumHash(String imageMediumHash) {
+		this.imageMediumHash = imageMediumHash;
+	}
+
+	public String getImageLargeHash() {
+		return imageLargeHash;
+	}
+
+	public void setImageLargeHash(String imageLargeHash) {
+		this.imageLargeHash = imageLargeHash;
+	}
+
+	public String getFeaturedVideoHash() {
+		return featuredVideoHash;
+	}
+
+	public void setFeaturedVideoHash(String featuredVideoHash) {
+		this.featuredVideoHash = featuredVideoHash;
+	}
+
+	public String getFeaturedAudioHash() {
+		return featuredAudioHash;
+	}
+
+	public void setFeaturedAudioHash(String featuredAudioHash) {
+		this.featuredAudioHash = featuredAudioHash;
+	}
+
+	@Override
+	public PostEvent build(String type, LogBuilder builder) {
+		return builder.build(type, this);
+	}
 }

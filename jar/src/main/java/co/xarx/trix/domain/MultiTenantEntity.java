@@ -3,7 +3,11 @@ package co.xarx.trix.domain;
 
 public interface MultiTenantEntity {
 
-	public Integer getNetworkId();
+	String getTenantId();
 
-	public void setNetworkId(Integer networkId);
+	Integer getNetworkId();
+
+	void setTenantId(String tenantId);
+
+	void setNetworkId(Integer networkId);
 }

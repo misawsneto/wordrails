@@ -4,7 +4,6 @@ import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.NetworkPermission;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.dto.NetworkCreateDto;
@@ -12,6 +11,7 @@ import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
@@ -149,10 +149,11 @@ public class NetworkResource {
 			try {
 				network.networkCreationToken = UUID.randomUUID().toString();
 				networkRepository.save(network);
-				TenantContextHolder.setCurrentTenantId(network.id);
+
+				TenantContextHolder.setCurrentNetworkId(network.id);
 			} catch (javax.validation.ConstraintViolationException e) {
 
-				List<FieldError> errors = new ArrayList<FieldError>();
+				List<FieldError> errors = new ArrayList<>();
 				for (ConstraintViolation violation : e.getConstraintViolations()) {
 					FieldError error = new FieldError(violation.getRootBean().getClass().getName()+"", violation.getPropertyPath()+"", violation.getMessage());
 					errors.add(error);
@@ -379,7 +380,7 @@ public class NetworkResource {
 			post.title = "Bem Vindo a TRIX";
 			post.body = "<p>Trix é uma plataforma para a criação e gestão de redes de informação e pensada primeiramente para dispositivos móveis. Através do editor é possível criar conteúdos baseados em textos, imagens, áudios e vídeos.</p><p>Adicione usuários com permissão de leitura, escrita, edição ou administração e através das funções de administração personalize a sua rede.</p>";
 			post.author = person;
-			post.terms = new HashSet<Term>();
+			post.terms = new HashSet<>();
 			post.terms.add(defaultPostTerm);
 			post.station = station;
 			postEventHandler.savePost(post);
@@ -396,7 +397,7 @@ public class NetworkResource {
 	public Response publicationsCount(@Context HttpServletRequest request)throws IOException {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
-		List<Integer> ids = new ArrayList<Integer>();
+		List<Integer> ids = new ArrayList<>();
 		network = networkRepository.findOne(network.id);
 
 		for (Station station: network.stations){

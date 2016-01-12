@@ -1,7 +1,6 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.api.BooleanResponse;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Recommend;
@@ -9,7 +8,7 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.persistence.RecommendRepository;
-import co.xarx.trix.services.LogService;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,8 +37,6 @@ public class RecommendsResource {
 	private @Autowired
 	TrixAuthenticationProvider authProvider;
 	private @Autowired QueryPersistence queryPersistence;
-	private @Autowired
-	LogService logService;
 
 	private @PersistenceContext EntityManager manager;
 
@@ -58,7 +55,7 @@ public class RecommendsResource {
 //
 //			List<PostView> recommends = new ArrayList<PostView>();
 //			for (Recommend recommend : pages) {
-//				recommends.add(postConverter.convertToView(recommend.post));
+//				recommends.add(postConverter.convertTo(recommend.post));
 //			}
 //			response.content = recommends;
 //			return response;
@@ -111,7 +108,7 @@ public class RecommendsResource {
 //
 //		List<PostView> recommends = new ArrayList<PostView>();
 //		for (Recommend recommend : result) {
-//			recommends.add(postConverter.convertToView(recommend.post));
+//			recommends.add(postConverter.convertTo(recommend.post));
 //		}
 //
 //		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
@@ -138,11 +135,9 @@ public class RecommendsResource {
 			BooleanResponse content = new BooleanResponse();
 			content.response = true;
 			queryPersistence.incrementRecommendsCount(postId);
-			logService.recommend(recommend);
 			return content;
 		}catch(Exception e){
 			BooleanResponse content = new BooleanResponse();
-			logService.unrecommend(recommend);
 			queryPersistence.deleteRecommend(postId, person.id);
 			content = new BooleanResponse();
 			content.response = false;

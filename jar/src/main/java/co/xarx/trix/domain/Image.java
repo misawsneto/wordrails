@@ -20,6 +20,15 @@ public class Image extends BaseEntity implements Serializable {
 	public static final String SIZE_LARGE = "large";
 	public static final String SIZE_ORIGINAL = "original";
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	public enum Type {
 		FAVICON(0, new HashMap<String, Integer[]>() {{put(SIZE_SMALL, new Integer[]{32,32});}}),
 		SPLASH(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 500);}}),

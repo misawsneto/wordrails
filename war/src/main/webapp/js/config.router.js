@@ -108,6 +108,19 @@ angular.module('app')
                   },
                   controller: 'TagsPageCtrl'
               })
+              .state('app.invitation', {
+                  url: '/invitation',
+                  templateUrl: 'tpl/about.html?' + GLOBAL_URL_HASH,
+                  // use resolve to load other dependences
+                   resolve: {
+                      deps: ['$ocLazyLoad',
+                        function( $ocLazyLoad ){
+                          return $ocLazyLoad.load([
+                            'js/controllers/tags.js?' + GLOBAL_URL_HASH])
+                      }]
+                  },
+                  controller: 'TagsPageCtrl'
+              })
               .state('app.tagspage.read', {
                   url: '/:slug?invitation?redirect',
                   template: '',
@@ -180,7 +193,7 @@ angular.module('app')
                   , controller:'SettingsStationsStatisticsCtrl'
               })
               .state('app.settings.stationusers', {
-                  url: '/stationusers?stationId?newUser?username',
+                  url: '/stationusers?stationId?userId?newUser',
                   templateUrl: 'tpl/settings-stations-users.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -862,7 +875,7 @@ angular.module('app')
                   controller: 'NetworkCreatedCtrl'
               })
               .state('access.signup', {
-                  url: '/signup',
+                  url: '/signup?invitation',
                   templateUrl: 'tpl/page_signup.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',

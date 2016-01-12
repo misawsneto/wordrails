@@ -392,7 +392,7 @@ function getCustomStyle(color, perspective, header) {
 	"i.md-default-theme{"+
 		"background-color:" + color + ";" +
 		"color:" + textColorEval(color) +
-	"}"
+	"}"+
 
 	"md-checkbox.md-default-theme.md-checked .md-icon:after{" +
 	"border-color:" + textColorEval(color) +
@@ -457,6 +457,11 @@ String.prototype.getYoutubeCode = function(){
 
 String.prototype.stripHtml = function(){
 	return this.replace(/(<([^>]+)>)/ig,"");
+}
+
+var mediaUrl = function(hash){
+	if(initData && initData.publicCloudfrontUrl)
+		return "http://" + initData.publicCloudfrontUrl + (hash ? "/" + initData.network.subdomain + "/images/" + hash : "");
 }
 
 
