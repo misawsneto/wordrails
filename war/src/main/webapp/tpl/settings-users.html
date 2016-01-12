@@ -68,6 +68,9 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="person in persons" ng-click="loadPerson(person)">
+							<md-tooltip md-visible="true">
+				        Insert Drive
+				      </md-tooltip>
 								<td>
 									<label class="md-check">
 										<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
