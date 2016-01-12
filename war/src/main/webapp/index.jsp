@@ -6,8 +6,7 @@
   <meta charset="utf-8" />
   <title>${networkName}</title>
   ${requestedEntityMetas}
-
-    <link rel="shortcut icon" href="${not empty faviconLink?faviconLink:''}" />
+  <link rel="shortcut icon" href="${not empty faviconLink?faviconLink:''}" />
 
     <meta name="description" content="${networkDesciption}" />
   <meta name="keywords" content="${networkKeywords}" />

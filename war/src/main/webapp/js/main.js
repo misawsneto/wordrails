@@ -682,6 +682,7 @@ angular.module('app')
             if($scope.$state.current.name != "app.stations" && $scope.$state.current.name != "app.search"){
               $state.go("app.stations");
             }
+            $scope.app.currentStation = null;
             $scope.app.refreshData();
             if(initData && initData.noVisibleStation)
               $state.go('access.signin');

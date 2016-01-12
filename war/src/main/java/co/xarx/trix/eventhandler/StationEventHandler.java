@@ -190,19 +190,13 @@ public class StationEventHandler {
 
 			taxonomyRepository.save(taxonomy);
 
-//			if(taxonomies != null && !taxonomies.isEmpty()){
-//				for (Taxonomy taxonomy : taxonomies) {
-//					taxonomyEventHandler.handleBeforeDelete(taxonomy);
-//					taxonomyRepository.delete(taxonomy);
-//				}
-//			}
+			taxonomyEventHandler.handleBeforeDelete(taxonomy);
+			taxonomyRepository.delete(taxonomy);
 
 			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
 			if(stationsRoles != null && stationsRoles.size() > 0){
 				personStationRolesRepository.delete(stationsRoles);
 			}
-
-
 
 			List<Post> posts = postRepository.findByStation(station);
 
