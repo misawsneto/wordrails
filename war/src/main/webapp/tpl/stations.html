@@ -66,14 +66,14 @@
             </a>
             <a ui-sref="app.read({'slug': cell.postView.slug})">
               <div class="row">
-                <div class="col-md-5" ng-if="cell.postView.imageMediumId">
+                <div class="col-md-5" ng-if="cell.postView.imageMediumId || cell.postView.externalVideoUrl">
                   <span class="block-image2">
                     <div ng-style="getBackgroundImage(cell.postView, 'md')"
                     class="cell-wrap r r-2x bg-cover" alt=""></div>
                   </span>
                 </div>
-                <div ng-class="{'col-md-7':cell.postView.imageMediumId, 'col-md-12': !cell.postView.imageMediumId}">
-                  <span href="" class="h3 font-bold m-b block" ng-class="{'m-t-sm': cell.postView.imageMediumId}">
+                <div ng-class="{'col-md-7':cell.postView.imageMediumId || cell.postView.externalVideoUrl, 'col-md-12': !(cell.postView.imageMediumId || cell.postView.externalVideoUrl)}">
+                  <span href="" class="h3 font-bold m-b block" ng-class="{'m-t-sm': cell.postView.imageMediumId || cell.postView.externalVideoUrl}">
                   {{::cell.postView.title}}</span>
                   <!-- <div class="post-meta">
                     <span class="post-author a-custom-primary">Lavonne Flynn</span>

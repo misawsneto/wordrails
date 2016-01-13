@@ -69,7 +69,6 @@ public class PostEventHandler {
 			String originalSlug = StringUtil.toSlug(post.title);
 			try {
 				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
-				postRepository.save(post);
 			} catch (DataIntegrityViolationException ex) {
 				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
 				postRepository.save(post);
