@@ -37,6 +37,17 @@
 
 </div>
 
+<div style="display: none">
+    <%
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(stringWriter);
+    exception.printStackTrace(printWriter);
+    out.println(stringWriter);
+    printWriter.close();
+    stringWriter.close();
+    %>
+</div>
+
 <script src="../libs/jquery/jquery/dist/jquery.js"></script>
 <script src="../libs/jquery/bootstrap/dist/js/bootstrap.js"></script>
 <script src="../libs/jquery/waves/dist/waves.js"></script>
