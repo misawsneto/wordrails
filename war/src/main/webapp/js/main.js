@@ -79,7 +79,7 @@ angular.module('app')
     $scope.app.isMobile = false;
 
     $interval(function() {
-      if($('body').width() < 768 && !$scope.app.isMobile)
+      if($('body').width() < 768)
         $scope.app.isMobile = true;
       else
         $scope.app.isMobile = false;
@@ -609,9 +609,9 @@ angular.module('app')
             $scope.app.conflictingData = data;
 
             if($scope.app.conflictingData.value && user.email && $scope.app.conflictingData.value.indexOf(user.email) > -1){
-              $scope.app.showErrorToast('Este email está sendo utilizado. <br>Escolha outro e tente novamente')
+              $scope.app.showErrorToast('Este email está sendo utilizado. <br>Tente novamente.')
             }else if($scope.app.conflictingData.value && user.username && $scope.app.conflictingData.value.indexOf(user.username) > -1){
-              $scope.app.showErrorToast('Este userário está sendo utilizado. <br>Escolha outro e tente novamente')
+              $scope.app.showErrorToast('Este userário está sendo utilizado. <br>Tente novamente.')
             }
             $scope.app.showErrorToast('Dados inválidos. Tente novamente')
           }else
