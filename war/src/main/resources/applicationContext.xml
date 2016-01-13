@@ -88,8 +88,14 @@
 	<bean id="wordrailsService" class="co.xarx.trix.WordrailsService" init-method="init"/>
 	<bean id="simpleMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
 
+    <bean id="sessionRepository" class="org.springframework.session.data.redis.RedisOperationsSessionRepository">
+        <constructor-arg ref="sessionRedisTemplate"/>
+        <property name="defaultMaxInactiveInterval" value="345600"/>
+    </bean>
+
 	<bean id="springSessionRepositoryFilter" class="org.springframework.session.web.http.SessionRepositoryFilter">
-		<constructor-arg ref="sessionRepository"/>
+		<constructor-arg ref="sessionRepository" />
+
 		<property name="httpSessionStrategy">
 			<bean class="org.springframework.session.web.http.CookieHttpSessionStrategy">
 				<property name="cookieName" value="JSESSIONID" />
