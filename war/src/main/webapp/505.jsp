@@ -1,3 +1,4 @@
+<%@ page isErrorPage="true" import="java.io.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,12 +40,9 @@
 
 <div style="display: none">
     <%
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter printWriter = new PrintWriter(stringWriter);
-    exception.printStackTrace(printWriter);
-    out.println(stringWriter);
-    printWriter.close();
-    stringWriter.close();
+        response.getWriter().println("<div style=\"display: none\">");
+        exception.printStackTrace(response.getWriter());
+        response.getWriter().println("</div>");
     %>
 </div>
 
