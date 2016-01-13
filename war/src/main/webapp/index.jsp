@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
   <title>${networkName}</title>
   ${requestedEntityMetas}
-  <link rel="shortcut icon" href="${not empty faviconLink?faviconLink:''}" />
+  <link rel="shortcut icon" href="${not empty faviconLink?faviconLink:''}" type="image/x-icon" />
 
   <meta name="description" content="${networkDesciption}" />
   <meta name="keywords" content="${networkKeywords}" />
