@@ -9,7 +9,7 @@
   ${requestedEntityMetas}
   <link rel="shortcut icon" href="${not empty faviconLink?faviconLink:''}" />
 
-    <meta name="description" content="${networkDesciption}" />
+  <meta name="description" content="${networkDesciption}" />
   <meta name="keywords" content="${networkKeywords}" />
   <meta name="google-signin-client_id" content="940891630461-0a0krbd2djhnpd0282rskgdsjgi0n018.apps.googleusercontent.com">
   <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" type="text/css" />
@@ -37,7 +37,6 @@
       display: none !important;
     }
   </style>
-  <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
   <base href="/">
 </head>
 <body ng-controller="AppCtrl" ng-cloak>
