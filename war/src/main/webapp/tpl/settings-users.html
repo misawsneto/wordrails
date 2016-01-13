@@ -68,7 +68,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="person in persons" ng-click="loadPerson(person)" tooltip="{{person.email}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="200">
+							<tr ng-repeat="person in persons" ng-click="loadPerson(person)">
 								<td>
 									<label class="md-check">
 										<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
