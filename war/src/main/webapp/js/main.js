@@ -79,12 +79,12 @@ angular.module('app')
     $scope.app.isMobile = false;
 
     $interval(function() {
-      if($('body').width() < 768)
+      if($('body').width() < 768 && !$scope.app.isMobile)
         $scope.app.isMobile = true;
       else
         $scope.app.isMobile = false;
 
-    }, 100);
+    }, 300);
 
     $interval(function(){
       if(trixService.isLoggedIn()){
