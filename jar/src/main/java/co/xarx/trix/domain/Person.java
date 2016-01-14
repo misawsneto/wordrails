@@ -28,7 +28,7 @@ public class Person extends BaseEntity implements Serializable {
 	@Size(max = 50)
 	@NotNull
 	@Column(unique = true)
-	@Pattern(regexp = "^[a-z0-9\\._-]{3,50}$")
+	@Pattern(regexp = "^[a-zA-Z0-9\\._-]{3,50}$")
 	public String username;
 
 	@OneToMany(mappedBy = "author")
