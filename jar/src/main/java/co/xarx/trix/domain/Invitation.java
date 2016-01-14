@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Email;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "network_id"}))
@@ -28,9 +29,8 @@ public class Invitation {
 
 	public boolean active = true;
 
-	@ManyToOne
-	@JoinColumn(name = "station_id")
-	public Station station;
+    @OneToMany
+	public Set<Station> stations;
 
 	@ManyToOne
 	@JoinColumn(name = "network_id")
@@ -44,10 +44,16 @@ public class Invitation {
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date updatedAt;
 
+    public String getInvitationUrl(){
+        if(network != null && network.domain != null)
+            return "http://" + network.domain + "/access/signup?" + "invitation=" + hash;
+        return "http://" + network.subdomain + ".trix.rocks/access/signup?" + "invitation=" + hash;
+    }
+
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
-		invitationUrl = "http://" + network.subdomain + ".trix.rocks/" + "invitation?hash=" + hash;
+		invitationUrl = getInvitationUrl();
 	}
 
 	@PreUpdate

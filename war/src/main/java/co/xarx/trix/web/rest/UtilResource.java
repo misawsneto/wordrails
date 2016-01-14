@@ -253,7 +253,6 @@ public class UtilResource {
 		for (int i = 0; i < count; i++) {
 			Invitation invitation =  new Invitation();
 			invitation.network = network;
-			invitation.station = station;
 			invitation.active = true;
 			invitation.hash = StringUtil.generateRandomString(8, "aA#");
 			invites.add(invitation);
@@ -860,14 +859,77 @@ public class UtilResource {
 	@Autowired
 	public EmailService emailService;
 
-	@GET
-	@Path("/testEmail/{networkId}")
-	@Transactional
-	public void testEmail(@PathParam("networkId") Integer networkId){
-		Network network = networkRepository.findOne(networkId);
-		if(isLocal(request.getHeader("Host"))){
-			try {
-				String filePath = getClass().getClassLoader().getResource("tpl/invitation-email.html").getFile();
+//    @GET
+//    @Path("/testEmail/{networkId}")
+//    @Transactional
+//    public void testEmail(@PathParam("networkId") Integer networkId){
+//        Network network = networkRepository.findOne(networkId);
+//        if(isLocal(request.getHeader("Host"))){
+//            try {
+//                String filePath = getClass().getClassLoader().getResource("tpl/invitation-email.html").getFile();
+//
+//                filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
+//
+//                byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+//                String template = new String(bytes, Charset.forName("UTF-8"));
+//
+//                Color c1 = Color.decode(network.mainColor);
+//                Color c2 = Color.decode(network.navbarColor);
+//
+//                HashMap<String, Object> scopes = new HashMap<String, Object>();
+//                scopes.put("name", "Test Name");
+//                scopes.put("networkName", network.name);
+//                scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", "+ c1.getBlue() +" )");
+//                scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", "+ c2.getBlue() +" )");
+//                scopes.put("link", "http://"+network.subdomain+".trix.rocks");
+//                scopes.put("networkSubdomain", network.subdomain);
+//                scopes.put("passwordReset", "hash");
+//
+//
+//                Person person = authProvider.getLoggedPerson();
+//                if (person != null) scopes.put("inviterName", person.name);
+//                else scopes.put("inviterName", "");
+//
+//                StringWriter writer = new StringWriter();
+//
+//                MustacheFactory mf = new DefaultMustacheFactory();
+//
+//                Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
+//                mustache.execute(writer, scopes);
+//                writer.flush();
+//
+//                String emailBody = writer.toString();
+//                String subject = "[ Test ]" + " Cadastro de senha";
+//                emailService.sendSimpleMail("misawsneto@gmail.com", subject, emailBody);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
+//    @DELETE
+//    @Path("/deleteNetworkPosts/{id}")
+//    public void deleteNetworkPosts(@PathParam("id") Integer networkId){
+//        if(isLocal(request.getHeader("Host"))){
+//            adminAuth(networkId);
+//            Network network = networkRepository.findOne(networkId);
+//            for(Station station: network.stations){
+//                for(Post post: station.posts){
+//                    postEventHandler.handleBeforeDelete(post);
+//                    postRepository.delete(post.id);
+//                }
+//            }
+//        }
+//    }
+
+    @GET
+    @Path("/testEmail/{networkId}")
+    @Transactional
+    public void createInvitationEmail(@PathParam("networkId") Integer networkId){
+        Network network = networkRepository.findOne(networkId);
+        if(isLocal(request.getHeader("Host"))){
+            try {
+                String filePath = getClass().getClassLoader().getResource("tpl/custom-invitation-email.html").getFile();
 
 				filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
 

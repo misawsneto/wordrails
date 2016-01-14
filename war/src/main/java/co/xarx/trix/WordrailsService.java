@@ -111,6 +111,7 @@ public class WordrailsService {
                 network = cacheService.getNetworkBySubdomain(subdomain);
             } catch (Exception e) {
                 // no network found in cache or db.
+				e.printStackTrace();
             }
             if (network != null)
                 return network;

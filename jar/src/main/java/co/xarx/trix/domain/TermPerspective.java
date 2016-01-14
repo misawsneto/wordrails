@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name="term_perspective",uniqueConstraints = {@UniqueConstraint(columnNames={"station_perspective_id","term_id"})})
-public class TermPerspective {
+public class    TermPerspective {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;

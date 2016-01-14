@@ -15,15 +15,16 @@ public interface TaxonomyRepository extends JpaRepository<Taxonomy, Integer>, Qu
 
 	Taxonomy findByTypeAndName(@Param("type") String type, @Param("name") String name);
 
-	@Query("select taxonomy from Taxonomy taxonomy " +
-			"where taxonomy.id in " +
-			"(select t.id from Taxonomy t join t.owningStation station where station.id = :stationId) " +
-			"or taxonomy.id in " +
-			"(select t.id from Taxonomy t join t.owningNetwork network where :stationId member of network.stations) " +
-			"or taxonomy.id in " +
-			"(select t.id from Taxonomy t join t.networks network where :stationId member of network.stations)"
-	)
-	List<Taxonomy> findByStationId(@Param("stationId") Integer stationId);
+//	@RestResource(exported = false)
+//	@Query("select taxonomy from Taxonomy taxonomy " +
+//			"where taxonomy.id in " +
+//			"(select t.id from Taxonomy t join t.owningStation station where station.id = :stationId) " +
+//			"or taxonomy.id in " +
+//			"(select t.id from Taxonomy t join t.owningNetwork network where :stationId member of network.stations) " +
+//			"or taxonomy.id in " +
+//			"(select t.id from Taxonomy t join t.networks network where :stationId member of network.stations)"
+//	)
+//	List<Taxonomy> findByStationId(@Param("stationId") Integer stationId);
 
 	@Query("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'S' and taxonomy.owningStation.id = :stationId")
 	List<Taxonomy> findStationTaxonomy(@Param("stationId") Integer stationId);
