@@ -26,6 +26,14 @@
 	                    Permitir cadastro em estações públicas
 	                  </label>
 	                </p>
+                  <p>
+                    <label class="md-check p-l-lg">
+                      <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.addStationRolesOnSignup"
+                      ng-true-value="true" ng-false-value="false">
+                      <i class="blue"></i>
+                      Adicionar os usuários cadastrados em todas as estações
+                    </label>
+                  </p>
 	                <p>
 	                  <label class="md-switch">
 	                    <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.allowSocialLogin"
@@ -205,12 +213,22 @@
         		<md-input-container class="">
               <label>Aba de estações</label>
               <input ng-model="network.stationMenuName">
+              <small class="text-muted clear text-ellipsis pos-abt bottom-0">
+                  Substituir a palavra "estação" do menu lateral.</small>
             </md-input-container>
             <md-input-container class="">
               <label>Aba de início</label>
               <input ng-model="network.homeTabName">
             </md-input-container>
+            <md-input-container class="md-block">
+              <label>Texto de convite por email</label>
+              <textarea ng-model="network.invitationMessage" columns="1" rows="5"></textarea>
+              <small class="text-muted clear text-ellipsis pos-abt bottom-0">
+                  Mensagem enviada em emails de convites a usuários</small>
+            </md-input-container>
 	        </md-content>
+            <button md-ink-ripple ng-class="{'disabled': !showTopOptions()}" ng-click="publishPost()"
+              class="md-btn md-raised m-b btn-fw bg-white m-t-n-lg pull-right m-r">Convidar</button>
 	      </md-tab>
       </md-tabs>
     </md-content>

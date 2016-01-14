@@ -25,7 +25,7 @@ public interface TermPerspectiveRepository extends JpaRepository<TermPerspective
 
 	@RestResource(exported=false)
 	@Query("select termPerspective " +
-			"from TermPerspective termPerspective join termPerspective.perspective perspective " +
-			"where termPerspective.term is null and perspective.id = :stationPerspectiveId")
+			"from TermPerspective termPerspective " +
+			"where termPerspective.term is null and termPerspective.perspective.id = :stationPerspectiveId")
 	TermPerspective findPerspectiveAndTermNull(@Param("stationPerspectiveId") Integer stationPerspectiveId);
 }

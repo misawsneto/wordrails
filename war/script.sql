@@ -53,3 +53,15 @@ INSERT INTO person_bookmark (person_id, post_id)
   SELECT person_id, post_id FROM bookmark;
 
 drop table IF EXISTS bookmark;
+
+DELETE FROM taxonomy
+WHERE type = "A";
+DELETE post_term FROM post_term
+	JOIN term ON post_term.terms_id = term.id
+	JOIN taxonomy ON term.taxonomy_id = taxonomy.id
+WHERE taxonomy.type = "T";
+DELETE term FROM term
+	JOIN taxonomy ON term.taxonomy_id = taxonomy.id
+WHERE taxonomy.type = "T";
+DELETE FROM taxonomy
+WHERE type = "T";

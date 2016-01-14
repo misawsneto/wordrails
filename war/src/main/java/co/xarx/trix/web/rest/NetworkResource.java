@@ -283,14 +283,6 @@ public class NetworkResource {
 			station.ownedTaxonomies = taxonomies;
 			stationPerspective.taxonomy = sTaxonomy;
 
-			//Tag Default Taxonomy
-			Taxonomy tTaxonomy = new Taxonomy();
-			tTaxonomy.name = "Tags " + station.name;
-			tTaxonomy.owningStation = station;
-			tTaxonomy.type = Taxonomy.STATION_TAG_TAXONOMY;
-			taxonomies.add(tTaxonomy);
-			station.ownedTaxonomies = taxonomies;
-
 			stationRepository.save(station);
 
 			taxonomies = station.ownedTaxonomies;
@@ -298,10 +290,6 @@ public class NetworkResource {
 			Term term1 = null;
 			Term term2 = null;
 			for (Taxonomy tax: taxonomies){
-				if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
-					if(station.tagsTaxonomyId == null)
-						station.tagsTaxonomyId = tax.id;
-				}
 				if(tax.type.equals(Taxonomy.STATION_TAXONOMY)){
 					if(station.categoriesTaxonomyId == null) {
 						station.categoriesTaxonomyId = tax.id;

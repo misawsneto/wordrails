@@ -1,6 +1,6 @@
 {
   "name": "AngularJS-Toaster",
-  "version": "0.4.16",
+  "version": "0.4.181",
   "main": [
     "toaster.js",
     "toaster.css"
@@ -15,11 +15,11 @@
     "angular-animate": ">1.2.8"
   },
   "homepage": "https://github.com/jirikavi/AngularJS-Toaster",
-  "_release": "0.4.16",
+  "_release": "0.4.181",
   "_resolution": {
     "type": "version",
-    "tag": "0.4.16",
-    "commit": "f4813483b971ad43b44bc0f7ff517de956eac63a"
+    "tag": "0.4.181",
+    "commit": "772cc6335b079ccb8089fb2f44b2595d9346215d"
   },
   "_source": "git://github.com/jirikavi/AngularJS-Toaster.git",
   "_target": "~0.4.8",

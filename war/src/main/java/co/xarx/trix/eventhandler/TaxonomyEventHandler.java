@@ -1,23 +1,20 @@
 package co.xarx.trix.eventhandler;
 
-import java.util.List;
-
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.StationPerspective;
+import co.xarx.trix.domain.Taxonomy;
+import co.xarx.trix.domain.Term;
 import co.xarx.trix.exception.OperationNotSupportedException;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.TaxonomyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.core.annotation.HandleAfterSave;
-import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
-import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
-import org.springframework.data.rest.core.annotation.HandleBeforeSave;
-import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
-import org.springframework.stereotype.Component;
-
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.StationPerspectiveRepository;
+import co.xarx.trix.persistence.TaxonomyRepository;
 import co.xarx.trix.persistence.TermRepository;
 import co.xarx.trix.security.TaxonomySecurityChecker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.core.annotation.*;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @RepositoryEventHandler(Taxonomy.class)
 @Component
@@ -35,8 +32,6 @@ public class TaxonomyEventHandler {
 	public void handleBeforeCreate(Taxonomy taxonomy) throws UnauthorizedException, OperationNotSupportedException {
 		if(!taxonomySecurityChecker.canCreate(taxonomy)){
 			throw new UnauthorizedException();
-		}else if(taxonomy.type.equals(Taxonomy.STATION_AUTHOR_TAXONOMY)){
-			throw new OperationNotSupportedException();
 		}
 	}
 	
@@ -44,8 +39,6 @@ public class TaxonomyEventHandler {
 	public void handleBeforeSave(Taxonomy taxonomy) throws UnauthorizedException, OperationNotSupportedException {
 		if(!taxonomySecurityChecker.canEdit(taxonomy)){
 			throw new UnauthorizedException();
-		}else if(taxonomy.type.equals(Taxonomy.STATION_AUTHOR_TAXONOMY)){
-			throw new OperationNotSupportedException();
 		}
 	}
 	
