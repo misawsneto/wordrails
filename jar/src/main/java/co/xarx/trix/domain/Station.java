@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.domain.event.Event;
 import co.xarx.trix.domain.page.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,7 +11,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-public class Station extends BaseEntity implements Serializable {
+public class Station extends BaseEntity implements Serializable, Loggable {
 	public static final String RESTRICTED = "RESTRICTED";
 	public static final String RESTRICTED_TO_NETWORKS = "RESTRICTED_TO_NETWORKS";
 	public static final String UNRESTRICTED = "UNRESTRICTED";
@@ -412,5 +413,10 @@ public class Station extends BaseEntity implements Serializable {
 
 	public void setDefaultPerspectiveId(Integer defaultPerspectiveId) {
 		this.defaultPerspectiveId = defaultPerspectiveId;
+	}
+
+	@Override
+	public Event build(String type, LogBuilder builder) {
+		return builder.build(type, this);
 	}
 }

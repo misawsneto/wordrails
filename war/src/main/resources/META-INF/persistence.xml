@@ -11,7 +11,6 @@
 		<class>co.xarx.trix.domain.AndroidApp</class>
 		<class>co.xarx.trix.domain.Cell</class>
 		<class>co.xarx.trix.domain.Comment</class>
-		<class>co.xarx.trix.domain.EventEntity</class>
 		<class>co.xarx.trix.domain.File</class>
 		<class>co.xarx.trix.domain.FileContents</class>
 		<class>co.xarx.trix.domain.GlobalParameter</class>
@@ -44,7 +43,6 @@
 		<class>co.xarx.trix.domain.Recommend</class>
 		<class>co.xarx.trix.domain.Picture</class>
 		<class>co.xarx.trix.domain.PostRead</class>
-		<class>co.xarx.trix.domain.PostEvent</class>
 		<class>co.xarx.trix.domain.PersonNetworkRegId</class>
 		<class>co.xarx.trix.domain.PersonNetworkToken</class>
 		<class>co.xarx.trix.domain.Invitation</class>
@@ -57,6 +55,10 @@
 		<class>co.xarx.trix.domain.query.BaseObjectQuery</class>
 		<class>co.xarx.trix.domain.query.PostQuery</class>
 
+		<class>co.xarx.trix.domain.event.Event</class>
+		<class>co.xarx.trix.domain.event.PostEvent</class>
+		<class>co.xarx.trix.domain.event.StationEvent</class>
+		<class>co.xarx.trix.domain.event.TermEvent</class>
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>

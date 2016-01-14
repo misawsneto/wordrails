@@ -6,6 +6,7 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -17,20 +18,24 @@ import java.util.Date;
 @Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
 public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 
+	@DiffIgnore
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	public Date updatedAt;
 
+	@DiffIgnore
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	public Date createdAt;
 
+	@DiffIgnore
 	@JsonIgnore
 	@Column(columnDefinition = "int(11) DEFAULT 0")
 	public Integer networkId;
 
+	@DiffIgnore
 	@Version
 	@JsonIgnore
 	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)

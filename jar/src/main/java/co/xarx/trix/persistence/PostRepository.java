@@ -1,5 +1,6 @@
 package co.xarx.trix.persistence;
 
+import co.xarx.trix.annotation.EventLoggableRepository;
 import co.xarx.trix.domain.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +13,8 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import java.util.Collection;
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPredicateExecutor<Post>, LoggableRepository<Post, Integer> {
+@EventLoggableRepository
+public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPredicateExecutor<Post> {
 
 	@Query("select post from Post post where post.id in ( select p.id from Post p where p.station.id = :stationId ) order by post.date desc")
 	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);

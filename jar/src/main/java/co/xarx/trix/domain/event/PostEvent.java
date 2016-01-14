@@ -1,24 +1,17 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.domain.event;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
-@Table(name = "zevent_post")
 @DiscriminatorValue(value="POST")
 public class PostEvent extends Event {
 
-	@Column(name = "person_id")
 	public Integer personId;
 
-	@Column(name = "post_state")
 	public String postState;
 
-	@Column(name = "post_id")
 	public Integer postId;
 
-	public PostEvent() {
-	}
 
 	public Integer getPersonId() {
 		return personId;

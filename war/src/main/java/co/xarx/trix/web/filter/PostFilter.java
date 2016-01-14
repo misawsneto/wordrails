@@ -53,8 +53,8 @@ public class PostFilter implements Filter {
 					post = postRepository.findBySlug(slug);
 				}
 				if (post != null) {
-					asyncService.countPostRead(TenantContextHolder.getCurrentNetworkId(), post,
-							authProvider.getLoggedPerson(), rq.getRequestedSessionId());
+					asyncService.countPostRead(TenantContextHolder.getCurrentNetworkId(), post.id,
+							authProvider.getLoggedPerson().id, rq.getRequestedSessionId());
 				}
 			}
 		} catch (Exception e) {

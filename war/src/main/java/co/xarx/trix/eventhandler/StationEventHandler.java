@@ -1,6 +1,7 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.event.Event;
 import co.xarx.trix.elasticsearch.domain.ESStation;
 import co.xarx.trix.elasticsearch.repository.ESStationRepository;
 import co.xarx.trix.exception.UnauthorizedException;
@@ -9,6 +10,7 @@ import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.LogBuilderExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
@@ -180,13 +182,22 @@ public class StationEventHandler {
 
 	@HandleBeforeSave
 	public void handleBeforeSave(Station station){
-		station.stationPerspectives = new HashSet<StationPerspective>(stationPerspectiveRepository.findByStationId(station.id));
+		station.stationPerspectives = new HashSet<>(stationPerspectiveRepository.findByStationId(station.id));
 	}
+
+	@Autowired
+	private LogBuilderExecutor logBuilderExecutor;
+
+	@Autowired
+	private EventRepository eventRepository;
 
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Station station) throws UnauthorizedException{
 		if(stationSecurityChecker.canEdit(station)){
+			Event event = station.build(Event.EVENT_DELETE, logBuilderExecutor);
+			eventRepository.save(event);
+
 			stationRepository.deleteStationNetwork(station.id);
 
 			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);

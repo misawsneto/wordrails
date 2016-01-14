@@ -369,5 +369,26 @@
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.javers</groupId>
+			<artifactId>javers-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javers</groupId>
+			<artifactId>javers-spring</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javers</groupId>
+			<artifactId>javers-spring-data</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javers</groupId>
+			<artifactId>javers-persistence-sql</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>

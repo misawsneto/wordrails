@@ -1,6 +1,5 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostTrash;
 import co.xarx.trix.elasticsearch.domain.ESPost;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.Set;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -102,16 +100,9 @@ public class PostEventHandler {
 		}
 	}
 
-	@HandleAfterDelete
-	@Transactional
-	public void handleAfterDelete(Post post){
-		System.out.println("------------------- After delete --------------------");
-	}
-
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
-		System.out.println("------------------- Before delete --------------------");
 		if (postAndCommentSecurityChecker.canRemove(post)) {
 
 			cellRepository.delete(cellRepository.findByPost(post));

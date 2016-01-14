@@ -1,4 +1,6 @@
-package co.xarx.trix.domain;
+package co.xarx.trix.domain.event;
+
+import co.xarx.trix.domain.BaseEntity;
 
 import javax.persistence.*;
 
@@ -6,7 +8,7 @@ import javax.persistence.*;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn
 		(
-				name="class",
+				name="discriminator",
 				discriminatorType=DiscriminatorType.STRING
 		)
 public abstract class Event extends BaseEntity {
@@ -31,51 +33,25 @@ public abstract class Event extends BaseEntity {
 
 	public static final String UNKOWN_DEVICE = "UNKOWN";
 
-	@Column(name = "session_id")
 	public String sessionId;
 
-	@Column(name = "device")
 	public String device;
 
-	@Column(name = "user_id")
 	public Integer userId;
 
-	public Integer getUserId() {
-		return userId;
+	public String eventType;
+
+	public String getEventType() {
+		return eventType;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setEventType(String eventType) {
+		this.eventType = eventType;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getSessionId() {
-		return sessionId;
-	}
-
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
-
-	public String getDevice() {
-		return device;
-	}
-
-	public void setDevice(String device) {
-		this.device = device;
-	}
-
-	@Column(name = "type")
-	public String typeEvent;
-
-	public String getTypeEvent() {
-		return typeEvent;
-	}
-
-	public void setTypeEvent(String typeEvent) {
-		this.typeEvent = typeEvent;
+	public void setAuthor(Author author) {
+		this.userId = author.userId;
+		this.sessionId = author.sessionId;
+		this.device = author.device;
 	}
 }

@@ -1,6 +1,6 @@
 package co.xarx.trix.generator;
 
-import co.xarx.trix.domain.GeneratorIgnore;
+import co.xarx.trix.annotation.GeneratorIgnore;
 import org.reflections.Reflections;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.domain.Pageable;

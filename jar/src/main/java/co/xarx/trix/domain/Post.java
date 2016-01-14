@@ -1,6 +1,8 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.domain.event.PostEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.jsoup.Jsoup;
 
 import javax.persistence.*;
@@ -69,6 +71,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Column(length = 1024)
 	public String subheading;
 
+	@DiffIgnore
 	@ManyToOne
 	public Sponsor sponsor;
 

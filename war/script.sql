@@ -1,3 +1,8 @@
+drop table IF EXISTS section_fixedquery;
+drop table IF EXISTS section_properties;
+drop table IF EXISTS section_queryable_list;
+drop table IF EXISTS section_section_container;
+
 UPDATE station
   JOIN network ON network.id = station.network_id
   SET networkId = network_id;
@@ -46,3 +51,5 @@ CREATE TABLE `person_bookmark` (
 
 INSERT INTO person_bookmark (person_id, post_id)
   SELECT person_id, post_id FROM bookmark;
+
+drop table IF EXISTS bookmark;

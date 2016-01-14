@@ -3,8 +3,6 @@ package co.xarx.trix.services;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AndroidApp;
 import co.xarx.trix.domain.Notification;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -53,8 +51,8 @@ public class AsyncService {
 
 	@Async
 	@Transactional
-	public void countPostRead(Integer networkId, Post post, Person person, String sessionId) {
+	public void countPostRead(Integer networkId, Integer postId, Integer personId, String sessionId) {
 		TenantContextHolder.setCurrentNetworkId(networkId);
-		postService.countPostRead(post, person, sessionId);
+		postService.countPostRead(postId, personId, sessionId);
 	}
 }

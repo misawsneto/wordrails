@@ -1,15 +1,11 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.event.Event;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.CellRepository;
-import co.xarx.trix.persistence.RowRepository;
-import co.xarx.trix.persistence.StationPerspectiveRepository;
-import co.xarx.trix.persistence.TermPerspectiveRepository;
-import co.xarx.trix.persistence.TermRepository;
+import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.TaxonomySecurityChecker;
-import java.util.ArrayList;
-import java.util.List;
+import co.xarx.trix.services.LogBuilderExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
@@ -17,6 +13,9 @@ import org.springframework.data.rest.core.annotation.HandleBeforeLinkSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RepositoryEventHandler(Term.class)
 @Component
@@ -80,10 +79,19 @@ public class TermEventHandler {
 		}
 	}
 
+	@Autowired
+	private LogBuilderExecutor logBuilderExecutor;
+
+	@Autowired
+	private EventRepository eventRepository;
+
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Term term) {
 		if(taxonomySecurityChecker.canEdit(term.taxonomy)){
+			Event event = term.build(Event.EVENT_DELETE, logBuilderExecutor);
+			eventRepository.save(event);
+
 			deleteCascade(term, term);
 		}else{
 			throw new UnauthorizedException();

@@ -2,42 +2,19 @@ package co.xarx.trix.persistence;
 
 import co.xarx.trix.domain.Loggable;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
-import org.springframework.data.mapping.context.MappingContext;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
-import org.springframework.data.repository.core.support.TransactionalRepositoryFactoryBeanSupport;
-import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 
-public class RepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable> extends TransactionalRepositoryFactoryBeanSupport<T, S, ID> {
+public class RepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable> extends JpaRepositoryFactoryBean<T, S, ID> {
 
-	private EntityManager entityManager;
-
-
-	@PersistenceContext
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
-
-	@Override
-	public void setMappingContext(MappingContext<?, ?> mappingContext) {
-		super.setMappingContext(mappingContext);
-	}
-
-	@Override
-	protected RepositoryFactorySupport doCreateRepositoryFactory() {
+	protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
 		return new RepositoryFactory(entityManager);
-	}
-
-	@Override
-	public void afterPropertiesSet() {
-
-		Assert.notNull(entityManager, "EntityManager must not be null!");
-		super.afterPropertiesSet();
 	}
 
 	private static class RepositoryFactory extends JpaRepositoryFactory {
@@ -50,17 +27,30 @@ public class RepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Se
 		}
 
 		@Override
-		protected Object getTargetRepository(RepositoryMetadata metadata) {
-			if (metadata.getDomainType().equals(Loggable.class)) {
-				return new LoggableRepositoryImpl(metadata.getDomainType(), entityManager);
+		public Object getTargetRepository(RepositoryMetadata metadata) {
+			if (Loggable.class.isAssignableFrom(metadata.getDomainType())) {
+				return new LoggableRepositoryImpl(getEntityInformation(metadata.getDomainType()), entityManager);
 			} else {
-				return super.getTargetRepository(metadata);
+				return super.getTargetRepository(metadata, entityManager);
 			}
 		}
 
 		@Override
-		protected Class<?> getRepositoryBaseClass(final RepositoryMetadata metadata) {
-			return LoggableRepositoryImpl.class;
+		public SimpleJpaRepository<?, ?> getTargetRepository(RepositoryMetadata metadata, EntityManager entityManager) {
+			if (Loggable.class.isAssignableFrom(metadata.getDomainType())) {
+				return new LoggableRepositoryImpl(getEntityInformation(metadata.getDomainType()), entityManager);
+			} else {
+				return super.getTargetRepository(metadata, entityManager);
+			}
+		}
+
+		@Override
+		public Class<?> getRepositoryBaseClass(final RepositoryMetadata metadata) {
+			if (Loggable.class.isAssignableFrom(metadata.getDomainType())) {
+				return LoggableRepositoryImpl.class;
+			} else {
+				return super.getRepositoryBaseClass(metadata);
+			}
 		}
 
 	}
