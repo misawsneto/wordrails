@@ -58,11 +58,12 @@
 										<i class="blue"></i>
 									</label>
 								</th>
-								<th>Usuários</th>
-								<th>Nome</th>
-								<th class="text-center">Último login</th>
+								<th>usuário</th>
+								<th>nome</th>
+								<th>email</th>
+								<th class="text-center">último login</th>
 								<th ng-if="app.networkAdmin" style="max-width:130px;">
-									Ativar/Desativar Usuário
+									ativar/desativar
 								</th>
 							</tr>
 						</thead>
@@ -81,6 +82,7 @@
 									{{person.username}}
 								</td>
 								<td>{{person.name}}</td>
+								<td>{{person.email}}</td>
 								<td class="text-center" ng-if="!person.lastLogin"> - </td>
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 								<td class="text-center" ng-if="app.networkAdmin">
@@ -245,7 +247,6 @@
 	<md-button ng-hide="creating || editing"
 		id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
 		ui-sref="app.settings.users({'newUser': true})" ng-if="app.writableStations && app.writableStations.length > 0 && app.isLogged"
-		tooltip="Novo usuário" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
 		aria-label="Novo usuário">
 		<i class="mdi mdi-plus"></i>
 	</md-button>

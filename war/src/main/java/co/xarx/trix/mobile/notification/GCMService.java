@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletContext;
 import javax.transaction.Transactional;
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
@@ -36,6 +37,12 @@ public class GCMService {
 	@Autowired private PersonNetworkTokenRepository personNetworkTokenRepository;
 	@Autowired private NotificationRepository notificationRepository;
 	private ObjectMapper mapper;
+
+	@Autowired
+	private ServletContext servletContext;
+
+	@Value("${spring.profiles.active:'dev'}")
+	private String profile;
 
 	@Async
 	@Transactional
@@ -85,7 +92,7 @@ public class GCMService {
 	}
 
 	private void gcmNotify(List<PersonNetworkRegId> personNetworkRegIds,
-	                      final Notification notification) throws Exception{
+						  final Notification notification) throws Exception{
 
 		if(personNetworkRegIds == null || notification == null)
 			throw new UnexpectedException("Erro inesperado...");
@@ -134,6 +141,8 @@ public class GCMService {
 		notificationDto.postSnippet = notification.post != null ? TrixUtil.simpleSnippet(notification.post.body, 50) : null;
 		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallHash : null;
 		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumHash : null;
+		if("dev_prod".equals(profile) || "prod".equals(profile))
+		notificationDto.test = false;
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 

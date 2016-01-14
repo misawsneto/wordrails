@@ -121,7 +121,7 @@ public class PostService {
 			if (post.station != null && post.station.network != null) {
 				Station station = stationRepository.findOne(post.station.id);
 				Network network = cacheService.getNetwork(TenantContextHolder.getCurrentTenantId());
-
+                notification.network = network;
 
 				gcmService.sendToStation(network, station, notification);
 				apnService.sendToStation(network, station.id, notification);

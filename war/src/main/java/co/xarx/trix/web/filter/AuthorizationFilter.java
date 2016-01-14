@@ -100,6 +100,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetCommentStationAuthorized(Integer commentId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetCommentAuthorAuthorized(Integer commentId) {
 		return canReadComments(commentId);
 	}
@@ -595,11 +600,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isGetTaxonomyAuthorized(Integer taxonomyId) {
 
 		return true;
-	}
-
-	@Override
-	protected boolean isFindByStationIdAuthorized(Integer stationId) {
-		return canVisualizeStation(stationId);
 	}
 
 	@Override

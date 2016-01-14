@@ -3,6 +3,7 @@ package co.xarx.trix.persistence;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.NetworkRole;
 import co.xarx.trix.domain.User;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

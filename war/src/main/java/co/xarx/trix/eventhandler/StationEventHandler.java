@@ -185,20 +185,18 @@ public class StationEventHandler {
 			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
 			stationPerspectiveRepository.delete(stationsPerspectives);
 
-			List<Taxonomy> taxonomies = taxonomyRepository.findByStationId(station.id);
-			if(taxonomies != null && !taxonomies.isEmpty()){
-				for (Taxonomy taxonomy : taxonomies) {
-					taxonomyEventHandler.handleBeforeDelete(taxonomy);
-					taxonomyRepository.delete(taxonomy);
-				}
-			}
+			Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
+			taxonomy.owningStation = null;
+
+			taxonomyRepository.save(taxonomy);
+
+			taxonomyEventHandler.handleBeforeDelete(taxonomy);
+			taxonomyRepository.delete(taxonomy);
 
 			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
 			if(stationsRoles != null && stationsRoles.size() > 0){
 				personStationRolesRepository.delete(stationsRoles);
 			}
-
-
 
 			List<Post> posts = postRepository.findByStation(station);
 

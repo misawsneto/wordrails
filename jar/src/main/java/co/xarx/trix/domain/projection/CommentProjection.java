@@ -19,5 +19,4 @@ public interface CommentProjection {
 	String getTitle();
 	String getBody();
 	Person getAuthor();
-	List<ImageProjection> getImages();
 }
