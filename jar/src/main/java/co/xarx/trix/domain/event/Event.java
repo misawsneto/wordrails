@@ -32,6 +32,9 @@ public abstract class Event extends BaseEntity {
 	public static final String EVENT_UNRECOMMEND = "UNRECOMMEND";
 
 	public static final String UNKOWN_DEVICE = "UNKOWN";
+	public static final String ANDROID_DEVICE = "ANDROID";
+	public static final String APPLE_DEVICE = "IOS";
+	public static final String BROWSER_DEVICE = "BROWSER";
 
 	public String sessionId;
 

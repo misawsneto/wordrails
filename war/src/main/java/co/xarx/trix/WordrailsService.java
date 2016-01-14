@@ -7,7 +7,6 @@ import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.CacheService;
-import co.xarx.trix.services.LogBuilderExecutor;
 import co.xarx.trix.web.rest.PerspectiveResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.CacheBuilder;
@@ -16,11 +15,14 @@ import com.google.common.cache.LoadingCache;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.util.*;
@@ -48,9 +50,6 @@ public class WordrailsService {
 	private StationRepository stationRepository;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
-
-	@Autowired
-	private LogBuilderExecutor logBuilderExecutor;
 
 	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
 
@@ -279,5 +278,10 @@ public class WordrailsService {
 				ids.add(sp.stationId);
 			}
 		return ids;
+	}
+
+	public static HttpSession session() {
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		return attr.getRequest().getSession(true); // true == allow create
 	}
 }

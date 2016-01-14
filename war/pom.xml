@@ -390,5 +390,10 @@
 			<artifactId>javers-persistence-sql</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>eu.bitwalker</groupId>
+			<artifactId>UserAgentUtils</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>
