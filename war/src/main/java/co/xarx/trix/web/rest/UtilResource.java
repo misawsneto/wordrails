@@ -498,62 +498,6 @@ public class UtilResource {
 	}
 
 	@GET
-	@Path("/updateStationTagsTaxonomy")
-	@Transactional(readOnly=false)
-	public Response updateStationTagsTaxonomy(@Context HttpServletRequest request){
-		String host = request.getHeader("Host");
-
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Station> stations = stationRepository.findAll();
-			for (Station station: stations){
-				Set<Taxonomy> taxonomies = station.ownedTaxonomies;
-				boolean hasStationTag = false;
-				for (Taxonomy tax: taxonomies){
-					if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY))
-						hasStationTag = true;
-				}
-				if(!hasStationTag){
-					//Station Default Taxonomy
-					Taxonomy sTaxonomy = new Taxonomy();
-					sTaxonomy.name = "Station: " + station.name;
-					sTaxonomy.owningStation = station;
-					sTaxonomy.type = Taxonomy.STATION_TAG_TAXONOMY;
-					taxonomyRepository.save(sTaxonomy);
-					station.ownedTaxonomies.add(sTaxonomy);
-					stationRepository.save(station);
-				}
-			}
-		}
-		return Response.status(Status.OK).build();
-	}
-
-	@GET
-	@Path("/updateStationTagsCategoriesIds")
-	@Transactional(readOnly=false)
-	public Response updateStationTagsCategoriesIds(@Context HttpServletRequest request){
-		String host = request.getHeader("Host");
-
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Station> stations = stationRepository.findAll();
-			for (Station station: stations){
-				Set<Taxonomy> taxonomies = station.ownedTaxonomies;
-				for (Taxonomy tax: taxonomies){
-					if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
-						if(station.tagsTaxonomyId == null)
-							station.tagsTaxonomyId = tax.id;
-					}
-
-					if(tax.type.equals(Taxonomy.STATION_TAXONOMY)){
-						if(station.categoriesTaxonomyId == null)
-							station.categoriesTaxonomyId = tax.id;
-					}
-				}
-			}
-		}
-		return Response.status(Status.OK).build();
-	}
-
-	@GET
 	@Path("/updateStationTerm")
 	@Transactional(readOnly=false)
 	public Response updateAllTerms(@Context HttpServletRequest request){

@@ -85,14 +85,6 @@ public class StationEventHandler {
 				taxonomies.add(sTaxonomy);
 				station.ownedTaxonomies = taxonomies;
 				stationPerspective.taxonomy = sTaxonomy;
-
-				//Tag Default Taxonomy
-				Taxonomy tTaxonomy = new Taxonomy();
-				tTaxonomy.name = "Tags " + station.name;
-				tTaxonomy.owningStation = station;
-				tTaxonomy.type = Taxonomy.STATION_TAG_TAXONOMY;
-				taxonomies.add(tTaxonomy);
-				station.ownedTaxonomies = taxonomies;
 			}
 		}else{
 			throw new UnauthorizedException();
@@ -109,10 +101,6 @@ public class StationEventHandler {
 
 		Set<Taxonomy> taxonomies = station.ownedTaxonomies;
 		for (Taxonomy tax: taxonomies){
-			if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
-				if(station.tagsTaxonomyId == null)
-					station.tagsTaxonomyId = tax.id;
-			}
 			if(tax.type.equals(Taxonomy.STATION_TAXONOMY)){
 				if(station.categoriesTaxonomyId == null) {
 					station.categoriesTaxonomyId = tax.id;
@@ -204,12 +192,21 @@ public class StationEventHandler {
 			stationPerspectiveRepository.delete(stationsPerspectives);
 
 			Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
-			taxonomy.owningStation = null;
+			Taxonomy taxonomyTags = taxonomyRepository.findOne(station.tagsTaxonomyId);
+			Taxonomy taxonomyAuthors = taxonomyRepository.findTypeAByStation(station);
 
-			taxonomyRepository.save(taxonomy);
-
-			taxonomyEventHandler.handleBeforeDelete(taxonomy);
-			taxonomyRepository.delete(taxonomy);
+			if (taxonomy != null) {
+				taxonomyEventHandler.handleBeforeDelete(taxonomy);
+				taxonomyRepository.delete(taxonomy);
+			}
+			if (taxonomyTags != null) {
+				taxonomyEventHandler.handleBeforeDelete(taxonomyTags);
+				taxonomyRepository.delete(taxonomyTags);
+			}
+			if (taxonomyAuthors != null) {
+				taxonomyEventHandler.handleBeforeDelete(taxonomyAuthors);
+				taxonomyRepository.delete(taxonomyAuthors);
+			}
 
 			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
 			if(stationsRoles != null && stationsRoles.size() > 0){

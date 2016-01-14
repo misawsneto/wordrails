@@ -30,9 +30,7 @@ public class TermEventHandler {
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Term term) {
-		if(!term.taxonomy.type.equals(Taxonomy.STATION_TAG_TAXONOMY) &&
-				!term.taxonomy.type.equals(Taxonomy.STATION_AUTHOR_TAXONOMY) &&
-				taxonomySecurityChecker.canCreate(term.taxonomy)){
+		if(taxonomySecurityChecker.canCreate(term.taxonomy)){
 
 			List<StationPerspective> perspectives = stationPerspectiveRepository.findByTaxonomy(term.taxonomy);
 			if(perspectives != null && perspectives.size() > 0){

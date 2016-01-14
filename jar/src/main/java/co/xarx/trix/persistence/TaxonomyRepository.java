@@ -37,20 +37,23 @@ public interface TaxonomyRepository extends JpaRepository<Taxonomy, Integer>, Qu
 
 	@Query("select t from Taxonomy t where t.id IN " +
 			"(select taxonomy.id from Taxonomy taxonomy join taxonomy.owningStation station where " +
-			"station.network.id = :networkId and taxonomy.type != :type) " +
+			"station.network.id = :networkId) " +
 			"OR t.id IN " +
 			"(select taxonomy.id from Taxonomy taxonomy join taxonomy.owningNetwork network where network.id = :networkId)"
 	)
-	@RestResource(exported=false)
-	List<Taxonomy> findNetworkOrStationTaxonomiesByNetworkIdExcludeType(@Param("networkId") Integer networkId, @Param("type") String type);
+	List<Taxonomy> findNetworkOrStationTaxonomies(@Param("networkId") Integer networkId);
 
 	@Query("select t from Taxonomy t join t.owningStation station where station.id IN (:stationsIds)")
 	@RestResource(exported=false)
 	List<Taxonomy> findByStationsIds(@Param("stationsIds") List<Integer> stationsIds);
 
 	@Query("select t from Taxonomy t join t.owningStation station where station = :station and t.type = 'T'")
-	@RestResource(exported=false)
+	@RestResource(exported = false)
 	Taxonomy findTypeTByStation(@Param("station") Station station); //taxonomy of type T
+
+	@Query("select t from Taxonomy t join t.owningStation station where station = :station and t.type = 'A'")
+	@RestResource(exported = false)
+	Taxonomy findTypeAByStation(@Param("station") Station station); //taxonomy of type A
 
 	@Query("select t from Taxonomy t, StationPerspective p join p.station station " +
 			"where station = :station and t.type != 'T' and t.type != 'A' and t = p.taxonomy")
