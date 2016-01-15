@@ -609,6 +609,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindNetworkOrStationTaxonomiesAuthorized(Integer networkId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isFindStationTaxonomyAuthorized(Integer stationId) {
 		Station station = stationRepository.findOne(stationId);
 		stationSecurityChecker.canVisualize(station);
@@ -619,11 +624,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	protected boolean isFindNetworkCategoriesAuthorized(Integer networkId) {
 		Network network = networkRepository.findOne(networkId);
 		return networkSecurityChecker.isNetworkAdmin(network);
-	}
-
-	@Override
-	protected boolean isFindByStationIdAuthorized(Integer stationId) {
-		return false;
 	}
 
 	@Override
