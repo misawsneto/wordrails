@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"post_id", "person_id", "sessionid"}))
+@Table(uniqueConstraints={@UniqueConstraint(columnNames={"post_id", "person_session"})})
 public class PostRead {
 	
 	@Id
@@ -40,9 +40,12 @@ public class PostRead {
 	
 	public String sessionid;
 
+	public String person_session;
+
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
+		person_session = person != null ? person.id + "_" + sessionid : 0 + "_" + sessionid;
 	}
 
 	@PreUpdate
