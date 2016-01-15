@@ -26,6 +26,7 @@ public class LogBuilderExecutor implements LogBuilder {
 		event.setPostId(post.getId());
 		event.setPersonId(post.getAuthor().getId());
 		event.setPostState(post.state);
+		event.setStationId(post.stationId);
 
 		return event;
 	}

@@ -12,6 +12,15 @@ public class PostEvent extends Event {
 
 	public Integer postId;
 
+	public Integer stationId;
+
+	public Integer getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(Integer stationId) {
+		this.stationId = stationId;
+	}
 
 	public Integer getPersonId() {
 		return personId;
