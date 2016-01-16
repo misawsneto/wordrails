@@ -7,7 +7,6 @@ import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.CacheService;
-import co.xarx.trix.services.LogBuilderExecutor;
 import co.xarx.trix.web.rest.PerspectiveResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.CacheBuilder;
@@ -48,9 +47,6 @@ public class WordrailsService {
 	private StationRepository stationRepository;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
-
-	@Autowired
-	private LogBuilderExecutor logBuilderExecutor;
 
 	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
 
