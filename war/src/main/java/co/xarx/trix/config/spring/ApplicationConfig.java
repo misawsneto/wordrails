@@ -10,8 +10,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @Configuration
+@EnableAsync
 @Import({PropertyConfig.class})
 @ComponentScan(basePackages = "co.xarx.trix")
 public class ApplicationConfig {
@@ -30,4 +32,20 @@ public class ApplicationConfig {
 		modelMapper.addMappings(new PostViewMap());
 		return modelMapper;
 	}
+
+//	@Override
+//	public Executor getAsyncExecutor() {
+//		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//		executor.setCorePoolSize(7);
+//		executor.setMaxPoolSize(42);
+//		executor.setQueueCapacity(11);
+//		executor.setThreadNamePrefix("MyExecutor-");
+//		executor.initialize();
+//		return executor;
+//	}
+//
+//	@Override
+//	public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+//		return (ex, method, params) -> System.out.println("async exception");
+//	}
 }

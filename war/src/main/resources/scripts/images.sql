@@ -308,3 +308,10 @@ INSERT INTO image_picture (image_id, pictures_id)
 				 OR pic.file_id = img.large_id
 				 OR pic.file_id = img.medium_id
 				 OR pic.file_id = img.small_id;
+
+
+
+ALTER TABLE image DROP COLUMN original_id;
+ALTER TABLE image DROP COLUMN large_id;
+ALTER TABLE image DROP COLUMN medium_id;
+ALTER TABLE image DROP COLUMN small_id;

@@ -15,8 +15,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @MappedSuperclass
-@FilterDef(name = "networkFilter", parameters = @ParamDef(name = "networkId", type = "integer"))
-@Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
+@FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = "string"))
+@Filters(@Filter(name = "tenantFilter", condition = "tenantId = :tenantId"))
 public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Versionable {
 
 	@DiffIgnore

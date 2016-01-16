@@ -5,7 +5,6 @@ import co.xarx.trix.domain.File;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Picture;
 import co.xarx.trix.domain.QFile;
-import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
@@ -13,14 +12,15 @@ import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.ImageUtil;
 import co.xarx.trix.util.TrixUtil;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.google.common.collect.Sets;
 import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,13 +40,12 @@ public class ImageService {
 	}
 
 
-	public Image createNewImage(Image newImage, InputStream inputStream, String mime, boolean persistOnDatabase, boolean returnDuplicateIfExists) throws IOException, FileUploadException {
+	public Image createNewImage(Image newImage, InputStream inputStream, String mime) throws IOException, FileUploadException {
 		Image.Type imageType = Image.Type.findByAbbr(newImage.type);
-		if (imageType == null) {
-			throw new BadRequestException("Image type is not valid");
-		}
 
-		Set<Picture> pictures = Sets.newHashSet();
+		Assert.isTrue(imageType != null, "Image type is not valid");
+
+		Set<Picture> pictures = new HashSet<>();
 
 		java.io.File originalFile = FileUtil.createNewTempFile(inputStream);
 		ImageUtil.ImageFile imageFile = ImageUtil.getImageFile(originalFile);
@@ -55,12 +54,10 @@ public class ImageService {
 		if (existingImage != null) {
 			if(existingImage.pictures != null && !existingImage.pictures.isEmpty() &&
 					existingImage.pictures.size() == imageType.count()+1) { //+1 because original
-//				if(returnDuplicateIfExists) //uncomment when images become unique (when old image upload dies)
-//					return existingImage;
-//				else
-					return createNewImageFromExistingImage(persistOnDatabase, existingImage, originalFile);
+				return existingImage;
+			} else {
+				newImage = existingImage;
 			}
-
 		}
 
 		Picture originalPic = getOriginalPicture(mime, originalFile, imageFile);
@@ -70,16 +67,15 @@ public class ImageService {
 		if (imageType.qualities != null) {
 			Map<String, Integer> qualities = imageType.qualities;
 			for (Map.Entry<String, Integer> entry : qualities.entrySet()) {
-				Picture pic = getPictureByQuality(originalFile, entry);
+				Picture pic = getPictureByQuality(originalFile, entry.getKey(), entry.getValue());
 				pictures.add(pic);
-				fileRepository.save(pic.file);
+
 			}
 		} else if (imageType.sizes != null) {
 			Map<String, Integer[]> sizes = imageType.sizes;
 			for (Map.Entry<String, Integer[]> entry : sizes.entrySet()) {
-				Picture pic = getPictureBySize(originalFile, entry);
+				Picture pic = getPictureBySize(originalFile, entry.getKey(), entry.getValue());
 				pictures.add(pic);
-				fileRepository.save(pic.file);
 			}
 		}
 
@@ -94,9 +90,7 @@ public class ImageService {
 		}
 
 
-		if (persistOnDatabase) {
-			imageRepository.save(newImage);
-		}
+		imageRepository.save(newImage);
 
 		return newImage;
 	}
@@ -112,26 +106,6 @@ public class ImageService {
 			}
 		}
 		return existingImage;
-	}
-
-	public Image createNewImageFromExistingImage(boolean persistOnDatabase, Image existingImage, java.io.File originalFile) throws IOException, FileUploadException {
-		Image newImage = new Image();
-		newImage.type = existingImage.type;
-
-		for (Picture pic : existingImage.pictures) {
-			java.io.File tmpFile = FileUtil.createNewTempFile(new FileInputStream(originalFile));
-			uploadIfDoesntExist(tmpFile, pic.file.hash, pic.file.size, pic.sizeTag, pic.file.getExtension());
-
-			newImage.pictures.add(pic);
-		}
-
-		newImage.vertical = existingImage.vertical;
-
-		if (persistOnDatabase) {
-			imageRepository.save(newImage);
-		}
-
-		return newImage;
 	}
 
 	public void uploadIfDoesntExist(java.io.File file, String hash, Long size, String sizeTag, String extension) throws IOException, FileUploadException {
@@ -172,14 +146,13 @@ public class ImageService {
 		return originalPic;
 	}
 
-	private Picture getPictureBySize(java.io.File originalFile, Map.Entry<String, Integer[]> entry) throws IOException {
+	private Picture getPictureBySize(java.io.File originalFile, String sizeTag, Integer[] xy) throws IOException {
 		ImageUtil.ImageFile imageFile;
 		File existingFile;
 		Picture pic = new Picture();
 		pic.file = ImageUtil.createNewImageTrixFile("image/png", originalFile.length());
-		pic.sizeTag = entry.getKey();
+		pic.sizeTag = sizeTag;
 
-		Integer[] xy = entry.getValue();
 		imageFile = ImageUtil.resizeImage(originalFile, xy[0], xy[1], pic.file.getExtension());
 
 		existingFile = fileRepository.findOne(QFile.file.hash.eq(imageFile.hash).and(QFile.file.type.eq(File.EXTERNAL)));
@@ -194,17 +167,22 @@ public class ImageService {
 		pic.file.hash = imageFile.hash;
 		pic.height = imageFile.height;
 		pic.width = imageFile.width;
+
+		try {
+			fileRepository.save(pic.file);
+		} catch (Exception e) {
+		}
+
 		return pic;
 	}
 
-	private Picture getPictureByQuality(java.io.File originalFile, Map.Entry<String, Integer> entry) throws IOException {
+	private Picture getPictureByQuality(java.io.File originalFile, String sizeTag, Integer quality) throws IOException {
 		ImageUtil.ImageFile imageFile;
 		File existingFile;
 		Picture pic = new Picture();
 		pic.file = ImageUtil.createNewImageTrixFile("image/png", originalFile.length());
-		pic.sizeTag = entry.getKey();
+		pic.sizeTag = sizeTag;
 
-		Integer quality = entry.getValue();
 		imageFile = ImageUtil.resizeImage(originalFile, quality, pic.file.getExtension(), false, true);
 
 		existingFile = fileRepository.findOne(QFile.file.hash.eq(imageFile.hash).and(QFile.file.type.eq(File.EXTERNAL)));
@@ -213,12 +191,19 @@ public class ImageService {
 		} else {
 			amazonCloudService.uploadPublicImage(imageFile.file,
 					imageFile.file.length(), imageFile.hash, pic.sizeTag, pic.file.getExtension(), false);
+
 		}
 
 		pic.file.size = imageFile.file.length();
 		pic.file.hash = imageFile.hash;
 		pic.height = imageFile.height;
 		pic.width = imageFile.width;
+
+		try {
+			fileRepository.save(pic.file);
+		} catch (Exception e) {
+		}
+
 		return pic;
 	}
 }

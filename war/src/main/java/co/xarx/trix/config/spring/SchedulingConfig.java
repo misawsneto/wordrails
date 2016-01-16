@@ -14,8 +14,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 @Configuration
 @EnableScheduling
@@ -28,10 +26,10 @@ public class SchedulingConfig {
 	@Autowired
 	ApplicationContext applicationContext;
 
-	@Bean
-	public Executor taskExecutor() {
-		return Executors.newScheduledThreadPool(10);
-	}
+//	@Bean
+//	public Executor taskExecutor() {
+//		return Executors.newScheduledThreadPool(10);
+//	}
 
 	@Bean
 	public SchedulerFactoryBean quartzScheduler() {

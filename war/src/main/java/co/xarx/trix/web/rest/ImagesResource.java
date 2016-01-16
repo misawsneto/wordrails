@@ -62,7 +62,7 @@ public class ImagesResource {
 		Image newImage = new Image();
 		newImage.type = type;
 		newImage.title = item.getName();
-		newImage = imageService.createNewImage(newImage, item.getInputStream(), item.getContentType(), true, true);
+		newImage = imageService.createNewImage(newImage, item.getInputStream(), item.getContentType());
 
 		ImageUpload imageUpload = new ImageUpload();
 		imageUpload.hash = FileUtil.getHash(item.getInputStream());

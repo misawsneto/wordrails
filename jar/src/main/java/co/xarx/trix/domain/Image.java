@@ -93,7 +93,9 @@ public class Image extends BaseEntity implements Serializable {
 	public Set<Picture> pictures;
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	@JoinTable(name = "image_hash", joinColumns = @JoinColumn(name = "image_id"))
+	@JoinTable(name = "image_hash",
+			joinColumns = @JoinColumn(name = "image_id"),
+			uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "sizeTag", "image_id"}))
 	@MapKeyColumn(name = "sizeTag", nullable = false)
 	@Column(name = "hash", nullable = false)
 	public Map<String, String> hashs;
