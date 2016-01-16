@@ -10,10 +10,19 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"tenantId"}))
-public class Network extends BaseEntity implements Serializable{
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
+public class Network extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7723825842358687233L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@NotNull
 	@Size(min=1, max=100)
@@ -116,6 +125,9 @@ public class Network extends BaseEntity implements Serializable{
 
 	public Integer categoriesTaxonomyId;
 
+	@Lob
+	public String invitationMessage;
+
 	@Override
 	public String toString() {
 		return "Network [id=" + id + ", name=" + name + "]";
@@ -131,6 +143,9 @@ public class Network extends BaseEntity implements Serializable{
 
 	@Lob
 	public String appleStoreAddress;
+
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    public boolean addStationRolesOnSignup;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -149,10 +164,6 @@ public class Network extends BaseEntity implements Serializable{
 			defaultReadMode = "D";
 		if(defaultOrientationMode == null || defaultOrientationMode.isEmpty())
 			defaultOrientationMode = "H";
-	}
-
-	public Integer getId() {
-		return id;
 	}
 
 	public String getName() {

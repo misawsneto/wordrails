@@ -2,6 +2,8 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.domain.ElasticSearchEntity;
 import co.xarx.trix.domain.MultiTenantEntity;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.QPost;
 import co.xarx.trix.elasticsearch.ESRepository;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
@@ -10,7 +12,10 @@ import co.xarx.trix.elasticsearch.repository.ESBookmarkRepository;
 import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.elasticsearch.repository.ESStationRepository;
-import co.xarx.trix.persistence.*;
+import co.xarx.trix.persistence.PersonRepository;
+import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.StationRepository;
+import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -47,12 +52,6 @@ public class ElasticSearchService {
 	@Autowired
 	PostRepository postRepository;
 	@Autowired
-	PostScheduledRepository postScheduledRepository;
-	@Autowired
-	PostTrashRepository postTrashRepository;
-	@Autowired
-	PostDraftRepository postDraftRepository;
-	@Autowired
 	ESPostRepository esPostRepository;
 	@Autowired
 	StationRepository stationRepository;
@@ -76,10 +75,7 @@ public class ElasticSearchService {
 
 			List<MultiTenantEntity> stations = new ArrayList(stationRepository.findAll());
 			List<MultiTenantEntity> people = new ArrayList(personRepository.findAll());
-			List<MultiTenantEntity> posts = new ArrayList(postRepository.findAll());
-//			posts.addAll(postScheduledRepository.findAll());
-//			posts.addAll(postTrashRepository.findAll());
-//			posts.addAll(postDraftRepository.findAll());
+			List<MultiTenantEntity> posts = Lists.newArrayList(postRepository.findAll(QPost.post.state.eq(Post.STATE_PUBLISHED)));
 
 			mapThenSave(stations, ESStation.class, esStationRepository);
 			mapThenSave(posts, ESPost.class, esPostRepository);
@@ -109,8 +105,8 @@ public class ElasticSearchService {
 	}
 
 	public <T extends ElasticSearchEntity> void saveIndex(Object object, Class<T> objectClass, ESRepository esRepository) {
-		ElasticSearchEntity esPerson = modelMapper.map(object, objectClass);
-		esRepository.save(esPerson);
+		ElasticSearchEntity entity = modelMapper.map(object, objectClass);
+		esRepository.save(entity);
 	}
 
 	public void deleteIndex(Integer id, ESRepository esRepository) {

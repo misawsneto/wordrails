@@ -21,6 +21,15 @@ import java.util.Set;
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "tenantId"}))
 public class User extends BaseEntity implements UserDetails {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@Size(max = 50)
 	@NotNull
 	@Pattern(regexp = "^[a-z0-9\\._-]{3,50}$")

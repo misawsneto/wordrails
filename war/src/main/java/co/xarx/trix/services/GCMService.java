@@ -1,6 +1,9 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.PersonNetworkRegId;
 import co.xarx.trix.dto.NotificationDto;
 import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.persistence.PersonNetworkRegIdRepository;
@@ -38,6 +41,9 @@ public class GCMService {
 	@Autowired
 	private StationRepository stationRepository;
 	private ObjectMapper mapper;
+
+	@Value("${spring.profiles.active:'dev'}")
+	private String profile;
 
 	@Transactional
 	public void sendToStation(Integer stationId, Notification notification){
@@ -77,7 +83,7 @@ public class GCMService {
 	}
 
 	private void gcmNotify(List<PersonNetworkRegId> personNetworkRegIds,
-	                      final Notification notification) throws Exception{
+						  final Notification notification) throws Exception{
 
 		if(personNetworkRegIds == null || notification == null)
 			throw new UnexpectedException("Erro inesperado...");
@@ -124,6 +130,8 @@ public class GCMService {
 		notificationDto.postId = notification.post != null ? notification.post.id : null;
 		notificationDto.postTitle = notification.post != null ? notification.post.title : null;;
 		notificationDto.postSnippet = notification.post != null ? StringUtil.simpleSnippet(notification.post.body) : null;
+		if("dev_prod".equals(profile) || "prod".equals(profile))
+		notificationDto.test = false;
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 

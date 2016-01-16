@@ -1,18 +1,20 @@
 package co.xarx.trix.persistence;
 
+import co.xarx.trix.annotation.EventLoggableRepository;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.persistence.custom.CustomPostRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Collection;
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPredicateExecutor<Post> {
+@EventLoggableRepository
+public interface PostRepository extends JpaRepository<Post, Integer>, CustomPostRepository {
 
 	@Query("select post from Post post where post.id in ( select p.id from Post p where p.station.id = :stationId ) order by post.date desc")
 	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);
@@ -38,10 +40,6 @@ public interface PostRepository extends JpaRepository<Post, Integer>, QueryDslPr
 	@RestResource(exported = false)
 	@Query("select p from Post p where p.station.id = :stationId and p.author.id = :authorId order by p.date desc")
 	List<Post> findPostsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
-
-	List<PostDraft> findDraftsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
-
-	List<PostScheduled> findScheduledsByStationIdAndAuthorId(@Param("stationId") Integer stationId, @Param("authorId") Integer authorId, Pageable pageable);
 
 	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
 	List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);

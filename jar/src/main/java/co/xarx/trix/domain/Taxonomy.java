@@ -12,8 +12,15 @@ public class Taxonomy extends BaseEntity implements Serializable {
 
 	public static final String NETWORK_TAXONOMY = "N";
 	public static final String STATION_TAXONOMY = "S";
-	public static final String STATION_AUTHOR_TAXONOMY = "A";
-	public static final String STATION_TAG_TAXONOMY = "T";
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@NotNull
 	@Size(min=1, max=1)
@@ -90,5 +97,5 @@ public class Taxonomy extends BaseEntity implements Serializable {
 		} else if (!type.equals(other.type))
 			return false;
 		return true;
-	}	
+	}
 }

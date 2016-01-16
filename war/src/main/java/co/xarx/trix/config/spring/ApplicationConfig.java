@@ -25,7 +25,6 @@ public class ApplicationConfig {
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.addMappings(new PostMap());
-//		modelMapper.addMappings(new PostDraftMap());
 		modelMapper.addMappings(new StationMap());
 		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostViewMap());

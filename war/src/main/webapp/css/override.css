@@ -3923,6 +3923,10 @@ md-toast{z-index: 2000; position: fixed; top: 60px!important;}
 
 /* header */
 
+  #search-box{
+    max-height: none;
+  }
+
   .nav-down .station-header{
     height: 60px!important;
   }

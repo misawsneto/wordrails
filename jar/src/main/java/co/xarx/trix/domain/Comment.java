@@ -11,6 +11,15 @@ import java.util.Date;
 @Entity
 public class Comment extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@NotNull
@@ -24,8 +33,6 @@ public class Comment extends BaseEntity {
 	
 	@Size(min=1, max=100)
 	public String title;
-
-	public Station station;
 
 	@Lob
 	@NotNull

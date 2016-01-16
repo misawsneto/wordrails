@@ -6,6 +6,7 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -14,19 +15,17 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @MappedSuperclass
-@FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = "string"))
-@Filters(@Filter(name = "tenantFilter", condition = "tenantId = :tenantId"))
-public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
+@FilterDef(name = "networkFilter", parameters = @ParamDef(name = "networkId", type = "integer"))
+@Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
+public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Versionable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer id;
-
+	@DiffIgnore
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	public Date updatedAt;
 
+	@DiffIgnore
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -52,17 +51,12 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 		this.tenantId = tenantId;
 	}
 
-	@Override
-	public Integer getId() {
-		return id;
-	}
-
-	public int getVersion() {
+	public Integer getVersion() {
 		return version;
 	}
 
 	@SuppressWarnings("unused")
-	private void setVersion(int version) {
+	private void setVersion(Integer version) {
 		this.version = version;
 	}
 
@@ -82,5 +76,20 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 	@SuppressWarnings("unused")
 	private void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(getId() != null)
+			return getId().equals(((BaseEntity)obj).getId());
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+		return result;
 	}
 }

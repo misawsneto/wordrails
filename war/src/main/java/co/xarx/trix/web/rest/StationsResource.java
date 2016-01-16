@@ -14,6 +14,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 @Path("/stations")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -76,12 +79,14 @@ public class StationsResource {
 		Person person = authProvider.getLoggedPerson();
 		NetworkRole role = networkRolesRepository.findByPerson(person);
 
+		List<Station> stations = new ArrayList<Station>();
+
 		if (role.admin) {
 			for (Station station : stationRepository.findAll()) {
 				if (station.id.equals(stationId)) station.main = value;
 				else station.main = false;
 
-				queryPersistence.updateMainStation(station.id, station.main);
+				stationRepository.save(station);
 				cacheService.updateStation(station.id);
 			}
 			return Response.status(Status.OK).build();

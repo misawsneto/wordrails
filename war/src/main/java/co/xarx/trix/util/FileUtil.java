@@ -33,7 +33,7 @@ public class FileUtil {
 	}
 
 	public static java.io.File createNewTempFile() throws IOException {
-		return java.io.File.createTempFile(StringUtil.generateRandomString(5, "aA#"), ".tmp");
+		return new File(System.getProperty("java.io.tmpdir"), StringUtil.generateRandomString(5, "aA#") + ".tmp");
 	}
 
 	public static java.io.File createNewTempFile(InputStream inputStream) throws IOException {

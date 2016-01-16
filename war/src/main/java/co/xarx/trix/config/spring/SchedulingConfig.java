@@ -24,7 +24,7 @@ public class SchedulingConfig {
 	@Autowired
 	DataSource dataSource;
 	@Autowired
-	private PlatformTransactionManager transactionManager;
+	PlatformTransactionManager transactionManager;
 	@Autowired
 	ApplicationContext applicationContext;
 

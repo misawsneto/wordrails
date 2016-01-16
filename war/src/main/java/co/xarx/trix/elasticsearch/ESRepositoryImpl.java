@@ -33,11 +33,10 @@ public class ESRepositoryImpl<T extends ElasticSearchEntity>
 //		elasticsearchOperations.refresh(entity.getTenantId(), true);
 //		return entity;
 //	}
-
-//	public void delete(String tenant, Integer id) {
-//		Assert.notNull(id, "Cannot delete entity with id 'null'.");
-//		elasticsearchOperations.delete(entityInformation.getIndexName(), entityInformation.getType(), stringIdRepresentation(id));
-//		elasticsearchOperations.refresh(entityInformation.getIndexName(), true);
+//
+//	public void delete(Integer id) {
+//		T t = this.findOne(id);
+//		this.delete(t);
 //	}
 
 //	private IndexQuery createIndexQuery(T entity) {

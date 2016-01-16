@@ -22,6 +22,15 @@ public class Person extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7728358342573034233L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@Size(min = 1, max = 100)
 	public String name;
 

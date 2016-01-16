@@ -11,6 +11,15 @@ import java.util.Date;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "network_id"}))
 public class Invitation extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@NotNull
 	@Column(unique = true)
 	public String hash;
@@ -35,7 +44,11 @@ public class Invitation extends BaseEntity {
 	@PrePersist
 	void onCreate() {
 		createdAt = new Date();
-		invitationUrl = "http://" + network.getTenantId() + ".trix.rocks/" + "invitation?hash=" + hash;
+		invitationUrl = getUrl();
+	}
+
+	public String getUrl() {
+		return "http://" + network.getTenantId() + ".trix.rocks/" + "invitation?hash=" + hash;
 	}
 
 	@PreUpdate

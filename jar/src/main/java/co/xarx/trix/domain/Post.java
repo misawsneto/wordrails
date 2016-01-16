@@ -1,6 +1,8 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.domain.event.PostEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.jsoup.Jsoup;
 
 import javax.persistence.*;
@@ -11,13 +13,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(
-        name="state",
-        discriminatorType=DiscriminatorType.STRING
-)
-@DiscriminatorValue(value="PUBLISHED")
-public class Post extends BaseEntity implements Serializable, ElasticSearchEntity {
+public class Post extends BaseEntity implements Serializable, ElasticSearchEntity, Loggable {
 
     public static final String STATE_DRAFT = "DRAFT";
     public static final String STATE_NO_AUTHOR = "NOAUTHOR";
@@ -25,9 +21,18 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
     public static final String STATE_PUBLISHED = "PUBLISHED";
     public static final String STATE_SCHEDULED = "SCHEDULED";
 
-    public Post() {
-        state = Post.STATE_PUBLISHED;
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
+	public Post() {
+		state = Post.STATE_PUBLISHED;
+	}
 
 	@Override
 	public String getType() {
@@ -60,8 +65,9 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
     @Column(length = 1024)
     public String subheading;
 
-    @ManyToOne
-    public Sponsor sponsor;
+	@DiffIgnore
+	@ManyToOne
+	public Sponsor sponsor;
 
     @Lob
     public String originalSlug;
@@ -77,9 +83,9 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
     @OneToMany(mappedBy = "post")
     public Set<Comment> comments;
 
-    @Size(min = 1, max = 15)
-    @Column(insertable = false, updatable = false)
-    public String state;
+	@Column
+	@Size(min = 1, max = 15)
+	public String state;
 
     @ManyToOne(fetch = FetchType.EAGER)
     public Image featuredImage;
@@ -145,9 +151,9 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Deprecated
 	public String imageCreditsText;
 
-    public Double lat;
+	public Double lat;
 
-    public Double lng;
+	public Double lng;
 
 	@Lob
 	@Deprecated
@@ -156,17 +162,17 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
     public String featuredVideoHash;
     public String featuredAudioHash;
 
-    @PrePersist
-    public void onCreate() {
-        onChanges();
+	@PrePersist
+	public void onCreate() {
+		onChanges();
 
 		if (date == null)
 			date = new Date();
 	}
 
-    @PreUpdate
-    public void onUpdate() {
-        onChanges();
+	@PreUpdate
+	public void onUpdate() {
+		onChanges();
 
 		lastModificationDate = new Date();
 	}
@@ -176,8 +182,8 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 		readTime = calculateReadTime(body);
     }
 
-    public static int countWords(String string) {
-        if (string == null || string.isEmpty()) return 0;
+	public static int countWords(String string) {
+		if (string == null || string.isEmpty()) return 0;
 
 		org.jsoup.nodes.Document doc = Jsoup.parse(string);
 		string = doc.text();
@@ -191,18 +197,18 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
         return minutes;
     }
 
-    @Override
-    public String toString() {
-        return "Post [id=" + id + ", date=" + date
-                + ", lastModificationDate=" + lastModificationDate + ", title=" + title + ", state=" + state + "]";
-    }
+	@Override
+	public String toString() {
+		return "Post [id=" + id + ", date=" + date
+				+ ", lastModificationDate=" + lastModificationDate + ", title=" + title + ", state=" + state + "]";
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if(id != null)
-            return id.equals(((Post)obj).id);
-        return super.equals(obj);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if(id != null)
+			return id.equals(((Post)obj).id);
+		return super.equals(obj);
+	}
 
     @Override
     public int hashCode() {
@@ -497,5 +503,10 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	public void setFeaturedAudioHash(String featuredAudioHash) {
 		this.featuredAudioHash = featuredAudioHash;
+	}
+
+	@Override
+	public PostEvent build(String type, LogBuilder builder) {
+		return builder.build(type, this);
 	}
 }

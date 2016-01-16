@@ -1,8 +1,8 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.domain.PostDraft;
+import co.xarx.trix.domain.event.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
-public interface PostDraftRepository extends JpaRepository<PostDraft, Integer>, QueryDslPredicateExecutor<PostDraft> {
+public interface EventRepository extends JpaRepository<Event, Integer>, QueryDslPredicateExecutor<Event> {
 }

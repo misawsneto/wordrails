@@ -415,6 +415,7 @@ public class PersonsResource {
 	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, IOException{
 		Person person = null;
 		User user;
+        Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		if(personCreationObject != null){
 			try{
 				person = new Person();
@@ -524,6 +525,16 @@ public class PersonsResource {
 					}
 				}else{
 					throw new BadRequestException();
+				}
+			}
+
+			if(network != null && network.addStationRolesOnSignup){
+				List<Station> stations = stationRepository.findAll();
+				for (Station station : stations) {
+					StationRole sr = new StationRole();
+					sr.person = person;
+					sr.station = station;
+					stationRolesRepository.save(sr);
 				}
 			}
 

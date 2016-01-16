@@ -1,7 +1,6 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.PostTrash;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.exception.BadRequestException;
@@ -30,8 +29,6 @@ public class PostEventHandler {
 	@Autowired
 	private SchedulerService schedulerService;
 	@Autowired
-	private PostRepository postRepository;
-	@Autowired
 	private PostReadRepository postReadRepository;
 	@Autowired
 	private CellRepository cellRepository;
@@ -52,8 +49,6 @@ public class PostEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
-		if(post instanceof PostTrash) //post of type Trash is not insertable
-			throw new BadRequestException();
 
 		if (postAndCommentSecurityChecker.canWrite(post)) {
 			savePost(post);
@@ -71,11 +66,9 @@ public class PostEventHandler {
 		if (post.slug == null || post.slug.isEmpty()) {
 			String originalSlug = StringUtil.toSlug(post.title);
 			try {
-				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#");
-				postRepository.save(post);
+				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
 			} catch (DataIntegrityViolationException ex) {
-				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#");
-				postRepository.save(post);
+				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
 			}
 		} else {
 			post.originalSlug = post.slug;

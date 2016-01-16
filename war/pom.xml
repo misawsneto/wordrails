@@ -286,15 +286,7 @@
 
 		<dependency>
 			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-cloudfront</artifactId>
+			<artifactId>aws-java-sdk</artifactId>
 		</dependency>
 
 		<dependency>
@@ -333,20 +325,20 @@
 			<artifactId>spring-data-jpa</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>com.github.sps.mustache</groupId>
-			<artifactId>mustache-spring-view</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.samskivert</groupId>
-			<artifactId>jmustache</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.github.jknack</groupId>
+            <artifactId>handlebars</artifactId>
+        </dependency>
 
 		<dependency>
 			<groupId>com.github.spullara.mustache.java</groupId>
 			<artifactId>compiler</artifactId>
 		</dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+        </dependency>
 
 		<dependency>
 			<groupId>org.aspectj</groupId>
@@ -372,5 +364,31 @@
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.javers</groupId>
+			<artifactId>javers-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javers</groupId>
+			<artifactId>javers-spring</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javers</groupId>
+			<artifactId>javers-spring-data</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javers</groupId>
+			<artifactId>javers-persistence-sql</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>eu.bitwalker</groupId>
+			<artifactId>UserAgentUtils</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>

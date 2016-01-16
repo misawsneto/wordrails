@@ -8,6 +8,15 @@ import java.io.Serializable;
 @Table(name = "userconnection")
 public class UserConnection extends BaseEntity implements Serializable {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@Column(unique = true)
 	public String accessToken;
 

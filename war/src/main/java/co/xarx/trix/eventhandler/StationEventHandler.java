@@ -1,6 +1,7 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.event.Event;
 import co.xarx.trix.elasticsearch.domain.ESStation;
 import co.xarx.trix.elasticsearch.repository.ESStationRepository;
 import co.xarx.trix.exception.UnauthorizedException;
@@ -9,6 +10,7 @@ import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.LogBuilderExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
@@ -83,14 +85,6 @@ public class StationEventHandler {
 				taxonomies.add(sTaxonomy);
 				station.ownedTaxonomies = taxonomies;
 				stationPerspective.taxonomy = sTaxonomy;
-
-				//Tag Default Taxonomy
-				Taxonomy tTaxonomy = new Taxonomy();
-				tTaxonomy.name = "Tags " + station.name;
-				tTaxonomy.owningStation = station;
-				tTaxonomy.type = Taxonomy.STATION_TAG_TAXONOMY;
-				taxonomies.add(tTaxonomy);
-				station.ownedTaxonomies = taxonomies;
 			}
 		}else{
 			throw new UnauthorizedException();
@@ -107,10 +101,6 @@ public class StationEventHandler {
 
 		Set<Taxonomy> taxonomies = station.ownedTaxonomies;
 		for (Taxonomy tax: taxonomies){
-			if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
-				if(station.tagsTaxonomyId == null)
-					station.tagsTaxonomyId = tax.id;
-			}
 			if(tax.type.equals(Taxonomy.STATION_TAXONOMY)){
 				if(station.categoriesTaxonomyId == null) {
 					station.categoriesTaxonomyId = tax.id;
@@ -180,32 +170,38 @@ public class StationEventHandler {
 
 	@HandleBeforeSave
 	public void handleBeforeSave(Station station){
-		station.stationPerspectives = new HashSet<StationPerspective>(stationPerspectiveRepository.findByStationId(station.id));
+		station.stationPerspectives = new HashSet<>(stationPerspectiveRepository.findByStationId(station.id));
 	}
+
+	@Autowired
+	private LogBuilderExecutor logBuilderExecutor;
+
+	@Autowired
+	private EventRepository eventRepository;
 
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Station station) throws UnauthorizedException{
 		if(stationSecurityChecker.canEdit(station)){
+			Event event = station.build(Event.EVENT_DELETE, logBuilderExecutor);
+			eventRepository.save(event);
+
 			stationRepository.deleteStationNetwork(station.id);
 
 			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
 			stationPerspectiveRepository.delete(stationsPerspectives);
 
-			List<Taxonomy> taxonomies = taxonomyRepository.findByStationId(station.id);
-			if(taxonomies != null && !taxonomies.isEmpty()){
-				for (Taxonomy taxonomy : taxonomies) {
-					taxonomyEventHandler.handleBeforeDelete(taxonomy);
-					taxonomyRepository.delete(taxonomy);
-				}
+			Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
+
+			if (taxonomy != null) {
+				taxonomyEventHandler.handleBeforeDelete(taxonomy);
+				taxonomyRepository.delete(taxonomy);
 			}
 
 			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
 			if(stationsRoles != null && stationsRoles.size() > 0){
 				personStationRolesRepository.delete(stationsRoles);
 			}
-
-
 
 			List<Post> posts = postRepository.findByStation(station);
 

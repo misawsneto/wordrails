@@ -1,7 +1,9 @@
 package co.xarx.trix.domain;
 
 
+import co.xarx.trix.domain.event.Event;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,24 +15,37 @@ import java.util.Set;
 @Table(uniqueConstraints = {
 		@UniqueConstraint(columnNames={"taxonomy_id","name"})
 })
-public class Term extends BaseEntity implements Serializable {
+public class Term extends BaseEntity implements Serializable, Loggable {
 	private static final long serialVersionUID = 7891255759575029731L;
-	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@Size(min=1, max=100)
 	public String name;
 
+	@DiffIgnore
 	@JsonBackReference("cells")
 	@OneToMany(mappedBy="term")
 	public Set<Cell> cells;
 
+	@DiffIgnore
 	@JsonBackReference("posts")
 	@ManyToMany(mappedBy="terms")
 	public Set<Post> posts;
 
+	@DiffIgnore
 	@JsonBackReference("rows")
 	@OneToMany(mappedBy="term")
 	public Set<Row> rows;
-	
+
+	@DiffIgnore
 	@NotNull
 	@ManyToOne
 	public Taxonomy taxonomy;
@@ -39,9 +54,11 @@ public class Term extends BaseEntity implements Serializable {
 	@ManyToOne
 	public Term parent;
 
+	@DiffIgnore
 	@OneToMany(mappedBy="parent")
 	public Set<Term> children;
 
+	@DiffIgnore
 	@JsonBackReference("termPerspectives")
 	@OneToMany(mappedBy="term")
 	public Set<TermPerspective> termPerspectives;
@@ -164,5 +181,10 @@ public class Term extends BaseEntity implements Serializable {
 
 	public void setTaxonomyName(String taxonomyName) {
 		this.taxonomyName = taxonomyName;
+	}
+
+	@Override
+	public Event build(String type, LogBuilder builder) {
+		return builder.build(type, this);
 	}
 }

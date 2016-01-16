@@ -8,6 +8,15 @@ import java.util.Set;
 @Entity
 public class Sponsor extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 
 	@NotNull
 	@ManyToOne

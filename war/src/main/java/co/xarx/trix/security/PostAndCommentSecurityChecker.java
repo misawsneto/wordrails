@@ -1,6 +1,10 @@
 package co.xarx.trix.security;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import co.xarx.trix.domain.*;
+import co.xarx.trix.persistence.*;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.StationRepository;
@@ -9,13 +13,18 @@ import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import co.xarx.trix.domain.Comment;
+import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.StationRole;
 
 @Component
 public class PostAndCommentSecurityChecker {
 
 	private @Autowired StationRolesRepository personStationRolesRepository;
+    private @Autowired NetworkRolesRepository personNetworkRolesRepository;
 	private @Autowired
 	NetworkRepository networkRepository;
 	private @Autowired
@@ -61,11 +70,12 @@ public class PostAndCommentSecurityChecker {
 		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null){
 			StationRole personStationRoles = personStationRolesRepository.findByStationAndPerson(post.station, personLogged);
-			if(post.author.id == personLogged.id || (personStationRoles != null && (personStationRoles.editor || personStationRoles.admin))){
+            NetworkRole nr = personNetworkRolesRepository.findByNetworkAndPerson(post.station.network, personLogged);
+			if((nr != null && nr.admin) || (post.author.id.equals(personLogged.id) || (personStationRoles != null && (personStationRoles.editor || personStationRoles.admin)))){
 				canEdit = true;
 			}
 		}
-		return canEdit && canWrite(post);
+		return canEdit;// && canWrite(post);
 	}
 
 	public boolean canRead(Post post){

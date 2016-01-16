@@ -8,6 +8,15 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Cell extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@Min(0)
 	@Column(name="\"index\"")
 	public int index;

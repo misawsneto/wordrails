@@ -358,14 +358,18 @@ app.controller('SettingsPerspectiveEditorCtrl', ['$scope', '$log', '$timeout', '
       perspective.ordinaryRows && perspective.ordinaryRows.forEach(function(row, index){
         row.index = index;
         for (var i = row.cells.length - 1; i >= 0; i--) {
-          /*test*/
-          // if(i == 0)
-          //   row.cells[0].new = true;
-          /*/test*/
           if(!(row.cells[i].id || row.cells[i].new))
             row.cells.splice(i, 1)
         };
       });
+
+      if(perspective.homeRow && perspective.homeRow.cells){
+        row = perspective.homeRow
+        for (var i = row.cells.length - 1; i >= 0; i--) {
+          if(!(row.cells[i].id || row.cells[i].new))
+            row.cells.splice(i, 1)
+        };
+      }
 
       if(!perspective.id){
         createTermPerspective(perspective)

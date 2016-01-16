@@ -10,6 +10,15 @@ import java.util.Date;
 @Table(uniqueConstraints=@UniqueConstraint(columnNames={"post_id", "person_id"}))
 public class Recommend extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "post_id")

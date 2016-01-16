@@ -55,8 +55,8 @@ public class PostFilter implements Filter {
 				}
 				if (post != null) {
 					final Post p = post;
-					asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> postService.countPostRead(p,
-							authProvider.getLoggedPerson(), rq.getRequestedSessionId()));
+					asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> postService.countPostRead(p.id,
+							authProvider.getLoggedPerson().id, rq.getRequestedSessionId()));
 				}
 			}
 		} catch (Exception e) {

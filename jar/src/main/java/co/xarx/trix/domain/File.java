@@ -16,6 +16,15 @@ public class File extends BaseEntity implements Serializable {
 	public static final String DIR_IMAGES = "images";
 	public static final String DIR_VIDEO = "videos";
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@NotNull
 	@Size(min = 1, max = 1)
 	public String type;

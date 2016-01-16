@@ -96,7 +96,7 @@ app.controller('StationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
           return;
       }
 
-      if($scope.selectedVerticalRow.$$hashKey != ordinaryRow.$$hashKey)
+      if($scope.selectedVerticalRow && $scope.selectedVerticalRow.$$hashKey != ordinaryRow.$$hashKey)
           return;
 
       if(!ordinaryRow.loading){

@@ -8,22 +8,23 @@ import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.QPost;
 import co.xarx.trix.dto.StationTermsDto;
 import co.xarx.trix.exception.BadRequestException;
-import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.PostService;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -66,9 +67,10 @@ public class PostsResource {
 	@Autowired
 	private PostConverter postConverter;
 	@Autowired
-	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
-	@Autowired
 	private TrixAuthenticationProvider authProvider;
+
+	@Autowired
+	private PostService postService;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -131,25 +133,6 @@ public class PostsResource {
 		forward();
 	}
 
-	@Autowired
-	private PostService postService;
-
-	@PUT
-	@Path("/{postId}/convert")
-	@Transactional(readOnly=false)
-	public ContentResponse<PostView> convertPost(@PathParam("postId") int postId, @FormParam("state") String state) throws ServletException, IOException {
-		Post post = postRepository.findOne(postId);
-		if(post != null && postAndCommentSecurityChecker.canWrite(post)){
-			post = postService.convertPost(postId, state);
-			ContentResponse<PostView> response = new ContentResponse<>();
-			response.content = postConverter.convertTo(post);
-			return response;
-		}else{
-			throw new UnauthorizedException();
-		}
-		
-	}
-
 	@PUT
 	@Path("/{id}")
 	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
@@ -166,21 +149,19 @@ public class PostsResource {
 	@Path("/{stationId}/findPostsByStationIdAndAuthorIdAndState")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> findPostsByStationIdAndAuthorIdAndState(@PathParam("stationId") Integer stationId,
-																				   @QueryParam("authorId") Integer authorId,
-																				   @QueryParam("state") String state,
-																				   @QueryParam("page") int page,
-																				   @QueryParam("size") int size) throws ServletException, IOException {
+	                                                                               @QueryParam("authorId") Integer authorId,
+	                                                                               @QueryParam("state") String state,
+	                                                                               @QueryParam("page") int page,
+	                                                                               @QueryParam("size") int size) throws ServletException, IOException {
 
 		Pageable pageable = new PageRequest(page, size);
 
-		List posts = null;
-		if (state.equals("PUBLISHED"))
-			posts = postRepository.findPostsByStationIdAndAuthorId(stationId, authorId, pageable);
-		if (state.equals("DRAFT"))
-			posts = postRepository.findDraftsByStationIdAndAuthorId(stationId, authorId, pageable);
-		if (state.equals("SCHEDULED"))
-			posts = postRepository.findScheduledsByStationIdAndAuthorId(stationId, authorId, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		QPost p = QPost.post;
+
+		Page<Post> pagePosts = postRepository.findAll(p.station.id.eq(stationId).and(p.author.id.eq(authorId)), pageable);
+		List<Post> posts = Lists.newArrayList(pagePosts.iterator());
+
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
@@ -189,14 +170,14 @@ public class PostsResource {
 	@Path("/search/networkPosts")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request,
-												   @QueryParam("query") String q,
-												   @QueryParam("stationIds") String stationIds,
-												   @QueryParam("personId") Integer personId,
-												   @QueryParam("publicationType") String publicationType,
-												   @QueryParam("noHighlight") Boolean noHighlight,
-												   @QueryParam("sortByDate") Boolean sortByDate,
-												   @QueryParam("page") Integer page,
-												   @QueryParam("size") Integer size) {
+	                                               @QueryParam("query") String q,
+	                                               @QueryParam("stationIds") String stationIds,
+	                                               @QueryParam("personId") Integer personId,
+	                                               @QueryParam("publicationType") String publicationType,
+	                                               @QueryParam("noHighlight") Boolean noHighlight,
+	                                               @QueryParam("sortByDate") Boolean sortByDate,
+	                                               @QueryParam("page") Integer page,
+	                                               @QueryParam("size") Integer size) {
 
 		if (q == null) {
 			ContentResponse<SearchView> response = new ContentResponse<>();
@@ -265,8 +246,8 @@ public class PostsResource {
 	@Path("/{stationId}/postRead")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId,
-													   @QueryParam("page") Integer page,
-													   @QueryParam("size") Integer size) throws BadRequestException{
+	                                                   @QueryParam("page") Integer page,
+	                                                   @QueryParam("size") Integer size) throws BadRequestException{
 
 		if (stationId == null || page == null || size == null) {
 			throw new BadRequestException("Invalid null parameter(s).");
@@ -298,8 +279,8 @@ public class PostsResource {
 	@Path("/{stationId}/popular")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId,
-													  @QueryParam("page") Integer page,
-													  @QueryParam("size") Integer size) {
+	                                                  @QueryParam("page") Integer page,
+	                                                  @QueryParam("size") Integer size) {
 
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPopularPosts(stationId, pageable);
@@ -313,8 +294,8 @@ public class PostsResource {
 	@Path("/{stationId}/recent")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getRecent(@PathParam("stationId") Integer stationId,
-													 @QueryParam("page") Integer page,
-													 @QueryParam("size") Integer size) {
+	                                                 @QueryParam("page") Integer page,
+	                                                 @QueryParam("size") Integer size) {
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPostsOrderByDateDesc(stationId, pageable);
 
@@ -332,7 +313,7 @@ public class PostsResource {
 		String body = postRepository.findPostBodyById(postId);
 		Post post = postRepository.findOne(postId);
 
-		asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> postService.countPostRead(post, person, request.getRequestedSessionId()));
+		asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> postService.countPostRead(post.id, person.id, request.getRequestedSessionId()));
 
 		StringResponse content = new StringResponse();
 		content.response = body;
@@ -352,7 +333,7 @@ public class PostsResource {
 	@Path("/search/findPostsByTags")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tags") String tagsString, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-		if(tagsString == null || !tagsString.isEmpty()){
+		if (tagsString == null || !tagsString.isEmpty()) {
 			// TODO: throw badrequest
 		}
 

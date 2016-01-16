@@ -13,6 +13,15 @@ public class Row extends BaseEntity implements Comparable<Row> {
 	public static final String ORDINARY_ROW = "O";
 	public static final String SPLASHED_ROW = "S";
 	public static final String HOME_ROW = "H";
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 	
 	@NotNull
 	@Size(min=1, max=1)

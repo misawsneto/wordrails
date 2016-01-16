@@ -1,9 +1,6 @@
 package co.xarx.trix.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 
 
@@ -11,6 +8,15 @@ import java.io.Serializable;
 public class Section extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7424825842348684233L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	public String name;
 

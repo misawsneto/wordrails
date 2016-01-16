@@ -8,6 +8,15 @@ import javax.validation.constraints.NotNull;
 @Table(name = "person_station_role", uniqueConstraints = {@UniqueConstraint(columnNames = {"person_id", "station_id"})})
 public class StationRole extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 
 	@NotNull
 	@ManyToOne

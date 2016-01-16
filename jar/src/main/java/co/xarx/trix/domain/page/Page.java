@@ -1,7 +1,7 @@
 package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.BaseEntity;
-import co.xarx.trix.domain.GeneratorIgnore;
+import co.xarx.trix.annotation.GeneratorIgnore;
 import co.xarx.trix.domain.Station;
 import com.fasterxml.jackson.annotation.*;
 
@@ -15,6 +15,15 @@ import java.util.Map;
 public class Page extends BaseEntity {
 
 	public String title;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@JsonIgnore
 	@GeneratorIgnore
