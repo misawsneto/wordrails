@@ -13,12 +13,6 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(
-		name="state",
-		discriminatorType=DiscriminatorType.STRING
-)
-@DiscriminatorValue(value="PUBLISHED")
 public class Post extends BaseEntity implements Serializable, ElasticSearchEntity, Loggable {
 
 	public static final String STATE_DRAFT = "DRAFT";
@@ -89,8 +83,8 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@OneToMany(mappedBy = "post")
 	public Set<Comment> comments;
 
+	@Column
 	@Size(min = 1, max = 15)
-	@Column(insertable = false, updatable = false)
 	public String state;
 
 	@ManyToOne(fetch = FetchType.EAGER)

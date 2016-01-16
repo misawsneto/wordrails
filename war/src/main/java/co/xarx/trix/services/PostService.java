@@ -7,7 +7,6 @@ import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
-import co.xarx.trix.persistence.PostReadRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.util.StringUtil;
@@ -36,10 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -54,11 +50,11 @@ public class PostService {
 	@Autowired
 	private SchedulerService schedulerService;
 	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
 	private PostRepository postRepository;
 	@Autowired
 	private ESPostRepository esPostRepository;
+	@Autowired
+	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESPersonRepository esPersonRepository;
 	@Autowired
@@ -68,7 +64,7 @@ public class PostService {
 	@Autowired
 	private ElasticsearchTemplate elasticsearchTemplate;
 	@Autowired
-	private ElasticSearchService elasticSearchService;
+	private MobileService mobileService;
 
 	public Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
 		boolQuery.must(matchQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
@@ -131,8 +127,24 @@ public class PostService {
 		return new ImmutablePair(total, postView);
 	}
 
+	public void publishScheduledPost(Integer postId) {
+		Post scheduledPost = postRepository.findOne(postId);
+		if (scheduledPost != null && scheduledPost.state.equals(Post.STATE_SCHEDULED)) {
+			if (scheduledPost.notify) {
+				mobileService.buildNotification(scheduledPost);
+			}
+
+			scheduledPost.date = new Date();
+			scheduledPost.state = Post.STATE_PUBLISHED;
+			postRepository.save(scheduledPost);
+		}
+	}
+
 	public Post convertPost(int postId, String state) {
-		Post dbPost = postRepository.findOne(postId);
+		return convertPost(postRepository.findOne(postId), state);
+	}
+
+	public Post convertPost(Post dbPost, String state) {
 
 		if (dbPost != null) {
 			log.debug("Before convert: " + dbPost.getClass().getSimpleName());
@@ -141,20 +153,20 @@ public class PostService {
 			}
 
 			if (dbPost.state.equals(Post.STATE_SCHEDULED)) { //if converting FROM scheduled, unschedule
-				schedulerService.unschedule(dbPost.id);
+				schedulerService.unschedule(dbPost.getId());
 			} else if (state.equals(Post.STATE_SCHEDULED)) { //if converting TO scheduled, schedule
-				schedulerService.schedule(dbPost.id, dbPost.scheduledDate);
+				schedulerService.schedule(dbPost.getId(), dbPost.scheduledDate);
 			}
 
 			dbPost.state = state;
 
-			queryPersistence.changePostState(postId, state);
+			queryPersistence.changePostState(dbPost.getId(), state);
 
 			if (state.equals(Post.STATE_PUBLISHED)) {
-				dbPost = postRepository.findOne(postId); //do it again so modelmapper don't cry... stupid framework
+				dbPost = postRepository.findOne(dbPost.getId()); //do it again so modelmapper don't cry... stupid framework
 				elasticSearchService.saveIndex(dbPost, ESPost.class, esPostRepository);
 			} else {
-				elasticSearchService.deleteIndex(postId, esPostRepository);
+				elasticSearchService.deleteIndex(dbPost.getId(), esPostRepository);
 			}
 		}
 

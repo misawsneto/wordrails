@@ -17,8 +17,11 @@ public class SchedulerService {
 
 	@Transactional
 	public void unschedule(Integer postId) {
+		TriggerKey triggerKey = new TriggerKey("trigger-" + postId);
 		try {
-			scheduler.unscheduleJob(new TriggerKey("trigger-" + postId));
+			if (scheduler.checkExists(triggerKey)) {
+				scheduler.unscheduleJob(new TriggerKey("trigger-" + postId));
+			}
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}

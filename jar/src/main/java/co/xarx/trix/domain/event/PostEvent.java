@@ -7,11 +7,17 @@ import javax.persistence.*;
 public class PostEvent extends Event {
 
 	public Integer personId;
-
+	public Integer stationId;
 	public String postState;
-
 	public Integer postId;
 
+	public Integer getStationId() {
+		return stationId;
+	}
+
+	public void setStationId(Integer stationId) {
+		this.stationId = stationId;
+	}
 
 	public Integer getPersonId() {
 		return personId;

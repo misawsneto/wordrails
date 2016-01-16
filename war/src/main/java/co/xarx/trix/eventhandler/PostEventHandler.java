@@ -1,7 +1,6 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.PostTrash;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.exception.BadRequestException;
@@ -50,8 +49,6 @@ public class PostEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
-		if(post instanceof PostTrash) //post of type Trash is not insertable
-			throw new BadRequestException();
 
 		if (postAndCommentSecurityChecker.canWrite(post)) {
 			savePost(post);

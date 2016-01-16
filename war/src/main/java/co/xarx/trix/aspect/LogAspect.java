@@ -22,7 +22,12 @@ public class LogAspect {
 	@AfterReturning("within(org.springframework.data.repository.CrudRepository+) && execution(* *..save(*)) && args(entity)")
 	public void logSave(Loggable entity){
 
-		Event event = entity.build(Event.EVENT_SAVE, logBuilderExecutor);
+		Event event;
+		if (entity.getVersion() == 0) {
+			event = entity.build(Event.EVENT_CREATE, logBuilderExecutor);
+		} else {
+			event = entity.build(Event.EVENT_SAVE, logBuilderExecutor);
+		}
 
 		eventRepository.save(event);
 	}

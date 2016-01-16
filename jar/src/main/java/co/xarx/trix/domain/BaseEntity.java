@@ -16,7 +16,7 @@ import java.util.Date;
 @MappedSuperclass
 @FilterDef(name = "networkFilter", parameters = @ParamDef(name = "networkId", type = "integer"))
 @Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
-public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
+public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Versionable {
 
 	@DiffIgnore
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
@@ -64,12 +64,12 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 		this.networkId = networkId;
 	}
 
-	public int getVersion() {
+	public Integer getVersion() {
 		return version;
 	}
 
 	@SuppressWarnings("unused")
-	private void setVersion(int version) {
+	private void setVersion(Integer version) {
 		this.version = version;
 	}
 

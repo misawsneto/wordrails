@@ -16,10 +16,8 @@ public class EventAuthorProvider implements AuthorProvider {
 
 	@Override
 	public String provide() {
-		Author author = new Author();
+		Author author = getAuthor();
 
-		author.userId = provider.getUser().getId();
-		author.sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
 		return author.userId + ":" + author.sessionId;
 	}
 
@@ -28,7 +26,11 @@ public class EventAuthorProvider implements AuthorProvider {
 		Author author = new Author();
 
 		author.userId = provider.getUser().getId();
-		author.sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
+		try {
+			author.sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
+		} catch (Exception e) {
+			author.sessionId = "nosession";
+		}
 		return author;
 	}
 }

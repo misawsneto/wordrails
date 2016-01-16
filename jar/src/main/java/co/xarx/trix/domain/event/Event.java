@@ -22,6 +22,7 @@ public abstract class Event extends BaseEntity {
 		return id;
 	}
 
+	public static final String EVENT_CREATE = "CREATE";
 	public static final String EVENT_SAVE = "SAVE";
 	public static final String EVENT_DELETE = "DELETE";
 	public static final String EVENT_READ = "READ";

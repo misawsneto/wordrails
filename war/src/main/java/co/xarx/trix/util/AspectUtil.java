@@ -8,7 +8,7 @@ import java.util.List;
 
 public class AspectUtil {
 
-	public static Iterable<Object> collectArguments(JoinPoint jp) {
+	public static List<Object> collectArguments(JoinPoint jp) {
 		List<Object> result = new ArrayList<>();
 
 		for (Object arg : jp.getArgs()) {
@@ -19,5 +19,18 @@ public class AspectUtil {
 			}
 		}
 		return result;
+	}
+
+	public static <T> T getArgument(JoinPoint jp, Integer index, Class<T> type) {
+		List<Object> args = collectArguments(jp);
+
+		T arg;
+		try {
+			arg = (T) args.get(index);
+		} catch (ClassCastException e) {
+			throw new IllegalArgumentException("index " + index + " does not contain a " + type.getSimpleName());
+		}
+
+		return arg;
 	}
 }

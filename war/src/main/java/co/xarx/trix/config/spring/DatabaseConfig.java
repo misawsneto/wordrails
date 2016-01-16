@@ -1,5 +1,6 @@
 package co.xarx.trix.config.spring;
 
+import co.xarx.trix.config.RepositoryFactoryBean;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
@@ -20,7 +21,7 @@ import javax.sql.DataSource;
 @EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
 @EnableJpaRepositories(
 		basePackages = "co.xarx.trix.persistence"
-		//,repositoryFactoryBeanClass = RepositoryFactoryBean.class
+		,repositoryFactoryBeanClass = RepositoryFactoryBean.class
 )
 public class DatabaseConfig {
 
