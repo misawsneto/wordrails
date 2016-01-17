@@ -64,4 +64,8 @@ public interface TaxonomyRepository extends JpaRepository<Taxonomy, Integer>, Qu
 	@Modifying
 	@Query(nativeQuery=true, value="DELETE FROM network_taxonomy WHERE taxonomies_id = ?")
 	void deleteTaxonomyNetworks(Integer taxonomyId);
+
+	@Query("select t from Taxonomy t join t.owningStation station where station = :station and t.type = 'A'")
+	@RestResource(exported = false)
+	Taxonomy findTypeAByStation(@Param("station") Station station); //taxonomy of type A
 }

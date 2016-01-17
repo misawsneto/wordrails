@@ -77,14 +77,30 @@
 	<!--<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:hostName="meminstance1" p:port="6379"-->
 	      <!--p:password="108dbd3786884ddc94ec2669e948273b09828ec44FFd55a6cdd3b007cc018a16e93cb1Fc68060a9c7095324056d1bF9b08Fdd1b78c1c96351ceb129e6e959357"/>-->
 
-	<!--<bean id="springSessionRepositoryFilter" class="org.springframework.session.web.http.SessionRepositoryFilter">-->
-		<!--<constructor-arg ref="sessionRepository"/>-->
-		<!--<property name="httpSessionStrategy">-->
-			<!--<bean class="org.springframework.session.web.http.CookieHttpSessionStrategy">-->
-				<!--<property name="cookieName" value="JSESSIONID" />-->
-			<!--</bean>-->
-		<!--</property>-->
-	<!--</bean>-->
+	<bean id="postFilter" class="co.xarx.trix.web.filter.PostFilter"/>
+	<bean id="networkDomainFilter" class="co.xarx.trix.web.filter.NetworkDomainFilter"/>
+	<bean id="personDataFilter" class="co.xarx.trix.web.filter.PersonDataFilter"/>
+	<bean id="corsCustomFilter" class="co.xarx.trix.web.filter.CORSCustomFilter"/>
+	<bean id="PathEntityFilter" class="co.xarx.trix.web.filter.PathEntityFilter"/>
+	<bean id="cacheService" class="co.xarx.trix.services.CacheService" init-method="init"/>
+	<bean id="amazonCloudService" class="co.xarx.trix.services.AmazonCloudService" init-method="init"/>
+	<bean id="wordrailsService" class="co.xarx.trix.WordrailsService" init-method="init"/>
+	<bean id="simpleMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+
+    <bean id="sessionRepository" class="org.springframework.session.data.redis.RedisOperationsSessionRepository">
+        <constructor-arg ref="sessionRedisTemplate"/>
+        <property name="defaultMaxInactiveInterval" value="345600"/>
+    </bean>
+
+	<bean id="springSessionRepositoryFilter" class="org.springframework.session.web.http.SessionRepositoryFilter">
+		<constructor-arg ref="sessionRepository" />
+
+		<property name="httpSessionStrategy">
+			<bean class="org.springframework.session.web.http.CookieHttpSessionStrategy">
+				<property name="cookieName" value="JSESSIONID" />
+			</bean>
+		</property>
+	</bean>
 
 	<!-- __________________________ DATABASE __________________________ -->
 

@@ -397,7 +397,7 @@ public class NetworkResource {
 
 	@GET
 	@Path("/stats")
-	public Response networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("networkId") Integer postId) throws IOException {
+	public JsonStats networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("postId") Integer postId) throws IOException {
 		if (date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
 
@@ -482,6 +482,15 @@ public class NetworkResource {
 
 		String generalStatsJson = objectMapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
 		String dateStatsJson = objectMapper.writeValueAsString(stats);
-		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
+//		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
+		JsonStats jsonStats = new JsonStats();
+		jsonStats.generalStatsJson = generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null;
+		jsonStats.dateStatsJson = stats;
+		return jsonStats;
+	}
+
+	public static class JsonStats{
+		public Object generalStatsJson;
+		public TreeMap<Long, ReadsCommentsRecommendsCount> dateStatsJson;
 	}
 }
