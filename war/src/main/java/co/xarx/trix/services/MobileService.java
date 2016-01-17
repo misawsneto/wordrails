@@ -5,10 +5,12 @@ import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MobileService {
+	@Lazy
 	@Autowired
 	private AsyncService asyncService;
 	@Autowired
