@@ -51,9 +51,9 @@ public interface TaxonomyRepository extends JpaRepository<Taxonomy, Integer>, Qu
 	@RestResource(exported = false)
 	Taxonomy findTypeTByStation(@Param("station") Station station); //taxonomy of type T
 
-	@Query("select t from Taxonomy t join t.owningStation station where station = :station and t.type = 'A'")
-	@RestResource(exported = false)
-	Taxonomy findTypeAByStation(@Param("station") Station station); //taxonomy of type A
+//	@Query("select t from Taxonomy t join t.owningStation station where station = :station and t.type = 'A'")
+//	@RestResource(exported = false)
+//	Taxonomy findTypeAByStation(@Param("station") Station station); //taxonomy of type A
 
 	@Query("select t from Taxonomy t, StationPerspective p join p.station station " +
 			"where station = :station and t.type != 'T' and t.type != 'A' and t = p.taxonomy")
