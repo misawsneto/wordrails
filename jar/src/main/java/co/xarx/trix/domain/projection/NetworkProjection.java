@@ -14,6 +14,11 @@ public interface NetworkProjection {
 	Integer getLoginImageId();
     Integer getLoginImageSmallId();
 
+	ImageProjection getLogo();
+	ImageProjection getSplashImage();
+	ImageProjection getLoginImage();
+	ImageProjection getFaviconImage();
+
     String getStationMenuName();
     String getHomeTabName();
 

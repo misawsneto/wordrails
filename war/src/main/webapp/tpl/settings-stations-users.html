@@ -164,7 +164,7 @@
 					</div>
 				</div>
 				<div class="m-t text-right text-lg" >
-					<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null, 'username': null})"
+					<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null, 'userId': null})"
 					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
 
 					<button ng-click="createPerson()"
@@ -239,7 +239,7 @@
 			<!-- /user's data -->
 		</div>
 		<div class="m-t text-right text-lg" >
-			<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null, 'username': null})"
+			<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null, 'userId': null})"
 			md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
 
 			<button ng-if="creating" ng-click="createPerson()"
