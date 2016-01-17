@@ -14,6 +14,15 @@ import java.util.Map;
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
 public abstract class BaseSection extends BaseEntity implements Section, Serializable {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@NotNull
 	public String title;
 

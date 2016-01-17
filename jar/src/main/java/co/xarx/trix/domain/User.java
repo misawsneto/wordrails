@@ -19,6 +19,15 @@ import java.util.Set;
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "networkId"}))
 public class User extends BaseEntity implements UserDetails {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@Size(max = 50)
 	public String username;
 

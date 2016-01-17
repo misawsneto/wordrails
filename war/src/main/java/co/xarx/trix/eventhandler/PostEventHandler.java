@@ -1,8 +1,6 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.PostTrash;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.exception.BadRequestException;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.Set;
 
 @RepositoryEventHandler(Post.class)
 @Component
@@ -31,8 +28,6 @@ public class PostEventHandler {
 	private MobileService mobileService;
 	@Autowired
 	private SchedulerService schedulerService;
-	@Autowired
-	private PostRepository postRepository;
 	@Autowired
 	private PostReadRepository postReadRepository;
 	@Autowired
@@ -54,8 +49,6 @@ public class PostEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
-		if(post instanceof PostTrash) //post of type Trash is not insertable
-			throw new BadRequestException();
 
 		if (postAndCommentSecurityChecker.canWrite(post)) {
 			savePost(post);
@@ -73,11 +66,9 @@ public class PostEventHandler {
 		if (post.slug == null || post.slug.isEmpty()) {
 			String originalSlug = StringUtil.toSlug(post.title);
 			try {
-				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#");
-				postRepository.save(post);
+				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
 			} catch (DataIntegrityViolationException ex) {
-				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#");
-				postRepository.save(post);
+				post.slug = originalSlug + "-" + StringUtil.generateRandomString(8, "A#").toLowerCase();
 			}
 		} else {
 			post.originalSlug = post.slug;
@@ -88,18 +79,22 @@ public class PostEventHandler {
 	public void handleAfterCreate(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			schedulerService.schedule(post.id, post.scheduledDate);
-		} else if (post.notify && post.state.equals(Post.STATE_PUBLISHED)) {
-			mobileService.buildNotification(post);
+		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
+			if (post.notify) {
+				mobileService.buildNotification(post);
+			}
+
+			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 		}
-		elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 	}
 
 	@HandleAfterSave
 	public void handleAfterSave(Post post) {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			schedulerService.schedule(post.id, post.scheduledDate);
+		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
+			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 		}
-		elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 	}
 
 	@HandleBeforeDelete
@@ -107,17 +102,14 @@ public class PostEventHandler {
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
 		if (postAndCommentSecurityChecker.canRemove(post)) {
 
-			Set<Image> images = post.images;
-			if (images != null && images.size() > 0) {
-				postRepository.updateFeaturedImagesToNull(images);
-			}
-			imageRepository.delete(images);
 			cellRepository.delete(cellRepository.findByPost(post));
 			commentRepository.delete(post.comments);
 			postReadRepository.deleteByPost(post);
 			notificationRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
-			elasticSearchService.deleteIndex(post.id, esPostRepository); // evitando bug de remoção de post que tiveram post alterado.
+			if (post.state.equals(Post.STATE_PUBLISHED)) {
+				elasticSearchService.deleteIndex(post.id, esPostRepository); // evitando bug de remoção de post que tiveram post alterado.
+			}
 		} else {
 			throw new UnauthorizedException();
 		}

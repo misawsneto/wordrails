@@ -15,6 +15,15 @@ import java.util.stream.IntStream;
 @Table(name = "query_pageable")
 public class PageableQuery extends BaseEntity implements Query {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@Transient
 	private Integer size;
 

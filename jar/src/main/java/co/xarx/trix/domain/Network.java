@@ -149,6 +149,9 @@ public class Network implements Serializable{
 
 	public Integer categoriesTaxonomyId;
 
+	@Lob
+	public String invitationMessage;
+
 	@Override
 	public String toString() {
 		return "Network [id=" + id + ", name=" + name + "]";
@@ -164,6 +167,9 @@ public class Network implements Serializable{
 
 	@Lob
 	public String appleStoreAddress;
+
+    @Column(columnDefinition = "boolean default false", nullable = false)
+    public boolean addStationRolesOnSignup;
 
 	@Override
 	public boolean equals(Object obj) {

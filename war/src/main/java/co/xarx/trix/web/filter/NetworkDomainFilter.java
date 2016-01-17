@@ -27,7 +27,7 @@ public class NetworkDomainFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
-		String host = request.getHeader("Host");
+		String host = request.getHeader("Host");;
 
 		if (host.equals("xarx.co") || host.equals("trix.rocks") || host.equals("xarxlocal.com")) {
 			response.sendRedirect("/home");
@@ -45,6 +45,7 @@ public class NetworkDomainFilter implements Filter {
 				session.setAttribute("network", network);
 				session.setAttribute("networkId", network.id);
 				session.setAttribute("networkSubdomain", network.subdomain);
+				session.setAttribute("userAgent", request.getHeader("User-Agent"));
 			}
 		}
 

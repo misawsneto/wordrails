@@ -8,22 +8,23 @@ import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.QPost;
 import co.xarx.trix.dto.StationTermsDto;
 import co.xarx.trix.exception.BadRequestException;
-import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.PostService;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -66,9 +67,10 @@ public class PostsResource {
 	@Autowired
 	private PostConverter postConverter;
 	@Autowired
-	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
-	@Autowired
 	private TrixAuthenticationProvider authProvider;
+
+	@Autowired
+	private PostService postService;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -131,25 +133,6 @@ public class PostsResource {
 		forward();
 	}
 
-	@Autowired
-	private PostService postService;
-
-	@PUT
-	@Path("/{postId}/convert")
-	@Transactional(readOnly=false)
-	public ContentResponse<PostView> convertPost(@PathParam("postId") int postId, @FormParam("state") String state) throws ServletException, IOException {
-		Post post = postRepository.findOne(postId);
-		if(post != null && postAndCommentSecurityChecker.canWrite(post)){
-			post = postService.convertPost(postId, state);
-			ContentResponse<PostView> response = new ContentResponse<>();
-			response.content = postConverter.convertTo(post);
-			return response;
-		}else{
-			throw new UnauthorizedException();
-		}
-		
-	}
-
 	@PUT
 	@Path("/{id}")
 	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
@@ -173,14 +156,12 @@ public class PostsResource {
 
 		Pageable pageable = new PageRequest(page, size);
 
-		List posts = null;
-		if (state.equals("PUBLISHED"))
-			posts = postRepository.findPostsByStationIdAndAuthorId(stationId, authorId, pageable);
-		if (state.equals("DRAFT"))
-			posts = postRepository.findDraftsByStationIdAndAuthorId(stationId, authorId, pageable);
-		if (state.equals("SCHEDULED"))
-			posts = postRepository.findScheduledsByStationIdAndAuthorId(stationId, authorId, pageable);
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		QPost p = QPost.post;
+
+		Page<Post> pagePosts = postRepository.findAll(p.station.id.eq(stationId).and(p.author.id.eq(authorId)), pageable);
+		List<Post> posts = Lists.newArrayList(pagePosts.iterator());
+
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
@@ -332,7 +313,7 @@ public class PostsResource {
 		String body = postRepository.findPostBodyById(postId);
 		Post post = postRepository.findOne(postId);
 
-		asyncService.countPostRead(TenantContextHolder.getCurrentNetworkId(), post, person, request.getRequestedSessionId());
+		asyncService.countPostRead(TenantContextHolder.getCurrentNetworkId(), post.id, person.id, request.getRequestedSessionId());
 
 		StringResponse content = new StringResponse();
 		content.response = body;

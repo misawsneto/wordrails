@@ -1,6 +1,6 @@
 <div class="station-perspectives p-t-60" ng-if="!app.isMobile">
 
-<div class="container p-b-lg p-r-xxl p-l-xxl">
+<div class="container p-b-lg p-r-xxl p-l-xxl" infinite-scroll="verticalPaginate(app.termPerspectiveView.homeRow)" infinite-scroll-distance="1">
     <div class="row">
       <!-- carousel top -->
       <div class="col-md-12" style="height: 430px;" 
@@ -66,14 +66,14 @@
             </a>
             <a ui-sref="app.read({'slug': cell.postView.slug})">
               <div class="row">
-                <div class="col-md-5" ng-if="cell.postView.imageMediumId">
+                <div class="col-md-5" ng-if="cell.postView.imageMediumId || cell.postView.externalVideoUrl">
                   <span class="block-image2">
                     <div ng-style="getBackgroundImage(cell.postView, 'md')"
                     class="cell-wrap r r-2x bg-cover" alt=""></div>
                   </span>
                 </div>
-                <div ng-class="{'col-md-7':cell.postView.imageMediumId, 'col-md-12': !cell.postView.imageMediumId}">
-                  <span href="" class="h3 font-bold m-b block" ng-class="{'m-t-sm': cell.postView.imageMediumId}">
+                <div ng-class="{'col-md-7':cell.postView.imageMediumId || cell.postView.externalVideoUrl, 'col-md-12': !(cell.postView.imageMediumId || cell.postView.externalVideoUrl)}">
+                  <span href="" class="h3 font-bold m-b block" ng-class="{'m-t-sm': cell.postView.imageMediumId || cell.postView.externalVideoUrl}">
                   {{::cell.postView.title}}</span>
                   <!-- <div class="post-meta">
                     <span class="post-author a-custom-primary">Lavonne Flynn</span>
@@ -325,23 +325,23 @@
 <div class="station-perspectives p-t-50" ng-if="app.isMobile">
 
   <!-- horizontal perspective -->
-  <div id="perspective-horizontal" ng-if="app.viewMode === 'horizontal'" class="p-t-lg p-b-lg">
+  <!-- <div id="perspective-horizontal" ng-if="app.viewMode === 'horizontal'" class="p-t-lg p-b-lg">
     <div ng-repeat="ordinaryRow in app.termPerspectiveView.ordinaryRows" class="ordinary-row" ng-if="ordinaryRow.cells && ordinaryRow.cells.length">
-    <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
+    ng-class="{'text-white': !app.customStyle.darkFonts2}"
       <button ng-if="ordinaryRow.cells"  class="backward"><i class="mdi mdi-chevron-left"></i></button>
-      <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}"  -->
+      ng-class="{'text-white': !app.customStyle.darkFonts2}"
       <button ng-if="ordinaryRow.cells"  class="forward"><i class="mdi mdi-chevron-right"></i></button>
       <div ng-if="ordinaryRow.cells" class="wrap info-flow-wrap" scroll="horizontalPaginate(ordinaryRow)" active="horizontalCallback()" sly-scroll>
         <div class="h3">
           <a ng-if="ordinaryRow.termName" class="animated fadeIn" ui-sref="app.stations.perspectives({stationId: app.network.currentStation.id, perspectiveId: app.network.currentStation.perspective.id, termId: ordinaryRow.termId})">
-            <!-- ng-class="{'text-white': !app.customStyle.darkFonts2}" -->
+            ng-class="{'text-white': !app.customStyle.darkFonts2}"
             <span class="m-l-xs font-thin text-lg text-u-c" >{{::ordinaryRow.termName}}</span>
           </a>
         </div>
         <div class="frame info-flow" style="overflow: hidden;">
           <ul class="sly-clearfix info-flow-list" >
             <li class="cell" ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
-              <!-- <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div> -->
+              <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div>
               <div class="news-item animated fadeIn o-h" ng-class="{'bg-custom-primary-no-image': !cell.postView.imageMediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
                 <div class="bottom wrapper-xxs bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.imageMediumId">
                   <div class="text-base text-white ls-sm">{{::cell.postView.title}}</div>
@@ -374,11 +374,11 @@
                     </div>
                   </div>
                 </div>
-
+  
                 <div class="wrapper-xs font-base" ng-if="!cell.postView.imageMediumId">
                   {{::cell.postView.title | characters:50}}
                 </div>
-
+  
                 <div class="pos-abt bottom-0 wrapper-xs" ng-if="!cell.postView.imageMediumId">
                   <div class="display-t-c">
                     <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" title="Ir para o perfil de {{::cell.postView.authorName}}">
@@ -407,7 +407,7 @@
                     </a>
                   </span>
                 </div>
-
+  
                 <div class="cell-wrap img-bg" ng-if="cell.postView.imageMediumId" ng-style="getBackgroundImage(cell.postView, 'md')">
                 </div>
               </div>
@@ -417,7 +417,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- /horizontal perspective -->
 
   <!-- vertical perspective -->

@@ -6,6 +6,7 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
+import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -15,26 +16,26 @@ import java.util.Date;
 @MappedSuperclass
 @FilterDef(name = "networkFilter", parameters = @ParamDef(name = "networkId", type = "integer"))
 @Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
-public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
+public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Versionable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer id;
-
+	@DiffIgnore
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	public Date updatedAt;
 
+	@DiffIgnore
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	public Date createdAt;
 
+	@DiffIgnore
 	@JsonIgnore
 	@Column(columnDefinition = "int(11) DEFAULT 0")
 	public Integer networkId;
 
+	@DiffIgnore
 	@Version
 	@JsonIgnore
 	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
@@ -54,11 +55,6 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 	}
 
 	@Override
-	public Integer getId() {
-		return id;
-	}
-
-	@Override
 	public Integer getNetworkId() {
 		return networkId;
 	}
@@ -68,12 +64,12 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 		this.networkId = networkId;
 	}
 
-	public int getVersion() {
+	public Integer getVersion() {
 		return version;
 	}
 
 	@SuppressWarnings("unused")
-	private void setVersion(int version) {
+	private void setVersion(Integer version) {
 		this.version = version;
 	}
 
@@ -93,5 +89,20 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable {
 	@SuppressWarnings("unused")
 	private void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(getId() != null)
+			return getId().equals(((BaseEntity)obj).getId());
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+		return result;
 	}
 }

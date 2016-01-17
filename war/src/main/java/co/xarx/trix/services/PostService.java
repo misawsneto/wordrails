@@ -2,15 +2,11 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.PostRead;
-import co.xarx.trix.domain.QPostRead;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
-import co.xarx.trix.persistence.PostReadRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.util.StringUtil;
@@ -26,12 +22,10 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.ResultsExtractor;
@@ -41,10 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -59,11 +50,11 @@ public class PostService {
 	@Autowired
 	private SchedulerService schedulerService;
 	@Autowired
-	private PostReadRepository postReadRepository;
-	@Autowired
 	private PostRepository postRepository;
 	@Autowired
 	private ESPostRepository esPostRepository;
+	@Autowired
+	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private ESPersonRepository esPersonRepository;
 	@Autowired
@@ -72,6 +63,8 @@ public class PostService {
 	private ModelMapper modelMapper;
 	@Autowired
 	private ElasticsearchTemplate elasticsearchTemplate;
+	@Autowired
+	private MobileService mobileService;
 
 	public Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
 		boolQuery.must(matchQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
@@ -134,17 +127,24 @@ public class PostService {
 		return new ImmutablePair(total, postView);
 	}
 
-	public void saveIndex(Post post) {
-		ESPost esPost = modelMapper.map(post, ESPost.class);
-		esPostRepository.save(esPost);
-	}
+	public void publishScheduledPost(Integer postId) {
+		Post scheduledPost = postRepository.findOne(postId);
+		if (scheduledPost != null && scheduledPost.state.equals(Post.STATE_SCHEDULED)) {
+			if (scheduledPost.notify) {
+				mobileService.buildNotification(scheduledPost);
+			}
 
-	public void deleteIndex(Integer postId) {
-		esPostRepository.delete(postId);
+			scheduledPost.date = new Date();
+			scheduledPost.state = Post.STATE_PUBLISHED;
+			postRepository.save(scheduledPost);
+		}
 	}
 
 	public Post convertPost(int postId, String state) {
-		Post dbPost = postRepository.findOne(postId);
+		return convertPost(postRepository.findOne(postId), state);
+	}
+
+	public Post convertPost(Post dbPost, String state) {
 
 		if (dbPost != null) {
 			log.debug("Before convert: " + dbPost.getClass().getSimpleName());
@@ -153,50 +153,66 @@ public class PostService {
 			}
 
 			if (dbPost.state.equals(Post.STATE_SCHEDULED)) { //if converting FROM scheduled, unschedule
-				schedulerService.unschedule(dbPost.id);
+				schedulerService.unschedule(dbPost.getId());
 			} else if (state.equals(Post.STATE_SCHEDULED)) { //if converting TO scheduled, schedule
-				schedulerService.schedule(dbPost.id, dbPost.scheduledDate);
+				schedulerService.schedule(dbPost.getId(), dbPost.scheduledDate);
 			}
 
 			dbPost.state = state;
 
-			queryPersistence.changePostState(postId, state);
-			saveIndex(dbPost);
+			queryPersistence.changePostState(dbPost.getId(), state);
+
+			if (state.equals(Post.STATE_PUBLISHED)) {
+				dbPost = postRepository.findOne(dbPost.getId()); //do it again so modelmapper don't cry... stupid framework
+				elasticSearchService.saveIndex(dbPost, ESPost.class, esPostRepository);
+			} else {
+				elasticSearchService.deleteIndex(dbPost.getId(), esPostRepository);
+			}
 		}
 
 		return dbPost;
 	}
 
+//	@Autowired
+//	private Javers javers;
+//	@Autowired
+//	private EventAuthorProvider eventAuthorProvider;
+
 	@Transactional(noRollbackFor = Exception.class)
-	public void countPostRead(Post post, Person person, String sessionId) {
-		QPostRead pr = QPostRead.postRead;
-		if (person == null || person.username.equals("wordrails")) {
-			if(postReadRepository.findAll(pr.sessionid.eq(sessionId).and(pr.post.id.eq(post.id)))
-					.iterator().hasNext()) {
-				return;
-			}
-		} else {
-			if(postReadRepository.findAll(pr.sessionid.eq("0").and(pr.post.id.eq(post.id)).and(pr.person.id.eq(person.id)))
-					.iterator().hasNext()) {
-				return;
-			}
-		}
+	public void countPostRead(Integer postId, Integer personId, String sessionId) {
 
-		PostRead postRead = new PostRead();
-		postRead.person = person;
-		postRead.post = post;
-		postRead.sessionid = "0"; // constraint fails if null
-		if (postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
-			postRead.person = null;
-			postRead.sessionid = sessionId;
-		}
-
-		try {
-			postReadRepository.save(postRead);
-			queryPersistence.incrementReadsCount(post.id);
-		} catch (ConstraintViolationException | DataIntegrityViolationException e) {
-			log.info("user already read this post");
-		}
+//		ReadPostEvent readPostEvent = new ReadPostEvent();
+//		readPostEvent.setPersonId(personId);
+//		readPostEvent.getDates().add(new Date());
+//		javers.commit(eventAuthorProvider.provide(), )
+//		QPostRead pr = QPostRead.postRead;
+//		if (person == null || person.username.equals("wordrails")) {
+//			if(postReadRepository.findAll(pr.sessionid.eq(sessionId).and(pr.post.id.eq(post.id)))
+//					.iterator().hasNext()) {
+//				return;
+//			}
+//		} else {
+//			if(postReadRepository.findAll(pr.sessionid.eq("0").and(pr.post.id.eq(post.id)).and(pr.person.id.eq(person.id)))
+//					.iterator().hasNext()) {
+//				return;
+//			}
+//		}
+//
+//		PostRead postRead = new PostRead();
+//		postRead.person = person;
+//		postRead.post = post;
+//		postRead.sessionid = "0"; // constraint fails if null
+//		if (postRead.person != null && postRead.person.username.equals("wordrails")) { // if user wordrails, include session to uniquely identify the user.
+//			postRead.person = null;
+//			postRead.sessionid = sessionId;
+//		}
+//
+//		try {
+//			postReadRepository.save(postRead);
+//			queryPersistence.incrementReadsCount(post.id);
+//		} catch (ConstraintViolationException | DataIntegrityViolationException e) {
+//			log.info("user already read this post");
+//		}
 	}
 
 	public BoolQueryBuilder getBoolQueryBuilder(String q, Integer personId, String publicationType, Iterable<Integer> stationIds, Iterable<Integer> postIds) {

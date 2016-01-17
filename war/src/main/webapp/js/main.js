@@ -84,7 +84,7 @@ angular.module('app')
       else
         $scope.app.isMobile = false;
 
-    }, 100);
+    }, 300);
 
     $interval(function(){
       if(trixService.isLoggedIn()){
@@ -609,9 +609,9 @@ angular.module('app')
             $scope.app.conflictingData = data;
 
             if($scope.app.conflictingData.value && user.email && $scope.app.conflictingData.value.indexOf(user.email) > -1){
-              $scope.app.showErrorToast('Este email está sendo utilizado. <br>Escolha outro e tente novamente')
+              $scope.app.showErrorToast('Este email está sendo utilizado. <br>Tente novamente.')
             }else if($scope.app.conflictingData.value && user.username && $scope.app.conflictingData.value.indexOf(user.username) > -1){
-              $scope.app.showErrorToast('Este userário está sendo utilizado. <br>Escolha outro e tente novamente')
+              $scope.app.showErrorToast('Este userário está sendo utilizado. <br>Tente novamente.')
             }
             $scope.app.showErrorToast('Dados inválidos. Tente novamente')
           }else
@@ -682,6 +682,7 @@ angular.module('app')
             if($scope.$state.current.name != "app.stations" && $scope.$state.current.name != "app.search"){
               $state.go("app.stations");
             }
+            $scope.app.currentStation = null;
             $scope.app.refreshData();
             if(initData && initData.noVisibleStation)
               $state.go('access.signin');
@@ -1020,4 +1021,8 @@ angular.module('app')
     }
 
     $scope.app.year = moment().format('YYYY')
+
+    $scope.app.mediaUrl = function(hash){
+      return mediaUrl(hash); 
+    }
 }]);

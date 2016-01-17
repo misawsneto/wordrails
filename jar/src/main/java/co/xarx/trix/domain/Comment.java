@@ -27,8 +27,6 @@ public class Comment {
 	@Size(min=1, max=100)
 	public String title;
 
-	public Station station;
-
 	@Lob
 	@NotNull
 	public String body;

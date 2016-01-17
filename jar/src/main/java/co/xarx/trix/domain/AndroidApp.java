@@ -22,6 +22,15 @@ public class AndroidApp extends BaseEntity implements Serializable {
 	public String packageSuffix;
 	public String host;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@Lob
 	public String shortDescription;
 

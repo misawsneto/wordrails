@@ -58,11 +58,12 @@
 										<i class="blue"></i>
 									</label>
 								</th>
-								<th>Usuários</th>
-								<th>Nome</th>
-								<th class="text-center">Último login</th>
+								<th>usuário</th>
+								<th>nome</th>
+								<th>email</th>
+								<th class="text-center">último login</th>
 								<th ng-if="app.networkAdmin" style="max-width:130px;">
-									Ativar/Desativar Usuário
+									ativar/desativar
 								</th>
 							</tr>
 						</thead>
@@ -81,6 +82,7 @@
 									{{person.username}}
 								</td>
 								<td>{{person.name}}</td>
+								<td>{{person.email}}</td>
 								<td class="text-center" ng-if="!person.lastLogin"> - </td>
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 								<td class="text-center" ng-if="app.networkAdmin">
@@ -104,53 +106,61 @@
 
 			<!-- new user panel -->
 		<div class="panel material-shadow-light panel-card block-600 m-auto" ng-if="creating">
-			<div class="panel-heading h4 wrapper-md">
-				<span>Novo usuário</span>
-			</div>
-			<div class="panel-body wrapper-md">
-				<div class="row pos-rlt">
-					<div class="w-xxl m-auto">
-						<div class="md-form-group md-neutral-theme text-lg">
-							<input class="md-input text-xl" ng-model="person.name">
-							<label>Nome completo</label>
+			<md-content class="md-neutral-theme">
+	      <md-tabs md-dynamic-height md-border-bottom>
+	        <md-tab label="Novo usuário">
+		<!-- <div class="panel-heading h4 wrapper-md">
+			<span>Novo usuário</span>
+		</div> -->
+						<div class="panel-body wrapper-md">
+							<div class="row pos-rlt">
+								<div class="w-xxl m-auto">
+									<div class="md-form-group md-neutral-theme text-lg">
+										<input class="md-input text-xl" ng-model="person.name">
+										<label>Nome completo</label>
+									</div>
+									<div class="md-form-group md-neutral-theme">
+										<input class="md-input" ng-model="person.email" required>
+										<label>Email</label>
+									</div>
+									<div class="md-form-group md-neutral-theme">
+										<input class="md-input" ng-model="person.username" required>
+										<label>Usuário</label>
+									</div>
+									<div class="md-form-group md-neutral-theme">
+										<input type="password" class="md-input" ng-model="person.password" required>
+										<label>Senha</label>
+										<span class="md-input-msg right">(opcional) se não fornecido, criaremos uma senha automaticamente.</span>
+									</div>
+								</div>
+							</div>
+							<div class="line line-dashed b-b line-lg pull-in"></div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="m-b text-muted text-md text-u-c">Notificar usuário</div>
+									<p>
+										<label class="md-switch">
+											<input type="checkbox" ng-model="person.emailNotification"
+											ng-true-value="true" ng-false-value="false">
+											<i class="blue"></i>
+											Enviar link de configuração do perfil via email.
+										</label>
+									</p>
+								</div>
+							</div>
 						</div>
-						<div class="md-form-group md-neutral-theme">
-							<input class="md-input" ng-model="person.email" required>
-							<label>Email</label>
-						</div>
-						<div class="md-form-group md-neutral-theme">
-							<input class="md-input" ng-model="person.username" required>
-							<label>Usuário</label>
-						</div>
-						<div class="md-form-group md-neutral-theme">
-							<input type="password" class="md-input" ng-model="person.password" required>
-							<label>Senha</label>
-							<span class="md-input-msg right">(opcional) se não fornecido, criaremos uma senha automaticamente.</span>
-						</div>
-					</div>
-				</div>
-				<div class="line line-dashed b-b line-lg pull-in"></div>
-				<div class="row">
-					<div class="col-sm-12">
-						<div class="m-b text-muted text-md text-u-c">Notificar usuário</div>
-						<p>
-							<label class="md-switch">
-								<input type="checkbox" ng-model="person.emailNotification"
-								ng-true-value="true" ng-false-value="false">
-								<i class="blue"></i>
-								Enviar link de configuração do perfil via email.
-							</label>
-						</p>
-					</div>
-				</div>
-			</div>
-			<div class="m-t text-right text-lg" >
-				<button ui-sref="app.settings.users({'newUser': null, 'username': null})"
-				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+						<div class="m-t text-right text-lg" >
+							<button ui-sref="app.settings.users({'newUser': null, 'username': null})"
+							md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
 
-				<button ng-click="createPerson()"
-				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
-			</div>
+							<button ng-click="createPerson()"
+							md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
+						</div>
+					</md-tab>
+					<md-tab label="Convites">
+					</md-tab>
+				</md-tabs>
+			</md-content>
 		</div>
 			<!-- /new user panel-->
 
@@ -237,7 +247,6 @@
 	<md-button ng-hide="creating || editing"
 		id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
 		ui-sref="app.settings.users({'newUser': true})" ng-if="app.writableStations && app.writableStations.length > 0 && app.isLogged"
-		tooltip="Novo usuário" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
 		aria-label="Novo usuário">
 		<i class="mdi mdi-plus"></i>
 	</md-button>

@@ -180,7 +180,7 @@ angular.module('app')
                   , controller:'SettingsStationsStatisticsCtrl'
               })
               .state('app.settings.stationusers', {
-                  url: '/stationusers?stationId?newUser?username',
+                  url: '/stationusers?stationId?userId?newUser',
                   templateUrl: 'tpl/settings-stations-users.html?' + GLOBAL_URL_HASH,
                   resolve: {
                     deps: ['$ocLazyLoad',
@@ -862,7 +862,7 @@ angular.module('app')
                   controller: 'NetworkCreatedCtrl'
               })
               .state('access.signup', {
-                  url: '/signup',
+                  url: '/signup?invitation',
                   templateUrl: 'tpl/page_signup.html?' + GLOBAL_URL_HASH,
                   resolve: {
                       deps: ['uiLoad',

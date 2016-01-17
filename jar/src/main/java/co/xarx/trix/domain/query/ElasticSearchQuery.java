@@ -4,9 +4,21 @@ import co.xarx.trix.domain.BaseEntity;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.List;
 
 public class ElasticSearchQuery<T> extends BaseEntity {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	public String highlightedField;
 	private BoolQueryBuilder boolQueryBuilder;

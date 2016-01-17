@@ -112,12 +112,13 @@ public class APNService {
 		payloadBuilder.addCustomProperty("stationName", notification.station.name);
 		payloadBuilder.setAlertTitle(notification.station.name);
 		payloadBuilder.setAlertBody(notification.message);
+		payloadBuilder.setContentAvailable(true);
 
 		int notificationsCounter = 0;
 		for (PersonNetworkToken personToken : personNetworkTokens) {
 			log.debug("Sending notification: " + personToken.token);
 
-			if (personToken.person != null && personToken.person.id.equals(notification.person.id)) {
+			if (personToken.person != null && notification.person != null && personToken.person.id.equals(notification.person.id)) {
 				continue; //this is the person that is producing the notification, don't send to him
 			}
 

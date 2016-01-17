@@ -13,6 +13,14 @@ import java.util.*;
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
 public abstract class BaseObjectQuery extends BaseEntity implements ObjectQuery, SortedQuery {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "query_sorter", joinColumns = @JoinColumn(name = "query_id"))

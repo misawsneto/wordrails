@@ -1,5 +1,6 @@
 package co.xarx.trix.config;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.OperationNotSupportedException;
@@ -25,7 +26,7 @@ public class ExceptionMapperImpl implements ExceptionMapper<Throwable> {
 	public Response toResponse(Throwable throwable) {
 		Status status;
 
-		log.error(throwable.getMessage(), throwable);
+        log.error("NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" + throwable.getMessage(), throwable);
 
 		if (throwable instanceof EntityNotFoundException) {
 			status = Status.NOT_FOUND;

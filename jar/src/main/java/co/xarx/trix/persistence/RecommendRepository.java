@@ -5,6 +5,7 @@ import java.util.List;
 
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Recommend;
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

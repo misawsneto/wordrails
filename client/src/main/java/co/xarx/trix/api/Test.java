@@ -1,13 +1,15 @@
 package co.xarx.trix.api;
 
-import org.joda.time.DateTime;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedInput;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 public class Test {
 
@@ -207,25 +209,6 @@ public class Test {
 		post.notify = true;
 		try {
 			wordRails.postPost(post);
-		} catch (RetrofitError err) {
-			printServerError(err);
-		}
-	}
-
-	private static void createScheduledPost(WordRails wordRails) {
-		String person = wordRails.getSelf(wordRails.getPerson(2));
-		String station = wordRails.getSelf(wordRails.getStation(2));
-
-
-		PostScheduledDto post = new PostScheduledDto();
-		post.title = "Post 1";
-		post.body = "Post 1";
-		post.scheduledDate = new DateTime(new Date().getTime()).plusMinutes(1).toDate();
-		post.author = person;
-		post.station = station;
-		post.date = new Date();
-		try {
-			wordRails.postPostScheduled(post);
 		} catch (RetrofitError err) {
 			printServerError(err);
 		}

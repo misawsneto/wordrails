@@ -1,1 +1,1 @@
-mvn -DskipTests=true clean package
+mvn -DskipTests=true clean package -e

@@ -9,6 +9,15 @@ import javax.validation.constraints.NotNull;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"network_id", "regId"}))
 public class PersonNetworkRegId extends BaseEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@NotEmpty
 	public String regId;
 	

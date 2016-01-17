@@ -218,13 +218,20 @@ public class PerspectiveResource {
 				if(row == null)
 					return rowView;
 
-				List<Cell> cells = fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+				List<Cell> cells = new ArrayList<Cell>();
 				rowView = new RowView();
+				if(row.type != null && row.type.equals(Row.ORDINARY_ROW.toString())) {
+					rowView.type = Row.ORDINARY_ROW;
+					cells = fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+				}else if(row.type != null && row.type.equals(Row.HOME_ROW.toString())) {
+					rowView.type = Row.HOME_ROW;
+					cells = fillPostsNotPositionedInHomeRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+				}
 				rowView.id = row.id;
 				rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
-				rowView.termId = term.id;
-				rowView.termName = term.name;
-				rowView.type = Row.ORDINARY_ROW;
+				rowView.termId = term != null ? term.id : null;
+				rowView.termName = term != null ? term.name : null;
+
 			}else{
 				StationPerspective stationPerspective = stationPerspectiveRepository.findOne(stationPerspectiveId);
 				if(stationPerspective != null){
@@ -240,11 +247,20 @@ public class PerspectiveResource {
 
                 Row row = termPerspective.homeRow;
 
-                List<Cell> cells = fillPostsNotPositionedInRows(row, stationPerspectiveId, page, size, lowerLimit, upperLimit);
-                rowView = new RowView();
-                rowView.id = row.id;
-                rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
-                rowView.type = Row.ORDINARY_ROW;
+				List<Cell> cells = new ArrayList<Cell>();
+				rowView = new RowView();
+				if(row.type != null && row.type.equals(Row.ORDINARY_ROW.toString())) {
+					rowView.type = Row.ORDINARY_ROW;
+					cells = fillPostsNotPositionedInRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+				}else if(row.type != null && row.type.equals(Row.HOME_ROW.toString())) {
+					rowView.type = Row.HOME_ROW;
+					cells = fillPostsNotPositionedInHomeRows(row, termPerspective.perspective.station.id, page, size, lowerLimit, upperLimit);
+				}
+				rowView.id = row.id;
+				rowView.cells = cellConverter.convertToViews(cells, withBody != null ? withBody : false);
+				rowView.termId = term != null ? term.id : null;
+				rowView.termName = term != null ? term.name : null;
+
             }else{
                 rowView = convertTermToRow(null, termRepository.findTermIdsByTaxonomyId(stationPerspective.taxonomyId), stationPerspective.station.id, 0, Row.ORDINARY_ROW, page, size);
             }
@@ -270,7 +286,10 @@ public class PerspectiveResource {
 			}else if(type.equals(Row.SPLASHED_ROW)){
 				newRow.splashedPerspective = termPerspective;
 				difference = rowComparator.getDifference(newRow.cells, termPerspective.splashedRow == null ? null : termPerspective.splashedRow.cells);
-			}
+			}else if(type.equals(Row.HOME_ROW)){
+                newRow.homePerspective = termPerspective;
+                difference = rowComparator.getDifference(newRow.cells, termPerspective.homeRow == null ? null : termPerspective.homeRow.cells);
+            }
 
 			if(difference != null && difference.cellsToDelete != null && difference.cellsToDelete.size() > 0){
 				cellRepository.deleteInBatch(difference.cellsToDelete);
@@ -282,7 +301,9 @@ public class PerspectiveResource {
 				rowRepository.delete(termPerspective.featuredRow);
 			}else if(type.equals(Row.SPLASHED_ROW) && termPerspective.splashedRow != null){
 				rowRepository.delete(termPerspective.splashedRow);
-			} 
+            }else if(type.equals(Row.HOME_ROW) && termPerspective.homeRow != null){
+                rowRepository.delete(termPerspective.homeRow);
+            }
 		}
 	}
 	
@@ -347,7 +368,7 @@ public class PerspectiveResource {
 
         List<Cell> cells = null;
 
-        List<Integer> ids = termRepository.findTermIdsByTaxonomyId(row.term.taxonomyId);
+        List<Integer> ids = termRepository.findTermIdsByTaxonomyId(row.homePerspective.taxonomyId);
 
         int numberPostsNotPositioned = size - positionedCells.size();
         if(numberPostsNotPositioned > 0){
@@ -358,7 +379,7 @@ public class PerspectiveResource {
                 List<Post> notPositionedPosts = (postRepository.findPostsNotPositioned(stationId, ids, postPositionedIds, pageable));
                 cells = mergePostsPositionedsNotPositioneds(row, positionedCells, notPositionedPosts, size);
             }else{
-                List<Post> posts = postRepository.findPostsPublished(stationId, ids, pageable);
+                List<Post> posts = ids != null && ids.size() > 0 ? postRepository.findPostsPublished(stationId, ids, pageable) : new ArrayList<Post>(); //postRepository.findPostsPublished(stationId, ids, pageable);
                 cells = convertPostsToCells(row, posts);
             }
         }else{
@@ -384,12 +405,11 @@ public class PerspectiveResource {
 		
 		List<Cell> cells = null;
 
-		List<Term> terms = termRepository.findAll();
 		Term term = termRepository.findTreeByTermId(row.term.id);
 		List<Integer> ids = new ArrayList<Integer>();
 		ids.add(term.id);
 		convertTermTreeToIds(term, ids);
-		
+
 		int numberPostsNotPositioned = size - positionedCells.size();
 		if(numberPostsNotPositioned > 0){
 			List<Integer> postPositionedIds = convertCellsToPostsIds(positionedCells);
@@ -399,7 +419,7 @@ public class PerspectiveResource {
 				List<Post> notPositionedPosts = (postRepository.findPostsNotPositioned(stationId, ids, postPositionedIds, pageable));
 				cells = mergePostsPositionedsNotPositioneds(row, positionedCells, notPositionedPosts, size);
 			}else{
-				List<Post> posts = postRepository.findPostsPublished(stationId, ids, pageable);
+				List<Post> posts = ids != null && ids.size() > 0 ? postRepository.findPostsPublished(stationId, ids, pageable) : new ArrayList<Post>();// postRepository.findPostsPublished(stationId, ids, pageable);
 				cells = convertPostsToCells(row, posts);
 			}
 		}else{
@@ -504,7 +524,7 @@ public class PerspectiveResource {
 	private RowView convertTermToRow(Term term, List<Integer> termsIds, Integer stationId, int index, String rowType, int page, int size){
 		Pageable pageable = new PageRequest(page, size);
 		
-		List<Post> posts = postRepository.findPostsPublished(stationId, termsIds, pageable);
+		List<Post> posts = termsIds != null && termsIds.size() > 0 ? postRepository.findPostsPublished(stationId, termsIds, pageable) : new ArrayList<Post>();
 
 		Row row = new Row();
 		row.index = index;

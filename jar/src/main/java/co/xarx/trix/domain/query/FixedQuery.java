@@ -12,6 +12,14 @@ import java.util.Set;
 @Table(name = "query_fixed")
 public class FixedQuery extends BaseEntity implements Query {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 	@NotNull
 	@ElementCollection
 	@JoinTable(name = "query_fixed_indexes")
