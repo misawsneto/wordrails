@@ -624,6 +624,34 @@ public class PersonsResource {
 	}
 
 	@PUT
+	@Path("/enable/all")
+	public Response enablePerson(IdsList idsList){
+		if(idsList != null && idsList.ids != null){
+			List<Person> persons = personRepository.findAll(idsList.ids);
+			for (Person person: persons) {
+				person.user.enabled = true;
+			}
+
+			personRepository.save(persons);
+		}
+		return Response.status(Status.CREATED).build();
+	}
+
+	@PUT
+	@Path("/disable/all")
+	public Response disablePerson(IdsList idsList){
+		if(idsList != null && idsList.ids != null){
+			List<Person> persons = personRepository.findAll(idsList.ids);
+			for (Person person: persons) {
+				person.user.enabled = true;
+			}
+
+			personRepository.save(persons);
+		}
+		return Response.status(Status.CREATED).build();
+	}
+
+	@PUT
 	@Path("/deletePersonStationRoles")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Transactional(readOnly = false)

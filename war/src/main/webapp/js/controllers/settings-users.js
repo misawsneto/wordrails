@@ -57,7 +57,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   if(!$scope.editing && !$scope.creating){
     $scope.showProgress = true;
-  	trix.findAllByNetworkExcludingPerson(initData.network.id, initData.person.id, $scope.page, $scope.window, null, 'personProjection').success(function(response){
+  	trix.findAllByNetwork(initData.network.id, $scope.page, $scope.window, null, 'personProjection').success(function(response){
   		$scope.persons = response.persons;
       $scope.showProgress = false;
   	});
@@ -87,7 +87,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
     if(!$scope.allLoaded){
       $scope.showProgress = true;
-      trix.findAllByNetworkExcludingPerson(initData.network.id, initData.person.id, page, $scope.window, null, 'personProjection').success(function(response){
+      trix.findAllByNetwork(initData.network.id, page, $scope.window, null, 'personProjection').success(function(response){
         if((!response.persons || response.persons.length == 0) && direction == 'right'){
           $scope.allLoaded = true;
         }else{
@@ -245,11 +245,40 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   $scope.openBulkActionsSplash = function(){
+    $scope.pe = {bulkActionSelected: $scope.bulkActionSelected};
   	if(noPersonSelected())
-  		$scope.app.openSplash('confirm_no_person_selected.html');
-  	else if($scope.bulkActionSelected.id == 0)
+  		$scope.openNoPersonSelected();
+  	else if($scope.bulkActionSelected == 0)
   		return null;
-  	else if($scope.bulkActionSelected.id == 2)
-  		$scope.app.openSplash('confirm_bulk_delete_persons.html');
+  	else if($scope.bulkActionSelected == 2 || $scope.bulkActionSelected == 3)
+  		$scope.confirmBulkAction()
   }
+
+  $scope.openNoPersonSelected = function(ev){
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'confirm_no_person_selected.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
+
+    $scope.confirmBulkAction = function(ev){
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'confirm_bulk_action.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
 }])

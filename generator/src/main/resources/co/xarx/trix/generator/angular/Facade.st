@@ -143,6 +143,26 @@ var trix = angular.module('trix', [])
 		return \$http.put(_config.url + "/api/persons/" + personId + "/enable", {}, config)
 	}
 
+	this.enablePersons = function(personIds){
+	    var config = {"headers": {"Content-Type": "application/json"}}
+	    params = {ids: []};
+	    if(personIds)
+	    personIds.forEach(function(id){
+	        if(id) {ids.push(id)}
+	    })
+        return \$http.put(_config.url + "/api/persons/enable/all", params, config)
+	}
+
+	this.disablePersons = function(personIds){
+        var config = {"headers": {"Content-Type": "application/json"}}
+        params = {ids: []};
+        if(personIds)
+        personIds.forEach(function(id){
+            if(id) {ids.push(id)}
+        })
+        return \$http.put(_config.url + "/api/persons/disable/all", params, config)
+    }
+
 	this.putTermView = function (termView) {
 		var config = {"headers": {"Content-Type": "application/json"}}
     	return \$http.put(_config.url + "/api/perspectives/termPerspectiveDefinitions/" + termView.id , termView, config)

@@ -16,7 +16,7 @@
 				<div class="row wrapper">
 					<div class="col-sm-4 m-b-xs">
 						<md-select class="col-sm-8 m-t-none m-b-none" ng-model="bulkActionSelected" ng-change="selectBulkAction(bulkActionSelected)" placeholder="Ações em grupo">
-		          <md-option ng-value="action.name" ng-repeat="action in bulkActions">{{ action.name }}</md-option>
+		          <md-option ng-value="action.id" ng-repeat="action in bulkActions">{{ action.name }}</md-option>
 		        </md-select>
 						<button md-ink-ripple ng-disabled="!bulkActionSelected" ng-click="openBulkActionsSplash()" class="m-t-n-xxs md-btn md-raised bg-white">Aplicar</button>
 					</div>
@@ -27,12 +27,12 @@
 							</span>
 							<span class="p-l-xs p-r-xs">de</span> 
 							<span class="p-r font-bold">
-								{{personsCount - 1}}
+								{{personsCount}}
 							</span>
 							<div class="inline">
 								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('left')" ng-disabled="beginning">
 								<span class="mdi mdi-chevron-left"></span></button>
-								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('right')" ng-disabled="allLoaded">
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('right')" ng-disabled="allLoaded || personsCount <= window">
 								<span class="mdi mdi-chevron-right"></span></button>
 			        </div>
 						</div>
@@ -312,10 +312,10 @@
 				<md-content>
 				<div class="wrapper">
 					<div class="h4 wrapper-sm m-t text-center">
-						{{pe.enableDisablePerson.user.enabled ? 
-						'Tem certeza que deseja desativar este usuário? Após ser desativado o usuário não poderá autenticar-se nesta rede.':
-						'Tem certeza que deseja ativar este usuário? Após ser ativado o usuário poderá autenticar-se nesta rede.'
-					}}
+						{{(pe.enableDisablePerson.user.enabled) ? 
+												'Tem certeza que deseja desativar este usuário? Após ser desativado o usuário não poderá autenticar-se nesta rede.':
+												'Tem certeza que deseja ativar este usuário? Após ser ativado o usuário poderá autenticar-se nesta rede.'
+											}}
 					<div class="m-t-lg text-center text-lg">
 						<button ng-click="app.enableDisablePerson()" md-ink-ripple class="md-btn md-flat btn-fw m-r">
 							{{pe.enableDisablePerson.user.enabled ? 
@@ -330,43 +330,34 @@
 				</md-dialog>
 			</script>
 
-         	<script type="text/ng-template" id="confirm_no_person_selected.html">
-         		<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-         		<div class="splash-content text-center" ng-cloak>
-         			<div class="row m-t-xxl">
-         				<div class="col-xs-6 col-xs-offset-3 text-2x m-t-xxl">
-         					Nenhum usuário foi selecionado.
-         				</div>
-         			</div>
-         		</div>
-         	</script>
+     	<script type="text/ng-template" id="confirm_no_person_selected.html">
+       	<md-dialog aria-label="Nenum usuário selecionado">
+			  	<md-content>
+			  		<div class="wrapper">
+			  			<div class="h3 wrapper-sm m-t-md text-center">Nenhum usuário foi selecionado.</div>
+							<div class="m-t text-center wrapper-sm text-lg">
+								<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
+							<div>
+						</div>
+				  </md-content>
+				</md-dialog>
+     	</script>
 
-         	<script type="text/ng-template" id="confirm_bulk_delete_persons.html">
-         		<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-         		<div class="splash-content text-center" ng-cloak>
-         			<div>
-         				<div class="row">
-         					<div class="col-xs-8 col-xs-offset-2">
-         						<div class="">
-         							{enableDisablePerson.user.enabled ? 
-         							'Tem certeza que deseja desativar este usuário?':
-         							'Tem certeza que deseja habilitar este usuário?'
-         							}
-         						</div>
-         					</div>
-         				</div>
-         				<div class="row">
-         					<div class="col-xs-6 col-xs-offset-3">
-         						<div class="p-lg text-color wrapper-lg">
-         							<button ng-click="app.applyBulkActions();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
-         								Sim
-         							</button>
-         							<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
-         								Não
-         							</button>
-         						</div>
-         					</div>
-         				</div>
-         			</div>
-         		</div>
-         	</script>
+     	<script type="text/ng-template" id="confirm_bulk_action.html">
+     		<md-dialog aria-label="Nenum usuário selecionado">
+			  	<md-content>
+     				<div class="wrapper">
+   						<div class="text-lg wrapper-sm m-t-md text-center">
+   							{{pe.bulkActionSelected == 2? 
+   							     							'Tem certeza que deseja habilitar os usuários selecionados?':
+   							     							'Tem certeza que deseja desativar os usuários selecionados?'
+   							     							}}
+ 							</div>
+   						<div class="m-t text-center wrapper-sm text-lg">
+   							<button ng-click="pe.activateDeactivateUsers()" md-ink-ripple class="md-btn md-flat btn-fw m-r">Remover</button>
+								<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
+							<div>
+						</div>
+     			</md-dialog>
+     		</md-content>
+     	</script>
