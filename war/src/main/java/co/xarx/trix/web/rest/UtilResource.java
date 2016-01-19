@@ -5,16 +5,15 @@ import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.script.ImageScript;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.services.EmailService;
 import co.xarx.trix.util.StringUtil;
-import org.apache.log4j.Logger;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -788,17 +787,6 @@ public class UtilResource {
 
 	@Autowired
 	private AsyncService asyncService;
-	@Autowired
-	public ImageScript imageScript;
-
-	@GET
-	@Path("/addPicturesToImages")
-	@Transactional
-	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {
-		if(isLocal(request.getHeader("Host"))){
-			asyncService.run(() -> imageScript.addPicturesToImages());
-		}
-	}
 
 	@Autowired
 	public EmailService emailService;
