@@ -52,8 +52,8 @@ public class TestArtifactsFactory {
 	}
 
 	public static Image createImage(Image.Type type) {
-		Image image = new Image();
-		for (String s : type.getSizeTags()) {
+		Image image = new Image(type);
+		for (String s : image.getSizeTags()) {
 			image.hashs.put(s, generateToken());
 		}
 		image.caption = "Dummy caption";

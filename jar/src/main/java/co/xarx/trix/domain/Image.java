@@ -1,17 +1,19 @@
 package co.xarx.trix.domain;
 
+import com.amazonaws.services.cloudfront.model.InvalidArgumentException;
+import com.google.common.collect.Sets;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Entity
-//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"type", "tenantId", "originalHash"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId", "originalHash"}))
 public class Image extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6607038985063216969L;
@@ -30,52 +32,102 @@ public class Image extends BaseEntity implements Serializable {
 		return id;
 	}
 
-	public enum Type {
-		FAVICON(0, new HashMap<String, Integer[]>() {{put(SIZE_SMALL, new Integer[]{32,32});}}),
-		SPLASH(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 500);}}),
-		LOGIN(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 500);}}),
-		POST(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 400);put(SIZE_LARGE, 1024);}}),
-		COVER(new HashMap<String, Integer>() {{put(SIZE_MEDIUM, 400);put(SIZE_LARGE, 1024);}}),
-		PROFILE_PICTURE(new HashMap<String, Integer>() {{put(SIZE_SMALL, 100);put(SIZE_MEDIUM, 500);}});
+	public enum Size {
 
-		public Map<String, Integer[]> sizes; //height & width
-		public Map<String, Integer> qualities; //height * width
+		FAVICON(new Integer[]{32, 32}),
+		SMALL(100),
+		MEDIUM(500),
+		LARGE(1024);
 
-		Type(Map<String, Integer> qualities) {
-			this.qualities = qualities;
+		public Integer[] xy; //height & width
+		public Integer quality; //height * width
+
+		Size(Integer quality) {
+			this.quality = quality;
 		}
 
-		//first integer is just to create this second constructor. its not elegant, but we can't do much with enum
-		Type(Integer x, Map<String, Integer[]> sizes) {
-			this.sizes = sizes;
+		Size(Integer[] size) {
+			this.xy = size;
 		}
 
-		public Set<String> getSizeTags() {
-			if(qualities != null) return qualities.keySet();
-			else return sizes.keySet();
-		}
-
-		public static Type findByAbbr(String abbr){
-			for(Type v : values()){
-				if( v.toString().equals(abbr)){
+		public static Size findByAbbr(String abbr) {
+			for (Size v : values()) {
+				if (v.toString().equalsIgnoreCase(abbr)) {
 					return v;
 				}
 			}
-			return POST;
+
+			throw new InvalidArgumentException("Size does not exist for value " + abbr);
 		}
 
-		public Integer count() {
-			if(sizes != null) return sizes.size();
-			else return qualities.size();
+		@Override
+		public String toString() {
+			return super.toString().toLowerCase();
 		}
 	}
 
-	public Image() {
+	public enum Type {
+
+		FAVICON(Size.FAVICON),
+		SPLASH(Size.MEDIUM),
+		LOGIN(Size.MEDIUM),
+		POST(Size.MEDIUM, Size.LARGE),
+		COVER(Size.MEDIUM, Size.LARGE),
+		PROFILE_PICTURE(Size.SMALL, Size.MEDIUM);
+
+		private Set<Size> sizes; //height & width
+
+		Type(Size... sizes) {
+			this.sizes = Sets.newHashSet(sizes);
+		}
+
+		private static Type findByAbbr(String abbr){
+			for(Type v : values()){
+				if(v.toString().equalsIgnoreCase(abbr)){
+					return v;
+				}
+			}
+
+			throw new InvalidArgumentException("Type does not exist for value " + abbr);
+		}
+	}
+
+	protected Image() {
 		this.pictures = new HashSet<>();
 		this.hashs = new HashMap<>();
 	}
 
-	@Size(min=1, max=100)
+	public Image(Type type) {
+		this();
+		this.sizes = type.sizes;
+	}
+
+	public Image(String type) {
+		this();
+		Type t = Type.findByAbbr(type);
+		this.sizes = t.sizes;
+	}
+
+	@Transient
+	private Set<Size> sizes;
+
+	public Set<String> getSizeTags() {
+		return sizes.stream().map(Size::toString).collect(Collectors.toSet());
+	}
+
+	public Set<Size> getSizes() {
+		return sizes;
+	}
+
+	public Set<Size> getQualitySizes() {
+		return sizes.stream().filter(size -> size.quality != null).collect(Collectors.toSet());
+	}
+
+	public Set<Size> getAbsoluteSizes() {
+		return sizes.stream().filter(size -> size.xy != null).collect(Collectors.toSet());
+	}
+
+	@javax.validation.constraints.Size(min=1, max=100)
 	public String title;
 	
 	@Lob
@@ -85,12 +137,7 @@ public class Image extends BaseEntity implements Serializable {
 	@Lob
 	public String credits;
 
-	@Column(columnDefinition = "varchar(255) default 'POST'", nullable = false)
-	public String type;
-
-	@ManyToMany
-	@JoinTable(name = "image_picture", joinColumns = @JoinColumn(name = "image_id"))
-	public Set<Picture> pictures;
+	public String originalHash;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "image_hash",
@@ -106,6 +153,10 @@ public class Image extends BaseEntity implements Serializable {
 	public String get(Object key) {
 		return hashs.get(key);
 	}
+
+	@ManyToMany
+	@JoinTable(name = "image_picture", joinColumns = @JoinColumn(name = "image_id"))
+	public Set<Picture> pictures;
 
 	@PrePersist
 	public void create(){

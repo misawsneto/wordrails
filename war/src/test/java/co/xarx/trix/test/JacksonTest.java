@@ -81,7 +81,7 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 	}
 
 	private Image createImage() {
-		Image image = new Image();
+		Image image = new Image(Image.Type.POST);
 		image.pictures = Sets.newHashSet(
 				new Picture("original", createFile()),
 				new Picture("large", createFile()),

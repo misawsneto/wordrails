@@ -59,8 +59,7 @@ public class ImagesResource {
 		}
 
 
-		Image newImage = new Image();
-		newImage.type = type;
+		Image newImage = new Image(type);
 		newImage.title = item.getName();
 		newImage = imageService.createNewImage(newImage, item.getInputStream(), item.getContentType());
 

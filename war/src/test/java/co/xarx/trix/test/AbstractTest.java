@@ -9,8 +9,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@ActiveProfiles(profiles = "dev")
 @RunWith(SpringJUnit4ClassRunner.class)
+@ActiveProfiles(profiles = "dev")
 @ContextConfiguration({
 		"classpath:applicationContext-test.xml",
 		"classpath:applicationContext-quartz.xml",
