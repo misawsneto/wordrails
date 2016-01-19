@@ -11,6 +11,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -34,6 +35,7 @@ public class ImageService {
 		this.pictureRepository = pictureRepository;
 	}
 
+	@Transactional
 	public Image createNewImage(Image newImage, InputStream inputStream, String mime) throws IOException, FileUploadException {
 		Set<Picture> pictures = new HashSet<>();
 
