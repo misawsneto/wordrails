@@ -1,9 +1,6 @@
 package co.xarx.trix.persistence;
 
 import co.xarx.trix.domain.Network;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -30,22 +27,15 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 			"where person.id = :personId and network.id IN (:networksId)")
 	List<Network> belongsToNetworks(@Param("personId") Integer personId, @Param("networksId") List<Integer> networksId);
 
-	@RestResource(exported = false)
-	@Query("select tenantId from Network")
-	Set<String> findTenantIds();
+	@RestResource(exported = true)
+	Network findBySubdomain(@Param("subdomain") String subdomain);
 
 	@RestResource(exported = false)
-	@Query("select domain, tenantId from Network")
-	Map<String, String> findDomains();
-
-	@RestResource(exported = false)
-//	@Cacheable(value = "network_findByDomain", key = "#p0")
-	public Network findByDomain(String domain);
+	Network findByDomain(@Param("domain") String domain);
 
 	@Override
 	@RestResource(exported = false)
-//	@Cacheable(value = "network_findOne", key = "#p0")
-	public Network findOne(Integer integer);
+	Network findOne(@Param("id") Integer integer);
 
 	@RestResource(exported = false)
 	@Query(value = "select " +

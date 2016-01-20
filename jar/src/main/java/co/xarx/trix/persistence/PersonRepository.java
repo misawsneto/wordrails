@@ -1,9 +1,10 @@
 package co.xarx.trix.persistence;
 
+import co.xarx.trix.annotation.GeneratorIgnore;
 import co.xarx.trix.domain.NetworkRole;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.User;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,9 +20,14 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	Person findByUsername(@Param("username") String username);
 
 	@Override
-	@RestResource(exported = false)
-	@CachePut(value = "person", key = "#p0.user.username")
+	@GeneratorIgnore
+	@CacheEvict(value = "person", key = "#p0.user.username")
 	Person save(Person person);
+
+	@Override
+	@GeneratorIgnore
+	@CacheEvict(value = "person", key = "#p0.user.username")
+	void delete(Person person);
 
 	@Deprecated
 	@Query("SELECT person FROM Person person where person.username = :username and (:networkId is null or :networkId > 0)")

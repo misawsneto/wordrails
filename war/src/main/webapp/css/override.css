@@ -2302,6 +2302,22 @@ a.text-lgrey:hover {
   border-color: #344397 !important;
 }
 
+.btn-gplus {
+  color: #ffffff !important;
+  background-color: #dd4b39;
+  border-color: ##dd4b39;
+}
+.btn-gplus:hover,
+.btn-gplus:focus,
+.btn-gplus:active,
+.btn-gplus.active,
+.open .dropdown-toggle.btn-gplus {
+  color: #ffffff !important;
+  background-color: #d63f2a !important;
+  border-color: #d23d23 !important;
+}
+
+
 .in-left-shadow{
   box-shadow: inset 6px 0 9px -10px rgba(0,0,0,0.5);
 }
@@ -5020,11 +5036,29 @@ ul.normal-wrap{
 /* /settings-categories */
 
 /* settings-users */
+
+.stations-permissions-dialog-list{
+  max-height: 230px;
+  overflow: auto;
+  box-shadow: inset 0px 0px 25px -10px rgba(0,0,0,0.5);
+}
+
 #user-remove-dialog md-content > div{
   overflow: auto; 
   width: 400px;
   min-height: 200px;
   max-height: 300px; 
+}
+
+#user-permissions-dialog md-content > div{
+ overflow: auto; 
+ width: 400px;
+ min-height: 400px;
+ max-height: 500px;
+}
+
+#user-permissions-dialog .station-permissions li{
+  display: inline-block;
 }
 
 #editing-user-profile #image-button{position: relative; overflow: hidden; vertical-align: bottom;}

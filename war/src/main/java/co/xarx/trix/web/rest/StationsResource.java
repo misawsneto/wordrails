@@ -15,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Path("/stations")
@@ -67,7 +66,6 @@ public class StationsResource {
 
 		if ((role.admin || sRole.admin) && stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
 			queryPersistence.updateDefaultPerspective(station.id, perspectiveId);
-			cacheService.updateStation(station.id);
 			return Response.status(Status.OK).build();
 		} else return Response.status(Status.UNAUTHORIZED).build();
 	}
@@ -87,7 +85,6 @@ public class StationsResource {
 				else station.main = false;
 
 				stationRepository.save(station);
-				cacheService.updateStation(station.id);
 			}
 			return Response.status(Status.OK).build();
 		} else return Response.status(Status.UNAUTHORIZED).build();

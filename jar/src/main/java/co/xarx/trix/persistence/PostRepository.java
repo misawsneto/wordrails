@@ -1,7 +1,9 @@
 package co.xarx.trix.persistence;
 
 import co.xarx.trix.annotation.EventLoggableRepository;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Image;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.custom.CustomPostRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

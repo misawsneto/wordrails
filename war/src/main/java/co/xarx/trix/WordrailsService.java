@@ -90,16 +90,24 @@ public class WordrailsService {
 		Network network = null;
 		String subdomain = StringUtil.getSubdomainFromHost(host);
 		if (subdomain != null && !subdomain.isEmpty()) {
+			if (subdomain.equals("settings")) {
+				network = new Network();
+				network.name = "Settings";
+				network.tenantId = "settings";
+				network.id = 0;
+			}
+
 			try {
-				network = cacheService.getNetworkBySubdomain(subdomain);
+				network = networkRepository.findBySubdomain(subdomain);
 			} catch (Exception e) {
 				// no network found in cache or db.
+				e.printStackTrace();
 			}
 			if (network != null) return network;
 		}
 
 		try {
-			network = cacheService.getNetworkByDomain(host);
+			network = networkRepository.findByDomain(host);
 			if (network != null) return network;
 			response.setStatus(400);
 			return null;

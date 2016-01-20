@@ -18,9 +18,12 @@ import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.APNService;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.GCMService;
+import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -158,32 +161,36 @@ public class PersonsResource {
 	@PUT
 	@Path("/update")
 	@Transactional
-	public Response update(Person person) {
+	public Response update(Person person){
 		Person loggedPerson = authProvider.getLoggedPerson();
 
 		Person loadedPerson = personRepository.findOne(person.id);
 
-		if (person.id == null || !person.id.equals(loggedPerson.id)) throw new UnauthorizedException();
+		if(person.id == null || !person.id.equals(loggedPerson.id))
+			throw new UnauthorizedException();
 
-		if (person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
+		if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
 			throw new BadRequestException("Password no equal");
 
-		if ((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
+		if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
 			throw new BadRequestException("Invalid Password");
 
-		if (!StringUtil.isEmailAddr(person.email)) throw new BadRequestException("Not email");
+		if(!StringUtil.isEmailAddr(person.email))
+			throw new BadRequestException("Not email");
 
-		if (person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
+		if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
 			throw new BadRequestException("Invalid username");
 
-		if (person.bio != null && !person.bio.isEmpty()) loadedPerson.bio = person.bio;
-		else loadedPerson.bio = null;
+		if(person.bio != null && !person.bio.isEmpty())
+			loadedPerson.bio = person.bio;
+		else
+			loadedPerson.bio = null;
 
 		loadedPerson.email = person.email;
 		loadedPerson.name = person.name;
 
 		User user = null;
-		if (!person.username.equals(loggedPerson.username)) {
+		if(!person.username.equals(loggedPerson.username)){
 			loadedPerson.user.username = person.username;
 			loadedPerson.username = person.username;
 			user = userRepository.findOne(loadedPerson.user.id);
@@ -192,7 +199,7 @@ public class PersonsResource {
 			personRepository.save(loadedPerson);
 		}
 
-		if ((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)) {
+		if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
 			loadedPerson.user.password = person.password;
 			user = userRepository.findOne(loadedPerson.user.id);
 			user.password = person.password;
@@ -290,7 +297,7 @@ public class PersonsResource {
 	@GET
 	@Path("/{personId}/posts")
 	public ContentResponse<List<PostView>> getPersonNetworkPosts(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
-	                                                             @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+																 @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -415,7 +422,7 @@ public class PersonsResource {
 	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, IOException{
 		Person person = null;
 		User user;
-        Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		if(personCreationObject != null){
 			try{
 				person = new Person();
@@ -469,16 +476,21 @@ public class PersonsResource {
 						break;
 					}
 
+					if(errorVal.contains("-"))
+						errorVal = errorVal.split("-")[0];
+
 					Person conflictingPerson = null;
-					if(person.email != null && person.email.trim().equals(errorVal)){
+					if(person.email != null && person.email.trim().equals(errorVal))
 						conflictingPerson = personRepository.findByEmail(person.email);
-					}else if(person.username != null && person.username.trim().equals(errorVal)){
+
+					if(conflictingPerson == null && person.username != null && person.username.trim().equals(errorVal)){
 						conflictingPerson = personRepository.findOne(QPerson.person.user.username.eq(person.username));
 					}
 
 					if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
 //							conflictingPerson.id 
 						StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
+						Logger.debug("conflicting station name: " + str.station.name);
 						if(str != null)
 							return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
 									+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
@@ -529,7 +541,7 @@ public class PersonsResource {
 			}
 
 			if(network != null && network.addStationRolesOnSignup){
-				List<Station> stations = stationRepository.findAll();
+				List<Station> stations = stationRepository.findByNetworkId(network.id);
 				for (Station station : stations) {
 					StationRole sr = new StationRole();
 					sr.person = person;
@@ -601,18 +613,115 @@ public class PersonsResource {
 	@PUT
 	@Path("/{personId}/disable")
 	public Response disablePerson(@PathParam("personId") Integer personId){
+		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
-		person.user.enabled = false;
-		personRepository.save(person);
+		if(!self.id.equals(person.id)) {
+			person.user.enabled = false;
+			personRepository.save(person);
+		}
 		return Response.status(Status.CREATED).build();
 	}
 
 	@PUT
 	@Path("/{personId}/enable")
 	public Response enablePerson(@PathParam("personId") Integer personId){
+		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
-		person.user.enabled = true;
-		personRepository.save(person);
+		if(!self.id.equals(person.id)) {
+			person.user.enabled = true;
+			personRepository.save(person);
+		}
+		return Response.status(Status.CREATED).build();
+	}
+
+	@PUT
+	@Path("/updateStationRoles")
+	@Transactional
+	public Response updateStationRoles(StationRolesUpdate stationRolesUpdate){
+		Person self = authProvider.getLoggedPerson();
+		if(stationRolesUpdate != null && stationRolesUpdate.personsIds != null && stationRolesUpdate.stationsIds != null){
+
+			stationRolesUpdate.personsIds.remove(self.id);
+
+			QStationRole q = QStationRole.stationRole;
+
+			Iterable<StationRole> isr = stationRolesRepository.findAll(q.person.id.in(stationRolesUpdate.personsIds).and(q.station.id.in(stationRolesUpdate.stationsIds)));
+			ArrayList<StationRole> roles = Lists.newArrayList(isr);
+
+			for (StationRole sr: roles){
+				sr.admin = stationRolesUpdate.admin;
+				sr.editor = stationRolesUpdate.editor;
+				sr.writer = stationRolesUpdate.writer;
+			}
+
+			stationRolesRepository.save(roles);
+
+			List<Person> persons = personRepository.findAll(stationRolesUpdate.personsIds);
+			List<Station> stations = stationRepository.findAll(stationRolesUpdate.stationsIds);
+
+			ArrayList<StationRole> allRoles = new ArrayList<StationRole>();
+
+			for (Station station : stations) {
+				for (Person person: persons){
+
+					boolean skip = false;
+					for(StationRole sr: roles){
+						if(sr.person != null && sr.station != null && sr.station.id.equals(station.id) && sr.person.id.equals(person.id)) {
+							skip = true;
+							continue;
+						}
+					}
+
+					if(skip)
+						continue;
+
+					StationRole sRole = new StationRole();
+					sRole.station = station;
+					sRole.person = person;
+					sRole.admin = stationRolesUpdate.admin;
+					sRole.editor = stationRolesUpdate.editor;
+					sRole.writer = stationRolesUpdate.writer;
+
+					allRoles.add(sRole);
+				}
+			}
+
+			stationRolesRepository.save(allRoles);
+		}
+		return Response.status(Status.CREATED).build();
+	}
+
+	@PUT
+	@Path("/enable/all")
+	public Response enablePerson(IdsList idsList){
+		Person self = authProvider.getLoggedPerson();
+		if(idsList != null && idsList.ids != null){
+			List<Person> persons = personRepository.findAll(idsList.ids);
+			for (Person person: persons) {
+				if(self.id.equals(person.id))
+					continue;
+				person.user.enabled = true;
+			}
+
+			personRepository.save(persons);
+		}
+		return Response.status(Status.CREATED).build();
+	}
+
+	@PUT
+	@Path("/disable/all")
+	public Response disablePerson(IdsList idsList){
+		Person self = authProvider.getLoggedPerson();
+		if(idsList != null && idsList.ids != null){
+			List<Person> persons = personRepository.findAll(idsList.ids);
+			for (Person person: persons) {
+				if(self.id.equals(person.id))
+					continue;
+				person.user.enabled = false;
+			}
+
+			personRepository.save(persons);
+		}
 		return Response.status(Status.CREATED).build();
 	}
 

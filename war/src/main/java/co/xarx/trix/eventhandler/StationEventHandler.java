@@ -242,6 +242,5 @@ public class StationEventHandler {
 	@Transactional
 	public void handleAfterSave(Station station){
 		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
-		cacheService.updateStation(station.id);
 	}
 }

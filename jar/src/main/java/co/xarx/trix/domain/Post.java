@@ -4,6 +4,7 @@ import co.xarx.trix.domain.event.PostEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -90,13 +91,13 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
     @ManyToOne(fetch = FetchType.EAGER)
     public Image featuredImage;
 
-	@OneToMany
-	@JoinTable(
-			name="post_video",
-			joinColumns = @JoinColumn( name="post_id"),
-			inverseJoinColumns = @JoinColumn( name="video_id")
-	)
-	public Set<Video> videos;
+    @OneToMany
+    @JoinTable(
+            name="post_video",
+            joinColumns = @JoinColumn( name="post_id"),
+            inverseJoinColumns = @JoinColumn( name="video_id")
+    )
+    public Set<Video> videos;
 
     @NotNull
     @ManyToOne
@@ -166,16 +167,18 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public void onCreate() {
 		onChanges();
 
-		if (date == null)
-			date = new Date();
-	}
+        if (date == null)
+            date = new Date();
+        createdAt = new Date();
+    }
 
 	@PreUpdate
 	public void onUpdate() {
 		onChanges();
 
-		lastModificationDate = new Date();
-	}
+        updatedAt = new Date();
+        lastModificationDate = updatedAt;
+    }
 
 	private void onChanges() {
 		stationId = station.id;
@@ -185,11 +188,11 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public static int countWords(String string) {
 		if (string == null || string.isEmpty()) return 0;
 
-		org.jsoup.nodes.Document doc = Jsoup.parse(string);
-		string = doc.text();
-		String[] wordArray = string.split("\\s+");
-		return wordArray.length;
-	}
+        Document doc = Jsoup.parse(string);
+        string = doc.text();
+        String[] wordArray = string.split("\\s+");
+        return wordArray.length;
+    }
 
     public static int calculateReadTime(String string) {
         int words = countWords(string);

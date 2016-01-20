@@ -92,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.failureHandler(authFailureHandler())
 				.and()
 				.logout()
-				.logoutUrl("/logout")
+				.logoutUrl("/j_spring_security_logout")
 				.and()
 				.sessionManagement().maximumSessions(-1).sessionRegistry(sessionRegistry());
 
