@@ -165,7 +165,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     }).error(function(data, status, headers, config){
       if(status == 409){
         $scope.app.conflictingData = data;
-        role = $scope.person.stationRole.roleString;
         $scope.openConflictingUserSplash()
       }else
         $scope.app.showErrorToast('Dados inválidos. Tente novamente')
@@ -174,6 +173,10 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         cfpLoadingBar.complete(); 
       }, 100);
     });
+  }
+
+  $scope.openConflictingUserSplash = function(){
+    $scope.app.openSplash('conflicting_person.html')
   }
 
   var deletePersons = function(){

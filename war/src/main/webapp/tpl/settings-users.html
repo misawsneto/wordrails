@@ -268,43 +268,22 @@
          </div>
          <!-- /settings-stations-users -->
 
-     <script type="text/ng-template" id="conflicting_person.html">
-     	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-     	<div class="splash-content text-center" ng-cloak>
-     		<div>
-     			<div class="row">
-     				<div class="col-xs-8 col-xs-offset-2">
-
-     					<div class="h3 m-b-lg m-t-lg" ng-show="app.conflictingData.conflictingStationRole">
+     	<script type="text/ng-template" id="conflicting_person.html">
+	     	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+	     	<div class="splash-content text-center" ng-cloak>
+				  <div class="row">
+				    <div class="col-xs-8 col-xs-offset-2">
+				    	<div class="h3 m-b-lg m-t-lg">
      						Esta estação já possui um usuário cadastrado com estes dados!
      					</div>
-
-     					<div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
-     					class="bg-cover bg-img-lg bg-cover-round m-auto" 
-     					title="{{app.conflictingData.conflictingPerson.name}}"></div>
-     					<div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
-     					<div class="h4 m-b-lg">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
-     				</div>
-     			</div>
-     			<div class="row">
-     				<div class="col-xs-6 col-xs-offset-3">
-
-     					<div class="h4 m-b" ng-hide="app.conflictingData.conflictingStationRole">
-     						Este usuário já existe. Deseja adioná-lo a esta estação no papel de <strong>
-     						{{app.conflictingData.role == 'ADMIN' ? 'admin': (app.conflictingData.role == 'EDITOR' ? 'editor' : app.conflictingData.role == 'WRITER' ? 'escritor' : 'leitor')}}?</strong></div>
-
-     						<div class="text-color p-l-lg p-r-lg" ng-hide="app.conflictingData.conflictingStationRole">
-     							<button ng-click="app.addConflictingToStation();" angular-ripple type="submit" class="m-t-md btn-default btn text-lg text-u-c btn-block ">
-     								Sim
-     							</button>
-     							<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
-     								Não
-     							</button>
-     						</div>
-     					</div>
-     				</div>
-     			</div>
-     		</div>
+				      <div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
+				      class="bg-cover bg-img-lg bg-cover-round m-auto" 
+				      title="{{app.conflictingData.conflictingPerson.name}}"></div>
+				      <div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
+				      <div class="h4 m-b-lg">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
+				    </div>
+				  </div>
+				</div>
      	</script>
 
      	<script type="text/ng-template" id="bulk_change_permissions.html">
