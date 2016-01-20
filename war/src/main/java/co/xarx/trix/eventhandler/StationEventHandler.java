@@ -1,53 +1,65 @@
 package co.xarx.trix.eventhandler;
 
-import java.util.*;
-
-import co.xarx.trix.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.event.Event;
+import co.xarx.trix.elasticsearch.domain.ESStation;
+import co.xarx.trix.elasticsearch.repository.ESStationRepository;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.CacheService;
+import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.LogBuilderExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.core.annotation.HandleAfterCreate;
-import org.springframework.data.rest.core.annotation.HandleAfterSave;
-import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
-import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
-import org.springframework.data.rest.core.annotation.HandleBeforeSave;
-import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.xarx.trix.services.CacheService;
+import java.util.*;
 
 @RepositoryEventHandler(Station.class)
 @Component
 public class StationEventHandler {
-	@Autowired StationRolesRepository personStationRolesRepository;
-	@Autowired PostEventHandler postEventHandler;
+
+	@Autowired
+	StationRolesRepository personStationRolesRepository;
+	@Autowired
+	PostEventHandler postEventHandler;
 	@Autowired
 	PostRepository postRepository;
-	@Autowired StationPerspectiveRepository stationPerspectiveRepository;
+	@Autowired
+	StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
 	StationRepository stationRepository;
 	@Autowired
 	StationSecurityChecker stationSecurityChecker;
-	@Autowired TaxonomyEventHandler taxonomyEventHandler;
+	@Autowired
+	TaxonomyEventHandler taxonomyEventHandler;
 	@Autowired
 	TaxonomyRepository taxonomyRepository;
-	@Autowired NotificationRepository notificationRepository;
-	@Autowired PostReadRepository postReadRepository;
-	@Autowired private TrixAuthenticationProvider authProvider;
-	@Autowired CacheService cacheService;
-	@Autowired QueryPersistence queryPersistence;
-	@Autowired TermRepository termRepository;
+	@Autowired
+	NotificationRepository notificationRepository;
+	@Autowired
+	PostReadRepository postReadRepository;
+	@Autowired
+	CacheService cacheService;
+	@Autowired
+	QueryPersistence queryPersistence;
+	@Autowired
+	TermRepository termRepository;
 	@Autowired
 	TermPerspectiveRepository termPerspectiveRepository;
 	@Autowired
 	RowRepository rowRepository;
 	@Autowired
-	PerspectiveEsRepository perspectiveEsRepository;
-	@Autowired StationPerspectiveEventHandler stationPerspectiveEventHandler;
+	StationPerspectiveEventHandler stationPerspectiveEventHandler;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private ElasticSearchService elasticSearchService;
+	@Autowired
+	private ESStationRepository esStationRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -73,14 +85,6 @@ public class StationEventHandler {
 				taxonomies.add(sTaxonomy);
 				station.ownedTaxonomies = taxonomies;
 				stationPerspective.taxonomy = sTaxonomy;
-
-				//Tag Default Taxonomy
-				Taxonomy tTaxonomy = new Taxonomy();
-				tTaxonomy.name = "Tags " + station.name;
-				tTaxonomy.owningStation = station;
-				tTaxonomy.type = Taxonomy.STATION_TAG_TAXONOMY;
-				taxonomies.add(tTaxonomy);
-				station.ownedTaxonomies = taxonomies;
 			}
 		}else{
 			throw new UnauthorizedException();
@@ -97,10 +101,6 @@ public class StationEventHandler {
 
 		Set<Taxonomy> taxonomies = station.ownedTaxonomies;
 		for (Taxonomy tax: taxonomies){
-			if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
-				if(station.tagsTaxonomyId == null)
-					station.tagsTaxonomyId = tax.id;
-			}
 			if(tax.type.equals(Taxonomy.STATION_TAXONOMY)){
 				if(station.categoriesTaxonomyId == null) {
 					station.categoriesTaxonomyId = tax.id;
@@ -165,43 +165,37 @@ public class StationEventHandler {
 
 		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
-
-		for (TermPerspective tp: stationPerspective.perspectives)
-			perspectiveEsRepository.save(tp);
-
+		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
 	}
 
 	@HandleBeforeSave
 	public void handleBeforeSave(Station station){
-		station.stationPerspectives = new HashSet<StationPerspective>(stationPerspectiveRepository.findByStationId(station.id));
+		station.stationPerspectives = new HashSet<>(stationPerspectiveRepository.findByStationId(station.id));
 	}
+
+	@Autowired
+	private LogBuilderExecutor logBuilderExecutor;
+
+	@Autowired
+	private EventRepository eventRepository;
 
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Station station) throws UnauthorizedException{
 		if(stationSecurityChecker.canEdit(station)){
+			Event event = station.build(Event.EVENT_DELETE, logBuilderExecutor);
+			eventRepository.save(event);
+
 			stationRepository.deleteStationNetwork(station.id);
 
 			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
 			stationPerspectiveRepository.delete(stationsPerspectives);
 
 			Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
-			Taxonomy taxonomyTags = null;
-			if(station.tagsTaxonomyId != null)
-				taxonomyTags= taxonomyRepository.findOne(station.tagsTaxonomyId);
-			Taxonomy taxonomyAuthors = taxonomyRepository.findTypeAByStation(station);
 
 			if (taxonomy != null) {
 				taxonomyEventHandler.handleBeforeDelete(taxonomy);
 				taxonomyRepository.delete(taxonomy);
-			}
-			if (taxonomyTags != null) {
-				taxonomyEventHandler.handleBeforeDelete(taxonomyTags);
-				taxonomyRepository.delete(taxonomyTags);
-			}
-			if (taxonomyAuthors != null) {
-				taxonomyEventHandler.handleBeforeDelete(taxonomyAuthors);
-				taxonomyRepository.delete(taxonomyAuthors);
 			}
 
 			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
@@ -236,7 +230,8 @@ public class StationEventHandler {
 			if(notifications != null && notifications.size() > 0)
 				notificationRepository.delete(notifications);
 
-			//for(StationPerspective p: stationsPerspectives)
+
+			elasticSearchService.deleteIndex(station.getId(), esStationRepository);
 
 		}else{
 			throw new UnauthorizedException();
@@ -246,6 +241,6 @@ public class StationEventHandler {
 	@HandleAfterSave
 	@Transactional
 	public void handleAfterSave(Station station){
-		cacheService.updateStation(station.id);
+		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
 	}
 }

@@ -1,10 +1,13 @@
 package co.xarx.trix.persistence;
 
+import co.xarx.trix.annotation.EventLoggableRepository;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Taxonomy;
 import co.xarx.trix.domain.Term;
 
 import java.util.List;
+
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -2,16 +2,17 @@ package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.elasticsearch.domain.ESPerson;
+import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
+import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.CacheService;
+import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.core.annotation.HandleAfterSave;
-import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
-import org.springframework.data.rest.core.annotation.HandleBeforeSave;
-import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,19 +22,12 @@ public class PersonEventHandler {
 
 	@Autowired
 	private ImageRepository imageRepository;
-
-	@Autowired
-	private BookmarkRepository bookmarksRepository;
-
 	@Autowired
 	private NotificationRepository notificationRepository;
-
 	@Autowired
 	private PersonNetworkRegIdRepository personNetworkRegIdRepository;
-
 	@Autowired
 	private PersonNetworkTokenRepository personNetworkTokenRepository;
-
 	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
@@ -44,28 +38,29 @@ public class PersonEventHandler {
 	private NetworkRolesRepository networkRolesRepository;
 	@Autowired
 	private PersonRepository personRepository;
-
 	@Autowired
 	private QueryPersistence queryPersistence;
-
 	@Autowired
 	private TermRepository termRepository;
-
 	@Autowired
 	private PostRepository postRepository;
-
 	@Autowired
 	private PostService postService;
-
 	@Autowired
 	private CacheService cacheService;
-
+	@Autowired
+	private PersonService personService;
+	@Autowired
+	private ElasticSearchService elasticSearchService;
+	@Autowired
+	private ESPostRepository esPostRepository;
+	@Autowired
+	private ESPersonRepository esPersonRepository;
 	@Autowired
 	private UserRepository userRepository;
 
 
 	@HandleBeforeSave
-	@Transactional
 	public void handleBeforeSave(Person person) {
 		Person originalPerson = personRepository.findOne(person.id);
 		person.user = userRepository.findOne(originalPerson.user.id);
@@ -75,7 +70,6 @@ public class PersonEventHandler {
 	}
 
 	@HandleBeforeDelete
-	@Transactional
 	public void handleBeforeDelete(Person person) {
 		networkRolesRepository.deleteByPersonId(person.id);
 		stationRolesRepository.deleteByPersonId(person.id);
@@ -84,13 +78,12 @@ public class PersonEventHandler {
 			imageRepository.delete(person.cover);
 		}
 
-		bookmarksRepository.deleteByPersonId(person.id);
 		recommendRepository.deleteByPersonId(person.id);
 		postReadRepository.deleteByPersonId(person.id);
 
 		List<Post> posts = postRepository.findAllFromPerson(person.id);
 		for (Post post: posts){
-			postService.removePostIndex(post);
+			postRepository.delete(post);
 		}
 
 		queryPersistence.setNoAuthor(person.id);
@@ -99,13 +92,17 @@ public class PersonEventHandler {
 		personNetworkRegIdRepository.deleteByPersonId(person.id);
 		personNetworkTokenRepository.deleteByPersonId(person.id);
 		userRepository.delete(person.user.id);
+		elasticSearchService.deleteIndex(person.getId(), esPersonRepository);
 	}
 
 	@HandleAfterSave
-	@Transactional
 	public void handleAfterSave(Person person) {
-		cacheService.updatePerson(person.id);
-		cacheService.updatePerson(person.username);
+		elasticSearchService.saveIndex(person, ESPerson.class, esPersonRepository);
+	}
+
+	@HandleAfterCreate
+	public void handleAfterCreate(Person person) {
+		elasticSearchService.saveIndex(person, ESPerson.class, esPersonRepository);
 	}
 
 }

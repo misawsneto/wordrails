@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
@@ -26,16 +27,13 @@ public class Comment {
 	@Size(min=1, max=100)
 	public String title;
 
-	@ManyToOne
-	@JoinColumn(updatable=false)
-	public Station station;
-
 	@Lob
 	@NotNull
 	public String body;
 
 	@NotNull
 	@ManyToOne
+	@JsonBackReference
 	@JoinColumn(updatable=false)
 	public Person author;
 	

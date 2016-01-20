@@ -2,7 +2,7 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
@@ -12,8 +12,8 @@ import co.xarx.trix.eventhandler.StationRoleEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.mobile.notification.APNService;
-import co.xarx.trix.mobile.notification.GCMService;
+import co.xarx.trix.services.APNService;
+import co.xarx.trix.services.GCMService;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
@@ -86,8 +86,6 @@ public class PersonsResource {
 	@Autowired
 	private PostConverter postConverter;
 	@Autowired
-	private BookmarkRepository bookmarkRepository;
-	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private PostReadRepository postReadRepository;
@@ -159,61 +157,61 @@ public class PersonsResource {
 			return Response.status(Status.UNAUTHORIZED).build();
 	}
 
-    @PUT
-    @Path("/update")
-    @Transactional
-    public Response update(Person person){
-        Person loggedPerson = authProvider.getLoggedPerson();
+	@PUT
+	@Path("/update")
+	@Transactional
+	public Response update(Person person){
+		Person loggedPerson = authProvider.getLoggedPerson();
 
-        Person loadedPerson = personRepository.findOne(person.id);
+		Person loadedPerson = personRepository.findOne(person.id);
 
-        if(person.id == null || !person.id.equals(loggedPerson.id))
-            throw new UnauthorizedException();
+		if(person.id == null || !person.id.equals(loggedPerson.id))
+			throw new UnauthorizedException();
 
-        if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
-            throw new BadRequestException("Password no equal");
+		if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
+			throw new BadRequestException("Password no equal");
 
-        if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
-            throw new BadRequestException("Invalid Password");
+		if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
+			throw new BadRequestException("Invalid Password");
 
-        if(!StringUtil.isEmailAddr(person.email))
-            throw new BadRequestException("Not email");
+		if(!StringUtil.isEmailAddr(person.email))
+			throw new BadRequestException("Not email");
 
-        if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
-            throw new BadRequestException("Invalid username");
+		if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
+			throw new BadRequestException("Invalid username");
 
-        if(person.bio != null && !person.bio.isEmpty())
-            loadedPerson.bio = person.bio;
-        else
-            loadedPerson.bio = null;
+		if(person.bio != null && !person.bio.isEmpty())
+			loadedPerson.bio = person.bio;
+		else
+			loadedPerson.bio = null;
 
-        loadedPerson.email = person.email;
-        loadedPerson.name = person.name;
+		loadedPerson.email = person.email;
+		loadedPerson.name = person.name;
 
-        User user = null;
-        if(!person.username.equals(loggedPerson.username)){
-            loadedPerson.user.username = person.username;
-            loadedPerson.username = person.username;
-            user = userRepository.findOne(loadedPerson.user.id);
-            user.username = person.username;
-            userRepository.save(user);
-            personRepository.save(loadedPerson);
-        }
+		User user = null;
+		if(!person.username.equals(loggedPerson.username)){
+			loadedPerson.user.username = person.username;
+			loadedPerson.username = person.username;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.username = person.username;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
 
-        if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
-            loadedPerson.user.password = person.password;
-            user = userRepository.findOne(loadedPerson.user.id);
-            user.password = person.password;
-            userRepository.save(user);
-            personRepository.save(loadedPerson);
-        }
+		if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
+			loadedPerson.user.password = person.password;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.password = person.password;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
 
-        personRepository.save(loadedPerson);
+		personRepository.save(loadedPerson);
 
-        authProvider.updateLoggedPerson(loadedPerson);
+		authProvider.updateLoggedPerson(loadedPerson);
 
-        return Response.status(Status.OK).build();
-    }
+		return Response.status(Status.OK).build();
+	}
 
 	@PUT
 	@Path("/{id}")
@@ -286,7 +284,7 @@ public class PersonsResource {
 			User user = nr.get(0).person.user;
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password);
+			authProvider.passwordAuthentication(user, user.password);
 
 			network.networkCreationToken = null;
 			networkRepository.save(network);
@@ -300,7 +298,7 @@ public class PersonsResource {
 	@GET
 	@Path("/{personId}/posts")
 	public ContentResponse<List<PostView>> getPersonNetworkPosts(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
-	                                                             @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+																 @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -338,7 +336,7 @@ public class PersonsResource {
 			person = personRepository.findOne(personId);
 		}
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, TenantContextHolder.getCurrentTenantId());
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, TenantContextHolder.getCurrentNetworkId());
 
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
@@ -425,7 +423,7 @@ public class PersonsResource {
 	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, IOException{
 		Person person = null;
 		User user;
-        Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		if(personCreationObject != null){
 			try{
 				person = new Person();
@@ -507,7 +505,7 @@ public class PersonsResource {
 			}
 
 			NetworkRole networkRole = new NetworkRole();
-			networkRole.network = networkRepository.findOne(TenantContextHolder.getCurrentTenantId());
+			networkRole.network = networkRepository.findOne(TenantContextHolder.getCurrentNetworkId());
 			networkRole.person = person;
 			networkRole.admin = false;
 			networkRolesRepository.save(networkRole);
@@ -543,15 +541,15 @@ public class PersonsResource {
 				}
 			}
 
-            if(network != null && network.addStationRolesOnSignup){
-                List<Station> stations = stationRepository.findByNetworkId(network.id);
-                for (Station station : stations) {
-                    StationRole sr = new StationRole();
-                    sr.person = person;
-                    sr.station = station;
-                    stationRolesRepository.save(sr);
-                }
-            }
+			if(network != null && network.addStationRolesOnSignup){
+				List<Station> stations = stationRepository.findByNetworkId(network.id);
+				for (Station station : stations) {
+					StationRole sr = new StationRole();
+					sr.person = person;
+					sr.station = station;
+					stationRolesRepository.save(sr);
+				}
+			}
 
 			userRepository.save(user);
 
@@ -777,9 +775,9 @@ public class PersonsResource {
 				request.setAttribute("personData", simpleMapper.writeValueAsString(personData));
 				request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
 				request.setAttribute("networkName", personData.network.name);
-                request.setAttribute("networkId", personData.network.id);
-                if(personData.network.faviconId != null)
-                    request.setAttribute("faviconLink", "/api/files/" + personData.network.faviconId + "/contents");
+				request.setAttribute("networkId", personData.network.id);
+				if(personData.network.faviconId != null)
+					request.setAttribute("faviconLink", "/api/files/" + personData.network.faviconId + "/contents");
 				request.setAttribute("networkDesciption", "");
 				request.setAttribute("networkKeywords", "");
 			}
@@ -867,7 +865,7 @@ public class PersonsResource {
 		Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
 		if(initData.person != null && !initData.person.username.equals("wordrails")){
 			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
-			List<Integer> bookmarks = bookmarkRepository.findBookmarkByPerson(initData.person.id, pageable2);
+			List<Integer> bookmarks = new ArrayList(person.getBookmarkPosts());
 			List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
 			initData.postsRead = postsRead;
 			initData.bookmarks = bookmarks;
@@ -917,7 +915,7 @@ public class PersonsResource {
 		Person person = authProvider.getLoggedPerson();
 		List<BooleanResponse> resp = new ArrayList<>();
 
-		if(bookmarkRepository.findBookmarkByPersonIdAndPostId(person.id, postId)!=null){
+		if(person.getBookmarkPosts().contains(postId)){
 			BooleanResponse bool = new BooleanResponse();
 			bool.response = true;
 			resp.add(bool);

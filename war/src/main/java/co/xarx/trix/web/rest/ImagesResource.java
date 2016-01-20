@@ -29,19 +29,19 @@ public class ImagesResource {
 	@Autowired
 	private ImageService imageService;
 
-    @Context
-    private HttpServletRequest request;
-    @Context
-    private UriInfo uriInfo;
-    @Context
-    private HttpServletResponse response;
+	@Context
+	private HttpServletRequest request;
+	@Context
+	private UriInfo uriInfo;
+	@Context
+	private HttpServletResponse response;
 
 	@Autowired private AmazonCloudService amazonCloudService;
 
-    private void forward() throws ServletException, IOException {
-        String path = request.getServletPath() + uriInfo.getPath();
-        request.getServletContext().getRequestDispatcher(path).forward(request, response);
-    }
+	private void forward() throws ServletException, IOException {
+		String path = request.getServletPath() + uriInfo.getPath();
+		request.getServletContext().getRequestDispatcher(path).forward(request, response);
+	}
 
 	@POST
 	@Path("/upload")
@@ -61,7 +61,10 @@ public class ImagesResource {
 
 		Image newImage = imageService.createNewImage(type, item.getInputStream(), item.getContentType(), true, true);
 
-		return Response.ok().entity("{\"hash\":\"" + hash + "\", \"imageId\":" + newImage.id + ", \"link\": \"" + amazonCloudService.getPublicImageURL(hash) + "\", \"filelink\": \"" +  amazonCloudService.getPublicImageURL(hash) + "\"}").build();
+		return Response.ok().entity("{\"hash\":\"" + hash +
+				"\", \"imageId\":" + newImage.id +
+				", \"link\": \"" + amazonCloudService.getPublicImageURL(hash) +
+				"\", \"filelink\": \"" + amazonCloudService.getPublicImageURL(hash) + "\"}").build();
 	}
 
 	private boolean validate(FileItem item) throws FileUploadException {

@@ -2,7 +2,7 @@ package co.xarx.trix.security;
 
 
 import co.xarx.trix.domain.*;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.persistence.StationRolesRepository;

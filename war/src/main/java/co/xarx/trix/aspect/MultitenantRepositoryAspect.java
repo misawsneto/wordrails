@@ -5,6 +5,7 @@ import co.xarx.trix.domain.MultiTenantEntity;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -16,19 +17,21 @@ import java.util.Map;
 
 
 @Aspect
+@Component
 public class MultitenantRepositoryAspect {
 
 	Logger log = Logger.getLogger(this.getClass().getName());
 
-	@Before("bean(*Repository) && execution(* *..save(*)) && args(entity)")
+	@Before("within(org.springframework.data.repository.CrudRepository+) && execution(* *..save(*)) && args(entity)")
 	public void checkMultitenantEntity(MultiTenantEntity entity) throws Throwable {
 		if (entity != null && entity.getNetworkId() == null) {
-			Integer networkId = TenantContextHolder.getCurrentTenantId();
-			entity.setNetworkId(networkId);
+			String tenantId = TenantContextHolder.getCurrentTenantId();
+			entity.setNetworkId(TenantContextHolder.getCurrentNetworkId());
+			entity.setTenantId(tenantId);
 			for(MultiTenantEntity mte : getFields(MultiTenantEntity.class, entity)) {
 				checkMultitenantEntity(mte);
 			}
-			log.info("@ checkMultitenantEntity " + entity.getClass().getSimpleName() + " - saving " + networkId);
+			log.info("@ checkMultitenantEntity " + entity.getClass().getSimpleName() + " - saving " + tenantId);
 		}
 	}
 

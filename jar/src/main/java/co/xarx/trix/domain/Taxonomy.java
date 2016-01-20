@@ -15,8 +15,6 @@ public class Taxonomy implements Serializable {
 
 	public static final String NETWORK_TAXONOMY = "N";
 	public static final String STATION_TAXONOMY = "S";
-	public static final String STATION_AUTHOR_TAXONOMY = "A";
-	public static final String STATION_TAG_TAXONOMY = "T";
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

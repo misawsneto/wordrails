@@ -18,6 +18,7 @@
 	<!--</rule>-->
 
 	<rule>
+		<condition type="request-uri" operator="notequal">^/index.jsp(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/css(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/fonts(/+.*)*$</condition>
 		<condition type="request-uri" operator="notequal">^/img(/+.*)*$</condition>
@@ -33,7 +34,8 @@
 		<condition type="request-uri" operator="notequal">^/404.html$</condition>
 		<condition type="request-uri" operator="notequal">^/505.html$</condition>
 		<condition type="request-uri" operator="notequal">^/access/createnetwork$</condition>
-		<from>^/(.+)$</from>
+		<from>^/(.*)</from>
+		<!--<from>^/(.+)$</from>-->
 		<to last="true">/index.jsp</to>
 	</rule>
 

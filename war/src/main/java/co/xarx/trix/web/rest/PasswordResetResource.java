@@ -1,7 +1,6 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.PasswordReset;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.QUser;
@@ -9,7 +8,6 @@ import co.xarx.trix.domain.User;
 import co.xarx.trix.persistence.PasswordResetRepository;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserRepository;
-import co.xarx.trix.services.EmailService;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -43,11 +41,7 @@ public class PasswordResetResource {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private EmailService emailService;
-	@Autowired
 	private TrixAuthenticationProvider authProvider;
-	@Autowired
-	private WordrailsService wordrailsService;
 
 	@POST
 	@Path("/")
@@ -69,11 +63,10 @@ public class PasswordResetResource {
 
 		if (passwordReset.invite) // if passwordReset is of type user invitation, send invitation email
 			sendInviteEmail(passwordReset);
-		else // if not invitation, send a simple user reset email.
-			wordrailsService.sendResetEmail(passwordReset);
+		// else  if not invitation, send a simple user reset email.
+			//wordrailsService.sendResetEmail(passwordReset);
 
 		return Response.status(Status.CREATED).build();
-		//		throw new UnauthorizedException();
 	}
 
 	private void sendInviteEmail(PasswordReset passwordReset) {
@@ -107,7 +100,7 @@ public class PasswordResetResource {
 			String emailBody = writer.toString();
 			String subject = "[" + passwordReset.networkName + "]" + " Cadastro de senha";
 
-			emailService.sendSimpleMail(passwordReset.email, subject, emailBody);
+			//emailService.sendSimpleMail(passwordReset.email, subject, emailBody);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

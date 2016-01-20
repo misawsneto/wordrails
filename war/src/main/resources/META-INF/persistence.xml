@@ -24,9 +24,6 @@
 		<class>co.xarx.trix.domain.page.QueryableListSection</class>
 		<class>co.xarx.trix.domain.page.ContainerSection</class>
 		<class>co.xarx.trix.domain.query.ElasticSearchQuery</class>
-		<class>co.xarx.trix.domain.PostScheduled</class>
-		<class>co.xarx.trix.domain.PostDraft</class>
-		<class>co.xarx.trix.domain.PostTrash</class>
 		<class>co.xarx.trix.domain.Row</class>
 		<class>co.xarx.trix.domain.Station</class>
 		<class>co.xarx.trix.domain.StationPerspective</class>
@@ -41,7 +38,6 @@
 		<class>co.xarx.trix.domain.PasswordReset</class>
 		<class>co.xarx.trix.domain.Notification</class>
 		<class>co.xarx.trix.domain.Recommend</class>
-		<class>co.xarx.trix.domain.Bookmark</class>
 		<class>co.xarx.trix.domain.Picture</class>
 		<class>co.xarx.trix.domain.PostRead</class>
 		<class>co.xarx.trix.domain.PersonNetworkRegId</class>
@@ -53,7 +49,13 @@
 		<class>co.xarx.trix.domain.Video</class>
 		<class>co.xarx.trix.domain.query.FixedQuery</class>
 		<class>co.xarx.trix.domain.query.PageableQuery</class>
+		<class>co.xarx.trix.domain.query.BaseObjectQuery</class>
+		<class>co.xarx.trix.domain.query.PostQuery</class>
 
+		<class>co.xarx.trix.domain.event.Event</class>
+		<class>co.xarx.trix.domain.event.PostEvent</class>
+		<class>co.xarx.trix.domain.event.StationEvent</class>
+		<class>co.xarx.trix.domain.event.TermEvent</class>
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>

@@ -37,22 +37,25 @@ public class PageService {
 					}
 					if (index >= from && index < from + section.getSize()) {
 						blocks.put(index, fixedBlocks.get(index));
-						pageableQuery.addIndexException(index);
+						if(pageableQuery != null)
+							pageableQuery.addIndexException(index);
 					}
 
 				});
 
-		pageableQuery.setFrom(pageableFrom.get());
+		if(pageableQuery != null) {
+			pageableQuery.setFrom(pageableFrom.get());
 
-		//add boolean queries to the pageable stream avoid the items that were already got
-		fixedBlocks.values().stream()
-				.filter(block -> Objects.equals(block.getObjectName(), pageableQuery.getElasticSearchQuery().getObjectName()))
-				.forEach(block -> pageableQuery.addIdException(block.getObject().getId()));
+			//add boolean queries to the pageable stream avoid the items that were already got
+			fixedBlocks.values().stream()
+					.filter(block -> Objects.equals(block.getObjectType(), pageableQuery.getObjectType()))
+					.forEach(block -> pageableQuery.addIdException(block.getObject().getId()));
 
-		Map<Integer, Block> pageBlocks = pageableQuery.fetch(queryExecutor);
-		//add all elements that don't don't clash with some index
-		pageBlocks.keySet().stream()
-				.forEach(index -> blocks.putIfAbsent(index, pageBlocks.get(index)));
+			Map<Integer, Block> pageBlocks = pageableQuery.fetch(queryExecutor);
+			//add all elements that don't don't clash with some index
+			pageBlocks.keySet().stream()
+					.forEach(index -> blocks.putIfAbsent(index, pageBlocks.get(index)));
+		}
 		blocks.keySet().stream()
 				.filter(index -> index >= section.getSize())
 				.forEach(blocks::remove);

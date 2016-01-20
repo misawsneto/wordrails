@@ -1,7 +1,7 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.api.AbstractAuthorizationFilter;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
@@ -100,11 +100,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetCommentStationAuthorized(Integer commentId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetCommentAuthorAuthorized(Integer commentId) {
 		return canReadComments(commentId);
 	}
@@ -115,12 +110,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetElasticSearchQueriesAuthorized() {
+	protected boolean isGetEventsAuthorized() {
 		return false;
 	}
 
 	@Override
-	protected boolean isGetElasticSearchQueryAuthorized(Integer elasticSearchQueryId) {
+	protected boolean isGetEventAuthorized(Integer eventId) {
 		return false;
 	}
 
@@ -145,7 +140,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetFixedQueryQueryAuthorized(Integer fixedQueryId) {
+	protected boolean isGetFixedQueryObjectQueryAuthorized(Integer fixedQueryId) {
 		return false;
 	}
 
@@ -316,16 +311,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindDraftsByStationIdAndAuthorIdAuthorized(Integer stationId, Integer authorId, Integer page, Integer size, List<String> sort) {
-		return false;
-	}
-
-	@Override
-	protected boolean isFindScheduledsByStationIdAndAuthorIdAuthorized(Integer stationId, Integer authorId, Integer page, Integer size, List<String> sort) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetPostCommentsAuthorized(Integer postId) {
 		return canReadPosts(postId);
 	}
@@ -365,57 +350,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return canReadPosts(postId);
 	}
 
-    @Override
-	protected boolean isGetPostDraftsAuthorized() {
-		return false;
-	}
-
 	@Override
-	protected boolean isGetPostDraftAuthorized(Integer postDraftId) {
-		return canReadPosts(postDraftId);
-	}
-
-	@Override
-	protected boolean isGetPostDraftSponsorAuthorized(Integer postDraftId) {
-		return canReadPosts(postDraftId);
-	}
-
-	@Override
-	protected boolean isGetPostDraftCommentsAuthorized(Integer postDraftId) {
-		return canReadPosts(postDraftId);
-	}
-
-	@Override
-	protected boolean isGetPostDraftFeaturedImageAuthorized(Integer postDraftId) {
-		return canReadPosts(postDraftId);
-	}
-
-	@Override
-	protected boolean isGetPostDraftVideosAuthorized(Integer postDraftId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPostDraftImagesAuthorized(Integer postDraftId) {
-		return canReadPosts(postDraftId);
-	}
-
-	@Override
-	protected boolean isGetPostDraftAuthorAuthorized(Integer postDraftId) {
-		return canReadPosts(postDraftId);
-	}
-
-	@Override
-	protected boolean isGetPostDraftStationAuthorized(Integer postDraftId) {
-		return canReadPosts(postDraftId);
-	}
-
-	@Override
-	protected boolean isGetPostDraftTermsAuthorized(Integer postDraftId) {
-		return canReadPosts(postDraftId);
-	}
-
-    @Override
 	protected boolean isGetRowsAuthorized() {
 		return false;
 	}
@@ -603,6 +538,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindNetworkOrStationTaxonomiesAuthorized(Integer networkId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isFindStationTagsAuthorized(Integer stationId) {
 		Station station = stationRepository.findOne(stationId);
 		return stationSecurityChecker.canVisualize(station);
@@ -744,10 +684,10 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return termPerspective != null && canVisualizeStation(termPerspective.perspective.station.id);
 	}
 
-    @Override
-    protected boolean isGetTermPerspectiveHomeRowAuthorized(Integer termPerspectiveId) {
-        return false;
-    }
+	@Override
+	protected boolean isGetTermPerspectiveHomeRowAuthorized(Integer termPerspectiveId) {
+		return false;
+	}
 
 	@Override
 	protected boolean isGetTermPerspectiveFeaturedRowAuthorized(Integer termPerspectiveId) {
@@ -1125,7 +1065,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPageableQueryQueryAuthorized(Integer pageableQueryId) {
+	protected boolean isGetPageableQueryObjectQueryAuthorized(Integer pageableQueryId) {
 		return false;
 	}
 
@@ -1155,56 +1095,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPostScheduledsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPostScheduledAuthorized(Integer postScheduledId) {
-		return canReadPosts(postScheduledId);
-	}
-
-	@Override
-	protected boolean isGetPostScheduledSponsorAuthorized(Integer postScheduledId) {
-		return canReadPosts(postScheduledId);
-	}
-
-	@Override
-	protected boolean isGetPostScheduledCommentsAuthorized(Integer postScheduledId) {
-		return canReadPosts(postScheduledId);
-	}
-
-	@Override
-	protected boolean isGetPostScheduledFeaturedImageAuthorized(Integer postScheduledId) {
-		return canReadPosts(postScheduledId);
-	}
-
-	@Override
-	protected boolean isGetPostScheduledVideosAuthorized(Integer postScheduledId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPostScheduledImagesAuthorized(Integer postScheduledId) {
-		return canReadPosts(postScheduledId);
-	}
-
-	@Override
-	protected boolean isGetPostScheduledAuthorAuthorized(Integer postScheduledId) {
-		return canReadPosts(postScheduledId);
-	}
-
-	@Override
-	protected boolean isGetPostScheduledStationAuthorized(Integer postScheduledId) {
-		return canReadPosts(postScheduledId);
-	}
-
-	@Override
-	protected boolean isGetPostScheduledTermsAuthorized(Integer postScheduledId) {
-		return canReadPosts(postScheduledId);
-	}
-
-    @Override
 	protected boolean isGetStationLogoAuthorized(Integer stationId) {
 		return true;
 	}
@@ -1250,6 +1140,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetBaseObjectQueriesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetBaseObjectQueryAuthorized(Integer baseObjectQueryId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetBaseSectionsAuthorized() {
 		return false;
 	}
@@ -1257,46 +1157,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetBaseSectionAuthorized(Integer baseSectionId) {
 		return false;
-	}
-
-	@Override
-	protected boolean isGetBaseSectionPageAuthorized(Integer baseSectionId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetBookmarksAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetBookmarkAuthorized(Integer bookmarkId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindBookmarksByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindBookmarksByPersonIdAuthorized(Integer personId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindBookmarksByPostIdAuthorized(Integer postId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetBookmarkPostAuthorized(Integer bookmarkId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetBookmarkPersonAuthorized(Integer bookmarkId) {
-		return true;
 	}
 
 	@Override
@@ -1316,11 +1176,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetRecommendPersonAuthorized(Integer recommendId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonBookmarksAuthorized(Integer personId) {
 		return true;
 	}
 
@@ -1400,16 +1255,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindBookmarksByPersonIdAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindBookmarkByPersonIdAndPostIdAuthorized(Integer personId, Integer postId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isFindRecommendByPersonIdAndPostIdAuthorized(Integer personId, Integer postId) {
 		return true;
 	}
@@ -1421,11 +1266,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindRecommendByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindBookmarkByPersonAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
 
@@ -1522,11 +1362,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetNetworkLoginImageAuthorized(Integer networkId) {
 		return true;
-	}
-
-	@Override
-	protected boolean isGetNetworkAndroidAppAuthorized(Integer networkId) {
-		return false;
 	}
 
 	@Override

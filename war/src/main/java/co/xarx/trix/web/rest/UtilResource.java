@@ -1,24 +1,19 @@
 package co.xarx.trix.web.rest;
 
 
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.auth.TrixAuthenticationProvider;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.*;
 import co.xarx.trix.domain.Image;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.persistence.elasticsearch.BookmarkEsRespository;
-import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
-import co.xarx.trix.persistence.elasticsearch.PostEsRepository;
-import co.xarx.trix.script.ImageScript;
-import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.services.EmailService;
 import co.xarx.trix.util.StringUtil;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,48 +53,37 @@ import java.util.stream.Collectors;
 public class UtilResource {
 	private @Context HttpServletRequest request;
 
-	private @Autowired
-	NetworkEventHandler networkEventHandler;
-	private @Autowired
-	PersonEventHandler personEventHandler;
-	private @Autowired
-	TaxonomyEventHandler taxonomyEventHandler;
-	private @Autowired
-	StationEventHandler stationEventHandler;
-	private @Autowired PersonRepository personRepository;
-	private @Autowired
-	StationRoleEventHandler stationRoleEventHandler;
-	private @Autowired
-	NetworkRolesRepository networkRolesRepository;
-	private @Autowired
-	StationRepository stationRepository;
-	private @Autowired StationRolesRepository stationRolesRepository;
-	private @Autowired
-	TrixAuthenticationProvider authProvider;
-	private @Autowired NetworkRepository networkRepository;
-	private @Autowired
-	WordrailsService wordrailsService;
-	private @Autowired
-	TaxonomyRepository taxonomyRepository;
-	private @Autowired
-	PostRepository postRepository;
-	private @Autowired
-	TermPerspectiveRepository termPerspectiveRepository;
-	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
-	private @Autowired InvitationRepository invitationRepository;
-	public @Autowired FileRepository fileRepository;
-	public @Autowired
-	PerspectiveEsRepository perspectiveEsRepository;
+	@Autowired
+	private PersonEventHandler personEventHandler;
+	@Autowired
+	private TaxonomyEventHandler taxonomyEventHandler;
+	@Autowired
+	private StationEventHandler stationEventHandler;
+	@Autowired
+	private PersonRepository personRepository;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private NetworkRepository networkRepository;
+	@Autowired
+	private TaxonomyRepository taxonomyRepository;
+	@Autowired
+	private PostRepository postRepository;
+	@Autowired
+	private TermPerspectiveRepository termPerspectiveRepository;
+	@Autowired
+	private StationPerspectiveRepository stationPerspectiveRepository;
+	@Autowired
+	private InvitationRepository invitationRepository;
 
-	public @Autowired CacheService cacheService;
+	@Autowired
+	private CacheService cacheService;
 
-	private @PersistenceContext EntityManager manager;
-
-	private @Autowired
-	PostEsRepository postEsRepository;
-
-	private @Autowired
-	BookmarkEsRespository bookmarkEsRespository;
+	private
+	@PersistenceContext
+	EntityManager manager;
 
 	@GET
 	@Path("/updateDefaultStationPerspective")
@@ -258,8 +242,7 @@ public class UtilResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response generate(@FormParam("subdomain") String subdomain, @FormParam("stationId") Integer stationId, @FormParam("count") Integer count){
 
-		Network network = networkRepository.findOneBySubdomain(subdomain);
-		Station station = stationId != null ? stationRepository.findOne(stationId) : null;
+		Network network = networkRepository.findBySubdomain(subdomain);
 
 		List<Invitation> invites = new ArrayList<>();
 
@@ -321,43 +304,43 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-    @GET
-    @Path("/updateTermPerspectives")
-    @Transactional(readOnly = false)
-    public Response updateTermPerspectives(@Context HttpServletRequest request){
-        List<StationPerspective> sps = stationPerspectiveRepository.findAll();
+	@GET
+	@Path("/updateTermPerspectives")
+	@Transactional(readOnly = false)
+	public Response updateTermPerspectives(@Context HttpServletRequest request){
+		List<StationPerspective> sps = stationPerspectiveRepository.findAll();
 
-        for(StationPerspective stationPerspective: sps) {
+		for(StationPerspective stationPerspective: sps) {
 
-            if(stationPerspective.perspectives != null && stationPerspective.perspectives.size() > 0)
-                continue;
+			if(stationPerspective.perspectives != null && stationPerspective.perspectives.size() > 0)
+				continue;
 
-            Taxonomy taxonomy = taxonomyRepository.findOne(stationPerspective.taxonomy.id);
-            TermPerspective tp = new TermPerspective();
-            tp.perspective = stationPerspective;
-            tp.stationId = stationPerspective.station.id;
-            tp.rows = new ArrayList<Row>();
-            for (Term term: taxonomy.terms){
-                Row row = new Row();
-                row.term = term;
-                row.type = Row.ORDINARY_ROW;
-                tp.rows.add(row);
-                row.perspective = tp;
-            }
+			Taxonomy taxonomy = taxonomyRepository.findOne(stationPerspective.taxonomy.id);
+			TermPerspective tp = new TermPerspective();
+			tp.perspective = stationPerspective;
+			tp.stationId = stationPerspective.station.id;
+			tp.rows = new ArrayList<Row>();
+			for (Term term: taxonomy.terms){
+				Row row = new Row();
+				row.term = term;
+				row.type = Row.ORDINARY_ROW;
+				tp.rows.add(row);
+				row.perspective = tp;
+			}
 
-            stationPerspective.perspectives = new HashSet<TermPerspective>();
-            stationPerspective.perspectives.add(tp);
+			stationPerspective.perspectives = new HashSet<TermPerspective>();
+			stationPerspective.perspectives.add(tp);
 
-            termPerspectiveRepository.save(tp);
+			termPerspectiveRepository.save(tp);
 
-            for(Row row: tp.rows){
-                row.perspective = tp;
-                rowRepository.save(row);
-            }
-        }
+			for(Row row: tp.rows){
+				row.perspective = tp;
+				rowRepository.save(row);
+			}
+		}
 
-        return Response.status(Status.OK).build();
-    }
+		return Response.status(Status.OK).build();
+	}
 
 	@GET
 	@Path("/updateNetworkTaxonomies")
@@ -402,50 +385,50 @@ public class UtilResource {
 				}
 			}
 
-            List<Taxonomy> taxs = manager.createQuery("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'N' and taxonomy.owningNetwork is null").getResultList();
+			List<Taxonomy> taxs = manager.createQuery("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'N' and taxonomy.owningNetwork is null").getResultList();
 
 
-            for(Taxonomy tax: taxs) {
-                taxonomyRepository.deleteTaxonomyNetworks(tax.id);
-                for (Term term : termRepository.findRoots(tax.id)) {
+			for(Taxonomy tax: taxs) {
+				taxonomyRepository.deleteTaxonomyNetworks(tax.id);
+				for (Term term : termRepository.findRoots(tax.id)) {
 
-                    if(term.termPerspectives != null && term.termPerspectives.size() > 0){
-                        termPerspectiveRepository.delete(term.termPerspectives);
-                    }
+					if(term.termPerspectives != null && term.termPerspectives.size() > 0){
+						termPerspectiveRepository.delete(term.termPerspectives);
+					}
 
-                    List<Row> rows = rowRepository.findByTerm(term);
-                    if(rows != null && rows.size() > 0){
-                        rowRepository.delete(rows);
-                    }
+					List<Row> rows = rowRepository.findByTerm(term);
+					if(rows != null && rows.size() > 0){
+						rowRepository.delete(rows);
+					}
 
-                    List<Term> terms = termRepository.findByParent(term);
-                    if(terms != null && terms.size() > 0){
-                        deleteCascade(term);
-                    }
-                    termRepository.deletePostsTerms(term.id);
-                    if(!term.equals(term)){
-                        termRepository.delete(term);
-                    }
+					List<Term> terms = termRepository.findByParent(term);
+					if(terms != null && terms.size() > 0){
+						deleteCascade(term);
+					}
+					termRepository.deletePostsTerms(term.id);
+					if(!term.equals(term)){
+						termRepository.delete(term);
+					}
 
-                    termRepository.delete(term);
-                }
-                List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByTaxonomy(tax);
-                if(stationsPerspectives != null && stationsPerspectives.size() > 0){
-                    stationPerspectiveRepository.delete(stationsPerspectives);
-                }
-                taxonomyRepository.delete(tax);
-            }
+					termRepository.delete(term);
+				}
+				List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByTaxonomy(tax);
+				if(stationsPerspectives != null && stationsPerspectives.size() > 0){
+					stationPerspectiveRepository.delete(stationsPerspectives);
+				}
+				taxonomyRepository.delete(tax);
+			}
 
 			taxs = manager.createQuery("select taxonomy from Taxonomy taxonomy where taxonomy.type = 'N' and taxonomy.owningNetwork is not null").getResultList();
 
 			for(Taxonomy tax: taxs){
 				Network net = networkRepository.findOne(tax.owningNetwork.id);
-                if(net.categoriesTaxonomyId == null) {
-                    net.categoriesTaxonomyId = tax.id;
-                    networkRepository.save(net);
-                }
+				if(net.categoriesTaxonomyId == null) {
+					net.categoriesTaxonomyId = tax.id;
+					networkRepository.save(net);
+				}
 			}
-        }
+		}
 
 		return Response.status(Status.OK).build();
 	}
@@ -464,15 +447,15 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-    @GET
-    @Path("/updateStationTaxonomies")
-    @Transactional(readOnly=false)
-    public Response updateStationTaxonomies(@Context HttpServletRequest request){
-        String host = request.getHeader("Host");
+	@GET
+	@Path("/updateStationTaxonomies")
+	@Transactional(readOnly=false)
+	public Response updateStationTaxonomies(@Context HttpServletRequest request){
+		String host = request.getHeader("Host");
 
-        if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-           List<Station> stations = stationRepository.findAll();
-            for (Station station: stations){
+		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
+		   List<Station> stations = stationRepository.findAll();
+			for (Station station: stations){
 				Set<Taxonomy> taxonomies = station.ownedTaxonomies;
 				boolean hasStationTaxonomy = false;
 				for (Taxonomy tax: taxonomies){
@@ -504,62 +487,6 @@ public class UtilResource {
 					termRepository.save(term1);
 					termRepository.save(term2);
 					taxonomyRepository.save(sTaxonomy);
-				}
-            }
-        }
-		return Response.status(Status.OK).build();
-    }
-
-	@GET
-	@Path("/updateStationTagsTaxonomy")
-	@Transactional(readOnly=false)
-	public Response updateStationTagsTaxonomy(@Context HttpServletRequest request){
-		String host = request.getHeader("Host");
-
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Station> stations = stationRepository.findAll();
-			for (Station station: stations){
-				Set<Taxonomy> taxonomies = station.ownedTaxonomies;
-				boolean hasStationTag = false;
-				for (Taxonomy tax: taxonomies){
-					if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY))
-						hasStationTag = true;
-				}
-				if(!hasStationTag){
-					//Station Default Taxonomy
-					Taxonomy sTaxonomy = new Taxonomy();
-					sTaxonomy.name = "Station: " + station.name;
-					sTaxonomy.owningStation = station;
-					sTaxonomy.type = Taxonomy.STATION_TAG_TAXONOMY;
-					taxonomyRepository.save(sTaxonomy);
-					station.ownedTaxonomies.add(sTaxonomy);
-					stationRepository.save(station);
-				}
-			}
-		}
-		return Response.status(Status.OK).build();
-	}
-
-	@GET
-	@Path("/updateStationTagsCategoriesIds")
-	@Transactional(readOnly=false)
-	public Response updateStationTagsCategoriesIds(@Context HttpServletRequest request){
-		String host = request.getHeader("Host");
-
-		if(host.contains("0:0:0:0:0:0:0") || host.contains("0.0.0.0") || host.contains("localhost") || host.contains("127.0.0.1")){
-			List<Station> stations = stationRepository.findAll();
-			for (Station station: stations){
-				Set<Taxonomy> taxonomies = station.ownedTaxonomies;
-				for (Taxonomy tax: taxonomies){
-					if(tax.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
-						if(station.tagsTaxonomyId == null)
-							station.tagsTaxonomyId = tax.id;
-					}
-
-					if(tax.type.equals(Taxonomy.STATION_TAXONOMY)){
-						if(station.categoriesTaxonomyId == null)
-							station.categoriesTaxonomyId = tax.id;
-					}
 				}
 			}
 		}
@@ -601,8 +528,7 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-	private @Autowired ImageRepository imageRepository;
-	private @Autowired BookmarkRepository bookmarkRepository;
+	@Autowired private ImageRepository imageRepository;
 	@Autowired private TermRepository termRepository;
 	@Autowired private RowRepository rowRepository;
 
@@ -706,10 +632,9 @@ public class UtilResource {
 	@DELETE
 	@Path("/deleteNetwork/{id}")
 	public Response deleteNetwork (@Context HttpServletRequest request, @PathParam("id") Integer networkId) {
-        if(isLocal(request.getHeader("Host"))) {
+		if(isLocal(request.getHeader("Host"))) {
 
 			Network network = networkRepository.findOne(networkId);
-            TenantContextHolder.setCurrentTenantId(network.id);
 
 			List<NetworkRole> nr = personRepository.findNetworkAdmin();
 
@@ -717,7 +642,7 @@ public class UtilResource {
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password);
+			authProvider.passwordAuthentication(user, user.password);
 
 			List<Station> stations = stationRepository.findByNetworkId(networkId);
 			for (Station station: stations){
@@ -731,10 +656,7 @@ public class UtilResource {
 				personRepository.delete(person);
 			}
 
-			networkEventHandler.handleBeforeCreate(network);
 			networkRepository.delete(network);
-
-			cacheService.removeNetwork(networkId);
 		}
 		return Response.status(Status.OK).build();
 	}
@@ -750,7 +672,7 @@ public class UtilResource {
 
 			Set<GrantedAuthority> authorities = new HashSet<>();
 			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-			authProvider.passwordAuthentication(user.username, user.password);
+			authProvider.passwordAuthentication(user, user.password);
 
 			TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTermNull(perspectiveId);
 
@@ -785,18 +707,6 @@ public class UtilResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@Autowired
-	private AmazonCloudService amazon;
-
-	@POST
-	@Path("/uploadAmazonImages")
-	public Response uploadAmazonImages(@Context HttpServletRequest request) {
-		if(isLocal(request.getHeader("Host"))) {
-			amazon.uploadAmazonImages();
-		}
-		return Response.status(Status.OK).build();
-	}
-
 	private boolean isLocal(String host) {
 		return host.contains("0:0:0:0:0:0:0") ||
 				host.contains("0.0.0.0") ||
@@ -805,29 +715,29 @@ public class UtilResource {
 				host.contains("xarxlocal.com");
 	}
 
-    public Response adminAuth(){
-        List<NetworkRole> nr = personRepository.findNetworkAdmin();
-        User user = nr.get(0).person.user;
-        Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-        authProvider.passwordAuthentication(user.username, user.password);
-        return Response.status(Status.OK).build();
-    }
+	public Response adminAuth(){
+		List<NetworkRole> nr = personRepository.findNetworkAdmin();
+		User user = nr.get(0).person.user;
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+		authProvider.passwordAuthentication(user, user.password);
+		return Response.status(Status.OK).build();
+	}
 
-    public Response adminAuth(Integer networkId){
-        List<NetworkRole> nrs = personRepository.findNetworkAdmin();
-        User user = null;
-        for (NetworkRole nr: nrs) {
-            if(nr.network.id.equals(networkId) && nr.admin) {
-                user = nr.person.user;
-                break;
-            }
-        }
-        Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
-        authProvider.passwordAuthentication(user.username, user.password);
-        return Response.status(Status.OK).build();
-    }
+	public Response adminAuth(Integer networkId){
+		List<NetworkRole> nrs = personRepository.findNetworkAdmin();
+		User user = null;
+		for (NetworkRole nr: nrs) {
+			if(nr.network.id.equals(networkId) && nr.admin) {
+				user = nr.person.user;
+				break;
+			}
+		}
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+		authProvider.passwordAuthentication(user.username, user.password);
+		return Response.status(Status.OK).build();
+	}
 
 	@GET
 	@Path("/updateRowPositions")
@@ -853,78 +763,6 @@ public class UtilResource {
 	}
 
 	@GET
-	@Path("/indexPostsToElastisearch")
-	@Transactional(readOnly=false)
-	public void indexPostsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<Post> all = postRepository.findAllPostsOrderByIdDesc();
-			for(int i = 0; i < all.size(); i++){
-				postEsRepository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
-	@GET
-	@Path("/indexPersonsToElastisearch")
-	@Transactional(readOnly=false)
-	public void indexPersonsToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<Person> all = personRepository.findAllPostsOrderByIdDesc();
-			for(int i = 0; i < all.size(); i++){
-				personRepository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
-	@GET
-	@Path("/indexPerspectivesToElastisearch")
-	@Transactional(readOnly=false)
-	public void indexPerspectivesToElastisearch(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<TermPerspective> all = termPerspectiveRepository.findAll();
-			for(int i = 0; i < all.size(); i++){
-				perspectiveEsRepository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
-	@GET
-	@Path("/indexBookmarksToElastisearch")
-	@Transactional(readOnly=false)
-	public void indexBookmarksToElastisearch() throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<Bookmark> all = bookmarkRepository.findAll();
-			for(int i = 0; i < all.size(); i++){
-				bookmarkEsRespository.save(all.get(i));
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
-
-	@GET
 	@Path("/stationNetwork")
 	@Transactional
 	public void stationNetwork(){
@@ -941,39 +779,11 @@ public class UtilResource {
 		}
 	}
 
-
-	@GET
-	@Path("/deleteAllPerspectivesFromIndex")
-	@Transactional(readOnly=false)
-	public void deleteAllPerspectivesFromIndex(@Context HttpServletRequest request) throws InterruptedException {
-		String host = request.getHeader("Host");
-
-		if(isLocal(request.getHeader("Host"))){
-			List<StationPerspective> all = stationPerspectiveRepository.findAll();
-			for(int i = 0; i < all.size(); i++){
-				perspectiveEsRepository.deleteByStationPerspective(all.get(i).id);
-
-				if(i % 50 == 0){
-					Thread.sleep(100);
-				}
-			}
-		}
-	}
+	@Autowired
+	private AsyncService asyncService;
 
 	@Autowired
-	private ImageScript imageScript;
-
-	@GET
-	@Path("/addPicturesToImages")
-	@Transactional(readOnly=false)
-	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {
-		if(isLocal(request.getHeader("Host"))){
-			imageScript.addPicturesToImages();
-		}
-	}
-
-    @Autowired
-    public EmailService emailService;
+	public EmailService emailService;
 
 //    @GET
 //    @Path("/testEmail/{networkId}")
@@ -1023,9 +833,6 @@ public class UtilResource {
 //        }
 //    }
 
-    @Autowired
-    public PostEventHandler postEventHandler;
-
 //    @DELETE
 //    @Path("/deleteNetworkPosts/{id}")
 //    public void deleteNetworkPosts(@PathParam("id") Integer networkId){
@@ -1050,23 +857,72 @@ public class UtilResource {
             try {
                 String filePath = getClass().getClassLoader().getResource("tpl/custom-invitation-email.html").getFile();
 
-                filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
+				filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
 
-                byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-                String template = new String(bytes, Charset.forName("UTF-8"));
+				byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+				String template = new String(bytes, Charset.forName("UTF-8"));
 
-                Invitation invitation = new Invitation();
-                invitation.network = network;
-                invitation.active = true;
-                invitation.personName = "Misael Neto";
-                invitation.email = "misawsneto@gmail.com";
-                invitation.hash = StringUtil.generateRandomString(8, "aA#");
+				Color c1 = Color.decode(network.mainColor);
+				Color c2 = Color.decode(network.navbarColor);
 
-                emailService.sendNetworkInvitation(network, invitation, template);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
+				HashMap<String, Object> scopes = new HashMap<String, Object>();
+				scopes.put("name", "Test Name");
+				scopes.put("networkName", network.name);
+				scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", "+ c1.getBlue() +" )");
+				scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", "+ c2.getBlue() +" )");
+				scopes.put("link", "http://"+network.subdomain+".trix.rocks");
+				scopes.put("networkSubdomain", network.subdomain);
+				scopes.put("passwordReset", "hash");
+
+
+				Person person = authProvider.getLoggedPerson();
+				if (person != null) scopes.put("inviterName", person.name);
+				else scopes.put("inviterName", "");
+
+				StringWriter writer = new StringWriter();
+
+				MustacheFactory mf = new DefaultMustacheFactory();
+
+				Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
+				mustache.execute(writer, scopes);
+				writer.flush();
+
+				String emailBody = writer.toString();
+				String subject = "[ Test ]" + " Cadastro de senha";
+				emailService.sendSimpleMail("misawsneto@gmail.com", subject, emailBody);
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Autowired
+	public PostEventHandler postEventHandler;
+
+	@DELETE
+	@Path("/deleteNetworkPosts/{id}")
+	public void deleteNetworkPosts(@PathParam("id") Integer networkId){
+		if(isLocal(request.getHeader("Host"))){
+			adminAuth(networkId);
+			Network network = networkRepository.findOne(networkId);
+			for(Station station: network.stations){
+				for(Post post: station.posts){
+					postEventHandler.handleBeforeDelete(post);
+					postRepository.delete(post.id);
+				}
+			}
+		}
+	}
+
+	Logger log = Logger.getLogger(this.getClass().getName());
+
+	@GET
+	@Path("/testLog")
+	@Transactional(readOnly=false)
+	public void testLog(@Context HttpServletRequest request) throws InterruptedException {
+		if(isLocal(request.getHeader("Host"))){
+			log.info("testLog");
+		}
+	}
 
 }

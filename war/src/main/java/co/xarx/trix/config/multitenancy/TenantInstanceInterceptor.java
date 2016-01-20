@@ -20,8 +20,8 @@ public class TenantInstanceInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		if(!(handler instanceof ResourceHttpRequestHandler)) {
 			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-			TenantContextHolder.setCurrentTenantId(network.id);
-			TenantContextHolder.setCurrentTenantSubdomain(network.subdomain);
+			TenantContextHolder.setCurrentNetworkId(network.id);
+			TenantContextHolder.setCurrentTenantId(network.subdomain);
 		}
 
 		return super.preHandle(request, response, handler);

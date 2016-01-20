@@ -15,8 +15,7 @@ import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,7 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collection;
 
-@Component
+@Service
 public class AndroidBuilderService {
 
 	Logger log = Logger.getLogger(AndroidBuilderService.class.getName());
@@ -49,7 +48,6 @@ public class AndroidBuilderService {
 	private AmazonCloudService amazonCloudService;
 
 
-	@Async
 	public void run(String configPath, AndroidApp androidApp) throws Exception {
 		String separator = "/";
 		if (configPath.endsWith("/")) {

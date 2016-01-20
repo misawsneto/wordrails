@@ -1,0 +1,68 @@
+{
+  "id": 397,
+  "updatedAt": 1450889776000,
+  "createdAt": 1450889566000,
+  "networkId": 5,
+  "name": "jonas",
+  "username": "jonas",
+  "bio": "Um programador!",
+  "email": "jonas@xarx.co",
+  "imageUrl": null,
+  "coverUrl": null,
+  "lastLogin": null,
+  "coverHashes": null,
+  "imageHashes": {},
+  "imageId": 18982,
+  "imageSmallId": 18983,
+  "imageMediumId": 18983,
+  "imageLargeId": 18983,
+  "coverLargeId": null,
+  "coverId": null,
+  "imageHash": "2d5036762f01966ef507c9a0cad50662",
+  "imageSmallHash": null,
+  "imageMediumHash": "2d5036762f01966ef507c9a0cad50662",
+  "imageLargeHash": "2d5036762f01966ef507c9a0cad50662",
+  "coverMediumHash": null,
+  "coverLargeHash": null,
+  "coverHash": null,
+  "passwordReseted": false,
+  "twitterHandle": null,
+  "coverMediumId": null,
+  "_links": {
+    "self": {
+      "href": "http://demo.xarxlocal.com/api/persons/397{?projection}",
+      "templated": true
+    },
+    "personsStationPermissions": {
+      "href": "http://demo.xarxlocal.com/api/persons/397/personsStationPermissions"
+    },
+    "posts": {
+      "href": "http://demo.xarxlocal.com/api/persons/397/posts"
+    },
+    "following": {
+      "href": "http://demo.xarxlocal.com/api/persons/397/following"
+    },
+    "image": {
+      "href": "http://demo.xarxlocal.com/api/persons/397/image"
+    },
+    "cover": {
+      "href": "http://demo.xarxlocal.com/api/persons/397/cover"
+    },
+    "comments": {
+      "href": "http://demo.xarxlocal.com/api/persons/397/comments"
+    },
+    "bookmarks": {
+      "href": "http://demo.xarxlocal.com/api/persons/397/bookmarks"
+    },
+    "user": {
+      "href": "http://demo.xarxlocal.com/api/persons/397/user"
+    },
+    "recommends": {
+      "href": "http://demo.xarxlocal.com/api/persons/397/recommends"
+    },
+    "personsNetworkRoles": {
+      "href": "http://demo.xarxlocal.com/api/persons/397/personsNetworkRoles"
+    }
+  },
+  "image": "http://demo.xarxlocal.com/api/images/4760"
+}

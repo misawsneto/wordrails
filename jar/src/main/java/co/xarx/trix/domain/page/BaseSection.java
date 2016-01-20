@@ -1,42 +1,44 @@
 package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Map;
 
 @Entity
+@Table(name = "section_base")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
 public abstract class BaseSection extends BaseEntity implements Section, Serializable {
 
-	@JsonIgnore
-	@NotNull
-	@Column(name = "list_index")
-	public Integer index;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@NotNull
 	public String title;
 
-	@NotNull
-	public String layout;
-
-	@ManyToOne
-	@JsonBackReference("page")
-	public Page page;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "section_properties", joinColumns = @JoinColumn(name = "section_id"))
+	@MapKeyColumn(name = "property_key", nullable = false)
+	@Column(name = "value", nullable = false)
+	public Map<String, String> properties;
 
 	@Override
-	public Integer getIndex() {
-		return index;
+	public Map<String, String> getProperties() {
+		return properties;
 	}
 
-	@Override
-	public void setIndex(Integer index) {
-		this.index = index;
+	public void setProperties(Map<String, String> properties) {
+		this.properties = properties;
 	}
 
 	public void setTitle(String title) {
@@ -44,27 +46,7 @@ public abstract class BaseSection extends BaseEntity implements Section, Seriali
 	}
 
 	@Override
-	public void setLayout(String layout) {
-		this.layout = layout;
-	}
-
-	@Override
-	public String getLayout() {
-		return layout;
-	}
-
-	@Override
 	public String getTitle() {
 		return title;
-	}
-
-	@Override
-	public Page getPage() {
-		return page;
-	}
-
-	@Override
-	public void setPage(Page page) {
-		this.page = page;
 	}
 }
