@@ -292,15 +292,19 @@ aria-label="Novo usuário">
              					class="bg-cover bg-img-lg bg-cover-round m-auto" 
              					title="{{app.conflictingData.conflictingPerson.name}}"></div>
              					<div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
-             					<div class="h4 m-b-lg">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
+             					<div class="h4 m-b-xs">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
+           						<div class="h4 m-b-lg" ng-if="app.conflictingData.conflictingStationRole">
+           							Permissão: <strong> {{app.conflictingData.conflictingStationRole.admin ? 'administrador': (app.conflictingData.conflictingStationRole.editor ? 'editor' : app.conflictingData.conflictingStationRole.writer ? 'escritor' : 'leitor')}}</strong>
+
+           						</div>
              				</div>
              			</div>
              			<div class="row">
              				<div class="col-xs-6 col-xs-offset-3">
 
              					<div class="h4 m-b" ng-hide="app.conflictingData.conflictingStationRole">
-             						Este usuário já existe. Deseja adioná-lo a esta estação no papel de <strong>
-             						{{app.conflictingData.role == 'ADMIN' ? 'admin': (app.conflictingData.role == 'EDITOR' ? 'editor' : app.conflictingData.role == 'WRITER' ? 'escritor' : 'leitor')}}?</strong></div>
+             						Este usuário já está cadastrado. Deseja dar permissões de <strong>
+             						{{app.conflictingData.role == 'ADMIN' ? 'administrador': (app.conflictingData.role == 'EDITOR' ? 'editor' : app.conflictingData.role == 'WRITER' ? 'escritor' : 'leitor')}}?</strong> nesta estação?</div>
 
              						<div class="text-color p-l-lg p-r-lg" ng-hide="app.conflictingData.conflictingStationRole">
              							<button ng-click="app.addConflictingToStation();" angular-ripple type="submit" class="m-t-md btn-default btn text-lg text-u-c btn-block ">

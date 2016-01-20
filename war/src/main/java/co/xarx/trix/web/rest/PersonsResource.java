@@ -17,6 +17,7 @@ import co.xarx.trix.mobile.notification.GCMService;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
+import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -478,16 +479,21 @@ public class PersonsResource {
 						break;
 					}
 
+					if(errorVal.contains("-"))
+						errorVal = errorVal.split("-")[0];
+
 					Person conflictingPerson = null;
-					if(person.email != null && person.email.trim().equals(errorVal)){
+					if(person.email != null && person.email.trim().equals(errorVal))
 						conflictingPerson = personRepository.findByEmail(person.email);
-					}else if(person.username != null && person.username.trim().equals(errorVal)){
+
+					if(conflictingPerson == null && person.username != null && person.username.trim().equals(errorVal)){
 						conflictingPerson = personRepository.findOne(QPerson.person.user.username.eq(person.username));
 					}
 
 					if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
 //							conflictingPerson.id 
 						StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
+						Logger.debug("conflicting station name: " + str.station.name);
 						if(str != null)
 							return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
 									+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
