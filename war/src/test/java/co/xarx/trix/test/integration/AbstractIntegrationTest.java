@@ -1,9 +1,10 @@
-package co.xarx.trix.test;
+package co.xarx.trix.test.integration;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.test.config.ApplicationTestConfig;
 import co.xarx.trix.test.config.DatabaseTestConfig;
 import org.junit.Before;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
+@Category(IntegrationTest.class)
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
 @PowerMockIgnore({"javax.management.*", "javax.xml.parsers.*", "org.apache.log4j.*", "org.xml.sax.*", "org.w3c.dom.*", "com.sun.xml.*", "javax.xml.stream.*", "com.sun.org.apache.xerces.internal.jaxp.*", "ch.qos.logback.*", "org.slf4j.*"})

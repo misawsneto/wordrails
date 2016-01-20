@@ -8,8 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public interface NetworkRepository extends JpaRepository<Network, Integer>, QueryDslPredicateExecutor<Network> {
 
@@ -28,7 +26,7 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 	List<Network> belongsToNetworks(@Param("personId") Integer personId, @Param("networksId") List<Integer> networksId);
 
 	@RestResource(exported = true)
-	Network findBySubdomain(@Param("subdomain") String subdomain);
+	Network findByTenantId(@Param("tenantId") String tenantId);
 
 	@RestResource(exported = false)
 	Network findByDomain(@Param("domain") String domain);

@@ -23,7 +23,6 @@ import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -541,7 +540,7 @@ public class PersonsResource {
 			}
 
 			if(network != null && network.addStationRolesOnSignup){
-				List<Station> stations = stationRepository.findByNetworkId(network.id);
+				List<Station> stations = stationRepository.findAll();
 				for (Station station : stations) {
 					StationRole sr = new StationRole();
 					sr.person = person;

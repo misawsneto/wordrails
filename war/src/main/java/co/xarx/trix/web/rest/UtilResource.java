@@ -238,7 +238,7 @@ public class UtilResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response generate(@FormParam("subdomain") String subdomain, @FormParam("stationId") Integer stationId, @FormParam("count") Integer count){
 
-		Network network = networkRepository.findBySubdomain(subdomain);
+		Network network = networkRepository.findByTenantId(subdomain);
 
 		List<Invitation> invites = new ArrayList<>();
 

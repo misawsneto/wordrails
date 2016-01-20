@@ -69,7 +69,7 @@ public class NetworkDomainFilter implements Filter {
 					TenantContextHolder.setCurrentTenantId(network.tenantId);
 					domains.put(host, network.tenantId);
 				} else {
-					network = networkRepository.findBySubdomain(subdomain);
+					network = networkRepository.findByTenantId(subdomain);
 					if (network != null) {
 						tenantIds.add(subdomain);
 					} else {

@@ -1,4 +1,4 @@
-package co.xarx.trix.test.services;
+package co.xarx.trix.test.integration;
 
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.persistence.FileRepository;
@@ -6,7 +6,6 @@ import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
-import co.xarx.trix.test.AbstractIntegrationTest;
 import co.xarx.trix.test.config.ApplicationTestConfig;
 import co.xarx.trix.test.config.DatabaseTestConfig;
 import co.xarx.trix.util.FileUtil;
@@ -16,6 +15,7 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -40,6 +40,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Category(IntegrationTest.class)
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
 @PrepareForTest({FileUtil.class, ImageUtil.class})
@@ -49,9 +50,9 @@ import static org.mockito.Mockito.when;
 )
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-public class ImageServiceTest extends AbstractIntegrationTest {
+public class ImageUploadIT extends AbstractIntegrationTest {
 
-	Logger logger = LoggerFactory.getLogger(ImageServiceTest.class);
+	Logger logger = LoggerFactory.getLogger(ImageUploadIT.class);
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();

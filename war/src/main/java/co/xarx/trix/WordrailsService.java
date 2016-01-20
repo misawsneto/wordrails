@@ -98,7 +98,7 @@ public class WordrailsService {
 			}
 
 			try {
-				network = networkRepository.findBySubdomain(subdomain);
+				network = networkRepository.findByTenantId(subdomain);
 			} catch (Exception e) {
 				// no network found in cache or db.
 				e.printStackTrace();

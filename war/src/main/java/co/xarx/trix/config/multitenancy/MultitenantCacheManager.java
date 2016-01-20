@@ -70,7 +70,7 @@ public final class MultitenantCacheManager implements CacheManager {
 	}
 
 	private String getTenantContext() {
-		String context = String.valueOf(TenantContextHolder.getCurrentNetworkId());
+		String context = TenantContextHolder.getCurrentTenantId();
 		// normalize empty string/whitespace as null context
 		if (context != null && context.trim().isEmpty()) {
 			context = null;
