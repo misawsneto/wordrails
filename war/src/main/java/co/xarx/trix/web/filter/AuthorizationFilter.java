@@ -165,6 +165,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindBySubdomainAuthorized(String subdomain) {
+		return false;
+	}
+
+	@Override
 	protected boolean isFindNetworksOrderDescAuthorized(Integer id) {
 		return true;
 	}

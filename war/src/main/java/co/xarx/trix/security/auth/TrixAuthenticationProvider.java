@@ -113,7 +113,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			return new AnonymousAuthenticationToken("anonymousKey",
 					Constants.Authentication.ANONYMOUS_USER, Constants.Authentication.ANONYMOUS_USER.authorities);
 
-		User user = userRepository.findByUsername(username);
+		User user = userRepository.findUserByUsername(username);
 
 		return passwordAuthentication(user, password);
 	}
