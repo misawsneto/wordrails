@@ -98,8 +98,6 @@ public class PersonEventHandler {
 	@HandleAfterSave
 	public void handleAfterSave(Person person) {
 		elasticSearchService.saveIndex(person, ESPerson.class, esPersonRepository);
-		cacheService.updatePerson(person.id);
-		cacheService.updatePerson(person.username);
 	}
 
 	@HandleAfterCreate

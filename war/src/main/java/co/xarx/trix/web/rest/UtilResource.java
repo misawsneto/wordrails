@@ -54,8 +54,6 @@ public class UtilResource {
 	private @Context HttpServletRequest request;
 
 	@Autowired
-	private NetworkEventHandler networkEventHandler;
-	@Autowired
 	private PersonEventHandler personEventHandler;
 	@Autowired
 	private TaxonomyEventHandler taxonomyEventHandler;
@@ -244,8 +242,7 @@ public class UtilResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response generate(@FormParam("subdomain") String subdomain, @FormParam("stationId") Integer stationId, @FormParam("count") Integer count){
 
-		Network network = networkRepository.findOneBySubdomain(subdomain);
-		Station station = stationId != null ? stationRepository.findOne(stationId) : null;
+		Network network = networkRepository.findBySubdomain(subdomain);
 
 		List<Invitation> invites = new ArrayList<>();
 
@@ -659,10 +656,7 @@ public class UtilResource {
 				personRepository.delete(person);
 			}
 
-			networkEventHandler.handleBeforeCreate(network);
 			networkRepository.delete(network);
-
-			cacheService.removeNetwork(networkId);
 		}
 		return Response.status(Status.OK).build();
 	}
