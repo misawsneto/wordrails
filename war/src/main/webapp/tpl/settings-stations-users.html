@@ -15,7 +15,7 @@
 						<select class="form-control w inline v-middle" ng-model="bulkActionSelected" ng-change="selectBulkAction()"
 						ng-options="action as action.name for action in bulkActions track by action.id">
 					</select>
-					<button ng-disabled="bulkActionSelected.id == 0" ng-click="openBulkActionsSplash()" class="btn btn-default">Aplicar</button>                
+					<button ng-disabled="bulkActionSelected.id == 0" ng-click="openBulkActionsDialog()" class="btn btn-default">Aplicar</button>                
 				</div>
 				<div class="col-sm-1">
 				</div>
@@ -62,6 +62,7 @@
 										{{role.person.username}}
 									</td>
 									<td>{{role.person.name}}</td>
+									<td>{{role.person.email}}</td>
 									<td class="text-center">{{role.admin ? 'admin': (role.editor ? 'editor' : role.writer ? 'escritor' : 'leitor')}}</td>
 									<td class="text-center" ng-if="!role.person.lastLogin"> - </td>
 									<td class="text-center" ng-if="role.person.lastLogin">{{role.person.lastLogin | fromNow3}}</td>

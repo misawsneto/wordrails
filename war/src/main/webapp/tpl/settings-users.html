@@ -18,7 +18,7 @@
 						<md-select class="col-sm-8 m-t-none m-b-none" ng-model="bulkActionSelected" ng-change="selectBulkAction(bulkActionSelected)" placeholder="Ações em grupo">
 		          <md-option ng-value="action.id" ng-repeat="action in bulkActions">{{ action.name }}</md-option>
 		        </md-select>
-						<button md-ink-ripple ng-disabled="!bulkActionSelected" ng-click="openBulkActionsSplash()" class="m-t-n-xxs md-btn md-raised bg-white">Aplicar</button>
+						<button md-ink-ripple ng-disabled="!bulkActionSelected" ng-click="openBulkActionsDialog()" class="m-t-n-xxs md-btn md-raised bg-white">Aplicar</button>
 					</div>
 					<div class="col-sm-4 text-right">
 						<div ng-if="persons && personsCount">
@@ -70,7 +70,7 @@
 						<tbody>
 							<tr ng-repeat="person in persons" ng-click="loadPerson(person)">
 								<td>
-									<label class="md-check">
+									<label class="md-check" ng-if="person.id != app.initData.person.id">
 										<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
 										<i class="blue"></i>
 									</label>
@@ -86,14 +86,14 @@
 								<td class="text-center" ng-if="!person.lastLogin"> - </td>
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 								<td class="text-center" ng-if="app.networkAdmin">
-									<div class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+									<div ng-if="person.id != app.initData.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
 										<!-- <a href ng-click="openEnableDisableDialog(person, $event)" angular-ripple class="dropdown-toggle border-radius-50 i-20" ng-class="{'text-danger mdi mdi-block-helper': person.user.enabled, 'text-success mdi mdi-check': !person.user.enabled}">
 										</a> -->
 										<!-- dropdown -->
-										 <label class="md-switch">
-							              <input type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
-							              <i class="blue"></i>
-							            </label>
+									 <label class="md-switch">
+				              <input type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
+				              <i class="blue"></i>
+				            </label>
 									</div>
 								</td>
 							</tr>
@@ -307,26 +307,96 @@
      		</div>
      	</script>
 
-     	<script type="text/ng-template" id="confirm_enable_disable_person.html">
+     	<script type="text/ng-template" id="bulk_change_permissions.html">
+	     	<md-dialog aria-label="Adicionar notícia" id="user-permissions-dialog">
+			  	<md-content>
+						<div class="wrapper">
+							<div class="wrapper-xxs text-md">
+								Estações:
+							</div>
+							<div class="wrapper-sm stations-permissions-dialog-list m-t-sm" >
+								<ul class="no-style">
+									<li ng-repeat="station in pe.adminStations" class="clearfix wrapper-xxs font-thin">
+										<span class="pull-right">
+											<label class="md-check">
+												<input type="checkbox" ng-model="station.selected" ng-change="station.selected = true;">
+												<i class="blue"></i>
+											</label>
+										</span>
+							      <span class="clear m-r-xxl">
+							        <span>{{station.stationName}}</span>
+							        <small class="text-muted clear text-ellipsis">
+							        	Visibilidade: {{(station.visibility == 'UNRESTRICTED') ? 'Pública' : 'Privada'}} | Todos podem escrever: {{(station.writable) ? 'Sim' : 'Não'}}
+							        </small>
+							      </span>
+							    </li>
+								</ul>
+							</div>
+							<div class="wrapper-xxs text-base m-t-sm">
+								<span class="text-md">Permissões:</span>
+								<ul class="station-permissions m-t">
+									<li class="m-r">
+										<label class="md-check">
+											<input type="radio" name="c" ng-model="pe.stationRole" value="READER">
+											<i class="blue"></i>
+											Leitor
+										</label>
+									</p>
+									<li class="m-r">
+										<label class="md-check">
+											<input type="radio" name="c" ng-model="pe.stationRole" value="WRITER">
+											<i class="blue"></i>
+											Escritor
+										</label>
+									</p>
+									<li class="m-r">
+										<label class="md-check">
+											<input type="radio" name="c" ng-model="pe.stationRole" value="EDITOR">
+											<i class="blue"></i>
+											Editor
+										</label>
+									</p>
+									<li class="m-r">
+										<label class="md-check">
+											<input type="radio" name="c" ng-model="pe.stationRole" value="ADMIN">
+											<i class="blue"></i>
+											Administrador
+										</label>
+									</p>
+								</ul>
+							</div>
+							<div class="pos-abt bottom-0 right-0 wrapper-sm">
+								<button ng-click="pe.applyPermissions(pe.adminStations, pe.stationRole)" md-ink-ripple class="md-btn md-flat btn-fw">Confirmar</button>
+								<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+							<div>
+						</div>
+				  </md-content>
+				</md-dialog>
+     	</script>
+
+     	<script type="text/ng-template" id="bulk_change_permissions_back.html">
 				<md-dialog aria-label="Adicionar notícia" id="user-remove-dialog">
-				<md-content>
-				<div class="wrapper">
-					<div class="h4 wrapper-sm m-t text-center">
-						{{(pe.enableDisablePerson.user.enabled) ? 
-												'Tem certeza que deseja desativar este usuário? Após ser desativado o usuário não poderá autenticar-se nesta rede.':
-												'Tem certeza que deseja ativar este usuário? Após ser ativado o usuário poderá autenticar-se nesta rede.'
-											}}
-					<div class="m-t-lg text-center text-lg">
-						<button ng-click="app.enableDisablePerson()" md-ink-ripple class="md-btn md-flat btn-fw m-r">
-							{{pe.enableDisablePerson.user.enabled ? 
-							'Desativar':
-							'Ativar'
-						}}
-					</button>
-					<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
-				</div>
-				</div>
-				</md-content>
+					<md-content>
+						<div class="wrapper">
+							<div class="wrapper-xxs stations-permissions-dialog-list m-t-sm" >
+								<ul class="no-style">
+									<li ng-repeat="station in app.adminStations" class="clearfix wrapper-xxs font-thin" >
+							      <span class="pull-right">
+											<a angular-ripple class="border-radius-50 text-lg p-sm mdi-plus mdi"></a>
+										</span>
+							      <span class="clear m-r-xxl">
+							        <span>{{station.stationName}}</span>
+							        <small class="text-muted clear text-ellipsis" ng-bind-html="station.stationName">
+							        </small>
+							      </span>
+							    </li>
+								</ul>
+							</div>
+							<div class="pos-abt bottom-0 right-0 wrapper-sm">
+								<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+							<div>
+						</div>
+					</md-content>
 				</md-dialog>
 			</script>
 
@@ -344,7 +414,7 @@
      	</script>
 
      	<script type="text/ng-template" id="confirm_bulk_action.html">
-     		<md-dialog aria-label="Nenum usuário selecionado">
+     		<md-dialog aria-label="Confimar alterações">
 			  	<md-content>
      				<div class="wrapper">
    						<div class="text-lg wrapper-sm m-t-md text-center">
@@ -354,7 +424,7 @@
    							     							}}
  							</div>
    						<div class="m-t text-center wrapper-sm text-lg">
-   							<button ng-click="pe.activateDeactivateUsers()" md-ink-ripple class="md-btn md-flat btn-fw m-r">Remover</button>
+   							<button ng-click="pe.activateDeactivateUsers()" md-ink-ripple class="md-btn md-flat btn-fw m-r">Confirmar</button>
 								<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
 							<div>
 						</div>

@@ -211,40 +211,40 @@
 <script type="text/ng-template" id="add_post.html">
 	<md-dialog aria-label="Adicionar notícia" id="perspective-editor-dialog">
   	<md-content>
-  		<div class="wrapper">
-  			<form ng-submit="pe.submitSearch()">
-	  			<div class="input-group">
+			<div class="wrapper">
+				<form ng-submit="pe.submitSearch()">
+					<div class="input-group">
 						<input ng-model="pe.searchQuery" class="input-lg w-full form-control" placeholder="Busque por notícias" />
 						<span class="input-group-btn">
-	          <button class="btn btn-default btn-lg i-24" type="submit" style="padding: 6px 12px">
-	          	<i class="mdi mdi-magnify"></i>
-	          </button>
-	         </span>
+		      <button class="btn btn-default btn-lg i-24" type="submit" style="padding: 6px 12px">
+		      	<i class="mdi mdi-magnify"></i>
+		      </button>
+		     </span>
 					</div>
-  			</form>
+				</form>
 				<div class="wrapper-xxs perspective-editor-search-results m-t-sm" >
 					<ul class="no-style">
 						<li ng-repeat="postView in pe.searchResults" class="clearfix wrapper-xxs font-thin" ng-class="{'opacity-07 bg-light': !pe.cellAddValidation(postView)}">
-              <span ng-if="postView.imageSmallId" style="height: 50px" class="bg-cover pull-left thumb m-r" ng-style="app.getBackgroundImage(postView, 'sm')">
-              </span>
-              <span class="pull-right" ng-if="pe.cellAddValidation(postView)"
-              tooltip="Adicionar" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="300">
+		      <span ng-if="postView.imageSmallId" style="height: 50px" class="bg-cover pull-left thumb m-r" ng-style="app.getBackgroundImage(postView, 'sm')">
+		      </span>
+		      <span class="pull-right" ng-if="pe.cellAddValidation(postView)"
+		      tooltip="Adicionar" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="300">
 								<a ng-click="pe.addCell(postView)" angular-ripple class="border-radius-50 text-lg p-sm mdi-plus mdi"></a>
 							</span>
 							<span class="pull-right" ng-if="!pe.cellAddValidation(postView)">
 								<a ng-click="pe.removeCell(postView)" angular-ripple class="border-radius-50 text-lg p-sm mdi-close mdi animated bounceIn text-danger"></a>
 							</span>
-              <span class="clear m-r-xxl">
-                <span>{{postView.title}}</span>
-                <small class="text-muted clear text-ellipsis" ng-bind-html="postView.snippet">
-                </small>
-              </span>
-            </li>
-            <li ng-if="pe.searchResults.length > 0">
-            	<div class="wrapper-xs text-center">
-            		<button ng-click="pe.paginateSearch()" md-ink-ripple class="md-btn md-flat btn-fw">mais</button>
-            	</div>
-            </li>
+		      <span class="clear m-r-xxl">
+		        <span>{{postView.title}}</span>
+		        <small class="text-muted clear text-ellipsis" ng-bind-html="postView.snippet">
+		        </small>
+		      </span>
+		    </li>
+		    <li ng-if="pe.searchResults.length > 0">
+		    	<div class="wrapper-xs text-center">
+		    		<button ng-click="pe.paginateSearch()" md-ink-ripple class="md-btn md-flat btn-fw">mais</button>
+		    	</div>
+		    </li>
 					</ul>
 				</div>
 				<div class="pos-abt bottom-0 right-0 wrapper-sm">

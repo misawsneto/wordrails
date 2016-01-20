@@ -466,7 +466,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	return ret;
   }
 
-  $scope.openBulkActionsSplash = function(){
+  $scope.openBulkActionsDialog = function(){
   	if(noPersonSelected())
   		$scope.app.openSplash('confirm_no_person_selected.html');
   	else if($scope.bulkActionSelected.id == 0)

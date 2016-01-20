@@ -148,7 +148,7 @@ var trix = angular.module('trix', [])
 	    params = {ids: []};
 	    if(personIds)
 	    personIds.forEach(function(id){
-	        if(id) {ids.push(id)}
+	        if(id) {params.ids.push(id)}
 	    })
         return \$http.put(_config.url + "/api/persons/enable/all", params, config)
 	}
@@ -158,9 +158,14 @@ var trix = angular.module('trix', [])
         params = {ids: []};
         if(personIds)
         personIds.forEach(function(id){
-            if(id) {ids.push(id)}
+            if(id) {params.ids.push(id)}
         })
         return \$http.put(_config.url + "/api/persons/disable/all", params, config)
+    }
+
+    this.updateStationRoles = function(stationRoleUpdates){
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.put(_config.url + "/api/persons/updateStationRoles", stationRoleUpdates, config)
     }
 
 	this.putTermView = function (termView) {
