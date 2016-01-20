@@ -79,7 +79,6 @@ public final class MultitenantCache implements Cache {
 	public void put(Object key, Object value) {
 		Object translatedKey = translateKey(key);
 		this.delegate.put(translatedKey, value);
-		;
 	}
 
 	@Override

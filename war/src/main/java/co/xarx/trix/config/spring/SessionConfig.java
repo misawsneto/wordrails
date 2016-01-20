@@ -44,6 +44,7 @@ public class SessionConfig extends CachingConfigurerSupport {
 	@Bean
 	public CacheManager cacheManager() {
 		RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate());
+		cacheManager.setDefaultExpiration(60);
 //		cacheManager.setCacheBuilder(CacheBuilder.
 //				newBuilder().
 //				expireAfterWrite(1, TimeUnit.MINUTES).
