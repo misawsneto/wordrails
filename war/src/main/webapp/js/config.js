@@ -61,7 +61,7 @@ angular.module('app')
 
 .config(function(trixProvider, redactorOptions, TRIX){
   redactorOptions.lang = 'pt_br';
-  redactorOptions.imageUpload = TRIX.baseUrl + "/api/files/contents/simple";
+  redactorOptions.imageUpload = TRIX.baseUrl + "/api/images/upload?imageType";
   redactorOptions.toolbarExternal = "#external-toolbar"
   redactorOptions.plugins = ['fontsize', 'fontcolor', 'video', 'counter']
   redactorOptions.minHeight = 100,
