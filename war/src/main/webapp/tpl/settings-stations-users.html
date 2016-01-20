@@ -11,24 +11,52 @@
 			</div>
 			<div class="panel-body p-n" style="min-height: 200px;">
 				<div class="row wrapper">
-					<div class="col-sm-6 m-b-xs">
-						<select class="form-control w inline v-middle" ng-model="bulkActionSelected" ng-change="selectBulkAction()"
-						ng-options="action as action.name for action in bulkActions track by action.id">
-					</select>
-					<button ng-disabled="bulkActionSelected.id == 0" ng-click="openBulkActionsDialog()" class="btn btn-default">Aplicar</button>                
-				</div>
-				<div class="col-sm-1">
-				</div>
-				<div class="col-sm-5">
-					<!-- <div class="input-group"> -->
-					<input type="text" class="input-md w-full form-control" placeholder="Busque por usuário, nome ou email">
-							<!-- <span class="input-group-btn">
-								<button class="btn btn-sm text-lg btn-default" type="button">Buscar</button>
-							</span> -->
-							<!-- </div> -->
+					<div class="col-sm-4">
+						<div class="md-form-group m-t-n-md float-label">
+							<!-- <i class="mdi mdi-magnify text-muted text-shadow-none pos-abt text-lg m-t-xs"></i> -->
+		          <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstName" required="" tabindex="0" aria-required="true" aria-invalid="true" style="">
+		          <label>
+		          <i class="mdi mdi-magnify"></i>
+		          Busque por usuário, nome ou email</label>
+		        </div>
+	        </div>
+					<!-- persons pagination -->
+					<div class="col-sm-4">
+						<div ng-if="persons && personsCount">
+							<span class="font-bold">
+								{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
+							</span>
+							<span class="p-l-xs p-r-xs">de</span> 
+							<span class="p-r font-bold">
+								{{personsCount}}
+							</span>
+							<div class="inline">
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('left')" ng-disabled="beginning">
+								<span class="mdi mdi-chevron-left"></span></button>
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('right')" ng-disabled="allLoaded || personsCount <= window">
+								<span class="mdi mdi-chevron-right"></span></button>
+			        </div>
 						</div>
 					</div>
-					<div class="table-responsive o-visible text-md">
+				<!-- /persons pagination -->
+				<!-- actions -->
+					<div class="col-sm-4 m-b-xs text-right m-t-n-sm">
+		        <md-menu md-position-mode="target-right target md-neutral-theme">
+		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r-xl">
+		          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
+		          </button>
+		          <md-menu-content width="4" >
+		            <md-menu-item ng-repeat="action in bulkActions">
+		              <md-button ng-click="selectBulkAction(action.id); openBulkActionsDialog($event);">
+                    {{action.name}}
+		              </md-button>
+		            </md-menu-item>
+		          </md-menu-content>
+		        </md-menu>
+					</div>
+				<!-- /actions -->
+				</div>
+					<div class="table-responsive o-visible text-base">
 						<table class="table b-t b-light">
 							<thead>
 								<tr>
@@ -39,10 +67,10 @@
 										</label>
 									</th>
 									<th>usuário</th>
-									<th>nome</th>
-									<th>email</th>
-									<th class="text-center">permissão</th>
-									<th class="text-center">último login</th>
+									<th style="width: 20%">nome</th>
+									<th style="width: 20%">email</th>
+									<th style="width: 15%" class="text-center">permissão</th>
+									<th style="width: 10%" class="text-center">último login</th>
 									<th style="width:30px;"></th>
 								</tr>
 							</thead>
