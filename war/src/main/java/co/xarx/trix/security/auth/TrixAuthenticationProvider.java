@@ -1,10 +1,12 @@
 package co.xarx.trix.security.auth;
 
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.SocialUser;
+import co.xarx.trix.domain.User;
+import co.xarx.trix.domain.UserConnection;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserConnectionRepository;
 import co.xarx.trix.persistence.UserRepository;
-import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.Constants;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
@@ -30,8 +32,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	private PersonRepository personRepository;
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private CacheService cacheService;
 	@Autowired
 	private UserConnectionRepository userConnectionRepository;
 	@Autowired
@@ -89,11 +89,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 
 	public void updateLoggedPerson(Person person) {
 		logout();
-		try {
-			person = cacheService.getPersonByUsername(person.user.username);
-		} catch (Exception e) {
-			person = personRepository.findByUser(person.user);
-		}
+		person = personRepository.findByUsername(person.username);
 
 		Authentication auth = new UsernamePasswordAuthenticationToken(person.user, person.user.password, person.user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
@@ -121,12 +117,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			return new AnonymousAuthenticationToken("anonymousKey",
 					Constants.Authentication.ANONYMOUS_USER, Constants.Authentication.ANONYMOUS_USER.authorities);
 
-		User user;
-		try {
-			user = cacheService.getUserByUsername(username);
-		} catch (Exception e) {
-			user = userRepository.findOne(QUser.user.username.eq(username).and(QUser.user.enabled.eq(true)));
-		}
+		User user = userRepository.findByUsername(username);
 
 		return passwordAuthentication(user, password);
 	}

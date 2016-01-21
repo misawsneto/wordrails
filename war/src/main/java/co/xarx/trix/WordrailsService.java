@@ -88,39 +88,39 @@ public class WordrailsService {
 		return !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
 	}
 
-    @Autowired
-    private HttpServletResponse response;
+	@Autowired
+	private HttpServletResponse response;
 
 	public Network getNetworkFromHost(String host){
 		Network network = null;
-        String subdomain = getSubdomainFromHost(host);
-        if(subdomain != null && !subdomain.isEmpty()){
+		String subdomain = getSubdomainFromHost(host);
+		if(subdomain != null && !subdomain.isEmpty()){
 
-            if(subdomain.equals("settings")){
-                network = new Network();
-                network.name = "Settings";
-                network.subdomain = "settings";
-                network.id = 0;
-            }
+			if(subdomain.equals("settings")){
+				network = new Network();
+				network.name = "Settings";
+				network.subdomain = "settings";
+				network.id = 0;
+			}
 
-            try {
-                network = cacheService.getNetworkBySubdomain(subdomain);
-            } catch (Exception e) {
-                // no network found in cache or db.
+			try {
+				network = networkRepository.findBySubdomain(subdomain);
+			} catch (Exception e) {
+				// no network found in cache or db.
 				e.printStackTrace();
-            }
-            if (network != null)
-                return network;
-        }
+			}
+			if (network != null)
+				return network;
+		}
 
 		try {
-            network = cacheService.getNetworkByDomain(host);
-            if(network != null)
-			    return network;
-            response.setStatus(400);
-            return null;
+			network = networkRepository.findByDomain(host);
+			if(network != null)
+				return network;
+			response.setStatus(400);
+			return null;
 		} catch (Exception e) {
-            throw new NotFoundException();
+			throw new NotFoundException();
 		}
 	}
 

@@ -192,10 +192,6 @@ public class StationEventHandler {
 			stationPerspectiveRepository.delete(stationsPerspectives);
 
 			Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
-			Taxonomy taxonomyTags = null;
-			if(station.tagsTaxonomyId != null)
-				taxonomyTags= taxonomyRepository.findOne(station.tagsTaxonomyId);
-			Taxonomy taxonomyAuthors = taxonomyRepository.findTypeAByStation(station);
 
 			if (taxonomy != null) {
 				taxonomyEventHandler.handleBeforeDelete(taxonomy);
@@ -246,6 +242,5 @@ public class StationEventHandler {
 	@Transactional
 	public void handleAfterSave(Station station){
 		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
-		cacheService.updateStation(station.id);
 	}
 }

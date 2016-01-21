@@ -157,61 +157,61 @@ public class PersonsResource {
 			return Response.status(Status.UNAUTHORIZED).build();
 	}
 
-    @PUT
-    @Path("/update")
-    @Transactional
-    public Response update(Person person){
-        Person loggedPerson = authProvider.getLoggedPerson();
+	@PUT
+	@Path("/update")
+	@Transactional
+	public Response update(Person person){
+		Person loggedPerson = authProvider.getLoggedPerson();
 
-        Person loadedPerson = personRepository.findOne(person.id);
+		Person loadedPerson = personRepository.findOne(person.id);
 
-        if(person.id == null || !person.id.equals(loggedPerson.id))
-            throw new UnauthorizedException();
+		if(person.id == null || !person.id.equals(loggedPerson.id))
+			throw new UnauthorizedException();
 
-        if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
-            throw new BadRequestException("Password no equal");
+		if(person.password != null && !person.password.isEmpty() && !person.password.equals(person.passwordConfirm))
+			throw new BadRequestException("Password no equal");
 
-        if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
-            throw new BadRequestException("Invalid Password");
+		if((person.password != null && !person.password.isEmpty()) && person.password.length() < 5)
+			throw new BadRequestException("Invalid Password");
 
-        if(!StringUtil.isEmailAddr(person.email))
-            throw new BadRequestException("Not email");
+		if(!StringUtil.isEmailAddr(person.email))
+			throw new BadRequestException("Not email");
 
-        if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
-            throw new BadRequestException("Invalid username");
+		if(person.username == null || person.username.isEmpty() || person.username.length() < 3 || !StringUtil.isFQDN(person.username))
+			throw new BadRequestException("Invalid username");
 
-        if(person.bio != null && !person.bio.isEmpty())
-            loadedPerson.bio = person.bio;
-        else
-            loadedPerson.bio = null;
+		if(person.bio != null && !person.bio.isEmpty())
+			loadedPerson.bio = person.bio;
+		else
+			loadedPerson.bio = null;
 
-        loadedPerson.email = person.email;
-        loadedPerson.name = person.name;
+		loadedPerson.email = person.email;
+		loadedPerson.name = person.name;
 
-        User user = null;
-        if(!person.username.equals(loggedPerson.username)){
-            loadedPerson.user.username = person.username;
-            loadedPerson.username = person.username;
-            user = userRepository.findOne(loadedPerson.user.id);
-            user.username = person.username;
-            userRepository.save(user);
-            personRepository.save(loadedPerson);
-        }
+		User user = null;
+		if(!person.username.equals(loggedPerson.username)){
+			loadedPerson.user.username = person.username;
+			loadedPerson.username = person.username;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.username = person.username;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
 
-        if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
-            loadedPerson.user.password = person.password;
-            user = userRepository.findOne(loadedPerson.user.id);
-            user.password = person.password;
-            userRepository.save(user);
-            personRepository.save(loadedPerson);
-        }
+		if((person.password != null && !person.password.isEmpty()) && !person.password.equals(loadedPerson.user.password)){
+			loadedPerson.user.password = person.password;
+			user = userRepository.findOne(loadedPerson.user.id);
+			user.password = person.password;
+			userRepository.save(user);
+			personRepository.save(loadedPerson);
+		}
 
-        personRepository.save(loadedPerson);
+		personRepository.save(loadedPerson);
 
-        authProvider.updateLoggedPerson(loadedPerson);
+		authProvider.updateLoggedPerson(loadedPerson);
 
-        return Response.status(Status.OK).build();
-    }
+		return Response.status(Status.OK).build();
+	}
 
 	@PUT
 	@Path("/{id}")
@@ -298,7 +298,7 @@ public class PersonsResource {
 	@GET
 	@Path("/{personId}/posts")
 	public ContentResponse<List<PostView>> getPersonNetworkPosts(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
-	                                                             @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+																 @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -423,7 +423,7 @@ public class PersonsResource {
 	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, IOException{
 		Person person = null;
 		User user;
-        Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		if(personCreationObject != null){
 			try{
 				person = new Person();
@@ -541,15 +541,15 @@ public class PersonsResource {
 				}
 			}
 
-            if(network != null && network.addStationRolesOnSignup){
-                List<Station> stations = stationRepository.findByNetworkId(network.id);
-                for (Station station : stations) {
-                    StationRole sr = new StationRole();
-                    sr.person = person;
-                    sr.station = station;
-                    stationRolesRepository.save(sr);
-                }
-            }
+			if(network != null && network.addStationRolesOnSignup){
+				List<Station> stations = stationRepository.findByNetworkId(network.id);
+				for (Station station : stations) {
+					StationRole sr = new StationRole();
+					sr.person = person;
+					sr.station = station;
+					stationRolesRepository.save(sr);
+				}
+			}
 
 			userRepository.save(user);
 
@@ -778,9 +778,9 @@ public class PersonsResource {
 				request.setAttribute("personData", simpleMapper.writeValueAsString(personData));
 				request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
 				request.setAttribute("networkName", personData.network.name);
-                request.setAttribute("networkId", personData.network.id);
-                if(personData.network.faviconId != null)
-                    request.setAttribute("faviconLink", "/api/files/" + personData.network.faviconId + "/contents");
+				request.setAttribute("networkId", personData.network.id);
+				if(personData.network.faviconId != null)
+					request.setAttribute("faviconLink", "/api/files/" + personData.network.faviconId + "/contents");
 				request.setAttribute("networkDesciption", "");
 				request.setAttribute("networkKeywords", "");
 			}

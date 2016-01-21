@@ -39,7 +39,8 @@ public class PersistenceUnitDescription {
 
 		for (Class<? extends JpaRepository> repositoryClass : classes) {
 			RepositoryRestResource repositoryResource = repositoryClass.getAnnotation(RepositoryRestResource.class);
-			if (repositoryResource == null || repositoryResource.exported()) {
+			GeneratorIgnore repositoryIgnore = repositoryClass.getAnnotation(GeneratorIgnore.class);
+			if (repositoryIgnore == null && (repositoryResource == null || repositoryResource.exported())) {
 				Type[] interfaces = repositoryClass.getGenericInterfaces();
 				for (Type genericInterface : interfaces) {
 					if (genericInterface instanceof ParameterizedType) {
@@ -54,7 +55,8 @@ public class PersistenceUnitDescription {
 							if (methods.length > 0) {
 								for (Method method : methods) {
 									RestResource methodResource = method.getAnnotation(RestResource.class);
-									if (methodResource == null || methodResource.exported()) {
+									GeneratorIgnore methodIgnore = method.getAnnotation(GeneratorIgnore.class);
+									if (methodIgnore == null && (methodResource == null || methodResource.exported())) {
 										QueryDescription query = new QueryDescription();
 										query.collection = Collection.class.isAssignableFrom(method.getReturnType());
 										if (methodResource == null || "".equals(methodResource.path())) {

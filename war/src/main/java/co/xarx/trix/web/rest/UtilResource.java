@@ -5,16 +5,15 @@ import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.eventhandler.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.script.ImageScript;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.services.EmailService;
 import co.xarx.trix.util.StringUtil;
-import org.apache.log4j.Logger;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +53,6 @@ import java.util.stream.Collectors;
 public class UtilResource {
 	private @Context HttpServletRequest request;
 
-	@Autowired
-	private NetworkEventHandler networkEventHandler;
 	@Autowired
 	private PersonEventHandler personEventHandler;
 	@Autowired
@@ -245,8 +242,7 @@ public class UtilResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response generate(@FormParam("subdomain") String subdomain, @FormParam("stationId") Integer stationId, @FormParam("count") Integer count){
 
-		Network network = networkRepository.findOneBySubdomain(subdomain);
-		Station station = stationId != null ? stationRepository.findOne(stationId) : null;
+		Network network = networkRepository.findBySubdomain(subdomain);
 
 		List<Invitation> invites = new ArrayList<>();
 
@@ -660,10 +656,7 @@ public class UtilResource {
 				personRepository.delete(person);
 			}
 
-			networkEventHandler.handleBeforeCreate(network);
 			networkRepository.delete(network);
-
-			cacheService.removeNetwork(networkId);
 		}
 		return Response.status(Status.OK).build();
 	}
@@ -788,17 +781,6 @@ public class UtilResource {
 
 	@Autowired
 	private AsyncService asyncService;
-	@Autowired
-	public ImageScript imageScript;
-
-	@GET
-	@Path("/addPicturesToImages")
-	@Transactional
-	public void addPicturesToImages(@Context HttpServletRequest request) throws InterruptedException {
-		if(isLocal(request.getHeader("Host"))){
-			asyncService.run(() -> imageScript.addPicturesToImages());
-		}
-	}
 
 	@Autowired
 	public EmailService emailService;

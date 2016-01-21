@@ -80,4 +80,10 @@ public class StringUtil {
 		Document doc = Jsoup.parse(body);
 		return doc.text();
 	}
+
+	public static String getSubdomainFromHost(String host) {
+		String[] names = host.split("\\.");
+		String topDomain = names[names.length - 2] + "." + names[names.length - 1];
+		return !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
+	}
 }
