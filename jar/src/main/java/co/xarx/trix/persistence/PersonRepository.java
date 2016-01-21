@@ -47,7 +47,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	Long countPersons();
 
 	@RestResource(exported = false)
-	@Query("select count(*) from Person person where person.name like %:q% OR person.username like %:q% OR person.email like %:q%")
+	@Query("select count(*) from Person person where person.name = :q OR person.username = :q OR person.email = :q")
 	Long countPersonsByString(@Param("q") String q);
 
 	@Query("select count(*) from StationRole sr, NetworkRole nr where (sr.person.id = :personId AND sr.admin = true) OR (nr.person.id = :personId AND nr.admin = true)")

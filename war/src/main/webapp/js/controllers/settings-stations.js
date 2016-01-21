@@ -391,8 +391,8 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
     })
   }
 
-  trix.countRolesByStationIds($scope.app.initData.network.id).success(function(response){
-    $scope.rolesCount = response.count;
+  trix.countRolesByStationIds([$state.params.stationId]).success(function(response){
+    $scope.rolesCount = response;
   })
 
   $scope.paginate = function(direction){
