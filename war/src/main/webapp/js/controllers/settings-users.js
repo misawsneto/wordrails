@@ -67,8 +67,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	});
   }
 
-  trix.countPersonsByNetwork($scope.app.initData.network.id).success(function(response){
-    $scope.personsCount = response.count;
+  trix.countPersonsByNetwork().success(function(response){
+    $scope.personsCount = response;
   })
 
   $scope.paginate = function(direction){

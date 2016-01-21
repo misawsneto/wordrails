@@ -317,8 +317,8 @@ $scope.totalScheduled = 0
 $scope.totalDrafts = 0;
 $scope.imagesCount = 0;
 
-trix.countPersonsByNetwork($scope.app.initData.network.id).success(function(response){
-	$scope.usersCount = response.count;
+trix.countPersonsByNetwork().success(function(response){
+	$scope.usersCount = response;
 })
 
 $scope.page = 0;
