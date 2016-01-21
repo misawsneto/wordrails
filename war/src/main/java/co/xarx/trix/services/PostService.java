@@ -67,7 +67,7 @@ public class PostService {
 	private MobileService mobileService;
 
 	public Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
-		boolQuery.must(matchQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
+		boolQuery.must(matchQuery("networkId", TenantContextHolder.getCurrentNetworkId()));
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 		if(sort != null) nativeSearchQueryBuilder.withSort(sort);
 		SearchQuery query = nativeSearchQueryBuilder
