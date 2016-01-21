@@ -6,15 +6,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-import javax.validation.Valid;
-
 @Configuration
 @Profile("prod")
 public class ProdDataSourceConfiguration {
+
+	@Value("#{systemProperties['dbName'] ?: 'wordrails4'}")
+	private String dbName;
 
 	@Value("#{systemProperties['username']}")
 	private String username;
@@ -26,7 +23,7 @@ public class ProdDataSourceConfiguration {
 	public BoneCPDataSource dataSource() {
 		BoneCPDataSource dataSource = new BoneCPDataSource();
 		dataSource.setDriverClass("com.mysql.jdbc.Driver");
-		dataSource.setJdbcUrl("jdbc:mysql://dbinstance1/wordrails4");
+		dataSource.setJdbcUrl("jdbc:mysql://dbinstance1/" + dbName);
 		dataSource.setUsername(username);
 		dataSource.setPassword(password);
 

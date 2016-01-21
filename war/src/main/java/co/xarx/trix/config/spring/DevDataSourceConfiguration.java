@@ -13,13 +13,19 @@ public class DevDataSourceConfiguration {
 	@Value("#{systemProperties['dbName'] ?: 'trix_dev'}")
 	private String dbName;
 
+	@Value("#{systemProperties['username'] ?: 'wordrails'}")
+	private String username;
+
+	@Value("#{systemProperties['password'] ?: 'wordrails'}")
+	private String password;
+
 	@Bean
 	public BoneCPDataSource dataSource() {
 		BoneCPDataSource dataSource = new BoneCPDataSource();
 		dataSource.setDriverClass("com.mysql.jdbc.Driver");
 		dataSource.setJdbcUrl("jdbc:mysql://localhost/" + dbName);
-		dataSource.setUsername("wordrails");
-		dataSource.setPassword("wordrails");
+		dataSource.setUsername(username);
+		dataSource.setPassword(username);
 
 		return dataSource;
 	}
