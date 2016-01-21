@@ -43,7 +43,7 @@ public class Test {
 		wordRails.login();
 		wordRails.getInitialData();
 
-		createPost(wordRails);
+//		createPost(wordRails);
 
 //		PostView postView = wordRails.getPostViewById(57, true);
 //		System.out.println(postView);

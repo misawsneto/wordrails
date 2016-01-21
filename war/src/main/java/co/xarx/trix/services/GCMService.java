@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletContext;
 import javax.transaction.Transactional;
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class GCMService {
 		}
 	}
 
-	private void init() {
+	public void init() {
 		if(sender == null){
 			sender = new Sender(GCM_KEY);
 		}
@@ -125,11 +124,11 @@ public class GCMService {
 		notificationDto.personId = notification.person != null ? notification.person.id : null;
 		notificationDto.personName = notification.person != null ? notification.person.name : null;
 		notificationDto.networkId = notification.network != null ? notification.network.id : null;
-		notificationDto.networkName = notification.network != null ? notification.network.name : null;;
+		notificationDto.networkName = notification.network != null ? notification.network.name : null;
 		notificationDto.stationId = notification.station != null ? notification.station.id : null;
 		notificationDto.stationName = notification.station != null ? notification.station.name : null;
 		notificationDto.postId = notification.post != null ? notification.post.id : null;
-		notificationDto.postTitle = notification.post != null ? notification.post.title : null;;
+		notificationDto.postTitle = notification.post != null ? notification.post.title : null;
 		notificationDto.postSnippet = notification.post != null ? StringUtil.simpleSnippet(notification.post.body) : null;
 		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallHash : null;
 		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumHash : null;
@@ -140,7 +139,7 @@ public class GCMService {
 
 		try{
 			Message message = new Message.Builder().addData("message", notificationJson).build();
-			List<List<String>> parts = TrixUtil.partition(new ArrayList<String>(devices), GCM_WINDOW_SIZE);
+			List<List<String>> parts = TrixUtil.partition(new ArrayList<>(devices), GCM_WINDOW_SIZE);
 			for (List<String> part : parts) {
 				sendBulkMessages(message, part, notification.hash);
 				Thread.sleep(2000);
@@ -151,7 +150,7 @@ public class GCMService {
 		}
 	}
 
-	private void sendBulkMessages(Message message, List<String> devices, String notificationHash){
+	public void sendBulkMessages(Message message, List<String> devices, String notificationHash){
 		MulticastResult multicastResult;
 		try {
 			System.out.println("sending messages... " + devices.size() + " hash: " + notificationHash);
