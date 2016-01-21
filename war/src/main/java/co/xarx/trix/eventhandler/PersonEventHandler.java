@@ -78,7 +78,7 @@ public class PersonEventHandler {
 	@Transactional
 	public void handleBeforeDelete(Person person) {
 		networkRolesRepository.deleteByPersonId(person.id);
-		stationRolesRepository.deleteByPersonId(person.id);
+		stationRolesRepository.deleteRolesByPersonId(person.id);
 
 		if(person.cover != null) {
 			imageRepository.delete(person.cover);

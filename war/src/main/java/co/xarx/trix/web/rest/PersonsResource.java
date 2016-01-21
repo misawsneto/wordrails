@@ -566,8 +566,11 @@ public class PersonsResource {
 	@Path("/stats/count")
 	@GET
 	@Produces(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response countPersonsByNetwork(@QueryParam("networkId") Integer networkId){
-		return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersons() + " }").build();
+	public Response countPersonsByNetwork(@QueryParam("q") String q){
+		if(q != null && !q.isEmpty())
+			return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersons() + " }").build();
+		else
+			return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersonsByString(q) + " }").build();
 	}
 
 	@PUT

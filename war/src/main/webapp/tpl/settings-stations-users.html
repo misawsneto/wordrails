@@ -8,10 +8,13 @@
 		<div class="panel material-shadow-light panel-card block-1000 m-auto" ng-hide="creating || editing">
 			<div class="panel-heading h4 wrapper-md">
 				<a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Permissões da estação <strong>{{stationName}}</strong></span>
+				<div class="pos-abt" ng-if="showProgress" layout="row" layout-sm="column" layout-align="space-around" style="transform: scale(0.5); right: 0; margin:-65px 5px 0 0;">
+		      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+		    </div>
 			</div>
 			<div class="panel-body p-n" style="min-height: 200px;">
 				<div class="row wrapper">
-					<div class="col-sm-4">
+					<div class="col-sm-6">
 						<div class="md-form-group m-t-n-md float-label">
 							<!-- <i class="mdi mdi-magnify text-muted text-shadow-none pos-abt text-lg m-t-xs"></i> -->
 		          <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstName" required="" tabindex="0" aria-required="true" aria-invalid="true" style="">
@@ -22,7 +25,7 @@
 	        </div>
 					<!-- persons pagination -->
 					<div class="col-sm-4">
-						<div ng-if="persons && personsCount">
+						<div ng-if="personsRoles">
 							<span class="font-bold">
 								{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
 							</span>
@@ -40,7 +43,7 @@
 					</div>
 				<!-- /persons pagination -->
 				<!-- actions -->
-					<div class="col-sm-4 m-b-xs text-right m-t-n-sm">
+					<div class="col-sm-2 m-b-xs text-right m-t-n-sm">
 		        <md-menu md-position-mode="target-right target md-neutral-theme">
 		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r-xl">
 		          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
@@ -67,10 +70,10 @@
 										</label>
 									</th>
 									<th>usuário</th>
-									<th style="width: 20%">nome</th>
-									<th style="width: 20%">email</th>
 									<th style="width: 15%" class="text-center">permissão</th>
-									<th style="width: 10%" class="text-center">último login</th>
+									<th style="width: 18%">nome</th>
+									<th style="width: 20%">email</th>
+									<th style="width: 12%" class="text-center">último login</th>
 									<th style="width:30px;"></th>
 								</tr>
 							</thead>
@@ -89,9 +92,9 @@
 										title="{{role.person.name}}"></div>
 										{{role.person.username}}
 									</td>
+									<td class="text-center">{{role.admin ? 'admin': (role.editor ? 'editor' : role.writer ? 'escritor' : 'leitor')}}</td>
 									<td>{{role.person.name}}</td>
 									<td>{{role.person.email}}</td>
-									<td class="text-center">{{role.admin ? 'admin': (role.editor ? 'editor' : role.writer ? 'escritor' : 'leitor')}}</td>
 									<td class="text-center" ng-if="!role.person.lastLogin"> - </td>
 									<td class="text-center" ng-if="role.person.lastLogin">{{role.person.lastLogin | fromNow3}}</td>
 									<td>
@@ -343,7 +346,7 @@
  					<div class="col-xs-8 col-xs-offset-2">
  						<div class="">
  							Tem certeza que deseja remover as permissões deste usuário a esta estação? <br>
- 							Atenção! Este usuário não será excluído. Para excluir este usuário, entre em contato com o administrador da rede. 
+ 							Atenção! Este usuário não será desativado. Para desativar este usuário, entre em contato com o administrador da rede. 
  						</div>
  					</div>
  				</div>
@@ -383,7 +386,7 @@
  						<div class="">
  							Tem certeza que deseja remover as permissões dos usuários selecionados para esta estação?
  							<br>
- 							Atenção! Os usuários selecionados não serão excluídos da rede. Para excluir um usuário, entre em contato com o administrador da rede. 
+ 							Atenção! Os usuários selecionados não serão desativados da rede. Para desativar um usuário, entre em contato com o administrador da rede. 
  						</div>
  					</div>
  				</div>

@@ -34,10 +34,18 @@ public interface StationRolesRepository extends JpaRepository<StationRole, Integ
 	List<StationRole> findByPersonIdAndNetworkId(@Param("personId") Integer personId, @Param("networkId") Integer networkId);
 
 	@Query("SELECT str FROM StationRole str WHERE str.station.id in (:stationIds) order by str.person.id desc")
-	List<StationRole> findByStationIds(@Param("stationIds") List<Integer> stationIds, Pageable pageable);
+	List<StationRole> findRolesByStationIds(@Param("stationIds") List<Integer> stationIds, Pageable pageable);
 
-	@Query("SELECT str FROM StationRole str WHERE str.station.id in (:stationIds) AND (str.person.name = :nameOrUseranmeOrEmail OR str.person.username = :nameOrUseranmeOrEmail OR str.person.email = :nameOrUseranmeOrEmail) order by str.person.id desc")
-	List<StationRole> findByStationIdsAndNameOrUseranmeOrEmail(@Param("stationIds") List<Integer> stationIds, @Param("nameOrUseranmeOrEmail") String nameOrUseranmeOrEmail, Pageable pageable);
+	@RestResource(exported = false)
+	@Query("count(*) FROM StationRole str WHERE str.station.id in (:stationIds) AND (str.person.name = :nameOrUsernameOrEmail OR str.person.username = :nameOrUsernameOrEmail OR str.person.email = :nameOrUsernameOrEmail) order by str.person.id desc")
+	Long countRolesByStationIds(@Param("stationIds") List<Integer> stationIds);
+
+	@Query("SELECT str FROM StationRole str WHERE str.station.id in (:stationIds) AND (str.person.name = :nameOrUsernameOrEmail OR str.person.username = :nameOrUsernameOrEmail OR str.person.email = :nameOrUsernameOrEmail) order by str.person.id desc")
+	List<StationRole> findRolesByStationIdsAndNameOrUsernameOrEmail(@Param("stationIds") List<Integer> stationIds, @Param("nameOrUsernameOrEmail") String nameOrUsernameOrEmail, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Query("count(*) FROM StationRole str WHERE str.station.id in (:stationIds) AND (str.person.name = :nameOrUsernameOrEmail OR str.person.username = :nameOrUsernameOrEmail OR str.person.email = :nameOrUsernameOrEmail) order by str.person.id desc")
+	Long countRolesByStationIdsAndNameOrUsernameOrEmail(@Param("stationIds") List<Integer> stationIds, @Param("nameOrUsernameOrEmail") String nameOrUsernameOrEmail);
 
 	@RestResource(exported=false)
 	@Query("SELECT str FROM StationRole str WHERE str.station.id in (:stationIds) AND str.person.id = :personId")
@@ -50,5 +58,5 @@ public interface StationRolesRepository extends JpaRepository<StationRole, Integ
 
 	@RestResource(exported = false)
 	@Modifying
-	void deleteByPersonId(Integer id);
+	void deleteRolesByPersonId(Integer id);
 }
