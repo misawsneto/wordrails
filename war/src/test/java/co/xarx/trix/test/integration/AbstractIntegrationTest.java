@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(
 		loader = AnnotationConfigContextLoader.class,
 		classes = {ApplicationTestConfig.class, DatabaseTestConfig.class})
-public class AbstractIntegrationTest {
+public abstract class AbstractIntegrationTest {
 
 
 	@Before

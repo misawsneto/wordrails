@@ -23,7 +23,7 @@ public class CreateMigrateScript {
 		String timestamp = sm.format(new Date());
 		System.out.println(timestamp);
 
-		File file = new File("war/src/main/resources/db/migration/V" + timestamp + "_" + SCRIPT_NAME + ".sql");
+		File file = new File("war/src/main/resources/db/migration/V" + timestamp + "__" + SCRIPT_NAME + ".sql");
 		System.out.println(file.getAbsolutePath());
 
 		file.createNewFile();
