@@ -14,13 +14,17 @@
 			</div>
 			<div class="panel-body p-n" style="min-height: 200px;">
 				<div class="row wrapper">
-					<div class="col-sm-4 m-b-xs">
-						<md-select class="col-sm-8 m-t-none m-b-none" ng-model="bulkActionSelected" ng-change="selectBulkAction(bulkActionSelected)" placeholder="Ações em grupo">
-		          <md-option ng-value="action.id" ng-repeat="action in bulkActions">{{ action.name }}</md-option>
-		        </md-select>
-						<button md-ink-ripple ng-disabled="!bulkActionSelected" ng-click="openBulkActionsDialog()" class="m-t-n-xxs md-btn md-raised bg-white">Aplicar</button>
-					</div>
-					<div class="col-sm-4 text-right">
+					<div class="col-sm-4">
+						<div class="md-form-group m-t-n-md float-label">
+							<!-- <i class="mdi mdi-magnify text-muted text-shadow-none pos-abt text-lg m-t-xs"></i> -->
+		          <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstName" required="" tabindex="0" aria-required="true" aria-invalid="true" style="">
+		          <label>
+		          <i class="mdi mdi-magnify"></i>
+		          Busque por usuário, nome ou email</label>
+		        </div>
+	        </div>
+					<!-- persons pagination -->
+					<div class="col-sm-4">
 						<div ng-if="persons && personsCount">
 							<span class="font-bold">
 								{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
@@ -38,15 +42,25 @@
 						</div>
 					</div>
 				<!-- /persons pagination -->
-					<div class="col-sm-4">
-						<div class="md-form-group m-t-n-md float-label">
-							<!-- <i class="mdi mdi-magnify text-muted text-shadow-none pos-abt text-lg m-t-xs"></i> -->
-		          <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstName" required="" tabindex="0" aria-required="true" aria-invalid="true" style="">
-		          <label>
-		          <i class="mdi mdi-magnify"></i>
-		          Busque por usuário, nome ou email</label>
-		        </div>
-	        </div>
+				<!-- actions -->
+					<div class="col-sm-4 m-b-xs text-right m-t-n-sm">
+						<!-- <md-select class="col-sm-8 m-t-none m-b-none pull-right" ng-model="bulkActionSelected" ng-change="selectBulkAction(bulkActionSelected)" placeholder="Ações em grupo">
+								          <md-option ng-value="action.id" ng-repeat="action in bulkActions">{{ action.name }}</md-option>
+								        </md-select> -->
+		        <md-menu md-position-mode="target-right target md-neutral-theme">
+		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r-xl">
+		          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
+		          </button>
+		          <md-menu-content width="4" >
+		            <md-menu-item ng-repeat="action in bulkActions">
+		              <md-button ng-click="selectBulkAction(action.id); openBulkActionsDialog();">
+                    {{action.name}}
+		              </md-button>
+		            </md-menu-item>
+		          </md-menu-content>
+		        </md-menu>
+					</div>
+				<!-- /actions -->
 				</div>
 				<div class="table-responsive o-visible text-md">
 					<table class="table b-t b-light">

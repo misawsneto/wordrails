@@ -41,7 +41,7 @@ public class ElasticSearchService {
 
 	@Value("${elasticsearch.index}")
 	private String index;
-	@Value("#{systemProperties.indexES}")
+	@Value("#{systemProperties['indexES'] ?: false}")
 	private boolean indexES;
 
 
