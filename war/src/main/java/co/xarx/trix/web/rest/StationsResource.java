@@ -18,6 +18,8 @@ import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
 import java.util.List;
 
+//import co.xarx.trix.auth.TrixAuthenticationProvider;
+
 @Path("/stations")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

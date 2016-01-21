@@ -276,6 +276,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindRolesByStationIdsAuthorized(List<Integer> stationIds, Integer page, Integer size, List<String> sort) {
+		return false;
+	}
+
+	@Override
+	protected boolean isFindRolesByStationIdsAndNameOrUsernameOrEmailAuthorized(List<Integer> stationIds, String nameOrUsernameOrEmail, Integer page, Integer size, List<String> sort) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetStationRoleStationAuthorized(Integer stationRoleId) {
 		return isStationAdminByPersonStationRoles(stationRoleId);
 	}
@@ -1371,16 +1381,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	protected boolean isFindRolesByStationIdsAndNameOrUsernameOrEmailAuthorized(List<Integer> stationIds, String nameOrUsernameOrEmail, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindRolesByStationIdsAuthorized(List<Integer> stationIds, Integer page, Integer size, List<String> sort) {
-		return true;
 	}
 
 }
