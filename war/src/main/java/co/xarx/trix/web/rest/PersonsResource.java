@@ -17,9 +17,12 @@ import co.xarx.trix.services.GCMService;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
+import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -474,16 +477,21 @@ public class PersonsResource {
 						break;
 					}
 
+					if(errorVal.contains("-"))
+						errorVal = errorVal.split("-")[0];
+
 					Person conflictingPerson = null;
-					if(person.email != null && person.email.trim().equals(errorVal)){
+					if(person.email != null && person.email.trim().equals(errorVal))
 						conflictingPerson = personRepository.findByEmail(person.email);
-					}else if(person.username != null && person.username.trim().equals(errorVal)){
+
+					if(conflictingPerson == null && person.username != null && person.username.trim().equals(errorVal)){
 						conflictingPerson = personRepository.findOne(QPerson.person.user.username.eq(person.username));
 					}
 
 					if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
 //							conflictingPerson.id 
 						StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
+						Logger.debug("conflicting station name: " + str.station.name);
 						if(str != null)
 							return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
 									+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
@@ -556,8 +564,11 @@ public class PersonsResource {
 	@Path("/stats/count")
 	@GET
 	@Produces(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response countPersonsByNetwork(@QueryParam("networkId") Integer networkId){
-		return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersons() + " }").build();
+	public Response countPersonsByNetwork(@QueryParam("q") String q){
+		if(q != null && !q.isEmpty())
+			return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersons() + " }").build();
+		else
+			return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersonsByString(q) + " }").build();
 	}
 
 	@PUT
@@ -606,18 +617,115 @@ public class PersonsResource {
 	@PUT
 	@Path("/{personId}/disable")
 	public Response disablePerson(@PathParam("personId") Integer personId){
+		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
-		person.user.enabled = false;
-		personRepository.save(person);
+		if(!self.id.equals(person.id)) {
+			person.user.enabled = false;
+			personRepository.save(person);
+		}
 		return Response.status(Status.CREATED).build();
 	}
 
 	@PUT
 	@Path("/{personId}/enable")
 	public Response enablePerson(@PathParam("personId") Integer personId){
+		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
-		person.user.enabled = true;
-		personRepository.save(person);
+		if(!self.id.equals(person.id)) {
+			person.user.enabled = true;
+			personRepository.save(person);
+		}
+		return Response.status(Status.CREATED).build();
+	}
+
+	@PUT
+	@Path("/updateStationRoles")
+	@Transactional
+	public Response updateStationRoles(StationRolesUpdate stationRolesUpdate){
+		Person self = authProvider.getLoggedPerson();
+		if(stationRolesUpdate != null && stationRolesUpdate.personsIds != null && stationRolesUpdate.stationsIds != null){
+
+			stationRolesUpdate.personsIds.remove(self.id);
+
+			QStationRole q = QStationRole.stationRole;
+
+			Iterable<StationRole> isr = stationRolesRepository.findAll(q.person.id.in(stationRolesUpdate.personsIds).and(q.station.id.in(stationRolesUpdate.stationsIds)));
+			ArrayList<StationRole> roles = Lists.newArrayList(isr);
+
+			for (StationRole sr: roles){
+				sr.admin = stationRolesUpdate.admin;
+				sr.editor = stationRolesUpdate.editor;
+				sr.writer = stationRolesUpdate.writer;
+			}
+
+			stationRolesRepository.save(roles);
+
+			List<Person> persons = personRepository.findAll(stationRolesUpdate.personsIds);
+			List<Station> stations = stationRepository.findAll(stationRolesUpdate.stationsIds);
+
+			ArrayList<StationRole> allRoles = new ArrayList<StationRole>();
+
+			for (Station station : stations) {
+				for (Person person: persons){
+
+					boolean skip = false;
+					for(StationRole sr: roles){
+						if(sr.person != null && sr.station != null && sr.station.id.equals(station.id) && sr.person.id.equals(person.id)) {
+							skip = true;
+							continue;
+						}
+					}
+
+					if(skip)
+						continue;
+
+					StationRole sRole = new StationRole();
+					sRole.station = station;
+					sRole.person = person;
+					sRole.admin = stationRolesUpdate.admin;
+					sRole.editor = stationRolesUpdate.editor;
+					sRole.writer = stationRolesUpdate.writer;
+
+					allRoles.add(sRole);
+				}
+			}
+
+			stationRolesRepository.save(allRoles);
+		}
+		return Response.status(Status.CREATED).build();
+	}
+
+	@PUT
+	@Path("/enable/all")
+	public Response enablePerson(IdsList idsList){
+		Person self = authProvider.getLoggedPerson();
+		if(idsList != null && idsList.ids != null){
+			List<Person> persons = personRepository.findAll(idsList.ids);
+			for (Person person: persons) {
+				if(self.id.equals(person.id))
+					continue;
+				person.user.enabled = true;
+			}
+
+			personRepository.save(persons);
+		}
+		return Response.status(Status.CREATED).build();
+	}
+
+	@PUT
+	@Path("/disable/all")
+	public Response disablePerson(IdsList idsList){
+		Person self = authProvider.getLoggedPerson();
+		if(idsList != null && idsList.ids != null){
+			List<Person> persons = personRepository.findAll(idsList.ids);
+			for (Person person: persons) {
+				if(self.id.equals(person.id))
+					continue;
+				person.user.enabled = false;
+			}
+
+			personRepository.save(persons);
+		}
 		return Response.status(Status.CREATED).build();
 	}
 

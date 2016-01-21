@@ -52,6 +52,10 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@Query("select count(*) from Person person")
 	Long countPersons();
 
+	@RestResource(exported = false)
+	@Query("select count(*) from Person person where person.name = :q OR person.username = :q OR person.email = :q")
+	Long countPersonsByString(@Param("q") String q);
+
 	@Query("select count(*) from StationRole sr, NetworkRole nr where (sr.person.id = :personId AND sr.admin = true) OR (nr.person.id = :personId AND nr.admin = true)")
 	Long isAdmin(@Param("personId") Integer personId);
 

@@ -1,6 +1,8 @@
 app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdDialog',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix, FileUploader, TRIX, cfpLoadingBar, $mdDialog){
 
+    $scope.pe = {};
+    $scope.pe.adminStations = angular.copy($scope.app.adminStations);
    FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
     return true; // true|false
   };
@@ -19,6 +21,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   $scope.selectedPerson = null;
 
   $scope.stations = $scope.app.initData.stations;
+  $scope.person = $scope.app.initData.person;
 
   if($state.params.newUser){
   	$scope.person = {
@@ -42,6 +45,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   $scope.bulkActions = [
+    {name:'Convites', id:4},
     {name:'Alterar permissões', id:1},
     {name:'Ativar usuários', id:2},
     {name:'Desativar usuários', id:3}
@@ -57,7 +61,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   if(!$scope.editing && !$scope.creating){
     $scope.showProgress = true;
-  	trix.findAllByNetworkExcludingPerson(initData.network.id, initData.person.id, $scope.page, $scope.window, null, 'personProjection').success(function(response){
+  	trix.findAllByNetwork(initData.network.id, $scope.page, $scope.window, null, 'personProjection').success(function(response){
   		$scope.persons = response.persons;
       $scope.showProgress = false;
   	});
@@ -87,7 +91,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
     if(!$scope.allLoaded){
       $scope.showProgress = true;
-      trix.findAllByNetworkExcludingPerson(initData.network.id, initData.person.id, page, $scope.window, null, 'personProjection').success(function(response){
+      trix.findAllByNetwork(initData.network.id, page, $scope.window, null, 'personProjection').success(function(response){
         if((!response.persons || response.persons.length == 0) && direction == 'right'){
           $scope.allLoaded = true;
         }else{
@@ -113,24 +117,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	$state.go('app.settings.users', {'username': person.username})
   }
 
-  $scope.openEnableDisableDialog = function(person, ev){
-  	//$scope.app.openSplash('confirm_delete_person.html')
-  	
-    $mdDialog.show({
-      controller: DialogController,
-      templateUrl: 'confirm_enable_disable_person.html',
-      targetEvent: ev,
-      onComplete: function(){}
-    })
-    .then(function(answer) {
-    //$scope.alert = 'You said the information was "' + answer + '".';
-    }, function() {
-    //$scope.alert = 'You cancelled the dialog.';
-    });
-    $scope.pe = {
-      enableDisablePerson : person};
-  }
-
   function DialogController(scope, $mdDialog) {
     scope.app = $scope.app;
     scope.pe = $scope.pe;
@@ -149,7 +135,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   $scope.app.enableDisablePerson = function(person){
     if(person)
-      $scope.pe = {enableDisablePerson : person};
+      $scope.pe.enableDisablePerson = person;
 
     if(!$scope.pe.enableDisablePerson.user.enabled)
       trix.disablePerson($scope.pe.enableDisablePerson.id).success(function(){
@@ -180,7 +166,6 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     }).error(function(data, status, headers, config){
       if(status == 409){
         $scope.app.conflictingData = data;
-        $scope.app.conflictingData.role = $scope.person.stationRole.roleString;
         $scope.openConflictingUserSplash()
       }else
         $scope.app.showErrorToast('Dados inválidos. Tente novamente')
@@ -189,6 +174,10 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
         cfpLoadingBar.complete(); 
       }, 100);
     });
+  }
+
+  $scope.openConflictingUserSplash = function(){
+    $scope.app.openSplash('conflicting_person.html')
   }
 
   var deletePersons = function(){
@@ -232,6 +221,15 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	return ret;
   }
 
+  function getSelectedPersonIds(){
+    var ret = []
+    $scope.persons.forEach(function(person, index){
+      if(person.selected)
+        ret.push(person.id);
+    });
+    return ret;
+  }
+
   $scope.selectBulkAction = function(bulkActionSelected){
     $scope.bulkActionSelected = bulkActionSelected;
   }
@@ -244,12 +242,129 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     $scope.app.cancelModal();
   }
 
-  $scope.openBulkActionsSplash = function(){
+  $scope.openBulkActionsDialog = function(ev){
+    $scope.pe.bulkActionSelected = $scope.bulkActionSelected;
+
+    if($scope.bulkActionSelected == 4){
+      
+      return;
+    }
+
   	if(noPersonSelected())
-  		$scope.app.openSplash('confirm_no_person_selected.html');
-  	else if($scope.bulkActionSelected.id == 0)
+  		$scope.openNoPersonSelected(ev);
+  	else if($scope.bulkActionSelected == 0)
   		return null;
-  	else if($scope.bulkActionSelected.id == 2)
-  		$scope.app.openSplash('confirm_bulk_delete_persons.html');
+    else if($scope.bulkActionSelected == 1)
+      $scope.bulkChangePermissions(ev);
+  	else if($scope.bulkActionSelected == 2 || $scope.bulkActionSelected == 3)
+  		$scope.confirmBulkAction(ev)
   }
+
+  $scope.pe.activateDeactivateUsers = function(){
+    ids = getSelectedPersonIds();
+    if($scope.bulkActionSelected == 2)
+      trix.enablePersons(ids).success(function(){
+        $scope.app.showSuccessToast('Usuários ativados.');
+        $mdDialog.cancel();
+        $scope.persons.forEach(function(person, index){
+          if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
+            person.user.enabled = true;
+        });
+      }).error(function(){
+        $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
+        $mdDialog.cancel();
+      })
+    if($scope.bulkActionSelected == 3)
+      trix.disablePersons(ids).success(function(){
+        $scope.app.showSuccessToast('Usuário desativados.');
+        $mdDialog.cancel();
+        $scope.persons.forEach(function(person, index){
+          if(ids.indexOf(person.id) > -1 && person.id != $scope.person.id)
+            person.user.enabled = false;
+        });
+      }).error(function(){
+        $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
+        $mdDialog.cancel();
+      })
+  }
+
+  $scope.bulkChangePermissions = function(ev){
+    $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'bulk_change_permissions.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
+  }
+
+  $scope.openNoPersonSelected = function(ev){
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'confirm_no_person_selected.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
+
+    $scope.confirmBulkAction = function(ev){
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'confirm_bulk_action.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
+
+    $scope.pe.applyPermissions = function(stations, permissions){
+      var stationRoleUpdates = {stationsIds: [], personsIds: []};
+      stationRoleUpdates.personsIds = getSelectedPersonIds();
+
+      if(stations){
+        stations.forEach(function(station){
+          if(station.selected)
+            stationRoleUpdates.stationsIds.push(station.stationId)
+        })
+      }
+
+      if(permissions == 'ADMIN'){
+        stationRoleUpdates.admin = true;
+        stationRoleUpdates.writer = true;
+        stationRoleUpdates.editor = true;
+      }else if(permissions == 'EDITOR'){
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.writer = true;
+        stationRoleUpdates.editor = true;
+      }else if(permissions == 'WRITER'){
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.editor = false;
+        stationRoleUpdates.writer = true;
+      }else{
+        stationRoleUpdates.admin = false;
+        stationRoleUpdates.editor = false;
+        stationRoleUpdates.writer = false;
+      }
+
+      trix.updateStationRoles(stationRoleUpdates).success(function(){
+        $scope.app.showSuccessToast('Permissões atualizadas.');
+        $mdDialog.cancel();
+      }).error(function(){
+        $scope.app.showSuccessToast('Houve um problema ao executar a operação.');
+        $mdDialog.cancel();
+      })
+    }
 }])

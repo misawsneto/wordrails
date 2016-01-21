@@ -31,7 +31,7 @@
                       <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.addStationRolesOnSignup"
                       ng-true-value="true" ng-false-value="false">
                       <i class="blue"></i>
-                      Adicionar os usuários cadastrados em todas as estações
+                      Ao cadastrar usuário, criar permissões de leitura em todas as estações
                     </label>
                   </p>
 	                <p>
@@ -227,8 +227,6 @@
                   Mensagem enviada em emails de convites a usuários</small>
             </md-input-container>
 	        </md-content>
-            <button md-ink-ripple ng-class="{'disabled': !showTopOptions()}" ng-click="publishPost()"
-              class="md-btn md-raised m-b btn-fw bg-white m-t-n-lg pull-right m-r">Convidar</button>
 	      </md-tab>
       </md-tabs>
     </md-content>

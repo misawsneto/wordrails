@@ -192,6 +192,10 @@ public class StationEventHandler {
 			stationPerspectiveRepository.delete(stationsPerspectives);
 
 			Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
+			Taxonomy taxonomyTags = null;
+			if(station.tagsTaxonomyId != null)
+				taxonomyTags= taxonomyRepository.findOne(station.tagsTaxonomyId);
+			Taxonomy taxonomyAuthors = taxonomyRepository.findTypeAByStation(station);
 
 			if (taxonomy != null) {
 				taxonomyEventHandler.handleBeforeDelete(taxonomy);

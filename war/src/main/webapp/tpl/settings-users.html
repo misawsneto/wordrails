@@ -14,31 +14,7 @@
 			</div>
 			<div class="panel-body p-n" style="min-height: 200px;">
 				<div class="row wrapper">
-					<div class="col-sm-4 m-b-xs">
-						<md-select class="col-sm-8 m-t-none m-b-none" ng-model="bulkActionSelected" ng-change="selectBulkAction(bulkActionSelected)" placeholder="Ações em grupo">
-		          <md-option ng-value="action.name" ng-repeat="action in bulkActions">{{ action.name }}</md-option>
-		        </md-select>
-						<button md-ink-ripple ng-disabled="!bulkActionSelected" ng-click="openBulkActionsSplash()" class="m-t-n-xxs md-btn md-raised bg-white">Aplicar</button>
-					</div>
-					<div class="col-sm-4 text-right">
-						<div ng-if="persons && personsCount">
-							<span class="font-bold">
-								{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
-							</span>
-							<span class="p-l-xs p-r-xs">de</span> 
-							<span class="p-r font-bold">
-								{{personsCount - 1}}
-							</span>
-							<div class="inline">
-								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('left')" ng-disabled="beginning">
-								<span class="mdi mdi-chevron-left"></span></button>
-								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('right')" ng-disabled="allLoaded">
-								<span class="mdi mdi-chevron-right"></span></button>
-			        </div>
-						</div>
-					</div>
-				<!-- /persons pagination -->
-					<div class="col-sm-4">
+					<div class="col-sm-6">
 						<div class="md-form-group m-t-n-md float-label">
 							<!-- <i class="mdi mdi-magnify text-muted text-shadow-none pos-abt text-lg m-t-xs"></i> -->
 		          <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstName" required="" tabindex="0" aria-required="true" aria-invalid="true" style="">
@@ -47,8 +23,43 @@
 		          Busque por usuário, nome ou email</label>
 		        </div>
 	        </div>
+					<!-- persons pagination -->
+					<div class="col-sm-4">
+						<div ng-if="persons && personsCount">
+							<span class="font-bold">
+								{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
+							</span>
+							<span class="p-l-xs p-r-xs">de</span> 
+							<span class="p-r font-bold">
+								{{personsCount}}
+							</span>
+							<div class="inline">
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('left')" ng-disabled="beginning">
+								<span class="mdi mdi-chevron-left"></span></button>
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('right')" ng-disabled="allLoaded || personsCount <= window">
+								<span class="mdi mdi-chevron-right"></span></button>
+			        </div>
+						</div>
+					</div>
+				<!-- /persons pagination -->
+				<!-- actions -->
+					<div class="col-sm-2 m-b-xs text-right m-t-n-sm">
+		        <md-menu md-position-mode="target-right target md-neutral-theme">
+		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r-xl">
+		          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
+		          </button>
+		          <md-menu-content width="4" >
+		            <md-menu-item ng-repeat="action in bulkActions">
+		              <md-button ng-click="selectBulkAction(action.id); openBulkActionsDialog($event);">
+                    {{action.name}}
+		              </md-button>
+		            </md-menu-item>
+		          </md-menu-content>
+		        </md-menu>
+					</div>
+				<!-- /actions -->
 				</div>
-				<div class="table-responsive o-visible text-md">
+				<div class="table-responsive o-visible text-base">
 					<table class="table b-t b-light">
 						<thead>
 							<tr>
@@ -70,7 +81,7 @@
 						<tbody>
 							<tr ng-repeat="person in persons" ng-click="loadPerson(person)">
 								<td>
-									<label class="md-check">
+									<label class="md-check" ng-if="person.id != app.initData.person.id">
 										<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
 										<i class="blue"></i>
 									</label>
@@ -86,14 +97,14 @@
 								<td class="text-center" ng-if="!person.lastLogin"> - </td>
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 								<td class="text-center" ng-if="app.networkAdmin">
-									<div class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+									<div ng-if="person.id != app.initData.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
 										<!-- <a href ng-click="openEnableDisableDialog(person, $event)" angular-ripple class="dropdown-toggle border-radius-50 i-20" ng-class="{'text-danger mdi mdi-block-helper': person.user.enabled, 'text-success mdi mdi-check': !person.user.enabled}">
 										</a> -->
 										<!-- dropdown -->
-										 <label class="md-switch">
-							              <input type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
-							              <i class="blue"></i>
-							            </label>
+									 <label class="md-switch">
+				              <input type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
+				              <i class="blue"></i>
+				            </label>
 									</div>
 								</td>
 							</tr>
@@ -106,61 +117,53 @@
 
 			<!-- new user panel -->
 		<div class="panel material-shadow-light panel-card block-600 m-auto" ng-if="creating">
-			<md-content class="md-neutral-theme">
-	      <md-tabs md-dynamic-height md-border-bottom>
-	        <md-tab label="Novo usuário">
-		<!-- <div class="panel-heading h4 wrapper-md">
-			<span>Novo usuário</span>
-		</div> -->
-						<div class="panel-body wrapper-md">
-							<div class="row pos-rlt">
-								<div class="w-xxl m-auto">
-									<div class="md-form-group md-neutral-theme text-lg">
-										<input class="md-input text-xl" ng-model="person.name">
-										<label>Nome completo</label>
-									</div>
-									<div class="md-form-group md-neutral-theme">
-										<input class="md-input" ng-model="person.email" required>
-										<label>Email</label>
-									</div>
-									<div class="md-form-group md-neutral-theme">
-										<input class="md-input" ng-model="person.username" required>
-										<label>Usuário</label>
-									</div>
-									<div class="md-form-group md-neutral-theme">
-										<input type="password" class="md-input" ng-model="person.password" required>
-										<label>Senha</label>
-										<span class="md-input-msg right">(opcional) se não fornecido, criaremos uma senha automaticamente.</span>
-									</div>
-								</div>
-							</div>
-							<div class="line line-dashed b-b line-lg pull-in"></div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="m-b text-muted text-md text-u-c">Notificar usuário</div>
-									<p>
-										<label class="md-switch">
-											<input type="checkbox" ng-model="person.emailNotification"
-											ng-true-value="true" ng-false-value="false">
-											<i class="blue"></i>
-											Enviar link de configuração do perfil via email.
-										</label>
-									</p>
-								</div>
-							</div>
+			<div class="panel-heading h4 wrapper-md">
+				<span>Novo usuário</span>
+			</div>
+			<div class="panel-body wrapper-md">
+				<div class="row pos-rlt">
+					<div class="w-xxl m-auto">
+						<div class="md-form-group md-neutral-theme text-lg">
+							<input class="md-input text-xl" ng-model="person.name">
+							<label>Nome completo</label>
 						</div>
-						<div class="m-t text-right text-lg" >
-							<button ui-sref="app.settings.users({'newUser': null, 'username': null})"
-							md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+						<div class="md-form-group md-neutral-theme">
+							<input class="md-input" ng-model="person.email" required>
+							<label>Email</label>
+						</div>
+						<div class="md-form-group md-neutral-theme">
+							<input class="md-input" ng-model="person.username" required>
+							<label>Usuário</label>
+						</div>
+						<div class="md-form-group md-neutral-theme">
+							<input type="password" class="md-input" ng-model="person.password" required>
+							<label>Senha</label>
+							<span class="md-input-msg right">(opcional) se não fornecido, criaremos uma senha automaticamente.</span>
+						</div>
+					</div>
+				</div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="m-b text-muted text-md text-u-c">Notificar usuário</div>
+						<p>
+							<label class="md-switch">
+								<input type="checkbox" ng-model="person.emailNotification"
+								ng-true-value="true" ng-false-value="false">
+								<i class="blue"></i>
+								Enviar link de configuração do perfil via email.
+							</label>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="m-t text-right text-lg" >
+				<button ui-sref="app.settings.users({'newUser': null, 'username': null})"
+				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
 
-							<button ng-click="createPerson()"
-							md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
-						</div>
-					</md-tab>
-					<md-tab label="Convites">
-					</md-tab>
-				</md-tabs>
-			</md-content>
+				<button ng-click="createPerson()"
+				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
+			</div>
 		</div>
 			<!-- /new user panel-->
 
@@ -251,122 +254,148 @@
 		<i class="mdi mdi-plus"></i>
 	</md-button>
 
-	<!-- <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html" 
-                label="Publicar"
-                 mfb-menu position="{{chosen.position}}" effect="{{chosen.effect}}"
-                 active-icon="mdi mdi-send" resting-icon="mdi mdi-plus"
-                 ng-mouseenter="hovered()" ng-mouseleave="hovered()"
-                 toggling-method="{{chosen.method}}" menu-state="menuState" main-action="publishPost($event)"
-                 ng-class="{'sidebar-opened': !app.hidePostOptions}">
-            
-              <button template-url="ng-mfb-button-md.tpl.html"
-                 mfb-button icon="{{button.icon}}" ng-click="doAction(button.action($event))"
-                 label="{{button.label}}" ng-repeat="button in buttons"></button>
-             </nav> -->
-             <!-- /options button -->
+</div>
+<!-- /settings-users -->
 
-         </div>
-         <!-- /settings-stations-users -->
+ 	<script type="text/ng-template" id="conflicting_person.html">
+   	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+   	<div class="splash-content text-center" ng-cloak>
+		  <div class="row">
+		    <div class="col-xs-8 col-xs-offset-2">
+		    	<div class="h3 m-b-lg m-t-lg">
+ 						Esta rede já possui um usuário cadastrado com estes dados!
+ 					</div>
+		      <div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
+		      class="bg-cover bg-img-lg bg-cover-round m-auto" 
+		      title="{{app.conflictingData.conflictingPerson.name}}"></div>
+		      <div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
+		      <div class="h4 m-b-lg">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
+		    </div>
+		  </div>
+		</div>
+ 	</script>
 
-     <script type="text/ng-template" id="conflicting_person.html">
-     	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-     	<div class="splash-content text-center" ng-cloak>
-     		<div>
-     			<div class="row">
-     				<div class="col-xs-8 col-xs-offset-2">
-
-     					<div class="h3 m-b-lg m-t-lg" ng-show="app.conflictingData.conflictingStationRole">
-     						Esta estação já possui um usuário cadastrado com estes dados!
-     					</div>
-
-     					<div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
-     					class="bg-cover bg-img-lg bg-cover-round m-auto" 
-     					title="{{app.conflictingData.conflictingPerson.name}}"></div>
-     					<div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
-     					<div class="h4 m-b-lg">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
-     				</div>
-     			</div>
-     			<div class="row">
-     				<div class="col-xs-6 col-xs-offset-3">
-
-     					<div class="h4 m-b" ng-hide="app.conflictingData.conflictingStationRole">
-     						Este usuário já existe. Deseja adioná-lo a esta estação no papel de <strong>
-     						{{app.conflictingData.role == 'ADMIN' ? 'admin': (app.conflictingData.role == 'EDITOR' ? 'editor' : app.conflictingData.role == 'WRITER' ? 'escritor' : 'leitor')}}?</strong></div>
-
-     						<div class="text-color p-l-lg p-r-lg" ng-hide="app.conflictingData.conflictingStationRole">
-     							<button ng-click="app.addConflictingToStation();" angular-ripple type="submit" class="m-t-md btn-default btn text-lg text-u-c btn-block ">
-     								Sim
-     							</button>
-     							<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
-     								Não
-     							</button>
-     						</div>
-     					</div>
-     				</div>
-     			</div>
-     		</div>
-     	</script>
-
-     	<script type="text/ng-template" id="confirm_enable_disable_person.html">
-				<md-dialog aria-label="Adicionar notícia" id="user-remove-dialog">
-				<md-content>
+ 	<script type="text/ng-template" id="bulk_change_permissions.html">
+   	<md-dialog aria-label="Adicionar notícia" id="user-permissions-dialog">
+	  	<md-content>
 				<div class="wrapper">
-					<div class="h4 wrapper-sm m-t text-center">
-						{{pe.enableDisablePerson.user.enabled ? 
-						'Tem certeza que deseja desativar este usuário? Após ser desativado o usuário não poderá autenticar-se nesta rede.':
-						'Tem certeza que deseja ativar este usuário? Após ser ativado o usuário poderá autenticar-se nesta rede.'
-					}}
-					<div class="m-t-lg text-center text-lg">
-						<button ng-click="app.enableDisablePerson()" md-ink-ripple class="md-btn md-flat btn-fw m-r">
-							{{pe.enableDisablePerson.user.enabled ? 
-							'Desativar':
-							'Ativar'
-						}}
-					</button>
-					<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
+					<div class="wrapper-xxs text-md">
+						Estações:
+					</div>
+					<div class="wrapper-sm stations-permissions-dialog-list m-t-sm" >
+						<ul class="no-style">
+							<li ng-repeat="station in pe.adminStations" class="clearfix wrapper-xxs font-thin">
+								<span class="pull-right">
+									<label class="md-check">
+										<input type="checkbox" ng-model="station.selected" ng-change="station.selected = true;">
+										<i class="blue"></i>
+									</label>
+								</span>
+					      <span class="clear m-r-xxl">
+					        <span>{{station.stationName}}</span>
+					        <small class="text-muted clear text-ellipsis">
+					        	Visibilidade: {{(station.visibility == 'UNRESTRICTED') ? 'Pública' : 'Privada'}} | Todos podem escrever: {{(station.writable) ? 'Sim' : 'Não'}}
+					        </small>
+					      </span>
+					    </li>
+						</ul>
+					</div>
+					<div class="wrapper-xxs text-base m-t-sm">
+						<span class="text-md">Permissões:</span>
+						<ul class="station-permissions m-t">
+							<li class="m-r">
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="pe.stationRole" value="READER">
+									<i class="blue"></i>
+									Leitor
+								</label>
+							</p>
+							<li class="m-r">
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="pe.stationRole" value="WRITER">
+									<i class="blue"></i>
+									Escritor
+								</label>
+							</p>
+							<li class="m-r">
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="pe.stationRole" value="EDITOR">
+									<i class="blue"></i>
+									Editor
+								</label>
+							</p>
+							<li class="m-r">
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="pe.stationRole" value="ADMIN">
+									<i class="blue"></i>
+									Administrador
+								</label>
+							</p>
+						</ul>
+					</div>
+					<div class="pos-abt bottom-0 right-0 wrapper-sm">
+						<button ng-click="pe.applyPermissions(pe.adminStations, pe.stationRole)" md-ink-ripple class="md-btn md-flat btn-fw">Confirmar</button>
+						<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+					<div>
 				</div>
+		  </md-content>
+		</md-dialog>
+ 	</script>
+
+ 	<script type="text/ng-template" id="bulk_change_permissions_back.html">
+		<md-dialog aria-label="Adicionar notícia" id="user-remove-dialog">
+			<md-content>
+				<div class="wrapper">
+					<div class="wrapper-xxs stations-permissions-dialog-list m-t-sm" >
+						<ul class="no-style">
+							<li ng-repeat="station in app.adminStations" class="clearfix wrapper-xxs font-thin" >
+					      <span class="pull-right">
+									<a angular-ripple class="border-radius-50 text-lg p-sm mdi-plus mdi"></a>
+								</span>
+					      <span class="clear m-r-xxl">
+					        <span>{{station.stationName}}</span>
+					        <small class="text-muted clear text-ellipsis" ng-bind-html="station.stationName">
+					        </small>
+					      </span>
+					    </li>
+						</ul>
+					</div>
+					<div class="pos-abt bottom-0 right-0 wrapper-sm">
+						<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+					<div>
 				</div>
-				</md-content>
-				</md-dialog>
-			</script>
+			</md-content>
+		</md-dialog>
+	</script>
 
-         	<script type="text/ng-template" id="confirm_no_person_selected.html">
-         		<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-         		<div class="splash-content text-center" ng-cloak>
-         			<div class="row m-t-xxl">
-         				<div class="col-xs-6 col-xs-offset-3 text-2x m-t-xxl">
-         					Nenhum usuário foi selecionado.
-         				</div>
-         			</div>
-         		</div>
-         	</script>
+ 	<script type="text/ng-template" id="confirm_no_person_selected.html">
+   	<md-dialog aria-label="Nenum usuário selecionado">
+	  	<md-content>
+	  		<div class="wrapper">
+	  			<div class="h3 wrapper-sm m-t-md text-center">Nenhum usuário foi selecionado.</div>
+					<div class="m-t text-center wrapper-sm text-lg">
+						<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
+					<div>
+				</div>
+		  </md-content>
+		</md-dialog>
+ 	</script>
 
-         	<script type="text/ng-template" id="confirm_bulk_delete_persons.html">
-         		<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-         		<div class="splash-content text-center" ng-cloak>
-         			<div>
-         				<div class="row">
-         					<div class="col-xs-8 col-xs-offset-2">
-         						<div class="">
-         							{enableDisablePerson.user.enabled ? 
-         							'Tem certeza que deseja desativar este usuário?':
-         							'Tem certeza que deseja habilitar este usuário?'
-         							}
-         						</div>
-         					</div>
-         				</div>
-         				<div class="row">
-         					<div class="col-xs-6 col-xs-offset-3">
-         						<div class="p-lg text-color wrapper-lg">
-         							<button ng-click="app.applyBulkActions();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
-         								Sim
-         							</button>
-         							<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
-         								Não
-         							</button>
-         						</div>
-         					</div>
-         				</div>
-         			</div>
-         		</div>
-         	</script>
+ 	<script type="text/ng-template" id="confirm_bulk_action.html">
+ 		<md-dialog aria-label="Confimar alterações">
+	  	<md-content>
+ 				<div class="wrapper">
+						<div class="text-lg wrapper-sm m-t-md text-center">
+							{{pe.bulkActionSelected == 2? 
+							     							'Tem certeza que deseja habilitar os usuários selecionados?':
+							     							'Tem certeza que deseja desativar os usuários selecionados?'
+							     							}}
+						</div>
+						<div class="m-t text-center wrapper-sm text-lg">
+							<button ng-click="pe.activateDeactivateUsers()" md-ink-ripple class="md-btn md-flat btn-fw m-r">Confirmar</button>
+						<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
+					<div>
+				</div>
+ 			</md-dialog>
+ 		</md-content>
+ 	</script>

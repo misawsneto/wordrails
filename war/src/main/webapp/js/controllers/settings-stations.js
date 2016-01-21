@@ -372,13 +372,70 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	console.log($scope.person.stationRole);
   }
 
-  trix.findByStationIds([$state.params.stationId], 0, 50, null, 'stationRoleProjection').success(function(personsRoles){
-  	$scope.personsRoles = personsRoles.stationRoles;
-  	for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
-  		if($scope.personsRoles[i].person.id == $scope.app.initData.person.id)
-  			$scope.personsRoles.splice(i, 1);
-  	};
+  $scope.page = 0;
+  var loading = false;
+  $scope.allLoaded = false;
+  $scope.beginning = true;
+  $scope.window = 20
+
+  if(!$scope.editing && !$scope.creating){
+    $scope.showProgress = true;
+    trix.findRolesByStationIds([$state.params.stationId], 0, $scope.window, null, 'stationRoleProjection').success(function(personsRoles){
+      
+    	$scope.personsRoles = personsRoles.stationRoles;
+    	// for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
+    	// 	if($scope.personsRoles[i].person.id == $scope.app.initData.person.id)
+    	// 		$scope.personsRoles.splice(i, 1);
+    	// };
+      $scope.showProgress = false; 
+    })
+  }
+
+  trix.countRolesByStationIds([$state.params.stationId]).success(function(response){
+    $scope.rolesCount = response;
   })
+
+  $scope.paginate = function(direction){
+    var page = 0;
+    if(!direction)
+      return;
+
+    if(direction == 'left'){
+      page = $scope.page-1;
+      $scope.allLoaded = false;
+    }
+    else if(direction == 'right'){
+      page = $scope.page+1;
+      $scope.beginning = false;
+    }
+
+    if(page < 0){
+      return;
+    }
+
+    if(!$scope.allLoaded){
+      $scope.showProgress = true;
+      trix.findAllByNetwork(initData.network.id, page, $scope.window, null, 'personProjection').success(function(response){
+        if((!response.persons || response.persons.length == 0) && direction == 'right'){
+          $scope.allLoaded = true;
+        }else{
+          if(!$scope.persons && response.persons)
+            $scope.persons = response.persons;
+          else if(response.persons && response.persons.length > 0){
+            $scope.persons = response.persons;
+            $scope.page = page;
+          }
+
+          if($scope.page == 0)
+            $scope.beginning = true;
+
+          if((($scope.page * $scope.window) + $scope.persons.length) == $scope.personsCount)
+            $scope.allLoaded = true;
+        }
+        $scope.showProgress = false;
+      }); 
+    }
+  }
 
   $scope.loadPerson = function(person){
   	$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': person.id})
@@ -454,7 +511,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	return ret;
   }
 
-  $scope.openBulkActionsSplash = function(){
+  $scope.openBulkActionsDialog = function(){
   	if(noPersonSelected())
   		$scope.app.openSplash('confirm_no_person_selected.html');
   	else if($scope.bulkActionSelected.id == 0)

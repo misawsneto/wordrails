@@ -271,6 +271,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindRolesByStationIdsAuthorized(List<Integer> stationIds, Integer page, Integer size, List<String> sort) {
+		return false;
+	}
+
+	@Override
+	protected boolean isFindRolesByStationIdsAndNameOrUsernameOrEmailAuthorized(List<Integer> stationIds, String nameOrUsernameOrEmail, Integer page, Integer size, List<String> sort) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetStationRoleStationAuthorized(Integer stationRoleId) {
 		return isStationAdminByPersonStationRoles(stationRoleId);
 	}
@@ -1362,18 +1372,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetNetworkLoginImageAuthorized(Integer networkId) {
 		return true;
-	}
-
-	@Override
-	protected boolean isFindByStationIdsAndNameOrUseranmeOrEmailAuthorized(List<Integer> stationIds, String nameOrUseranmeOrEmail, Integer page, Integer size, List<String> sort) {
-
-		return stationSecurityChecker.isStationsAdmin(stationIds);
-	}
-
-	@Override
-	protected boolean isFindByStationIdsAuthorized(List<Integer> stationIds, Integer page, Integer size, List<String> sort) {
-
-		return stationSecurityChecker.isStationsAdmin(stationIds);
 	}
 
 	@Override
