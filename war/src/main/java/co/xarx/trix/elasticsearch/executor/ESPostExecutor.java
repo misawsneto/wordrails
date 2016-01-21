@@ -3,13 +3,13 @@ package co.xarx.trix.elasticsearch.executor;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.query.ElasticSearchExecutor;
 import co.xarx.trix.domain.query.ElasticSearchQuery;
-import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rometools.utils.Lists;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightField;
@@ -31,15 +31,13 @@ public class ESPostExecutor implements ElasticSearchExecutor<PostView> {
 
 	@Value("${elasticsearch.index}")
 	private String indexName;
+	@Autowired
+	protected Client client;
 
 	private static final String ES_TYPE = "post";
 
-	@Autowired
-	private ElasticSearchService elasticSearchService;
-
 	public List<PostView> execute(ElasticSearchQuery query, Integer size, Integer from) {
-		SearchRequestBuilder searchRequestBuilder = elasticSearchService
-				.getClient()
+		SearchRequestBuilder searchRequestBuilder = client
 				.prepareSearch(indexName)
 				.setTypes(ES_TYPE)
 				.setQuery(query.getBoolQueryBuilder())
