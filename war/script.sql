@@ -39,6 +39,8 @@ UPDATE post
   JOIN network ON network.id = station.networkId
   SET post.networkId = station.networkId;
 
+DROP TABLE IF EXISTS `person_bookmark`;
+
 CREATE TABLE `person_bookmark` (
 	`person_id` INT(11) NOT NULL,
 	`post_id`   INT(11) DEFAULT NULL,

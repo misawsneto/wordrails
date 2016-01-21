@@ -1,5 +1,6 @@
 package co.xarx.trix.config.spring;
 
+import co.xarx.trix.config.CookieAndHeaderHttpSessionStrategy;
 import co.xarx.trix.config.multitenancy.MultitenantCacheManager;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -12,6 +13,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.web.http.CookieHttpSessionStrategy;
+import org.springframework.session.web.http.HttpSessionStrategy;
 
 @Configuration
 @EnableCaching
@@ -53,11 +55,14 @@ public class SessionConfig extends CachingConfigurerSupport {
 	}
 
 	@Bean
-	public CookieHttpSessionStrategy cookieHttpSessionStrategy() {
-		CookieHttpSessionStrategy cookieHttpSessionStrategy = new CookieHttpSessionStrategy();
-		cookieHttpSessionStrategy.setCookieName("JSESSIONID");
+	public HttpSessionStrategy httpSessionStrategy() {
+//		CookieHttpSessionStrategy cookieHttpSessionStrategy = new CookieHttpSessionStrategy();
+//		cookieHttpSessionStrategy.setCookieName("JSESSIONID");
 
-		return cookieHttpSessionStrategy;
+		CookieAndHeaderHttpSessionStrategy sessionStrategy = new CookieAndHeaderHttpSessionStrategy();
+		sessionStrategy.setCookieName("JSESSIONID");
+
+		return sessionStrategy;
 	}
 
 	@Bean
