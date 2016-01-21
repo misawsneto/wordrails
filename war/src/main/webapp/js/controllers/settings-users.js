@@ -45,6 +45,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   $scope.bulkActions = [
+    {name:'Convites', id:4},
     {name:'Alterar permissões', id:1},
     {name:'Ativar usuários', id:2},
     {name:'Desativar usuários', id:3}
@@ -241,16 +242,22 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     $scope.app.cancelModal();
   }
 
-  $scope.openBulkActionsDialog = function(){
+  $scope.openBulkActionsDialog = function(ev){
     $scope.pe.bulkActionSelected = $scope.bulkActionSelected;
+
+    if($scope.bulkActionSelected == 4){
+      
+      return;
+    }
+
   	if(noPersonSelected())
-  		$scope.openNoPersonSelected();
+  		$scope.openNoPersonSelected(ev);
   	else if($scope.bulkActionSelected == 0)
   		return null;
     else if($scope.bulkActionSelected == 1)
-      $scope.bulkChangePermissions();
+      $scope.bulkChangePermissions(ev);
   	else if($scope.bulkActionSelected == 2 || $scope.bulkActionSelected == 3)
-  		$scope.confirmBulkAction()
+  		$scope.confirmBulkAction(ev)
   }
 
   $scope.pe.activateDeactivateUsers = function(){

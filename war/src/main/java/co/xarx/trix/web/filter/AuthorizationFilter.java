@@ -1365,24 +1365,22 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByStationIdsAndNameOrUseranmeOrEmailAuthorized(List<Integer> stationIds, String nameOrUseranmeOrEmail, Integer page, Integer size, List<String> sort) {
-
-		return stationSecurityChecker.isStationsAdmin(stationIds);
-	}
-
-	@Override
-	protected boolean isFindByStationIdsAuthorized(List<Integer> stationIds, Integer page, Integer size, List<String> sort) {
-
-		return stationSecurityChecker.isStationsAdmin(stationIds);
-	}
-
-	@Override
 	protected boolean isFindByStationIdAndPersonIdAuthorized(Integer stationId, Integer personId) {
 		Station station = stationRepository.findOne(stationId);
 		if (station != null && stationSecurityChecker.isStationAdmin(station)) {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	protected boolean isFindRolesByStationIdsAndNameOrUsernameOrEmailAuthorized(List<Integer> stationIds, String nameOrUsernameOrEmail, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+	@Override
+	protected boolean isFindRolesByStationIdsAuthorized(List<Integer> stationIds, Integer page, Integer size, List<String> sort) {
+		return true;
 	}
 
 }
