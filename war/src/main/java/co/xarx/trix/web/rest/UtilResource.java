@@ -9,6 +9,7 @@ import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.CacheService;
 import co.xarx.trix.services.EmailService;
+import co.xarx.trix.services.GCMService;
 import co.xarx.trix.util.StringUtil;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
