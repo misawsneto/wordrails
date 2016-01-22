@@ -75,7 +75,7 @@ public class Term extends BaseEntity implements Serializable, Loggable {
 			taxonomyName = taxonomy.name;
 		}
 
-		name_parent = name + "_" + parent;
+		name_parent = name + "_" + (parent != null ? parent.id : "0");
 	}
 	
 	@PreUpdate
@@ -85,7 +85,7 @@ public class Term extends BaseEntity implements Serializable, Loggable {
 			taxonomyName = taxonomy.name;
 		}
 
-		name_parent = name + "_" + parent;
+		name_parent = name + "_" + (parent != null ? parent.id : "0");
 	}
 
 	@Override

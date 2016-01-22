@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public SimpleUrlAuthenticationSuccessHandler authSuccessHandler(){
-		return new SimpleUrlAuthenticationSuccessHandler();
+		return new TrixUrlAuthenticationSuccessHandler();
 	}
 
 	@Autowired
@@ -89,6 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginProcessingUrl("/login")
 				.usernameParameter("username")
 				.passwordParameter("password")
+				.successHandler(authSuccessHandler())
 				.failureHandler(authFailureHandler())
 				.and()
 				.logout()
