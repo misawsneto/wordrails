@@ -277,12 +277,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindRolesByStationIdsAuthorized(List<Integer> stationIds, Integer page, Integer size, List<String> sort) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean isFindRolesByStationIdsAndNameOrUsernameOrEmailAuthorized(List<Integer> stationIds, String nameOrUsernameOrEmail, Integer page, Integer size, List<String> sort) {
-		return false;
+		return true;
 	}
 
 	@Override
