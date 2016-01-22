@@ -80,9 +80,8 @@ public class PostEventHandler {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 			schedulerService.schedule(post.id, post.scheduledDate);
 		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
-			if (post.notify) {
+			if (post.notify)
 				mobileService.buildNotification(post);
-			}
 
 			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 		}

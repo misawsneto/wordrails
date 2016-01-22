@@ -71,7 +71,7 @@ public class GCMService {
 		}
 	}
 
-	private void init() {
+	public void init() {
 		if(sender == null){
 			sender = new Sender(GCM_KEY);
 		}
@@ -125,11 +125,11 @@ public class GCMService {
 		notificationDto.personId = notification.person != null ? notification.person.id : null;
 		notificationDto.personName = notification.person != null ? notification.person.name : null;
 		notificationDto.networkId = notification.network != null ? notification.network.id : null;
-		notificationDto.networkName = notification.network != null ? notification.network.name : null;;
+		notificationDto.networkName = notification.network != null ? notification.network.name : null;
 		notificationDto.stationId = notification.station != null ? notification.station.id : null;
 		notificationDto.stationName = notification.station != null ? notification.station.name : null;
 		notificationDto.postId = notification.post != null ? notification.post.id : null;
-		notificationDto.postTitle = notification.post != null ? notification.post.title : null;;
+		notificationDto.postTitle = notification.post != null ? notification.post.title : null;
 		notificationDto.postSnippet = notification.post != null ? StringUtil.simpleSnippet(notification.post.body) : null;
 		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallHash : null;
 		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumHash : null;
@@ -155,7 +155,7 @@ public class GCMService {
 		}
 	}
 
-	private void sendBulkMessages(Message message, List<String> devices, String notificationHash){
+	public void sendBulkMessages(Message message, List<String> devices, String notificationHash){
 		MulticastResult multicastResult;
 		try {
 			Logger.info("sending messages... " + devices.size() + " hash: " + notificationHash);
