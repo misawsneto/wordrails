@@ -68,10 +68,12 @@ WHERE taxonomy.type = "T";
 DELETE FROM taxonomy
 WHERE type = "T";
 
-ALTER  TABLE  term drop index UK_68x4pioq3b3mu1t3jrp01bsss;
+ALTER TABLE term DROP INDEX UK_68x4pioq3b3mu1t3jrp01bsss;
+ALTER TABLE term DROP INDEX UK_kki6crlp9p5g7979h2wb4imgh;
+ALTER TABLE term DROP INDEX UK_h725nbm620imfiywywc1w8jo1;
+ALTER TABLE term DROP INDEX UK_lixtbau20i1s7rq5evq6gl10p;
+ALTER TABLE term ADD `name_parent` VARCHAR (255) DEFAULT NULL;
 
-ALTER  TABLE  term drop INDEX UK_kki6crlp9p5g7979h2wb4imgh;
-
-ALTER  TABLE  term drop INDEX UK_h725nbm620imfiywywc1w8jo1;
-
-ALTER  TABLE  term drop INDEX UK_lixtbau20i1s7rq5evq6gl10p;
+select concat(term.name, concat('_', term.parent_id)) from term;
+UPDATE term SET term.name_parent = concat(term.name, concat('_', term.parent_id)) where term.parent_id is not null;
+UPDATE term SET term.name_parent = concat(term.name, '_0') where term.parent_id is null;
