@@ -74,7 +74,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 				term.parent = TRIX.baseUrl + "/api/terms/" + $scope.parentCategory.id
 
 			trix.postTerm(term).success(function(){
-				$scope.app.cancelModal();
+				$mdDialog.cancel();
 				trix.getTermTree(null, $scope.taxonomyId).success(function(response){
 					$scope.termTree = response;
 				});
