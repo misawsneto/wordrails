@@ -74,7 +74,7 @@
 									<th style="width: 18%">nome</th>
 									<th style="width: 20%">email</th>
 									<th style="width: 12%" class="text-center">último login</th>
-									<th style="width:30px;"></th>
+									<th style="width:40px;"></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -97,8 +97,8 @@
 									<td>{{role.person.email}}</td>
 									<td class="text-center" ng-if="!role.person.lastLogin"> - </td>
 									<td class="text-center" ng-if="role.person.lastLogin">{{role.person.lastLogin | fromNow3}}</td>
-									<td>
-										<a ng-if="role.person.id != app.initData.person.id" ng-click="openDeletePersonRole(role.id);app.stopPropagation($event);"> <i class="mdi mdi-delete"></i> </a>
+									<td style="padding:10px 0 0 0">
+										<a ng-if="role.person.id != app.initData.person.id" class="wrapper-sm p-t-lg" ng-click="openDeletePersonRole(role.id);app.stopPropagation($event);"> <i class="mdi mdi-delete"></i> </a>
 									</td>
 								</tr>
 							</tbody>

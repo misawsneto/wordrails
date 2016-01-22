@@ -117,6 +117,15 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
     $scope.editing = true;
     $scope.parentCategory = null;
 
+    $scope.thisStation = {}
+    $scope.app.initData.stations.forEach(function(station, index){
+      if($state.params.stationId == station.id){
+        $scope.stationName = station.name;
+        $scope.stationId = station.id;
+        $scope.thisStation = station;
+      }
+    });
+
     $scope.showAddCategorySplash = function(parent){
       $scope.parentCategory = parent;
       $scope.app.openSplash('add_category.html')
@@ -437,6 +446,22 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
     }
   }
 
+  function DialogController(scope, $mdDialog) {
+    scope.app = $scope.app;
+    scope.pe = $scope.pe;
+    scope.thisStation = $scope.thisStation;
+
+    scope.hide = function() {
+      $mdDialog.hide();
+    };
+
+    scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    // check if user has permisstion to write
+  };
+
   $scope.loadPerson = function(person){
   	$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': person.id})
   }
@@ -477,6 +502,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   			if($scope.personsRoles[i].id == $scope.deletePersonRoleId)
   				$scope.personsRoles.splice(i, 1);
   		};
+      $scope.rolesCount--;
   		$scope.app.showSuccessToast('Alterações realizadas com successo.')
   		$scope.app.cancelModal();
   	})

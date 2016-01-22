@@ -11,9 +11,19 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 		})
 
 
-		$scope.showAddCategorySplash = function(parent){
+		$scope.showAddCategorySplash = function(parent, ev){
 			$scope.parentCategory = parent;
-			$scope.app.openSplash('add_category.html')
+	    $mdDialog.show({
+	        controller: DialogController,
+	        templateUrl: 'add_category.html',
+	        targetEvent: ev,
+	        onComplete: function(){}
+	      })
+	      .then(function(answer) {
+	      //$scope.alert = 'You said the information was "' + answer + '".';
+	      }, function() {
+	      //$scope.alert = 'You cancelled the dialog.';
+	    });
 		}
 
 		$scope.app.toDeleteCategory = null;
@@ -71,4 +81,19 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 			});
 		}
 
-	}])
+		function DialogController(scope, $mdDialog) {
+	    scope.app = $scope.app;
+	    scope.pe = $scope.pe;
+
+	    scope.hide = function() {
+	      $mdDialog.hide();
+	    };
+
+	    scope.cancel = function() {
+	      $mdDialog.cancel();
+	    };
+
+	    // check if user has permisstion to write
+	  };
+
+}])
