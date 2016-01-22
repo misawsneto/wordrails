@@ -538,13 +538,11 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   }		
 
   $scope.openDeletePersonRole = function(roleId){
-  	//$scope.app.openSplash('confirm_delete_person.html')
-  	//$scope.deletePersonRoleId = roleId;
+  	 $scope.app.deletePersonRoleId = roleId;
     
       $mdDialog.show({
         controller: DialogController,
         templateUrl: 'confirm_delete_person.html',
-        targetEvent: ev,
         onComplete: function(){}
       })
       .then(function(answer) {
@@ -555,14 +553,14 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   }
 
   $scope.app.deletePersonRole = function(){
-  	trix.deleteStationRole($scope.deletePersonRoleId).success(function(response){
+  	trix.deleteStationRole($scope.app.deletePersonRoleId).success(function(response){
   		for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
-  			if($scope.personsRoles[i].id == $scope.deletePersonRoleId)
+  			if($scope.personsRoles[i].id == $scope.app.deletePersonRoleId)
   				$scope.personsRoles.splice(i, 1);
   		};
       $scope.rolesCount--;
   		$scope.app.showSuccessToast('Alterações realizadas com successo.')
-  		$scope.app.cancelModal();
+  		$mdDialog.cancel();
   	})
   }
 

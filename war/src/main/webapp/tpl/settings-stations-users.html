@@ -319,34 +319,26 @@
  	</script>
 
  	<script type="text/ng-template" id="confirm_delete_person.html">
- 		<md-dialog aria-label="Adicionar notícia">
-	<md-content>
-		<div class="wrapper">
-			<div class="text-center w-lg">
-				Tem certeza que deseja remover as permissões deste usuário a esta estação?
-				Atenção! Este usuário não será desativado. Para desativar este usuário, entre em contato com o administrador da rede. 
-			</div>
-			<div class="col-xs-6 col-xs-offset-3">
-				<!-- <div class="p-lg text-color wrapper-lg">
-					<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
-						Sim
-					</button>
-					<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
-						Não
-					</button>
-				</div> -->
-				<div class="p-l-lg p-r-lg text-center m-t-lg text-lg">
-					<button ng-click="app.addConflictingToStation();" md-ink-ripple class="md-btn md-flat btn-fw"
-					ng-if="!app.conflictingData.conflictingStationRole">Confirmar
-					</button>
-					<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">
-						Fechar
-					</button>
+ 		<md-dialog aria-label="delete station role">
+			<md-content>
+				<div class="wrapper">
+					<div class="text-center w-xxl text-lg">
+						Tem certeza que deseja remover as permissões deste usuário a esta estação?
+						Atenção! Este usuário não será desativado. Para desativar este usuário, entre em contato com o administrador da rede. 
+					</div>
+					<div class="">
+						<div class="p-l-lg p-r-lg text-center m-t-lg text-lg">
+							<button ng-click="app.deletePersonRole();" md-ink-ripple class="md-btn md-flat btn-fw"
+							ng-if="!app.conflictingData.conflictingStationRole">Confirmar
+							</button>
+							<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">
+								Fechar
+							</button>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-	</md-content>
-</md-dialog>
+			</md-content>
+		</md-dialog>
  	</script>
 
  	<script type="text/ng-template" id="confirm_no_person_selected.html">
