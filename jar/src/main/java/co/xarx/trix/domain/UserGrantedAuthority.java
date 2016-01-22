@@ -31,6 +31,15 @@ public class UserGrantedAuthority extends BaseEntity implements GrantedAuthority
 		this.station = station;
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 	@ManyToOne
 	public User user;
 

@@ -1,11 +1,6 @@
 package co.xarx.trix.eventhandler;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 import co.xarx.trix.domain.*;
-import co.xarx.trix.persistence.elasticsearch.PerspectiveEsRepository;
 import co.xarx.trix.persistence.RowRepository;
 import co.xarx.trix.persistence.StationPerspectiveRepository;
 import co.xarx.trix.persistence.TaxonomyRepository;
@@ -16,6 +11,10 @@ import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @RepositoryEventHandler(StationPerspective.class)
 @Component
@@ -32,9 +31,6 @@ public class StationPerspectiveEventHandler {
 
 	private @Autowired
 	RowRepository rowRepository;
-
-	private @Autowired
-	PerspectiveEsRepository perspectiveEsRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(StationPerspective stationPerspective) {
@@ -71,7 +67,6 @@ public class StationPerspectiveEventHandler {
 		}
 
 		stationPerspectiveRepository.save(stationPerspective);
-		perspectiveEsRepository.save(tp);
 	}
 
 	@HandleBeforeSave

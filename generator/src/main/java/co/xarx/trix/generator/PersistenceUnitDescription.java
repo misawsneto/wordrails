@@ -1,6 +1,8 @@
 package co.xarx.trix.generator;
 
+import co.xarx.trix.annotation.GeneratorIgnore;
 import org.reflections.Reflections;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
@@ -27,9 +29,18 @@ public class PersistenceUnitDescription {
 		Map<Class<?>, Class<? extends JpaRepository>> entityRepository = new HashMap<>();
 		Map<Class<?>, List<QueryDescription>> entityQueries = new HashMap<>();
 		Set<Class<? extends JpaRepository>> classes = reflections.getSubTypesOf(JpaRepository.class);
+
+		Iterator <Class<? extends JpaRepository>> iterator = classes.iterator();
+		while (iterator.hasNext()){
+			Class<? extends JpaRepository> c = iterator.next();
+			if (AnnotationUtils.isAnnotationDeclaredLocally(GeneratorIgnore.class, c))
+				iterator.remove();
+		}
+
 		for (Class<? extends JpaRepository> repositoryClass : classes) {
 			RepositoryRestResource repositoryResource = repositoryClass.getAnnotation(RepositoryRestResource.class);
-			if (repositoryResource == null || repositoryResource.exported()) {
+			GeneratorIgnore repositoryIgnore = repositoryClass.getAnnotation(GeneratorIgnore.class);
+			if (repositoryIgnore == null && (repositoryResource == null || repositoryResource.exported())) {
 				Type[] interfaces = repositoryClass.getGenericInterfaces();
 				for (Type genericInterface : interfaces) {
 					if (genericInterface instanceof ParameterizedType) {
@@ -44,7 +55,8 @@ public class PersistenceUnitDescription {
 							if (methods.length > 0) {
 								for (Method method : methods) {
 									RestResource methodResource = method.getAnnotation(RestResource.class);
-									if (methodResource == null || methodResource.exported()) {
+									GeneratorIgnore methodIgnore = method.getAnnotation(GeneratorIgnore.class);
+									if (methodIgnore == null && (methodResource == null || methodResource.exported())) {
 										QueryDescription query = new QueryDescription();
 										query.collection = Collection.class.isAssignableFrom(method.getReturnType());
 										if (methodResource == null || "".equals(methodResource.path())) {
@@ -148,30 +160,30 @@ public class PersistenceUnitDescription {
 									entity.fields.add(fieldDescription);
 								}
 							} else if(field.isAnnotationPresent(ElementCollection.class)){
-                                FieldDescription fieldDescription = new FieldDescription();
-                                fieldDescription.type =  parameterizedGenericType.toString(); // Arrays.deepToString(actualTypeArguments).replace('[','<').replace(']','>').replaceAll("class ", ""); // field.getType().getName() + "<" + field.getType().getSimpleName() + (!isSimpleType(field.getType()) ? "Dto" : "") + ">";
+								FieldDescription fieldDescription = new FieldDescription();
+								fieldDescription.type =  parameterizedGenericType.toString(); // Arrays.deepToString(actualTypeArguments).replace('[','<').replace(']','>').replaceAll("class ", ""); // field.getType().getName() + "<" + field.getType().getSimpleName() + (!isSimpleType(field.getType()) ? "Dto" : "") + ">";
 
-                                fieldDescription.name = field.getName();
-                                fieldDescription.nameUppercase = getNameUppercase(field);
-                                fieldDescription.entity = new EntityDescription();
-                                fieldDescription.entity.name = type.getSimpleName();
-                                entity.fields.add(fieldDescription);
-                            }
+								fieldDescription.name = field.getName();
+								fieldDescription.nameUppercase = getNameUppercase(field);
+								fieldDescription.entity = new EntityDescription();
+								fieldDescription.entity.name = type.getSimpleName();
+								entity.fields.add(fieldDescription);
+							}
 
-                            if(!field.isAnnotationPresent(ElementCollection.class)) {
-                                FieldDescription relationship = new FieldDescription();
-                                relationship.type = "List<" + type.getSimpleName() + (!isSimpleType(type) ? "Dto" : "") + ">";
-                                relationship.name = field.getName();
-                                relationship.nameUppercase = getNameUppercase(field);
-                                relationship.entity = new EntityDescription();
-                                relationship.entity.name = type.getSimpleName();
-                                relationship.collection = true;
-                                relationship.mappedBy = (field.isAnnotationPresent(OneToMany.class) && !"".equals(field.getAnnotation(OneToMany.class).mappedBy())) || (field.isAnnotationPresent(ManyToMany.class) && !"".equals(field.getAnnotation(ManyToMany.class).mappedBy()));
+							if(!field.isAnnotationPresent(ElementCollection.class)) {
+								FieldDescription relationship = new FieldDescription();
+								relationship.type = "List<" + type.getSimpleName() + (!isSimpleType(type) ? "Dto" : "") + ">";
+								relationship.name = field.getName();
+								relationship.nameUppercase = getNameUppercase(field);
+								relationship.entity = new EntityDescription();
+								relationship.entity.name = type.getSimpleName();
+								relationship.collection = true;
+								relationship.mappedBy = (field.isAnnotationPresent(OneToMany.class) && !"".equals(field.getAnnotation(OneToMany.class).mappedBy())) || (field.isAnnotationPresent(ManyToMany.class) && !"".equals(field.getAnnotation(ManyToMany.class).mappedBy()));
 //							    relationship.collectionType = field.getType().getName();
-                                relationship.collectionType = List.class.getName();
-                                relationship.elementType = type.getSimpleName();
-                                entity.relationships.add(relationship);
-                            }
+								relationship.collectionType = List.class.getName();
+								relationship.elementType = type.getSimpleName();
+								entity.relationships.add(relationship);
+							}
 						} else {
 							if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(OneToOne.class)) {
 								FieldDescription relationshipDescription = new FieldDescription();
@@ -322,22 +334,22 @@ public class PersistenceUnitDescription {
 		return name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
 
-    private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
+	private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
 
-    private static boolean isSimpleType(Class<?> clazz){
-        return WRAPPER_TYPES.contains(clazz) || clazz.equals(String.class);
-    }
-    private static Set<Class<?>> getWrapperTypes(){
-        Set<Class<?>> ret = new HashSet<Class<?>>();
-        ret.add(Boolean.class);
-        ret.add(Character.class);
-        ret.add(Byte.class);
-        ret.add(Short.class);
-        ret.add(Integer.class);
-        ret.add(Long.class);
-        ret.add(Float.class);
-        ret.add(Double.class);
-        ret.add(Void.class);
-        return ret;
-    }
+	private static boolean isSimpleType(Class<?> clazz){
+		return WRAPPER_TYPES.contains(clazz) || clazz.equals(String.class);
+	}
+	private static Set<Class<?>> getWrapperTypes(){
+		Set<Class<?>> ret = new HashSet<Class<?>>();
+		ret.add(Boolean.class);
+		ret.add(Character.class);
+		ret.add(Byte.class);
+		ret.add(Short.class);
+		ret.add(Integer.class);
+		ret.add(Long.class);
+		ret.add(Float.class);
+		ret.add(Double.class);
+		ret.add(Void.class);
+		return ret;
+	}
 }

@@ -36,6 +36,10 @@ public class ImageService {
 	@Autowired
 	private PictureRepository pictureRepository;
 
+	public ImageService() {
+	}
+
+
 	public Image createNewImage(String type, InputStream inputStream, String mime, boolean persistOnDatabase, boolean returnDuplicateIfExists) throws IOException, FileUploadException {
 		Image newImage = new Image();
 		newImage.type = type;

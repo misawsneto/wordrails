@@ -1,10 +1,12 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.domain.Identifiable;
 import co.xarx.trix.domain.page.Block;
+import co.xarx.trix.domain.page.BlockImpl;
 import co.xarx.trix.domain.query.*;
 import co.xarx.trix.factory.ElasticSearchExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Identifiable;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,47 +15,43 @@ import java.util.*;
 public class QueryExecutorService implements QueryExecutor {
 
 	@Autowired
+	private ElasticSearchQueryBuilderExecutor elasticSearchQueryBuilderExecutor;
+	@Autowired
+	@Qualifier("elasticSearchExecutorFactory")
 	private ElasticSearchExecutorFactory elasticSearchExecutorFactory;
 
 	private Map<Integer, Block> getBlocks(Iterator<Identifiable> itens, Iterator<Integer> indexes, String objectName) {
 		Map<Integer, Block> blocks = new TreeMap<>();
 
 		while (itens.hasNext() && indexes.hasNext()) {
-			Block block = new Block() {
-				@Override
-				public Identifiable getObject() {
-					return itens.next();
-				}
-
-				@Override
-				public String getObjectName() {
-					return objectName;
-				}
-			};
-
+			BlockImpl block = new BlockImpl(itens.next(), objectName);
 			blocks.put(indexes.next(), block);
 		}
 
 		return blocks;
 	}
 
+	private List<Identifiable> getItens(Query query, Integer size, Integer from) {
+		List<Identifiable> itens = new ArrayList<>();
+		String objectType = query.getObjectType();
+		ObjectQuery objectQuery = query.getObjectQuery();
+		if(objectQuery instanceof ElasticSearchObjectQuery) {
+			ElasticSearchExecutor executor = elasticSearchExecutorFactory.getExecutor(objectType + "_executor");
+			itens = executor.execute((ElasticSearchQuery) objectQuery.build(elasticSearchQueryBuilderExecutor), size, from);
+		}
+
+		return itens;
+	}
+
 	@Override
 	public Map<Integer, Block> execute(FixedQuery query) {
-		ElasticSearchQuery esQuery = query.getElasticSearchQuery();
-		ElasticSearchExecutor executor = elasticSearchExecutorFactory.getElasticSearchExecutor(esQuery.getObjectName() + "_executor");
-
-		Set<Integer> indexes = query.getIndexes();
-		List<Identifiable> itens = executor.execute(esQuery, indexes.size(), 0);
-		return getBlocks(itens.iterator(), indexes.iterator(), esQuery.getObjectName());
+		List<Identifiable> itens = getItens(query, query.getIndexes().size(), 0);
+		return getBlocks(itens.iterator(), query.getIndexes().iterator(), query.getObjectType());
 	}
 
 	@Override
 	public Map<Integer, Block> execute(PageableQuery query) {
-		ElasticSearchQuery esQuery = query.getElasticSearchQuery();
-		ElasticSearchExecutor executor = elasticSearchExecutorFactory.getElasticSearchExecutor(esQuery.getObjectName() + "_executor");
-
-		Set<Integer> indexes = query.getIndexes();
-		List<Identifiable> itens = executor.execute(esQuery, query.getSize(), query.getFrom());
-		return getBlocks(itens.iterator(), indexes.iterator(), esQuery.getObjectName());
+		List<Identifiable> itens = getItens(query, query.getSize(), query.getFrom());
+		return getBlocks(itens.iterator(), query.getIndexes().iterator(), query.getObjectType());
 	}
 }

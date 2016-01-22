@@ -31,58 +31,58 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			};
 
 
-		    $scope.app.editingPost.disabled = function(date, mode) {// Disable weekend selection
-		    	return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-		    };
+			$scope.app.editingPost.disabled = function(date, mode) {// Disable weekend selection
+				return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+			};
 
-		    $scope.app.editingPost.toggleMin = function() {
-		    	$scope.app.editingPost.minDate = $scope.app.editingPost.minDate ? null : new Date();
-		    };
-		    $scope.app.editingPost.toggleMin();
+			$scope.app.editingPost.toggleMin = function() {
+				$scope.app.editingPost.minDate = $scope.app.editingPost.minDate ? null : new Date();
+			};
+			$scope.app.editingPost.toggleMin();
 
-		    $scope.app.editingPost.open = function($event) {
-		    	$event.preventDefault();
-		    	$event.stopPropagation();
+			$scope.app.editingPost.open = function($event) {
+				$event.preventDefault();
+				$event.stopPropagation();
 
-		    	$scope.app.editingPost.opened = true;
-		    };
+				$scope.app.editingPost.opened = true;
+			};
 
-		    $scope.app.editingPost.dateOptions = {
-		    	formatYear: 'yy',
-		    	startingDay: 0,
-		    	class: 'datepicker',
-		    	showWeeks: false
-		    };
+			$scope.app.editingPost.dateOptions = {
+				formatYear: 'yy',
+				startingDay: 0,
+				class: 'datepicker',
+				showWeeks: false
+			};
 
-		    $scope.app.editingPost.initDate = new Date();
-		    $scope.app.editingPost.formats = ['dd MMMM yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-		    $scope.app.editingPost.format = $scope.app.editingPost.formats[0];
+			$scope.app.editingPost.initDate = new Date();
+			$scope.app.editingPost.formats = ['dd MMMM yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+			$scope.app.editingPost.format = $scope.app.editingPost.formats[0];
 
-		    $scope.app.editingPost.showTimepicker = false;
-		    $scope.app.editingPost.mytime = $scope.app.editingPost.customDate
+			$scope.app.editingPost.showTimepicker = false;
+			$scope.app.editingPost.mytime = $scope.app.editingPost.customDate
 
-		    $scope.app.editingPost.hstep = 1;
-		    $scope.app.editingPost.mstep = 15;
+			$scope.app.editingPost.hstep = 1;
+			$scope.app.editingPost.mstep = 15;
 
-		    $scope.app.editingPost.options = {
-		    	hstep: [1, 2, 3],
-		    	mstep: [1, 5, 10, 15, 25, 30]
-		    };
+			$scope.app.editingPost.options = {
+				hstep: [1, 2, 3],
+				mstep: [1, 5, 10, 15, 25, 30]
+			};
 
-		    $scope.app.editingPost.ismeridian = false;
-		    $scope.app.editingPost.toggleMode = function() {
-		    	$scope.app.editingPost.ismeridian = ! $scope.app.editingPost.ismeridian;
-		    };
+			$scope.app.editingPost.ismeridian = false;
+			$scope.app.editingPost.toggleMode = function() {
+				$scope.app.editingPost.ismeridian = ! $scope.app.editingPost.ismeridian;
+			};
 
-		    $scope.app.editingPost.changed = function () {
-		    	window.console && console.log('Time changed to: ' + $scope.app.editingPost.mytime);
-		    };
+			$scope.app.editingPost.changed = function () {
+				window.console && console.log('Time changed to: ' + $scope.app.editingPost.mytime);
+			};
 
-		    $scope.app.editingPost.clear = function() {
-		    	$scope.app.editingPost.mytime = null;
-		    };
+			$scope.app.editingPost.clear = function() {
+				$scope.app.editingPost.mytime = null;
+			};
 
-		    /*--------- /post time info ----*/
+			/*--------- /post time info ----*/
 		}
 
 		$scope.loadPost = function(postId){
@@ -218,7 +218,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		}
 
 	/*  $scope.$watch('app.editingPost.selectedStation', function(newVal){
-	  	console.log(newVal);
+		console.log(newVal);
 	  }, true)*/
 
 $scope.$watch('app.hidePostOptions', checkPostToolsWidth)
@@ -411,25 +411,25 @@ uploader.onProgressItem = function(fileItem, progress) {
 // --------------- chip tags ------------------
 
  $scope.chipTags = {
- 	readonly: false,
-    // Lists of fruit names and Vegetable objects
-    fruitNames: ['Apple', 'Banana', 'Orange'],
-    roFruitNames: angular.copy(self.fruitNames),
-    tags: [],
-    vegObjs: [
-      {
-        'name' : 'Broccoli',
-        'type' : 'Brassica'
-      },
-      {
-        'name' : 'Cabbage',
-        'type' : 'Brassica'
-      },
-      {
-        'name' : 'Carrot',
-        'type' : 'Umbelliferous'
-      }
-    ]}
+	readonly: false,
+	// Lists of fruit names and Vegetable objects
+	fruitNames: ['Apple', 'Banana', 'Orange'],
+	roFruitNames: angular.copy(self.fruitNames),
+	tags: [],
+	vegObjs: [
+	  {
+		'name' : 'Broccoli',
+		'type' : 'Brassica'
+	  },
+	  {
+		'name' : 'Cabbage',
+		'type' : 'Brassica'
+	  },
+	  {
+		'name' : 'Carrot',
+		'type' : 'Umbelliferous'
+	  }
+	]}
  
 // --------------- end of chip tags ------------
 
@@ -502,6 +502,8 @@ function isTermSelected(terms){
 	$scope.schedulePost = function(){
 		if(isTermSelected($scope.termTree) && !$scope.app.editingPost.id){
 			createPost("SCHEDULED")
+		} else if (isTermSelected($scope.termTree) && $scope.app.editingPost.id) {
+			updatePost("SCHEDULED")
 		}else{
 			//$scope.showMoreOptions(ev);
 			$scope.togglePostOptions();
@@ -513,7 +515,7 @@ function isTermSelected(terms){
 
 	$scope.publishPost = function(ev){
 		if(isTermSelected($scope.termTree) && !$scope.app.editingPost.id){
-			createPost()
+			createPost("PUBLISHED")
 		}else if(isTermSelected($scope.termTree) && $scope.app.editingPost.id){
 			updatePost("PUBLISHED")
 		}else{
@@ -650,27 +652,11 @@ function isTermSelected(terms){
 			}
 
 			var doUpdate = function(){
-				trix.convertPost(post.id, state).success(function(){
-					post.state = state
-					if($scope.checkState(state) == 1){
-						trix.putPost(post).success(function(){
-							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
-							$scope.app.editingPost.state = state;
-							$scope.app.cancelModal();
-						});
-					}else if($scope.checkState(state) == 2){
-						trix.putPostDraft(post).success(function(){
-							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
-							$scope.app.editingPost.state = state;
-							$scope.app.cancelModal();
-						});
-					}else if($scope.checkState(state) == 3){
-						trix.putPostScheduled(post).success(function(){
-							$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
-							$scope.app.editingPost.state = state;
-							$scope.app.cancelModal();
-						});
-					}
+				post.state = state
+				trix.putPost(post).success(function () {
+					$scope.app.showSuccessToast('Notícia atualizada com sucesso.')
+					$scope.app.editingPost.state = state;
+					$scope.app.cancelModal();
 				});
 			}
 
@@ -705,19 +691,19 @@ function isTermSelected(terms){
 
 function createPost(state){
 	var post = {};
-	post.title = $scope.app.editingPost.title
-	post.body = $scope.app.editingPost.body
+	post.title = $scope.app.editingPost.title;
+	post.body = $scope.app.editingPost.body;
 
 	if($scope.app.editingPost.externalVideoUrl)
-		post.externalVideoUrl = $scope.app.editingPost.externalVideoUrl
+		post.externalVideoUrl = $scope.app.editingPost.externalVideoUrl;
 	if($scope.app.editingPost.notify)
-		post.notify = true
+		post.notify = true;
 
 	if($scope.app.editingPost.topper)
-		post.topper = $scope.app.editingPost.topper
+		post.topper = $scope.app.editingPost.topper;
 
 	if($scope.app.editingPost.subheading)
-		post.subheading = $scope.app.editingPost.subheading
+		post.subheading = $scope.app.editingPost.subheading;
 
 	if(!post.title || post.title.trim() === "")
 		$scope.app.showErrorToast('Título inválido.');
@@ -725,40 +711,31 @@ function createPost(state){
 		$scope.app.showErrorToast('Texto inválido.');
 	else if((!post.body || post.body.trim() === "") && (!post.title || post.title.trim() === ""))
 		$scope.app.showErrorToast('Título e texto inválidos.');
-	else{
+	else {
 			// post is ok to be created
 			var termList = getTermList($scope.termTree);
-			var termUris = []
+			var termUris = [];
 			termList.forEach(function(term){
 				termUris.push(TRIX.baseUrl + "/api/terms/" + term.id);
-			})
+			});
 
 			post.terms = termUris;
 			post.station = TRIX.baseUrl + "/api/stations/" + $scope.app.editingPost.selectedStation.stationId;
 			post.author = extractSelf($scope.app.getLoggedPerson())
 			post.tags = $scope.chipTags.tags;
 
-			if($scope.app.editingPost.uploadedImage){
-				
-				post.featuredImage = TRIX.baseUrl + "/api/images/" + $scope.app.editingPost.uploadedImage.imageId
-				if(state == "DRAFT"){
-					post.state = state;
-					postDraft(post)
-				}else{
-					postPost(post);
-				}
-			}else{
-				if(state == "DRAFT"){
-					post.state = state;
-					postDraft(post)
-				}else if(state == "SCHEDULED"){
-					post.state = state;
+			if ($scope.app.editingPost.uploadedImage) {
+				TRIX.baseUrl + "/api/images/" + $scope.app.editingPost.uploadedImage.imageId;
+				post.state = state;
+				postPost(post);
+			} else {
+				post.state = state;
+				if (state == "SCHEDULED") {
+					var start = $scope.dt;
+					start.setHours(0, 0, 0, 0);
 
-					var start = $scope.dt
-					start.setHours(0,0,0,0);
-
-					var now = new Date()
-					now.setHours(0,0,0,0);
+					var now = new Date();
+					now.setHours(0, 0, 0, 0);
 
 					var scheduledDate = new Date(start.getTime() + ($scope.app.editingPost.scheduledDate.getTime() - now.getTime()))
 
@@ -766,77 +743,30 @@ function createPost(state){
 
 					var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
 
-					if(diffMins < 15 && (scheduledDate.toDateString() === now.toDateString() || scheduledDate.toDateString() < now.toDateString() )){
-						$scope.app.showErrorToast('Escolha um horário com mínimo<br>15 minutes do horário atual. ');
+					if (diffMins < 1 && (scheduledDate.toDateString() === now.toDateString() || scheduledDate.toDateString() < now.toDateString() )) {
+						$scope.app.showErrorToast('Escolha um horário com mínimo<br>1 minutes do horário atual. ');
 						return;
 					}
 
 					post.scheduledDate = scheduledDate;
-					postSchduled(post)
-				
-				}else{
-					postPost(post);
+
+				}
+
+				postPost(post);
+
+				if (state == "DRAFT") {
+					$scope.app.showSuccessToast('Rascunho salvo com sucesso.');
+				} else if (state == "PUBLISHED") {
+					$scope.app.showSuccessToast('Publicado com sucesso.');
+				} else if (state == "SCHEDULED") {
+					$scope.app.showSuccessToast('Agendado com sucesso.');
 				}
 			}
-
-			
 		} // end of final else
 	}// end of createPost()
 
-	var postSchduled = function(post){
-		if(post && post.id){
-			window.console && console.log('Erro ao criar post: ' + post.id);
-			return false;
-		}
-
-		trix.postPostScheduled(post).success(function(postId){
-			$scope.app.showSuccessToast('Agendado com sucesso.');
-			// replace url withou state reload
-			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
-			$scope.app.refreshPerspective();
-			trix.getPostScheduled(postId, "postProjection").success(function(postResponse){
-				$scope.schedulerPopoverOpen = false;
-				$scope.app.editingPost = angular.extend($scope.app.editingPost, postResponse);
-				customSlug = true;
-				$timeout(function() {
-					$scope.app.editingPost.editingExisting = false;
-					window.onbeforeunload = null;
-				}, 1000);	
-			}).error(function(data, status, header){
-				if(status == 403)
-					$scope.app.openSplash('signin_splash.html')
-			})
-		})
-	}
-
-	var postDraft = function(post){
-		if(post && post.id){
-			window.console && console.log('Erro ao criar post: ' + post.id);
-			return false;
-		}
-
-		trix.postPostDraft(post).success(function(postId){
-			$scope.app.showSuccessToast('Rascunho salvo.');
-			// replace url withou state reload
-			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
-			$scope.app.refreshPerspective();
-			trix.getPostDraft(postId, "postProjection").success(function(postResponse){
-				$scope.app.editingPost = angular.extend($scope.app.editingPost, postResponse);
-				customSlug = true;
-				$timeout(function() {
-					$scope.app.editingPost.editingExisting = false;
-					window.onbeforeunload = null;
-				}, 1000);	
-			}).error(function(data, status, header){
-				if(status == 403)
-					$scope.app.openSplash('signin_splash.html')
-			})
-		})
-	}
-
 	var postPost = function(post){
 		trix.postPost(post).success(function(postId){
-			$scope.app.showSuccessToast('Notícia publicada.');
 			// replace url withou state reload
 			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
 
@@ -971,7 +901,7 @@ function createPost(state){
 	// ----------- end of scheduler date picker ------------
 	
 	$scope.togglePostOptions = function(ev){
-      $mdSidenav('post-options').toggle();
-    }
+	  $mdSidenav('post-options').toggle();
+	}
 
 }]);

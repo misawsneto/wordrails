@@ -13,12 +13,12 @@ public class TermConverter extends AbstractConverter<Term, TermView> {
 	@Autowired TermRepository termRepository;
 	
 	@Override
-	public Term convertToEntity(TermView termView) {
+	public Term convertFrom(TermView termView) {
 		return termRepository.findOne(termView.termId);
 	}
 
 	@Override
-	public TermView convertToView(Term term) {
+	public TermView convertTo(Term term) {
 		TermView termView = new TermView();
 		termView.termId = term.id;
 		if(term.parent != null)

@@ -1,6 +1,6 @@
 package co.xarx.trix.security;
 
-import co.xarx.trix.auth.TrixAuthenticationProvider;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.NetworkRolesRepository;
 import co.xarx.trix.persistence.NetworkRepository;
@@ -26,7 +26,7 @@ public class TaxonomySecurityChecker {
 
 		boolean canCreate = false;
 		if(person != null){
-			if(taxonomy.type.equals(Taxonomy.STATION_TAXONOMY) || taxonomy.type.equals(Taxonomy.STATION_TAG_TAXONOMY) || taxonomy.type.equals(Taxonomy.STATION_AUTHOR_TAXONOMY)){
+			if(taxonomy.type.equals(Taxonomy.STATION_TAXONOMY)){
 				StationRole personStationRoles = personStationRolesRepository.findByStationAndPerson(taxonomy.owningStation, person);
 				if(personStationRoles != null && (personStationRoles.admin || personStationRoles.editor))
 					canCreate = true;
@@ -47,13 +47,6 @@ public class TaxonomySecurityChecker {
 	}
 	
 	public boolean canEdit(Taxonomy taxonomy){
-		Person person = authProvider.getLoggedPerson();
-		if(taxonomy.type.equals(Taxonomy.STATION_TAG_TAXONOMY)){
-			StationRole personStationRoles = personStationRolesRepository.findByStationAndPerson(taxonomy.owningStation, person);
-			if(personStationRoles != null && (personStationRoles.writer)){
-				return true;
-			}
-		}
 		return canCreate(taxonomy);
 	}
 }

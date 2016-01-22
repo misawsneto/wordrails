@@ -71,8 +71,7 @@ public class QueryPersistence {
 	public void changePostState(Integer postId, String state) {
 		manager.createNativeQuery("UPDATE post SET state=:state where id = :postId").setParameter("postId", postId).setParameter("state", state).executeUpdate();
 	}
-	
-	@Async
+
 	@Transactional
 	public void updateCommentsCount(Integer postId) {
 		manager.createNativeQuery("UPDATE Post set commentsCount = (select count(*) FROM comment WHERE post_id = :postId) WHERE id = :postId;").setParameter("postId", postId).executeUpdate();
@@ -129,10 +128,6 @@ public class QueryPersistence {
 										"(select count(*) from Post po where po.author_id = p.id and po.state = 'DRAFT')," +
 										"(select count(*) from Post po where po.author_id = p.id and po.state = 'SCHEDULED')" +
 				"from Person p where p.id = :personId").setParameter("personId", personId).getResultList();
-	}
-	public void updateLastLogin(String username) {
-		// TODO Auto-generated method stub
-		manager.createQuery("update Person person set person.lastLogin = :date where person.username = :username").setParameter("username", username).setParameter("date", new Date()).executeUpdate();
 	}
 
 	@Transactional

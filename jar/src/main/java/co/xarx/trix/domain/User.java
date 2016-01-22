@@ -1,5 +1,7 @@
 package co.xarx.trix.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -14,8 +16,17 @@ import java.util.Set;
  * @author misael
  */
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "networkId"}))
 public class User extends BaseEntity implements UserDetails {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@Size(max = 50)
 	public String username;
@@ -25,12 +36,15 @@ public class User extends BaseEntity implements UserDetails {
 
 	public Boolean enabled;
 
+	@JsonBackReference("person")
 	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
 	public Person person;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserGrantedAuthority> authorities;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserConnection> userConnections;
 

@@ -7,8 +7,17 @@ import java.sql.Blob;
 
 @Deprecated
 @Entity
-@Table(name="file")
+@Table(name="File")
 public class FileContents extends BaseEntity {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@NotNull
 	@Size(min = 1, max = 1)

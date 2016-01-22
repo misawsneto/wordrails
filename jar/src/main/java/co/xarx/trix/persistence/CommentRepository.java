@@ -1,8 +1,7 @@
 package co.xarx.trix.persistence;
 
-import java.util.Date;
-import java.util.List;
-
+import co.xarx.trix.domain.Comment;
+import co.xarx.trix.domain.Post;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,8 +9,8 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import co.xarx.trix.domain.Comment;
-import co.xarx.trix.domain.Post;
+import java.util.Date;
+import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer>, QueryDslPredicateExecutor<Comment> {
 
@@ -23,7 +22,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>, Quer
 
 	@RestResource(exported = false)
 	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.id = :postId and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")
-	public List<Object[]> countByPostAndDate(@Param("postId") Integer postId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
+	List<Object[]> countByPostAndDate(@Param("postId") Integer postId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
 
 	@RestResource(exported = false)
 	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.author.id = :authorId and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")

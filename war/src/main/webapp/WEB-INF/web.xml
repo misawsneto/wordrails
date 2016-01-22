@@ -4,11 +4,6 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0" metadata-complete="true">
 
-	<context-param>
-		<param-name>spring.profiles.active</param-name>
-		<param-value>dev</param-value>
-	</context-param>
-
 	<resource-ref>
 		<res-ref-name>jdbc/trix</res-ref-name>
 		<res-type>com.jolbox.bonecp.BoneCPDataSource</res-type>
@@ -45,19 +40,23 @@
 	<!-- RESTEasy -->
 
 	<!-- Spring -->
-	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class> 
+	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
 		</listener> -->
 	<listener>
-		<listener-class>co.xarx.trix.config.WordRailsContextLoaderListener</listener-class>
+		<listener-class>co.xarx.trix.config.TrixContextLoaderListener</listener-class>
 	</listener>
+
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>
+			org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+		</param-value>
+	</context-param>
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath:applicationContext.xml
-			classpath:applicationContext-quartz.xml
-			classpath:applicationContext-integration.xml
-			classpath:applicationContext-security.xml
+			co.xarx.trix.config.spring
 		</param-value>
 	</context-param>
 
@@ -217,17 +216,19 @@
 
 	<filter-mapping>
 		<filter-name>NetworkDomainFilter</filter-name>
-		<url-pattern>/index.jsp</url-pattern>
-		<url-pattern>/search/*</url-pattern>
-		<url-pattern>/post/*</url-pattern>
-		<url-pattern>/bookmarks/*</url-pattern>
-		<url-pattern>/notifications/*</url-pattern>
-		<url-pattern>/settings/*</url-pattern>
-		<url-pattern>/publications/*</url-pattern>
-		<url-pattern>/user/*</url-pattern>
-		<url-pattern>/read/*</url-pattern>
-		<url-pattern>/api/*</url-pattern>
-		<url-pattern>/mystats/*</url-pattern>
+		<url-pattern>/*</url-pattern>
+		<!--<url-pattern>/index.jsp</url-pattern>-->
+		<!--<url-pattern>/search/*</url-pattern>-->
+		<!--<url-pattern>/post/*</url-pattern>-->
+		<!--<url-pattern>/bookmarks/*</url-pattern>-->
+		<!--<url-pattern>/notifications/*</url-pattern>-->
+		<!--<url-pattern>/settings/*</url-pattern>-->
+		<!--<url-pattern>/publications/*</url-pattern>-->
+		<!--<url-pattern>/user/*</url-pattern>-->
+		<!--<url-pattern>/read/*</url-pattern>-->
+		<!--<url-pattern>/login/*</url-pattern>-->
+		<!--<url-pattern>/api/*</url-pattern>-->
+		<!--<url-pattern>/mystats/*</url-pattern>-->
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>

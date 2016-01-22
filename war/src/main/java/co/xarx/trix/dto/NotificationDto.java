@@ -17,5 +17,5 @@ public class NotificationDto {
 	public String postSnippet;
 	public String imageSmallId;
 	public String imageMediumId;
-	public Boolean test;
+	public Boolean test = true;
 }

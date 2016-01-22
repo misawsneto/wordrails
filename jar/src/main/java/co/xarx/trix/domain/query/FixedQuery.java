@@ -3,32 +3,39 @@ package co.xarx.trix.domain.query;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.Set;
 
 @Entity
+@Table(name = "query_fixed")
 public class FixedQuery extends BaseEntity implements Query {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 	@NotNull
 	@ElementCollection
+	@JoinTable(name = "query_fixed_indexes")
 	public Set<Integer> indexes;
 
+	@JoinColumn(name = "object_query_id")
 	@OneToOne(cascade = CascadeType.ALL)
-	public ElasticSearchQuery query;
+	public BaseObjectQuery objectQuery;
 
 	@Override
-	public ElasticSearchQuery getElasticSearchQuery() {
-		return query;
+	public BaseObjectQuery getObjectQuery() {
+		return objectQuery;
 	}
 
-	@Override
-	public void setElasticSearchQuery(ElasticSearchQuery elasticSearchQuery) {
-		this.query = elasticSearchQuery;
+	public void setObjectQuery(ObjectQuery objectQuery) {
+		this.objectQuery = (BaseObjectQuery) objectQuery;
 	}
 
 	@Override

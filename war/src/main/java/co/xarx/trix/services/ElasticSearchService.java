@@ -1,76 +1,105 @@
 package co.xarx.trix.services;
 
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.ImmutableSettings;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.index.query.QueryBuilders;
+import co.xarx.trix.domain.ElasticSearchEntity;
+import co.xarx.trix.domain.MultiTenantEntity;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.QPost;
+import co.xarx.trix.elasticsearch.ESRepository;
+import co.xarx.trix.elasticsearch.domain.ESPerson;
+import co.xarx.trix.elasticsearch.domain.ESPost;
+import co.xarx.trix.elasticsearch.domain.ESStation;
+import co.xarx.trix.elasticsearch.repository.ESBookmarkRepository;
+import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
+import co.xarx.trix.elasticsearch.repository.ESPostRepository;
+import co.xarx.trix.elasticsearch.repository.ESStationRepository;
+import co.xarx.trix.persistence.PersonRepository;
+import co.xarx.trix.persistence.PostRepository;
+import co.xarx.trix.persistence.StationRepository;
+import com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.ExecutionException;
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
+@Service
 public class ElasticSearchService {
 
-	protected Client client;
+	Logger log = Logger.getLogger(this.getClass().getName());
 
-	public Client getClient() {
-		return client;
-	}
+	@Value("${elasticsearch.index}")
+	private String index;
+	@Value("#{systemProperties['indexES'] ?: false}")
+	private boolean indexES;
 
 
-	public ElasticSearchService(String cluster, String host, Integer port, String user, String password){
-		startEsClient(cluster, host, port, user, password);
-	}
+	@Autowired
+	ModelMapper modelMapper;
+	@Autowired
+	PostRepository postRepository;
+	@Autowired
+	ESPostRepository esPostRepository;
+	@Autowired
+	StationRepository stationRepository;
+	@Autowired
+	ESStationRepository esStationRepository;
+	@Autowired
+	ESBookmarkRepository esBookmarkRepository;
+	@Autowired
+	PersonRepository personRepository;
+	@Autowired
+	ESPersonRepository esPersonRepository;
+	@Autowired
+	ElasticsearchTemplate elasticsearchTemplate;
 
-	public Client getElasticsearchClient(){
-		return client;
-	}
+	@PostConstruct
+	public void init() {
+		log.info("Start indexing of elasticsearch entities with " + this.toString());
 
-	private void startEsClient(String cluster, String host, Integer port, String user, String password){
-		Settings settings = ImmutableSettings.settingsBuilder()
-				.put("cluster.name", cluster)
-				.put("shield.user", user + ":" + password)
-				.build();
+		if(indexES) {
+			elasticsearchTemplate.deleteIndex(index);
 
-		client = new TransportClient(settings).addTransportAddress(new InetSocketTransportAddress(host, port));
-	}
+			List<MultiTenantEntity> stations = new ArrayList(stationRepository.findAll());
+			List<MultiTenantEntity> people = new ArrayList(personRepository.findAll());
+			List<MultiTenantEntity> posts = Lists.newArrayList(postRepository.findAll(QPost.post.state.eq(Post.STATE_PUBLISHED)));
 
-	public IndexResponse index(String doc, String id, String index, String type){
-		return client == null ? null:  client.prepareIndex(index, type, id)
-				.setSource(doc)
-				.execute()
-				.actionGet();
-	}
-
-	public UpdateResponse update(String doc, String id, String index, String type){
-		UpdateRequest updateRequest = new UpdateRequest();
-		updateRequest.index(index);
-		updateRequest.type(type);
-		updateRequest.id(id);
-		updateRequest.doc(doc);
-		try {
-			return client.update(updateRequest).get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
+			mapThenSave(stations, ESStation.class, esStationRepository);
+			mapThenSave(posts, ESPost.class, esPostRepository);
+			mapThenSave(people, ESPerson.class, esPersonRepository);
 		}
-		return null;
 	}
 
-	public void save(String doc, String id, String index, String type){
-		index(doc, id, index, type);
+	public <D extends MultiTenantEntity> void mapThenSave(List<MultiTenantEntity> itens, Class<D> mapTo, CrudRepository esRepository) {
+		int errorCount = 0;
+		List<MultiTenantEntity> entities = new ArrayList<>();
+		for (Object item : itens) {
+			try {
+				entities.add(modelMapper.map(item, mapTo));
+			} catch (Exception e) {
+				errorCount++;
+			}
+		}
+
+		if (itens.size() > 0) {
+			if (errorCount > 0) log.info("mapping of " + errorCount + "/" + itens.size() +
+					" entities of type " + itens.get(0).getClass().getSimpleName() + " threw mapping error");
+			if (entities.size() > 0) log.info("indexing " + entities.size() + " elements of type " + itens.get(0).getClass().getSimpleName());
+		}
+		entities.forEach(esRepository::save);
 	}
 
-	public void delete(String id, String index, String type){
-		if(client !=null)
-			client.prepareDeleteByQuery(index)
-					.setQuery(QueryBuilders.idsQuery(type).addIds(id))
-					.execute();
+	public <T extends ElasticSearchEntity> void saveIndex(Object object, Class<T> objectClass, ESRepository esRepository) {
+		ElasticSearchEntity entity = modelMapper.map(object, objectClass);
+		esRepository.save(entity);
+	}
+
+	public void deleteIndex(Integer id, ESRepository esRepository) {
+		esRepository.delete(id);
 	}
 }
