@@ -45,7 +45,7 @@
 				<!-- actions -->
 					<div class="col-sm-2 m-b-xs text-right m-t-n-sm">
 		        <md-menu md-position-mode="target-right target md-neutral-theme">
-		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r-xl">
+		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r">
 		          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
 		          </button>
 		          <md-menu-content width="4" >
@@ -81,7 +81,7 @@
 								<!-- <tr ng-repeat="role in personsRoles"> -->
 								<tr ng-repeat="role in personsRoles" ng-click="loadPerson(role.person)">
 									<td>
-										<label class="md-check">
+										<label class="md-check" ng-if="role.person.id != app.initData.person.id">
 											<input type="checkbox" ng-model="role.selected" ng-click="app.stopPropagation($event)">
 											<i class="blue"></i>
 										</label>
@@ -98,17 +98,7 @@
 									<td class="text-center" ng-if="!role.person.lastLogin"> - </td>
 									<td class="text-center" ng-if="role.person.lastLogin">{{role.person.lastLogin | fromNow3}}</td>
 									<td>
-										<div class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-											<a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-dots-vertical mdi" dropdown-toggle>
-											</a>
-											<!-- dropdown -->
-											<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
-												<li ng-if="app.networkAdmin" > <a href> Reconfigurar a senha </a> </li>
-												<!-- <li class="divider"></li> -->
-												<li> <a ng-click="openDeletePersonRole(role.id);"> Remover permissões </a> </li>
-											</ul>
-											<!-- / dropdown -->
-										</div>
+										<a ng-if="role.person.id != app.initData.person.id" ng-click="openDeletePersonRole(role.id);app.stopPropagation($event);"> <i class="mdi mdi-delete"></i> </a>
 									</td>
 								</tr>
 							</tbody>

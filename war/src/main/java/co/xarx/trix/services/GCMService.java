@@ -123,7 +123,7 @@ public class GCMService {
 		notificationDto.hash = notification.hash + "";
 		notificationDto.personId = notification.person != null ? notification.person.id : null;
 		notificationDto.personName = notification.person != null ? notification.person.name : null;
-		notificationDto.networkId = notification.network != null ? notification.network.id : null;
+		notificationDto.networkId = notification.post != null ? notification.post.networkId : null;
 		notificationDto.networkName = notification.network != null ? notification.network.name : null;
 		notificationDto.stationId = notification.station != null ? notification.station.id : null;
 		notificationDto.stationName = notification.station != null ? notification.station.name : null;
@@ -132,8 +132,8 @@ public class GCMService {
 		notificationDto.postSnippet = notification.post != null ? StringUtil.simpleSnippet(notification.post.body) : null;
 		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallHash : null;
 		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumHash : null;
-		if("dev_prod".equals(profile) || "prod".equals(profile))
-		notificationDto.test = false;
+		notificationDto.test = !("dev_prod".equals(profile) || "prod".equals(profile));
+
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 

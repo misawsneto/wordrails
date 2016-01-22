@@ -45,7 +45,7 @@
 				<!-- actions -->
 					<div class="col-sm-2 m-b-xs text-right m-t-n-sm">
 		        <md-menu md-position-mode="target-right target md-neutral-theme">
-		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r-xl">
+		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r">
 		          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
 		          </button>
 		          <md-menu-content width="4" >
@@ -73,9 +73,10 @@
 								<th>nome</th>
 								<th>email</th>
 								<th class="text-center">último login</th>
-								<th ng-if="app.networkAdmin" style="max-width:130px;">
+								<th ng-if="app.networkAdmin" style="max-width:115px;">
 									ativar/desativar
 								</th>
+								<th style="width:30px;"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -98,13 +99,23 @@
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 								<td class="text-center" ng-if="app.networkAdmin">
 									<div ng-if="person.id != app.initData.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-										<!-- <a href ng-click="openEnableDisableDialog(person, $event)" angular-ripple class="dropdown-toggle border-radius-50 i-20" ng-class="{'text-danger mdi mdi-block-helper': person.user.enabled, 'text-success mdi mdi-check': !person.user.enabled}">
-										</a> -->
-										<!-- dropdown -->
 									 <label class="md-switch">
 				              <input type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
 				              <i class="blue"></i>
 				            </label>
+									</div>
+								</td>
+								<td>
+									<div ng-if="person.id != app.initData.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+										<a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-dots-vertical mdi" dropdown-toggle>
+										</a>
+										<!-- dropdown -->
+										<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
+											<li ng-if="app.networkAdmin" > <a href> Reconfigurar a senha </a> </li>
+											<!-- <li class="divider"></li> -->
+											<li> <a ng-click="openDeletePersonRole(role.id);"> Alterar permissões </a> </li>
+										</ul>
+										<!-- / dropdown -->
 									</div>
 								</td>
 							</tr>
