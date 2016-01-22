@@ -8,6 +8,7 @@ import co.xarx.trix.dto.NotificationDto;
 import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.persistence.PersonNetworkRegIdRepository;
 import co.xarx.trix.persistence.StationRepository;
+import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -66,7 +67,7 @@ public class GCMService {
 
 			gcmNotify(personNetworkRegIds, notification);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.error(e.toString());
 		}
 	}
 
@@ -138,25 +139,29 @@ public class GCMService {
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 
 		try{
-			Message message = new Message.Builder().addData("message", notificationJson).build();
-			List<List<String>> parts = TrixUtil.partition(new ArrayList<>(devices), GCM_WINDOW_SIZE);
+			Message message = new Message.Builder()
+					.addData("message", notificationJson)
+					.delayWhileIdle(true)
+					.timeToLive(86400)
+					.build();
+			List<List<String>> parts = TrixUtil.partition(new ArrayList<String>(devices), GCM_WINDOW_SIZE);
 			for (List<String> part : parts) {
 				sendBulkMessages(message, part, notification.hash);
 				Thread.sleep(2000);
 			}
 		}catch(Throwable e){
-			System.err.println(notificationJson + " \n RegIds: " + personNetworkRegIds.size());
-			e.printStackTrace();
+			Logger.error(notificationJson + " \n RegIds: " + personNetworkRegIds.size());
+			Logger.error(e.toString());
 		}
 	}
 
 	public void sendBulkMessages(Message message, List<String> devices, String notificationHash){
 		MulticastResult multicastResult;
 		try {
-			System.out.println("sending messages... " + devices.size() + " hash: " + notificationHash);
+			Logger.info("sending messages... " + devices.size() + " hash: " + notificationHash);
 			multicastResult = sender.send(message, devices, 5);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.error(e.toString());
 			if(notificationHash!= null)
 				notificationRepository.deleteByHash(notificationHash);
 			return;
@@ -172,11 +177,11 @@ public class GCMService {
 				String canonicalRegId = result.getCanonicalRegistrationId();
 				if (canonicalRegId != null) {
 					// same device has more than on registration id: update it
-					System.out.println("same device has more than on registration id: update it");
+					Logger.info("same device has more than one registration id: update it");
 					try{
 						personNetworkRegIdRepository.deleteByRegId(devices.get(i));
 					}catch(Exception e){
-						e.printStackTrace();
+						Logger.error(e.toString());
 					}
 				}
 			} else {
@@ -184,7 +189,7 @@ public class GCMService {
 				if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
 					personNetworkRegIdRepository.deleteByRegId(devices.get(i));
 				} else {
-					System.out.println("Error sending message to " + regId + ": " + error);
+					Logger.error("Error sending message to " + regId + ": " + error);
 				}
 			}
 		}
@@ -207,7 +212,7 @@ public class GCMService {
 			}
 			personNetworkRegIdRepository.save(pnregId);
 		}catch(Exception e){
-			System.out.println(e.getLocalizedMessage());
+			Logger.error(e.getLocalizedMessage());
 		}
 	}
 }
