@@ -16,17 +16,17 @@ public interface UserRepository extends JpaRepository<User, Integer>, QueryDslPr
 	boolean existsByUsername(@Param("username") String username);
 
 	@RestResource(exported = false)
-	@Cacheable(value = "user", key = "#p0")
+//	@Cacheable(value = "user", key = "#p0")
 	@Query("select user from User user where user.username = :username")
 	User findUserByUsername(@Param("username") String username);
 
 	@Override
 	@GeneratorIgnore
-	@CacheEvict(value = "user", key = "#p0.user.username")
+//	@CacheEvict(value = "user", key = "#p0.username")
 	User save(User user);
 
 	@Override
 	@GeneratorIgnore
-	@CacheEvict(value = "user", key = "#p0.user.username")
+//	@CacheEvict(value = "user", key = "#p0.username")
 	void delete(User user);
 }

@@ -155,7 +155,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       })
   }
 
-  $scope.createPerson = function(){
+  $scope.createPerson = function(ev){
     trix.createPerson($scope.person).success(function(response){
       $scope.app.showSuccessToast('Alterações realizadas com successo.')
       $scope.selectedPerson = response;
@@ -166,7 +166,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     }).error(function(data, status, headers, config){
       if(status == 409){
         $scope.app.conflictingData = data;
-        $scope.openConflictingUserSplash()
+        $scope.openConflictingUserSplash(ev)
       }else
         $scope.app.showErrorToast('Dados inválidos. Tente novamente')
       
@@ -176,8 +176,19 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     });
   }
 
-  $scope.openConflictingUserSplash = function(){
-    $scope.app.openSplash('conflicting_person.html')
+  $scope.openConflictingUserSplash = function(ev){
+    //$scope.app.openSplash('conflicting_person.html')
+    $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'conflicting_person.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
   }
 
   var deletePersons = function(){

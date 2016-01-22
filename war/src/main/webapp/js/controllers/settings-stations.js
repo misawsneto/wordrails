@@ -126,21 +126,57 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
       }
     });
 
-    $scope.showAddCategorySplash = function(parent){
+    $scope.showAddCategorySplash = function(parent, ev){
       $scope.parentCategory = parent;
-      $scope.app.openSplash('add_category.html')
+      $mdDialog.show({
+          controller: DialogController,
+          templateUrl: 'add_category.html',
+          targetEvent: ev,
+          onComplete: function(){}
+        })
+        .then(function(answer) {
+        //$scope.alert = 'You said the information was "' + answer + '".';
+        }, function() {
+        //$scope.alert = 'You cancelled the dialog.';
+      });
     }
 
     $scope.app.toDeleteCategory = null;
-    $scope.showDeleteCategorySplash = function(category){
+    $scope.showDeleteCategorySplash = function(category, ev){
       $scope.app.toDeleteCategory = category;
-      $scope.app.openSplash('delete_category.html')
+      $scope.parentCategory = parent;
+      $mdDialog.show({
+          controller: DialogController,
+          templateUrl: 'delete_category.html',
+          targetEvent: ev,
+          onComplete: function(){}
+        })
+        .then(function(answer) {
+        //$scope.alert = 'You said the information was "' + answer + '".';
+        }, function() {
+        //$scope.alert = 'You cancelled the dialog.';
+      });
     }
+
+    function DialogController(scope, $mdDialog) {
+      scope.app = $scope.app;
+      scope.pe = $scope.pe;
+
+      scope.hide = function() {
+        $mdDialog.hide();
+      };
+
+      scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+
+      // check if user has permisstion to write
+    };
 
     $scope.app.deleteCategory = function(){
       trix.deleteTerm($scope.app.toDeleteCategory.id).success(function(){
         $scope.app.showSuccessToast('Alterações realizadas com successo.')
-        $scope.app.cancelModal();
+        $mdDialog.cancel();
         trix.getTermTree(null, $scope.thisStation.categoriesTaxonomyId).success(function(response){
           $scope.termTree = response;
         });
@@ -179,11 +215,15 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
         term.parent = TRIX.baseUrl + "/api/terms/" + $scope.parentCategory.id
 
       trix.postTerm(term).success(function(){
-        $scope.app.cancelModal();
+        $mdDialog.cancel();
         trix.getTermTree(null, $scope.thisStation.categoriesTaxonomyId).success(function(response){
+          $scope.app.showSuccessToast('Categoria criada com successo.')
           $scope.termTree = response;
-        });
-      });
+        })
+      }).error(function(data, status){
+        $mdDialog.cancel();
+        $scope.app.showErrorToast('Esta categoria já existe')
+      });;
     }
 
     $scope.thisStation = {}
@@ -299,7 +339,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	})
   }
 
-  $scope.createPerson = function(){
+  $scope.createPerson = function(ev){
   	trix.createPerson($scope.person).success(function(response){
   		$scope.app.showSuccessToast('Alterações realizadas com successo.')
       $scope.person = response;
@@ -311,7 +351,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   		if(status == 409){
   			$scope.app.conflictingData = data;
   			$scope.app.conflictingData.role = $scope.person.stationRole.roleString;
-  			$scope.openAddUserToStaionSplash()
+  			$scope.openAddUserToStaionSplash(ev)
   		}else
   		$scope.app.showErrorToast('Dados inválidos. Tente novamente')
   		$timeout(function() {
@@ -327,7 +367,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	trix.postStationRole($scope.app.conflictingData.stationRole).success(function(){
   		$scope.app.showSuccessToast('Alterações realizadas com successo.')
   		$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': $scope.app.conflictingData.conflictingPerson.id, 'newUser': null})
-  		$scope.app.cancelModal();
+  		$mdDialog.cancel();
   	}).error(function(){
   		$timeout(function() {
   			cfpLoadingBar.complete();	
@@ -335,8 +375,19 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	})
   }
 
-  $scope.openAddUserToStaionSplash = function(){
-  	$scope.app.openSplash('conflicting_person.html')
+  $scope.openAddUserToStaionSplash = function(ev){
+  	//$scope.app.openSplash('conflicting_person.html')
+    $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'conflicting_person.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
   }
 
   $scope.app.changeExistingUserPermission = function(){
@@ -390,12 +441,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   if(!$scope.editing && !$scope.creating){
     $scope.showProgress = true;
     trix.findRolesByStationIds([$state.params.stationId], 0, $scope.window, null, 'stationRoleProjection').success(function(personsRoles){
-      
     	$scope.personsRoles = personsRoles.stationRoles;
-    	// for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
-    	// 	if($scope.personsRoles[i].person.id == $scope.app.initData.person.id)
-    	// 		$scope.personsRoles.splice(i, 1);
-    	// };
       $scope.showProgress = false; 
     })
   }
@@ -492,8 +538,20 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   }		
 
   $scope.openDeletePersonRole = function(roleId){
-  	$scope.app.openSplash('confirm_delete_person.html')
-  	$scope.deletePersonRoleId = roleId;
+  	//$scope.app.openSplash('confirm_delete_person.html')
+  	//$scope.deletePersonRoleId = roleId;
+    
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'confirm_delete_person.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
   }
 
   $scope.app.deletePersonRole = function(){

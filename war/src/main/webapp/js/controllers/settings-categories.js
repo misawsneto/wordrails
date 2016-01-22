@@ -27,15 +27,26 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 		}
 
 		$scope.app.toDeleteCategory = null;
-		$scope.showDeleteCategorySplash = function(category){
+		$scope.showDeleteCategorySplash = function(category, ev){
 			$scope.app.toDeleteCategory = category;
-			$scope.app.openSplash('delete_category.html')
+			$scope.parentCategory = parent;
+	    $mdDialog.show({
+	        controller: DialogController,
+	        templateUrl: 'delete_category.html',
+	        targetEvent: ev,
+	        onComplete: function(){}
+	      })
+	      .then(function(answer) {
+	      //$scope.alert = 'You said the information was "' + answer + '".';
+	      }, function() {
+	      //$scope.alert = 'You cancelled the dialog.';
+	    });
 		}
 
 		$scope.app.deleteCategory = function(){
 			trix.deleteTerm($scope.app.toDeleteCategory.id).success(function(){
 				$scope.app.showSuccessToast('Alterações realizadas com successo.')
-				$scope.app.cancelModal();
+				$mdDialog.cancel();
 				trix.getTermTree(null, $scope.taxonomyId).success(function(response){
 					$scope.termTree = response;
 				});
@@ -76,9 +87,13 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 			trix.postTerm(term).success(function(){
 				$mdDialog.cancel();
 				trix.getTermTree(null, $scope.taxonomyId).success(function(response){
+					$scope.app.showSuccessToast('Categoria criada com successo.')
 					$scope.termTree = response;
 				});
-			});
+			}).error(function(data, status){
+        $mdDialog.cancel();
+        $scope.app.showErrorToast('Esta categoria já existe')
+      });;
 		}
 
 		function DialogController(scope, $mdDialog) {

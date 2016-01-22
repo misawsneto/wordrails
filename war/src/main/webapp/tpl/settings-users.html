@@ -172,7 +172,7 @@
 				<button ui-sref="app.settings.users({'newUser': null, 'username': null})"
 				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
 
-				<button ng-click="createPerson()"
+				<button ng-click="createPerson($event)"
 				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
 			</div>
 		</div>
@@ -269,25 +269,29 @@
 <!-- /settings-users -->
 
  	<script type="text/ng-template" id="conflicting_person.html">
-   	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-   	<div class="splash-content text-center" ng-cloak>
-		  <div class="row">
-		    <div class="col-xs-8 col-xs-offset-2">
-		    	<div class="h3 m-b-lg m-t-lg">
- 						Esta rede já possui um usuário cadastrado com estes dados!
- 					</div>
-		      <div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
-		      class="bg-cover bg-img-lg bg-cover-round m-auto" 
-		      title="{{app.conflictingData.conflictingPerson.name}}"></div>
-		      <div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
-		      <div class="h4 m-b-lg">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
-		    </div>
-		  </div>
-		</div>
+ 		<md-dialog aria-label="Adicionar notícia">
+			<md-content>
+			  <div class="wrapper text-center">
+		    		<div class="h3 m-b-lg">
+							Esta rede já possui um usuário cadastrado <br> com estes dados!
+						</div>
+			      <div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
+			      class="bg-cover bg-img-lg bg-cover-round m-auto" 
+			      title="{{app.conflictingData.conflictingPerson.name}}"></div>
+			      <div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
+			      <div class="h4">
+			      {{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}
+		    		</div>
+		    		<div class="m-t-lg">
+		    			<md-button ng-click="cancel()" md-ink-ripple class="text-xl font-bold p-l-sm p-r-sm p-t-xs p-b-xs md-button md-ink-ripple">Fechar</mg-button>
+		    		</div>
+		  		</div>
+		  </md-content>
+		</md-dialog>
  	</script>
 
  	<script type="text/ng-template" id="bulk_change_permissions.html">
-   	<md-dialog aria-label="Adicionar notícia" id="user-permissions-dialog">
+   	<md-dialog aria-label="Editar permissão" id="user-permissions-dialog">
 	  	<md-content>
 				<div class="wrapper">
 					<div class="wrapper-xxs text-md">

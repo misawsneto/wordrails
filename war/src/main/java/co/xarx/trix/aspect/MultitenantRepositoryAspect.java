@@ -1,8 +1,11 @@
 package co.xarx.trix.aspect;
 
+import co.xarx.trix.aspect.annotations.IgnoreMultitenancy;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.MultiTenantEntity;
 import org.apache.log4j.Logger;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
@@ -33,6 +36,15 @@ public class MultitenantRepositoryAspect {
 			}
 			log.info("@ checkMultitenantEntity " + entity.getClass().getSimpleName() + " - saving " + tenantId);
 		}
+	}
+
+	@Around("@annotation(ignoreMultitenancy)")
+	public Object annotation(ProceedingJoinPoint pjp, IgnoreMultitenancy ignoreMultitenancy) throws Throwable {
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		TenantContextHolder.setCurrentTenantId(null);
+		Object output = pjp.proceed();
+		TenantContextHolder.setCurrentTenantId(tenantId);
+		return output;
 	}
 
 	public <T> List<T> getFields(Class<T> classType, Object obj) throws IllegalAccessException, ClassNotFoundException {

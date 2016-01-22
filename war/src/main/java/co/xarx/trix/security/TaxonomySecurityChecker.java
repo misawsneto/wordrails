@@ -1,5 +1,6 @@
 package co.xarx.trix.security;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.NetworkRolesRepository;
@@ -23,6 +24,7 @@ public class TaxonomySecurityChecker {
 	public boolean canCreate(Taxonomy taxonomy){
 		Person person = authProvider.getLoggedPerson();
 		Network network = networkRepository.findOne(person.networkId);
+//		Network network = networkRepository.findOne(TenantContextHolder.getCurrentNetworkId());
 
 		boolean canCreate = false;
 		if(person != null){

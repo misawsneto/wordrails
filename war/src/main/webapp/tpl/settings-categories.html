@@ -44,32 +44,28 @@
 </div>
 
 <script type="text/ng-template" id="delete_category.html">
-	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-	<div class="splash-content text-center" ng-cloak>
-		<div>
-			<div class="row m-t-xxl">
-				<div class="col-xs-8 col-xs-offset-2">
+	<md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
+		<md-content role="document" >
+			<div class="wrapper">
+				<div class="md-dialog-content-body text-lg p-r p-l w-xxl">
 					<strong>Atenção! </strong> Tem certeza que deseja remover esta categoria? Esta operação não pode ser desfeita.
 				</div>
+
+				<div class="text-center">
+					<button ng-click="app.deleteCategory();" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw">
+						Sim
+					</button>
+					<button ng-click="cancel()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw">
+						Não
+					</button>
+				<div>
 			</div>
-			<div class="row">
-				<div class="col-xs-6 col-xs-offset-3">
-					<div class="text-color padder-lg">
-						<button ng-click="app.deleteCategory();" angular-ripple type="submit" class="m-t-md btn-success btn text-lg text-u-c btn-block ">
-							Sim
-						</button>
-						<button ng-click="app.cancelModal()" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
-							Não
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+		</md-content>
+	</md-dialog>
 </script>
 
 <script type="text/ng-template" id="add_category.html">
-	<md-dialog aria-label="Alert Dialog Demo" id="categories-dialog">
+	<md-dialog aria-label="Add Categories Dialog" id="add-categories-dialog">
 		<md-content role="document" >
 			<div class="wrapper">
 				<div class="md-dialog-content-body text-lg p-r p-l w-xxl">
@@ -90,5 +86,4 @@
 			</div>
 		</md-content>
 	</md-dialog>
-
 </script>

@@ -67,3 +67,11 @@ DELETE term FROM term
 WHERE taxonomy.type = "T";
 DELETE FROM taxonomy
 WHERE type = "T";
+
+ALTER  TABLE  term drop index UK_68x4pioq3b3mu1t3jrp01bsss;
+
+ALTER  TABLE  term drop INDEX UK_kki6crlp9p5g7979h2wb4imgh;
+
+ALTER  TABLE  term drop INDEX UK_h725nbm620imfiywywc1w8jo1;
+
+ALTER  TABLE  term drop INDEX UK_lixtbau20i1s7rq5evq6gl10p;

@@ -189,7 +189,7 @@
 					<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null, 'userId': null})"
 					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
 
-					<button ng-click="createPerson()"
+					<button ng-click="createPerson(ev)"
 					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
 				</div>
 			</div>
@@ -285,75 +285,68 @@
 </div>
 <!-- /settings-stations-users -->
 
- <script type="text/ng-template" id="conflicting_person.html">
- 	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
- 	<div class="splash-content text-center" ng-cloak>
- 		<div>
- 			<div class="row">
- 				<div class="col-xs-8 col-xs-offset-2">
-
- 					<div class="h3 m-b-lg m-t-lg">
- 						Esta rede já possui um usuário cadastrado com estes dados!
- 					</div>
-
- 					<div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
- 					class="bg-cover bg-img-lg bg-cover-round m-auto" 
- 					title="{{app.conflictingData.conflictingPerson.name}}"></div>
- 					<div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
- 					<div class="h4 m-b-xs">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
-						<div class="h4 m-b-lg" ng-if="app.conflictingData.conflictingStationRole">
-							Permissão: <strong> {{app.conflictingData.conflictingStationRole.admin ? 'administrador': (app.conflictingData.conflictingStationRole.editor ? 'editor' : app.conflictingData.conflictingStationRole.writer ? 'escritor' : 'leitor')}}</strong>
-
-						</div>
- 				</div>
- 			</div>
- 			<div class="row">
- 				<div class="col-xs-6 col-xs-offset-3">
-
- 					<div class="h4 m-b" ng-hide="app.conflictingData.conflictingStationRole">
- 						Este usuário já está cadastrado. Deseja dar permissões de <strong>
- 						{{app.conflictingData.role == 'ADMIN' ? 'administrador': (app.conflictingData.role == 'EDITOR' ? 'editor' : app.conflictingData.role == 'WRITER' ? 'escritor' : 'leitor')}}?</strong> nesta estação?</div>
-
- 						<div class="text-color p-l-lg p-r-lg" ng-hide="app.conflictingData.conflictingStationRole">
- 							<button ng-click="app.addConflictingToStation();" angular-ripple type="submit" class="m-t-md btn-default btn text-lg text-u-c btn-block ">
- 								Sim
- 							</button>
- 							<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
- 								Não
- 							</button>
- 						</div>
- 					</div>
- 				</div>
- 			</div>
- 		</div>
+ 	<script type="text/ng-template" id="conflicting_person.html">
+		<md-dialog aria-label="Adicionar notícia">
+			<md-content>
+	  		<div class="wrapper">
+					<div class="h3 m-b-lg text-center">
+						Esta rede já possui um usuário cadastrado <br> com estes dados!
+					</div>
+					<div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
+					class="bg-cover bg-img-lg bg-cover-round m-auto" 
+					title="{{app.conflictingData.conflictingPerson.name}}">
+					</div>
+					<div class="h3 m-b-xs text-center">{{app.conflictingData.conflictingPerson.name}}</div>
+					<div class="h4 m-b-xs text-center">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
+					<div class="h4 m-b-lg text-center" ng-if="app.conflictingData.conflictingStationRole">
+						Permissão: <strong> {{app.conflictingData.conflictingStationRole.admin ? 'administrador': (app.conflictingData.conflictingStationRole.editor ? 'editor' : app.conflictingData.conflictingStationRole.writer ? 'escritor' : 'leitor')}}</strong>
+					</div>
+					<div class="h4 m-b text-center" ng-hide="app.conflictingData.conflictingStationRole">
+						Este usuário já está cadastrado.<br>Deseja dar permissões de <strong>
+						{{app.conflictingData.role == 'ADMIN' ? 'administrador': (app.conflictingData.role == 'EDITOR' ? 'editor' : app.conflictingData.role == 'WRITER' ? 'escritor' : 'leitor')}}</strong> nesta estação?
+					</div>
+					<div class="p-l-lg p-r-lg text-center m-t-lg text-lg">
+						<button ng-click="app.addConflictingToStation();" md-ink-ripple class="md-btn md-flat btn-fw"
+						ng-if="!app.conflictingData.conflictingStationRole">Confirmar
+						</button>
+						<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">
+							Fechar
+						</button>
+					</div>
+				</div>
+		  </md-content>
+		</md-dialog>
  	</script>
 
  	<script type="text/ng-template" id="confirm_delete_person.html">
- 		<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
- 		<div class="splash-content text-center" ng-cloak>
- 			<div>
- 				<div class="row">
- 					<div class="col-xs-8 col-xs-offset-2">
- 						<div class="">
- 							Tem certeza que deseja remover as permissões deste usuário a esta estação? <br>
- 							Atenção! Este usuário não será desativado. Para desativar este usuário, entre em contato com o administrador da rede. 
- 						</div>
- 					</div>
- 				</div>
- 				<div class="row">
- 					<div class="col-xs-6 col-xs-offset-3">
- 						<div class="p-lg text-color wrapper-lg">
- 							<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
- 								Sim
- 							</button>
- 							<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
- 								Não
- 							</button>
- 						</div>
- 					</div>
- 				</div>
- 			</div>
- 		</div>
+ 		<md-dialog aria-label="Adicionar notícia">
+	<md-content>
+		<div class="wrapper">
+			<div class="text-center w-lg">
+				Tem certeza que deseja remover as permissões deste usuário a esta estação?
+				Atenção! Este usuário não será desativado. Para desativar este usuário, entre em contato com o administrador da rede. 
+			</div>
+			<div class="col-xs-6 col-xs-offset-3">
+				<!-- <div class="p-lg text-color wrapper-lg">
+					<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
+						Sim
+					</button>
+					<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
+						Não
+					</button>
+				</div> -->
+				<div class="p-l-lg p-r-lg text-center m-t-lg text-lg">
+					<button ng-click="app.addConflictingToStation();" md-ink-ripple class="md-btn md-flat btn-fw"
+					ng-if="!app.conflictingData.conflictingStationRole">Confirmar
+					</button>
+					<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">
+						Fechar
+					</button>
+				</div>
+			</div>
+		</div>
+	</md-content>
+</md-dialog>
  	</script>
 
  	<script type="text/ng-template" id="confirm_no_person_selected.html">

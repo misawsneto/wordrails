@@ -1,6 +1,9 @@
 package co.xarx.trix.web.rest;
 
 
+import co.xarx.trix.aspect.annotations.IgnoreMultitenancy;
+import co.xarx.trix.domain.Term;
+import co.xarx.trix.persistence.TermRepository;
 import co.xarx.trix.services.GCMService;
 import co.xarx.trix.util.StringUtil;
 import com.google.android.gcm.server.Message;
@@ -54,6 +57,27 @@ public class UtilResource {
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
+
+			return Response.status(Response.Status.OK).build();
+		} else {
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+		}
+	}
+
+	@Autowired
+	TermRepository termRepository;
+
+	@GET
+	@Path("/updateTermConstraing")
+	@IgnoreMultitenancy
+	public Response updateTermConstraing(@Context HttpServletRequest request) {
+		if (isLocal(request.getHeader("Host"))) {
+			List<Term> terms = termRepository.findAll();
+			for (Term term : terms) {
+				term.name_parent = term.name + "_" + term.parent;
+			}
+
+			termRepository.save(terms);
 
 			return Response.status(Response.Status.OK).build();
 		} else {
