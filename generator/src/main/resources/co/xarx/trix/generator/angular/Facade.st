@@ -178,13 +178,8 @@ var trix = angular.module('trix', [])
 		return \$http.post(_config.url + "/api/perspectives/termPerspectiveDefinitions" , termView, config)
 	}
 
-    this.countPersonsByNetwork = function(networkId){
-    	var config = {
-			"params": {
-				"networkId": networkId
-			}
-		}
-    	return \$http.get(_config.url + "/api/persons/stats/count", config)
+    this.countPersonsByNetwork = function(){
+    	return \$http.get(_config.url + "/api/persons/stats/count")
     }
 
     this.countRolesByStationIds = function(stationIds, q){

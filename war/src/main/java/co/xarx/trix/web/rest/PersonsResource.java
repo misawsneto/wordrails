@@ -563,12 +563,15 @@ public class PersonsResource {
 
 	@Path("/stats/count")
 	@GET
-	@Produces(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response countPersonsByNetwork(@QueryParam("q") String q){
-		if(q != null && !q.isEmpty())
-			return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersons() + " }").build();
-		else
-			return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersonsByString(q) + " }").build();
+	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q){
+		ContentResponse<Integer> resp = new ContentResponse<Integer>();
+		resp.content = 0;
+		if(q != null && !q.isEmpty()) {
+			resp.content = personRepository.countPersonsByString(q).intValue();
+		}else {
+			resp.content = personRepository.countPersons().intValue();
+		}
+		return resp;
 	}
 
 	@PUT
