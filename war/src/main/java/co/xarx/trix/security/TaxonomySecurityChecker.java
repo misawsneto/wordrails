@@ -23,8 +23,8 @@ public class TaxonomySecurityChecker {
 	
 	public boolean canCreate(Taxonomy taxonomy){
 		Person person = authProvider.getLoggedPerson();
-		Network network = networkRepository.findOne(person.networkId);
-//		Network network = networkRepository.findOne(TenantContextHolder.getCurrentNetworkId());
+//		Network network = networkRepository.findOne(person.networkId);
+		Network network = networkRepository.findOne(TenantContextHolder.getCurrentNetworkId());
 
 		boolean canCreate = false;
 		if(person != null){

@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -105,6 +106,9 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 		} else if(user.password.equals(password)) {
 			Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(auth);
+
+			Person p = personRepository.findByUsername(user.username);
+			p.lastLogin = new Date();
 
 			return auth;
 		}

@@ -22,11 +22,11 @@ public interface UserRepository extends JpaRepository<User, Integer>, QueryDslPr
 
 	@Override
 	@GeneratorIgnore
-//	@CacheEvict(value = "user", key = "#p0.username")
+	@CacheEvict(value = "user", key = "#p0.username")
 	User save(User user);
 
 	@Override
 	@GeneratorIgnore
-//	@CacheEvict(value = "user", key = "#p0.username")
+	@CacheEvict(value = "user", key = "#p0.username")
 	void delete(User user);
 }

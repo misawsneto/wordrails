@@ -17,17 +17,17 @@ import java.util.List;
 
 public interface PersonRepository extends JpaRepository<Person, Integer>, QueryDslPredicateExecutor<Person> {
 
-//	@Cacheable(value = "person", key = "#p0")
+	@Cacheable(value = "person", key = "#p0")
 	Person findByUsername(@Param("username") String username);
 
 	@Override
 	@GeneratorIgnore
-//	@CacheEvict(value = "person", key = "#p0.user.username")
+    @CacheEvict(value = "person", key = "#p0.username")
 	Person save(Person person);
 
 	@Override
 	@GeneratorIgnore
-//	@CacheEvict(value = "person", key = "#p0.user.username")
+    @CacheEvict(value = "person", key = "#p0.username")
 	void delete(Person person);
 
 	@Query("SELECT person FROM Person person where person.username = :username and person.networkId = :networkId")

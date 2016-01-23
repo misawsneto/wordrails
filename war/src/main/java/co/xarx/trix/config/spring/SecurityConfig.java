@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -63,11 +62,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new SimpleUrlAuthenticationFailureHandler();
 	}
 
-	@Bean
-	public SimpleUrlAuthenticationSuccessHandler authSuccessHandler(){
-		return new TrixUrlAuthenticationSuccessHandler();
-	}
-
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider);
@@ -89,7 +83,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginProcessingUrl("/login")
 				.usernameParameter("username")
 				.passwordParameter("password")
-				.successHandler(authSuccessHandler())
 				.failureHandler(authFailureHandler())
 				.and()
 				.logout()
