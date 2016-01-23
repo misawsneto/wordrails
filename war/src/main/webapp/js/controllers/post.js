@@ -1,6 +1,6 @@
 // tab controller
-app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$window', '$mdSidenav',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $window, $mdSidenav) {
+app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$window', '$mdSidenav', '$interval',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $window, $mdSidenav, $interval) {
 
 		FileUploader.FileSelect.prototype.isEmptyAfterSelection = function() {
 			return true;
@@ -11,6 +11,10 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 		$scope.selectedStations = [];
 
 		$scope.multiselectCong = {'displayProp': 'stationName', 'idProp': 'stationId'};
+
+		$interval(function(){
+			$(".redactor-box > textarea").css('opacity', 1)
+		}, 500);
 
 		var createPostObject = function(){
 			$scope.app.editingPost = {};
