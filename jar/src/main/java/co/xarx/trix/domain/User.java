@@ -57,6 +57,7 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 		return authorities;
 	}
 
+	@JsonIgnore
 	public boolean isAnonymous() {
 		return username.equals("wordrails");
 	}
