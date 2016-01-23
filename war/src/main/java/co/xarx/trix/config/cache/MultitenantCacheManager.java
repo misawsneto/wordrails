@@ -25,8 +25,6 @@ public final class MultitenantCacheManager implements CacheManager {
 	private Map<String, Cache> redisCaches = new HashMap<>();
 
 	public MultitenantCacheManager(Map<String, RedisTemplate> redisTemplates) {
-//		super(redisTemplates.values().iterator().next(), redisTemplates.keySet());
-
 		redisTemplates.values().stream().forEach(RedisTemplate::afterPropertiesSet);
 
 		redisTemplates.keySet().stream().forEach(cacheName ->
