@@ -1,5 +1,6 @@
 package co.xarx.trix.security.auth;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.SocialUser;
 import co.xarx.trix.domain.User;
@@ -7,6 +8,7 @@ import co.xarx.trix.domain.UserConnection;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserConnectionRepository;
 import co.xarx.trix.persistence.UserRepository;
+import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.util.Constants;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
@@ -37,6 +39,9 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	private UserConnectionRepository userConnectionRepository;
 	@Autowired
 	private SocialAuthenticationService socialAuthenticationService;
+
+	@Autowired
+	private AsyncService asyncService;
 
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
@@ -75,7 +80,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			person.coverId = 0;
 			person.imageHash = "";
 			person.coverHash = "";
-			person.recommends = new HashSet<>();
 
 			return person;
 		}
@@ -107,8 +111,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(auth);
 
-			Person p = personRepository.findByUsername(user.username);
-			p.lastLogin = new Date();
+//			asyncService.updatePersonLastLoginDate(TenantContextHolder.getCurrentNetworkId(), user.username);
 
 			return auth;
 		}

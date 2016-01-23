@@ -31,7 +31,6 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	public Date createdAt;
 
 	@DiffIgnore
-	@JsonIgnore
 	@Column(columnDefinition = "int(11) DEFAULT 0")
 	public Integer networkId;
 
@@ -41,7 +40,6 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
 	private int version;
 
-	@JsonIgnore
 	String tenantId;
 
 	@Override

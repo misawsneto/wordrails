@@ -1,4 +1,4 @@
-package co.xarx.trix.config;
+package co.xarx.trix.config.database;
 
 import co.xarx.trix.domain.Loggable;
 import co.xarx.trix.domain.Post;

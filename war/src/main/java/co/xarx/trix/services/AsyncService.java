@@ -3,10 +3,14 @@ package co.xarx.trix.services;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AndroidApp;
 import co.xarx.trix.domain.Notification;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.persistence.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Service
 public class AsyncService {
@@ -19,6 +23,8 @@ public class AsyncService {
 	public PostService postService;
 	@Autowired
 	public AndroidBuilderService androidBuilderService;
+	@Autowired
+	public PersonRepository personRepository;
 
 	@Async
 	public void run(Runnable runnable) {
@@ -54,5 +60,16 @@ public class AsyncService {
 	public void countPostRead(Integer networkId, Integer postId, Integer personId, String sessionId) {
 		TenantContextHolder.setCurrentNetworkId(networkId);
 		postService.countPostRead(postId, personId, sessionId);
+	}
+
+	@Async
+	@Transactional
+	public void updatePersonLastLoginDate(Integer networkId, String username) {
+		TenantContextHolder.setCurrentNetworkId(networkId);
+		Person person = personRepository.findByUsername(username);
+		if(person!=null){
+			person.lastLogin = new Date();
+			personRepository.save(person);
+		}
 	}
 }

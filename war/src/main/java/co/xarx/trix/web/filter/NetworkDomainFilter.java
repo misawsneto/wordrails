@@ -59,20 +59,20 @@ public class NetworkDomainFilter implements Filter {
 		if (host.equals("xarx.co") || host.equals("trix.rocks") || host.equals("xarxlocal.com")) {
 			response.sendRedirect("/home");
 		} else {
-			String subdomain = StringUtil.getSubdomainFromHost(host);
+			String tenantId = StringUtil.getSubdomainFromHost(host);
 			if (domains.keySet().contains(host)) {
 				TenantContextHolder.setCurrentNetworkId(domains.get(host));
-			} else if (tenantIds.keySet().contains(subdomain)) {
-				TenantContextHolder.setCurrentNetworkId(tenantIds.get(subdomain));
+			} else if (tenantIds.keySet().contains(tenantId)) {
+				TenantContextHolder.setCurrentNetworkId(tenantIds.get(tenantId));
 			} else {
 				Network network = networkRepository.findByDomain(host);
 				if (network != null) {
 					TenantContextHolder.setCurrentNetworkId(network.id);
 					domains.put(host, network.id);
 				} else {
-					network = networkRepository.findBySubdomain(subdomain);
+					network = networkRepository.findBySubdomain(tenantId);
 					if (network != null) {
-						tenantIds.put(subdomain, network.id);
+						tenantIds.put(tenantId, network.id);
 					} else {
 						response.sendRedirect("/404.html");
 						return;
@@ -82,7 +82,7 @@ public class NetworkDomainFilter implements Filter {
 
 			HttpSession session = request.getSession();
 			session.setAttribute("userAgent", request.getHeader("User-Agent"));
-			session.setAttribute("tenantId", subdomain);
+			session.setAttribute("tenantId", tenantId);
 
 //			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 //			if (network == null) {

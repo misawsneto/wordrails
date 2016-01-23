@@ -43,7 +43,7 @@
 	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
 		</listener> -->
 	<listener>
-		<listener-class>co.xarx.trix.config.TrixContextLoaderListener</listener-class>
+		<listener-class>co.xarx.trix.config.web.TrixContextLoaderListener</listener-class>
 	</listener>
 
 	<context-param>

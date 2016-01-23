@@ -226,26 +226,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 
 	@Override
-	protected boolean isGetPersonCommentsAuthorized(Integer personId) {
-		return authProvider.isLogged(personId);
-	}
-
-	@Override
-	protected boolean isGetPersonPersonsStationPermissionsAuthorized(Integer personId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonPersonsNetworkRolesAuthorized(Integer personId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonPostsAuthorized(Integer personId) {
-		return authProvider.isLogged(personId);
-	}
-
-	@Override
 	protected boolean isGetNetworkRolesAuthorized() {
 		return false;
 	}
@@ -838,12 +818,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPersonFollowingAuthorized(Integer personId) {
-
-		return true;
-	}
-
-	@Override
 	protected boolean isGetSponsorsAuthorized() {
 
 		return false;
@@ -946,11 +920,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isExistsByUsernameAuthorized(String username) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserPersonAuthorized(Integer userId) {
 		return false;
 	}
 
@@ -1191,11 +1160,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetRecommendPersonAuthorized(Integer recommendId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonRecommendsAuthorized(Integer personId) {
 		return true;
 	}
 

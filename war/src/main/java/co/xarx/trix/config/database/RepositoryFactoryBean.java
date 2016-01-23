@@ -1,4 +1,4 @@
-package co.xarx.trix.config;
+package co.xarx.trix.config.database;
 
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.data.repository.Repository;

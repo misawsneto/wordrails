@@ -1,6 +1,6 @@
 package co.xarx.trix.config.spring;
 
-import co.xarx.trix.config.RepositoryFactoryBean;
+import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
