@@ -5,6 +5,7 @@ import co.xarx.trix.exception.TargetLookupFailureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
+import org.springframework.util.Assert;
 
 /**
  * A {@link Cache} implementation that provides support for multi-tenancy by translating the lookup
@@ -22,6 +23,8 @@ import org.springframework.cache.Cache;
  * @author Joe Laudadio (Joe.Laudadio@AltegraHealth.com)
  */
 public final class MultitenantCache implements Cache {
+
+	private final Logger logger = LoggerFactory.getLogger(MultitenantCache.class);
 
 	public final Cache delegate;
 
@@ -76,18 +79,13 @@ public final class MultitenantCache implements Cache {
 	}
 
 	private String translateKey(Object key) throws TargetLookupFailureException {
+		Assert.notNull(key, "Key must have some value");
+
 		logger.debug("Translating key {}", key);
 		String tenantContext = String.valueOf(TenantContextHolder.getCurrentNetworkId());
-		if (tenantContext == null || tenantContext.trim().isEmpty()) {
-			throw new TargetLookupFailureException("Tenant context is required but is not available");
-		}
+
+		Assert.hasText(tenantContext, "Tenant context is required but is not available");
 
 		return tenantContext + ":" + this.getName() + ":" + key;
-
-//		TenantKey translatedKey = new TenantKey(tenantContext, key, this.getName());
-//		logger.debug("Translated key: {}", translatedKey);
-//		return translatedKey;
 	}
-
-	private final Logger logger = LoggerFactory.getLogger(MultitenantCache.class);
 }
