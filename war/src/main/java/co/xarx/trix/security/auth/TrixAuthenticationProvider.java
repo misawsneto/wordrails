@@ -21,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Objects;
 
 
@@ -74,7 +73,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			person.coverId = 0;
 			person.imageHash = "";
 			person.coverHash = "";
-			person.recommends = new HashSet<>();
 
 			return person;
 		}

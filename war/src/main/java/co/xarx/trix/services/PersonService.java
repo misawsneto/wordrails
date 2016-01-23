@@ -1,7 +1,6 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.persistence.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +14,6 @@ public class PersonService {
 
 	@Autowired
 	private PersonRepository personRepository;
-	@Autowired
-	private PersonEventHandler personEventHandler;
 
 	public boolean toggleBookmark(Person person, Integer postId) {
 		boolean bookmarkInserted = false;

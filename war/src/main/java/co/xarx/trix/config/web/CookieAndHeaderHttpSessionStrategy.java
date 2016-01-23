@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package co.xarx.trix.config;
+package co.xarx.trix.config.web;
 
 import org.springframework.session.Session;
 import org.springframework.session.web.http.HttpSessionManager;
