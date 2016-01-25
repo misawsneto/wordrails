@@ -9,12 +9,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @Configuration
 @EnableAsync
-@Import({PropertyConfig.class})
+@PropertySource(name = "props",
+		value = {"classpath:application.properties",
+				"classpath:application_${spring.profiles.active:dev}.properties"
+		}
+)
 @ComponentScan(basePackages = "co.xarx.trix")
 public class ApplicationConfig {
 
@@ -32,5 +37,10 @@ public class ApplicationConfig {
 		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostViewMap());
 		return modelMapper;
+	}
+
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer getProperties() {
+		return new PropertySourcesPlaceholderConfigurer();
 	}
 }

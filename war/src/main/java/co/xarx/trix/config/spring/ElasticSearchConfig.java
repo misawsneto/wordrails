@@ -12,13 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ServiceLocatorFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
-@Import({PropertyConfig.class})
 @EnableElasticsearchRepositories(
 		basePackages = "co.xarx.trix.elasticsearch",
 		repositoryFactoryBeanClass = ESRepositoryFactoryBean.class
