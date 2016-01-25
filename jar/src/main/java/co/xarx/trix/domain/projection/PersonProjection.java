@@ -19,10 +19,6 @@ public interface PersonProjection {
 
 	String getEmail();
 
-	Set<StationRole> getPersonsStationPermissions();
-
-	Set<NetworkRole> getPersonsNetworkRoles();
-
 	User getUser();
 
 	Integer getCoverLargeId();
