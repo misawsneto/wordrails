@@ -1,3 +1,20 @@
+<md-sidenav id="comments-list" class="md-sidenav-right md-whiteframe-z2 pos-fix" md-component-id="post-options">
+  <md-toolbar class="bg-header">
+    <h2 class="md-toolbar-tools bg-header-text"><i class="mdi mdi-comment-text-outline text-xl p-r-sm"></i>Comentários</h2>
+  </md-toolbar>
+  <md-content class="pos-abt bottom-0 right-0 left-0" style="top:64px">
+    <div id="post-options-sidebar" class="vbox">
+      <div class="row-row">
+        <div class="cell b-l">
+          <div class="cell-inner">
+						
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-content>
+</md-sidenav>
+
 <div id="publications" class="hbox hbox-auto-xs">
 	<div class="header-custom box-shadow">
 		<div class="block-1000 m-auto m-b-xxl text-center">
@@ -83,7 +100,7 @@
 							</div>
 							<div class="p-t display-t-c v-middle inline">
 								<span class="readingTime text-muted">{{publication.date | fromNow2}}</span>
-								<span class="readingTime text-muted p-l text-md">
+								<span class="readingTime text-muted p-l text-md" ng-click="showComments(publication.postId)">
 									<i class="mdi mdi-comment-text-outline"></i> 
 									{{publication.commentsCount}}</span>
 									<span class="readingTime text-muted p-l text-md">

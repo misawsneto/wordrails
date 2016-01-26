@@ -58,7 +58,7 @@
                   <br>
                   <span class="text-sm">
                     <span class="">
-                      <span class="readingTime">{{bookmark.date | fromNow}}</span>
+                      <span class="readingTime" data-livestamp="{{bookmark.date/1000}}">{{bookmark.date | fromNow}}</span>
                       <div class="inline text-muted p-l-lg text-u-c" ng-if="bookmark.authorId == app.initData.person.id">
                         <a ng-click="app.goToEditPost(bookmark.postId, $event)"
                         class="text-muted p-r underline-hover">editar</a>

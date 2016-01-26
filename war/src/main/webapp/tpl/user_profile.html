@@ -129,7 +129,7 @@
 								<br>
 								<span class="text-sm">
 									<span class="">
-										<span class="readingTime">{{postView.date | fromNow}}</span>
+										<span class="readingTime" data-livestamp="{{postView.date/1000}}">{{postView.date | fromNow}}</span>
 										<div class="inline text-muted p-l-lg text-u-c" ng-if="postView.authorId == app.initData.person.id">
 											<a ng-click="app.goToEditPost(postView.postId, $event)"
 											 class="text-muted p-r underline-hover">editar</a>
@@ -202,7 +202,7 @@
 								<br>
 								<span class="text-sm">
 									<span class="">
-										<span class="readingTime">{{postView.date | fromNow}}</span>
+										<span class="readingTime" data-livestamp="{{postView.date/1000}}">{{postView.date | fromNow}}</span>
 										<div class="inline text-muted p-l-lg text-u-c" ng-if="postView.authorId == app.initData.person.id">
 											<a ng-click="app.goToEditPost(postView.postId, $event)"
 											 class="text-muted p-r underline-hover">editar</a>

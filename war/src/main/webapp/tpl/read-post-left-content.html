@@ -17,7 +17,7 @@
                 <li class="tl-item" ng-repeat="postView in app.readList" ng-if="app.readList && app.readList.length > 0">
                   <div class="tl-wrap" ng-class="{'active':app.nowReading.postId == postView.postId}" ng-click="app.setNowReading(postView, app.readList, app.nowReadingMeta.listMeta, app.nowReadingMeta.baseState)" class="pointer">
                     <div class="">
-                      <small class="post-time w-md text-muted">{{::postView.date | fromNow}}</small>
+                      <small class="post-time w-md text-muted" data-livestamp="{{postView.date/1000}}">{{::postView.date | fromNow}}</small>
                       <div>
                         <a>{{::postView.title}}</a>
                       </div>

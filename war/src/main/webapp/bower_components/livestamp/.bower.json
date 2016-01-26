@@ -1,0 +1,15 @@
+{
+  "name": "livestamp",
+  "homepage": "https://github.com/mattbradley/livestampjs",
+  "version": "1.1.2",
+  "_release": "1.1.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.1.2",
+    "commit": "139dd44bbf96486e02f5061a8313d1b2c74bf41a"
+  },
+  "_source": "git://github.com/mattbradley/livestampjs.git",
+  "_target": "~1.1.2",
+  "_originalSource": "livestamp",
+  "_direct": true
+}

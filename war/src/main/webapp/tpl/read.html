@@ -95,62 +95,69 @@
   </div>
   <!-- end of post -->
 
-  <div class="b-t m-b m-t hide"></div>
+  <div class="b-t m-b m-t"></div>
 
-  <div class="comments m-t hide">
-  	<h5>Comentários</h5>
-  	<div class="comment-tab">
-  		<textarea placeholder="Add Your Content"></textarea>
-  		<span>Enter to Submit</span>
-  		<div class="log-user">
-  			You're logged in as <a href="#">Cristian Cotlet</a>
-  		</div>
-  	</div>
+  <div class="comments m-t">
+      <!-- <img src="images/other/1.png" class="pull-left">
+      <div id="aside-user" back-img="{{app.initData.person.imageSmallId}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div> -->
+    <div>
+      <div class="display-t-c pull-left">
+        <div back-img="{{app.initData.person.imageSmallId}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div>
+      </div>
+      <h4 class="text-u-c font-bold m-b-md m-t-md wrapper-sm" style="margin-left: 60px;">{{app.initData.person.name}}</h4>
+        <!-- <span class="font-thing text-md m-b-md block">King of a Big Deal</span></h4> -->
+    	<div class="comment-tab text-lg md-default-theme">
+        <md-input-container class="md-block">
+          <label>Deixe o seu comentário...</label>
+          <textarea id="comment-box" ng-model="newComment.body" ng-blur="commentBlur()" ng-focus="commentFocus()" columns="1" rows="5">
+          </textarea>
+        </md-input-container>
+    	</div>
 
-  	<ul class="comments-info">
-  		<li>
-  			<img src="images/other/1.png" alt="">
-  			<h4>Neil patel<span>King of a Big Deal</span></h4>
-  			<p>Warren Buffett knows a thing or three about becoming wealthy and successful, and the Oracle of Omaha is not averse to handing out mostly excellent advice to others who'd like to follow in his footsteps.</p>
-  			<div class="comment-meta">
-  				<span><a href="#">UpVote</a></span>
-  				<span><a href="#">Reply</a></span>
-  			</div>
-  		</li>
+      <md-button ng-click="createComment()" class="m-l-n-xxs m-r-n-xxs md-raised m-b btn-fw bg-white md-btn" md-ink-ripple ng-if="commentFocused || (newComment != null)">
+        <span class="font-bold text-lg">ENVIAR</span>
+      </md-button>
+    </div>
 
-  		<li>
-  			<img src="images/other/2.png" alt="">
-  			<h4>Emily Alford<span>Content Writer for SearchEngineWatch</span></h4>
-  			<p>It's not that taking risks is wrong--but do it only for the right reasons, Buffett explained to the University of Florida class. He added that he's seen both businesses and individuals take big risks out of greed when they should have held back.</p>
-  			<p>"If you risk something that is important to you for something that is unimportant to you, it just doesn't make sense," he said. "I don't care if the odds you succeed are 99"</p>
-  			<div class="comment-meta">
-  				<span><a href="#">UpVote</a></span>
-  				<span><a href="#">Reply</a></span>
-  				<span>36 Upvotes</span>
-  			</div>
-  		</li>
+    <div ng-if="comments && comments.length" ng-class="{'m-t p-t b-t': commentFocused || (newComment != null)}">
+      <h5>Comentários</h5>
+    	<ul class="comments-info">
+    		<li ng-repeat="comment in comments" class="b-b m-b p-b">
+    			<div class="display-t-c pull-left">
+            <div back-img="{{comment.author.imageSmallId}}" class="bg-cover bg-img bg-cover-round" title="{{::comment.author.name}}"></div>
+          </div>
+    			<h4 class="text-u-c font-bold m-l-xxl">{{comment.author.name}}
+            <span class="text-muted font-thin text-base t-t-n m-b-sm block" data-livestamp="{{comment.date/1000}}">{{::comment.date | fromNow}}</span>
+          </h4>
+    			<p>{{comment.body}}</p>
+    			<!-- <div class="comment-meta">
+    				<span><a href="#">UpVote</a></span>
+    				<span><a href="#">Reply</a></span>
+    			</div> -->
+    		</li>
 
-  		<li class="sub-comment">
-  			<img src="images/other/3.png" alt="">
-  			<h4>Yuyu Chen<span><a href="#">www.themeforest.net</a></span></h4>
-  			<p>Warren Buffett knows a thing or three about becoming wealthy and successful, and the Oracle of Omaha is not averse to handing out mostly excellent advice to others who'd like to follow in his footsteps.</p>
-  			<div class="comment-meta">
-  				<span><a href="#">UpVote</a></span>
-  				<span><a href="#">Reply</a></span>
-  			</div>
-  		</li>
+    		<!-- <li class="sub-comment">
+    			<img src="images/other/3.png" alt="">
+    			<h4>Yuyu Chen<span><a href="#">www.themeforest.net</a></span></h4>
+    			<p>Warren Buffett knows a thing or three about becoming wealthy and successful, and the Oracle of Omaha is not averse to handing out mostly excellent advice to others who'd like to follow in his footsteps.</p>
+    			<div class="comment-meta">
+    				<span><a href="#">UpVote</a></span>
+    				<span><a href="#">Reply</a></span>
+    			</div>
+    		</li>
 
-  		<li>
-  			<img src="images/other/4.png" alt="">
-  			<h4>Cory Collins<span>Marketing Specialist</span></h4>
-  			<p>Warren Buffett knows a thing or three about becoming wealthy and successful, and the Oracle of Omaha is not averse to handing out mostly excellent advice to others who'd like to follow in his footsteps.</p>
-  			<div class="comment-meta">
-  				<span><a href="#">UpVote</a></span>
-  				<span><a href="#">Reply</a></span>
-  			</div>
-  		</li>
-  	</ul>
-  	<a href="#" class="more-comments">3 More Comments</a>			
+    		<li>
+    			<img src="images/other/4.png" alt="">
+    			<h4>Cory Collins<span>Marketing Specialist</span></h4>
+    			<p>Warren Buffett knows a thing or three about becoming wealthy and successful, and the Oracle of Omaha is not averse to handing out mostly excellent advice to others who'd like to follow in his footsteps.</p>
+    			<div class="comment-meta">
+    				<span><a href="#">UpVote</a></span>
+    				<span><a href="#">Reply</a></span>
+    			</div>
+    		</li> -->
+    	</ul>
+    </div>
+  	<!-- <a href="#" class="more-comments">3 More Comments</a>			 -->
   </div>		
 </div>
 <!-- end of col -->

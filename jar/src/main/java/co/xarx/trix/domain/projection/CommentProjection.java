@@ -16,7 +16,6 @@ public interface CommentProjection {
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	Date getDate();
 	
-	String getTitle();
 	String getBody();
 	Person getAuthor();
 }

@@ -335,8 +335,8 @@ trix.searchPosts(null, $scope.page, 10, {'personId': $scope.app.getLoggedPerson(
 	})
 }])
 
-app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout', '$interval', 'trix', 'cfpLoadingBar', '$q',
-	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q) {
+app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout', '$interval', 'trix', 'cfpLoadingBar', '$q', '$mdSidenav',
+	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q, $mdSidenav) {
 		
 		$scope.app.publicationsCtrl = {page: 0, firstLoad: false};
 
@@ -384,6 +384,7 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 				]
 			}}
 
+			
 			$scope.$watch('$state.params.type', function(){
 				if($state.params.type == "drafts"){
 			// trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
@@ -437,33 +438,61 @@ $scope.paginate = function(){
 	}
 
 	if(!$scope.loadingPage){
-		$scope.loadingPage = true;
-				/*trix.searchPosts(null, $scope.app.publicationsCtrl.page + 1, 10, {'personId': $scope.app.getLoggedPerson().id,
-					'publicationType': type, sortByDate: true}).success(function(response){*/
+	$scope.loadingPage = true;
+			/*trix.searchPosts(null, $scope.app.publicationsCtrl.page + 1, 10, {'personId': $scope.app.getLoggedPerson().id,
+				'publicationType': type, sortByDate: true}).success(function(response){*/
 
-						trix.getPersonNetworkPostsByState(null, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
-							var posts = response;
+					trix.getPersonNetworkPostsByState(null, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
+						var posts = response;
 
-							$scope.loadingPage = false;
-							$scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
+						$scope.loadingPage = false;
+						$scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
 
-							if(!posts || posts.length == 0){
-								$scope.allLoaded = true;
-								return;
-							}
+						if(!posts || posts.length == 0){
+							$scope.allLoaded = true;
+							return;
+						}
 
-							if(!$scope.pages)
-								$scope.pages = []
+						if(!$scope.pages)
+							$scope.pages = []
 
-							posts && posts.forEach(function(element, index){
-								$scope.app.publicationsCtrl.publications.push(element)
-							}); 
+						posts && posts.forEach(function(element, index){
+							$scope.app.publicationsCtrl.publications.push(element)
+						}); 
 
-						})
-						.error(function(){
-							$scope.loadingPage = false;
-						})
-					}
+					})
+					.error(function(){
+						$scope.loadingPage = false;
+					})
 				}
+			}
 
-			}])		
+		$scope.page = 0;
+		$scope.loadingComments = true
+		$scope.allLoaded = false;
+		$scope.beginning = true;
+		$scope.window = 20
+
+		$scope.showComments = function(postId){
+			$scope.comments = []
+			$scope.loadingComments = true
+			if(postId)
+				trix.findPostCommentsOrderByDate(postId).success(function(comments){
+					$scope.loadingComments = false
+				}).error(function(){
+					$scope.loadingComments = false
+				})
+		}
+
+		$scope.togglePostOptions = function(ev){
+		  $mdSidenav('comments-list').toggle();
+		}
+
+		$scope.createComment = function(string){
+			var comment = {author: '/api/persons/' + $scope.initData.person.id, post:'/api/posts/' + $scope.nowReading.postId}
+			trix.postComment = function(comment){
+
+			}
+		}
+
+}])		

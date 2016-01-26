@@ -74,7 +74,7 @@ public class QueryPersistence {
 
 	@Transactional
 	public void updateCommentsCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post set commentsCount = (select count(*) FROM comment WHERE post_id = :postId) WHERE id = :postId;").setParameter("postId", postId).executeUpdate();
+		manager.createNativeQuery("UPDATE Post p set commentsCount = (select count(*) FROM comment c WHERE c.post_id = :postId1) + 1 WHERE p.id = :postId2").setParameter("postId1", postId).setParameter("postId2", postId).executeUpdate();
 	}
 
 	@Transactional

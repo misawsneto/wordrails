@@ -257,6 +257,10 @@ angular.module('app')
                 name: 'angular-carousel',
                 files: ['../bower_components/angular-carousel/dist/angular-carousel.min.css', '../bower_components/angular-carousel/dist/angular-carousel.min.js']
               }
+              // ,{
+              //   name: 'livestamp',
+              //   files: ['../bower_components/livestamp/livestamp.min.js?' + GLOBAL_URL_HASH]
+              // }
           ]
       });
   }])

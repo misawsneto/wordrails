@@ -36,7 +36,7 @@
                       <br>
                       <span class="text-sm">
                         <span class="">
-                          <span class="readingTime">{{::cell.postView.date | fromNow}}</span>
+                          <span class="readingTime" data-livestamp="{{cell.postView.date/1000}}">{{::cell.postView.date | fromNow}}</span>
                         </span>
                       </span>
                     </div>

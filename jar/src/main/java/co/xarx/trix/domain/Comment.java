@@ -25,16 +25,12 @@ public class Comment implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastModificationDate;
 	
-	@Size(min=1, max=100)
-	public String title;
-
 	@Lob
 	@NotNull
 	public String body;
 
 	@NotNull
 	@ManyToOne
-	@JsonBackReference
 	@JoinColumn(updatable=false)
 	public Person author;
 	

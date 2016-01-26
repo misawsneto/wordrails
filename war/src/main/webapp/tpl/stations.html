@@ -24,7 +24,7 @@
                         {{::cell.postView.authorName}}
                       </span>
                       <br>
-                      <span class="text-sm readingTime">
+                      <span class="text-sm readingTime" data-livestamp="{{cell.postView.date/1000}}">
                         {{::cell.postView.date | fromNow}}
                       </span>
                     </div>
@@ -94,7 +94,7 @@
                   {{::cell.postView.authorName}}
                 </a>
                 <br>
-                <span class="text-sm readingTime">
+                <span class="text-sm readingTime" data-livestamp="{{cell.postView.date/1000}}">
                   {{::cell.postView.date | fromNow}}
                 </span>
               </div>
@@ -293,7 +293,7 @@
               <a ui-sref="app.read({'slug': post.slug})" class="rp-title">
               {{post.title}}</a>
               <div class="rp-meta">
-                <span class="post-author a-custom-primary">{{post.date | fromNow}}</span>
+                <span class="post-author a-custom-primary" data-livestamp="{{post.date/1000}}">{{post.date | fromNow}}</span>
                 <!-- <span class="post-tags"><a href="#">Startup</a></span> -->
               </div>
             </li>
@@ -307,7 +307,7 @@
               <a ui-sref="app.read({'slug': post.slug})" class="rp-title">
               {{post.title}}</a>
               <div class="rp-meta">
-                <span class="post-author a-custom-primary">{{post.date | fromNow}}</span>
+                <span class="post-author a-custom-primary" data-livestamp="{{post.date/1000}}">{{post.date | fromNow}}</span>
                 <!-- <span class="post-tags"><a href="#">Startup</a></span> -->
               </div>
             </li>
@@ -456,7 +456,7 @@
                   {{::cell.postView.authorName}}
                 </a>
                 <br>
-                <span class="text-sm readingTime">
+                <span class="text-sm readingTime" data-livestamp="{{cell.postView.date/1000}}">
                   {{::cell.postView.date | fromNow}}
                 </span>
               </div>
@@ -503,7 +503,7 @@
         <div class="tl-wrap">
           <div class="popular-index">{{$index + 1}}</div>
           <div class="">
-            <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
+            <small style="opacity: 0.7" class="post-time w-md" data-livestamp="{{post.date/1000}}">{{post.date | fromNow}}</small>
             <a ng-click="app.setNowReading(post, app.initData.popular)" class="pointer">
               <div>
                 {{post.title | characters:40}}
@@ -522,7 +522,7 @@
     <li class="tl-item" ng-repeat="post in app.initData.recent | limitTo: 5">
       <div class="tl-wrap">
         <div class="">
-          <small style="opacity: 0.7" class="post-time w-md">{{post.date | fromNow}}</small>
+          <small style="opacity: 0.7" class="post-time w-md" data-livestamp="{{post.date/1000}}">{{post.date | fromNow}}</small>
           <a ng-click="app.setNowReading(post, app.initData.recent)" class="pointer">
             <div clamp="1">
               {{post.title | characters:40}}
