@@ -58,8 +58,6 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	  $mdSidenav('comments-list').toggle();
 	}
 
-	$scope.app.newComment = "null";
-
 	$scope.createComment = function(){
 		var comment = {}
 		comment = angular.copy($scope.newComment);

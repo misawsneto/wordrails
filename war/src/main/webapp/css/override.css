@@ -2944,11 +2944,12 @@ md-backdrop.md-opaque.ng-leave {
       z-index: 58;
     }
 
-  #user-profile md-sidenav {
+  #user-profile md-sidenav, #publications md-sidenav{
     width: 450px;
     min-width: 450px;
     max-width: 450px;
   }
+
 }
 
 .t-t-n {

@@ -467,32 +467,58 @@ $scope.paginate = function(){
 				}
 			}
 
-		$scope.page = 0;
+$scope.page = 0;
+	$scope.loadingComments = true
+	$scope.allLoaded = false;
+	$scope.beginning = true;
+	$scope.window = 20
+
+	$scope.showComments = function(postId){
+		$scope.toggleCommentsSidebar();
+		$scope.comments = []
 		$scope.loadingComments = true
-		$scope.allLoaded = false;
-		$scope.beginning = true;
-		$scope.window = 20
+		if(postId)
+			trix.findPostCommentsOrderByDate(postId, $scope.page, $scope.window, null, 'commentProjection').success(function(response){
+				$scope.comments = response.comments;
+				$scope.loadingComments = false
+			}).error(function(){
+				$scope.comments = null;
+				$scope.loadingComments = false
+			})
+	}
 
-		$scope.showComments = function(postId){
-			$scope.comments = []
-			$scope.loadingComments = true
-			if(postId)
-				trix.findPostCommentsOrderByDate(postId).success(function(comments){
-					$scope.loadingComments = false
-				}).error(function(){
-					$scope.loadingComments = false
-				})
-		}
+	$scope.toggleCommentsSidebar = function(){
+	  $mdSidenav('comments-list').toggle();
+	}
 
-		$scope.togglePostOptions = function(ev){
-		  $mdSidenav('comments-list').toggle();
-		}
+	$scope.createComment = function(){
+		var comment = {}
+		comment = angular.copy($scope.newComment);
+		comment.author = extractSelf($scope.app.initData.person)
+		comment.post =TRIX.baseUrl + '/api/posts/' + $scope.app.nowReading.postId
 
-		$scope.createComment = function(string){
-			var comment = {author: '/api/persons/' + $scope.initData.person.id, post:'/api/posts/' + $scope.nowReading.postId}
-			trix.postComment = function(comment){
+		trix.postComment(comment).success(function(response){
+			if(!$scope.comments || $scope.comments.length == 0)
+				$scope.comments = [];
 
-			}
-		}
+			comment.author = angular.copy($scope.app.initData.person)
+			comment.date = new Date().getTime();
+			$scope.newComment = {body: ''};
+
+			$scope.comments.unshift(comment)
+
+		}).error(function(response,status){
+			$scope.app.showErrorToast('Houve um erro inesperado. Tente novamente.')
+
+		})
+	}
+
+	$scope.commentFocused = false;
+	$scope.commentFocus = function(){
+		$scope.commentFocused = true;
+	}
+	$scope.commentBlur = function(){
+		$scope.commentFocused = false;
+	}
 
 }])		

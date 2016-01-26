@@ -1,4 +1,6 @@
-<md-sidenav id="comments-list" class="md-sidenav-right md-whiteframe-z2 pos-fix" md-component-id="post-options">
+<div id="publications" class="hbox hbox-auto-xs">
+
+<md-sidenav id="comments-list" class="md-sidenav-right md-whiteframe-z2 pos-fix" md-component-id="comments-list">
   <md-toolbar class="bg-header">
     <h2 class="md-toolbar-tools bg-header-text"><i class="mdi mdi-comment-text-outline text-xl p-r-sm"></i>Comentários</h2>
   </md-toolbar>
@@ -6,8 +8,44 @@
     <div id="post-options-sidebar" class="vbox">
       <div class="row-row">
         <div class="cell b-l">
-          <div class="cell-inner">
-						
+          <div class="cell-inner comments">
+          	<div ng-if="comments && comments.length" ng-class="{'m-t p-t b-t': (commentFocused || (newComment.body) && app.isLogged)}">
+				    	<ul class="comments-info">
+				    		<li ng-repeat="comment in comments" class="b-b p-b p-l p-r">
+				    			<div class="display-t-c pull-left m-t-xs">
+				            <div back-img="{{comment.author.imageSmallId}}" class="bg-cover bg-img bg-cover-round" title="{{::comment.author.name}}"></div>
+				          </div>
+				    			<h4 class="text-u-c font-bold m-l-xxl">{{comment.author.name}}
+				            <span class="text-muted font-thin text-base t-t-n m-b-sm block" data-livestamp="{{comment.date/1000}}">{{::comment.date | fromNow}}</span>
+				          </h4>
+				    			<p>{{comment.body}}</p>
+				    			<!-- <div class="comment-meta">
+				    				<span><a href="#">UpVote</a></span>
+				    				<span><a href="#">Reply</a></span>
+				    			</div> -->
+				    		</li>
+
+				    		<!-- <li class="sub-comment">
+				    			<img src="images/other/3.png" alt="">
+				    			<h4>Yuyu Chen<span><a href="#">www.themeforest.net</a></span></h4>
+				    			<p>Warren Buffett knows a thing or three about becoming wealthy and successful, and the Oracle of Omaha is not averse to handing out mostly excellent advice to others who'd like to follow in his footsteps.</p>
+				    			<div class="comment-meta">
+				    				<span><a href="#">UpVote</a></span>
+				    				<span><a href="#">Reply</a></span>
+				    			</div>
+				    		</li>
+
+				    		<li>
+				    			<img src="images/other/4.png" alt="">
+				    			<h4>Cory Collins<span>Marketing Specialist</span></h4>
+				    			<p>Warren Buffett knows a thing or three about becoming wealthy and successful, and the Oracle of Omaha is not averse to handing out mostly excellent advice to others who'd like to follow in his footsteps.</p>
+				    			<div class="comment-meta">
+				    				<span><a href="#">UpVote</a></span>
+				    				<span><a href="#">Reply</a></span>
+				    			</div>
+				    		</li> -->
+				    	</ul>
+				    </div>
           </div>
         </div>
       </div>
@@ -15,7 +53,6 @@
   </md-content>
 </md-sidenav>
 
-<div id="publications" class="hbox hbox-auto-xs">
 	<div class="header-custom box-shadow">
 		<div class="block-1000 m-auto m-b-xxl text-center">
 			<p class="h1 font-bold">Publicações</p>
