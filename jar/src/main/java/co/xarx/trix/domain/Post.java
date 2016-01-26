@@ -22,6 +22,8 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public static final String STATE_PUBLISHED = "PUBLISHED";
 	public static final String STATE_SCHEDULED = "SCHEDULED";
 
+	private static final long serialVersionUID = 7468718930497246401L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;

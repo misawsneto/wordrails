@@ -87,4 +87,13 @@ public class SessionConfig extends CachingConfigurerSupport {
 				"c018a16e93cb1Fc68060a9c7095324056d1bF9b08Fdd1b78c1c96351ceb129e6e959357");
 		return jedisConnectionFactory;
 	}
+
+	@Bean
+	public RedisOperationsSessionRepository sessionRepository(@Qualifier("sessionRedisTemplate")
+																  RedisOperations<String, ExpiringSession> sessionRedisTemplate) {
+		RedisOperationsSessionRepository sessionRepository = new RedisOperationsSessionRepository(sessionRedisTemplate);
+		sessionRepository.setDefaultMaxInactiveInterval(345600);
+
+		return sessionRepository;
+	}
 }
