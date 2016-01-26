@@ -100,7 +100,7 @@
   <div class="comments m-t">
       <!-- <img src="images/other/1.png" class="pull-left">
       <div id="aside-user" back-img="{{app.initData.person.imageSmallId}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div> -->
-    <div>
+    <div ng-if="app.isLogged">
       <div class="display-t-c pull-left">
         <div back-img="{{app.initData.person.imageSmallId}}" class="bg-cover bg-img bg-cover-round" title="{{::app.initData.person.name}}"></div>
       </div>
@@ -114,12 +114,12 @@
         </md-input-container>
     	</div>
 
-      <md-button ng-click="createComment()" class="m-l-n-xxs m-r-n-xxs md-raised m-b btn-fw bg-white md-btn" md-ink-ripple ng-if="commentFocused || (newComment != null)">
+      <md-button ng-click="createComment()" class="m-l-n-xxs m-r-n-xxs md-raised m-b btn-fw bg-white md-btn" md-ink-ripple ng-if="(commentFocused || (newComment.body) && app.isLogged)">
         <span class="font-bold text-lg">ENVIAR</span>
       </md-button>
     </div>
 
-    <div ng-if="comments && comments.length" ng-class="{'m-t p-t b-t': commentFocused || (newComment != null)}">
+    <div ng-if="comments && comments.length" ng-class="{'m-t p-t b-t': (commentFocused || (newComment.body) && app.isLogged)}">
       <h5>Comentários</h5>
     	<ul class="comments-info">
     		<li ng-repeat="comment in comments" class="b-b m-b p-b">
