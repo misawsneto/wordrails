@@ -10,14 +10,14 @@ app.controller('SettingsSponsorsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 		$scope.app.deleteSponsor = function(){
 			trix.deleteSponsor($scope.deleteSponsorId).success(function(){
 				$scope.app.getInitData();
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			});
 		}
 
 		$scope.setMainSponsor = function(sponsor){
 			trix.setMainSponsor(sponsor.id, sponsor.main).success(function(){
 				$scope.app.getInitData();
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			})
 		}
 
@@ -95,14 +95,14 @@ app.controller('SettingsSponsorsConfigCtrl', ['$scope', '$log', '$timeout', '$md
             sponsor.network = TRIX.baseUrl + '/api/networks/' + $scope.app.initData.network.id;
       	trix.postSponsor(sponsor).success(function(){
       		$scope.app.getInitData();
-      		$scope.app.showSuccessToast('Patrocinador criado com successo.')
+      		$scope.app.showSuccessToast('Patrocinador criado com sucesso.')
       	});
       }
 
       $scope.updateSponsor = function(){
       	trix.putSponsor($scope.sponsor).success(function(){
       		$scope.app.getInitData();
-      		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+      		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
       	});
       }
   }])

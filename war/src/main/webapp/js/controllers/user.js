@@ -224,7 +224,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     		$scope.editingPerson.password = null;
     		$scope.editingPerson.passwordConfirm = null;
     		$scope.person = $scope.app.initData.person = $scope.editingPerson;
-				$scope.app.showSuccessToast('Alterações realizadas com successo')    		
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso')    		
     	});
     }
 

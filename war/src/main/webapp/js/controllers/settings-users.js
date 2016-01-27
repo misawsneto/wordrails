@@ -157,7 +157,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
 
   $scope.createPerson = function(ev){
     trix.createPerson($scope.person).success(function(response){
-      $scope.app.showSuccessToast('Alterações realizadas com successo.')
+      $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
       $scope.selectedPerson = response;
       $scope.editingPersonLoaded = true;
       $scope.editing = true;

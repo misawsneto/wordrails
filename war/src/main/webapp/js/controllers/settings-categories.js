@@ -45,7 +45,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 
 		$scope.app.deleteCategory = function(){
 			trix.deleteTerm($scope.app.toDeleteCategory.id).success(function(){
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 				$mdDialog.cancel();
 				trix.getTermTree(null, $scope.taxonomyId).success(function(response){
 					$scope.termTree = response;
@@ -61,7 +61,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 			delete term['children']
 			trix.putTerm(term).success(function(){
 				node.editing=false;
-				$scope.app.showSuccessToast('Alterações realizadas com successo.');
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.');
 			}).error(function(){
 				$timeout(function() {
 					cfpLoadingBar.complete(); 
@@ -87,7 +87,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 			trix.postTerm(term).success(function(){
 				$mdDialog.cancel();
 				trix.getTermTree(null, $scope.taxonomyId).success(function(response){
-					$scope.app.showSuccessToast('Categoria criada com successo.')
+					$scope.app.showSuccessToast('Categoria criada com sucesso.')
 					$scope.termTree = response;
 				});
 			}).error(function(data, status){

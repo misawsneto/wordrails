@@ -10,14 +10,14 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 		$scope.app.deleteStation = function(){
 			trix.deleteStation($scope.deleteStationId).success(function(){
 				$scope.app.getInitData();
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			});
 		}
 
 		$scope.setMainStation = function(station){
 			trix.setMainStation(station.id, station.main).success(function(){
 				$scope.app.getInitData();
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			})
 		}
 	}])
@@ -49,7 +49,7 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
       }
       trix.putStation($scope.station).success(function(){
         $scope.app.getInitData();
-        $scope.app.showSuccessToast('Alterações realizadas com successo.')
+        $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
       })
 		}
 
@@ -58,7 +58,7 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 				trix.postStation($scope.station).success(function(response){
 					trix.getStation(response).success(function(responseStation){
 						$scope.app.getInitData();
-						$scope.app.showSuccessToast('Estação criada com successo.')
+						$scope.app.showSuccessToast('Estação criada com sucesso.')
 						$scope.creating = false;
 						$scope.station = responseStation;
 						$state.go('app.settings.stationconfig', {'stationId': response}, {location: 'replace', inherit: false, notify: false, reload: false})
@@ -175,7 +175,7 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
 
     $scope.app.deleteCategory = function(){
       trix.deleteTerm($scope.app.toDeleteCategory.id).success(function(){
-        $scope.app.showSuccessToast('Alterações realizadas com successo.')
+        $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
         $mdDialog.cancel();
         trix.getTermTree(null, $scope.thisStation.categoriesTaxonomyId).success(function(response){
           $scope.termTree = response;
@@ -191,7 +191,7 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
       delete term['children']
       trix.putTerm(term).success(function(){
         node.editing=false;
-        $scope.app.showSuccessToast('Alterações realizadas com successo.');
+        $scope.app.showSuccessToast('Alterações realizadas com sucesso.');
       }).error(function(){
         $timeout(function() {
           cfpLoadingBar.complete(); 
@@ -217,7 +217,7 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
       trix.postTerm(term).success(function(){
         $mdDialog.cancel();
         trix.getTermTree(null, $scope.thisStation.categoriesTaxonomyId).success(function(response){
-          $scope.app.showSuccessToast('Categoria criada com successo.')
+          $scope.app.showSuccessToast('Categoria criada com sucesso.')
           $scope.termTree = response;
         })
       }).error(function(data, status){
@@ -341,7 +341,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 
   $scope.createPerson = function(ev){
   	trix.createPerson($scope.person).success(function(response){
-  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
       $scope.person = response;
       $scope.editingPersonLoaded = true;
       $scope.editing = true;
@@ -365,7 +365,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	$scope.app.conflictingData.stationRole.person = '/api/persons/'+ $scope.app.conflictingData.conflictingPerson.id;
   	$scope.app.conflictingData.stationRole.station = '/api/stations/' + $scope.thisStation.id
   	trix.postStationRole($scope.app.conflictingData.stationRole).success(function(){
-  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
   		$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': $scope.app.conflictingData.conflictingPerson.id, 'newUser': null})
   		$mdDialog.cancel();
   	}).error(function(){
@@ -532,7 +532,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   			if(ids.indexOf($scope.personsRoles[i].id) > -1)
   				$scope.personsRoles.splice(i, 1);
   		};
-  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
   		$scope.app.cancelModal();
   	})
   }		
@@ -559,7 +559,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   				$scope.personsRoles.splice(i, 1);
   		};
       $scope.rolesCount--;
-  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
   		$mdDialog.cancel();
   	})
   }
