@@ -31,13 +31,13 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	public Date createdAt;
 
 	@DiffIgnore
-	@Column(columnDefinition = "int(11) DEFAULT 0")
+	@Column(columnDefinition = "int(11) DEFAULT '0'")
 	public Integer networkId;
 
 	@DiffIgnore
 	@Version
 	@JsonIgnore
-	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
+	@Column(columnDefinition = "int(11) DEFAULT '0'", nullable = false)
 	private int version;
 
 	String tenantId;
