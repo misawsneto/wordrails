@@ -116,7 +116,6 @@ public class Image extends BaseEntity implements Serializable {
 	@ManyToOne(cascade=CascadeType.MERGE)
 	public File large;
 
-	@Deprecated
 	public String originalHash;
 	@Deprecated
 	public String smallHash;

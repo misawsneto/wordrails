@@ -79,8 +79,8 @@ public class ImagesResource {
 	}
 
 	@GET
-	@Path("/get")
-	public Response getImage(@QueryParam("hash") String hash, @QueryParam("size") String size, @Context HttpServletResponse response) throws IOException {
+	@Path("/get/{hash}")
+	public Response getImage(@PathParam("hash") String hash, @QueryParam("size") String size, @Context HttpServletResponse response) throws IOException {
 		Image image = imageRepository.findOne(QImage.image.hashs.contains("original", hash));
 		hash = amazonCloudService.getPublicImageURL(image.hashs.get(size));
 
