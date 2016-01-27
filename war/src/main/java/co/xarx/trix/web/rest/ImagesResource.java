@@ -6,6 +6,7 @@ import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
+import com.google.common.collect.Lists;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Path("/images")
 @Consumes(MediaType.WILDCARD)
@@ -82,13 +84,13 @@ public class ImagesResource {
 	@GET
 	@Path("/get/{hash}")
 	public Response getImage(@PathParam("hash") String hash, @QueryParam("size") String size, @Context HttpServletResponse response) throws IOException {
-		Image image = imageRepository.findOne(QImage.image.originalHash.eq(hash));
+		List<Image> images = Lists.newArrayList(imageRepository.findAll(QImage.image.originalHash.eq(hash)));
 
-		if(image == null) {
+		if(images == null || images.isEmpty()) {
 			throw new NotFoundException("Image does not exist");
 		}
 
-		hash = image.hashs.get(size);
+		hash = images.get(0).hashs.get(size);
 
 		if(StringUtils.isEmpty(hash)) return Response.status(Response.Status.NO_CONTENT).build();
 
