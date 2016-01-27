@@ -83,6 +83,7 @@ public class NetworkDomainFilter implements Filter {
 			HttpSession session = request.getSession();
 			session.setAttribute("userAgent", request.getHeader("User-Agent"));
 			session.setAttribute("tenantId", tenantId);
+			TenantContextHolder.setCurrentTenantId(tenantId);
 
 //			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 //			if (network == null) {
