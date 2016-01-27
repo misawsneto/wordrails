@@ -54,6 +54,10 @@ public class PostView implements Serializable {
 
 	public String authorEmail;
 	public String authorTwitter;
+
+	public String authorCover;
+	public String authorProfilePicture;
+
 	public String authorCoverMediumHash;
 	public String authorImageSmallHash;
 	public String authorCoverUrl;
@@ -80,6 +84,22 @@ public class PostView implements Serializable {
 	public String subheading;
 	public Date scheduledDate;
 	public boolean notify;
+
+	public String getAuthorCover() {
+		return authorCover;
+	}
+
+	public void setAuthorCover(String authorCover) {
+		this.authorCover = authorCover;
+	}
+
+	public String getAuthorProfilePicture() {
+		return authorProfilePicture;
+	}
+
+	public void setAuthorProfilePicture(String authorProfilePicture) {
+		this.authorProfilePicture = authorProfilePicture;
+	}
 
 	public String getTitle() {
 		return title;

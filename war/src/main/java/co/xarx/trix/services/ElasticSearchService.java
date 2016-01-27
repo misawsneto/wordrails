@@ -8,7 +8,6 @@ import co.xarx.trix.elasticsearch.ESRepository;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.domain.ESStation;
-import co.xarx.trix.elasticsearch.repository.ESBookmarkRepository;
 import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.elasticsearch.repository.ESStationRepository;
@@ -49,8 +48,6 @@ public class ElasticSearchService {
 	StationRepository stationRepository;
 	@Autowired
 	ESStationRepository esStationRepository;
-	@Autowired
-	ESBookmarkRepository esBookmarkRepository;
 	@Autowired
 	PersonRepository personRepository;
 	@Autowired

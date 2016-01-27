@@ -8,6 +8,7 @@ import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -82,7 +83,14 @@ public class ImagesResource {
 	@Path("/get/{hash}")
 	public Response getImage(@PathParam("hash") String hash, @QueryParam("size") String size, @Context HttpServletResponse response) throws IOException {
 		Image image = imageRepository.findOne(QImage.image.hashs.contains("original", hash));
-		hash = amazonCloudService.getPublicImageURL(image.hashs.get(size));
+
+		if(image == null) {
+			throw new NotFoundException("Image does not exist");
+		}
+
+		hash = image.hashs.get(size);
+
+		if(StringUtils.isEmpty(hash)) return Response.status(Response.Status.NO_CONTENT).build();
 
 		response.setHeader("Pragma", "public");
 		response.setHeader("Cache-Control", "max-age=2592000");
