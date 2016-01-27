@@ -1,18 +1,18 @@
-<div id="post-media-box" ng-style="getBackgroundImage2(app.nowReading, 'large')" class="post-block image-landscape m-t-60" ng-if="!app.isMobile && app.nowReading.imageLandscape && app.nowReading.imageLargeId">
+<div id="post-media-box" ng-style="getBackgroundImage(app.nowReading, 'large')" class="post-block image-landscape m-t-60" ng-if="!app.isMobile && app.nowReading.imageLandscape && app.nowReading.featuredImage">
 </div>
 
-<div id="post-content" ng-if="app.nowReading.postId || app.nowReading.id" class="container p-t-xxl" ng-class="{'m-t p-t-70': !app.nowReading.imageLargeId && !app.isMobile, 'p-t-xxl': app.isMobile}"> 
+<div id="post-content" ng-if="app.nowReading.postId || app.nowReading.id" class="container p-t-xxl" ng-class="{'m-t p-t-70': !app.nowReading.featuredImage && !app.isMobile, 'p-t-xxl': app.isMobile}"> 
 	<div class="row">
-		<div class="img-responsive" ng-if="app.isMobile && app.nowReading.imageLargeId">
-			<img ng-src="{{getImageLink(app.nowReading.imageLargeId)}}" class="img-full">
+		<div class="img-responsive" ng-if="app.isMobile && app.nowReading.featuredImage">
+			<img ng-src="{{getImageLink(app.nowReading.featuredImage, 'large')}}" class="img-full">
 		</div>
 		<div class="col-md-8 col-md-offset-2 col-sm-12 col-sm-offset-0 p-b-xxl">
 			<div class="cell-inner animated {{app.incomingPostDirection}}">
-				<div id="post-media-box" class="post-block p-t-xxl m-b-lg" ng-if="!app.isMobile && (!app.nowReading.imageLandscape && app.nowReading.imageLargeId)">
-					<img ng-src="{{getImageLink(app.nowReading.imageLargeId)}}" class="img-full">
+				<div id="post-media-box" class="post-block p-t-xxl m-b-lg" ng-if="!app.isMobile && (!app.nowReading.imageLandscape && app.nowReading.featuredImage)">
+					<img ng-src="{{getImageLink(app.nowReading.featuredImage, 'large')}}" class="img-full">
 				</div>
 
-            <!-- <div class="post-image-cover" ng-style="getBackgroundImage2(app.nowReading, 'large')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
+            <!-- <div class="post-image-cover" ng-style="getBackgroundImage(app.nowReading, 'large')" ng-if="app.nowReading.imageLandscape && app.nowReading.featuredImage">
           </div> -->
           <div class="post-block m-t-lg" ng-show="app.nowReading.externalVideoUrl">
           	<embed-video enablejsapi="1" class="video" iframe-id="video1" api="1" player_id="video1" href="{{app.nowReading.externalVideoUrl}}" width=800 height=460 ></embed-video>

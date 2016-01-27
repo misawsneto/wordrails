@@ -11,6 +11,7 @@ public interface ImageProjection {
 	FileProjection getSmall();
 	FileProjection getMedium();
 	FileProjection getLarge();
+	String getOriginalHash();
 	Integer getPostId();
 	Map<String, String> getHashs();
 }

@@ -404,17 +404,9 @@ angular.module('app')
         return $scope.getBackgroundImage(postView, size);
       }
 
-      $scope.getBackgroundImage2 = function(post, size){
-        var img = $filter('pvimageLink2')(post, size);
-        return img;
-      }
 
-      $scope.app.getBackgroundImage2 = function(post, size){
-        return $scope.getBackgroundImage2(post, size);
-      }
-
-      $scope.getImageLink = function(id){
-        var img = $filter('imageLink')(id);
+      $scope.getImageLink = function(featuredImage, size){
+        var img = $filter('imageLink')(featuredImage, size);
         return img;
       }
 

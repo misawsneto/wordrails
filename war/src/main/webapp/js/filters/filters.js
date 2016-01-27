@@ -51,39 +51,18 @@ angular.module('app')
 })
 
 .filter('pvimageLink', function pvimageLink(TRIX) {
-	return function(postView, size) {
-		if(postView && postView.imageLargeId && size == "lg"){
-			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.imageLargeId +"/contents)", "background-position": "50% 20%"};
-		}else if(postView && postView.imageMediumId && size == "md"){
-			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.imageMediumId +"/contents)", "background-position": "50% 20%"};
-		}else if(postView && postView.imageSmallId && size == "sm"){
-			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ postView.imageSmallId +"/contents)", "background-position": "50% 20%"};
-		}else{
-			//return {"background-image": "url(img/p0.jpg)"};
-			return {};
-		}
-	}
-})
-
-.filter('pvimageLink2', function pvimageLink(TRIX) {
 	return function(post, size) {
-		if(post && post.imageLargeId && size == "lg"){
-			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ post.imageLargeId +"/contents)", "background-position": "50% 20%"};
-		}else if(post && post.imageMediumId && size == "md"){
-			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ post.imageMediumId +"/contents)", "background-position": "50% 20%"};
-		}else if(post && post.imageSmallId && size == "sm"){
-			return {"background-image": "url(" + TRIX.baseUrl + "/api/files/"+ post.imageSmallId +"/contents)", "background-position": "50% 20%"};
-		}else{
-			//return {"background-image": "url(img/p0.jpg)"};
+		if(post && post.featuredImage)
+			return {"background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ ((post.featuredImage.originalHash) ? post.featuredImage.originalHash : post.featuredImage)  + "?size=" +size+ ")", "background-position": "50% 20%"};
+		else
 			return {};
-		}
 	}
 })
 
 .filter('imageLink', function imageLink(TRIX) {
-	return function(imgId) {
-		if(imgId)
-			return TRIX.baseUrl + "/api/files/"+ imgId +"/contents";
+	return function(featuredImage, size) {
+		if(featuredImage)
+			return TRIX.baseUrl + "/api/images/get/"+ ((featuredImage.originalHash) ? featuredImage.originalHash : featuredImage)  + "?size=" + size;
 
 		return "";
 	}

@@ -13,7 +13,7 @@
               <!-- title bg-stripe -->
               <div class="pos-abt bottom-0 wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg animated fadeInUp">
                   <div class="text-shadow-dark h2 text-white">{{::cell.postView.title}}</div>
-                  <div  ng-if="cell.postView.imageMediumId">
+                  <div  ng-if="cell.postView.featuredImage">
                     <div class="display-t-c pull-right">
                       <span ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
                         <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="{{::cell.postView.authorName}}"></div>
@@ -66,14 +66,14 @@
             </a>
             <a ui-sref="app.read({'slug': cell.postView.slug})">
               <div class="row">
-                <div class="col-md-5" ng-if="cell.postView.imageMediumId || cell.postView.externalVideoUrl">
+                <div class="col-md-5" ng-if="cell.postView.featuredImage || cell.postView.externalVideoUrl">
                   <span class="block-image2">
                     <div ng-style="getBackgroundImage(cell.postView, 'medium')"
                     class="cell-wrap r r-2x bg-cover" alt=""></div>
                   </span>
                 </div>
-                <div ng-class="{'col-md-7':cell.postView.imageMediumId || cell.postView.externalVideoUrl, 'col-md-12': !(cell.postView.imageMediumId || cell.postView.externalVideoUrl)}">
-                  <span href="" class="h3 font-bold m-b block" ng-class="{'m-t-sm': cell.postView.imageMediumId || cell.postView.externalVideoUrl}">
+                <div ng-class="{'col-md-7':cell.postView.featuredImage || cell.postView.externalVideoUrl, 'col-md-12': !(cell.postView.featuredImage || cell.postView.externalVideoUrl)}">
+                  <span href="" class="h3 font-bold m-b block" ng-class="{'m-t-sm': cell.postView.featuredImage || cell.postView.externalVideoUrl}">
                   {{::cell.postView.title}}</span>
                   <!-- <div class="post-meta">
                     <span class="post-author a-custom-primary">Lavonne Flynn</span>
@@ -342,10 +342,10 @@
           <ul class="sly-clearfix info-flow-list" >
             <li class="cell" ng-repeat="cell in ordinaryRow.cells" ng-class="{'post-read': app.postRead(cell.postView.postId)}">
               <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div>
-              <div class="news-item animated fadeIn o-h" ng-class="{'bg-custom-primary-no-image': !cell.postView.imageMediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
-                <div class="bottom wrapper-xxs bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.imageMediumId">
+              <div class="news-item animated fadeIn o-h" ng-class="{'bg-custom-primary-no-image': !cell.postView.featuredImage}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+                <div class="bottom wrapper-xxs bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.featuredImage">
                   <div class="text-base text-white ls-sm">{{::cell.postView.title}}</div>
-                  <div class="m-t-sm" ng-if="cell.postView.imageMediumId">
+                  <div class="m-t-sm" ng-if="cell.postView.featuredImage">
                     <div class="display-t-c">
                       <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
                         <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img-xs bg-cover-round" title="{{::cell.postView.authorName}}"></div>
@@ -375,11 +375,11 @@
                   </div>
                 </div>
   
-                <div class="wrapper-xs font-base" ng-if="!cell.postView.imageMediumId">
+                <div class="wrapper-xs font-base" ng-if="!cell.postView.featuredImage">
                   {{::cell.postView.title | characters:50}}
                 </div>
   
-                <div class="pos-abt bottom-0 wrapper-xs" ng-if="!cell.postView.imageMediumId">
+                <div class="pos-abt bottom-0 wrapper-xs" ng-if="!cell.postView.featuredImage">
                   <div class="display-t-c">
                     <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" title="Ir para o perfil de {{::cell.postView.authorName}}">
                       <div back-img="{{cell.postView.authorSmallImageId}}" class="bg-cover bg-img-xs bg-cover-round" title="{{::cell.postView.authorName}}"></div>
@@ -395,7 +395,7 @@
                     </span>
                   </div>
                 </div>
-                <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r-xs" ng-if="!cell.postView.imageMediumId">
+                <div class="pos-abt bottom-0 right-0 v-middle padder-v p-r-xs" ng-if="!cell.postView.featuredImage">
                   <span ng-click="app.recommend(cell.postView.postId); app.stopPropagation($event);">
                     <a href class="text-center text-md v-middle">
                       <i class="mdi text-custom-primary link" ng-class="{'mdi-heart animated rubberBand': app.recommended(cell.postView.postId), 'mdi-heart-outline': !app.recommended(cell.postView.postId)}"></i>
@@ -408,7 +408,7 @@
                   </span>
                 </div>
   
-                <div class="cell-wrap img-bg" ng-if="cell.postView.imageMediumId" ng-style="getBackgroundImage(cell.postView, 'medium')">
+                <div class="cell-wrap img-bg" ng-if="cell.postView.featuredImage" ng-style="getBackgroundImage(cell.postView, 'medium')">
                 </div>
               </div>
             </li>
@@ -433,13 +433,13 @@
          <div ng-class="{'b-t': !$first}"></div>
          <div ng-click="app.goToState('app.read', {'slug': cell.postView.slug})" class="clear p-t-sm padder-v padder-md post-list news-item">
           <!-- image -->
-          <a  class="block-image m-l m-t" ng-if="cell.postView.imageMediumId" >
+          <a  class="block-image m-l m-t" ng-if="cell.postView.featuredImage" >
             <div class="cell-wrap r r-2x bg-cover" ng-style="getBackgroundImage(cell.postView, 'medium')">
             </div>
           </a>
           <!-- /image -->
           <!-- /content -->
-          <div class="m-t-sm" ng-class="{'content-block': cell.postView.imageMediumId}">
+          <div class="m-t-sm" ng-class="{'content-block': cell.postView.featuredImage}">
             <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{::cell.postView.topper}}</span>
             <a  class="h3 font-bold m-b m-t-sm m-b m-t-sm block">
               {{::cell.postView.title}}

@@ -10,14 +10,14 @@
              <div ng-class="{'b-t': !$first}"></div>
               <div class="clear p-t-sm padder-v padder-md post-list news-item" angular-ripple ng-click="app.setNowReading(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
                 <!-- image -->
-                <a class="block-image m-l m-t" ng-if="cell.postView.imageMediumId" >
+                <a class="block-image m-l m-t" ng-if="cell.postView.featuredImage" >
                   <div class="cell-wrap r r-2x">
                     <div ng-style="getBackgroundImage(cell.postView, 'medium')"></div>
                   </div>
                 </a>
                 <!-- /image -->
                 <!-- /content -->
-                <div class="m-t-sm" ng-class="{'content-block': cell.postView.imageMediumId}">
+                <div class="m-t-sm" ng-class="{'content-block': cell.postView.featuredImage}">
                   <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="cell.postView.topper">{{::cell.postView.topper}}</span>
                   <a  class="h3 font-bold m-b m-t-sm block">
                     {{::cell.postView.title}}
