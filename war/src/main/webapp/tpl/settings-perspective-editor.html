@@ -32,7 +32,7 @@
 								</div>
 								<ul rn-carousel="" rn-carousel-index="carouselIndex2" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="carousel2 ng-scope p-e-carousel">
 									<li ng-repeat="cell in termPerspectiveView.featuredRow.cells">
-										<div ng-if="cell.postView.imageLargeId" ng-style="getBackgroundImage(cell.postView, 'lg')"
+										<div ng-if="cell.postView.imageLargeId" ng-style="getBackgroundImage(cell.postView, 'large')"
 												class="cell-wrap bg-cover">
 										</div>
 									</li>
@@ -70,7 +70,7 @@
 												</div>
 							
 												<div class="cell-wrap" ng-if="cell.postView.imageMediumId">
-													<div class="w-full h-full" ng-style="getBackgroundImage(cell.postView, 'md')"></div>
+													<div class="w-full h-full" ng-style="getBackgroundImage(cell.postView, 'medium')"></div>
 												</div>
 											</div>
 							
@@ -225,7 +225,7 @@
 				<div class="wrapper-xxs perspective-editor-search-results m-t-sm" >
 					<ul class="no-style">
 						<li ng-repeat="postView in pe.searchResults" class="clearfix wrapper-xxs font-thin" ng-class="{'opacity-07 bg-light': !pe.cellAddValidation(postView)}">
-		      <span ng-if="postView.imageSmallId" style="height: 50px" class="bg-cover pull-left thumb m-r" ng-style="app.getBackgroundImage(postView, 'sm')">
+		      <span ng-if="postView.imageSmallId" style="height: 50px" class="bg-cover pull-left thumb m-r" ng-style="app.getBackgroundImage(postView, 'medium')">
 		      </span>
 		      <span class="pull-right" ng-if="pe.cellAddValidation(postView)"
 		      tooltip="Adicionar" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="300">

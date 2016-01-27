@@ -1,4 +1,4 @@
-<div id="post-media-box" ng-style="getBackgroundImage2(app.nowReading, 'lg')" class="post-block image-landscape m-t-60" ng-if="!app.isMobile && app.nowReading.imageLandscape && app.nowReading.imageLargeId">
+<div id="post-media-box" ng-style="getBackgroundImage2(app.nowReading, 'large')" class="post-block image-landscape m-t-60" ng-if="!app.isMobile && app.nowReading.imageLandscape && app.nowReading.imageLargeId">
 </div>
 
 <div id="post-content" ng-if="app.nowReading.postId || app.nowReading.id" class="container p-t-xxl" ng-class="{'m-t p-t-70': !app.nowReading.imageLargeId && !app.isMobile, 'p-t-xxl': app.isMobile}"> 
@@ -12,7 +12,7 @@
 					<img ng-src="{{getImageLink(app.nowReading.imageLargeId)}}" class="img-full">
 				</div>
 
-            <!-- <div class="post-image-cover" ng-style="getBackgroundImage2(app.nowReading, 'lg')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
+            <!-- <div class="post-image-cover" ng-style="getBackgroundImage2(app.nowReading, 'large')" ng-if="app.nowReading.imageLandscape && app.nowReading.imageLargeId">
           </div> -->
           <div class="post-block m-t-lg" ng-show="app.nowReading.externalVideoUrl">
           	<embed-video enablejsapi="1" class="video" iframe-id="video1" api="1" player_id="video1" href="{{app.nowReading.externalVideoUrl}}" width=800 height=460 ></embed-video>
