@@ -16,6 +16,8 @@ UPDATE users
   JOIN network ON network.id = users.network_id
 SET networkId = network_id;
 
+UPDATE users JOIN person ON person.user_id = users.id SET users.networkId = person.networkId, users.network_id = person.networkId;
+
 update person_network_role set networkId = network_id;
 update personnetworkregid set networkId = network_id;
 update users set networkId = network_id;

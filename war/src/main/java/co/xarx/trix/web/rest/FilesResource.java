@@ -13,12 +13,14 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.engine.jdbc.LobCreator;
+import org.jboss.resteasy.annotations.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -27,6 +29,10 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 @Path("/files")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -165,39 +171,39 @@ public class FilesResource {
 		return false;
 	}
 
-//	@GET
-//	@Path("{id}/contents")
-//	@Cache(isPrivate = false, maxAge = 31536000)
-//	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response) throws SQLException, IOException {
-//		String hash = fileRepository.findExternalHashById(id);
-//
-//		FileContents file = null;
-//		if (hash == null || hash.isEmpty()) {
-//			file = fileContentsRepository.findOne(id);
-//			if (file == null || file.contents == null) {
-//				return Response.status(Status.NO_CONTENT).build();
-//			}
-//		}
-//
-//		response.setHeader("Pragma", "public");
-//		response.setHeader("Cache-Control", "max-age=2592000");
-//
-//		Calendar c = Calendar.getInstance();
-//		c.setTime(new Date());
-//		c.add(Calendar.DATE, 30);
-//		//HTTP header date format: Thu, 01 Dec 1994 16:00:00 GMT
-//		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
-//		response.setHeader("Expires", o);
-//
-//		if (hash != null && !hash.isEmpty()) {
-//			response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
-//			return Response.ok().build();
-//		} else if (file != null && file.contents != null) {
-//			return Response.ok(file.contents.getBinaryStream(), file.mime).build();
-//		}
-//
-//		return Response.status(Status.NO_CONTENT).build();
-//	}
+	@GET
+	@Path("{id}/contents")
+	@Cache(isPrivate = false, maxAge = 31536000)
+	public Response getFileContents(@PathParam("id") Integer id, @Context HttpServletResponse response) throws SQLException, IOException {
+		String hash = fileRepository.findExternalHashById(id);
+
+		FileContents file = null;
+		if (hash == null || hash.isEmpty()) {
+			file = fileContentsRepository.findOne(id);
+			if (file == null || file.contents == null) {
+				return Response.status(Status.NO_CONTENT).build();
+			}
+		}
+
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control", "max-age=2592000");
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.add(Calendar.DATE, 30);
+		//HTTP header date format: Thu, 01 Dec 1994 16:00:00 GMT
+		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
+		response.setHeader("Expires", o);
+
+		if (hash != null && !hash.isEmpty()) {
+			response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
+			return Response.ok().build();
+		} else if (file != null && file.contents != null) {
+			return Response.ok(file.contents.getBinaryStream(), file.mime).build();
+		}
+
+		return Response.status(Status.NO_CONTENT).build();
+	}
 
 
 }
