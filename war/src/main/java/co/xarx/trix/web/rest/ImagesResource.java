@@ -82,7 +82,7 @@ public class ImagesResource {
 	@GET
 	@Path("/get/{hash}")
 	public Response getImage(@PathParam("hash") String hash, @QueryParam("size") String size, @Context HttpServletResponse response) throws IOException {
-		Image image = imageRepository.findOne(QImage.image.hashs.contains("original", hash));
+		Image image = imageRepository.findOne(QImage.image.originalHash.eq(hash));
 
 		if(image == null) {
 			throw new NotFoundException("Image does not exist");
