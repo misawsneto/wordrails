@@ -37,7 +37,7 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	@DiffIgnore
 	@Version
 	@JsonIgnore
-	@Column(columnDefinition = "int(11) DEFAULT 0")
+	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
 	private int version;
 
 	String tenantId;

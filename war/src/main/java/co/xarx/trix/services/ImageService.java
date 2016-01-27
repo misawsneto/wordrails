@@ -1,11 +1,8 @@
 package co.xarx.trix.services;
 
 
-import co.xarx.trix.domain.QFile;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.BadRequestException;
-import co.xarx.trix.domain.File;
-import co.xarx.trix.domain.Image;
-import co.xarx.trix.domain.Picture;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
@@ -108,8 +105,8 @@ public class ImageService {
 		Image existingImage = null;
 		Set<Image> images = imageRepository.findByFileHashFetchPictures(hash);
 		if (images != null && !images.isEmpty()) {
-			for(Image i : images) {
-				if(i.type.equals(type)) {
+			for (Image i : images) {
+				if (i.type.equals(type)) {
 					existingImage = i;
 				}
 			}
