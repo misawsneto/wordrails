@@ -26,13 +26,13 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 
 	@Override
 	public Post convertFrom(PostView postView) {
-		return postRepository.findOne(postView.id);
+		return postRepository.findOne(postView.postId);
 	}
 
 	@Override
 	public PostView convertTo(Post post) {
 		PostView postView = new PostView();
-		postView.id = post.id;
+		postView.postId = post.id;
 		postView.title = post.title;
 		postView.subheading = post.subheading;
 		postView.slug = post.slug;

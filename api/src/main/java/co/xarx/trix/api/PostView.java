@@ -18,7 +18,7 @@ public class PostView implements Serializable {
 
 	@Id
 	@JsonProperty("postId")
-	public Integer id;
+	public Integer postId;
 
 	public String featuredImageHash;
 
@@ -110,11 +110,11 @@ public class PostView implements Serializable {
 	}
 
 	public Integer getId() {
-		return id;
+		return postId;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.postId = id;
 	}
 
 	public String getSmallHash() {
