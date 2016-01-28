@@ -21,10 +21,10 @@
 
 
             <!-- <div class="" include=" 'tpl/stations_horizontal_cells.html' "></div> -->
-            <div class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.featuredImage}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
-              <div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.featuredImage">
+            <div class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.featuredImageHash}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+              <div class="bottom wrapper-sm bg-stripe bg-gd-dk text-white title-wrapper-bg" ng-if="cell.postView.featuredImageHash">
                 <div class="text-md font-thin text-white ls-sm">{{::cell.postView.title}}</div>
-                <div class="m-t-md" ng-if="cell.postView.featuredImage">
+                <div class="m-t-md" ng-if="cell.postView.featuredImageHash">
                   <div class="display-t-c">
                     <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" class="" title="Ir para o perfil de {{::cell.postView.authorName}}">
                       <div back-img="{{::cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
@@ -56,14 +56,14 @@
                 </div>
               </div>
 
-              <div class="wrapper-sm text-lg font-bold" ng-if="!cell.postView.featuredImage">
+              <div class="wrapper-sm text-lg font-bold" ng-if="!cell.postView.featuredImageHash">
                 {{::cell.postView.title | characters:50}}
               </div>
-              <div class="wrapper-sm clamped" ng-if="!cell.postView.featuredImage">
+              <div class="wrapper-sm clamped" ng-if="!cell.postView.featuredImageHash">
                 {{::cell.postView.snippet}}
               </div>
 
-              <div class="pos-abt bottom-0 wrapper-sm" ng-if="!cell.postView.featuredImage">
+              <div class="pos-abt bottom-0 wrapper-sm" ng-if="!cell.postView.featuredImageHash">
                 <div class="display-t-c">
                   <a ng-click="app.goToProfile($event, cell.postView.authorUsername)" title="Ir para o perfil de {{::cell.postView.authorName}}">
                     <div back-img="{{::cell.postView.authorSmallImageId}}" class="bg-cover bg-img bg-cover-round" title="cell.postView.authorName"></div>
@@ -94,7 +94,7 @@
                 </span>
               </div>
 
-              <div class="cell-wrap" ng-if="cell.postView.featuredImage">
+              <div class="cell-wrap" ng-if="cell.postView.featuredImageHash">
                 <div ng-style="getBackgroundImage(cell.postView, 'medium')"></div>
               </div>
             </div>
