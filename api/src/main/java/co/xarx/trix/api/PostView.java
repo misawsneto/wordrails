@@ -20,7 +20,7 @@ public class PostView implements Serializable {
 	@JsonProperty("postId")
 	public Integer id;
 
-	public String featuredImage;
+	public String featuredImageHash;
 
 	public String smallHash;
 	public String mediumHash;
@@ -477,11 +477,11 @@ public class PostView implements Serializable {
 		this.notify = notify;
 	}
 
-	public String getFeaturedImage() {
-		return featuredImage;
+	public String getFeaturedImageHash() {
+		return featuredImageHash;
 	}
 
-	public void setFeaturedImage(String featuredImage) {
-		this.featuredImage = featuredImage;
+	public void setFeaturedImageHash(String featuredImageHash) {
+		this.featuredImageHash = featuredImageHash;
 	}
 }
