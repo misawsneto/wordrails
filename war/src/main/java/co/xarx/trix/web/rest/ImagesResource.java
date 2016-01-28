@@ -1,30 +1,27 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.domain.Image;
-import co.xarx.trix.domain.QImage;
-import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
-import com.google.common.collect.Lists;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
 
 @Path("/images")
 @Consumes(MediaType.WILDCARD)
@@ -36,14 +33,7 @@ public class ImagesResource {
 	@Autowired
 	private ImageService imageService;
 	@Autowired
-	private ImageRepository imageRepository;
-
-	@Context
-	private HttpServletRequest request;
-	@Context
-	private UriInfo uriInfo;
-
-	@Autowired private AmazonCloudService amazonCloudService;
+	private AmazonCloudService amazonCloudService;
 
 	@POST
 	@Path("/upload")
@@ -84,15 +74,18 @@ public class ImagesResource {
 	@GET
 	@Path("/get/{hash}")
 	public Response getImage(@PathParam("hash") String hash, @QueryParam("size") String size, @Context HttpServletResponse response) throws IOException {
-		List<Image> images = Lists.newArrayList(imageRepository.findAll(QImage.image.originalHash.eq(hash)));
 
-		if(images == null || images.isEmpty()) {
+		Map<String, String> hashes;
+		try {
+			hashes = imageService.getHashes(hash);
+		} catch (EntityNotFoundException e) {
 			throw new NotFoundException("Image does not exist");
 		}
 
-		hash = images.get(0).hashs.get(size);
+		hash = hashes.get(size);
 
-		if(StringUtils.isEmpty(hash)) return Response.status(Response.Status.NO_CONTENT).build();
+		if(StringUtils.isEmpty(hash))
+			return Response.status(Response.Status.NO_CONTENT).build();
 
 		response.setHeader("Pragma", "public");
 		response.setHeader("Cache-Control", "max-age=2592000");
@@ -103,11 +96,7 @@ public class ImagesResource {
 		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
 		response.setHeader("Expires", o);
 
-		if (hash != null && !hash.isEmpty()) {
-			response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
-			return Response.ok().build();
-		}
-
-		return Response.status(Response.Status.NO_CONTENT).build();
+		response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
+		return Response.ok().build();
 	}
 }

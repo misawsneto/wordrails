@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -33,36 +32,25 @@ public class SessionConfig extends CachingConfigurerSupport {
 		RedisTemplate redisTemplate = new RedisTemplate();
 		redisTemplate.setConnectionFactory(jedisConnectionFactory());
 		redisTemplate.setKeySerializer(new StringRedisSerializer());
-//		redisTemplate.setKeySerializer(new Jackson2JsonRedisSerializer(TenantKey.class));
 		return redisTemplate;
 	}
 
-//	@Bean
-//	public KeyGenerator keyGenerator() {
-//		return (o, method, objects) -> {
-//			// This will generate a unique key of the class name, the method name,
-//			// and all method parameters appended.
-//			StringBuilder sb = new StringBuilder();
-//			sb.append(o.getClass().getName());
-//			sb.append(method.getName());
-//			for (Object obj : objects) {
-//				sb.append(obj.toString());
-//			}
-//			return sb.toString();
-//		};
-//	}
-
 	@Bean
 	public CacheManager cacheManager() {
-		Map<String, RedisTemplate> templates = new HashMap<>();
+		Map<String, Map<RedisTemplate, Integer>> templates = new HashMap<>();
+
 		RedisTemplate personRedisTemplate = redisTemplate();
 		personRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(Person.class));
 
 		RedisTemplate userRedisTemplate = redisTemplate();
 		userRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(User.class));
 
-		templates.put("person", personRedisTemplate);
-		templates.put("user", userRedisTemplate);
+		RedisTemplate imageRedisTemplate = redisTemplate();
+		imageRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(Map.class));
+
+		templates.put("person", new HashMap<RedisTemplate, Integer>(){{put(personRedisTemplate, 60);}});
+		templates.put("user", new HashMap<RedisTemplate, Integer>(){{put(userRedisTemplate, 60);}});
+		templates.put("image", new HashMap<RedisTemplate, Integer>(){{put(imageRedisTemplate, 600);}});
 
 		return new MultitenantCacheManager(templates);
 	}
