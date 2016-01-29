@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {
-		@UniqueConstraint(columnNames={"taxonomy_id","name"})
+		@UniqueConstraint(columnNames={"taxonomy_id","name_parent"})
 })
 public class Term extends BaseEntity implements Serializable, Loggable {
 	private static final long serialVersionUID = 7891255759575029731L;
@@ -29,6 +29,8 @@ public class Term extends BaseEntity implements Serializable, Loggable {
 
 	@Size(min=1, max=100)
 	public String name;
+
+	public String name_parent;
 
 	@DiffIgnore
 	@JsonBackReference("cells")
@@ -72,6 +74,8 @@ public class Term extends BaseEntity implements Serializable, Loggable {
 			taxonomyId = taxonomy.id;
 			taxonomyName = taxonomy.name;
 		}
+
+		name_parent = name + "_" + (parent != null ? parent.id : "0");
 	}
 	
 	@PreUpdate
@@ -80,6 +84,8 @@ public class Term extends BaseEntity implements Serializable, Loggable {
 			taxonomyId = taxonomy.id;
 			taxonomyName = taxonomy.name;
 		}
+
+		name_parent = name + "_" + (parent != null ? parent.id : "0");
 	}
 
 	@Override

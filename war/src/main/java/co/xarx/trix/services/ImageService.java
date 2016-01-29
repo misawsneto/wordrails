@@ -7,14 +7,20 @@ import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.ImageUtil;
+import com.google.common.collect.Lists;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,6 +39,18 @@ public class ImageService {
 		this.amazonCloudService = amazonCloudService;
 		this.fileRepository = fileRepository;
 		this.pictureRepository = pictureRepository;
+	}
+
+
+	@Cacheable(value = "image", key = "#p0")
+	public Map<String, String> getHashes(String originalHash) throws EntityNotFoundException {
+		List<Image> images = Lists.newArrayList(imageRepository.findAll(QImage.image.originalHash.eq(originalHash)));
+
+		if (CollectionUtils.isEmpty(images)) {
+			throw new EntityNotFoundException("Image does not exist");
+		} else {
+			return images.get(0).hashs;
+		}
 	}
 
 	@Transactional

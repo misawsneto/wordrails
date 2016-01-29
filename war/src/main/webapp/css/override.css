@@ -2944,15 +2944,16 @@ md-backdrop.md-opaque.ng-leave {
       z-index: 58;
     }
 
-  #user-profile md-sidenav {
+  #user-profile md-sidenav, #publications md-sidenav{
     width: 450px;
     min-width: 450px;
     max-width: 450px;
   }
+
 }
 
-label {
-  margin: margin;
+.t-t-n {
+  text-transform: none;
 }
 
  /* /general */
@@ -2995,6 +2996,7 @@ label {
 #settings-network .animated,
 #settings-stations-perspectives .animated,
 #user-stats .animated,
+#network-stats .animated,
 #settings-stations-users .animated,
 #settings-stations-categories .animated,
 #settings-categories .animated,
@@ -6865,7 +6867,7 @@ ul.normal-wrap{
   color: #2a3744;
 }
 
-.comment-tab {
+.r-comment-tab {
   background: #fff;
   height: 200px;
   border-radius: 10px;
@@ -6875,7 +6877,7 @@ ul.normal-wrap{
   margin-bottom: 41px;
 }
 
-.comment-tab textarea {
+.r-comment-tab textarea {
   border: medium none;
   background: transparent;
   height: 159px;
@@ -6886,27 +6888,27 @@ ul.normal-wrap{
   /* letter-spacing: 0.05em; */
 }
 
-.comment-tab textarea::-webkit-input-placeholder {
+.r-comment-tab textarea::-webkit-input-placeholder {
   color: #2a3744;
   opacity: 1;
 }
 
-.comment-tab textarea:-moz-placeholder {
+.r-comment-tab textarea:-moz-placeholder {
   color: #2a3744;
   opacity: 1;
 }
 
-.comment-tab textarea::-moz-placeholder {
+.r-comment-tab textarea::-moz-placeholder {
   color: #2a3744;
   opacity: 1;
 }
 
-.comment-tab textarea:-ms-input-placeholder {
+.r-comment-tab textarea:-ms-input-placeholder {
   color: #2a3744;
   opacity: 1;
 }
 
-.comment-tab span {
+.r-comment-tab span {
   /* color: #6A7A89; */
   /* letter-spacing: 0.05em; */
   background: url(../images/other/arrow.png) no-repeat center left;
@@ -6930,7 +6932,7 @@ ul.normal-wrap{
   color: #2f7af8;
 }
 
-.comments-info li {
+.r-comments-info li {
   margin-bottom: 36px;
 }
 
@@ -6953,7 +6955,7 @@ ul.normal-wrap{
   color: #2a3744;
 }
 
-.comments-info li h4 span {
+.r-comments-info li h4 span {
   font-size: 13px;
   /* color: #6A7A89; */
   letter-spacing: 0.1em;

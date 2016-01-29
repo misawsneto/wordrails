@@ -1,4 +1,58 @@
 <div id="publications" class="hbox hbox-auto-xs">
+
+<md-sidenav id="comments-list" class="md-sidenav-right md-whiteframe-z2 pos-fix" md-component-id="comments-list">
+  <md-toolbar class="bg-header">
+    <h2 class="md-toolbar-tools bg-header-text"><i class="mdi mdi-comment-text-outline text-xl p-r-sm"></i>Comentários</h2>
+  </md-toolbar>
+  <md-content class="pos-abt bottom-0 right-0 left-0" style="top:64px">
+    <div id="post-options-sidebar" class="vbox">
+      <div class="row-row">
+        <div class="cell b-l">
+          <div class="cell-inner comments">
+          	<div ng-if="comments && comments.length" ng-class="{'m-t p-t b-t': (commentFocused || (newComment.body) && app.isLogged)}">
+				    	<ul class="comments-info">
+				    		<li ng-repeat="comment in comments" class="b-b p-b p-l p-r">
+				    			<div class="display-t-c pull-left m-t-xs">
+				            <div back-img="{{comment.author.imageSmallId}}" class="bg-cover bg-img bg-cover-round" title="{{::comment.author.name}}"></div>
+				          </div>
+				    			<h4 class="text-u-c font-bold m-l-xxl">{{comment.author.name}}
+				            <span class="text-muted font-thin text-base t-t-n m-b-sm block" data-livestamp="{{comment.date/1000}}">{{::comment.date | fromNow}}</span>
+				          </h4>
+				    			<p>{{comment.body}}</p>
+				    			<!-- <div class="comment-meta">
+				    				<span><a href="#">UpVote</a></span>
+				    				<span><a href="#">Reply</a></span>
+				    			</div> -->
+				    		</li>
+
+				    		<!-- <li class="sub-comment">
+				    			<img src="images/other/3.png" alt="">
+				    			<h4>Yuyu Chen<span><a href="#">www.themeforest.net</a></span></h4>
+				    			<p>Warren Buffett knows a thing or three about becoming wealthy and successful, and the Oracle of Omaha is not averse to handing out mostly excellent advice to others who'd like to follow in his footsteps.</p>
+				    			<div class="comment-meta">
+				    				<span><a href="#">UpVote</a></span>
+				    				<span><a href="#">Reply</a></span>
+				    			</div>
+				    		</li>
+
+				    		<li>
+				    			<img src="images/other/4.png" alt="">
+				    			<h4>Cory Collins<span>Marketing Specialist</span></h4>
+				    			<p>Warren Buffett knows a thing or three about becoming wealthy and successful, and the Oracle of Omaha is not averse to handing out mostly excellent advice to others who'd like to follow in his footsteps.</p>
+				    			<div class="comment-meta">
+				    				<span><a href="#">UpVote</a></span>
+				    				<span><a href="#">Reply</a></span>
+				    			</div>
+				    		</li> -->
+				    	</ul>
+				    </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-content>
+</md-sidenav>
+
 	<div class="header-custom box-shadow">
 		<div class="block-1000 m-auto m-b-xxl text-center">
 			<p class="h1 font-bold">Publicações</p>
@@ -18,20 +72,9 @@
 		</md-button>
 		<div id="publications-list" class="w-full panel panel-card animated fadeIn material-shadow-light" infinite-scroll="paginate()" infinite-scroll-distance="1">
 			<div class="wrapper form-group">
-				<!-- <div class="display-t-c col-sm-5 pull-in m-r">
-						<input ng-model="pe.searchQuery" ng-class="{'input-lg': !app.isMobile}" class="form-control material-shadow-light b-none" placeholder="Busque por notícias" />
-				</div> -->
-				<!-- <div class="display-t-c col-sm-5 m-r md-form-group float-label">
-							<i class="mdi mdi-magnify text-muted text-shadow-none pos-abt text-lg m-t-xs"></i>
-				          <input ng-class="{'input-lg': !app.isMobile}" class="m-t-n md-input text-lg ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstName" required="" tabindex="0" aria-required="true" aria-invalid="true" style="">
-				          <label>
-				          	<i class="mdi mdi-magnify"></i>
-				          	Busque por notícias</label>
-				        </div> -->
 
-	      <md-input-container class="text-lg pull-left w-full">
-	        <label><i class="mdi mdi-magnify"></i>
-					          	Busque por notícias</label>
+	      <md-input-container class="text-lg pull-left w-full p-l-xxl p-r-xxl">
+	        <label><i class="mdi mdi-magnify"></i>Busque por notícias</label>
 	        <input name="clientName" ng-model="project.clientName">
 	      </md-input-container>
         <!-- <div class="pull-right pos-rlt" style="cursor: pointer; padding: 0px 10px 15px 10px;">
@@ -77,13 +120,13 @@
 					<div ng-class="{'b-t': !$first}"></div>
 					<div class="clear p-t-sm p post-list news-item">
 						<!-- image -->
-						<a class="block-image m-l m-t" ng-if="publication.mediumId" ui-sref="app.read({'slug': publication.slug})">
-							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'md')">
+						<a class="block-image m-l m-t" ng-if="publication.featuredImageHash" ui-sref="app.read({'slug': publication.slug})">
+							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'medium')">
 							</div>
 						</a>
 						<!-- /image -->
 						<!-- /content -->
-						<div ng-class="{'content-block': publication.mediumId}">
+						<div ng-class="{'content-block': publication.featuredImageHash}">
 							<div class="m-b-sm" ng-if="publication.topper">
 								<span class="no-radius normal p-xxs topper text-md bg-custom-primary">{{publication.topper}}</span>
 							</div>
@@ -94,7 +137,7 @@
 							</div>
 							<div class="p-t display-t-c v-middle inline">
 								<span class="readingTime text-muted">{{publication.date | fromNow2}}</span>
-								<span class="readingTime text-muted p-l text-md">
+								<span class="readingTime text-muted p-l text-md" ng-click="showComments(publication.postId)">
 									<i class="mdi mdi-comment-text-outline"></i> 
 									{{publication.commentsCount}}</span>
 									<span class="readingTime text-muted p-l text-md">

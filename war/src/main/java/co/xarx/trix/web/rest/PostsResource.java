@@ -180,12 +180,13 @@ public class PostsResource {
 	                                               @QueryParam("size") Integer size) {
 
 		if (q == null) {
-			ContentResponse<SearchView> response = new ContentResponse<>();
-			response.content = new SearchView();
-			response.content.hits = 0;
-			response.content.posts = new ArrayList<>();
-
-			return response;
+//			ContentResponse<SearchView> response = new ContentResponse<>();
+//			response.content = new SearchView();
+//			response.content.hits = 0;
+//			response.content.posts = new ArrayList<>();
+//
+//			return response;
+			q = "";
 		}
 
 		Person person = authProvider.getLoggedPerson();

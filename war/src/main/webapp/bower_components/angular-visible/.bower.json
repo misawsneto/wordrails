@@ -1,0 +1,44 @@
+{
+  "name": "angular-visible",
+  "homepage": "https://github.com/sculove/angular-visible",
+  "authors": [
+    "sculove <sculove@gmail.com>"
+  ],
+  "description": "Check if DOM elements are out of window. ",
+  "keywords": [
+    "visible",
+    "angular",
+    "check",
+    "lazy",
+    "lazyloading"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "demo",
+    "src",
+    "img",
+    ".*",
+    "Gruntfile.js",
+    "*.md",
+    "*.json"
+  ],
+  "devDependencies": {
+    "angular": "~1.3.8",
+    "jquery": "~2.1.3"
+  },
+  "_release": "3f98d3920e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "3f98d3920ee9073982a11153d73f81ab55b75330"
+  },
+  "_source": "git://github.com/sculove/angular-visible.git",
+  "_target": "*",
+  "_originalSource": "angular-visible",
+  "_direct": true
+}

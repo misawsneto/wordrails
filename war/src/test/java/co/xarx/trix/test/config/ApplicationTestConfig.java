@@ -2,7 +2,6 @@ package co.xarx.trix.test.config;
 
 import co.xarx.trix.aspect.MultitenantRepositoryAspect;
 import co.xarx.trix.aspect.ProfilerAspect;
-import co.xarx.trix.config.spring.PropertyConfig;
 import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.PostViewMap;
@@ -12,11 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Import;
 
 @Configuration
 @EnableAspectJAutoProxy
-@Import({PropertyConfig.class})
 //@ComponentScan(
 //		basePackages = {"co.xarx.trix.aspect"},
 //		excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "co.xarx.trix.config.spring.*")

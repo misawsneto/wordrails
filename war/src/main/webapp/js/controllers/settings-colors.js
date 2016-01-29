@@ -61,7 +61,7 @@ app.controller('SettingsColorsCtrl', ['$scope', '$log', '$timeout', '$mdDialog',
 			var main = $scope.network.mainColor = rbgToHex2($("#paint-main").css('backgroundColor'))
 
 			trix.putNetwork($scope.network).success(function(response){
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 				$scope.app.getInitData();
 				$('style#custom-style').remove();
 				$timeout(function() {

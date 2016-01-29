@@ -257,6 +257,10 @@ angular.module('app')
                 name: 'angular-carousel',
                 files: ['../bower_components/angular-carousel/dist/angular-carousel.min.css', '../bower_components/angular-carousel/dist/angular-carousel.min.js']
               }
+              ,{
+                name: 'angular-inview',
+                files: ['../bower_components/angular-inview/angular-inview.js?']
+              }
           ]
       });
   }])

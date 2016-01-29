@@ -1,6 +1,6 @@
 package co.xarx.trix.test.config;
 
-import co.xarx.trix.config.RepositoryFactoryBean;
+import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

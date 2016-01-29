@@ -30,7 +30,7 @@ angular.module('app')
                   resolve: {
                       deps: ['$ocLazyLoad',
                       function( $ocLazyLoad ){
-                          return $ocLazyLoad.load(['720kb.socialshare', 'videosharing-embed', 'toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll']).then(function(){
+                          return $ocLazyLoad.load(['720kb.socialshare', 'videosharing-embed', 'toaster', 'afkl.lazyImage', 'angularRipple', 'infinite-scroll','../bower_components/livestamp/livestamp.min.js', 'angular-inview']).then(function(){
                             // you might call this after your module initalization
                               angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 1000)
                           });

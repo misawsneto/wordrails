@@ -8,27 +8,58 @@
 		<div class="panel material-shadow-light panel-card block-1000 m-auto" ng-hide="creating || editing">
 			<div class="panel-heading h4 wrapper-md">
 				<a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span>Permissões da estação <strong>{{stationName}}</strong></span>
+				<div class="pos-abt" ng-if="showProgress" layout="row" layout-sm="column" layout-align="space-around" style="transform: scale(0.5); right: 0; margin:-65px 5px 0 0;">
+		      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+		    </div>
 			</div>
 			<div class="panel-body p-n" style="min-height: 200px;">
 				<div class="row wrapper">
-					<div class="col-sm-6 m-b-xs">
-						<select class="form-control w inline v-middle" ng-model="bulkActionSelected" ng-change="selectBulkAction()"
-						ng-options="action as action.name for action in bulkActions track by action.id">
-					</select>
-					<button ng-disabled="bulkActionSelected.id == 0" ng-click="openBulkActionsDialog()" class="btn btn-default">Aplicar</button>                
-				</div>
-				<div class="col-sm-1">
-				</div>
-				<div class="col-sm-5">
-					<!-- <div class="input-group"> -->
-					<input type="text" class="input-md w-full form-control" placeholder="Busque por usuário, nome ou email">
-							<!-- <span class="input-group-btn">
-								<button class="btn btn-sm text-lg btn-default" type="button">Buscar</button>
-							</span> -->
-							<!-- </div> -->
+					<div class="col-sm-6">
+						<div class="md-form-group m-t-n-md float-label">
+							<!-- <i class="mdi mdi-magnify text-muted text-shadow-none pos-abt text-lg m-t-xs"></i> -->
+		          <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstName" required="" tabindex="0" aria-required="true" aria-invalid="true" style="">
+		          <label>
+		          <i class="mdi mdi-magnify"></i>
+		          Busque por usuário, nome ou email</label>
+		        </div>
+	        </div>
+					<!-- persons pagination -->
+					<div class="col-sm-4">
+						<div ng-if="personsRoles">
+							<span class="font-bold">
+								{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
+							</span>
+							<span class="p-l-xs p-r-xs">de</span> 
+							<span class="p-r font-bold">
+								{{rolesCount}}
+							</span>
+							<div class="inline">
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('left')" ng-disabled="beginning">
+								<span class="mdi mdi-chevron-left"></span></button>
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('right')" ng-disabled="allLoaded || rolesCount <= window">
+								<span class="mdi mdi-chevron-right"></span></button>
+			        </div>
 						</div>
 					</div>
-					<div class="table-responsive o-visible text-md">
+				<!-- /persons pagination -->
+				<!-- actions -->
+					<div class="col-sm-2 m-b-xs text-right m-t-n-sm">
+		        <md-menu md-position-mode="target-right target md-neutral-theme">
+		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r">
+		          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
+		          </button>
+		          <md-menu-content width="4" >
+		            <md-menu-item ng-repeat="action in bulkActions">
+		              <md-button ng-click="selectBulkAction(action.id); openBulkActionsDialog($event);">
+                    {{action.name}}
+		              </md-button>
+		            </md-menu-item>
+		          </md-menu-content>
+		        </md-menu>
+					</div>
+				<!-- /actions -->
+				</div>
+					<div class="table-responsive o-visible text-base">
 						<table class="table b-t b-light">
 							<thead>
 								<tr>
@@ -39,18 +70,18 @@
 										</label>
 									</th>
 									<th>usuário</th>
-									<th>nome</th>
-									<th>email</th>
-									<th class="text-center">permissão</th>
-									<th class="text-center">último login</th>
-									<th style="width:30px;"></th>
+									<th style="width: 15%" class="text-center">permissão</th>
+									<th style="width: 18%">nome</th>
+									<th style="width: 20%">email</th>
+									<th style="width: 12%" class="text-center">último login</th>
+									<th style="width:40px;"></th>
 								</tr>
 							</thead>
 							<tbody>
 								<!-- <tr ng-repeat="role in personsRoles"> -->
 								<tr ng-repeat="role in personsRoles" ng-click="loadPerson(role.person)">
 									<td>
-										<label class="md-check">
+										<label class="md-check" ng-if="role.person.id != app.initData.person.id">
 											<input type="checkbox" ng-model="role.selected" ng-click="app.stopPropagation($event)">
 											<i class="blue"></i>
 										</label>
@@ -61,23 +92,13 @@
 										title="{{role.person.name}}"></div>
 										{{role.person.username}}
 									</td>
+									<td class="text-center">{{role.admin ? 'admin': (role.editor ? 'editor' : role.writer ? 'escritor' : 'leitor')}}</td>
 									<td>{{role.person.name}}</td>
 									<td>{{role.person.email}}</td>
-									<td class="text-center">{{role.admin ? 'admin': (role.editor ? 'editor' : role.writer ? 'escritor' : 'leitor')}}</td>
 									<td class="text-center" ng-if="!role.person.lastLogin"> - </td>
 									<td class="text-center" ng-if="role.person.lastLogin">{{role.person.lastLogin | fromNow3}}</td>
-									<td>
-										<div class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-											<a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-dots-vertical mdi" dropdown-toggle>
-											</a>
-											<!-- dropdown -->
-											<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
-												<li ng-if="app.networkAdmin" > <a href> Reconfigurar a senha </a> </li>
-												<!-- <li class="divider"></li> -->
-												<li> <a ng-click="openDeletePersonRole(role.id);"> Remover permissões </a> </li>
-											</ul>
-											<!-- / dropdown -->
-										</div>
+									<td style="padding:10px 0 0 0">
+										<a ng-if="role.person.id != app.initData.person.id" class="wrapper-sm p-t-lg" ng-click="openDeletePersonRole(role.id);app.stopPropagation($event);"> <i class="mdi mdi-delete"></i> </a>
 									</td>
 								</tr>
 							</tbody>
@@ -168,7 +189,7 @@
 					<button ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': null, 'userId': null})"
 					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
 
-					<button ng-click="createPerson()"
+					<button ng-click="createPerson(ev)"
 					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
 				</div>
 			</div>
@@ -251,139 +272,111 @@
 </div>
 <!--  /wrapper -->
 
-<!-- create user -->
-<md-button ng-hide="creating || editing"
-id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
-tooltip="Novo usuário" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
-aria-label="Novo usuário">
-<i class="mdi mdi-plus"></i>
-</md-button>
+	<!-- create user -->
+	<md-button ng-hide="creating || editing"
+	id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+	ui-sref="app.settings.stationusers({'stationId':stationId, 'newUser': true})" ng-show="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+	tooltip="Novo usuário" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+	aria-label="Novo usuário">
+	<i class="mdi mdi-plus"></i>
+	</md-button>
 
-	<!-- <nav id="post-fab-button" template-url="ng-mfb-menu-md.tpl.html" 
-                label="Publicar"
-                 mfb-menu position="{{chosen.position}}" effect="{{chosen.effect}}"
-                 active-icon="mdi mdi-send" resting-icon="mdi mdi-plus"
-                 ng-mouseenter="hovered()" ng-mouseleave="hovered()"
-                 toggling-method="{{chosen.method}}" menu-state="menuState" main-action="publishPost($event)"
-                 ng-class="{'sidebar-opened': !app.hidePostOptions}">
-            
-              <button template-url="ng-mfb-button-md.tpl.html"
-                 mfb-button icon="{{button.icon}}" ng-click="doAction(button.action($event))"
-                 label="{{button.label}}" ng-repeat="button in buttons"></button>
-               </nav> -->
-               <!-- /options button -->
 
-             </div>
-             <!-- /settings-stations-users -->
+</div>
+<!-- /settings-stations-users -->
 
-             <script type="text/ng-template" id="conflicting_person.html">
-             	<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-             	<div class="splash-content text-center" ng-cloak>
-             		<div>
-             			<div class="row">
-             				<div class="col-xs-8 col-xs-offset-2">
+ 	<script type="text/ng-template" id="conflicting_person.html">
+		<md-dialog aria-label="Adicionar notícia">
+			<md-content>
+	  		<div class="wrapper">
+					<div class="h3 m-b-lg text-center">
+						Esta rede já possui um usuário cadastrado <br> com estes dados!
+					</div>
+					<div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
+					class="bg-cover bg-img-lg bg-cover-round m-auto" 
+					title="{{app.conflictingData.conflictingPerson.name}}">
+					</div>
+					<div class="h3 m-b-xs text-center">{{app.conflictingData.conflictingPerson.name}}</div>
+					<div class="h4 m-b-xs text-center">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
+					<div class="h4 m-b-lg text-center" ng-if="app.conflictingData.conflictingStationRole">
+						Permissão: <strong> {{app.conflictingData.conflictingStationRole.admin ? 'administrador': (app.conflictingData.conflictingStationRole.editor ? 'editor' : app.conflictingData.conflictingStationRole.writer ? 'escritor' : 'leitor')}}</strong>
+					</div>
+					<div class="h4 m-b text-center" ng-hide="app.conflictingData.conflictingStationRole">
+						Este usuário já está cadastrado.<br>Deseja dar permissões de <strong>
+						{{app.conflictingData.role == 'ADMIN' ? 'administrador': (app.conflictingData.role == 'EDITOR' ? 'editor' : app.conflictingData.role == 'WRITER' ? 'escritor' : 'leitor')}}</strong> nesta estação?
+					</div>
+					<div class="p-l-lg p-r-lg text-center m-t-lg text-lg">
+						<button ng-click="app.addConflictingToStation();" md-ink-ripple class="md-btn md-flat btn-fw"
+						ng-if="!app.conflictingData.conflictingStationRole">Confirmar
+						</button>
+						<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">
+							Fechar
+						</button>
+					</div>
+				</div>
+		  </md-content>
+		</md-dialog>
+ 	</script>
 
-             					<div class="h3 m-b-lg m-t-lg">
-             						Esta rede já possui um usuário cadastrado com estes dados!
-             					</div>
+ 	<script type="text/ng-template" id="confirm_delete_person.html">
+ 		<md-dialog aria-label="delete station role">
+			<md-content>
+				<div class="wrapper">
+					<div class="text-center w-xxl text-lg">
+						Tem certeza que deseja remover as permissões deste usuário a esta estação?
+						Atenção! Este usuário não será desativado. Para desativar este usuário, entre em contato com o administrador da rede. 
+					</div>
+					<div class="">
+						<div class="p-l-lg p-r-lg text-center m-t-lg text-lg">
+							<button ng-click="app.deletePersonRole();" md-ink-ripple class="md-btn md-flat btn-fw"
+							ng-if="!app.conflictingData.conflictingStationRole">Confirmar
+							</button>
+							<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">
+								Fechar
+							</button>
+						</div>
+					</div>
+				</div>
+			</md-content>
+		</md-dialog>
+ 	</script>
 
-             					<div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
-             					class="bg-cover bg-img-lg bg-cover-round m-auto" 
-             					title="{{app.conflictingData.conflictingPerson.name}}"></div>
-             					<div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
-             					<div class="h4 m-b-xs">{{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}</div>
-           						<div class="h4 m-b-lg" ng-if="app.conflictingData.conflictingStationRole">
-           							Permissão: <strong> {{app.conflictingData.conflictingStationRole.admin ? 'administrador': (app.conflictingData.conflictingStationRole.editor ? 'editor' : app.conflictingData.conflictingStationRole.writer ? 'escritor' : 'leitor')}}</strong>
+ 	<script type="text/ng-template" id="confirm_no_person_selected.html">
+ 		<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+ 		<div class="splash-content text-center" ng-cloak>
+ 			<div class="row m-t-xxl">
+ 				<div class="col-xs-6 col-xs-offset-3 text-2x m-t-xxl">
+ 					Nenhum usuário foi selecionado.
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</script>
 
-           						</div>
-             				</div>
-             			</div>
-             			<div class="row">
-             				<div class="col-xs-6 col-xs-offset-3">
-
-             					<div class="h4 m-b" ng-hide="app.conflictingData.conflictingStationRole">
-             						Este usuário já está cadastrado. Deseja dar permissões de <strong>
-             						{{app.conflictingData.role == 'ADMIN' ? 'administrador': (app.conflictingData.role == 'EDITOR' ? 'editor' : app.conflictingData.role == 'WRITER' ? 'escritor' : 'leitor')}}?</strong> nesta estação?</div>
-
-             						<div class="text-color p-l-lg p-r-lg" ng-hide="app.conflictingData.conflictingStationRole">
-             							<button ng-click="app.addConflictingToStation();" angular-ripple type="submit" class="m-t-md btn-default btn text-lg text-u-c btn-block ">
-             								Sim
-             							</button>
-             							<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
-             								Não
-             							</button>
-             						</div>
-             					</div>
-             				</div>
-             			</div>
-             		</div>
-             	</script>
-
-             	<script type="text/ng-template" id="confirm_delete_person.html">
-             		<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-             		<div class="splash-content text-center" ng-cloak>
-             			<div>
-             				<div class="row">
-             					<div class="col-xs-8 col-xs-offset-2">
-             						<div class="">
-             							Tem certeza que deseja remover as permissões deste usuário a esta estação? <br>
-             							Atenção! Este usuário não será excluído. Para excluir este usuário, entre em contato com o administrador da rede. 
-             						</div>
-             					</div>
-             				</div>
-             				<div class="row">
-             					<div class="col-xs-6 col-xs-offset-3">
-             						<div class="p-lg text-color wrapper-lg">
-             							<button ng-click="app.deletePersonRole();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
-             								Sim
-             							</button>
-             							<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
-             								Não
-             							</button>
-             						</div>
-             					</div>
-             				</div>
-             			</div>
-             		</div>
-             	</script>
-
-             	<script type="text/ng-template" id="confirm_no_person_selected.html">
-             		<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-             		<div class="splash-content text-center" ng-cloak>
-             			<div class="row m-t-xxl">
-             				<div class="col-xs-6 col-xs-offset-3 text-2x m-t-xxl">
-             					Nenhum usuário foi selecionado.
-             				</div>
-             			</div>
-             		</div>
-             	</script>
-
-             	<script type="text/ng-template" id="confirm_bulk_delete_persons.html">
-             		<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
-             		<div class="splash-content text-center" ng-cloak>
-             			<div>
-             				<div class="row">
-             					<div class="col-xs-8 col-xs-offset-2">
-             						<div class="">
-             							Tem certeza que deseja remover as permissões dos usuários selecionados para esta estação?
-             							<br>
-             							Atenção! Os usuários selecionados não serão excluídos da rede. Para excluir um usuário, entre em contato com o administrador da rede. 
-             						</div>
-             					</div>
-             				</div>
-             				<div class="row">
-             					<div class="col-xs-6 col-xs-offset-3">
-             						<div class="p-lg text-color wrapper-lg">
-             							<button ng-click="app.applyBulkActions();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
-             								Sim
-             							</button>
-             							<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
-             								Não
-             							</button>
-             						</div>
-             					</div>
-             				</div>
-             			</div>
-             		</div>
-             	</script>
+ 	<script type="text/ng-template" id="confirm_bulk_delete_persons.html">
+ 		<a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+ 		<div class="splash-content text-center" ng-cloak>
+ 			<div>
+ 				<div class="row">
+ 					<div class="col-xs-8 col-xs-offset-2">
+ 						<div class="">
+ 							Tem certeza que deseja remover as permissões dos usuários selecionados para esta estação?
+ 							<br>
+ 							Atenção! Os usuários selecionados não serão desativados da rede. Para desativar um usuário, entre em contato com o administrador da rede. 
+ 						</div>
+ 					</div>
+ 				</div>
+ 				<div class="row">
+ 					<div class="col-xs-6 col-xs-offset-3">
+ 						<div class="p-lg text-color wrapper-lg">
+ 							<button ng-click="app.applyBulkActions();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
+ 								Sim
+ 							</button>
+ 							<button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
+ 								Não
+ 							</button>
+ 						</div>
+ 					</div>
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</script>

@@ -1,4 +1,4 @@
-package co.xarx.trix.config;
+package co.xarx.trix.config.web;
 
 import org.jboss.resteasy.plugins.spring.SpringContextLoaderSupport;
 import org.springframework.web.context.ConfigurableWebApplicationContext;

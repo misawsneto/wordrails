@@ -10,14 +10,14 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 		$scope.app.deleteStation = function(){
 			trix.deleteStation($scope.deleteStationId).success(function(){
 				$scope.app.getInitData();
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			});
 		}
 
 		$scope.setMainStation = function(station){
 			trix.setMainStation(station.id, station.main).success(function(){
 				$scope.app.getInitData();
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			})
 		}
 	}])
@@ -49,7 +49,7 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
       }
       trix.putStation($scope.station).success(function(){
         $scope.app.getInitData();
-        $scope.app.showSuccessToast('Alterações realizadas com successo.')
+        $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
       })
 		}
 
@@ -58,7 +58,7 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
 				trix.postStation($scope.station).success(function(response){
 					trix.getStation(response).success(function(responseStation){
 						$scope.app.getInitData();
-						$scope.app.showSuccessToast('Estação criada com successo.')
+						$scope.app.showSuccessToast('Estação criada com sucesso.')
 						$scope.creating = false;
 						$scope.station = responseStation;
 						$state.go('app.settings.stationconfig', {'stationId': response}, {location: 'replace', inherit: false, notify: false, reload: false})
@@ -117,21 +117,66 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
     $scope.editing = true;
     $scope.parentCategory = null;
 
-    $scope.showAddCategorySplash = function(parent){
+    $scope.thisStation = {}
+    $scope.app.initData.stations.forEach(function(station, index){
+      if($state.params.stationId == station.id){
+        $scope.stationName = station.name;
+        $scope.stationId = station.id;
+        $scope.thisStation = station;
+      }
+    });
+
+    $scope.showAddCategorySplash = function(parent, ev){
       $scope.parentCategory = parent;
-      $scope.app.openSplash('add_category.html')
+      $mdDialog.show({
+          controller: DialogController,
+          templateUrl: 'add_category.html',
+          targetEvent: ev,
+          onComplete: function(){}
+        })
+        .then(function(answer) {
+        //$scope.alert = 'You said the information was "' + answer + '".';
+        }, function() {
+        //$scope.alert = 'You cancelled the dialog.';
+      });
     }
 
     $scope.app.toDeleteCategory = null;
-    $scope.showDeleteCategorySplash = function(category){
+    $scope.showDeleteCategorySplash = function(category, ev){
       $scope.app.toDeleteCategory = category;
-      $scope.app.openSplash('delete_category.html')
+      $scope.parentCategory = parent;
+      $mdDialog.show({
+          controller: DialogController,
+          templateUrl: 'delete_category.html',
+          targetEvent: ev,
+          onComplete: function(){}
+        })
+        .then(function(answer) {
+        //$scope.alert = 'You said the information was "' + answer + '".';
+        }, function() {
+        //$scope.alert = 'You cancelled the dialog.';
+      });
     }
+
+    function DialogController(scope, $mdDialog) {
+      scope.app = $scope.app;
+      scope.pe = $scope.pe;
+
+      scope.hide = function() {
+        $mdDialog.hide();
+      };
+
+      scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+
+      // check if user has permisstion to write
+    };
 
     $scope.app.deleteCategory = function(){
       trix.deleteTerm($scope.app.toDeleteCategory.id).success(function(){
-        $scope.app.showSuccessToast('Alterações realizadas com successo.')
-        $scope.app.cancelModal();
+        $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
+        $mdDialog.cancel();
         trix.getTermTree(null, $scope.thisStation.categoriesTaxonomyId).success(function(response){
           $scope.termTree = response;
         });
@@ -146,7 +191,7 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
       delete term['children']
       trix.putTerm(term).success(function(){
         node.editing=false;
-        $scope.app.showSuccessToast('Alterações realizadas com successo.');
+        $scope.app.showSuccessToast('Alterações realizadas com sucesso.');
       }).error(function(){
         $timeout(function() {
           cfpLoadingBar.complete(); 
@@ -170,11 +215,15 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
         term.parent = TRIX.baseUrl + "/api/terms/" + $scope.parentCategory.id
 
       trix.postTerm(term).success(function(){
-        $scope.app.cancelModal();
+        $mdDialog.cancel();
         trix.getTermTree(null, $scope.thisStation.categoriesTaxonomyId).success(function(response){
+          $scope.app.showSuccessToast('Categoria criada com sucesso.')
           $scope.termTree = response;
-        });
-      });
+        })
+      }).error(function(data, status){
+        $mdDialog.cancel();
+        $scope.app.showErrorToast('Esta categoria já existe')
+      });;
     }
 
     $scope.thisStation = {}
@@ -290,9 +339,9 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	})
   }
 
-  $scope.createPerson = function(){
+  $scope.createPerson = function(ev){
   	trix.createPerson($scope.person).success(function(response){
-  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
       $scope.person = response;
       $scope.editingPersonLoaded = true;
       $scope.editing = true;
@@ -302,7 +351,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   		if(status == 409){
   			$scope.app.conflictingData = data;
   			$scope.app.conflictingData.role = $scope.person.stationRole.roleString;
-  			$scope.openAddUserToStaionSplash()
+  			$scope.openAddUserToStaionSplash(ev)
   		}else
   		$scope.app.showErrorToast('Dados inválidos. Tente novamente')
   		$timeout(function() {
@@ -316,9 +365,9 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	$scope.app.conflictingData.stationRole.person = '/api/persons/'+ $scope.app.conflictingData.conflictingPerson.id;
   	$scope.app.conflictingData.stationRole.station = '/api/stations/' + $scope.thisStation.id
   	trix.postStationRole($scope.app.conflictingData.stationRole).success(function(){
-  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
   		$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': $scope.app.conflictingData.conflictingPerson.id, 'newUser': null})
-  		$scope.app.cancelModal();
+  		$mdDialog.cancel();
   	}).error(function(){
   		$timeout(function() {
   			cfpLoadingBar.complete();	
@@ -326,8 +375,19 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	})
   }
 
-  $scope.openAddUserToStaionSplash = function(){
-  	$scope.app.openSplash('conflicting_person.html')
+  $scope.openAddUserToStaionSplash = function(ev){
+  	//$scope.app.openSplash('conflicting_person.html')
+    $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'conflicting_person.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
   }
 
   $scope.app.changeExistingUserPermission = function(){
@@ -372,13 +432,81 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   	console.log($scope.person.stationRole);
   }
 
-  trix.findByStationIds([$state.params.stationId], 0, 50, null, 'stationRoleProjection').success(function(personsRoles){
-  	$scope.personsRoles = personsRoles.stationRoles;
-  	for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
-  		if($scope.personsRoles[i].person.id == $scope.app.initData.person.id)
-  			$scope.personsRoles.splice(i, 1);
-  	};
+  $scope.page = 0;
+  var loading = false;
+  $scope.allLoaded = false;
+  $scope.beginning = true;
+  $scope.window = 20
+
+  if(!$scope.editing && !$scope.creating){
+    $scope.showProgress = true;
+    trix.findRolesByStationIds([$state.params.stationId], 0, $scope.window, null, 'stationRoleProjection').success(function(personsRoles){
+    	$scope.personsRoles = personsRoles.stationRoles;
+      $scope.showProgress = false; 
+    })
+  }
+
+  trix.countRolesByStationIds([$state.params.stationId]).success(function(response){
+    $scope.rolesCount = response;
   })
+
+  $scope.paginate = function(direction){
+    var page = 0;
+    if(!direction)
+      return;
+
+    if(direction == 'left'){
+      page = $scope.page-1;
+      $scope.allLoaded = false;
+    }
+    else if(direction == 'right'){
+      page = $scope.page+1;
+      $scope.beginning = false;
+    }
+
+    if(page < 0){
+      return;
+    }
+
+    if(!$scope.allLoaded){
+      $scope.showProgress = true;
+      trix.findAllByNetwork(initData.network.id, page, $scope.window, null, 'personProjection').success(function(response){
+        if((!response.persons || response.persons.length == 0) && direction == 'right'){
+          $scope.allLoaded = true;
+        }else{
+          if(!$scope.persons && response.persons)
+            $scope.persons = response.persons;
+          else if(response.persons && response.persons.length > 0){
+            $scope.persons = response.persons;
+            $scope.page = page;
+          }
+
+          if($scope.page == 0)
+            $scope.beginning = true;
+
+          if((($scope.page * $scope.window) + $scope.persons.length) == $scope.personsCount)
+            $scope.allLoaded = true;
+        }
+        $scope.showProgress = false;
+      }); 
+    }
+  }
+
+  function DialogController(scope, $mdDialog) {
+    scope.app = $scope.app;
+    scope.pe = $scope.pe;
+    scope.thisStation = $scope.thisStation;
+
+    scope.hide = function() {
+      $mdDialog.hide();
+    };
+
+    scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    // check if user has permisstion to write
+  };
 
   $scope.loadPerson = function(person){
   	$state.go('app.settings.stationusers', {'stationId': $scope.thisStation.id, 'userId': person.id})
@@ -404,29 +532,39 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
   			if(ids.indexOf($scope.personsRoles[i].id) > -1)
   				$scope.personsRoles.splice(i, 1);
   		};
-  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
+  		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
   		$scope.app.cancelModal();
   	})
   }		
 
   $scope.openDeletePersonRole = function(roleId){
-  	$scope.app.openSplash('confirm_delete_person.html')
-  	$scope.deletePersonRoleId = roleId;
+  	 $scope.app.deletePersonRoleId = roleId;
+    
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'confirm_delete_person.html',
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
   }
 
   $scope.app.deletePersonRole = function(){
-  	trix.deleteStationRole($scope.deletePersonRoleId).success(function(response){
+  	trix.deleteStationRole($scope.app.deletePersonRoleId).success(function(response){
   		for (var i = $scope.personsRoles.length - 1; i >= 0; i--) {
-  			if($scope.personsRoles[i].id == $scope.deletePersonRoleId)
+  			if($scope.personsRoles[i].id == $scope.app.deletePersonRoleId)
   				$scope.personsRoles.splice(i, 1);
   		};
-  		$scope.app.showSuccessToast('Alterações realizadas com successo.')
-  		$scope.app.cancelModal();
+      $scope.rolesCount--;
+  		$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
+  		$mdDialog.cancel();
   	})
   }
 
   $scope.bulkActions = [
-  {name:'Ações em grupo', id:0},
   {name:'Alterar permissões', id:1},
   {name:'Remover permissões', id:2}
   ]

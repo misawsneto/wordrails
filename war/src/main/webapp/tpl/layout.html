@@ -69,11 +69,11 @@
           </div>
           <form name="form" ng-submit="app.signIn(username, password)" class="m-b-sm">
             <div class="md-form-group float-label p-b-sm">
-              <input id="username-input" class="md-input" ng-model="username" required>
+              <input id="username-input" class="md-input" ng-model="username" required oninvalid="this.setCustomValidity('Campo usuário é obrigatório')" oninput="setCustomValidity('')">
               <label>Usuário</label>
             </div>
             <div class="md-form-group float-label p-b-sm">
-              <input type="password" class="md-input" ng-model="password" required>
+              <input type="password" class="md-input" ng-model="password" required oninvalid="this.setCustomValidity('Campo senha é obrigatório')" oninput="setCustomValidity('')">
               <label>Senha</label>
             </div>      
             <button md-ink-ripple type="submit" class="m-t btn-custom md-btn text-lg text-u-c btn-block ">Entrar</button>

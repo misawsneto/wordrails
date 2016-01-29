@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -61,11 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public SimpleUrlAuthenticationFailureHandler authFailureHandler(){
 		return new SimpleUrlAuthenticationFailureHandler();
-	}
-
-	@Bean
-	public SimpleUrlAuthenticationSuccessHandler authSuccessHandler(){
-		return new SimpleUrlAuthenticationSuccessHandler();
 	}
 
 	@Autowired

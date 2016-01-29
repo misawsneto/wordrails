@@ -1,6 +1,5 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +19,9 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "tenantId"}))
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity implements UserDetails, Serializable {
+
+	private static final long serialVersionUID = -4656215770382382924L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,10 +42,6 @@ public class User extends BaseEntity implements UserDetails {
 
 	public Boolean enabled;
 
-	@JsonBackReference("person")
-	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
-	public Person person;
-
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserGrantedAuthority> authorities;
@@ -63,6 +61,7 @@ public class User extends BaseEntity implements UserDetails {
 		return authorities;
 	}
 
+	@JsonIgnore
 	public boolean isAnonymous() {
 		return username.equals("wordrails");
 	}
@@ -78,16 +77,19 @@ public class User extends BaseEntity implements UserDetails {
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}

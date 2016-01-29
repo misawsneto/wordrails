@@ -45,6 +45,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   }
 
   $scope.bulkActions = [
+    {name:'Convites', id:4},
     {name:'Alterar permissões', id:1},
     {name:'Ativar usuários', id:2},
     {name:'Desativar usuários', id:3}
@@ -66,8 +67,8 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
   	});
   }
 
-  trix.countPersonsByNetwork($scope.app.initData.network.id).success(function(response){
-    $scope.personsCount = response.count;
+  trix.countPersonsByNetwork().success(function(response){
+    $scope.personsCount = response;
   })
 
   $scope.paginate = function(direction){
@@ -154,9 +155,9 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
       })
   }
 
-  $scope.createPerson = function(){
+  $scope.createPerson = function(ev){
     trix.createPerson($scope.person).success(function(response){
-      $scope.app.showSuccessToast('Alterações realizadas com successo.')
+      $scope.app.showSuccessToast('Alterações realizadas com sucesso.')
       $scope.selectedPerson = response;
       $scope.editingPersonLoaded = true;
       $scope.editing = true;
@@ -165,7 +166,7 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     }).error(function(data, status, headers, config){
       if(status == 409){
         $scope.app.conflictingData = data;
-        $scope.openConflictingUserSplash()
+        $scope.openConflictingUserSplash(ev)
       }else
         $scope.app.showErrorToast('Dados inválidos. Tente novamente')
       
@@ -175,8 +176,19 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     });
   }
 
-  $scope.openConflictingUserSplash = function(){
-    $scope.app.openSplash('conflicting_person.html')
+  $scope.openConflictingUserSplash = function(ev){
+    //$scope.app.openSplash('conflicting_person.html')
+    $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'conflicting_person.html',
+        targetEvent: ev,
+        onComplete: function(){}
+      })
+      .then(function(answer) {
+      //$scope.alert = 'You said the information was "' + answer + '".';
+      }, function() {
+      //$scope.alert = 'You cancelled the dialog.';
+    });
   }
 
   var deletePersons = function(){
@@ -241,16 +253,22 @@ app.controller('SettingsUsersCtrl', ['$scope', '$log', '$timeout', '$mdDialog', 
     $scope.app.cancelModal();
   }
 
-  $scope.openBulkActionsDialog = function(){
+  $scope.openBulkActionsDialog = function(ev){
     $scope.pe.bulkActionSelected = $scope.bulkActionSelected;
+
+    if($scope.bulkActionSelected == 4){
+      
+      return;
+    }
+
   	if(noPersonSelected())
-  		$scope.openNoPersonSelected();
+  		$scope.openNoPersonSelected(ev);
   	else if($scope.bulkActionSelected == 0)
   		return null;
     else if($scope.bulkActionSelected == 1)
-      $scope.bulkChangePermissions();
+      $scope.bulkChangePermissions(ev);
   	else if($scope.bulkActionSelected == 2 || $scope.bulkActionSelected == 3)
-  		$scope.confirmBulkAction()
+  		$scope.confirmBulkAction(ev)
   }
 
   $scope.pe.activateDeactivateUsers = function(){

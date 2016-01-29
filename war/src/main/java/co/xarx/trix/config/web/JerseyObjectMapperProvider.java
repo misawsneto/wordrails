@@ -1,4 +1,4 @@
-package co.xarx.trix.config;
+package co.xarx.trix.config.web;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;

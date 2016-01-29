@@ -224,7 +224,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     		$scope.editingPerson.password = null;
     		$scope.editingPerson.passwordConfirm = null;
     		$scope.person = $scope.app.initData.person = $scope.editingPerson;
-				$scope.app.showSuccessToast('Alterações realizadas com successo')    		
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso')    		
     	});
     }
 
@@ -335,8 +335,8 @@ trix.searchPosts(null, $scope.page, 10, {'personId': $scope.app.getLoggedPerson(
 	})
 }])
 
-app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout', '$interval', 'trix', 'cfpLoadingBar', '$q',
-	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q) {
+app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout', '$interval', 'trix', 'cfpLoadingBar', '$q', '$mdSidenav',
+	function($scope, $log, $state, $filter, $timeout, $interval, trix, cfpLoadingBar, $q, $mdSidenav) {
 		
 		$scope.app.publicationsCtrl = {page: 0, firstLoad: false};
 
@@ -384,6 +384,7 @@ app.controller('UserPublicationsCtrl', ['$scope', '$log', '$state', '$filter', '
 				]
 			}}
 
+			
 			$scope.$watch('$state.params.type', function(){
 				if($state.params.type == "drafts"){
 			// trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
@@ -437,33 +438,87 @@ $scope.paginate = function(){
 	}
 
 	if(!$scope.loadingPage){
-		$scope.loadingPage = true;
-				/*trix.searchPosts(null, $scope.app.publicationsCtrl.page + 1, 10, {'personId': $scope.app.getLoggedPerson().id,
-					'publicationType': type, sortByDate: true}).success(function(response){*/
+	$scope.loadingPage = true;
+			/*trix.searchPosts(null, $scope.app.publicationsCtrl.page + 1, 10, {'personId': $scope.app.getLoggedPerson().id,
+				'publicationType': type, sortByDate: true}).success(function(response){*/
 
-						trix.getPersonNetworkPostsByState(null, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
-							var posts = response;
+					trix.getPersonNetworkPostsByState(null, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
+						var posts = response;
 
-							$scope.loadingPage = false;
-							$scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
+						$scope.loadingPage = false;
+						$scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
 
-							if(!posts || posts.length == 0){
-								$scope.allLoaded = true;
-								return;
-							}
+						if(!posts || posts.length == 0){
+							$scope.allLoaded = true;
+							return;
+						}
 
-							if(!$scope.pages)
-								$scope.pages = []
+						if(!$scope.pages)
+							$scope.pages = []
 
-							posts && posts.forEach(function(element, index){
-								$scope.app.publicationsCtrl.publications.push(element)
-							}); 
+						posts && posts.forEach(function(element, index){
+							$scope.app.publicationsCtrl.publications.push(element)
+						}); 
 
-						})
-						.error(function(){
-							$scope.loadingPage = false;
-						})
-					}
+					})
+					.error(function(){
+						$scope.loadingPage = false;
+					})
 				}
+			}
 
-			}])		
+$scope.page = 0;
+	$scope.loadingComments = true
+	$scope.allLoaded = false;
+	$scope.beginning = true;
+	$scope.window = 20
+
+	$scope.showComments = function(postId){
+		$scope.toggleCommentsSidebar();
+		$scope.comments = []
+		$scope.loadingComments = true
+		if(postId)
+			trix.findPostCommentsOrderByDate(postId, $scope.page, $scope.window, null, 'commentProjection').success(function(response){
+				$scope.comments = response.comments;
+				$scope.loadingComments = false
+			}).error(function(){
+				$scope.comments = null;
+				$scope.loadingComments = false
+			})
+	}
+
+	$scope.toggleCommentsSidebar = function(){
+	  $mdSidenav('comments-list').toggle();
+	}
+
+	$scope.createComment = function(){
+		var comment = {}
+		comment = angular.copy($scope.newComment);
+		comment.author = extractSelf($scope.app.initData.person)
+		comment.post =TRIX.baseUrl + '/api/posts/' + $scope.app.nowReading.postId
+
+		trix.postComment(comment).success(function(response){
+			if(!$scope.comments || $scope.comments.length == 0)
+				$scope.comments = [];
+
+			comment.author = angular.copy($scope.app.initData.person)
+			comment.date = new Date().getTime();
+			$scope.newComment = {body: ''};
+
+			$scope.comments.unshift(comment)
+
+		}).error(function(response,status){
+			$scope.app.showErrorToast('Houve um erro inesperado. Tente novamente.')
+
+		})
+	}
+
+	$scope.commentFocused = false;
+	$scope.commentFocus = function(){
+		$scope.commentFocused = true;
+	}
+	$scope.commentBlur = function(){
+		$scope.commentFocused = false;
+	}
+
+}])		

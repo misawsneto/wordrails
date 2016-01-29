@@ -26,13 +26,13 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 
 	@Override
 	public Post convertFrom(PostView postView) {
-		return postRepository.findOne(postView.id);
+		return postRepository.findOne(postView.postId);
 	}
 
 	@Override
 	public PostView convertTo(Post post) {
 		PostView postView = new PostView();
-		postView.id = post.id;
+		postView.postId = post.id;
 		postView.title = post.title;
 		postView.subheading = post.subheading;
 		postView.slug = post.slug;
@@ -46,7 +46,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		}
 
 		if (post.featuredImage != null) {
-			postView.featuredImage = post.featuredImage.hashs;
+			postView.featuredImageHash = post.featuredImage.originalHash;
 			postView.imageSmallHash = post.featuredImage.hashs.get(Image.SIZE_SMALL);
 			postView.imageMediumHash = post.featuredImage.hashs.get(Image.SIZE_MEDIUM);
 			postView.imageLargeHash = post.featuredImage.hashs.get(Image.SIZE_LARGE);
@@ -59,11 +59,6 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 				postView.imageLargeHash = post.featuredImage.get(Image.SIZE_LARGE);
 			}
 		}
-
-//		postView.imageId = post.imageId;
-//		postView.imageSmallId = post.imageSmallId;
-//		postView.imageMediumId = post.imageMediumId;
-//		postView.imageLargeId = post.imageLargeId;
 
 		postView.imageLandscape = post.imageLandscape;
 		postView.date = post.date;

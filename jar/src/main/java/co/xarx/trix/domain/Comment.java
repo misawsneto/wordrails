@@ -6,10 +6,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-public class Comment extends BaseEntity {
+public class Comment extends BaseEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,7 +21,7 @@ public class Comment extends BaseEntity {
 		return id;
 	}
 
-	
+
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
@@ -30,9 +31,6 @@ public class Comment extends BaseEntity {
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastModificationDate;
-	
-	@Size(min=1, max=100)
-	public String title;
 
 	@Lob
 	@NotNull
@@ -40,7 +38,6 @@ public class Comment extends BaseEntity {
 
 	@NotNull
 	@ManyToOne
-	@JsonBackReference
 	@JoinColumn(updatable=false)
 	public Person author;
 	

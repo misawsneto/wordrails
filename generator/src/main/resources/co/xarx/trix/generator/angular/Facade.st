@@ -178,13 +178,19 @@ var trix = angular.module('trix', [])
 		return \$http.post(_config.url + "/api/perspectives/termPerspectiveDefinitions" , termView, config)
 	}
 
-    this.countPersonsByNetwork = function(networkId){
-    	var config = {
-			"params": {
-				"networkId": networkId
-			}
-		}
-    	return \$http.get(_config.url + "/api/persons/stats/count", config)
+    this.countPersonsByNetwork = function(){
+    	return \$http.get(_config.url + "/api/persons/stats/count")
+    }
+
+    this.countRolesByStationIds = function(stationIds, q){
+        var config = {
+            "params": {
+                "stationIds": stationIds
+            }
+        }
+        if(q && q.length > 0)
+            config.params.q = q
+        return \$http.get(_config.url + "/api/stations/stats/roles/count", config)
     }
 
     this.updatePostTerms = function(postId, terms) {

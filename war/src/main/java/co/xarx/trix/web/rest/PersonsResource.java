@@ -447,13 +447,6 @@ public class PersonsResource {
 
 				person.user = user;
 
-				if(person.email != null && !person.email.isEmpty()){
-					Person personE = personRepository.findByEmail(person.email);
-					if(personE != null){
-						return Response.status(Status.CONFLICT).entity("{\"value\": \"" + person.email + "\"}").build();
-					}
-				}
-
 				personRepository.save(person);
 			}catch (javax.validation.ConstraintViolationException e){
 				BadRequestException badRequest = new BadRequestException();
@@ -487,13 +480,13 @@ public class PersonsResource {
 					}
 
 					if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
-//							conflictingPerson.id 
 						StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
-						Logger.debug("conflicting station name: " + str.station.name);
-						if(str != null)
+						if(str != null) {
+							Logger.debug("conflicting station name: " + str.station.name);
 							return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
 									+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
-									+ "\"conflictingStationRole\": " + mapper.writeValueAsString(str) +"}").build();
+									+ "\"conflictingStationRole\": " + mapper.writeValueAsString(str) + "}").build();
+						}
 					}
 
 					return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) +"}").build();
@@ -561,9 +554,15 @@ public class PersonsResource {
 
 	@Path("/stats/count")
 	@GET
-	@Produces(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response countPersonsByNetwork(@QueryParam("networkId") Integer networkId){
-		return Response.status(Status.OK).entity("{\"count\": " + personRepository.countPersons() + " }").build();
+	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q){
+		ContentResponse<Integer> resp = new ContentResponse<Integer>();
+		resp.content = 0;
+		if(q != null && !q.isEmpty()) {
+			resp.content = personRepository.countPersonsByString(q).intValue();
+		}else {
+			resp.content = personRepository.countPersons().intValue();
+		}
+		return resp;
 	}
 
 	@PUT

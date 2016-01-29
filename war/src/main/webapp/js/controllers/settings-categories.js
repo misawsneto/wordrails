@@ -11,21 +11,42 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 		})
 
 
-		$scope.showAddCategorySplash = function(parent){
+		$scope.showAddCategorySplash = function(parent, ev){
 			$scope.parentCategory = parent;
-			$scope.app.openSplash('add_category.html')
+	    $mdDialog.show({
+	        controller: DialogController,
+	        templateUrl: 'add_category.html',
+	        targetEvent: ev,
+	        onComplete: function(){}
+	      })
+	      .then(function(answer) {
+	      //$scope.alert = 'You said the information was "' + answer + '".';
+	      }, function() {
+	      //$scope.alert = 'You cancelled the dialog.';
+	    });
 		}
 
 		$scope.app.toDeleteCategory = null;
-		$scope.showDeleteCategorySplash = function(category){
+		$scope.showDeleteCategorySplash = function(category, ev){
 			$scope.app.toDeleteCategory = category;
-			$scope.app.openSplash('delete_category.html')
+			$scope.parentCategory = parent;
+	    $mdDialog.show({
+	        controller: DialogController,
+	        templateUrl: 'delete_category.html',
+	        targetEvent: ev,
+	        onComplete: function(){}
+	      })
+	      .then(function(answer) {
+	      //$scope.alert = 'You said the information was "' + answer + '".';
+	      }, function() {
+	      //$scope.alert = 'You cancelled the dialog.';
+	    });
 		}
 
 		$scope.app.deleteCategory = function(){
 			trix.deleteTerm($scope.app.toDeleteCategory.id).success(function(){
-				$scope.app.showSuccessToast('Alterações realizadas com successo.')
-				$scope.app.cancelModal();
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
+				$mdDialog.cancel();
 				trix.getTermTree(null, $scope.taxonomyId).success(function(response){
 					$scope.termTree = response;
 				});
@@ -40,7 +61,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 			delete term['children']
 			trix.putTerm(term).success(function(){
 				node.editing=false;
-				$scope.app.showSuccessToast('Alterações realizadas com successo.');
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso.');
 			}).error(function(){
 				$timeout(function() {
 					cfpLoadingBar.complete(); 
@@ -64,11 +85,30 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
 				term.parent = TRIX.baseUrl + "/api/terms/" + $scope.parentCategory.id
 
 			trix.postTerm(term).success(function(){
-				$scope.app.cancelModal();
+				$mdDialog.cancel();
 				trix.getTermTree(null, $scope.taxonomyId).success(function(response){
+					$scope.app.showSuccessToast('Categoria criada com sucesso.')
 					$scope.termTree = response;
 				});
-			});
+			}).error(function(data, status){
+        $mdDialog.cancel();
+        $scope.app.showErrorToast('Esta categoria já existe')
+      });;
 		}
 
-	}])
+		function DialogController(scope, $mdDialog) {
+	    scope.app = $scope.app;
+	    scope.pe = $scope.pe;
+
+	    scope.hide = function() {
+	      $mdDialog.hide();
+	    };
+
+	    scope.cancel = function() {
+	      $mdDialog.cancel();
+	    };
+
+	    // check if user has permisstion to write
+	  };
+
+}])

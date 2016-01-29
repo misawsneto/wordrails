@@ -5,7 +5,6 @@ import co.xarx.trix.util.Constants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-import java.util.Map;
 import java.util.Set;
 
 @Document(indexName = "#{properties.index}", type = Constants.ObjectType.PERSON)
@@ -22,8 +21,9 @@ public class ESPerson implements ElasticSearchEntity {
 	public String email;
 	public String twitter;
 	public Set<Integer> bookmarkPosts;
-	public Map<String, String> cover;
-	public Map<String, String> profilePicture;
+
+	public String cover;
+	public String profilePicture;
 
 	@Id
 	@Override
@@ -90,19 +90,19 @@ public class ESPerson implements ElasticSearchEntity {
 		this.twitter = twitter;
 	}
 
-	public Map<String, String> getCover() {
+	public String getCover() {
 		return cover;
 	}
 
-	public void setCover(Map<String, String> cover) {
+	public void setCover(String cover) {
 		this.cover = cover;
 	}
 
-	public Map<String, String> getProfilePicture() {
+	public String getProfilePicture() {
 		return profilePicture;
 	}
 
-	public void setProfilePicture(Map<String, String> profilePicture) {
+	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
 }

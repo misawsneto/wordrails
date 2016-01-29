@@ -1,6 +1,7 @@
 package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -39,21 +40,6 @@ public class Person extends BaseEntity implements Serializable {
 	@Pattern(regexp = "^[a-z0-9\\._-]{3,50}$")
 	public String username;
 
-	@OneToMany(mappedBy = "author")
-	public Set<Comment> comments;
-
-	@OneToMany(mappedBy = "person")
-	public Set<StationRole> personsStationPermissions;
-
-	@OneToMany(mappedBy = "person")
-	public Set<NetworkRole> personsNetworkRoles;
-
-	@OneToMany(mappedBy = "author")
-	public Set<Post> posts;
-
-	@OneToMany
-	public Set<Person> following;
-
 	@OrderColumn(name = "order")
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "person_bookmark",
@@ -62,9 +48,6 @@ public class Person extends BaseEntity implements Serializable {
 	)
 	@Column(name = "post_id")
 	public Set<Integer> bookmarkPosts;
-
-	@OneToMany(mappedBy = "person")
-	public Set<Recommend> recommends;
 
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
@@ -78,9 +61,11 @@ public class Person extends BaseEntity implements Serializable {
 	public String email;
 
 	@OneToOne
+	@JsonIgnore
 	public Image image;
 
 	@OneToOne
+	@JsonIgnore
 	public Image cover;
 
 	public String imageUrl;
@@ -120,54 +105,6 @@ public class Person extends BaseEntity implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public Set<Comment> getComments() {
-		return comments;
-	}
-
-	public void setComments(Set<Comment> comments) {
-		this.comments = comments;
-	}
-
-	public Set<StationRole> getPersonsStationPermissions() {
-		return personsStationPermissions;
-	}
-
-	public void setPersonsStationPermissions(Set<StationRole> personsStationPermissions) {
-		this.personsStationPermissions = personsStationPermissions;
-	}
-
-	public Set<NetworkRole> getPersonsNetworkRoles() {
-		return personsNetworkRoles;
-	}
-
-	public void setPersonsNetworkRoles(Set<NetworkRole> personsNetworkRoles) {
-		this.personsNetworkRoles = personsNetworkRoles;
-	}
-
-	public Set<Post> getPosts() {
-		return posts;
-	}
-
-	public void setPosts(Set<Post> posts) {
-		this.posts = posts;
-	}
-
-	public Set<Person> getFollowing() {
-		return following;
-	}
-
-	public void setFollowing(Set<Person> following) {
-		this.following = following;
-	}
-
-	public Set<Recommend> getRecommends() {
-		return recommends;
-	}
-
-	public void setRecommends(Set<Recommend> recommends) {
-		this.recommends = recommends;
 	}
 
 	public User getUser() {

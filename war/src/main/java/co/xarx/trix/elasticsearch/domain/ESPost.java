@@ -10,7 +10,6 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.Set;
 
 @Document(indexName = "#{properties.index}", type = Constants.ObjectType.POST)
@@ -48,7 +47,7 @@ public class ESPost implements ElasticSearchEntity {
 	public String slug;
 	public Integer readTime;
 
-	public Map<String, String> featuredImage;
+	public String featuredImage;
 	public boolean imageLandscape;
 	public String featuredImageCaption;
 	public String featuredImageCredits;
@@ -233,11 +232,11 @@ public class ESPost implements ElasticSearchEntity {
 		this.readTime = readTime;
 	}
 
-	public Map<String, String> getFeaturedImage() {
+	public String getFeaturedImage() {
 		return featuredImage;
 	}
 
-	public void setFeaturedImage(Map<String, String> featuredImage) {
+	public void setFeaturedImage(String featuredImage) {
 		this.featuredImage = featuredImage;
 	}
 

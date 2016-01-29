@@ -1,6 +1,10 @@
 package co.xarx.trix.api;
 
-public class Category {
+import java.io.Serializable;
+
+public class Category implements Serializable {
+
+	private static final long serialVersionUID = -2271798679380862532L;
 
 	public Category() {
 	}

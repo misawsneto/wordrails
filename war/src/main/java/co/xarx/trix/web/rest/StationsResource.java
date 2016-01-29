@@ -1,6 +1,7 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
+import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
@@ -16,6 +17,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
 import java.util.List;
+
+//import co.xarx.trix.auth.TrixAuthenticationProvider;
 
 @Path("/stations")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -88,5 +91,22 @@ public class StationsResource {
 			}
 			return Response.status(Status.OK).build();
 		} else return Response.status(Status.UNAUTHORIZED).build();
+	}
+
+	@GET
+	@Path("/stats/roles/count")
+	public ContentResponse<Integer> countRolesByStationIds(@QueryParam("stationIds") List<Integer> stationIds, @QueryParam("q") String q){
+		ContentResponse<Integer> resp = new ContentResponse<Integer>();
+		resp.content = 0;
+		if(stationIds != null && !stationIds.isEmpty()) {
+			if (q != null && !q.isEmpty()) {
+				resp.content = stationRolesRepository.countRolesByStationIdsAndNameOrUsernameOrEmail(stationIds, q).intValue();
+			}else {
+				resp.content = stationRolesRepository.countRolesByStationIds(stationIds).intValue();
+			}
+		}else {
+			throw new co.xarx.trix.exception.BadRequestException();
+		}
+		return resp;
 	}
 }

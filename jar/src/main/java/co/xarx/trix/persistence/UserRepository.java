@@ -6,12 +6,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
-
-import javax.persistence.QueryHint;
 
 public interface UserRepository extends JpaRepository<User, Integer>, QueryDslPredicateExecutor<User> {
 
@@ -20,16 +17,16 @@ public interface UserRepository extends JpaRepository<User, Integer>, QueryDslPr
 
 	@RestResource(exported = false)
 	@Cacheable(value = "user", key = "#p0")
-	@QueryHints({@QueryHint(name = "enabled", value = "true")})
+	@Query("select user from User user where user.username = :username")
 	User findUserByUsername(@Param("username") String username);
 
 	@Override
 	@GeneratorIgnore
-	@CacheEvict(value = "user", key = "#p0.user.username")
+	@CacheEvict(value = "user", key = "#p0.username")
 	User save(User user);
 
 	@Override
 	@GeneratorIgnore
-	@CacheEvict(value = "user", key = "#p0.user.username")
+	@CacheEvict(value = "user", key = "#p0.username")
 	void delete(User user);
 }

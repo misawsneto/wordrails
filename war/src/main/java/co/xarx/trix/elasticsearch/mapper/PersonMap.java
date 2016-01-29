@@ -8,9 +8,8 @@ public class PersonMap extends PropertyMap<Person, ESPerson> {
 
 	@Override
 	protected void configure() {
-		map().setCover(source.getCover().hashs);
-		map().setTenantId(source.getTenantId());
-		map().setProfilePicture(source.getImage().hashs);
+		map().setCover(source.getCover().originalHash);
+		map().setProfilePicture(source.getImage().originalHash);
 		map().setTwitter(source.getTwitterHandle());
 	}
 }

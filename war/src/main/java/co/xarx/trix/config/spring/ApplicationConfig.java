@@ -9,12 +9,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @Configuration
 @EnableAsync
-@Import({PropertyConfig.class})
+@PropertySource(name = "props",
+		value = {"classpath:application.properties",
+				"classpath:application_${spring.profiles.active:dev}.properties"
+		}
+)
 @ComponentScan(basePackages = "co.xarx.trix")
 public class ApplicationConfig {
 
@@ -26,26 +31,15 @@ public class ApplicationConfig {
 	@Bean
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
-		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostViewMap());
 		return modelMapper;
 	}
 
-//	@Override
-//	public Executor getAsyncExecutor() {
-//		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-//		executor.setCorePoolSize(7);
-//		executor.setMaxPoolSize(42);
-//		executor.setQueueCapacity(11);
-//		executor.setThreadNamePrefix("MyExecutor-");
-//		executor.initialize();
-//		return executor;
-//	}
-//
-//	@Override
-//	public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-//		return (ex, method, params) -> System.out.println("async exception");
-//	}
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer getProperties() {
+		return new PropertySourcesPlaceholderConfigurer();
+	}
 }

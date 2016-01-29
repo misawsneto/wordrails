@@ -32,7 +32,7 @@
 								</div>
 								<ul rn-carousel="" rn-carousel-index="carouselIndex2" rn-carousel-auto-slide="" rn-carousel-pause-on-hover="" rn-carousel-buffered="" class="carousel2 ng-scope p-e-carousel">
 									<li ng-repeat="cell in termPerspectiveView.featuredRow.cells">
-										<div ng-if="cell.postView.imageLargeId" ng-style="getBackgroundImage(cell.postView, 'lg')"
+										<div ng-if="cell.postView.featuredImageHash" ng-style="getBackgroundImage(cell.postView, 'large')"
 												class="cell-wrap bg-cover">
 										</div>
 									</li>
@@ -54,7 +54,7 @@
 									<ul class="sly-clearfix info-flow-list" data-term-id="{{::ordinaryRow.termId}}">
 										<li class="cell" style="width:130px" ng-repeat="cell in ordinaryRow.cells">
 							
-											<div style="height:130px" class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.imageMediumId}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
+											<div style="height:130px" class="news-item animated fadeIn" data-post-id="{{::cell.postView.postId}}" ng-class="{'bg-custom-primary-no-image': !cell.postView.featuredImageHash}" ng-click="app.setHorizontalCursor(cell.postView, app.cellsToPostViews(ordinaryRow.cells))">
 
 												<div class="pos-abt right-0 z-i-4 text-white" ng-class="{'p-r-xxl m-r-xxl': !isMobile}">
 													<!-- <a ng-click="app.stopPropagation($event)" popover-class="carousel-popover" popover-placement="bottom" popover-class class="text-shadow-dark perspective-editor-options-button" popover="" popover-template=" 'carousel-template.html' " type="button" popover-append-to-body="true">
@@ -69,8 +69,8 @@
 													{{::cell.postView.title | characters:60}}
 												</div>
 							
-												<div class="cell-wrap" ng-if="cell.postView.imageMediumId">
-													<div class="w-full h-full" ng-style="getBackgroundImage(cell.postView, 'md')"></div>
+												<div class="cell-wrap" ng-if="cell.postView.featuredImageHash">
+													<div class="w-full h-full" ng-style="getBackgroundImage(cell.postView, 'medium')"></div>
 												</div>
 											</div>
 							
@@ -225,7 +225,7 @@
 				<div class="wrapper-xxs perspective-editor-search-results m-t-sm" >
 					<ul class="no-style">
 						<li ng-repeat="postView in pe.searchResults" class="clearfix wrapper-xxs font-thin" ng-class="{'opacity-07 bg-light': !pe.cellAddValidation(postView)}">
-		      <span ng-if="postView.imageSmallId" style="height: 50px" class="bg-cover pull-left thumb m-r" ng-style="app.getBackgroundImage(postView, 'sm')">
+		      <span ng-if="postView.featuredImageHash" style="height: 50px" class="bg-cover pull-left thumb m-r" ng-style="app.getBackgroundImage(postView, 'medium')">
 		      </span>
 		      <span class="pull-right" ng-if="pe.cellAddValidation(postView)"
 		      tooltip="Adicionar" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="300">

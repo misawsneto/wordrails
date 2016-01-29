@@ -4,11 +4,6 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0" metadata-complete="true">
 
-	<context-param>
-		<param-name>spring.profiles.active</param-name>
-		<param-value>dev</param-value>
-	</context-param>
-
 	<resource-ref>
 		<res-ref-name>jdbc/trix</res-ref-name>
 		<res-type>com.jolbox.bonecp.BoneCPDataSource</res-type>
@@ -48,7 +43,7 @@
 	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
 		</listener> -->
 	<listener>
-		<listener-class>co.xarx.trix.config.TrixContextLoaderListener</listener-class>
+		<listener-class>co.xarx.trix.config.web.TrixContextLoaderListener</listener-class>
 	</listener>
 
 	<context-param>
@@ -298,7 +293,7 @@
 
 	<error-page>
 		<error-code>500</error-code>
-		<location>/505.html</location>
+		<location>/505.jsp</location>
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>

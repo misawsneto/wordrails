@@ -6,9 +6,11 @@ import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -17,6 +19,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
 
 @Path("/images")
 @Consumes(MediaType.WILDCARD)
@@ -81,5 +87,34 @@ public class ImagesResource {
 			return true;
 		}
 		return false;
+	}
+
+	@GET
+	@Path("/get/{hash}")
+	public Response getImage(@PathParam("hash") String hash, @QueryParam("size") String size, @Context HttpServletResponse response) throws IOException {
+
+		Map<String, String> hashes;
+		try {
+			hashes = imageService.getHashes(hash);
+		} catch (EntityNotFoundException e) {
+			throw new NotFoundException("Image does not exist");
+		}
+
+		hash = hashes.get(size);
+
+		if(StringUtils.isEmpty(hash))
+			return Response.status(Response.Status.NO_CONTENT).build();
+
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control", "max-age=2592000");
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.add(Calendar.DATE, 30);
+		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
+		response.setHeader("Expires", o);
+
+		response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
+		return Response.ok().build();
 	}
 }

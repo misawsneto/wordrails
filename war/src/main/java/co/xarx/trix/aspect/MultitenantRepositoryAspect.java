@@ -38,7 +38,7 @@ public class MultitenantRepositoryAspect {
 	}
 
 	@Around("@annotation(ignoreMultitenancy)")
-	public Object profile(ProceedingJoinPoint pjp, IgnoreMultitenancy ignoreMultitenancy) throws Throwable {
+	public Object annotation(ProceedingJoinPoint pjp, IgnoreMultitenancy ignoreMultitenancy) throws Throwable {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		TenantContextHolder.setCurrentTenantId(null);
 		Object output = pjp.proceed();
