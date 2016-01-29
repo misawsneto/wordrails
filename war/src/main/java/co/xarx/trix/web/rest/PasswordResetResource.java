@@ -53,7 +53,7 @@ public class PasswordResetResource {
 		if (passwordReset.email == null || personRepository.findByEmail(passwordReset.email) == null)
 			return Response.status(Status.NOT_FOUND).build();
 
-		if (passwordReset.invite && passwordReset.networkSubdomain == null) {
+		if (passwordReset.invite && passwordReset.getTenantId() == null) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 
@@ -81,8 +81,8 @@ public class PasswordResetResource {
 			HashMap<String, Object> scopes = new HashMap<String, Object>();
 			scopes.put("name", passwordReset.personName + "");
 			scopes.put("networkName", passwordReset.networkName + "");
-			scopes.put("link", "http://" + passwordReset.networkSubdomain + ".xarx.co/#/pass?hash=" + passwordReset.hash);
-			scopes.put("networkSubdomain", passwordReset.networkSubdomain);
+			scopes.put("link", "http://" + passwordReset.getTenantId() + ".xarx.co/#/pass?hash=" + passwordReset.hash);
+			scopes.put("networkSubdomain", passwordReset.getTenantId());
 			scopes.put("passwordReset", passwordReset);
 
 			Person person = authProvider.getLoggedPerson();

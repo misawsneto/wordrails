@@ -1,34 +1,26 @@
 package co.xarx.trix.domain;
 
-import java.util.Date;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 @Entity
-public class Notification {
+public class Notification extends BaseEntity {
 	
 	public enum Type{
 		ADDED_TO_STATION, REMOVED_FROM_STATION, POST_COMMENTED, POST_DELETED, POST_ADDED, BREAKING_NEWS, MESSAGE, IREPORT_INVITE, IREPORT_REVOKE
 	}
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 	
 	@ManyToOne
 	@NotNull
@@ -61,37 +53,11 @@ public class Notification {
 	@NotNull
 	@NotEmpty
 	public String type;
-	
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date createdAt;
 
 	@PrePersist
 	void onCreate() {
-		createdAt = new Date();
 		if(post!=null){
 			postId = post.id;
 		}
-	}
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@PreUpdate
-	void onUpdate() {
-		updatedAt = new Date();
-	}
-	
-	private boolean contains(String test) {
-
-	    for (Type t : Type.values()) {
-	        if (t.name().equals(test)) {
-	            return true;
-	        }
-	    }
-
-	    return false;
 	}
 }

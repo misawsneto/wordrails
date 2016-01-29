@@ -17,17 +17,24 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<!--<plugin>-->
-					<!--<groupId>org.eclipse.jetty</groupId>-->
-					<!--<artifactId>jetty-maven-plugin</artifactId>-->
-					<!--<version>9.3.6.v20151106</version>-->
-					<!--<configuration>-->
-						<!--<scanIntervalSeconds>10</scanIntervalSeconds>-->
-						<!--<webApp>-->
-							<!--<contextPath>/</contextPath>-->
-						<!--</webApp>-->
-					<!--</configuration>-->
-				<!--</plugin>-->
+				<plugin>
+					<groupId>org.flywaydb</groupId>
+					<artifactId>flyway-maven-plugin</artifactId>
+					<version>3.2.1</version>
+					<configuration>
+						<user>wordrails</user>
+						<password>wordrails</password>
+						<url>jdbc:mysql://localhost:3306/trix_dev</url>
+						<outOfOrder>true</outOfOrder>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>mysql</groupId>
+							<artifactId>mysql-connector-java</artifactId>
+							<version>5.1.31</version>
+						</dependency>
+					</dependencies>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.tomcat.maven</groupId>
 					<artifactId>tomcat7-maven-plugin</artifactId>
@@ -73,6 +80,33 @@
 						</execution>
 					</executions>
 				</plugin>
+
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.18.1</version>
+					<!--<configuration>-->
+						<!--<excludedGroups>co.xarx.trix.test.integration.IntegrationTest</excludedGroups>-->
+					<!--</configuration>-->
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.18.1</version>
+					<configuration>
+						<includes>
+							<include>**/*.java</include>
+						</includes>
+						<!--<groups>co.xarx.trix.test.integration.IntegrationTest</groups>-->
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -112,6 +146,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-core</artifactId>
+				<version>3.2.1</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.elasticsearch</groupId>
 				<artifactId>elasticsearch-shield</artifactId>
@@ -342,7 +382,7 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
-				<version>4.0.9.RELEASE</version>
+				<version>4.2.4.RELEASE</version>
 				<scope>test</scope>
 			</dependency>
 
@@ -691,6 +731,43 @@
 				<artifactId>UserAgentUtils</artifactId>
 				<version>1.18</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-api-mockito</artifactId>
+				<version>1.6.4</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-module-junit4</artifactId>
+				<version>1.6.4</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!--<dependency>-->
+				<!--<groupId>org.powermock</groupId>-->
+				<!--<artifactId>powermock-module-junit4-rule</artifactId>-->
+				<!--<version>1.6.4</version>-->
+				<!--<scope>test</scope>-->
+			<!--</dependency>-->
+
+			<!--<dependency>-->
+				<!--<groupId>org.powermock</groupId>-->
+				<!--<artifactId>powermock-classloading-xstream</artifactId>-->
+				<!--<version>1.6.4</version>-->
+				<!--<scope>test</scope>-->
+			<!--</dependency>-->
+
+
+			<dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>2.3.3</version>
+				<scope>test</scope>
+			</dependency>
+
 
 		</dependencies>
 	</dependencyManagement>

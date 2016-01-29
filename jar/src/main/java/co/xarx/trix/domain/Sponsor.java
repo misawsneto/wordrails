@@ -1,18 +1,22 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
-public class Sponsor {
+public class Sponsor extends BaseEntity {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
 
 	@NotNull
 	@ManyToOne
@@ -29,49 +33,7 @@ public class Sponsor {
 
 	@OneToOne
 	public Image logo;
-	public Integer logoId;
-	public Integer logoMediumId;
-	public Integer logoLargeId;
 
 	@OneToMany
 	public Set<Ad> ads;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable = false)
-	public Date createdAt;
-
-	@PrePersist
-	public void onCreate() {
-		if (logo != null && logo.original != null) {
-			logoId = logo.original.id;
-			logoMediumId = logo.medium.id;
-			logoLargeId = logo.large.id;
-		} else {
-			logoId = null;
-			logoMediumId = null;
-			logoLargeId = null;
-		}
-
-		createdAt = updatedAt = new Date();
-	}
-
-	@PreUpdate
-	public void onUpdate() {
-		if (logo != null && logo.original != null) {
-			logoId = logo.original.id;
-			logoMediumId = logo.medium.id;
-			logoLargeId = logo.large.id;
-		} else {
-			logoId = null;
-			logoMediumId = null;
-			logoLargeId = null;
-		}
-
-		updatedAt = new Date();
-	}
 }

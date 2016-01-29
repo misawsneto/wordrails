@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "networkId"))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "tenantId"))
 public class AndroidApp extends BaseEntity implements Serializable {
 
 	public static final Integer MDPI_SIZE = 48;

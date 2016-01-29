@@ -4,7 +4,7 @@ import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.NetworkPermission;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.aspect.annotations.IgnoreMultitenancy;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.dto.NetworkCreateDto;
 import co.xarx.trix.eventhandler.PostEventHandler;
@@ -91,7 +91,7 @@ public class NetworkResource {
 			networkPermissionDto.admin = networkRole.admin;
 
 			//Stations Permissions
-			List<Station> stations = stationRepository.findByPersonIdAndNetworkId(person.id, id);
+			List<Station> stations = stationRepository.findByPersonId(person.id);
 			List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>(stations.size());
 			for (Station station : stations) {
 				StationPermission stationPermissionDto = new StationPermission();
@@ -131,13 +131,14 @@ public class NetworkResource {
 		return personPermissions;
 	}
 
-	@Path("/createNetwork")
 	@POST
+	@IgnoreMultitenancy
+	@Path("/createNetwork")
 	public Response createNetwork (NetworkCreateDto networkCreate)  throws ConflictException, BadRequestException, IOException {
 		try {
 			Network network = new Network();
 			network.name = networkCreate.name;
-			network.subdomain = networkCreate.subdomain;
+			network.setTenantId(networkCreate.subdomain);
 
 			//Station Default Taxonomy
 			Taxonomy nTaxonomy = new Taxonomy();
@@ -149,8 +150,6 @@ public class NetworkResource {
 			try {
 				network.networkCreationToken = UUID.randomUUID().toString();
 				networkRepository.save(network);
-
-				TenantContextHolder.setCurrentNetworkId(network.id);
 			} catch (javax.validation.ConstraintViolationException e) {
 
 				List<FieldError> errors = new ArrayList<>();
@@ -383,12 +382,9 @@ public class NetworkResource {
 	@GET
 	@Path("/publicationsCount")
 	public Response publicationsCount(@Context HttpServletRequest request)throws IOException {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-
 		List<Integer> ids = new ArrayList<>();
-		network = networkRepository.findOne(network.id);
 
-		for (Station station: network.stations){
+		for (Station station: stationRepository.findAll()){
 			ids.add(station.id);
 		}
 		List<Object[]> counts =  queryPersistence.getStationsPublicationsCount(ids);
@@ -402,11 +398,6 @@ public class NetworkResource {
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
 
 		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-
-		Network network = null;
-		if (postId == null || postId == 0) {
-			network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		}
 
 		TreeMap<Long, ReadsCommentsRecommendsCount> stats = new TreeMap<>();
 		DateTime firstDay = formatter.parseDateTime(date);
@@ -431,16 +422,16 @@ public class NetworkResource {
 		List<Object[]> commentsCounts;
 		List<Object[]> generalStatus;
 
-		if(network == null) {
+		if (postId != null && postId > 0) {
 			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			recommendsCounts = recommendRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			generalStatus = postRepository.findPostStats(postId);
 		}else {
-			postReadCounts = postReadRepository.countByNetworkAndDate(network.id, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			recommendsCounts = recommendRepository.countByNetworkAndDate(network.id, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			commentsCounts = commentRepository.countByNetworkAndDate(network.id, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			generalStatus = networkRepository.findNetworkStats(network.id);
+			postReadCounts = postReadRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			recommendsCounts = recommendRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			commentsCounts = commentRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
+			generalStatus = networkRepository.findStats();
 		}
 
 		// check date and map counts

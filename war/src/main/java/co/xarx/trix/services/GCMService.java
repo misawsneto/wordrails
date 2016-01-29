@@ -124,17 +124,15 @@ public class GCMService {
 		notificationDto.hash = notification.hash + "";
 		notificationDto.personId = notification.person != null ? notification.person.id : null;
 		notificationDto.personName = notification.person != null ? notification.person.name : null;
-		notificationDto.networkId = notification.post != null ? notification.post.networkId : null;
+		notificationDto.networkId = notification.network != null ? notification.network.id : null;
 		notificationDto.networkName = notification.network != null ? notification.network.name : null;
 		notificationDto.stationId = notification.station != null ? notification.station.id : null;
 		notificationDto.stationName = notification.station != null ? notification.station.name : null;
 		notificationDto.postId = notification.post != null ? notification.post.id : null;
 		notificationDto.postTitle = notification.post != null ? notification.post.title : null;
 		notificationDto.postSnippet = notification.post != null ? StringUtil.simpleSnippet(notification.post.body) : null;
-		notificationDto.imageSmallId = notification.post != null ? notification.post.imageSmallHash : null;
-		notificationDto.imageMediumId = notification.post != null ? notification.post.imageMediumHash : null;
-		notificationDto.test = !("dev_prod".equals(profile) || "prod".equals(profile));
-
+		if("dev_prod".equals(profile) || "prod".equals(profile))
+			notificationDto.test = false;
 
 		String notificationJson = mapper.valueToTree(notificationDto).toString();
 
@@ -196,17 +194,16 @@ public class GCMService {
 	}
 
 	public void updateRegId(Network network, Person person, String regId, Double lat, Double lng) {
-		try{
-
+		try {
 			PersonNetworkRegId pnregId = personNetworkRegIdRepository.findOneByRegId(regId);
-			if(pnregId == null || pnregId.regId == null){
+			if (pnregId == null || pnregId.regId == null) {
 				pnregId = new PersonNetworkRegId();
 				pnregId.regId = regId;
 			}
 
 			pnregId.network = network;
 			pnregId.person = person == null || person.username.equals("wordrails") ? null : person;
-			if(lat != null && lng != null){
+			if (lat != null && lng != null) {
 				pnregId.lat = lat;
 				pnregId.lng = lng;
 			}

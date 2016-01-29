@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -16,7 +18,7 @@ import java.util.Set;
  * @author misael
  */
 @Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "networkId"}))
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "tenantId"}))
 public class User extends BaseEntity implements UserDetails, Serializable {
 
 	private static final long serialVersionUID = -4656215770382382924L;
@@ -31,6 +33,8 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 	}
 
 	@Size(max = 50)
+	@NotNull
+	@Pattern(regexp = "^[a-z0-9\\._-]{3,50}$")
 	public String username;
 
 	@Size(max = 500)

@@ -11,11 +11,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @MappedSuperclass
-@FilterDef(name = "networkFilter", parameters = @ParamDef(name = "networkId", type = "integer"))
-@Filters(@Filter(name = "networkFilter", condition = "networkId = :networkId"))
+@FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = "string"))
+@Filters(@Filter(name = "tenantFilter", condition = "tenantId = :tenantId"))
 public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Versionable {
 
 	@DiffIgnore
@@ -30,17 +31,15 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	@CreatedDate
 	public Date createdAt;
 
-	@DiffIgnore
-	@Column(columnDefinition = "int(11) DEFAULT 0", updatable = false, nullable = false)
-	public Integer networkId;
-
-	@DiffIgnore
 	@Version
 	@JsonIgnore
 	@Column(columnDefinition = "int(11) DEFAULT 0", nullable = false)
 	private int version;
 
-	String tenantId;
+	@JsonIgnore
+	@NotNull
+	@Column(columnDefinition = "VARCHAR(255) DEFAULT ''")
+	public String tenantId;
 
 	@Override
 	public String getTenantId() {
@@ -50,16 +49,6 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	@Override
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
-	}
-
-	@Override
-	public Integer getNetworkId() {
-		return networkId;
-	}
-
-	@Override
-	public void setNetworkId(Integer networkId) {
-		this.networkId = networkId;
 	}
 
 	public Integer getVersion() {

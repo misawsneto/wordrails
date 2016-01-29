@@ -25,7 +25,6 @@ public class TestArtifactsFactory {
 	public static Post createPost() {
 		Post post = new Post();
 		post.id = 5;
-		post.setNetworkId(NETWORK);
 		post.setTenantId(TENANT);
 		post.title = "Dummy title";
 		post.body = "Dummy body";
@@ -53,8 +52,8 @@ public class TestArtifactsFactory {
 	}
 
 	public static Image createImage(Image.Type type) {
-		Image image = new Image();
-		for (String s : type.getSizeTags()) {
+		Image image = new Image(type);
+		for (String s : image.getSizeTags()) {
 			image.hashs.put(s, generateToken());
 		}
 		image.caption = "Dummy caption";
@@ -90,7 +89,6 @@ public class TestArtifactsFactory {
 
 	public static Person createPerson() {
 		Person person = new Person();
-		person.setNetworkId(NETWORK);
 		person.setTenantId(TENANT);
 		person.id = 10;
 		person.bookmarkPosts = Sets.newHashSet(10, 11, 12);
@@ -107,13 +105,11 @@ public class TestArtifactsFactory {
 	public static Station createStation() {
 		Station station = new Station();
 		station.id = 11;
-		station.setNetworkId(NETWORK);
 		station.setTenantId(TENANT);
 		station.name = "TUPY";
 		station.visibility = "UNRESTRICTED";
 		station.logo = createImage(Image.Type.LOGIN);
 		station.logo.id = 16119;
-		station.logoId = 3722;
 		station.defaultPerspectiveId = 7;
 		station.categoriesTaxonomyId = 140;
 		station.tagsTaxonomyId = 183;
@@ -122,7 +118,6 @@ public class TestArtifactsFactory {
 
 	public static Page createPage() {
 		Page page = new Page();
-		page.setNetworkId(NETWORK);
 		page.setTenantId(TENANT);
 		page.setTitle("Home");
 

@@ -1,6 +1,6 @@
 package co.xarx.trix.aspect;
 
-import co.xarx.trix.aspect.annotations.Profile;
+import co.xarx.trix.aspect.annotations.TimeIt;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -14,8 +14,8 @@ public class ProfilerAspect {
 
 	Logger log = Logger.getLogger(this.getClass().getName());
 
-	@Around("@annotation(profile)")
-	public Object profile(ProceedingJoinPoint pjp, Profile profile) throws Throwable {
+	@Around("@annotation(timeIt)")
+	public Object profile(ProceedingJoinPoint pjp, TimeIt timeIt) throws Throwable {
 		long start = System.currentTimeMillis();
 		log.debug("@ profile - Calling method " + ((MethodSignature)pjp.getSignature()).getMethod());
 		Object output = pjp.proceed();

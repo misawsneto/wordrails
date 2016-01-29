@@ -16,11 +16,11 @@ import java.util.Set;
 @Entity
 public class Post extends BaseEntity implements Serializable, ElasticSearchEntity, Loggable {
 
-	public static final String STATE_DRAFT = "DRAFT";
-	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
-	public static final String STATE_TRASH = "TRASH";
-	public static final String STATE_PUBLISHED = "PUBLISHED";
-	public static final String STATE_SCHEDULED = "SCHEDULED";
+    public static final String STATE_DRAFT = "DRAFT";
+    public static final String STATE_NO_AUTHOR = "NOAUTHOR";
+    public static final String STATE_TRASH = "TRASH";
+    public static final String STATE_PUBLISHED = "PUBLISHED";
+    public static final String STATE_SCHEDULED = "SCHEDULED";
 
 	private static final long serialVersionUID = 7468718930497246401L;
 
@@ -42,56 +42,56 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 		return "post";
 	}
 
-	public Integer originalPostId;
+    public Integer originalPostId;
 
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@NotNull
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date date;
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date date;
 
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date lastModificationDate;
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date lastModificationDate;
 
-	@Lob
-	@Column(length = 1024)
-	public String title;
+    @Lob
+    @Column(length = 1024)
+    public String title;
 
-	@Lob
-	public String body;
+    @Lob
+    public String body;
 
-	@Lob
-	@Column(length = 1024)
-	public String topper;
+    @Lob
+    @Column(length = 1024)
+    public String topper;
 
-	@Lob
-	@Column(length = 1024)
-	public String subheading;
+    @Lob
+    @Column(length = 1024)
+    public String subheading;
 
 	@DiffIgnore
 	@ManyToOne
 	public Sponsor sponsor;
 
-	@Lob
-	public String originalSlug;
+    @Lob
+    public String originalSlug;
 
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date scheduledDate;
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date scheduledDate;
 
-	@Lob
-	@Column(unique = true)
-	public String slug;
+    @Lob
+    @Column(unique = true)
+    public String slug;
 
-	@OneToMany(mappedBy = "post")
-	public Set<Comment> comments;
+    @OneToMany(mappedBy = "post")
+    public Set<Comment> comments;
 
 	@Column
 	@Size(min = 1, max = 15)
 	public String state;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	public Image featuredImage;
+    @ManyToOne(fetch = FetchType.EAGER)
+    public Image featuredImage;
 
     @OneToMany
     @JoinTable(
@@ -101,58 +101,53 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
     )
     public Set<Video> videos;
 
-	@OneToMany
-	@JoinTable(name = "post_image", joinColumns = @JoinColumn(name = "post_id"))
-	public Set<Image> images;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(updatable = false)
+    public Person author;
 
-	@NotNull
-	@ManyToOne
-	@JoinColumn(updatable = false)
-	public Person author;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(updatable = false)
+    public Station station;
 
-	@NotNull
-	@ManyToOne
-	@JoinColumn(updatable = false)
-	public Station station;
+    public Integer stationId;
 
-	public Integer stationId;
+    @Column(updatable = false)
+    public int readsCount = 0;
 
-	@Column(updatable = false)
-	public int readsCount = 0;
+    @Column(updatable = false)
+    public int bookmarksCount = 0;
 
-	@Column(updatable = false)
-	public int bookmarksCount = 0;
+    @Column(updatable = false)
+    public int recommendsCount = 0;
 
-	@Column(updatable = false)
-	public int recommendsCount = 0;
-
-	@Column(updatable = false)
-	public int commentsCount = 0;
+    @Column(updatable = false)
+    public int commentsCount = 0;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	public Set<Term> terms;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@JoinTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
-	public Set<String> tags;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
+    public Set<String> tags;
 
-	@Column(columnDefinition = "boolean default true", nullable = false)
-	public boolean imageLandscape = true;
+    @Column(columnDefinition = "boolean default true", nullable = false)
+    public boolean imageLandscape = true;
 
 	@Column(length = 1024)
 	public String externalFeaturedImgUrl;
 
-	@Column(length = 1024)
-	public String externalVideoUrl;
+    @Column(length = 1024)
+    public String externalVideoUrl;
 
-	@Column(columnDefinition = "int(11) DEFAULT 0")
-	public int readTime;
+    @Column(columnDefinition = "int(11) DEFAULT 0")
+    public int readTime;
 
-	@Column(columnDefinition = "boolean DEFAULT false")
-	public boolean notify = false;
+    @Column(columnDefinition = "boolean DEFAULT false")
+    public boolean notify = false;
 
 	@Lob
-	@Deprecated
 	public String imageCaptionText;
 
 	@Lob
@@ -167,18 +162,8 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Deprecated
 	public String imageTitleText;
 
-    public Integer imageId;
-    public Integer imageSmallId;
-    public Integer imageMediumId;
-    public Integer imageLargeId;
-
-	public String imageHash;
-	public String imageSmallHash;
-	public String imageMediumHash;
-	public String imageLargeHash;
-
-	public String featuredVideoHash;
-	public String featuredAudioHash;
+    public String featuredVideoHash;
+    public String featuredAudioHash;
 
 	@PrePersist
 	public void onCreate() {
@@ -197,36 +182,10 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
         lastModificationDate = updatedAt;
     }
 
-    private void onChanges() {
-        stationId = station.id;
-        readTime = calculateReadTime(body);
-
-		if (featuredImage != null && featuredImage.originalHash != null) {
-			imageHash = featuredImage.originalHash;
-			imageSmallHash = featuredImage.smallHash;
-			imageMediumHash = featuredImage.mediumHash;
-			imageLargeHash = featuredImage.largeHash;
-
-			imageId = featuredImage.original.id;
-			imageSmallId = featuredImage.small.id;
-			imageMediumId = featuredImage.medium.id;
-			imageLargeId = featuredImage.large.id;
-
-			imageCaptionText = featuredImage.caption;
-			imageCreditsText = featuredImage.credits;
-			imageTitleText = featuredImage.title;
-		} else {
-			imageId = null;
-			imageSmallId = null;
-			imageMediumId = null;
-			imageLargeId = null;
-
-			imageHash = null;
-			imageSmallHash = null;
-			imageMediumHash = null;
-			imageLargeHash = null;
-		}
-	}
+	private void onChanges() {
+		stationId = station.id;
+		readTime = calculateReadTime(body);
+    }
 
 	public static int countWords(String string) {
 		if (string == null || string.isEmpty()) return 0;
@@ -237,11 +196,11 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
         return wordArray.length;
     }
 
-	public static int calculateReadTime(String string) {
-		int words = countWords(string);
-		int minutes = 5 * words / 398;
-		return minutes;
-	}
+    public static int calculateReadTime(String string) {
+        int words = countWords(string);
+        int minutes = 5 * words / 398;
+        return minutes;
+    }
 
 	@Override
 	public String toString() {
@@ -381,14 +340,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	public void setVideos(Set<Video> videos) {
 		this.videos = videos;
-	}
-
-	public Set<Image> getImages() {
-		return images;
-	}
-
-	public void setImages(Set<Image> images) {
-		this.images = images;
 	}
 
 	public Person getAuthor() {
@@ -541,70 +492,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	public void setImageTitleText(String imageTitleText) {
 		this.imageTitleText = imageTitleText;
-	}
-
-	public Integer getImageId() {
-		return imageId;
-	}
-
-	public void setImageId(Integer imageId) {
-		this.imageId = imageId;
-	}
-
-	public Integer getImageSmallId() {
-		return imageSmallId;
-	}
-
-	public void setImageSmallId(Integer imageSmallId) {
-		this.imageSmallId = imageSmallId;
-	}
-
-	public Integer getImageMediumId() {
-		return imageMediumId;
-	}
-
-	public void setImageMediumId(Integer imageMediumId) {
-		this.imageMediumId = imageMediumId;
-	}
-
-	public Integer getImageLargeId() {
-		return imageLargeId;
-	}
-
-	public void setImageLargeId(Integer imageLargeId) {
-		this.imageLargeId = imageLargeId;
-	}
-
-	public String getImageHash() {
-		return imageHash;
-	}
-
-	public void setImageHash(String imageHash) {
-		this.imageHash = imageHash;
-	}
-
-	public String getImageSmallHash() {
-		return imageSmallHash;
-	}
-
-	public void setImageSmallHash(String imageSmallHash) {
-		this.imageSmallHash = imageSmallHash;
-	}
-
-	public String getImageMediumHash() {
-		return imageMediumHash;
-	}
-
-	public void setImageMediumHash(String imageMediumHash) {
-		this.imageMediumHash = imageMediumHash;
-	}
-
-	public String getImageLargeHash() {
-		return imageLargeHash;
-	}
-
-	public void setImageLargeHash(String imageLargeHash) {
-		this.imageLargeHash = imageLargeHash;
 	}
 
 	public String getFeaturedVideoHash() {

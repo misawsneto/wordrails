@@ -6,7 +6,7 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.converter.TermConverter;
-import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.domain.TermPerspective;
@@ -82,12 +82,6 @@ public class TermsResource {
 	@GET
 	@Path("/{termId}/image")
 	public Response getTermImage(@PathParam("termId") Integer termId, @QueryParam("perspectiveId") Integer perspectiveId, @Context HttpServletResponse response, @Context HttpServletRequest request) throws IOException {
-
-		String subdomain = "";
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		if (network != null)
-			subdomain = network.subdomain;
-
 		TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTerm(perspectiveId, termId);
 		String hash = ""; // termRepository.findValidHash(perspectiveId, termId);
 
@@ -97,7 +91,7 @@ public class TermsResource {
 			Pageable page = new PageRequest(0,1, Sort.Direction.DESC, "date");
 			List<Post> posts = postRepository.findByFeaturedImageByTermId(termId, page);
 			if(posts!=null && posts.size()>0)
-				hash = posts.get(0).featuredImage.largeHash;
+				hash = posts.get(0).featuredImage.get(Image.SIZE_LARGE);
 		}
 
 		if (hash != null && !hash.isEmpty()) {

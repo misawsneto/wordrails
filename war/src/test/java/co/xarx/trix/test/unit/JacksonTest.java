@@ -1,18 +1,14 @@
-package co.xarx.trix.test;
+package co.xarx.trix.test.unit;
 
 import co.xarx.trix.api.PageView;
-import co.xarx.trix.config.spring.ApplicationConfig;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.domain.page.Page;
+import co.xarx.trix.test.TestArtifactsFactory;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,22 +17,22 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@ContextConfiguration(classes = {
-		ApplicationConfig.class
-})
-public class JacksonTest extends AbstractJUnit4SpringContextTests {
+//@RunWith(MockitoJUnitRunner.class)
+public class JacksonTest {
 
-	@Autowired
 	ObjectMapper objectMapper;
 
-	@Test
+//	@Before
+	public void setUp() throws Exception {
+		objectMapper = new ObjectMapper();
+	}
+
 	public void deserializePage() throws IOException {
 		PageView view = objectMapper.readValue(new java.io.File("src/test/resources/page.json"), PageView.class);
 
 		System.out.println(view);
 	}
 
-	@Test
 	public void serializePage() throws JsonProcessingException, FileNotFoundException {
 		Page page = TestArtifactsFactory.createPage();
 
@@ -57,14 +53,12 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 		return new String(encoded, StandardCharsets.UTF_8);
 	}
 
-	@Test
 	public void termTest() throws IOException {
 		Term term = objectMapper.readValue(new java.io.File("src/test/resources/term.json"), Term.class);
 
 		System.out.println(term);
 	}
 
-	@Test
 	public void imageTest() throws IOException {
 		Image image = createImage();
 
@@ -72,7 +66,6 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 		System.out.println(json);
 	}
 
-	@Test
 	public void testPost() throws IOException {
 		String json = readFile("src/test/resources/post.json");
 		Post post = objectMapper.readValue(json, Post.class);
@@ -81,16 +74,12 @@ public class JacksonTest extends AbstractJUnit4SpringContextTests {
 	}
 
 	private Image createImage() {
-		Image image = new Image();
-		image.original = createFile();
-		image.large = createFile();
-		image.medium = createFile();
-		image.small = createFile();
+		Image image = new Image(Image.Type.POST);
 		image.pictures = Sets.newHashSet(
-				new Picture("original", image.original),
-				new Picture("large", image.large),
-				new Picture("medium", image.medium),
-				new Picture("small", image.small)
+				new Picture("original", createFile()),
+				new Picture("large", createFile()),
+				new Picture("medium", createFile()),
+				new Picture("small", createFile())
 		);
 
 		image.create();

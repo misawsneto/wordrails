@@ -82,7 +82,7 @@ public final class MultitenantCache implements Cache {
 		Assert.notNull(key, "Key must have some value");
 
 		logger.debug("Translating key {}", key);
-		String tenantContext = String.valueOf(TenantContextHolder.getCurrentNetworkId());
+		String tenantContext = TenantContextHolder.getCurrentTenantId();
 
 		Assert.hasText(tenantContext, "Tenant context is required but is not available");
 

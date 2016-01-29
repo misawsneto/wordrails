@@ -3,30 +3,33 @@ package co.xarx.trix.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by misael on 28/09/2015.
- */
+
 @Entity
-public class Section implements Serializable {
+public class Section extends BaseEntity implements Serializable {
 
-    private static final long serialVersionUID = 7424825842348684233L;
+	private static final long serialVersionUID = 7424825842348684233L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
 
-    public String name;
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
-    @Lob
-    public String loggedInUrl;
+	public String name;
 
-    @Lob
-    public String anonymousUrl;
+	@Lob
+	public String loggedInUrl;
 
-    @Lob
-    public String content;
+	@Lob
+	public String anonymousUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "network_id")
-    public Network network;
+	@Lob
+	public String content;
+
+	@ManyToOne
+	@JoinColumn(name = "network_id")
+	public Network network;
 }

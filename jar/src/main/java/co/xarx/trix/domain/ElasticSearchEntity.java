@@ -8,6 +8,4 @@ public interface ElasticSearchEntity extends Identifiable, MultiTenantEntity, Se
 	Integer getId();
 
 	String getType();
-
-	String getTenantId();
 }

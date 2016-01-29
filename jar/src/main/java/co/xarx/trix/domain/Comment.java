@@ -10,11 +10,18 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-public class Comment implements Serializable {
+public class Comment extends BaseEntity implements Serializable {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-	
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
+
+
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
@@ -24,7 +31,7 @@ public class Comment implements Serializable {
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date lastModificationDate;
-	
+
 	@Lob
 	@NotNull
 	public String body;

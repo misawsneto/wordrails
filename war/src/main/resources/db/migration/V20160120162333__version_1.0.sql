@@ -3,6 +3,9 @@ drop table IF EXISTS section_properties;
 drop table IF EXISTS section_queryable_list;
 drop table IF EXISTS section_section_container;
 
+ALTER TABLE term
+ADD `name_parent` VARCHAR(255) DEFAULT NULL;
+
 UPDATE station
   JOIN network ON network.id = station.network_id
   SET networkId = network_id;
@@ -13,10 +16,11 @@ UPDATE person
   SET person.networkId = users.networkId;
 
 UPDATE users
-  JOIN network ON network.id = users.network_id
-SET networkId = network_id;
+SET users.networkId = users.network_id;
 
-UPDATE users JOIN person ON person.user_id = users.id SET users.networkId = person.networkId, users.network_id = person.networkId;
+UPDATE users
+	JOIN person ON person.user_id = users.id
+SET users.networkId = person.networkId, users.network_id = person.networkId;
 
 update person_network_role set networkId = network_id;
 update personnetworkregid set networkId = network_id;
@@ -56,7 +60,7 @@ CREATE TABLE `person_bookmark` (
 INSERT INTO person_bookmark (person_id, post_id)
   SELECT person_id, post_id FROM bookmark;
 
-drop table IF EXISTS bookmark;
+DROP TABLE IF EXISTS bookmark;
 
 DELETE FROM taxonomy
 WHERE type = "A";
@@ -70,16 +74,19 @@ WHERE taxonomy.type = "T";
 DELETE FROM taxonomy
 WHERE type = "T";
 
-ALTER TABLE term DROP INDEX UK_68x4pioq3b3mu1t3jrp01bsss;
-ALTER TABLE term DROP INDEX UK_kki6crlp9p5g7979h2wb4imgh;
-ALTER TABLE term DROP INDEX UK_h725nbm620imfiywywc1w8jo1;
-ALTER TABLE term DROP INDEX UK_lixtbau20i1s7rq5evq6gl10p;
-ALTER TABLE term ADD `name_parent` VARCHAR (255) DEFAULT NULL;
-
 select concat(term.name, concat('_', term.parent_id)) from term;
 UPDATE term SET term.name_parent = concat(term.name, concat('_', term.parent_id)) where term.parent_id is not null;
 UPDATE term SET term.name_parent = concat(term.name, '_0') where term.parent_id is null;
 
+-- -----------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
+-- --------------------------- DELETE DUPLICATE POSTS --------------------------
+-- -----------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 
 DELETE postread FROM postread
 WHERE post_id IN (SELECT n1.id
@@ -204,23 +211,23 @@ INSERT INTO image_hash (image_id, hash, sizeTag)
 	WHERE tf.hash IS NOT NULL;
 
 
-INSERT INTO picture (networkId, tenantId, file_id, sizeTag, createdAt, updatedAt)
-	SELECT img.networkId, img.tenantId, tf.id, 'original', img.createdAt, img.updatedAt
+INSERT INTO picture (networkId, file_id, sizeTag, createdAt, updatedAt)
+	SELECT img.networkId, tf.id, 'original', img.createdAt, img.updatedAt
 	FROM image img
 		JOIN file tf ON tf.id = img.original_id
 	WHERE tf.hash IS NOT NULL;
-INSERT INTO picture (networkId, tenantId, file_id, sizeTag, createdAt, updatedAt)
-	SELECT img.networkId, img.tenantId, tf.id, 'large', img.createdAt, img.updatedAt
+INSERT INTO picture (networkId, file_id, sizeTag, createdAt, updatedAt)
+	SELECT img.networkId, tf.id, 'large', img.createdAt, img.updatedAt
 	FROM image img
 		JOIN file tf ON tf.id = img.large_id
 	WHERE tf.hash IS NOT NULL;
-INSERT INTO picture (networkId, tenantId, file_id, sizeTag, createdAt, updatedAt)
-	SELECT img.networkId, img.tenantId, tf.id, 'medium', img.createdAt, img.updatedAt
+INSERT INTO picture (networkId, file_id, sizeTag, createdAt, updatedAt)
+	SELECT img.networkId, tf.id, 'medium', img.createdAt, img.updatedAt
 	FROM image img
 		JOIN file tf ON tf.id = img.medium_id
 	WHERE tf.hash IS NOT NULL;
-INSERT INTO picture (networkId, tenantId, file_id, sizeTag, createdAt, updatedAt)
-	SELECT img.networkId, img.tenantId, tf.id, 'small', img.createdAt, img.updatedAt
+INSERT INTO picture (networkId, file_id, sizeTag, createdAt, updatedAt)
+	SELECT img.networkId, tf.id, 'small', img.createdAt, img.updatedAt
 	FROM image img
 		JOIN file tf ON tf.id = img.small_id
 	WHERE tf.hash IS NOT NULL;

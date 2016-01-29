@@ -7,10 +7,15 @@ import java.util.List;
 
 @Entity
 @Table(name="term_perspective",uniqueConstraints = {@UniqueConstraint(columnNames={"station_perspective_id","term_id"})})
-public class    TermPerspective {
+public class TermPerspective extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@OneToOne(mappedBy="splashedPerspective", cascade=CascadeType.REMOVE)
 	public Row splashedRow;

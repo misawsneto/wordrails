@@ -35,18 +35,8 @@ public class ESStation implements ElasticSearchEntity {
 	}
 
 	@Override
-	public Integer getNetworkId() {
-		return networkId;
-	}
-
-	@Override
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
-	}
-
-	@Override
-	public void setNetworkId(Integer networkId) {
-		this.networkId = networkId;
 	}
 
 	public void setId(Integer id) {

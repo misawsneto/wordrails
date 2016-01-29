@@ -1,28 +1,21 @@
 package co.xarx.trix.domain;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.Email;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
-public class PasswordReset {
-	
+public class PasswordReset extends BaseEntity {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)				
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@NotNull
 	@Column(unique=true)
@@ -38,26 +31,5 @@ public class PasswordReset {
 	
 	public boolean invite = false;
 	
-	public String networkSubdomain;
-	
 	public String networkName;
-	
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date createdAt;
-
-	@PrePersist
-	void onCreate() {
-		createdAt = new Date();
-	}
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@PreUpdate
-	void onUpdate() {
-		updatedAt = new Date();
-	}
 }

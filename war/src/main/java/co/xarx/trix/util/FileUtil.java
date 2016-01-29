@@ -38,7 +38,7 @@ public class FileUtil {
 
 	public static java.io.File createNewTempFile(InputStream inputStream) throws IOException {
 		java.io.File tmpFile = createNewTempFile();
-		FileUtils.copyInputStreamToFile(inputStream, tmpFile);
+ 		FileUtils.copyInputStreamToFile(inputStream, tmpFile);
 		return tmpFile;
 	}
 

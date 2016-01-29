@@ -17,6 +17,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,8 +33,23 @@ public class ImagesResource {
 
 	@Autowired
 	private ImageService imageService;
+
+	@Context
+	private HttpServletRequest request;
+	@Context
+	private UriInfo uriInfo;
+	@Context
+	private HttpServletResponse response;
 	@Autowired
 	private AmazonCloudService amazonCloudService;
+
+	public static class ImageUpload {
+		public String hash;
+		public Integer imageId;
+		public String link;
+		public String fileLink;
+	}
+
 
 	@POST
 	@Path("/upload")
@@ -48,16 +64,18 @@ public class ImagesResource {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 
-		String hash = FileUtil.getHash(item.getInputStream());
 
+		Image newImage = new Image(type);
+		newImage.title = item.getName();
+		newImage = imageService.createNewImage(newImage, item.getInputStream(), item.getContentType());
 
-		Image newImage = imageService.createNewImage(type, item.getInputStream(), item.getContentType(), true, true);
+		ImageUpload imageUpload = new ImageUpload();
+		imageUpload.hash = FileUtil.getHash(item.getInputStream());
+		imageUpload.imageId = newImage.id;
+		imageUpload.link = amazonCloudService.getPublicImageURL(imageUpload.hash);
+		imageUpload.fileLink = imageUpload.link;
 
-		return Response.ok().entity("{\"hash\":\"" + hash +
-				"\", \"imageId\":" + newImage.id +
-				"\", \"imageHash\":" + newImage.hashs.get(Image.SIZE_ORIGINAL) +
-				", \"link\": \"" + amazonCloudService.getPublicImageURL(hash) +
-				"\", \"filelink\": \"" + amazonCloudService.getPublicImageURL(hash) + "\"}").build();
+		return Response.ok().entity(imageUpload).build();
 	}
 
 	private boolean validate(FileItem item) throws FileUploadException {

@@ -5,6 +5,7 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
+import co.xarx.trix.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,12 +18,12 @@ public class PostFilter implements Filter {
 
 	@Autowired
 	private PostRepository postRepository;
-
 	@Autowired
 	private AsyncService asyncService;
-
 	@Autowired
 	TrixAuthenticationProvider authProvider;
+	@Autowired
+	public PostService postService;
 
 	@Override
 	public void destroy() {/* not implemented */
@@ -53,8 +54,9 @@ public class PostFilter implements Filter {
 					post = postRepository.findBySlug(slug);
 				}
 				if (post != null) {
-					asyncService.countPostRead(TenantContextHolder.getCurrentNetworkId(), post.id,
-							authProvider.getLoggedPerson().id, rq.getRequestedSessionId());
+					final Post p = post;
+					asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> postService.countPostRead(p.id,
+							authProvider.getLoggedPerson().id, rq.getRequestedSessionId()));
 				}
 			}
 		} catch (Exception e) {
