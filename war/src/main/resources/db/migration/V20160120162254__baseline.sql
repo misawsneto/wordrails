@@ -1609,10 +1609,6 @@ CREATE TABLE `term` (
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_68x4pioq3b3mu1t3jrp01bsss` (`taxonomy_id`,`name`),
-  UNIQUE KEY `UK_lixtbau20i1s7rq5evq6gl10p` (`taxonomy_id`,`name`,`wordpressSlug`),
-  UNIQUE KEY `UK_h725nbm620imfiywywc1w8jo1` (`wordpressId`),
-  UNIQUE KEY `UK_kki6crlp9p5g7979h2wb4imgh` (`taxonomy_id`,`name`,`wordpressId`),
   KEY `FK_s0912yy2ycnxmo44xyigjt7q8` (`parent_id`),
   CONSTRAINT `FK_6sih8dychj51bbihofi2js43k` FOREIGN KEY (`taxonomy_id`) REFERENCES `taxonomy` (`id`),
   CONSTRAINT `FK_s0912yy2ycnxmo44xyigjt7q8` FOREIGN KEY (`parent_id`) REFERENCES `term` (`id`)

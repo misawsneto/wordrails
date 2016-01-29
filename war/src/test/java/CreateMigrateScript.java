@@ -11,7 +11,7 @@ public class CreateMigrateScript {
 //	--multitenant.sql
 //	--images.sql
 
-	private static final String SCRIPT_NAME = "fullmultitenant_and_imagelibrary";
+	private static final String SCRIPT_NAME = "version_1.0";
 
 	public static void main(String[] args) throws IOException {
 		CreateMigrateScript script = new CreateMigrateScript();

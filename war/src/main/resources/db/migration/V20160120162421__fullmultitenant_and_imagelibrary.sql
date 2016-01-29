@@ -2,49 +2,6 @@
 -- -----------------------------------------------------------------------------
 -- -----------------------------------------------------------------------------
 -- -----------------------------------------------------------------------------
--- ------------------------------ GENERAL CHANGES ------------------------------
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS section_fixedquery;
-DROP TABLE IF EXISTS section_properties;
-DROP TABLE IF EXISTS section_queryable_list;
-DROP TABLE IF EXISTS section_section_container;
-DROP TABLE IF EXISTS person_bookmark;
-
-CREATE TABLE `person_bookmark` (
-	`person_id` INT(11) NOT NULL,
-	`post_id`   INT(11) DEFAULT NULL,
-	KEY `FK_ockvlbcurheoy43wtnjegjoed` (`person_id`),
-	CONSTRAINT `FK_ockvlbcurheoy43wtnjegjoed` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-)
-	ENGINE = InnoDB
-	DEFAULT CHARSET = utf8;
-
-INSERT INTO person_bookmark (person_id, post_id)
-	SELECT person_id, post_id
-	FROM bookmark;
-
-DROP TABLE IF EXISTS bookmark;
-
-DELETE FROM taxonomy
-WHERE type = "A";
-DELETE post_term FROM post_term
-	JOIN term ON post_term.terms_id = term.id
-	JOIN taxonomy ON term.taxonomy_id = taxonomy.id
-WHERE taxonomy.type = "T";
-DELETE term FROM term
-	JOIN taxonomy ON term.taxonomy_id = taxonomy.id
-WHERE taxonomy.type = "T";
-DELETE FROM taxonomy
-WHERE type = "T";
-
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
 -- -------------------------------- CONSTRAINTS --------------------------------
 -- -----------------------------------------------------------------------------
 -- -----------------------------------------------------------------------------
@@ -61,34 +18,6 @@ ALTER TABLE image DROP FOREIGN KEY FK_jlmrknjsp36q8dsgmedn7dvc6;
 DROP INDEX FK_jlmrknjsp36q8dsgmedn7dvc6 ON image;
 ALTER TABLE image DROP FOREIGN KEY FK_t2gabdofdotdaxia4yamfwve5;
 DROP INDEX FK_t2gabdofdotdaxia4yamfwve5 ON image;
-
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
--- --------------------------- DELETE DUPLICATE POSTS --------------------------
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
--- -----------------------------------------------------------------------------
-
-DELETE postread FROM postread
-WHERE post_id IN (SELECT n1.id
-									FROM post n1, post n2
-									WHERE n1.id > n2.id AND n1.featuredImage_id = n2.featuredImage_id);
-
-DELETE post_term FROM post_term
-WHERE posts_id IN (SELECT n1.id
-									 FROM post n1, post n2
-									 WHERE n1.id > n2.id AND n1.featuredImage_id = n2.featuredImage_id);
-
-DELETE comment FROM comment
-WHERE post_id IN (SELECT n1.id
-									FROM post n1, post n2
-									WHERE n1.id > n2.id AND n1.featuredImage_id = n2.featuredImage_id);
-
-DELETE n1 FROM post n1, post n2
-WHERE n1.id > n2.id AND n1.featuredImage_id = n2.featuredImage_id;
 
 -- -----------------------------------------------------------------------------
 -- -----------------------------------------------------------------------------
@@ -282,7 +211,7 @@ INSERT INTO temp_file (id, tenantId) SELECT CONVERT(
 
 -- ------------ SAVE ALL IMAGES BEING USED IN A TEMP TABLE ------------
 
-DELETE FROM post_image;
+DROP TABLE IF EXISTS post_image;
 DELETE FROM image_hash;
 DELETE FROM image_picture;
 DELETE FROM picture;
@@ -513,11 +442,6 @@ DELETE file FROM file
 
 -- ------------ POPULATE THE TABLES PICTURES, IMAGE_HASH AND IMAGE_PICTURE ------------
 
-DROP TABLE IF EXISTS post_image;
-DELETE FROM image_hash;
-DELETE FROM image_picture;
-DELETE FROM picture;
-
 INSERT INTO image_hash (image_id, hash, sizeTag)
 	SELECT img.id, tf.hash, 'original'
 	FROM image img
@@ -568,3 +492,9 @@ ALTER TABLE image DROP COLUMN original_id;
 ALTER TABLE image DROP COLUMN large_id;
 ALTER TABLE image DROP COLUMN medium_id;
 ALTER TABLE image DROP COLUMN small_id;
+
+
+DROP TABLE IF EXISTS temp_file;
+DROP TABLE IF EXISTS temp_image;
+DROP TABLE IF EXISTS temp_file_duplicated;
+DROP TABLE IF EXISTS temp_image_duplicated;
