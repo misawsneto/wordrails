@@ -443,6 +443,10 @@ DELETE file FROM file
 -- ------------ POPULATE THE TABLES PICTURES, IMAGE_HASH AND IMAGE_PICTURE ------------
 
 INSERT INTO image_hash (image_id, hash, sizeTag)
+	SELECT img.id, tf.hash, 'original'
+	FROM image img
+		JOIN file tf ON tf.id = img.original_id;
+INSERT INTO image_hash (image_id, hash, sizeTag)
 	SELECT img.id, tf.hash, 'large'
 	FROM image img
 		JOIN file tf ON tf.id = img.large_id;
