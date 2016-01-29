@@ -31,7 +31,7 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	public Date createdAt;
 
 	@DiffIgnore
-	@Column(columnDefinition = "int(11) DEFAULT 0")
+	@Column(columnDefinition = "int(11) DEFAULT 0", updatable = false, nullable = false)
 	public Integer networkId;
 
 	@DiffIgnore

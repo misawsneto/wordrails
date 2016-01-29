@@ -21,13 +21,13 @@
 								<div ng-class="{'b-t': !$first}"></div>
 								<div class="m-b panel-card panel animated zoomIn clear p-t-sm padder-v padder-md post-list news-item">
 									<!-- image -->
-									<a ui-sref="app.read({'slug': postView.slug})" class="block-image m-l m-t" ng-if="postView.imageMediumId" >
-										<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'md')">
+									<a ui-sref="app.read({'slug': postView.slug})" class="block-image m-l m-t" ng-if="postView.featuredImageHash" >
+										<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(postView, 'medium')">
 										</div>
 									</a>
 									<!-- /image -->
 									<!-- /content -->
-									<div class="m-t-sm" ng-class="{'content-block': postView.imageMediumId}">
+									<div class="m-t-sm" ng-class="{'content-block': postView.featuredImageHash}">
 										<span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="postView.topper">{{postView.topper}}</span>
 										<a  class="h3 font-bold m-b m-t-sm block" ui-sref="app.read({'slug': postView.slug})">
 											{{postView.title}}

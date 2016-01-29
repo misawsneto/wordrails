@@ -309,24 +309,34 @@ app.controller('NetworkStatsCtrl', ['$scope', '$log', '$timeout', '$rootScope', 
 	        }}
 		//$scope.datePickerValue = moment().add(-30, 'days').format('DD/MM/YYYY') + ' - ' + moment().format('DD/MM/YYYY');
 
-$scope.usersCount = 0;
-$scope.usersAndroid = 0
-$scope.usersIOS = 0
-$scope.totalPublished = 0;
-$scope.totalScheduled = 0
-$scope.totalDrafts = 0;
-$scope.imagesCount = 0;
+	$scope.usersCount = 0;
+	$scope.usersAndroid = 0
+	$scope.usersIOS = 0
+	$scope.totalPublished = 0;
+	$scope.totalScheduled = 0
+	$scope.totalDrafts = 0;
+	$scope.imagesCount = 0;
 
-trix.countPersonsByNetwork().success(function(response){
-	$scope.usersCount = response;
-})
+	trix.countPersonsByNetwork().success(function(response){
+		$scope.usersCount = response;
+	})
 
-$scope.page = 0;
-$scope.firstLoad = false
+	$scope.page = 0;
+	$scope.firstLoad = false
 
-trix.searchPosts(null, $scope.page, 10, {'personId': $scope.app.getLoggedPerson().id,
-	'publicationType': 'PUBLISHED', sortByDate: true}).success(function(response){
+	trix.searchPosts(null, $scope.page, 10, {'personId': $scope.app.getLoggedPerson().id,
+		'publicationType': 'PUBLISHED', sortByDate: true}).success(function(response){
 		$scope.publications = response.posts;
 		$scope.firstLoad = true;
 	})
+
+	$scope.lineInView = function(inview, inviewpart, event) {
+		// var inViewReport = inview ? '<strong>enters</strong>' : '<strong>exit</strong>';
+		// if (typeof(inviewpart) != 'undefined') {
+		// 	inViewReport = '<strong>' + inviewpart + '</strong> part ' + inViewReport;
+		// }
+		// $scope.inviewLogs.unshift({ id: logId++, message: $sce.trustAsHtml('Line <em>#' + index + '</em>: ' + inViewReport) });
+		console.log(event);
+		return false;
+	}
 }])

@@ -24,11 +24,18 @@ public final class MultitenantCacheManager implements CacheManager {
 
 	private Map<String, Cache> redisCaches = new HashMap<>();
 
-	public MultitenantCacheManager(Map<String, RedisTemplate> redisTemplates) {
-		redisTemplates.values().stream().forEach(RedisTemplate::afterPropertiesSet);
+	public MultitenantCacheManager(Map<String, Map<RedisTemplate, Integer>> redisTemplates) {
+		redisTemplates.values().stream().forEach(r -> r.keySet().forEach(RedisTemplate::afterPropertiesSet));
 
 		redisTemplates.keySet().stream().forEach(cacheName ->
-				redisCaches.put(cacheName, new MultitenantCache(new RedisCache(cacheName, null, redisTemplates.get(cacheName), 60)))
+				redisCaches.put(cacheName,
+						new MultitenantCache(
+								new RedisCache(cacheName, null,
+										redisTemplates.get(cacheName).keySet().iterator().next(),
+										redisTemplates.get(cacheName).values().iterator().next()
+								)
+						)
+				)
 		);
 	}
 

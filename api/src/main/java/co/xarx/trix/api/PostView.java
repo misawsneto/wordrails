@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Id;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,7 +18,9 @@ public class PostView implements Serializable {
 
 	@Id
 	@JsonProperty("postId")
-	public Integer id;
+	public Integer postId;
+
+	public String featuredImageHash;
 
 	public String smallHash;
 	public String mediumHash;
@@ -53,6 +54,10 @@ public class PostView implements Serializable {
 
 	public String authorEmail;
 	public String authorTwitter;
+
+	public String authorCover;
+	public String authorProfilePicture;
+
 	public String authorCoverMediumHash;
 	public String authorImageSmallHash;
 	public String authorCoverUrl;
@@ -80,7 +85,21 @@ public class PostView implements Serializable {
 	public Date scheduledDate;
 	public boolean notify;
 
-	public Map<String, String> featuredImage;
+	public String getAuthorCover() {
+		return authorCover;
+	}
+
+	public void setAuthorCover(String authorCover) {
+		this.authorCover = authorCover;
+	}
+
+	public String getAuthorProfilePicture() {
+		return authorProfilePicture;
+	}
+
+	public void setAuthorProfilePicture(String authorProfilePicture) {
+		this.authorProfilePicture = authorProfilePicture;
+	}
 
 	public String getTitle() {
 		return title;
@@ -91,11 +110,11 @@ public class PostView implements Serializable {
 	}
 
 	public Integer getId() {
-		return id;
+		return postId;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.postId = id;
 	}
 
 	public String getSmallHash() {
@@ -458,19 +477,11 @@ public class PostView implements Serializable {
 		this.notify = notify;
 	}
 
-	public Map<String, String> getFeaturedImage() {
-		return featuredImage;
+	public String getFeaturedImageHash() {
+		return featuredImageHash;
 	}
 
-	public void setFeaturedImage(Map<String, String> featuredImage) {
-		if (featuredImage != null) {
-			this.featuredImage = featuredImage;
-			this.setSmallHash(featuredImage.get("small"));
-			this.setMediumHash(featuredImage.get("medium"));
-			this.setLargeHash(featuredImage.get("large"));
-			this.setImageSmallHash(featuredImage.get("small"));
-			this.setImageMediumHash(featuredImage.get("medium"));
-			this.setImageLargeHash(featuredImage.get("large"));
-		}
+	public void setFeaturedImageHash(String featuredImageHash) {
+		this.featuredImageHash = featuredImageHash;
 	}
 }

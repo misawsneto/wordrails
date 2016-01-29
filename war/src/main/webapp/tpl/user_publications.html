@@ -120,13 +120,13 @@
 					<div ng-class="{'b-t': !$first}"></div>
 					<div class="clear p-t-sm p post-list news-item">
 						<!-- image -->
-						<a class="block-image m-l m-t" ng-if="publication.mediumId" ui-sref="app.read({'slug': publication.slug})">
-							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'md')">
+						<a class="block-image m-l m-t" ng-if="publication.featuredImageHash" ui-sref="app.read({'slug': publication.slug})">
+							<div class="cell-wrap r r-2x" ng-style="getBackgroundImage(publication, 'medium')">
 							</div>
 						</a>
 						<!-- /image -->
 						<!-- /content -->
-						<div ng-class="{'content-block': publication.mediumId}">
+						<div ng-class="{'content-block': publication.featuredImageHash}">
 							<div class="m-b-sm" ng-if="publication.topper">
 								<span class="no-radius normal p-xxs topper text-md bg-custom-primary">{{publication.topper}}</span>
 							</div>
