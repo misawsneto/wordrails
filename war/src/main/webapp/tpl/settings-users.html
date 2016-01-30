@@ -69,11 +69,9 @@
 										<i class="blue"></i>
 									</label>
 								</th>
-								<th>usuário</th>
-								<th>nome</th>
-								<th>email</th>
+								<th>usuários</th>
 								<th class="text-center">último login</th>
-								<th ng-if="app.networkAdmin" style="max-width:115px;">
+								<th ng-if="app.networkAdmin" style="max-width:115px;" class="text-center">
 									ativar/desativar
 								</th>
 								<th style="width:30px;"></th>
@@ -87,14 +85,18 @@
 										<i class="blue"></i>
 									</label>
 								</td>
-								<td>
-									<div back-img="{{person.imageSmallId}}" 
-									class="bg-cover bg-img-xs bg-cover-round pull-left m-r m-t-n-xxs m-b-n-xxs pos-rlt bla-{{person.imageSmallId}}"
-									title="{{person.name}}"></div>
-									{{person.username}}
+								<td class="clearfix">
+					              <span class="pull-left thumb-sm avatar m-r">
+					                <div back-img="{{person.imageSmallId}}" 
+										class="bg-cover m-t-sm bg-img bg-cover-round pull-left m-r m-t-n-xxs m-b-n-xxs pos-rlt b-t-sm"
+										title="{{person.name}}">
+									</div>
+					              </span>
+					              <span class="clear">
+					                <span class="text-md font-bold">{{person.name}}</span>
+					                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
+					              </span>
 								</td>
-								<td>{{person.name}}</td>
-								<td>{{person.email}}</td>
 								<td class="text-center" ng-if="!person.lastLogin"> - </td>
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 								<td class="text-center" ng-if="app.networkAdmin">
