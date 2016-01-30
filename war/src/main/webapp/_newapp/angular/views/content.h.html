@@ -1,0 +1,90 @@
+<div class="box">
+  <!-- Content Navbar -->
+  <div class="navbar no-radius" ng-class="$state.current.data.theme ? $state.current.data.theme.primary+'-600' : app.setting.theme.primary+'-600'">
+    <!-- Open side - Naviation on mobile -->
+    <a md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
+    <!-- / -->
+    <div class="navbar-header pull-left">
+      <a class="navbar-brand">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
+              width: 24px; height: 24px;">
+            <path d="M 50 0 L 100 14 L 92 80 Z" fill="rgba(139, 195, 74, 0.5)"></path>
+            <path d="M 92 80 L 50 0 L 50 100 Z" fill="rgba(139, 195, 74, 0.8)"></path>
+            <path d="M 8 80 L 50 0 L 50 100 Z" fill="#f3f3f3"></path>
+            <path d="M 50 0 L 8 80 L 0 14 Z" fill="rgba(220, 220, 220, 0.6)"></path>
+          </svg>
+        <img src="images/logo.png" alt="." style="max-height: 36px; display:none">
+        <span class="hidden-folded m-l inline">{{app.name}}</span>
+      </a>
+    </div>
+    <!-- GoBack - Back to parent if $state has the param 'child' -->
+    <a md-ink-ripple class="navbar-item pull-left" ng-click="goBack()" ng-show="$state.current.data.child" ><i class="mdi-navigation-arrow-back i-24"></i></a>
+    <!-- / -->
+    <!-- Common tools -->
+    <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child">
+      <li>
+        <a md-ink-ripple ng-click="app.search.show = true">
+          <i class="mdi-action-search i-24"></i>
+        </a>
+      </li>
+      <li>
+        <a md-ink-ripple data-toggle="modal" data-target="#user">
+          <i class="mdi-social-person-outline i-24"></i>
+        </a>
+      </li>
+      <li class="dropdown">
+        <a md-ink-ripple data-toggle="dropdown">
+          <i class="mdi-navigation-more-vert i-24"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up text-color">
+          <li><a href>Single-column view</a></li>
+          <li><a href>Sort by date</a></li>
+          <li><a href>Sort by name</a></li>
+          <li class="divider"></li>
+          <li><a href>Help &amp; feedback</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="pull-right" ui-view="navbar@"></div>
+    <!-- / -->
+    <!-- Search form -->
+    <div id="search" class="pos-abt w-full h-full" ng-show="app.search.show" ng-class="$state.current.data.theme ? $state.current.data.theme.primary : app.setting.theme.primary">
+      <div class="box">
+        <div class="box-col w-56 text-center">
+          <!-- hide search form -->
+          <a md-ink-ripple class="navbar-item inline" ng-click="app.search.show=false; app.search.content=''"><i class="mdi-navigation-arrow-back i-24"></i></a>
+        </div>
+        <div class="box-col v-m">
+          <!-- bind to app.search.content -->
+          <input class="form-control input-lg no-bg no-border" placeholder="Search" ng-model="app.search.content">
+        </div>
+        <div class="box-col w-56 text-center">
+          <a md-ink-ripple class="navbar-item inline"><i class="mdi-av-mic i-24"></i></a>
+        </div>
+      </div>
+    </div>
+    <!-- / -->
+  </div>
+  <!-- Content -->
+  <div class="box-row">
+    <div class="box-cell">
+      <div class="box-inner">
+        <div id="view" class="clearfix md-whiteframe-z0 no-radius" ng-class="$state.current.data.theme ? $state.current.data.theme.primary : app.setting.theme.primary">
+          <div class="container m-v-md">
+            <!-- Page title - Bind to $state's title -->
+            <div class="h4" ng-bind="$state.current.data.title"></div>
+            <!-- / -->
+          </div>
+        </div>
+        <div class="container p-v-lg" ui-view></div>
+        <div class="container p-v-lg">
+          <div class="row text-muted">
+            <div class="col-sm-6">&copy; Copyright 2015. All rights reserved.</div>
+            <div class="col-sm-6 text-right text-left-xs font-bold">{{app.name}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- / -->
+</div>

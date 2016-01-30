@@ -52,3 +52,6 @@ nbactions.xml
 *.dmp
 deploy.sh
 rebel.xml
+
+war/src/main/webapp/_newapp/node_modules/**
+war/src/main/webapp/_newapp/bower_components/**

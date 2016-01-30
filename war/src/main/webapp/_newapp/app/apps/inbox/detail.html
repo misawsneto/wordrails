@@ -1,0 +1,60 @@
+<div ng-controller="DetailCtrl">
+  <!-- header -->
+  <div class="m-b">
+    <a ui-sref="app.inbox.list" class="btn btn-sm btn-default w-xxs m-r-sm" tooltip="Back to Inbox"><i class="fa fa-long-arrow-left"></i></a>
+    <div class="btn-group pos-stc m-r-sm">
+      <button class="btn btn-sm btn-default w-xxs w-auto-xs" tooltip="Delete" ng-click="removeItem(item)"><i class="fa fa-trash-o"></i></button>
+    </div>
+    <div class="btn-group pos-stc">
+      <div class="btn-group">
+        <button class="btn btn-sm btn-default w-xxs w-auto-xs" data-toggle="dropdown" tooltip="Move to" tooltip-placement="bottom"><i class="fa fa-fw fa-tag"></i> <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li ng-repeat="label in labels">
+            <a href ng-click="updateItem(item, label.filter)">
+              <i class="fa fa-fw fa-circle text-muted text-xs" color="{{label.color}}" label-color ></i>
+              {{label.name}}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- / header -->
+  <div class="b-b">
+    <h2 class="font-thin">{{item.subject}}</h2>
+  </div>
+  <div class="p-v text-muted">
+    <img ng-src="{{item.avatar}}" class="img-circle w-32 m-r-sm">
+    from <a href>{{item.from}}</a> <span class="text-xs">on {{item.date}}</span>
+  </div>
+  <div class="p-v">
+    {{item.content}}
+  </div>
+  <div class="p-v">
+    <div ng-repeat="attach in item.attach" class="panel b-a inline m-r-sm m-b-sm bg-light">
+      <div class="p-xs b-b"><i class="fa fa-paperclip"></i> {{attach.name}}</div>
+      <div class="p-xs w-sm lt">
+        <a ng-href="{{attach.url}}"><img ng-src="{{attach.url}}" class="w-full"></a>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="panel b-a">
+      <div class="panel-heading ng-show" ng-hide="reply">
+        <div class="m-b-lg">
+        Click here to <a href class="text-u-l" ng-click="reply=!reply">Reply</a> or <a href class="text-u-l" ng-click="reply=!reply">Forward</a>
+        </div>
+      </div>
+      <div class="ng-hide" ng-show="reply">
+        <div class="panel-heading b-b b-light">
+          {{item.from}}
+        </div>
+        <div class="p" contenteditable="true" style="min-height:100px"></div>
+        <div class="panel-footer bg-light lt">
+          <button class="btn btn-link pull-right" ng-click="reply=!reply"><i class="fa fa-trash-o"></i></button>
+          <button class="btn btn-info w-xs font-bold">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

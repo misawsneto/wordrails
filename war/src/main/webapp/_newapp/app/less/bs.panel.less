@@ -1,0 +1,102 @@
+.panel-wariant(@bg-color, @name){
+  @color: mix(@bg-color, #fff, 15%);
+  .panel-@{name}{
+    border-color: darken(@color, 5%);
+    > .panel-heading{
+      color: darken(@bg-color, 20%);
+      background-color: @color;
+      border-color: darken(@color, 5%);
+    }
+  }
+}
+
+.panel{
+  border-radius: @panel-border-radius;
+  .accordion-toggle{
+    font-size: 14px;
+    display: block;
+    cursor: pointer;
+  }
+  .list-group-item{
+    border-color: @panel-list-group-border;
+  }
+  &.no-borders{
+    border-width: 0;
+    .panel-heading,
+    .panel-footer{
+      border-width: 0;
+    }
+  }
+}
+
+.panel-card{
+  border-width: 0;
+  .box-shadow( 0 1px 3px rgba(0, 0, 0, 0.15) );
+}
+
+.panel-heading{
+  padding: 16px 24px;
+  .panel-default &{
+    background-color: @panel-heading-bg;
+    &.bg-white{
+      background-color: #fff;
+    }
+  }  
+  border-radius: @panel-border-radius @panel-border-radius 0 0;
+  &.no-border{
+    margin:-1px -1px 0 -1px;
+    border: none;
+  }
+  .nav{
+    margin: -12px  -16px;
+  }
+  .list-group{
+    background: transparent;
+  }
+  &.panel-heading-sm{
+    padding-top: (@panel-heading-sm - @line-height-computed)/2;
+    padding-bottom: (@panel-heading-sm - @line-height-computed)/2;
+  }
+  &.panel-heading-xs{
+    padding-top: (@panel-heading-xs - @line-height-computed)/2;
+    padding-bottom: (@panel-heading-xs - @line-height-computed)/2;
+  }
+}
+
+.panel-body{
+  padding: 16px 24px;
+}
+
+.panel-footer{
+  padding: 16px 24px;
+  border-color: @panel-heading-border;
+  border-radius: 0 0 @panel-border-radius @panel-border-radius;
+  background-color: @panel-footer-bg;
+  &.panel-footer-sm{
+    padding-top: (@panel-heading-sm - @line-height-computed)/2;
+    padding-bottom: (@panel-heading-sm - @line-height-computed)/2;
+  }
+  &.panel-footer-xs{
+    padding-top: (@panel-heading-xs - @line-height-computed)/2;
+    padding-bottom: (@panel-heading-xs - @line-height-computed)/2;
+  }
+}
+
+.panel-group .panel-heading + .panel-collapse .panel-body{
+  border-top: 1px solid @panel-heading-border;
+}
+
+.panel-default{
+  border-color: @panel-border;
+  > .panel-heading,
+  > .panel-footer {
+    border-color: @panel-heading-border;
+  }
+}
+
+.panel-wariant(@primary, primary);
+.panel-wariant(@info, info);
+.panel-wariant(@success, success);
+.panel-wariant(@warning, warning);
+.panel-wariant(@danger, danger);
+.panel-wariant(@dark, dark);
