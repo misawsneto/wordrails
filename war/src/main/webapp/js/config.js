@@ -84,10 +84,17 @@ angular.module('app')
   var $style = $('style#custom-style').length ? $('style#style#custom-style') : $('<style id="custom-style">').appendTo('body');
   $style.html(getCustomStyle(mainColor, backgroundColor, navbarColor));
 
-  $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
-    window.console && console.log(toState);
-    window.console && console.log(fromState);
-    window.console && console.error(event);
+  $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
+      var errorObj = {
+          event: event,
+          toState: toState,
+          toParams: toParams,
+          fromState: fromState,
+          fromParams: fromParams,
+          error: error
+      }
+
+      window.console && console.error(errorObj);
   });
 
       if(initData.network.facebookAppID) {
