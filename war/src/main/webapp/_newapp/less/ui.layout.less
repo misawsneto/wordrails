@@ -1,0 +1,86 @@
+/*layout*/
+html, body{
+	width: 100%;
+	height: 100%;
+}
+
+body{
+	overflow: hidden;
+}
+
+.app{
+	width: 100%;
+	height: 100%;
+	position: relative;
+	overflow: auto;
+	.modal-open &{
+		overflow: hidden;
+	}
+}
+
+// aside
+.app-aside{
+	position: absolute !important;
+	top: 0;
+	bottom: 0;
+	height:100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	background-color: transparent;
+  	box-shadow: 0px @navbar-height 5px 0 rgba(0, 0, 0, 0.26);
+  	z-index: 60;
+  	opacity: 1;
+ 	.backface-visibility(hidden);
+}
+
+.app-content{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height:100%;
+	overflow-y: auto;
+}
+
+// md
+@media (min-width: @aside-min) {
+	.app-aside {
+		display: block !important;
+		width: @aside-width;
+		&.md-closed.hide{
+			.translate3d(-100%, 0, 0) !important;
+		}
+		&.folded{
+			width: @aside-folded-width;
+			~ .app-content{
+				margin-left: @aside-folded-width;
+			}
+		}
+		&:not(.folded):not(.hide)~ .app-content{
+			margin-left: @aside-width;
+		}
+		&.md-sidenav-left{
+			.translate3d(0%, 0, 0) !important;
+			min-width: 0;
+		}
+		.left{
+			.translate3d(0, 0, 0) !important;
+		}
+	}
+}
+
+@media (max-width: @aside-max) {
+	.app-aside {
+		display: block !important;
+		&.modal{
+			z-index: 1050;
+		}
+		.left{
+			max-width: 304px;
+		}
+	}
+	.app-padding{
+		padding: 4px 4px;
+	}
+}

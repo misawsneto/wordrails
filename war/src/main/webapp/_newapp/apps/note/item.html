@@ -1,0 +1,24 @@
+
+	<div class="box">
+	  <div class="bg-light lt b-b clearfix">
+	    <span class="text-muted pull-right p inline">Created on: {{ item.date  | date:'MMM-dd-yyyy H:mm' }}</span>
+	    <div class="dropdown" dropdown>
+	      <a class="p inline" dropdown-toggle >
+	      	<span class="w-16 inline {{item.color}} b-a b" style="vertical-align: -15%"></span>
+	      </a>
+	      <div class="dropdown-menu animated fadeIn p-h-sm">
+	        <div ng-repeat="color in colors" class="p-sm inline pointer" ng-click=" item.color = color ">
+	        	<span class="w-16 inline {{color}} b-a b"></span>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="box-row">
+	    <div class="box-cell">
+	      <div class="box-inner">
+	        <textarea class="form-control no-radius no-border no-bg p text-md" style="height:100%;" ng-model="item.title">
+	        </textarea>
+	      </div>
+	    </div>
+	  </div>
+  </div>

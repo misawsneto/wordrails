@@ -1,0 +1,68 @@
+<div class="padding-out">
+  <div ng-show="todos.length" class="bg-white p-h-md md-whiteframe-z0">
+      <ul class="nav nav-md nav-lines b-info">
+        <li ui-sref-active="active">
+          <a ui-sref="app.todo.list({fold:''})">All</a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.todo.list({fold:'active'})">Active <b class="badge bg-warning">{{remainingCount}}</b></a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="app.todo.list({fold:'completed'})">Completed <b class="badge bg-success">{{todos.length - remainingCount}}</b></a>
+        </li>
+      </ul>
+  </div>
+  <div class="padding">
+    <div>
+      <form id="todo-form" ng-submit="addTodo()" class="panel panel-card p-sm">
+        <input placeholder="What needs to be done?" ng-model="newTodo" autofocus class="form-control input-lg no-border no-bg">
+      </form>
+    </div>
+    <div ng-show="todos.length">
+      <div class="m-b-md">
+        <div ng-repeat="todo in todos | filter:app.search.content | filter:statusFilter | orderBy:'id':true  track by $index" ng-class="{completed: todo.completed, editing: todo == editedTodo}" class="card p m-b-xs">
+          <div ng-hide="todo.editedTodo">
+            <div class="dropdown card-tools">
+              <button md-ink-ripple data-toggle="dropdown" class="md-btn md-flat md-btn-circle">
+                <i class="mdi-navigation-more-vert text-md"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-scale pull-right pull-up text-color">
+                <li><a href ng-click='editTodo(todo)'>Edit</a></li>
+                <li><a href ng-click="removeTodo(todo)">Remove</a></li>
+              </ul>
+            </div>
+            <label class="md-check pull-left m-r-xs">
+              <input type="checkbox" ng-model="todo.completed" ng-change="todoCompleted(todo)"><i></i>
+            </label>
+            <span class="clear m-r-lg">{{todo.title}}</span>
+          </div>
+          <form ng-submit="doneEditing(todo)" ng-show="todo.editedTodo">
+            <input class="form-control" ng-trim="false" ng-model="todo.title" ng-blur="doneEditing(todo)" ui-focus="todo.editedTodo">
+          </form>
+        </div>
+      </div>
+    </div>
+    <div ng-show="todos.length" class="row">
+      <div class="col-xs-7">
+        <label class="md-check m-l">
+          <input type="checkbox" ng-model="allChecked" ng-click="markAll(allChecked)"><i class="blue"></i>
+          Mark all as complete
+        </label>
+      </div>
+      <div class="col-xs-5 text-right">
+          <button class="btn btn-default btn-xs" ng-click="clearCompletedTodos()" ng-show="remainingCount < todos.length">Clear completed ({{todos.length - remainingCount}})</button>
+      </div>
+    </div>
+
+    <div ng-hide="todos.length">
+      <div class="p-lg text-center animated fadeInUp">
+        <span class="text-3x">
+          <i class="mdi-action-done-all text-2x text-white"></i>
+        </span>
+        <h3 class="font-thin">
+          Create your first todo!
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
