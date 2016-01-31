@@ -55,3 +55,7 @@ rebel.xml
 
 war/src/main/webapp/_newapp/node_modules/**
 war/src/main/webapp/_newapp/bower_components/**
+war/src/main/webapp/_newapp/app/scripts/app.min.js
+war/src/main/webapp/_newapp/app/scripts/app.src.js
+war/src/main/webapp/_newapp/app/styles/app.min.css
+
