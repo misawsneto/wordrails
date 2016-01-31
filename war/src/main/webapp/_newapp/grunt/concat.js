@@ -34,7 +34,8 @@ module.exports = {
       'app/scripts/services/*.js',
       'app/scripts/filters/*.js'
     ],
-    dest:'angular/scripts/app.src.js'
+    // dest:'angular/scripts/app.src.js'
+    dest:'app/scripts/app.src.js'
   },
   html:{
     src:[

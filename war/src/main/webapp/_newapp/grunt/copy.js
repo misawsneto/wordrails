@@ -78,19 +78,19 @@ module.exports = {
             {src: '**', cwd: 'bower_components/bootstrap/dist/fonts', dest: 'app/fonts', expand: true}
         ]
     },
-    webapp: {
-        files: [
-            {expand: true, src: '**', cwd: 'app/api',     dest: 'angular/api'},
-            {expand: true, src: '**', cwd: 'app/apps',    dest: 'angular/apps'},
-            {expand: true, src: '**', cwd: 'app/fonts',   dest: 'angular/fonts'},
-            {expand: true, src: '**', cwd: 'app/i18n',    dest: 'angular/i18n'},
-            {expand: true, src: '**', cwd: 'app/images',  dest: 'angular/images'},
-            {expand: true, src: '**', cwd: 'app/scripts', dest: 'angular/scripts'},
-            {expand: true, src: '**', cwd: 'app/styles',  dest: 'angular/styles'},
-            {expand: true, src: '**', cwd: 'app/views',   dest: 'angular/views'},
-            {src: 'app/index.min.html', dest: 'angular/index.html'}
-        ]
-    },
+    // webapp: {
+    //     files: [
+    //         {expand: true, src: '**', cwd: 'app/api',     dest: 'angular/api'},
+    //         {expand: true, src: '**', cwd: 'app/apps',    dest: 'angular/apps'},
+    //         {expand: true, src: '**', cwd: 'app/fonts',   dest: 'angular/fonts'},
+    //         {expand: true, src: '**', cwd: 'app/i18n',    dest: 'angular/i18n'},
+    //         {expand: true, src: '**', cwd: 'app/images',  dest: 'angular/images'},
+    //         {expand: true, src: '**', cwd: 'app/scripts', dest: 'angular/scripts'},
+    //         {expand: true, src: '**', cwd: 'app/styles',  dest: 'angular/styles'},
+    //         {expand: true, src: '**', cwd: 'app/views',   dest: 'angular/views'},
+    //         {src: 'app/index.min.html', dest: 'angular/index.html'}
+    //     ]
+    // },
     html: {
         files: [
             {expand: true, src: '**', cwd: 'app/api',       dest: 'html/api'},

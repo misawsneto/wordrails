@@ -10,7 +10,8 @@ module.exports = {
     },
     webapp: {
         files: {
-            'angular/styles/app.min.css': [
+            'app/styles/app.min.css': [
+            // 'angular/styles/app.min.css': [
                 'libs/jquery/bootstrap/dist/css/bootstrap.css',
                 'app/styles/font.css',
                 'app/styles/app.css'
