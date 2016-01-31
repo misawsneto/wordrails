@@ -1,0 +1,371 @@
+  <div class="row row-xs">
+    <div class="col-sm-4">
+      <div class="panel panel-card p m-b-sm">
+        <h5 class="no-margin m-b">Tasks</h5>
+        <div class="text-center">
+          <div class="inline">
+            <div ui-jp="easyPieChart" ui-options="{
+                percent: 25,
+                lineWidth: 12,
+                trackColor: '{{app.color.light}}',
+                barColor: '{{app.color.success}}',
+                scaleColor: '#fff',
+                size: 167,
+                lineCap: 'butt',
+                color: '{{color}}',
+                animate: 3000,
+                rotate: 270
+              }" ng-init="color = getColor(app.setting.theme.primary, 400)">
+              <div class="font-bold text-warning">
+                25%
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div><strong>5</strong> remainning</div>
+          <small class="text-muted">Next task: 19:30 Thu</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-card p m-b-sm">
+        <h5 class="no-margin m-b">Todos</h5>
+        <div class="text-center">
+          <div class="inline">
+            <div ui-jp="easyPieChart" ui-options="{
+                percent: 50,
+                lineWidth: 70,
+                trackColor: '#fff',
+                barColor: '{{app.color.light}}',
+                scaleColor: '#fff',
+                size: 167,
+                lineCap: 'butt',
+                rotate: 90,
+                animate: 5000
+              }">
+              <div class="font-bold h3 text-accent">
+                50%
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div><strong>32</strong> not finished</div>
+          <small class="text-muted">432 task finished</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-card p m-b-sm">
+        <h5 class="no-margin m-b">Sells</h5>
+        <div class="text-center" ng-controller="ChartCtrl">
+            <div ui-jp="plot" ui-options="
+              {{plot_pie}},
+              {
+                series: { pie: { show: true, innerRadius: 0.4, stroke: { width: 3 }, label: { show: true, threshold: 0.05 } } },
+                colors: ['{{app.color.info}}','{{app.color.warning}}','{{app.color.success}}','{{app.color.accent}}'],
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },   
+                tooltip: true,
+                tooltipOpts: { content: '%s: %p.0%' }
+              }
+            " style="height:168px"></div>
+        </div>
+        <div class="m-t-xs">
+          <div class="font-bold">$432,000</div>
+          <small class="text-muted">This month</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row row-xs" ng-controller="ChartCtrl">
+    <div class="col-sm-4">
+      <div class="panel panel-card">
+        <div class="p">
+          Members
+        </div>
+        <div class="panel-body text-center">
+          <div class="m-v-lg">
+            Total accounts
+            <div class="h2 text-success font-bold">3,421,100</div>
+          </div>
+        </div>
+        <div class="b-t b-light p">
+          Composite
+          <div class="progress progress-striped progress-sm r m-v-sm">
+            <div class="progress-bar {{app.setting.theme.accent}}" style="width:30%">30%</div>
+            <div class="progress-bar {{app.setting.theme.warn}}" style="width:20%">20%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-card">
+        <div class="p">
+          <label class="md-switch pull-right" ng-init="showData=false">
+            <input type="checkbox" ng-model="showData">
+            <i class="{{app.setting.theme.accent}}"></i>
+          </label>
+          <span>Monitor</span> <i class="fa fa-caret-up text-success"></i><span class="text-xs text-muted m-l-xs">1.5%</span>
+        </div>
+        <div class="panel-body">
+          <div ui-jp="plot" ui-refresh="showData" ui-options="
+            [
+              {
+                data: {{plot_line}}, 
+                points: { show: true, radius: 4, lineWidth: 3, fillColor: '{{app.color.accent}}'}, 
+                lines:  { show: {{showData}}, lineWidth: 0, fill: 0.5, fillColor: '{{app.color.accent}}' }, 
+                color:'#fff'
+              }
+            ],
+            {
+              series: { shadowSize: 0 },
+              xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+              yaxis:{ show: true, font: { color: '#ccc' }},
+              grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+              tooltip: true,
+              tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+            }
+          " style="height:198px">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-card">
+        <div class="p">
+          Total revenue of this month
+        </div>
+        <div style="overflow-x: hidden">
+          <div style="margin: 0 -4px;" >
+            <div ui-jp="plot" ui-options="
+              [
+                { data: {{plot_line_1}}, points: { show: true, radius: 0}, splines: { show: true, tension: 0.45, lineWidth: 1, fill: 0.2 } },
+                { data: {{plot_line_2}}, points: { show: true, radius: 0}, splines: { show: true, tension: 0.45, lineWidth: 1, fill: 1 } }
+              ], 
+              {
+                colors: ['#cccccc', '{{app.color.dark}}'],
+                series: { shadowSize: 3 },
+                xaxis: { show: false, font: { color: '#ccc' }, position: 'bottom' },
+                yaxis:{ show: false, font: { color: '#ccc' }},
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                tooltip: true,
+                tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+              }
+            " style="height:173px" >
+          </div>
+          </div>
+        </div>
+        <div class="panel-footer bg-dark no-b-t">
+          <div class="box">
+            <div class="box-col">
+              <span class="text-md">$30,343 <i class="fa fa-caret-up text-muted"></i></span>
+            </div>
+            <div class="box-col text-right w-xs">
+              <div ng-init="data1=[60,40]" ui-jp="sparkline" ui-options="{{data1}}, {type:'pie', height:25, sliceColors:['{{app.color.warning}}','#fff']}" class="sparkline inline"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>    
+  </div>
+  <div class="row row-xs" ng-controller="VectorMapCtrl">
+    <div class="col-md-8">
+      <div class="panel panel-card">
+        <div class="panel-heading b-b b-light">World Market</div>
+        <div class="panel-body">
+          <p class="m-b-lg text-muted">World map, world regions, countries and cities.</p>
+          <div class="m-b-lg" style="height:243px;" ui-jp="vectorMap" ui-options="{            
+            map: 'world_mill_en',
+            markers: {{world_markers}},
+            normalizeFunction: 'polynomial',
+            backgroundColor: '#fff',
+            regionsSelectable: true,
+            markersSelectable: true,
+            regionStyle: {
+              initial: {
+                fill: '{{app.color.light}}'
+              },
+              hover: {
+                fill: '{{app.color.info}}',
+                stroke: '#fff'
+              },
+            },
+            markerStyle: {
+              initial: {
+                fill: '{{app.color.info}}',
+                stroke: '#fff'
+              },
+              hover: {
+                fill: '{{app.color.primary}}',
+                stroke: '#fff'
+              }
+            },
+            series: {
+              markers: [{
+                attribute: 'fill',
+                scale: ['{{app.color.primary}}','{{app.color.accent}}', '{{app.color.success}}'],
+                values: {{cityAreaData}}
+              },{
+                attribute: 'r',
+                scale: [5, 20],
+                values: {{cityAreaData}}
+              }]
+            }
+          }" >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-card">
+        <div class="panel-heading b-b b-light">Infomation</div>
+        <div class="list-group no-border no-radius">
+          <div class="list-group-item">
+            <span class="pull-right">293,200</span>
+            <i class="fa fa-fw fa-circle m-r-sm text-info"></i>
+            Vatican City
+          </div>
+          <div class="list-group-item">
+            <span class="pull-right">203,000</span>
+            <i class="fa fa-fw fa-circle m-r-sm text-success"></i>
+            San Marino
+          </div>
+          <div class="list-group-item">
+            <span class="pull-right">180,230</span>
+            <i class="fa fa-fw fa-circle m-r-sm text-accent"></i>
+            Marshall Islands
+          </div>
+          <div class="list-group-item">
+            <span class="pull-right">130,100</span>
+            <i class="fa fa-fw fa-circle m-r-sm text-accent-lt"></i>
+            Maldives
+          </div>
+          <div class="list-group-item">
+            <span class="pull-right">98,000</span>
+            <i class="fa fa-fw fa-circle m-r-sm text-primary"></i>
+            Palau
+          </div>
+          <div class="list-group-item">
+            <span class="pull-right">130,100</span>
+            <i class="fa fa-fw fa-circle m-r-sm text-muted-lt"></i>
+            Maldives
+          </div>
+          <div class="list-group-item">
+            <span class="pull-right">98,000</span>
+            <i class="fa fa-fw fa-circle m-r-sm text-muted-lt"></i>
+            Palau
+          </div>
+          <div class="list-group-item">
+            <span class="pull-right">130,100</span>
+            <i class="fa fa-fw fa-circle m-r-sm text-muted-lt"></i>
+            Maldives
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row row-xs">
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span class="label bg-danger pull-right m-t-xs">4 left</span>
+          Tasks
+        </div>
+        <table class="table table-striped m-b-none">
+          <thead>
+            <tr>
+              <th>Progress</th>
+              <th>Item</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="progress progress-sm progress-striped active no-margin m-v-xs">
+                  <div class="progress-bar bg-success" data-toggle="tooltip" data-original-title="80%" style="width: 80%"></div>
+                </div>
+              </td>
+              <td>App prototype design</td>
+            </tr>
+            <tr>                    
+              <td>
+                <div class="progress progress-sm no-margin m-v-xs">
+                  <div class="progress-bar bg-info" data-toggle="tooltip" data-original-title="40%" style="width: 40%"></div>
+                </div>
+              </td>
+              <td>Design documents</td>
+            </tr>
+            <tr>                    
+              <td>
+                <div class="progress progress-sm no-margin m-v-xs">
+                  <div class="progress-bar bg-warning" data-toggle="tooltip" data-original-title="20%" style="width: 20%"></div>
+                </div>
+              </td>
+              <td>UI toolkit</td>
+            </tr>
+            <tr>                    
+              <td>
+                <div class="progress progress-sm no-margin m-v-xs">
+                  <div class="progress-bar bg-danger" data-toggle="tooltip" data-original-title="15%" style="width: 15%"></div>
+                </div>
+              </td>
+              <td>Testing</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Stats</div>
+        <table class="table table-striped m-b-none">
+          <thead>
+            <tr>
+              <th style="width:60px;" class="text-center">Graph</th>
+              <th>Item</th>                    
+              <th style="width:90px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>                    
+              <td>
+                <div ng-init="data1=[ 16,15,15,14,17,18,16,15,16 ]" ui-jp="sparkline" ui-options="{{data1}}, {type:'bar', height:19, barWidth:4, barSpacing:2, barColor:'{{app.color.success}}'}" class="sparkline inline">loading...</div>
+              </td>
+              <td>App downloads</td>
+              <td class="text-success">
+                <i class="fa fa-level-up"></i> 40%
+              </td>
+            </tr>
+            <tr>
+              <td class="text-center">
+                <div ng-init="data2=[ 60,30,10 ]" ui-jp="sparkline" ui-options="{{data2}}, {type:'pie', height:19, sliceColors:['{{app.color.info}}','#fff','{{app.color.warning}}']}" class="sparkline inline">loading...</div>
+              </td>
+              <td>Social connection</td>
+              <td class="text-success">
+                <i class="fa fa-level-up"></i> 20%
+              </td>
+            </tr>
+            <tr>                    
+              <td>
+                <div ng-init="data3=[ 16,15,15,14,17,18,16,15,16 ]" ui-jp="sparkline" ui-options="{{data3}}, {type:'line', height:19, width:60, lineColor:'{{app.color.primary}}', fillColor:'#fff'}" class="sparkline inline">loading...</div>
+              </td>
+              <td>Revenue</td>
+              <td class="text-warning">
+                <i class="fa fa-level-down"></i> 5%
+              </td>
+            </tr>
+            <tr>                    
+              <td>
+                <div ng-init="data4=[ 16,15,15,14,17,18,16,15,16 ]" ui-jp="sparkline" ui-options="{{data4}}, {type:'discrete', height:19, width:60, lineColor:'{{app.color.success}}'}" class="sparkline inline">loading...</div>
+              </td>
+              <td>Customer increase</td>
+              <td class="text-danger">
+                <i class="fa fa-level-down"></i> 20%
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

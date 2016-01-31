@@ -1,0 +1,94 @@
+// icon list
+.list-icon i{.transition(font-size .2s); margin-right: 16px}
+.list-icon div{line-height: 40px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+
+
+/*Charts*/
+.jqstooltip{
+  background-color: rgba(0,0,0,0.8) !important;
+  border: solid 1px #000 !important;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  padding: 5px 10px !important;
+  .box-sizing(content-box);
+}
+
+// easypie
+.easyPieChart {
+  position: relative;
+  text-align: center;
+  display: table;
+  > div{
+    display: table-cell;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    line-height: 1;
+    img{
+      margin-top: -4px;
+    }
+  }
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+}
+
+// flot tip
+#flotTip,
+.flotTip {
+  padding: 4px 10px;
+  background-color: rgba(0,0,0,0.8) !important;
+  border: solid 1px #000 !important;
+  z-index: 100;
+  font-size: 12px;
+  color: #fff;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+// flot lengend
+.legendColorBox{
+  > div{
+    border: none !important;
+    margin: 5px;
+    > div{
+      border-radius: 10px;
+    }
+  }
+}
+
+// sortable
+.st-sort-ascent:before {
+  content: '\25B2';
+}
+.st-sort-descent:before {
+  content: '\25BC';
+}
+.st-selected td{
+  background: #f0f9ec !important;
+}
+
+// select
+.ui-select-bootstrap > .ui-select-choices{
+  overflow-y: scroll;
+}
+
+// datatable
+.panel .dataTables_wrapper {padding-top: 10px}
+.panel .dataTables_wrapper > .row {margin: 0}
+.panel .dataTables_wrapper > .row > .col-sm-12{padding: 0;}
+.dataTables_wrapper.form-inline .form-control{width: auto;}
+
+// uibootstrap
+.btn-info .text-info{
+  color: #fff;
+}
+
+.ie .ie-show{display:block}
+
+.nav a.waves-effect{-webkit-mask-image: -webkit-radial-gradient(circle, #ffffff 100%, #000000 100%);}
