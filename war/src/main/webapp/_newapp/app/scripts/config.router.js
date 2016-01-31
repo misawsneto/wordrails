@@ -30,6 +30,17 @@ angular.module('app')
         $stateProvider
           .state('app', {
             abstract: true,
+            resolve: {
+              loggedIn: function($stateParams, $q, trix){
+                var deferred = $q.defer();
+                trix.login('demo', 'Dem0Pass').success(function(){
+                  trix.allInitData().success(function(response){
+                    deferred.resolve(true);
+                  });
+                })
+                return deferred.promise;
+              }
+            },
             url: '/app',
             views: {
               '': {

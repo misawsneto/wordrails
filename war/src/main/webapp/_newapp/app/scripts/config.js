@@ -28,4 +28,28 @@ angular.module('app')
     $translateProvider.preferredLanguage('en');
     // Tell the module to store the language in the local storage
     $translateProvider.useLocalStorage();
-  }]);
+  }])
+
+  .config(function(trixProvider){
+    trixProvider.setConfig({ url: location.protocol + '//' + 'demo.xarxlocal.com' });
+  })
+
+  .run(function($rootScope){
+    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
+      // window.console && console.log(toState);
+      // window.console && console.log(fromState);
+      var errorObj = {
+        event: event, 
+        toState: toState, 
+        toParams: toParams, 
+        fromState: fromState, 
+        fromParams: fromParams, 
+        error: error
+      }
+
+      window.console && console.error(errorObj);
+      window.console && console.error(error.message);
+    });
+  })
+  
+  ;
