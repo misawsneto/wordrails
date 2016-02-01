@@ -17,6 +17,7 @@ import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.APNService;
 import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.services.EmailService;
 import co.xarx.trix.services.GCMService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
@@ -99,6 +100,8 @@ public class PersonsResource {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PersonEventHandler personEventHandler;
+	@Autowired
+	private EmailService emailService;
 
 	@Autowired
 	@Qualifier("objectMapper")
@@ -1033,4 +1036,29 @@ public class PersonsResource {
 		String dateStatsJson = mapper.writeValueAsString(stats);
 		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 	}
+
+	@POST
+	@Path("/sendPassword")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response sendPassword(@FormParam("email") String email){
+		if(email == null || email == ""){
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+
+		Person person = personRepository.findByEmail(email);
+
+		if(person == null || person.email == null){
+			return Response.status(Status.NOT_FOUND).build();
+		}
+
+		User user = userRepository.findOne(person.user.id);
+
+		String emailBody = "Hi, " + person.getName() + "\n Here is your password: " + user.password + "\n";
+		String emailSubject = "Your lost password is here";
+
+		emailService.sendSimpleMail(person.getEmail(), emailSubject, emailBody);
+
+		return Response.status(Status.OK).build();
+	}
+
 }

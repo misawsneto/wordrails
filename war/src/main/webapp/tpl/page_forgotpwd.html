@@ -6,7 +6,7 @@
       </div>
     </div>
     <strong>Digite seu email para reconfigurar sua senha</strong>
-    <form class="m-t" name="reset" ng-init="isCollapsed=true">
+    <form class="m-t" name="reset" ng-init="isCollapsed=true" ng-submit="app.recoverPassword(email)">
       <div class="list-group list-group-sm">
         <div class="list-group-item">
           <input type="email" placeholder="Email" ng-model="email" class="form-control no-border" required>
@@ -19,7 +19,10 @@
       </div>
     </form>
     <div collapse="isCollapsed" class="m-t">
-      <div class="alert alert-success">
+      <span id="login-error" class="alert alert-danger" ng-class="{'fadeIn': !app.passwordRecovered, 'hide': app.passwordRecovered}">
+        Endereço de e-mail não cadastrado
+      </span>
+      <div class="alert alert-success" ng-class="{'fadeIn': app.passwordRecovered, 'hide': !app.passwordRecovered}">
         <p>Instruções de reconfiguração da senha foram enviadas a seu email. <a ui-sref="access.signin" class="btn btn-sm btn-success">Entrar</a></p>
       </div>
     </div>
