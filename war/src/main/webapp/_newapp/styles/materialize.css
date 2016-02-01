@@ -2320,7 +2320,7 @@ td, th {
   float: right;
   color: #26a69a; }
 
-span.badge {
+/* span.badge {
   min-width: 3rem;
   padding: 0 6px;
   text-align: center;
@@ -2339,7 +2339,7 @@ span.badge {
     background-color: #26a69a;
     border-radius: 2px; }
   span.badge.new:after {
-    content: " new"; }
+    content: " new"; } */
 
 .video-container {
   position: relative;
@@ -5807,7 +5807,7 @@ button.btn-floating {
 a.waves-effect .waves-ripple {
   z-index: -1; }
 
-.modal {
+/* .modal {
   display: none;
   position: fixed;
   left: 0;
@@ -5841,7 +5841,7 @@ a.waves-effect .waves-ripple {
     width: 100%; }
     .modal .modal-footer .btn, .modal .modal-footer .btn-large, .modal .modal-footer .btn-flat {
       float: right;
-      margin: 6px 0; }
+      margin: 6px 0; } */
 
 #lean-overlay {
   position: fixed;
@@ -5856,7 +5856,7 @@ a.waves-effect .waves-ripple {
   display: none;
   will-change: opacity; }
 
-.modal.modal-fixed-footer {
+/* .modal.modal-fixed-footer {
   padding: 0;
   height: 70%; }
   .modal.modal-fixed-footer .modal-content {
@@ -5877,7 +5877,7 @@ a.waves-effect .waves-ripple {
   width: 100%;
   max-height: 45%;
   border-radius: 0;
-  will-change: bottom, opacity; }
+  will-change: bottom, opacity; } */
 
 .collapsible {
   border-top: 1px solid #ddd;

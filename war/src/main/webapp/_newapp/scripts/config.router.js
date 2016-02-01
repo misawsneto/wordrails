@@ -37,15 +37,16 @@ angular.module('app')
             .state('app', {
               abstract: true,
               resolve: {
-                loggedIn: function($stateParams, $q, trix){
+                appData: function($stateParams, $q, trix){
                   var deferred = $q.defer();
                   trix.login('demo', 'Dem0Pass').success(function(){
                     trix.allInitData().success(function(response){
-                      deferred.resolve(true);
+                      deferred.resolve(response);
                     });
                   })
                   return deferred.promise;
-                }
+                },
+                deps:load( '/scripts/services/trix.js' ).deps
               },
               url: '',
               views: {
@@ -56,7 +57,8 @@ angular.module('app')
                   templateUrl: aside
                 },
                 'content': {
-                  templateUrl: content
+                  templateUrl: content,
+                  controller: 'AppDataCtrl'
                 }
               }
             })
@@ -471,15 +473,16 @@ angular.module('app')
           .state('app', {
             abstract: true,
             resolve: {
-              loggedIn: function($stateParams, $q, trix){
+              appData: function($stateParams, $q, trix){
                 var deferred = $q.defer();
                 trix.login('demo', 'Dem0Pass').success(function(){
                   trix.allInitData().success(function(response){
-                    deferred.resolve(true);
+                    deferred.resolve(response);
                   });
                 })
                 return deferred.promise;
-              }
+              },
+              deps:load( '/scripts/services/trix.js' ).deps
             },
             url: '',
             views: {
@@ -490,7 +493,8 @@ angular.module('app')
                 templateUrl: aside
               },
               'content': {
-                templateUrl: content
+                templateUrl: content,
+                controller: 'AppDataCtrl'
               }
             }
           })

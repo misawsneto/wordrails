@@ -596,7 +596,8 @@ ul.pgwSlider > li span, .pgwSlider > .ps-list > li span
 .news-blog .image .responsive-img{ display: inherit; }
 .news.horizontal .news-description{ border-bottom: 1px solid #eaeaea; height: 200px; }
 .news.vertidcal .news-image img { height: 180px; width: 100%; }
-.news.horizontal{ height: 200px; }
+/* .news.horizontal{ height: 200px; } */
+.news.horizontal{ height: 187px; }
 .news.horizontal .news-image img { width: 100%; display: inherit; /*height: 210px;*/ }
 .news-time  {
   color: #fe7faa;

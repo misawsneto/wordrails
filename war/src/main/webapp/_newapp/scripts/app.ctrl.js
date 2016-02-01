@@ -114,4 +114,21 @@ angular.module('app')
       }
 
     }
+  ])
+
+  .controller('AppDataCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix',
+    function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix ) {
+
+      //window.console && console.log(appData);
+      $scope.app = angular.extend($scope.app, appData)
+      $scope.app.name = $scope.app.network.name
+      $scope.app.currentStation = trixService.selectDefaultStation($scope.app.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
+      $scope.app.stationsPermissions = trixService.getStationPermissions(angular.copy($scope.app));
+
+      var id = $scope.app.currentStation.defaultPerspectiveId
+      trix.findPerspectiveView(id, null, null, 0, 10).success(function(termPerspective){
+        $scope.app.termPerspectiveView = termPerspective
+      })
+
+    }
   ]);
