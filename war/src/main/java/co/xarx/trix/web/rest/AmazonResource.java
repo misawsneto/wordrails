@@ -29,7 +29,7 @@ public class AmazonResource {
 	String accessKey;
 	@Value("${amazon.accessSecretKey}")
 	String accessSecretKey;
-	@Value("${amazon.publicBucket}")
+	@Value("${amazon.bucketName}")
 	String publicBucket;
 
 	private AmazonS3 s3() {
