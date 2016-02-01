@@ -54,8 +54,8 @@
 
 /**************************************************** 1. General Style **************************************************************/
 
-body{ background-color: #eaeaea; font-size: 14px; }
-a:focus { outline: none; }
+/* body{ background-color: #eaeaea; font-size: 14px; } */
+/* a:focus { outline: none; } */
 /* .container { width: 100%; } */
 /* .wrapper{
   position: relative;
@@ -66,27 +66,27 @@ a:focus { outline: none; }
   margin-top: 350px;
   width: 100%;
 }
-.section{ margin-top: 50px; padding: 0; }
+/* .section{ margin-top: 50px; padding: 0; } */
 .wrapper.grey-background{ background-color: #eaeaea; bottom: 75px; padding: 20px 0 0 0; }
-.row{ margin-bottom: 16px;}
-.row .col{ padding: 0 8px}
+/* .row{ margin-bottom: 16px;} */
+/* .row .col{ padding: 0 8px} */
 .no-border{ border: none !important; }
 .margin-bottom-20{ margin-bottom: 20px;}
 .margin-bottom-0{ margin-bottom: 0;}
-.title {
+/* .title {
   color: #504e63;
   font-size: 24px;
   font-weight: bold;
   margin: 20px 0;
   text-transform: uppercase;
-}
+} */
 img.responsive-img{ width: 100%; display: inherit;}
-p{ color: #8b8b8b;}
+/* p{ color: #8b8b8b;} */
 *::-moz-placeholder{ color: #000; }
 
 /********************************************************** 2. Header ***************************************************************/
 
-header{
+/* header{
   background-color: #3f51b5;
   height: 240px;
   width: 100%;
@@ -94,7 +94,7 @@ header{
   -webkit-transition-duration: 0.8s;
   -ms-transition-duration: 0.8s;
   -pie-transition-duration: 0.8s;
-}
+} */
 header.header-fix{
   height: 125px;
   background-color: #fff;
@@ -126,9 +126,9 @@ header.header-fix .header-top{ background-color: #3f51b5; }
   height: 55px;
   line-height: 55px;
 } */
-nav ul li { display: inline-block; float: none; }
+/* nav ul li { display: inline-block; float: none; }
 nav ul a { padding: 10px 30px; font-weight: 500; font-size: 15px; }
-nav ul li:hover, nav ul li.active{ background: transparent;}
+nav ul li:hover, nav ul li.active{ background: transparent;} */
 .nav-wrapper.menu-category a {  position: relative; text-transform: capitalize; }
 .nav-wrapper.menu-category a:after
 {
