@@ -5,6 +5,7 @@ import co.xarx.trix.config.web.CookieAndHeaderHttpSessionStrategy;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.User;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -27,6 +28,9 @@ import java.util.Map;
 @EnableCaching
 @EnableRedisHttpSession
 public class SessionConfig extends CachingConfigurerSupport {
+
+	@Value("${trix.auth.header:'x-auth-trix-token'}")
+	private String trixAuthHeader;
 
 	public RedisTemplate redisTemplate() {
 		RedisTemplate redisTemplate = new RedisTemplate();
@@ -62,6 +66,7 @@ public class SessionConfig extends CachingConfigurerSupport {
 
 		CookieAndHeaderHttpSessionStrategy sessionStrategy = new CookieAndHeaderHttpSessionStrategy();
 		sessionStrategy.setCookieName("JSESSIONID");
+		sessionStrategy.setHeaderName(trixAuthHeader);
 
 		return sessionStrategy;
 	}

@@ -1,0 +1,92 @@
+html {
+  background-color: @body-bg;  
+}
+body {
+  font-family: @font-family-base;
+  font-size: @font-size-base;
+  color: @text-color;
+  background-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  line-height: @line-height-base;
+}
+
+*:focus {
+  outline: 0 !important;
+}
+
+h1, h2, h3,
+.h1, .h2, .h3{
+  font-family: @font-family-header;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6{
+  margin: 0;
+}
+
+a {
+  color: @link-color;
+  text-decoration: none;
+  cursor: pointer;
+  outline: 0;
+}
+a:hover,
+a:focus {
+  color: @link-color;
+  text-decoration: none;
+}
+
+.well, pre {
+  background-color: @light;
+  border-color: @border-color;
+}
+
+small, 
+.small{
+  font-size: @font-size-sm;
+}
+blockquote{
+  border-color: @border-color;
+}
+label{
+  font-weight: normal;
+}
+sup{
+  position: relative; 
+  top: -0.5em; 
+  font-size: 75%
+}
+.thumbnail{
+  border-color: @border-color;
+}
+
+// sm
+@media (min-width: 768px) and (max-width: 991px) {
+  .pull-none-sm{
+    float: none !important;
+  }
+  .pull-right-sm{
+    float: right !important;
+  }
+  .pull-left-sm{
+    float: left !important;
+  }
+  .hidden-sm.show{
+    display: inherit !important;
+  }
+}
+
+// xs
+@media (max-width: 767px) {
+  .pull-none-xs{
+    float: none !important;
+  }
+  .pull-right-xs{
+    float: right !important;
+  }
+  .pull-left-xs{
+    float: left !important;
+  }
+  .hidden-xs.show{
+    display: inherit !important;
+  }
+}
