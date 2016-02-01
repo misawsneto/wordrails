@@ -28,14 +28,14 @@ module.exports = {
      
       'libs/angular/angular-loading-bar/build/loading-bar.js',
       
-      'app/scripts/app.js',
-      'app/scripts/*.js',
-      'app/scripts/directives/*.js',
-      'app/scripts/services/*.js',
-      'app/scripts/filters/*.js'
+      'scripts/app.js',
+      'scripts/*.js',
+      'scripts/directives/*.js',
+      'scripts/services/*.js',
+      'scripts/filters/*.js'
     ],
     // dest:'angular/scripts/app.src.js'
-    dest:'app/scripts/app.src.js'
+    dest:'scripts/app.src.js'
   },
   html:{
     src:[

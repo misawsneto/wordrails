@@ -13,7 +13,7 @@ angular.module('app')
       restrict: 'AC',
       link: function(scope, el, attr) {
         el.addClass('hide');
-        $ocLazyLoad.load('../libs/jquery/screenfull/dist/screenfull.min.js').then(function(){
+        $ocLazyLoad.load('/libs/jquery/screenfull/dist/screenfull.min.js').then(function(){
           if (screenfull.enabled) {
             el.removeClass('hide');
           } else{
