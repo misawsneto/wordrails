@@ -791,8 +791,8 @@ public class PersonsResource {
 		return personData;
 	}
 
-	@Value("${amazon.publicCloudfrontUrl}")
-	String publicCloudfrontUrl;
+	@Value("${amazon.cloudfrontUrl}")
+	String cloudfrontUrl;
 
 	@GET
 	@Path("/init")
@@ -839,8 +839,8 @@ public class PersonsResource {
 			initData.noPassword = true;
 		}
 
-		initData.publicCloudfrontUrl = publicCloudfrontUrl;
-		initData.privateCloudfrontUrl = publicCloudfrontUrl;
+		initData.publicCloudfrontUrl = cloudfrontUrl;
+		initData.privateCloudfrontUrl = cloudfrontUrl;
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
