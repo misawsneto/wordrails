@@ -2,7 +2,6 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
@@ -12,17 +11,17 @@ import co.xarx.trix.eventhandler.StationRoleEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.services.APNService;
-import co.xarx.trix.services.GCMService;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.APNService;
+import co.xarx.trix.services.GCMService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -789,8 +788,8 @@ public class PersonsResource {
 		return personData;
 	}
 
-	@Value("${amazon.publicCloudfrontUrl}")
-	String publicCloudfrontUrl;
+	@Value("${amazon.cloudfrontUrl}")
+	String cloudfrontUrl;
 
 	@GET
 	@Path("/init")
@@ -837,8 +836,8 @@ public class PersonsResource {
 			initData.noPassword = true;
 		}
 
-		initData.publicCloudfrontUrl = publicCloudfrontUrl;
-		initData.privateCloudfrontUrl = publicCloudfrontUrl;
+		initData.publicCloudfrontUrl = cloudfrontUrl;
+		initData.privateCloudfrontUrl = cloudfrontUrl;
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);

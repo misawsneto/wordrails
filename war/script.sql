@@ -73,7 +73,6 @@ WHERE type = "T";
 ALTER TABLE term DROP INDEX UK_68x4pioq3b3mu1t3jrp01bsss;
 ALTER TABLE term DROP INDEX UK_kki6crlp9p5g7979h2wb4imgh;
 ALTER TABLE term DROP INDEX UK_h725nbm620imfiywywc1w8jo1;
-ALTER TABLE term DROP INDEX UK_lixtbau20i1s7rq5evq6gl10p;
 ALTER TABLE term ADD `name_parent` VARCHAR (255) DEFAULT NULL;
 
 select concat(term.name, concat('_', term.parent_id)) from term;
@@ -204,23 +203,23 @@ INSERT INTO image_hash (image_id, hash, sizeTag)
 	WHERE tf.hash IS NOT NULL;
 
 
-INSERT INTO picture (networkId, tenantId, file_id, sizeTag, createdAt, updatedAt)
-	SELECT img.networkId, img.tenantId, tf.id, 'original', img.createdAt, img.updatedAt
+INSERT INTO picture (networkId, file_id, sizeTag, createdAt, updatedAt)
+	SELECT img.networkId, tf.id, 'original', img.createdAt, img.updatedAt
 	FROM image img
 		JOIN file tf ON tf.id = img.original_id
 	WHERE tf.hash IS NOT NULL;
-INSERT INTO picture (networkId, tenantId, file_id, sizeTag, createdAt, updatedAt)
-	SELECT img.networkId, img.tenantId, tf.id, 'large', img.createdAt, img.updatedAt
+INSERT INTO picture (networkId, file_id, sizeTag, createdAt, updatedAt)
+	SELECT img.networkId, tf.id, 'large', img.createdAt, img.updatedAt
 	FROM image img
 		JOIN file tf ON tf.id = img.large_id
 	WHERE tf.hash IS NOT NULL;
-INSERT INTO picture (networkId, tenantId, file_id, sizeTag, createdAt, updatedAt)
-	SELECT img.networkId, img.tenantId, tf.id, 'medium', img.createdAt, img.updatedAt
+INSERT INTO picture (networkId, file_id, sizeTag, createdAt, updatedAt)
+	SELECT img.networkId, tf.id, 'medium', img.createdAt, img.updatedAt
 	FROM image img
 		JOIN file tf ON tf.id = img.medium_id
 	WHERE tf.hash IS NOT NULL;
-INSERT INTO picture (networkId, tenantId, file_id, sizeTag, createdAt, updatedAt)
-	SELECT img.networkId, img.tenantId, tf.id, 'small', img.createdAt, img.updatedAt
+INSERT INTO picture (networkId, file_id, sizeTag, createdAt, updatedAt)
+	SELECT img.networkId, tf.id, 'small', img.createdAt, img.updatedAt
 	FROM image img
 		JOIN file tf ON tf.id = img.small_id
 	WHERE tf.hash IS NOT NULL;
