@@ -1,12 +1,20 @@
 package co.xarx.trix.domain;
 
-import org.hibernate.validator.constraints.Email;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 public class PasswordReset extends BaseEntity {
+
+	public PasswordReset(){
+		LocalDate daysFromNow = LocalDate.now().plusDays(1);
+		expiresAt = new Date(daysFromNow.toEpochDay());
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,18 +26,10 @@ public class PasswordReset extends BaseEntity {
 	}
 
 	@NotNull
-	@Column(unique=true)
 	public String hash;
-	
+
 	@NotNull
-	@Email
-	public String email;
-	
-	public String personName;
-	
-	public boolean active = true;
-	
-	public boolean invite = false;
-	
-	public String networkName;
+	public User user;
+
+	public Date expiresAt;
 }

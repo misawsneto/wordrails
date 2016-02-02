@@ -7,7 +7,6 @@ import co.xarx.trix.domain.social.SocialUser;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserConnectionRepository;
 import co.xarx.trix.persistence.UserRepository;
-import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.util.Constants;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
@@ -36,9 +35,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	private UserConnectionRepository userConnectionRepository;
 	@Autowired
 	private SocialAuthenticationService socialAuthenticationService;
-
-	@Autowired
-	private AsyncService asyncService;
 
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {

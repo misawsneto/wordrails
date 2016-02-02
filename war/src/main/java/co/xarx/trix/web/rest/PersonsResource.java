@@ -1036,29 +1036,4 @@ public class PersonsResource {
 		String dateStatsJson = mapper.writeValueAsString(stats);
 		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 	}
-
-	@POST
-	@Path("/sendPassword")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response sendPassword(@FormParam("email") String email){
-		if(email == null || email == ""){
-			return Response.status(Status.BAD_REQUEST).build();
-		}
-
-		Person person = personRepository.findByEmail(email);
-
-		if(person == null || person.email == null){
-			return Response.status(Status.NOT_FOUND).build();
-		}
-
-		User user = userRepository.findOne(person.user.id);
-
-		String emailBody = "Hi, " + person.getName() + "\n Here is your password: " + user.password + "\n";
-		String emailSubject = "Your lost password is here";
-
-		emailService.sendSimpleMail(person.getEmail(), emailSubject, emailBody);
-
-		return Response.status(Status.OK).build();
-	}
-
 }
