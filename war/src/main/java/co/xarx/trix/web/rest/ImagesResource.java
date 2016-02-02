@@ -65,7 +65,7 @@ public class ImagesResource {
 		iur.imageId = newImage.id;
 		iur.imageHash = newImage.hashs.get(Image.SIZE_ORIGINAL);
 		iur.link = amazonCloudService.getPublicImageURL(hash);
-		iur.link = amazonCloudService.getPublicImageURL(hash);
+		iur.filelink = amazonCloudService.getPublicImageURL(hash);
 
 		return Response.ok().entity(simpleMapper.writeValueAsString(iur)).build();
 	}
