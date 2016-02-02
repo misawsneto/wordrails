@@ -54,38 +54,39 @@ public class Network extends BaseEntity implements Serializable {
 
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
-	
-	@Column(columnDefinition = "boolean default false", nullable = false)
+
 	public boolean allowSignup;
 
-	@Deprecated
-	@Column(columnDefinition = "boolean default false", nullable = false)
+	@OneToOne
+	public OAuthCredential oauthCredential;
+
 	public boolean allowSocialLogin;
 
+	@Deprecated
 	public String facebookAppID;
-
+	@Deprecated
 	@JsonIgnore
 	public String facebookAppSecret;
-
+	@Deprecated
 	public String googleAppID;
-
-    public String facebookLink;
-    public String youtubeLink;
-    public String googlePlusLink;
-    public String twitterLink;
-
-    public String webFooter;
-
+	@Deprecated
 	@JsonIgnore
 	public String googleAppSecret;
+
+	public String facebookLink;
+	public String youtubeLink;
+	public String googlePlusLink;
+	public String twitterLink;
+
+	public String webFooter;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
 
-    public String stationMenuName;
-    public String homeTabName;
+	public String stationMenuName;
+	public String homeTabName;
 
-    public String domain;
+	public String domain;
 
 	@JsonIgnore
 	public String networkCreationToken;
@@ -144,8 +145,8 @@ public class Network extends BaseEntity implements Serializable {
 	@Lob
 	public String appleStoreAddress;
 
-    @Column(columnDefinition = "boolean default false", nullable = false)
-    public boolean addStationRolesOnSignup;
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean addStationRolesOnSignup;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -168,18 +169,6 @@ public class Network extends BaseEntity implements Serializable {
 
 	public String getName() {
 		return name;
-	}
-
-	public boolean isFacebookLoginAllowed() {
-		return
-				this.facebookAppID != null && !this.facebookAppID.isEmpty() &&
-						this.facebookAppSecret != null && !this.facebookAppSecret.isEmpty();
-	}
-
-	public boolean isGoogleLoginAllowed() {
-		return
-				this.googleAppID != null && !this.googleAppID.isEmpty() &&
-						this.googleAppSecret != null && !this.googleAppSecret.isEmpty();
 	}
 
 }

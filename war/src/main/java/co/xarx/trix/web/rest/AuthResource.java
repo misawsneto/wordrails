@@ -2,6 +2,7 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.OAuthCredential;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import org.scribe.builder.ServiceBuilder;
@@ -12,10 +13,7 @@ import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -35,28 +33,46 @@ public class AuthResource {
 	public Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
+		if(network.oauthCredential == null) {
+			throw new NotAllowedException("This network does not support social login");
+		}
+
 		boolean allowSocialLogin = true;
+		OAuthCredential oauthCredential = network.oauthCredential;
 		OAuthService service = null;
 		Token token = null;
-		switch (providerId) {
-			case "facebook":
-				allowSocialLogin = network.isFacebookLoginAllowed();
-				service = new ServiceBuilder()
-						.provider(FacebookApi.class)
-						.apiKey(network.facebookAppID)
-						.apiSecret(network.facebookAppSecret)
-						.build();
-				token = new Token(accessToken, network.facebookAppSecret);
-				break;
-			case "google":
-				allowSocialLogin = network.isGoogleLoginAllowed();
-				service = new ServiceBuilder()
-						.provider(GoogleApi.class)
-						.apiKey(network.googleAppID)
-						.apiSecret(network.googleAppSecret)
-						.build();
-				token = new Token(accessToken, network.googleAppSecret);
-				break;
+		if (providerId.equals("facebook")) {
+			allowSocialLogin = oauthCredential.isFacebookLoginAllowed();
+			service = new ServiceBuilder()
+					.provider(FacebookApi.class)
+					.apiKey(oauthCredential.getFacebookAppID())
+					.apiSecret(oauthCredential.getFacebookAppSecret())
+					.build();
+			token = new Token(accessToken, oauthCredential.getFacebookAppSecret());
+		} else if (providerId.equals("googleweb")) {
+			allowSocialLogin = oauthCredential.isGoogleWebLoginAllowed();
+			service = new ServiceBuilder()
+					.provider(GoogleApi.class)
+					.apiKey(oauthCredential.getGoogleWebAppID())
+					.apiSecret(oauthCredential.getGoogleWebAppSecret())
+					.build();
+			token = new Token(accessToken, oauthCredential.getGoogleWebAppSecret());
+		} else if (providerId.equals("googleandroid")) {
+			allowSocialLogin = oauthCredential.isGoogleAndroidLoginAllowed();
+			service = new ServiceBuilder()
+					.provider(GoogleApi.class)
+					.apiKey(oauthCredential.getGoogleAndroidAppID())
+					.apiSecret(oauthCredential.getGoogleAndroidAppSecret())
+					.build();
+			token = new Token(accessToken, oauthCredential.getGoogleAndroidAppSecret());
+		} else if (providerId.equals("googleios")) {
+			allowSocialLogin = oauthCredential.isGoogleAppleLoginAllowed();
+			service = new ServiceBuilder()
+					.provider(GoogleApi.class)
+					.apiKey(oauthCredential.getGoogleAppleAppID())
+					.apiSecret(oauthCredential.getGoogleAppleAppSecret())
+					.build();
+			token = new Token(accessToken, oauthCredential.getGoogleAppleAppSecret());
 		}
 
 		if (!allowSocialLogin) {

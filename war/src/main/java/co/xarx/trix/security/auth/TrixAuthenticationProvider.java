@@ -130,7 +130,7 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			SocialUser socialUser = null;
 			if (providerId.equals("facebook")) {
 				socialUser = socialAuthenticationService.getFacebookUserFromOAuth(userId, service, token);
-			} else if (providerId.equals("google")) {
+			} else if (providerId.contains("google")) {
 				socialUser = socialAuthenticationService.getGoogleUserFromOAuth(userId, token.getToken());
 			}
 
