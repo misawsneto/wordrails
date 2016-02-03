@@ -51,4 +51,10 @@ public final class Constants {
 		public static final String STATE_PUBLISHED = "PUBLISHED";
 		public static final String STATE_SCHEDULED = "SCHEDULED";
 	}
+
+	public static class Notification {
+		public static final String STATUS_SEND_ERROR = "SEND_ERROR";
+		public static final String STATUS_GCM_ERROR = "GCM_ERROR";
+		public static final String STATUS_SUCCESS = "SUCCESS";
+	}
 }

@@ -21,29 +21,20 @@ public class Notification extends BaseEntity {
 	public Integer getId() {
 		return id;
 	}
-	
-	@ManyToOne
-	@NotNull
-	public Person person;
-	
-	@ManyToOne
-	@NotNull
-	public Network network;
-	
+
+	public String regId;
+
 	@NotNull
 	public String hash;
 	
 	@ManyToOne
-	public Station station;
-	
-	@ManyToOne
 	public Post post;
-	
-	public Integer postId;
-	
-	public boolean seen = false;
 
     public boolean test = true;
+
+	public String status;
+
+	public String errorCodeName;
 	
 	@NotNull
 	@NotEmpty
@@ -53,11 +44,4 @@ public class Notification extends BaseEntity {
 	@NotNull
 	@NotEmpty
 	public String type;
-
-	@PrePersist
-	void onCreate() {
-		if(post!=null){
-			postId = post.id;
-		}
-	}
 }
