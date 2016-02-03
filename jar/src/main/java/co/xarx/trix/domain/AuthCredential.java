@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
-public class OAuthCredential extends BaseEntity {
+public class AuthCredential extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

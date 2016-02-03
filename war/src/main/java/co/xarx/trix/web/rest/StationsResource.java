@@ -1,11 +1,11 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.ContentResponse;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
-import co.xarx.trix.services.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.ArrayList;
 import java.util.List;
-
-//import co.xarx.trix.auth.TrixAuthenticationProvider;
 
 @Path("/stations")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -26,35 +23,18 @@ import java.util.List;
 @Component
 public class StationsResource {
 
-	private
 	@Context
-	HttpServletRequest request;
+	private HttpServletRequest request;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
-	private
 	@Autowired
-	NetworkRolesRepository networkRolesRepository;
-
+	private StationRolesRepository stationRolesRepository;
 	@Autowired
-	StationRolesRepository stationRolesRepository;
-
-	private
+	private StationRepository stationRepository;
 	@Autowired
-	StationRepository stationRepository;
-
-	private
+	private StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
-	StationPerspectiveRepository stationPerspectiveRepository;
-
-	private
-	@Autowired
-	WordrailsService wordrailsService;
-	private
-	@Autowired
-	CacheService cacheService;
-	private
-	@Autowired
-	QueryPersistence queryPersistence;
+	private QueryPersistence queryPersistence;
 
 	@PUT
 	@Path("/{stationId}/setDefaultPerspective")
@@ -63,11 +43,9 @@ public class StationsResource {
 		Person person = authProvider.getLoggedPerson();
 		Station station = stationRepository.findOne(stationId);
 
-		NetworkRole role = networkRolesRepository.findByPerson(person);
-
 		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
 
-		if ((role.admin || sRole.admin) && stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
+		if ((person.networkAdmin || sRole.admin) && stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
 			queryPersistence.updateDefaultPerspective(station.id, perspectiveId);
 			return Response.status(Status.OK).build();
 		} else return Response.status(Status.UNAUTHORIZED).build();
@@ -78,14 +56,10 @@ public class StationsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response setMainStation(@PathParam("stationId") Integer stationId, @FormParam("value") boolean value) {
 		Person person = authProvider.getLoggedPerson();
-		NetworkRole role = networkRolesRepository.findByPerson(person);
 
-		List<Station> stations = new ArrayList<Station>();
-
-		if (role.admin) {
+		if (person.networkAdmin) {
 			for (Station station : stationRepository.findAll()) {
-				if (station.id.equals(stationId)) station.main = value;
-				else station.main = false;
+				station.main = station.id.equals(stationId) && value;
 
 				stationRepository.save(station);
 			}
@@ -96,7 +70,7 @@ public class StationsResource {
 	@GET
 	@Path("/stats/roles/count")
 	public ContentResponse<Integer> countRolesByStationIds(@QueryParam("stationIds") List<Integer> stationIds, @QueryParam("q") String q){
-		ContentResponse<Integer> resp = new ContentResponse<Integer>();
+		ContentResponse<Integer> resp = new ContentResponse<>();
 		resp.content = 0;
 		if(stationIds != null && !stationIds.isEmpty()) {
 			if (q != null && !q.isEmpty()) {

@@ -37,9 +37,6 @@ public class Network extends BaseEntity implements Serializable {
 	@Size(min=1, max=100)
 	public String trackingId;
 
-	@OneToMany(mappedBy="network")
-	public Set<NetworkRole> personsNetworkRoles;
-
 	@OneToMany(mappedBy="network", cascade=CascadeType.REMOVE)
 	public Set<Station> stations;
 
@@ -58,7 +55,7 @@ public class Network extends BaseEntity implements Serializable {
 	public boolean allowSignup;
 
 	@OneToOne
-	public OAuthCredential oauthCredential;
+	public AuthCredential authCredential;
 
 	public boolean allowSocialLogin;
 

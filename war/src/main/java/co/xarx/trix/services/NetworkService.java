@@ -14,8 +14,8 @@ import java.util.Objects;
 @Service
 public class NetworkService {
 
-	private Map<String, Integer> tenantIds;
-	private Map<String, Integer> domains;
+	private Map<String, Integer> tenantIds; //key=tenantId, value=networkId
+	private Map<String, Integer> domains; //key=domain, value=networkId
 
 	private NetworkRepository networkRepository;
 

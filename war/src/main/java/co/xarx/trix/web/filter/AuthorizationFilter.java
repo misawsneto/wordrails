@@ -4,7 +4,6 @@ import co.xarx.trix.api.AbstractAuthorizationFilter;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +30,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired
-	private NetworkRolesRepository personNetworkRolesRepository;
-	@Autowired
 	private StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
 	private StationSecurityChecker stationSecurityChecker;
-	@Autowired
-	private NetworkSecurityChecker networkSecurityChecker;
 	@Autowired
 	private TaxonomyRepository taxonomyRepository;
 	@Autowired
@@ -165,23 +160,13 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindNetworksOrderDescAuthorized(Integer id) {
-		return true;
-	}
-
-	@Override
 	protected boolean isFindByTenantIdAuthorized(String tenantId) {
 		return false;
 	}
 
 	@Override
-	protected boolean isGetNetworkPersonsNetworkRolesAuthorized(Integer networkId) {
-		return isNetworkAdminById(networkId);
-	}
-
-	@Override
 	protected boolean isGetNetworkStationsAuthorized(Integer networkId) {
-		return belongsToNetwork(networkId);
+		return true;
 	}
 
 	@Override
@@ -191,7 +176,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetNetworkOwnedTaxonomiesAuthorized(Integer networkId) {
-		return belongsToNetwork(networkId);
+		return true;
+	}
+
+	@Override
+	protected boolean isGetNetworkAuthCredentialAuthorized(Integer networkId) {
+		return false;
 	}
 
 	@Override
@@ -207,27 +197,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindByUsernameAuthorized(String username) {
 		return true;
-	}
-
-
-	@Override
-	protected boolean isGetNetworkRolesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetNetworkRoleAuthorized(Integer networkRoleId) {
-		return isNetworkAdminByPersonNetworkRoles(networkRoleId);
-	}
-
-	@Override
-	protected boolean isGetNetworkRoleNetworkAuthorized(Integer networkRoleId) {
-		return isNetworkAdminByPersonNetworkRoles(networkRoleId);
-	}
-
-	@Override
-	protected boolean isGetNetworkRolePersonAuthorized(Integer networkRoleId) {
-		return isNetworkAdminByPersonNetworkRoles(networkRoleId);
 	}
 
 	@Override
@@ -396,10 +365,13 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return canVisualizeStation(stationId);
 	}
 
-	//	@Override
-	protected boolean isGetStationNetworksAuthorized(Integer stationId) {
+	private boolean isNetworkAdmin() {
+		Person personLogged = authProvider.getLoggedPerson();
+		if (personLogged != null) {
+			if (personLogged.networkAdmin) return true;
+		}
 
-		return true;
+		return false;
 	}
 
 	@Override
@@ -410,7 +382,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 			authorized = stationSecurityChecker.isStationAdmin(station);
 			if (!authorized) {
 //				for (Network network: station.networks) {
-				authorized = networkSecurityChecker.isNetworkAdmin();
+				authorized = isNetworkAdmin();
 //					if(authorized){
 //						break;
 //					}
@@ -526,8 +498,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindNetworkCategoriesAuthorized(Integer networkId) {
-		Network network = networkRepository.findOne(networkId);
-		return networkSecurityChecker.isNetworkAdmin();
+		return isNetworkAdmin();
 	}
 
 	@Override
@@ -740,25 +711,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		boolean authorized = false;
 		Network network = networkRepository.findOne(networkId);
 		if (network != null) {
-			authorized = networkSecurityChecker.isNetworkAdmin();
-		}
-		return authorized;
-	}
-
-	private boolean isNetworkAdminByPersonNetworkRoles(Integer personNetworkRolesId) {
-		boolean authorized = false;
-		NetworkRole personNetworkRole = personNetworkRolesRepository.findOne(personNetworkRolesId);
-		if (personNetworkRole != null && networkSecurityChecker.isNetworkAdmin()) {
-			authorized = true;
-		}
-		return authorized;
-	}
-
-	private boolean belongsToNetwork(Integer networkId) {
-		boolean authorized = false;
-		Network network = networkRepository.findOne(networkId);
-		if (network != null) {
-			authorized = networkSecurityChecker.belongsToNetwork();
+			authorized = isNetworkAdmin();
 		}
 		return authorized;
 	}
@@ -789,8 +742,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindSponsorByNetworkIdAuthorized(Integer networkId) {
-		Network network = networkRepository.findOne(networkId);
-		return networkSecurityChecker.isNetworkAdmin();
+		return isNetworkAdmin();
 	}
 
 	@Override
@@ -852,8 +804,8 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isIsAdminAuthorized(Integer personId) {
-		return false;
+	protected boolean isGetPersonStationRolesAuthorized(Integer personId) {
+		return authProvider.getLoggedPerson().id.equals(personId);
 	}
 
 	@Override
@@ -1067,6 +1019,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetAuthCredentialsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAuthCredentialAuthorized(Integer authCredentialId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetBaseObjectQueriesAuthorized() {
 		return false;
 	}
@@ -1187,23 +1149,13 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindPostBySlugAuthorized(String slug) {
+	protected boolean isFindBySlugAuthorized(String slug) {
 		boolean authorized = false;
 		Post post = postRepository.findBySlug(slug);
 		if (post != null) {
 			authorized = postAndCommentSecurityChecker.canRead(post);
 		}
 		return authorized;
-	}
-
-	@Override
-	protected boolean isFindBySlugAuthorized(String slug) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindByOriginalPostIdAuthorized(Integer originalPostId) {
-		return true;
 	}
 
 	@Override

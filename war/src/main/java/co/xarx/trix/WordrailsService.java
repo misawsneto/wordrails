@@ -6,7 +6,6 @@ import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.CacheService;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.PerspectiveResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,8 +41,6 @@ public class WordrailsService {
 	private NetworkRepository networkRepository;
 	@Autowired
 	private PerspectiveResource perspectiveResource;
-	@Autowired
-	private CacheService cacheService;
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
@@ -261,7 +258,7 @@ public class WordrailsService {
 	}
 
 	public List<Integer> getReadableStationIds(StationsPermissions permissions) {
-		List<Integer> ids = new ArrayList<Integer>();
+		List<Integer> ids = new ArrayList<>();
 		if(permissions.stationPermissionDtos != null)
 			for (StationPermission sp : permissions.stationPermissionDtos) {
 				//if(sp.visibility.equals(Station.UNRESTRICTED) || sp.writer)

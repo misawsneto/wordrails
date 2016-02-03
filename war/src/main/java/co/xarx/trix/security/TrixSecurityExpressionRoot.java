@@ -1,18 +1,19 @@
 package co.xarx.trix.security;
 
 
-import co.xarx.trix.domain.*;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.core.Authentication;
-
-import java.util.List;
 
 public class TrixSecurityExpressionRoot extends SecurityExpressionRoot implements MethodSecurityExpressionOperations {
 
@@ -41,12 +42,6 @@ public class TrixSecurityExpressionRoot extends SecurityExpressionRoot implement
 			Station station = post.station;
 			if(station.visibility.equals(Station.UNRESTRICTED) && station.writable){
 				canWrite = true;
-			}else if(station.visibility.equals(Station.RESTRICTED_TO_NETWORKS) && station.writable){
-				List<Integer> networksId = networkRepository.findIdsByStation(post.station.id);
-				List<Network> belongsToNetworks = networkRepository.belongsToNetworks(personLogged.id, networksId);
-				if(belongsToNetworks != null && belongsToNetworks.size() > 0){
-					canWrite = true;
-				}
 			}else if(station.visibility.equals(Station.RESTRICTED) && station.writable){
 				Station belongsToStation = stationRepository.belongsToStation(personLogged.id, post.station.id);
 				if(belongsToStation != null){

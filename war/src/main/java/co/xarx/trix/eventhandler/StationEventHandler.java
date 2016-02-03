@@ -8,7 +8,6 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
-import co.xarx.trix.services.CacheService;
 import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.LogBuilderExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +42,6 @@ public class StationEventHandler {
 	@Autowired
 	PostReadRepository postReadRepository;
 	@Autowired
-	CacheService cacheService;
-	@Autowired
 	QueryPersistence queryPersistence;
 	@Autowired
 	TermRepository termRepository;
@@ -63,7 +60,8 @@ public class StationEventHandler {
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
-		if(stationSecurityChecker.canCreate(station)){
+		Person personLogged = authProvider.getLoggedPerson();
+		if(personLogged.networkAdmin){
 			if(station.stationPerspectives == null || station.stationPerspectives.size() == 0 
 					&& station.network != null){
 				Set<StationPerspective> perspectives = new HashSet<StationPerspective>(1);

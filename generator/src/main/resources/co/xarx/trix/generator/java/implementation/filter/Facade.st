@@ -18,7 +18,9 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.spi.HttpRequest;
+import org.springframework.stereotype.Component;
 
+@Component
 public abstract class AbstractAuthorizationFilter {
 	private @Context HttpServletRequest httpServletRequest;
 	private @Context UriInfo uriInfo;	

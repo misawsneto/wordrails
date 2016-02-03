@@ -2,7 +2,6 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.dto.PersonCreateDto;
@@ -12,7 +11,6 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.APNService;
@@ -34,8 +32,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,8 +64,6 @@ public class PersonsResource {
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
-	private NetworkRolesRepository networkRolesRepository;
-	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
@@ -91,8 +85,6 @@ public class PersonsResource {
 	private PostReadRepository postReadRepository;
 	@Autowired
 	private CommentRepository commentRepository;
-	@Autowired
-	private NetworkSecurityChecker networkSecurityChecker;
 	@Autowired
 	private StationSecurityChecker stationSecurityChecker;
 	@Autowired
@@ -150,7 +142,7 @@ public class PersonsResource {
 	public Response findPerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
-		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin()) {
+		if(person.id.equals(id) || person.networkAdmin) {
 			forward();
 			return Response.status(Status.OK).build();
 		}else
@@ -219,7 +211,7 @@ public class PersonsResource {
 	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
-		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin())
+		if(person.id.equals(id) || person.networkAdmin)
 			forward();
 		else
 			throw new BadRequestException();
@@ -278,10 +270,8 @@ public class PersonsResource {
 			if(network.networkCreationToken == null || !network.networkCreationToken.equals(token))
 				throw new BadRequestException("Invalid Token");
 
-			List<NetworkRole> nr = personRepository.findNetworkAdmin();
-			User user = nr.get(0).person.user;
-			Set<GrantedAuthority> authorities = new HashSet<>();
-			authorities.add(new SimpleGrantedAuthority("ROLE_NETWORK_ADMIN"));
+			Person person = authProvider.getLoggedPerson();
+			User user = person.user;
 			authProvider.passwordAuthentication(user, user.password);
 
 			network.networkCreationToken = null;
@@ -463,9 +453,8 @@ public class PersonsResource {
 					Pattern p = Pattern.compile("\'([^\']*)\'");
 					Matcher m = p.matcher(errorMsg);
 					String errorVal = "";
-					while (m.find()) {
+					if (m.find()) {
 						errorVal = m.group(1);
-						break;
 					}
 
 					if(errorVal.contains("-"))
@@ -493,17 +482,6 @@ public class PersonsResource {
 				}
 				e.printStackTrace();
 				throw new ConflictException();
-			}
-
-			NetworkRole networkRole = new NetworkRole();
-			networkRole.network = networkRepository.findOne(QNetwork.network.tenantId.eq(TenantContextHolder.getCurrentTenantId()));
-			networkRole.person = person;
-			networkRole.admin = false;
-			networkRolesRepository.save(networkRole);
-
-			if (networkRole.admin) {
-				UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.NETWORK_ADMIN);
-				user.addAuthority(authority);
 			}
 
 
@@ -569,7 +547,7 @@ public class PersonsResource {
 	@Path("/deleteMany/network")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
-//		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		Person person = authProvider.getLoggedPerson();
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
 
 		if(persons != null && persons.size() > 0) {
@@ -577,9 +555,9 @@ public class PersonsResource {
 //				if (!person.user.getTenantId().equals(network.getTenantId())) return Response.status(Status.UNAUTHORIZED).build();
 //			}
 
-			if (networkSecurityChecker.isNetworkAdmin()) {
-				for (Person person : persons) {
-					personEventHandler.handleBeforeDelete(person);
+			if (person.networkAdmin) {
+				for (Person p : persons) {
+					personEventHandler.handleBeforeDelete(p);
 				}
 
 				personRepository.delete(persons);
@@ -598,7 +576,7 @@ public class PersonsResource {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = personRepository.findOne(personId);
 
-		if(person != null && networkSecurityChecker.isNetworkAdmin() && person.user.getTenantId().equals(network.getTenantId())){
+		if(person != null && person.networkAdmin && person.user.getTenantId().equals(network.getTenantId())){
 			personEventHandler.handleBeforeDelete(person);
 			personRepository.delete(person.id);
 			return Response.status(Status.OK).build();
@@ -805,14 +783,11 @@ public class PersonsResource {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 
 		PersonPermissions personPermissions = new PersonPermissions();
-		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(network.id, person.id);
 
 		//Network Permissions
 		NetworkPermission networkPermissionDto = new NetworkPermission();
-		if(networkRole != null)
-			networkPermissionDto.networkId = networkRole.id;
-		else
-			networkPermissionDto.admin = false;
+
+		networkPermissionDto.admin = person.networkAdmin;
 
 		network.sections = sectionRepository.findByNetwork(network);
 
@@ -851,14 +826,11 @@ public class PersonsResource {
 
 		initData.sections = sections;
 
-		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes("UTF-8"), NetworkRoleDto.class);
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;
 
 		initData.person.links = wordrailsService.generateSelfLinks(baseUrl + "/api/persons/" + person.id);
 		initData.network.links = wordrailsService.generateSelfLinks(baseUrl + "/api/network/" + network.id);
-		if(initData.networkRole != null)
-			initData.networkRole.links = networkRole != null ? wordrailsService.generateSelfLinks(baseUrl + "/api/networkRoles/" + networkRole.id) : Arrays.asList(new Link());
 
 		Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
 		if(initData.person != null && !initData.person.username.equals("wordrails")){

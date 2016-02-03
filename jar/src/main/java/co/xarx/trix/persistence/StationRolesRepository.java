@@ -21,6 +21,7 @@ public interface StationRolesRepository extends JpaRepository<StationRole, Integ
 	@RestResource(exported=false)
 	StationRole findByStationAndPersonId(Station station, Integer personId);
 
+	@Query("select str FROM StationRole str WHERE str.station.id = :stationId and str.person.id = :personId")
 	StationRole findByStationIdAndPersonId(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 
 	@RestResource(exported=false)

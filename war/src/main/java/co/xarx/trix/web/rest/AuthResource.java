@@ -1,8 +1,8 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.AuthCredential;
 import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.OAuthCredential;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import org.scribe.builder.ServiceBuilder;
@@ -33,12 +33,12 @@ public class AuthResource {
 	public Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
-		if(network.oauthCredential == null) {
+		if(network.authCredential == null) {
 			throw new NotAllowedException("This network does not support social login");
 		}
 
 		boolean allowSocialLogin = true;
-		OAuthCredential oauthCredential = network.oauthCredential;
+		AuthCredential oauthCredential = network.authCredential;
 		OAuthService service = null;
 		Token token = null;
 		if (providerId.equals("facebook")) {

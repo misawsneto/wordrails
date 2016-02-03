@@ -41,8 +41,6 @@ public class NetworkResource {
 	@Autowired
 	public ObjectMapper objectMapper;
 	@Autowired
-	private NetworkRolesRepository networkRolesRepository;
-	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
@@ -79,55 +77,51 @@ public class NetworkResource {
 
 	@Path("/{id}/permissions")
 	@GET
-	public PersonPermissions getNetworkPersonPermissions(@PathParam("id") Integer id){
+	public PersonPermissions getNetworkPersonPermissions(@PathParam("id") Integer id) {
 		PersonPermissions personPermissions = new PersonPermissions();
 		Person person = authProvider.getLoggedPerson();
 
-		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(id, person.id);
-		if(networkRole != null){
-			//Network Permissions
-			NetworkPermission networkPermissionDto = new NetworkPermission();
-			networkPermissionDto.networkId = networkRole.id;
-			networkPermissionDto.admin = networkRole.admin;
+		//Network Permissions
+		NetworkPermission networkPermissionDto = new NetworkPermission();
+		networkPermissionDto.admin = person.networkAdmin;
 
-			//Stations Permissions
-			List<Station> stations = stationRepository.findByPersonId(person.id);
-			List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>(stations.size());
-			for (Station station : stations) {
-				StationPermission stationPermissionDto = new StationPermission();
+		//Stations Permissions
+		List<Station> stations = stationRepository.findByPersonId(person.id);
+		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>(stations.size());
+		for (Station station : stations) {
+			StationPermission stationPermissionDto = new StationPermission();
 
-				//Station Fields
-				stationPermissionDto.stationId = station.id;
-				stationPermissionDto.stationName = station.name;
-				stationPermissionDto.writable = station.writable;
-				stationPermissionDto.main = station.main;
-				stationPermissionDto.visibility = station.visibility;
-				stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
+			//Station Fields
+			stationPermissionDto.stationId = station.id;
+			stationPermissionDto.stationName = station.name;
+			stationPermissionDto.writable = station.writable;
+			stationPermissionDto.main = station.main;
+			stationPermissionDto.visibility = station.visibility;
+			stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
 
-				stationPermissionDto.subheading = station.subheading;
-				stationPermissionDto.sponsored = station.sponsored;
-				stationPermissionDto.topper = station.topper;
+			stationPermissionDto.subheading = station.subheading;
+			stationPermissionDto.sponsored = station.sponsored;
+			stationPermissionDto.topper = station.topper;
 
-				stationPermissionDto.allowComments = station.allowComments;
-				stationPermissionDto.allowSocialShare = station.allowSocialShare;
+			stationPermissionDto.allowComments = station.allowComments;
+			stationPermissionDto.allowSocialShare = station.allowSocialShare;
 
-				//StationRoles Fields
-				StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
-				if(stationRole != null){
-					stationPermissionDto.admin = stationRole.admin;
-					stationPermissionDto.editor = stationRole.editor;
-					stationPermissionDto.writer = stationRole.writer;
-				}
-
-				stationPermissionDtos.add(stationPermissionDto);
+			//StationRoles Fields
+			StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
+			if (stationRole != null) {
+				stationPermissionDto.admin = stationRole.admin;
+				stationPermissionDto.editor = stationRole.editor;
+				stationPermissionDto.writer = stationRole.writer;
 			}
-			personPermissions.networkPermission = networkPermissionDto;
-			personPermissions.stationPermissions = stationPermissionDtos;
-			personPermissions.personId = person.id;
-			personPermissions.username = person.username;
-			personPermissions.personName = person.name;
 
+			stationPermissionDtos.add(stationPermissionDto);
 		}
+		personPermissions.networkPermission = networkPermissionDto;
+		personPermissions.stationPermissions = stationPermissionDtos;
+		personPermissions.personId = person.id;
+		personPermissions.username = person.username;
+		personPermissions.personName = person.name;
+
 		return personPermissions;
 	}
 
@@ -190,6 +184,7 @@ public class NetworkResource {
 				user.addAuthority(nauthority);
 
 				person.user = user;
+				person.networkAdmin = true;
 
 				personRepository.save(person);
 			} catch (javax.validation.ConstraintViolationException e) {
@@ -220,12 +215,6 @@ public class NetworkResource {
 				networkRepository.delete(network);
 				e.printStackTrace();
 			}
-
-			NetworkRole networkRole = new NetworkRole();
-			networkRole.network = network;
-			networkRole.person = person;
-			networkRole.admin = true;
-			networkRolesRepository.save(networkRole);
 
 			// End Create Person ------------------------------
 

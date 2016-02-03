@@ -49,6 +49,11 @@ public class Person extends BaseEntity implements Serializable {
 	@Column(name = "post_id")
 	public Set<Integer> bookmarkPosts;
 
+	@OneToMany(mappedBy = "person")
+	public Set<StationRole> stationRoles;
+
+	public boolean networkAdmin = false;
+
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	public User user;

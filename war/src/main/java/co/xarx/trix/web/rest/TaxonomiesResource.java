@@ -28,8 +28,6 @@ public class TaxonomiesResource {
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired
-	private NetworkRolesRepository networkRolesRepository;
-	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
 	private StationPerspectiveRepository stationPerspectiveRepository;
@@ -48,8 +46,7 @@ public class TaxonomiesResource {
 		Network network = networkRepository.findOne(networkId);
 		if(network != null){
 			Person personLogged = authProvider.getLoggedPerson();
-			NetworkRole networkRole = networkRolesRepository.findByNetworkAndPerson(network, personLogged);
-			if(networkRole != null && networkRole.admin){
+			if(personLogged.networkAdmin){
 				taxonomies = taxonomyRepository.findNetworkOrStationTaxonomies(networkId);
 			}else{
 				List<StationRole> stationRoles = stationRolesRepository.findByPersonIdAndNetworkId(personLogged.id, network.id);

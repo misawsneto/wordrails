@@ -1,6 +1,8 @@
 package co.xarx.trix.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -20,11 +22,13 @@ public class StationRole extends BaseEntity {
 
 	@NotNull
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "station_id")
 	public Station station;
 
 	@NotNull
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "person_id")
 	public Person person;
 
@@ -36,4 +40,10 @@ public class StationRole extends BaseEntity {
 
 	@NotNull
 	public boolean admin;
+
+	public Integer getStationId() {
+		if(station != null)
+			return station.id;
+		return null;
+	}
 }

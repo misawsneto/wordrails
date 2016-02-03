@@ -1,36 +1,22 @@
 package co.xarx.trix.security;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.persistence.NetworkRepository;
-import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.persistence.StationRepository;
-import co.xarx.trix.persistence.StationRolesRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import co.xarx.trix.domain.Comment;
-import co.xarx.trix.domain.Network;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.Station;
-import co.xarx.trix.domain.StationRole;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class PostAndCommentSecurityChecker {
 
-	private @Autowired StationRolesRepository personStationRolesRepository;
-    private @Autowired NetworkRolesRepository personNetworkRolesRepository;
-	private @Autowired
-	NetworkRepository networkRepository;
-	private @Autowired
+	@Autowired
+	private StationRolesRepository personStationRolesRepository;
+	@Autowired
+	private
 	StationRepository stationRepository;
-	private @Autowired
-	PostRepository postRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
 
@@ -43,12 +29,6 @@ public class PostAndCommentSecurityChecker {
 			Station station = post.station;
 			if(station.visibility.equals(Station.UNRESTRICTED) && station.writable){
 				canWrite = true;
-			}else if(station.visibility.equals(Station.RESTRICTED_TO_NETWORKS) && station.writable){
-				List<Integer> networksId = networkRepository.findIdsByStation(post.station.id);
-				List<Network> belongsToNetworks = networkRepository.belongsToNetworks(personLogged.id, networksId);
-				if(belongsToNetworks != null && belongsToNetworks.size() > 0){
-					canWrite = true;
-				}
 			}else if(station.visibility.equals(Station.RESTRICTED) && station.writable){
 				Station belongsToStation = stationRepository.belongsToStation(personLogged.id, post.station.id);
 				if(belongsToStation != null){
@@ -70,12 +50,11 @@ public class PostAndCommentSecurityChecker {
 		Person personLogged = authProvider.getLoggedPerson();
 		if(personLogged != null){
 			StationRole personStationRoles = personStationRolesRepository.findByStationAndPerson(post.station, personLogged);
-            NetworkRole nr = personNetworkRolesRepository.findByNetworkAndPerson(post.station.network, personLogged);
-			if((nr != null && nr.admin) || (post.author.id.equals(personLogged.id) || (personStationRoles != null && (personStationRoles.editor || personStationRoles.admin)))){
+			if(personLogged.networkAdmin || (post.author.id.equals(personLogged.id) || (personStationRoles != null && (personStationRoles.editor || personStationRoles.admin)))){
 				canEdit = true;
 			}
 		}
-		return canEdit;// && canWrite(post);
+		return canEdit;
 	}
 
 	public boolean canRead(Post post){
@@ -85,14 +64,8 @@ public class PostAndCommentSecurityChecker {
 		if(personLogged != null){
 			if(post.station.visibility.equals(Station.UNRESTRICTED)){
 				canRead = true;
-			}else if(post.station.visibility.equals(Station.RESTRICTED_TO_NETWORKS)){
-				List<Integer> networksId = networkRepository.findIdsByStation(post.station.id);
-				List<Network> belongsToNetworks = networkRepository.belongsToNetworks(personLogged.id, networksId);
-				if(belongsToNetworks != null && belongsToNetworks.size() > 0){
-					canRead = true;
-				}
 			}else{
-				List<Integer> stationsId = new ArrayList<Integer>();
+				List<Integer> stationsId = new ArrayList<>();
 				List<Station> belongsToStations = stationRepository.belongsToStations(personLogged.id, stationsId);
 				if(belongsToStations != null && belongsToStations.size() > 0){
 					canRead = true;

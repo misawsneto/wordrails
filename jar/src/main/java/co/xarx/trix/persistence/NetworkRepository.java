@@ -11,20 +11,6 @@ import java.util.List;
 
 public interface NetworkRepository extends JpaRepository<Network, Integer>, QueryDslPredicateExecutor<Network> {
 
-	@Query("from Network where id > :id order by id desc")
-	List<Network> findNetworksOrderDesc(@Param("id") Integer id);
-
-	@RestResource(exported = false)
-	@Query("select n.id from Network n join n.stations s where s.id = :stationId")
-	List<Integer> findIdsByStation(@Param("stationId") Integer stationId);
-
-	@RestResource(exported = false)
-	@Query("select network from Network network " +
-			"join network.personsNetworkRoles personRoles " +
-			"join personRoles.person person " +
-			"where person.id = :personId and network.id IN (:networksId)")
-	List<Network> belongsToNetworks(@Param("personId") Integer personId, @Param("networksId") List<Integer> networksId);
-
 	@RestResource(exported = true)
 	Network findByTenantId(@Param("tenantId") String tenantId);
 
