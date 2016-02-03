@@ -2,7 +2,6 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.domain.PasswordReset;
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.QPasswordReset;
 import co.xarx.trix.persistence.PasswordResetRepository;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserRepository;
@@ -32,9 +31,14 @@ public class PasswordService {
 
 		Assert.notNull(person, "Person not found");
 
-		PasswordReset checkReset = passwordResetRepository.findOne(QPasswordReset.passwordReset.user.eq(person.user));
+//		PasswordReset checkReset = passwordResetRepository.findOne(QPasswordReset.passwordReset.user.eq(person.user));
+
+		PasswordReset checkReset = passwordResetRepository.findOne(person.user.id);
 
 		if( checkReset != null && checkReset.expiresAt.after(new Date()) ){
+			if(checkReset.expiresAt.before(new Date())){
+				return;
+			}
 			throw new IllegalArgumentException();
 		}
 

@@ -927,6 +927,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetPasswordResetUserAuthorized(Integer passwordResetId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetNotificationsAuthorized() {
 		return false;
 	}

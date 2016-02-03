@@ -1,19 +1,18 @@
 package co.xarx.trix.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
 public class PasswordReset extends BaseEntity {
 
 	public PasswordReset(){
-		LocalDate daysFromNow = LocalDate.now().plusDays(1);
-		expiresAt = new Date(daysFromNow.toEpochDay());
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+		expiresAt = calendar.getTime();
 	}
 
 	@Id
@@ -29,6 +28,7 @@ public class PasswordReset extends BaseEntity {
 	public String hash;
 
 	@NotNull
+	@OneToOne
 	public User user;
 
 	public Date expiresAt;
