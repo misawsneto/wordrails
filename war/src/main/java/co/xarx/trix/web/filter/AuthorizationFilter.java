@@ -947,21 +947,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetNotificationPersonAuthorized(Integer notificationId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetNotificationNetworkAuthorized(Integer notificationId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetNotificationStationAuthorized(Integer notificationId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isGetNotificationPostAuthorized(Integer notificationId) {
 		return true;
 	}
@@ -1128,11 +1113,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPersonNetworkRegIdPersonAuthorized(Integer personNetworkRegIdId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkRegIdNetworkAuthorized(Integer personNetworkRegIdId) {
 		return true;
 	}
 

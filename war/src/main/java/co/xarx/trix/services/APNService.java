@@ -107,36 +107,36 @@ public class APNService {
 
 	public void apnNotify(List<PersonNetworkToken> personNetworkTokens, final Notification notification) throws MalformedTokenStringException, InterruptedException {
 
-		ApnsPayloadBuilder payloadBuilder = new ApnsPayloadBuilder();
-		payloadBuilder.setBadgeNumber(1);
-		payloadBuilder.setSoundFileName("default");
-		payloadBuilder.addCustomProperty("postId", notification.post.id);
-		payloadBuilder.addCustomProperty("stationName", notification.station.name);
-		payloadBuilder.setAlertTitle(notification.station.name);
-		payloadBuilder.setAlertBody(notification.message);
-		payloadBuilder.setContentAvailable(true);
-
-		int notificationsCounter = 0;
-		for (PersonNetworkToken personToken : personNetworkTokens) {
-			log.debug("Sending notification: " + personToken.token);
-
-			if (personToken.person != null && notification.person != null && personToken.person.id.equals(notification.person.id)) {
-				continue; //this is the person that is producing the notification, don't send to him
-			}
-
-			pushManager.getQueue().put(new SimpleApnsPushNotification(TokenUtil.tokenStringToByteArray(personToken.token), payloadBuilder.buildWithDefaultMaximumLength()));
-
-//			System.out.println(personToken.token);
-
-			//Limit the number of notifications sent to less than 9000 per second, so it's possible to handle errors
-			if (notificationsCounter >= APN_NOTIFICATION_SENT_LIMIT) {
-				Thread.sleep(1000);
-				notificationsCounter = 0;
-			}
-			notificationsCounter++;
-		}
-
-		shutdown();
+//		ApnsPayloadBuilder payloadBuilder = new ApnsPayloadBuilder();
+//		payloadBuilder.setBadgeNumber(1);
+//		payloadBuilder.setSoundFileName("default");
+//		payloadBuilder.addCustomProperty("postId", notification.post.id);
+//		payloadBuilder.addCustomProperty("stationName", notification.station.name);
+//		payloadBuilder.setAlertTitle(notification.station.name);
+//		payloadBuilder.setAlertBody(notification.message);
+//		payloadBuilder.setContentAvailable(true);
+//
+//		int notificationsCounter = 0;
+//		for (PersonNetworkToken personToken : personNetworkTokens) {
+//			log.debug("Sending notification: " + personToken.token);
+//
+//			if (personToken.person != null && notification.person != null && personToken.person.id.equals(notification.person.id)) {
+//				continue; //this is the person that is producing the notification, don't send to him
+//			}
+//
+//			pushManager.getQueue().put(new SimpleApnsPushNotification(TokenUtil.tokenStringToByteArray(personToken.token), payloadBuilder.buildWithDefaultMaximumLength()));
+//
+////			System.out.println(personToken.token);
+//
+//			//Limit the number of notifications sent to less than 9000 per second, so it's possible to handle errors
+//			if (notificationsCounter >= APN_NOTIFICATION_SENT_LIMIT) {
+//				Thread.sleep(1000);
+//				notificationsCounter = 0;
+//			}
+//			notificationsCounter++;
+//		}
+//
+//		shutdown();
 	}
 
 	public void updateIosToken(Network network, Person person, String token, Double lat, Double lng) {

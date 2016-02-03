@@ -5,7 +5,6 @@ import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.PostViewMap;
 import co.xarx.trix.elasticsearch.mapper.StationMap;
 import co.xarx.trix.services.AmazonCloudService;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.Sender;
 import org.modelmapper.ModelMapper;
@@ -41,14 +40,6 @@ public class ApplicationConfig {
 	@Bean
 	public ObjectMapper simpleMapper() {
 		return new ObjectMapper();
-	}
-
-	@Bean
-	public ObjectMapper gcmMapper() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-		return mapper;
 	}
 
 

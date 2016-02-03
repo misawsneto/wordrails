@@ -10,7 +10,26 @@ import javax.validation.constraints.Size;
 public class Notification extends BaseEntity {
 	
 	public enum Type{
-		ADDED_TO_STATION, REMOVED_FROM_STATION, POST_COMMENTED, POST_DELETED, POST_ADDED, BREAKING_NEWS, MESSAGE, IREPORT_INVITE, IREPORT_REVOKE
+		ADDED_TO_STATION,
+		REMOVED_FROM_STATION,
+		POST_COMMENTED,
+		POST_DELETED,
+		POST_ADDED,
+		BREAKING_NEWS,
+		MESSAGE,
+		IREPORT_INVITE,
+		IREPORT_REVOKE
+	}
+
+	protected Notification() {
+	}
+
+	public Notification(String regId, String hash, String status, String message, String type) {
+		this.regId = regId;
+		this.hash = hash;
+		this.status = status;
+		this.message = message;
+		this.type = type;
 	}
 
 	@Id
@@ -32,16 +51,15 @@ public class Notification extends BaseEntity {
 
     public boolean test = true;
 
+	@NotEmpty
 	public String status;
 
 	public String errorCodeName;
-	
-	@NotNull
+
 	@NotEmpty
 	@Size(min=1,max=500)
 	public String message;
-	
-	@NotNull
+
 	@NotEmpty
 	public String type;
 }
