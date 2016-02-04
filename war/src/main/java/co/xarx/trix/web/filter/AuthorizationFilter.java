@@ -170,11 +170,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByTenantIdAuthorized(String tenantId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetNetworkPersonsNetworkRolesAuthorized(Integer networkId) {
 		return isNetworkAdminById(networkId);
 	}

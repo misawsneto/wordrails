@@ -30,8 +30,6 @@ public class NotificationConverter extends AbstractConverter<Notification, Notif
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		Network network = networkRepository.findByTenantId(tenantId);
 
-		if(notification == null) return null;
-
 		notificationView.id = notification.id;
 		notificationView.hash = notification.hash;
 		notificationView.message = notification.message;

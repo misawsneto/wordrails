@@ -38,7 +38,6 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 
 	@JsonIgnore
 	@NotNull
-	@Column(columnDefinition = "VARCHAR(255) DEFAULT ''")
 	public String tenantId;
 
 	@Override

@@ -3,7 +3,8 @@ package co.xarx.trix.test.unit;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.services.NotificationService;
+import co.xarx.trix.services.notification.AndroidNotificationSender;
+import co.xarx.trix.services.notification.NotificationService;
 import co.xarx.trix.test.TestArtifactsFactory;
 import co.xarx.trix.util.Constants;
 import com.google.android.gcm.server.Message;
@@ -50,7 +51,9 @@ public class NotificationServiceTest {
 		when(result.getResults()).thenReturn(results);
 		when(sender.send(any(Message.class), anyListOf(String.class), anyInt())).thenReturn(result);
 
-		this.notificationService = new NotificationService(sender);
+		AndroidNotificationSender notificationSender = new AndroidNotificationSender(sender);
+
+		this.notificationService = new NotificationService(notificationSender);
 	}
 
 	public void setUpGCMError() throws Exception {

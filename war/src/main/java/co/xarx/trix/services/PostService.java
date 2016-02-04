@@ -2,13 +2,17 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
+import co.xarx.trix.exception.NotificationException;
+import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
+import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
@@ -51,6 +55,10 @@ public class PostService {
 	private SchedulerService schedulerService;
 	@Autowired
 	private PostRepository postRepository;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private MobileDeviceRepository mobileDeviceRepository;
 	@Autowired
 	private ESPostRepository esPostRepository;
 	@Autowired
@@ -127,11 +135,22 @@ public class PostService {
 		return new ImmutablePair(total, postView);
 	}
 
-	public void publishScheduledPost(Integer postId) {
+	public void sentNewPostNotification(Post post) throws NotificationException {
+		List<MobileDevice> mobileDevices;
+		if (stationRepository.isUnrestricted(post.getStationId())) {
+			mobileDevices = mobileDeviceRepository.findAll();
+		} else {
+			mobileDevices = mobileDeviceRepository.findByStation(post.station.id);
+		}
+
+		mobileService.buildNewPostNotification(post, mobileDevices);
+	}
+
+	public void publishScheduledPost(Integer postId, boolean allowNotifications) throws NotificationException {
 		Post scheduledPost = postRepository.findOne(postId);
 		if (scheduledPost != null && scheduledPost.state.equals(Post.STATE_SCHEDULED)) {
-			if (scheduledPost.notify) {
-				mobileService.buildNotification(scheduledPost);
+			if (scheduledPost.notify && allowNotifications) {
+				sentNewPostNotification(scheduledPost);
 			}
 
 			scheduledPost.date = new Date();

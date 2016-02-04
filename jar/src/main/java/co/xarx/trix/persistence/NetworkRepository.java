@@ -25,7 +25,7 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 			"where person.id = :personId and network.id IN (:networksId)")
 	List<Network> belongsToNetworks(@Param("personId") Integer personId, @Param("networksId") List<Integer> networksId);
 
-	@RestResource(exported = true)
+	@RestResource(exported = false)
 	Network findByTenantId(@Param("tenantId") String tenantId);
 
 	@RestResource(exported = false)

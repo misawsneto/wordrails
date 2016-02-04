@@ -8,8 +8,8 @@ import javax.validation.constraints.Size;
 
 @Entity
 public class Notification extends BaseEntity {
-	
-	public enum Type{
+
+	public enum Type {
 		ADDED_TO_STATION,
 		REMOVED_FROM_STATION,
 		POST_COMMENTED,
@@ -21,13 +21,24 @@ public class Notification extends BaseEntity {
 		IREPORT_REVOKE
 	}
 
+	public enum DeviceType {
+		ANDROID,
+		APPLE
+	}
+
+	public enum Status {
+		SEND_ERROR,
+		SERVER_ERROR,
+		SUCCESS
+	}
+
 	protected Notification() {
 	}
 
-	public Notification(String regId, String hash, String status, String message, String type) {
+	public Notification(String regId, String hash, Status status, String message, String type) {
 		this.regId = regId;
 		this.hash = hash;
-		this.status = status;
+		this.status = status.toString();
 		this.message = message;
 		this.type = type;
 	}
@@ -56,10 +67,94 @@ public class Notification extends BaseEntity {
 
 	public String errorCodeName;
 
+	public String deviceType;
+
+	public Boolean deviceDeactivated;
+
 	@NotEmpty
 	@Size(min=1,max=500)
 	public String message;
 
 	@NotEmpty
 	public String type;
+
+	public String getRegId() {
+		return regId;
+	}
+
+	public void setRegId(String regId) {
+		this.regId = regId;
+	}
+
+	public String getHash() {
+		return hash;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
+	}
+
+	public boolean isTest() {
+		return test;
+	}
+
+	public void setTest(boolean test) {
+		this.test = test;
+	}
+
+	public Status getStatus() {
+		return Status.valueOf(status);
+	}
+
+	public void setStatus(Status status) {
+		this.status = status.toString();
+	}
+
+	public String getErrorCodeName() {
+		return errorCodeName;
+	}
+
+	public void setErrorCodeName(String errorCodeName) {
+		this.errorCodeName = errorCodeName;
+	}
+
+	public DeviceType getDeviceType() {
+		return DeviceType.valueOf(deviceType);
+	}
+
+	public void setDeviceType(DeviceType deviceType) {
+		this.deviceType = deviceType.toString();
+	}
+
+	public Boolean getDeviceDeactivated() {
+		return deviceDeactivated;
+	}
+
+	public void setDeviceDeactivated(Boolean deviceDeactivated) {
+		this.deviceDeactivated = deviceDeactivated;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }
