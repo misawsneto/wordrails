@@ -8,7 +8,7 @@
     <a md-ink-ripple class="navbar-item pull-left" ng-click="goBack()" ng-show="$state.current.data.child" ><i class="mdi-navigation-arrow-back i-24"></i></a>
     <!-- / -->
     <!-- Page title - Bind to $state's title -->
-    <div class="navbar-item pull-left h4" ng-bind="$state.current.data.title"></div>
+    <div class="navbar-item pull-left h4">{{($state.current.data.titleTranslate) ? ($state.current.data.titleTranslate | translate) : $state.current.data.title}}</div>
     <!-- / -->
     <!-- Common tools -->
     <ul class="nav nav-sm navbar-tool pull-right" ng-hide="$state.current.data.child">

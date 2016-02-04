@@ -1,10 +1,17 @@
 <nav ui-nav>
   <ul class="nav">
-    <li class="nav-header m-v-sm hidden-folded">
-      UI Kits
+    <li class="nav-header m-v-sm hidden-folded" translate="settings.aside.DASHBOARD">
+      Configurations
+    </li>
+
+    <li ui-sref-active="active">
+      <a md-ink-ripple ui-sref="app.stations">
+        <i class="icon mdi-device-multitrack-audio i-20"></i>
+        <span class="font-normal" translate="titles.STATION">Estações</span>
+      </a>
     </li>
     
-    <li ui-sref-active="active">
+    <!-- <li ui-sref-active="active">
       <a md-ink-ripple>
         <span class="pull-right text-muted">
           <i class="fa fa-caret-down"></i>
@@ -19,6 +26,9 @@
         </li>
         <li ui-sref-active="active">
           <a md-ink-ripple ui-sref="app.analysis">Analysis</a>
+        </li>
+        <li ui-sref-active="active">
+          <a md-ink-ripple ui-sref="app.theming">Theming</a>
         </li>
         <li ui-sref-active="active">
           <a md-ink-ripple ui-sref="app.wall">Wall</a>
@@ -306,16 +316,11 @@
           </ul>          
         </li>        
       </ul>
-    </li>
+    </li> -->
     <li class="b-b b m-v-sm"></li>
     <li>
       <a md-ink-ripple ui-sref="page.document">
         <span>Document</span>
-      </a>
-    </li>
-    <li class="m-b-sm">
-      <a md-ink-ripple href="../html">
-        <span>HTML Version</span>
       </a>
     </li>
   </ul>

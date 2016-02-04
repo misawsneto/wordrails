@@ -1,0 +1,103 @@
+<div id="settings-stations">
+  <div class="wrapper-lg m-b-xxl">
+    <div class="row">
+      <div class="col-sm-4" ng-repeat="station in app.stations">
+        <div class="md-list md-whiteframe-z0 bg-white m-b">
+          
+          <a class="md-list-item list-group-item b-n" ui-sref="app.settings.perspectives({'stationId': station.id})">
+            <div class="md-list-item-content">
+              <h3 class="text-md">
+                <i class="mdi mdi-view-quilt fa-fw text-muted"></i> 
+                {{'titles.PERSPECTIVE' | translate}}s
+              </h3>
+            </div>
+          </a>
+
+          <a class="md-list-item list-group-item b-n" ui-sref="app.settings.stationcategories({'stationId': station.id})">
+            <div class="md-list-item-content">
+              <h3 class="text-md">
+                <i class="mdi mdi-sitemap fa-fw text-muted"></i> 
+                {{'titles.CATEGORIES' | translate}}
+              </h3>
+            </div>
+          </a>
+
+          <a class="md-list-item list-group-item b-n" ui-sref="app.settings.stationusers({'stationId': station.id})">
+            <div class="md-list-item-content">
+              <h3 class="text-md">
+                <i class="mdi mdi-account-key fa-fw text-muted"></i> 
+                {{'titles.USER' | translate}}
+              </h3>
+            </div>
+          </a>
+
+          <a class="md-list-item list-group-item b-n" ui-sref="app.settings.stationconfig({'stationId': station.id})">
+            <div class="md-list-item-content">
+              <h3 class="text-md">
+                  <i class="mdi mdi-settings fa-fw text-muted"></i> 
+                  Configurações
+              </h3>
+            </div>
+          </a>
+
+          <a class="md-list-item list-group-item b-n" ui-sref="app.settings.stationstatistics({'stationId': station.id})">
+            <div class="md-list-item-content">
+              <h3 class="text-md">
+                <i class="mdi mdi-chart-bar fa-fw text-muted"></i> 
+                Estatísticas
+              </h3>
+            </div>
+          </a>
+
+          <div class="md-list-item list-group-item b-n">
+            <div class="md-list-item-content wrapper">
+              <div class="text-md text-right">
+                <div class="pull-left m-t-xs" ng-if="app.stations.length > 1 &&  app.networkAdmin">
+                  <label class="md-check">
+                    <input type="checkbox" ng-model="station.main" ng-change="setMainStation(station)">
+                    <i class="blue"></i>
+                    Principal
+                  </label>
+                </div>
+                <button ng-click="openDeleteStation(station.id)"
+                md-ink-ripple class="md-btn md-flat">Excluir</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <md-button 
+    id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+    ui-sref="app.settings.stationconfig({'newStation': true})" ng-if="app.networkAdmin && app.isLogged"
+    tooltip="Nova estação" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+    aria-label="Nova estação">
+    <i class="mdi mdi-plus"></i>
+  </md-button>
+
+</div>
+
+<script type="text/ng-template" id="confirm_delete_station.html">
+  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <div class="splash-content text-center" ng-cloak>
+    <div class="row">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="p-lg text-color wrapper-lg">
+          <div class="m-b-lg">
+            Tem certeza que deseja excluir esta estação e todo o seu conteúdo? Esta operação não poderá ser desfeita!
+          </div>
+          <button ng-click="app.deleteStation();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
+           Sim
+         </button>
+         <button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
+           Não
+         </button>
+       </div>
+     </div>
+   </div>
+ </div>
+</script>

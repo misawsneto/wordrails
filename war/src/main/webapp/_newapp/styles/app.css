@@ -5279,6 +5279,10 @@ a.text-dark:hover {
   border-width: 5px;
 }
 
+.b-n {
+  border: none;
+}
+
 .b-t-2x {
   border-top-width: 2px !important;
 }
@@ -5293,6 +5297,10 @@ a.text-dark:hover {
 
 .b-t-5x {
   border-top-width: 5px !important;
+}
+
+.b-t-n {
+  border-top: none;
 }
 
 .b-r-2x {
@@ -5311,6 +5319,10 @@ a.text-dark:hover {
   border-right-width: 5px !important;
 }
 
+.b-r-n {
+  border-right: none;
+}
+
 .b-b-2x {
   border-bottom-width: 2px !important;
 }
@@ -5327,6 +5339,10 @@ a.text-dark:hover {
   border-bottom-width: 5px !important;
 }
 
+.b-b-n {
+  border-bottom: none;
+}
+
 .b-l-2x {
   border-left-width: 2px !important;
 }
@@ -5341,6 +5357,10 @@ a.text-dark:hover {
 
 .b-l-5x {
   border-left-width: 5px !important;
+}
+
+.b-l-n {
+  border-left: none;
 }
 
 .b-light {

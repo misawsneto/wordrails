@@ -17,8 +17,8 @@ angular.module('app')
     ]
   )
   .config(
-    [          '$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG',
-      function ( $stateProvider,   $urlRouterProvider,  MODULE_CONFIG ) {
+    [          '$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG', '$translateProvider',
+      function ( $stateProvider,   $urlRouterProvider,  MODULE_CONFIG ,  $translateProvider) {
         $urlRouterProvider
           .otherwise('/dashboard');
 
@@ -62,11 +62,26 @@ angular.module('app')
                 }
               }
             })
+              .state('app.stations', {
+                url: '/stations',
+                templateUrl: '/views/settings/settings-stations.html',
+                data : { titleTranslate: 'settings.titles.STATION', title: 'Estações', folded: false },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-stations.js']),
+                controller: 'SettingsStationsCtrl'
+              })
               .state('app.dashboard', {
                 url: '/dashboard',
                 templateUrl: '/views/pages/dashboard.html',
-                data : { title: 'Dashboard', folded: true },
+                data : { title: 'Dashboard', folded: false },
                 resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
+              })
+              .state('app.theming', {
+                url: '/theming',
+                templateUrl: '/views/pages/dashboard.theming.html',
+                data : { title: 'Theme builder', folded: false },
+                resolve: load(['angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
+                    '/styles/theming.css']),
+                controller: 'ColorGeneratorCtrl'
               })
               .state('app.analysis', {
                 url: '/analysis',
@@ -77,7 +92,7 @@ angular.module('app')
               .state('app.wall', {
                 url: '/wall',
                 templateUrl: '/views/pages/dashboard.wall.html',
-                data : { title: 'Wall', folded: true }
+                data : { title: 'Wall', folded: false }
               })
               .state('app.todo', {
                 url: '/todo',
@@ -99,7 +114,7 @@ angular.module('app')
                 templateUrl: '/apps/note/list.html',
                 data : { title: 'Note'},
                 controller: 'NoteCtrl',
-                resolve: load(['/apps/note/note.js', 'moment'])
+                resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
               })
               .state('app.note.item', {
                 url: '/{id}',
@@ -107,7 +122,7 @@ angular.module('app')
                   '': {
                     templateUrl: '/apps/note/item.html',
                     controller: 'NoteItemCtrl',
-                    resolve: load(['/apps/note/note.js', 'moment'])
+                    resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
                   },
                   'navbar@': {
                     templateUrl: '/apps/note/navbar.html',
@@ -119,8 +134,8 @@ angular.module('app')
               .state('app.inbox', {
                   url: '/inbox',
                   templateUrl: '/apps/inbox/inbox.html',
-                  data : { title: 'Inbox', folded: true },
-                  resolve: load( ['/apps/inbox/inbox.js','moment'] )
+                  data : { title: 'Inbox', folded: false },
+                  resolve: load( ['/apps/inbox/inbox.js','/libs/jquery/moment/min/moment-with-locales.min.js'] )
               })
               .state('app.inbox.list', {
                   url: '/inbox/{fold}',
@@ -464,6 +479,7 @@ angular.module('app')
                 url: '/lockme',
                 templateUrl: '/views/pages/lockme.html'
               })
+              
             ;
         // end of if /settings
           else
@@ -501,7 +517,7 @@ angular.module('app')
             .state('app.dashboard', {
               url: '/dashboard',
               templateUrl: '/views/pages/dashboard.html',
-              data : { title: 'Dashboard', folded: true },
+              data : { title: 'Dashboard', folded: false },
               resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
             })
             .state('app.analysis', {
@@ -513,12 +529,12 @@ angular.module('app')
             .state('app.home', {
               url: '/home',
               templateUrl: '/views/pages/dashboard.home.html',
-              data : { title: 'Home', folded: true }
+              data : { title: 'Home', folded: false }
             })
             .state('app.wall', {
               url: '/wall',
               templateUrl: '/views/pages/dashboard.wall.html',
-              data : { title: 'Wall', folded: true }
+              data : { title: 'Wall', folded: false }
             })
             .state('app.todo', {
               url: '/todo',
@@ -540,7 +556,7 @@ angular.module('app')
               templateUrl: '/apps/note/list.html',
               data : { title: 'Note'},
               controller: 'NoteCtrl',
-              resolve: load(['/apps/note/note.js', 'moment'])
+              resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
             })
             .state('app.note.item', {
               url: '/{id}',
@@ -548,7 +564,7 @@ angular.module('app')
                 '': {
                   templateUrl: '/apps/note/item.html',
                   controller: 'NoteItemCtrl',
-                  resolve: load(['/apps/note/note.js', 'moment'])
+                  resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
                 },
                 'navbar@': {
                   templateUrl: '/apps/note/navbar.html',
@@ -560,8 +576,8 @@ angular.module('app')
             .state('app.inbox', {
                 url: '/inbox',
                 templateUrl: '/apps/inbox/inbox.html',
-                data : { title: 'Inbox', folded: true },
-                resolve: load( ['/apps/inbox/inbox.js','moment'] )
+                data : { title: 'Inbox', folded: false },
+                resolve: load( ['/apps/inbox/inbox.js','/libs/jquery/moment/min/moment-with-locales.min.js'] )
             })
             .state('app.inbox.list', {
                 url: '/inbox/{fold}',

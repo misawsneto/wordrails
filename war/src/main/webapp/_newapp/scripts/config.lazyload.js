@@ -143,17 +143,21 @@ angular.module('app')
           name: 'vectorMap',
           module: false,
           files: [
-              '/libs/jquery/bower-jvectormap/jquery-jvectormap-1.2.2.min.js',
-              '/libs/jquery/bower-jvectormap/jquery-jvectormap.css', 
-              '/libs/jquery/bower-jvectormap/jquery-jvectormap-world-mill-en.js',
-              '/libs/jquery/bower-jvectormap/jquery-jvectormap-us-aea-en.js'
+              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-2.0.0.min.js',
+              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-2.0.0.css', 
+              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-world-mill-en.js',
+              '/libs/jquery/bower-jvectormap-2/jquery-jvectormap-us-aea-en.js'
           ]
       },
       {
-          name: 'moment',
-          module: false,
+          name: 'angularSpectrumColorpicker',
+          module: true,
           files: [
-              '/libs/jquery/moment/moment.js'
+              '/libs/theming/spectrum/spectrum.js',
+              '/libs/theming/spectrum/spectrum.css',
+              '/libs/theming/angular-spectrum-colorpicker/dist/angular-spectrum-colorpicker.min.js',
+              '/libs/theming/tinycolor/tinycolor.js',
+              '/libs/theming/angular-toArrayFilter/toArrayFilter.js'
           ]
       }
     ]

@@ -1951,12 +1951,12 @@ optgroup {
 /**
  * Remove most spacing between table cells.
  */
-table {
+/* table {
   border-collapse: collapse;
   border-spacing: 0; }
 
 td, th {
-  padding: 0; }
+  padding: 0; } */
 
 html {
   box-sizing: border-box; }
@@ -2171,12 +2171,12 @@ footer.page-footer {
     color: rgba(255, 255, 255, 0.8);
     background-color: rgba(51, 51, 51, 0.08); }
 
-table, th, td {
-  border: none; }
+/* table, th, td {
+  border: none; } */
 
-table {
+/* table {
   width: 100%;
-  display: table; }
+  display: table; } */
   table.bordered tr {
     border-bottom: 1px solid #d0d0d0; }
   table.striped tbody tr:nth-child(odd) {
@@ -2192,15 +2192,15 @@ table {
   table.centered thead tr th, table.centered tbody tr td {
     text-align: center; }
 
-thead {
-  border-bottom: 1px solid #d0d0d0; }
+/* thead {
+  border-bottom: 1px solid #d0d0d0; } */
 
-td, th {
+/* td, th {
   padding: 15px 5px;
   display: table-cell;
   text-align: left;
   vertical-align: middle;
-  border-radius: 2px; }
+  border-radius: 2px; } */
 
 @media only screen and (max-width : 992px) {
   table.responsive-table {
