@@ -116,8 +116,8 @@ angular.module('app')
     }
   ])
 
-  .controller('AppDataCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix',
-    function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix ) {
+  .controller('AppDataCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter',
+    function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter ) {
 
       //window.console && console.log(appData);
       $scope.app = angular.extend($scope.app, appData)
@@ -130,5 +130,62 @@ angular.module('app')
         $scope.app.termPerspectiveView = termPerspective
       })
 
+      $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+        $rootScope.previousState = fromState.name;
+        $rootScope.currentState = toState.name;
+
+        if(toState.data && (toState.data.title || toState.titleTranslate)){
+          $("title").html($scope.app.network.name + " | " + ((toState.data.titleTranslate) ? $filter('translate')(toState.data.titleTranslate) : toState.data.title));
+        }
+
+        window.console && console.log($rootScope.currentState);
+      });
+
+      
+      $scope.toastPosition = {
+        bottom: false,
+        top: true,
+        left: false,
+        right: true
+      };
+
+      $scope.getToastPosition = function() {
+        return Object.keys($scope.toastPosition)
+        .filter(function(pos) { return $scope.toastPosition[pos]; })
+        .join(' ');
+      };
+
+      $scope.app.showSimpleToast = function(content) {
+        $mdToast.show(
+          $mdToast.simple()
+          .content(content)
+          .position($scope.getToastPosition())
+          .hideDelay(3000)
+          );
+      };
+
+      $scope.app.showErrorToast = function(content) {
+        $mdToast.show({
+          template: '<md-toast style="background-color: rgba(204,34,0,0.95)" ><span flex>'+content+'</span></md-toast>',
+          hideDelay: 3000,
+          position: $scope.getToastPosition()
+        });
+      };
+
+      $scope.app.showSuccessToast = function(content) {
+        $mdToast.show({
+          template: '<md-toast style="background-color: rgba(0,128,0,0.95)" ><span flex>'+content+'</span></md-toast>',
+          hideDelay: 3000,
+          position: $scope.getToastPosition()
+        });
+      };
+
+      $scope.app.showInfoToast = function(content) {
+        $mdToast.show({
+          template: '<md-toast style="background-color: rgba(0,85,187,0.95)" ><span flex>'+content+'</span></md-toast>',
+          hideDelay: 3000,
+          position: $scope.getToastPosition()
+        });
+      };
     }
   ]);

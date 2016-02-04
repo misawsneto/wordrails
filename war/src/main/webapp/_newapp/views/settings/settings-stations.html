@@ -2,9 +2,13 @@
   <div class="wrapper-lg m-b-xxl">
     <div class="row">
       <div class="col-sm-4" ng-repeat="station in app.stations">
-        <div class="md-list md-whiteframe-z0 bg-white m-b">
+        <div class="md-list md-whiteframe-z1 bg-white m-b">
+
+          <div class="md-list-item list-group-item b-n text-md font-bold">
+            {{station.name}}
+          </div>
           
-          <a class="md-list-item list-group-item b-n" ui-sref="app.settings.perspectives({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.settings.perspectives({'stationId': station.id})">
             <div class="md-list-item-content">
               <h3 class="text-md">
                 <i class="mdi mdi-view-quilt fa-fw text-muted"></i> 
@@ -13,7 +17,7 @@
             </div>
           </a>
 
-          <a class="md-list-item list-group-item b-n" ui-sref="app.settings.stationcategories({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.settings.stationcategories({'stationId': station.id})">
             <div class="md-list-item-content">
               <h3 class="text-md">
                 <i class="mdi mdi-sitemap fa-fw text-muted"></i> 
@@ -22,29 +26,29 @@
             </div>
           </a>
 
-          <a class="md-list-item list-group-item b-n" ui-sref="app.settings.stationusers({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.settings.stationusers({'stationId': station.id})">
             <div class="md-list-item-content">
               <h3 class="text-md">
                 <i class="mdi mdi-account-key fa-fw text-muted"></i> 
-                {{'titles.USER' | translate}}
+                {{'titles.USER' | translate}}s
               </h3>
             </div>
           </a>
 
-          <a class="md-list-item list-group-item b-n" ui-sref="app.settings.stationconfig({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.settings.stationconfig({'stationId': station.id})">
             <div class="md-list-item-content">
               <h3 class="text-md">
                   <i class="mdi mdi-settings fa-fw text-muted"></i> 
-                  Configurações
+                  {{'titles.CONFIGURATION' | translate}}s
               </h3>
             </div>
           </a>
 
-          <a class="md-list-item list-group-item b-n" ui-sref="app.settings.stationstatistics({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.settings.stationstatistics({'stationId': station.id})">
             <div class="md-list-item-content">
               <h3 class="text-md">
                 <i class="mdi mdi-chart-bar fa-fw text-muted"></i> 
-                Estatísticas
+                {{'titles.STATS' | translate}}
               </h3>
             </div>
           </a>
@@ -52,15 +56,15 @@
           <div class="md-list-item list-group-item b-n">
             <div class="md-list-item-content wrapper">
               <div class="text-md text-right">
-                <div class="pull-left m-t-xs" ng-if="app.stations.length > 1 &&  app.networkAdmin">
+                <div class="pull-left m-t-xs">
                   <label class="md-check">
                     <input type="checkbox" ng-model="station.main" ng-change="setMainStation(station)">
                     <i class="blue"></i>
-                    Principal
+                    {{'titles.DEFAULT_STATION' | translate}}
                   </label>
                 </div>
                 <button ng-click="openDeleteStation(station.id)"
-                md-ink-ripple class="md-btn md-flat">Excluir</button>
+                md-ink-ripple class="md-btn md-flat" translate="actions.REMOVE">Excluir</button>
               </div>
             </div>
           </div>

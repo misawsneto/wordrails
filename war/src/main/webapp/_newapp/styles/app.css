@@ -5163,6 +5163,22 @@ a.text-dark:hover {
   position: static !important;
 }
 
+.top-0 {
+  top: 0;
+}
+
+.right-0 {
+  right: 0;
+}
+
+.bottom-0 {
+  bottom: 0;
+}
+
+.left-0 {
+  left: 0;
+}
+
 .block {
   display: block;
 }
@@ -5228,6 +5244,11 @@ a.text-dark:hover {
 .clear {
   display: block;
   overflow: hidden;
+}
+
+.back-none,
+bg-none {
+  background: transparent;
 }
 
 .no-border {
@@ -5750,6 +5771,10 @@ a.text-dark:hover {
   margin-bottom: -16px;
 }
 
+.m-auto {
+  margin: auto;
+}
+
 .no-padding {
   padding: 0 !important;
 }
@@ -6228,6 +6253,22 @@ a.text-dark:hover {
 
 .h-full {
   height: 100%;
+}
+
+.block-1000 {
+  max-width: 1000px;
+}
+
+.block-1200 {
+  max-width: 1200px;
+}
+
+.block-800 {
+  max-width: 800px;
+}
+
+.block-600 {
+  max-width: 600px;
 }
 
 @media (max-width: 991px) {

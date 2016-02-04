@@ -1,13 +1,20 @@
 <nav ui-nav>
   <ul class="nav">
-    <li class="nav-header m-v-sm hidden-folded" translate="settings.aside.DASHBOARD">
-      Configurations
+    <li class="nav-header m-v-sm hidden-folded" translate="settings.aside.SETTINGS">
+      Configurações
     </li>
 
     <li ui-sref-active="active">
       <a md-ink-ripple ui-sref="app.stations">
         <i class="icon mdi-device-multitrack-audio i-20"></i>
-        <span class="font-normal" translate="titles.STATION">Estações</span>
+        <span class="font-normal" translate="titles.STATIONS">Estações</span>
+      </a>
+    </li>
+
+    <li ui-sref-active="active">
+      <a md-ink-ripple ui-sref="app.network">
+        <i class="icon mdi-action-settings i-20"></i>
+        <span class="font-normal" translate="titles.NETWORK">Rede</span>
       </a>
     </li>
     

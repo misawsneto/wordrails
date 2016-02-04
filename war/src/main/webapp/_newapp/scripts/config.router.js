@@ -65,9 +65,16 @@ angular.module('app')
               .state('app.stations', {
                 url: '/stations',
                 templateUrl: '/views/settings/settings-stations.html',
-                data : { titleTranslate: 'settings.titles.STATION', title: 'Estações', folded: false },
+                data : { titleTranslate: 'titles.STATIONS', title: 'Estações', folded: false },
                 resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-stations.js']),
                 controller: 'SettingsStationsCtrl'
+              })
+              .state('app.network', {
+                url: '/network',
+                templateUrl: '/views/settings/settings-network.html',
+                data : { titleTranslate: 'titles.NETWORK', title: 'Rede', folded: false },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js']),
+                controller: 'SettingsNetworkCtrl'
               })
               .state('app.dashboard', {
                 url: '/dashboard',

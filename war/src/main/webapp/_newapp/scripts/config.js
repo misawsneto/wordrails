@@ -28,9 +28,9 @@ angular.module('app')
       suffix: '.js'
     });
     // Tell the module what language to use by default
-    $translateProvider.preferredLanguage('en');
+    $translateProvider.preferredLanguage('pt');
     // Tell the module to store the language in the local storage
-    $translateProvider.useLocalStorage();
+    // $translateProvider.useLocalStorage();
   }])
 
   .config(function(trixProvider, $mdThemingProvider){
@@ -60,6 +60,12 @@ angular.module('app')
     $mdThemingProvider.theme('brown').primaryPalette('brown').accentPalette('clear');
     $mdThemingProvider.theme('grey').primaryPalette('grey').accentPalette('clear');
     $mdThemingProvider.theme('blue-grey').primaryPalette('blue-grey').accentPalette('clear');
+
+    $mdThemingProvider.definePalette('settings',{
+     '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '500': '#333333', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'dark', 'contrastDarkColors': '50 100 A100 A200'
+    });
+
+    $mdThemingProvider.theme('default').primaryPalette('settings').accentPalette('settings').warnPalette('settings');
 
   })
 
