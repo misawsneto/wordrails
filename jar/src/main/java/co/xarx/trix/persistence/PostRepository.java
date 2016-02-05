@@ -58,7 +58,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 			"(select pr.id from PostRead pr join pr.person person where person.id=:personId)")
 	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId and post.state = 'PUBLISHED' ORDER BY post.date DESC")
 	List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 
 	@RestResource(exported = false)
