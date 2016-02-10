@@ -36,7 +36,7 @@ public class NotificationService {
 				notifications.addAll(this.getNotifications(results, notification, post, Notification.DeviceType.ANDROID));
 			} catch (IOException e) {
 				notifications.addAll(this.getNotifications(new HashSet<>(part), notification, post,
-						"Failed to send to GCM", Notification.Status.SEND_ERROR, Notification.DeviceType.ANDROID));
+						"Failed to send to GCM", Notification.Status.SERVER_ERROR, Notification.DeviceType.ANDROID));
 			}
 
 			try {
@@ -63,7 +63,7 @@ public class NotificationService {
 				notifications.addAll(this.getNotifications(results, notification, post, Notification.DeviceType.APPLE));
 			} catch (IOException e) {
 				notifications.addAll(this.getNotifications(new HashSet<>(part), notification, post,
-						"Failed to send to Apple", Notification.Status.SEND_ERROR, Notification.DeviceType.APPLE));
+						"Failed to send to Apple", Notification.Status.SERVER_ERROR, Notification.DeviceType.APPLE));
 			}
 
 			try {

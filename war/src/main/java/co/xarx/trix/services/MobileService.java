@@ -72,10 +72,9 @@ public class MobileService {
 			futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
 					() -> notificationService.sendAndroidNotifications(notification, post, androidDevices));
 			futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
-					() -> notificationService.sendAndroidNotifications(notification, post, appleDevices));
+					() -> notificationService.sendAppleNotifications(notification, post, appleDevices));
 		} catch (Exception e) {
-			if(futureAndroidNotifications != null) futureAndroidNotifications.cancel(true);
-			if(futureAppleNotifications != null) futureAppleNotifications.cancel(true);
+			if (futureAndroidNotifications != null) futureAndroidNotifications.cancel(true);
 			throw new NotificationException(e);
 		}
 

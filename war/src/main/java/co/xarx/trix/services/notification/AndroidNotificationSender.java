@@ -46,7 +46,7 @@ public class AndroidNotificationSender implements NotificationSender {
 			notificationResult.status = r.getMessageId() == null ?
 					Notification.Status.SERVER_ERROR : Notification.Status.SUCCESS;
 			notificationResult.errorMessage = r.getErrorCodeName();
-			if(notificationResult.errorMessage.equals(Constants.ERROR_NOT_REGISTERED)) {
+			if(Constants.ERROR_NOT_REGISTERED.equals(notificationResult.errorMessage)) {
 				notificationResult.deviceDeactivated = true;
 			}
 			resultMap.put(devices.get(i), notificationResult);

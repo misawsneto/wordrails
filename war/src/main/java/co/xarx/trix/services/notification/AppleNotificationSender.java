@@ -33,13 +33,16 @@ import java.util.concurrent.ExecutionException;
 public class AppleNotificationSender implements NotificationSender {
 
 	private AppleCertificateRepository appleCertificateRepository;
+	private ApnsClient<SimpleApnsPushNotification> apnsClient;
 
 	@Autowired
 	public AppleNotificationSender(AppleCertificateRepository appleCertificateRepository) {
 		this.appleCertificateRepository = appleCertificateRepository;
 	}
 
-	private ApnsClient<SimpleApnsPushNotification> getAPNsCliens(Boolean isTest) throws SQLException, CertificateException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, IOException, InterruptedException {
+	public ApnsClient<SimpleApnsPushNotification> getAPNsClient(Boolean isTest) throws SQLException,
+			CertificateException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException,
+			KeyManagementException, IOException, InterruptedException {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		AppleCertificate certificate = appleCertificateRepository.findByTenantId(tenantId);
 
@@ -60,9 +63,9 @@ public class AppleNotificationSender implements NotificationSender {
 
 	@Override
 	public Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, List<String> devices) throws IOException {
-		ApnsClient<SimpleApnsPushNotification> apnsClient;
+//		ApnsClient<SimpleApnsPushNotification> apnsClient;
 		try {
-			apnsClient = getAPNsCliens(notification.test);
+			apnsClient = getAPNsClient(notification.test);
 		} catch (SQLException | CertificateException | UnrecoverableKeyException |
 				NoSuchAlgorithmException | KeyStoreException | KeyManagementException |InterruptedException e) {
 			throw new IOException("Failed to initialize Apple PushManager", e);
@@ -79,7 +82,7 @@ public class AppleNotificationSender implements NotificationSender {
 		return sendMessageToDevices(payloadBuilder.buildWithDefaultMaximumLength(), devices, apnsClient, 0, new HashMap<>());
 	}
 
-	public Map<String, NotificationResult> sendMessageToDevices(String payloader, List<String> devices,
+	private Map<String, NotificationResult> sendMessageToDevices(String payloader, List<String> devices,
 																ApnsClient<SimpleApnsPushNotification> apnsClient,
 																Integer index, Map<String, NotificationResult> results) throws IOException {
 		int i = index;

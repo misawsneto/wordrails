@@ -28,7 +28,7 @@ public class ListUtil {
 		public List<T> get(int index) {
 			int listSize = size();
 			Assert.isTrue(listSize > 0, "negative size: " + listSize);
-			Assert.isTrue(index > 0, "index " + index + " must not be negative");
+			Assert.isTrue(index >= 0, "index " + index + " must not be negative");
 			Assert.isTrue(index < listSize, "index " + index + " must be less than size " + listSize);
 
 			int start = index * size;
