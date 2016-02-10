@@ -13,7 +13,7 @@ import co.xarx.trix.dto.StationTermsDto;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.PostService;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -67,7 +67,7 @@ public class PostsResource {
 	@Autowired
 	private PostConverter postConverter;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 
 	@Autowired
 	private PostService postService;

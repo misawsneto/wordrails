@@ -15,6 +15,7 @@ import java.util.List;
 @EventLoggableRepository
 public interface PostRepository extends JpaRepository<Post, Integer>, CustomPostRepository {
 
+	@Deprecated
 	@Query("select post from Post post where post.id in ( select p.id from Post p where p.station.id = :stationId ) order by post.date desc")
 	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);
 
@@ -31,6 +32,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 	@RestResource(exported = false)
 	List<Post> findByStation(Station station);
 
+	@Deprecated
 	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
 	List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);
 

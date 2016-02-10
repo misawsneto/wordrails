@@ -8,7 +8,7 @@ import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
@@ -22,7 +22,7 @@ public class TrixSecurityExpressionRoot extends SecurityExpressionRoot implement
 	private Object target;
 
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired

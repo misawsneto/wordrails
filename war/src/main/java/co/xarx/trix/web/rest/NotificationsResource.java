@@ -6,7 +6,7 @@ import co.xarx.trix.converter.NotificationConverter;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.NotificationRepository;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +31,7 @@ public class NotificationsResource {
 	private @Autowired
 	NotificationRepository notificationRepository;
 	private @Autowired
-	TrixAuthenticationProvider authProvider;
+	AuthService authProvider;
 	
 	private @Autowired
 	NotificationConverter notificationConverter;

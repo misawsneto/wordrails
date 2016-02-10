@@ -1,6 +1,6 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.domain.StationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class StationRoleEventHandler {
 
 	private @Autowired
-	TrixAuthenticationProvider authProvider;
+	AuthService authProvider;
 	
 	@Transactional
 	@HandleBeforeSave

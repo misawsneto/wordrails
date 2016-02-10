@@ -7,7 +7,7 @@ import co.xarx.trix.elasticsearch.repository.ESStationRepository;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.LogBuilderExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ public class StationEventHandler {
 	@Autowired
 	StationPerspectiveEventHandler stationPerspectiveEventHandler;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 	@Autowired
 	private ElasticSearchService elasticSearchService;
 	@Autowired

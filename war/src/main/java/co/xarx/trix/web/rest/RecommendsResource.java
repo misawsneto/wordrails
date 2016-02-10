@@ -8,7 +8,7 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.persistence.RecommendRepository;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +35,7 @@ public class RecommendsResource {
 	private @Autowired PostConverter postConverter;
 	private @Autowired RecommendRepository recommendRepository;
 	private @Autowired
-	TrixAuthenticationProvider authProvider;
+	AuthService authProvider;
 	private @Autowired QueryPersistence queryPersistence;
 
 	private @PersistenceContext EntityManager manager;

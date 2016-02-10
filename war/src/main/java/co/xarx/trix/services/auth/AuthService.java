@@ -1,4 +1,4 @@
-package co.xarx.trix.security.auth;
+package co.xarx.trix.services.auth;
 
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.User;
@@ -7,17 +7,14 @@ import co.xarx.trix.domain.social.SocialUser;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserConnectionRepository;
 import co.xarx.trix.persistence.UserRepository;
-import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.util.Constants;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +23,7 @@ import java.util.Objects;
 
 
 @Component
-public class TrixAuthenticationProvider implements AuthenticationProvider {
+public class AuthService {
 
 	@Autowired
 	private PersonRepository personRepository;
@@ -37,22 +34,9 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	@Autowired
 	private SocialAuthenticationService socialAuthenticationService;
 
-	@Autowired
-	private AsyncService asyncService;
-
-	@Override
-	public Authentication authenticate(Authentication auth) throws AuthenticationException {
-		return auth; //won't do any validation because we ensure it's validated in both cases: social login and user/password
-	}
-
-	@Override
-	public boolean supports(Class<?> authentication) {
-		return (UsernamePasswordAuthenticationToken.class.equals(authentication));
-	}
-
 	public User getUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null) {
+		if (auth == null || auth.getPrincipal() instanceof String) {
 			User user = new User();
 			user.username = "wordrails";
 			user.password = "wordrails";

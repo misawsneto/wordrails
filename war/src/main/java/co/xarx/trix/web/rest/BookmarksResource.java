@@ -10,7 +10,7 @@ import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PersonRepository;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.PostService;
 import co.xarx.trix.util.Constants;
@@ -46,7 +46,7 @@ public class BookmarksResource {
 	@Autowired
 	private PostService postService;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 
 	@GET
 	@Path("/searchBookmarks")

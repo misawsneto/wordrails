@@ -4,7 +4,7 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AuthCredential;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.builder.api.GoogleApi;
@@ -25,7 +25,7 @@ public class AuthResource {
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)

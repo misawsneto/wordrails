@@ -17,10 +17,6 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 	@RestResource(exported = false)
 	Network findByDomain(@Param("domain") String domain);
 
-	@Override
-	@RestResource(exported = false)
-	Network findOne(@Param("id") Integer integer);
-
 	@RestResource(exported = false)
 	@Query(value = "select " +
 			"(select count(*) from PostRead pr where pr.post.stationId = s.id), " +

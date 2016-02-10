@@ -46,6 +46,7 @@ public class DatabaseConfig {
 
 //			flyway.setPlaceholderReplacement(false);
 			flyway.setBaselineOnMigrate(true);
+			flyway.setOutOfOrder(true);
 
 			//yes, this is a hack. not my fault setPlaceholderReplacement doesnt work
 			flyway.setPlaceholderPrefix("NDSIJbhasiBDysBDSAB");

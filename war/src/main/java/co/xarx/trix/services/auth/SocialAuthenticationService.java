@@ -1,4 +1,4 @@
-package co.xarx.trix.security.auth;
+package co.xarx.trix.services.auth;
 
 import co.xarx.trix.domain.*;
 import co.xarx.trix.domain.social.FacebookUser;

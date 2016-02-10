@@ -11,7 +11,6 @@ import com.amazonaws.services.s3.model.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,7 +18,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class AmazonCloudService {
 
 	Logger log = Logger.getLogger(AmazonCloudService.class.getName());

@@ -11,7 +11,7 @@ import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
@@ -45,7 +45,7 @@ public class NetworkResource {
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired

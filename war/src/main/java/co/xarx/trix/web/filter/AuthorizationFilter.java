@@ -1,7 +1,7 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.api.AbstractAuthorizationFilter;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
@@ -42,7 +42,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 
 	@Override
 	protected boolean isGetCellsAuthorized() {
@@ -804,11 +804,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPersonStationRolesAuthorized(Integer personId) {
-		return authProvider.getLoggedPerson().id.equals(personId);
-	}
-
-	@Override
 	protected boolean isFindByUsernameAndNetworkIdAuthorized(String username, Integer networkId) {
 		return false;
 	}
@@ -855,11 +850,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetUserGrantedAuthorityUserAuthorized(Integer userGrantedAuthorityId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserGrantedAuthorityStationAuthorized(Integer userGrantedAuthorityId) {
 		return false;
 	}
 

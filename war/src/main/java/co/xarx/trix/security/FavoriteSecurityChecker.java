@@ -4,7 +4,7 @@ import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import java.util.Objects;
 @Component
 public class FavoriteSecurityChecker {
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 	private @Autowired
 	NetworkRepository networkRepository;
 	private @Autowired

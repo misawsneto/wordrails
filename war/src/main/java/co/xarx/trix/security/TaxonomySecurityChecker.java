@@ -4,7 +4,7 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.domain.Taxonomy;
 import co.xarx.trix.persistence.StationRolesRepository;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public class TaxonomySecurityChecker {
 	@Autowired
 	private StationRolesRepository personStationRolesRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 	
 	public boolean canCreate(Taxonomy taxonomy){
 		Person person = authProvider.getLoggedPerson();

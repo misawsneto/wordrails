@@ -1,7 +1,7 @@
 package co.xarx.trix.config;
 
 import co.xarx.trix.domain.event.Author;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.javers.spring.auditable.AuthorProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 public class EventAuthorProvider implements AuthorProvider {
 
 	@Autowired
-	private TrixAuthenticationProvider provider;
+	private AuthService provider;
 
 
 	@Override

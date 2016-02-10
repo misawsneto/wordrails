@@ -3,7 +3,7 @@ package co.xarx.trix.web.filter;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class PostFilter implements Filter {
 	@Autowired
 	private AsyncService asyncService;
 	@Autowired
-	TrixAuthenticationProvider authProvider;
+	AuthService authProvider;
 	@Autowired
 	public PostService postService;
 

@@ -12,7 +12,7 @@ import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.APNService;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.GCMService;
@@ -105,7 +105,7 @@ public class PersonsResource {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 	@Autowired
 	private AmazonCloudService amazonCloudService;
 
@@ -249,17 +249,17 @@ public class PersonsResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@POST
-	@Path("/login")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password) {
-		try{
-			authProvider.passwordAuthentication(username, password);
-			return Response.status(Status.OK).build();
-		}catch(BadCredentialsException | UsernameNotFoundException e){
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
-	}
+//	@POST
+//	@Path("/login")
+//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password) {
+//		try{
+//			authProvider.passwordAuthentication(username, password);
+//			return Response.status(Status.OK).build();
+//		}catch(BadCredentialsException | UsernameNotFoundException e){
+//			return Response.status(Status.UNAUTHORIZED).build();
+//		}
+//	}
 
 	@POST
 	@Path("/tokenSignin")
@@ -492,19 +492,6 @@ public class PersonsResource {
 					stRole.person = person;
 					stationRoleEventHandler.handleBeforeCreate(stRole);
 					stationRolesRepository.save(stRole);
-
-					if(stRole.admin) {
-						UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.STATION_ADMIN, stRole.station);
-						user.addAuthority(authority);
-					}
-					if(stRole.editor) {
-						UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.STATION_EDITOR, stRole.station);
-						user.addAuthority(authority);
-					}
-					if(stRole.writer) {
-						UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.STATION_WRITER, stRole.station);
-						user.addAuthority(authority);
-					}
 				}else{
 					throw new BadRequestException();
 				}

@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.domain.PasswordReset;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.QUser;
@@ -41,7 +41,7 @@ public class PasswordResetResource {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 
 	@POST
 	@Path("/")

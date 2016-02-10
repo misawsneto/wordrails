@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +36,7 @@ public class TaxonomiesResource {
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 
 	@Path("/networks/{networkId}/taxonomiesToEdit")
 	@GET

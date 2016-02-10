@@ -4,14 +4,13 @@ package co.xarx.trix.web.filter;
 import co.xarx.trix.util.Constants;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class TrixAnonymousAuthenticationFilter extends AnonymousAuthenticationFilter {
+public class AnonymousAuthenticationFilter extends org.springframework.security.web.authentication.AnonymousAuthenticationFilter {
 
 
-	public TrixAnonymousAuthenticationFilter(String key) {
+	public AnonymousAuthenticationFilter(String key) {
 		super(key);
 	}
 

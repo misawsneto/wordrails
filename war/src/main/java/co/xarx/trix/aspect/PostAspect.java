@@ -7,7 +7,7 @@ import co.xarx.trix.domain.Station;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.ElasticSearchService;
 import co.xarx.trix.services.SchedulerService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -32,7 +32,7 @@ public class PostAspect {
 	@Autowired
 	private StationRolesRepository rolesRepository;
 	@Autowired
-	private TrixAuthenticationProvider authenticationProvider;
+	private AuthService authenticationProvider;
 
 	@AfterReturning("within(co.xarx.trix.persistence.PostRepository+) && execution(* *..save(*)) && args(post)")
 	public void checkMultitenantEntity(Post post) throws Throwable {

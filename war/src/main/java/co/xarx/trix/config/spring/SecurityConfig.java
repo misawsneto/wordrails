@@ -1,12 +1,13 @@
 package co.xarx.trix.config.spring;
 
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
-import co.xarx.trix.web.filter.TrixAnonymousAuthenticationFilter;
-import co.xarx.trix.web.filter.TrixAuthenticationFilter;
+import co.xarx.trix.web.filter.UserPassAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AnonymousAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -14,7 +15,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -22,7 +30,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	private TrixAuthenticationProvider authenticationProvider;
+	private UserDetailsService userDetailsService;
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
@@ -46,26 +54,40 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public TrixAuthenticationFilter trixAuthenticationFilter() throws Exception {
-		TrixAuthenticationFilter authFilter = new TrixAuthenticationFilter();
+	public UsernamePasswordAuthenticationFilter userPassAuthenticationFilter() throws Exception {
+		UsernamePasswordAuthenticationFilter authFilter = new UserPassAuthenticationFilter();
 		authFilter.setAuthenticationManager(authenticationManager());
+		authFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/persons/login", "POST"));
+		authFilter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler());
+		authFilter.setUsernameParameter("username");
+		authFilter.setPasswordParameter("password");
 		return authFilter;
 	}
 
 	@Bean
-	public TrixAnonymousAuthenticationFilter trixAnonymousAuthenticationFilter(){
-		return new TrixAnonymousAuthenticationFilter("anonymousKey");
+	public ProviderManager authenticationManager() {
+		List<AuthenticationProvider> providers = new ArrayList<>();
+
+		DaoAuthenticationProvider daoProvider = new DaoAuthenticationProvider();
+//		daoProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+//		ReflectionSaltSource saltSource = new ReflectionSaltSource();
+//		saltSource.setUserPropertyToUse("username");
+//		daoProvider.setSaltSource(saltSource);
+		daoProvider.setUserDetailsService(userDetailsService);
+
+		AnonymousAuthenticationProvider anonymousProvider = new AnonymousAuthenticationProvider("anonymousKey");
+
+		providers.add(daoProvider);
+		providers.add(anonymousProvider);
+		ProviderManager providerManager = new ProviderManager(providers);
+		providerManager.setEraseCredentialsAfterAuthentication(true);
+		return providerManager;
 	}
 
-	@Bean
-	public SimpleUrlAuthenticationFailureHandler authFailureHandler(){
-		return new SimpleUrlAuthenticationFailureHandler();
-	}
-
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider);
-	}
+//	@Autowired
+//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.authenticationProvider(authenticationProvider);
+//	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -74,26 +96,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				//.antMatchers("/", "/app/**", "/index.html", "/home", "/login", "/data", "/data/**", "/access", "/logout", "/util/**").permitAll()
 				//.antMatchers("/admin/api/**").hasAnyAuthority("ADMIN", "SUPERUSER")
-				.antMatchers("/**").permitAll()
-				.anyRequest().authenticated()
-				.and().csrf().disable()
-				.exceptionHandling()
+				.antMatchers("/**").permitAll().anyRequest().authenticated()
 				.and()
-				.formLogin()
-				.loginProcessingUrl("/login")
-				.usernameParameter("username")
-				.passwordParameter("password")
-				.failureHandler(authFailureHandler())
+				.csrf().disable().exceptionHandling()
 				.and()
-				.logout()
-				.logoutUrl("/j_spring_security_logout")
+				.logout().logoutUrl("/j_spring_security_logout")
 				.and()
 				.sessionManagement().maximumSessions(-1).sessionRegistry(sessionRegistry());
 
 
-		http.addFilterBefore(trixAnonymousAuthenticationFilter(), TrixAnonymousAuthenticationFilter.class);
-		http.addFilterBefore(trixAuthenticationFilter(), TrixAuthenticationFilter.class);
-
+		http.addFilterBefore(new AnonymousAuthenticationFilter("anonymousUser"), AnonymousAuthenticationFilter.class);
+		http.addFilterBefore(userPassAuthenticationFilter(), UserPassAuthenticationFilter.class);
 	}
 
 }

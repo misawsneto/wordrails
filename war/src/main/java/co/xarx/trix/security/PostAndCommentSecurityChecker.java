@@ -2,7 +2,7 @@ package co.xarx.trix.security;
 
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ public class PostAndCommentSecurityChecker {
 	private
 	StationRepository stationRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 
 	public boolean canWrite(Post post){
 		boolean canWrite = false;

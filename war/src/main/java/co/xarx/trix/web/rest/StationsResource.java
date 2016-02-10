@@ -5,7 +5,7 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,7 @@ public class StationsResource {
 	@Context
 	private HttpServletRequest request;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
 	@Autowired

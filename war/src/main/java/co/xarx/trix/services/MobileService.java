@@ -3,7 +3,7 @@ package co.xarx.trix.services;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class MobileService {
 	@Autowired
 	private AsyncService asyncService;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 
 	public void buildNotification(Post post) {
 		Notification notification = new Notification();
