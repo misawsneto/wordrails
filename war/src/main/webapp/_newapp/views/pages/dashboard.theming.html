@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-heading">
-        <h2>Set the color pallets</h2>
+        <h2>Set the color palettes</h2>
     </div>
     <div class="theming card-body">
         <!-- <md-toolbar layout-gt-md="row" layout-md="column" layout-align="center center">
@@ -47,14 +47,14 @@
         <!-- <md-content class="md-dark-theme"> -->
     	<md-content>
             <md-content class="palette m-r" ng-repeat="(paletteKey, palette) in palettes">
-        		<md-toolbar class="md-accent" layout="row" layout-align="center center" style="padding-right: 15px;">
+        		<div class="b-a" layout="row" layout-align="center center" style="padding-right: 15px;">
         			<div class="md-toolbar-tools">
         				<!-- <md-input-container>
                                                     <label>Palette Name</label>
                             <input ng-model="palette.name">
                         </md-input-container> -->
                         <div class="text-md w-md">
-                            Principal
+                            {{palette.name}}
                         </div>
         			</div>
         			<span flex></span>
@@ -67,7 +67,7 @@
                         <ng-md-icon icon="remove_circle" size="24"></ng-md-icon>
                     </md-button> -->
                     <spectrum-colorpicker ng-model="palette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(paletteKey)"></spectrum-colorpicker>
-                </md-toolbar>
+                </div>
         		<md-list flex class="palette-colors spaced">
         		    <md-list-item class="light-canvas" ng-repeat="color in palette.colors">
         		        <div class="palette-color" style="background-color:{{color.hex}};" ng-class="{'palette-color-light': !color.darkContrast, 'palette-color-dark': color.darkContrast}">
@@ -88,35 +88,9 @@
         		    </md-list-item>
         		</md-list>
         	</md-content>
-            <md-fab-speed-dial md-open="dialOpen" class="bright-text md-scale" md-direction="left">
-                <md-fab-trigger>
-                    <md-button aria-label="menu" class="md-fab md-warn">
-                        <ng-md-icon icon="menu" size="34" style="fill:#fff;"></ng-md-icon>
-                    </md-button>
-                </md-fab-trigger>
-                <md-fab-actions>
-                    <md-button class="md-accent" md-visible="dialTooltipOpen" ng-click="addBasePalette()" style="margin-right: 15px;" aria-label="Add Palette">
-                        <md-tooltip>Add Palette</md-tooltip>
-                        <ng-md-icon icon="add_box" size="34" style="fill:#fff;"></ng-md-icon>
-                    </md-button>
-                    <md-button class="md-accent" md-visible="dialTooltipOpen" ng-click="showColourLovers()" style="margin-right: 15px;" aria-label="Select A ColourLovers Theme">
-                        <md-tooltip>Select A ColourLovers Theme</md-tooltip>
-                        <ng-md-icon icon="palette" size="34" style="fill:#fff;"></ng-md-icon>
-                    </md-button>
-                    <md-button class="md-accent" md-visible="dialTooltipOpen" ng-click="showImport()" style="margin-right: 15px;" aria-label="Import Theme">
-                        <md-tooltip>Import</md-tooltip>
-                        <ng-md-icon icon="file_upload" size="34" style="fill:#fff;"></ng-md-icon>
-                    </md-button>
-                    <md-button class="md-accent" md-visible="dialTooltipOpen" ng-click="showThemeCode()" style="margin-right: 15px;" aria-label="Copy AngularJS Code">
-                        <md-tooltip>Copy AngularJS Code / Export</md-tooltip>
-                        <ng-md-icon icon="file_download" size="34" style="fill:#fff;"></ng-md-icon>
-                    </md-button>
-                    <md-button class="md-accent" md-visible="dialTooltipOpen" ng-click="showAbout()" style="margin-right: 15px;" aria-label="About This Tool">
-                        <md-tooltip>About This Tool</md-tooltip>
-                        <ng-md-icon icon="info" size="34" style="fill:#fff;"></ng-md-icon>
-                    </md-button>
-                </md-fab-actions>
-            </md-fab-speed-dial>
+            <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg">
+                <i class="mdi-content-save i-24"></i>
+            </md-button>
         </md-content>
     </div>
 </div>

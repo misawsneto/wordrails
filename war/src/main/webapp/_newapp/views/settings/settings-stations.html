@@ -1,5 +1,5 @@
 <div id="settings-stations">
-  <div class="wrapper-lg m-b-xxl">
+  <div class="wrapper-lg m-b-lg">
     <div class="row">
       <div class="col-sm-4" ng-repeat="station in app.stations">
         <div class="md-list md-whiteframe-z1 bg-white m-b">
@@ -7,6 +7,15 @@
           <div class="md-list-item list-group-item b-n text-md font-bold">
             {{station.name}}
           </div>
+
+          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.pagebuilder">
+            <div class="md-list-item-content">
+              <h3 class="text-md">
+                <i class="mdi mdi-view-quilt fa-fw text-muted"></i> 
+                {{'titles.PAGEBUIDER' | translate}}
+              </h3>
+            </div>
+          </a>
           
           <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.settings.perspectives({'stationId': station.id})">
             <div class="md-list-item-content">
@@ -75,9 +84,8 @@
     </div>
   </div>
 
-  <md-button 
-    id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-    ui-sref="app.settings.stationconfig({'newStation': true})" ng-if="app.networkAdmin && app.isLogged"
+  <md-button class="md-fab text-2x animated zoomIn" 
+    ui-sref="app.settings.stationconfig({'newStation': true})"
     tooltip="Nova estação" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
     aria-label="Nova estação">
     <i class="mdi mdi-plus"></i>

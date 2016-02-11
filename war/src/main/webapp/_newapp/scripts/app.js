@@ -28,5 +28,6 @@ angular
     'pascalprecht.translate',
     'oc.lazyLoad',
     'angular-loading-bar',
-    'trix'
+    'trix',
+    'material.core.colors'
   ]);

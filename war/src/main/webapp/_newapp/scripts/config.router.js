@@ -90,6 +90,11 @@ angular.module('app')
                     '/styles/theming.css']),
                 controller: 'ColorGeneratorCtrl'
               })
+              .state('app.pagebuilder', {
+                url: '/pagebuilder',
+                templateUrl: '/views/settings/settings-stations-pagebuilder.html',
+                data : { title: 'Page Builder', folded: true }
+              })
               .state('app.analysis', {
                 url: '/analysis',
                 templateUrl: '/views/pages/dashboard.analysis.html',

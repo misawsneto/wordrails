@@ -5,211 +5,209 @@
 
 <div class="wrapper-lg animated">
   <div class="panel panel-card block-800 m-auto pos-rlt md-whiteframe-z2">
-    <md-content>
-      <md-tabs md-dynamic-height md-border-bottom>
-        <md-tab label="{{'settings.network.tabs.SETTINGS' | translate}}">
-          <md-content class="md-padding">
-            <div class="w-xxl m-auto p-t p-b-xxl">
-		          <md-input-container class="">
-		            <label translate="settings.network.settings.NAME">Nome</label>
-		            <input ng-model="network.name">
-		          </md-input-container>
-            </div>
-            <div class="row">
-              <div class="block-600 p-lg m-auto">
-                <div class="m-l">
-                	<p>
-	                  <label class="md-switch">
-	                    <input type="checkbox" ng-model="network.allowSignup"
-	                    ng-true-value="true" ng-false-value="false">
-	                    <i class="blue"></i>
-	                    <!-- Permitir cadastro em estações públicas -->
-                      {{'settings.network.settings.ALLOW_SIGNUP' | translate}}
-	                  </label>
-	                </p>
-                  <p>
-                    <label class="md-check p-l-lg">
-                      <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.addStationRolesOnSignup"
-                      ng-true-value="true" ng-false-value="false">
-                      <i class="blue"></i>
-                      <!-- Ao cadastrar usuário, criar permissões de leitura em todas as estações -->
-                      {{'settings.network.settings.ADD_ROLES_ON_STARTUP' | translate}}
-                    </label>
-                  </p>
-	                <p>
-	                  <label class="md-switch">
-	                    <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.allowSocialLogin"
-	                    ng-true-value="true" ng-false-value="false">
-	                    <i class="blue"></i>
-	                    <!-- Autenticação através de redes sociais em estações públicas -->
-                      {{'settings.network.settings.ALLOW_SOCIAL_LOGIN' | translate}}
-	                  </label>
-	                </p>
-	                <p>
-	                  <label class="md-switch">
-	                    <input type="checkbox" ng-model="network.allowSponsors"
-	                    ng-true-value="true" ng-false-value="false">
-	                    <i class="blue"></i>
-	                    <!-- Ativar/Desativar patrocinadores -->
-                      {{'settings.network.settings.ALLOW_SPONSOR' | translate}}
-	                  </label>
-	                </p>
-                  <p>
-                    <md-input-container class="w-lg">
-                      <label translate="settings.network.settings.LANGUAGE">Idioma</label>
-                      <md-select ng-model="network.language" ng-change="setLanguage(network.language)">
-                        <md-option ng-repeat="language in [{ref:'en', name: 'English'}, {ref: 'pt', name: 'Português'}]" value="{{language.ref}}">
-                            {{language.name}}
-                        </md-option>
-                      </md-select>
-                    </md-input-container>
-                  </p>
-                </div>
+    <md-tabs md-dynamic-height md-border-bottom class="md-primary">
+      <md-tab label="{{'settings.network.tabs.SETTINGS' | translate}}">
+        <md-content class="md-padding">
+          <div class="w-xxl m-auto p-t p-b-xxl">
+	          <md-input-container class="">
+	            <label translate="settings.network.settings.NAME">Nome</label>
+	            <input ng-model="network.name">
+	          </md-input-container>
+          </div>
+          <div class="row">
+            <div class="block-600 p-lg m-auto">
+              <div class="m-l">
+              	<p>
+                  <label class="md-switch">
+                    <input type="checkbox" ng-model="network.allowSignup"
+                    ng-true-value="true" ng-false-value="false">
+                    <i class="blue"></i>
+                    <!-- Permitir cadastro em estações públicas -->
+                    {{'settings.network.settings.ALLOW_SIGNUP' | translate}}
+                  </label>
+                </p>
+                <p>
+                  <label class="md-check p-l-lg">
+                    <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.addStationRolesOnSignup"
+                    ng-true-value="true" ng-false-value="false">
+                    <i class="blue"></i>
+                    <!-- Ao cadastrar usuário, criar permissões de leitura em todas as estações -->
+                    {{'settings.network.settings.ADD_ROLES_ON_STARTUP' | translate}}
+                  </label>
+                </p>
+                <p>
+                  <label class="md-switch">
+                    <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.allowSocialLogin"
+                    ng-true-value="true" ng-false-value="false">
+                    <i class="blue"></i>
+                    <!-- Autenticação através de redes sociais em estações públicas -->
+                    {{'settings.network.settings.ALLOW_SOCIAL_LOGIN' | translate}}
+                  </label>
+                </p>
+                <p>
+                  <label class="md-switch">
+                    <input type="checkbox" ng-model="network.allowSponsors"
+                    ng-true-value="true" ng-false-value="false">
+                    <i class="blue"></i>
+                    <!-- Ativar/Desativar patrocinadores -->
+                    {{'settings.network.settings.ALLOW_SPONSOR' | translate}}
+                  </label>
+                </p>
+                <p>
+                  <md-input-container class="w-lg">
+                    <label translate="settings.network.settings.LANGUAGE">Idioma</label>
+                    <md-select ng-model="network.language" ng-change="setLanguage(network.language)">
+                      <md-option ng-repeat="language in [{ref:'en', name: 'English'}, {ref: 'pt', name: 'Português'}]" value="{{language.ref}}">
+                          {{language.name}}
+                      </md-option>
+                    </md-select>
+                  </md-input-container>
+                </p>
               </div>
             </div>
-          </md-content>
-        </md-tab>
-        <md-tab label="{{'settings.network.tabs.DOMAINS_ANALYTICS' | translate}}">
-          <md-content class="md-padding">
-            <div class="m-b text-muted text-md text-u-c" translate="titles.DOMAIN">Domínio</div>
-              <div class="row pos-rlt">
-                <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
-                <div class="w-xxl m-auto">
-                  <div class="md-form-group ">
-                    <input class="md-input" ng-model="network.subdomain" disabled>
-                    <label translate="titles.SUBDOMAIN">Subdomínio</label>
-                  </div>
-                </div>
-                <div class="w-xxl m-auto">
-                  <div class="md-form-group ">
-                    <input class="md-input" ng-model="network.domain">
-                    <label translate="settings.network.domain_analytics.CUSTOM_DOMAIN">Domínio personalizado</label>
-                  </div>
+          </div>
+        </md-content>
+      </md-tab>
+      <md-tab label="{{'settings.network.tabs.DOMAINS_ANALYTICS' | translate}}">
+        <md-content class="md-padding">
+          <div class="m-b text-muted text-md text-u-c" translate="titles.DOMAIN">Domínio</div>
+            <div class="row pos-rlt">
+              <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
+              <div class="w-xxl m-auto">
+                <div class="md-form-group ">
+                  <input class="md-input" ng-model="network.subdomain" disabled>
+                  <label translate="titles.SUBDOMAIN">Subdomínio</label>
                 </div>
               </div>
-              <!-- /domain settings -->
-              <!-- analytics settings -->
-              <div class="line line-dashed b-b line-lg pull-in"></div>
-              <div class="m-b text-muted text-md text-u-c">Analytics</div>
-              <div class="row pos-rlt">
-                <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
-                <div class="w-xxl m-auto">
-                  <div class="md-form-group ">
-                    <input class="md-input" ng-model="network.trackingId">
-                    <label>Google Analytics - TRACKING ID</label>
-                  </div>
-                </div>
-                <div class="w-xxl m-auto">
-                  <div class="md-form-group ">
-                    <input class="md-input" ng-model="network.flurryKey">
-                    <label>Flurry - API KEY</label>
-                  </div>
+              <div class="w-xxl m-auto">
+                <div class="md-form-group ">
+                  <input class="md-input" ng-model="network.domain">
+                  <label translate="settings.network.domain_analytics.CUSTOM_DOMAIN">Domínio personalizado</label>
                 </div>
               </div>
-          </md-content>
-        </md-tab>
-        <md-tab label="{{'settings.network.tabs.LOGOS' | translate}}">
-          <md-content class="md-padding">
-            <!-- /color preferences -->
-            <!-- logo section -->
-            <ul class="list-group list-group-lg no-bg auto">
-              <li class="list-group-item clearfix b-n">
-                <div class="display-t-c thumb-xl">
-                  <img ng-src="{{loginImage.link ? loginImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
+            </div>
+            <!-- /domain settings -->
+            <!-- analytics settings -->
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="m-b text-muted text-md text-u-c">Analytics</div>
+            <div class="row pos-rlt">
+              <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
+              <div class="w-xxl m-auto">
+                <div class="md-form-group ">
+                  <input class="md-input" ng-model="network.trackingId">
+                  <label>Google Analytics - TRACKING ID</label>
                 </div>
-                <div class="clear display-t-c v-middle p-l">
-                  <span class="font-bold">Login</span>
-                  <small class="text-muted clear text-ellipsis">
-                  Logotipo da rede. Exibido na tela de login no Android, iOS e Web.</small>
-                  <input id="image-upload" type="file" nv-file-select="" uploader="login" name="contents" accept="image/*"/>
+              </div>
+              <div class="w-xxl m-auto">
+                <div class="md-form-group ">
+                  <input class="md-input" ng-model="network.flurryKey">
+                  <label>Flurry - API KEY</label>
                 </div>
-              </li>
-              <li class="list-group-item clearfix b-n">
-                <div class="display-t-c thumb-xl">
-                  <img ng-src="{{splashImage.link ? splashImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
-                </div>
-                <div class="clear display-t-c v-middle p-l">
-                  <span class="font-bold">Splash</span> <span>(dispositivos móveis apenas)</span>
-                  <small class="text-muted clear text-ellipsis">
-                  Logotipo da rede. Exibido na tela inicial dos aplicativos Android e iOS.</small>
-                  <input id="image-upload" type="file" nv-file-select="" uploader="splash" name="contents" accept="image/*"/>
-                </div>
-              </li>
-              <li class="list-group-item clearfix b-n">
-                <div class="display-t-c thumb">
-                  <img ng-src="{{faviconImage.link ? faviconImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
-                </div>
-                <div class="clear display-t-c v-middle p-l">
-                  <span class="font-bold">Favicon</span> <span>(cliente web apenas)</span>
-                  <small class="text-muted clear text-ellipsis">Favicon da home page. Exibido na aba do browser.</small>
-                  <input id="image-upload" class="text-xs" type="file" nv-file-select="" uploader="favicon" name="contents" accept="image/*"/>
-                </div>
-              </li>
-            </ul>
-      <!-- /logo section -->
-          </md-content>
-        </md-tab>
-        <md-tab label="{{'settings.network.tabs.FOOTER' | translate}}">
-	        <md-content class="md-padding">
-	        		<div class="m-b text-muted text-md text-u-c">RODAPÉ DA PÁGINA</div>
-		        		<div class="p-r-xxl p-l-xxl">
+              </div>
+            </div>
+        </md-content>
+      </md-tab>
+      <md-tab label="{{'settings.network.tabs.LOGOS' | translate}}">
+        <md-content class="md-padding">
+          <!-- /color preferences -->
+          <!-- logo section -->
+          <ul class="list-group list-group-lg no-bg auto">
+            <li class="list-group-item clearfix b-n">
+              <div class="display-t-c thumb-xl">
+                <img ng-src="{{loginImage.link ? loginImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
+              </div>
+              <div class="clear display-t-c v-middle p-l">
+                <span class="font-bold">Login</span>
+                <small class="text-muted clear text-ellipsis">
+                Logotipo da rede. Exibido na tela de login no Android, iOS e Web.</small>
+                <input id="image-upload" type="file" nv-file-select="" uploader="login" name="contents" accept="image/*"/>
+              </div>
+            </li>
+            <li class="list-group-item clearfix b-n">
+              <div class="display-t-c thumb-xl">
+                <img ng-src="{{splashImage.link ? splashImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
+              </div>
+              <div class="clear display-t-c v-middle p-l">
+                <span class="font-bold">Splash</span> <span>(dispositivos móveis apenas)</span>
+                <small class="text-muted clear text-ellipsis">
+                Logotipo da rede. Exibido na tela inicial dos aplicativos Android e iOS.</small>
+                <input id="image-upload" type="file" nv-file-select="" uploader="splash" name="contents" accept="image/*"/>
+              </div>
+            </li>
+            <li class="list-group-item clearfix b-n">
+              <div class="display-t-c thumb">
+                <img ng-src="{{faviconImage.link ? faviconImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
+              </div>
+              <div class="clear display-t-c v-middle p-l">
+                <span class="font-bold">Favicon</span> <span>(cliente web apenas)</span>
+                <small class="text-muted clear text-ellipsis">Favicon da home page. Exibido na aba do browser.</small>
+                <input id="image-upload" class="text-xs" type="file" nv-file-select="" uploader="favicon" name="contents" accept="image/*"/>
+              </div>
+            </li>
+          </ul>
+    <!-- /logo section -->
+        </md-content>
+      </md-tab>
+      <md-tab label="{{'settings.network.tabs.FOOTER' | translate}}">
+        <md-content class="md-padding">
+        		<div class="m-b text-muted text-md text-u-c">RODAPÉ DA PÁGINA</div>
+	        		<div class="p-r-xxl p-l-xxl">
+	        			<div class="p-r-xxl p-l-xxl">
+		              <md-input-container class="">
+		                <label>Link da página/perfil do Facebook</label>
+		                <input ng-model="network.facebookLink">
+		              </md-input-container>
+		              <md-input-container class="">
+		                <label>Link do perfil do Twitter</label>
+		                <input ng-model="network.twitterLink">
+		              </md-input-container>
+		              <md-input-container class="">
+		                <label>Link do canal do Youtube</label>
+		                <input ng-model="network.youtubeLink">
+		              </md-input-container>
+		              <md-input-container class="">
+		                <label>Link da página/perfil do Google+</label>
+		                <input ng-model="network.googlePlusLink">
+		              </md-input-container>
+	              </div>
+		          </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="m-b text-muted text-md text-u-c">Rodapé da tela de login</div>
+              <div class="p-r-xxl p-l-xxl">
 		        			<div class="p-r-xxl p-l-xxl">
-			              <md-input-container class="">
-			                <label>Link da página/perfil do Facebook</label>
-			                <input ng-model="network.facebookLink">
-			              </md-input-container>
-			              <md-input-container class="">
-			                <label>Link do perfil do Twitter</label>
-			                <input ng-model="network.twitterLink">
-			              </md-input-container>
-			              <md-input-container class="">
-			                <label>Link do canal do Youtube</label>
-			                <input ng-model="network.youtubeLink">
-			              </md-input-container>
-			              <md-input-container class="">
-			                <label>Link da página/perfil do Google+</label>
-			                <input ng-model="network.googlePlusLink">
-			              </md-input-container>
-		              </div>
-			          </div>
-	            <div class="line line-dashed b-b line-lg pull-in"></div>
-              <div class="m-b text-muted text-md text-u-c">Rodapé da tela de login</div>
-	              <div class="p-r-xxl p-l-xxl">
-			        			<div class="p-r-xxl p-l-xxl">
-			              <div class="m-t-lg md-form-group  m-t text-md">
-				              <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="3"></textarea>
-				              <label></label>
-				              <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
-				            </div>
+		              <div class="m-t-lg md-form-group  m-t text-md">
+			              <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="3"></textarea>
+			              <label></label>
+			              <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
 			            </div>
 		            </div>
-	        </md-content>
-        </md-tab>
-        <md-tab label="{{'settings.network.tabs.CUSTOMIZATION' | translate}}">
-	        <md-content class="md-padding">
-          	<div class="m-t-xxl text-muted text-md text-u-c">Personalização</div>
-        		<md-input-container class="">
-              <label>Aba de estações</label>
-              <input ng-model="network.stationMenuName">
-              <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
-                  Substituir a palavra "estação" do menu lateral.</small> -->
-              <span class="md-input-msg left">Substituir a palavra "estação" do menu lateral.</span>
-            </md-input-container>
-            <md-input-container class="">
-              <label>Aba de início</label>
-              <input ng-model="network.homeTabName">
-            </md-input-container>
-            <md-input-container class="md-block">
-              <label>Texto de convite por email</label>
-              <textarea ng-model="network.invitationMessage" columns="1" rows="5"></textarea>
-              <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
-                  Mensagem enviada em emails de convites a usuários</small> -->
-              <span class="md-input-msg left">Mensagem enviada em emails de convites a usuários</span>
-            </md-input-container>
-	        </md-content>
-	      </md-tab>
-      </md-tabs>
-    </md-content>
+	            </div>
+        </md-content>
+      </md-tab>
+      <md-tab label="{{'settings.network.tabs.CUSTOMIZATION' | translate}}">
+        <md-content class="md-padding">
+        	<div class="m-t-xxl text-muted text-md text-u-c">Personalização</div>
+      		<md-input-container class="">
+            <label>Aba de estações</label>
+            <input ng-model="network.stationMenuName">
+            <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
+                Substituir a palavra "estação" do menu lateral.</small> -->
+            <span class="md-input-msg left">Substituir a palavra "estação" do menu lateral.</span>
+          </md-input-container>
+          <md-input-container class="">
+            <label>Aba de início</label>
+            <input ng-model="network.homeTabName">
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>Texto de convite por email</label>
+            <textarea ng-model="network.invitationMessage" columns="1" rows="5"></textarea>
+            <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
+                Mensagem enviada em emails de convites a usuários</small> -->
+            <span class="md-input-msg left">Mensagem enviada em emails de convites a usuários</span>
+          </md-input-container>
+        </md-content>
+      </md-tab>
+    </md-tabs>
     <!-- <div class="pos-abt top-0 right-0 text-lg m-t">
       <button ng-click="saveChanges()"
       md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>

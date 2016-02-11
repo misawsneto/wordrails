@@ -3,6 +3,9 @@
 		"NETWORK": "Rede",
 		"STATION": "Estação",
 		"STATIONS": "Estações",
+		"PAGE": "Página",
+		"PAGES": "Páginas",
+		"PAGEBUIDER": "Criador de Páginas",
 		"PERSPECTIVE": "Perspectiva",
 		"PERSPECTIVES": "Perspectivas",
 		"CATEGORY": "Categoria",
@@ -29,7 +32,7 @@
 	    "DASHBOARD" : "Configurações",
 	    "EMAIL" : "Email",
 	    "UIKITS" : "UI Kits PT",
-	    "PAGES" : "Paginas"
+	    "PAGES" : "Páginas"
 	  }
 	},
 	"settings":{
@@ -57,7 +60,10 @@
 				"FLURRY": "Flurry - API Key",
 				"CUSTOM_DOMAIN": "Domínio personalizado"
 			}
-		}
+		},
+		"COLOR_PRIMARY": "Cores Primárias",
+		"COLOR_SECONDARY": "Cores Secundárias",
+		"COLOR_BACKGROUND": "Cores de Fundo"
 	},
 	"messages": {
 		"network":{

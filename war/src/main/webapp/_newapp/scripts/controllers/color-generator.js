@@ -2,7 +2,7 @@
 
 // Define our default color generator controller!
 angular.module('app').controller('ColorGeneratorCtrl',
-function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette )
+function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $filter )
 {
 	function DialogImportCtrl($scope, $mdDialog, $mdColorPalette ){
 		$scope.code = '';
@@ -39,9 +39,11 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette )
 		$scope.initSpeedDial();
 
 		// Add a default palette
-		$scope.addPaletteFromObject( $mdColorPalette.indigo );
-		$scope.addBasePalette();
-		$scope.addBasePalette();
+		// $scope.addPaletteFromObject( $mdColorPalette.indigo );
+		
+		$scope.addBasePalette($filter('translate')('settings.COLOR_PRIMARY'));
+		$scope.addBasePalette($filter('translate')('settings.COLOR_SECONDARY'));
+		$scope.addBasePalette($filter('translate')('settings.COLOR_BACKGROUND'));
 
 		// Define theme defaults
 		$scope.theme = {
@@ -128,10 +130,16 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette )
 	}
 
 	// Function to add a palette to palettes.
-	$scope.addBasePalette = function()
+	$scope.addBasePalette = function(paletteName)
 	{
 		// Push on the default and then calculate it's values from it's base.
-		$scope.palettes.push(angular.copy($scope.palette));
+		if(!paletteName)
+			$scope.palettes.push(angular.copy($scope.palette));
+		else{
+			var newPalette = angular.copy($scope.palette)
+			newPalette.name = paletteName
+			$scope.palettes.push(newPalette);
+		}
 		$scope.calcPalette($scope.palettes.length-1);
 	};
 
@@ -195,12 +203,12 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette )
 	{
 		// Return array of color objects.
 		return [
+			getColorObject(tinycolor( hex ), '500'),
 			getColorObject(tinycolor( hex ).lighten( 52 ), '50'),
 			getColorObject(tinycolor( hex ).lighten( 37 ), '100'),
 			getColorObject(tinycolor( hex ).lighten( 26 ), '200'),
 			getColorObject(tinycolor( hex ).lighten( 12 ), '300'),
 			getColorObject(tinycolor( hex ).lighten( 6 ), '400'),
-			getColorObject(tinycolor( hex ), '500'),
 			getColorObject(tinycolor( hex ).darken( 6 ), '600'),
 			getColorObject(tinycolor( hex ).darken( 12 ), '700'),
 			getColorObject(tinycolor( hex ).darken( 18 ), '800'),

@@ -3,6 +3,9 @@
 		"NETWORK": "Network",
 		"STATION": "Station",
 		"STATIONS": "Stations",
+		"PAGE": "Page",
+		"PAGES": "Pages",
+		"PAGEBUIDER": "Page Builder",
 		"PERSPECTIVE": "Perspective",
 		"PERSPECTIVES": "Perspectives",
 		"CATEGORY": "Category",
@@ -57,7 +60,10 @@
 				"FLURRY": "Flurry - API Key",
 				"CUSTOM_DOMAIN": "Custom domain"
 			}
-		}
+		},
+		"COLOR_PRIMARY": "Primary Colors",
+		"COLOR_SECONDARY": "Secondary Colors",
+		"COLOR_BACKGROUND": "Background Colors"
 	},
 	"messages": {
 		"network":{
