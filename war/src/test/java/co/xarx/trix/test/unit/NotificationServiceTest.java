@@ -12,6 +12,10 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
+import com.relayrides.pushy.apns.ApnsClient;
+import com.relayrides.pushy.apns.ApnsPushNotification;
+import com.relayrides.pushy.apns.PushNotificationResponse;
+import io.netty.util.concurrent.Future;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,141 +57,19 @@ public class NotificationServiceTest {
 		when(result.getResults()).thenReturn(results);
 		when(sender.send(any(Message.class), anyListOf(String.class), anyInt())).thenReturn(result);
 
-		AndroidNotificationSender androidNotificationSender = new AndroidNotificationSender(sender);
-		AppleNotificationSender appleNotificationSender = new AppleNotificationSender(appleCertificateRepository);
+		PushNotificationResponse pnr = PowerMockito.mock(PushNotificationResponse.class);
+		when(pnr.isAccepted()).thenReturn(true);
 
-//		PushNotificationResponse<SimpleApnsPushNotification> response = new PushNotificationResponse<SimpleApnsPushNotification>() {
-//			@Override
-//			public SimpleApnsPushNotification getPushNotification() {
-//				return null;
-//			}
-//
-//			@Override
-//			public boolean isAccepted() {
-//				//This should be true for tests
-//				return true;
-//			}
-//
-//			@Override
-//			public String getRejectionReason() {
-//				return null;
-//			}
-//
-//			@Override
-//			public Date getTokenInvalidationTimestamp() {
-//				return null;
-//			}
-//		};
-//
-//		Future<PushNotificationResponse<SimpleApnsPushNotification>> responseFuture = new Future<PushNotificationResponse<SimpleApnsPushNotification>>() {
-//			@Override
-//			public boolean isSuccess() {
-//				return false;
-//			}
-//
-//			@Override
-//			public boolean isCancellable() {
-//				return false;
-//			}
-//
-//			@Override
-//			public Throwable cause() {
-//				return null;
-//			}
-//
-//			@Override
-//			public Future<PushNotificationResponse<SimpleApnsPushNotification>> addListener(GenericFutureListener<? extends Future<? super PushNotificationResponse<SimpleApnsPushNotification>>> genericFutureListener) {
-//				return null;
-//			}
-//
-//			@Override
-//			public Future<PushNotificationResponse<SimpleApnsPushNotification>> addListeners(GenericFutureListener<? extends Future<? super PushNotificationResponse<SimpleApnsPushNotification>>>... genericFutureListeners) {
-//				return null;
-//			}
-//
-//			@Override
-//			public Future<PushNotificationResponse<SimpleApnsPushNotification>> removeListener(GenericFutureListener<? extends Future<? super PushNotificationResponse<SimpleApnsPushNotification>>> genericFutureListener) {
-//				return null;
-//			}
-//
-//			@Override
-//			public Future<PushNotificationResponse<SimpleApnsPushNotification>> removeListeners(GenericFutureListener<? extends Future<? super PushNotificationResponse<SimpleApnsPushNotification>>>... genericFutureListeners) {
-//				return null;
-//			}
-//
-//			@Override
-//			public Future<PushNotificationResponse<SimpleApnsPushNotification>> sync() throws InterruptedException {
-//				return null;
-//			}
-//
-//			@Override
-//			public Future<PushNotificationResponse<SimpleApnsPushNotification>> syncUninterruptibly() {
-//				return null;
-//			}
-//
-//			@Override
-//			public Future<PushNotificationResponse<SimpleApnsPushNotification>> await() throws InterruptedException {
-//				return null;
-//			}
-//
-//			@Override
-//			public Future<PushNotificationResponse<SimpleApnsPushNotification>> awaitUninterruptibly() {
-//				return null;
-//			}
-//
-//			@Override
-//			public boolean await(long l, TimeUnit timeUnit) throws InterruptedException {
-//				return false;
-//			}
-//
-//			@Override
-//			public boolean await(long l) throws InterruptedException {
-//				return false;
-//			}
-//
-//			@Override
-//			public boolean awaitUninterruptibly(long l, TimeUnit timeUnit) {
-//				return false;
-//			}
-//
-//			@Override
-//			public boolean awaitUninterruptibly(long l) {
-//				return false;
-//			}
-//
-//			@Override
-//			public PushNotificationResponse<SimpleApnsPushNotification> getNow() {
-//				return null;
-//			}
-//
-//			@Override
-//			public boolean cancel(boolean b) {
-//				return false;
-//			}
-//
-//			@Override
-//			public boolean isCancelled() {
-//				return false;
-//			}
-//
-//			@Override
-//			public boolean isDone() {
-//				return false;
-//			}
-//
-//			@Override
-//			public PushNotificationResponse<SimpleApnsPushNotification> get() throws InterruptedException, ExecutionException {
-//				return response;
-//			}
-//
-//			@Override
-//			public PushNotificationResponse<SimpleApnsPushNotification> get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-//				return null;
-//			}
-//		};
-//
-//		when(appleNotificationSender.getAPNsClient(anyBoolean())).thenReturn(apnsClient);
-//		when(apnsClient.sendNotification(any())).thenReturn(responseFuture);
+		Future f = PowerMockito.mock(Future.class);
+		when(f.get()).thenReturn(pnr);
+
+		ApnsClient apnsClient = PowerMockito.mock(ApnsClient.class);
+		when(apnsClient.sendNotification(any(ApnsPushNotification.class))).thenReturn(f);
+
+		AndroidNotificationSender androidNotificationSender = new AndroidNotificationSender(sender);
+		AppleNotificationSender appleNotificationSender = PowerMockito.mock(AppleNotificationSender.class);
+		when(appleNotificationSender.getAPNsClient(anyBoolean())).thenReturn(apnsClient);
+		when(appleNotificationSender.sendMessageToDevices(any(NotificationView.class), anyList())).thenCallRealMethod();
 
 		this.notificationService = new NotificationService(androidNotificationSender, appleNotificationSender);
 	}
@@ -196,10 +78,9 @@ public class NotificationServiceTest {
 		Sender sender = PowerMockito.mock(Sender.class);
 
 		MulticastResult result = PowerMockito.mock(MulticastResult.class);
-		appleCertificateRepository = PowerMockito.mock(AppleCertificateRepository.class);
 
 		AndroidNotificationSender androidNotificationSender = new AndroidNotificationSender(sender);
-		AppleNotificationSender appleNotificationSender = new AppleNotificationSender(appleCertificateRepository);
+		AppleNotificationSender appleNotificationSender = new AppleNotificationSender(null);
 
 		List<Result> results = new ArrayList<>();
 		for (int i = 0; i < 300; i++) {
@@ -227,8 +108,7 @@ public class NotificationServiceTest {
 		when(sender.send(any(Message.class), anyListOf(String.class), anyInt())).thenThrow(new IOException());
 
 		AndroidNotificationSender androidNotificationSender = new AndroidNotificationSender(sender);
-//		AppleNotificationSender appleNotificationSender = new AppleNotificationSender(appleCertificateRepository);
-		AppleNotificationSender appleNotificationSender = PowerMockito.mock(AppleNotificationSender.class);
+		AppleNotificationSender appleNotificationSender = new AppleNotificationSender(null);
 
 		this.notificationService = new NotificationService(androidNotificationSender, appleNotificationSender);
 	}
