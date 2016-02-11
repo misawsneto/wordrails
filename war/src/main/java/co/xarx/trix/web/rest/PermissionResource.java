@@ -5,6 +5,7 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.auth.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ public class PermissionResource {
 	@PUT
 	@Path("/stations/update")
 	@Transactional
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response updateStationsPermissions(StationRolesUpdate dto) {
 		Assert.notNull(dto, "Dto must not be null");
 		Assert.notEmpty(dto.usernames, "Person ids must have elements");
@@ -47,6 +49,7 @@ public class PermissionResource {
 	@POST
 	@Path("/stations/clean")
 	@Transactional
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response cleanStationsPermissions(StationRolesUpdate dto) {
 		Assert.notNull(dto, "Dto must not be null");
 		Assert.notEmpty(dto.usernames, "Person ids must have elements");

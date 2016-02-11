@@ -2,7 +2,7 @@ package co.xarx.trix.services.auth;
 
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.PersonRepository;
-import co.xarx.trix.security.TrixPermission;
+import co.xarx.trix.security.acl.TrixPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.domain.PrincipalSid;

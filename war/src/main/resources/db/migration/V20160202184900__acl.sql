@@ -23,8 +23,9 @@ CREATE TABLE IF NOT EXISTS `acl_sid` (
 	`id`        BIGINT(20)   NOT NULL AUTO_INCREMENT,
 	`principal` TINYINT(1)   NOT NULL,
 	`sid`       VARCHAR(100) NOT NULL,
+	`tenantId`  VARCHAR(100) NOT NULL,
 	PRIMARY KEY (`id`),
-	UNIQUE KEY `unique_uk_1` (`sid`, `principal`)
+	UNIQUE KEY `unique_uk_1` (`sid`, `principal`, `tenantId`)
 )
 	ENGINE = InnoDB
 	DEFAULT CHARSET = latin1

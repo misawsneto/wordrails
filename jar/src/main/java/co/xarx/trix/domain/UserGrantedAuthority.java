@@ -10,8 +10,10 @@ import javax.validation.constraints.NotNull;
 @Table(name="authorities")
 public class UserGrantedAuthority extends BaseEntity implements GrantedAuthority {
 
+	private static final long serialVersionUID = 3490708994804255206L;
+
 	public static final String USER = "ROLE_USER";
-	public static final String NETWORK_ADMIN = "ROLE_NETWORK_ADMIN";
+	public static final String ADMIN = "ROLE_ADMIN";
 
 	protected UserGrantedAuthority() {
 		this(null, USER);

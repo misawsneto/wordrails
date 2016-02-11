@@ -1,4 +1,4 @@
-package co.xarx.trix.security;
+package co.xarx.trix.security.acl;
 
 import org.springframework.security.acls.domain.AbstractPermission;
 import org.springframework.security.acls.model.Permission;

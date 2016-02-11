@@ -1,6 +1,7 @@
 package co.xarx.trix.config.spring;
 
-import co.xarx.trix.security.TrixPermission;
+import co.xarx.trix.security.acl.MultitenantAclService;
+import co.xarx.trix.security.acl.TrixPermission;
 import org.hibernate.cache.CacheException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -11,7 +12,6 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.acls.domain.*;
 import org.springframework.security.acls.jdbc.BasicLookupStrategy;
-import org.springframework.security.acls.jdbc.JdbcMutableAclService;
 import org.springframework.security.acls.jdbc.LookupStrategy;
 import org.springframework.security.acls.model.AclCache;
 import org.springframework.security.acls.model.MutableAclService;
@@ -75,8 +75,7 @@ public class AclConfig {
 
 	@Bean
 	public MutableAclService aclService() throws CacheException, IOException {
-
-		JdbcMutableAclService aclService = new JdbcMutableAclService(dataSource, aclLookupStrategy(), aclCache());
+		MultitenantAclService aclService = new MultitenantAclService(dataSource, aclLookupStrategy(), aclCache());
 		aclService.setClassIdentityQuery("SELECT @@IDENTITY");
 		aclService.setSidIdentityQuery("SELECT @@IDENTITY");
 		return aclService;

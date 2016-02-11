@@ -23,6 +23,10 @@
 		<listener-class>co.xarx.trix.ContextServletListener</listener-class>
 	</listener>
 
+	<listener>
+		<listener-class>co.xarx.trix.config.flyway.FlywayServletContextListener</listener-class>
+	</listener>
+
 	<!-- RESTEasy -->
 	<listener>
 		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
