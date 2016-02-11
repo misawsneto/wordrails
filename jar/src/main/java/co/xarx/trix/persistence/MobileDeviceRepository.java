@@ -2,6 +2,7 @@ package co.xarx.trix.persistence;
 
 import co.xarx.trix.domain.MobileDevice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,8 @@ public interface MobileDeviceRepository extends JpaRepository<MobileDevice, Inte
 			"join StationRole sr on sr.person = person " +
 			"where sr.station.id = :stationId")
 	List<MobileDevice> findByStation(@Param("stationId") Integer stationId);
+
+	@RestResource(exported = false)
+	@Modifying
+	void deleteByPersonId(Integer id);
 }

@@ -25,10 +25,6 @@ public class PersonEventHandler {
 	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
-	private PersonNetworkRegIdRepository personNetworkRegIdRepository;
-	@Autowired
-	private PersonNetworkTokenRepository personNetworkTokenRepository;
-	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private PostReadRepository postReadRepository;
@@ -58,7 +54,8 @@ public class PersonEventHandler {
 	private ESPersonRepository esPersonRepository;
 	@Autowired
 	private UserRepository userRepository;
-
+	@Autowired
+	private MobileDeviceRepository mobileDeviceRepository;
 
 	@HandleBeforeSave
 	public void handleBeforeSave(Person person) {
@@ -89,8 +86,7 @@ public class PersonEventHandler {
 		queryPersistence.setNoAuthor(person.id);
 
 		notificationRepository.deleteByPersonId(person.id);
-		personNetworkRegIdRepository.deleteByPersonId(person.id);
-		personNetworkTokenRepository.deleteByPersonId(person.id);
+		mobileDeviceRepository.deleteByPersonId(person.id);
 		userRepository.delete(person.user.id);
 		elasticSearchService.deleteIndex(person.getId(), esPersonRepository);
 	}

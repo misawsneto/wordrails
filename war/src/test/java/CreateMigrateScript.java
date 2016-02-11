@@ -11,8 +11,9 @@ public class CreateMigrateScript {
 //	--multitenant.sql
 //	--images.sql
 //	--passwordReset.sql
+//	--refactoring_notification.sql
 
-	private static final String SCRIPT_NAME = "passwordReset";
+	private static final String SCRIPT_NAME = "refactoring_notification";
 
 	public static void main(String[] args) throws IOException {
 		CreateMigrateScript script = new CreateMigrateScript();

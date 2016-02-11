@@ -39,8 +39,6 @@ public class NotificationServiceTest {
 
 	public void setUpSuccess() throws Exception {
 		Sender sender = PowerMockito.mock(Sender.class);
-//		AppleNotificationSender appleNotificationSender = Mock(AppleNotificationSender.class);
-		appleCertificateRepository = PowerMockito.mock(AppleCertificateRepository.class);
 
 		MulticastResult result = PowerMockito.mock(MulticastResult.class);
 
