@@ -830,50 +830,76 @@ CREATE TABLE `person_station_role` (
 -- Table structure for table `personnetworkregid`
 --
 
-DROP TABLE IF EXISTS `personnetworkregid`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `personnetworkregid` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `regId` varchar(255) DEFAULT NULL,
-  `network_id` int(11) NOT NULL,
-  `person_id` int(11) DEFAULT NULL,
-  `createdAt` datetime DEFAULT NULL,
-  `updatedAt` datetime DEFAULT NULL,
-  `lat` double DEFAULT NULL,
-  `lng` double DEFAULT NULL,
-  `networkId` int(11) DEFAULT '0',
-  `version` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_5gxr3ln7jp4avfvl1sn14u8ei` (`person_id`,`network_id`,`regId`),
-  UNIQUE KEY `UK_66ucw8s78581mapmajvvcuy4h` (`network_id`,`regId`),
-  CONSTRAINT `FK_15ku2e704vuq11eilqsh4x6ya` FOREIGN KEY (`network_id`) REFERENCES `network` (`id`),
-  CONSTRAINT `FK_ccl1tsc49s5hf4ce0ilx1169b` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24150 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- DROP TABLE IF EXISTS `personnetworkregid`;
+-- /*!40101 SET @saved_cs_client     = @@character_set_client */;
+-- /*!40101 SET character_set_client = utf8 */;
+-- CREATE TABLE `personnetworkregid` (
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `regId` varchar(255) DEFAULT NULL,
+--   `network_id` int(11) NOT NULL,
+--   `person_id` int(11) DEFAULT NULL,
+--   `createdAt` datetime DEFAULT NULL,
+--   `updatedAt` datetime DEFAULT NULL,
+--   `lat` double DEFAULT NULL,
+--   `lng` double DEFAULT NULL,
+--   `networkId` int(11) DEFAULT '0',
+--   `version` int(11) NOT NULL DEFAULT '0',
+--   PRIMARY KEY (`id`),
+--   UNIQUE KEY `UK_5gxr3ln7jp4avfvl1sn14u8ei` (`person_id`,`network_id`,`regId`),
+--   UNIQUE KEY `UK_66ucw8s78581mapmajvvcuy4h` (`network_id`,`regId`),
+--   CONSTRAINT `FK_15ku2e704vuq11eilqsh4x6ya` FOREIGN KEY (`network_id`) REFERENCES `network` (`id`),
+--   CONSTRAINT `FK_ccl1tsc49s5hf4ce0ilx1169b` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=24150 DEFAULT CHARSET=latin1;
+-- /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `personnetworktoken`
 --
 
-DROP TABLE IF EXISTS `personnetworktoken`;
+-- DROP TABLE IF EXISTS `personnetworktoken`;
+-- /*!40101 SET @saved_cs_client     = @@character_set_client */;
+-- /*!40101 SET character_set_client = utf8 */;
+-- CREATE TABLE `personnetworktoken` (
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `createdAt` datetime DEFAULT NULL,
+--   `lat` double DEFAULT NULL,
+--   `lng` double DEFAULT NULL,
+--   `token` varchar(255) DEFAULT NULL,
+--   `updatedAt` datetime DEFAULT NULL,
+--   `network_id` int(11) NOT NULL,
+--   `person_id` int(11) DEFAULT NULL,
+--   PRIMARY KEY (`id`),
+--   UNIQUE KEY `UK_jhaydrew3p73y5oxxe9xvu2f3` (`network_id`,`token`),
+--   KEY `FK_mpk030j2e4p5dyjtw2mj5a81n` (`person_id`),
+--   CONSTRAINT `FK_1gttfb6y3fmlg1j2nhvftqfbu` FOREIGN KEY (`network_id`) REFERENCES `network` (`id`),
+--   CONSTRAINT `FK_mpk030j2e4p5dyjtw2mj5a81n` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=1192 DEFAULT CHARSET=latin1;
+-- /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mobiledevice`
+--
+
+DROP TABLE IF EXISTS `mobiledevice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `personnetworktoken` (
+CREATE TABLE `mobiledevice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `createdAt` datetime DEFAULT NULL,
+  `tenantId` varchar(255) NOT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  `active` bit(1) NOT NULL,
+  `deviceCode` varchar(255) NOT NULL,
   `lat` double DEFAULT NULL,
   `lng` double DEFAULT NULL,
-  `token` varchar(255) DEFAULT NULL,
-  `updatedAt` datetime DEFAULT NULL,
-  `network_id` int(11) NOT NULL,
+  `type` int(11) DEFAULT NULL,
   `person_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_jhaydrew3p73y5oxxe9xvu2f3` (`network_id`,`token`),
-  KEY `FK_mpk030j2e4p5dyjtw2mj5a81n` (`person_id`),
-  CONSTRAINT `FK_1gttfb6y3fmlg1j2nhvftqfbu` FOREIGN KEY (`network_id`) REFERENCES `network` (`id`),
-  CONSTRAINT `FK_mpk030j2e4p5dyjtw2mj5a81n` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1192 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `UK_ra0b9pf2esqesmc9ba40kfi1b` (`tenantId`,`deviceCode`),
+  KEY `FK_bp0e0gt2xa419i44uv4t0lind` (`person_id`),
+  CONSTRAINT `FK_bp0e0gt2xa419i44uv4t0lind` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9215 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

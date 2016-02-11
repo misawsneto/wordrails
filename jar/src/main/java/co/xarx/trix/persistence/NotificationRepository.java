@@ -20,7 +20,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	@RestResource(exported = false)
 	public <S extends Notification> S save(S arg0);
 
-	@Query("select notification from Notification notification where notification.person.id = :personId order by notification.id desc")
+	@Query("select notification from Notification notification" +
+			" join MobileDevice mobileDevice join notification.regId " +
+			"where notification.person.id = :personId order by notification.id desc")
 	public List<Notification> findNotificationsByPersonIdOrderByDate(@Param("personId") Integer personId, Pageable pageable);
 
 	@RestResource(exported = false)
@@ -28,12 +30,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	
 	@RestResource(exported = false)
 	public void deleteByHash(String notificationHash);
-
-	@RestResource(exported = false)
-	public List<Notification> findByStation(Station station);
-
-	@RestResource(exported = false)
-	@Modifying
-	void deleteByPersonId(Integer id);
 
 }
