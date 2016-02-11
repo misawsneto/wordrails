@@ -12,6 +12,7 @@ import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,6 +45,16 @@ public class AuthService {
 		}
 
 		return (User) auth.getPrincipal();
+	}
+
+	public String getLoggedUsername() {
+		User user = getUser();
+
+		if(user == null || user.getUsername().equals("wordrails")) {
+			throw new AuthenticationCredentialsNotFoundException("Session has anonymous user");
+		}
+
+		return user.getUsername();
 	}
 
 	public Person getLoggedPerson() {

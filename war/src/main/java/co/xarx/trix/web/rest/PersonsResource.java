@@ -12,11 +12,11 @@ import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
-import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.APNService;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.GCMService;
-import co.xarx.trix.util.Logger;
+import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,12 +35,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.FieldError;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -49,8 +47,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Path("/persons")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -75,6 +71,8 @@ public class PersonsResource {
 	private GCMService gcmService;
 	@Autowired
 	private APNService apnService;
+	@Autowired
+	private PersonService personService;
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
@@ -408,109 +406,12 @@ public class PersonsResource {
 
 	@POST
 	@Path("/create")
-	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, IOException{
-		Person person = null;
-		User user;
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		if(personCreationObject != null){
-			try{
-				person = new Person();
-				person.name = personCreationObject.name;
-				person.username = personCreationObject.username;
-				person.password = personCreationObject.password;
-				person.email = personCreationObject.email;
+	public Response create(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException{
+		Person person = personService.create(dto.name, dto.username, dto.password, dto.email);
 
-
-				String password = person.password;
-
-				if (password == null || password.trim().equals("")) {
-					password = StringUtil.generateRandomString(8, "a#");
-				}
-
-				user = new User();
-				user.enabled = true;
-				user.username = person.username;
-				user.password = password;
-				UserGrantedAuthority authority = new UserGrantedAuthority(user, UserGrantedAuthority.USER);
-				authority.user = user;
-				user.addAuthority(authority);
-
-				person.user = user;
-
-				personRepository.save(person);
-			}catch (javax.validation.ConstraintViolationException e){
-				BadRequestException badRequest = new BadRequestException();
-
-				for (ConstraintViolation violation : e.getConstraintViolations()) {
-					FieldError error = new FieldError(violation.getInvalidValue()+"", violation.getInvalidValue()+"", violation.getMessage());
-					badRequest.errors.add(error);
-				}
-
-				throw badRequest;
-			}catch (org.springframework.dao.DataIntegrityViolationException e) {
-				if(e.getCause() != null && e.getCause() instanceof org.hibernate.exception.ConstraintViolationException){
-					String errorMsg = e.getCause().getCause().getLocalizedMessage();
-					Pattern p = Pattern.compile("\'([^\']*)\'");
-					Matcher m = p.matcher(errorMsg);
-					String errorVal = "";
-					if (m.find()) {
-						errorVal = m.group(1);
-					}
-
-					if(errorVal.contains("-"))
-						errorVal = errorVal.split("-")[0];
-
-					Person conflictingPerson = null;
-					if(person.email != null && person.email.trim().equals(errorVal))
-						conflictingPerson = personRepository.findByEmail(person.email);
-
-					if(conflictingPerson == null && person.username != null && person.username.trim().equals(errorVal)){
-						conflictingPerson = personRepository.findOne(QPerson.person.user.username.eq(person.username));
-					}
-
-					if(conflictingPerson!=null && personCreationObject.stationRole !=null && personCreationObject.stationRole.station != null) {
-						StationRole str = stationRolesRepository.findByStationIdAndPersonId(personCreationObject.stationRole.station.id, conflictingPerson.id);
-						if(str != null) {
-							Logger.debug("conflicting station name: " + str.station.name);
-							return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", "
-									+ "\"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) + ", "
-									+ "\"conflictingStationRole\": " + mapper.writeValueAsString(str) + "}").build();
-						}
-					}
-
-					return Response.status(Status.CONFLICT).entity("{\"value\": \"" + errorVal + "\", \"conflictingPerson\": " + mapper.writeValueAsString(conflictingPerson) +"}").build();
-				}
-				e.printStackTrace();
-				throw new ConflictException();
-			}
-
-
-			StationRole stRole = personCreationObject.stationRole;
-			if(stRole !=null){
-				if(stRole.station != null && stRole.station.id != null){
-					stRole.station = stationRepository.findOne(stRole.station.id);
-					stRole.person = person;
-					stationRoleEventHandler.handleBeforeCreate(stRole);
-					stationRolesRepository.save(stRole);
-				}else{
-					throw new BadRequestException();
-				}
-			}
-
-			if(network != null && network.addStationRolesOnSignup){
-				List<Station> stations = stationRepository.findAll();
-				for (Station station : stations) {
-					StationRole sr = new StationRole();
-					sr.person = person;
-					sr.station = station;
-					stationRolesRepository.save(sr);
-				}
-			}
-
-			userRepository.save(user);
-
+		if (person != null) {
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
-		}else{
+		} else {
 			throw new BadRequestException();
 		}
 	}
@@ -622,7 +523,7 @@ public class PersonsResource {
 			List<Person> persons = personRepository.findAll(stationRolesUpdate.personsIds);
 			List<Station> stations = stationRepository.findAll(stationRolesUpdate.stationsIds);
 
-			ArrayList<StationRole> allRoles = new ArrayList<StationRole>();
+			ArrayList<StationRole> allRoles = new ArrayList<>();
 
 			for (Station station : stations) {
 				for (Person person: persons){

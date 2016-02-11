@@ -17,6 +17,10 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@Cacheable(value = "person", key = "#p0")
 	Person findByUsername(@Param("username") String username);
 
+	@RestResource(exported = false)
+	@Query("select u.username from Person p inner join p.user u where p.id in (:ids)")
+	List<String> findUsernames(List<Integer> ids);
+
 	@Override
 	@GeneratorIgnore
 	@CacheEvict(value = "person", key = "#p0.username")
