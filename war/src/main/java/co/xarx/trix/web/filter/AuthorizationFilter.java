@@ -937,11 +937,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindNotificationsByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
 	protected boolean isGetNotificationPostAuthorized(Integer notificationId) {
 		return true;
 	}

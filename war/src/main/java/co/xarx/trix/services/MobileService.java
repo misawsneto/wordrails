@@ -120,15 +120,17 @@ public class MobileService {
 		return notification;
 	}
 
-	public void updateDevice(String deviceCode, Double lat, Double lng) {
+	public void updateDevice(String deviceCode, Double lat, Double lng, MobileDevice.Type type) {
 		Assert.hasText(deviceCode, "Device code must not be empty");
 
 		MobileDevice device = mobileDeviceRepository.findOne(QMobileDevice.mobileDevice.deviceCode.eq(deviceCode));
-		if (device == null || device.deviceCode == null) {
-			Person person = authProvider.getLoggedPerson();
+		Person person = authProvider.getLoggedPerson();
 
-			if (person.id == 0)
-				person = null;
+		if (person.id == 0) {
+			person = null;
+		}
+
+		if (device != null){
 
 			device.person = person;
 
@@ -138,7 +140,23 @@ public class MobileService {
 			if (lng != null) {
 				device.lng = lng;
 			}
-			mobileDeviceRepository.save(device);
+		} else {
+			device = new MobileDevice();
+
+			device.deviceCode = deviceCode;
+			device.person = person;
+			device.active = true;
+
+			if (lat != null) {
+				device.lat = lat;
+			}
+			if (lng != null) {
+				device.lng = lng;
+			}
+			device.type = type;
+
 		}
+
+		mobileDeviceRepository.save(device);
 	}
 }

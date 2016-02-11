@@ -5,8 +5,11 @@ import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.converter.NotificationConverter;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.QMobileDevice;
+import co.xarx.trix.domain.QNotification;
 import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -63,7 +66,10 @@ public class NotificationsResource {
 			Pageable pageable = new PageRequest(page, size);
 
 			ContentResponse<List<NotificationView>> response = new ContentResponse<List<NotificationView>>();
-			List<Notification> pages = notificationRepository.findNotificationsByPersonIdOrderByDate(person.id, pageable);
+			QMobileDevice m = QMobileDevice.mobileDevice;
+			QNotification n = QNotification.notification;
+			List<Notification> pages = Lists.newArrayList(notificationRepository.findAll(n.regId.eq(m.deviceCode).and(m.person.id.eq(person.id))));
+//			List<Notification> pages = notificationRepository.findNotificationsByPersonIdOrderByDate(person.id);
 
 			List<NotificationView> notifications = new ArrayList<>();
 			for (Notification notification : pages) {

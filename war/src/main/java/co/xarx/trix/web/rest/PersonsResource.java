@@ -231,7 +231,7 @@ public class PersonsResource {
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		mobileService.updateDevice(regId, lat, lng);
+		mobileService.updateDevice(regId, lat, lng, MobileDevice.Type.ANDROID);
 		return Response.status(Status.OK).build();
 	}
 
@@ -239,7 +239,7 @@ public class PersonsResource {
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		mobileService.updateDevice(token, lat, lng);
+		mobileService.updateDevice(token, lat, lng, MobileDevice.Type.APPLE);
 		return Response.status(Status.OK).build();
 	}
 

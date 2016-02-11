@@ -4,15 +4,13 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.exception.NotificationException;
-import co.xarx.trix.persistence.MobileDeviceRepository;
-import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.persistence.StationRepository;
+import co.xarx.trix.persistence.*;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
@@ -73,6 +71,8 @@ public class PostService {
 	private ElasticsearchTemplate elasticsearchTemplate;
 	@Autowired
 	private MobileService mobileService;
+	@Autowired
+	private StationRolesRepository stationRolesRepository;
 
 	public Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
 		boolQuery.must(matchQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
@@ -137,10 +137,16 @@ public class PostService {
 
 	public void sentNewPostNotification(Post post) throws NotificationException {
 		List<MobileDevice> mobileDevices;
+		List<StationRole> stationRoles;
 		if (stationRepository.isUnrestricted(post.getStationId())) {
 			mobileDevices = mobileDeviceRepository.findAll();
 		} else {
-			mobileDevices = mobileDeviceRepository.findByStation(post.station.id);
+//			mobileDevices = mobileDeviceRepository.findByStation(post.station.id);
+			stationRoles = stationRolesRepository.findByStation(post.station);
+
+			List<Integer> personIds = stationRoles.stream().map(stationRole -> stationRole.person.id).collect(Collectors.toList());
+
+			mobileDevices = mobileDeviceRepository.findByPersonIds(personIds);
 		}
 
 		mobileService.buildNewPostNotification(post, mobileDevices);

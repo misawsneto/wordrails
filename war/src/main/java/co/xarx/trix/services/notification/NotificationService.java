@@ -5,6 +5,7 @@ import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.util.ListUtil;
 import org.eclipse.persistence.jpa.jpql.Assert;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ public class NotificationService {
 	private AndroidNotificationSender androidNotificationSender;
 	private AppleNotificationSender appleNotificationSender;
 
+	@Autowired
 	public NotificationService(AndroidNotificationSender androidNotificationSender, AppleNotificationSender appleNotificationSender) {
 		this.androidNotificationSender = androidNotificationSender;
 		this.appleNotificationSender = appleNotificationSender;

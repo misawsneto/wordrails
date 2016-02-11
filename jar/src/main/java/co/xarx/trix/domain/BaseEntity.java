@@ -79,9 +79,12 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 
 	@Override
 	public boolean equals(Object obj) {
-		if(getId() != null)
-			return getId().equals(((BaseEntity)obj).getId());
-		return super.equals(obj);
+		if(obj == null || !(obj instanceof BaseEntity)) {
+			return false;
+		}
+
+		return ((BaseEntity) obj).getId().equals(getId());
+
 	}
 
 	@Override

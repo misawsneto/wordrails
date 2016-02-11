@@ -16,10 +16,8 @@ public interface MobileDeviceRepository extends JpaRepository<MobileDevice, Inte
 
 	@RestResource(exported = false)
 	@Query("SELECT device FROM MobileDevice device " +
-			"join device.person person " +
-			"join StationRole sr on sr.person = device.person " +
-			"where sr.station.id = :stationId")
-	List<MobileDevice> findByStation(@Param("stationId") Integer stationId);
+			"where device.person.id in (:personIds)")
+	List<MobileDevice> findByPersonIds(@Param("personIds") List<Integer> personIds);
 
 	@RestResource(exported = false)
 	@Modifying

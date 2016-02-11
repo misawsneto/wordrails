@@ -3,7 +3,6 @@ package co.xarx.trix.test.unit;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.persistence.AppleCertificateRepository;
 import co.xarx.trix.services.notification.AndroidNotificationSender;
 import co.xarx.trix.services.notification.AppleNotificationSender;
 import co.xarx.trix.services.notification.NotificationService;
@@ -24,10 +23,17 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -39,9 +45,29 @@ import static org.mockito.Mockito.when;
 public class NotificationServiceTest {
 
 	private NotificationService notificationService;
-	private AppleCertificateRepository appleCertificateRepository;
 
-	public void setUpSuccess() throws Exception {
+	public void setUpSuccessApple() throws ExecutionException, InterruptedException, CertificateException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, SQLException, IOException {
+
+		PushNotificationResponse pnr = PowerMockito.mock(PushNotificationResponse.class);
+		AppleNotificationSender appleNotificationSender = PowerMockito.mock(AppleNotificationSender.class);
+
+		when(pnr.isAccepted()).thenReturn(true);
+
+		Future f = PowerMockito.mock(Future.class);
+		when(f.get()).thenReturn(pnr);
+
+		ApnsClient apnsClient = PowerMockito.mock(ApnsClient.class);
+		when(apnsClient.sendNotification(any(ApnsPushNotification.class))).thenReturn(f);
+
+		when(appleNotificationSender.getAPNsClient(anyBoolean())).thenReturn(apnsClient);
+		when(appleNotificationSender.sendMessageToDevices(any(NotificationView.class), anyList())).thenCallRealMethod();
+
+		AndroidNotificationSender androidNotificationSender = new AndroidNotificationSender(null);
+
+		this.notificationService = new NotificationService(androidNotificationSender, appleNotificationSender);
+	}
+
+	public void setUpSuccessAndroid() throws Exception {
 		Sender sender = PowerMockito.mock(Sender.class);
 
 		MulticastResult result = PowerMockito.mock(MulticastResult.class);
@@ -57,19 +83,8 @@ public class NotificationServiceTest {
 		when(result.getResults()).thenReturn(results);
 		when(sender.send(any(Message.class), anyListOf(String.class), anyInt())).thenReturn(result);
 
-		PushNotificationResponse pnr = PowerMockito.mock(PushNotificationResponse.class);
-		when(pnr.isAccepted()).thenReturn(true);
-
-		Future f = PowerMockito.mock(Future.class);
-		when(f.get()).thenReturn(pnr);
-
-		ApnsClient apnsClient = PowerMockito.mock(ApnsClient.class);
-		when(apnsClient.sendNotification(any(ApnsPushNotification.class))).thenReturn(f);
-
 		AndroidNotificationSender androidNotificationSender = new AndroidNotificationSender(sender);
 		AppleNotificationSender appleNotificationSender = PowerMockito.mock(AppleNotificationSender.class);
-		when(appleNotificationSender.getAPNsClient(anyBoolean())).thenReturn(apnsClient);
-		when(appleNotificationSender.sendMessageToDevices(any(NotificationView.class), anyList())).thenCallRealMethod();
 
 		this.notificationService = new NotificationService(androidNotificationSender, appleNotificationSender);
 	}
@@ -114,8 +129,41 @@ public class NotificationServiceTest {
 	}
 
 	@Test
-	public void testSuccessful() throws Exception {
-		setUpSuccess();
+	public void testSuccessfulAppple() throws IOException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException, ExecutionException, SQLException, InterruptedException, KeyStoreException, KeyManagementException {
+		setUpSuccessApple();
+
+		List<String> successTypes = new ArrayList<>();
+		Set<String> devices = new HashSet<>();
+		for (int i = 0; i < 1000; i++) {
+			devices.add(i + "");
+			successTypes.add(String.valueOf(Notification.Status.SUCCESS));
+		}
+
+		NotificationView notification = new NotificationView();
+		notification.type = Notification.Type.POST_ADDED.toString();
+		notification.message = "Dummy title";
+		Post post = TestArtifactsFactory.createPost();
+
+		List<Notification> appleNotifications = notificationService.sendAppleNotifications(notification, post, devices);
+
+		List<String> notiAppleDevices = new ArrayList<>();
+
+		List<String> notiAppleStatuses = new ArrayList<>();
+
+		for (Notification n : appleNotifications) {
+			notiAppleDevices.add(n.regId);
+			notiAppleStatuses.add(n.status);
+		}
+
+		assertEquals(appleNotifications.size(), 1000);
+		assertThat(devices, IsIterableContainingInOrder.contains(notiAppleDevices.toArray()));
+		assertThat(successTypes, IsIterableContainingInOrder.contains(notiAppleDevices.toArray()));
+
+	}
+
+	@Test
+	public void testSuccessfulAndroid() throws Exception {
+		setUpSuccessAndroid();
 
 		List<String> successTypes = new ArrayList<>();
 		Set<String> devices = new HashSet<>();
@@ -130,33 +178,17 @@ public class NotificationServiceTest {
 		Post post = TestArtifactsFactory.createPost();
 
 		List<Notification> androidNotifications = notificationService.sendAndroidNotifications(notification, post, devices);
-//		List<Notification> appleNotifications = notificationService.sendAppleNotifications(notification, post, devices);
 
-//
 		List<String> notiAndroidDevices = new ArrayList<>();
-		List<String> notiAppleDevices = new ArrayList<>();
-//
 		List<String> notiAndroidStatuses = new ArrayList<>();
-//		List<String> notiAppleStatuses = new ArrayList<>();
-//
 		for (Notification n : androidNotifications) {
 			notiAndroidDevices.add(n.regId);
 			notiAndroidStatuses.add(n.status);
 		}
 
-//		for (Notification n : appleNotifications) {
-//			notiAppleDevices.add(n.regId);
-//			notiAppleStatuses.add(n.status);
-//		}
-
 		assertEquals(androidNotifications.size(), 1000);
-//		assertEquals(appleNotifications.size(), 1000);
-
 		assertThat(devices, IsIterableContainingInOrder.contains(notiAndroidDevices.toArray()));
-//		assertThat(devices, IsIterableContainingInOrder.contains(notiAppleDevices.toArray()));
-
 		assertThat(successTypes, IsIterableContainingInOrder.contains(notiAndroidStatuses.toArray()));
-//		assertThat(successTypes, IsIterableContainingInOrder.contains(notiAppleDevices.toArray()));
 	}
 
 
