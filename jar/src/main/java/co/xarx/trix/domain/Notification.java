@@ -60,7 +60,7 @@ public class Notification extends BaseEntity {
 	@ManyToOne
 	public Post post;
 
-    public boolean test = true;
+	public boolean test = true;
 
 	@NotEmpty
 	public String status;
@@ -69,7 +69,7 @@ public class Notification extends BaseEntity {
 
 	public String deviceType;
 
-	public Boolean deviceDeactivated;
+	public boolean deviceDeactivated;
 
 	@NotEmpty
 	@Size(min=1,max=500)
@@ -110,8 +110,8 @@ public class Notification extends BaseEntity {
 		this.test = test;
 	}
 
-	public Status getStatus() {
-		return Status.valueOf(status);
+	public String getStatus() {
+		return status;
 	}
 
 	public void setStatus(Status status) {

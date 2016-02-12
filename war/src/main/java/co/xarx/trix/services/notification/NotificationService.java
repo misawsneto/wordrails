@@ -4,9 +4,9 @@ import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.util.ListUtil;
-import org.eclipse.persistence.jpa.jpql.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.util.*;
@@ -23,9 +23,9 @@ public class NotificationService {
 		this.appleNotificationSender = appleNotificationSender;
 	}
 
-	public List<Notification> sendAndroidNotifications(NotificationView notification, Post post, Set<String> devices) {
-		Assert.isNotNull(devices, "Devices must not be null");
-		Assert.isNotNull(notification, "Notification must not be null");
+	public List<Notification> sendAndroidNotifications(NotificationView notification, Post post, Collection<String> devices) {
+		Assert.notEmpty(devices, "Devices must not be null and not empty");
+		Assert.notNull(notification, "Notification must not be null");
 
 		Map<String, NotificationResult> results;
 		List<Notification> notifications = new ArrayList<>();
@@ -38,7 +38,7 @@ public class NotificationService {
 				notifications.addAll(this.getNotifications(results, notification, post, Notification.DeviceType.ANDROID));
 			} catch (IOException e) {
 				notifications.addAll(this.getNotifications(new HashSet<>(part), notification, post,
-						"Failed to send to GCM", Notification.Status.SERVER_ERROR, Notification.DeviceType.ANDROID));
+						"Failed to send to GCM", Notification.Status.SEND_ERROR, Notification.DeviceType.ANDROID));
 			}
 
 			try {
@@ -50,9 +50,9 @@ public class NotificationService {
 		return notifications;
 	}
 
-	public List<Notification> sendAppleNotifications(NotificationView notification, Post post, Set<String> devices) {
-		Assert.isNotNull(devices, "Devices must not be null");
-		Assert.isNotNull(notification, "Notification must not be null");
+	public List<Notification> sendAppleNotifications(NotificationView notification, Post post, Collection<String> devices) {
+		Assert.notEmpty(devices, "Devices must not be null and not empty");
+		Assert.notNull(notification, "Notification must not be null");
 
 		Map<String, NotificationResult> results;
 		List<Notification> notifications = new ArrayList<>();
@@ -65,7 +65,7 @@ public class NotificationService {
 				notifications.addAll(this.getNotifications(results, notification, post, Notification.DeviceType.APPLE));
 			} catch (IOException e) {
 				notifications.addAll(this.getNotifications(new HashSet<>(part), notification, post,
-						"Failed to send to Apple", Notification.Status.SERVER_ERROR, Notification.DeviceType.APPLE));
+						"Failed to send to Apple", Notification.Status.SEND_ERROR, Notification.DeviceType.APPLE));
 			}
 
 			try {
@@ -81,16 +81,19 @@ public class NotificationService {
 												NotificationView notification,
 												Post post, String errorMessage, Notification.Status status,
 												Notification.DeviceType deviceType) {
-		Assert.isNotNull(devices, "Null devices");
-		Assert.isNotNull(notification, "Null notification");
-
 		List<Notification> notis = new ArrayList<>();
+		if(devices == null || devices.isEmpty())
+			return notis;
+
+		Assert.notNull(notification, "Notification must not be null");
+
 
 		for (String device : devices) {
 			Notification noti = new Notification(device, notification.hash, status, notification.message, notification.type);
 			noti.post = post;
 			noti.errorCodeName = errorMessage;
 			noti.setDeviceType(deviceType);
+			noti.deviceDeactivated = false;
 			notis.add(noti);
 		}
 
@@ -101,10 +104,11 @@ public class NotificationService {
 	private List<Notification> getNotifications(Map<String, NotificationResult> results,
 												NotificationView notification, Post post,
 												Notification.DeviceType deviceType) {
-		Assert.isNotNull(results, "Null results");
-		Assert.isNotNull(notification, "Null notification");
-
 		List<Notification> notis = new ArrayList<>();
+		if (results == null || results.isEmpty())
+			return notis;
+
+		Assert.notNull(notification, "Notification must not be null");
 
 		for (String device : results.keySet()) {
 			NotificationResult r = results.get(device);
@@ -112,6 +116,7 @@ public class NotificationService {
 			noti.post = post;
 			noti.errorCodeName = r.errorMessage;
 			noti.setDeviceType(deviceType);
+			noti.deviceDeactivated = r.deviceDeactivated;
 			notis.add(noti);
 		}
 

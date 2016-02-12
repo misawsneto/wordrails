@@ -3,6 +3,7 @@ package co.xarx.trix.services;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.MobileDevice;
+import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
@@ -73,6 +74,8 @@ public class PostService {
 	private MobileService mobileService;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
+	@Autowired
+	private NotificationRepository notificationRepository;
 
 	public Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
 		boolQuery.must(matchQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
@@ -141,15 +144,16 @@ public class PostService {
 		if (stationRepository.isUnrestricted(post.getStationId())) {
 			mobileDevices = mobileDeviceRepository.findAll();
 		} else {
-//			mobileDevices = mobileDeviceRepository.findByStation(post.station.id);
 			stationRoles = stationRolesRepository.findByStation(post.station);
-
 			List<Integer> personIds = stationRoles.stream().map(stationRole -> stationRole.person.id).collect(Collectors.toList());
 
 			mobileDevices = mobileDeviceRepository.findByPersonIds(personIds);
 		}
 
-		mobileService.buildNewPostNotification(post, mobileDevices);
+		List<Notification> notifications = mobileService.sendNotifications(post, mobileDevices);
+		for (Notification notification : notifications) {
+			notificationRepository.save(notification);
+		}
 	}
 
 	public void publishScheduledPost(Integer postId, boolean allowNotifications) throws NotificationException {

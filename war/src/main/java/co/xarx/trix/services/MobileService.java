@@ -8,7 +8,6 @@ import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.exception.OperationNotSupportedException;
 import co.xarx.trix.persistence.MobileDeviceRepository;
 import co.xarx.trix.persistence.NetworkRepository;
-import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.notification.NotificationService;
 import co.xarx.trix.util.StringUtil;
@@ -29,22 +28,26 @@ public class MobileService {
 	@Value("${spring.profiles.active:'dev'}")
 	private String profile;
 
-	@Autowired
-	public NotificationService notificationService;
-	@Autowired
+	private NotificationService notificationService;
 	private AsyncService asyncService;
-	@Autowired
 	private PostConverter postConverter;
-	@Autowired
 	private TrixAuthenticationProvider authProvider;
-	@Autowired
 	private NetworkRepository networkRepository;
-	@Autowired
 	private MobileDeviceRepository mobileDeviceRepository;
-	@Autowired
-	private NotificationRepository notificationRepository;
 
-	public void buildNewPostNotification(Post post, List<MobileDevice> mobileDevices) throws NotificationException {
+	@Autowired
+	public MobileService(NotificationService notificationService, AsyncService asyncService,
+						 PostConverter postConverter, TrixAuthenticationProvider authProvider,
+						 NetworkRepository networkRepository, MobileDeviceRepository mobileDeviceRepository) {
+		this.notificationService = notificationService;
+		this.asyncService = asyncService;
+		this.postConverter = postConverter;
+		this.authProvider = authProvider;
+		this.networkRepository = networkRepository;
+		this.mobileDeviceRepository = mobileDeviceRepository;
+	}
+
+	public List<Notification> sendNotifications(Post post, List<MobileDevice> mobileDevices) throws NotificationException {
 		Assert.notNull(post, "Post should not be null");
 
 		String tenantId = TenantContextHolder.getCurrentTenantId();
@@ -74,37 +77,30 @@ public class MobileService {
 			futureAppleNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
 					() -> notificationService.sendAppleNotifications(notification, post, appleDevices));
 		} catch (Exception e) {
-			if (futureAndroidNotifications != null) futureAndroidNotifications.cancel(true);
+			if (futureAndroidNotifications != null)
+				futureAndroidNotifications.cancel(true);
 			throw new NotificationException(e);
 		}
 
+		List<Notification> notifications;
 
-		List<Notification> androidNotifications;
 		try {
-			androidNotifications = futureAndroidNotifications.get();
+			notifications = futureAndroidNotifications.get();
 		} catch (InterruptedException | ExecutionException e) {
-			androidNotifications = notificationService.getNotifications(androidDevices,
+			notifications = notificationService.getNotifications(androidDevices,
 					notification, post, "Execution error",
 					Notification.Status.SEND_ERROR, Notification.DeviceType.ANDROID);
 		}
 
-		for (Notification androidNotification : androidNotifications) {
-			notificationRepository.save(androidNotification);
-		}
-
-
-		List<Notification> appleNotifications;
 		try {
-			appleNotifications = futureAppleNotifications.get();
+			notifications.addAll(futureAppleNotifications.get());
 		} catch (InterruptedException | ExecutionException e) {
-			appleNotifications = notificationService.getNotifications(appleDevices,
+			notifications.addAll(notificationService.getNotifications(appleDevices,
 					notification, post, "Execution error",
-					Notification.Status.SEND_ERROR, Notification.DeviceType.APPLE);
+					Notification.Status.SEND_ERROR, Notification.DeviceType.APPLE));
 		}
 
-		for (Notification appleNotification : appleNotifications) {
-			notificationRepository.save(appleNotification);
-		}
+		return notifications;
 	}
 
 	public NotificationView getCreatePostNotification(Post post, Integer networkId) {
@@ -130,32 +126,18 @@ public class MobileService {
 			person = null;
 		}
 
-		if (device != null){
-
-			device.person = person;
-
-			if (lat != null) {
-				device.lat = lat;
-			}
-			if (lng != null) {
-				device.lng = lng;
-			}
-		} else {
+		if (device == null) {
 			device = new MobileDevice();
 
 			device.deviceCode = deviceCode;
 			device.person = person;
 			device.active = true;
-
-			if (lat != null) {
-				device.lat = lat;
-			}
-			if (lng != null) {
-				device.lng = lng;
-			}
 			device.type = type;
-
 		}
+
+		device.person = person;
+		if (lat != null) device.lat = lat;
+		if (lng != null) device.lng = lng;
 
 		mobileDeviceRepository.save(device);
 	}

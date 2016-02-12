@@ -33,7 +33,10 @@ import java.util.concurrent.ExecutionException;
 public class AppleNotificationSender implements NotificationSender {
 
 	private AppleCertificateRepository appleCertificateRepository;
-	private ApnsClient<SimpleApnsPushNotification> apnsClient;
+
+	//needed for unit testing
+	protected AppleNotificationSender() {
+	}
 
 	@Autowired
 	public AppleNotificationSender(AppleCertificateRepository appleCertificateRepository) {
@@ -63,7 +66,7 @@ public class AppleNotificationSender implements NotificationSender {
 
 	@Override
 	public Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, List<String> devices) throws IOException {
-//		ApnsClient<SimpleApnsPushNotification> apnsClient;
+		ApnsClient<SimpleApnsPushNotification> apnsClient;
 		try {
 			apnsClient = getAPNsClient(notification.test);
 		} catch (SQLException | CertificateException | UnrecoverableKeyException |
@@ -88,7 +91,7 @@ public class AppleNotificationSender implements NotificationSender {
 		int i = index;
 		try {
 			int notificationsCounter = 0;
-			for (;i < devices.size(); i++) {
+			for (i = index; i < devices.size(); i++) {
 				String deviceCode =  devices.get(i);
 
 				SimpleApnsPushNotification apnsNotification =

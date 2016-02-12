@@ -6,5 +6,5 @@ public class NotificationResult {
 
 	Notification.Status status;
 	String errorMessage;
-	Boolean deviceDeactivated;
+	boolean deviceDeactivated;
 }
