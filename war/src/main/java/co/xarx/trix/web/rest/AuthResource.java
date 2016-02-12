@@ -5,7 +5,6 @@ import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.PasswordService;
-import org.hibernate.metamodel.relational.IllegalIdentifierException;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.builder.api.GoogleApi;
@@ -42,20 +41,12 @@ public class AuthResource {
 		switch (providerId) {
 			case "facebook":
 				allowSocialLogin = network.isFacebookLoginAllowed();
-				service = new ServiceBuilder()
-						.provider(FacebookApi.class)
-						.apiKey(network.facebookAppID)
-						.apiSecret(network.facebookAppSecret)
-						.build();
+				service = new ServiceBuilder().provider(FacebookApi.class).apiKey(network.facebookAppID).apiSecret(network.facebookAppSecret).build();
 				token = new Token(accessToken, network.facebookAppSecret);
 				break;
 			case "google":
 				allowSocialLogin = network.isGoogleLoginAllowed();
-				service = new ServiceBuilder()
-						.provider(GoogleApi.class)
-						.apiKey(network.googleAppID)
-						.apiSecret(network.googleAppSecret)
-						.build();
+				service = new ServiceBuilder().provider(GoogleApi.class).apiKey(network.googleAppID).apiSecret(network.googleAppSecret).build();
 				token = new Token(accessToken, network.googleAppSecret);
 				break;
 		}
@@ -76,23 +67,17 @@ public class AuthResource {
 	@POST
 	@Path("/forgotPassword")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response resetePassword(@FormParam("email") String email){
-		try{
-			passwordService.resetPassword(email);
-		} catch (IllegalArgumentException e){
-			return Response.status(Response.Status.BAD_REQUEST).build();
-		}
-
+	public Response resetePassword(@FormParam("email") String email) {
+		passwordService.resetPassword(email);
 		return Response.status(Response.Status.OK).build();
 	}
 
 	@PUT
 	@Path("/{hash}")
-	public Response updatePassword(@PathParam("hash") String hash, @FormParam("password") String password){
-		try{
+	public Response updatePassword(@PathParam("hash") String hash, @FormParam("password") String password) {
+
+		if (password != null && !password.isEmpty()) {
 			passwordService.updatePassword(hash, password);
-		} catch (IllegalIdentifierException e){
-			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 
 		return Response.status(Response.Status.OK).build();
