@@ -2,6 +2,7 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.domain.PasswordReset;
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PasswordResetRepository;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserRepository;
@@ -24,6 +25,8 @@ public class PasswordService {
 	private EmailService emailService;
 	@Autowired
 	private PasswordResetRepository passwordResetRepository;
+	@Autowired
+	private NetworkRepository networkRepository;
 
 	public void resetPassword(String email){
 		Assert.hasText(email, "Null email");
@@ -31,28 +34,23 @@ public class PasswordService {
 		Person person = personRepository.findByEmail(email);
 
 		Assert.notNull(person, "Person not found");
-
-//		PasswordReset checkReset = passwordResetRepository.findOne(QPasswordReset.passwordReset.user.eq(person.user));
-
 		PasswordReset checkReset = passwordResetRepository.findOne(person.user.id);
 
-		if( checkReset != null && checkReset.expiresAt.after(new Date()) ){
-			if(checkReset.expiresAt.before(new Date())){
+		if (checkReset == null || !checkReset.expiresAt.after(new Date())) {
+
+			PasswordReset passwordReset = new PasswordReset();
+			passwordReset.user = person.user;
+			passwordReset.hash = UUID.randomUUID().toString();
+
+			passwordResetRepository.save(passwordReset);
+
+			emailService.sendSimpleMail(person.getEmail(), "Recuperação de senha", createResetEmail(person, passwordReset.hash));
+		} else {
+			if (checkReset.expiresAt.before(new Date())) {
 				return;
 			}
 			throw new IllegalArgumentException();
 		}
-
-		PasswordReset passwordReset = new PasswordReset();
-		passwordReset.user = person.user;
-		passwordReset.hash = UUID.randomUUID().toString();
-
-		passwordResetRepository.save(passwordReset);
-
-		String emailBody = "Hi, " + person.getName() + "\n Here is your hash: " + passwordReset.hash + "\n";
-		String emailSubject = "We'll help you";
-
-		emailService.sendSimpleMail(person.getEmail(), emailSubject, emailBody);
 	}
 
 	public void updatePassword(String hash, String password){
@@ -70,6 +68,15 @@ public class PasswordService {
 		passwordResetRepository.delete(passwordReset);
 	}
 
+	public String createResetEmail(Person person, String hash){
+		String baseUrl;
+
+		baseUrl = "http://" + networkRepository.findByTenantId(person.tenantId).domain + "/api/auth/";
+
+		String emailBody = "Oi, " + person.getName() + "\n click here to reset you password: " + baseUrl + hash + "\n";
+
+		return emailBody;
+	}
 
 //	private void sendInviteEmail(PasswordReset passwordReset) {
 //		try {
