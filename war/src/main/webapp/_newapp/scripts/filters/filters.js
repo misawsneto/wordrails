@@ -36,4 +36,23 @@ angular.module('app')
     if(reverse) filtered.reverse();
     return filtered;
   };
+})
+
+.filter('generateRandom', function(){
+  return function(length, chars){
+    var mask = "";
+    if (chars.indexOf("a") > -1) mask += "abcdefghijklmnopqrstuvwxyz";
+    if (chars.indexOf("A") > -1) mask += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (chars.indexOf("#") > -1) mask += "0123456789";
+    if (chars.indexOf("!") > -1) mask += "~`!@#$%^&*()_+-={}[]:\";\'<>?,./|\\";
+    if (chars.indexOf("u") > -1) mask += "~!@$^*()_+-=:\";\',.|"; //unsafe -> < > # % { } | \ ^ ~ [ ] `
+    var result = "";
+    var i = length
+    for (; i > 0; --i) {
+      var index = Math.round(Math.random() * (mask.length - 1));
+      result += mask[index];
+    }
+
+    return result;
+  };
 });

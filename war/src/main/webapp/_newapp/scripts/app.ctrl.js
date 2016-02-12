@@ -187,5 +187,7 @@ angular.module('app')
           position: $scope.getToastPosition()
         });
       };
+
+      $scope.app.theme = 'default';
     }
   ]);

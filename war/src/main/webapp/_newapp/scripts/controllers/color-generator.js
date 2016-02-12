@@ -99,10 +99,16 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		themeProvider.definePalette('myAccent', $scope.makeColorsJsonObject($scope.palettes[1].colors));
     	themeProvider.definePalette('myWarn', $scope.makeColorsJsonObject($scope.palettes[2].colors));
 
-    	themeProvider.theme('default').primaryPalette('myPrimary').accentPalette('myAccent').warnPalette('myWarn');
-		themeProvider.reload($injector)
+    	var themeName = $filter('generateRandom')(4,"aA");
+    	themeProvider.theme(themeName).primaryPalette('myPrimary').accentPalette('myAccent').warnPalette('myWarn');
+    	// $mdTheming.generateTheme('asdfa')
+    	themeProvider.reload($injector);
+    	themeProvider.setDefaultTheme(themeName)
+    	$scope.app.theme = themeName;
 
-    	createCustomMDCssTheme(themeProvider, colorsProvider);
+    	createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
+
+    	// console.log($mdColorPalette,themeProvider);
 
 		// console.log($scope.makeColorsJson($scope.palettes[0].colors))
 		// console.log($scope.palettes[0].colors)

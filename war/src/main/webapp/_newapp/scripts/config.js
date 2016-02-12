@@ -36,6 +36,8 @@ angular.module('app')
   .config(function(trixProvider, $mdThemingProvider, $mdColorPalette, $provide, $mdColorsProvider){
     trixProvider.setConfig({ url: location.protocol + '//' + 'demo.xarxlocal.com' });
 
+    $mdThemingProvider.setNonce('default')
+
     $mdThemingProvider.definePalette('clear', { "500": "#FFFFFF", "50": "#FFFFFF", "100": "#FFFFFF", "200": "#FFFFFF", "300": "#FFFFFF", "400": "#FFFFFF", "600": "#cbcaca", "700": "#aeadad", "800": "#919090", "900": "#747474", "A100": "#f8f8f8", "A200": "#f4f3f3", "A400": "#ecebeb", "A700": "#aeadad" } );
     $mdThemingProvider.theme('default').primaryPalette('red').accentPalette('clear');
     $mdThemingProvider.theme('dark').primaryPalette('red').accentPalette( 'clear' ).dark();
@@ -71,12 +73,14 @@ angular.module('app')
 
     $mdThemingProvider.theme('default').primaryPalette('myPrimary').accentPalette('myAccent').warnPalette('myWarn');
 
+    $mdThemingProvider.alwaysWatchTheme(true);
+
     $provide.value('themeProvider', $mdThemingProvider);
     $provide.value('colorsProvider', $mdColorsProvider);
     
   })
 
-  .config(createCustomMDCssTheme)
+  .config(configCustomMDCssTheme)
 
   .run(function($rootScope){
     $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
@@ -95,14 +99,28 @@ angular.module('app')
   });
 
   //--------------
+
+  function configCustomMDCssTheme($mdThemingProvider, $mdColorsProvider){
+    createCustomMDCssTheme($mdThemingProvider, $mdColorsProvider)  
+  }
   
-  function createCustomMDCssTheme($mdThemingProvider, $mdColorsProvider) {
+  function createCustomMDCssTheme($mdThemingProvider, $mdColorsProvider, newThemeName) {
+    var newThemeName = newThemeName ? newThemeName : 'default'
     var colorStore, palette, paletteName, parsePalette, parseTheme, primaryPalette, ref, themeStore;
     colorStore = {};
+    //Function to convert hex format to a rgb color
+    function rgb2hex(rgb) {
+      return "#" + hex(rgb[0]) + hex(rgb[1]) + hex(rgb[2]);
+    }
+
+    function hex(x) {
+      var hexDigits = new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
+      return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+    }
     parsePalette = function(paletteName, palette) {
       var addHue, colors, copyColors, hueColors, paletteContrast;
       paletteContrast = palette;
-      hueColors = $mdThemingProvider._THEMES['default'].colors['primary'].hues;
+      hueColors = $mdThemingProvider._THEMES[newThemeName].colors['primary'].hues;
       colors = {};
       addHue = function(hueName) {
         var contrastColor;
@@ -120,7 +138,15 @@ angular.module('app')
             value: palette[colorName],
             contrast: contrastColor
           };
+        }else if(palette[colorName].contrast && palette[colorName].value){
+          var colVal = palette[colorName].value;
+          var colCon = palette[colorName].contrast;
+          colors[colorName] = {
+            value: rgb2hex(colVal),
+            contrast: (colCon[3]) ? ("rgba("+colCon[0]+","+colCon[1]+","+colCon[2]+","+colCon[3]+")") : ("rgb("+colCon[0]+","+colCon[1]+","+colCon[2]+")")
+          };
         }
+          console.log(colors[colorName]);
       };
       colorStore[paletteName] = colors;
       Object.keys(palette).forEach(copyColors);
@@ -154,6 +180,172 @@ angular.module('app')
       Object.keys(themeColorGroups).forEach(defineColors);
     };
     Object.keys($mdThemingProvider._THEMES).forEach(parseTheme);
-    primaryPalette = $mdThemingProvider._THEMES['default'].colors.primary.name;
+    primaryPalette = $mdThemingProvider._THEMES[newThemeName].colors.primary.name;
     $mdColorsProvider.storeAndLoadPalettes(colorStore, themeStore, primaryPalette);
   }
+
+
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+(function() {
+  return angular.module('material.core.colors', ['material.core.theming']).provider('$mdColors', function($mdColorPalette) {
+    var DARK_CONTRAST_COLOR, LIGHT_CONTRAST_COLOR, STRONG_LIGHT_CONTRAST_COLOR, addCustomStyle, clearStyleSheet, index, style, stylesheet;
+    style = angular.element('<style id="customMDCss" type="text/css"></style>');
+    document.head.appendChild(style[0]);
+    stylesheet = style[0].sheet;
+    index = 0;
+    DARK_CONTRAST_COLOR = [0, 0, 0, 0.87];
+    LIGHT_CONTRAST_COLOR = [255, 255, 255, 0.87];
+    STRONG_LIGHT_CONTRAST_COLOR = [255, 255, 255];
+    addCustomStyle = function(cssname, name, color, contrast) {
+      if (contrast == null) {
+        contrast = '';
+      }
+      if (contrast) {
+        contrast = "color: " + contrast;
+      }
+      stylesheet.insertRule(".md-" + cssname + "-" + name + ".text { " + contrast + " !important }", index);
+      stylesheet.insertRule(".md-" + cssname + "-" + name + ".background { background-color: " + color + "; " + contrast + " }", index + 1);
+      index += 2;
+    };
+    clearStyleSheet = function() {
+      var results;
+      results = [];
+      index = 0;
+      while (stylesheet.cssRules.length > 0) {
+        results.push(stylesheet.deleteRule(0));
+      }
+      return results;
+    };
+    return {
+      colorNames: [],
+      colorStore: {},
+      colorSelected: null,
+      themeNames: [],
+      themeStore: {},
+      getContrastColor: function(palette, hueName) {
+        var contrastDarkColors, contrastDefaultColor, contrastLightColors, contrastStrongLightColors;
+        contrastDefaultColor = palette.contrastDefaultColor, contrastLightColors = palette.contrastLightColors, contrastStrongLightColors = palette.contrastStrongLightColors, contrastDarkColors = palette.contrastDarkColors;
+        if (angular.isString(contrastLightColors)) {
+          contrastLightColors = contrastLightColors.split(' ');
+        }
+        if (angular.isString(contrastStrongLightColors)) {
+          contrastStrongLightColors = contrastStrongLightColors.split(' ');
+        }
+        if (angular.isString(contrastDarkColors)) {
+          contrastDarkColors = contrastDarkColors.split(' ');
+        }
+        if (contrastDefaultColor === 'light') {
+          if ((contrastDarkColors != null ? contrastDarkColors.indexOf(hueName) : void 0) > -1) {
+            return DARK_CONTRAST_COLOR;
+          } else {
+            if ((contrastStrongLightColors != null ? contrastStrongLightColors.indexOf(hueName) : void 0) > -1) {
+              return STRONG_LIGHT_CONTRAST_COLOR;
+            } else {
+              return LIGHT_CONTRAST_COLOR;
+            }
+          }
+        } else {
+          if ((contrastLightColors != null ? contrastLightColors.indexOf(hueName) : void 0) > -1) {
+            if ((contrastStrongLightColors != null ? contrastStrongLightColors.indexOf(hueName) : void 0) > -1) {
+              return STRONG_LIGHT_CONTRAST_COLOR;
+            } else {
+              return LIGHT_CONTRAST_COLOR;
+            }
+          } else {
+            return DARK_CONTRAST_COLOR;
+          }
+        }
+      },
+      storeAndLoadPalettes: function(colors, themes, primaryPalette) {
+        this.colorStore = colors;
+        this.themeStore = themes;
+        this.colorNames = Object.keys(colors);
+        this.themeNames = Object.keys(themes);
+        this.loadPalette(primaryPalette);
+      },
+      clearStyleSheet: function(){
+        return clearStyleSheet();
+      }, 
+      loadPalette: function(newPalette) {
+        var cleanedThemeName, color, group, groupName, name, ref, ref1, theme, themeName;
+        if (this.colorSelected) {
+          clearStyleSheet();
+        }
+        this.colorSelected = newPalette;
+        ref = this.colorStore[newPalette];
+        for (name in ref) {
+          color = ref[name];
+          addCustomStyle('fg', name, color.value, color.contrast);
+          addCustomStyle('bg', name, color.value, color.contrast);
+        }
+        ref1 = this.themeStore;
+        for (themeName in ref1) {
+          theme = ref1[themeName];
+          cleanedThemeName = themeName === 'default' ? '' : themeName + '-';
+          for (groupName in theme) {
+            group = theme[groupName];
+            for (name in group) {
+              color = group[name];
+              if(color)
+                addCustomStyle(cleanedThemeName + groupName, name, color.value, color.contrast);
+            }
+          }
+        }
+      },
+      $get: function() {
+        return {
+          colorNames: this.colorNames,
+          colorStore: this.colorStore,
+          colorSelected: this.colorSelected,
+          themeNames: this.themeNames,
+          themeStore: this.themeStore,
+          loadPalette: this.loadPalette
+        };
+      }
+    };
+  }).directive('mdStyle', function($mdColors, $parse) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        var color, colorNames, colorObject, colorSelected, colorStore, cssName, cssValue, hue, hue2, parsedStyles, ref, results, styles, themeNames, themeStore;
+        colorSelected = $mdColors.colorSelected, colorStore = $mdColors.colorStore, colorNames = $mdColors.colorNames, themeStore = $mdColors.themeStore, themeNames = $mdColors.themeNames;
+        parsedStyles = $parse(attrs.mdStyle);
+        styles = parsedStyles();
+        results = [];
+        for (cssName in styles) {
+          cssValue = styles[cssName];
+          ref = cssValue.split('.'), color = ref[0], hue = ref[1], hue2 = ref[2];
+          if (color === 'primary' || color === 'accent' || color === 'background' || color === 'foreground' || color === 'warn') {
+            color = themeStore['default'][color];
+          } else if (indexOf.call(colorNames, color) < 0) {
+            color = colorSelected;
+            if (themeStore[color]) {
+              color = themeStore[color];
+              if (hue2) {
+                color = color[hue][hue2];
+              } else {
+                color = color[hue]['default'];
+              }
+            }
+          }
+          color = colorStore[color] || color;
+          colorObject = color[hue] || color["default"];
+          if (colorObject) {
+            if (cssName === 'background-color') {
+              element.css('color', colorObject.contrast);
+            }
+            if (angular.isString(attrs.mdContrast)) {
+              results.push(element.css(cssName, colorObject.contrast));
+            } else {
+              results.push(element.css(cssName, colorObject.value));
+            }
+          } else {
+            results.push(void 0);
+          }
+        }
+        return results;
+      }
+    };
+  });
+})();
