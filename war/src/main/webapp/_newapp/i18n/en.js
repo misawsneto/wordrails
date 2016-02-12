@@ -61,9 +61,11 @@
 				"CUSTOM_DOMAIN": "Custom domain"
 			}
 		},
+		"SET_COLOR": "Set the color palettes",
 		"COLOR_PRIMARY": "Primary Colors",
-		"COLOR_SECONDARY": "Secondary Colors",
-		"COLOR_BACKGROUND": "Background Colors"
+		"COLOR_ACCENT": "Secondary Colors",
+		"COLOR_WARN": "Warning Colors",
+		"COLOR_BACKGROUND": "Background Color"
 	},
 	"messages": {
 		"network":{

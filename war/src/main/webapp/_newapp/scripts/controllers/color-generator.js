@@ -2,7 +2,7 @@
 
 // Define our default color generator controller!
 angular.module('app').controller('ColorGeneratorCtrl',
-function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $filter )
+function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $filter, themeProvider, colorsProvider, $mdTheming, $injector)
 {
 	function DialogImportCtrl($scope, $mdDialog, $mdColorPalette ){
 		$scope.code = '';
@@ -13,6 +13,35 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		$scope.import = function ( code ) {
 			$mdDialog.hide( code );
 		};
+	}
+
+	$scope.baseColorFilter = function (color) { 
+	    return color.name === '500' || color.name === '300' || color.name === '800' || color.name === 'A100'; 
+	};
+
+	// A200, A100, A400 and A700
+	$scope.accentColorFilter = function (color) { 
+	    return color.name === 'A200' || color.name === 'A100' || color.name === 'A400' || color.name === 'A700';
+	};
+
+	$scope.backgrounds = 
+		["#FFFFFF",
+		"#EFEFEF",
+		"#D5D5D5",
+		"#AEAEAE",
+		"#929292",
+		"#6F6F6F",
+		"#5F5F5F",
+		"#505050",
+		"#414141",
+		"#313131",
+		"#222222",
+		"#131313"]
+
+	$scope.backgroundPalette = $scope.backgrounds[0]
+
+	$scope.changeBackgroundColor = function(color){
+		$scope.backgroundPalette = color
 	}
 
 	// Init function.
@@ -41,9 +70,21 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		// Add a default palette
 		// $scope.addPaletteFromObject( $mdColorPalette.indigo );
 		
-		$scope.addBasePalette($filter('translate')('settings.COLOR_PRIMARY'));
-		$scope.addBasePalette($filter('translate')('settings.COLOR_SECONDARY'));
-		$scope.addBasePalette($filter('translate')('settings.COLOR_BACKGROUND'));
+		$scope.addPaletteFromObject(themeProvider.extendPalette('myPrimary',{}), $filter('translate')('settings.COLOR_PRIMARY'))
+		$scope.addPaletteFromObject(themeProvider.extendPalette('myAccent',{}), $filter('translate')('settings.COLOR_ACCENT'))
+		$scope.addPaletteFromObject(themeProvider.extendPalette('myWarn',{}), $filter('translate')('settings.COLOR_WARN'))
+
+		$scope.calcPalette(0);
+		$scope.calcPalette(1);
+		$scope.calcPalette(2);
+
+		// window.console && console.log($mdColorPalette.indigo)
+		// window.console && console.log(themeProvider.extendPalette('settingsPrimary',{}));
+  //   	window.console && console.log($mdTheming.extendPalette('settingsBackground',{}));
+
+		$scope.primaryPalette = $scope.palettes[0];
+		$scope.accentPalette = $scope.palettes[1];
+		$scope.warnPalette = $scope.palettes[2];
 
 		// Define theme defaults
 		$scope.theme = {
@@ -51,6 +92,28 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
             palettes: $scope.palettes
 		};
 	};
+
+	$scope.setTheme = function(){
+
+		themeProvider.definePalette('myPrimary', $scope.makeColorsJsonObject($scope.palettes[0].colors));
+		themeProvider.definePalette('myAccent', $scope.makeColorsJsonObject($scope.palettes[1].colors));
+    	themeProvider.definePalette('myWarn', $scope.makeColorsJsonObject($scope.palettes[2].colors));
+
+    	themeProvider.theme('default').primaryPalette('myPrimary').accentPalette('myAccent').warnPalette('myWarn');
+		themeProvider.reload($injector)
+
+    	createCustomMDCssTheme(themeProvider, colorsProvider);
+
+		// console.log($scope.makeColorsJson($scope.palettes[0].colors))
+		// console.log($scope.palettes[0].colors)
+		// window.console && console.log(
+		// 	$scope.makeColorsJson($scope.palettes[0].colors), 
+		// 	$scope.makeColorsJson($scope.palettes[1].colors),
+		// 	$scope.makeColorsJson($scope.palettes[2].colors))
+		// var primary = $mdTheming.extendPalette('myPrimary',{})
+		// var accent = $mdTheming.extendPalette('myAccent',{})
+		// var warn = $mdTheming.extendPalette('myWarn',{})
+	}
 
 	$scope.initSpeedDial = function(){
 		$scope.dialOpen = false;
@@ -80,7 +143,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 	// Function to add a palette from
 	// a JSON object (angularjs material
 	// design format)
-	$scope.addPaletteFromObject = function ( objectRef )
+	$scope.addPaletteFromObject = function ( objectRef, paletteName )
 	{
 		// First, clone object to clean it.
 		var paletteObj = angular.copy( objectRef );
@@ -116,9 +179,20 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		palette.colors = colors;
 		palette.base = base;
 
+		if(paletteName)
+			palette.name = paletteName
+
 		// Push to the palette repository.
 		$scope.palettes.push( palette );
 	};
+
+	$scope.tinycolor = function (value, name){
+		return tinycolor(value, name);
+	}
+
+	$scope.isLight = function (hex){
+		return tinycolor(hex).isLight();
+	}
 
 	function getColorObject(value, name) {
 		var c = tinycolor(value);
@@ -191,6 +265,20 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		exportable.contrastDefaultColor = 'light';
 		exportable.contrastDarkColors = darkColors.join(' ');
 		return angular.toJson(exportable, 2).replace(/"/g, "'");
+	};
+
+	$scope.makeColorsJsonObject = function(colors){
+		var exportable = {};
+		var darkColors = [];
+		angular.forEach(colors, function(value, key){
+			exportable[value.name] = value.hex;
+			if (value.darkContrast) {
+				darkColors.push(value.name);
+			}
+		});
+		exportable.contrastDefaultColor = 'light';
+		exportable.contrastDarkColors = darkColors.join(' ');
+		return exportable;
 	};
 
 	// Function to calculate all colors from base

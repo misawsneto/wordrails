@@ -46,8 +46,8 @@ pre {
 }
 
 .md-accent, .md-accent input, .md-accent label {
-	color: #333 !important;
-	fill: #333 !important;
+	/* color: #333 !important; */
+	/* fill: #333 !important; */
 }
 
 .logo-text {
@@ -74,7 +74,7 @@ pre {
 .palette {
 	box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
 	/* margin: 10px; */
-	min-width: 280px;
+	min-width: 120px;
 	max-width: 500px;
 	float: left;
 }
@@ -101,6 +101,7 @@ body .palette-colors md-list-item {
 	display: block;
 	min-height: 35px
 }
+
 .palette-color-light {
 	color: rgba(255, 255, 255, 0.87);
 	text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
@@ -115,6 +116,18 @@ body .palette-colors md-list-item {
 	display: inline-block;
 	line-height: 35px;
 }
+
+.background-palette-color{
+	line-height: inherit!important;
+	min-height: inherit!important;
+}
+
+.background-palette-color span.color-text{
+	line-height: inherit!important;
+	min-height: inherit!important;
+	height: inherit!important;
+}
+
 
 .palette-color-hex {
 	font-size: 11px;

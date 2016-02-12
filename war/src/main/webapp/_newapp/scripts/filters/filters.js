@@ -22,4 +22,18 @@ angular.module('app')
     return function(color){
         return tinycolor( color ).lighten( 5 );
     };
+})
+
+.filter('orderByAccent', function(){
+   return function(items, field, reverse) {
+    var filtered = [];
+    angular.forEach(items, function(item) {
+      filtered.push(item);
+    });
+    filtered.sort(function (a, b) {
+      return ((b.name ===  'A200') || (b.name < a.name) ? 1 : -1) ;
+    });
+    if(reverse) filtered.reverse();
+    return filtered;
+  };
 });

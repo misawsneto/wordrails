@@ -33,7 +33,7 @@ angular.module('app')
     // $translateProvider.useLocalStorage();
   }])
 
-  .config(function(trixProvider, $mdThemingProvider){
+  .config(function(trixProvider, $mdThemingProvider, $mdColorPalette, $provide, $mdColorsProvider){
     trixProvider.setConfig({ url: location.protocol + '//' + 'demo.xarxlocal.com' });
 
     $mdThemingProvider.definePalette('clear', { "500": "#FFFFFF", "50": "#FFFFFF", "100": "#FFFFFF", "200": "#FFFFFF", "300": "#FFFFFF", "400": "#FFFFFF", "600": "#cbcaca", "700": "#aeadad", "800": "#919090", "900": "#747474", "A100": "#f8f8f8", "A200": "#f4f3f3", "A400": "#ecebeb", "A700": "#aeadad" } );
@@ -61,22 +61,42 @@ angular.module('app')
     $mdThemingProvider.theme('grey').primaryPalette('grey').accentPalette('clear');
     $mdThemingProvider.theme('blue-grey').primaryPalette('blue-grey').accentPalette('clear');
 
-    $mdThemingProvider.definePalette('settingsPrimary',{
+    $mdThemingProvider.definePalette('myPrimary',{
      '500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'
     });
 
+    $mdThemingProvider.definePalette('myAccent', $mdColorPalette.indigo);
 
-    $mdThemingProvider.definePalette('settingsBackground',{
-     '500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'dark', 'contrastDarkColors': '50 100 A100 A200'
-    });
+    $mdThemingProvider.definePalette('myWarn', $mdColorPalette.red);
 
-    $mdThemingProvider.theme('default').primaryPalette('settingsPrimary').accentPalette('indigo').warnPalette('red');
+    $mdThemingProvider.theme('default').primaryPalette('myPrimary').accentPalette('myAccent').warnPalette('myWarn');
 
-    window.console && console.log($mdThemingProvider.theme('default'));
-
+    $provide.value('themeProvider', $mdThemingProvider);
+    $provide.value('colorsProvider', $mdColorsProvider);
+    
   })
 
-  .config(function($mdThemingProvider, $mdColorsProvider) {
+  .config(createCustomMDCssTheme)
+
+  .run(function($rootScope){
+    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
+      var errorObj = {
+        event: event, 
+        toState: toState, 
+        toParams: toParams, 
+        fromState: fromState, 
+        fromParams: fromParams, 
+        error: error
+      }
+
+      window.console && console.error(errorObj);
+      window.console && console.error(error.message);
+    });
+  });
+
+  //--------------
+  
+  function createCustomMDCssTheme($mdThemingProvider, $mdColorsProvider) {
     var colorStore, palette, paletteName, parsePalette, parseTheme, primaryPalette, ref, themeStore;
     colorStore = {};
     parsePalette = function(paletteName, palette) {
@@ -136,24 +156,4 @@ angular.module('app')
     Object.keys($mdThemingProvider._THEMES).forEach(parseTheme);
     primaryPalette = $mdThemingProvider._THEMES['default'].colors.primary.name;
     $mdColorsProvider.storeAndLoadPalettes(colorStore, themeStore, primaryPalette);
-  })
-
-  .run(function($rootScope){
-    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
-      // window.console && console.log(toState);
-      // window.console && console.log(fromState);
-      var errorObj = {
-        event: event, 
-        toState: toState, 
-        toParams: toParams, 
-        fromState: fromState, 
-        fromParams: fromParams, 
-        error: error
-      }
-
-      window.console && console.error(errorObj);
-      window.console && console.error(error.message);
-    });
-  })
-  
-  ;
+  }

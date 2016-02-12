@@ -61,9 +61,11 @@
 				"CUSTOM_DOMAIN": "Domínio personalizado"
 			}
 		},
+		"SET_COLOR": "Configure as paletas de cores",
 		"COLOR_PRIMARY": "Cores Primárias",
-		"COLOR_SECONDARY": "Cores Secundárias",
-		"COLOR_BACKGROUND": "Cores de Fundo"
+		"COLOR_ACCENT": "Cores Secundárias",
+		"COLOR_WARN": "Cores de Alertas",
+		"COLOR_BACKGROUND": "Cor de Fundo"
 	},
 	"messages": {
 		"network":{

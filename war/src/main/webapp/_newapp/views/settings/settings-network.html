@@ -3,13 +3,13 @@
 <div class="header-custom text-center animated box-shadow">
 </div>
 
-<div class="wrapper-lg animated">
+<div class="wrapper-lg animated m-b-lg">
   <div class="panel panel-card block-800 m-auto pos-rlt md-whiteframe-z2">
     <md-tabs md-dynamic-height md-border-bottom class="md-primary">
       <md-tab label="{{'settings.network.tabs.SETTINGS' | translate}}">
         <md-content class="md-padding">
-          <div class="w-xxl m-auto p-t p-b-xxl">
-	          <md-input-container class="">
+          <div class="w-xxl m-auto p-t-md p-b-md">
+	          <md-input-container class="m-b-sm m-t-sm w-full">
 	            <label translate="settings.network.settings.NAME">Nome</label>
 	            <input ng-model="network.name">
 	          </md-input-container>
@@ -54,7 +54,7 @@
                   </label>
                 </p>
                 <p>
-                  <md-input-container class="w-lg">
+                  <md-input-container class="m-b-sm m-t-sm w-lg">
                     <label translate="settings.network.settings.LANGUAGE">Idioma</label>
                     <md-select ng-model="network.language" ng-change="setLanguage(network.language)">
                       <md-option ng-repeat="language in [{ref:'en', name: 'English'}, {ref: 'pt', name: 'Português'}]" value="{{language.ref}}">
@@ -74,16 +74,20 @@
             <div class="row pos-rlt">
               <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
               <div class="w-xxl m-auto">
-                <div class="md-form-group ">
-                  <input class="md-input" ng-model="network.subdomain" disabled>
+                <md-input-container class="m-b-sm m-t-sm w-full">
                   <label translate="titles.SUBDOMAIN">Subdomínio</label>
-                </div>
+                  <input ng-model="network.subdomain" disabled>
+                </md-input-container>
               </div>
               <div class="w-xxl m-auto">
-                <div class="md-form-group ">
+                <!-- <div class="md-form-group ">
                   <input class="md-input" ng-model="network.domain">
                   <label translate="settings.network.domain_analytics.CUSTOM_DOMAIN">Domínio personalizado</label>
-                </div>
+                </div> -->
+                <md-input-container class="m-b-sm m-t-sm w-full">
+                  <label translate="settings.network.domain_analytics.CUSTOM_DOMAIN">Domínio personalizado</label>
+                  <input ng-model="network.domain">
+                </md-input-container>
               </div>
             </div>
             <!-- /domain settings -->
@@ -93,16 +97,24 @@
             <div class="row pos-rlt">
               <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
               <div class="w-xxl m-auto">
-                <div class="md-form-group ">
+                <!-- <div class="md-form-group ">
                   <input class="md-input" ng-model="network.trackingId">
                   <label>Google Analytics - TRACKING ID</label>
-                </div>
+                </div> -->
+                <md-input-container class="m-b-sm m-t-sm w-full">
+                  <label>Google Analytics - TRACKING ID</label>
+                  <input ng-model="network.trackingId">
+                </md-input-container>
               </div>
               <div class="w-xxl m-auto">
-                <div class="md-form-group ">
+                <!-- <div class="md-form-group ">
                   <input class="md-input" ng-model="network.flurryKey">
                   <label>Flurry - API KEY</label>
-                </div>
+                </div> -->
+                <md-input-container class="m-b-sm m-t-sm w-full">
+                  <label>Flurry - API KEY</label>
+                  <input ng-model="network.flurryKey">
+                </md-input-container>
               </div>
             </div>
         </md-content>
@@ -151,54 +163,60 @@
       <md-tab label="{{'settings.network.tabs.FOOTER' | translate}}">
         <md-content class="md-padding">
         		<div class="m-b text-muted text-md text-u-c">RODAPÉ DA PÁGINA</div>
-	        		<div class="p-r-xxl p-l-xxl">
-	        			<div class="p-r-xxl p-l-xxl">
-		              <md-input-container class="">
-		                <label>Link da página/perfil do Facebook</label>
-		                <input ng-model="network.facebookLink">
-		              </md-input-container>
-		              <md-input-container class="">
-		                <label>Link do perfil do Twitter</label>
-		                <input ng-model="network.twitterLink">
-		              </md-input-container>
-		              <md-input-container class="">
-		                <label>Link do canal do Youtube</label>
-		                <input ng-model="network.youtubeLink">
-		              </md-input-container>
-		              <md-input-container class="">
-		                <label>Link da página/perfil do Google+</label>
-		                <input ng-model="network.googlePlusLink">
-		              </md-input-container>
-	              </div>
+	        		<div class="p row">
+                <div class="col-lg-6">
+  	              <md-input-container class="m-b-sm m-t-sm w-full">
+  	                <label>Link da página/perfil do Facebook</label>
+  	                <input ng-model="network.facebookLink">
+  	              </md-input-container>
+                  <md-input-container class="m-b-sm m-t-sm w-full">
+                    <label>Link do perfil do Twitter</label>
+                    <input ng-model="network.twitterLink">
+                  </md-input-container>
+                </div>
+                <div class="col-lg-6">
+  	              <md-input-container class="m-b-sm m-t-sm w-full">
+  	                <label>Link do canal do Youtube</label>
+  	                <input ng-model="network.youtubeLink">
+  	              </md-input-container>
+  	              <md-input-container class="m-b-sm m-t-sm w-full">
+  	                <label>Link da página/perfil do Google+</label>
+  	                <input ng-model="network.googlePlusLink">
+  	              </md-input-container>
+                </div>
 		          </div>
             <div class="line line-dashed b-b line-lg pull-in"></div>
             <div class="m-b text-muted text-md text-u-c">Rodapé da tela de login</div>
-              <div class="p-r-xxl p-l-xxl">
-		        			<div class="p-r-xxl p-l-xxl">
-		              <div class="m-t-lg md-form-group  m-t text-md">
-			              <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="3"></textarea>
-			              <label></label>
-			              <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
-			            </div>
-		            </div>
-	            </div>
+              <!-- <div class="p-r-xxl p-l-xxl">
+                              <div class="m-t-lg md-form-group  m-t text-md">
+                                <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="3"></textarea>
+                                <label></label>
+                                <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
+                              </div>
+                            </div> -->
+
+              <md-input-container class="md-block">
+                <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="5" md-select-on-focus>
+                </textarea>
+                <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
+              </md-input-container>
         </md-content>
       </md-tab>
       <md-tab label="{{'settings.network.tabs.CUSTOMIZATION' | translate}}">
         <md-content class="md-padding">
         	<div class="m-t-xxl text-muted text-md text-u-c">Personalização</div>
-      		<md-input-container class="">
+      		<md-input-container class="m-b-sm m-t-sm ">
             <label>Aba de estações</label>
             <input ng-model="network.stationMenuName">
             <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
                 Substituir a palavra "estação" do menu lateral.</small> -->
             <span class="md-input-msg left">Substituir a palavra "estação" do menu lateral.</span>
           </md-input-container>
-          <md-input-container class="">
+          <md-input-container class="m-b-sm m-t-sm ">
             <label>Aba de início</label>
             <input ng-model="network.homeTabName">
           </md-input-container>
-          <md-input-container class="md-block">
+          <md-input-container class="m-b-sm m-t-sm md-block">
             <label>Texto de convite por email</label>
             <textarea ng-model="network.invitationMessage" columns="1" rows="5"></textarea>
             <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
@@ -217,12 +235,6 @@
       md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
     </div> -->
   </div>
-</div>
-    <md-button ng-click="saveChanges()"
-      id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
-      ng-if="app.networkAdmin && app.isLogged"
-      tooltip="Salvar" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
-      aria-label="Salvar">
-      <i class="mdi mdi-content-save"></i>
-    </md-button>
-</div>
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg">
+  <i class="mdi-content-save i-24"></i>
+</md-button>

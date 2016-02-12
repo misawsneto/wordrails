@@ -114,6 +114,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
     clearStyleSheet = function() {
       var results;
       results = [];
+      index = 0;
       while (stylesheet.cssRules.length > 0) {
         results.push(stylesheet.deleteRule(0));
       }
@@ -166,6 +167,9 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         this.themeNames = Object.keys(themes);
         this.loadPalette(primaryPalette);
       },
+      clearStyleSheet: function(){
+        return clearStyleSheet();
+      }, 
       loadPalette: function(newPalette) {
         var cleanedThemeName, color, group, groupName, name, ref, ref1, theme, themeName;
         if (this.colorSelected) {
@@ -186,7 +190,8 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
             group = theme[groupName];
             for (name in group) {
               color = group[name];
-              addCustomStyle(cleanedThemeName + groupName, name, color.value, color.contrast);
+              if(color)
+                addCustomStyle(cleanedThemeName + groupName, name, color.value, color.contrast);
             }
           }
         }
