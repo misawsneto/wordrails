@@ -1,8 +1,7 @@
-package co.xarx.trix.test.unit;
+package co.xarx.trix.services;
 
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
-import co.xarx.trix.services.NetworkService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

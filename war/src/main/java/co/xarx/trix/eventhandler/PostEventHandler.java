@@ -81,7 +81,7 @@ public class PostEventHandler {
 			schedulerService.schedule(post.id, post.scheduledDate);
 		} else if (post.state.equals(Post.STATE_PUBLISHED)) {
 			if (post.notify)
-				postService.sentNewPostNotification(post);
+				postService.sendNewPostNotification(post);
 
 			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 		}

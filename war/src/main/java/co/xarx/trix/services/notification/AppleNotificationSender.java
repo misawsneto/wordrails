@@ -24,9 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Component
@@ -35,7 +33,7 @@ public class AppleNotificationSender implements NotificationSender {
 	private AppleCertificateRepository appleCertificateRepository;
 
 	//needed for unit testing
-	protected AppleNotificationSender() {
+	AppleNotificationSender() {
 	}
 
 	@Autowired
@@ -65,7 +63,7 @@ public class AppleNotificationSender implements NotificationSender {
 	}
 
 	@Override
-	public Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, List<String> devices) throws IOException {
+	public Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, Collection<String> devices) throws IOException {
 		ApnsClient<SimpleApnsPushNotification> apnsClient;
 		try {
 			apnsClient = getAPNsClient(notification.test);
@@ -82,7 +80,12 @@ public class AppleNotificationSender implements NotificationSender {
 		payloadBuilder.setAlertBody(notification.message);
 		payloadBuilder.setContentAvailable(true);
 
-		return sendMessageToDevices(payloadBuilder.buildWithDefaultMaximumLength(), devices, apnsClient, 0, new HashMap<>());
+		return sendMessageToDevices(payloadBuilder.buildWithDefaultMaximumLength(), new ArrayList(devices), apnsClient, 0, new HashMap<>());
+	}
+
+	PushNotificationResponse get(ApnsClient<SimpleApnsPushNotification> apnsClient,
+										 SimpleApnsPushNotification apnsNotification) throws ExecutionException, InterruptedException {
+		return apnsClient.sendNotification(apnsNotification).get();
 	}
 
 	private Map<String, NotificationResult> sendMessageToDevices(String payloader, List<String> devices,
@@ -97,18 +100,17 @@ public class AppleNotificationSender implements NotificationSender {
 				SimpleApnsPushNotification apnsNotification =
 						new SimpleApnsPushNotification(TokenUtil.sanitizeTokenString(deviceCode), "topic", payloader);
 
-				Future<PushNotificationResponse<SimpleApnsPushNotification>> responseFuture = apnsClient.sendNotification(apnsNotification);
-				PushNotificationResponse<SimpleApnsPushNotification> response = responseFuture.get();
+				PushNotificationResponse response = get(apnsClient, apnsNotification);
 
 				NotificationResult notificationResult = new NotificationResult();
 				if (response.isAccepted()) {
-					notificationResult.status = Notification.Status.SUCCESS;
+					notificationResult.setStatus(Notification.Status.SUCCESS);
 				} else {
-					notificationResult.status = Notification.Status.SERVER_ERROR;
-					notificationResult.errorMessage = response.getRejectionReason();
+					notificationResult.setStatus(Notification.Status.SERVER_ERROR);
+					notificationResult.setErrorMessage(response.getRejectionReason());
 
 					if (response.getTokenInvalidationTimestamp() != null) {
-						notificationResult.deviceDeactivated = true;
+						notificationResult.setDeviceDeactivated(true);
 					}
 				}
 

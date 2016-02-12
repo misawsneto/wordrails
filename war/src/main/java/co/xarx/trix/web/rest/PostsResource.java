@@ -314,7 +314,9 @@ public class PostsResource {
 		String body = postRepository.findPostBodyById(postId);
 		Post post = postRepository.findOne(postId);
 
-		asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> postService.countPostRead(post.id, person.id, request.getRequestedSessionId()));
+		String requestedSessionId = request.getRequestedSessionId();
+		asyncService.run(TenantContextHolder.getCurrentTenantId(), () ->
+				postService.countPostRead(post.id, person.id, requestedSessionId));
 
 		StringResponse content = new StringResponse();
 		content.response = body;

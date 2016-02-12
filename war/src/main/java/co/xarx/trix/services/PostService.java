@@ -1,17 +1,17 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.MobileDevice;
-import co.xarx.trix.domain.Notification;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.StationRole;
+import co.xarx.trix.converter.PostConverter;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
@@ -29,6 +29,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.ResultsExtractor;
@@ -46,6 +47,9 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 @Service
 public class PostService {
 
+	@Value("${spring.profiles.active:'dev'}")
+	private String profile;
+
 	private static final Logger log = LoggerFactory.getLogger(PostService.class);
 
 	@Autowired
@@ -55,9 +59,15 @@ public class PostService {
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
+	private PostConverter postConverter;
+	@Autowired
+	private TrixAuthenticationProvider authProvider;
+	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
 	private MobileDeviceRepository mobileDeviceRepository;
+	@Autowired
+	private NetworkRepository networkRepository;
 	@Autowired
 	private ESPostRepository esPostRepository;
 	@Autowired
@@ -138,7 +148,7 @@ public class PostService {
 		return new ImmutablePair(total, postView);
 	}
 
-	public void sentNewPostNotification(Post post) throws NotificationException {
+	public void sendNewPostNotification(Post post) throws NotificationException {
 		List<MobileDevice> mobileDevices;
 		List<StationRole> stationRoles;
 		if (stationRepository.isUnrestricted(post.getStationId())) {
@@ -147,20 +157,42 @@ public class PostService {
 			stationRoles = stationRolesRepository.findByStation(post.station);
 			List<Integer> personIds = stationRoles.stream().map(stationRole -> stationRole.person.id).collect(Collectors.toList());
 
+			personIds.remove(authProvider.getLoggedPerson().getId());
+
 			mobileDevices = mobileDeviceRepository.findByPersonIds(personIds);
 		}
 
-		List<Notification> notifications = mobileService.sendNotifications(post, mobileDevices);
-		for (Notification notification : notifications) {
-			notificationRepository.save(notification);
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		Network network = networkRepository.findByTenantId(tenantId); //this should be removed in next android releases
+
+		Collection appleDevices = mobileService.getDeviceCodes(mobileDevices, MobileDevice.Type.APPLE);
+		Collection androidDevices = mobileService.getDeviceCodes(mobileDevices, MobileDevice.Type.ANDROID);
+
+		NotificationView notification = getCreatePostNotification(post, network.id);
+		List<Notification> notifications = mobileService.sendNotifications(post, notification, androidDevices, appleDevices);
+		for (Notification n : notifications) {
+			notificationRepository.save(n);
 		}
+	}
+
+	public NotificationView getCreatePostNotification(Post post, Integer networkId) {
+		NotificationView notification = new NotificationView();
+		notification.type = Notification.Type.POST_ADDED.toString();
+		notification.message = post.title;
+		notification.networkId = networkId;
+		notification.post = postConverter.convertTo(post);
+		notification.postId = post.id;
+		notification.postTitle = post.title;
+		notification.postSnippet = StringUtil.simpleSnippet(post.body);
+		notification.test = !profile.equals("prod");
+		return notification;
 	}
 
 	public void publishScheduledPost(Integer postId, boolean allowNotifications) throws NotificationException {
 		Post scheduledPost = postRepository.findOne(postId);
 		if (scheduledPost != null && scheduledPost.state.equals(Post.STATE_SCHEDULED)) {
 			if (scheduledPost.notify && allowNotifications) {
-				sentNewPostNotification(scheduledPost);
+				sendNewPostNotification(scheduledPost);
 			}
 
 			scheduledPost.date = new Date();

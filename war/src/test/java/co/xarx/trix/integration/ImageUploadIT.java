@@ -1,13 +1,13 @@
-package co.xarx.trix.test.integration;
+package co.xarx.trix.integration;
 
+import co.xarx.trix.config.DatabaseTestConfig;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
-import co.xarx.trix.test.config.ApplicationTestConfig;
-import co.xarx.trix.test.config.DatabaseTestConfig;
+import co.xarx.trix.config.ApplicationTestConfig;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.ImageUtil;
 import com.amazonaws.services.s3.model.AmazonS3Exception;

@@ -1,9 +1,9 @@
-package co.xarx.trix.test.unit;
+package co.xarx.trix.unit;
 
+import co.xarx.trix.TestArtifactsFactory;
 import co.xarx.trix.api.PageView;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.domain.page.Page;
-import co.xarx.trix.test.TestArtifactsFactory;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

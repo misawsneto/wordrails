@@ -1,8 +1,8 @@
-package co.xarx.trix.test.integration;
+package co.xarx.trix.integration;
 
+import co.xarx.trix.config.DatabaseTestConfig;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.test.config.ApplicationTestConfig;
-import co.xarx.trix.test.config.DatabaseTestConfig;
+import co.xarx.trix.config.ApplicationTestConfig;
 import org.junit.Before;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;

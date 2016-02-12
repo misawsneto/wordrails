@@ -1,5 +1,7 @@
-package co.xarx.trix.test;
+package co.xarx.trix;
 
+import co.xarx.trix.api.NotificationView;
+import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.domain.page.BaseSection;
 import co.xarx.trix.domain.page.Page;
@@ -7,6 +9,7 @@ import co.xarx.trix.domain.page.QueryableListSection;
 import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
 import co.xarx.trix.domain.query.PostQuery;
+import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.RandomStringUtils;
@@ -159,5 +162,19 @@ public class TestArtifactsFactory {
 		}});
 
 		return page;
+	}
+
+	public static NotificationView createNotification() {
+		Post post = createPost();
+		NotificationView notification = new NotificationView();
+		notification.type = Notification.Type.POST_ADDED.toString();
+		notification.message = post.title;
+		notification.networkId = 5;
+		notification.post = new PostConverter(null, null).convertTo(post);
+		notification.postId = post.id;
+		notification.postTitle = post.title;
+		notification.postSnippet = StringUtil.simpleSnippet(post.body);
+		notification.test = false;
+		return notification;
 	}
 }

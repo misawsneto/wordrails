@@ -1,6 +1,6 @@
-package co.xarx.trix.test.config;
+package co.xarx.trix.config;
 
-import co.xarx.trix.aspect.MultitenantRepositoryAspect;
+import co.xarx.trix.aspect.MultitenantAspect;
 import co.xarx.trix.aspect.ProfilerAspect;
 import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
@@ -26,8 +26,8 @@ public class ApplicationTestConfig {
 	}
 
 	@Bean
-	public MultitenantRepositoryAspect multitenantRepositoryAspect() {
-		return new MultitenantRepositoryAspect();
+	public MultitenantAspect multitenantRepositoryAspect() {
+		return new MultitenantAspect();
 	}
 
 	static {

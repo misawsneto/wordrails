@@ -19,10 +19,14 @@ import java.util.List;
 @Component
 public class PostConverter extends AbstractConverter<Post, PostView> {
 
-	@Autowired
 	PostRepository postRepository;
-	@Autowired
 	TermConverter termConverter;
+
+	@Autowired
+	public PostConverter(PostRepository postRepository, TermConverter termConverter) {
+		this.postRepository = postRepository;
+		this.termConverter = termConverter == null ? new TermConverter() : termConverter;
+	}
 
 	@Override
 	public Post convertFrom(PostView postView) {

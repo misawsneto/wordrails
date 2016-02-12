@@ -1,4 +1,4 @@
-package co.xarx.trix.test.config;
+package co.xarx.trix.config;
 
 import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;

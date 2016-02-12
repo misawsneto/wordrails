@@ -1,5 +1,6 @@
-package co.xarx.trix.test.unit;
+package co.xarx.trix.unit;
 
+import co.xarx.trix.TestArtifactsFactory;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
@@ -11,7 +12,6 @@ import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.PostViewMap;
 import co.xarx.trix.elasticsearch.mapper.StationMap;
-import co.xarx.trix.test.TestArtifactsFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;

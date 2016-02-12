@@ -10,15 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class AndroidNotificationSender implements NotificationSender {
 
 	private ObjectMapper mapper;
 	private Sender sender;
+
+	AndroidNotificationSender() {
+	}
 
 	@Autowired
 	public AndroidNotificationSender(Sender sender) {
@@ -29,8 +30,10 @@ public class AndroidNotificationSender implements NotificationSender {
 	}
 
 	@Override
-	public Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, List<String> devices) throws IOException {
+	public Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, Collection<String> d) throws IOException {
 		MulticastResult multicastResult;
+
+		List<String> devices = new ArrayList<>(d);
 
 		String notificationJson = mapper.valueToTree(notification).toString();
 		Message message = new Message.Builder().addData("message", notificationJson).delayWhileIdle(true).timeToLive(86400).build();
@@ -43,11 +46,11 @@ public class AndroidNotificationSender implements NotificationSender {
 		for (int i = 0; i < results.size(); i++) {
 			Result r = results.get(i);
 			NotificationResult notificationResult = new NotificationResult();
-			notificationResult.status = r.getMessageId() == null ?
-					Notification.Status.SERVER_ERROR : Notification.Status.SUCCESS;
-			notificationResult.errorMessage = r.getErrorCodeName();
-			if(Constants.ERROR_NOT_REGISTERED.equals(notificationResult.errorMessage)) {
-				notificationResult.deviceDeactivated = true;
+			notificationResult.setStatus(r.getMessageId() == null ?
+					Notification.Status.SERVER_ERROR : Notification.Status.SUCCESS);
+			notificationResult.setErrorMessage(r.getErrorCodeName());
+			if(Constants.ERROR_NOT_REGISTERED.equals(notificationResult.getErrorMessage())) {
+				notificationResult.setDeviceDeactivated(true);
 			}
 			resultMap.put(devices.get(i), notificationResult);
 		}
