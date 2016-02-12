@@ -11,6 +11,7 @@ import com.google.android.gcm.server.*;
 import com.google.common.collect.Lists;
 import com.relayrides.pushy.apns.ApnsClient;
 import com.relayrides.pushy.apns.ApnsPushNotification;
+import com.relayrides.pushy.apns.ClientNotConnectedException;
 import com.relayrides.pushy.apns.PushNotificationResponse;
 import com.relayrides.pushy.apns.util.SimpleApnsPushNotification;
 import io.netty.util.concurrent.Future;
@@ -79,7 +80,7 @@ public class NotificationServiceTest {
 		Set<String> deviceCodes = notifications.stream().map(Notification::getRegId).collect(Collectors.toSet());
 		List<String> statuses = notifications.stream().map(Notification::getStatus).collect(Collectors.toList());
 
-		assertEquals(notifications.size(), 2);
+		assertEquals(notifications.size(), devices.size());
 		assertThat(devices, contains(deviceCodes.toArray()));
 		assertThat(statuses, contains(successTypes));
 	}
@@ -92,7 +93,7 @@ public class NotificationServiceTest {
 		Notification second = notifications.get(1);
 		Notification third = notifications.get(2);
 
-		assertEquals(notifications.size(), 3);
+		assertEquals(notifications.size(), devices.size());
 		assertThat(devices, contains(deviceCodes.toArray()));
 		assertEquals(first.getStatus(), Notification.Status.SUCCESS.toString());
 		assertEquals(second.getStatus(), Notification.Status.SERVER_ERROR.toString());
@@ -107,7 +108,7 @@ public class NotificationServiceTest {
 		Set<String> deviceCodes = notifications.stream().map(Notification::getRegId).collect(Collectors.toSet());
 		List<String> statuses = notifications.stream().map(Notification::getStatus).collect(Collectors.toList());
 
-		assertEquals(notifications.size(), 2);
+		assertEquals(notifications.size(), devices.size());
 		assertThat(devices, contains(deviceCodes.toArray()));
 		assertThat(statuses, contains(errorTypes));
 	}
@@ -179,7 +180,6 @@ public class NotificationServiceTest {
 		PushNotificationResponse successPnr = mock(PushNotificationResponse.class);
 		PushNotificationResponse errorPnr = mock(PushNotificationResponse.class);
 		PushNotificationResponse errorDeactivatedPnr = mock(PushNotificationResponse.class);
-		AppleNotificationSender appleNotificationSender = spy(AppleNotificationSender.class);
 
 		when(successPnr.isAccepted()).thenReturn(true);
 		when(errorPnr.isAccepted()).thenReturn(false);
@@ -192,6 +192,7 @@ public class NotificationServiceTest {
 		ApnsClient apnsClient = mock(ApnsClient.class);
 		when(apnsClient.sendNotification(any(ApnsPushNotification.class))).thenReturn(f);
 
+		AppleNotificationSender appleNotificationSender = spy(AppleNotificationSender.class);
 		doReturn(apnsClient).when(appleNotificationSender).getAPNsClient(anyBoolean());
 		doCallRealMethod().when(appleNotificationSender).sendMessageToDevices(any(NotificationView.class), anyList());
 
@@ -294,5 +295,78 @@ public class NotificationServiceTest {
 
 		testSendError(dummy.devices, () ->
 				notificationService.sendAndroidNotifications(dummy.notification, dummy.post, dummy.devices));
+	}
+
+	//------------------------------------ TEST APPLE RECONNECT ------------------------------------
+
+	public NotificationService setUpAppleReconnectSuccess() throws Exception {
+		PushNotificationResponse successPnr = mock(PushNotificationResponse.class);
+		PushNotificationResponse errorPnr = mock(PushNotificationResponse.class);
+		PushNotificationResponse errorDeactivatedPnr = mock(PushNotificationResponse.class);
+
+		when(successPnr.isAccepted()).thenReturn(true);
+		when(errorPnr.isAccepted()).thenReturn(false);
+		when(errorDeactivatedPnr.isAccepted()).thenReturn(false);
+		when(errorDeactivatedPnr.getTokenInvalidationTimestamp()).thenReturn(new Date());
+
+		ExecutionException e = new ExecutionException(new ClientNotConnectedException());
+
+		Future f = mock(Future.class);
+		when(f.get())
+				.thenReturn(successPnr)
+				.thenThrow(e)
+				.thenReturn(errorPnr)
+				.thenThrow(e)
+				.thenReturn(errorDeactivatedPnr);
+
+		ApnsClient apnsClient = mock(ApnsClient.class);
+		when(apnsClient.sendNotification(any(ApnsPushNotification.class))).thenReturn(f);
+
+		when(apnsClient.getReconnectionFuture()).thenReturn(mock(Future.class));
+
+		AppleNotificationSender appleNotificationSender = spy(AppleNotificationSender.class);
+		doReturn(apnsClient).when(appleNotificationSender).getAPNsClient(anyBoolean());
+		doCallRealMethod().when(appleNotificationSender).sendMessageToDevices(any(NotificationView.class), anyList());
+
+		return new NotificationService(mock(AndroidNotificationSender.class), appleNotificationSender);
+	}
+
+	@Test
+	public void testAppleReconnectSuccess() throws Exception {
+		NotificationService notificationService = setUpAppleReconnectSuccess();
+
+		DummyData dummy = getDummyData(3);
+
+		testServerError(dummy.devices, () -> notificationService.sendAppleNotifications(dummy.notification, dummy.post, dummy.devices));
+	}
+
+	public NotificationService setUpAppleReconnectFail() throws Exception {
+		ExecutionException e = new ExecutionException(new ClientNotConnectedException());
+
+		Future f = mock(Future.class);
+		when(f.get()).thenThrow(e);
+
+		ApnsClient apnsClient = mock(ApnsClient.class);
+		when(apnsClient.sendNotification(any(ApnsPushNotification.class))).thenReturn(f);
+
+		when(apnsClient.getReconnectionFuture()).thenReturn(mock(Future.class));
+
+		AppleNotificationSender appleNotificationSender = spy(AppleNotificationSender.class);
+		doReturn(apnsClient).when(appleNotificationSender).getAPNsClient(anyBoolean());
+		doCallRealMethod().when(appleNotificationSender).sendMessageToDevices(any(NotificationView.class), anyList());
+
+		when(apnsClient.getReconnectionFuture()).thenReturn(mock(Future.class));
+		when(apnsClient.getReconnectionFuture().await()).thenThrow(InterruptedException.class);
+
+		return new NotificationService(mock(AndroidNotificationSender.class), appleNotificationSender);
+	}
+
+	@Test
+	public void testAppleReconnectFail() throws Exception {
+		NotificationService notificationService = setUpAppleReconnectFail();
+
+		DummyData dummy = getDummyData(2);
+
+		testSendError(dummy.devices, () -> notificationService.sendAppleNotifications(dummy.notification, dummy.post, dummy.devices));
 	}
 }
