@@ -26,7 +26,7 @@ public class NotificationConverter extends AbstractConverter<Notification, Notif
 
 	@Override
 	public NotificationView convertTo(Notification notification) {
-		NotificationView notificationView = new NotificationView();
+		NotificationView notificationView = new NotificationView(notification.message, notification.message, notification.hash, notification.test);
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		Network network = networkRepository.findByTenantId(tenantId);
 

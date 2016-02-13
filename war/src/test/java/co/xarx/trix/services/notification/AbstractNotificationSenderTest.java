@@ -37,9 +37,7 @@ public abstract class AbstractNotificationSenderTest {
 			devices.add("device" + i);
 		}
 
-		NotificationView notification = new NotificationView();
-		notification.type = Notification.Type.POST_ADDED.toString();
-		notification.message = "Dummy title";
+		NotificationView notification = TestArtifactsFactory.createNotification();
 		Post post = TestArtifactsFactory.createPost();
 
 		return new DummyData(devices, notification, post);

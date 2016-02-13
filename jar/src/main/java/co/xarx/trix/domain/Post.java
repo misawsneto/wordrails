@@ -370,6 +370,10 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 		this.readsCount = readsCount;
 	}
 
+	public void incrementReadCount() {
+		this.readsCount++;
+	}
+
 	public int getBookmarksCount() {
 		return bookmarksCount;
 	}
