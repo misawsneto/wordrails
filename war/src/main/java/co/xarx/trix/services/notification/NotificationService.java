@@ -4,6 +4,7 @@ import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.util.ListUtil;
+import co.xarx.trix.util.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -24,6 +25,8 @@ public class NotificationService {
 		List<List<String>> parts = ListUtil.partition(new ArrayList<>(devices), sender.getBatchSize());
 		for (List<String> part : parts) {
 			try {
+				Logger.info(deviceType.toString() + ": Sending notification to " +
+						devices.size() + " devices. Notification hash: " + notification.hash);
 				results = sender.sendMessageToDevices(notification, part);
 
 				notifications.addAll(this.getSuccessNotifications(results, notification, post, deviceType));
@@ -80,6 +83,7 @@ public class NotificationService {
 			noti.errorCodeName = r.getErrorMessage();
 			noti.setDeviceType(deviceType);
 			noti.deviceDeactivated = r.isDeviceDeactivated();
+			noti.test = notification.test;
 			notis.add(noti);
 		}
 

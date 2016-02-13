@@ -2,7 +2,6 @@ package co.xarx.trix.services.notification;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.Notification;
-import co.xarx.trix.util.Logger;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.*;
@@ -38,7 +37,6 @@ public class AndroidNotificationSender implements NotificationSender {
 		String notificationJson = mapper.valueToTree(notification).toString();
 		Message message = new Message.Builder().addData("message", notificationJson).delayWhileIdle(true).timeToLive(86400).build();
 
-		Logger.info("sending messages... " + devices.size() + " hash: " + notification.hash);
 		multicastResult = sender.send(message, devices, 5);
 
 		Map<String, NotificationResult> resultMap = new HashMap<>();

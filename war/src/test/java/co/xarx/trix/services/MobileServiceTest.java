@@ -5,27 +5,36 @@ import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.services.notification.NotificationService;
 import com.google.common.collect.Lists;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @RunWith(PowerMockRunner.class)
 public class MobileServiceTest {
 
-	@InjectMocks
 	private MobileService mobileService;
 
-	@Mock
-	NotificationService notificationService;
-	@Mock
-	AsyncService asyncService;
+	private AsyncService asyncService;
+
+	@Before
+	public void setUp() throws Exception {
+		NotificationService notificationService = mock(NotificationService.class);
+		when(notificationService.getErrorNotifications(anyList(), any(), any(), any())).thenCallRealMethod();
+
+		asyncService = mock(AsyncService.class);
+		mobileService = new MobileService(notificationService, asyncService, null, null, null);
+	}
 
 	@Test
-	public void testSendNotification() {
+	public void testSendSuccessfullNotifications() {
 		Post post = TestArtifactsFactory.createPost();
 		NotificationView notification = TestArtifactsFactory.createNotification();
 		List<String> androidDeviceCodes = Lists.newArrayList("android1", "android2");

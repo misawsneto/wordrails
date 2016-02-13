@@ -33,9 +33,6 @@ public class MobileService {
 	private AppleNotificationSender appleNS;
 	private AndroidNotificationSender androidNS;
 
-	MobileService () {
-	}
-
 	@Autowired
 	public MobileService(NotificationService notificationService,
 						 AsyncService asyncService, MobileDeviceRepository mobileDeviceRepository,
@@ -100,6 +97,13 @@ public class MobileService {
 
 		MobileDevice device = mobileDeviceRepository.findOne(QMobileDevice.mobileDevice.deviceCode.eq(deviceCode));
 
+		device = getMobileDevice(person, deviceCode, lat, lng, type, device);
+
+		mobileDeviceRepository.save(device);
+	}
+
+	public MobileDevice getMobileDevice(Person person, String deviceCode,
+										Double lat, Double lng, MobileDevice.Type type, MobileDevice device) {
 		if (person != null && person.id == 0) {
 			person = null;
 		}
@@ -117,6 +121,6 @@ public class MobileService {
 		if (lat != null) device.lat = lat;
 		if (lng != null) device.lng = lng;
 
-		mobileDeviceRepository.save(device);
+		return device;
 	}
 }

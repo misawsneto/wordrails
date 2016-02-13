@@ -34,9 +34,9 @@ public class AndroidNotificationSenderTest extends AbstractNotificationSenderTes
 	private AndroidNotificationSender androidNS;
 	private Sender sender;
 	private MulticastResult multicastResult;
-	private Result rs;
-	private Result re;
-	private Result rd;
+	private Result resultSuccess;
+	private Result resultError;
+	private Result resultErrorDeactivated;
 
 	@Before
 	public void setUp() throws CertificateException, InterruptedException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, SQLException, IOException {
@@ -45,24 +45,24 @@ public class AndroidNotificationSenderTest extends AbstractNotificationSenderTes
 
 		multicastResult = mock(MulticastResult.class);
 
-		rs = mock(Result.class);
-		when(rs.getErrorCodeName()).thenReturn(null);
-		when(rs.getMessageId()).thenReturn("");
+		resultSuccess = mock(Result.class);
+		when(resultSuccess.getErrorCodeName()).thenReturn(null);
+		when(resultSuccess.getMessageId()).thenReturn("");
 
-		re = mock(Result.class);
-		when(re.getErrorCodeName()).thenReturn(null);
-		when(re.getMessageId()).thenReturn(null);
+		resultError = mock(Result.class);
+		when(resultError.getErrorCodeName()).thenReturn(null);
+		when(resultError.getMessageId()).thenReturn(null);
 
-		rd = mock(Result.class);
-		when(rd.getErrorCodeName()).thenReturn(Constants.ERROR_NOT_REGISTERED);
-		when(rd.getMessageId()).thenReturn(null);
+		resultErrorDeactivated = mock(Result.class);
+		when(resultErrorDeactivated.getErrorCodeName()).thenReturn(Constants.ERROR_NOT_REGISTERED);
+		when(resultErrorDeactivated.getMessageId()).thenReturn(null);
 
 		when(sender.send(any(Message.class), anyListOf(String.class), anyInt())).thenReturn(multicastResult);
 	}
 
 	@Test
 	public void testSuccess() throws Exception {
-		List<Result> results = Lists.newArrayList(rs, rs);
+		List<Result> results = Lists.newArrayList(resultSuccess, resultSuccess);
 		when(multicastResult.getResults()).thenReturn(results);
 
 		super.testSuccess();
@@ -80,7 +80,7 @@ public class AndroidNotificationSenderTest extends AbstractNotificationSenderTes
 
 	@Test
 	public void testServerError() throws Exception {
-		List<Result> results = Lists.newArrayList(rs, re, rd);
+		List<Result> results = Lists.newArrayList(resultSuccess, resultError, resultErrorDeactivated);
 		when(multicastResult.getResults()).thenReturn(results);
 
 		super.testSuccessAndErrorStatus();

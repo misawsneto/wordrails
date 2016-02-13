@@ -183,6 +183,7 @@ public class PostService {
 		notification.post = postConverter.convertTo(post);
 		notification.postId = post.id;
 		notification.postTitle = post.title;
+		notification.hash = StringUtil.generateRandomString(10, "Aa#");
 		notification.postSnippet = StringUtil.simpleSnippet(post.body);
 		notification.test = !profile.equals("prod");
 		return notification;

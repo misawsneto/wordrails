@@ -65,7 +65,6 @@ public class NotificationServiceTest {
 		List<Notification> notifications = notificationService.sendNotifications(notificationSender, notification,
 				post, deviceCodes, Notification.DeviceType.ANDROID);
 
-		//a list with 10 Notification.Status.SUCCESS
 		String[] successTypes = {Notification.Status.SUCCESS.toString(), Notification.Status.SERVER_ERROR.toString()};
 		Set<String> devices = notifications.stream().map(Notification::getRegId).collect(Collectors.toSet());
 		List<String> statuses = notifications.stream().map(Notification::getStatus).collect(Collectors.toList());

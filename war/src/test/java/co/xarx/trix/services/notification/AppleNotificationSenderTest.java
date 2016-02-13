@@ -34,9 +34,9 @@ public class AppleNotificationSenderTest extends AbstractNotificationSenderTest 
 
 	private AppleNotificationSender appleNS;
 	private ApnsClient apnsClient;
-	private PushNotificationResponse successPnr;
-	private PushNotificationResponse errorPnr;
-	private PushNotificationResponse errorDeactivatedPnr;
+	private PushNotificationResponse resultSuccess;
+	private PushNotificationResponse resultError;
+	private PushNotificationResponse resultErrorDeactivated;
 
 	@Before
 	public void setUp() throws CertificateException, InterruptedException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, SQLException, IOException {
@@ -44,21 +44,21 @@ public class AppleNotificationSenderTest extends AbstractNotificationSenderTest 
 		appleNS = spy(new AppleNotificationSender());
 		doReturn(apnsClient).when(appleNS).getAPNsClient(anyBoolean());
 
-		successPnr = mock(PushNotificationResponse.class);
-		errorPnr = mock(PushNotificationResponse.class);
-		errorDeactivatedPnr = mock(PushNotificationResponse.class);
+		resultSuccess = mock(PushNotificationResponse.class);
+		resultError = mock(PushNotificationResponse.class);
+		resultErrorDeactivated = mock(PushNotificationResponse.class);
 
-		when(successPnr.isAccepted()).thenReturn(true);
-		when(errorPnr.isAccepted()).thenReturn(false);
-		when(errorDeactivatedPnr.isAccepted()).thenReturn(false);
-		when(errorDeactivatedPnr.getTokenInvalidationTimestamp()).thenReturn(new Date());
+		when(resultSuccess.isAccepted()).thenReturn(true);
+		when(resultError.isAccepted()).thenReturn(false);
+		when(resultErrorDeactivated.isAccepted()).thenReturn(false);
+		when(resultErrorDeactivated.getTokenInvalidationTimestamp()).thenReturn(new Date());
 
 		when(apnsClient.getReconnectionFuture()).thenReturn(mock(Future.class));
 	}
 
 	@Test
 	public void testSuccess() throws Exception {
-		doReturn(successPnr).when(appleNS).get(any(), any());
+		doReturn(resultSuccess).when(appleNS).get(any(), any());
 
 		super.testSuccess();
 	}
@@ -75,9 +75,9 @@ public class AppleNotificationSenderTest extends AbstractNotificationSenderTest 
 
 	@Test
 	public void testServerError() throws Exception {
-		doReturn(successPnr)
-				.doReturn(errorPnr)
-				.doReturn(errorDeactivatedPnr)
+		doReturn(resultSuccess)
+				.doReturn(resultError)
+				.doReturn(resultErrorDeactivated)
 				.when(appleNS).get(any(), any());
 
 		testSuccessAndErrorStatus();
@@ -86,11 +86,11 @@ public class AppleNotificationSenderTest extends AbstractNotificationSenderTest 
 	@Test
 	public void testReconnectSuccess() throws Exception {
 		Exception e = new ExecutionException(new ClientNotConnectedException());
-		doReturn(successPnr)
+		doReturn(resultSuccess)
 				.doThrow(e)
-				.doReturn(errorPnr)
+				.doReturn(resultError)
 				.doThrow(e)
-				.doReturn(errorDeactivatedPnr)
+				.doReturn(resultErrorDeactivated)
 				.when(appleNS).get(any(), any());
 
 		testSuccessAndErrorStatus();

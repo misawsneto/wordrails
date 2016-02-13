@@ -60,7 +60,7 @@ public class Notification extends BaseEntity {
 	@ManyToOne
 	public Post post;
 
-	public boolean test = true;
+	public boolean test = false;
 
 	@NotEmpty
 	public String status;
