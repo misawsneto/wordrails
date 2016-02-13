@@ -17,7 +17,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,10 +35,6 @@ public class ImagesResource {
 
 	@Context
 	private HttpServletRequest request;
-	@Context
-	private UriInfo uriInfo;
-	@Context
-	private HttpServletResponse response;
 	@Autowired
 	private AmazonCloudService amazonCloudService;
 

@@ -38,7 +38,6 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 
 	@JsonIgnore
 	@NotNull
-	@Column(columnDefinition = "VARCHAR(255) DEFAULT ''")
 	public String tenantId;
 
 	@Override
@@ -80,9 +79,11 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 
 	@Override
 	public boolean equals(Object obj) {
-		if(getId() != null)
-			return getId().equals(((BaseEntity)obj).getId());
-		return super.equals(obj);
+		if(obj == null || !(obj instanceof BaseEntity) || getId() == null) {
+			return false;
+		}
+
+		return ((BaseEntity) obj).getId().equals(getId());
 	}
 
 	@Override

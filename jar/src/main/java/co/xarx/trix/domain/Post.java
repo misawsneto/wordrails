@@ -359,11 +359,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	}
 
 	public Integer getStationId() {
-		return stationId;
-	}
-
-	public void setStationId(Integer stationId) {
-		this.stationId = stationId;
+		return station.id;
 	}
 
 	public int getReadsCount() {
@@ -372,6 +368,10 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	public void setReadsCount(int readsCount) {
 		this.readsCount = readsCount;
+	}
+
+	public void incrementReadCount() {
+		this.readsCount++;
 	}
 
 	public int getBookmarksCount() {

@@ -852,9 +852,9 @@ CREATE TABLE `personnetworkregid` (
 ) ENGINE=InnoDB AUTO_INCREMENT=24150 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
+-- 
 -- Table structure for table `personnetworktoken`
---
+-- 
 
 DROP TABLE IF EXISTS `personnetworktoken`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

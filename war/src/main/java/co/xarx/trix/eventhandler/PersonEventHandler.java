@@ -1,7 +1,9 @@
 package co.xarx.trix.eventhandler;
 
+import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.QNotification;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
@@ -24,10 +26,6 @@ public class PersonEventHandler {
 	private ImageRepository imageRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
-	@Autowired
-	private PersonNetworkRegIdRepository personNetworkRegIdRepository;
-	@Autowired
-	private PersonNetworkTokenRepository personNetworkTokenRepository;
 	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
@@ -58,7 +56,8 @@ public class PersonEventHandler {
 	private ESPersonRepository esPersonRepository;
 	@Autowired
 	private UserRepository userRepository;
-
+	@Autowired
+	private MobileDeviceRepository mobileDeviceRepository;
 
 	@HandleBeforeSave
 	public void handleBeforeSave(Person person) {
@@ -88,9 +87,9 @@ public class PersonEventHandler {
 
 		queryPersistence.setNoAuthor(person.id);
 
-		notificationRepository.deleteByPersonId(person.id);
-		personNetworkRegIdRepository.deleteByPersonId(person.id);
-		personNetworkTokenRepository.deleteByPersonId(person.id);
+		Iterable<Notification> notifications = notificationRepository.findAll(QNotification.notification.post.author.id.eq(person.id));
+		notificationRepository.delete(notifications);
+		mobileDeviceRepository.deleteByPersonId(person.id);
 		userRepository.delete(person.user.id);
 		elasticSearchService.deleteIndex(person.getId(), esPersonRepository);
 	}

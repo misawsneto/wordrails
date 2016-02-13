@@ -170,11 +170,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByTenantIdAuthorized(String tenantId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetNetworkPersonsNetworkRolesAuthorized(Integer networkId) {
 		return isNetworkAdminById(networkId);
 	}
@@ -927,32 +922,17 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetPasswordResetUserAuthorized(Integer passwordResetId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetNotificationsAuthorized() {
 		return false;
 	}
 
 	@Override
 	protected boolean isGetNotificationAuthorized(Integer notificationId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindNotificationsByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetNotificationPersonAuthorized(Integer notificationId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetNotificationNetworkAuthorized(Integer notificationId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetNotificationStationAuthorized(Integer notificationId) {
 		return true;
 	}
 
@@ -1112,26 +1092,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPersonNetworkRegIdsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkRegIdAuthorized(Integer personNetworkRegIdId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkRegIdPersonAuthorized(Integer personNetworkRegIdId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkRegIdNetworkAuthorized(Integer personNetworkRegIdId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isFindPostReadByPersonIdOrderByDatePaginatedAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
 		return true;
 	}
@@ -1214,26 +1174,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetNetworkFaviconAuthorized(Integer networkId) {
 		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkTokensAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkTokenAuthorized(Integer personNetworkTokenId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkTokenPersonAuthorized(Integer personNetworkTokenId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkTokenNetworkAuthorized(Integer personNetworkTokenId) {
-		return false;
 	}
 
 	@Override

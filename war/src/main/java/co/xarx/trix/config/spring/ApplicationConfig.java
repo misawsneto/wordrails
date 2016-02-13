@@ -6,6 +6,7 @@ import co.xarx.trix.elasticsearch.mapper.PostViewMap;
 import co.xarx.trix.elasticsearch.mapper.StationMap;
 import co.xarx.trix.services.AmazonCloudService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gcm.server.Sender;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,10 +34,18 @@ public class ApplicationConfig {
 	private String cloudfrontUrl;
 	@Value("${amazon.bucketName}")
 	private String bucketName;
+	@Value("${gcm.key}")
+	private String GCM_KEY;
 
 	@Bean
 	public ObjectMapper simpleMapper() {
 		return new ObjectMapper();
+	}
+
+
+	@Bean
+	public Sender gcmSender() {
+		return new Sender(GCM_KEY);
 	}
 
 	@Bean

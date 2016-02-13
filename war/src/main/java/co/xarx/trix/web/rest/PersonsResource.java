@@ -15,9 +15,9 @@ import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
-import co.xarx.trix.services.APNService;
 import co.xarx.trix.services.AmazonCloudService;
-import co.xarx.trix.services.GCMService;
+import co.xarx.trix.services.EmailService;
+import co.xarx.trix.services.MobileService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
@@ -68,6 +68,8 @@ public class PersonsResource {
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
+	private MobileService mobileService;
+	@Autowired
 	private NetworkRolesRepository networkRolesRepository;
 	@Autowired
 	private StationRepository stationRepository;
@@ -78,9 +80,7 @@ public class PersonsResource {
 	@Autowired
 	private WordrailsService wordrailsService;
 	@Autowired
-	private GCMService gcmService;
-	@Autowired
-	private APNService apnService;
+	private MobileService gcmService;
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
@@ -99,6 +99,8 @@ public class PersonsResource {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PersonEventHandler personEventHandler;
+	@Autowired
+	private EmailService emailService;
 
 	@Autowired
 	@Qualifier("objectMapper")
@@ -229,15 +231,8 @@ public class PersonsResource {
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = authProvider.getLoggedPerson();
-		if(person.id == 0){
-			gcmService.updateRegId(network, null, regId, lat, lng);
-		} else {
-			gcmService.updateRegId(network, person, regId, lat, lng);
-		}
-//		if(person.id == 0) person = null;
-		System.out.println("regId: " + regId);
+		mobileService.updateDevice(person, regId, lat, lng, MobileDevice.Type.ANDROID);
 		return Response.status(Status.OK).build();
 	}
 
@@ -245,15 +240,8 @@ public class PersonsResource {
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = authProvider.getLoggedPerson();
-		if(person.id == 0){
-			apnService.updateIosToken(network, null, token, lat, lng);
-		} else {
-			apnService.updateIosToken(network, person, token, lat, lng);
-		}
-//		if(person.id == 0) person = null;
-		System.out.println("iOS token: " + token);
+		mobileService.updateDevice(person, token, lat, lng, MobileDevice.Type.APPLE);
 		return Response.status(Status.OK).build();
 	}
 
