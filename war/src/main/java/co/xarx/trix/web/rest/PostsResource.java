@@ -16,6 +16,7 @@ import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.PostService;
+import co.xarx.trix.services.elasticsearch.ESPostService;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.google.common.collect.Lists;
@@ -71,6 +72,8 @@ public class PostsResource {
 
 	@Autowired
 	private PostService postService;
+	@Autowired
+	private ESPostService esPostService;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -221,7 +224,7 @@ public class PostsResource {
 
 
 
-		BoolQueryBuilder mainQuery = postService.getBoolQueryBuilder(q, personId, publicationType, readableIds, null);
+		BoolQueryBuilder mainQuery = esPostService.getBoolQueryBuilder(q, personId, publicationType, readableIds, null);
 		FieldSortBuilder sort = null;
 
 		if(sortByDate != null && sortByDate){
@@ -232,7 +235,7 @@ public class PostsResource {
 		Pageable pageable = new PageRequest(page, size);
 
 
-		Pair<Integer, List<PostView>> postsViews = postService.searchIndex(mainQuery, pageable, sort);
+		Pair<Integer, List<PostView>> postsViews = esPostService.searchIndex(mainQuery, pageable, sort);
 
 		ContentResponse<SearchView> response = new ContentResponse<>();
 		response.content = new SearchView();
