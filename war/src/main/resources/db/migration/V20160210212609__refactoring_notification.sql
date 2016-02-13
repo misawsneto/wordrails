@@ -41,11 +41,31 @@ CREATE TABLE `mobiledevice` (
 ) ENGINE=InnoDB AUTO_INCREMENT=9215 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table 'applecertificate'
+--
+DROP TABLE IF EXISTS `applecertificate`;
+
+CREATE TABLE `applecertificate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `createdAt` datetime DEFAULT NULL,
+  `tenantId` varchar(255) NOT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  `file` longblob NOT NULL,
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 INSERT INTO mobiledevice (createdAt, tenantId, updatedAt, active, deviceCode, lat, lng, type, person_id) SELECT
  createdAt, tenantId, updatedAt, TRUE, token, lat, lng, 1, person_id FROM personnetworktoken;
 
- INSERT into mobiledevice(createdAt, tenantId, updatedAt, version, active, deviceCode, lat, lng, type, person_id) SELECT
+INSERT into mobiledevice(createdAt, tenantId, updatedAt, version, active, deviceCode, lat, lng, type, person_id) SELECT
 createdAt, tenantId, updatedAt, version, TRUE, regId, lat, lng, 0, person_id from personnetworkregid;
+
+INSERT INTO applecertificate(createdAt, updatedAt, tenantId, password, file)
+	SELECT createdAt, updatedAt, tenantId, certificate_password, certificate_ios FROM network
+	WHERE certificate_password IS NOT NULL AND certificate_ios IS NOT NULL;
 
 drop table notification;
 
