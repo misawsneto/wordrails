@@ -9,6 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -170,6 +171,27 @@ public class Network implements Serializable{
 
     @Column(columnDefinition = "boolean default false", nullable = false)
     public boolean addStationRolesOnSignup;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_primary_color", joinColumns = @JoinColumn(name = "network_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> primaryColors;
+
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_secondary_color", joinColumns = @JoinColumn(name = "network_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> secondaryColors;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_alert_color", joinColumns = @JoinColumn(name = "network_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> alertColors;
+
+//	public String backgroundColor;
 
 	@Override
 	public boolean equals(Object obj) {

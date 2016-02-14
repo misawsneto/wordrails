@@ -1,11 +1,112 @@
-<div class="card md-whiteframe-z1">
-    <div class="card-heading">
-        <h2 translate="settings.SET_COLOR">Configure as paletas de cores</h2>
-    </div>
-    <div class="theming card-body">
-    	  <md-content>
+<div id="settings-colors">
+	<div class="p-sm pos-abt top-0 left-0 b-b w-full md-whiteframe-z0 md-primary-hue-1 background">
+		<md-button class="pull-right font-bold" ng-click="setTheme()" translate="settings.colors.APPLY_THEME">
+			Aplicar Cores
+		</md-button>
+		<md-button class="pull-right font-bold" ng-click="setTheme()" translate="settings.colors.TEST_THEME">
+			Testar Cores
+		</md-button>
+		<md-button class="pull-right font-bold" ng-click="togglePalette()" translate="settings.COLOR_PALETTE">
+		  	Paleta de Cores
+		</md-button>
+		<md-button ng-click="isMobile = !isMobile" aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;" ng-click="$mdOpenMenu($event)">
+      <i class="i-20" ng-class="{'mdi-hardware-desktop-windows': !isMobile, 'mdi-hardware-phone-android': isMobile }"></i>
+    </md-button>
+    <!-- <md-button aria-label="Open demo menu" class="md-icon-button pull-right" style="margin-top: 5px;">
+      <i class="i-20 mdi-editor-format-color-fill"></i>
+    </md-button> -->
+	</div>
 
-          <md-content class="palette pull-left m-r m-b">
+    <div class="p-t-lg">
+      <div class="color-selector-container">
+        <div class="content m-t-md">
+          <md-content class="mockup-browser md-whiteframe-z2 animated fadeIn" ng-class="{'mobile': isMobile}">
+
+            <md-sidenav class="md-sidenav-left md-whiteframe-z2 w-lg" md-component-id="sidenav-demo">
+              <div class="box bg-white ng-scope">
+                <div class="box-row">
+                  <div class="box-cell scrollable hover">
+                    <div class="box-inner">
+                      <div class="p hidden-folded indigo-50" style="background-image:url(images/bg.png); background-size:cover">
+                        <div class="rounded w-64 bg-white inline pos-rlt">
+                          <img src="images/a0.jpg" class="img-responsive rounded">
+                        </div>
+                        <a class="block m-t-sm ng-binding">
+                          <span class="block font-bold ng-binding">Demo</span>
+                          demo@demo.com
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </md-sidenav>
+
+            <md-toast class="md-warn-default ng-scope md-top md-right" style="width: 150px; min-width: 150px; z-index: 51">
+              <div class="md-toast-content w-sm pull-right m-t" style="padding: 0 10px; min-height: 38px;" translate="settings.colors.ALERT">Alerta</div>
+            </md-toast>
+
+            <div class="navbar no-radius md-primary-default background">
+              <a md-ink-ripple ng-click="toggleDemo()" class="navbar-item pull-left">
+              <i class="mdi-navigation-menu i-24"></i></a>
+            </div>
+
+            <section id="paint-background" class="mockup-section paint-area">
+              <!-- <div class="mockup-content mockup-grid"> -->
+                <md-content class="w-full">
+                  <md-tabs md-dynamic-height md-border-bottom class="md-primary">
+                    <md-tab label="{{'settings.colors.TAB' | translate}} 1">
+                      <div style="height: 350px;">
+                      </div>
+                    </mb-tab>
+                    <md-tab label="{{'settings.colors.TAB' | translate}} 2">
+                      <div style="height: 350px;">
+                      </div>
+                    </mb-tab>
+                  </md-tabs>
+                </md-content>
+              <!-- </div> -->
+              <!-- /mockup-grid -->
+              <!-- <md-button md-no-ink id="paint-main" class="md-fab pos-abt bottom-0 right-0 m-r m-b mockup-button paint-area" aria-label="demo">
+                <i class="mdi-editor-mode-edit i-24"></i>
+                          </md-button> -->
+            <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r m-b">
+              <i class="mdi-editor-mode-edit i-24"></i>
+            </md-button>
+          </section>
+        </div><!-- /mockup-browser -->
+      </md-content><!-- /content -->
+      <!-- <div class="customizer">
+        <ul class="color-tool">
+          <li class="color-1">
+            <div class="drag-element" data-color="{{colors.one}}" colorpicker ng-model="colors.one">
+              <div class="drop color-1"></div>
+              <i class="drop-helper-1 color-1"></i>
+              <i class="drop-helper-2 color-1"></i>
+              <i class="drop-helper-3 color-1"></i>
+              <i class="drop-helper-4 color-1"></i>
+            </div>
+          </li>
+          <li class="color-2"><div data-color="{{colors.two}}" colorpicker ng-model="colors.two" class="drag-element" data-color="{{colors.two}}"><div class="drop color-2"></div><i class="drop-helper-1 color-2"></i><i class="drop-helper-2 color-2"></i><i class="drop-helper-3 color-2"></i><i class="drop-helper-4 color-2"></i></div></li>
+          <li class="color-3"><div data-color="{{colors.three}}" colorpicker ng-model="colors.three" class="drag-element" data-color="{{colors.three}}"><div class="drop color-3"></div><i class="drop-helper-1 color-3"></i><i class="drop-helper-2 color-3"></i><i class="drop-helper-3 color-3"></i><i class="drop-helper-4 color-3"></i></div></li>
+          <li class="color-4"><div data-color="{{colors.four}}" colorpicker ng-model="colors.four" class="drag-element" data-color="{{colors.four}}"><div class="drop color-4"></div><i class="drop-helper-1 color-4"></i><i class="drop-helper-2 color-4"></i><i class="drop-helper-3 color-4"></i><i class="drop-helper-4 color-4"></i></div></li>
+          <li class="color-5"><div data-color="{{colors.five}}" colorpicker ng-model="colors.five" class="drag-element" data-color="{{colors.five}}"><div class="drop color-5"></div><i class="drop-helper-1 color-5"></i><i class="drop-helper-2 color-5"></i><i class="drop-helper-3 color-5"></i><i class="drop-helper-4 color-5"></i></div></li>
+          <li><button class="reset-button" title="Reser colors">Reset colors</button></li>
+        </ul>
+      </div> -->
+    </div><!-- /container -->
+  </div>
+</div>
+
+
+    <md-sidenav class="md-sidenav-right md-whiteframe-z2 theming" md-component-id="palette-selector">
+      <md-toolbar class="md-theme-light">
+        <h1 class="md-toolbar-tools" translate="settings.COLOR_PALETTE"></h1>
+      </md-toolbar>
+      <md-content layout-padding>
+        <div>
+          <!-- primary -->
+          <md-content class="palette m-b w-lg m-h-auto">
             <div class="p-r-10" layout="row" layout-align="center center" style="background-color:{{primaryPalette.base}};"
               ng-class="{'palette-color-light': !isLight(primaryPalette.base), 'palette-color-dark': isLight(primaryPalette.base)}">
               <div class="md-toolbar-tools text-md">
@@ -34,8 +135,10 @@
                 </md-list-item>
             </md-list>
           </md-content>
+          <!-- /primary -->
 
-          <md-content class="palette pull-left m-r m-b">
+          <!-- secondary -->
+          <md-content class="palette m-b w-lg m-h-auto">
             <div class="p-r-10" layout="row" layout-align="center center" style="background-color:{{accentPalette.base}};"
               ng-class="{'palette-color-light': !isLight(accentPalette.base), 'palette-color-dark': isLight(accentPalette.base)}">
               <div class="md-toolbar-tools text-md">
@@ -45,7 +148,7 @@
                   <spectrum-colorpicker ng-model="accentPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(1)"></spectrum-colorpicker>
             </div>
             <md-list flex class="palette-colors spaced">
-                <md-list-item class="light-canvas" ng-repeat="color in accentPalette.colors | filter: accentColorFilter | orderByAccent:'name'">
+                <md-list-item class="light-canvas" ng-repeat="color in accentPalette.colors | filter: baseColorFilter | orderByAccent:'name'">
                     <div class="palette-color" style="background-color:{{color.hex}};" ng-class="{'palette-color-light': !color.darkContrast, 'palette-color-dark': color.darkContrast}">
                         <span class="name color-text w-48" ng-bind="color.name"></span>
                         <span ng-bind="color.hex" class="palette-color-hex color-text"></span>
@@ -64,8 +167,10 @@
                 </md-list-item>
             </md-list>
           </md-content>
-
-          <md-content class="palette pull-left m-r m-b">
+          <!-- /secondary -->
+          
+          <!-- warn -->
+          <md-content class="palette m-b w-lg m-h-auto">
             <div class="p-r-10" layout="row" layout-align="center center" style="background-color:{{warnPalette.base}};"
               ng-class="{'palette-color-light': !isLight(warnPalette.base), 'palette-color-dark': isLight(warnPalette.base)}">
               <div class="md-toolbar-tools text-md">
@@ -94,15 +199,17 @@
                 </md-list-item>
             </md-list>
           </md-content>
-          
-          <md-content class="palette pull-left m-b" style="background-color:{{backgroundPalette}};">
+          <!-- /warn -->
+
+          <!-- background -->
+          <md-content class="palette m-b w-lg m-h-auto" style="background-color:{{backgroundPalette}};">
             <div layout="row" layout-align="center center" style="padding-right: 15px;"
                 ng-class="{'palette-color-light': !isLight(backgroundPalette), 'palette-color-dark': isLight(backgroundPalette)}">
               <div class="md-toolbar-tools text-md" translate="settings.COLOR_BACKGROUND">
                 Cor de Fundo
               </div>
             </div>
-            <div class="p text-center m-t-lg m-b-lg p-t-md">
+            <div class="p text-center m-t m-b-xxl p-t-md">
               <md-menu md-position-mode="target-right target">
                 <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
                   <i class="mdi-editor-format-color-fill i-24" ng-class="{'palette-color-light': !isLight(backgroundPalette), 'palette-color-dark': isLight(backgroundPalette)}"
@@ -118,11 +225,7 @@
               </md-menu>
             </div>
           </md-content>
-
-        </md-content>
-    </div>
-</div>
-
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" ng-click="setTheme()">
-    <i class="mdi-content-save i-24"></i>
-</md-button>
+          <!-- /background -->
+        </div>
+      </md-content>
+    </md-sidenav>

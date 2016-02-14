@@ -1,21 +1,18 @@
 <div id="settings-network">
 
-<div class="header-custom text-center animated box-shadow">
-</div>
-
-<div class="wrapper-lg animated m-b-lg">
-  <div class="panel panel-card block-800 m-auto pos-rlt md-whiteframe-z2">
+  <div class="panel panel-card block-800 m-h-auto pos-rlt md-whiteframe-z2">
     <md-tabs md-dynamic-height md-border-bottom class="md-primary">
+      <!-- start of network configuration -->
       <md-tab label="{{'settings.network.tabs.SETTINGS' | translate}}">
         <md-content class="md-padding">
-          <div class="w-xxl m-auto p-t-md p-b-md">
+          <div class="w-xxl m-h-auto p-t-md p-b-md">
 	          <md-input-container class="m-b-sm m-t-sm w-full">
 	            <label translate="settings.network.settings.NAME">Nome</label>
 	            <input ng-model="network.name">
 	          </md-input-container>
           </div>
           <div class="row">
-            <div class="block-600 p-lg m-auto">
+            <div class="block-600 p-lg m-h-auto">
               <div class="m-l">
               	<p>
                   <label class="md-switch">
@@ -68,18 +65,21 @@
           </div>
         </md-content>
       </md-tab>
+      <!-- end of network configurations -->
+
+      <!-- domain and analytics -->
       <md-tab label="{{'settings.network.tabs.DOMAINS_ANALYTICS' | translate}}">
         <md-content class="md-padding">
           <div class="m-b text-muted text-md text-u-c" translate="titles.DOMAIN">Domínio</div>
             <div class="row pos-rlt">
               <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
-              <div class="w-xxl m-auto">
+              <div class="w-xxl m-h-auto">
                 <md-input-container class="m-b-sm m-t-sm w-full">
                   <label translate="titles.SUBDOMAIN">Subdomínio</label>
                   <input ng-model="network.subdomain" disabled>
                 </md-input-container>
               </div>
-              <div class="w-xxl m-auto">
+              <div class="w-xxl m-h-auto">
                 <!-- <div class="md-form-group ">
                   <input class="md-input" ng-model="network.domain">
                   <label translate="settings.network.domain_analytics.CUSTOM_DOMAIN">Domínio personalizado</label>
@@ -96,7 +96,7 @@
             <div class="m-b text-muted text-md text-u-c">Analytics</div>
             <div class="row pos-rlt">
               <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
-              <div class="w-xxl m-auto">
+              <div class="w-xxl m-h-auto">
                 <!-- <div class="md-form-group ">
                   <input class="md-input" ng-model="network.trackingId">
                   <label>Google Analytics - TRACKING ID</label>
@@ -106,7 +106,7 @@
                   <input ng-model="network.trackingId">
                 </md-input-container>
               </div>
-              <div class="w-xxl m-auto">
+              <div class="w-xxl m-h-auto">
                 <!-- <div class="md-form-group ">
                   <input class="md-input" ng-model="network.flurryKey">
                   <label>Flurry - API KEY</label>
@@ -119,6 +119,9 @@
             </div>
         </md-content>
       </md-tab>
+      <!-- /domain and analytics -->
+
+      <!-- logos -->
       <md-tab label="{{'settings.network.tabs.LOGOS' | translate}}">
         <md-content class="md-padding">
           <!-- /color preferences -->
@@ -157,9 +160,11 @@
               </div>
             </li>
           </ul>
-    <!-- /logo section -->
         </md-content>
       </md-tab>
+    <!-- /logo section -->
+
+    <!-- footer -->
       <md-tab label="{{'settings.network.tabs.FOOTER' | translate}}">
         <md-content class="md-padding">
         		<div class="m-b text-muted text-md text-u-c">RODAPÉ DA PÁGINA</div>
@@ -202,6 +207,9 @@
               </md-input-container>
         </md-content>
       </md-tab>
+      <!-- /footer -->
+
+      <!-- customization -->
       <md-tab label="{{'settings.network.tabs.CUSTOMIZATION' | translate}}">
         <md-content class="md-padding">
         	<div class="m-t-xxl text-muted text-md text-u-c">Personalização</div>
@@ -225,16 +233,12 @@
           </md-input-container>
         </md-content>
       </md-tab>
+      <!-- /customization -->
     </md-tabs>
-    <!-- <div class="pos-abt top-0 right-0 text-lg m-t">
-      <button ng-click="saveChanges()"
-      md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
-    </div> -->
-    <!-- <div class="m-t text-right text-lg">
-      <button ng-click="saveChanges()"
-      md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
-    </div> -->
+
   </div>
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg">
-  <i class="mdi-content-save i-24"></i>
-</md-button>
+  
+  <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg">
+    <i class="mdi-content-save i-24"></i>
+  </md-button>
+</div>

@@ -67,11 +67,18 @@ angular.module('app')
      '500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'
     });
 
-    $mdThemingProvider.definePalette('myAccent', $mdColorPalette.indigo);
+    $mdThemingProvider.definePalette('myAccent',{
+        '500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'
+    });
 
-    $mdThemingProvider.definePalette('myWarn', $mdColorPalette.red);
+    $mdThemingProvider.definePalette('myWarn',{
+        '500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'
+    });
 
-    $mdThemingProvider.theme('default').primaryPalette('myPrimary').accentPalette('myAccent').warnPalette('myWarn');
+    $mdThemingProvider.theme('default')
+    .primaryPalette('myPrimary')
+    .accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
+    .warnPalette('myWarn');
 
     $mdThemingProvider.alwaysWatchTheme(true);
 
@@ -146,7 +153,6 @@ angular.module('app')
             contrast: (colCon[3]) ? ("rgba("+colCon[0]+","+colCon[1]+","+colCon[2]+","+colCon[3]+")") : ("rgb("+colCon[0]+","+colCon[1]+","+colCon[2]+")")
           };
         }
-          console.log(colors[colorName]);
       };
       colorStore[paletteName] = colors;
       Object.keys(palette).forEach(copyColors);
@@ -206,7 +212,11 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
       }
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".text { " + contrast + " !important }", index);
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".background { background-color: " + color + "; " + contrast + " }", index + 1);
-      index += 2;
+      if(cssname === 'warn' && name === 'default'){
+        stylesheet.insertRule("md-toast.md-" + cssname + "-" + name + " > div { background-color: " + color + "!important; " + contrast + " }", index + 2);
+        index += 3
+      }else
+        index += 2;
     };
     clearStyleSheet = function() {
       var results;

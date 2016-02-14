@@ -17,7 +17,8 @@
 		"SETTINGS": "Settings",
 		"DEFAULT_STATION": "Default Station",
 		"DOMAIN": "Domain",
-		"SUBDOMAIN": "Subdomain"
+		"SUBDOMAIN": "Subdomain",
+		"THEMING": "Appearance"
 	},
 	"actions":{
 		"ADD": "Add",
@@ -45,7 +46,8 @@
 				"DOMAINS_ANALYTICS": "Domains & Analytics",
 				"LOGOS": "Logos",
 				"FOOTER": "Footer",
-				"CUSTOMIZATION": "Customization"
+				"CUSTOMIZATION": "Customization",
+				"THEMING": "Appearance"
 			},
 			"settings":{
 				"NAME": "Name",
@@ -61,7 +63,14 @@
 				"CUSTOM_DOMAIN": "Custom domain"
 			}
 		},
+		"colors":{
+			"TEST_THEME": "Test Colors",
+			"APPLY_THEME": "Apply Cores",
+			"TAB": "Tab",
+			"ALERT": "Alert"
+		},
 		"SET_COLOR": "Set the color palettes",
+		"COLOR_PALETTE": "Color Palette",
 		"COLOR_PRIMARY": "Primary Colors",
 		"COLOR_ACCENT": "Secondary Colors",
 		"COLOR_WARN": "Warning Colors",

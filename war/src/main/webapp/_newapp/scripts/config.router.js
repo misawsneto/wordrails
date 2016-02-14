@@ -73,8 +73,17 @@ angular.module('app')
                 url: '/network',
                 templateUrl: '/views/settings/settings-network.html',
                 data : { titleTranslate: 'titles.NETWORK', title: 'Rede', folded: false },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js']),
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
+                    '/styles/theming.css']),
                 controller: 'SettingsNetworkCtrl'
+              })
+              .state('app.colors', {
+                url: '/colors',
+                templateUrl: '/views/settings/settings-colors.html',
+                data : { titleTranslate: 'titles.THEMING', title: 'Aparência', folded: false },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
+                    '/styles/theming.css']),
+                controller: 'ColorGeneratorCtrl'
               })
               .state('app.dashboard', {
                 url: '/dashboard',

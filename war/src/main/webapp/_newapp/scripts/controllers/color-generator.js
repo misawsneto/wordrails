@@ -2,8 +2,21 @@
 
 // Define our default color generator controller!
 angular.module('app').controller('ColorGeneratorCtrl',
-function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $filter, themeProvider, colorsProvider, $mdTheming, $injector)
+function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $filter, themeProvider, colorsProvider, $mdTheming, $injector, $mdSidenav)
 {
+
+	$scope.togglePalette = buildToggler('palette-selector');
+	$scope.toggleDemo = buildToggler('sidenav-demo');
+
+	$scope.isMobile = true;
+
+	function buildToggler(navID) {
+      return function() {
+        $mdSidenav(navID)
+          .toggle()
+      }
+    }
+
 	function DialogImportCtrl($scope, $mdDialog, $mdColorPalette ){
 		$scope.code = '';
 		$scope.defaultPalettes = $mdColorPalette;
@@ -17,11 +30,6 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
 	$scope.baseColorFilter = function (color) { 
 	    return color.name === '500' || color.name === '300' || color.name === '800' || color.name === 'A100'; 
-	};
-
-	// A200, A100, A400 and A700
-	$scope.accentColorFilter = function (color) { 
-	    return color.name === 'A200' || color.name === 'A100' || color.name === 'A400' || color.name === 'A700';
 	};
 
 	$scope.backgrounds = 
@@ -68,7 +76,6 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		$scope.initSpeedDial();
 
 		// Add a default palette
-		// $scope.addPaletteFromObject( $mdColorPalette.indigo );
 		
 		$scope.addPaletteFromObject(themeProvider.extendPalette('myPrimary',{}), $filter('translate')('settings.COLOR_PRIMARY'))
 		$scope.addPaletteFromObject(themeProvider.extendPalette('myAccent',{}), $filter('translate')('settings.COLOR_ACCENT'))
@@ -77,10 +84,6 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		$scope.calcPalette(0);
 		$scope.calcPalette(1);
 		$scope.calcPalette(2);
-
-		// window.console && console.log($mdColorPalette.indigo)
-		// window.console && console.log(themeProvider.extendPalette('settingsPrimary',{}));
-  //   	window.console && console.log($mdTheming.extendPalette('settingsBackground',{}));
 
 		$scope.primaryPalette = $scope.palettes[0];
 		$scope.accentPalette = $scope.palettes[1];
@@ -95,30 +98,22 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
 	$scope.setTheme = function(){
 
-		themeProvider.definePalette('myPrimary', $scope.makeColorsJsonObject($scope.palettes[0].colors));
-		themeProvider.definePalette('myAccent', $scope.makeColorsJsonObject($scope.palettes[1].colors));
-    	themeProvider.definePalette('myWarn', $scope.makeColorsJsonObject($scope.palettes[2].colors));
+		themeProvider.definePalette('myPrimary', $scope.app.makeColorsJsonObject($scope.palettes[0].colors));
+		themeProvider.definePalette('myAccent', $scope.app.makeColorsJsonObject($scope.palettes[1].colors));
+    	themeProvider.definePalette('myWarn', $scope.app.makeColorsJsonObject($scope.palettes[2].colors));
 
     	var themeName = $filter('generateRandom')(4,"aA");
-    	themeProvider.theme(themeName).primaryPalette('myPrimary').accentPalette('myAccent').warnPalette('myWarn');
+    	themeProvider.theme(themeName)
+    	
+    	.primaryPalette('myPrimary')
+    	.accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
+    	.warnPalette('myWarn');
+
     	// $mdTheming.generateTheme('asdfa')
     	themeProvider.reload($injector);
     	themeProvider.setDefaultTheme(themeName)
-    	$scope.app.theme = themeName;
 
     	createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
-
-    	// console.log($mdColorPalette,themeProvider);
-
-		// console.log($scope.makeColorsJson($scope.palettes[0].colors))
-		// console.log($scope.palettes[0].colors)
-		// window.console && console.log(
-		// 	$scope.makeColorsJson($scope.palettes[0].colors), 
-		// 	$scope.makeColorsJson($scope.palettes[1].colors),
-		// 	$scope.makeColorsJson($scope.palettes[2].colors))
-		// var primary = $mdTheming.extendPalette('myPrimary',{})
-		// var accent = $mdTheming.extendPalette('myAccent',{})
-		// var warn = $mdTheming.extendPalette('myWarn',{})
 	}
 
 	$scope.initSpeedDial = function(){

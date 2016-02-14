@@ -31,7 +31,7 @@ angular.module('app')
       filtered.push(item);
     });
     filtered.sort(function (a, b) {
-      return ((b.name ===  'A200') || (b.name < a.name) ? 1 : -1) ;
+      return ((b.name ===  '300') || (b.name < a.name) ? 1 : -1) ;
     });
     if(reverse) filtered.reverse();
     return filtered;

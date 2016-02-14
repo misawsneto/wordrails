@@ -17,7 +17,8 @@
 		"SETTINGS": "Configurações",
 		"DEFAULT_STATION": "Estação padrão",
 		"DOMAIN": "Domínio",
-		"SUBDOMAIN": "Subdomínio"
+		"SUBDOMAIN": "Subdomínio",
+		"THEMING": "Aparência"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -45,7 +46,8 @@
 				"DOMAINS_ANALYTICS": "Domínios & Analytics",
 				"LOGOS": "Logotipos",
 				"FOOTER": "Rodapé",
-				"CUSTOMIZATION": "Personalização"
+				"CUSTOMIZATION": "Personalização",
+				"THEMING": "Aparência"
 			},
 			"settings":{
 				"NAME": "Nome",
@@ -61,7 +63,14 @@
 				"CUSTOM_DOMAIN": "Domínio personalizado"
 			}
 		},
+		"colors":{
+			"TEST_THEME": "Testar Cores",
+			"APPLY_THEME": "Aplicar Cores",
+			"TAB": "Aba",
+			"ALERT": "Alerta"
+		},
 		"SET_COLOR": "Configure as paletas de cores",
+		"COLOR_PALETTE": "Paleta de Cores",
 		"COLOR_PRIMARY": "Cores Primárias",
 		"COLOR_ACCENT": "Cores Secundárias",
 		"COLOR_WARN": "Cores de Alertas",

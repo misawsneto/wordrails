@@ -708,6 +708,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return termPerspective != null && canVisualizeStation(termPerspective.perspective.station.id);
 	}
 
+	@Override
+	protected boolean isGetThemesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetThemeAuthorized(Integer themeId) {
+		return true;
+	}
+
 	private boolean canReadComments(Integer commentId) {
 		boolean authorized = false;
 		Comment comment = commentRepository.findOne(commentId);
