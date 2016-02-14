@@ -92,7 +92,7 @@ public class ImagesResource {
 		try {
 			hashes = imageService.getHashes(hash);
 		} catch (EntityNotFoundException e) {
-			throw new NotFoundException("Image does not exist");
+			throw new NotFoundException("Image does not exist. Hash:" + hash);
 		}
 
 		hash = hashes.get(size);

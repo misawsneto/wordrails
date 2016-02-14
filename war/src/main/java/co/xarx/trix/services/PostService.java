@@ -4,8 +4,6 @@ import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.elasticsearch.domain.ESPost;
-import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
@@ -34,10 +32,6 @@ public class PostService {
 	private static final Logger log = LoggerFactory.getLogger(PostService.class);
 
 	@Autowired
-	private QueryPersistence queryPersistence;
-	@Autowired
-	private SchedulerService schedulerService;
-	@Autowired
 	private PostRepository postRepository;
 	@Autowired
 	private PostReadRepository postReadRepository;
@@ -53,10 +47,6 @@ public class PostService {
 	private MobileDeviceRepository mobileDeviceRepository;
 	@Autowired
 	private NetworkRepository networkRepository;
-	@Autowired
-	private ESPostRepository esPostRepository;
-	@Autowired
-	private ElasticSearchService elasticSearchService;
 	@Autowired
 	private MobileService mobileService;
 	@Autowired
@@ -122,39 +112,7 @@ public class PostService {
 		}
 	}
 
-	public Post convertPost(int postId, String state) {
-		return convertPost(postRepository.findOne(postId), state);
-	}
-
-	public Post convertPost(Post dbPost, String state) {
-
-		if (dbPost != null) {
-			log.debug("Before convert: " + dbPost.getClass().getSimpleName());
-			if (state.equals(dbPost.state)) {
-				return dbPost; //they are the same type. no need for convertion
-			}
-
-			if (dbPost.state.equals(Post.STATE_SCHEDULED)) { //if converting FROM scheduled, unschedule
-				schedulerService.unschedule(dbPost.getId());
-			} else if (state.equals(Post.STATE_SCHEDULED)) { //if converting TO scheduled, schedule
-				schedulerService.schedule(dbPost.getId(), dbPost.scheduledDate);
-			}
-
-			dbPost.state = state;
-
-			queryPersistence.changePostState(dbPost.getId(), state);
-
-			if (state.equals(Post.STATE_PUBLISHED)) {
-				dbPost = postRepository.findOne(dbPost.getId()); //do it again so modelmapper don't cry... stupid framework
-				elasticSearchService.saveIndex(dbPost, ESPost.class, esPostRepository);
-			} else {
-				elasticSearchService.deleteIndex(dbPost.getId(), esPostRepository);
-			}
-		}
-
-		return dbPost;
-	}
-
+	@Transactional(noRollbackFor = Exception.class)
 	public void countPostRead(int postId, int personId, String sessionId) {
 		Assert.isTrue(postId > 0, "Post id must be bigger than zero");
 
@@ -170,15 +128,13 @@ public class PostService {
 		try {
 			if (pr != null) {
 				postReadRepository.save(pr);
-				post.incrementReadCount();
-				postRepository.save(post);
+				postRepository.incrementReadCount(postId);
 			}
 		} catch (ConstraintViolationException | DataIntegrityViolationException e) {
 			log.info("user already read this post");
 		}
 	}
 
-	@Transactional(noRollbackFor = Exception.class)
 	public PostRead getPostRead(Post post, Person person, String sessionId) {
 		QPostRead pr = QPostRead.postRead;
 		if (person == null) {
