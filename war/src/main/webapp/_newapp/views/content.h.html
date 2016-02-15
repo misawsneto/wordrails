@@ -1,6 +1,6 @@
 <div class="box">
   <!-- Content Navbar -->
-  <div class="navbar no-radius" ng-class="$state.current.data.theme ? $state.current.data.theme.primary+'-600' : app.setting.theme.primary+'-600'">
+  <div class="navbar no-radius md-primary-default background">
     <!-- Open side - Naviation on mobile -->
     <a md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
     <!-- / -->
@@ -32,7 +32,7 @@
           <i class="mdi-social-person-outline i-24"></i>
         </a>
       </li>
-      <li class="dropdown">
+      <!-- <li class="dropdown">
         <a md-ink-ripple data-toggle="dropdown">
           <i class="mdi-navigation-more-vert i-24"></i>
         </a>
@@ -43,7 +43,7 @@
           <li class="divider"></li>
           <li><a href>Help &amp; feedback</a></li>
         </ul>
-      </li>
+      </li> -->
     </ul>
     <div class="pull-right" ui-view="navbar@"></div>
     <!-- / -->

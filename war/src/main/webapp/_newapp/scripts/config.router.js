@@ -17,8 +17,8 @@ angular.module('app')
     ]
   )
   .config(
-    [          '$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG',
-      function ( $stateProvider,   $urlRouterProvider,  MODULE_CONFIG ) {
+    [          '$stateProvider', '$urlRouterProvider', 'MODULE_CONFIG', '$translateProvider',
+      function ( $stateProvider,   $urlRouterProvider,  MODULE_CONFIG ,  $translateProvider) {
         $urlRouterProvider
           .otherwise('/dashboard');
 
@@ -37,15 +37,16 @@ angular.module('app')
             .state('app', {
               abstract: true,
               resolve: {
-                loggedIn: function($stateParams, $q, trix){
+                appData: function($stateParams, $q, trix){
                   var deferred = $q.defer();
                   trix.login('demo', 'Dem0Pass').success(function(){
                     trix.allInitData().success(function(response){
-                      deferred.resolve(true);
+                      deferred.resolve(response);
                     });
                   })
                   return deferred.promise;
-                }
+                },
+                deps:load( '/scripts/services/trix.js' ).deps
               },
               url: '',
               views: {
@@ -56,15 +57,52 @@ angular.module('app')
                   templateUrl: aside
                 },
                 'content': {
-                  templateUrl: content
+                  templateUrl: content,
+                  controller: 'AppDataCtrl'
                 }
               }
             })
+              .state('app.stations', {
+                url: '/stations',
+                templateUrl: '/views/settings/settings-stations.html',
+                data : { titleTranslate: 'titles.STATIONS', title: 'Estações', folded: false },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-stations.js']),
+                controller: 'SettingsStationsCtrl'
+              })
+              .state('app.network', {
+                url: '/network',
+                templateUrl: '/views/settings/settings-network.html',
+                data : { titleTranslate: 'titles.NETWORK', title: 'Rede', folded: false },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
+                    '/styles/theming.css']),
+                controller: 'SettingsNetworkCtrl'
+              })
+              .state('app.colors', {
+                url: '/colors',
+                templateUrl: '/views/settings/settings-colors.html',
+                data : { titleTranslate: 'titles.THEMING', title: 'Aparência', folded: false },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
+                    '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
+                controller: 'ColorGeneratorCtrl'
+              })
               .state('app.dashboard', {
                 url: '/dashboard',
                 templateUrl: '/views/pages/dashboard.html',
-                data : { title: 'Dashboard', folded: true },
+                data : { title: 'Dashboard', folded: false },
                 resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
+              })
+              .state('app.theming', {
+                url: '/theming',
+                templateUrl: '/views/pages/dashboard.theming.html',
+                data : { title: 'Theme builder', folded: false },
+                resolve: load(['angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
+                    '/styles/theming.css']),
+                controller: 'ColorGeneratorCtrl'
+              })
+              .state('app.pagebuilder', {
+                url: '/pagebuilder',
+                templateUrl: '/views/settings/settings-stations-pagebuilder.html',
+                data : { title: 'Page Builder', folded: true }
               })
               .state('app.analysis', {
                 url: '/analysis',
@@ -75,7 +113,7 @@ angular.module('app')
               .state('app.wall', {
                 url: '/wall',
                 templateUrl: '/views/pages/dashboard.wall.html',
-                data : { title: 'Wall', folded: true }
+                data : { title: 'Wall', folded: false }
               })
               .state('app.todo', {
                 url: '/todo',
@@ -97,7 +135,7 @@ angular.module('app')
                 templateUrl: '/apps/note/list.html',
                 data : { title: 'Note'},
                 controller: 'NoteCtrl',
-                resolve: load(['/apps/note/note.js', 'moment'])
+                resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
               })
               .state('app.note.item', {
                 url: '/{id}',
@@ -105,7 +143,7 @@ angular.module('app')
                   '': {
                     templateUrl: '/apps/note/item.html',
                     controller: 'NoteItemCtrl',
-                    resolve: load(['/apps/note/note.js', 'moment'])
+                    resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
                   },
                   'navbar@': {
                     templateUrl: '/apps/note/navbar.html',
@@ -117,8 +155,8 @@ angular.module('app')
               .state('app.inbox', {
                   url: '/inbox',
                   templateUrl: '/apps/inbox/inbox.html',
-                  data : { title: 'Inbox', folded: true },
-                  resolve: load( ['/apps/inbox/inbox.js','moment'] )
+                  data : { title: 'Inbox', folded: false },
+                  resolve: load( ['/apps/inbox/inbox.js','/libs/jquery/moment/min/moment-with-locales.min.js'] )
               })
               .state('app.inbox.list', {
                   url: '/inbox/{fold}',
@@ -462,6 +500,7 @@ angular.module('app')
                 url: '/lockme',
                 templateUrl: '/views/pages/lockme.html'
               })
+              
             ;
         // end of if /settings
           else
@@ -471,15 +510,16 @@ angular.module('app')
           .state('app', {
             abstract: true,
             resolve: {
-              loggedIn: function($stateParams, $q, trix){
+              appData: function($stateParams, $q, trix){
                 var deferred = $q.defer();
                 trix.login('demo', 'Dem0Pass').success(function(){
                   trix.allInitData().success(function(response){
-                    deferred.resolve(true);
+                    deferred.resolve(response);
                   });
                 })
                 return deferred.promise;
-              }
+              },
+              deps:load( '/scripts/services/trix.js' ).deps
             },
             url: '',
             views: {
@@ -490,14 +530,15 @@ angular.module('app')
                 templateUrl: aside
               },
               'content': {
-                templateUrl: content
+                templateUrl: content,
+                controller: 'AppDataCtrl'
               }
             }
           })
             .state('app.dashboard', {
               url: '/dashboard',
               templateUrl: '/views/pages/dashboard.html',
-              data : { title: 'Dashboard', folded: true },
+              data : { title: 'Dashboard', folded: false },
               resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
             })
             .state('app.analysis', {
@@ -509,12 +550,12 @@ angular.module('app')
             .state('app.home', {
               url: '/home',
               templateUrl: '/views/pages/dashboard.home.html',
-              data : { title: 'Home', folded: true }
+              data : { title: 'Home', folded: false }
             })
             .state('app.wall', {
               url: '/wall',
               templateUrl: '/views/pages/dashboard.wall.html',
-              data : { title: 'Wall', folded: true }
+              data : { title: 'Wall', folded: false }
             })
             .state('app.todo', {
               url: '/todo',
@@ -536,7 +577,7 @@ angular.module('app')
               templateUrl: '/apps/note/list.html',
               data : { title: 'Note'},
               controller: 'NoteCtrl',
-              resolve: load(['/apps/note/note.js', 'moment'])
+              resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
             })
             .state('app.note.item', {
               url: '/{id}',
@@ -544,7 +585,7 @@ angular.module('app')
                 '': {
                   templateUrl: '/apps/note/item.html',
                   controller: 'NoteItemCtrl',
-                  resolve: load(['/apps/note/note.js', 'moment'])
+                  resolve: load(['/apps/note/note.js', '/libs/jquery/moment/min/moment-with-locales.min.js'])
                 },
                 'navbar@': {
                   templateUrl: '/apps/note/navbar.html',
@@ -556,8 +597,8 @@ angular.module('app')
             .state('app.inbox', {
                 url: '/inbox',
                 templateUrl: '/apps/inbox/inbox.html',
-                data : { title: 'Inbox', folded: true },
-                resolve: load( ['/apps/inbox/inbox.js','moment'] )
+                data : { title: 'Inbox', folded: false },
+                resolve: load( ['/apps/inbox/inbox.js','/libs/jquery/moment/min/moment-with-locales.min.js'] )
             })
             .state('app.inbox.list', {
                 url: '/inbox/{fold}',

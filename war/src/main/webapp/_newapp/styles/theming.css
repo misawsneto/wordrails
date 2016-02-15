@@ -1,0 +1,338 @@
+/*
+ * Reset the vertical align from baseline to middle. My app wont be typical text.
+ */
+/* html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+	vertical-align: middle;
+}
+
+body {
+	font-family: "Open Sans", Arial, sans-serif;
+	background: rgb(66, 66, 66);
+} */
+
+.spaced-top {
+	margin-top: 40px;
+}
+
+.spaced-bottom {
+	margin-bottom: 40px;
+}
+
+.spaced-left {
+	margin-left: 40px;
+}
+
+.spaced-right {
+	margin-right: 40px;
+}
+
+.spaced-horizontal {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.spaced-vertical {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.padded {
+	padding: 15px;
+}
+
+pre {
+	background: #eee;
+	padding: 50px;
+}
+
+.md-accent, .md-accent input, .md-accent label {
+	/* color: #333 !important; */
+	/* fill: #333 !important; */
+}
+
+.logo-text {
+	color: #fff;
+	padding-left: 15px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.logo-subhead {
+	font-size: 11px;
+	text-transform: uppercase;
+	display: block;
+}
+
+.bright-text input {
+	color: #fff !important;
+	text-shadow: none !important;
+}
+
+/*
+ * Palette Color List CSS
+ */
+.palette {
+	box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+	/* margin: 10px; */
+	min-width: 120px;
+	max-width: 500px;
+	/* float: left; */
+}
+
+.palette-colors {
+
+}
+
+body .palette-colors md-list-item {
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+	display: block;
+	min-height: 0px;
+}
+
+.palette-color {
+	font-weight: 200;
+	padding: 0 10px;
+	/* font-size: 16px; */
+	font-size: 14px;
+	line-height: 35px;
+	width: 100%;
+	display: block;
+	min-height: 35px
+}
+
+.palette-color-light {
+	color: rgba(255, 255, 255, 0.87);
+	text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+}
+.palette-color-dark {
+	color: #000;
+	text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.1);
+}
+
+.palette-color span.color-text {
+	height: 35px !important;
+	display: inline-block;
+	line-height: 35px;
+}
+
+.background-palette-color{
+	line-height: inherit!important;
+	min-height: inherit!important;
+}
+
+.background-palette-color span.color-text{
+	line-height: inherit!important;
+	min-height: inherit!important;
+	height: inherit!important;
+}
+
+
+.palette-color-hex {
+	font-size: 11px;
+	text-transform: uppercase;
+	opacity: 0.7;
+}
+
+.palette-color-mutators {
+	display: inline-block;
+	position: relative;
+	top: -3px;
+	float: right;
+	height: 35px !important;
+}
+
+.palette-color-contrast {
+	border-radius: 50%;
+	display: inline-block;
+	float: right;
+	width: 20px;
+	height: 20px;
+	opacity: 0.7;
+	margin: 4px;
+	margin-top: 6px;
+}
+.palette-color-light .palette-color-contrast {
+	background: white;
+	border: 1px solid black;
+}
+.palette-color-dark .palette-color-contrast {
+	background: black;
+	border: 1px solid white;
+}
+
+.dot {
+	border-radius: 24px;
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+}
+
+.sp-replacer {
+	min-width: 50px;
+	border: 0px solid #fff;
+	background: transparent;
+}
+
+.sp-replacer:hover {
+	/* color: #fff !important; */
+}
+
+.gh-btn {
+	text-align: center;
+	margin-left: 15px !important;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.gh-btn img{
+	padding: 10px;
+}
+
+.btn-icon-only {
+	width: 47px !important;
+	text-align: center;
+	min-width: 0px;
+	margin: 0px;
+}
+
+.theming .md-button.md-fab {
+	line-height: 16px;
+}
+
+.theming md-fab-speed-dial {
+	position: absolute;
+	bottom: 4%;
+	right: 3%;
+}
+
+/*
+ * MD Style Overrides
+ */
+/*[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}*/
+.theming md-input-container {
+	padding: 20px 2px 26px !important;
+}
+
+.theming .md-background {
+	background-color: rgba(0, 0, 0, 0.701961) !important;
+}
+
+.theming md-input-container.md-default-theme label, .theming md-input-container.md-default-theme .md-placeholder {
+	text-shadow: none !important;
+}
+
+.bright-text md-input-container.md-default-theme.md-input-focused label {
+	color: #fff !important;
+}
+
+.theming .md-accent input {
+	color: rgb(244, 67, 54) !important;
+	text-shadow: none !important;
+}
+
+.theming md-list {
+	padding: 0 !important;
+	overflow: hidden !important;
+}
+
+/* .theming md-content {
+	overflow: visible !important;
+} */
+
+.theming md-dialog md-content {
+	max-height: 600px;
+}
+
+.theming md-dialog pre {
+	overflow-x: scroll;
+}
+
+.color {
+	height: 100px;
+	min-width: 100px;
+}
+
+.color-lovers-palette {
+	margin-bottom: 25px;
+	cursor: pointer;
+}
+
+.colour-lover-content {
+	min-width: 600px;
+	overflow: auto !important;
+}
+
+/* Fix virtual align of images within md-button */
+.theming .md-button {
+	line-height: normal;
+	min-width: 40px;
+}
+
+/* Content styles */
+.light-text{
+	color: #727373;
+}
+.spaced-text{
+	font-size: 18px;
+	line-height: 37px;
+}
+
+.spaced-text p, .spaced-text strong{
+	margin: 30px;
+}
+
+.fixed-footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+#amzn_assoc_ad_div_assoc_banner_placement_default_0 {
+	text-align: center;
+}
+
+.fixed-footer iframe {
+	margin: 0 auto;
+}
+
+/**
+ * Import Styles
+ **/
+.import-textarea {
+	width: 80%;
+	height: 120px;
+	margin: 10px 10%;
+	border: 3px solid #ccc;
+	padding: 5px;
+	font-family: Tahoma, sans-serif;
+}
+
+#import-theme-container {
+	width: 600px;
+}
+
+#import-theme-container .md-button {
+	float: left;
+	margin: 5px;
+}
+
+@media screen and (max-width: 960px) {
+	.palette {
+		float: left;
+		width: 100%;
+		display: block !important;
+	}
+}
+
+/**
+ * About styles
+ **/
+.clean-ul{
+	margin-left: 50px;
+	list-style-type: circle;
+	font-size: 14px;
+	padding-left: 30px;
+}
