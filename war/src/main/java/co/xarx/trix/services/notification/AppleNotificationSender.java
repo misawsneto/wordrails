@@ -132,6 +132,8 @@ public class AppleNotificationSender implements NotificationSender {
 					throw new IOException("Failed to reconnect to Apple", e);
 				}
 				return sendMessageToDevices(payloader, devices, apnsClient, i, results);
+			} else {
+				throw new IOException("Unexpected error", e);
 			}
 		}
 
