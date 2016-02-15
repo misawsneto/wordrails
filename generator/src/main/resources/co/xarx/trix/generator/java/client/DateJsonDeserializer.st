@@ -16,11 +16,11 @@ class DateJsonDeserializer implements JsonDeserializer<Date> {
 	@Override
 	public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {		
 		try {
-            	Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault())
-        						.parse(json.getAsString());
-        	    return date;
-        	} catch (Exception e){
+				Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault())
+								.parse(json.getAsString());
+				return date;
+			} catch (Exception e){
 			return new Date(json.getAsLong());
-        	}
+			}
 	}
 }>>
