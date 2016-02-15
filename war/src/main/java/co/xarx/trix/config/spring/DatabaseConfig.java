@@ -51,7 +51,6 @@ public class DatabaseConfig {
 			//yes, this is a hack. not my fault setPlaceholderReplacement doesnt work
 			flyway.setPlaceholderPrefix("NDSIJbhasiBDysBDSAB");
 			flyway.setPlaceholderSuffix("HBDUDBYUDVYludinauidaiu");
-			flyway.migrate();
 		}
 		return flyway;
 	}

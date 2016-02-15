@@ -1,4 +1,4 @@
-package co.xarx.trix.integration;
+package test.integration;
 
 import co.xarx.trix.config.DatabaseTestConfig;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;

@@ -3,9 +3,6 @@ package co.xarx.trix.services;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.aspect.annotations.TenantAuthorize;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.Notification;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.MobileDeviceRepository;
@@ -37,8 +34,6 @@ public class MobileService {
 	private AndroidNotificationSender androidNS;
 
 	@Autowired
-	private AuthService authProvider;
-
 	public MobileService(NotificationService notificationService,
 						 AsyncService asyncService, MobileDeviceRepository mobileDeviceRepository,
 						 AppleNotificationSender appleNS, AndroidNotificationSender androidNS) {

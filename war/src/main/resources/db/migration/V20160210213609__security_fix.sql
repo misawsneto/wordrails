@@ -23,13 +23,6 @@ WHERE user_id IN (SELECT n1.id
 									FROM users n1, users n2
 									WHERE n1.id > n2.id AND n1.username = n2.username AND n1.tenantId = n2.tenantId);
 
-DELETE personnetworktoken FROM personnetworktoken
-WHERE person_id IN (SELECT id
-										FROM person
-										WHERE user_id IN (SELECT n1.id
-																			FROM users n1, users n2
-																			WHERE n1.id > n2.id AND n1.username = n2.username AND n1.tenantId = n2.tenantId));
-
 DELETE person_station_role FROM person_station_role
 WHERE person_id IN (SELECT id
 										FROM person
