@@ -267,6 +267,7 @@ angular.module('app')
 
       createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
       $scope.app.backgroundPalette = $scope.app.network.backgroundColor
+      
 
       // ---------- /theming ----------
 
