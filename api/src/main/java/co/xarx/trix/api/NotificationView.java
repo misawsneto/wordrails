@@ -5,6 +5,9 @@ import java.io.Serializable;
 public class NotificationView implements Serializable {
 	private static final long serialVersionUID = -8515832598761372174L;
 
+	protected NotificationView() {
+	}
+
 	public NotificationView(String title, String message, String hash, boolean test) {
 		this.title = title;
 		this.message = message;

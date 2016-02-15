@@ -27,7 +27,7 @@ public class MobileServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		NotificationService notificationService = mock(NotificationService.class);
-		when(notificationService.getErrorNotifications(anyList(), any(), any(), any())).thenCallRealMethod();
+		when(notificationService.getErrorNotifications(anyList(), any(), any(), any(), any())).thenCallRealMethod();
 
 		asyncService = mock(AsyncService.class);
 		mobileService = new MobileService(notificationService, asyncService, null, null, null);

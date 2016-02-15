@@ -33,11 +33,14 @@ CREATE TABLE `mobiledevice` (
   `lat` double DEFAULT NULL,
   `lng` double DEFAULT NULL,
   `type` int(11) DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL,
+	`person_id` INT(11) DEFAULT NULL,
+	`last_person_id` INT(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_ra0b9pf2esqesmc9ba40kfi1b` (`tenantId`,`deviceCode`),
   KEY `FK_bp0e0gt2xa419i44uv4t0lind` (`person_id`),
-  CONSTRAINT `FK_bp0e0gt2xa419i44uv4t0lind` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
+  KEY `FK_edy8n2bc7eb9ce89cn9we89cn` (`last_person_id`),
+  CONSTRAINT `FK_bp0e0gt2xa419i44uv4t0lind` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
+  CONSTRAINT `FK_edy8n2bc7eb9ce89cn9we89cn` FOREIGN KEY (`last_person_id`) REFERENCES `person` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9215 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -57,11 +60,11 @@ CREATE TABLE `applecertificate` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO mobiledevice (createdAt, tenantId, updatedAt, active, deviceCode, lat, lng, type, person_id) SELECT
- createdAt, tenantId, updatedAt, TRUE, token, lat, lng, 1, person_id FROM personnetworktoken;
+INSERT INTO mobiledevice (createdAt, tenantId, updatedAt, active, deviceCode, lat, lng, type, person_id, last_person_id) SELECT
+ createdAt, tenantId, updatedAt, TRUE, token, lat, lng, 1, person_id, person_id FROM personnetworktoken;
 
-INSERT into mobiledevice(createdAt, tenantId, updatedAt, version, active, deviceCode, lat, lng, type, person_id) SELECT
-createdAt, tenantId, updatedAt, version, TRUE, regId, lat, lng, 0, person_id from personnetworkregid;
+INSERT into mobiledevice(createdAt, tenantId, updatedAt, version, active, deviceCode, lat, lng, type, person_id, last_person_id) SELECT
+createdAt, tenantId, updatedAt, version, TRUE, regId, lat, lng, 0, person_id, person_id from personnetworkregid;
 
 INSERT INTO applecertificate(createdAt, updatedAt, tenantId, password, file)
 	SELECT createdAt, updatedAt, tenantId, certificate_password, certificate_ios FROM network

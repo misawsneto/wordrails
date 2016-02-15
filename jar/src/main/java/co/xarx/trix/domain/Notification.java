@@ -1,5 +1,7 @@
 package co.xarx.trix.domain;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -7,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class Notification extends BaseEntity {
 
 	public enum Type {
@@ -67,6 +71,9 @@ public class Notification extends BaseEntity {
 
 	public String errorCodeName;
 
+	@Lob
+	public String stackTrace;
+
 	public String deviceType;
 
 	public boolean deviceDeactivated;
@@ -78,83 +85,7 @@ public class Notification extends BaseEntity {
 	@NotEmpty
 	public String type;
 
-	public String getRegId() {
-		return regId;
-	}
-
-	public void setRegId(String regId) {
-		this.regId = regId;
-	}
-
-	public String getHash() {
-		return hash;
-	}
-
-	public void setHash(String hash) {
-		this.hash = hash;
-	}
-
-	public Post getPost() {
-		return post;
-	}
-
-	public void setPost(Post post) {
-		this.post = post;
-	}
-
-	public boolean isTest() {
-		return test;
-	}
-
-	public void setTest(boolean test) {
-		this.test = test;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status.toString();
-	}
-
-	public String getErrorCodeName() {
-		return errorCodeName;
-	}
-
-	public void setErrorCodeName(String errorCodeName) {
-		this.errorCodeName = errorCodeName;
-	}
-
-	public DeviceType getDeviceType() {
-		return DeviceType.valueOf(deviceType);
-	}
-
 	public void setDeviceType(DeviceType deviceType) {
 		this.deviceType = deviceType.toString();
-	}
-
-	public Boolean getDeviceDeactivated() {
-		return deviceDeactivated;
-	}
-
-	public void setDeviceDeactivated(Boolean deviceDeactivated) {
-		this.deviceDeactivated = deviceDeactivated;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 }

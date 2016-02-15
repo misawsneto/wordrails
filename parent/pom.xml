@@ -746,20 +746,12 @@
 				<scope>test</scope>
 			</dependency>
 
-			<!--<dependency>-->
-				<!--<groupId>org.powermock</groupId>-->
-				<!--<artifactId>powermock-module-junit4-rule</artifactId>-->
-				<!--<version>1.6.4</version>-->
-				<!--<scope>test</scope>-->
-			<!--</dependency>-->
-
-			<!--<dependency>-->
-				<!--<groupId>org.powermock</groupId>-->
-				<!--<artifactId>powermock-classloading-xstream</artifactId>-->
-				<!--<version>1.6.4</version>-->
-				<!--<scope>test</scope>-->
-			<!--</dependency>-->
-
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.16.6</version>
+				<scope>provided</scope>
+			</dependency>
 
 			<dependency>
 				<groupId>org.hsqldb</groupId>

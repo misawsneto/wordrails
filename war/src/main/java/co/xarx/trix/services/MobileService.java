@@ -79,14 +79,14 @@ public class MobileService {
 			notifications = futureAndroidNotifications.get();
 		} catch (InterruptedException | ExecutionException e) {
 			notifications = notificationService.getErrorNotifications(androidDevices,
-					notification, post, Notification.DeviceType.ANDROID);
+					notification, post, e, Notification.DeviceType.ANDROID);
 		}
 
 		try {
 			notifications.addAll(futureAppleNotifications.get());
 		} catch (InterruptedException | ExecutionException e) {
 			notifications.addAll(notificationService.getErrorNotifications(appleDevices,
-					notification, post, Notification.DeviceType.APPLE));
+					notification, post, e, Notification.DeviceType.APPLE));
 		}
 
 		return notifications;
@@ -118,6 +118,8 @@ public class MobileService {
 		}
 
 		device.person = person;
+		if(person != null)
+			device.lastPersonLogged = person;
 		if (lat != null) device.lat = lat;
 		if (lng != null) device.lng = lng;
 

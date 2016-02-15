@@ -44,13 +44,17 @@ public class AmazonCloudService {
 	}
 
 	public String getPublicImageURL(String fileName) throws IOException {
-		String networkDomain = TenantContextHolder.getCurrentTenantId();
-		return "http://" + cloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		if (tenantId == null || tenantId.isEmpty())
+			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
+		return "http://" + cloudfrontUrl + "/" + tenantId + "/images/" + fileName;
 	}
 
 	public String getPublicApkURL(String fileName) throws IOException {
-		String networkDomain = TenantContextHolder.getCurrentTenantId();
-		return "http://" + cloudfrontUrl + "/" + networkDomain + "/apk/" + fileName;
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		if(tenantId == null || tenantId.isEmpty())
+			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
+		return "http://" + cloudfrontUrl + "/" + tenantId + "/apk/" + fileName;
 	}
 
 	public String uploadPublicImage(InputStream input, Long lenght, String size, String mime) throws IOException, AmazonS3Exception {

@@ -61,6 +61,7 @@ import java.util.regex.Pattern;
 @Produces(MediaType.APPLICATION_JSON)
 @Component
 public class PersonsResource {
+
 	@Context
 	private HttpServletRequest httpServletRequest;
 	@Context
@@ -232,6 +233,7 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Person person = authProvider.getLoggedPerson();
+		Logger.info("Updating android device " + regId + " for person " + person.id);
 		mobileService.updateDevice(person, regId, lat, lng, MobileDevice.Type.ANDROID);
 		return Response.status(Status.OK).build();
 	}
@@ -241,6 +243,7 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		Person person = authProvider.getLoggedPerson();
+		Logger.info("Updating apple device " + token + " for person " + person.id);
 		mobileService.updateDevice(person, token, lat, lng, MobileDevice.Type.APPLE);
 		return Response.status(Status.OK).build();
 	}
@@ -798,7 +801,7 @@ public class PersonsResource {
 		//Network Permissions
 		NetworkPermission networkPermissionDto = new NetworkPermission();
 		if(networkRole != null)
-			networkPermissionDto.networkId = networkRole.id;
+			networkPermissionDto.networkId = network.id;
 		else
 			networkPermissionDto.admin = false;
 

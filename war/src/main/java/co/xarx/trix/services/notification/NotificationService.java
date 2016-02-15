@@ -5,6 +5,7 @@ import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.util.ListUtil;
 import co.xarx.trix.util.Logger;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -31,7 +32,7 @@ public class NotificationService {
 
 				notifications.addAll(this.getSuccessNotifications(results, notification, post, deviceType));
 			} catch (IOException e) {
-				notifications.addAll(this.getErrorNotifications(new HashSet<>(part), notification, post, deviceType));
+				notifications.addAll(this.getErrorNotifications(new HashSet<>(part), notification, post, e, deviceType));
 			}
 
 			try {
@@ -45,7 +46,7 @@ public class NotificationService {
 
 	public List<Notification> getErrorNotifications(Collection<String> devices,
 													NotificationView notification,
-													Post post,
+													Post post, Exception e,
 													Notification.DeviceType deviceType) {
 		List<Notification> notis = new ArrayList<>();
 		if(devices == null || devices.isEmpty())
@@ -60,6 +61,8 @@ public class NotificationService {
 			noti.errorCodeName = "Failed to send notification to server";
 			noti.setDeviceType(deviceType);
 			noti.deviceDeactivated = false;
+			noti.setStackTrace(ExceptionUtils.getStackTrace(e));
+			noti.test = notification.test;
 			notis.add(noti);
 		}
 

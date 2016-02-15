@@ -24,10 +24,14 @@ public class MobileDevice extends BaseEntity {
 
 	@NotEmpty
 	public String deviceCode;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "person_id")
 	public Person person;
+
+	@ManyToOne
+	@JoinColumn(name = "last_person_id")
+	public Person lastPersonLogged;
 
 	public Double lat;
 
