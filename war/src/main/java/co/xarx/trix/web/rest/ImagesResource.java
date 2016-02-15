@@ -1,13 +1,16 @@
 package co.xarx.trix.web.rest;
 
+import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
@@ -35,6 +38,10 @@ public class ImagesResource {
 	@Autowired
 	private AmazonCloudService amazonCloudService;
 
+	@Autowired
+	@Qualifier("simpleMapper")
+	ObjectMapper simpleMapper;
+
 	@POST
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -53,11 +60,14 @@ public class ImagesResource {
 
 		Image newImage = imageService.createNewImage(type, item.getInputStream(), item.getContentType(), true, true);
 
-		return Response.ok().entity("{\"hash\":\"" + hash +
-				"\", \"imageId\":" + newImage.id +
-				"\", \"imageHash\":" + newImage.hashs.get(Image.SIZE_ORIGINAL) +
-				", \"link\": \"" + amazonCloudService.getPublicImageURL(hash) +
-				"\", \"filelink\": \"" + amazonCloudService.getPublicImageURL(hash) + "\"}").build();
+		ImageUploadResponse iur = new ImageUploadResponse();
+		iur.hash = hash;
+		iur.imageId = newImage.id;
+		iur.imageHash = newImage.hashs.get(Image.SIZE_ORIGINAL);
+		iur.link = amazonCloudService.getPublicImageURL(hash);
+		iur.filelink = amazonCloudService.getPublicImageURL(hash);
+
+		return Response.ok().entity(simpleMapper.writeValueAsString(iur)).build();
 	}
 
 	private boolean validate(FileItem item) throws FileUploadException {
