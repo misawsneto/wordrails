@@ -46,7 +46,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		"#222222",
 		"#131313"]
 
-	$scope.backgroundPalette = $scope.backgrounds[0]
+	$scope.backgroundPalette = $scope.app.network.backgroundColor
 
 	$scope.changeBackgroundColor = function(color){
 		$scope.backgroundPalette = color
