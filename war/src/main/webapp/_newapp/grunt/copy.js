@@ -35,7 +35,7 @@ module.exports = {
                     'ngstorage/ngStorage.js',
                     'oclazyload/dist/**',
                     'textAngular/dist/**',
-                    'venturocket-angular-slider/build/**',
+                    'venturocket-angular-slider/build/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',
@@ -59,9 +59,27 @@ module.exports = {
                     'flot-spline/js/jquery.flot.spline.min.js',
                     'flot.orderbars/js/jquery.flot.orderBars.js',
                     'moment/moment.js',
-                    'waves/dist/**'
+                    'moment/min/moment-with-locales.min.js',
+                    'waves/dist/**',
+                    'screenfull/**',
+                    'jquery.easy-pie-chart/**',
+                    'jquery.sparkline/**',
+                    'bower-jvectormap-2/**',
+                    'slimScroll/jquery.slimscroll.min.js'
                 ],
                 dest: 'libs/jquery',
+                cwd:  'bower_components',
+                expand: true
+            },
+            {
+                src: [
+                    'spectrum/spectrum.css',
+                    'spectrum/spectrum.js',
+                    'angular-spectrum-colorpicker/dist/angular-spectrum-colorpicker.min.js',
+                    'tinycolor/tinycolor.js',
+                    'angular-toArrayFilter/toArrayFilter.js'
+                ],
+                dest: 'libs/theming',
                 cwd:  'bower_components',
                 expand: true
             },

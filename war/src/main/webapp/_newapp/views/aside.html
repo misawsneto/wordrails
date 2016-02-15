@@ -1,5 +1,5 @@
 <div class="box bg-white">
-  <div class="navbar md-whiteframe-z1 no-radius" ng-class="$state.current.data.theme ? $state.current.data.theme.primary : app.setting.theme.primary">
+  <div class="navbar md-whiteframe-z1 no-radius md-primary-default background">
       <!-- brand -->
       <a class="navbar-brand">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
@@ -22,12 +22,12 @@
             <img src="images/a0.jpg" class="img-responsive rounded">
           </div>
           <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account">
-            <span class="block font-bold">John Smith</span>
+            <span class="block font-bold">{{app.person.name}}</span>
             <span class="pull-right auto">
               <i class="fa inline fa-caret-down"></i>
               <i class="fa none fa-caret-up"></i>
             </span>
-            john.smith@gmail.com
+            {{app.person.email}}
           </a>
         </div>
         <div id="nav" ng-include="'views/partials/aside.nav.uikit.html'"></div>
