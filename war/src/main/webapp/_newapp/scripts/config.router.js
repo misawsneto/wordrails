@@ -46,7 +46,7 @@ angular.module('app')
                   })
                   return deferred.promise;
                 },
-                deps:load( '/scripts/services/trix.js' ).deps
+                deps:load( ['/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js'] ).deps
               },
               url: '',
               views: {
@@ -519,7 +519,7 @@ angular.module('app')
                 })
                 return deferred.promise;
               },
-              deps:load( '/scripts/services/trix.js' ).deps
+              deps:load( ['/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js'] ).deps
             },
             url: '',
             views: {
