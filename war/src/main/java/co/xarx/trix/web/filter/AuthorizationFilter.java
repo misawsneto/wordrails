@@ -294,7 +294,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return canReadPosts(postId);
 	}
 
-    @Override
+	@Override
 	protected boolean isGetRowsAuthorized() {
 		return false;
 	}
@@ -624,10 +624,10 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return termPerspective != null && canVisualizeStation(termPerspective.perspective.station.id);
 	}
 
-    @Override
-    protected boolean isGetTermPerspectiveHomeRowAuthorized(Integer termPerspectiveId) {
-        return false;
-    }
+	@Override
+	protected boolean isGetTermPerspectiveHomeRowAuthorized(Integer termPerspectiveId) {
+		return false;
+	}
 
 	@Override
 	protected boolean isGetTermPerspectiveFeaturedRowAuthorized(Integer termPerspectiveId) {
@@ -948,18 +948,8 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
-    @Override
+	@Override
 	protected boolean isGetStationLogoAuthorized(Integer stationId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindRecommendsByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isFindRecommendsByPostIdAuthorized(Integer postId) {
 		return true;
 	}
 
