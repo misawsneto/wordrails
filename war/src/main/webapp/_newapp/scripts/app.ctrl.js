@@ -251,7 +251,7 @@ angular.module('app')
       themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
       themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
       themeProvider.definePalette('myWarn', $scope.app.network.alertColors);
-      if($scope.app.network.backgroundColors)
+      if($scope.app.network.backgroundColors && $scope.app.network.backgroundColors.length > 0)
         themeProvider.definePalette('myBackground', $scope.app.network.backgroundColors);
       else
         themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject(computeColors($scope.app.network.backgroundColor)))
@@ -266,8 +266,7 @@ angular.module('app')
       themeProvider.setDefaultTheme(themeName)
 
       createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
-
-      console.log($scope.app.network)
+      $scope.app.backgroundPalette = $scope.app.network.backgroundColor
 
       // ---------- /theming ----------
 

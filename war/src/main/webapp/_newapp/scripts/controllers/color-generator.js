@@ -46,7 +46,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		"#222222",
 		"#131313"]
 
-	$scope.backgroundPalette = $scope.app.network.backgroundColor
+	$scope.backgroundPalette = $scope.app.backgroundPalette
 
 	$scope.changeBackgroundColor = function(color){
 		$scope.backgroundPalette = color
@@ -103,8 +103,6 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
     	themeProvider.definePalette('myWarn', $scope.app.makeColorsJsonObject($scope.palettes[2].colors));
     	themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette)))
 
-    	console.log($scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette)))
-
     	var themeName = $filter('generateRandom')(4,"aA");
     	themeProvider.theme(themeName)
     	
@@ -118,6 +116,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
     	themeProvider.setDefaultTheme(themeName)
 
     	createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
+    	$scope.app.backgroundPalette = $scope.backgroundPalette
 	}
 
 	$scope.initSpeedDial = function(){
