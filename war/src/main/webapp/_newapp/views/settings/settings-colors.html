@@ -36,6 +36,33 @@
                             demo@demo.com
                           </a>
                         </div>
+                        <div id="nav">
+                          <nav ui-nav>
+                            <ul class="nav">
+                              <li class="nav-header m-v-sm hidden-folded" translate="titles.STATIONS">
+                                Estação
+                              </li>
+
+                              <li ui-sref-active="active">
+                                <a md-ink-ripple>
+                                  <span class="font-normal">{{'titles.STATION' | translate}} 1</span>
+                                </a>
+                              </li>
+
+                              <li ui-sref-active="active">
+                                <a md-ink-ripple >
+                                  <span class="font-normal">{{'titles.STATION' | translate}} 2</span>
+                                </a>
+                              </li>
+
+                              <li ui-sref-active="active">
+                                <a md-ink-ripple >
+                                  <span class="font-normal">{{'titles.STATION' | translate}} 3</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </nav>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -43,7 +70,7 @@
               </md-sidenav>
 
               <md-toast class="md-warn-default ng-scope md-top md-right" style="width: 150px; min-width: 150px; z-index: 51">
-                <div class="md-toast-content w-sm pull-right m-t" style="padding: 0 10px; min-height: 38px;" translate="settings.colors.ALERT">Alerta</div>
+                <div class="md-toast-content w-sm pull-right m-t" style="padding: 0 10px; min-height: 45px;" translate="settings.colors.ALERT">Alerta</div>
               </md-toast>
 
               <div class="navbar no-radius md-primary-default background">

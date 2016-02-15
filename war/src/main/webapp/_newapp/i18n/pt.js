@@ -67,7 +67,7 @@
 			"TEST_THEME": "Testar Cores",
 			"APPLY_THEME": "Aplicar Cores",
 			"TAB": "Aba",
-			"ALERT": "Alerta"
+			"ALERT": "Mensagem de alerta!"
 		},
 		"SET_COLOR": "Configure as paletas de cores",
 		"COLOR_PALETTE": "Paleta de Cores",

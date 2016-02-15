@@ -67,7 +67,7 @@
 			"TEST_THEME": "Test Colors",
 			"APPLY_THEME": "Apply Cores",
 			"TAB": "Tab",
-			"ALERT": "Alert"
+			"ALERT": "Alert message!"
 		},
 		"SET_COLOR": "Set the color palettes",
 		"COLOR_PALETTE": "Color Palette",
