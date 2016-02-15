@@ -20,100 +20,92 @@
     <div class="p-t-lg">
       <div class="color-selector-container">
         <div class="content m-t-md">
-          <md-content class="mockup-browser md-whiteframe-z2 animated fadeIn" ng-class="{'mobile': isMobile}">
-
-            <md-sidenav class="md-sidenav-left md-whiteframe-z2 w-lg" md-component-id="sidenav-demo">
-              <div class="box bg-white ng-scope">
-                <div class="box-row">
-                  <div class="box-cell scrollable hover">
-                    <div class="box-inner">
-                      <div class="p hidden-folded indigo-50" style="background-image:url(images/bg.png); background-size:cover">
-                        <div class="rounded w-64 bg-white inline pos-rlt">
-                          <img src="images/a0.jpg" class="img-responsive rounded">
+          <div class="mockup-browser md-whiteframe-z2 animated fadeIn" ng-class="{'mobile': isMobile}">
+            <md-content>
+              <md-sidenav class="md-sidenav-left md-whiteframe-z2 w-lg" md-component-id="sidenav-demo">
+                <div class="box bg-white ng-scope">
+                  <div class="box-row">
+                    <div class="box-cell scrollable hover">
+                      <div class="box-inner">
+                        <div class="p hidden-folded indigo-50" style="background-image:url(images/bg.png); background-size:cover">
+                          <div class="rounded w-64 bg-white inline pos-rlt">
+                            <img src="images/a0.jpg" class="img-responsive rounded">
+                          </div>
+                          <a class="block m-t-sm ng-binding">
+                            <span class="block font-bold ng-binding">Demo</span>
+                            demo@demo.com
+                          </a>
                         </div>
-                        <a class="block m-t-sm ng-binding">
-                          <span class="block font-bold ng-binding">Demo</span>
-                          demo@demo.com
-                        </a>
                       </div>
                     </div>
                   </div>
                 </div>
+              </md-sidenav>
+
+              <md-toast class="md-warn-default ng-scope md-top md-right" style="width: 150px; min-width: 150px; z-index: 51">
+                <div class="md-toast-content w-sm pull-right m-t" style="padding: 0 10px; min-height: 38px;" translate="settings.colors.ALERT">Alerta</div>
+              </md-toast>
+
+              <div class="navbar no-radius md-primary-default background">
+                <a md-ink-ripple ng-click="toggleDemo()" class="navbar-item pull-left">
+                <i class="mdi-navigation-menu i-24"></i></a>
               </div>
-            </md-sidenav>
 
-            <md-toast class="md-warn-default ng-scope md-top md-right" style="width: 150px; min-width: 150px; z-index: 51">
-              <div class="md-toast-content w-sm pull-right m-t" style="padding: 0 10px; min-height: 38px;" translate="settings.colors.ALERT">Alerta</div>
-            </md-toast>
-
-            <div class="navbar no-radius md-primary-default background">
-              <a md-ink-ripple ng-click="toggleDemo()" class="navbar-item pull-left">
-              <i class="mdi-navigation-menu i-24"></i></a>
-            </div>
-
-            <section id="paint-background" class="mockup-section paint-area">
-              <!-- <div class="mockup-content mockup-grid"> -->
-                <md-content class="w-full">
-                  <md-tabs md-dynamic-height md-border-bottom class="md-primary">
-                    <md-tab label="{{'settings.colors.TAB' | translate}} 1">
-                      <div class="p" style="height: 350px;">
-                        <div class="card md-whiteframe-z1">
-                          <div class="item">
-                            <img src="/images/c1.jpg" class="w-full r-t" alt="Washed Out">
-                            <div class="bottom text-white p">
-                              Title
-                            </div>
-                          </div>
-                          <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
-                          <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
-                          <div class="p">
-                            <h3>Paracosm</h3>
-                            <p>
-                              The titles of Washed Out's breakthrough song and the first single from Paracosm share the
-                              two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
-                            </p>
+              <md-content class="w-full">
+                <md-tabs md-dynamic-height md-border-bottom class="md-primary">
+                  <md-tab label="{{'settings.colors.TAB' | translate}} 1">
+                    <div class="p">
+                      <div class="card md-whiteframe-z1">
+                        <div class="item">
+                          <img src="/images/c8.jpg" class="w-full r-t" alt="Washed Out">
+                          <div class="bottom text-white p">
+                            Title
                           </div>
                         </div>
+                        <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                        <div class="p">
+                          <h3>Paracosm</h3>
+                          <p>
+                            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                          </p>
+                        </div>
                       </div>
-                    </mb-tab>
-                    <md-tab label="{{'settings.colors.TAB' | translate}} 2">
-                      <div style="height: 350px;">
+                    </div>
+                  </md-tab>
+                  <md-tab label="{{'settings.colors.TAB' | translate}} 2">
+                    <div class="p">
+                      <div class="card md-whiteframe-z1">
+                        <div class="item">
+                          <img src="/images/c2.jpg" class="w-full r-t" alt="Washed Out">
+                          <div class="bottom text-white p">
+                            Title
+                          </div>
+                        </div>
+                        <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                        <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                        <div class="p">
+                          <h3>Paracosm</h3>
+                          <p>
+                            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                          </p>
+                        </div>
                       </div>
-                    </mb-tab>
-                  </md-tabs>
-                </md-content>
-              <!-- </div> -->
+                    </div>
+                  </md-tab>
+                </md-tabs>
+              </md-content>
               <!-- /mockup-grid -->
-              <!-- <md-button md-no-ink id="paint-main" class="md-fab pos-abt bottom-0 right-0 m-r m-b mockup-button paint-area" aria-label="demo">
-                <i class="mdi-editor-mode-edit i-24"></i>
-                          </md-button> -->
             <md-button md-ink-ripple aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r m-b">
               <i class="mdi-editor-mode-edit i-24"></i>
             </md-button>
-          </section>
+          </md-content><!-- /content -->
         </div><!-- /mockup-browser -->
-      </md-content><!-- /content -->
-      <!-- <div class="customizer">
-        <ul class="color-tool">
-          <li class="color-1">
-            <div class="drag-element" data-color="{{colors.one}}" colorpicker ng-model="colors.one">
-              <div class="drop color-1"></div>
-              <i class="drop-helper-1 color-1"></i>
-              <i class="drop-helper-2 color-1"></i>
-              <i class="drop-helper-3 color-1"></i>
-              <i class="drop-helper-4 color-1"></i>
-            </div>
-          </li>
-          <li class="color-2"><div data-color="{{colors.two}}" colorpicker ng-model="colors.two" class="drag-element" data-color="{{colors.two}}"><div class="drop color-2"></div><i class="drop-helper-1 color-2"></i><i class="drop-helper-2 color-2"></i><i class="drop-helper-3 color-2"></i><i class="drop-helper-4 color-2"></i></div></li>
-          <li class="color-3"><div data-color="{{colors.three}}" colorpicker ng-model="colors.three" class="drag-element" data-color="{{colors.three}}"><div class="drop color-3"></div><i class="drop-helper-1 color-3"></i><i class="drop-helper-2 color-3"></i><i class="drop-helper-3 color-3"></i><i class="drop-helper-4 color-3"></i></div></li>
-          <li class="color-4"><div data-color="{{colors.four}}" colorpicker ng-model="colors.four" class="drag-element" data-color="{{colors.four}}"><div class="drop color-4"></div><i class="drop-helper-1 color-4"></i><i class="drop-helper-2 color-4"></i><i class="drop-helper-3 color-4"></i><i class="drop-helper-4 color-4"></i></div></li>
-          <li class="color-5"><div data-color="{{colors.five}}" colorpicker ng-model="colors.five" class="drag-element" data-color="{{colors.five}}"><div class="drop color-5"></div><i class="drop-helper-1 color-5"></i><i class="drop-helper-2 color-5"></i><i class="drop-helper-3 color-5"></i><i class="drop-helper-4 color-5"></i></div></li>
-          <li><button class="reset-button" title="Reser colors">Reset colors</button></li>
-        </ul>
-      </div> -->
-    </div><!-- /container -->
+      </div><!-- /container -->
+    </div>
   </div>
-</div>
 
 
     <md-sidenav class="md-sidenav-right md-whiteframe-z2 theming" md-component-id="palette-selector">
@@ -246,3 +238,5 @@
         </div>
       </md-content>
     </md-sidenav>
+
+</div>
