@@ -64,7 +64,8 @@ module.exports = {
                     'screenfull/**',
                     'jquery.easy-pie-chart/**',
                     'jquery.sparkline/**',
-                    'bower-jvectormap-2/**'
+                    'bower-jvectormap-2/**',
+                    'slimScroll/jquery.slimscroll.min.js'
                 ],
                 dest: 'libs/jquery',
                 cwd:  'bower_components',

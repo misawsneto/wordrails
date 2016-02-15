@@ -82,7 +82,7 @@ angular.module('app')
                 templateUrl: '/views/settings/settings-colors.html',
                 data : { titleTranslate: 'titles.THEMING', title: 'Aparência', folded: false },
                 resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
-                    '/styles/theming.css']),
+                    '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
                 controller: 'ColorGeneratorCtrl'
               })
               .state('app.dashboard', {
