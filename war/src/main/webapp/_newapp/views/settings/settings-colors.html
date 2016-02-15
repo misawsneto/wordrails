@@ -23,7 +23,7 @@
           <div class="mockup-browser md-whiteframe-z2 animated fadeIn" ng-class="{'mobile': isMobile}">
             <md-content>
               <md-sidenav class="md-sidenav-left md-whiteframe-z2 w-lg" md-component-id="sidenav-demo">
-                <div class="box bg-white ng-scope">
+                <div class="box md-background-hue-1 background ng-scope">
                   <div class="box-row">
                     <div class="box-cell scrollable hover">
                       <div class="box-inner">
@@ -199,11 +199,11 @@
   </div>
 </div>
 
-<md-sidenav class="md-sidenav-right md-whiteframe-z2 theming" md-component-id="palette-selector">
+<md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 theming" md-component-id="palette-selector">
   <md-toolbar class="md-theme-light">
     <h1 class="md-toolbar-tools" translate="settings.COLOR_PALETTE"></h1>
   </md-toolbar>
-  <md-content layout-padding>
+  <div layout-padding>
     <div>
       <!-- primary -->
       <md-content class="palette m-b w-lg m-h-auto">
@@ -213,7 +213,7 @@
           {{primaryPalette.name}}
           </div>
           <span flex></span>
-              <spectrum-colorpicker ng-model="primaryPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(0)"></spectrum-colorpicker>
+              <spectrum-colorpicker ng-model="primaryPalette.base" options="{ clickoutFiresChange: true }" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(0)"></spectrum-colorpicker>
         </div>
         <md-list flex class="palette-colors spaced">
             <md-list-item class="light-canvas" ng-repeat="color in primaryPalette.colors | filter: baseColorFilter">
@@ -245,7 +245,7 @@
           {{accentPalette.name}}
           </div>
           <span flex></span>
-              <spectrum-colorpicker ng-model="accentPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(1)"></spectrum-colorpicker>
+              <spectrum-colorpicker ng-model="accentPalette.base" options="{ clickoutFiresChange: true }" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(1)"></spectrum-colorpicker>
         </div>
         <md-list flex class="palette-colors spaced">
             <md-list-item class="light-canvas" ng-repeat="color in accentPalette.colors | filter: baseColorFilter | orderByAccent:'name'">
@@ -277,7 +277,7 @@
           {{warnPalette.name}}
           </div>
           <span flex></span>
-              <spectrum-colorpicker ng-model="warnPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(2)"></spectrum-colorpicker>
+              <spectrum-colorpicker ng-model="warnPalette.base" options="{ clickoutFiresChange: true }" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(2)"></spectrum-colorpicker>
         </div>
         <md-list flex class="palette-colors spaced">
             <md-list-item class="light-canvas" ng-repeat="color in warnPalette.colors | filter: baseColorFilter">
@@ -327,5 +327,5 @@
       </md-content>
       <!-- /background -->
     </div>
-  </md-content>
+  </div>
 </md-sidenav>

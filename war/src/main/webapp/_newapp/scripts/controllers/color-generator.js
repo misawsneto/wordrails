@@ -46,7 +46,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		"#222222",
 		"#131313"]
 
-	$scope.backgroundPalette = $scope.backgrounds[0]
+	$scope.backgroundPalette = $scope.app.network.backgroundColor
 
 	$scope.changeBackgroundColor = function(color){
 		$scope.backgroundPalette = color
@@ -101,13 +101,17 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		themeProvider.definePalette('myPrimary', $scope.app.makeColorsJsonObject($scope.palettes[0].colors));
 		themeProvider.definePalette('myAccent', $scope.app.makeColorsJsonObject($scope.palettes[1].colors));
     	themeProvider.definePalette('myWarn', $scope.app.makeColorsJsonObject($scope.palettes[2].colors));
+    	themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette)))
+
+    	console.log($scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette)))
 
     	var themeName = $filter('generateRandom')(4,"aA");
     	themeProvider.theme(themeName)
     	
     	.primaryPalette('myPrimary')
     	.accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
-    	.warnPalette('myWarn');
+    	.warnPalette('myWarn')
+    	.backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
 
     	// $mdTheming.generateTheme('asdfa')
     	themeProvider.reload($injector);

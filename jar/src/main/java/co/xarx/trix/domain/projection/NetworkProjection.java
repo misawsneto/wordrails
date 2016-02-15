@@ -3,6 +3,8 @@ package co.xarx.trix.domain.projection;
 import co.xarx.trix.domain.Network;
 import org.springframework.data.rest.core.config.Projection;
 
+import java.util.Map;
+
 @Projection(types=Network.class)
 public interface NetworkProjection {
 	Integer getId();
@@ -40,6 +42,11 @@ public interface NetworkProjection {
     String getSecondaryFont();
     String getSubdomain();
     Boolean getConfigured();
+
+	Map<String, String> getPrimaryColors();
+	Map<String, String> getSecondaryColors();
+	Map<String, String> getAlertColors();
+	Map<String, String> getBackgroundColors();
 
     Integer categoriesTaxonomyId();
     

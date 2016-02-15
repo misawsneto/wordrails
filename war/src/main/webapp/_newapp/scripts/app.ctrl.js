@@ -196,6 +196,42 @@ angular.module('app')
 
       // ---------- theming -----------
       
+      // Function to calculate all colors from base
+      // These colors were determined by finding all
+      // HSL values for a google palette, calculating
+      // the difference in H, S, and L per color
+      // change individually, and then applying these
+      // here.
+      var computeColors = function(hex)
+      {
+        // Return array of color objects.
+        return [
+          getColorObject(tinycolor( hex ), '500'),
+          getColorObject(tinycolor( hex ).lighten( 52 ), '50'),
+          getColorObject(tinycolor( hex ).lighten( 37 ), '100'),
+          getColorObject(tinycolor( hex ).lighten( 26 ), '200'),
+          getColorObject(tinycolor( hex ).lighten( 12 ), '300'),
+          getColorObject(tinycolor( hex ).lighten( 6 ), '400'),
+          getColorObject(tinycolor( hex ).darken( 6 ), '600'),
+          getColorObject(tinycolor( hex ).darken( 12 ), '700'),
+          getColorObject(tinycolor( hex ).darken( 18 ), '800'),
+          getColorObject(tinycolor( hex ).darken( 24 ), '900'),
+          getColorObject(tinycolor( hex ).lighten( 52 ), 'A100'),
+          getColorObject(tinycolor( hex ).lighten( 37 ), 'A200'),
+          getColorObject(tinycolor( hex ).lighten( 6 ), 'A400'),
+          getColorObject(tinycolor( hex ).darken( 12 ), 'A700')
+        ];
+      };
+
+      function getColorObject(value, name) {
+        var c = tinycolor(value);
+        return {
+          name: name,
+          hex: c.toHexString(),
+          darkContrast: c.isLight()
+        };
+      }
+      
       $scope.app.makeColorsJsonObject = function(colors){
         var exportable = {};
         var darkColors = [];
@@ -215,11 +251,16 @@ angular.module('app')
       themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
       themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
       themeProvider.definePalette('myWarn', $scope.app.network.alertColors);
+      if($scope.app.network.backgroundColors)
+        themeProvider.definePalette('myBackground', $scope.app.network.backgroundColors);
+      else
+        themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject(computeColors($scope.app.network.backgroundColor)))
 
       themeProvider.theme(themeName)
       .primaryPalette('myPrimary')
       .accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
-      .warnPalette('myWarn');
+      .warnPalette('myWarn')
+      .backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
 
       themeProvider.reload($injector);
       themeProvider.setDefaultTheme(themeName)
