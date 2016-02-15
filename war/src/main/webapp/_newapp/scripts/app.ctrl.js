@@ -114,4 +114,121 @@ angular.module('app')
       }
 
     }
+  ])
+
+  .controller('AppDataCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast',
+    function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast) {
+
+      //window.console && console.log(appData);
+      // ---------- util -------------
+      // ---------- util-trix -------------
+      $scope.app = angular.extend($scope.app, appData)
+      $scope.app.name = $scope.app.network.name
+      $scope.app.currentStation = trixService.selectDefaultStation($scope.app.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
+      $scope.app.stationsPermissions = trixService.getStationPermissions(angular.copy($scope.app));
+
+      var id = $scope.app.currentStation.defaultPerspectiveId
+      trix.findPerspectiveView(id, null, null, 0, 10).success(function(termPerspective){
+        $scope.app.termPerspectiveView = termPerspective
+      })
+
+      $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+        $rootScope.previousState = fromState.name;
+        $rootScope.currentState = toState.name;
+
+        if(toState.data && (toState.data.title || toState.titleTranslate)){
+          $("title").html($scope.app.network.name + " | " + ((toState.data.titleTranslate) ? $filter('translate')(toState.data.titleTranslate) : toState.data.title));
+        }
+
+        window.console && console.log($rootScope.currentState);
+      });
+      // ---------- /util-trix -------------
+      
+      // ---------- util-toast -------------
+      $scope.toastPosition = {
+        bottom: false,
+        top: true,
+        left: false,
+        right: true
+      };
+
+      $scope.getToastPosition = function() {
+        return Object.keys($scope.toastPosition)
+        .filter(function(pos) { return $scope.toastPosition[pos]; })
+        .join(' ');
+      };
+
+      $scope.app.showSimpleToast = function(content) {
+        $mdToast.show(
+          $mdToast.simple()
+          .content(content)
+          .position($scope.getToastPosition())
+          .hideDelay(3000)
+          );
+      };
+
+      $scope.app.showErrorToast = function(content) {
+        $mdToast.show({
+          template: '<md-toast class="md-warn-default">'+content+'</md-toast>',
+          hideDelay: 3000,
+          position: $scope.getToastPosition()
+        });
+      };
+
+      $scope.app.showSuccessToast = function(content) {
+        $mdToast.show({
+          template: '<md-toast class="md-toast-success" >'+content+'</md-toast>',
+          hideDelay: 3000,
+          position: $scope.getToastPosition()
+        });
+      };
+
+      $scope.app.showInfoToast = function(content) {
+        $mdToast.show({
+          template: '<md-toast class="md-toast-info" >'+content+'</md-toast>',
+          hideDelay: 3000,
+          position: $scope.getToastPosition()
+        });
+      };
+
+      // ---------- /util-toast -------------
+      // ---------- /util -------------
+
+      // ---------- theming -----------
+      
+      $scope.app.makeColorsJsonObject = function(colors){
+        var exportable = {};
+        var darkColors = [];
+        angular.forEach(colors, function(value, key){
+          exportable[value.name] = value.hex;
+          if (value.darkContrast) {
+            darkColors.push(value.name);
+          }
+        });
+        exportable.contrastDefaultColor = 'light';
+        exportable.contrastDarkColors = darkColors.join(' ');
+        return exportable;
+      };
+
+      var themeName = $filter('generateRandom')(4,"aA");
+
+      themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
+      themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
+      themeProvider.definePalette('myWarn', $scope.app.network.alertColors);
+
+      themeProvider.theme(themeName)
+      .primaryPalette('myPrimary')
+      .accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
+      .warnPalette('myWarn');
+
+      themeProvider.reload($injector);
+      themeProvider.setDefaultTheme(themeName)
+
+      createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
+
+      console.log($scope.app.network)
+
+      // ---------- /theming ----------
+
+    }
   ]);

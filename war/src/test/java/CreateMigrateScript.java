@@ -10,8 +10,11 @@ public class CreateMigrateScript {
 //	--duplicate_post.sql
 //	--multitenant.sql
 //	--images.sql
+//	--passwordReset.sql
+//	--refactoring_notification.sql
+//	--insert_mobiledevice.sql
 
-	private static final String SCRIPT_NAME = "version_1.0";
+	private static final String SCRIPT_NAME = "insert_mobiledevice";
 
 	public static void main(String[] args) throws IOException {
 		CreateMigrateScript script = new CreateMigrateScript();

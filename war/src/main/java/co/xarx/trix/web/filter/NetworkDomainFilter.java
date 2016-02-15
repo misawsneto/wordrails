@@ -1,6 +1,7 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.services.NetworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,10 @@ public class NetworkDomainFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 		String host = request.getHeader("Host");
+
+		if(host == null) {
+			throw new BadRequestException("Host is null");
+		}
 
 		if (host.equals("xarx.co") || host.equals("trix.rocks") || host.equals("xarxlocal.com")) {
 			response.sendRedirect("/home");

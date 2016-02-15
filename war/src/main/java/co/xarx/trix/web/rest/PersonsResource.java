@@ -12,11 +12,12 @@ import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
-import co.xarx.trix.services.APNService;
 import co.xarx.trix.services.AmazonCloudService;
-import co.xarx.trix.services.GCMService;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.EmailService;
+import co.xarx.trix.services.MobileService;
+import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,12 +54,15 @@ import java.util.*;
 @Produces(MediaType.APPLICATION_JSON)
 @Component
 public class PersonsResource {
+
 	@Context
 	private HttpServletRequest httpServletRequest;
 	@Context
 	private HttpRequest httpRequest;
 	@Autowired
 	private PersonRepository personRepository;
+	@Autowired
+	private MobileService mobileService;
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
@@ -67,10 +71,6 @@ public class PersonsResource {
 	private NetworkRepository networkRepository;
 	@Autowired
 	private WordrailsService wordrailsService;
-	@Autowired
-	private GCMService gcmService;
-	@Autowired
-	private APNService apnService;
 	@Autowired
 	private PersonService personService;
 	@Autowired
@@ -89,6 +89,8 @@ public class PersonsResource {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PersonEventHandler personEventHandler;
+	@Autowired
+	private EmailService emailService;
 
 	@Autowired
 	@Qualifier("objectMapper")
@@ -219,15 +221,9 @@ public class PersonsResource {
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = authProvider.getLoggedPerson();
-		if(person.id == 0){
-			gcmService.updateRegId(network, null, regId, lat, lng);
-		} else {
-			gcmService.updateRegId(network, person, regId, lat, lng);
-		}
-//		if(person.id == 0) person = null;
-		System.out.println("regId: " + regId);
+		Logger.info("Updating android device " + regId + " for person " + person.id);
+		mobileService.updateDevice(person, regId, lat, lng, MobileDevice.Type.ANDROID);
 		return Response.status(Status.OK).build();
 	}
 
@@ -235,15 +231,9 @@ public class PersonsResource {
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = authProvider.getLoggedPerson();
-		if(person.id == 0){
-			apnService.updateIosToken(network, null, token, lat, lng);
-		} else {
-			apnService.updateIosToken(network, person, token, lat, lng);
-		}
-//		if(person.id == 0) person = null;
-		System.out.println("iOS token: " + token);
+		Logger.info("Updating apple device " + token + " for person " + person.id);
+		mobileService.updateDevice(person, token, lat, lng, MobileDevice.Type.APPLE);
 		return Response.status(Status.OK).build();
 	}
 

@@ -5,7 +5,6 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.util.StringUtil;
-import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,13 +48,11 @@ public class PathEntityFilter implements Filter {
 
 			Post post = postRepository.findBySlug(path.replace("/", ""));
 
-			TrixUtil.EntityType entityType = TrixUtil.EntityType.POST;
-
 			if (post != null) {
 				request.setAttribute("requestedEntityJson", objectMapper.writeValueAsString(post));
 				request.setAttribute("requestedEntityMetas", metaTagsBuilder(post));
 				request.setAttribute("requestedEntityHiddenHtml", hiddenHtmlBuilder(post));
-				request.setAttribute("entityType", entityType);
+				request.setAttribute("entityType", "POST");
 			}
 		}
 

@@ -592,6 +592,17 @@ angular.module('app')
         })
       };
 
+      $scope.app.recoverPassword = function(email){
+        trix.recoverPassword(email).success(function(response){
+          $scope.app.passwordRecovered = true;
+          // console.log(email);
+          // console.log(status);
+        }).error(function(response){
+          $scope.app.passwordRecovered = false;
+          // console.log(status);
+        })        
+      };
+
       $scope.app.signup = function(user){
         trix.createPerson(user).success(function(response){
           window.location.href=window.location.protocol + '//' + window.location.host + "?signupSuccess=true"

@@ -41,12 +41,12 @@ public class EventAuthorProvider implements AuthorProvider {
 		return author;
 	}
 
-	public String parseDevice(String userAgent){
+	private String parseDevice(String userAgent){
 		UserAgent ua = UserAgent.parseUserAgentString(userAgent);
 		return ua.getBrowser().getName();
 	}
 
-	public  HttpSession session() {
+	private HttpSession session() {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		return attr.getRequest().getSession(true); // true == allow create
 	}

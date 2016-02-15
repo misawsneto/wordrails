@@ -5,10 +5,13 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 @Service
 public class AsyncService {
@@ -25,6 +28,12 @@ public class AsyncService {
 	public void run(String tenantId, Runnable runnable) {
 		TenantContextHolder.setCurrentTenantId(tenantId);
 		runnable.run();
+	}
+
+	@Async
+	public <V> Future<V> run(String tenantId, Callable<V> runnable) throws Exception {
+		TenantContextHolder.setCurrentTenantId(tenantId);
+		return new AsyncResult<>(runnable.call());
 	}
 
 	@Async

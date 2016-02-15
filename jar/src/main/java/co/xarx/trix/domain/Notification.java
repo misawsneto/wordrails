@@ -1,5 +1,7 @@
 package co.xarx.trix.domain;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -7,10 +9,42 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class Notification extends BaseEntity {
-	
-	public enum Type{
-		ADDED_TO_STATION, REMOVED_FROM_STATION, POST_COMMENTED, POST_DELETED, POST_ADDED, BREAKING_NEWS, MESSAGE, IREPORT_INVITE, IREPORT_REVOKE
+
+	public enum Type {
+		ADDED_TO_STATION,
+		REMOVED_FROM_STATION,
+		POST_COMMENTED,
+		POST_DELETED,
+		POST_ADDED,
+		BREAKING_NEWS,
+		MESSAGE,
+		IREPORT_INVITE,
+		IREPORT_REVOKE
+	}
+
+	public enum DeviceType {
+		ANDROID,
+		APPLE
+	}
+
+	public enum Status {
+		SEND_ERROR,
+		SERVER_ERROR,
+		SUCCESS
+	}
+
+	protected Notification() {
+	}
+
+	public Notification(String regId, String hash, Status status, String message, String type) {
+		this.regId = regId;
+		this.hash = hash;
+		this.status = status.toString();
+		this.message = message;
+		this.type = type;
 	}
 
 	@Id
@@ -21,43 +55,37 @@ public class Notification extends BaseEntity {
 	public Integer getId() {
 		return id;
 	}
-	
-	@ManyToOne
-	@NotNull
-	public Person person;
-	
-	@ManyToOne
-	@NotNull
-	public Network network;
-	
+
+	public String regId;
+
 	@NotNull
 	public String hash;
 	
 	@ManyToOne
-	public Station station;
-	
-	@ManyToOne
 	public Post post;
-	
-	public Integer postId;
-	
-	public boolean seen = false;
 
-    public boolean test = true;
-	
-	@NotNull
+	public boolean test = false;
+
+	@NotEmpty
+	public String status;
+
+	public String errorCodeName;
+
+	@Lob
+	public String stackTrace;
+
+	public String deviceType;
+
+	public boolean deviceDeactivated;
+
 	@NotEmpty
 	@Size(min=1,max=500)
 	public String message;
-	
-	@NotNull
+
 	@NotEmpty
 	public String type;
 
-	@PrePersist
-	void onCreate() {
-		if(post!=null){
-			postId = post.id;
-		}
+	public void setDeviceType(DeviceType deviceType) {
+		this.deviceType = deviceType.toString();
 	}
 }

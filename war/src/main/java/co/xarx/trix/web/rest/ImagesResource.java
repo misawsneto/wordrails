@@ -17,7 +17,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,10 +35,6 @@ public class ImagesResource {
 
 	@Context
 	private HttpServletRequest request;
-	@Context
-	private UriInfo uriInfo;
-	@Context
-	private HttpServletResponse response;
 	@Autowired
 	private AmazonCloudService amazonCloudService;
 
@@ -97,7 +92,7 @@ public class ImagesResource {
 		try {
 			hashes = imageService.getHashes(hash);
 		} catch (EntityNotFoundException e) {
-			throw new NotFoundException("Image does not exist");
+			throw new NotFoundException("Image does not exist. Hash:" + hash);
 		}
 
 		hash = hashes.get(size);

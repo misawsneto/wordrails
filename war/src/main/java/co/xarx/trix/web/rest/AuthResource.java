@@ -5,6 +5,7 @@ import co.xarx.trix.domain.AuthCredential;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.PasswordService;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.builder.api.GoogleApi;
@@ -26,6 +27,8 @@ public class AuthResource {
 	private NetworkRepository networkRepository;
 	@Autowired
 	private AuthService authProvider;
+	@Autowired
+	private PasswordService passwordService;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -86,5 +89,24 @@ public class AuthResource {
 		}
 
 		return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+
+	@POST
+	@Path("/forgotPassword")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response resetePassword(@FormParam("email") String email) {
+		passwordService.resetPassword(email);
+		return Response.status(Response.Status.OK).build();
+	}
+
+	@PUT
+	@Path("/{hash}")
+	public Response updatePassword(@PathParam("hash") String hash, @FormParam("password") String password) {
+
+		if (password != null && !password.isEmpty()) {
+			passwordService.updatePassword(hash, password);
+		}
+
+		return Response.status(Response.Status.OK).build();
 	}
 }
