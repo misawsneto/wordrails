@@ -637,6 +637,7 @@ angular.module('app')
 
         $scope.app.checkIfLogged();
         //window.console && console.log($scope.app.currentStation, $scope.app.stationsPermissions);
+        if($scope.app.currentStation && $scope.app.currentStation.defaultPerspectiveId)
         trix.getAllTerms($scope.app.currentStation.defaultPerspectiveId).success(function(terms){
           $scope.app.currentStation.perspectiveTerms = terms;
           terms && terms.forEach(function(term){
