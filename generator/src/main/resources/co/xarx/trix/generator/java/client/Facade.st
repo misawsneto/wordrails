@@ -509,6 +509,14 @@ public class $facade$ {
 	public void putRegId(String regId, Integer networkId, Double lat, Double lng, Callback<Response> _callback){
 		_facade.putRegId(regId, networkId, lat, lng, _callback);
 	}
+	
+	public Response putLocation(String regId, Double lat, Double lng){
+		return _facade.putLocation(regId, lat, lng);
+	}
+	
+	public void putLocation(String regId, Double lat, Double lng, Callback<Response> _callback){
+		_facade.putLocation(regId, lat, lng, _callback);
+	}
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
