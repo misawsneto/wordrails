@@ -19,7 +19,10 @@
 		"DOMAIN": "Domain",
 		"SUBDOMAIN": "Subdomain",
 		"THEMING": "Appearance",
-		"SEARCH": "Search"
+		"SEARCH": "Search",
+		"YES": "Yes",
+		"NO": "No",
+		"CANCEL": "Cancel"
 	},
 	"actions":{
 		"ADD": "Add",
@@ -66,7 +69,9 @@
 		},
 		"colors":{
 			"TEST_THEME": "Test Colors",
+			"RESET_THEME": "Reset Colors",
 			"APPLY_THEME": "Apply Cores",
+			"APPLY_THEME_DIALOG": "<strong>Attention!</strong> Changes to colors and appearance will be applied to all devices. Do you want to continue?",
 			"TAB": "Tab",
 			"ALERT": "Alert message!"
 		},
@@ -78,6 +83,8 @@
 		"COLOR_BACKGROUND": "Background Color"
 	},
 	"messages": {
+		"ERROR_MSG": "There was an error while applying changes! Try again or contact our team.",
+		"SUCCESS_MSG": "Changes successfully applied",
 		"network":{
 			"NO_LANGUAGE": "Language is not available"
 		}

@@ -23,8 +23,8 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
     
     // ------ dialog -------
 	function DialogController(scope, $mdDialog) {
-      scope.app = $scope.app;
-      scope.pe = $scope.pe;
+			$scope.app.enableButtons = true;
+    	scope.app = $scope.app;
 
       scope.hide = function() {
         $mdDialog.hide();
@@ -107,7 +107,15 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		};
 	};
 
-	$scope.setTheme = function(){
+	$scope.setTheme = function(applying){
+		applying = !applying;
+		if(applying){
+			$scope.app.testingTheme = !$scope.app.testingTheme;
+			if(!$scope.app.testingTheme){
+				$scope.app.applyNetworkTheme();
+				return;
+			}
+		}
 
 		themeProvider.definePalette('myPrimary', $scope.app.makeColorsJsonObject($scope.palettes[0].colors));
 		themeProvider.definePalette('myAccent', $scope.app.makeColorsJsonObject($scope.palettes[1].colors));
@@ -411,7 +419,8 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
     /* --------- apply theme --------- */
     $scope.openApplyThemeDialog = function(ev){
-      $mdDialog.show({
+		$scope.setTheme(true);
+      	$mdDialog.show({
           controller: DialogController,
           templateUrl: 'apply_theme_dialog.html',
           targetEvent: ev,
@@ -425,15 +434,22 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
     }
 
     $scope.app.applyTheme = function(){
+    	$scope.app.enableButtons = false;
+    	$scope.app.testingTheme = false;
     	var newTheme = {primaryColors: $scope.app.makeColorsJsonObject($scope.palettes[0].colors),
     					secondaryColors: $scope.app.makeColorsJsonObject($scope.palettes[1].colors),
 						alertColors: $scope.app.makeColorsJsonObject($scope.palettes[2].colors),
 						backgroundColors: $scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette))
     	    			}
-    	    	trix.updateTheme(newTheme).success(function(){
-    	    		console.log("success")
-    	    		$mdDialog.cancel();
-    	    	})
+    	trix.updateTheme(newTheme).success(function(){
+    		$scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+    		$mdDialog.cancel();
+    		$scope.app.enableButtons = true;
+    	}).erro(function(){
+    		$scope.app.showSuccessToast($filter('translate')('messages.ERROR_MSG'))
+    		$mdDialog.cancel();
+    		$scope.app.enableButtons = true;
+    	})
     }
 
     /* --------- /apply theme -------- */

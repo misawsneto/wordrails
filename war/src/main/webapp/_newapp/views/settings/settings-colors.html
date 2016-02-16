@@ -3,8 +3,8 @@
 		<md-button class="pull-right font-bold" ng-click="openApplyThemeDialog($event)" translate="settings.colors.APPLY_THEME">
 			Aplicar Cores
 		</md-button>
-		<md-button class="pull-right font-bold" ng-click="setTheme()" translate="settings.colors.TEST_THEME">
-			Testar Cores
+		<md-button class="pull-right font-bold" ng-click="setTheme()" >
+			{{app.testingTheme ? 'settings.colors.RESET_THEME' : 'settings.colors.TEST_THEME'| translate}}
 		</md-button>
 		<md-button class="pull-right font-bold" ng-click="togglePalette()" translate="settings.COLOR_PALETTE">
 		  	Paleta de Cores
@@ -332,18 +332,17 @@
 
 <script type="text/ng-template" id="apply_theme_dialog.html">
   <md-dialog aria-label="Remove Categories Dialog" id="apply-theme-dialog">
-    <md-content role="document" >
+    <md-content role="document" class="md-background-default background">
       <div class="p">
-        <div class="md-dialog-content-body text-lg p-r p-l w-xxl">
-          <strong>Atenção! </strong> Tem certeza que deseja remover esta categoria? Esta operação não pode ser desfeita.
+        <div class="md-dialog-content-body text-md p-r p-l w-xxl m-b" ng-bind-html="'settings.colors.APPLY_THEME_DIALOG' | translate">
         </div>
 
         <div class="text-center">
-          <button ng-click="app.applyTheme()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw">
-            Sim
+          <button ng-click="app.applyTheme()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw" ng-disabled="!app.enableButtons">
+            {{'titles.YES' | translate }}
           </button>
-          <button ng-click="cancel()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw">
-            Não
+          <button ng-click="cancel()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw" ng-disabled="!app.enableButtons">
+            {{'titles.NO' | translate }}
           </button>
         <div>
       </div>

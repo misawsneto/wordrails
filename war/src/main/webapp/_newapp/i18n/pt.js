@@ -19,7 +19,10 @@
 		"DOMAIN": "Domínio",
 		"SUBDOMAIN": "Subdomínio",
 		"THEMING": "Aparência",
-		"SEARCH": "Buscar"
+		"SEARCH": "Buscar",
+		"YES": "Sim",
+		"NO": "Não",
+		"CANCEL": "Cancel"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -66,7 +69,9 @@
 		},
 		"colors":{
 			"TEST_THEME": "Testar Cores",
+			"RESET_THEME": "Reset Colors",
 			"APPLY_THEME": "Aplicar Cores",
+			"APPLY_THEME_DIALOG": "<strong>Atenção!</strong> As modificações de aparência serão aplicadas a todos os dispositivos. Tem certeza que deseja continuar?",
 			"TAB": "Aba",
 			"ALERT": "Mensagem de alerta!"
 		},
@@ -78,6 +83,8 @@
 		"COLOR_BACKGROUND": "Cor de Fundo"
 	},
 	"messages": {
+		"ERROR_MSG": "Houve um erro ao tentar aplicar as alterações! Tente novamente ou entre em contato com nossa equipe.",
+		"SUCCESS_MSG": "Alterações realizadas com sucesso",
 		"network":{
 			"NO_LANGUAGE": "Idioma não disponível"
 		}
