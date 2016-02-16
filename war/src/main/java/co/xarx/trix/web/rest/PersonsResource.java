@@ -16,7 +16,6 @@ import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.AmazonCloudService;
-import co.xarx.trix.services.EmailService;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
@@ -224,6 +223,7 @@ public class PersonsResource {
 			throw new BadRequestException();
 	}
 
+	@Deprecated
 	@PUT
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -231,6 +231,7 @@ public class PersonsResource {
 		return updateMobile(regId, lat, lng, MobileDevice.Type.ANDROID);
 	}
 
+	@Deprecated
 	@PUT
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -240,9 +241,9 @@ public class PersonsResource {
 
 	public Response updateMobile(String token, Double lat, Double lng, MobileDevice.Type type) {
 		Person person = authProvider.getLoggedPerson();
-		Logger.info("Updating apple device " + token + " for person " + person.id);
+		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
 		mobileService.updateDevice(person, token, lat, lng, type);
-		return Response.status(Status.OK).build();
+		return Response.status(Response.Status.OK).build();
 	}
 
 	@POST
