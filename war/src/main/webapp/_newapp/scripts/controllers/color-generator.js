@@ -92,9 +92,9 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		$scope.addPaletteFromObject(themeProvider.extendPalette('myAccent',{}), $filter('translate')('settings.COLOR_ACCENT'))
 		$scope.addPaletteFromObject(themeProvider.extendPalette('myWarn',{}), $filter('translate')('settings.COLOR_WARN'))
 
-		$scope.calcPalette(0);
-		$scope.calcPalette(1);
-		$scope.calcPalette(2);
+		// $scope.calcPalette(0);
+		// $scope.calcPalette(1);
+		// $scope.calcPalette(2);
 
 		$scope.primaryPalette = $scope.palettes[0];
 		$scope.accentPalette = $scope.palettes[1];
@@ -106,6 +106,10 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
             palettes: $scope.palettes
 		};
 	};
+
+	$scope.app.setThemeTesting = function(testing){
+		$scope.app.testingTheme = testing;			
+	}
 
 	$scope.setTheme = function(applying){
 		applying = !applying;
@@ -266,6 +270,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
 	// Function to assign watchers to all bases
 	$scope.calcPalette = function(key){
+		$scope.app.setThemeTesting(false);
 		$scope.palettes[key].orig = $scope.computeColors($scope.palettes[key].base);
 		$scope.palettes[key].colors = $scope.palettes[key].orig;
 	};
@@ -419,7 +424,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
     /* --------- apply theme --------- */
     $scope.openApplyThemeDialog = function(ev){
-		$scope.setTheme(true);
+			$scope.setTheme(true);
       	$mdDialog.show({
           controller: DialogController,
           templateUrl: 'apply_theme_dialog.html',
@@ -435,7 +440,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
     $scope.app.applyTheme = function(){
     	$scope.app.enableButtons = false;
-    	$scope.app.testingTheme = false;
+    	$scope.app.setThemeTesting(false);
     	var newTheme = {primaryColors: $scope.app.makeColorsJsonObject($scope.palettes[0].colors),
     					secondaryColors: $scope.app.makeColorsJsonObject($scope.palettes[1].colors),
 						alertColors: $scope.app.makeColorsJsonObject($scope.palettes[2].colors),
