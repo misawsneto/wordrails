@@ -81,8 +81,6 @@ public class PersonsResource {
 	@Autowired
 	private WordrailsService wordrailsService;
 	@Autowired
-	private MobileService gcmService;
-	@Autowired
 	private PostRepository postRepository;
 	@Autowired
 	private PostConverter postConverter;
@@ -100,8 +98,6 @@ public class PersonsResource {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PersonEventHandler personEventHandler;
-	@Autowired
-	private EmailService emailService;
 
 	@Autowired
 	@Qualifier("objectMapper")
@@ -232,19 +228,20 @@ public class PersonsResource {
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Person person = authProvider.getLoggedPerson();
-		Logger.info("Updating android device " + regId + " for person " + person.id);
-		mobileService.updateDevice(person, regId, lat, lng, MobileDevice.Type.ANDROID);
-		return Response.status(Status.OK).build();
+		return updateMobile(regId, lat, lng, MobileDevice.Type.ANDROID);
 	}
 
 	@PUT
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
+		return updateMobile(token, lat, lng, MobileDevice.Type.APPLE);
+	}
+
+	public Response updateMobile(String token, Double lat, Double lng, MobileDevice.Type type) {
 		Person person = authProvider.getLoggedPerson();
 		Logger.info("Updating apple device " + token + " for person " + person.id);
-		mobileService.updateDevice(person, token, lat, lng, MobileDevice.Type.APPLE);
+		mobileService.updateDevice(person, token, lat, lng, type);
 		return Response.status(Status.OK).build();
 	}
 
