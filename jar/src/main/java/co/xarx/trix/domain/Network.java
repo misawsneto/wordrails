@@ -168,7 +168,11 @@ public class Network extends BaseEntity implements Serializable {
 	@Column(name = "color", nullable = false, length = 100)
 	public Map<String, String> alertColors;
 
-//	public String backgroundColor;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_background_color", joinColumns = @JoinColumn(name = "network_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> backgroundColors;
 
 	@Override
 	public boolean equals(Object obj) {
