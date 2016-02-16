@@ -2,8 +2,10 @@
 
 // Define our default color generator controller!
 angular.module('app').controller('ColorGeneratorCtrl',
-function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $filter, themeProvider, colorsProvider, $mdTheming, $injector, $mdSidenav)
+function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $filter, themeProvider, colorsProvider, $mdTheming, $injector, $mdSidenav, trix)
 {
+	// network's background palette
+	$scope.backgroundPalette = $scope.app.backgroundPalette
 
 	// sidenav toggle
 	$scope.togglePalette = buildToggler('palette-selector');
@@ -15,15 +17,33 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
       return function() {
         $mdSidenav(navID)
           .toggle()
-f      }
+      }
     }
-
     // -----------
+    
+    // ------ dialog -------
+	function DialogController(scope, $mdDialog) {
+      scope.app = $scope.app;
+      scope.pe = $scope.pe;
 
+      scope.hide = function() {
+        $mdDialog.hide();
+      };
+
+      scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+
+      // check if user has permisstion to write
+    };
+    // ------ /dialog ------
+
+    // filter the possible color tones in frontend
 	$scope.baseColorFilter = function (color) { 
 	    return color.name === '500' || color.name === '300' || color.name === '800' || color.name === 'A100'; 
 	};
 
+	// set possible background color tones
 	$scope.backgrounds = 
 		["#FFFFFF",
 		"#EFEFEF",
@@ -38,7 +58,6 @@ f      }
 		"#222222",
 		"#131313"]
 
-	$scope.backgroundPalette = $scope.app.backgroundPalette
 
 	$scope.changeBackgroundColor = function(color){
 		$scope.backgroundPalette = color
@@ -388,6 +407,36 @@ f      }
     $scope.lightenPaletteItem = function(color){
         color.hex = shadeColor(color.hex, 0.1);
     };
+
+
+    /* --------- apply theme --------- */
+    $scope.openApplyThemeDialog = function(ev){
+      $mdDialog.show({
+          controller: DialogController,
+          templateUrl: 'apply_theme_dialog.html',
+          targetEvent: ev,
+          onComplete: function(){}
+        })
+        .then(function(answer) {
+        //$scope.alert = 'You said the information was "' + answer + '".';
+        }, function() {
+        //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
+
+    $scope.app.applyTheme = function(){
+    	var newTheme = {primaryColors: $scope.app.makeColorsJsonObject($scope.palettes[0].colors),
+    					secondaryColors: $scope.app.makeColorsJsonObject($scope.palettes[1].colors),
+						alertColors: $scope.app.makeColorsJsonObject($scope.palettes[2].colors),
+						backgroundColors: $scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette))
+    	    			}
+    	    	trix.updateTheme(newTheme).success(function(){
+    	    		console.log("success")
+    	    		$mdDialog.cancel();
+    	    	})
+    }
+
+    /* --------- /apply theme -------- */
 
 	// Init controller
 	$scope.init();

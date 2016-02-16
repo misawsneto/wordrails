@@ -18,7 +18,8 @@
 		"DEFAULT_STATION": "Estação padrão",
 		"DOMAIN": "Domínio",
 		"SUBDOMAIN": "Subdomínio",
-		"THEMING": "Aparência"
+		"THEMING": "Aparência",
+		"SEARCH": "Buscar"
 	},
 	"actions":{
 		"ADD": "Adicionar",
