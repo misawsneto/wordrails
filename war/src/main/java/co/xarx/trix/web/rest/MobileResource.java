@@ -8,6 +8,7 @@ import co.xarx.trix.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.PUT;
@@ -28,8 +29,9 @@ public class MobileResource {
 	@PUT
 	@Path("/location")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response putToken(@FormParam("deviceCode") String token, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		return updateMobile(token, lat, lng, MobileDevice.Type.APPLE);
+	public Response putToken(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String device,
+							 @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
+		return updateMobile(token, lat, lng, device.equals("apple") ? MobileDevice.Type.APPLE : MobileDevice.Type.ANDROID);
 	}
 
 	public Response updateMobile(String token, Double lat, Double lng, MobileDevice.Type type) {
