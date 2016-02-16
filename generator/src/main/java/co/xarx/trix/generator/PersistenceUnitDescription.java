@@ -1,6 +1,7 @@
 package co.xarx.trix.generator;
 
 import co.xarx.trix.annotation.GeneratorIgnore;
+import co.xarx.trix.annotation.GeneratorInclude;
 import org.reflections.Reflections;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.domain.Pageable;
@@ -148,7 +149,7 @@ public class PersistenceUnitDescription {
 							Type actualTypeArgument = actualTypeArguments[actualTypeArguments.length-1];
 							Class<?> type = (Class<?>) actualTypeArgument;
 
-							if (field.isAnnotationPresent(NotNull.class)) {
+							if (field.isAnnotationPresent(NotNull.class) || field.isAnnotationPresent(GeneratorInclude.class)) {
 								Size size = field.getAnnotation(Size.class);
 								if (size != null && size.min() > 0) {
 									FieldDescription fieldDescription = new FieldDescription();
@@ -193,7 +194,7 @@ public class PersistenceUnitDescription {
 								relationshipDescription.entity = new EntityDescription();
 								relationshipDescription.entity.name = field.getType().getSimpleName();
 								entity.relationships.add(relationshipDescription);
-								if (field.isAnnotationPresent(NotNull.class)) {
+								if (field.isAnnotationPresent(NotNull.class) || field.isAnnotationPresent(GeneratorInclude.class)) {
 									FieldDescription fieldDescription = new FieldDescription();
 									fieldDescription.type = "String";
 									fieldDescription.name = field.getName();

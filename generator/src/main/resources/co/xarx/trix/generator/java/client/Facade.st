@@ -77,7 +77,7 @@ public class $facade$ {
 					 LogLevel _level) throws IOException {
 		Gson _gson = new GsonBuilder()
 			.registerTypeAdapter(Date.class, new DateJsonSerializer())
-    		.registerTypeAdapter(Date.class, new DateJsonDeserializer())
+			.registerTypeAdapter(Date.class, new DateJsonDeserializer())
 			.create();		
 		Converter _converter = new GsonConverter(_gson);		
 		
@@ -463,7 +463,7 @@ public class $facade$ {
 	}
 
 	public PostView getPostViewBySlug(String slug, Boolean withBody){
-    	return _facade.getPostViewBySlug(slug, withBody);
+		return _facade.getPostViewBySlug(slug, withBody);
 	}
 
 	public void getPostViewBySlug(String slug, Boolean withBody, Callback<PostView> _callback){
