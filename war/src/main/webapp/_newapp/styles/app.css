@@ -7383,6 +7383,8 @@ bg-none {
 }
 
 /* /settings-color-selector */
+/* toast */
+
 .md-toast-success > div {
   background-color: rgba(0, 128, 0, 0.95) !important;
 }
@@ -7390,3 +7392,14 @@ bg-none {
 .md-toast-info > div {
   background-color: rgba(0, 85, 187, 0.95) !important;
 }
+
+/* /toast */
+
+/* search */
+
+#search input {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+/* /search */

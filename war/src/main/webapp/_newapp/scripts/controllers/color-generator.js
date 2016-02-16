@@ -5,6 +5,7 @@ angular.module('app').controller('ColorGeneratorCtrl',
 function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $filter, themeProvider, colorsProvider, $mdTheming, $injector, $mdSidenav)
 {
 
+	// sidenav toggle
 	$scope.togglePalette = buildToggler('palette-selector');
 	$scope.toggleDemo = buildToggler('sidenav-demo');
 
@@ -14,19 +15,10 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
       return function() {
         $mdSidenav(navID)
           .toggle()
-      }
+f      }
     }
 
-	function DialogImportCtrl($scope, $mdDialog, $mdColorPalette ){
-		$scope.code = '';
-		$scope.defaultPalettes = $mdColorPalette;
-		$scope.closeDialog = function () {
-			$mdDialog.hide();
-		};
-		$scope.import = function ( code ) {
-			$mdDialog.hide( code );
-		};
-	}
+    // -----------
 
 	$scope.baseColorFilter = function (color) { 
 	    return color.name === '500' || color.name === '300' || color.name === '800' || color.name === 'A100'; 
@@ -386,134 +378,6 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		$scope.showClipboard(palette.json);
 
 	};
-
-    // Function to show export json for loading carts later
-    $scope.showImport = function()
-	{
-		$mdDialog
-			// Show the dialog to allow import
-			.show( {
-				templateUrl: 'templates/dialogs/import.html',
-				controller: DialogImportCtrl
-			} )
-			// Once the user clicks import...
-			.then( function ( code )
-			{
-				// ...add the palette!
-				if ( typeof code == "object" ) {
-					$scope.addPaletteFromObject( code );
-				}else{
-					$scope.addPaletteFromJSON( code );
-				}
-			}, function () { } );
-
-		// Google Analytics Event Track
-		ga( 'send', 'event', 'mcg', 'import_code' );
-    };
-
-	// Function to show export json for loading carts later
-	$scope.showAbout = function ()
-	{
-		// Show about us section!
-		$mdDialog.show( {
-			templateUrl: 'templates/dialogs/about.html',
-			controller:  AboutCtrl
-		} );
-
-		// Google Analytics Event Track
-		ga( 'send', 'event', 'mcg', 'about_us' );
-	};
-
-	// Function to show generic clipboard alert dialog
-	$scope.showClipboard = function(code)
-	{
-		// TODO: Move these controllers and templates to their own files.
-		$mdDialog.show({
-			template   : '<md-dialog aria-label="Clipboard dialog">' +
-			'  <md-content>' +
-			'    <pre>{{code}}</pre>' +
-			'  </md-content>' +
-			'  <div class="md-actions">' +
-			'    <span ng-if="copied==true" ng-cloak class="animated fadeInUp">Code copied to clipboard!</span>'+
-			'    <md-button class="md-accent" ui-zeroclip zeroclip-model="code" zeroclip-copied="showNotice()">' +
-			'      Copy' +
-			'    </md-button>' +
-			'    <md-button ng-click="closeDialog()">' +
-			'      Close' +
-			'    </md-button>' +
-			'  </div>' +
-			'</md-dialog>',
-			locals     : {
-				code: code
-			},
-			controller : ClipboardDialogController
-		});
-
-
-		// TODO: Move these controllers and templates to their own files.
-		function ClipboardDialogController($scope, $mdDialog, $timeout, code)
-		{
-			$scope.code = code;
-			$scope.copied = false;
-			$scope.closeDialog = function () {
-				$mdDialog.hide();
-			};
-			$scope.showNotice = function(){
-				$scope.copied = true;
-				$timeout(function(){
-					$scope.copied = false;
-				}, 1500);
-			};
-		}
-	};
-
-	/*// Function to show generic clipboard alert dialog
-	$scope.showColourLovers = function () {
-		$mdDialog.show( {
-			templateUrl: '/templates/dialogs/colourlovers.html',
-			controller: ColourLoversDialogController
-		} );
-
-		// Google Analytics Event Track
-		ga( 'send', 'event', 'mcg', 'view_colourlovers' );
-
-		function ColourLoversDialogController( $scope, $mdDialog, ColourLovers )
-		{
-			$scope.init = function(){
-				$scope.colourlovers = [];
-				$scope.setColors = $rootScope.setPalettesByColors;
-				$scope.getTop();
-			};
-
-			// Get top colourlover palettes.
-			$scope.getTop = function(){
-				ColourLovers.getTop().success( function ( data ) {
-					$scope.colourlovers = data;
-				} );
-			};
-
-			// Get new colourlover palettes.
-			$scope.getNew = function () {
-				ColourLovers.getNew().success( function ( data ) {
-					$scope.colourlovers = data;
-				} );
-			};
-
-			// Get random colourlover palettes.
-			$scope.getRandom = function () {
-				ColourLovers.getRandom().success( function ( data ) {
-					$scope.colourlovers = data;
-				} );
-			};
-
-			// Function to close dialog
-			$scope.closeDialog = function () {
-				$mdDialog.hide();
-			};
-
-			$scope.init();
-		}
-	};*/
 
     // Function to darken a palette's color.
     $scope.darkenPaletteItem = function(color){
