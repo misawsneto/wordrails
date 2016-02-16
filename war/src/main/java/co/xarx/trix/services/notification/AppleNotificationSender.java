@@ -8,18 +8,12 @@ import co.xarx.trix.persistence.AppleCertificateRepository;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
-import com.relayrides.pushy.apns.ApnsClient;
-import com.relayrides.pushy.apns.ClientNotConnectedException;
-import com.relayrides.pushy.apns.PushNotificationResponse;
-import com.relayrides.pushy.apns.util.SimpleApnsPushNotification;
-import com.relayrides.pushy.apns.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 @Component
 public class AppleNotificationSender implements NotificationSender {
@@ -51,13 +45,12 @@ public class AppleNotificationSender implements NotificationSender {
 
 	@Override
 	public Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, Collection<String> devices) throws IOException {
-//		ApnsClient<SimpleApnsPushNotification> apnsClient;
 
 		ApnsService apnsClient = null;
 		try {
 			apnsClient = getAPNsClient(notification.test);
 		} catch (Exception e) {
-			throw new IOException("Failed to initialize Apple Notification Service");
+			return processServerError(devices, e);
 		}
 
 		String payload = APNS.newPayload()
@@ -70,80 +63,101 @@ public class AppleNotificationSender implements NotificationSender {
 				.shrinkBody("...")
 				.build();
 
-		Collection<ApnsNotification> apnsNotifications = (Collection<ApnsNotification>) apnsClient.push(devices, payload);
+		send(devices, payload, apnsClient);
 
+		return checkDevices(apnsClient, devices);
+
+	}
+
+	public List<ApnsNotification> send(Collection<String> devices, String payload, ApnsService apnsClient) throws IOException {
+		return (List<ApnsNotification>) apnsClient.push(devices, payload);
+	}
+
+	public Map<String, NotificationResult> checkDevices(ApnsService apnsClient, Collection<String> devices){
 		Map<String, NotificationResult> notificationResultMap = new HashMap<>();
 		Map<String, Date> inactiveDevices = apnsClient.getInactiveDevices();
 
-		for (ApnsNotification apnsNotification : apnsNotifications) {
+		for (String device : devices) {
 			NotificationResult r = new NotificationResult();
 
-			if(inactiveDevices.containsKey(apnsNotification.getDeviceToken().toString())){
-				r.setStatus(Notification.Status.SEND_ERROR);
+			if (inactiveDevices.containsKey(device)) {
+				r.setStatus(Notification.Status.SERVER_ERROR);
 				r.setErrorMessage("Device deactivated");
 				r.setDeviceDeactivated(true);
 			} else {
 				r.setStatus(Notification.Status.SUCCESS);
 			}
-
-			notificationResultMap.put(apnsNotification.getDeviceToken().toString(), r);
+			notificationResultMap.put(device, r);
 		}
 
 		return notificationResultMap;
 	}
 
-	PushNotificationResponse get(ApnsClient<SimpleApnsPushNotification> apnsClient, SimpleApnsPushNotification apnsNotification) throws ExecutionException, InterruptedException {
-		return apnsClient.sendNotification(apnsNotification).get();
-	}
+	public Map<String, NotificationResult> processServerError(Collection<String> devices, Exception e){
+		Map<String, NotificationResult> serverErrorNotifications = new HashMap<>();
 
-	private Map<String, NotificationResult> sendMessageToDevices(String payloader, List<String> devices, ApnsClient<SimpleApnsPushNotification> apnsClient, Integer index, Map<String, NotificationResult> results) throws IOException {
-		int i = index;
-		try {
-			int notificationsCounter = 0;
-			for (i = index; i < devices.size(); i++) {
-				String deviceCode = devices.get(i);
-
-				SimpleApnsPushNotification apnsNotification = new SimpleApnsPushNotification(TokenUtil.sanitizeTokenString(deviceCode), "topic", payloader);
-
-				PushNotificationResponse response = get(apnsClient, apnsNotification);
-
-				NotificationResult notificationResult = new NotificationResult();
-				if (response.isAccepted()) {
-					notificationResult.setStatus(Notification.Status.SUCCESS);
-				} else {
-					notificationResult.setStatus(Notification.Status.SERVER_ERROR);
-					notificationResult.setErrorMessage(response.getRejectionReason());
-
-					if (response.getTokenInvalidationTimestamp() != null) {
-						notificationResult.setDeviceDeactivated(true);
-					}
-				}
-
-				results.put(deviceCode, notificationResult);
-
-				if (notificationsCounter >= getBatchSize()) {
-					Thread.sleep(1000);
-					notificationsCounter = 0;
-				}
-				notificationsCounter++;
-			}
-		} catch (InterruptedException e) {
-			throw new IOException("Connection was interrupted", e);
-		} catch (ExecutionException e) {
-			if (e.getCause() instanceof ClientNotConnectedException) {
-				try {
-					apnsClient.getReconnectionFuture().await();
-				} catch (InterruptedException e1) {
-					throw new IOException("Failed to reconnect to Apple", e);
-				}
-				return sendMessageToDevices(payloader, devices, apnsClient, i, results);
-			} else {
-				throw new IOException("Unexpected error", e);
-			}
+		for (String device:
+			 devices) {
+			NotificationResult nr = new NotificationResult();
+			nr.setStatus(Notification.Status.SERVER_ERROR);
+			nr.setErrorMessage(e.getMessage());
 		}
 
-		return results;
+		return serverErrorNotifications;
 	}
+
+//	PushNotificationResponse get(ApnsClient<SimpleApnsPushNotification> apnsClient, SimpleApnsPushNotification apnsNotification) throws ExecutionException, InterruptedException {
+//		return apnsClient.sendNotification(apnsNotification).get();
+//	}
+
+//	private Map<String, NotificationResult> sendMessageToDevices(String payloader, List<String> devices, ApnsClient<SimpleApnsPushNotification> apnsClient, Integer index, Map<String, NotificationResult> results) throws IOException {
+//		int i = index;
+//		try {
+//			int notificationsCounter = 0;
+//			for (i = index; i < devices.size(); i++) {
+//				String deviceCode = devices.get(i);
+//
+//				SimpleApnsPushNotification apnsNotification = new SimpleApnsPushNotification(TokenUtil.sanitizeTokenString(deviceCode), "topic", payloader);
+//
+//				PushNotificationResponse response = get(apnsClient, apnsNotification);
+//
+//				NotificationResult notificationResult = new NotificationResult();
+//				if (response.isAccepted()) {
+//					notificationResult.setStatus(Notification.Status.SUCCESS);
+//				} else {
+//					notificationResult.setStatus(Notification.Status.SERVER_ERROR);
+//					notificationResult.setErrorMessage(response.getRejectionReason());
+//
+//					if (response.getTokenInvalidationTimestamp() != null) {
+//						notificationResult.setDeviceDeactivated(true);
+//					}
+//				}
+//
+//				results.put(deviceCode, notificationResult);
+//
+//				if (notificationsCounter >= getBatchSize()) {
+//					Thread.sleep(1000);
+//					notificationsCounter = 0;
+//				}
+//				notificationsCounter++;
+//			}
+//		} catch (InterruptedException e) {
+//			throw new IOException("Connection was interrupted", e);
+//		} catch (ExecutionException e) {
+//			if (e.getCause() instanceof ClientNotConnectedException) {
+//				try {
+//					apnsClient.getReconnectionFuture().await();
+//				} catch (InterruptedException e1) {
+//					throw new IOException("Failed to reconnect to Apple", e);
+//				}
+//				return sendMessageToDevices(payloader, devices, apnsClient, i, results);
+//			} else {
+//				throw new IOException("Unexpected error", e);
+//			}
+//		}
+//
+//		return results;
+//	}
 
 	@Override
 	public Integer getBatchSize() {
