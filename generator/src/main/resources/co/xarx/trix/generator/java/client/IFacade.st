@@ -254,7 +254,15 @@ interface I$facade$ {
 	
 	@PUT("/persons/me/regId")
 	@FormUrlEncoded
-	void putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId, @Field("lat") Double lat, @Field("lng") Double lng, Callback<Response> _callback);
+	void putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId,@Field("lat") Double lat, @Field("lng") Double lng, Callback<Response> _callback);
+	
+	@PUT("/mobile/location")
+	@FormUrlEncoded
+	Response putLocation(@Field("regId") String regId, @Field("lat") Double lat, @Field("lng") Double lng);
+	
+	@PUT("/mobile/location")
+	@FormUrlEncoded
+	void putLocation(@Field("regId") String regId, @Field("lat") Double lat, @Field("lng") Double lng, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
