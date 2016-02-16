@@ -248,26 +248,29 @@ angular.module('app')
 
       var themeName = $filter('generateRandom')(4,"aA");
 
-      themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
-      themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
-      themeProvider.definePalette('myWarn', $scope.app.network.alertColors);
-      if($scope.app.network.backgroundColors)
-        themeProvider.definePalette('myBackground', $scope.app.network.backgroundColors);
-      else
-        themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject(computeColors($scope.app.network.backgroundColor)))
+      $scope.app.applyNetworkTheme = function (){
+        themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
+        themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
+        themeProvider.definePalette('myWarn', $scope.app.network.alertColors);
+        if($scope.app.network.backgroundColors && $scope.app.network.backgroundColors.length > 0)
+          themeProvider.definePalette('myBackground', $scope.app.network.backgroundColors);
+        else
+          themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject(computeColors($scope.app.network.backgroundColor)))
+  
+        themeProvider.theme(themeName)
+        .primaryPalette('myPrimary')
+        .accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
+        .warnPalette('myWarn')
+        .backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
+  
+        themeProvider.reload($injector);
+        themeProvider.setDefaultTheme(themeName)
+  
+        createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
+        $scope.app.backgroundPalette = $scope.app.network.backgroundColor
+      }
 
-      themeProvider.theme(themeName)
-      .primaryPalette('myPrimary')
-      .accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
-      .warnPalette('myWarn')
-      .backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
-
-      themeProvider.reload($injector);
-      themeProvider.setDefaultTheme(themeName)
-
-      createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
-
-      console.log($scope.app.network)
+      $scope.app.applyNetworkTheme();
 
       // ---------- /theming ----------
 

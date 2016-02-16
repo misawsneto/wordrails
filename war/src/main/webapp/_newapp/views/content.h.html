@@ -48,7 +48,7 @@
     <div class="pull-right" ui-view="navbar@"></div>
     <!-- / -->
     <!-- Search form -->
-    <div id="search" class="pos-abt w-full h-full" ng-show="app.search.show" ng-class="$state.current.data.theme ? $state.current.data.theme.primary : app.setting.theme.primary">
+    <div id="search" class="pos-abt w-full h-full md-primary-default background" ng-show="app.search.show">
       <div class="box">
         <div class="box-col w-56 text-center">
           <!-- hide search form -->
@@ -56,7 +56,7 @@
         </div>
         <div class="box-col v-m">
           <!-- bind to app.search.content -->
-          <input class="form-control input-lg no-bg no-border" placeholder="Search" ng-model="app.search.content">
+          <input class="form-control input-lg no-bg no-border" placeholder="{{'titles.SEARCH' | translate }}" ng-model="app.search.content">
         </div>
         <div class="box-col w-56 text-center">
           <a md-ink-ripple class="navbar-item inline"><i class="mdi-av-mic i-24"></i></a>
