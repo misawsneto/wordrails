@@ -4,9 +4,11 @@ import co.xarx.trix.config.flyway.SpringContextMigration;
 import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.persistence.StationRolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class V20160202185000__Acl_Inserts extends SpringContextMigration {
 
 	@Autowired

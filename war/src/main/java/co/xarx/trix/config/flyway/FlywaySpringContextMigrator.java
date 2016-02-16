@@ -24,7 +24,7 @@ public class FlywaySpringContextMigrator {
 	}
 
 	public void migrate() {
-		flyway.setLocations("db.migration");
+		flyway.setLocations("co.xarx.trix.config.flyway.migration");
 		flyway.migrate();
 	}
 
