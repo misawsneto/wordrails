@@ -8,6 +8,8 @@ import co.xarx.trix.persistence.AppleCertificateRepository;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.eclipse.persistence.jpa.jpql.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,16 +31,22 @@ public class AppleNotificationSender implements NotificationSender {
 		this.appleCertificateRepository = appleCertificateRepository;
 	}
 
-	public ApnsService getAPNsClient(Boolean isTest) throws SQLException {
+	public ApnsService getAPNsClient(Boolean istest) throws IOException {
 
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		AppleCertificate certificate = appleCertificateRepository.findByTenantId(tenantId);
+		Assert.isNotNull(certificate, "Apple certificate not found");
 
-		ApnsService service = APNS
-				.newService()
-				.withCert(certificate.file.getBinaryStream(), certificate.password)
-				.withProductionDestination()
-				.build();
+		ApnsService service = null;
+		try {
+			service = APNS
+					.newService()
+					.withCert(certificate.file.getBinaryStream(), certificate.password)
+					.withProductionDestination()
+					.build();
+		} catch (SQLException e) {
+			throw new IOException(e.getMessage());
+		}
 
 		return service;
 	}
@@ -47,11 +55,7 @@ public class AppleNotificationSender implements NotificationSender {
 	public Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, Collection<String> devices) throws IOException {
 
 		ApnsService apnsClient = null;
-		try {
-			apnsClient = getAPNsClient(notification.test);
-		} catch (Exception e) {
-			return processServerError(devices, e);
-		}
+		apnsClient = getAPNsClient(notification.test);
 
 		String payload = APNS.newPayload()
 				.badge(1)
@@ -101,7 +105,7 @@ public class AppleNotificationSender implements NotificationSender {
 			 devices) {
 			NotificationResult nr = new NotificationResult();
 			nr.setStatus(Notification.Status.SERVER_ERROR);
-			nr.setErrorMessage(e.getMessage());
+			nr.setErrorMessage(ExceptionUtils.getStackTrace(e));
 			serverErrorNotifications.put(device, nr);
 		}
 

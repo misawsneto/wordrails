@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,7 +34,7 @@ public class AppleNotificationSenderTest extends AbstractNotificationSenderTest 
 	private ApnsNotification resultErrorDeactivated;
 
 	@Before
-	public void setUp() throws SQLException {
+	public void setUp() throws IOException {
 		apnsClient = mock(ApnsService.class);
 
 		appleNS = spy(new AppleNotificationSender());
