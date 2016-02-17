@@ -1,3 +1,4 @@
+
 app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$mdDialog', '$mdSidenav',
 	function($scope , $log ,  $timeout ,  $rootScope ,  $state ,  trix ,  FileUploader, TRIX, cfpLoadingBar, $mdToast , $mdDialog, $mdSidenav) {
 
@@ -191,6 +192,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     };
 
     $scope.showEditProfile = function(ev){
+    	$scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
     	$mdSidenav('right').toggle();
     }
 
@@ -224,7 +226,8 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     		$scope.editingPerson.password = null;
     		$scope.editingPerson.passwordConfirm = null;
     		$scope.person = $scope.app.initData.person = $scope.editingPerson;
-				$scope.app.showSuccessToast('Alterações realizadas com sucesso')    		
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso')
+			$scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
     	});
     }
 
