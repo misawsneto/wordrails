@@ -56,10 +56,11 @@ public class AppleNotificationSender implements NotificationSender {
 		String payload = APNS.newPayload()
 				.badge(1)
 				.sound("default")
-				.customField("postId", notification.postId)
-				.customField("title", notification.title)
 				.alertBody(notification.message)
-				.customField("content-available", true)
+				.alertTitle(notification.post.stationName)
+				.customField("stationName", notification.post.stationName)
+				.customField("postId", notification.postId)
+				.forNewsstand()
 				.shrinkBody("...")
 				.build();
 
