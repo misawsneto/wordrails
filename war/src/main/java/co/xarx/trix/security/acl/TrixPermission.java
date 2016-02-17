@@ -19,7 +19,7 @@ public class TrixPermission extends AbstractPermission {
 	public static final Permission WRITE = new TrixPermission(1 << 1, 'W'); // 2
 	public static final Permission CREATE = new TrixPermission(1 << 2, 'C'); // 4
 	public static final Permission DELETE = new TrixPermission(1 << 3, 'D'); // 8
-	public static final Permission PUBLISHER = new TrixPermission(1 << 4, 'P'); // 16
-	public static final Permission EDITOR = new TrixPermission(1 << 5, 'E'); // 32
+	public static final Permission PUBLISH = new TrixPermission(1 << 4, 'P'); // 16
+	public static final Permission SUPEREDITOR = new TrixPermission(1 << 5, 'E'); // 32
 	public static final Permission ADMINISTRATION = new TrixPermission(1 << 6, 'A'); // 64
 }

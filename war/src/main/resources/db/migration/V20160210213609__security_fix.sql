@@ -55,3 +55,19 @@ INSERT INTO acl_class (class) VALUES ('co.xarx.trix.domain.Comment');
 INSERT INTO acl_sid (principal, sid, tenantId) SELECT 1, username, tenantId
 																							 FROM users;
 
+DELETE person_station_role FROM person_station_role
+	INNER JOIN station
+		ON person_station_role.station_id = station.id AND station.tenantId != person_station_role.tenantId;
+
+
+UPDATE person AS p1
+	INNER JOIN (SELECT tenantId, id
+							FROM person
+							GROUP BY tenantId HAVING sum(networkAdmin = 1) = 0) AS p2 ON p1.tenantId = p2.tenantId AND p1.id = p2.id
+SET p1.networkAdmin = TRUE;
+
+INSERT INTO person_station_role (admin, editor, writer, person_id, station_id, tenantId)
+	SELECT TRUE, FALSE, FALSE, person.id pid, station.id sid, person.tenantId
+	FROM person, station
+	WHERE person.networkAdmin IS TRUE AND person.tenantId = station.tenantId
+ON DUPLICATE KEY UPDATE admin = TRUE, editor = FALSE, writer = FALSE;

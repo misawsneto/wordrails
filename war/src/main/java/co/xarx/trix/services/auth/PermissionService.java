@@ -1,7 +1,6 @@
 package co.xarx.trix.services.auth;
 
 import co.xarx.trix.domain.Station;
-import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.security.acl.TrixPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
@@ -16,15 +15,11 @@ import java.util.List;
 @Service
 public class PermissionService {
 
-	private AuthService authService;
 	private MutableAclService aclService;
-	private PersonRepository personRepository;
 
 	@Autowired
-	public PermissionService(AuthService authService, MutableAclService aclService, PersonRepository personRepository) {
-		this.authService = authService;
+	public PermissionService(MutableAclService aclService) {
 		this.aclService = aclService;
-		this.personRepository = personRepository;
 	}
 
 	public void updateStationsPermissions(List<String> usernames, List<Integer> stationIds, boolean publisher, boolean editor, boolean admin) {
@@ -35,8 +30,8 @@ public class PermissionService {
 		int permissionMask = TrixPermission.READ.getMask();
 
 		//in simple words, the three next lines adds the following permissions to the permission list
-		if (publisher) permissionMask |= TrixPermission.PUBLISHER.getMask(); //I never thought I'd use the |= operator
-		if (editor) permissionMask |= TrixPermission.EDITOR.getMask();
+		if (publisher) permissionMask |= TrixPermission.PUBLISH.getMask(); //I never thought I'd use the |= operator
+		if (editor) permissionMask |= TrixPermission.SUPEREDITOR.getMask();
 		if (admin) permissionMask |= TrixPermission.ADMINISTRATION.getMask();
 
 		Permission p = new TrixPermission(permissionMask);

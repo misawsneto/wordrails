@@ -24,6 +24,7 @@ public class MultitenantAclService extends JdbcMutableAclService {
 	@Override
 	protected Long createOrRetrieveSidPrimaryKey(String sidName, boolean sidIsPrincipal, boolean allowCreate) {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
+		Assert.hasText(tenantId, "Tenant ID must not be null or empty");
 		Long sidId = findSid(sidName, sidIsPrincipal, tenantId);
 
 		if (sidId == null && allowCreate) {

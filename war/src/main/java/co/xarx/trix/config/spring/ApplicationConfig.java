@@ -23,7 +23,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 				"classpath:application_${spring.profiles.active:dev}.properties"
 		}
 )
-@ComponentScan(basePackages = {"co.xarx.trix", "db.migration"})
+@ComponentScan(basePackages = {"co.xarx.trix"})
 public class ApplicationConfig {
 
 	@Value("${amazon.accessKey}")

@@ -5,12 +5,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 public abstract class SpringContextMigration implements SpringJdbcMigration {
 
+	protected JdbcTemplate jdbc;
+
 	@Override
 	public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
-		FlywaySpringContextMigrator.autowire(this);
+		this.jdbc = jdbcTemplate;
+		FlywayIntegrator.autowire(this);
 		migrate();
 	}
 
 	public abstract void migrate() throws Exception;
-
 }
