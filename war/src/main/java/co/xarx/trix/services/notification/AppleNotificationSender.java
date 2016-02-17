@@ -102,6 +102,7 @@ public class AppleNotificationSender implements NotificationSender {
 			NotificationResult nr = new NotificationResult();
 			nr.setStatus(Notification.Status.SERVER_ERROR);
 			nr.setErrorMessage(e.getMessage());
+			serverErrorNotifications.put(device, nr);
 		}
 
 		return serverErrorNotifications;
