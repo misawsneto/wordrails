@@ -195,7 +195,7 @@ public class PersistenceUnitDescription {
 							}
 
 							FieldDescription relationship = new FieldDescription();
-							relationship.type = "List<" + genericName + (field.isSimpleType(genericType) ? "" : "Dto") + ">";
+							relationship.type = "List<" + genericSimpleName + (field.isSimpleType(genericType) ? "" : "Dto") + ">";
 							relationship.name = field.getName();
 							relationship.nameUppercase = field.getNameUppercase();
 							relationship.entity = new EntityDescription();

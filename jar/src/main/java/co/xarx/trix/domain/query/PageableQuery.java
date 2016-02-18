@@ -1,5 +1,6 @@
 package co.xarx.trix.domain.query;
 
+import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
 import lombok.Data;
@@ -38,6 +39,7 @@ public class PageableQuery extends BaseEntity implements Query {
 	@Transient
 	private Set<Integer> indexExceptions; //indexes that are already filled
 
+	@SdkInclude
 	@JoinColumn(name = "object_query_id")
 	@OneToOne(cascade = CascadeType.ALL)
 	public AbstractObjectQuery objectQuery;
