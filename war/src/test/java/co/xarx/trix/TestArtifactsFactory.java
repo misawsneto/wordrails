@@ -3,7 +3,7 @@ package co.xarx.trix;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.domain.page.BaseSection;
+import co.xarx.trix.domain.page.AbstractSection;
 import co.xarx.trix.domain.page.Page;
 import co.xarx.trix.domain.page.QueryableListSection;
 import co.xarx.trix.domain.query.FixedQuery;
@@ -156,7 +156,7 @@ public class TestArtifactsFactory {
 		section2.setPageable(false);
 		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));
 
-		page.setSections(new TreeMap<Integer, BaseSection>() {{
+		page.setSections(new TreeMap<Integer, AbstractSection>() {{
 			put(0, section1);
 			put(1, section2);
 		}});

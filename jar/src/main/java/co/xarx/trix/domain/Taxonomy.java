@@ -1,11 +1,16 @@
 package co.xarx.trix.domain;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 public class Taxonomy extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 7821255752575024731L;

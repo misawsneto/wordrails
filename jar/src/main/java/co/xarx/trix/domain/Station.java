@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.event.Event;
 import co.xarx.trix.domain.page.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -74,6 +75,7 @@ public class Station extends BaseEntity implements Serializable, Loggable {
 	@OneToMany(mappedBy = "station")
 	public Set<Page> pages;
 
+	@SdkInclude
 	@Size(min = 1)
 	@NotNull
 	@OneToMany(mappedBy = "station", cascade = CascadeType.PERSIST)

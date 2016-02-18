@@ -1,9 +1,15 @@
 package co.xarx.trix.domain.event;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.BaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
+@SdkExclude
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn

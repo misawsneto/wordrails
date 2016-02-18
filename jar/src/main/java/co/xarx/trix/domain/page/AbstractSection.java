@@ -8,11 +8,20 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Map;
 
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "section_base")
+@Table(name = "sections")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
-public abstract class BaseSection extends BaseEntity implements Section, Serializable {
+public abstract class AbstractSection extends BaseEntity implements Section, Serializable {
+
+	private static final long serialVersionUID = 3219789942521409531L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,22 +40,4 @@ public abstract class BaseSection extends BaseEntity implements Section, Seriali
 	@MapKeyColumn(name = "property_key", nullable = false)
 	@Column(name = "value", nullable = false)
 	public Map<String, String> properties;
-
-	@Override
-	public Map<String, String> getProperties() {
-		return properties;
-	}
-
-	public void setProperties(Map<String, String> properties) {
-		this.properties = properties;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	@Override
-	public String getTitle() {
-		return title;
-	}
 }

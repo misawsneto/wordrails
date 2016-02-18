@@ -24,10 +24,10 @@ public class FavoriteSecurityChecker {
 
 	public boolean canWriteRecommend(Recommend recommend) {
 		boolean canWrite = false;
-		Post post = recommend.post;
+		Post post = recommend.getPost();
 
 		Person personLogged = authProvider.getLoggedPerson();
-		if(personLogged != null && Objects.equals(personLogged.id, recommend.person.id)){
+		if(personLogged != null && Objects.equals(personLogged.id, recommend.getPerson().id)){
 			Station station = post.station;
 			if(station.visibility.equals(Station.UNRESTRICTED) && station.writable){
 				canWrite = true;

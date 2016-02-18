@@ -1,31 +1,31 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"post_id", "person_id"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "person_id"}))
 public class Recommend extends BaseEntity {
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
+	private Integer id;
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "post_id")
-	public Post post;
+	private Post post;
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "person_id")
-	public Person person;
+	private Person person;
 }

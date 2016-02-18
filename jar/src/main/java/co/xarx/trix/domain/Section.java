@@ -1,9 +1,14 @@
 package co.xarx.trix.domain;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 public class Section extends BaseEntity implements Serializable {
 

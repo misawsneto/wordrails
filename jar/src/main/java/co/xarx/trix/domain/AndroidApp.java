@@ -1,10 +1,13 @@
 package co.xarx.trix.domain;
 
 
+import co.xarx.trix.annotation.SdkExclude;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+@SdkExclude
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "tenantId"))
 public class AndroidApp extends BaseEntity implements Serializable {

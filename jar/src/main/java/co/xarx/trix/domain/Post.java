@@ -1,9 +1,10 @@
 package co.xarx.trix.domain;
 
-import co.xarx.trix.annotation.GeneratorInclude;
+import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.event.PostEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,6 +18,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class Post extends BaseEntity implements Serializable, ElasticSearchEntity, Loggable {
 
 	public static final String STATE_DRAFT = "DRAFT";
@@ -93,7 +95,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Size(min = 1, max = 15)
 	public String state;
 
-	@GeneratorInclude
+	@SdkInclude
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
 
@@ -210,19 +212,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public String toString() {
 		return "Post [id=" + id + ", date=" + date
 				+ ", lastModificationDate=" + lastModificationDate + ", title=" + title + ", state=" + state + "]";
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return super.equals(obj);
-	}
-
-	@Override
-	public int hashCode() {
-		if(id!=null)
-			return id.hashCode() * 31;
-		else
-			return super.hashCode();
 	}
 
 	@Override

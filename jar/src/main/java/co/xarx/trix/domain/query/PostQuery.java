@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "query_object_post")
 @PrimaryKeyJoinColumn(name = "object_query_id", referencedColumnName = "id")
-public class PostQuery extends BaseObjectQuery implements ElasticSearchObjectQuery, SortedQuery {
+public class PostQuery extends AbstractObjectQuery implements ElasticSearchObjectQuery, SortedQuery {
 
 	@Column(name = "before_date")
 	public Date before;

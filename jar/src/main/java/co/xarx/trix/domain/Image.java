@@ -2,6 +2,10 @@ package co.xarx.trix.domain;
 
 import com.amazonaws.services.cloudfront.model.InvalidArgumentException;
 import com.google.common.collect.Sets;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +16,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId", "originalHash"}))
 public class Image extends BaseEntity implements Serializable {
@@ -24,13 +30,9 @@ public class Image extends BaseEntity implements Serializable {
 	public static final String SIZE_ORIGINAL = "original";
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	public enum Size {
 

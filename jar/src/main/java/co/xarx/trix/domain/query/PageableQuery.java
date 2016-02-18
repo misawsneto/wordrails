@@ -2,6 +2,8 @@ package co.xarx.trix.domain.query;
 
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +13,9 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "query_pageable")
 public class PageableQuery extends BaseEntity implements Query {
@@ -35,16 +40,7 @@ public class PageableQuery extends BaseEntity implements Query {
 
 	@JoinColumn(name = "object_query_id")
 	@OneToOne(cascade = CascadeType.ALL)
-	public BaseObjectQuery objectQuery;
-
-	@Override
-	public BaseObjectQuery getObjectQuery() {
-		return objectQuery;
-	}
-
-	public void setObjectQuery(ObjectQuery objectQuery) {
-		this.objectQuery = (BaseObjectQuery) objectQuery;
-	}
+	public AbstractObjectQuery objectQuery;
 
 	@Override
 	public Set<Integer> getIndexes() {
@@ -62,24 +58,12 @@ public class PageableQuery extends BaseEntity implements Query {
 		this.indexExceptions.add(indexException);
 	}
 
-	public void addIdException(Serializable id) {
-		this.objectQuery.addIdException(id);
+	public void addIdExclusion(Serializable id) {
+		this.objectQuery.addIdExclusion(id);
 	}
 
 	public Integer getSize() {
 		return size - indexExceptions.size();
-	}
-
-	public void setSize(Integer size) {
-		this.size = size;
-	}
-
-	public Integer getFrom() {
-		return from;
-	}
-
-	public void setFrom(Integer from) {
-		this.from = from;
 	}
 
 	@Override

@@ -1,14 +1,22 @@
 package co.xarx.trix.domain.page;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.BaseEntity;
-import co.xarx.trix.annotation.GeneratorIgnore;
 import co.xarx.trix.domain.Station;
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Map;
 
+
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "page")
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
@@ -26,44 +34,20 @@ public class Page extends BaseEntity {
 	}
 
 	@JsonIgnore
-	@GeneratorIgnore
+	@SdkExclude
 	@ManyToMany
 	@JoinTable(name = "page_section",
 			joinColumns = @JoinColumn(name = "page_id"),
 			inverseJoinColumns = @JoinColumn(name = "section_id"))
 	@MapKeyJoinColumn(name = "list_index")
-	public Map<Integer, BaseSection> sections;
+	public Map<Integer, AbstractSection> sections;
 
 	@JsonProperty("sections")
-	public Collection<BaseSection> getSectionList() {
+	public Collection<AbstractSection> getSectionList() {
 		return sections.values();
 	}
 
 	@ManyToOne
 	@JsonBackReference("station")
 	public Station station;
-
-	public Station getStation() {
-		return station;
-	}
-
-	public void setStation(Station station) {
-		this.station = station;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public Map<Integer, BaseSection> getSections() {
-		return sections;
-	}
-
-	public void setSections(Map<Integer, BaseSection> sections) {
-		this.sections = sections;
-	}
 }

@@ -1,10 +1,16 @@
 package co.xarx.trix.domain;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.Date;
 
+
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 public class PasswordReset extends BaseEntity {
 

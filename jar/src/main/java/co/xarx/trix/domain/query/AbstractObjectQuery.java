@@ -8,10 +8,10 @@ import java.io.Serializable;
 import java.util.*;
 
 @Entity
-@Table(name = "query_object_base")
+@Table(name = "query_object")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
-public abstract class BaseObjectQuery extends BaseEntity implements ObjectQuery, SortedQuery {
+public abstract class AbstractObjectQuery extends BaseEntity implements ObjectQuery, SortedQuery {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,7 +32,7 @@ public abstract class BaseObjectQuery extends BaseEntity implements ObjectQuery,
 	@JoinTable(name = "query_object_base_exceptions")
 	public Set<Serializable> exceptionIds;
 
-	public BaseObjectQuery() {
+	public AbstractObjectQuery() {
 		sorts = new HashMap<>();
 		exceptionIds = new HashSet<>();
 	}
@@ -47,7 +47,7 @@ public abstract class BaseObjectQuery extends BaseEntity implements ObjectQuery,
 		return sorts;
 	}
 
-	public void addIdException(Serializable id) {
+	public void addIdExclusion(Serializable id) {
 		this.exceptionIds.add(id);
 	}
 }

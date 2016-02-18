@@ -1,9 +1,14 @@
 package co.xarx.trix.domain;
 
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "person_station_role", uniqueConstraints = {@UniqueConstraint(columnNames = {"person_id", "station_id"})})
 public class StationRole extends BaseEntity {
