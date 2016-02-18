@@ -3,6 +3,7 @@ package co.xarx.trix.domain.query;
 import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
+import co.xarx.trix.domain.query.statement.AbstractObjectSortedStatement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,8 +19,8 @@ import java.util.stream.IntStream;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "query_pageable")
-public class PageableQuery extends BaseEntity implements Query {
+@Table(name = "querypageable")
+public class PageableQuery extends BaseEntity implements ObjectQuery {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,9 +41,9 @@ public class PageableQuery extends BaseEntity implements Query {
 	private Set<Integer> indexExceptions; //indexes that are already filled
 
 	@SdkInclude
-	@JoinColumn(name = "object_query_id")
+	@JoinColumn(name = "objectstatement_id")
 	@OneToOne(cascade = CascadeType.ALL)
-	public AbstractObjectQuery objectQuery;
+	public AbstractObjectSortedStatement objectStatement;
 
 	@Override
 	public Set<Integer> getIndexes() {
@@ -61,7 +62,7 @@ public class PageableQuery extends BaseEntity implements Query {
 	}
 
 	public void addIdExclusion(Serializable id) {
-		this.objectQuery.addIdExclusion(id);
+		this.objectStatement.addIdExclusion(id);
 	}
 
 	public Integer getSize() {
@@ -69,7 +70,7 @@ public class PageableQuery extends BaseEntity implements Query {
 	}
 
 	@Override
-	public Map<Integer, Block> fetch(QueryExecutor executor) {
+	public Map<Integer, Block> fetch(QueryRunner executor) {
 		return executor.execute(this);
 	}
 }

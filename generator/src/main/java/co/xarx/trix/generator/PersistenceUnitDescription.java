@@ -155,7 +155,9 @@ public class PersistenceUnitDescription {
 							try {
 								Field f = entityClass.getDeclaredField(propertyDescriptor.getName());
 
-								if (!Modifier.isStatic(f.getModifiers()) && !f.isAnnotationPresent(Transient.class)) {
+								if (!Modifier.isStatic(f.getModifiers())
+										&& !f.isAnnotationPresent(Transient.class)
+										&& !f.isAnnotationPresent(SdkExclude.class)) {
 									JavaField jf = new JavaField(f);
 									fields.add(jf);
 								}
@@ -209,7 +211,8 @@ public class PersistenceUnitDescription {
 					} else {
 						if (field.isRelationship()) {
 							FieldDescription relationship = new FieldDescription();
-							relationship.type = fd.type + (!field.isSimpleType(field.getType()) ? "Dto" : "");
+							relationship.type = field.getTypeSimpleName()
+									+ (!field.isSimpleType(field.getType()) ? "Dto" : "");
 							relationship.name = fd.name;
 							relationship.nameUppercase = fd.nameUppercase;
 							relationship.entity = new EntityDescription();

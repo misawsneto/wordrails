@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
 import com.amazonaws.services.cloudfront.model.InvalidArgumentException;
 import com.google.common.collect.Sets;
 import lombok.AccessLevel;
@@ -156,6 +157,7 @@ public class Image extends BaseEntity implements Serializable {
 		return hashs.get(key);
 	}
 
+	@SdkExclude
 	@ManyToMany
 	@JoinTable(name = "image_picture", joinColumns = @JoinColumn(name = "image_id"))
 	public Set<Picture> pictures;

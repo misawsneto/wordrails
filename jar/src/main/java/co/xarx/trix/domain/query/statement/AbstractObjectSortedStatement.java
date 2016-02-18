@@ -1,4 +1,4 @@
-package co.xarx.trix.domain.query;
+package co.xarx.trix.domain.query.statement;
 
 import co.xarx.trix.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -7,11 +7,16 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "query_object")
+@Table(name = "objectstatement")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
-public abstract class AbstractObjectQuery extends BaseEntity implements ObjectQuery, SortedQuery {
+public abstract class AbstractObjectSortedStatement<T> extends BaseEntity implements SortedStatement, ObjectStatement<T> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,16 +28,16 @@ public abstract class AbstractObjectQuery extends BaseEntity implements ObjectQu
 	}
 
 	@ElementCollection(fetch = FetchType.EAGER)
-	@JoinTable(name = "query_sorter", joinColumns = @JoinColumn(name = "query_id"))
+	@JoinTable(name = "query_sorts", joinColumns = @JoinColumn(name = "query_id"))
 	@MapKeyColumn(name = "sort_attribute", nullable = false)
 	@Column(name = "is_asc", nullable = false)
 	public Map<String, Boolean> sorts;
 
 	@ElementCollection
-	@JoinTable(name = "query_object_base_exceptions")
+	@JoinTable(name = "statement_exceptions")
 	public Set<Serializable> exceptionIds;
 
-	public AbstractObjectQuery() {
+	public AbstractObjectSortedStatement() {
 		sorts = new HashMap<>();
 		exceptionIds = new HashSet<>();
 	}
@@ -43,10 +48,6 @@ public abstract class AbstractObjectQuery extends BaseEntity implements ObjectQu
 	}
 
 	@Override
-	public Map<String, Boolean> getSorts() {
-		return sorts;
-	}
-
 	public void addIdExclusion(Serializable id) {
 		this.exceptionIds.add(id);
 	}

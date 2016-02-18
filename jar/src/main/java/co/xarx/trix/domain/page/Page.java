@@ -1,6 +1,5 @@
 package co.xarx.trix.domain.page;
 
-import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.Station;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -34,7 +33,6 @@ public class Page extends BaseEntity {
 	}
 
 	@JsonIgnore
-	@SdkExclude
 	@ManyToMany
 	@JoinTable(name = "page_section",
 			joinColumns = @JoinColumn(name = "page_id"),

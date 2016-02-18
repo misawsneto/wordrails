@@ -34,7 +34,7 @@ public class ElasticSearchConfig {
 	@Value("${elasticsearch.password}")
 	private String password;
 
-	@Bean(name = "elasticSearchExecutorFactory")
+	@Bean
 	public FactoryBean elasticSearchExecutorFactory() {
 		ServiceLocatorFactoryBean serviceLocatorFactoryBean = new ServiceLocatorFactoryBean();
 		serviceLocatorFactoryBean.setServiceLocatorInterface(ElasticSearchExecutorFactory.class);

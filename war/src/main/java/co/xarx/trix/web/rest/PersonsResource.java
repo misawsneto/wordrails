@@ -107,8 +107,6 @@ public class PersonsResource {
 	@Autowired
 	public StationRoleEventHandler stationRoleEventHandler;
 	@Autowired
-	private SectionRepository sectionRepository;
-	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
@@ -803,8 +801,6 @@ public class PersonsResource {
 		else
 			networkPermissionDto.admin = false;
 
-		network.sections = sectionRepository.findByNetwork(network);
-
 		List<StationDto> stationDtos = new ArrayList<>();
 		List<Station> stations = stationRepository.findByPersonId(person.id);
 		for(Station station : stations) {
@@ -830,15 +826,6 @@ public class PersonsResource {
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
-
-		List<SectionDto> sections = new ArrayList<>();
-		for(Section section: network.sections){
-			SectionDto sectionDto = mapper.readValue(mapper.writeValueAsString(section).getBytes("UTF-8"), SectionDto.class);
-			sectionDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/sections/" + sectionDto.id);
-			sections.add(sectionDto);
-		}
-
-		initData.sections = sections;
 
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes("UTF-8"), NetworkRoleDto.class);
 		initData.stations = stationDtos;

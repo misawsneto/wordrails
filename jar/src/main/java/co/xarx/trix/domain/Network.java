@@ -1,16 +1,20 @@
 package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+
+@Getter
+@Setter
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
 public class Network extends BaseEntity implements Serializable {
@@ -51,9 +55,6 @@ public class Network extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy="network", cascade=CascadeType.ALL)
 	public Set<Sponsor> sponsors;
 
-	@OneToMany(mappedBy="network")
-	public Set<Section> sections;
-
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
 	
@@ -71,12 +72,12 @@ public class Network extends BaseEntity implements Serializable {
 
 	public String googleAppID;
 
-    public String facebookLink;
-    public String youtubeLink;
-    public String googlePlusLink;
-    public String twitterLink;
+	public String facebookLink;
+	public String youtubeLink;
+	public String googlePlusLink;
+	public String twitterLink;
 
-    public String webFooter;
+	public String webFooter;
 
 	@JsonIgnore
 	public String googleAppSecret;
@@ -84,10 +85,10 @@ public class Network extends BaseEntity implements Serializable {
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
 
-    public String stationMenuName;
-    public String homeTabName;
+	public String stationMenuName;
+	public String homeTabName;
 
-    public String domain;
+	public String domain;
 
 	@JsonIgnore
 	public String networkCreationToken;
@@ -146,8 +147,8 @@ public class Network extends BaseEntity implements Serializable {
 	@Lob
 	public String appleStoreAddress;
 
-    @Column(columnDefinition = "boolean default false", nullable = false)
-    public boolean addStationRolesOnSignup;
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean addStationRolesOnSignup;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "palette_primary_color", joinColumns = @JoinColumn(name = "network_id"))
@@ -191,10 +192,6 @@ public class Network extends BaseEntity implements Serializable {
 			defaultReadMode = "D";
 		if(defaultOrientationMode == null || defaultOrientationMode.isEmpty())
 			defaultOrientationMode = "H";
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public boolean isFacebookLoginAllowed() {
