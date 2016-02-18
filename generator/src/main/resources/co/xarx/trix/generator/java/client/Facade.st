@@ -97,7 +97,7 @@ public class $facade$ {
 			.setEndpoint(_url + "/api")			
 			.build();
 		_builder.setLogLevel(_level);
-		IWordRails target = _builder.create(IWordRails.class);	
+		ITrix target = _builder.create(ITrix.class);
 
 		ClassLoader _loader = I$facade$.class.getClassLoader();
 

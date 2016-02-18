@@ -105,7 +105,7 @@ class JavaClientGenerator {
 	}	
 	
 	public static void main(String[] args) throws IOException {
-		JavaClientGenerator generator = new JavaClientGenerator(args[0] + "/co/xarx/trix/api", "co.xarx.trix.api", "WordRails", "co.xarx.trix");
+		JavaClientGenerator generator = new JavaClientGenerator(args[0] + "/co/xarx/trix/api", "co.xarx.trix.api", "Trix", "co.xarx.trix");
 		generator.generate();
 	}		
 }

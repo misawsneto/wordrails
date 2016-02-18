@@ -22,9 +22,6 @@ class AngularClientGenerator {
 	}
 
 	public static void main(String[] args) throws IOException {
-//		"C:/Users/misael/PROJECTs/WORDRAILS2_TRUNK/wordrails2/war/src/main/webapp/js"
-//		AngularClientGenerator generator = new AngularClientGenerator("C:/Users/misael/PROJECTs/TRIX/wordrails/war/src/main/webapp/js", "Trix", "co.xarx.trix");
-//		generator.generate();
 		AngularClientGenerator generator = new AngularClientGenerator(args[0], "Trix", "co.xarx.trix");
 		generator.generate();
 	}

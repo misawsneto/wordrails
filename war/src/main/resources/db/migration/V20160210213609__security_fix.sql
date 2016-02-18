@@ -48,13 +48,6 @@ WHERE n1.id > n2.id AND n1.username = n2.username AND n1.tenantId = n2.tenantId;
 -- -----------------------------------------------------------------------------
 -- -----------------------------------------------------------------------------
 
-INSERT INTO acl_class (class) VALUES ('co.xarx.trix.domain.Station');
-INSERT INTO acl_class (class) VALUES ('co.xarx.trix.domain.Post');
-INSERT INTO acl_class (class) VALUES ('co.xarx.trix.domain.Comment');
-
-INSERT INTO acl_sid (principal, sid, tenantId) SELECT 1, username, tenantId
-																							 FROM users;
-
 DELETE person_station_role FROM person_station_role
 	INNER JOIN station
 		ON person_station_role.station_id = station.id AND station.tenantId != person_station_role.tenantId;

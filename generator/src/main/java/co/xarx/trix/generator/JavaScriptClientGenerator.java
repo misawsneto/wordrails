@@ -35,7 +35,7 @@ class JavaScriptClientGenerator {
 	}
 
 	public static void main(String[] args) throws IOException {
-		JavaScriptClientGenerator generator = new JavaScriptClientGenerator(args[0], "WordRails", "co.xarx.trix");
+		JavaScriptClientGenerator generator = new JavaScriptClientGenerator(args[0], "Trix", "co.xarx.trix");
 		generator.generate();
 	}		
 }

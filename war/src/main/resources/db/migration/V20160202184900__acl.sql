@@ -18,7 +18,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 -- Table structure for table `acl_sid`
 --
-
+DROP TABLE IF EXISTS acl_sid;
 CREATE TABLE IF NOT EXISTS `acl_sid` (
 	`id`        BIGINT(20)   NOT NULL AUTO_INCREMENT,
 	`principal` TINYINT(1)   NOT NULL,
@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `acl_sid` (
 -- Table structure for table `acl_class`
 --
 
+DROP TABLE IF EXISTS acl_class;
 CREATE TABLE IF NOT EXISTS `acl_class` (
 	`id`    BIGINT(20)   NOT NULL AUTO_INCREMENT,
 	`class` VARCHAR(255) NOT NULL,
@@ -53,6 +54,7 @@ CREATE TABLE IF NOT EXISTS `acl_class` (
 -- Table structure for table `acl_entry`
 --
 
+DROP TABLE IF EXISTS acl_entry;
 CREATE TABLE IF NOT EXISTS `acl_entry` (
 	`id`                  BIGINT(20) NOT NULL AUTO_INCREMENT,
 	`acl_object_identity` BIGINT(20) NOT NULL,
@@ -76,6 +78,7 @@ CREATE TABLE IF NOT EXISTS `acl_entry` (
 -- Table structure for table `acl_object_identity`
 --
 
+DROP TABLE IF EXISTS acl_object_identity;
 CREATE TABLE IF NOT EXISTS `acl_object_identity` (
 	`id`                 BIGINT(20) NOT NULL AUTO_INCREMENT,
 	`object_id_class`    BIGINT(20) NOT NULL,

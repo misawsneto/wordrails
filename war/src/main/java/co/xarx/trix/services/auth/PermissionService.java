@@ -30,8 +30,13 @@ public class PermissionService {
 		int permissionMask = TrixPermission.READ.getMask();
 
 		//in simple words, the three next lines adds the following permissions to the permission list
-		if (publisher) permissionMask |= TrixPermission.PUBLISH.getMask(); //I never thought I'd use the |= operator
-		if (editor) permissionMask |= TrixPermission.SUPEREDITOR.getMask();
+		//I never thought I'd use the |= operator
+
+		if (editor) permissionMask |= TrixPermission.MODERATION.getMask() |
+				TrixPermission.CREATE.getMask() |
+				TrixPermission.UPDATE.getMask() |
+				TrixPermission.DELETE.getMask();
+		if (publisher) permissionMask |= TrixPermission.CREATE.getMask();
 		if (admin) permissionMask |= TrixPermission.ADMINISTRATION.getMask();
 
 		Permission p = new TrixPermission(permissionMask);

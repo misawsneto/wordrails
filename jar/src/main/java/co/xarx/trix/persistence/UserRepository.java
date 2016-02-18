@@ -10,8 +10,6 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import java.util.List;
-
 public interface UserRepository extends JpaRepository<User, Integer>, QueryDslPredicateExecutor<User> {
 
 	@Query("SELECT CASE WHEN COUNT(u) > 0 THEN 'true' ELSE 'false' END FROM User u WHERE u.username = :username")

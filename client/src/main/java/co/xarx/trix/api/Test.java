@@ -13,24 +13,24 @@ import java.util.Random;
 
 public class Test {
 
-	private static WordRails getLocal() throws IOException {
-		return new WordRails(
+	private static Trix getLocal() throws IOException {
+		return new Trix(
 				new MockConnectivityManager(true),
 				new File("."), 0,
 				"http://sport.xarxlocal.com", "sport", "Sport@dmiN",
 				LogLevel.FULL);
 	}
 
-	private static WordRails getLocal(String username, String password) throws IOException {
-		return new WordRails(
+	private static Trix getLocal(String username, String password) throws IOException {
+		return new Trix(
 				new MockConnectivityManager(true),
 				new File("."), 0,
 				"http://demo.xarxlocal.com", username, password,
 				LogLevel.FULL);
 	}
 
-	private static WordRails getTest(String username, String password) throws IOException {
-		return new WordRails(
+	private static Trix getTest(String username, String password) throws IOException {
+		return new Trix(
 				new MockConnectivityManager(true),
 				new File("."), 0,
 				"http://demo.trix.rocks", username, password,
@@ -39,7 +39,7 @@ public class Test {
 
 	public static void main(String[] args) throws IOException {
 		//WordRails wordRails = getTest("demo", "demo");
-		WordRails wordRails = getLocal();
+		Trix wordRails = getLocal();
 		wordRails.login();
 		wordRails.getInitialData();
 
@@ -195,9 +195,9 @@ public class Test {
 ////		}
 //	}
 
-	private static void createPost(WordRails wordRails) {
-		String person = wordRails.getSelf(wordRails.getPerson(2));
-		String station = wordRails.getSelf(wordRails.getStation(2));
+	private static void createPost(Trix trix) {
+		String person = trix.getSelf(trix.getPerson(2));
+		String station = trix.getSelf(trix.getStation(2));
 
 
 		PostDto post = new PostDto();//.getPostDraft(1598);
@@ -208,122 +208,122 @@ public class Test {
 		post.date = new Date();
 		post.notify = true;
 		try {
-			wordRails.postPost(post);
+			trix.postPost(post);
 		} catch (RetrofitError err) {
 			printServerError(err);
 		}
 	}
 
-	public static void createDevEnv(WordRails wordRails) {
+	public static void createDevEnv(Trix trix) {
 
 		TaxonomyDto localizacao = new TaxonomyDto();
 		localizacao.name = "Localização";
 		localizacao.type = "N";
-		localizacao.id = wordRails.postTaxonomy(localizacao);
-		localizacao = wordRails.getTaxonomy(localizacao.id);
+		localizacao.id = trix.postTaxonomy(localizacao);
+		localizacao = trix.getTaxonomy(localizacao.id);
 
 		TaxonomyDto categoria = new TaxonomyDto();
 		categoria.name = "Categoria";
 		categoria.type = "N";
-		categoria.id = wordRails.postTaxonomy(categoria);
-		categoria = wordRails.getTaxonomy(categoria.id);
+		categoria.id = trix.postTaxonomy(categoria);
+		categoria = trix.getTaxonomy(categoria.id);
 
 		NetworkDto network = new NetworkDto();
 		network.name = "Rede Teste";
-		network.id = wordRails.postNetwork(network);
-		network = wordRails.getNetwork(network.id);
+		network.id = trix.postNetwork(network);
+		network = trix.getNetwork(network.id);
 
-		wordRails.putTaxonomyOwningNetwork(localizacao.id, network.getSelf());
-		wordRails.putTaxonomyOwningNetwork(categoria.id, network.getSelf());
+		trix.putTaxonomyOwningNetwork(localizacao.id, network.getSelf());
+		trix.putTaxonomyOwningNetwork(categoria.id, network.getSelf());
 
 		StationDto station1 = new StationDto();
 		station1.name = "Estação 1";
 //		station1.networks = new HashSet<String>();
 //		station1.networks.add(network.getSelf());
 //		station1.network = network.getSelf();
-		wordRails.postStation(station1);
+		trix.postStation(station1);
 
 		StationDto station2 = new StationDto();
 		station2.name = "Estação 2";
 //		station2.networks = new HashSet<String>();
 //		station2.networks.add(network.getSelf());
 //		station2.network = network.getSelf();
-		wordRails.postStation(station2);
+		trix.postStation(station2);
 
 		StationDto station3 = new StationDto();
 		station3.name = "Estação 3";
 //		station3.networks = new HashSet<String>();
 //		station3.networks.add(network.getSelf());
 //		station3.network = network.getSelf();
-		wordRails.postStation(station3);
+		trix.postStation(station3);
 
 		List<String> l = new ArrayList<String>();
 		l.add(network.getSelf());
 
-		for (StationDto s : wordRails.getStations(0, 10, null)){}
+		for (StationDto s : trix.getStations(0, 10, null)){}
 //			wordRails.putStationNetwork(s.id, l);
 
 		TermDto cat1 = new TermDto();
 		cat1.name = "Categoria 1";
 		cat1.taxonomy = categoria.getSelf();
-		cat1.id = wordRails.postTerm(cat1);
-		cat1 = wordRails.getTerm(cat1.id);
+		cat1.id = trix.postTerm(cat1);
+		cat1 = trix.getTerm(cat1.id);
 		TermDto cat2 = new TermDto();
 		cat2.name = "Categoria 2";
 		cat2.taxonomy = categoria.getSelf();
-		cat2.id = wordRails.postTerm(cat2);
-		cat2 = wordRails.getTerm(cat2.id);
+		cat2.id = trix.postTerm(cat2);
+		cat2 = trix.getTerm(cat2.id);
 		TermDto cat3 = new TermDto();
 		cat3.name = "Categoria 3";
 		cat3.taxonomy = categoria.getSelf();
-		cat3.id = wordRails.postTerm(cat3);
-		cat3 = wordRails.getTerm(cat3.id);
+		cat3.id = trix.postTerm(cat3);
+		cat3 = trix.getTerm(cat3.id);
 		TermDto cat1Child1 = new TermDto();
 		cat1Child1.name = "Cat 1 Child 1";
 		cat1Child1.taxonomy = categoria.getSelf();
-		cat1Child1.id = wordRails.postTerm(cat1Child1);
-		cat1Child1 = wordRails.getTerm(cat1Child1.id);
+		cat1Child1.id = trix.postTerm(cat1Child1);
+		cat1Child1 = trix.getTerm(cat1Child1.id);
 		TermDto cat1Child2 = new TermDto();
 		cat1Child2.name = "Cat 1 Child 2";
 		cat1Child2.taxonomy = categoria.getSelf();
-		cat1Child2.id = wordRails.postTerm(cat1Child2);
-		cat1Child2 = wordRails.getTerm(cat1Child2.id);
+		cat1Child2.id = trix.postTerm(cat1Child2);
+		cat1Child2 = trix.getTerm(cat1Child2.id);
 		TermDto cat1Child3 = new TermDto();
 		cat1Child3.name = "Cat 1 Child 3";
 		cat1Child3.taxonomy = categoria.getSelf();
-		cat1Child3.id = wordRails.postTerm(cat1Child3);
-		cat1Child3 = wordRails.getTerm(cat1Child3.id);
+		cat1Child3.id = trix.postTerm(cat1Child3);
+		cat1Child3 = trix.getTerm(cat1Child3.id);
 		TermDto cat1Child1Child1 = new TermDto();
 		cat1Child1Child1.name = "Cat 1 Child 1 Child 1";
 		cat1Child1Child1.taxonomy = categoria.getSelf();
-		cat1Child1Child1.id = wordRails.postTerm(cat1Child1Child1);
-		cat1Child1Child1 = wordRails.getTerm(cat1Child1Child1.id);
+		cat1Child1Child1.id = trix.postTerm(cat1Child1Child1);
+		cat1Child1Child1 = trix.getTerm(cat1Child1Child1.id);
 		TermDto cat1Child1Child2 = new TermDto();
 		cat1Child1Child2.name = "Cat 1 Child 1 Child 2";
 		cat1Child1Child2.taxonomy = categoria.getSelf();
-		cat1Child1Child2.id = wordRails.postTerm(cat1Child1Child2);
-		cat1Child1Child2 = wordRails.getTerm(cat1Child1Child2.id);
-		wordRails.putTermParent(cat1Child1.id, cat1.getSelf());
-		wordRails.putTermParent(cat1Child2.id, cat1.getSelf());
-		wordRails.putTermParent(cat1Child3.id, cat1.getSelf());
-		wordRails.putTermParent(cat1Child1Child1.id, cat1Child1.getSelf());
-		wordRails.putTermParent(cat1Child1Child2.id, cat1Child1.getSelf());
+		cat1Child1Child2.id = trix.postTerm(cat1Child1Child2);
+		cat1Child1Child2 = trix.getTerm(cat1Child1Child2.id);
+		trix.putTermParent(cat1Child1.id, cat1.getSelf());
+		trix.putTermParent(cat1Child2.id, cat1.getSelf());
+		trix.putTermParent(cat1Child3.id, cat1.getSelf());
+		trix.putTermParent(cat1Child1Child1.id, cat1Child1.getSelf());
+		trix.putTermParent(cat1Child1Child2.id, cat1Child1.getSelf());
 
 		TermDto brasil = new TermDto();
 		brasil.name = "Brasil";
 		brasil.taxonomy = localizacao.getSelf();
-		brasil.id = wordRails.postTerm(brasil);
-		brasil = wordRails.getTerm(brasil.id);
+		brasil.id = trix.postTerm(brasil);
+		brasil = trix.getTerm(brasil.id);
 		TermDto pernambuco = new TermDto();
 		pernambuco.name = "Pernambuco";
 		pernambuco.taxonomy = localizacao.getSelf();
-		pernambuco.id = wordRails.postTerm(pernambuco);
-		wordRails.putTermParent(pernambuco.id, brasil.getSelf());
+		pernambuco.id = trix.postTerm(pernambuco);
+		trix.putTermParent(pernambuco.id, brasil.getSelf());
 
-		PersonDto person = wordRails.getPerson(1);
-		List<StationDto> stas = wordRails.getStations(0, 50, null);
-		List<TermDto> locs = wordRails.getTaxonomyTerms(1);
-		List<TermDto> cats = wordRails.getTaxonomyTerms(2);
+		PersonDto person = trix.getPerson(1);
+		List<StationDto> stas = trix.getStations(0, 50, null);
+		List<TermDto> locs = trix.getTaxonomyTerms(1);
+		List<TermDto> cats = trix.getTaxonomyTerms(2);
 		for (StationDto s : stas) {
 			for (int i = 0; i < 100; i++) {
 				TermDto loc = locs.get(new Random().nextInt(locs.size()));
@@ -334,13 +334,13 @@ public class Test {
 				p.author = person.getSelf();
 				p.body = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
 				p.title = "post " + new Random().nextInt();
-				p.id = wordRails.postPost(p);
-				p = wordRails.getPost(p.id);
+				p.id = trix.postPost(p);
+				p = trix.getPost(p.id);
 
 				List<String> terms = new ArrayList<String>();
 				terms.add(loc.getSelf());
 				terms.add(cat.getSelf());
-				wordRails.putPostTerms(p.id, terms);
+				trix.putPostTerms(p.id, terms);
 
 				//addImage("test.jpg", p.getSelf());
 			}

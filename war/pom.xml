@@ -23,21 +23,6 @@
 				<version>1.3.2</version>
 				<executions>
 					<execution>
-						<id>ImplementationGenerator</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<configuration>
-							<mainClass>co.xarx.trix.generator.ImplementationGenerator</mainClass>
-							<arguments>
-								<argument>${project.build.directory}/generated-sources/java</argument>
-							</arguments>
-							<includePluginDependencies>true</includePluginDependencies>
-						</configuration>
-					</execution>
-
-					<execution>
 						<id>JavaScriptClientGenerator</id>
 						<phase>generate-sources</phase>
 						<goals>
