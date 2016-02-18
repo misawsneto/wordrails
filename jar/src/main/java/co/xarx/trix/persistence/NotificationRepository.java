@@ -2,6 +2,7 @@ package co.xarx.trix.persistence;
 
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -16,8 +17,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 	@RestResource(exported = false)
 	<S extends Notification> S save(S arg0);
 
-	@Query("select n from Notification n, MobileDevice device where n.regId = device.deviceCode and device.person.id = :personId")
-	List<Notification> findNotificationsByPersonIdOrderByDate(@Param("personId") Integer personId);
+	@Query("select n from Notification n, MobileDevice device where n.regId = device.deviceCode and device.person.id = :personId order by n.id")
+	List<Notification> findNotificationsByPersonIdOrderByDate(@Param("personId") Integer personId, Pageable pageable);
 
 	@RestResource(exported = false)
 	void deleteByPost(Post post);
