@@ -166,11 +166,6 @@ public class QueryPersistence {
                 .getResultList();
     }
 
-	public List<Notification> findNotificationsByPersonIdOrderByDate(Integer personId){
-		return manager.createNativeQuery("SELECT * FROM notification n, mobiledevice m WHERE n.regId = m.deviceCode AND m.person_id = :personId ORDER BY n.id DESC")
-				.setParameter("personId", personId).getResultList();
-	}
-
 	@Transactional
 	public List<Object[]> getRepeatedImage(){
 		return manager.createNativeQuery("SELECT id, originalHash, count(originalHash) AS c FROM Image WHERE originalHash IS NOT NULL GROUP BY originalHash HAVING c > 1").getResultList();
