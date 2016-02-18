@@ -1,15 +1,13 @@
 package co.xarx.trix.persistence;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -167,6 +165,11 @@ public class QueryPersistence {
                 .setFirstResult(page * size)
                 .getResultList();
     }
+
+	public List<Notification> findNotificationsByPersonIdOrderByDate(Integer personId){
+		return manager.createNativeQuery("SELECT * FROM notification n, mobiledevice m WHERE n.regId = m.deviceCode AND m.person_id = :personId ORDER BY n.id DESC")
+				.setParameter("personId", personId).getResultList();
+	}
 
 	@Transactional
 	public List<Object[]> getRepeatedImage(){

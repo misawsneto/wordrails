@@ -7,7 +7,7 @@ import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.QMobileDevice;
 import co.xarx.trix.domain.QNotification;
-import co.xarx.trix.persistence.NotificationRepository;
+import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class NotificationsResource {
 
 	@Autowired
-	private NotificationRepository notificationRepository;
+	private QueryPersistence queryPersistence;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
 
@@ -41,7 +41,10 @@ public class NotificationsResource {
 		ContentResponse<List<NotificationView>> response = new ContentResponse<>();
 		QMobileDevice m = QMobileDevice.mobileDevice;
 		QNotification n = QNotification.notification;
-		List<Notification> notifications = Lists.newArrayList(notificationRepository.findAll(n.regId.eq(m.deviceCode).and(m.person.id.eq(person.id))));
+
+//		List<Notification> noti = queryPersistence.findNotificationsByPersonIdOrderByDate(person.id);
+
+		List<Notification> notifications = Lists.newArrayList(queryPersistence.findNotificationsByPersonIdOrderByDate(person.id));
 
 		response.content = notifications.stream().map(notification ->
 				notificationConverter.convertTo(notification)).collect(Collectors.toList());
