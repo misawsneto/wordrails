@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -37,15 +38,18 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 	@Pattern(regexp = "^[a-z0-9\\._-]{3,50}$")
 	public String username;
 
+	@SdkExclude
 	@Size(max = 500)
 	public String password;
 
 	public Boolean enabled;
 
+	@SdkExclude
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserGrantedAuthority> authorities;
 
+	@SdkExclude
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserConnection> userConnections;

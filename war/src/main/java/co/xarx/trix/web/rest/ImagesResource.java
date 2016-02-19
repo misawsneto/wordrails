@@ -20,6 +20,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,7 +58,7 @@ public class ImagesResource {
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadImage(@QueryParam("imageType") String type, @Context HttpServletRequest request) throws FileUploadException, IOException {
+	public Response uploadImage(@QueryParam("imageType") String type, @Context HttpServletRequest request) throws Exception {
 		FileItem item = FileUtil.getFileFromRequest(request);
 
 		if (item == null) {
@@ -69,7 +70,12 @@ public class ImagesResource {
 
 		Image newImage = new Image(type);
 		newImage.title = item.getName();
-		newImage = imageService.createNewImage(newImage, item.getInputStream(), item.getContentType());
+		File originalFile = FileUtil.createNewTempFile(item.getInputStream());
+
+		newImage = imageService.createAndSaveNewImage(type, item.getName(), originalFile, item.getContentType());
+
+		if (originalFile.exists())
+			originalFile.delete();
 
 		ImageUpload imageUpload = new ImageUpload();
 		imageUpload.hash = FileUtil.getHash(item.getInputStream());

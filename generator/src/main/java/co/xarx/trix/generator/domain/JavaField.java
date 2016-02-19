@@ -3,8 +3,10 @@ package co.xarx.trix.generator.domain;
 import co.xarx.trix.annotation.SdkInclude;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.ElementCollection;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -47,7 +49,7 @@ public class JavaField extends AbstractField {
 
 	@Override
 	public boolean isIncludeAsReference() {
-		return field.isAnnotationPresent(NotNull.class) || field.isAnnotationPresent(SdkInclude.class);
+		return field.isAnnotationPresent(SdkInclude.class);
 	}
 
 //	@Override

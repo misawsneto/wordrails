@@ -107,26 +107,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetFixedQueriesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetFixedQueryAuthorized(Integer fixedQueryId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetFixedQueryIndexesAuthorized(Integer fixedQueryId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetFixedQueryObjectStatementAuthorized(Integer fixedQueryId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetImagesAuthorized() {
 		return false;
 	}
@@ -827,21 +807,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetUserAuthoritiesAuthorized(Integer userId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserGrantedAuthoritiesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserGrantedAuthorityAuthorized(Integer userGrantedAuthorityId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetVideosAuthorized() {
 		return true;
 	}
@@ -888,21 +853,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPageStationAuthorized(Integer pageId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPageableQueriesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPageableQueryAuthorized(Integer pageableQueryId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPageableQueryObjectStatementAuthorized(Integer pageableQueryId) {
 		return false;
 	}
 

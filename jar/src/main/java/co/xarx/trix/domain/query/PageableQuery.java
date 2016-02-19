@@ -1,5 +1,6 @@
 package co.xarx.trix.domain.query;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
+@SdkExclude
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name = "querypageable")

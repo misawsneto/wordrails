@@ -1,5 +1,6 @@
 package co.xarx.trix.domain.query;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
 import co.xarx.trix.domain.query.statement.AbstractObjectSortedStatement;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 
+@SdkExclude
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name = "queryfixed")
@@ -21,6 +23,7 @@ public class FixedQuery extends BaseEntity implements ObjectQuery {
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
+
 	@NotNull
 	@ElementCollection
 	@JoinTable(name = "queryfixed_indexes")

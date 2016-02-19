@@ -9,7 +9,10 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @SdkExclude
-@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
+@lombok.EqualsAndHashCode(callSuper = false)
 @Entity
 public class Picture extends BaseEntity implements Serializable {
 

@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkInclude;
 import lombok.AccessLevel;
 import lombok.Setter;
 
@@ -16,11 +17,13 @@ public class Recommend extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
+	@SdkInclude
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "post_id")
 	private Post post;
 
+	@SdkInclude
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "person_id")

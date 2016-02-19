@@ -24,14 +24,14 @@ public class Cell extends BaseEntity {
 
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean featured;
-	
+
 	@NotNull
 	@ManyToOne
 	public Row row;
 	
 	@ManyToOne
 	public Term term;
-	
+
 	@NotNull
 	@ManyToOne
 	public Post post;

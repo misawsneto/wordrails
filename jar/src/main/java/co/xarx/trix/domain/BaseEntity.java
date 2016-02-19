@@ -2,7 +2,6 @@ package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Filter;
@@ -19,7 +18,6 @@ import java.util.Date;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "getId")
 @MappedSuperclass
 @FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = "string"))
 @Filters(@Filter(name = "tenantFilter", condition = "tenantId = :tenantId"))
