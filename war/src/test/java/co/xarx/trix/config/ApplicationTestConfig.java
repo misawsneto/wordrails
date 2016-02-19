@@ -43,9 +43,9 @@ public class ApplicationTestConfig {
 	@Bean
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
-		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostViewMap());
 		return modelMapper;
 	}

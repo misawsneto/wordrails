@@ -1,8 +1,6 @@
 package co.xarx.trix.domain;
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 import javax.persistence.*;

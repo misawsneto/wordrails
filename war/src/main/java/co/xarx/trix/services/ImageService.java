@@ -55,8 +55,10 @@ public class ImageService {
 		Image image = createNewImage(type, name, originalFile, mime);
 
 		for (Picture picture : image.pictures) {
+			if (picture.file.getId() == null) {
+				fileRepository.save(picture.file);
+			}
 			pictureRepository.save(picture);
-			fileRepository.save(picture.file);
 		}
 
 		imageRepository.save(image);
