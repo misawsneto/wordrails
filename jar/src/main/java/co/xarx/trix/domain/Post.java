@@ -1,9 +1,11 @@
 package co.xarx.trix.domain;
 
-import co.xarx.trix.annotation.GeneratorInclude;
+import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.event.PostEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,8 +17,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+@lombok.Getter @lombok.Setter
 @Entity
-@Data
+@JsonIgnoreProperties(value = {
+		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash"
+}, allowGetters = true)
 public class Post extends BaseEntity implements Serializable, ElasticSearchEntity, Loggable {
 
 	public static final String STATE_DRAFT = "DRAFT";
@@ -28,13 +33,9 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	private static final long serialVersionUID = 7468718930497246401L;
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	public Post() {
 		state = Post.STATE_PUBLISHED;
@@ -93,7 +94,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Size(min = 1, max = 15)
 	public String state;
 
-	@GeneratorInclude
+	@SdkInclude
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
 
@@ -213,20 +214,38 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return super.equals(obj);
-	}
-
-	@Override
-	public int hashCode() {
-		if(id!=null)
-			return id.hashCode() * 31;
-		else
-			return super.hashCode();
-	}
-
-	@Override
 	public PostEvent build(String type, LogBuilder builder) {
 		return builder.build(type, this);
+	}
+
+	@SdkInclude
+	public String getImageHash() {
+		if (featuredImage != null) return featuredImage.getOriginalHash();
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getImageLargeHash() {
+		if (featuredImage != null) return featuredImage.getLargeHash();
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getImageMediumHash() {
+		if (featuredImage != null) return featuredImage.getMediumHash();
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getImageSmallHash() {
+		if (featuredImage != null) return featuredImage.getSmallHash();
+
+		return null;
 	}
 }

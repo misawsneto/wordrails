@@ -1,30 +1,36 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+
+@Getter
+@Setter
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
+@JsonIgnoreProperties(value = {
+		"faviconHash", "splashImageHash", "loginImageHash", "loginImageSmallHash"
+}, allowGetters = true)
 public class Network extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7723825842358687233L;
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@NotNull
 	@Size(min=1, max=100)
@@ -51,9 +57,6 @@ public class Network extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy="network", cascade=CascadeType.ALL)
 	public Set<Sponsor> sponsors;
 
-	@OneToMany(mappedBy="network")
-	public Set<Section> sections;
-
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
 	
@@ -71,12 +74,12 @@ public class Network extends BaseEntity implements Serializable {
 
 	public String googleAppID;
 
-    public String facebookLink;
-    public String youtubeLink;
-    public String googlePlusLink;
-    public String twitterLink;
+	public String facebookLink;
+	public String youtubeLink;
+	public String googlePlusLink;
+	public String twitterLink;
 
-    public String webFooter;
+	public String webFooter;
 
 	@JsonIgnore
 	public String googleAppSecret;
@@ -84,10 +87,10 @@ public class Network extends BaseEntity implements Serializable {
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
 
-    public String stationMenuName;
-    public String homeTabName;
+	public String stationMenuName;
+	public String homeTabName;
 
-    public String domain;
+	public String domain;
 
 	@JsonIgnore
 	public String networkCreationToken;
@@ -146,8 +149,8 @@ public class Network extends BaseEntity implements Serializable {
 	@Lob
 	public String appleStoreAddress;
 
-    @Column(columnDefinition = "boolean default false", nullable = false)
-    public boolean addStationRolesOnSignup;
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean addStationRolesOnSignup;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "palette_primary_color", joinColumns = @JoinColumn(name = "network_id"))
@@ -193,20 +196,45 @@ public class Network extends BaseEntity implements Serializable {
 			defaultOrientationMode = "H";
 	}
 
-	public String getName() {
-		return name;
-	}
-
+	@SdkInclude
 	public boolean isFacebookLoginAllowed() {
-		return
-				this.facebookAppID != null && !this.facebookAppID.isEmpty() &&
+		return this.facebookAppID != null && !this.facebookAppID.isEmpty() &&
 						this.facebookAppSecret != null && !this.facebookAppSecret.isEmpty();
 	}
 
+	@SdkInclude
 	public boolean isGoogleLoginAllowed() {
-		return
-				this.googleAppID != null && !this.googleAppID.isEmpty() &&
+		return this.googleAppID != null && !this.googleAppID.isEmpty() &&
 						this.googleAppSecret != null && !this.googleAppSecret.isEmpty();
+	}
+
+	@SdkInclude
+	public String getFaviconHash() {
+		if (favicon != null) return favicon.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getSplashImageHash() {
+		if (splashImage != null) return splashImage.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getLoginImageHash() {
+		if (loginImage != null) return loginImage.getOriginalHash();
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getLoginImageSmallHash() {
+		if (loginImage != null) return loginImage.getSmallHash();
+
+		return null;
 	}
 
 }

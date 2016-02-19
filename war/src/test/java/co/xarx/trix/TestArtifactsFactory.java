@@ -3,12 +3,12 @@ package co.xarx.trix;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.domain.page.BaseSection;
+import co.xarx.trix.domain.page.AbstractSection;
 import co.xarx.trix.domain.page.Page;
 import co.xarx.trix.domain.page.QueryableListSection;
 import co.xarx.trix.domain.query.FixedQuery;
 import co.xarx.trix.domain.query.PageableQuery;
-import co.xarx.trix.domain.query.PostQuery;
+import co.xarx.trix.domain.query.statement.PostStatement;
 import co.xarx.trix.util.StringUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -124,23 +124,23 @@ public class TestArtifactsFactory {
 		page.setTenantId(TENANT);
 		page.setTitle("Home");
 
-		PostQuery postQuery1 = new PostQuery();
-		postQuery1.setStationIds(Sets.newHashSet(11));
-		postQuery1.setRichText("dilma");
+		PostStatement postStatement1 = new PostStatement();
+		postStatement1.setStationIds(Sets.newHashSet(11));
+		postStatement1.setRichText("dilma");
 
 		PageableQuery pageableQuery = new PageableQuery();
-		pageableQuery.setObjectQuery(postQuery1);
+		pageableQuery.setObjectStatement(postStatement1);
 
-		PostQuery postQuery2 = new PostQuery();
-		postQuery2.setStationIds(Sets.newHashSet(11));
-		postQuery2.setRichText("fhc");
+		PostStatement postStatement2 = new PostStatement();
+		postStatement2.setStationIds(Sets.newHashSet(11));
+		postStatement2.setRichText("fhc");
 
 		FixedQuery fixedQuery1 = new FixedQuery();
-		fixedQuery1.setObjectQuery(postQuery2);
+		fixedQuery1.setObjectStatement(postStatement2);
 		fixedQuery1.setIndexes(Sets.newHashSet(0, 2, 3));
 
 		FixedQuery fixedQuery2 = new FixedQuery();
-		fixedQuery2.setObjectQuery(postQuery2);
+		fixedQuery2.setObjectStatement(postStatement2);
 		fixedQuery2.setIndexes(Sets.newHashSet(0, 1, 2, 3, 4));
 
 		QueryableListSection section1 = new QueryableListSection();
@@ -156,7 +156,7 @@ public class TestArtifactsFactory {
 		section2.setPageable(false);
 		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));
 
-		page.setSections(new TreeMap<Integer, BaseSection>() {{
+		page.setSections(new TreeMap<Integer, AbstractSection>() {{
 			put(0, section1);
 			put(1, section2);
 		}});

@@ -107,8 +107,6 @@ public class PersonsResource {
 	@Autowired
 	public StationRoleEventHandler stationRoleEventHandler;
 	@Autowired
-	private SectionRepository sectionRepository;
-	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
@@ -764,7 +762,7 @@ public class PersonsResource {
 				request.setAttribute("networkName", personData.network.name);
 				request.setAttribute("networkId", personData.network.id);
 				if(network.favicon != null)
-					request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(network.favicon.get(Image.SIZE_MEDIUM)));
+					request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(network.getFaviconHash()));
 				request.setAttribute("networkDesciption", "");
 				request.setAttribute("networkKeywords", "");
 			}
@@ -803,8 +801,6 @@ public class PersonsResource {
 		else
 			networkPermissionDto.admin = false;
 
-		network.sections = sectionRepository.findByNetwork(network);
-
 		List<StationDto> stationDtos = new ArrayList<>();
 		List<Station> stations = stationRepository.findByPersonId(person.id);
 		for(Station station : stations) {
@@ -830,15 +826,6 @@ public class PersonsResource {
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
-
-		List<SectionDto> sections = new ArrayList<>();
-		for(Section section: network.sections){
-			SectionDto sectionDto = mapper.readValue(mapper.writeValueAsString(section).getBytes("UTF-8"), SectionDto.class);
-			sectionDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/sections/" + sectionDto.id);
-			sections.add(sectionDto);
-		}
-
-		initData.sections = sections;
 
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes("UTF-8"), NetworkRoleDto.class);
 		initData.stations = stationDtos;
@@ -983,43 +970,29 @@ public class PersonsResource {
 
 		// check date and map counts
 		Iterator it = stats.entrySet().iterator();
-		while (it.hasNext()){
-			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-			long key = (Long)pair.getKey();
-			for(Object[] counts: postReadCounts){
-				long dateLong = ((java.sql.Date) counts[0]).getTime();
-				long count = (long) counts[1];
-				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-					pair.getValue().readsCount = count;
-			}
-		}
+		checkDateAndMapCounts(postReadCounts, it);
 
 		it = stats.entrySet().iterator();
-		while (it.hasNext()){
-			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-			long key = (Long)pair.getKey();
-			for(Object[] counts: recommendsCounts){
-				long dateLong = ((java.sql.Date) counts[0]).getTime();
-				long count = (long) counts[1];
-				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-					pair.getValue().recommendsCount = count;
-			}
-		}
+		checkDateAndMapCounts(recommendsCounts, it);
 
 		it = stats.entrySet().iterator();
+		checkDateAndMapCounts(commentsCounts, it);
+
+		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
+		String dateStatsJson = mapper.writeValueAsString(stats);
+		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
+	}
+
+	public void checkDateAndMapCounts(List<Object[]> countList, Iterator it) {
 		while (it.hasNext()){
 			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
 			long key = (Long)pair.getKey();
-			for(Object[] counts: commentsCounts){
+			for(Object[] counts: countList){
 				long dateLong = ((java.sql.Date) counts[0]).getTime();
 				long count = (long) counts[1];
 				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
 					pair.getValue().commentsCount = count;
 			}
 		}
-
-		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
-		String dateStatsJson = mapper.writeValueAsString(stats);
-		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 	}
 }

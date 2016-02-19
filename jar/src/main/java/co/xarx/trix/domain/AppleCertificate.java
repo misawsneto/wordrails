@@ -1,10 +1,15 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Blob;
 
 
+@lombok.Getter
+@lombok.Setter
+@SdkExclude
 @Entity
 public class AppleCertificate extends BaseEntity {
 

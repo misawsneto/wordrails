@@ -1,7 +1,11 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
+import co.xarx.trix.annotation.SdkInclude;
 import com.amazonaws.services.cloudfront.model.InvalidArgumentException;
 import com.google.common.collect.Sets;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
+@lombok.Getter @lombok.Setter
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId", "originalHash"}))
 public class Image extends BaseEntity implements Serializable {
@@ -24,13 +29,9 @@ public class Image extends BaseEntity implements Serializable {
 	public static final String SIZE_ORIGINAL = "original";
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	public enum Size {
 
@@ -137,7 +138,7 @@ public class Image extends BaseEntity implements Serializable {
 	@Lob
 	public String credits;
 
-	public String originalHash;
+	private String originalHash;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "image_hash",
@@ -150,10 +151,7 @@ public class Image extends BaseEntity implements Serializable {
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean vertical = false;
 
-	public String get(Object key) {
-		return hashs.get(key);
-	}
-
+	@SdkExclude
 	@ManyToMany
 	@JoinTable(name = "image_picture", joinColumns = @JoinColumn(name = "image_id"))
 	public Set<Picture> pictures;
@@ -172,5 +170,28 @@ public class Image extends BaseEntity implements Serializable {
 		for(Picture pic : pictures) {
 			hashs.put(pic.sizeTag, pic.file.hash);
 		}
+	}
+
+	@SdkInclude
+	public String getOriginalHash() {
+		return originalHash;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getLargeHash() {
+		return hashs.get(SIZE_LARGE);
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getMediumHash() {
+		return hashs.get(SIZE_MEDIUM);
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getSmallHash() {
+		return hashs.get(SIZE_SMALL);
 	}
 }

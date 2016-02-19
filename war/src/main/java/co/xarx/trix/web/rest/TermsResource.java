@@ -6,7 +6,6 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.converter.TermConverter;
-import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.domain.TermPerspective;
@@ -91,7 +90,7 @@ public class TermsResource {
 			Pageable page = new PageRequest(0,1, Sort.Direction.DESC, "date");
 			List<Post> posts = postRepository.findByFeaturedImageByTermId(termId, page);
 			if(posts!=null && posts.size()>0)
-				hash = posts.get(0).featuredImage.get(Image.SIZE_LARGE);
+				hash = posts.get(0).getImageLargeHash();
 		}
 
 		if (hash != null && !hash.isEmpty()) {

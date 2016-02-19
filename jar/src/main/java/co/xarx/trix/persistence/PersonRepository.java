@@ -1,6 +1,6 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.annotation.GeneratorIgnore;
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.NetworkRole;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.User;
@@ -20,13 +20,13 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	Person findByUsername(@Param("username") String username);
 
 	@Override
-	@GeneratorIgnore
-    @CacheEvict(value = "person", key = "#p0.username")
+	@SdkExclude
+	@CacheEvict(value = "person", key = "#p0.username")
 	Person save(Person person);
 
 	@Override
-	@GeneratorIgnore
-    @CacheEvict(value = "person", key = "#p0.username")
+	@SdkExclude
+	@CacheEvict(value = "person", key = "#p0.username")
 	void delete(Person person);
 
 	@Deprecated
