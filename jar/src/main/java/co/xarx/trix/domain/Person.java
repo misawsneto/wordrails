@@ -1,8 +1,11 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -13,14 +16,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name = "person",
 		uniqueConstraints = {
 				@UniqueConstraint(columnNames = {"user_id", "username"}),
 				@UniqueConstraint(columnNames = {"username", "tenantId"})
 		})
+@JsonIgnoreProperties(value = {
+		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash",
+		"coverHash", "coverLargeHash", "coverMediumHash"
+}, allowGetters = true)
 public class Person extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7728358342573034233L;
@@ -58,11 +64,11 @@ public class Person extends BaseEntity implements Serializable {
 	@Email
 	public String email;
 
-	@OneToOne
+	@ManyToOne
 	@JsonIgnore
 	public Image image;
 
-	@OneToOne
+	@ManyToOne
 	@JsonIgnore
 	public Image cover;
 
@@ -79,5 +85,59 @@ public class Person extends BaseEntity implements Serializable {
 	public String passwordConfirm;
 	public Boolean passwordReseted = false;
 	public String twitterHandle;
+
+	@SdkInclude
+	public String getImageHash() {
+		if (image != null) return image.getOriginalHash();
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getImageLargeHash() {
+		if (image != null) return image.getLargeHash();
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getImageMediumHash() {
+		if (image != null) return image.getMediumHash();
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getImageSmallHash() {
+		if (image != null) return image.getSmallHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getCoverHash() {
+		if (cover != null) return cover.getOriginalHash();
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getCoverLargeHash() {
+		if (cover != null) return cover.getLargeHash();
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getCoverMediumHash() {
+		if (cover != null) return cover.getMediumHash();
+
+		return null;
+	}
 
 }

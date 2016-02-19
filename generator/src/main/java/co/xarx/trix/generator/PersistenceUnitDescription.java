@@ -1,9 +1,11 @@
 package co.xarx.trix.generator;
 
 import co.xarx.trix.annotation.SdkExclude;
+import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.generator.domain.AbstractField;
 import co.xarx.trix.generator.domain.JavaField;
+import co.xarx.trix.generator.domain.TrixField;
 import com.google.common.collect.Lists;
 import org.reflections.Reflections;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -125,9 +127,9 @@ public class PersistenceUnitDescription {
 		Set<Class<?>> entityClassSet = reflections.getTypesAnnotatedWith(Entity.class);
 
 		Set<Class<?>> entityClassSet2 = new HashSet(entityClassSet);
-		for (Class<?> c : entityClassSet) {
-			if (AnnotationUtils.isAnnotationDeclaredLocally(SdkExclude.class, c)) entityClassSet2.remove(c);
-		}
+		entityClassSet.stream()
+				.filter(c -> AnnotationUtils.isAnnotationDeclaredLocally(SdkExclude.class, c))
+				.forEach(entityClassSet2::remove);
 		entityClassSet = entityClassSet2;
 
 		for (Class<?> entityClass : entityClassSet) {
@@ -149,11 +151,11 @@ public class PersistenceUnitDescription {
 				try {
 					PropertyDescriptor[] propertyDescriptors =
 							Introspector.getBeanInfo(entityClass, BaseEntity.class).getPropertyDescriptors();
-					for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+					for (PropertyDescriptor pd : propertyDescriptors) {
 
-						if(propertyDescriptor.getReadMethod() != null) {
+						if(pd.getReadMethod() != null) {
 							try {
-								Field f = entityClass.getDeclaredField(propertyDescriptor.getName());
+								Field f = entityClass.getDeclaredField(pd.getName());
 
 								if (!Modifier.isStatic(f.getModifiers())
 										&& !f.isAnnotationPresent(Transient.class)
@@ -162,7 +164,11 @@ public class PersistenceUnitDescription {
 									fields.add(jf);
 								}
 							} catch (NoSuchFieldException e) {
-								//e.printStackTrace();
+								SdkInclude sdkInclude = pd.getReadMethod().getAnnotation(SdkInclude.class);
+								if (sdkInclude != null) {
+									TrixField tf = getTrixField(pd, sdkInclude.asReference());
+									fields.add(tf);
+								}
 							}
 						}
 					}
@@ -179,33 +185,34 @@ public class PersistenceUnitDescription {
 						entity.id = fd;
 					} else if (field.isList()) {
 						Class<?> genericType = field.getGenericType();
-						String genericName = genericType.getName();
-						String genericSimpleName = genericType.getSimpleName();
+						String genericName = genericType.getSimpleName();
+						if(field.isSimpleType(genericType))
+							genericName = genericType.getName();
 
-						if (field.isElementCollection()) {
+						if (field.isMap()) {
 							fd.type = field.getParametrizedGenericTypeName();
 							fd.entity = new EntityDescription();
-							fd.entity.name = genericSimpleName;
+							fd.entity.name = genericType.getSimpleName();
 							entity.fields.add(fd);
 						} else {
-							if (field.isSdkIncludeAsReference()) {
+							if (field.isIncludeAsReference()) {
 								fd.type = field.getTypeName()
-										+ "<" + (field.isSimpleType(genericType) ? genericSimpleName : "String") + ">";
+										+ "<" + (field.isSimpleType(genericType) ? genericName : "java.lang.String") + ">";
 								fd.entity = new EntityDescription();
-								fd.entity.name = genericSimpleName;
+								fd.entity.name = genericType.getSimpleName();
 								entity.fields.add(fd);
 							}
 
 							FieldDescription relationship = new FieldDescription();
-							relationship.type = "List<" + genericSimpleName + (field.isSimpleType(genericType) ? "" : "Dto") + ">";
+							relationship.type = "java.util.List<" + genericName + (field.isSimpleType(genericType) ? "" : "Dto") + ">";
 							relationship.name = field.getName();
 							relationship.nameUppercase = field.getNameUppercase();
 							relationship.entity = new EntityDescription();
-							relationship.entity.name = genericSimpleName;
+							relationship.entity.name = genericType.getSimpleName();
 							relationship.collection = true;
 							relationship.mappedBy = field.isMappedBy();
 							relationship.collectionType = List.class.getName();
-							relationship.elementType = genericSimpleName;
+							relationship.elementType = genericName;
 							entity.relationships.add(relationship);
 						}
 					} else {
@@ -218,8 +225,8 @@ public class PersistenceUnitDescription {
 							relationship.entity = new EntityDescription();
 							relationship.entity.name = field.getTypeSimpleName();
 							entity.relationships.add(relationship);
-							if (field.isSdkIncludeAsReference()) {
-								fd.type = "String";
+							if (field.isIncludeAsReference()) {
+								fd.type = "java.lang.String";
 								fd.entity = new EntityDescription();
 								fd.entity.name = field.getTypeSimpleName();
 								entity.fields.add(fd);
@@ -304,6 +311,30 @@ public class PersistenceUnitDescription {
 				entity.projections.add(projection);
 			}
 		}
+	}
+
+	private TrixField getTrixField(PropertyDescriptor pd, boolean asReference) {
+		TrixField t = new TrixField();
+
+		Method readMethod = pd.getReadMethod();
+		Class<?> returnType = readMethod.getReturnType();
+		Type genericReturnType = readMethod.getGenericReturnType();
+
+		t.setType(returnType);
+		if (genericReturnType != null) {
+			t.setGenericType(genericReturnType.getClass());
+			t.setParametrizedGenericTypeName(genericReturnType.toString());
+//			t.setRelationship(!genericReturnType.getClass().isPrimitive());
+		}
+//		else {
+//			t.setRelationship(!returnType.isPrimitive());
+//		}
+		t.setMap(returnType.isAssignableFrom(Collection.class));
+		t.setMap(returnType.isAssignableFrom(Map.class));
+		t.setIncludeAsReference(asReference);
+		t.setName(pd.getName());
+
+		return t;
 	}
 
 	private String getPlural(String noun) {

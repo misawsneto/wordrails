@@ -762,7 +762,7 @@ public class PersonsResource {
 				request.setAttribute("networkName", personData.network.name);
 				request.setAttribute("networkId", personData.network.id);
 				if(network.favicon != null)
-					request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(network.favicon.get(Image.SIZE_MEDIUM)));
+					request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(network.getFaviconHash()));
 				request.setAttribute("networkDesciption", "");
 				request.setAttribute("networkKeywords", "");
 			}

@@ -1,6 +1,5 @@
 package co.xarx.trix.web.filter;
 
-import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AmazonCloudService;
@@ -66,7 +65,7 @@ public class PathEntityFilter implements Filter {
 		html = html + "<meta property=\"og:title\" content=\"" + post.title + "\" />";
 		html = html + "<meta property=\"og:description\" content=\"" + StringUtil.simpleSnippet(post.body) + "\" />";
 		if (post.featuredImage != null)
-			html = html + "<meta property=\"og:image\" content=\"" + amazonCloudService.getPublicImageURL(post.featuredImage.get(Image.SIZE_LARGE)) + "\" />";
+			html = html + "<meta property=\"og:image\" content=\"" + amazonCloudService.getPublicImageURL(post.getImageLargeHash()) + "\" />";
 
 		return html;
 	}
@@ -75,7 +74,7 @@ public class PathEntityFilter implements Filter {
 		String html = "";
 
 		if (post.featuredImage != null)
-			html = html + "<img class=\"hidden\" src=\"" + amazonCloudService.getPublicImageURL(post.featuredImage.get(Image.SIZE_LARGE)) + "\" />";
+			html = html + "<img class=\"hidden\" src=\"" + amazonCloudService.getPublicImageURL(post.getImageLargeHash()) + "\" />";
 		html = html + "<h1 class=\"hidden\">" + post.title + "</h1>";
 		html = html + "<div class=\"hidden\">" + post.body + "</div>";
 

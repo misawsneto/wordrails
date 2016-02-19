@@ -1,5 +1,7 @@
 package co.xarx.trix.generator.domain;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,14 +34,42 @@ public abstract class AbstractField {
 		ret.add(Long.class);
 		ret.add(Float.class);
 		ret.add(Double.class);
-//		ret.add(Void.class);
+		ret.add(Serializable.class);
+		ret.add(Date.class);
+		ret.add(String.class);
 
-		return ret.contains(clazz) || clazz.equals(String.class);
+		return ret.contains(clazz) || clazz.isPrimitive();
+	}
+
+	public String getNameUppercase() {
+		return getNameUppercase(getName());
+	}
+
+	public String getTypeName() {
+		return getType().getName();
+	}
+
+	public String getTypeSimpleName() {
+		return getType().getSimpleName();
 	}
 
 	public abstract boolean isId();
 
 	public abstract boolean isList();
+
+	public abstract boolean isIncludeAsReference();
+
+	public boolean isRelationship() {
+		if(getGenericType() != null && !getGenericType().equals(Class.class)) {
+			return !isSimpleType(getGenericType());
+		}
+
+		return !isSimpleType(getType());
+	}
+
+	public abstract boolean isMappedBy();
+
+	public abstract boolean isMap();
 
 	public abstract Class<?> getType();
 
@@ -47,23 +77,5 @@ public abstract class AbstractField {
 
 	public abstract String getName();
 
-	public abstract String getTypeName();
-
-	public abstract String getTypeSimpleName();
-
 	public abstract String getParametrizedGenericTypeName();
-
-	public abstract String getNameUppercase();
-
-	public abstract boolean isSdkInclude();
-
-	public abstract boolean isSdkIncludeAsReference();
-
-	public abstract boolean isSdkExclude();
-
-	public abstract boolean isRelationship();
-
-	public abstract boolean isMappedBy();
-
-	public abstract boolean isElementCollection();
 }

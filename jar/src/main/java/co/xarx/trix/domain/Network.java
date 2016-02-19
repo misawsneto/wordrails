@@ -1,6 +1,9 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,18 +20,17 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
+@JsonIgnoreProperties(value = {
+		"faviconHash", "splashImageHash", "loginImageHash", "loginImageSmallHash"
+}, allowGetters = true)
 public class Network extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7723825842358687233L;
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@NotNull
 	@Size(min=1, max=100)
@@ -194,16 +196,45 @@ public class Network extends BaseEntity implements Serializable {
 			defaultOrientationMode = "H";
 	}
 
+	@SdkInclude
 	public boolean isFacebookLoginAllowed() {
-		return
-				this.facebookAppID != null && !this.facebookAppID.isEmpty() &&
+		return this.facebookAppID != null && !this.facebookAppID.isEmpty() &&
 						this.facebookAppSecret != null && !this.facebookAppSecret.isEmpty();
 	}
 
+	@SdkInclude
 	public boolean isGoogleLoginAllowed() {
-		return
-				this.googleAppID != null && !this.googleAppID.isEmpty() &&
+		return this.googleAppID != null && !this.googleAppID.isEmpty() &&
 						this.googleAppSecret != null && !this.googleAppSecret.isEmpty();
+	}
+
+	@SdkInclude
+	public String getFaviconHash() {
+		if (favicon != null) return favicon.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getSplashImageHash() {
+		if (splashImage != null) return splashImage.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getLoginImageHash() {
+		if (loginImage != null) return loginImage.getOriginalHash();
+
+		return null;
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getLoginImageSmallHash() {
+		if (loginImage != null) return loginImage.getSmallHash();
+
+		return null;
 	}
 
 }

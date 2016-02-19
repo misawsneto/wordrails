@@ -1,6 +1,5 @@
 package co.xarx.trix.generator.domain;
 
-import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
 import org.springframework.util.StringUtils;
 
@@ -9,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Map;
 
 public class JavaField extends AbstractField {
 
@@ -41,47 +41,22 @@ public class JavaField extends AbstractField {
 	}
 
 	@Override
-	public String getTypeName() {
-		return field.getType().getName();
-	}
-
-	@Override
-	public String getTypeSimpleName() {
-		return field.getType().getSimpleName();
-	}
-
-	@Override
 	public String getParametrizedGenericTypeName() {
 		return field.getGenericType().toString();
 	}
 
 	@Override
-	public String getNameUppercase() {
-		return getNameUppercase(field.getName());
-	}
-
-	@Override
-	public boolean isSdkInclude() {
-		return field.isAnnotationPresent(SdkInclude.class);
-	}
-
-	@Override
-	public boolean isSdkIncludeAsReference() {
+	public boolean isIncludeAsReference() {
 		return field.isAnnotationPresent(NotNull.class) || field.isAnnotationPresent(SdkInclude.class);
 	}
 
-	@Override
-	public boolean isSdkExclude() {
-		return field.isAnnotationPresent(SdkExclude.class);
-	}
-
-	@Override
-	public boolean isRelationship() {
-		return field.isAnnotationPresent(OneToMany.class)
-				|| field.isAnnotationPresent(ManyToMany.class)
-				|| field.isAnnotationPresent(OneToOne.class)
-				|| field.isAnnotationPresent(ManyToOne.class);
-	}
+//	@Override
+//	public boolean isRelationship() {
+//		return field.isAnnotationPresent(OneToMany.class)
+//				|| field.isAnnotationPresent(ManyToMany.class)
+//				|| field.isAnnotationPresent(OneToOne.class)
+//				|| field.isAnnotationPresent(ManyToOne.class);
+//	}
 
 	@Override
 	public boolean isMappedBy() {
@@ -93,13 +68,18 @@ public class JavaField extends AbstractField {
 	}
 
 	@Override
-	public boolean isElementCollection() {
-		return field.isAnnotationPresent(ElementCollection.class);
+	public boolean isMap() {
+		return getType().isAssignableFrom(Map.class);
 	}
 
 	@Override
 	public Class<?> getGenericType() {
-		ParameterizedType parameterizedGenericType = (ParameterizedType) field.getGenericType();
+		ParameterizedType parameterizedGenericType;
+		try {
+			parameterizedGenericType = (ParameterizedType) field.getGenericType();
+		} catch (Exception e) {
+			return null;
+		}
 		Type[] actualTypeArguments = parameterizedGenericType.getActualTypeArguments();
 		Type actualTypeArgument = actualTypeArguments[actualTypeArguments.length - 1];
 		return (Class<?>) actualTypeArgument;

@@ -1,8 +1,8 @@
 package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,21 +10,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 public class Comment extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -7637696909957859675L;
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 
 	@JsonFormat(shape=JsonFormat.Shape.NUMBER)

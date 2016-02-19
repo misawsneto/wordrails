@@ -59,7 +59,7 @@ public class ImageService {
 
 		java.io.File originalFile = FileUtil.createNewTempFile(inputStream);
 		ImageUtil.ImageFile imageFile = ImageUtil.getImageFile(originalFile);
-		newImage.originalHash = imageFile.hash;
+		newImage.setOriginalHash(imageFile.hash);
 
 		Set<String> sizeTags = newImage.getSizeTags(); //this is all the sizes we need to upload
 		Image existingImage = imageRepository.findOne(QImage.image.originalHash.eq(imageFile.hash));

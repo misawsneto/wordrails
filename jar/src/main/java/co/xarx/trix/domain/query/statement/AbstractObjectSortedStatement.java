@@ -2,16 +2,14 @@ package co.xarx.trix.domain.query.statement;
 
 import co.xarx.trix.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter
 @Entity
 @Table(name = "objectstatement")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -19,13 +17,9 @@ import lombok.EqualsAndHashCode;
 public abstract class AbstractObjectSortedStatement<T> extends BaseEntity implements SortedStatement, ObjectStatement<T> {
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "query_sorts", joinColumns = @JoinColumn(name = "query_id"))

@@ -1,8 +1,8 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkExclude;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,8 +11,7 @@ import java.io.Serializable;
 
 
 @SdkExclude
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "tenantId"}))
 public class File extends BaseEntity implements Serializable {
@@ -25,13 +24,9 @@ public class File extends BaseEntity implements Serializable {
 	public static final String DIR_VIDEO = "videos";
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@NotNull
 	@Size(min = 1, max = 1)

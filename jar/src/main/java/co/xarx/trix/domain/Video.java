@@ -1,7 +1,8 @@
 package co.xarx.trix.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import co.xarx.trix.annotation.SdkExclude;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,22 +10,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
 @Entity
 public class Video extends BaseEntity {
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
-	@Override
-	public Integer getId() {
-		return id;
-	}
-
 	public Integer duration;
 
+	@SdkExclude
 	public File file;
 
 }

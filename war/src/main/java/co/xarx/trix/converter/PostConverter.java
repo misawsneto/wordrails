@@ -3,7 +3,6 @@ package co.xarx.trix.converter;
 import co.xarx.trix.api.Category;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
-import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.PostRepository;
@@ -50,18 +49,13 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		}
 
 		if (post.featuredImage != null) {
-			postView.featuredImageHash = post.featuredImage.originalHash;
-			postView.imageSmallHash = post.featuredImage.hashs.get(Image.SIZE_SMALL);
-			postView.imageMediumHash = post.featuredImage.hashs.get(Image.SIZE_MEDIUM);
-			postView.imageLargeHash = post.featuredImage.hashs.get(Image.SIZE_LARGE);
+			postView.featuredImageHash = post.getImageHash();
+			postView.imageSmallHash = post.getImageSmallHash();
+			postView.imageMediumHash = post.getImageMediumHash();
+			postView.imageLargeHash = post.getImageLargeHash();
 			postView.imageCaptionText = post.featuredImage.caption;
 			postView.imageCreditsText = post.featuredImage.credits;
 			postView.imageTitleText = post.featuredImage.title;
-			if (post.featuredImage != null && post.featuredImage.hashs != null && post.featuredImage.hashs.size() == 0) {
-				postView.imageSmallHash = post.featuredImage.get(Image.SIZE_SMALL);
-				postView.imageMediumHash = post.featuredImage.get(Image.SIZE_MEDIUM);
-				postView.imageLargeHash = post.featuredImage.get(Image.SIZE_LARGE);
-			}
 		}
 
 		postView.imageLandscape = post.imageLandscape;
@@ -77,10 +71,10 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.authorUsername = post.author.username;
 
 			if (post.author.cover != null) {
-				postView.authorCoverMediumHash = post.author.cover.get(Image.SIZE_MEDIUM);
+				postView.authorCoverMediumHash = post.author.getCoverMediumHash();
 			}
 			if (post.author.image != null) {
-				postView.authorImageSmallHash = post.author.image.get(Image.SIZE_SMALL);
+				postView.authorImageSmallHash = post.author.getImageSmallHash();
 			}
 
 

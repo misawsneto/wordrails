@@ -1,27 +1,23 @@
 package co.xarx.trix.domain;
 
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name = "person_network_role", uniqueConstraints = {@UniqueConstraint(columnNames = {"person_id", "network_id"})})
 public class NetworkRole extends BaseEntity {
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
-	@Override
-	public Integer getId() {
-		return id;
-	}
 	@ManyToOne
 	@NotNull
 	@JoinColumn(name = "network_id")

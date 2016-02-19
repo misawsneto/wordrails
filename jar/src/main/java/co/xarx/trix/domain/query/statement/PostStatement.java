@@ -12,8 +12,7 @@ import java.util.Date;
 import java.util.Set;
 
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name = "objectstatementpost")
 @PrimaryKeyJoinColumn(name = "objectstatement_id", referencedColumnName = "id")

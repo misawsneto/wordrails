@@ -1,7 +1,6 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.api.AbstractAuthorizationFilter;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
@@ -46,8 +45,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	private TermPerspectiveRepository termPerspectiveRepository;
 	@Autowired
 	private CommentRepository commentRepository;
-	@Autowired
-	private TrixAuthenticationProvider authProvider;
 
 	@Override
 	protected boolean isGetCellsAuthorized() {
@@ -120,6 +117,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetFixedQueryIndexesAuthorized(Integer fixedQueryId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetFixedQueryObjectStatementAuthorized(Integer fixedQueryId) {
 		return false;
 	}
@@ -182,6 +184,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindByUsernameAuthorized(String username) {
 		return true;
+	}
+
+	@Override
+	protected boolean isGetPersonBookmarkPostsAuthorized(Integer personId) {
+		return false;
 	}
 
 
@@ -293,6 +300,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 			authorized = true;
 		}
 		return authorized;
+	}
+
+	@Override
+	protected boolean isGetPostTagsAuthorized(Integer postId) {
+		return false;
 	}
 
 	@Override
@@ -875,11 +887,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPageSectionsAuthorized(Integer pageId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetPageStationAuthorized(Integer pageId) {
 		return false;
 	}
@@ -946,6 +953,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetAbstractObjectSortedStatementAuthorized(Integer abstractObjectSortedStatementId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAbstractObjectSortedStatementExceptionIdsAuthorized(Integer abstractObjectSortedStatementId) {
 		return false;
 	}
 

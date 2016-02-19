@@ -2,14 +2,13 @@ package co.xarx.trix.domain.event;
 
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.BaseEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @SdkExclude
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn
@@ -20,13 +19,9 @@ import javax.persistence.*;
 public abstract class Event extends BaseEntity {
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	public static final String EVENT_CREATE = "CREATE";
 	public static final String EVENT_SAVE = "SAVE";

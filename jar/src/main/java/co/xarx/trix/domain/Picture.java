@@ -1,23 +1,19 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkExclude;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @SdkExclude
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 public class Picture extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6407170001176054415L;
-
-	public Picture() {
-	}
 
 	public Picture(String sizeTag, File file) {
 		this.sizeTag = sizeTag;
@@ -25,13 +21,9 @@ public class Picture extends BaseEntity implements Serializable {
 	}
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	public Integer height;
 

@@ -2,6 +2,7 @@ package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Filter;
@@ -18,6 +19,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@EqualsAndHashCode(of = "getId")
 @MappedSuperclass
 @FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = "string"))
 @Filters(@Filter(name = "tenantFilter", condition = "tenantId = :tenantId"))
@@ -43,21 +45,4 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	@JsonIgnore
 	@NotNull
 	public String tenantId;
-
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == null || !(obj instanceof BaseEntity) || getId() == null) {
-			return false;
-		}
-
-		return ((BaseEntity) obj).getId().equals(getId());
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-		return result;
-	}
 }

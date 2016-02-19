@@ -11,8 +11,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name="station_perspective")
 public class StationPerspective extends BaseEntity implements Serializable{

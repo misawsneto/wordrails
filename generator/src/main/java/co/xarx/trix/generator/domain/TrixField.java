@@ -1,23 +1,28 @@
 package co.xarx.trix.generator.domain;
 
-import javax.persistence.Id;
-import java.lang.reflect.Field;
 
-public class TrixField {
+import lombok.Getter;
+import lombok.Setter;
 
-	private Field field;
+@Getter
+@Setter
+public class TrixField extends AbstractField {
 
-	private boolean isId;
+	public boolean isList;
+	public boolean isMap;
+	public boolean isIncludeAsReference;
+	public Class<?> type;
+	public Class<?> genericType;
+	public String name;
+	public String parametrizedGenericTypeName;
 
-	public TrixField(Field field) {
-		this.field = field;
+	@Override
+	public boolean isId() {
+		return false;
 	}
 
-	boolean isId() {
-		if(field != null) {
-			return field.isAnnotationPresent(Id.class);
-		}
-
-		return isId;
+	@Override
+	public boolean isMappedBy() {
+		return false;
 	}
 }

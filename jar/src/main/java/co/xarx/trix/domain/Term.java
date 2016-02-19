@@ -3,6 +3,8 @@ package co.xarx.trix.domain;
 
 import co.xarx.trix.domain.event.Event;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.javers.core.metamodel.annotation.DiffIgnore;
 
 import javax.persistence.*;
@@ -11,6 +13,8 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+@lombok.Getter
+@lombok.Setter
 @Entity
 @Table(uniqueConstraints = {
 		@UniqueConstraint(columnNames={"taxonomy_id","name_parent"})
@@ -19,13 +23,9 @@ public class Term extends BaseEntity implements Serializable, Loggable {
 	private static final long serialVersionUID = 7891255759575029731L;
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@Size(min=1, max=100)
 	public String name;

@@ -9,12 +9,13 @@ import java.io.Serializable;
 import java.util.Map;
 
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name = "section")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -24,13 +25,9 @@ public abstract class AbstractSection extends BaseEntity implements Section, Ser
 	private static final long serialVersionUID = 3219789942521409531L;
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@NotNull
 	public String title;

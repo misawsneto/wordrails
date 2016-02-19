@@ -1,8 +1,6 @@
 package co.xarx.trix.domain;
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,8 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 public class Sponsor extends BaseEntity {
 

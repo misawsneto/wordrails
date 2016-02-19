@@ -1,7 +1,7 @@
 package co.xarx.trix.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,8 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter
 @Entity
 public class PasswordReset extends BaseEntity {
 
@@ -22,13 +21,9 @@ public class PasswordReset extends BaseEntity {
 	}
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@NotNull
 	public String hash;

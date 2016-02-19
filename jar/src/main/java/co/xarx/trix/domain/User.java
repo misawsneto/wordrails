@@ -1,6 +1,8 @@
 package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -17,6 +19,8 @@ import java.util.Set;
  *
  * @author misael
  */
+@lombok.Getter
+@lombok.Setter
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "tenantId"}))
 public class User extends BaseEntity implements UserDetails, Serializable {
@@ -24,13 +28,9 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 	private static final long serialVersionUID = -4656215770382382924L;
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@Size(max = 50)
 	@NotNull

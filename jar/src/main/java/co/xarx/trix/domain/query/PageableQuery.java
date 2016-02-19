@@ -4,8 +4,8 @@ import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
 import co.xarx.trix.domain.query.statement.AbstractObjectSortedStatement;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,20 +16,15 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name = "querypageable")
 public class PageableQuery extends BaseEntity implements ObjectQuery {
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@Transient
 	private Integer size;

@@ -2,11 +2,15 @@ package co.xarx.trix.domain;
 
 
 import co.xarx.trix.annotation.SdkExclude;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+@lombok.Getter
+@lombok.Setter
 @SdkExclude
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "tenantId"))
@@ -26,13 +30,9 @@ public class AndroidApp extends BaseEntity implements Serializable {
 	public String host;
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@Lob
 	public String shortDescription;

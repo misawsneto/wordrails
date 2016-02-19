@@ -1,15 +1,12 @@
 package co.xarx.trix.domain;
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "person_id"}))
 public class Recommend extends BaseEntity {
