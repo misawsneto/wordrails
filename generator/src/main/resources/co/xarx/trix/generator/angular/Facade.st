@@ -454,6 +454,19 @@ var trix = angular.module('trix', [])
         return \$http.get(_config.url + "/api/taxonomies/allCategories",  config)
     };
 
+    this.recoverPassword = function(email) {
+      var config = {};
+      config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
+      return \$http.post(_config.url + "/api/auth/forgotPassword", \$.param({"email": email}), config)
+    }
+
+    this.updatePassword = function(hash, password) {
+      var config = {};
+      config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
+      return \$http.put(_config.url + "/api/auth/" + hash, \$.param({"password": password}), config)
+    }
+
+
   	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
   }
 

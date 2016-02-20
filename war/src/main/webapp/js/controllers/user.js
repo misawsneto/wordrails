@@ -65,7 +65,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	  };
 
 	  image.onSuccessItem = function(fileItem, response, status, headers) {
-	  	if(response.filelink){
+	  	if(response.fileLink){
 	  		$scope.userImage = response;
 	  		// var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userImage.id }
 	  		// trix.postImage(imageObject).success(function(imageId){
@@ -193,6 +193,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 
     $scope.showEditProfile = function(ev){
     	$scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
+    	
     	$mdSidenav('right').toggle();
     }
 
@@ -524,4 +525,4 @@ $scope.page = 0;
 		$scope.commentFocused = false;
 	}
 
-}])		
+}])
