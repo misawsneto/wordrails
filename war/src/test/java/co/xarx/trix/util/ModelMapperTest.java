@@ -18,6 +18,8 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
+import static org.junit.Assert.assertEquals;
+
 @RunWith(MockitoJUnitRunner.class)
 public class ModelMapperTest {
 
@@ -26,6 +28,7 @@ public class ModelMapperTest {
 	@Before
 	public void setUp() throws Exception {
 		modelMapper = new ModelMapper();
+		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
 		modelMapper.addMappings(new PersonMap());
@@ -35,19 +38,28 @@ public class ModelMapperTest {
 	@Test
 	public void testPostToESPostMapping() throws Exception {
 		Post post = TestArtifactsFactory.createPost();
-		modelMapper.map(post, ESPost.class);
+		ESPost esPost = modelMapper.map(post, ESPost.class);
+
+		assertEquals(post.tags, esPost.tags);
+		assertEquals(post.station.id, esPost.stationId);
 	}
 
 	@Test
 	public void testStationToESStationMapping() throws Exception {
 		Station station = TestArtifactsFactory.createStation();
-		modelMapper.map(station, ESStation.class);
+		ESStation esStation = modelMapper.map(station, ESStation.class);
+
+		assertEquals(station.id, esStation.id);
+		assertEquals(station.logo.hashs, esStation.logo);
 	}
 
 	@Test
 	public void testPersonToESPersonMapping() throws Exception {
 		Person person = TestArtifactsFactory.createPerson();
-		modelMapper.map(person, ESPerson.class);
+		ESPerson esPerson = modelMapper.map(person, ESPerson.class);
+
+		assertEquals(person.id, esPerson.id);
+		assertEquals(person.cover.getOriginalHash(), esPerson.cover);
 	}
 
 //	@Test
@@ -57,7 +69,10 @@ public class ModelMapperTest {
 
 		Person person = TestArtifactsFactory.createPerson();
 		esPost.author = modelMapper.map(person, ESPerson.class);
-		modelMapper.map(esPost, PostView.class);
+		PostView postView = modelMapper.map(esPost, PostView.class);
+
+		assertEquals(postView.tags, esPost.tags);
+		assertEquals(postView.stationId, esPost.stationId);
 	}
 
 	@After

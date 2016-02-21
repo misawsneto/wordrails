@@ -1,8 +1,22 @@
 package co.xarx.trix.domain.query;
 
-public interface ObjectQuery<T> {
+import co.xarx.trix.domain.page.Block;
+import co.xarx.trix.domain.query.statement.ObjectStatement;
 
-	T build(QueryBuilder builder);
+import javax.persistence.MappedSuperclass;
+import java.util.Map;
+import java.util.Set;
 
-	String getObjectType();
+@MappedSuperclass
+public interface ObjectQuery {
+
+	default String getObjectType() {
+		return getObjectStatement().getObjectType();
+	}
+
+	Set<Integer> getIndexes();
+
+	ObjectStatement getObjectStatement();
+
+	Map<Integer, Block> fetch(QueryRunner executor); //visitor design pattern
 }

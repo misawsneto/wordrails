@@ -107,9 +107,14 @@ var trix = angular.module('trix', [])
 	  return \$http.post(_config.url + "/api/networks/createNetwork", createNetwork, config)
 	}
 
-	this.logout = function() {
-		return \$http.get(_config.url + "/j_spring_security_logout")
-	}
+    this.updateTheme = function(theme) {
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return \$http.put(_config.url + "/api/networks/updateTheme", theme, config)
+    };
+
+    this.logout = function() {
+    	return \$http.get(_config.url + "/j_spring_security_logout")
+    }
 
 	this.initData = function() {
 	  return \$http.get(_config.url + "/api/persons/init");
@@ -454,7 +459,20 @@ var trix = angular.module('trix', [])
 		return \$http.get(_config.url + "/api/taxonomies/allCategories",  config)
 	};
 
-	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
+    this.recoverPassword = function(email) {
+      var config = {};
+      config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
+      return \$http.post(_config.url + "/api/auth/forgotPassword", \$.param({"email": email}), config)
+    }
+
+    this.updatePassword = function(hash, password) {
+      var config = {};
+      config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
+      return \$http.put(_config.url + "/api/auth/" + hash, \$.param({"password": password}), config)
+    }
+
+
+  	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
   }
 
   provider.\$get = function(\$http){

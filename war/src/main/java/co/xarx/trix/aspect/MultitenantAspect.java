@@ -78,6 +78,7 @@ public class MultitenantAspect {
 		Field[] allFields = obj.getClass().getDeclaredFields();
 
 		for (Field f : allFields) {
+			f.setAccessible(true);
 			Class<?> type = f.getType();
 			if (classType.isAssignableFrom(type)) {
 				toReturn.add((T) f.get(obj));

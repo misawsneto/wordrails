@@ -4,6 +4,8 @@ import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.NetworkPermission;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
+import co.xarx.trix.api.ThemeView;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.aspect.annotations.IgnoreMultitenancy;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.dto.NetworkCreateDto;
@@ -123,6 +125,26 @@ public class NetworkResource {
 		personPermissions.personName = person.name;
 
 		return personPermissions;
+	}
+
+	@Path("/updateTheme")
+	@PUT
+	public Response updateTheme (ThemeView themeView){
+		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
+		if(themeView.primaryColors == null || themeView.primaryColors.size() < 14 ||
+			themeView.secondaryColors == null || themeView.primaryColors.size() < 14 ||
+			themeView.alertColors == null || themeView.primaryColors.size() < 14 ||
+			themeView.backgroundColors == null || themeView.primaryColors.size() < 14)
+				throw new BadRequestException("Invalid Theme");
+
+		network.primaryColors = themeView.primaryColors;
+		network.secondaryColors = themeView.secondaryColors;
+		network.alertColors = themeView.alertColors;
+		network.backgroundColors = themeView.backgroundColors;
+		network.backgroundColor = themeView.backgroundColors.get("500");
+
+		networkRepository.save(network);
+		return Response.status(Status.OK).build();
 	}
 
 	@POST

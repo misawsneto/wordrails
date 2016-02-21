@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 public class Taxonomy extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 7821255752575024731L;

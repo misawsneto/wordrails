@@ -1,22 +1,21 @@
 package co.xarx.trix.domain;
 
+import lombok.AccessLevel;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 public class Sponsor extends BaseEntity {
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
-
 
 	@NotNull
 	@ManyToOne

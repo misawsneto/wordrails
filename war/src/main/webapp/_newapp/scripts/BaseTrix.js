@@ -143,7 +143,7 @@ function ImageDto(id, title, caption, credits, type, hashs, original, small, med
 	};
 }
 
-function NetworkDto(id, name, flurryKey, flurryAppleKey, trackingId, allowSignup, allowSocialLogin, facebookAppID, facebookAppSecret, googleAppID, facebookLink, youtubeLink, googlePlusLink, twitterLink, webFooter, googleAppSecret, allowSponsors, stationMenuName, homeTabName, domain, networkCreationToken, info, loginFooterMessage, backgroundColor, navbarColor, navbarSecondaryColor, mainColor, primaryFont, secondaryFont, titleFontSize, newsFontSize, subdomain, configured, logoId, logoSmallId, logoHash, logoSmallHash, faviconHash, splashImageHash, loginImageHash, loginImageSmallHash, faviconId, splashImageId, loginImageId, loginImageSmallId, defaultReadMode, defaultOrientationMode, categoriesTaxonomyId, invitationMessage, playStoreAddress, appleStoreAddress, addStationRolesOnSignup, createdAt, updatedAt) {
+function NetworkDto(id, name, flurryKey, flurryAppleKey, trackingId, allowSignup, allowSocialLogin, facebookAppID, facebookAppSecret, googleAppID, facebookLink, youtubeLink, googlePlusLink, twitterLink, webFooter, googleAppSecret, allowSponsors, stationMenuName, homeTabName, domain, networkCreationToken, info, loginFooterMessage, backgroundColor, navbarColor, navbarSecondaryColor, mainColor, primaryFont, secondaryFont, titleFontSize, newsFontSize, subdomain, configured, logoId, logoSmallId, logoHash, logoSmallHash, faviconHash, splashImageHash, loginImageHash, loginImageSmallHash, faviconId, splashImageId, loginImageId, loginImageSmallId, defaultReadMode, defaultOrientationMode, categoriesTaxonomyId, invitationMessage, playStoreAddress, appleStoreAddress, addStationRolesOnSignup, primaryColors, secondaryColors, alertColors, backgroundColors, createdAt, updatedAt) {
 	return {
 		id: id,
 		name: name,
@@ -197,6 +197,10 @@ function NetworkDto(id, name, flurryKey, flurryAppleKey, trackingId, allowSignup
 		playStoreAddress: playStoreAddress,
 		appleStoreAddress: appleStoreAddress,
 		addStationRolesOnSignup: addStationRolesOnSignup,
+		primaryColors: primaryColors,
+		secondaryColors: secondaryColors,
+		alertColors: alertColors,
+		backgroundColors: backgroundColors,
 		createdAt: createdAt,
 		updatedAt: updatedAt
 	};
@@ -580,7 +584,7 @@ function VideoDto(id, duration, file, updatedAt, createdAt, networkId) {
 		networkId: networkId
 	};
 }
-var trix = angular.module('trix', ['ngStorage'])
+var trix = angular.module('trix', [])
 
 .provider('trix', function trixProvider($httpProvider) {
 
@@ -602,7 +606,7 @@ var trix = angular.module('trix', ['ngStorage'])
 
   $httpProvider.defaults.useXDomain = true;
 	$httpProvider.defaults.withCredentials = true;
-	$httpProvider.interceptors.push(function trix_httpInterceptor($q, $rootScope, $localStorage) {
+	$httpProvider.interceptors.push(function trix_httpInterceptor($q, $rootScope) {
 		var requestInterceptor = {
 		responseError: function(rejection){
 			$rootScope.$broadcast('HTTP_ERROR',rejection);
@@ -610,13 +614,6 @@ var trix = angular.module('trix', ['ngStorage'])
 		},
 	    // optional method
 	    response: function(response) {
-	    	var trixToken = response.headers('x-auth-trix-token')
-	    	if ( trixToken ) {
-	    		$localStorage.trixToken = trixToken;
-		    }
-		    if(trixToken === ""){
-		    	delete $localStorage.trixToken;
-		    }
 	    // do something on success
 	    	if (_config.url && response.config.method === "GET" &&
 	    		response.config.url.indexOf(_config.url + "/api") > -1 &&
@@ -641,9 +638,6 @@ var trix = angular.module('trix', ['ngStorage'])
 	     		return response;
 	  	},
 	  	request: function(config) {
-	  		if ( $localStorage.trixToken ) {
-	    		config.headers['x-auth-trix-token'] = $localStorage.trixToken;
-		    }
 	      return config;
 	    }
 		};
@@ -653,12 +647,6 @@ var trix = angular.module('trix', ['ngStorage'])
 	delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
   var Trix = function($http){
-
-	this.recoverPassword = function(email) {
-      var config = {};
-      config.headers = {"Content-Type": "application/x-www-form-urlencoded"};
-      return $http.post(_config.url + "/api/persons/sendPassword", $.param({"email": email}), config);
-    }
 
   	this.login = function(username, password) {
       var config = {};
@@ -701,6 +689,11 @@ var trix = angular.module('trix', ['ngStorage'])
 	  config.headers = {"Content-Type": "application/json"}
 	  return $http.post(_config.url + "/api/networks/createNetwork", createNetwork, config)
 	}
+
+    this.updateTheme = function(theme) {
+        var config = {"headers": {"Content-Type": "application/json"}}
+        return $http.put(_config.url + "/api/networks/updateTheme", theme, config)
+    };
 
     this.logout = function() {
     	return $http.get(_config.url + "/j_spring_security_logout")
@@ -2969,6 +2962,78 @@ var trix = angular.module('trix', ['ngStorage'])
   	        return $http.delete("/api/persons/" + id);
   	    }
 
+  	    if (this.findByEmail) {
+  	    	window.console && console.log("findByEmail");
+  	    }
+  	    this.findByEmail = function(email, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            email: email,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/persons/search/findByEmail",  config)
+  	    };
+
+  	    if (this.findAllByNetwork) {
+  	    	window.console && console.log("findAllByNetwork");
+  	    }
+  	    this.findAllByNetwork = function(networkId, page, size, sort, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            networkId: networkId,
+  	            page: page,
+  	            size: size,
+  	            sort: sort,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/persons/search/findAllByNetwork",  config)
+  	    };
+
+  	    if (this.isAdmin) {
+  	    	window.console && console.log("isAdmin");
+  	    }
+  	    this.isAdmin = function(personId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            personId: personId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/persons/search/isAdmin",  config)
+  	    };
+
+  	    if (this.findByUsername) {
+  	    	window.console && console.log("findByUsername");
+  	    }
+  	    this.findByUsername = function(username, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            username: username,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/persons/search/findByUsername",  config)
+  	    };
+
+  	    if (this.findAllByNetworkAndQuery) {
+  	    	window.console && console.log("findAllByNetworkAndQuery");
+  	    }
+  	    this.findAllByNetworkAndQuery = function(networkId, query, page, size, sort, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            networkId: networkId,
+  	            query: query,
+  	            page: page,
+  	            size: size,
+  	            sort: sort,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/persons/search/findAllByNetworkAndQuery",  config)
+  	    };
+
   	    if (this.findAllByNetworkExcludingPerson) {
   	    	window.console && console.log("findAllByNetworkExcludingPerson");
   	    }
@@ -3000,23 +3065,6 @@ var trix = angular.module('trix', ['ngStorage'])
   	        return $http.get(_config.url + "/api/persons/search/findByUsernameAndNetworkId",  config)
   	    };
 
-  	    if (this.findAllByNetworkAndQuery) {
-  	    	window.console && console.log("findAllByNetworkAndQuery");
-  	    }
-  	    this.findAllByNetworkAndQuery = function(networkId, query, page, size, sort, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            networkId: networkId,
-  	            query: query,
-  	            page: page,
-  	            size: size,
-  	            sort: sort,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/persons/search/findAllByNetworkAndQuery",  config)
-  	    };
-
   	    if (this.findAllByNetworkAndQueryExcludingPerson) {
   	    	window.console && console.log("findAllByNetworkAndQueryExcludingPerson");
   	    }
@@ -3033,61 +3081,6 @@ var trix = angular.module('trix', ['ngStorage'])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/persons/search/findAllByNetworkAndQueryExcludingPerson",  config)
-  	    };
-
-  	    if (this.findByEmail) {
-  	    	window.console && console.log("findByEmail");
-  	    }
-  	    this.findByEmail = function(email, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            email: email,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/persons/search/findByEmail",  config)
-  	    };
-
-  	    if (this.isAdmin) {
-  	    	window.console && console.log("isAdmin");
-  	    }
-  	    this.isAdmin = function(personId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            personId: personId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/persons/search/isAdmin",  config)
-  	    };
-
-  	    if (this.findAllByNetwork) {
-  	    	window.console && console.log("findAllByNetwork");
-  	    }
-  	    this.findAllByNetwork = function(networkId, page, size, sort, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            networkId: networkId,
-  	            page: page,
-  	            size: size,
-  	            sort: sort,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/persons/search/findAllByNetwork",  config)
-  	    };
-
-  	    if (this.findByUsername) {
-  	    	window.console && console.log("findByUsername");
-  	    }
-  	    this.findByUsername = function(username, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            username: username,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/persons/search/findByUsername",  config)
   	    };
 
 
@@ -3567,22 +3560,6 @@ var trix = angular.module('trix', ['ngStorage'])
   	        return $http.get(_config.url + "/api/posts/search/findPostBySlug",  config)
   	    };
 
-  	    if (this.findPostsOrderByDateDesc) {
-  	    	window.console && console.log("findPostsOrderByDateDesc");
-  	    }
-  	    this.findPostsOrderByDateDesc = function(stationId, page, size, sort, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            stationId: stationId,
-  	            page: page,
-  	            size: size,
-  	            sort: sort,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/posts/search/findPostsOrderByDateDesc",  config)
-  	    };
-
   	    if (this.findByOriginalPostId) {
   	    	window.console && console.log("findByOriginalPostId");
   	    }
@@ -3610,22 +3587,6 @@ var trix = angular.module('trix', ['ngStorage'])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/posts/search/findPostsFromOrPromotedToStation",  config)
-  	    };
-
-  	    if (this.findPostReadByPerson) {
-  	    	window.console && console.log("findPostReadByPerson");
-  	    }
-  	    this.findPostReadByPerson = function(personId, page, size, sort, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            personId: personId,
-  	            page: page,
-  	            size: size,
-  	            sort: sort,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/posts/search/findPostReadByPerson",  config)
   	    };
 
   	    if (this.findPostsPublished) {
@@ -3661,6 +3622,38 @@ var trix = angular.module('trix', ['ngStorage'])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/posts/search/findPostsNotPositioned",  config)
+  	    };
+
+  	    if (this.findPostsOrderByDateDesc) {
+  	    	window.console && console.log("findPostsOrderByDateDesc");
+  	    }
+  	    this.findPostsOrderByDateDesc = function(stationId, page, size, sort, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            stationId: stationId,
+  	            page: page,
+  	            size: size,
+  	            sort: sort,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/posts/search/findPostsOrderByDateDesc",  config)
+  	    };
+
+  	    if (this.findPostReadByPerson) {
+  	    	window.console && console.log("findPostReadByPerson");
+  	    }
+  	    this.findPostReadByPerson = function(personId, page, size, sort, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            personId: personId,
+  	            page: page,
+  	            size: size,
+  	            sort: sort,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/posts/search/findPostReadByPerson",  config)
   	    };
 
 
@@ -3960,20 +3953,6 @@ var trix = angular.module('trix', ['ngStorage'])
   	        return $http.delete("/api/postReads/" + id);
   	    }
 
-  	    if (this.countByDistinctSessionid) {
-  	    	window.console && console.log("countByDistinctSessionid");
-  	    }
-  	    this.countByDistinctSessionid = function(dateIni, dateEnd, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            dateIni: dateIni,
-  	            dateEnd: dateEnd,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/postReads/search/countByDistinctSessionid",  config)
-  	    };
-
   	    if (this.findPostReadByPersonIdOrderByDatePaginated) {
   	    	window.console && console.log("findPostReadByPersonIdOrderByDatePaginated");
   	    }
@@ -3988,6 +3967,20 @@ var trix = angular.module('trix', ['ngStorage'])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/postReads/search/findPostReadByPersonIdOrderByDatePaginated",  config)
+  	    };
+
+  	    if (this.countByDistinctSessionid) {
+  	    	window.console && console.log("countByDistinctSessionid");
+  	    }
+  	    this.countByDistinctSessionid = function(dateIni, dateEnd, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            dateIni: dateIni,
+  	            dateEnd: dateEnd,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/postReads/search/countByDistinctSessionid",  config)
   	    };
 
   	    if (this.findPostReadByPersonIdOrderByDate) {
@@ -4115,6 +4108,19 @@ var trix = angular.module('trix', ['ngStorage'])
   	        return $http.delete("/api/recommends/" + id);
   	    }
 
+  	    if (this.findRecommendsByPostId) {
+  	    	window.console && console.log("findRecommendsByPostId");
+  	    }
+  	    this.findRecommendsByPostId = function(postId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            postId: postId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/recommends/search/findRecommendsByPostId",  config)
+  	    };
+
   	    if (this.findRecommendByPersonIdAndPostId) {
   	    	window.console && console.log("findRecommendByPersonIdAndPostId");
   	    }
@@ -4143,19 +4149,6 @@ var trix = angular.module('trix', ['ngStorage'])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/recommends/search/findRecommendByPerson",  config)
-  	    };
-
-  	    if (this.findRecommendsByPostId) {
-  	    	window.console && console.log("findRecommendsByPostId");
-  	    }
-  	    this.findRecommendsByPostId = function(postId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            postId: postId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/recommends/search/findRecommendsByPostId",  config)
   	    };
 
   	    if (this.findRecommendsByPersonIdOrderByDate) {
@@ -5076,21 +5069,20 @@ var trix = angular.module('trix', ['ngStorage'])
   	        return $http.delete("/api/stationRoles/" + id);
   	    }
 
-  	    if (this.findRolesByStationIdsAndNameOrUsernameOrEmail) {
-  	    	window.console && console.log("findRolesByStationIdsAndNameOrUsernameOrEmail");
+  	    if (this.findRolesByStationIds) {
+  	    	window.console && console.log("findRolesByStationIds");
   	    }
-  	    this.findRolesByStationIdsAndNameOrUsernameOrEmail = function(stationIds, nameOrUsernameOrEmail, page, size, sort, projection) {
+  	    this.findRolesByStationIds = function(stationIds, page, size, sort, projection) {
   	        var config = {};
   	        config.params = {
   	            stationIds: stationIds,
-  	            nameOrUsernameOrEmail: nameOrUsernameOrEmail,
   	            page: page,
   	            size: size,
   	            sort: sort,
 
   	        }
   	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/stationRoles/search/findRolesByStationIdsAndNameOrUsernameOrEmail",  config)
+  	        return $http.get(_config.url + "/api/stationRoles/search/findRolesByStationIds",  config)
   	    };
 
   	    if (this.findByStationIdAndPersonId) {
@@ -5107,20 +5099,21 @@ var trix = angular.module('trix', ['ngStorage'])
   	        return $http.get(_config.url + "/api/stationRoles/search/findByStationIdAndPersonId",  config)
   	    };
 
-  	    if (this.findRolesByStationIds) {
-  	    	window.console && console.log("findRolesByStationIds");
+  	    if (this.findRolesByStationIdsAndNameOrUsernameOrEmail) {
+  	    	window.console && console.log("findRolesByStationIdsAndNameOrUsernameOrEmail");
   	    }
-  	    this.findRolesByStationIds = function(stationIds, page, size, sort, projection) {
+  	    this.findRolesByStationIdsAndNameOrUsernameOrEmail = function(stationIds, nameOrUsernameOrEmail, page, size, sort, projection) {
   	        var config = {};
   	        config.params = {
   	            stationIds: stationIds,
+  	            nameOrUsernameOrEmail: nameOrUsernameOrEmail,
   	            page: page,
   	            size: size,
   	            sort: sort,
 
   	        }
   	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/stationRoles/search/findRolesByStationIds",  config)
+  	        return $http.get(_config.url + "/api/stationRoles/search/findRolesByStationIdsAndNameOrUsernameOrEmail",  config)
   	    };
 
 
@@ -5435,58 +5428,6 @@ var trix = angular.module('trix', ['ngStorage'])
   	        return $http.delete("/api/terms/" + id);
   	    }
 
-  	    if (this.findTermsByPostSlug) {
-  	    	window.console && console.log("findTermsByPostSlug");
-  	    }
-  	    this.findTermsByPostSlug = function(slug, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            slug: slug,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/terms/search/findTermsByPostSlug",  config)
-  	    };
-
-  	    if (this.findByPerspectiveId) {
-  	    	window.console && console.log("findByPerspectiveId");
-  	    }
-  	    this.findByPerspectiveId = function(perspectiveId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            perspectiveId: perspectiveId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/terms/search/findByPerspectiveId",  config)
-  	    };
-
-  	    if (this.findTermsByPostId) {
-  	    	window.console && console.log("findTermsByPostId");
-  	    }
-  	    this.findTermsByPostId = function(postId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            postId: postId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/terms/search/findTermsByPostId",  config)
-  	    };
-
-  	    if (this.findByTaxonomyId) {
-  	    	window.console && console.log("findByTaxonomyId");
-  	    }
-  	    this.findByTaxonomyId = function(taxonomyId, projection) {
-  	        var config = {};
-  	        config.params = {
-  	            taxonomyId: taxonomyId,
-
-  	        }
-  	        config.params["projection"] = projection;
-  	        return $http.get(_config.url + "/api/terms/search/findByTaxonomyId",  config)
-  	    };
-
   	    if (this.findTermsByParentId) {
   	    	window.console && console.log("findTermsByParentId");
   	    }
@@ -5501,6 +5442,19 @@ var trix = angular.module('trix', ['ngStorage'])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/terms/search/findTermsByParentId",  config)
+  	    };
+
+  	    if (this.findByTaxonomyId) {
+  	    	window.console && console.log("findByTaxonomyId");
+  	    }
+  	    this.findByTaxonomyId = function(taxonomyId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            taxonomyId: taxonomyId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/terms/search/findByTaxonomyId",  config)
   	    };
 
   	    if (this.findRootsPage) {
@@ -5543,6 +5497,45 @@ var trix = angular.module('trix', ['ngStorage'])
   	        }
   	        config.params["projection"] = projection;
   	        return $http.get(_config.url + "/api/terms/search/countTerms",  config)
+  	    };
+
+  	    if (this.findTermsByPostId) {
+  	    	window.console && console.log("findTermsByPostId");
+  	    }
+  	    this.findTermsByPostId = function(postId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            postId: postId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/terms/search/findTermsByPostId",  config)
+  	    };
+
+  	    if (this.findTermsByPostSlug) {
+  	    	window.console && console.log("findTermsByPostSlug");
+  	    }
+  	    this.findTermsByPostSlug = function(slug, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            slug: slug,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/terms/search/findTermsByPostSlug",  config)
+  	    };
+
+  	    if (this.findByPerspectiveId) {
+  	    	window.console && console.log("findByPerspectiveId");
+  	    }
+  	    this.findByPerspectiveId = function(perspectiveId, projection) {
+  	        var config = {};
+  	        config.params = {
+  	            perspectiveId: perspectiveId,
+
+  	        }
+  	        config.params["projection"] = projection;
+  	        return $http.get(_config.url + "/api/terms/search/findByPerspectiveId",  config)
   	    };
 
   	    if (this.getTermCells) {

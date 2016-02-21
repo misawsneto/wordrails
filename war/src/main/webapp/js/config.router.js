@@ -875,6 +875,10 @@ angular.module('app')
                   url: '/forgotpwd',
                   templateUrl: 'tpl/page_forgotpwd.html?' + GLOBAL_URL_HASH
               })
+              .state('access.newpwd', {
+                  url: '/newpwd?hash',
+                  templateUrl: 'tpl/user_newpwd.html?' + GLOBAL_URL_HASH
+              })
               .state('access.404', {
                   url: '/404',
                   templateUrl: 'tpl/page_404.html?' + GLOBAL_URL_HASH

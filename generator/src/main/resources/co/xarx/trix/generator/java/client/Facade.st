@@ -77,24 +77,24 @@ public class $facade$ {
 					 LogLevel _level) throws IOException {
 		Gson _gson = new GsonBuilder()
 			.registerTypeAdapter(Date.class, new DateJsonSerializer())
-			.registerTypeAdapter(Date.class, new DateJsonDeserializer())
-			.create();		
-		Converter _converter = new GsonConverter(_gson);		
-		
+    		.registerTypeAdapter(Date.class, new DateJsonDeserializer())
+			.create();
+		Converter _converter = new GsonConverter(_gson);
+
 		OkHttpClient _okHttpClient = new OkHttpClient();
 
 		if(_cacheMaxSize > 0){
 			Cache _cache = new Cache(_cacheDirectory, _cacheMaxSize);
 			_okHttpClient.setCache(_cache);
 		}
-		
+
 		Client _client = new OkClient(_okHttpClient);
-		
+
 		RestAdapter _builder = new RestAdapter.Builder()
 			.setClient(_client)
 			.setConverter(_converter)
-			.setRequestInterceptor(_interceptor)			
-			.setEndpoint(_url + "/api")			
+			.setRequestInterceptor(_interceptor)
+			.setEndpoint(_url + "/api")
 			.build();
 		_builder.setLogLevel(_level);
 		ITrix target = _builder.create(ITrix.class);
@@ -107,24 +107,24 @@ public class $facade$ {
 		handler.target = target;
 		handler.interceptor = _interceptor;
 
-		_facade = (I$facade$) Proxy.newProxyInstance(_loader, _interfaces, handler);	
+		_facade = (I$facade$) Proxy.newProxyInstance(_loader, _interfaces, handler);
 	}
-	
+
 	public Batch createBatch() {
 		return new Batch(_facade);
 	}
-	
+
 	public void login(){
 		_interceptor.logIn();
 	}
-	
+
 	public void logout(){
 		_interceptor.logOut();
 	}
-	
+
 /*---------------------------------------------------------------------------*/
 	$entities:{entity | $GetSelf(entity)$}; separator="\n\n"$
-/*---------------------------------------------------------------------------*/	
+/*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 
@@ -146,10 +146,28 @@ public class $facade$ {
 		});
 	}
 
+	public List<PostView> findStationPostsByTags(String tags, Integer stationId, int page, int size){
+        return _facade.findStationPostsByTags(tags, stationId, page, size).content;
+    }
+
+    public void findStationPostsByTags(String tags, Integer stationId, int page, int size, final Callback<List<PostView\>\> _callback){
+        _facade.findStationPostsByTags(tags, stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
+            @Override
+            public void success(ContentResponse<List<PostView\>\> _t, Response _response) {
+                _callback.success(_t.content, _response);
+            }
+
+            @Override
+            public void failure(RetrofitError _error) {
+                _callback.failure(_error);
+            }
+        });
+    }
+
 	public List<PostView> findPostsAndPostsPromotedByBody(Integer stationId, String body, int page, int size){
 		return _facade.findPostsAndPostsPromotedByBody(stationId, body, page, size).content;
 	}
-	
+
 	public void findPostsAndPostsPromotedByBody(Integer stationId, String body, int page, int size, final Callback<List<PostView\>\> _callback){
 		_facade.findPostsAndPostsPromotedByBody(stationId, body, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
@@ -160,14 +178,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public List<PostView> findPostsAndPostsPromotedByTermId(Integer stationId, Integer termId, int page, int size){
 		return _facade.findPostsAndPostsPromotedByTermId(stationId, termId, page, size).content;
 	}
-	
+
 	public void findPostsAndPostsPromotedByTermId(Integer stationId, Integer termId, int page, int size, final Callback<List<PostView\>\> _callback){
 		_facade.findPostsAndPostsPromotedByTermId(stationId, termId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
@@ -178,14 +196,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public List<TermView> getAllTerms(Integer taxonomyId, Integer perspectiveId){
 		return _facade.getAllTerms(taxonomyId, perspectiveId).content;
 	}
-	
+
 	public void getAllTerms(Integer taxonomyId, Integer perspectiveId, final Callback<List<TermView\>\> _callback){
 		_facade.getAllTerms(taxonomyId, perspectiveId, new Callback<ContentResponse<List<TermView\>\>\>() {
 			@Override
@@ -196,14 +214,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public List<PostView> findRecentPosts(Integer stationId, int page, int size){
 		return _facade.findRecentPosts(stationId, page, size).content;
 	}
-	
+
 	public void findRecentPosts(Integer stationId, int page, int size, final Callback<List<PostView\>\> _callback){
 		_facade.findRecentPosts(stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
@@ -214,14 +232,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public List<PostView> findPopularPosts(Integer stationId, int page, int size){
 		return _facade.findPopularPosts(stationId, page, size).content;
 	}
-	
+
 	public void findPopularPosts(Integer stationId, int page, int size, final Callback<List<PostView\>\> _callback){
 		_facade.findPopularPosts(stationId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
@@ -232,14 +250,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public List<PostView> findPostsByStationIdAndAuthorIdAndState(Integer stationId, Integer authorId, String state, int page, int size){
 		return _facade.findPostsByStationIdAndAuthorIdAndState(stationId, authorId, state, page, size).content;
 	}
-	
+
 	public void findPostsByStationIdAndAuthorIdAndState(Integer stationId, Integer authorId, String state, int page, int size, final Callback<List<PostView\>\> _callback){
 		_facade.findPostsByStationIdAndAuthorIdAndState(stationId, authorId, state, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
@@ -250,14 +268,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public List<PostView> findPostsAndPostsPromotedByAuthorId(Integer stationId, Integer authorId, int page, int size){
 		return _facade.findPostsAndPostsPromotedByAuthorId(stationId, authorId, page, size).content;
 	}
-	
+
 	public void findPostsAndPostsPromotedByAuthorId(Integer stationId, Integer authorId, int page, int size, final Callback<List<PostView\>\> _callback){
 		_facade.findPostsAndPostsPromotedByAuthorId(stationId, authorId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
@@ -268,10 +286,10 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public Response socialLogin(String provider, String userId, String accessToken){
 		return _facade.socialLogin(provider, userId, accessToken);
 	}
@@ -279,11 +297,11 @@ public class $facade$ {
 	public void socialLogin(String provider, String userId, String accessToken, Callback<Response> _callback){
 		_facade.socialLogin(provider, userId, accessToken, _callback);
 	}
-	
+
 	public PostView convertPost(Integer postId, String state){
 		return _facade.convertPost(postId, state).content;
 	}
-	
+
 	public void convertPost(Integer postId, String state, final Callback<PostView\> _callback){
 		_facade.convertPost(postId, state, new Callback<ContentResponse<PostView\>\>() {
 			@Override
@@ -294,14 +312,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public SearchView searchPosts(String q, String sIds, Integer pId, String pt, Boolean nh, Boolean sd, Integer p, Integer s){
 		return _facade.searchPosts(q, sIds, pId, pt, nh, sd, p, s).content;
 	}
-	
+
 	public void searchPosts(String q, String sIds, Integer pId, String pt, Boolean nh, Boolean sd, Integer p, Integer s, final Callback<SearchView\> _callback){
 		_facade.searchPosts(q, sIds, pId, pt, nh, sd, p, s, new Callback<ContentResponse<SearchView\>\>() {
 			@Override
@@ -312,14 +330,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public List<PostView\> searchBookmarks(String query, int page, int size){
 		return _facade.searchBookmarks(query, page, size).content;
 	}
-	
+
 	public void searchBookmarks(String query, int page, int size, final Callback<List<PostView\>\> _callback){
 		_facade.searchBookmarks(query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
@@ -330,14 +348,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public List<PostView\> searchRecommends(String query, int page, int size){
 		return _facade.searchRecommends(query, page, size).content;
 	}
-	
+
 	public void searchRecommends(String query, int page, int size, final Callback<List<PostView\>\> _callback){
 		_facade.searchRecommends(query, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
@@ -348,14 +366,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public List<NotificationView\> searchNotifications(String query, int page, int size){
 		return _facade.searchNotifications(query, page, size).content;
 	}
-	
+
 	public void searchNotifications(String query, int page, int size, final Callback<List<NotificationView\>\> _callback){
 		_facade.searchNotifications(query, page, size, new Callback<ContentResponse<List<NotificationView\>\>\>() {
 			@Override
@@ -366,15 +384,15 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
-	
+
+
 	public List<PostView> getPostReadPosts(Integer stationId, Integer personId){
 		return _facade.getPostReadPosts(stationId, personId).content;
 	}
-	
+
 	public void getPostReadPosts(Integer stationId, Integer personId, final Callback<List<PostView\>\> _callback){
 		_facade.getPostReadPosts(stationId, personId, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
@@ -385,14 +403,14 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 	public List<PostView> getAllPostReadPosts(Integer stationId, Integer personId, int page, int size){
 		return _facade.getAllPostReadPosts(stationId, personId, page, size).content;
 	}
-	
+
 	public void getAllPostReadPosts(Integer stationId, Integer personId, int page, int size, final Callback<List<PostView\>\> _callback){
 		_facade.getAllPostReadPosts(stationId, personId, page, size, new Callback<ContentResponse<List<PostView\>\>\>() {
 			@Override
@@ -403,17 +421,17 @@ public class $facade$ {
 			@Override
 			public void failure(RetrofitError _error) {
 				_callback.failure(_error);
-			}		
+			}
 		});
 	}
-	
+
 /*---------------------------------------------------------------------------*/
-		
+
 /*---------------------------------------------------------------------------*/
 	public Response getFileContents(Integer id) {
 		return _facade.getFileContents(id);
 	}
-	
+
 	public void getFileContents(Integer id, Callback<Void> _callback) {
 		_facade.getFileContents(id, _callback);
 	}
@@ -421,7 +439,7 @@ public class $facade$ {
 	public Response putFileContents(Integer id, TypedInput contents) {
 		return _facade.putFileContents(id, contents);
 	}
-	
+
 	public void putFileContents(Integer id, TypedInput contents, Callback<Void> _callback) {
 		_facade.putFileContents(id, contents, _callback);
 	}
@@ -446,8 +464,8 @@ public class $facade$ {
 
 	public RowView getRowView(Integer stationPerspectiveId, Integer termPerspectiveId, Integer childTermId, int page, int size){
 		return _facade.getRowView(stationPerspectiveId, termPerspectiveId, childTermId, page, size);
-	}				
-	
+	}
+
 	public void getRowView(Integer stationPerspectiveId, Integer termPerspectiveId, Integer childTermId, int page, int size, Callback<RowView> _callback){
 		_facade.getRowView(stationPerspectiveId, termPerspectiveId, childTermId, page, size, _callback);
 	}
@@ -457,13 +475,13 @@ public class $facade$ {
 	public Response putPassword(String oldPassword, String newPassword){
 		return _facade.putPassword(oldPassword, newPassword);
 	}
-	
+
 	public void putPassword(String oldPassword, String newPassword, Callback<Response> _callback){
 		_facade.putPassword(oldPassword, newPassword, _callback);
 	}
 
 	public PostView getPostViewBySlug(String slug, Boolean withBody){
-		return _facade.getPostViewBySlug(slug, withBody);
+    	return _facade.getPostViewBySlug(slug, withBody);
 	}
 
 	public void getPostViewBySlug(String slug, Boolean withBody, Callback<PostView> _callback){
@@ -508,6 +526,14 @@ public class $facade$ {
 	
 	public void putRegId(String regId, Integer networkId, Double lat, Double lng, Callback<Response> _callback){
 		_facade.putRegId(regId, networkId, lat, lng, _callback);
+	}
+
+	public Response putLocation(String deviceCode, String device, Double lat, Double lng){
+		return _facade.putLocation(deviceCode, device, lat, lng);
+	}
+
+	public void putLocation(String deviceCode, String device, Double lat, Double lng, Callback<Response> _callback){
+		_facade.putLocation(deviceCode, device, lat, lng, _callback);
 	}
 /*---------------------------------------------------------------------------*/
 

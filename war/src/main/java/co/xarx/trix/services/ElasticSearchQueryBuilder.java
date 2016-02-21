@@ -1,8 +1,8 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.domain.query.ElasticSearchQuery;
-import co.xarx.trix.domain.query.ElasticSearchQueryBuilder;
-import co.xarx.trix.domain.query.PostQuery;
+import co.xarx.trix.domain.query.QueryBuilder;
+import co.xarx.trix.domain.query.elasticsearch.ElasticSearchQuery;
+import co.xarx.trix.domain.query.statement.PostStatement;
 import co.xarx.trix.util.Constants;
 import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -18,10 +18,10 @@ import java.util.List;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service
-public class ElasticSearchQueryBuilderExecutor implements ElasticSearchQueryBuilder {
+public class ElasticSearchQueryBuilder implements QueryBuilder<ElasticSearchQuery> {
 
 	@Override
-	public ElasticSearchQuery build(PostQuery query) {
+	public ElasticSearchQuery build(PostStatement query) {
 		ElasticSearchQuery esQuery = new ElasticSearchQuery();
 		esQuery.setHighlightedField("body");
 

@@ -1,6 +1,6 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.annotation.GeneratorIgnore;
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Person;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,12 +22,12 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	List<String> findUsernames(List<Integer> ids);
 
 	@Override
-	@GeneratorIgnore
+	@SdkExclude
 	@CacheEvict(value = "person", key = "#p0.username")
 	Person save(Person person);
 
 	@Override
-	@GeneratorIgnore
+	@SdkExclude
 	@CacheEvict(value = "person", key = "#p0.username")
 	void delete(Person person);
 

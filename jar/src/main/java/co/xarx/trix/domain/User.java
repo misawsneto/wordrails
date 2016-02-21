@@ -1,6 +1,9 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -17,6 +20,8 @@ import java.util.Set;
  *
  * @author misael
  */
+@lombok.Getter
+@lombok.Setter
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"username", "tenantId"}))
 public class User extends BaseEntity implements UserDetails, Serializable {
@@ -24,28 +29,27 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 	private static final long serialVersionUID = -4656215770382382924L;
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@Size(max = 50)
 	@NotNull
 	@Pattern(regexp = "^[a-z0-9\\._-]{3,50}$")
 	public String username;
 
+	@SdkExclude
 	@Size(max = 500)
 	public String password;
 
 	public Boolean enabled;
 
+	@SdkExclude
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserGrantedAuthority> authorities;
 
+	@SdkExclude
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = {CascadeType.ALL})
 	public Set<UserConnection> userConnections;

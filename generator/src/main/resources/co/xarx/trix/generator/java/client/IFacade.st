@@ -34,6 +34,14 @@ interface I$facade$ {
 	void findPostsByTagAndStationId(@Query("tagName")String tagName, @Query("stationId")Integer stationId,
 		@Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
 
+    @GET("/posts/search/findPostsByTags")
+    ContentResponse<List<PostView\>\> findStationPostsByTags(@Query("tags")String tags, @Query("stationId")Integer stationId,
+        @Query("page") int page, @Query("size") int size);
+
+    @GET("/posts/search/findPostsByTags")
+    void findStationPostsByTags(@Query("tags")String tags, @Query("stationId")Integer stationId,
+        @Query("page") int page, @Query("size") int size, Callback<ContentResponse<List<PostView\>\>\> _callback);
+
 	@GET("/posts/{stationId}/findPostsAndPostsPromotedByBody")
 	ContentResponse<List<PostView\>\> findPostsAndPostsPromotedByBody(@Path("stationId")Integer stationId, @Query("body") String body, 
 		@Query("page") int page, @Query("size") int size);
@@ -246,7 +254,15 @@ interface I$facade$ {
 	
 	@PUT("/persons/me/regId")
 	@FormUrlEncoded
-	void putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId, @Field("lat") Double lat, @Field("lng") Double lng, Callback<Response> _callback);
+	void putRegId(@Field("regId") String regId, @Field("networkId") Integer networkId,@Field("lat") Double lat, @Field("lng") Double lng, Callback<Response> _callback);
+	
+	@PUT("/mobile/location")
+	@FormUrlEncoded
+	Response putLocation(@Field("deviceCode") String deviceCode, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng);
+	
+	@PUT("/mobile/location")
+	@FormUrlEncoded
+	void putLocation(@Field("deviceCode") String deviceCode, @Field("device") String device, @Field("lat") Double lat, @Field("lng") Double lng, Callback<Response> _callback);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

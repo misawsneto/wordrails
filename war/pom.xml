@@ -421,5 +421,17 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.notnoop.apns</groupId>
+			<artifactId>apns</artifactId>
+		</dependency>
+
+		<!--<dependency>-->
+			<!--<groupId>org.mortbay.jetty.alpn</groupId>-->
+			<!--<artifactId>alpn-boot</artifactId>-->
+			<!--<scope>runtime</scope>-->
+		<!--</dependency>-->
+
+
 	</dependencies>
 </project>

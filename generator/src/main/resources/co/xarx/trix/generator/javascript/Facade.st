@@ -174,59 +174,46 @@ function Base$facade$(_url, _username, _password) {
 	//    size: _size
 	//}
 	that.getRowView = function(data, _success, _error, _complete) {
-		return that._ajax({
-			url: _url + "/api/perspectives/rowViews",
-			data: data,
-			success: function(_data, _textStatus, _jqXHR) {
-				if (_success) {
-					_success(_data, _textStatus, _jqXHR);
-				}
-			},
-			error: _error,
-			complete: _complete
-		});
-	}
+    	return that._ajax({
+            url: _url + "/api/perspectives/rowViews",
+            data: data,
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    }
+    
+    that.getCurrentPerson = function(_success, _error, _complete) {
+    	return that._ajax({
+            url: _url + "/api/persons/me",
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    }
+    
+    that.getNetworkPersonPermissions = function(networkId, _success, _error, _complete){
+    	return that._ajax({
+            url: _url + "/api/networks/" + networkId + "/permissions",
+            success: function(_data, _textStatus, _jqXHR) {
+                if (_success) {
+                    _success(_data, _textStatus, _jqXHR);
+                }
+            },
+            error: _error,
+            complete: _complete
+        });
+    }
 
-	that.getCurrentPerson = function(_success, _error, _complete) {
-		return that._ajax({
-			url: _url + "/api/persons/me",
-			success: function(_data, _textStatus, _jqXHR) {
-				if (_success) {
-					_success(_data, _textStatus, _jqXHR);
-				}
-			},
-			error: _error,
-			complete: _complete
-		});
-	}
-
-	that.getNetworkPersonPermissions = function(networkId, _success, _error, _complete){
-		return that._ajax({
-			url: _url + "/api/networks/" + networkId + "/permissions",
-			success: function(_data, _textStatus, _jqXHR) {
-				if (_success) {
-					_success(_data, _textStatus, _jqXHR);
-				}
-			},
-			error: _error,
-			complete: _complete
-		});
-	}
-
-	that.updatePassword = function(hash, password, _success, _error, _complete){
-		var data = {password: password};
-		return that._ajax({
-			type: "PUT",
-			url: _url + "/api/passwordResets/" + hash,
-			data: data,
-			contentType: "application/x-www-form-urlencoded",
-			success: _success,
-			error: _error,
-			complete: _complete
-		});
-	}
-
-
+    
 $entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
 
 	return that;

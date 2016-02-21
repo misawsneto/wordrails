@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-@Table(name = "section_queryable_list")
+@Table(name = "sectionqueryablelist")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
-public class QueryableListSection extends BaseSection implements ListSection, QueryableSection {
+public class QueryableListSection extends AbstractSection implements ListSection, QueryableSection {
 
 	@JsonIgnore
-	@JoinTable(name = "section_fixedquery",
+	@JoinTable(name = "sectionqueryablelist_queryfixed",
 			joinColumns = @JoinColumn(name = "section_id"),
 			inverseJoinColumns = @JoinColumn(name = "query_id"))
 	@OneToMany(cascade = CascadeType.ALL)

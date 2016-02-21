@@ -1,10 +1,13 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.event.Event;
 import co.xarx.trix.domain.page.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,26 +15,27 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+
+@Getter
+@Setter
 @Entity
-@Data
-@EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties(value = {
+		"logoHash", "logoMediumHash"
+}, allowGetters = true)
 public class Station extends BaseEntity implements Serializable, Loggable {
 	public static final String RESTRICTED = "RESTRICTED";
 	public static final String RESTRICTED_TO_NETWORKS = "RESTRICTED_TO_NETWORKS";
 	public static final String UNRESTRICTED = "UNRESTRICTED";
 	private static final long serialVersionUID = 7821358742575074731L;
+
 	@Size(min = 1, max = 100)
 	@NotNull
 	public String name;
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@NotNull
 	@Column(columnDefinition = "boolean default false", nullable = false)
@@ -78,6 +82,7 @@ public class Station extends BaseEntity implements Serializable, Loggable {
 	@OneToMany(mappedBy = "station")
 	public Set<Page> pages;
 
+	@SdkInclude
 	@Size(min = 1)
 	@NotNull
 	@OneToMany(mappedBy = "station", cascade = CascadeType.PERSIST)
@@ -144,5 +149,19 @@ public class Station extends BaseEntity implements Serializable, Loggable {
 	@Override
 	public Event build(String type, LogBuilder builder) {
 		return builder.build(type, this);
+	}
+
+	@SdkInclude
+	public String getLogoHash() {
+		if (logo != null) return logo.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getLogoMediumHash() {
+		if (logo != null) return logo.getMediumHash();
+
+		return null;
 	}
 }
