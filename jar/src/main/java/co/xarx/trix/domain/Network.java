@@ -229,6 +229,11 @@ public class Network extends BaseEntity implements Serializable {
 		return null;
 	}
 
+	@SdkInclude
+	public String getSubdomain() {
+		return tenantId;
+	}
+
 	@Deprecated
 	@SdkInclude
 	public String getLoginImageSmallHash() {
