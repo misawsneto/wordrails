@@ -1,12 +1,19 @@
 package co.xarx.trix.domain;
 
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+
+@Getter
+@Setter
 @Entity
 public class Row extends BaseEntity implements Comparable<Row> {
 	public static final String FEATURED_ROW = "F";
@@ -15,13 +22,9 @@ public class Row extends BaseEntity implements Comparable<Row> {
 	public static final String HOME_ROW = "H";
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 	
 	@NotNull
 	@Size(min=1, max=1)

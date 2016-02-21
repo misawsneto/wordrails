@@ -1,24 +1,33 @@
 package co.xarx.trix.generator;
 
-import co.xarx.trix.annotation.GeneratorIgnore;
+import co.xarx.trix.annotation.SdkExclude;
+import co.xarx.trix.annotation.SdkInclude;
+import co.xarx.trix.domain.BaseEntity;
+import co.xarx.trix.generator.domain.AbstractField;
+import co.xarx.trix.generator.domain.JavaField;
+import co.xarx.trix.generator.domain.TrixField;
+import com.google.common.collect.Lists;
 import org.reflections.Reflections;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.data.rest.core.config.Projection;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 
 public class PersistenceUnitDescription {
-	private static final String ENCODING = "UTF-8";
+
 	private static final String JAVA_LANG = "java.lang.";
 
 	public List<EntityDescription> entities;
@@ -29,17 +38,23 @@ public class PersistenceUnitDescription {
 		Map<Class<?>, Class<? extends JpaRepository>> entityRepository = new HashMap<>();
 		Map<Class<?>, List<QueryDescription>> entityQueries = new HashMap<>();
 		Set<Class<? extends JpaRepository>> classes = reflections.getSubTypesOf(JpaRepository.class);
-
-		Iterator <Class<? extends JpaRepository>> iterator = classes.iterator();
-		while (iterator.hasNext()){
-			Class<? extends JpaRepository> c = iterator.next();
-			if (AnnotationUtils.isAnnotationDeclaredLocally(GeneratorIgnore.class, c))
-				iterator.remove();
+		Set<Class<? extends JpaRepository>> classes2 = new HashSet(classes);
+		for (Class<? extends JpaRepository> c : classes) {
+			List<Annotation> annotations = Lists.newArrayList(c.getAnnotations());
+			for (Annotation annotation : annotations) {
+				if(annotation.annotationType().equals(NoRepositoryBean.class)) {
+					classes2.remove(c);
+				} else if(annotation.annotationType().equals(RepositoryRestResource.class)
+						&& !((RepositoryRestResource)annotation).exported()) {
+					classes2.remove(c);
+				}
+			}
 		}
+		classes = classes2;
 
 		for (Class<? extends JpaRepository> repositoryClass : classes) {
 			RepositoryRestResource repositoryResource = repositoryClass.getAnnotation(RepositoryRestResource.class);
-			GeneratorIgnore repositoryIgnore = repositoryClass.getAnnotation(GeneratorIgnore.class);
+			SdkExclude repositoryIgnore = repositoryClass.getAnnotation(SdkExclude.class);
 			if (repositoryIgnore == null && (repositoryResource == null || repositoryResource.exported())) {
 				Type[] interfaces = repositoryClass.getGenericInterfaces();
 				for (Type genericInterface : interfaces) {
@@ -55,7 +70,7 @@ public class PersistenceUnitDescription {
 							if (methods.length > 0) {
 								for (Method method : methods) {
 									RestResource methodResource = method.getAnnotation(RestResource.class);
-									GeneratorIgnore methodIgnore = method.getAnnotation(GeneratorIgnore.class);
+									SdkExclude methodIgnore = method.getAnnotation(SdkExclude.class);
 									if (methodIgnore == null && (methodResource == null || methodResource.exported())) {
 										QueryDescription query = new QueryDescription();
 										query.collection = Collection.class.isAssignableFrom(method.getReturnType());
@@ -108,8 +123,15 @@ public class PersistenceUnitDescription {
 			}
 		}
 
-		Map<Class<?>, EntityDescription> entityMap = new HashMap<Class<?>, EntityDescription>();
+		Map<Class<?>, EntityDescription> entityMap = new HashMap<>();
 		Set<Class<?>> entityClassSet = reflections.getTypesAnnotatedWith(Entity.class);
+
+		Set<Class<?>> entityClassSet2 = new HashSet(entityClassSet);
+		entityClassSet.stream()
+				.filter(c -> AnnotationUtils.isAnnotationDeclaredLocally(SdkExclude.class, c))
+				.forEach(entityClassSet2::remove);
+		entityClassSet = entityClassSet2;
+
 		for (Class<?> entityClass : entityClassSet) {
 			Class<?> repositoryClass = entityRepository.get(entityClass);
 			if (repositoryClass != null) {
@@ -125,106 +147,105 @@ public class PersistenceUnitDescription {
 				entity.plural = plural;
 				entity.pluralLowercase = getLowercase(plural);
 
-				Field[] fields = entityClass.getFields();
-//				Field[] allFields = entityClass.getDeclaredFields();
-//				Set<Field> fieldSet = new HashSet<>();
-//				fieldSet.addAll(Arrays.asList(fields));
-//				fieldSet.addAll(Arrays.asList(allFields));
-				for (Field field : fields) {
-//					if(Modifier.isFinal(field.getModifiers())) {
-//						field.setAccessible(true);
-//					}
-					if (!Modifier.isStatic(field.getModifiers()) && !field.isAnnotationPresent(Transient.class)) {
-						if (field.isAnnotationPresent(Id.class)) {
-							FieldDescription id = new FieldDescription();
-							id.type = getType(field);
-							id.name = field.getName();
-							id.nameUppercase = getNameUppercase(field);
-							entity.id = id;
-						} else if (field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(ElementCollection.class)) {
-							Type genericType = field.getGenericType();
-							ParameterizedType parameterizedGenericType = (ParameterizedType) genericType;
-							Type[] actualTypeArguments = parameterizedGenericType.getActualTypeArguments();
-							Type actualTypeArgument = actualTypeArguments[actualTypeArguments.length-1];
-							Class<?> type = (Class<?>) actualTypeArgument;
+				List<AbstractField> fields = new ArrayList<>();
+				try {
+					PropertyDescriptor[] propertyDescriptors =
+							Introspector.getBeanInfo(entityClass, BaseEntity.class).getPropertyDescriptors();
+					for (PropertyDescriptor pd : propertyDescriptors) {
 
-							if (field.isAnnotationPresent(NotNull.class)) {
-								Size size = field.getAnnotation(Size.class);
-								if (size != null && size.min() > 0) {
-									FieldDescription fieldDescription = new FieldDescription();
-									fieldDescription.type = field.getType().getName() + "<String>";
-									fieldDescription.name = field.getName();
-									fieldDescription.nameUppercase = getNameUppercase(field);
-									fieldDescription.entity = new EntityDescription();
-									fieldDescription.entity.name = type.getSimpleName();
-									entity.fields.add(fieldDescription);
+						if(pd.getReadMethod() != null) {
+							try {
+								Field f = entityClass.getDeclaredField(pd.getName());
+
+								if (!Modifier.isStatic(f.getModifiers())
+										&& !f.isAnnotationPresent(Transient.class)
+										&& !f.isAnnotationPresent(SdkExclude.class)) {
+									JavaField jf = new JavaField(f);
+									fields.add(jf);
 								}
-							} else if(field.isAnnotationPresent(ElementCollection.class)){
-								FieldDescription fieldDescription = new FieldDescription();
-								fieldDescription.type =  parameterizedGenericType.toString(); // Arrays.deepToString(actualTypeArguments).replace('[','<').replace(']','>').replaceAll("class ", ""); // field.getType().getName() + "<" + field.getType().getSimpleName() + (!isSimpleType(field.getType()) ? "Dto" : "") + ">";
-
-								fieldDescription.name = field.getName();
-								fieldDescription.nameUppercase = getNameUppercase(field);
-								fieldDescription.entity = new EntityDescription();
-								fieldDescription.entity.name = type.getSimpleName();
-								entity.fields.add(fieldDescription);
-							}
-
-							if(!field.isAnnotationPresent(ElementCollection.class)) {
-								FieldDescription relationship = new FieldDescription();
-								relationship.type = "List<" + type.getSimpleName() + (!isSimpleType(type) ? "Dto" : "") + ">";
-								relationship.name = field.getName();
-								relationship.nameUppercase = getNameUppercase(field);
-								relationship.entity = new EntityDescription();
-								relationship.entity.name = type.getSimpleName();
-								relationship.collection = true;
-								relationship.mappedBy = (field.isAnnotationPresent(OneToMany.class) && !"".equals(field.getAnnotation(OneToMany.class).mappedBy())) || (field.isAnnotationPresent(ManyToMany.class) && !"".equals(field.getAnnotation(ManyToMany.class).mappedBy()));
-//							    relationship.collectionType = field.getType().getName();
-								relationship.collectionType = List.class.getName();
-								relationship.elementType = type.getSimpleName();
-								entity.relationships.add(relationship);
-							}
-						} else {
-							if (field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(OneToOne.class)) {
-								FieldDescription relationshipDescription = new FieldDescription();
-								relationshipDescription.type = field.getType().getSimpleName() + (!isSimpleType(field.getType()) ? "Dto" : "");
-								relationshipDescription.name = field.getName();
-								relationshipDescription.nameUppercase = getNameUppercase(field);
-								relationshipDescription.entity = new EntityDescription();
-								relationshipDescription.entity.name = field.getType().getSimpleName();
-								entity.relationships.add(relationshipDescription);
-								if (field.isAnnotationPresent(NotNull.class)) {
-									FieldDescription fieldDescription = new FieldDescription();
-									fieldDescription.type = "String";
-									fieldDescription.name = field.getName();
-									fieldDescription.nameUppercase = getNameUppercase(field);
-									fieldDescription.entity = new EntityDescription();
-									fieldDescription.entity.name = field.getType().getSimpleName();
-									entity.fields.add(fieldDescription);
+							} catch (NoSuchFieldException e) {
+								SdkInclude sdkInclude = pd.getReadMethod().getAnnotation(SdkInclude.class);
+								if (sdkInclude != null) {
+									TrixField tf = getTrixField(pd, sdkInclude.asReference());
+									fields.add(tf);
 								}
-							} else {
-								FieldDescription fieldDescription = new FieldDescription();
-								fieldDescription.type = getType(field);
-								fieldDescription.name = field.getName();
-								fieldDescription.nameUppercase = getNameUppercase(field);
-								entity.fields.add(fieldDescription);
 							}
 						}
 					}
+				} catch (IntrospectionException e) {
+					e.printStackTrace();
+				}
+
+				for (AbstractField field : fields) {
+					FieldDescription fd = new FieldDescription();
+					fd.type = field.getTypeName();
+					fd.name = field.getName();
+					fd.nameUppercase = field.getNameUppercase();
+					if (field.isId()) {
+						entity.id = fd;
+					} else if (field.isList()) {
+						Class<?> genericType = field.getGenericType();
+						String genericName = genericType.getSimpleName();
+						if(field.isSimpleType(genericType))
+							genericName = genericType.getName();
+
+						if (field.isMap()) {
+							fd.type = field.getParametrizedGenericTypeName();
+							fd.entity = new EntityDescription();
+							fd.entity.name = genericType.getSimpleName();
+							entity.fields.add(fd);
+						} else {
+							if (field.isIncludeAsReference()) {
+								fd.type = field.getTypeName()
+										+ "<" + (field.isSimpleType(genericType) ? genericName : "java.lang.String") + ">";
+								fd.entity = new EntityDescription();
+								fd.entity.name = genericType.getSimpleName();
+								entity.fields.add(fd);
+							}
+
+							FieldDescription relationship = new FieldDescription();
+							relationship.type = "java.util.List<" + genericName + (field.isSimpleType(genericType) ? "" : "Dto") + ">";
+							relationship.name = field.getName();
+							relationship.nameUppercase = field.getNameUppercase();
+							relationship.entity = new EntityDescription();
+							relationship.entity.name = genericType.getSimpleName();
+							relationship.collection = true;
+							relationship.mappedBy = field.isMappedBy();
+							relationship.collectionType = List.class.getName();
+							relationship.elementType = genericName;
+							entity.relationships.add(relationship);
+						}
+					} else {
+						if (field.isRelationship()) {
+							FieldDescription relationship = new FieldDescription();
+							relationship.type = field.getTypeSimpleName()
+									+ (!field.isSimpleType(field.getType()) ? "Dto" : "");
+							relationship.name = fd.name;
+							relationship.nameUppercase = fd.nameUppercase;
+							relationship.entity = new EntityDescription();
+							relationship.entity.name = field.getTypeSimpleName();
+							entity.relationships.add(relationship);
+							if (field.isIncludeAsReference()) {
+								fd.type = "java.lang.String";
+								fd.entity = new EntityDescription();
+								fd.entity.name = field.getTypeSimpleName();
+								entity.fields.add(fd);
+							}
+						} else {
+							entity.fields.add(fd);
+						}
+					}
+
 				}
 				entityMap.put(entityClass, entity);
 			}
 		}
+
 		entities = new ArrayList<>();
 		entities.addAll(entityMap.values());
-		Collections.sort(entities, new Comparator<EntityDescription>() {
-			@Override
-			public int compare(EntityDescription entity1, EntityDescription entity2) {
-				return entity1.name.compareTo(entity2.name);
-			}
-		});
+		Collections.sort(entities, (entity1, entity2) -> entity1.name.compareTo(entity2.name));
 		for (EntityDescription entity : entities) {
-			List<FieldDescription> fields = new ArrayList<FieldDescription>();
+			List<FieldDescription> fields = new ArrayList<>();
 			fields.addAll(entity.fields);
 			fields.addAll(entity.relationships);
 			for (FieldDescription field : fields) {
@@ -280,9 +301,40 @@ public class PersistenceUnitDescription {
 			Class<?>[] entityClasses = projectionAnnotation.types();
 			for (Class<?> entityClass : entityClasses) {
 				EntityDescription entity = entityMap.get(entityClass);
+				if (entity == null) {
+					System.out.println("Entity null for " + entityClass.getSimpleName());
+				} else if (entity.projections == null) {
+					System.out.println("Entity projections null for " + entityClass.getSimpleName());
+				} else if (projection == null) {
+					System.out.println("Projection null for " + entityClass.getSimpleName());
+				}
 				entity.projections.add(projection);
 			}
 		}
+	}
+
+	private TrixField getTrixField(PropertyDescriptor pd, boolean asReference) {
+		TrixField t = new TrixField();
+
+		Method readMethod = pd.getReadMethod();
+		Class<?> returnType = readMethod.getReturnType();
+		Type genericReturnType = readMethod.getGenericReturnType();
+
+		t.setType(returnType);
+		if (genericReturnType != null) {
+			t.setGenericType(genericReturnType.getClass());
+			t.setParametrizedGenericTypeName(genericReturnType.toString());
+//			t.setRelationship(!genericReturnType.getClass().isPrimitive());
+		}
+//		else {
+//			t.setRelationship(!returnType.isPrimitive());
+//		}
+		t.setMap(returnType.isAssignableFrom(Collection.class));
+		t.setMap(returnType.isAssignableFrom(Map.class));
+		t.setIncludeAsReference(asReference);
+		t.setName(pd.getName());
+
+		return t;
 	}
 
 	private String getPlural(String noun) {
@@ -299,10 +351,6 @@ public class PersistenceUnitDescription {
 
 	private String getLowercase(String name) {
 		return name.substring(0, 1).toLowerCase() + name.substring(1);
-	}
-
-	private String getType(Field field) {
-		return getType(field.getType());
 	}
 
 	private String getType(Class<?> type) {
@@ -325,19 +373,12 @@ public class PersistenceUnitDescription {
 		}
 	}
 
-	private String getNameUppercase(Field field) {
-		String name = field.getName();
-		return getNameUppercase(name);
-	}
-
 	private String getNameUppercase(String name) {
 		return name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
 
-	private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
-
 	private static boolean isSimpleType(Class<?> clazz){
-		return WRAPPER_TYPES.contains(clazz) || clazz.equals(String.class);
+		return getWrapperTypes().contains(clazz) || clazz.equals(String.class);
 	}
 	private static Set<Class<?>> getWrapperTypes(){
 		Set<Class<?>> ret = new HashSet<Class<?>>();

@@ -3,21 +3,28 @@ package co.xarx.trix.services;
 import co.xarx.trix.domain.Identifiable;
 import co.xarx.trix.domain.page.Block;
 import co.xarx.trix.domain.page.BlockImpl;
-import co.xarx.trix.domain.query.*;
+import co.xarx.trix.domain.query.FixedQuery;
+import co.xarx.trix.domain.query.ObjectQuery;
+import co.xarx.trix.domain.query.PageableQuery;
+import co.xarx.trix.domain.query.QueryRunner;
+import co.xarx.trix.domain.query.elasticsearch.ElasticSearchExecutor;
+import co.xarx.trix.domain.query.elasticsearch.ElasticSearchQuery;
+import co.xarx.trix.domain.query.statement.ObjectStatement;
 import co.xarx.trix.factory.ElasticSearchExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Service
-public class QueryExecutorService implements QueryExecutor {
+public class QueryRunnerService implements QueryRunner {
 
 	@Autowired
-	private ElasticSearchQueryBuilderExecutor elasticSearchQueryBuilderExecutor;
+	private ElasticSearchQueryBuilder queryBuilder;
 	@Autowired
-	@Qualifier("elasticSearchExecutorFactory")
 	private ElasticSearchExecutorFactory elasticSearchExecutorFactory;
 
 	private Map<Integer, Block> getBlocks(Iterator<Identifiable> itens, Iterator<Integer> indexes, String objectName) {
@@ -31,16 +38,11 @@ public class QueryExecutorService implements QueryExecutor {
 		return blocks;
 	}
 
-	private List<Identifiable> getItens(Query query, Integer size, Integer from) {
-		List<Identifiable> itens = new ArrayList<>();
+	private List<Identifiable> getItens(ObjectQuery query, Integer size, Integer from) {
 		String objectType = query.getObjectType();
-		ObjectQuery objectQuery = query.getObjectQuery();
-		if(objectQuery instanceof ElasticSearchObjectQuery) {
-			ElasticSearchExecutor executor = elasticSearchExecutorFactory.getExecutor(objectType + "_executor");
-			itens = executor.execute((ElasticSearchQuery) objectQuery.build(elasticSearchQueryBuilderExecutor), size, from);
-		}
-
-		return itens;
+		ObjectStatement<ElasticSearchQuery> objectStatement = query.getObjectStatement();
+		ElasticSearchExecutor executor = elasticSearchExecutorFactory.getExecutor(objectType + "_executor");
+		return executor.execute(objectStatement.build(queryBuilder), size, from);
 	}
 
 	@Override

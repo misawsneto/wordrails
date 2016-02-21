@@ -11,7 +11,7 @@ import java.util.Map;
 @Entity
 @Table(name = "section_container")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
-public class ContainerSection extends BaseSection {
+public class ContainerSection extends AbstractSection {
 
 	@ManyToOne
 	@JsonBackReference("parent")
@@ -20,7 +20,7 @@ public class ContainerSection extends BaseSection {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "section_section_container", joinColumns = @JoinColumn(name = "container_id"))
 	@MapKeyJoinColumn(name = "list_index", referencedColumnName = "list_index", nullable = false)
-	public Map<Integer, BaseSection> children;
+	public Map<Integer, AbstractSection> children;
 
 	public String orientation = Constants.Layout.SECTION_HORIZONTAL_ORIENTATION;
 
@@ -54,11 +54,11 @@ public class ContainerSection extends BaseSection {
 		this.parent = parent;
 	}
 
-	public Map<Integer, BaseSection> getChildren() {
+	public Map<Integer, AbstractSection> getChildren() {
 		return children;
 	}
 
-	public void setChildren(Map<Integer, BaseSection> children) {
+	public void setChildren(Map<Integer, AbstractSection> children) {
 		this.children = children;
 	}
 

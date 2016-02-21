@@ -2,6 +2,8 @@ package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.Filters;
@@ -14,6 +16,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@Getter
+@Setter
 @MappedSuperclass
 @FilterDef(name = "tenantFilter", parameters = @ParamDef(name = "tenantId", type = "string"))
 @Filters(@Filter(name = "tenantFilter", condition = "tenantId = :tenantId"))
@@ -39,58 +43,4 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	@JsonIgnore
 	@NotNull
 	public String tenantId;
-
-	@Override
-	public String getTenantId() {
-		return tenantId;
-	}
-
-	@Override
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
-
-	public Integer getVersion() {
-		return version;
-	}
-
-	@SuppressWarnings("unused")
-	private void setVersion(Integer version) {
-		this.version = version;
-	}
-
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	@SuppressWarnings("unused")
-	private void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	@SuppressWarnings("unused")
-	private void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == null || !(obj instanceof BaseEntity) || getId() == null) {
-			return false;
-		}
-
-		return ((BaseEntity) obj).getId().equals(getId());
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-		return result;
-	}
 }

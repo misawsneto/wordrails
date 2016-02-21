@@ -16,7 +16,7 @@ import java.util.Map;
 @Entity
 @Table(name = "section_queryable_list")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
-public class QueryableListSection extends BaseSection implements ListSection, QueryableSection {
+public class QueryableListSection extends AbstractSection implements ListSection, QueryableSection {
 
 	@JsonIgnore
 	@JoinTable(name = "section_fixedquery",

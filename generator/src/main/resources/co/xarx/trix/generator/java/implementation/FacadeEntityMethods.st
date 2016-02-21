@@ -2,10 +2,10 @@ FacadeEntityMethods(entity) ::=
 
 <</*---------------------------------------------------------------------------*/
 	@GET
- 	@Path("/$entity.pluralLowercase$")
+	@Path("/$entity.pluralLowercase$")
 	@Produces(MediaType.APPLICATION_JSON) 	
- 	public ContentResponse<List<$entity.name$Dto\>\> get$entity.plural$(@QueryParam("page") Integer page, @QueryParam("size") Integer size, @QueryParam("sort") List<String\> sort) {
- 		foward();
+	public ContentResponse<List<$entity.name$Dto\>\> get$entity.plural$(@QueryParam("page") Integer page, @QueryParam("size") Integer size, @QueryParam("sort") List<String\> sort) {
+		foward();
 		return null;
 	}
 

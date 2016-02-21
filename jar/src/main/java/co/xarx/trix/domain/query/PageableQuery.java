@@ -1,7 +1,12 @@
 package co.xarx.trix.domain.query;
 
+import co.xarx.trix.annotation.SdkExclude;
+import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
+import co.xarx.trix.domain.query.statement.AbstractObjectSortedStatement;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,18 +16,17 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+
+@SdkExclude
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
-@Table(name = "query_pageable")
-public class PageableQuery extends BaseEntity implements Query {
+@Table(name = "querypageable")
+public class PageableQuery extends BaseEntity implements ObjectQuery {
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	@Transient
 	private Integer size;
@@ -33,18 +37,10 @@ public class PageableQuery extends BaseEntity implements Query {
 	@Transient
 	private Set<Integer> indexExceptions; //indexes that are already filled
 
-	@JoinColumn(name = "object_query_id")
+	@SdkInclude
+	@JoinColumn(name = "objectstatement_id")
 	@OneToOne(cascade = CascadeType.ALL)
-	public BaseObjectQuery objectQuery;
-
-	@Override
-	public BaseObjectQuery getObjectQuery() {
-		return objectQuery;
-	}
-
-	public void setObjectQuery(ObjectQuery objectQuery) {
-		this.objectQuery = (BaseObjectQuery) objectQuery;
-	}
+	public AbstractObjectSortedStatement objectStatement;
 
 	@Override
 	public Set<Integer> getIndexes() {
@@ -62,28 +58,16 @@ public class PageableQuery extends BaseEntity implements Query {
 		this.indexExceptions.add(indexException);
 	}
 
-	public void addIdException(Serializable id) {
-		this.objectQuery.addIdException(id);
+	public void addIdExclusion(Serializable id) {
+		this.objectStatement.addIdExclusion(id);
 	}
 
 	public Integer getSize() {
 		return size - indexExceptions.size();
 	}
 
-	public void setSize(Integer size) {
-		this.size = size;
-	}
-
-	public Integer getFrom() {
-		return from;
-	}
-
-	public void setFrom(Integer from) {
-		this.from = from;
-	}
-
 	@Override
-	public Map<Integer, Block> fetch(QueryExecutor executor) {
+	public Map<Integer, Block> fetch(QueryRunner executor) {
 		return executor.execute(this);
 	}
 }
