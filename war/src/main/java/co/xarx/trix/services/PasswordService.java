@@ -1,5 +1,6 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.PasswordReset;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.NetworkRepository;
@@ -44,7 +45,7 @@ public class PasswordService {
 
 			passwordResetRepository.save(passwordReset);
 
-			emailService.sendSimpleMail(person.getEmail(), "Recuperação de senha", createResetEmail(person, passwordReset.hash));
+			emailService.sendSimpleMail(person.getEmail(), "Recuperação de senha", createEmailBody(person, passwordReset.hash));
 		} else {
 			if (checkReset.expiresAt.before(new Date())) {
 				return;
@@ -68,50 +69,12 @@ public class PasswordService {
 		passwordResetRepository.delete(passwordReset);
 	}
 
-	public String createResetEmail(Person person, String hash){
+	public String createEmailBody(Person person, String hash){
 		String baseUrl;
 
-		baseUrl = "http://" + networkRepository.findByTenantId(person.tenantId).domain + "/access/newpwd?hash=";
+		Network network = networkRepository.findByTenantId(person.tenantId);
+		baseUrl = "http://" + network.getRealDomain() + "/access/newpwd?hash=" + hash;
 
-		String emailBody = "Oi, " + person.getName() + "\n click here to reset you password: " + baseUrl + hash + "\n";
-
-		return emailBody;
+		return "Oi, " + person.getName() + ". Clique aqui para recuperar sua senha: " + baseUrl;
 	}
-
-//	private void sendInviteEmail(PasswordReset passwordReset) {
-//		try {
-//			String filePath = getClass().getClassLoader().getResource("tpl/invitation-email.html").getFile();
-//
-//			filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
-//
-//			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-//			String template = new String(bytes, Charset.forName("UTF-8"));
-//
-//			HashMap<String, Object> scopes = new HashMap<>();
-//			scopes.put("name", passwordReset.personName + "");
-//			scopes.put("networkName", passwordReset.networkName + "");
-//			scopes.put("link", "http://" + passwordReset.getTenantId() + ".xarx.co/#/pass?hash=" + passwordReset.hash);
-//			scopes.put("networkSubdomain", passwordReset.getTenantId());
-//			scopes.put("passwordReset", passwordReset);
-//
-//			Person person = authProvider.getLoggedPerson();
-//			if (person != null) scopes.put("inviterName", person.name);
-//			else scopes.put("inviterName", "");
-//
-//			StringWriter writer = new StringWriter();
-//
-//			MustacheFactory mf = new DefaultMustacheFactory();
-//
-//			Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
-//			mustache.execute(writer, scopes);
-//			writer.flush();
-//
-//			String emailBody = writer.toString();
-//			String subject = "[" + passwordReset.networkName + "]" + " Cadastro de senha";
-//
-//			//emailService.sendSimpleMail(passwordReset.email, subject, emailBody);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 }
