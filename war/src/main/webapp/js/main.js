@@ -615,7 +615,7 @@ angular.module('app')
         trix.recoverPassword(email).success(function(response){
           $scope.app.passwordRecovered = true;
         }).error(function(response){
-          $scope.app.passwordRecovered = false;
+          $scope.app.showErrorToast('Email não cadastrado.')
         })        
       };
 

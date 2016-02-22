@@ -7,6 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 public interface PasswordResetRepository extends JpaRepository<PasswordReset, Integer>, QueryDslPredicateExecutor<PasswordReset> {
-	@RestResource(exported=true)
-	public PasswordReset findByHash(@Param("hash") String hash);
+	@RestResource(exported = true)
+	PasswordReset findByHash(@Param("hash") String hash);
+
+	@RestResource(exported = false)
+	void deleteByUserId(@Param("id") Integer id);
 }

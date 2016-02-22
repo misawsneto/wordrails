@@ -11,7 +11,6 @@ import org.hibernate.metamodel.relational.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -30,27 +29,16 @@ public class PasswordService {
 
 	public void resetPassword(String email){
 		Assert.hasText(email, "Null email");
-
 		Person person = personRepository.findByEmail(email);
-
 		Assert.notNull(person, "Person not found");
-		PasswordReset checkReset = passwordResetRepository.findOne(person.user.id);
 
-		if (checkReset == null || !checkReset.expiresAt.after(new Date())) {
+		PasswordReset passwordReset = new PasswordReset();
+		passwordReset.user = person.user;
+		passwordReset.hash = UUID.randomUUID().toString();
 
-			PasswordReset passwordReset = new PasswordReset();
-			passwordReset.user = person.user;
-			passwordReset.hash = UUID.randomUUID().toString();
+		passwordResetRepository.save(passwordReset);
 
-			passwordResetRepository.save(passwordReset);
-
-			emailService.sendSimpleMail(person.getEmail(), "Recuperação de senha", createResetEmail(person, passwordReset.hash));
-		} else {
-			if (checkReset.expiresAt.before(new Date())) {
-				return;
-			}
-			throw new IllegalArgumentException();
-		}
+		emailService.sendSimpleMail(person.getEmail(), "Recuperação de senha", createResetEmail(person, passwordReset.hash));
 	}
 
 	public void updatePassword(String hash, String password){
@@ -65,7 +53,7 @@ public class PasswordService {
 		passwordReset.user.password = password;
 		userRepository.save(passwordReset.user);
 
-		passwordResetRepository.delete(passwordReset);
+		passwordResetRepository.deleteByUserId(passwordReset.user.id);
 	}
 
 	public String createResetEmail(Person person, String hash){
