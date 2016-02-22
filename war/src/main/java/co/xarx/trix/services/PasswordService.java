@@ -11,6 +11,7 @@ import com.mysema.commons.lang.Assert;
 import org.hibernate.metamodel.relational.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -42,8 +43,9 @@ public class PasswordService {
 		emailService.sendSimpleMail(person.getEmail(), "Recuperação de senha", createEmailBody(person, passwordReset.hash));
 	}
 
+	@Transactional
 	public void updatePassword(String hash, String password){
-		Assert.hasText(password, "Null password"); 
+		Assert.hasText(password, "Null password");
 
 		PasswordReset passwordReset = passwordResetRepository.findByHash(hash);
 
