@@ -106,11 +106,13 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	)
 	public Set<Video> videos;
 
+	@SdkInclude
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable = false)
 	public Person author;
 
+	@SdkInclude
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable = false)

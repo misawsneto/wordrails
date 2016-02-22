@@ -51,6 +51,7 @@ public class ImageService {
 		return images.get(0).hashs;
 	}
 
+	@Transactional
 	public Image createAndSaveNewImage(String type, String name, java.io.File originalFile, String mime) throws Exception {
 		Image image = createNewImage(type, name, originalFile, mime);
 
@@ -70,7 +71,6 @@ public class ImageService {
 		return image;
 	}
 
-	@Transactional
 	public Image createNewImage(String type, String name, java.io.File originalFile, String mime) throws Exception {
 		Set<Picture> pictures = new HashSet<>();
 
@@ -150,13 +150,13 @@ public class ImageService {
 		return originalPic;
 	}
 
-	private Picture getPictureBySize(java.io.File originalFile, String sizeTag, Integer[] xy) throws Exception {
+	Picture getPictureBySize(java.io.File originalFile, String sizeTag, Integer[] xy) throws Exception {
 		Callable<ImageUtil.ImageFile> callable = () -> ImageUtil.resizeImage(originalFile, xy[0], xy[1], "png");
 
 		return getPicture(callable, originalFile, sizeTag);
 	}
 
-	private Picture getPictureByQuality(java.io.File originalFile, String sizeTag, Integer quality) throws Exception {
+	Picture getPictureByQuality(java.io.File originalFile, String sizeTag, Integer quality) throws Exception {
 		Callable<ImageUtil.ImageFile> callable =
 				() -> ImageUtil.resizeImage(originalFile, quality, "png", false, true);
 
@@ -177,7 +177,6 @@ public class ImageService {
 			pic.file = existingFile;
 		} else {
 			amazonCloudService.uploadPublicImage(imageFile.file, imageFile.file.length(), imageFile.hash, pic.sizeTag, pic.file.getExtension(), false);
-
 		}
 
 		pic.file.size = imageFile.file.length();
