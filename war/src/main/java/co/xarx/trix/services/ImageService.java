@@ -56,7 +56,11 @@ public class ImageService {
 
 		for (Picture picture : image.pictures) {
 			if (picture.file.getId() == null) {
-				fileRepository.save(picture.file);
+				try {
+					fileRepository.save(picture.file);
+				} catch (Exception e) {
+					picture.file = fileRepository.findOne(QFile.file.hash.eq(picture.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
+				}
 			}
 			pictureRepository.save(picture);
 		}
@@ -92,18 +96,6 @@ public class ImageService {
 		} else {
 			Picture originalPic = getOriginalPicture(mime, originalFile, imageFile);
 			pictures.add(originalPic);
-		}
-
-		for (String sizeTag : sizeTags) {
-			Image.Size size = Image.Size.findByAbbr(sizeTag);
-			Picture pic;
-			if (size.xy != null) {
-				pic = getPictureBySize(originalFile, size.toString(), size.xy);
-			} else {
-				pic = getPictureByQuality(originalFile, size.toString(), size.quality);
-			}
-
-			pictures.add(pic);
 		}
 
 		if (newImage.getAbsoluteSizes() != null) {
