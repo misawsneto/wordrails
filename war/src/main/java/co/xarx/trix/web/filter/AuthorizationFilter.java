@@ -897,27 +897,27 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetAbstractObjectSortedStatementsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetAbstractObjectSortedStatementAuthorized(Integer abstractObjectSortedStatementId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetAbstractObjectSortedStatementExceptionIdsAuthorized(Integer abstractObjectSortedStatementId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetAbstractSectionsAuthorized() {
 		return false;
 	}
 
 	@Override
 	protected boolean isGetAbstractSectionAuthorized(Integer abstractSectionId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAbstractStatementsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAbstractStatementAuthorized(Integer abstractStatementId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAbstractStatementExceptionIdsAuthorized(Integer abstractStatementId) {
 		return false;
 	}
 

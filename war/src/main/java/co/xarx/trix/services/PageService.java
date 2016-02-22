@@ -40,7 +40,6 @@ public class PageService {
 						if(pageableQuery != null)
 							pageableQuery.addIndexException(index);
 					}
-
 				});
 
 		if(pageableQuery != null) {
@@ -48,11 +47,11 @@ public class PageService {
 
 			//add boolean queries to the pageable stream avoid the items that were already got
 			fixedBlocks.values().stream()
-					.filter(block -> Objects.equals(block.getObjectType(), pageableQuery.getObjectType()))
+					.filter(block -> Objects.equals(block.getObjectType(), pageableQuery.getType()))
 					.forEach(block -> pageableQuery.addIdExclusion(block.getObject().getId()));
 
 			Map<Integer, Block> pageBlocks = pageableQuery.fetch(queryRunner);
-			//add all elements that don't don't clash with some index
+			//add all elements that don't clash with some index
 			pageBlocks.keySet().stream()
 					.forEach(index -> blocks.putIfAbsent(index, pageBlocks.get(index)));
 		}
