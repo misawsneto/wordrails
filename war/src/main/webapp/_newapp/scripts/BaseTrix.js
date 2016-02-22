@@ -648,12 +648,6 @@ var trix = angular.module('trix', [])
 
   var Trix = function($http){
 
-	this.recoverPassword = function(email) {
-      var config = {};
-      config.headers = {"Content-Type": "application/x-www-form-urlencoded"};
-      return $http.post(_config.url + "/api/persons/sendPassword", $.param({"email": email}), config);
-    }
-
   	this.login = function(username, password) {
       var config = {};
       config.headers = {"Content-Type": "application/x-www-form-urlencoded"}

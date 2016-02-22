@@ -1,23 +1,18 @@
 package co.xarx.trix.services.notification;
 
-import com.relayrides.pushy.apns.ApnsClient;
-import com.relayrides.pushy.apns.ClientNotConnectedException;
-import com.relayrides.pushy.apns.PushNotificationResponse;
-import io.netty.util.concurrent.Future;
+import com.google.common.collect.Lists;
+import com.notnoop.apns.ApnsNotification;
+import com.notnoop.apns.ApnsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -33,78 +28,80 @@ public class AppleNotificationSenderTest extends AbstractNotificationSenderTest 
 	}
 
 	private AppleNotificationSender appleNS;
-	private ApnsClient apnsClient;
-	private PushNotificationResponse resultSuccess;
-	private PushNotificationResponse resultError;
-	private PushNotificationResponse resultErrorDeactivated;
+	private ApnsService apnsClient;
+	private ApnsNotification result;
+	private ApnsNotification resultError;
+	private ApnsNotification resultErrorDeactivated;
 
 	@Before
-	public void setUp() throws CertificateException, InterruptedException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, SQLException, IOException {
-		apnsClient = mock(ApnsClient.class);
+	public void setUp() throws IOException {
+		apnsClient = mock(ApnsService.class);
+
 		appleNS = spy(new AppleNotificationSender());
 		doReturn(apnsClient).when(appleNS).getAPNsClient(anyBoolean());
+		doReturn(new HashMap<String, Date>()).when(apnsClient).getInactiveDevices();
 
-		resultSuccess = mock(PushNotificationResponse.class);
-		resultError = mock(PushNotificationResponse.class);
-		resultErrorDeactivated = mock(PushNotificationResponse.class);
-
-		when(resultSuccess.isAccepted()).thenReturn(true);
-		when(resultError.isAccepted()).thenReturn(false);
-		when(resultErrorDeactivated.isAccepted()).thenReturn(false);
-		when(resultErrorDeactivated.getTokenInvalidationTimestamp()).thenReturn(new Date());
-
-		when(apnsClient.getReconnectionFuture()).thenReturn(mock(Future.class));
+		result = mock(ApnsNotification.class);
+		resultError = mock(ApnsNotification.class);
+		resultErrorDeactivated = mock(ApnsNotification.class);
 	}
 
 	@Test
 	public void testSuccess() throws Exception {
-		doReturn(resultSuccess).when(appleNS).get(any(), any());
+		Collection<ApnsNotification> results = Lists.newArrayList(result, result);
+		doReturn(results).when(appleNS).send(any(), any(), any());
 
 		super.testSuccess();
 	}
 
 	@Test(expected = IOException.class)
-	public void testSendError() throws Exception {
-		Exception e = new InterruptedException();
-		doThrow(e).when(appleNS).get(any(), any());
-
-		DummyData dummy = getDummyData(2);
-
-		appleNS.sendMessageToDevices(dummy.notification, dummy.devices);
-	}
-
-	@Test
 	public void testServerError() throws Exception {
-		doReturn(resultSuccess)
-				.doReturn(resultError)
-				.doReturn(resultErrorDeactivated)
-				.when(appleNS).get(any(), any());
-
-		testSuccessAndErrorStatus();
-	}
-
-	@Test
-	public void testReconnectSuccess() throws Exception {
-		Exception e = new ExecutionException(new ClientNotConnectedException());
-		doReturn(resultSuccess)
-				.doThrow(e)
-				.doReturn(resultError)
-				.doThrow(e)
-				.doReturn(resultErrorDeactivated)
-				.when(appleNS).get(any(), any());
-
-		testSuccessAndErrorStatus();
-	}
-
-	@Test(expected = IOException.class)
-	public void testAppleReconnectFail() throws Exception {
-		Exception e = new ExecutionException(new ClientNotConnectedException());
-		doThrow(e).when(appleNS).get(any(), any());
-
-		when(apnsClient.getReconnectionFuture().await()).thenThrow(InterruptedException.class);
+		Exception e = new IOException();
+		doThrow(e).when(appleNS).send(any(), any(), any());
 
 		DummyData dummy = getDummyData(2);
 
 		appleNS.sendMessageToDevices(dummy.notification, dummy.devices);
 	}
+
+	@Test
+	public void testSendError() throws IOException {
+		Collection<ApnsNotification> apnsNotifications = Lists.newArrayList(result, resultError, resultErrorDeactivated);
+
+		Map<String, Date> deactivated = new HashMap<>();
+		deactivated.put("device2", new Date());
+		deactivated.put("device1", new Date());
+
+		when(apnsClient.getInactiveDevices()).thenReturn(deactivated);
+
+		doReturn(apnsNotifications)
+				.when(appleNS).send(any(), any(), any());
+
+		testSuccessAndErrorStatus();
+	}
+
+//	@Test
+//	public void testReconnectSuccess() throws Exception {
+//		Exception e = new ExecutionException(new ClientNotConnectedException());
+//		doReturn(result)
+//				.doThrow(e)
+//				.doReturn(resultError)
+//				.doThrow(e)
+//				.doReturn(resultErrorDeactivated)
+//				.when(appleNS).send(any(), any(), any());
+//
+//		testSuccessAndErrorStatus();
+//	}
+
+//	@Test(expected = IOException.class)
+//	public void testAppleReconnectFail() throws Exception {
+//		Exception e = new ExecutionException(new ClientNotConnectedException());
+//		doThrow(e).when(appleNS).send(any(), any(), any());
+//
+//		when(apnsClient.getInactiveDevices()).thenThrow(NetworkIOException.class);
+//
+//		DummyData dummy = getDummyData(2);
+//
+//		appleNS.sendMessageToDevices(dummy.notification, dummy.devices);
+//	}
 }

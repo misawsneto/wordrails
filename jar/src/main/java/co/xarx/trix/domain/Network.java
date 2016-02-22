@@ -21,7 +21,7 @@ import java.util.Set;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
 @JsonIgnoreProperties(value = {
-		"faviconHash", "splashImageHash", "loginImageHash", "loginImageSmallHash"
+		"faviconHash", "splashImageHash", "loginImageHash", "loginImageSmallHash", "subdomain"
 }, allowGetters = true)
 public class Network extends BaseEntity implements Serializable {
 
@@ -232,6 +232,14 @@ public class Network extends BaseEntity implements Serializable {
 	@SdkInclude
 	public String getSubdomain() {
 		return tenantId;
+	}
+
+	@JsonIgnore
+	public String getRealDomain() {
+		if(getDomain() != null)
+			return getDomain();
+
+		return getSubdomain() + ".trix.rocks";
 	}
 
 	@Deprecated
