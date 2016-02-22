@@ -1,5 +1,6 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.PasswordReset;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.NetworkRepository;
@@ -38,7 +39,7 @@ public class PasswordService {
 
 		passwordResetRepository.save(passwordReset);
 
-		emailService.sendSimpleMail(person.getEmail(), "Recuperação de senha", createResetEmail(person, passwordReset.hash));
+		emailService.sendSimpleMail(person.getEmail(), "Recuperação de senha", createEmailBody(person, passwordReset.hash));
 	}
 
 	public void updatePassword(String hash, String password){
@@ -56,13 +57,10 @@ public class PasswordService {
 		passwordResetRepository.deleteByUserId(passwordReset.user.id);
 	}
 
-	public String createResetEmail(Person person, String hash){
-		String baseUrl;
+	public String createEmailBody(Person person, String hash) {
+		Network network = networkRepository.findByTenantId(person.tenantId);
+		String baseUrl = "http://" + network.getRealDomain() + "/access/newpwd?hash=" + hash;
 
-		baseUrl = "http://" + networkRepository.findByTenantId(person.tenantId).domain + "/access/newpwd?hash=";
-
-		String emailBody = "Oi, " + person.getName() + "\n click here to reset you password: " + baseUrl + hash + "\n";
-
-		return emailBody;
+		return "Oi, " + person.getName() + ". Clique aqui para recuperar sua senha: " + baseUrl;
 	}
 }
