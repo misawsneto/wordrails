@@ -1,7 +1,7 @@
 package co.xarx.trix.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -9,8 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Data
-@EqualsAndHashCode(callSuper = true)
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 public class Notification extends BaseEntity {
 
 	public enum Type {
@@ -36,9 +35,6 @@ public class Notification extends BaseEntity {
 		SUCCESS
 	}
 
-	protected Notification() {
-	}
-
 	public Notification(String regId, String hash, Status status, String message, String type) {
 		this.regId = regId;
 		this.hash = hash;
@@ -48,13 +44,9 @@ public class Notification extends BaseEntity {
 	}
 
 	@Id
+	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	@Override
-	public Integer getId() {
-		return id;
-	}
 
 	public String regId;
 

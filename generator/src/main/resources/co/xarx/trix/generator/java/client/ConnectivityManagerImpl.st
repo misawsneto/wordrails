@@ -20,7 +20,7 @@ public class ConnectivityManagerImpl implements IConnectivityManager {
 		if (networkInfo != null) {
 			return networkInfo.isConnectedOrConnecting();
 		} else {
-			return false;	
+			return false;
 		}
 	}
 }>>

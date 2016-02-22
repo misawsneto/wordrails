@@ -1,10 +1,10 @@
 <div id="settings-colors">
 	<div class="p-sm pos-abt top-0 left-0 b-b w-full md-whiteframe-z0 md-primary-hue-1 background">
-		<md-button class="pull-right font-bold" ng-click="setTheme()" translate="settings.colors.APPLY_THEME">
+		<md-button class="pull-right font-bold" ng-click="openApplyThemeDialog($event)" translate="settings.colors.APPLY_THEME">
 			Aplicar Cores
 		</md-button>
-		<md-button class="pull-right font-bold" ng-click="setTheme()" translate="settings.colors.TEST_THEME">
-			Testar Cores
+		<md-button class="pull-right font-bold" ng-click="setTheme()" >
+			{{app.testingTheme ? 'settings.colors.RESET_THEME' : 'settings.colors.TEST_THEME'| translate}}
 		</md-button>
 		<md-button class="pull-right font-bold" ng-click="togglePalette()" translate="settings.COLOR_PALETTE">
 		  	Paleta de Cores
@@ -23,7 +23,7 @@
           <div class="mockup-browser md-whiteframe-z2 animated fadeIn" ng-class="{'mobile': isMobile}">
             <md-content>
               <md-sidenav class="md-sidenav-left md-whiteframe-z2 w-lg" md-component-id="sidenav-demo">
-                <div class="box bg-white ng-scope">
+                <div class="box md-background-hue-1 background ng-scope">
                   <div class="box-row">
                     <div class="box-cell scrollable hover">
                       <div class="box-inner">
@@ -199,11 +199,11 @@
   </div>
 </div>
 
-<md-sidenav class="md-sidenav-right md-whiteframe-z2 theming" md-component-id="palette-selector">
+<md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 theming" md-component-id="palette-selector">
   <md-toolbar class="md-theme-light">
     <h1 class="md-toolbar-tools" translate="settings.COLOR_PALETTE"></h1>
   </md-toolbar>
-  <md-content layout-padding>
+  <div layout-padding>
     <div>
       <!-- primary -->
       <md-content class="palette m-b w-lg m-h-auto">
@@ -213,10 +213,10 @@
           {{primaryPalette.name}}
           </div>
           <span flex></span>
-              <spectrum-colorpicker ng-model="primaryPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(0)"></spectrum-colorpicker>
+              <spectrum-colorpicker ng-model="primaryPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(0);"></spectrum-colorpicker>
         </div>
         <md-list flex class="palette-colors spaced">
-            <md-list-item class="light-canvas" ng-repeat="color in primaryPalette.colors | filter: baseColorFilter">
+            <md-list-item class="light-canvas" ng-repeat="color in primaryPalette.colors | filter: baseColorFilter | orderByBase:'name'">
                 <div class="palette-color" style="background-color:{{color.hex}};" ng-class="{'palette-color-light': !color.darkContrast, 'palette-color-dark': color.darkContrast}">
                     <span class="name color-text w-48" ng-bind="color.name"></span>
                     <span ng-bind="color.hex" class="palette-color-hex color-text"></span>
@@ -226,7 +226,7 @@
                       </a>
                       <div class="palette-color-mutators">
                           <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
-                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" options="{showInput: true, showPalette: true}"></spectrum-colorpicker>
+                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
                       </div>
                       <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
                         <md-tooltip>Toggle contrast</md-tooltip>
@@ -245,7 +245,7 @@
           {{accentPalette.name}}
           </div>
           <span flex></span>
-              <spectrum-colorpicker ng-model="accentPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(1)"></spectrum-colorpicker>
+              <spectrum-colorpicker ng-model="accentPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(1)"></spectrum-colorpicker>
         </div>
         <md-list flex class="palette-colors spaced">
             <md-list-item class="light-canvas" ng-repeat="color in accentPalette.colors | filter: baseColorFilter | orderByAccent:'name'">
@@ -258,7 +258,7 @@
                       </a>
                       <div class="palette-color-mutators">
                           <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
-                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" options="{showInput: true, showPalette: true}"></spectrum-colorpicker>
+                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
                       </div>
                       <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
                         <md-tooltip>Toggle contrast</md-tooltip>
@@ -277,10 +277,10 @@
           {{warnPalette.name}}
           </div>
           <span flex></span>
-              <spectrum-colorpicker ng-model="warnPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(2)"></spectrum-colorpicker>
+              <spectrum-colorpicker ng-model="warnPalette.base" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{clickoutFiresChange: true, showInput: true, showPalette: true}" ng-change="calcPalette(2)"></spectrum-colorpicker>
         </div>
         <md-list flex class="palette-colors spaced">
-            <md-list-item class="light-canvas" ng-repeat="color in warnPalette.colors | filter: baseColorFilter">
+            <md-list-item class="light-canvas" ng-repeat="color in warnPalette.colors | filter: baseColorFilter | orderByBase:'name'">
                 <div class="palette-color" style="background-color:{{color.hex}};" ng-class="{'palette-color-light': !color.darkContrast, 'palette-color-dark': color.darkContrast}">
                     <span class="name color-text w-48" ng-bind="color.name"></span>
                     <span ng-bind="color.hex" class="palette-color-hex color-text"></span>
@@ -290,7 +290,7 @@
                       </a>
                       <div class="palette-color-mutators">
                           <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
-                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" options="{showInput: true, showPalette: true}"></spectrum-colorpicker>
+                          <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{ clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
                       </div>
                       <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
                         <md-tooltip>Toggle contrast</md-tooltip>
@@ -327,5 +327,25 @@
       </md-content>
       <!-- /background -->
     </div>
-  </md-content>
+  </div>
 </md-sidenav>
+
+<script type="text/ng-template" id="apply_theme_dialog.html">
+  <md-dialog aria-label="Remove Categories Dialog" id="apply-theme-dialog">
+    <md-content role="document" class="md-background-default background">
+      <div class="p">
+        <div class="md-dialog-content-body text-md p-r p-l w-xxl m-b" ng-bind-html="'settings.colors.APPLY_THEME_DIALOG' | translate">
+        </div>
+
+        <div class="text-center">
+          <button ng-click="app.applyTheme()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw" ng-disabled="!app.enableButtons">
+            {{'titles.YES' | translate }}
+          </button>
+          <button ng-click="cancel()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw" ng-disabled="!app.enableButtons">
+            {{'titles.NO' | translate }}
+          </button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>

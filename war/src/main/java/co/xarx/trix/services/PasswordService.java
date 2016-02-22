@@ -65,41 +65,4 @@ public class PasswordService {
 
 		return emailBody;
 	}
-
-//	private void sendInviteEmail(PasswordReset passwordReset) {
-//		try {
-//			String filePath = getClass().getClassLoader().getResource("tpl/invitation-email.html").getFile();
-//
-//			filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
-//
-//			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-//			String template = new String(bytes, Charset.forName("UTF-8"));
-//
-//			HashMap<String, Object> scopes = new HashMap<>();
-//			scopes.put("name", passwordReset.personName + "");
-//			scopes.put("networkName", passwordReset.networkName + "");
-//			scopes.put("link", "http://" + passwordReset.getTenantId() + ".xarx.co/#/pass?hash=" + passwordReset.hash);
-//			scopes.put("networkSubdomain", passwordReset.getTenantId());
-//			scopes.put("passwordReset", passwordReset);
-//
-//			Person person = authProvider.getLoggedPerson();
-//			if (person != null) scopes.put("inviterName", person.name);
-//			else scopes.put("inviterName", "");
-//
-//			StringWriter writer = new StringWriter();
-//
-//			MustacheFactory mf = new DefaultMustacheFactory();
-//
-//			Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
-//			mustache.execute(writer, scopes);
-//			writer.flush();
-//
-//			String emailBody = writer.toString();
-//			String subject = "[" + passwordReset.networkName + "]" + " Cadastro de senha";
-//
-//			//emailService.sendSimpleMail(passwordReset.email, subject, emailBody);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 }

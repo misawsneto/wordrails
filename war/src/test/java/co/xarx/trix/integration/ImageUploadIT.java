@@ -104,13 +104,10 @@ public class ImageUploadIT extends AbstractIntegrationTest {
 
 	@Test(expected = AmazonS3Exception.class)
 	public void testAUploadImageFailed() throws Exception {
-		Image newImage = new Image(Image.Type.PROFILE_PICTURE);
-		newImage.title = "fake title 2";
-
 		File fileMock = new File(getClass().getResource("/image.jpg").getFile());
 		when(amazonCloudService.uploadPublicImage(any(File.class), anyLong(), anyString(), anyString(), anyString(), anyBoolean())).thenAnswer(i -> FileUtil.getHash(new FileInputStream(i.getArgumentAt(0, File.class)))).thenThrow(AmazonS3Exception.class);
 
-		imageService.createNewImage(newImage, new FileInputStream(fileMock), "image/jpg");
+		imageService.createNewImage("PROFILE_PICTURE", "image.jpg", fileMock, "image/jpg");
 	}
 
 	@Test
@@ -130,11 +127,11 @@ public class ImageUploadIT extends AbstractIntegrationTest {
 		when(amazonCloudService.uploadPublicImage(any(File.class), anyLong(), anyString(), anyString(), anyString(), anyBoolean()))
 				.thenAnswer(i -> FileUtil.getHash(new FileInputStream(i.getArgumentAt(0, File.class))));
 
-		newImage = imageService.createNewImage(newImage, new FileInputStream(fileMock), "image/jpg");
+		newImage = imageService.createNewImage("POST", "image.jpg", fileMock, "image/jpg");
 
 		assertEquals(newImage.hashs.size(), newImage.getSizes().size()+1);
 
-		Image duplicateImage = imageService.createNewImage(new Image(Image.Type.PROFILE_PICTURE), new FileInputStream(fileMock), "image/jpg");
+		Image duplicateImage = imageService.createNewImage("PROFILE_PICTURE", "image.jpg", fileMock, "image/jpg");
 
 		assertEquals(duplicateImage, newImage);
 	}

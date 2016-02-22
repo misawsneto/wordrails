@@ -1,6 +1,6 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.annotation.GeneratorIgnore;
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.User;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,12 +21,12 @@ public interface UserRepository extends JpaRepository<User, Integer>, QueryDslPr
 	User findUserByUsername(@Param("username") String username);
 
 	@Override
-	@GeneratorIgnore
+	@SdkExclude
 	@CacheEvict(value = "user", key = "#p0.username")
 	User save(User user);
 
 	@Override
-	@GeneratorIgnore
+	@SdkExclude
 	@CacheEvict(value = "user", key = "#p0.username")
 	void delete(User user);
 }

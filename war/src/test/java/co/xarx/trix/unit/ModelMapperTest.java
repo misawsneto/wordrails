@@ -31,9 +31,9 @@ public class ModelMapperTest {
 	public void setUp() throws Exception {
 		objectMapper = new ObjectMapper();
 		modelMapper = new ModelMapper();
+		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
-		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostViewMap());
 	}
 
@@ -64,7 +64,7 @@ public class ModelMapperTest {
 //		System.out.println(objectMapper.writeValueAsString(esPerson));
 
 		assertEquals(person.id, esPerson.id);
-		assertEquals(person.cover.hashs, esPerson.cover);
+		assertEquals(person.cover.getOriginalHash(), esPerson.cover);
 	}
 
 	@Test

@@ -693,29 +693,29 @@ function isTermSelected(terms){
 			// })
 }
 
-function createPost(state){
-	var post = {};
-	post.title = $scope.app.editingPost.title;
-	post.body = $scope.app.editingPost.body;
+	function createPost(state){
+		var post = {};
+		post.title = $scope.app.editingPost.title;
+		post.body = $scope.app.editingPost.body;
 
-	if($scope.app.editingPost.externalVideoUrl)
-		post.externalVideoUrl = $scope.app.editingPost.externalVideoUrl;
-	if($scope.app.editingPost.notify)
-		post.notify = true;
+		if($scope.app.editingPost.externalVideoUrl)
+			post.externalVideoUrl = $scope.app.editingPost.externalVideoUrl;
+		if($scope.app.editingPost.notify)
+			post.notify = true;
 
-	if($scope.app.editingPost.topper)
-		post.topper = $scope.app.editingPost.topper;
+		if($scope.app.editingPost.topper)
+			post.topper = $scope.app.editingPost.topper;
 
-	if($scope.app.editingPost.subheading)
-		post.subheading = $scope.app.editingPost.subheading;
+		if($scope.app.editingPost.subheading)
+			post.subheading = $scope.app.editingPost.subheading;
 
-	if(!post.title || post.title.trim() === "")
-		$scope.app.showErrorToast('Título inválido.');
-	else if(!post.body || post.body.trim() === "")
-		$scope.app.showErrorToast('Texto inválido.');
-	else if((!post.body || post.body.trim() === "") && (!post.title || post.title.trim() === ""))
-		$scope.app.showErrorToast('Título e texto inválidos.');
-	else {
+		if(!post.title || post.title.trim() === "")
+			$scope.app.showErrorToast('Título inválido.');
+		else if(!post.body || post.body.trim() === "")
+			$scope.app.showErrorToast('Texto inválido.');
+		else if((!post.body || post.body.trim() === "") && (!post.title || post.title.trim() === ""))
+			$scope.app.showErrorToast('Título e texto inválidos.');
+		else {
 			// post is ok to be created
 			var termList = getTermList($scope.termTree);
 			var termUris = [];
@@ -727,45 +727,34 @@ function createPost(state){
 			post.station = TRIX.baseUrl + "/api/stations/" + $scope.app.editingPost.selectedStation.stationId;
 			post.author = extractSelf($scope.app.getLoggedPerson())
 			post.tags = $scope.chipTags.tags;
+			post.state = state;
 
 			if ($scope.app.editingPost.uploadedImage) {
-				TRIX.baseUrl + "/api/images/" + $scope.app.editingPost.uploadedImage.imageId;
-				post.state = state;
-				postPost(post);
-			} else {
-				post.state = state;
-				if (state == "SCHEDULED") {
-					var start = $scope.dt;
-					start.setHours(0, 0, 0, 0);
+				post.featuredImage = TRIX.baseUrl + "/api/images/" + $scope.app.editingPost.uploadedImage.imageId;
+			} 
 
-					var now = new Date();
-					now.setHours(0, 0, 0, 0);
+			if (state == "SCHEDULED") {
+				var start = $scope.dt;
+				start.setHours(0, 0, 0, 0);
 
-					var scheduledDate = new Date(start.getTime() + ($scope.app.editingPost.scheduledDate.getTime() - now.getTime()))
+				var now = new Date();
+				now.setHours(0, 0, 0, 0);
 
-					var diffMs = (scheduledDate - new Date());
+				var scheduledDate = new Date(start.getTime() + ($scope.app.editingPost.scheduledDate.getTime() - now.getTime()))
 
-					var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+				var diffMs = (scheduledDate - new Date());
 
-					if (diffMins < 1 && (scheduledDate.toDateString() === now.toDateString() || scheduledDate.toDateString() < now.toDateString() )) {
-						$scope.app.showErrorToast('Escolha um horário com mínimo<br>1 minutes do horário atual. ');
-						return;
-					}
+				var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
 
-					post.scheduledDate = scheduledDate;
-
+				if (diffMins < 1 && (scheduledDate.toDateString() === now.toDateString() || scheduledDate.toDateString() < now.toDateString() )) {
+					$scope.app.showErrorToast('Escolha um horário com mínimo<br>1 minutes do horário atual. ');
+					return;
 				}
-
-				postPost(post);
-
-				if (state == "DRAFT") {
-					$scope.app.showSuccessToast('Rascunho salvo com sucesso.');
-				} else if (state == "PUBLISHED") {
-					$scope.app.showSuccessToast('Publicado com sucesso.');
-				} else if (state == "SCHEDULED") {
-					$scope.app.showSuccessToast('Agendado com sucesso.');
-				}
+				post.scheduledDate = scheduledDate;
 			}
+
+			postPost(post);
+
 		} // end of final else
 	}// end of createPost()
 
@@ -788,6 +777,16 @@ function createPost(state){
 					window.onbeforeunload = null;
 				}, 1000);
 			})
+
+			var state = post.state;
+
+			if (state == "DRAFT") {
+				$scope.app.showSuccessToast('Rascunho salvo com sucesso.');
+			} else if (state == "PUBLISHED") {
+				$scope.app.showSuccessToast('Publicado com sucesso.');
+			} else if (state == "SCHEDULED") {
+				$scope.app.showSuccessToast('Agendado com sucesso.');
+			}
 
 		}).error(function(data, status, header){
 			if(status == 403)

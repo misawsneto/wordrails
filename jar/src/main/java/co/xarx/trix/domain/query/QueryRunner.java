@@ -4,7 +4,7 @@ import co.xarx.trix.domain.page.Block;
 
 import java.util.Map;
 
-public interface QueryExecutor {
+public interface QueryRunner {
 
 	Map<Integer, Block> execute(FixedQuery query);
 

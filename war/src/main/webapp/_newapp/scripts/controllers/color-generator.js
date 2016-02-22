@@ -2,9 +2,12 @@
 
 // Define our default color generator controller!
 angular.module('app').controller('ColorGeneratorCtrl',
-function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $filter, themeProvider, colorsProvider, $mdTheming, $injector, $mdSidenav)
+function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $filter, themeProvider, colorsProvider, $mdTheming, $injector, $mdSidenav, trix)
 {
+	// network's background palette
+	$scope.backgroundPalette = $scope.app.backgroundPalette
 
+	// sidenav toggle
 	$scope.togglePalette = buildToggler('palette-selector');
 	$scope.toggleDemo = buildToggler('sidenav-demo');
 
@@ -16,22 +19,31 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
           .toggle()
       }
     }
+    // -----------
+    
+    // ------ dialog -------
+	function DialogController(scope, $mdDialog) {
+			$scope.app.enableButtons = true;
+    	scope.app = $scope.app;
 
-	function DialogImportCtrl($scope, $mdDialog, $mdColorPalette ){
-		$scope.code = '';
-		$scope.defaultPalettes = $mdColorPalette;
-		$scope.closeDialog = function () {
-			$mdDialog.hide();
-		};
-		$scope.import = function ( code ) {
-			$mdDialog.hide( code );
-		};
-	}
+      scope.hide = function() {
+        $mdDialog.hide();
+      };
 
+      scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+
+      // check if user has permisstion to write
+    };
+    // ------ /dialog ------
+
+    // filter the possible color tones in frontend
 	$scope.baseColorFilter = function (color) { 
 	    return color.name === '500' || color.name === '300' || color.name === '800' || color.name === 'A100'; 
 	};
 
+	// set possible background color tones
 	$scope.backgrounds = 
 		["#FFFFFF",
 		"#EFEFEF",
@@ -46,7 +58,6 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		"#222222",
 		"#131313"]
 
-	$scope.backgroundPalette = $scope.backgrounds[0]
 
 	$scope.changeBackgroundColor = function(color){
 		$scope.backgroundPalette = color
@@ -81,9 +92,9 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		$scope.addPaletteFromObject(themeProvider.extendPalette('myAccent',{}), $filter('translate')('settings.COLOR_ACCENT'))
 		$scope.addPaletteFromObject(themeProvider.extendPalette('myWarn',{}), $filter('translate')('settings.COLOR_WARN'))
 
-		$scope.calcPalette(0);
-		$scope.calcPalette(1);
-		$scope.calcPalette(2);
+		// $scope.calcPalette(0);
+		// $scope.calcPalette(1);
+		// $scope.calcPalette(2);
 
 		$scope.primaryPalette = $scope.palettes[0];
 		$scope.accentPalette = $scope.palettes[1];
@@ -96,24 +107,39 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		};
 	};
 
-	$scope.setTheme = function(){
+	$scope.app.setThemeTesting = function(testing){
+		$scope.app.testingTheme = testing;			
+	}
+
+	$scope.setTheme = function(applying){
+		applying = !applying;
+		if(applying){
+			$scope.app.testingTheme = !$scope.app.testingTheme;
+			if(!$scope.app.testingTheme){
+				$scope.app.applyNetworkTheme();
+				return;
+			}
+		}
 
 		themeProvider.definePalette('myPrimary', $scope.app.makeColorsJsonObject($scope.palettes[0].colors));
 		themeProvider.definePalette('myAccent', $scope.app.makeColorsJsonObject($scope.palettes[1].colors));
     	themeProvider.definePalette('myWarn', $scope.app.makeColorsJsonObject($scope.palettes[2].colors));
+    	themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette)))
 
     	var themeName = $filter('generateRandom')(4,"aA");
     	themeProvider.theme(themeName)
     	
     	.primaryPalette('myPrimary')
     	.accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
-    	.warnPalette('myWarn');
+    	.warnPalette('myWarn')
+    	.backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
 
     	// $mdTheming.generateTheme('asdfa')
     	themeProvider.reload($injector);
     	themeProvider.setDefaultTheme(themeName)
 
     	createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
+    	$scope.app.backgroundPalette = $scope.backgroundPalette
 	}
 
 	$scope.initSpeedDial = function(){
@@ -244,6 +270,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
 	// Function to assign watchers to all bases
 	$scope.calcPalette = function(key){
+		$scope.app.setThemeTesting(false);
 		$scope.palettes[key].orig = $scope.computeColors($scope.palettes[key].base);
 		$scope.palettes[key].colors = $scope.palettes[key].orig;
 	};
@@ -384,134 +411,6 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
 	};
 
-    // Function to show export json for loading carts later
-    $scope.showImport = function()
-	{
-		$mdDialog
-			// Show the dialog to allow import
-			.show( {
-				templateUrl: 'templates/dialogs/import.html',
-				controller: DialogImportCtrl
-			} )
-			// Once the user clicks import...
-			.then( function ( code )
-			{
-				// ...add the palette!
-				if ( typeof code == "object" ) {
-					$scope.addPaletteFromObject( code );
-				}else{
-					$scope.addPaletteFromJSON( code );
-				}
-			}, function () { } );
-
-		// Google Analytics Event Track
-		ga( 'send', 'event', 'mcg', 'import_code' );
-    };
-
-	// Function to show export json for loading carts later
-	$scope.showAbout = function ()
-	{
-		// Show about us section!
-		$mdDialog.show( {
-			templateUrl: 'templates/dialogs/about.html',
-			controller:  AboutCtrl
-		} );
-
-		// Google Analytics Event Track
-		ga( 'send', 'event', 'mcg', 'about_us' );
-	};
-
-	// Function to show generic clipboard alert dialog
-	$scope.showClipboard = function(code)
-	{
-		// TODO: Move these controllers and templates to their own files.
-		$mdDialog.show({
-			template   : '<md-dialog aria-label="Clipboard dialog">' +
-			'  <md-content>' +
-			'    <pre>{{code}}</pre>' +
-			'  </md-content>' +
-			'  <div class="md-actions">' +
-			'    <span ng-if="copied==true" ng-cloak class="animated fadeInUp">Code copied to clipboard!</span>'+
-			'    <md-button class="md-accent" ui-zeroclip zeroclip-model="code" zeroclip-copied="showNotice()">' +
-			'      Copy' +
-			'    </md-button>' +
-			'    <md-button ng-click="closeDialog()">' +
-			'      Close' +
-			'    </md-button>' +
-			'  </div>' +
-			'</md-dialog>',
-			locals     : {
-				code: code
-			},
-			controller : ClipboardDialogController
-		});
-
-
-		// TODO: Move these controllers and templates to their own files.
-		function ClipboardDialogController($scope, $mdDialog, $timeout, code)
-		{
-			$scope.code = code;
-			$scope.copied = false;
-			$scope.closeDialog = function () {
-				$mdDialog.hide();
-			};
-			$scope.showNotice = function(){
-				$scope.copied = true;
-				$timeout(function(){
-					$scope.copied = false;
-				}, 1500);
-			};
-		}
-	};
-
-	/*// Function to show generic clipboard alert dialog
-	$scope.showColourLovers = function () {
-		$mdDialog.show( {
-			templateUrl: '/templates/dialogs/colourlovers.html',
-			controller: ColourLoversDialogController
-		} );
-
-		// Google Analytics Event Track
-		ga( 'send', 'event', 'mcg', 'view_colourlovers' );
-
-		function ColourLoversDialogController( $scope, $mdDialog, ColourLovers )
-		{
-			$scope.init = function(){
-				$scope.colourlovers = [];
-				$scope.setColors = $rootScope.setPalettesByColors;
-				$scope.getTop();
-			};
-
-			// Get top colourlover palettes.
-			$scope.getTop = function(){
-				ColourLovers.getTop().success( function ( data ) {
-					$scope.colourlovers = data;
-				} );
-			};
-
-			// Get new colourlover palettes.
-			$scope.getNew = function () {
-				ColourLovers.getNew().success( function ( data ) {
-					$scope.colourlovers = data;
-				} );
-			};
-
-			// Get random colourlover palettes.
-			$scope.getRandom = function () {
-				ColourLovers.getRandom().success( function ( data ) {
-					$scope.colourlovers = data;
-				} );
-			};
-
-			// Function to close dialog
-			$scope.closeDialog = function () {
-				$mdDialog.hide();
-			};
-
-			$scope.init();
-		}
-	};*/
-
     // Function to darken a palette's color.
     $scope.darkenPaletteItem = function(color){
         color.hex = shadeColor(color.hex, -0.1);
@@ -521,6 +420,44 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
     $scope.lightenPaletteItem = function(color){
         color.hex = shadeColor(color.hex, 0.1);
     };
+
+
+    /* --------- apply theme --------- */
+    $scope.openApplyThemeDialog = function(ev){
+			$scope.setTheme(true);
+      	$mdDialog.show({
+          controller: DialogController,
+          templateUrl: 'apply_theme_dialog.html',
+          targetEvent: ev,
+          onComplete: function(){}
+        })
+        .then(function(answer) {
+        //$scope.alert = 'You said the information was "' + answer + '".';
+        }, function() {
+        //$scope.alert = 'You cancelled the dialog.';
+      });
+    }
+
+    $scope.app.applyTheme = function(){
+    	$scope.app.enableButtons = false;
+    	$scope.app.setThemeTesting(false);
+    	var newTheme = {primaryColors: $scope.app.makeColorsJsonObject($scope.palettes[0].colors),
+    					secondaryColors: $scope.app.makeColorsJsonObject($scope.palettes[1].colors),
+						alertColors: $scope.app.makeColorsJsonObject($scope.palettes[2].colors),
+						backgroundColors: $scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette))
+    	    			}
+    	trix.updateTheme(newTheme).success(function(){
+    		$scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
+    		$mdDialog.cancel();
+    		$scope.app.enableButtons = true;
+    	}).erro(function(){
+    		$scope.app.showSuccessToast($filter('translate')('messages.ERROR_MSG'))
+    		$mdDialog.cancel();
+    		$scope.app.enableButtons = true;
+    	})
+    }
+
+    /* --------- /apply theme -------- */
 
 	// Init controller
 	$scope.init();
