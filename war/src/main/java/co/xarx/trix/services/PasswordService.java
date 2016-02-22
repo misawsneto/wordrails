@@ -43,7 +43,7 @@ public class PasswordService {
 	}
 
 	public void updatePassword(String hash, String password){
-		Assert.hasText(password, "Null password");
+		Assert.hasText(password, "Null password"); 
 
 		PasswordReset passwordReset = passwordResetRepository.findByHash(hash);
 
