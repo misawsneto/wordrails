@@ -57,7 +57,7 @@ public class PasswordService {
 	}
 
 	public String createResetEmail(Person person, String hash){
-		String baseUrl;
+		String baseUrl; 
 
 		baseUrl = "http://" + networkRepository.findByTenantId(person.tenantId).domain + "/access/newpwd?hash=";
 
