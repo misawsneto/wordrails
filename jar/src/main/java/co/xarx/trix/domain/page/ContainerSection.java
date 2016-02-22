@@ -9,16 +9,18 @@ import javax.validation.constraints.Min;
 import java.util.Map;
 
 @Entity
-@Table(name = "section_container")
+@Table(name = "sectioncontainer")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class ContainerSection extends AbstractSection {
+
+	private static final long serialVersionUID = 2651202755256597015L;
 
 	@ManyToOne
 	@JsonBackReference("parent")
 	public ContainerSection parent;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "section_section_container", joinColumns = @JoinColumn(name = "container_id"))
+	@JoinTable(name = "sectioncontainer_children", joinColumns = @JoinColumn(name = "container_id"))
 	@MapKeyJoinColumn(name = "list_index", referencedColumnName = "list_index", nullable = false)
 	public Map<Integer, AbstractSection> children;
 

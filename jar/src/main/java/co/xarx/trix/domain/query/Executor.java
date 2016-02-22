@@ -2,7 +2,7 @@ package co.xarx.trix.domain.query;
 
 import java.util.List;
 
-public interface Executor<T, K> {
+public interface Executor<T, K extends Command> {
 
-	List<K> execute(T query, Integer size, Integer from);
+	List<T> execute(K query, Integer size, Integer from);
 }

@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-@Table(name = "section_queryable_list")
+@Table(name = "sectionqueryablelist")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class QueryableListSection extends AbstractSection implements ListSection, QueryableSection {
+
+	private static final long serialVersionUID = -1931423761123134760L;
 
 	@JsonIgnore
 	@JoinTable(name = "section_fixedquery",

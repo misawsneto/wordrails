@@ -1,20 +1,24 @@
 package co.xarx.trix.domain.query.statement;
 
 import co.xarx.trix.domain.BaseEntity;
+import co.xarx.trix.domain.query.Command;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-@lombok.Getter @lombok.Setter
+@lombok.Getter @Setter
 @Entity
-@Table(name = "objectstatement")
+@Table(name = "statement")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
-public abstract class AbstractObjectSortedStatement<T> extends BaseEntity implements SortedStatement, ObjectStatement<T> {
+public abstract class AbstractStatement extends BaseEntity implements Statement {
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -31,7 +35,7 @@ public abstract class AbstractObjectSortedStatement<T> extends BaseEntity implem
 	@JoinTable(name = "statement_exceptions")
 	public Set<Serializable> exceptionIds;
 
-	public AbstractObjectSortedStatement() {
+	public AbstractStatement() {
 		sorts = new HashMap<>();
 		exceptionIds = new HashSet<>();
 	}

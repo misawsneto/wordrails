@@ -1,7 +1,6 @@
-package co.xarx.trix.services;
+package co.xarx.trix.services.elasticsearch;
 
-import co.xarx.trix.domain.query.QueryBuilder;
-import co.xarx.trix.domain.query.elasticsearch.ElasticSearchQuery;
+import co.xarx.trix.domain.query.CommandBuilder;
 import co.xarx.trix.domain.query.statement.PostStatement;
 import co.xarx.trix.util.Constants;
 import org.apache.commons.collections.CollectionUtils;
@@ -18,11 +17,11 @@ import java.util.List;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service
-public class ElasticSearchQueryBuilder implements QueryBuilder<ElasticSearchQuery> {
+public class ESCommandBuilder implements CommandBuilder<ElasticSearchCommand> {
 
 	@Override
-	public ElasticSearchQuery build(PostStatement query) {
-		ElasticSearchQuery esQuery = new ElasticSearchQuery();
+	public ElasticSearchCommand build(PostStatement query) {
+		ElasticSearchCommand esQuery = new ElasticSearchCommand();
 		esQuery.setHighlightedField("body");
 
 		List<FieldSortBuilder> fieldSortBuilders = new ArrayList<>();

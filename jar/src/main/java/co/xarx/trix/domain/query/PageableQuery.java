@@ -4,7 +4,7 @@ import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
-import co.xarx.trix.domain.query.statement.AbstractObjectSortedStatement;
+import co.xarx.trix.domain.query.statement.AbstractStatement;
 import lombok.AccessLevel;
 import lombok.Setter;
 
@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name = "querypageable")
-public class PageableQuery extends BaseEntity implements ObjectQuery {
+public class PageableQuery extends BaseEntity implements Query {
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -38,9 +38,9 @@ public class PageableQuery extends BaseEntity implements ObjectQuery {
 	private Set<Integer> indexExceptions; //indexes that are already filled
 
 	@SdkInclude
-	@JoinColumn(name = "objectstatement_id")
+	@JoinColumn(name = "statement_id")
 	@OneToOne(cascade = CascadeType.ALL)
-	public AbstractObjectSortedStatement objectStatement;
+	public AbstractStatement objectStatement;
 
 	@Override
 	public Set<Integer> getIndexes() {

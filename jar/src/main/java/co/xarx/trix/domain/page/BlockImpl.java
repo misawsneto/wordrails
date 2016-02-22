@@ -5,9 +5,9 @@ import co.xarx.trix.domain.Identifiable;
 public class BlockImpl<T extends Identifiable> implements Block {
 
 	private T object;
-	private String objectType;
+	private Class objectType;
 
-	public BlockImpl(T object, String objectType) {
+	public BlockImpl(T object, Class objectType) {
 		this.object = object;
 		this.objectType = objectType;
 	}
@@ -18,7 +18,7 @@ public class BlockImpl<T extends Identifiable> implements Block {
 	}
 
 	@Override
-	public String getObjectType() {
+	public Class getObjectType() {
 		return objectType;
 	}
 }

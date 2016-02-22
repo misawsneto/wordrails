@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 @JsonPropertyOrder({ "objectType", "object" })
 public interface Block<T extends Identifiable> {
 
-	String getObjectType();
+	Class getObjectType();
 
 	T getObject();
 }

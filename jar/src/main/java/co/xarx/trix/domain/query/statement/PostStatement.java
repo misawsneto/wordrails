@@ -1,10 +1,8 @@
 package co.xarx.trix.domain.query.statement;
 
-import co.xarx.trix.domain.query.QueryBuilder;
-import co.xarx.trix.domain.query.elasticsearch.ElasticSearchQuery;
-import co.xarx.trix.util.Constants;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.domain.query.Command;
+import co.xarx.trix.domain.query.CommandBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,9 +12,9 @@ import java.util.Set;
 
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
-@Table(name = "objectstatementpost")
-@PrimaryKeyJoinColumn(name = "objectstatement_id", referencedColumnName = "id")
-public class PostStatement extends AbstractObjectSortedStatement<ElasticSearchQuery> {
+@Table(name = "statementobjectpost")
+@PrimaryKeyJoinColumn(name = "statement_id", referencedColumnName = "id")
+public class PostStatement extends AbstractStatement implements Statement {
 
 	@Column(name = "before_date")
 	public Date before;
@@ -24,10 +22,10 @@ public class PostStatement extends AbstractObjectSortedStatement<ElasticSearchQu
 	public Date after;
 
 	@ElementCollection
-	@JoinTable(name = "objectstatementpost_tags")
+	@JoinTable(name = "statementobjectpost_tags")
 	public Set<String> tags;
 	@ElementCollection
-	@JoinTable(name = "objectstatementpost_categories")
+	@JoinTable(name = "statementobjectpost_categories")
 	public Set<Integer> categories;
 
 	@Column(name = "author_username")
@@ -38,19 +36,19 @@ public class PostStatement extends AbstractObjectSortedStatement<ElasticSearchQu
 
 	@NotNull
 	@ElementCollection
-	@JoinTable(name = "objectstatementpost_stations")
+	@JoinTable(name = "statementobjectpost_stations")
 	public Set<Integer> stationIds;
 
 	@Column(name = "rich_text")
 	public String richText;
 
 	@Override
-	public ElasticSearchQuery build(QueryBuilder<ElasticSearchQuery> builder) {
+	public Command build(CommandBuilder builder) {
 		return builder.build(this);
 	}
 
 	@Override
-	public String getObjectType() {
-		return Constants.ObjectType.POST;
+	public Class getType() {
+		return Post.class;
 	}
 }

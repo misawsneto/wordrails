@@ -10,8 +10,6 @@ import java.util.Map;
 
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 
