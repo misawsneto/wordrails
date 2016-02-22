@@ -11,8 +11,8 @@ import com.mysema.commons.lang.Assert;
 import org.hibernate.metamodel.relational.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -31,29 +31,19 @@ public class PasswordService {
 
 	public void resetPassword(String email){
 		Assert.hasText(email, "Null email");
-
 		Person person = personRepository.findByEmail(email);
-
 		Assert.notNull(person, "Person not found");
-		PasswordReset checkReset = passwordResetRepository.findOne(person.user.id);
 
-		if (checkReset == null || !checkReset.expiresAt.after(new Date())) {
+		PasswordReset passwordReset = new PasswordReset();
+		passwordReset.user = person.user;
+		passwordReset.hash = UUID.randomUUID().toString();
 
-			PasswordReset passwordReset = new PasswordReset();
-			passwordReset.user = person.user;
-			passwordReset.hash = UUID.randomUUID().toString();
+		passwordResetRepository.save(passwordReset);
 
-			passwordResetRepository.save(passwordReset);
-
-			emailService.sendSimpleMail(person.getEmail(), "Recuperação de senha", createEmailBody(person, passwordReset.hash));
-		} else {
-			if (checkReset.expiresAt.before(new Date())) {
-				return;
-			}
-			throw new IllegalArgumentException();
-		}
+		emailService.sendSimpleMail(person.getEmail(), "Recuperação de senha", createEmailBody(person, passwordReset.hash));
 	}
 
+	@Transactional
 	public void updatePassword(String hash, String password){
 		Assert.hasText(password, "Null password");
 
@@ -66,14 +56,12 @@ public class PasswordService {
 		passwordReset.user.password = password;
 		userRepository.save(passwordReset.user);
 
-		passwordResetRepository.delete(passwordReset);
+		passwordResetRepository.deleteByUserId(passwordReset.user.id);
 	}
 
-	public String createEmailBody(Person person, String hash){
-		String baseUrl;
-
+	public String createEmailBody(Person person, String hash) {
 		Network network = networkRepository.findByTenantId(person.tenantId);
-		baseUrl = "http://" + network.getRealDomain() + "/access/newpwd?hash=" + hash;
+		String baseUrl = "http://" + network.getRealDomain() + "/access/newpwd?hash=" + hash;
 
 		return "Oi, " + person.getName() + ". Clique aqui para recuperar sua senha: " + baseUrl;
 	}

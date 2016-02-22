@@ -89,6 +89,8 @@ public class PersonsResource {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PersonEventHandler personEventHandler;
+	@Autowired
+	private MenuEntryRepository menuEntryRepository;
 
 	@Autowired
 	@Qualifier("objectMapper")
@@ -694,6 +696,19 @@ public class PersonsResource {
 
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;
+
+		List<MenuEntry> entries = menuEntryRepository.findAll();
+		List<MenuEntryDto> menuEntries = new ArrayList<>();
+		if (entries != null) {
+			for (MenuEntry menuEntry : entries) {
+				MenuEntryDto sectionDto = mapper.readValue(mapper.writeValueAsString(menuEntry).getBytes("UTF-8"), MenuEntryDto.class);
+				sectionDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/menuEntries/" + sectionDto.id);
+				menuEntries.add(sectionDto);
+
+			}
+		}
+		initData.menuEntries = menuEntries;
+		initData.sections = menuEntries;
 
 		initData.person.links = wordrailsService.generateSelfLinks(baseUrl + "/api/persons/" + person.id);
 		initData.network.links = wordrailsService.generateSelfLinks(baseUrl + "/api/network/" + network.id);

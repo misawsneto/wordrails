@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -36,11 +37,13 @@ public class Comment extends BaseEntity implements Serializable {
 	@NotNull
 	public String body;
 
+	@SdkInclude
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable=false)
 	public Person author;
-	
+
+	@SdkInclude
 	@NotNull
 	@ManyToOne
 	@JoinColumn(updatable=false)

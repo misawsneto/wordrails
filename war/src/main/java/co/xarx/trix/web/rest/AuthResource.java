@@ -102,11 +102,7 @@ public class AuthResource {
 	@PUT
 	@Path("/{hash}")
 	public Response updatePassword(@PathParam("hash") String hash, @FormParam("password") String password) {
-
-		if (password != null && !password.isEmpty()) {
-			passwordService.updatePassword(hash, password);
-		}
-
+		passwordService.updatePassword(hash, password);
 		return Response.status(Response.Status.OK).build();
 	}
 }
