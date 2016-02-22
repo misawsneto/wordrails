@@ -39,6 +39,7 @@ public class PathEntityFilter implements Filter {
 				!path.equals("/notifications") &&
 				!path.equals("/bookmarks") &&
 				!path.equals("/post") &&
+				!path.equals("/login") &&
 				!path.equals("/settings") &&
 				!path.equals("/search") &&
 				!path.equals("/index.jsp") &&

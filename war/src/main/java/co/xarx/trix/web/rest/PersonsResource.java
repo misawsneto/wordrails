@@ -13,10 +13,9 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.auth.AuthService;
-import co.xarx.trix.services.EmailService;
-import co.xarx.trix.services.MobileService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
@@ -238,18 +237,6 @@ public class PersonsResource {
 		return Response.status(Response.Status.OK).build();
 	}
 
-//	@POST
-//	@Path("/login")
-//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//	public Response login(@Context HttpServletRequest request, @FormParam("username") String username, @FormParam("password") String password) {
-//		try{
-//			authProvider.passwordAuthentication(username, password);
-//			return Response.status(Status.OK).build();
-//		}catch(BadCredentialsException | UsernameNotFoundException e){
-//			return Response.status(Status.UNAUTHORIZED).build();
-//		}
-//	}
-
 	@POST
 	@Path("/tokenSignin")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -341,7 +328,7 @@ public class PersonsResource {
 
 		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id);
 
-		List<Integer> stationIds = new ArrayList<Integer>();
+		List<Integer> stationIds = new ArrayList<>();
 		if(permissions != null && permissions.size() > 0){
 			for (StationPermission stationPermission : permissions) {
 				stationIds.add(stationPermission.stationId);
@@ -350,7 +337,7 @@ public class PersonsResource {
 
 		List<Post> posts = postRepository.findRecommendationsByPersonIdAndStations(personId, stationIds, pageable);
 
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
@@ -359,18 +346,12 @@ public class PersonsResource {
 	@Path("/logout")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response logout(){
-		try{
-			authProvider.logout();
-			return Response.status(Status.OK).build();
-		}catch(BadCredentialsException | UsernameNotFoundException e){
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
-	}
-
-	@POST
-	@Path("/testpost")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response testPost(){
+//		try{
+//			authProvider.logout();
+//
+//		}catch(BadCredentialsException | UsernameNotFoundException e){
+//			return Response.status(Status.UNAUTHORIZED).build();
+//		}
 		return Response.status(Status.OK).build();
 	}
 

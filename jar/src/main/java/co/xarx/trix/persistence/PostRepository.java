@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.security.access.prepost.PostAuthorize;
 
 import java.util.List;
 
@@ -61,6 +62,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.id DESC")
 	List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
 
+	@PostAuthorize("hasPermission(returnObject, 'read')")
 	@Query("SELECT post FROM Post post where post.slug = :slug and post is not null")
 	Post findBySlug(@Param("slug") String slug);
 

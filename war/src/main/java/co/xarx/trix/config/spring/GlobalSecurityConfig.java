@@ -1,5 +1,6 @@
 package co.xarx.trix.config.spring;
 
+import co.xarx.trix.config.security.BitMaskPermissionGrantingStrategy;
 import co.xarx.trix.security.acl.MultitenantAclService;
 import co.xarx.trix.security.acl.TrixPermission;
 import org.hibernate.cache.CacheException;
@@ -10,24 +11,61 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.acls.AclPermissionEvaluator;
 import org.springframework.security.acls.domain.*;
 import org.springframework.security.acls.jdbc.BasicLookupStrategy;
 import org.springframework.security.acls.jdbc.LookupStrategy;
 import org.springframework.security.acls.model.AclCache;
 import org.springframework.security.acls.model.MutableAclService;
 import org.springframework.security.acls.model.PermissionGrantingStrategy;
+import org.springframework.security.authentication.AnonymousAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
-public class AclConfig {
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+public class GlobalSecurityConfig extends GlobalMethodSecurityConfiguration {
 
 	@Autowired
 	private DataSource dataSource;
 	@Autowired
 	private JedisConnectionFactory cacheConnectionFactory;
+	@Autowired
+	private UserDetailsService userDetailsService;
+
+
+	@Bean
+	public ProviderManager authenticationManager() {
+		List<AuthenticationProvider> providers = new ArrayList<>();
+
+		DaoAuthenticationProvider daoProvider = new DaoAuthenticationProvider();
+//		daoProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+//		ReflectionSaltSource saltSource = new ReflectionSaltSource();
+//		saltSource.setUserPropertyToUse("username");
+//		daoProvider.setSaltSource(saltSource);
+		daoProvider.setUserDetailsService(userDetailsService);
+
+		AnonymousAuthenticationProvider anonymousProvider = new AnonymousAuthenticationProvider("anonymousKey");
+
+		providers.add(daoProvider);
+		providers.add(anonymousProvider);
+		ProviderManager providerManager = new ProviderManager(providers);
+		providerManager.setEraseCredentialsAfterAuthentication(true);
+		return providerManager;
+	}
+
 
 	@Bean
 	public AclAuthorizationStrategy aclAuthorizationStrategy() {
@@ -36,7 +74,7 @@ public class AclConfig {
 
 	@Bean
 	public PermissionGrantingStrategy aclPermissionGrantingStrategy() {
-		return new DefaultPermissionGrantingStrategy(aclAuditLogger());
+		return new BitMaskPermissionGrantingStrategy(aclAuditLogger());
 	}
 
 	@Bean
@@ -79,5 +117,16 @@ public class AclConfig {
 		aclService.setClassIdentityQuery("SELECT @@IDENTITY");
 		aclService.setSidIdentityQuery("SELECT @@IDENTITY");
 		return aclService;
+	}
+
+	@Override
+	protected MethodSecurityExpressionHandler createExpressionHandler() {
+		DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+		try {
+			expressionHandler.setPermissionEvaluator(new AclPermissionEvaluator(aclService()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return expressionHandler;
 	}
 }
