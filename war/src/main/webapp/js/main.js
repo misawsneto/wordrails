@@ -300,6 +300,8 @@ angular.module('app')
         }else if($scope.app.editingPost && $scope.app.editingPost.id){
           $scope.app.editingPost = null;
         }
+      } else if (toState.name == 'access.newpwd'){
+        $state.go('access.newpwd')        
       }
     })
 
@@ -592,14 +594,28 @@ angular.module('app')
         })
       };
 
+      $scope.app.updatePassword = function(password){
+        var hash = $state.params.hash;
+
+        if(password.password != password.passwordConfirm){
+          // $scope.app.differentPasswords = true;
+          $scope.app.showErrorToast('Senhas digitadas não conferem. Tente novamente')
+          return;
+        }
+
+        trix.updatePassword(hash, password.password).success(function(response){
+          $scope.app.passwordUpdated = true;
+        }).error(function(response){
+          $scope.app.passwordUpdated = false;
+        })
+
+      }
+
       $scope.app.recoverPassword = function(email){
         trix.recoverPassword(email).success(function(response){
           $scope.app.passwordRecovered = true;
-          // console.log(email);
-          // console.log(status);
         }).error(function(response){
-          $scope.app.passwordRecovered = false;
-          // console.log(status);
+          $scope.app.showErrorToast('Email não cadastrado.')
         })        
       };
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
@@ -26,6 +27,7 @@ public class AndroidNotificationSender implements NotificationSender {
 		this.mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+		mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 	}
 
 	@Override

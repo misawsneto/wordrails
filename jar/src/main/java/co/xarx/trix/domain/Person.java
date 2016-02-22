@@ -83,7 +83,7 @@ public class Person extends BaseEntity implements Serializable {
 	public String password;
 	@Transient
 	public String passwordConfirm;
-	public Boolean passwordReseted = false;
+
 	public String twitterHandle;
 
 	@SdkInclude
