@@ -4,8 +4,12 @@ import co.xarx.trix.exception.*;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,10 +22,17 @@ import java.util.List;
 
 @ControllerAdvice
 public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHandler {
+
 	@ExceptionHandler(UnauthorizedException.class)
 	public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException exception) {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
 		return new ResponseEntity<>(stackTrace, HttpStatus.FORBIDDEN);
+	}
+
+	@Override
+	public ResponseEntity<Object> handleHttpRequestMethodNotSupported
+			(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		return super.handleHttpRequestMethodNotSupported(ex, headers, status, request);
 	}
 
 	@ExceptionHandler(NotImplementedException.class)

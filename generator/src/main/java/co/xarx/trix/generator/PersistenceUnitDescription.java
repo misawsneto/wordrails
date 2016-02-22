@@ -6,6 +6,7 @@ import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.generator.domain.AbstractField;
 import co.xarx.trix.generator.domain.JavaField;
 import co.xarx.trix.generator.domain.TrixField;
+import co.xarx.trix.persistence.TrixRepository;
 import com.google.common.collect.Lists;
 import org.reflections.Reflections;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -34,24 +35,11 @@ public class PersistenceUnitDescription {
 
 	public PersistenceUnitDescription(String prefix) {
 		Reflections reflections = new Reflections(prefix);
+		Set<Class<? extends JpaRepository>> classes = getRepositoryClasses(reflections, JpaRepository.class);
+
 
 		Map<Class<?>, Class<? extends JpaRepository>> entityRepository = new HashMap<>();
 		Map<Class<?>, List<QueryDescription>> entityQueries = new HashMap<>();
-		Set<Class<? extends JpaRepository>> classes = reflections.getSubTypesOf(JpaRepository.class);
-		Set<Class<? extends JpaRepository>> classes2 = new HashSet(classes);
-		for (Class<? extends JpaRepository> c : classes) {
-			List<Annotation> annotations = Lists.newArrayList(c.getAnnotations());
-			for (Annotation annotation : annotations) {
-				if(annotation.annotationType().equals(NoRepositoryBean.class)) {
-					classes2.remove(c);
-				} else if(annotation.annotationType().equals(RepositoryRestResource.class)
-						&& !((RepositoryRestResource)annotation).exported()) {
-					classes2.remove(c);
-				}
-			}
-		}
-		classes = classes2;
-
 		for (Class<? extends JpaRepository> repositoryClass : classes) {
 			RepositoryRestResource repositoryResource = repositoryClass.getAnnotation(RepositoryRestResource.class);
 			SdkExclude repositoryIgnore = repositoryClass.getAnnotation(SdkExclude.class);
@@ -61,7 +49,7 @@ public class PersistenceUnitDescription {
 					if (genericInterface instanceof ParameterizedType) {
 						ParameterizedType parameterizedType = (ParameterizedType) genericInterface;
 						Type rawType = parameterizedType.getRawType();
-						if (JpaRepository.class.equals(rawType)) {
+						if (JpaRepository.class.equals(rawType) || TrixRepository.class.equals(rawType)) {
 							Class<?> entity = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 							entityRepository.put(entity, repositoryClass);
 							List<QueryDescription> queries = new ArrayList<>();
@@ -311,6 +299,24 @@ public class PersistenceUnitDescription {
 				entity.projections.add(projection);
 			}
 		}
+	}
+
+	public <T> Set<Class<? extends T>> getRepositoryClasses(Reflections reflections, Class<T> extendsFrom) {
+		Set<Class<? extends T>> classes = reflections.getSubTypesOf(extendsFrom);
+		Set<Class<? extends T>> classes2 = new HashSet(classes);
+		for (Class<? extends T> c : classes) {
+			List<Annotation> annotations = Lists.newArrayList(c.getAnnotations());
+			for (Annotation annotation : annotations) {
+				if(annotation.annotationType().equals(NoRepositoryBean.class)) {
+					classes2.remove(c);
+				} else if(annotation.annotationType().equals(RepositoryRestResource.class)
+						&& !((RepositoryRestResource)annotation).exported()) {
+					classes2.remove(c);
+				}
+			}
+		}
+		classes = classes2;
+		return classes;
 	}
 
 	private TrixField getTrixField(PropertyDescriptor pd, boolean asReference) {
