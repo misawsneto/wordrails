@@ -13,6 +13,8 @@ import java.util.Map;
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class ContainerSection extends AbstractSection {
 
+	private static final long serialVersionUID = 2651202755256597015L;
+
 	@ManyToOne
 	@JsonBackReference("parent")
 	public ContainerSection parent;

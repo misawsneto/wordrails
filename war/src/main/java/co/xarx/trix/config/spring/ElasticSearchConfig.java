@@ -1,7 +1,7 @@
 package co.xarx.trix.config.spring;
 
+import co.xarx.trix.domain.query.ExecutorFactory;
 import co.xarx.trix.elasticsearch.ESRepositoryFactoryBean;
-import co.xarx.trix.factory.ElasticSearchExecutorFactory;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
@@ -35,9 +35,9 @@ public class ElasticSearchConfig {
 	private String password;
 
 	@Bean
-	public FactoryBean elasticSearchExecutorFactory() {
+	public FactoryBean executorFactory() {
 		ServiceLocatorFactoryBean serviceLocatorFactoryBean = new ServiceLocatorFactoryBean();
-		serviceLocatorFactoryBean.setServiceLocatorInterface(ElasticSearchExecutorFactory.class);
+		serviceLocatorFactoryBean.setServiceLocatorInterface(ExecutorFactory.class);
 
 		return serviceLocatorFactoryBean;
 	}

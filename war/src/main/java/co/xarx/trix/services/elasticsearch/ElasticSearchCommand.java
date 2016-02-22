@@ -1,11 +1,12 @@
-package co.xarx.trix.domain.query.elasticsearch;
+package co.xarx.trix.services.elasticsearch;
 
+import co.xarx.trix.domain.query.Command;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 
 import java.util.List;
 
-public class ElasticSearchQuery<T> {
+public class ElasticSearchCommand implements Command {
 
 	public String highlightedField;
 	private BoolQueryBuilder boolQueryBuilder;
@@ -33,9 +34,5 @@ public class ElasticSearchQuery<T> {
 
 	public void setHighlightedField(String highlightedField) {
 		this.highlightedField = highlightedField;
-	}
-
-	public List<T> execute(ElasticSearchExecutor<T> executor, Integer size, Integer from) {
-		return executor.execute(this, size, from);
 	}
 }
