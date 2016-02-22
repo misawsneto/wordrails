@@ -117,6 +117,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetMenuEntriesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetMenuEntryAuthorized(Integer menuEntryId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetNetworksAuthorized() {
 		return true;
 	}
@@ -894,16 +904,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindRecommendsByPostIdAuthorized(Integer postId) {
 		return true;
-	}
-
-	@Override
-	protected boolean isGetAbstractSectionsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetAbstractSectionAuthorized(Integer abstractSectionId) {
-		return false;
 	}
 
 	@Override

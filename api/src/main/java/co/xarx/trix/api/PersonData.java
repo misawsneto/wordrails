@@ -17,6 +17,9 @@ public class PersonData implements Serializable {
 	public List<Integer> bookmarks;
 	public List<Integer> recommends;
 
+	public List<MenuEntryDto> sections;
+	public List<MenuEntryDto> menuEntries;
+
 	public String publicCloudfrontUrl;
 	public String privateCloudfrontUrl;
 	public boolean noVisibleStation = false;

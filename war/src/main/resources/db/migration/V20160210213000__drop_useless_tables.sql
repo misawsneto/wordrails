@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS section_fixedquery;
 DROP TABLE IF EXISTS section_queryable_list;
 DROP TABLE IF EXISTS section_properties;
 DROP TABLE IF EXISTS section_container;
-DROP TABLE IF EXISTS section;
+RENAME TABLE section TO menuentry;
 DROP TABLE IF EXISTS containersection;
 DROP TABLE IF EXISTS containersection_section;
 DROP TABLE IF EXISTS es_sorts;

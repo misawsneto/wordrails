@@ -49,7 +49,7 @@ public class JavaField extends AbstractField {
 
 	@Override
 	public boolean isIncludeAsReference() {
-		return field.isAnnotationPresent(SdkInclude.class);
+		return field.isAnnotationPresent(SdkInclude.class) || field.isAnnotationPresent(ElementCollection.class);
 	}
 
 //	@Override
