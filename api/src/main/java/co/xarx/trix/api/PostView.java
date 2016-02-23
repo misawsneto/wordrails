@@ -1,5 +1,6 @@
 package co.xarx.trix.api;
 
+import co.xarx.trix.domain.Identifiable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
@@ -12,7 +13,7 @@ import java.util.Set;
 
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PostView implements Serializable {
+public class PostView implements Serializable, Identifiable {
 
 	private static final long serialVersionUID = -1474032487285763669L;
 
@@ -82,4 +83,9 @@ public class PostView implements Serializable {
 	public String subheading;
 	public Date scheduledDate;
 	public boolean notify;
+
+	@Override
+	public Serializable getId() {
+		return postId;
+	}
 }
