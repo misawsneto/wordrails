@@ -31,8 +31,7 @@ public class ImageService {
 	private PictureRepository pictureRepository;
 
 	@Autowired
-	public ImageService(ImageRepository imageRepository, AmazonCloudService amazonCloudService,
-						FileRepository fileRepository, PictureRepository pictureRepository) {
+	public ImageService(ImageRepository imageRepository, AmazonCloudService amazonCloudService, FileRepository fileRepository, PictureRepository pictureRepository) {
 		this.imageRepository = imageRepository;
 		this.amazonCloudService = amazonCloudService;
 		this.fileRepository = fileRepository;
@@ -56,13 +55,14 @@ public class ImageService {
 		Image image = createNewImage(type, name, originalFile, mime);
 
 		for (Picture picture : image.pictures) {
-			if (picture.file.getId() == null) {
-				try {
-					fileRepository.save(picture.file);
-				} catch (Exception e) {
-					picture.file = fileRepository.findOne(QFile.file.hash.eq(picture.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
-				}
+			File temp = fileRepository.findOne(QFile.file.hash.eq(picture.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
+
+			if(temp == null){
+				fileRepository.save(picture.file);
+			} else {
+				picture.file = temp;
 			}
+
 			pictureRepository.save(picture);
 		}
 
@@ -84,7 +84,7 @@ public class ImageService {
 		if (existingImage != null) {
 			//if this image that we've found with the same original hash has all the needed sizes,
 			//we can return this one because it matches what we need. Otherwise, upload the sizes we need
-			if(existingImage.hashs.keySet().stream().allMatch(sizeTags::contains)) {
+			if (existingImage.hashs.keySet().stream().allMatch(sizeTags::contains)) {
 				return existingImage;
 			} else {
 				newImage = existingImage;
@@ -98,25 +98,16 @@ public class ImageService {
 			pictures.add(originalPic);
 		}
 
-		if (newImage.getAbsoluteSizes() != null) {
-			Set<Image.Size> sizes = newImage.getAbsoluteSizes();
-			for (Image.Size entry : sizes) {
-				if (sizeTags.contains(entry.toString())) {
-					Picture pic = getPictureBySize(originalFile, entry.toString(), entry.xy);
-					pictures.add(pic);
-				}
-
+		for (String sizeTag : sizeTags) {
+			Image.Size size = Image.Size.findByAbbr(sizeTag);
+			Picture pic;
+			if (size.xy != null) {
+				pic = getPictureBySize(originalFile, size.toString(), size.xy);
+			} else {
+				pic = getPictureByQuality(originalFile, size.toString(), size.quality);
 			}
-		}
 
-		if (newImage.getQualitySizes() != null) {
-			Set<Image.Size> sizes = newImage.getQualitySizes();
-			for (Image.Size entry : sizes) {
-				if (sizeTags.contains(entry.toString())) {
-					Picture pic = getPictureByQuality(originalFile, entry.toString(), entry.quality);
-					pictures.add(pic);
-				}
-			}
+			pictures.add(pic);
 		}
 
 		newImage.vertical = imageFile.vertical;
@@ -131,17 +122,16 @@ public class ImageService {
 		originalPic.sizeTag = Image.SIZE_ORIGINAL;
 
 		File existingFile = fileRepository.findOne(QFile.file.hash.eq(imageFile.hash));
-		if(existingFile != null) {
+		if (existingFile != null) {
 			originalPic.file = existingFile;
 		}
 
 		String hash = null;
-		if(originalPic.file.id == null) {
-			hash = amazonCloudService.uploadPublicImage(originalFile,
-					originalFile.length(), null, originalPic.sizeTag, originalPic.file.getExtension(), false);
+		if (originalPic.file.id == null) {
+			hash = amazonCloudService.uploadPublicImage(originalFile, originalFile.length(), null, originalPic.sizeTag, originalPic.file.getExtension(), false);
 		}
 
-		if(originalPic.file.hash == null || originalPic.file.hash.isEmpty()) {
+		if (originalPic.file.hash == null || originalPic.file.hash.isEmpty()) {
 			originalPic.file.hash = hash;
 		}
 
@@ -157,8 +147,7 @@ public class ImageService {
 	}
 
 	Picture getPictureByQuality(java.io.File originalFile, String sizeTag, Integer quality) throws Exception {
-		Callable<ImageUtil.ImageFile> callable =
-				() -> ImageUtil.resizeImage(originalFile, quality, "png", false, true);
+		Callable<ImageUtil.ImageFile> callable = () -> ImageUtil.resizeImage(originalFile, quality, "png", false, true);
 
 		return getPicture(callable, originalFile, sizeTag);
 	}
