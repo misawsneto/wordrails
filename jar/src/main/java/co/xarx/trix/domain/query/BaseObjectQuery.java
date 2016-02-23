@@ -24,7 +24,7 @@ public abstract class BaseObjectQuery extends BaseEntity implements ObjectQuery,
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@JoinTable(name = "query_sorter", joinColumns = @JoinColumn(name = "query_id"))
-	@MapKeyColumn(name = "sort_attribute", nullable = false)
+	@MapKeyColumn(name = "sort_attribute", nullable = false, length = 100)
 	@Column(name = "is_asc", nullable = false)
 	public Map<String, Boolean> sorts;
 
