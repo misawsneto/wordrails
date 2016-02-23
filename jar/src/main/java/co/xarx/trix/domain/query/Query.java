@@ -3,8 +3,8 @@ package co.xarx.trix.domain.query;
 import co.xarx.trix.domain.page.Block;
 import co.xarx.trix.domain.query.statement.Statement;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface Query {
 
@@ -12,7 +12,7 @@ public interface Query {
 		return getObjectStatement().getType();
 	}
 
-	Set<Integer> getIndexes();
+	List<Integer> getIndexes();
 
 	Statement getObjectStatement();
 

@@ -17,5 +17,9 @@ public interface QueryableSection extends Section {
 
 	boolean isPageable();
 
+	void setPageable(boolean pageable);
+
 	Integer getSize();
+
+	void setSize(Integer size);
 }

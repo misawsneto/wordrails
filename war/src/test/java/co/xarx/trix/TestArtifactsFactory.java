@@ -128,33 +128,24 @@ public class TestArtifactsFactory {
 		postStatement1.setStationIds(Sets.newHashSet(11));
 		postStatement1.setRichText("dilma");
 
-		PageableQuery pageableQuery = new PageableQuery();
-		pageableQuery.setObjectStatement(postStatement1);
+		PageableQuery pageableQuery = new PageableQuery(postStatement1);
 
 		PostStatement postStatement2 = new PostStatement();
 		postStatement2.setStationIds(Sets.newHashSet(11));
 		postStatement2.setRichText("fhc");
 
-		FixedQuery fixedQuery1 = new FixedQuery();
-		fixedQuery1.setObjectStatement(postStatement2);
-		fixedQuery1.setIndexes(Sets.newHashSet(0, 2, 3));
+		FixedQuery fixedQuery1 = new FixedQuery(postStatement2, Lists.newArrayList(0, 2, 3));
 
-		FixedQuery fixedQuery2 = new FixedQuery();
-		fixedQuery2.setObjectStatement(postStatement2);
-		fixedQuery2.setIndexes(Sets.newHashSet(0, 1, 2, 3, 4));
+		FixedQuery fixedQuery2 = new FixedQuery(postStatement2, Lists.newArrayList(0, 1, 2, 3, 4));
 
-		QueryableListSection section1 = new QueryableListSection();
+		QueryableListSection section1 = new QueryableListSection(10, pageableQuery);
 		section1.setTitle("Section 1");
-		section1.setSize(10);
 		section1.setPageable(true);
-		section1.setPageableQuery(pageableQuery);
 		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
 
-		QueryableListSection section2 = new QueryableListSection();
+		QueryableListSection section2 = new QueryableListSection(5, Lists.newArrayList(fixedQuery2));
 		section2.setTitle("Section 2");
-		section2.setSize(5);
 		section2.setPageable(false);
-		section2.setFixedQueries(Lists.newArrayList(fixedQuery2));
 
 		page.setSections(new TreeMap<Integer, AbstractSection>() {{
 			put(0, section1);

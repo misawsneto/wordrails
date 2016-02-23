@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface QueryRunner {
 
-	Map<Integer, Block> execute(FixedQuery query);
+	Map<Integer, Block> execute(FixedQuery query, Integer size, Integer from);
 
-	Map<Integer, Block> execute(PageableQuery query);
+	Map<Integer, Block> execute(PageableQuery query, Integer size, Integer from);
 }

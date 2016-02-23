@@ -9,15 +9,22 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 @SdkExclude
-@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "queryfixed")
 public class FixedQuery extends BaseEntity implements Query {
+
+	public FixedQuery(AbstractStatement objectStatement, List<Integer> indexes) {
+		this.objectStatement = objectStatement;
+		this.indexes = indexes;
+	}
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -27,7 +34,7 @@ public class FixedQuery extends BaseEntity implements Query {
 	@NotNull
 	@ElementCollection
 	@JoinTable(name = "queryfixed_indexes")
-	public Set<Integer> indexes;
+	public List<Integer> indexes;
 
 	@JoinColumn(name = "statement_id")
 	@OneToOne(cascade = CascadeType.ALL)
@@ -35,6 +42,6 @@ public class FixedQuery extends BaseEntity implements Query {
 
 	@Override
 	public Map<Integer, Block> fetch(QueryRunner executor) {
-		return executor.execute(this);
+		return executor.execute(this, indexes.size(), 0);
 	}
 }
