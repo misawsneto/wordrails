@@ -1,7 +1,6 @@
 package co.xarx.trix.util;
 
 import co.xarx.trix.TestArtifactsFactory;
-import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
@@ -31,8 +30,6 @@ public class ModelMapperTest {
 		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
-		modelMapper.addMappings(new PersonMap());
-//		modelMapper.addMappings(new PostViewMap());
 	}
 
 	@Test
@@ -60,19 +57,6 @@ public class ModelMapperTest {
 
 		assertEquals(person.id, esPerson.id);
 		assertEquals(person.cover.getOriginalHash(), esPerson.cover);
-	}
-
-//	@Test
-	public void testESPostToPostViewMapping() throws Exception {
-		Post post = TestArtifactsFactory.createPost();
-		ESPost esPost = modelMapper.map(post, ESPost.class);
-
-		Person person = TestArtifactsFactory.createPerson();
-		esPost.author = modelMapper.map(person, ESPerson.class);
-		PostView postView = modelMapper.map(esPost, PostView.class);
-
-		assertEquals(postView.tags, esPost.tags);
-		assertEquals(postView.stationId, esPost.stationId);
 	}
 
 	@After
