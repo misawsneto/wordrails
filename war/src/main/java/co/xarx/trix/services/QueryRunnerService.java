@@ -16,12 +16,19 @@ import java.util.TreeMap;
 @Service
 public class QueryRunnerService implements QueryRunner {
 
-	@Autowired
 	private CommandBuilder commandBuilder;
-	@Autowired
 	private ExecutorFactory executorFactory;
 
-	private Map<Integer, Block> getBlocks(Iterator<Identifiable> itens, Iterator<Integer> indexes, Class objectType) {
+	protected QueryRunnerService() {
+	}
+
+	@Autowired
+	public QueryRunnerService(CommandBuilder commandBuilder, ExecutorFactory executorFactory) {
+		this.commandBuilder = commandBuilder;
+		this.executorFactory = executorFactory;
+	}
+
+	protected Map<Integer, Block> getBlocks(Iterator<Identifiable> itens, Iterator<Integer> indexes, Class objectType) {
 		Map<Integer, Block> blocks = new TreeMap<>();
 
 		while (itens.hasNext() && indexes.hasNext()) {
@@ -32,7 +39,7 @@ public class QueryRunnerService implements QueryRunner {
 		return blocks;
 	}
 
-	private List<Identifiable> getItens(Query query, Integer size, Integer from) {
+	protected List<Identifiable> getItens(Query query, Integer size, Integer from) {
 		String objectType = query.getType().getSimpleName();
 		Statement objectStatement = query.getObjectStatement();
 		Executor executor = executorFactory.getExecutor(objectType + "_executor");
@@ -40,14 +47,14 @@ public class QueryRunnerService implements QueryRunner {
 	}
 
 	@Override
-	public Map<Integer, Block> execute(FixedQuery query) {
-		List<Identifiable> itens = getItens(query, query.getIndexes().size(), 0);
+	public Map<Integer, Block> execute(FixedQuery query, Integer size, Integer from) {
+		List<Identifiable> itens = getItens(query, size, from);
 		return getBlocks(itens.iterator(), query.getIndexes().iterator(), query.getType());
 	}
 
 	@Override
-	public Map<Integer, Block> execute(PageableQuery query) {
-		List<Identifiable> itens = getItens(query, query.getSize(), query.getFrom());
+	public Map<Integer, Block> execute(PageableQuery query, Integer size, Integer from) {
+		List<Identifiable> itens = getItens(query, size, from);
 		return getBlocks(itens.iterator(), query.getIndexes().iterator(), query.getType());
 	}
 }
