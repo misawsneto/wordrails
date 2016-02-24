@@ -9,7 +9,7 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
 import co.xarx.trix.services.ESStartupIndexerService;
-import co.xarx.trix.services.PostService;
+import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,6 @@ public class PostEventHandler {
 	private CommentRepository commentRepository;
 	@Autowired
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
-	@Autowired
-	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
@@ -103,7 +101,6 @@ public class PostEventHandler {
 			commentRepository.delete(post.comments);
 			postReadRepository.deleteByPost(post);
 			notificationRepository.deleteByPost(post);
-			recommendRepository.deleteByPost(post);
 			if (post.state.equals(Post.STATE_PUBLISHED)) {
 				esPostRepository.delete(post.id); // evitando bug de remoção de post que tiveram post alterado.
 			}

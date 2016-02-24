@@ -5,7 +5,7 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.AsyncService;
-import co.xarx.trix.services.PostService;
+import co.xarx.trix.services.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

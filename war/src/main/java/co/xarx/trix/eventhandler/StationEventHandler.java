@@ -213,13 +213,10 @@ public class StationEventHandler {
 				for (Post post : posts) {
 					ids.add(post.id);
 				}
-				queryPersistence.deleteBookmarksInPosts(ids);
 				queryPersistence.deleteCellsInPosts(ids);
 				queryPersistence.deleteCommentsInPosts(ids);
-				queryPersistence.deleteImagesInPosts(ids);
 				queryPersistence.deleteNotificationsInPosts(ids);
 				queryPersistence.deletePostReadsInPosts(ids);
-				queryPersistence.deleteRecommendsInPosts(ids);
 
 				postRepository.delete(posts);
 			}

@@ -2,7 +2,6 @@ package co.xarx.trix.persistence;
 
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Station;
-import co.xarx.trix.domain.User;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,6 +22,7 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
 	List<Integer> findIds(@Param("tenantId") String tenantId);
 
 	@Override
+	@SdkExclude
 	@CacheEvict(value = "stationsIds")
 	Station save(Station station);
 

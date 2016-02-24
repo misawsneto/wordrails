@@ -11,17 +11,11 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.services.AsyncService;
-import co.xarx.trix.services.PostService;
 import co.xarx.trix.services.auth.AuthService;
-import co.xarx.trix.services.auth.StationPermissionService;
-import co.xarx.trix.services.elasticsearch.ESPostService;
+import co.xarx.trix.services.post.PostService;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang3.tuple.Pair;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,7 +34,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Path("/posts")
 @Consumes(MediaType.WILDCARD)
@@ -57,9 +54,9 @@ public class PostsResource {
 	@Autowired
 	private AsyncService asyncService;
 	@Autowired
-	private StationPermissionService stationPermissionService;
-	@Autowired
 	private PostRepository postRepository;
+	@Autowired
+	private SearchResource searchResource;
 	@Autowired
 	private QueryPersistence queryPersistence;
 	@Autowired
@@ -69,8 +66,6 @@ public class PostsResource {
 
 	@Autowired
 	private PostService postService;
-	@Autowired
-	private ESPostService esPostService;
 
 	private void forward() throws ServletException, IOException {
 		String path = request.getServletPath() + uriInfo.getPath();
@@ -166,6 +161,7 @@ public class PostsResource {
 		return response;
 	}
 
+	@Deprecated
 	@GET
 	@Path("/search/networkPosts")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -179,39 +175,7 @@ public class PostsResource {
 												   @QueryParam("page") Integer page,
 												   @QueryParam("size") Integer size) {
 
-		if (q == null)
-			q = "";
-
-		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
-
-		if (stationsWithPermission == null || stationsWithPermission.isEmpty()) {
-			ContentResponse<SearchView> response = new ContentResponse<>();
-			response.content = new SearchView();
-			response.content.hits = 0;
-			response.content.posts = new ArrayList<>();
-
-			return response;
-		}
-
-			BoolQueryBuilder mainQuery = esPostService.getBoolQueryBuilder(q, personId, publicationType, stationsWithPermission, null);
-		FieldSortBuilder sort = null;
-
-		if(sortByDate != null && sortByDate){
-			sort = new FieldSortBuilder("date")
-					.order(SortOrder.DESC);
-		}
-
-		Pageable pageable = new PageRequest(page, size);
-
-
-		Pair<Integer, List<PostView>> postsViews = esPostService.searchIndex(mainQuery, pageable, sort);
-
-		ContentResponse<SearchView> response = new ContentResponse<>();
-		response.content = new SearchView();
-		response.content.hits = postsViews.getLeft();
-		response.content.posts = postsViews.getRight();
-
-		return response;
+		return searchResource.posts(q, page, size, personId, sortByDate);
 	}
 
 	@GET

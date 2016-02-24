@@ -23,13 +23,26 @@ public class PersonService {
 		this.personRepository = personRepository;
 	}
 
+	public boolean toggleRecommend(Person person, Integer postId) {
+		boolean recommendInserted = false;
+		if (person.getRecommendPosts().contains(postId)) {
+			person.getRecommendPosts().remove(postId);
+		} else {
+			recommendInserted = true;
+			person.getRecommendPosts().add(postId);
+		}
+
+		personRepository.save(person);
+		return recommendInserted;
+	}
+
 	public boolean toggleBookmark(Person person, Integer postId) {
 		boolean bookmarkInserted = false;
-		if(!person.getBookmarkPosts().contains(postId)) {
+		if (person.getBookmarkPosts().contains(postId)) {
+			person.getBookmarkPosts().remove(postId);
+		} else {
 			bookmarkInserted = true;
 			person.getBookmarkPosts().add(postId);
-		} else {
-			person.getBookmarkPosts().remove(postId);
 		}
 
 		personRepository.save(person);

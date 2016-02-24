@@ -1,7 +1,7 @@
 package co.xarx.trix.scheduler.jobs;
 
 import co.xarx.trix.exception.NotificationException;
-import co.xarx.trix.services.PostService;
+import co.xarx.trix.services.post.PostService;
 import org.apache.log4j.Logger;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;

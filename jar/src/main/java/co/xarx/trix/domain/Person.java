@@ -53,6 +53,15 @@ public class Person extends BaseEntity implements Serializable {
 	@Column(name = "post_id")
 	public Set<Integer> bookmarkPosts;
 
+	@OrderColumn(name = "order")
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "person_recommend",
+			joinColumns = @JoinColumn(name = "person_id")
+
+	)
+	@Column(name = "post_id")
+	public Set<Integer> recommendPosts;
+
 	public boolean networkAdmin = false;
 
 	@NotNull

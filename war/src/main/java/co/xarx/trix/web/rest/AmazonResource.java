@@ -39,7 +39,8 @@ public class AmazonResource {
 
 	@GET
 	@Path("/signedUrl")
-	public Response generateSignedUrl(@QueryParam("hash") String hash, @QueryParam("type") String type, @Context HttpServletRequest request) throws IOException {
+	public Response generateSignedUrl(@QueryParam("hash") String hash,
+									  @QueryParam("type") String type) throws IOException {
 		String objectKey = TenantContextHolder.getCurrentTenantId() + "/" + type + "/" + hash;
 
 		System.out.println("Generating pre-signed URL.");

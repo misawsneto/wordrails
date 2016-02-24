@@ -57,15 +57,11 @@ public class NetworkResource {
 	@Autowired
 	private TermRepository termRepository;
 	@Autowired
-	private WordrailsService wordrailsService;
-	@Autowired
 	private PostRepository postRepository;
 	@Autowired
 	private PostEventHandler postEventHandler;
 	@Autowired
 	private PostReadRepository postReadRepository;
-	@Autowired
-	private RecommendRepository recommendRepository;
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
@@ -429,18 +425,15 @@ public class NetworkResource {
 		}
 
 		List<Object[]> postReadCounts;
-		List<Object[]> recommendsCounts;
 		List<Object[]> commentsCounts;
 		List<Object[]> generalStatus;
 
 		if (postId != null && postId > 0) {
 			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			recommendsCounts = recommendRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			generalStatus = postRepository.findPostStats(postId);
 		}else {
 			postReadCounts = postReadRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			recommendsCounts = recommendRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			commentsCounts = commentRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			generalStatus = networkRepository.findStats();
 		}
@@ -462,18 +455,6 @@ public class NetworkResource {
 		while (it.hasNext()){
 			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
 			long key = (Long)pair.getKey();
-			for(Object[] counts: recommendsCounts){
-				long dateLong = ((java.sql.Date) counts[0]).getTime();
-				long count = (long) counts[1];
-				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-					pair.getValue().recommendsCount = count;
-			}
-		}
-
-		it = stats.entrySet().iterator();
-		while (it.hasNext()){
-			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-			long key = (Long)pair.getKey();
 			for(Object[] counts: commentsCounts){
 				long dateLong = ((java.sql.Date) counts[0]).getTime();
 				long count = (long) counts[1];
@@ -482,9 +463,6 @@ public class NetworkResource {
 			}
 		}
 
-		String generalStatsJson = objectMapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
-		String dateStatsJson = objectMapper.writeValueAsString(stats);
-//		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 		JsonStats jsonStats = new JsonStats();
 		jsonStats.generalStatsJson = generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null;
 		jsonStats.dateStatsJson = stats;

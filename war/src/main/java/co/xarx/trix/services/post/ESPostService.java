@@ -1,4 +1,4 @@
-package co.xarx.trix.services.elasticsearch;
+package co.xarx.trix.services.post;
 
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
@@ -57,7 +57,9 @@ public class ESPostService {
 		this.elasticsearchTemplate = elasticsearchTemplate;
 	}
 
-	public Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
+
+
+	Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
 		Assert.isNotNull(boolQuery, "boolQuery must not be null");
 		Assert.isNotNull(pageable, "pageable must not be null");
 
@@ -119,7 +121,7 @@ public class ESPostService {
 		return new ImmutablePair(total, postView);
 	}
 
-	public BoolQueryBuilder getBoolQueryBuilder(String q, Integer personId, String publicationType, Iterable<Integer> stationIds, Iterable<Integer> postIds) {
+	BoolQueryBuilder getBoolQueryBuilder(String q, Integer personId, String publicationType, Iterable<Integer> stationIds, Iterable<Integer> postIds) {
 		BoolQueryBuilder mainQuery = boolQuery();
 
 		if (Strings.hasText(q)) {

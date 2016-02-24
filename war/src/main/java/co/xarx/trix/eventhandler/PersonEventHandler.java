@@ -23,8 +23,6 @@ public class PersonEventHandler {
 	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
-	private RecommendRepository recommendRepository;
-	@Autowired
 	private PostReadRepository postReadRepository;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
@@ -62,7 +60,6 @@ public class PersonEventHandler {
 			imageRepository.delete(person.cover);
 		}
 
-		recommendRepository.deleteByPersonId(person.id);
 		postReadRepository.deleteByPersonId(person.id);
 
 		List<Post> posts = postRepository.findAllFromPerson(person.id);

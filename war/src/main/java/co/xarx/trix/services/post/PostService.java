@@ -1,4 +1,4 @@
-package co.xarx.trix.services;
+package co.xarx.trix.services.post;
 
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
@@ -6,6 +6,7 @@ import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.util.StringUtil;
 import com.mysema.commons.lang.Assert;
@@ -135,7 +136,7 @@ public class PostService {
 		}
 	}
 
-	public PostRead getPostRead(Post post, Person person, String sessionId) {
+	private PostRead getPostRead(Post post, Person person, String sessionId) {
 		QPostRead pr = QPostRead.postRead;
 		if (person == null) {
 			if(postReadRepository.findAll(pr.sessionid.eq(sessionId).and(pr.post.id.eq(post.id)))

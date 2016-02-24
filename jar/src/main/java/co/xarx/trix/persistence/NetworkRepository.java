@@ -21,7 +21,6 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 	@Query(value = "select " +
 			"(select count(*) from PostRead pr where pr.post.stationId = s.id), " +
 			"(select count(*) from Comment comment where comment.post.stationId = s.id), " +
-			"(select count(*) from Recommend recommend where recommend.post.stationId = s.id)," +
 			"(select count(*) from MobileDevice md where md.type = 0), " +
 			"(select count(*) from MobileDevice md where md.type = 1)" +
 			" from Station s")

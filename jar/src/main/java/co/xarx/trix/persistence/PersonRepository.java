@@ -17,10 +17,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@Cacheable(value = "person", key = "#p0")
 	Person findByUsername(@Param("username") String username);
 
-	@RestResource(exported = false)
-	@Query("select u.username from Person p inner join p.user u where p.id in (:ids)")
-	List<String> findUsernames(List<Integer> ids);
-
 	@Override
 	@SdkExclude
 	@CacheEvict(value = "person", key = "#p0.username")
@@ -38,7 +34,9 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	Person findByEmail(@Param("email") String email);
 
 	@RestResource(exported = false)
-	@Query("select (select count(*) from PostRead pr where pr.post.author.id = p.id), (select count(*) from Comment comment where comment.post.author.id = p.id), (select count(*) from Recommend recommend where recommend.post.author.id = p.id) from Person p where p.id = :authorId")
+	@Query("select (select count(*) from PostRead pr where pr.post.author.id = p.id), " +
+			"(select count(*) from Comment comment where comment.post.author.id = p.id) " +
+			"from Person p where p.id = :authorId")
 	List<Object[]> findPersonStats(@Param("authorId") Integer authorId);
 	@RestResource(exported = false)
 	@Query("select count(*) from Person person")

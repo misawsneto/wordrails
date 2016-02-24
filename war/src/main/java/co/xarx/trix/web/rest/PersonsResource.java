@@ -78,8 +78,6 @@ public class PersonsResource {
 	@Autowired
 	private PostConverter postConverter;
 	@Autowired
-	private RecommendRepository recommendRepository;
-	@Autowired
 	private PostReadRepository postReadRepository;
 	@Autowired
 	private CommentRepository commentRepository;
@@ -293,21 +291,6 @@ public class PersonsResource {
 		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
 
 		List<Post> posts = postRepository.findPostByPersonIdAndStationsAndState(person.id, state, stationsWithPermission, pageable);
-
-		ContentResponse<List<PostView>> response = new ContentResponse<>();
-		response.content = postConverter.convertToViews(posts);
-		return response;
-	}
-
-	@GET
-	@Path("/{personId}/recommends")
-	public ContentResponse<List<PostView>> getPersonNetworkRecommendations(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
-																		   @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-		Pageable pageable = new PageRequest(page, size);
-
-		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
-
-		List<Post> posts = postRepository.findRecommendationsByPersonIdAndStations(personId, stationsWithPermission, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
@@ -644,7 +627,7 @@ public class PersonsResource {
 		if(initData.person != null && !initData.person.username.equals("wordrails")){
 			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
 			List<Integer> bookmarks = new ArrayList(person.getBookmarkPosts());
-			List<Integer> recommends = recommendRepository.findRecommendByPerson(initData.person.id, pageable2);
+			List<Integer> recommends = new ArrayList(person.getRecommendPosts());
 			initData.postsRead = postsRead;
 			initData.bookmarks = bookmarks;
 			initData.recommends = recommends;
@@ -703,7 +686,7 @@ public class PersonsResource {
 			resp.add(bool);
 		}
 
-		if(recommendRepository.findRecommendByPersonIdAndPostId(person.id, postId)!=null){
+		if(person.getRecommendPosts().contains(postId)){
 			BooleanResponse bool = new BooleanResponse();
 			bool.response = true;
 			resp.add(bool);
@@ -756,18 +739,15 @@ public class PersonsResource {
 		}
 
 		List<Object[]> postReadCounts;
-		List<Object[]> recommendsCounts;
 		List<Object[]> commentsCounts;
 		List<Object[]> generalStatus;
 
 		if(person == null) {
 			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			recommendsCounts = recommendRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
 			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
 			generalStatus = postRepository.findPostStats(postId);
 		}else {
 			postReadCounts = postReadRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
-			recommendsCounts = recommendRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
 			commentsCounts = commentRepository.countByAuthorAndDate(person.id, firstDay.minusDays(30).toDate(), firstDay.toDate());
 			generalStatus = personRepository.findPersonStats(person.id);
 		}
@@ -775,9 +755,6 @@ public class PersonsResource {
 		// check date and map counts
 		Iterator it = stats.entrySet().iterator();
 		checkDateAndMapCounts(postReadCounts, it);
-
-		it = stats.entrySet().iterator();
-		checkDateAndMapCounts(recommendsCounts, it);
 
 		it = stats.entrySet().iterator();
 		checkDateAndMapCounts(commentsCounts, it);

@@ -64,3 +64,11 @@ INSERT INTO person_station_role (admin, editor, writer, person_id, station_id, t
 	FROM person, station
 	WHERE person.networkAdmin IS TRUE AND person.tenantId = station.tenantId
 ON DUPLICATE KEY UPDATE admin = TRUE, editor = FALSE, writer = FALSE;
+
+INSERT INTO authorities (authority, user_id, createdAt, tenantId)
+	SELECT "ROLE_USER", id, createdAt, tenantId
+	FROM users;
+
+INSERT INTO authorities (authority, user_id, createdAt, tenantId)
+	SELECT "ROLE_ADMIN", user_id, createdAt, tenantId
+	FROM person where networkAdmin is true;
