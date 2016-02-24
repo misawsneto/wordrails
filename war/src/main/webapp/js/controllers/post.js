@@ -729,7 +729,7 @@ function isTermSelected(terms){
 			post.tags = $scope.chipTags.tags;
 			post.state = state;
 
-			if ($scope.app.editingPost.uploadedImage) {
+			if ($scope.app.editingPost.uploadedImage && $scope.app.editingPost.uploadedImage.imageId) {
 				post.featuredImage = TRIX.baseUrl + "/api/images/" + $scope.app.editingPost.uploadedImage.imageId;
 			} 
 
@@ -768,8 +768,8 @@ function isTermSelected(terms){
 				createPostObject();
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, response);
 				customSlug = true;
-				if($scope.app.editingPost.imageLargeId)
-				$scope.app.editingPost.uploadedImage = {filelink: $scope.app.mediaUrl($scope.app.editingPost.featuredImage.hashs.large) }
+				if($scope.app.editingPost.uploadedImage)
+                    $scope.app.editingPost.uploadedImage = {filelink: $scope.app.mediaUrl($scope.app.editingPost.featuredImage.hashs.large) }
 				setWritableStationById(response.station.id)
 				updateTermTree();
 				$timeout(function() {
