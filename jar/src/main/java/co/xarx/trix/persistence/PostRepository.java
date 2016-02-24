@@ -112,9 +112,6 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 	@Query("select post from Post post join post.terms term where term.id in (:termId) and post.featuredImage is not null")
 	List<Post> findByFeaturedImageByTermId(@Param("termId") Integer termId, Pageable page);
 
-	@Override
-	void delete(Iterable<? extends Post> entities);
-
 	@RestResource(exported = false)
 	@Modifying
 	@Query("DELETE from Post post WHERE post.id in (:ids)")
