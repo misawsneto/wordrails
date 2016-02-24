@@ -1,15 +1,22 @@
 package co.xarx.trix.domain;
 
 
+import lombok.AccessLevel;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name = "person_station_role", uniqueConstraints = {@UniqueConstraint(columnNames = {"person_id", "station_id"})})
-public class StationRole {
+public class StationRole extends BaseEntity {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
+
 
 	@NotNull
 	@ManyToOne

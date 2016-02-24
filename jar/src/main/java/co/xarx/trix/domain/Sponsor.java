@@ -1,17 +1,20 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
 import java.util.Set;
 
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
-public class Sponsor {
+public class Sponsor extends BaseEntity {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
 	@NotNull
@@ -29,49 +32,7 @@ public class Sponsor {
 
 	@OneToOne
 	public Image logo;
-	public Integer logoId;
-	public Integer logoMediumId;
-	public Integer logoLargeId;
 
 	@OneToMany
 	public Set<Ad> ads;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable = false)
-	public Date createdAt;
-
-	@PrePersist
-	public void onCreate() {
-		if (logo != null && logo.original != null) {
-			logoId = logo.original.id;
-			logoMediumId = logo.medium.id;
-			logoLargeId = logo.large.id;
-		} else {
-			logoId = null;
-			logoMediumId = null;
-			logoLargeId = null;
-		}
-
-		createdAt = updatedAt = new Date();
-	}
-
-	@PreUpdate
-	public void onUpdate() {
-		if (logo != null && logo.original != null) {
-			logoId = logo.original.id;
-			logoMediumId = logo.medium.id;
-			logoLargeId = logo.large.id;
-		} else {
-			logoId = null;
-			logoMediumId = null;
-			logoLargeId = null;
-		}
-
-		updatedAt = new Date();
-	}
 }

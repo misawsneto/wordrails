@@ -22,7 +22,7 @@ public class PostAspect {
 	private ElasticSearchService elasticSearchService;
 
 	@AfterReturning("within(co.xarx.trix.persistence.PostRepository+) && execution(* *..save(*)) && args(post)")
-	public void checkMultitenantEntity(Post post) throws Throwable {
+	public void savePost(Post post) throws Throwable {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
 				schedulerService.schedule(post.getId(), post.scheduledDate);
 		} else {
@@ -38,5 +38,10 @@ public class PostAspect {
 			elasticSearchService.deleteIndex(post.getId(), esPostRepository);
 
 		}
+	}
+
+	@AfterReturning("within(co.xarx.trix.persistence.PostRepository+) && execution(* *..delete(*)) && args(post)")
+	public void deletePost(Post post) throws Throwable {
+
 	}
 }

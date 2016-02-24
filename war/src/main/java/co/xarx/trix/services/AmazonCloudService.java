@@ -1,6 +1,7 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.exception.OperationNotSupportedException;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.StringUtil;
 import com.amazonaws.AmazonServiceException;
@@ -12,7 +13,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,38 +22,39 @@ import java.util.List;
 @Service
 public class AmazonCloudService {
 
+	Logger log = Logger.getLogger(AmazonCloudService.class.getName());
+
 	public static final String APK_DIR = "apk";
 	public static final String IMAGE_DIR = "images";
 
-	Logger log = Logger.getLogger(AmazonCloudService.class.getName());
+	@Value("${spring.profiles.active:'dev'}")
+	private String profile;
 
-	@Value("${amazon.accessKey}")
-	String accessKey;
-	@Value("${amazon.accessSecretKey}")
-	String accessSecretKey;
-	@Value("${amazon.distributionKey}")
-	String distributionKey;
-	@Value("${amazon.publicCloudfrontUrl}")
-	String publicCloudfrontUrl;
-	@Value("${amazon.publicBucket}")
-	String publicBucket;
+
+	private String cloudfrontUrl;
+	private String bucketName;
 
 	private AmazonS3Client s3Client;
 
-	@PostConstruct
-	public void init() {
+	public AmazonCloudService(String accessKey, String accessSecretKey, String cloudfrontUrl, String bucketName) {
+		this.cloudfrontUrl = cloudfrontUrl;
+		this.bucketName = bucketName;
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, accessSecretKey);
 		s3Client = new AmazonS3Client(awsCreds);
 	}
 
 	public String getPublicImageURL(String fileName) throws IOException {
-		String networkDomain = TenantContextHolder.getCurrentTenantId();
-		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/images/" + fileName;
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		if (tenantId == null || tenantId.isEmpty())
+			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
+		return "http://" + cloudfrontUrl + "/" + tenantId + "/images/" + fileName;
 	}
 
 	public String getPublicApkURL(String fileName) throws IOException {
-		String networkDomain = TenantContextHolder.getCurrentTenantId();
-		return "http://" + publicCloudfrontUrl + "/" + networkDomain + "/apk/" + fileName;
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		if(tenantId == null || tenantId.isEmpty())
+			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
+		return "http://" + cloudfrontUrl + "/" + tenantId + "/apk/" + fileName;
 	}
 
 	public String uploadPublicImage(InputStream input, Long lenght, String size, String mime) throws IOException, AmazonS3Exception {
@@ -110,7 +111,7 @@ public class AmazonCloudService {
 
 	public boolean exists(String key) {
 		try {
-			s3Client.getObjectMetadata(publicBucket, key);
+			s3Client.getObjectMetadata(bucketName, key);
 		} catch(AmazonServiceException e) {
 			if (e.getStatusCode() == 403 || e.getStatusCode() == 404) {
 				return false;
@@ -130,6 +131,10 @@ public class AmazonCloudService {
 	}
 
 	private void uploadFile(java.io.File file, Long lenght, String keyName, ObjectMetadata metadata, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
+		if("dev".equals(profile) && !TenantContextHolder.getCurrentTenantId().equals("demo")) {
+			throw new OperationNotSupportedException("Can't upload images in dev profile in network that is not demo");
+		}
+
 		log.debug("uploading file of lenght " + lenght);
 
 		if(exists(keyName)) {
@@ -141,7 +146,7 @@ public class AmazonCloudService {
 		List<PartETag> partETags = new ArrayList<>();
 
 		// Step 1: Initialize.
-		InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(publicBucket, keyName);
+		InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucketName, keyName);
 		if(metadata != null) initRequest.setObjectMetadata(metadata);
 
 		initRequest.setCannedACL(CannedAccessControlList.PublicRead);
@@ -160,7 +165,7 @@ public class AmazonCloudService {
 
 				// Create request to upload a part.
 				UploadPartRequest uploadRequest = new UploadPartRequest().
-						withBucketName(publicBucket).
+						withBucketName(bucketName).
 						withKey(keyName).
 						withUploadId(initResponse.getUploadId()).
 						withPartNumber(i).
@@ -175,11 +180,11 @@ public class AmazonCloudService {
 			}
 
 			// Step 3: Complete.
-			CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(publicBucket, keyName, initResponse.getUploadId(), partETags);
+			CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(bucketName, keyName, initResponse.getUploadId(), partETags);
 
 			s3Client.completeMultipartUpload(compRequest);
 		} catch (Exception e) {
-			s3Client.abortMultipartUpload(new AbortMultipartUploadRequest(publicBucket, keyName, initResponse.getUploadId()));
+			s3Client.abortMultipartUpload(new AbortMultipartUploadRequest(bucketName, keyName, initResponse.getUploadId()));
 
 			throw new AmazonS3Exception("Error uploading file to Amazon S3", e);
 		} finally {

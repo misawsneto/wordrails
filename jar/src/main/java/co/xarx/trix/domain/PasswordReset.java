@@ -1,63 +1,25 @@
 package co.xarx.trix.domain;
 
-import java.util.Date;
+import lombok.AccessLevel;
+import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Email;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
+@lombok.Getter @lombok.Setter
 @Entity
-public class PasswordReset {
-	
+public class PasswordReset extends BaseEntity {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)				
+	@Setter(AccessLevel.NONE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
 	@NotNull
-	@Column(unique=true)
 	public String hash;
-	
+
 	@NotNull
-	@Email
-	public String email;
-	
-	public String personName;
-	
-	public boolean active = true;
-	
-	public boolean invite = false;
-	
-	public String networkSubdomain;
-	
-	public String networkName;
-	
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date createdAt;
-
-	@PrePersist
-	void onCreate() {
-		createdAt = new Date();
-	}
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@PreUpdate
-	void onUpdate() {
-		updatedAt = new Date();
-	}
+	@OneToOne
+	public User user;
 }

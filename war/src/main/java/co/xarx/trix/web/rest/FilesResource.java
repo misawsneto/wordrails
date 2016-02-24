@@ -127,10 +127,10 @@ public class FilesResource {
 
 			String hash = FileUtil.getHash(item.getInputStream());
 //			FileContents existingFile = fileContentsRepository.findOne(QFileContents.fileContents.hash.eq(hash));
-            FileContents existingFile = null;
-            Iterable<FileContents> all = fileContentsRepository.findAll(QFileContents.fileContents.hash.eq(hash));
-            if(all != null && all.iterator().hasNext())
-                existingFile = all.iterator().next();
+			FileContents existingFile = null;
+			Iterable<FileContents> all = fileContentsRepository.findAll(QFileContents.fileContents.hash.eq(hash));
+			if(all != null && all.iterator().hasNext())
+				existingFile = all.iterator().next();
 			if (existingFile != null) {
 				if (existingFile.type.equals(File.EXTERNAL)) {
 					if (!amazonCloudService.exists(AmazonCloudService.IMAGE_DIR, existingFile.hash)) {

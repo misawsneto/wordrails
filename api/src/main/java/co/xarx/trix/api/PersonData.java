@@ -9,7 +9,6 @@ public class PersonData implements Serializable {
 	public NetworkDto network;
 	public NetworkRoleDto networkRole;
 	public List<StationDto> stations;
-	public List<SectionDto> sections;
 	public PersonPermissions personPermissions;
 	public List<PostView> recent;
 	public List<PostView> popular;
@@ -17,6 +16,9 @@ public class PersonData implements Serializable {
 	public List<Integer> postsRead;
 	public List<Integer> bookmarks;
 	public List<Integer> recommends;
+
+	public List<MenuEntryDto> sections;
+	public List<MenuEntryDto> menuEntries;
 
 	public String publicCloudfrontUrl;
 	public String privateCloudfrontUrl;

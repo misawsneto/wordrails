@@ -5,6 +5,7 @@ import co.xarx.trix.domain.query.PageableQuery;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,9 +15,24 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-@Table(name = "section_queryable_list")
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "sectionqueryablelist")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
-public class QueryableListSection extends BaseSection implements ListSection, QueryableSection {
+public class QueryableListSection extends AbstractSection implements ListSection, QueryableSection {
+
+	private static final long serialVersionUID = -1931423761123134760L;
+
+	public QueryableListSection(Integer size, PageableQuery query) {
+		this.size = size;
+		this.pageableQuery = query;
+	}
+
+	public QueryableListSection(Integer size, List<FixedQuery> query) {
+		this.size = size;
+		this.fixedQueries = query;
+	}
 
 	@JsonIgnore
 	@JoinTable(name = "section_fixedquery",
@@ -45,57 +61,6 @@ public class QueryableListSection extends BaseSection implements ListSection, Qu
 
 	@NotNull
 	public Integer size;
-
-	@Override
-	public PageableQuery getPageableQuery() {
-		if(pageableQuery == null) return null;
-
-		pageableQuery.setFrom(0);
-		pageableQuery.setSize(this.getSize());
-		return pageableQuery;
-	}
-
-	@Override
-	public void setPageableQuery(PageableQuery pageableQuery) {
-		this.pageableQuery = pageableQuery;
-	}
-
-	@Override
-	public List<FixedQuery> getFixedQueries() {
-		return fixedQueries;
-	}
-
-	@Override
-	public void setFixedQueries(List<FixedQuery> fixedQueries) {
-		this.fixedQueries = fixedQueries;
-	}
-
-	@Override
-	@JsonIgnore
-	public boolean isPageable() {
-		return isPageable;
-	}
-
-	public void setPageable(boolean pageable) {
-		isPageable = pageable;
-	}
-
-	public Integer getSize() {
-		return size;
-	}
-
-	public void setSize(Integer pageSize) {
-		this.size = pageSize;
-	}
-
-	@Override
-	public Map<Integer, Block> getBlocks() {
-		return blocks;
-	}
-
-	public void setBlocks(Map<Integer, Block> blocks) {
-		this.blocks = blocks;
-	}
 
 	@Override
 	public String getType() {

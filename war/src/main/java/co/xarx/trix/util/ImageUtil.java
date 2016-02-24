@@ -5,14 +5,11 @@ import co.xarx.trix.domain.File;
 import net.coobird.thumbnailator.Thumbnails;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.Iterator;
 
 public class ImageUtil {
 
@@ -47,30 +44,32 @@ public class ImageUtil {
 	public static ImageFile resizeImage(java.io.File file, Integer quality, String extension, boolean resizeUp, boolean resizeDown) throws IOException {
 		java.io.File newFile = FileUtil.createNewTempFile();
 		BufferedImage bi = ImageIO.read(file);
-        if(bi == null) {
-            // favicon TODO: this needs security and validation
-            return new ImageFile(file, 32, 32, FileUtil.getHash(new FileInputStream(file)));
-        }
+		if(bi == null) {
+			// favicon TODO: this needs security and validation
+			return new ImageFile(file, 32, 32, FileUtil.getHash(new FileInputStream(file)));
+		}
 
-        Double currentQuality = Math.sqrt(bi.getHeight() * bi.getWidth());
-        if ((resizeUp && quality > currentQuality) || (resizeDown && quality < currentQuality)) {
-            Double pctResize = new BigDecimal(quality).divide(new BigDecimal(currentQuality), 5, BigDecimal.ROUND_HALF_UP).doubleValue();
+		Double currentQuality = Math.sqrt(bi.getHeight() * bi.getWidth());
+		if ((resizeUp && quality > currentQuality) || (resizeDown && quality < currentQuality)) {
+			Double pctResize = new BigDecimal(quality).divide(new BigDecimal(currentQuality), 5, BigDecimal.ROUND_HALF_UP).doubleValue();
 
-            bi = Thumbnails.of(bi).scale(pctResize).outputFormat("png").asBufferedImage();
-            ImageIO.write(bi, "png", newFile);
-        } else {
-            newFile = file;
-        }
+			bi = Thumbnails.of(bi).scale(pctResize).outputFormat("png").asBufferedImage();
+			ImageIO.write(bi, "png", newFile);
+		} else {
+			newFile = file;
+		}
 
-        return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FileUtil.getHash(new FileInputStream(newFile)));
+		return new ImageFile(newFile, bi.getHeight(), bi.getWidth(), FileUtil.getHash(new FileInputStream(newFile)));
 	}
 
 	public static ImageFile getImageFile(java.io.File file) throws IOException {
+		if(file == null) return null;
+
 		BufferedImage bi = ImageIO.read(file);
-        if(bi == null){
-            // favicon TODO: this needs security and validation
-            return new ImageFile(file, 32, 32, FileUtil.getHash(new FileInputStream(file)));
-        }
+		if(bi == null){
+			// favicon TODO: this needs security and validation
+			return new ImageFile(file, 32, 32, FileUtil.getHash(new FileInputStream(file)));
+		}
 		return new ImageFile(file, bi.getHeight(), bi.getWidth(), FileUtil.getHash(new FileInputStream(file)));
 	}
 

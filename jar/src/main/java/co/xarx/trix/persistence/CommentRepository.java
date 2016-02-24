@@ -1,7 +1,6 @@
 package co.xarx.trix.persistence;
 
 import co.xarx.trix.domain.Comment;
-import co.xarx.trix.domain.Post;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,9 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer>, QueryDslPredicateExecutor<Comment> {
-
-	@RestResource(exported=false)
-	List<Comment> findByPost(Post post);
 
 	@Query("SELECT comment FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
 	List<Comment> findPostCommentsOrderByDate(@Param("postId") Integer postId, Pageable pageable);
@@ -29,6 +25,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>, Quer
 	List<Object[]> countByAuthorAndDate(@Param("authorId") Integer authorId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
 
 	@RestResource(exported = false)
-	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.stationId in (select s.id from Station s where s.network.id = :networkId ) and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")
-	List<Object[]> countByNetworkAndDate(@Param("networkId") Integer networkId, @Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
+	@Query("select date(comment.date), count(*)  from Comment comment where comment.post.stationId in (select s.id from Station s) and (date(comment.date) >= date(:dateStart) and date(comment.date) <= date(:dateEnd)) group by date(comment.date)")
+	List<Object[]> countByDate(@Param("dateStart") Date dateStart, @Param("dateEnd") Date dateEnd);
 }

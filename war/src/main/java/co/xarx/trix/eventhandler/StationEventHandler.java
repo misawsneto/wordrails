@@ -228,11 +228,6 @@ public class StationEventHandler {
 				}).collect(Collectors.toList()));
 			}
 
-			List<Notification> notifications = notificationRepository.findByStation(station);
-			if(notifications != null && notifications.size() > 0)
-				notificationRepository.delete(notifications);
-
-
 			elasticSearchService.deleteIndex(station.getId(), esStationRepository);
 
 		}else{

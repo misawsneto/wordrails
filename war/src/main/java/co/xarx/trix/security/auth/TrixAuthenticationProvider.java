@@ -1,14 +1,12 @@
 package co.xarx.trix.security.auth;
 
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.SocialUser;
 import co.xarx.trix.domain.User;
 import co.xarx.trix.domain.UserConnection;
+import co.xarx.trix.domain.social.SocialUser;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserConnectionRepository;
 import co.xarx.trix.persistence.UserRepository;
-import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.util.Constants;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
@@ -23,8 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
 
 
@@ -39,9 +35,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 	private UserConnectionRepository userConnectionRepository;
 	@Autowired
 	private SocialAuthenticationService socialAuthenticationService;
-
-	@Autowired
-	private AsyncService asyncService;
 
 	@Override
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
@@ -76,10 +69,6 @@ public class TrixAuthenticationProvider implements AuthenticationProvider {
 			person.password = "wordrails";
 			person.email = "";
 			person.name = "";
-			person.imageId = 0;
-			person.coverId = 0;
-			person.imageHash = "";
-			person.coverHash = "";
 
 			return person;
 		}

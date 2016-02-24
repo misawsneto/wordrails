@@ -128,8 +128,8 @@ public class RecommendsResource {
 			throw new UnauthorizedException();
 		
 		Recommend recommend = new Recommend();
-		recommend.post = postRepository.findOne(postId);
-		recommend.person = person;
+		recommend.setPost(postRepository.findOne(postId));
+		recommend.setPerson(person);
 		try{
 			recommendRepository.save(recommend);
 			BooleanResponse content = new BooleanResponse();

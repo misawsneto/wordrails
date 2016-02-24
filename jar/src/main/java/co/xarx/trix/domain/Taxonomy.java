@@ -1,24 +1,30 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
-public class Taxonomy implements Serializable {
+public class Taxonomy extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 7821255752575024731L;
 
 	public static final String NETWORK_TAXONOMY = "N";
 	public static final String STATION_TAXONOMY = "S";
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer id;
+
+	@Override
+	public Integer getId() {
+		return id;
+	}
 
 	@NotNull
 	@Size(min=1, max=1)
@@ -35,38 +41,13 @@ public class Taxonomy implements Serializable {
 	public Set<Term> terms;
 
 
-/*--NETWORK_TAXONOMY---------------------------------------------------------*/	
 	@ManyToOne
 	@JoinColumn(updatable=true)
 	public Network owningNetwork;
-/*--NETWORK_TAXONOMY---------------------------------------------------------*/
 
-/*--STATION_TAXONOMY---------------------------------------------------------*/	
 	@ManyToOne
 	@JoinColumn(updatable=true)
 	public Station owningStation;
-/*--STATION_TAXONOMY---------------------------------------------------------*/
-
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date createdAt;
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date updatedAt;
-
-	@PrePersist
-	void onCreate() {
-		createdAt = new Date();
-	}
-
-	@PreUpdate
-	void onUpdate() {
-		updatedAt = new Date();
-	}
 
 	@Override
 	public int hashCode() {
@@ -120,5 +101,5 @@ public class Taxonomy implements Serializable {
 		} else if (!type.equals(other.type))
 			return false;
 		return true;
-	}	
+	}
 }

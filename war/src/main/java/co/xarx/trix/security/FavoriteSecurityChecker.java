@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class FavoriteSecurityChecker {
@@ -23,10 +24,10 @@ public class FavoriteSecurityChecker {
 
 	public boolean canWriteRecommend(Recommend recommend) {
 		boolean canWrite = false;
-		Post post = recommend.post;
+		Post post = recommend.getPost();
 
 		Person personLogged = authProvider.getLoggedPerson();
-		if(personLogged != null && personLogged.id == recommend.person.id){
+		if(personLogged != null && Objects.equals(personLogged.id, recommend.getPerson().id)){
 			Station station = post.station;
 			if(station.visibility.equals(Station.UNRESTRICTED) && station.writable){
 				canWrite = true;

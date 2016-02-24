@@ -1,6 +1,5 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.util.StringUtil;
@@ -8,8 +7,6 @@ import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.ServletException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,17 +17,17 @@ public class NetworkService {
 	private Map<String, Integer> tenantIds;
 	private Map<String, Integer> domains;
 
-	@Autowired
 	private NetworkRepository networkRepository;
 
-	@PostConstruct //method with no args is required
-	public void init() throws ServletException {
+	@Autowired
+	public NetworkService(NetworkRepository networkRepository) {
+		this.networkRepository = networkRepository;
 		tenantIds = Maps.newConcurrentMap();
 		domains = Maps.newConcurrentMap();
 
 		List<Network> networks = networkRepository.findAll();
 		for (Network n : networks) {
-			tenantIds.put(n.subdomain, n.id);
+			tenantIds.put(n.tenantId, n.id);
 			if (n.domain != null) domains.put(n.domain, n.id);
 		}
 	}
@@ -38,23 +35,19 @@ public class NetworkService {
 	public String getTenantFromHost(String host) {
 		String tenantId = StringUtil.getSubdomainFromHost(host);
 		if (domains.keySet().contains(host)) {
-			TenantContextHolder.setCurrentNetworkId(domains.get(host));
 			for (String s : tenantIds.keySet()) {
 				if (Objects.equals(tenantIds.get(s), domains.get(host))) {
 					tenantId = s;
 					break;
 				}
 			}
-		} else if (tenantIds.keySet().contains(tenantId)) {
-			TenantContextHolder.setCurrentNetworkId(tenantIds.get(tenantId));
-		} else {
+		} else if (!tenantIds.keySet().contains(tenantId)) {
 			Network network = networkRepository.findByDomain(host);
 			if (network != null) {
-				TenantContextHolder.setCurrentNetworkId(network.id);
 				domains.put(host, network.id);
-				tenantId = network.subdomain;
+				tenantId = network.tenantId;
 			} else {
-				network = networkRepository.findBySubdomain(tenantId);
+				network = networkRepository.findByTenantId(tenantId);
 				if (network != null) {
 					tenantIds.put(tenantId, network.id);
 				} else {

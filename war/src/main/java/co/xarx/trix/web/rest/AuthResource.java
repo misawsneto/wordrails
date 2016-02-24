@@ -4,6 +4,7 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.PasswordService;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.builder.api.GoogleApi;
@@ -12,10 +13,7 @@ import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -28,12 +26,14 @@ public class AuthResource {
 	private NetworkRepository networkRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private PasswordService passwordService;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/signin")
 	public Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
-		Network network = networkRepository.findOne(TenantContextHolder.getCurrentNetworkId());
+		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
 		boolean allowSocialLogin = true;
 		OAuthService service = null;
@@ -41,20 +41,12 @@ public class AuthResource {
 		switch (providerId) {
 			case "facebook":
 				allowSocialLogin = network.isFacebookLoginAllowed();
-				service = new ServiceBuilder()
-						.provider(FacebookApi.class)
-						.apiKey(network.facebookAppID)
-						.apiSecret(network.facebookAppSecret)
-						.build();
+				service = new ServiceBuilder().provider(FacebookApi.class).apiKey(network.facebookAppID).apiSecret(network.facebookAppSecret).build();
 				token = new Token(accessToken, network.facebookAppSecret);
 				break;
 			case "google":
 				allowSocialLogin = network.isGoogleLoginAllowed();
-				service = new ServiceBuilder()
-						.provider(GoogleApi.class)
-						.apiKey(network.googleAppID)
-						.apiSecret(network.googleAppSecret)
-						.build();
+				service = new ServiceBuilder().provider(GoogleApi.class).apiKey(network.googleAppID).apiSecret(network.googleAppSecret).build();
 				token = new Token(accessToken, network.googleAppSecret);
 				break;
 		}
@@ -70,5 +62,20 @@ public class AuthResource {
 		}
 
 		return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+
+	@POST
+	@Path("/forgotPassword")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response resetePassword(@FormParam("email") String email) {
+		passwordService.resetPassword(email);
+		return Response.status(Response.Status.OK).build();
+	}
+
+	@PUT
+	@Path("/{hash}")
+	public Response updatePassword(@PathParam("hash") String hash, @FormParam("password") String password) {
+		passwordService.updatePassword(hash, password);
+		return Response.status(Response.Status.OK).build();
 	}
 }

@@ -1,8 +1,8 @@
 package co.xarx.trix.elasticsearch.executor;
 
 import co.xarx.trix.api.PostView;
-import co.xarx.trix.domain.query.ElasticSearchExecutor;
-import co.xarx.trix.domain.query.ElasticSearchQuery;
+import co.xarx.trix.domain.query.Executor;
+import co.xarx.trix.services.elasticsearch.ElasticSearchCommand;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 @Component("post_executor")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ESPostExecutor implements ElasticSearchExecutor<PostView> {
+public class ESPostExecutor implements Executor<PostView, ElasticSearchCommand> {
 
 	@Value("${elasticsearch.index}")
 	private String indexName;
@@ -36,7 +36,7 @@ public class ESPostExecutor implements ElasticSearchExecutor<PostView> {
 
 	private static final String ES_TYPE = "post";
 
-	public List<PostView> execute(ElasticSearchQuery query, Integer size, Integer from) {
+	public List<PostView> execute(ElasticSearchCommand query, Integer size, Integer from) {
 		SearchRequestBuilder searchRequestBuilder = client
 				.prepareSearch(indexName)
 				.setTypes(ES_TYPE)

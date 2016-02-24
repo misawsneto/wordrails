@@ -1,7 +1,6 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.api.AbstractAuthorizationFilter;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
@@ -46,8 +45,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	private TermPerspectiveRepository termPerspectiveRepository;
 	@Autowired
 	private CommentRepository commentRepository;
-	@Autowired
-	private TrixAuthenticationProvider authProvider;
 
 	@Override
 	protected boolean isGetCellsAuthorized() {
@@ -110,51 +107,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetEventsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetEventAuthorized(Integer eventId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetFilesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetFileAuthorized(Integer fileId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetFixedQueriesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetFixedQueryAuthorized(Integer fixedQueryId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetFixedQueryObjectQueryAuthorized(Integer fixedQueryId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetGlobalParametersAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetGlobalParameterAuthorized(Integer globalParameterId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetImagesAuthorized() {
 		return false;
 	}
@@ -165,6 +117,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetMenuEntriesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetMenuEntryAuthorized(Integer menuEntryId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetNetworksAuthorized() {
 		return true;
 	}
@@ -172,11 +134,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetNetworkAuthorized(Integer networkId) {
 		return true;
-	}
-
-	@Override
-	protected boolean isFindBySubdomainAuthorized(String subdomain) {
-		return false;
 	}
 
 	@Override
@@ -220,8 +177,8 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByUsernameAndNetworkIdAuthorized(String username, Integer networkId) {
-		return true;
+	protected boolean isGetPersonBookmarkPostsAuthorized(Integer personId) {
+		return false;
 	}
 
 
@@ -321,11 +278,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPostImagesAuthorized(Integer postId) {
-		return canReadPosts(postId);
-	}
-
-	@Override
 	protected boolean isGetPostAuthorAuthorized(Integer postId) {
 		return canReadPosts(postId);
 	}
@@ -341,11 +293,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetPostTagsAuthorized(Integer postId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetPostTermsAuthorized(Integer postId) {
 		return canReadPosts(postId);
 	}
 
-	@Override
+    @Override
 	protected boolean isGetRowsAuthorized() {
 		return false;
 	}
@@ -392,21 +349,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetSectionsAuthorized() {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetSectionAuthorized(Integer sectionId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetSectionNetworkAuthorized(Integer sectionId) {
-		return true;
-	}
-
-	@Override
 	protected boolean isGetStationsAuthorized() {
 		return false;
 	}
@@ -417,18 +359,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByNameAuthorized(String name) {
-
-		return true;
-	}
-
-	//	@Override
-	protected boolean isGetStationNetworksAuthorized(Integer stationId) {
-
-		return true;
-	}
-
-	@Override
 	protected boolean isGetStationPersonsStationRolesAuthorized(Integer stationId) {
 		boolean authorized = false;
 		Station station = stationRepository.findOne(stationId);
@@ -436,7 +366,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 			authorized = stationSecurityChecker.isStationAdmin(station);
 			if (!authorized) {
 //				for (Network network: station.networks) {
-				authorized = networkSecurityChecker.isNetworkAdmin(station.network);
+				authorized = networkSecurityChecker.isNetworkAdmin();
 //					if(authorized){
 //						break;
 //					}
@@ -533,11 +463,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindNetworkOrStationTaxonomiesAuthorized(Integer networkId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isFindStationTagsAuthorized(Integer stationId) {
 		Station station = stationRepository.findOne(stationId);
 		return stationSecurityChecker.canVisualize(station);
@@ -558,7 +483,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindNetworkCategoriesAuthorized(Integer networkId) {
 		Network network = networkRepository.findOne(networkId);
-		return networkSecurityChecker.isNetworkAdmin(network);
+		return networkSecurityChecker.isNetworkAdmin();
+	}
+
+	@Override
+	protected boolean isFindNetworkOrStationTaxonomiesAuthorized(Integer networkId) {
+		return false;
 	}
 
 	@Override
@@ -679,10 +609,10 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return termPerspective != null && canVisualizeStation(termPerspective.perspective.station.id);
 	}
 
-	@Override
-	protected boolean isGetTermPerspectiveHomeRowAuthorized(Integer termPerspectiveId) {
-		return false;
-	}
+    @Override
+    protected boolean isGetTermPerspectiveHomeRowAuthorized(Integer termPerspectiveId) {
+        return false;
+    }
 
 	@Override
 	protected boolean isGetTermPerspectiveFeaturedRowAuthorized(Integer termPerspectiveId) {
@@ -766,7 +696,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		boolean authorized = false;
 		Network network = networkRepository.findOne(networkId);
 		if (network != null) {
-			authorized = networkSecurityChecker.isNetworkAdmin(network);
+			authorized = networkSecurityChecker.isNetworkAdmin();
 		}
 		return authorized;
 	}
@@ -774,7 +704,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	private boolean isNetworkAdminByPersonNetworkRoles(Integer personNetworkRolesId) {
 		boolean authorized = false;
 		NetworkRole personNetworkRole = personNetworkRolesRepository.findOne(personNetworkRolesId);
-		if (personNetworkRole != null && networkSecurityChecker.isNetworkAdmin(personNetworkRole.network)) {
+		if (personNetworkRole != null && networkSecurityChecker.isNetworkAdmin()) {
 			authorized = true;
 		}
 		return authorized;
@@ -784,7 +714,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		boolean authorized = false;
 		Network network = networkRepository.findOne(networkId);
 		if (network != null) {
-			authorized = networkSecurityChecker.belongsToNetwork(network);
+			authorized = networkSecurityChecker.belongsToNetwork();
 		}
 		return authorized;
 	}
@@ -792,22 +722,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetPersonImageAuthorized(Integer personId) {
 
-		return true;
-	}
-
-	@Override
-	protected boolean isFindByPersonIdAndNetworkIdAuthorized(Integer personId, Integer networkId) {
-		boolean authorized = false;
-
-		Person loggedPerson = authProvider.getLoggedPerson();
-		if (loggedPerson != null && loggedPerson.id.equals(personId)) {
-			authorized = true;
-		}
-		return authorized;
-	}
-
-	@Override
-	protected boolean isGetNetworkLogoAuthorized(Integer networkId) {
 		return true;
 	}
 
@@ -831,18 +745,12 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindSponsorByNetworkIdAuthorized(Integer networkId) {
-		Network network = networkRepository.findOne(networkId);
-		return networkSecurityChecker.isNetworkAdmin(network);
+		return networkSecurityChecker.isNetworkAdmin();
 	}
 
 	@Override
 	protected boolean isGetNetworkSponsorsAuthorized(Integer networkId) {
 
-		return true;
-	}
-
-	@Override
-	protected boolean isGetNetworkSectionsAuthorized(Integer networkId) {
 		return true;
 	}
 
@@ -894,77 +802,17 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindAllByNetworkAuthorized(Integer networkId, Integer page, Integer size, List<String> sort) {
-		return stationSecurityChecker.isAdmin();
-	}
-
-	@Override
 	protected boolean isIsAdminAuthorized(Integer personId) {
 		return false;
 	}
 
 	@Override
-	protected boolean isFindAllByNetworkExcludingPersonAuthorized(Integer networkId, Integer personId, Integer page, Integer size, List<String> sort) {
-		return stationSecurityChecker.isAdmin();
-	}
-
-	@Override
-	protected boolean isFindAllByNetworkAndQueryAuthorized(Integer networkId, String query, Integer page, Integer size, List<String> sort) {
-		return stationSecurityChecker.isAdmin();
-	}
-
-	@Override
-	protected boolean isFindAllByNetworkAndQueryExcludingPersonAuthorized(Integer networkId, Integer personId, String query, Integer page, Integer size, List<String> sort) {
-		return stationSecurityChecker.isAdmin();
+	protected boolean isFindByUsernameAndNetworkIdAuthorized(String username, Integer networkId) {
+		return false;
 	}
 
 	@Override
 	protected boolean isExistsByUsernameAuthorized(String username) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserAuthoritiesAuthorized(Integer userId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserUserConnectionsAuthorized(Integer userId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserConnectionsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserConnectionAuthorized(Integer userConnectionId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserConnectionUserAuthorized(Integer userConnectionId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserGrantedAuthoritiesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserGrantedAuthorityAuthorized(Integer userGrantedAuthorityId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserGrantedAuthorityUserAuthorized(Integer userGrantedAuthorityId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetUserGrantedAuthorityStationAuthorized(Integer userGrantedAuthorityId) {
 		return false;
 	}
 
@@ -984,6 +832,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetPasswordResetUserAuthorized(Integer passwordResetId) {
+		return false;
+	}
+
+	@Override
 	protected boolean isGetNotificationsAuthorized() {
 		return false;
 	}
@@ -995,22 +848,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isFindNotificationsByPersonIdOrderByDateAuthorized(Integer personId, Integer page, Integer size, List<String> sort) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetNotificationPersonAuthorized(Integer notificationId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetNotificationNetworkAuthorized(Integer notificationId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetNotificationStationAuthorized(Integer notificationId) {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -1029,27 +867,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetPageSectionsAuthorized(Integer pageId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetPageStationAuthorized(Integer pageId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPageableQueriesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPageableQueryAuthorized(Integer pageableQueryId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPageableQueryObjectQueryAuthorized(Integer pageableQueryId) {
 		return false;
 	}
 
@@ -1078,7 +896,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 		return true;
 	}
 
-	@Override
+    @Override
 	protected boolean isGetStationLogoAuthorized(Integer stationId) {
 		return true;
 	}
@@ -1091,6 +909,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isFindRecommendsByPostIdAuthorized(Integer postId) {
 		return true;
+	}
+
+	@Override
+	protected boolean isGetAbstractStatementsAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAbstractStatementAuthorized(Integer abstractStatementId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetAbstractStatementExceptionIdsAuthorized(Integer abstractStatementId) {
+		return false;
 	}
 
 	@Override
@@ -1109,37 +942,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetAndroidAppsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetAndroidAppAuthorized(Integer androidAppId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetAndroidAppIconAuthorized(Integer androidAppId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetBaseObjectQueriesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetBaseObjectQueryAuthorized(Integer baseObjectQueryId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetBaseSectionsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetBaseSectionAuthorized(Integer baseSectionId) {
+	protected boolean isGetAdSponsorAuthorized(Integer adId) {
 		return false;
 	}
 
@@ -1166,26 +969,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetPersonUserAuthorized(Integer personId) {
 		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkRegIdsAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkRegIdAuthorized(Integer personNetworkRegIdId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkRegIdPersonAuthorized(Integer personNetworkRegIdId) {
-		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkRegIdNetworkAuthorized(Integer personNetworkRegIdId) {
-		return true;
 	}
 
 	@Override
@@ -1264,68 +1047,8 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isGetImagePicturesAuthorized(Integer imageId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetImageOriginalAuthorized(Integer imageId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetImageSmallAuthorized(Integer imageId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetImageMediumAuthorized(Integer imageId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetImageLargeAuthorized(Integer imageId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isGetNetworkFaviconAuthorized(Integer networkId) {
 		return true;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkTokensAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkTokenAuthorized(Integer personNetworkTokenId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkTokenPersonAuthorized(Integer personNetworkTokenId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPersonNetworkTokenNetworkAuthorized(Integer personNetworkTokenId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPicturesAuthorized() {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPictureAuthorized(Integer pictureId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isGetPictureFileAuthorized(Integer pictureId) {
-		return false;
 	}
 
 	@Override

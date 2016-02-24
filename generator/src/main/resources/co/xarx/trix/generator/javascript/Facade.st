@@ -212,20 +212,7 @@ function Base$facade$(_url, _username, _password) {
             complete: _complete
         });
     }
-    
-    that.updatePassword = function(hash, password, _success, _error, _complete){
-		var data = {password: password};
-    	return that._ajax({
-    		type: "PUT",
-            url: _url + "/api/passwordResets/" + hash,
-            data: data,
-            contentType: "application/x-www-form-urlencoded",
-            success: _success,
-            error: _error,
-            complete: _complete
-        });
-   	}
-    
+
     
 $entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
 

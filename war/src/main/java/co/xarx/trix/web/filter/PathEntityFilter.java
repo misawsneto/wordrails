@@ -4,7 +4,6 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.util.StringUtil;
-import co.xarx.trix.util.TrixUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,13 +47,11 @@ public class PathEntityFilter implements Filter {
 
 			Post post = postRepository.findBySlug(path.replace("/", ""));
 
-			TrixUtil.EntityType entityType = TrixUtil.EntityType.POST;
-
 			if (post != null) {
 				request.setAttribute("requestedEntityJson", objectMapper.writeValueAsString(post));
 				request.setAttribute("requestedEntityMetas", metaTagsBuilder(post));
 				request.setAttribute("requestedEntityHiddenHtml", hiddenHtmlBuilder(post));
-				request.setAttribute("entityType", entityType);
+				request.setAttribute("entityType", "POST");
 			}
 		}
 
@@ -67,8 +64,8 @@ public class PathEntityFilter implements Filter {
 		html = html + "<meta property=\"og:url\" content=\"" + request.getRequestURL() + "\" />";
 		html = html + "<meta property=\"og:title\" content=\"" + post.title + "\" />";
 		html = html + "<meta property=\"og:description\" content=\"" + StringUtil.simpleSnippet(post.body) + "\" />";
-		if (post.imageLargeHash != null)
-			html = html + "<meta property=\"og:image\" content=\"" + amazonCloudService.getPublicImageURL(post.imageLargeHash) + "\" />";
+		if (post.featuredImage != null)
+			html = html + "<meta property=\"og:image\" content=\"" + amazonCloudService.getPublicImageURL(post.getImageLargeHash()) + "\" />";
 
 		return html;
 	}
@@ -76,8 +73,8 @@ public class PathEntityFilter implements Filter {
 	public String hiddenHtmlBuilder(Post post) throws IOException {
 		String html = "";
 
-		if (post.imageLargeHash != null)
-			html = html + "<img class=\"hidden\" src=\"" + amazonCloudService.getPublicImageURL(post.imageLargeHash) + "\" />";
+		if (post.featuredImage != null)
+			html = html + "<img class=\"hidden\" src=\"" + amazonCloudService.getPublicImageURL(post.getImageLargeHash()) + "\" />";
 		html = html + "<h1 class=\"hidden\">" + post.title + "</h1>";
 		html = html + "<div class=\"hidden\">" + post.body + "</div>";
 

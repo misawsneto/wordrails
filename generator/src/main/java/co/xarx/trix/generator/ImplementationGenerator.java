@@ -13,7 +13,7 @@ class ImplementationGenerator {
 	private String apiPackage;
 	private String facade;
 	private PersistenceUnitDescription unit;
-	private STGroupDir templates;		
+	private STGroupDir templates;
 
 	private ImplementationGenerator(String directory, String apiPackage, String facade, String unitPackage) {
 		this.directory = new File(directory);

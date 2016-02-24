@@ -1,15 +1,22 @@
 package co.xarx.trix.domain;
 
 
+import lombok.AccessLevel;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(name="term_perspective",uniqueConstraints = {@UniqueConstraint(columnNames={"station_perspective_id","term_id"})})
-public class    TermPerspective {
+public class TermPerspective extends BaseEntity {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
 	@OneToOne(mappedBy="splashedPerspective", cascade=CascadeType.REMOVE)

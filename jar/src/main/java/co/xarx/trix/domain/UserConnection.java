@@ -1,15 +1,22 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
+import lombok.Getter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
+@SdkExclude
 @Table(name = "userconnection")
-public class UserConnection implements Serializable {
+public class UserConnection extends BaseEntity implements Serializable {
+
+	private static final long serialVersionUID = 5655931808896715401L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Getter
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
 	@Column(unique = true)
@@ -32,10 +39,4 @@ public class UserConnection implements Serializable {
 	public String email;
 
 	public String imageUrl;
-
-	public String secret;
-
-	public String refreshToken;
-
-	public Long expireTime;
 }

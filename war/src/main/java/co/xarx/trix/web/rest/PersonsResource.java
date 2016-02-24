@@ -2,7 +2,6 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
@@ -12,17 +11,17 @@ import co.xarx.trix.eventhandler.StationRoleEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.services.APNService;
-import co.xarx.trix.services.GCMService;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.NetworkSecurityChecker;
 import co.xarx.trix.security.StationSecurityChecker;
+import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.services.MobileService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -61,12 +60,15 @@ import java.util.regex.Pattern;
 @Produces(MediaType.APPLICATION_JSON)
 @Component
 public class PersonsResource {
+
 	@Context
 	private HttpServletRequest httpServletRequest;
 	@Context
 	private HttpRequest httpRequest;
 	@Autowired
 	private PersonRepository personRepository;
+	@Autowired
+	private MobileService mobileService;
 	@Autowired
 	private NetworkRolesRepository networkRolesRepository;
 	@Autowired
@@ -77,10 +79,6 @@ public class PersonsResource {
 	private NetworkRepository networkRepository;
 	@Autowired
 	private WordrailsService wordrailsService;
-	@Autowired
-	private GCMService gcmService;
-	@Autowired
-	private APNService apnService;
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
@@ -99,6 +97,8 @@ public class PersonsResource {
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PersonEventHandler personEventHandler;
+	@Autowired
+	private MenuEntryRepository menuEntryRepository;
 
 	@Autowired
 	@Qualifier("objectMapper")
@@ -109,11 +109,11 @@ public class PersonsResource {
 	@Autowired
 	public StationRoleEventHandler stationRoleEventHandler;
 	@Autowired
-	private SectionRepository sectionRepository;
-	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
+	@Autowired
+	private AmazonCloudService amazonCloudService;
 
 	@Context
 	private HttpServletRequest request;
@@ -148,9 +148,7 @@ public class PersonsResource {
 	public Response findPerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-
-		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network)) {
+		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin()) {
 			forward();
 			return Response.status(Status.OK).build();
 		}else
@@ -219,44 +217,33 @@ public class PersonsResource {
 	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-
-		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network))
+		if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin())
 			forward();
 		else
 			throw new BadRequestException();
 	}
 
+	@Deprecated
 	@PUT
 	@Path("/me/regId")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		Person person = authProvider.getLoggedPerson();
-		if(person.id == 0){
-			gcmService.updateRegId(network, null, regId, lat, lng);
-		} else {
-			gcmService.updateRegId(network, person, regId, lat, lng);
-		}
-//		if(person.id == 0) person = null;
-		System.out.println("regId: " + regId);
-		return Response.status(Status.OK).build();
+		return updateMobile(regId, lat, lng, MobileDevice.Type.ANDROID);
 	}
 
+	@Deprecated
 	@PUT
 	@Path("/me/token")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		return updateMobile(token, lat, lng, MobileDevice.Type.APPLE);
+	}
+
+	public Response updateMobile(String token, Double lat, Double lng, MobileDevice.Type type) {
 		Person person = authProvider.getLoggedPerson();
-		if(person.id == 0){
-			apnService.updateIosToken(network, null, token, lat, lng);
-		} else {
-			apnService.updateIosToken(network, person, token, lat, lng);
-		}
-//		if(person.id == 0) person = null;
-		System.out.println("iOS token: " + token);
-		return Response.status(Status.OK).build();
+		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
+		mobileService.updateDevice(person, token, lat, lng, type);
+		return Response.status(Response.Status.OK).build();
 	}
 
 	@POST
@@ -305,7 +292,7 @@ public class PersonsResource {
 
 		Person person = authProvider.getLoggedPerson();
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id);
 
 		List<Integer> stationIds = new ArrayList<>();
 		if(permissions != null && permissions.size() > 0){
@@ -336,7 +323,7 @@ public class PersonsResource {
 			person = personRepository.findOne(personId);
 		}
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, TenantContextHolder.getCurrentNetworkId());
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id);
 
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
@@ -362,7 +349,7 @@ public class PersonsResource {
 
 		Person person = authProvider.getLoggedPerson();
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id, networkId);
+		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id);
 
 		List<Integer> stationIds = new ArrayList<Integer>();
 		if(permissions != null && permissions.size() > 0){
@@ -498,7 +485,7 @@ public class PersonsResource {
 			}
 
 			NetworkRole networkRole = new NetworkRole();
-			networkRole.network = networkRepository.findOne(TenantContextHolder.getCurrentNetworkId());
+			networkRole.network = networkRepository.findOne(QNetwork.network.tenantId.eq(TenantContextHolder.getCurrentTenantId()));
 			networkRole.person = person;
 			networkRole.admin = false;
 			networkRolesRepository.save(networkRole);
@@ -535,7 +522,7 @@ public class PersonsResource {
 			}
 
 			if(network != null && network.addStationRolesOnSignup){
-				List<Station> stations = stationRepository.findByNetworkId(network.id);
+				List<Station> stations = stationRepository.findAll();
 				for (Station station : stations) {
 					StationRole sr = new StationRole();
 					sr.person = person;
@@ -571,15 +558,15 @@ public class PersonsResource {
 	@Path("/deleteMany/network")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+//		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
 
 		if(persons != null && persons.size() > 0) {
-			for (Person person : persons) {
-				if (!person.user.networkId.equals(network.id)) return Response.status(Status.UNAUTHORIZED).build();
-			}
+//			for (Person person : persons) {
+//				if (!person.user.getTenantId().equals(network.getTenantId())) return Response.status(Status.UNAUTHORIZED).build();
+//			}
 
-			if (networkSecurityChecker.isNetworkAdmin(network)) {
+			if (networkSecurityChecker.isNetworkAdmin()) {
 				for (Person person : persons) {
 					personEventHandler.handleBeforeDelete(person);
 				}
@@ -600,7 +587,7 @@ public class PersonsResource {
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Person person = personRepository.findOne(personId);
 
-		if(person != null && networkSecurityChecker.isNetworkAdmin(network) && person.user.networkId.equals(network.id)){
+		if(person != null && networkSecurityChecker.isNetworkAdmin() && person.user.getTenantId().equals(network.getTenantId())){
 			personEventHandler.handleBeforeDelete(person);
 			personRepository.delete(person.id);
 			return Response.status(Status.OK).build();
@@ -751,6 +738,7 @@ public class PersonsResource {
 	@Path("/allInit")
 	public PersonData   getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws IOException {
 
+		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
 		Integer stationId = wordrailsService.getStationIdFromCookie(request);
 		PersonData personData = getInitialData(request);
 
@@ -775,8 +763,8 @@ public class PersonsResource {
 				request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
 				request.setAttribute("networkName", personData.network.name);
 				request.setAttribute("networkId", personData.network.id);
-				if(personData.network.faviconId != null)
-					request.setAttribute("faviconLink", "/api/files/" + personData.network.faviconId + "/contents");
+				if(network.favicon != null)
+					request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(network.getFaviconHash()));
 				request.setAttribute("networkDesciption", "");
 				request.setAttribute("networkKeywords", "");
 			}
@@ -789,8 +777,8 @@ public class PersonsResource {
 		return personData;
 	}
 
-	@Value("${amazon.publicCloudfrontUrl}")
-	String publicCloudfrontUrl;
+	@Value("${amazon.cloudfrontUrl}")
+	String cloudfrontUrl;
 
 	@GET
 	@Path("/init")
@@ -811,14 +799,12 @@ public class PersonsResource {
 		//Network Permissions
 		NetworkPermission networkPermissionDto = new NetworkPermission();
 		if(networkRole != null)
-			networkPermissionDto.networkId = networkRole.id;
+			networkPermissionDto.networkId = network.id;
 		else
 			networkPermissionDto.admin = false;
 
-		network.sections = sectionRepository.findByNetwork(network);
-
 		List<StationDto> stationDtos = new ArrayList<>();
-		List<Station> stations = stationRepository.findByPersonIdAndNetworkId(person.id, network.id);
+		List<Station> stations = stationRepository.findByPersonId(person.id);
 		for(Station station : stations) {
 			StationDto stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
 			stationDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/stations/" + station.id);
@@ -837,24 +823,28 @@ public class PersonsResource {
 			initData.noPassword = true;
 		}
 
-		initData.publicCloudfrontUrl = publicCloudfrontUrl;
-		initData.privateCloudfrontUrl = publicCloudfrontUrl;
+		initData.publicCloudfrontUrl = cloudfrontUrl;
+		initData.privateCloudfrontUrl = cloudfrontUrl;
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
 
-		List<SectionDto> sections = new ArrayList<>();
-		for(Section section: network.sections){
-			SectionDto sectionDto = mapper.readValue(mapper.writeValueAsString(section).getBytes("UTF-8"), SectionDto.class);
-			sectionDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/sections/" + sectionDto.id);
-			sections.add(sectionDto);
-		}
-
-		initData.sections = sections;
-
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes("UTF-8"), NetworkRoleDto.class);
 		initData.stations = stationDtos;
 		initData.personPermissions = personPermissions;
+
+		List<MenuEntry> entries = menuEntryRepository.findAll();
+		List<MenuEntryDto> menuEntries = new ArrayList<>();
+		if (entries != null) {
+			for (MenuEntry menuEntry : entries) {
+				MenuEntryDto sectionDto = mapper.readValue(mapper.writeValueAsString(menuEntry).getBytes("UTF-8"), MenuEntryDto.class);
+				sectionDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/menuEntries/" + sectionDto.id);
+				menuEntries.add(sectionDto);
+
+			}
+		}
+		initData.menuEntries = menuEntries;
+		initData.sections = menuEntries;
 
 		initData.person.links = wordrailsService.generateSelfLinks(baseUrl + "/api/persons/" + person.id);
 		initData.network.links = wordrailsService.generateSelfLinks(baseUrl + "/api/network/" + network.id);
@@ -995,43 +985,29 @@ public class PersonsResource {
 
 		// check date and map counts
 		Iterator it = stats.entrySet().iterator();
-		while (it.hasNext()){
-			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-			long key = (Long)pair.getKey();
-			for(Object[] counts: postReadCounts){
-				long dateLong = ((java.sql.Date) counts[0]).getTime();
-				long count = (long) counts[1];
-				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-					pair.getValue().readsCount = count;
-			}
-		}
+		checkDateAndMapCounts(postReadCounts, it);
 
 		it = stats.entrySet().iterator();
-		while (it.hasNext()){
-			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-			long key = (Long)pair.getKey();
-			for(Object[] counts: recommendsCounts){
-				long dateLong = ((java.sql.Date) counts[0]).getTime();
-				long count = (long) counts[1];
-				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-					pair.getValue().recommendsCount = count;
-			}
-		}
+		checkDateAndMapCounts(recommendsCounts, it);
 
 		it = stats.entrySet().iterator();
+		checkDateAndMapCounts(commentsCounts, it);
+
+		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
+		String dateStatsJson = mapper.writeValueAsString(stats);
+		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
+	}
+
+	public void checkDateAndMapCounts(List<Object[]> countList, Iterator it) {
 		while (it.hasNext()){
 			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
 			long key = (Long)pair.getKey();
-			for(Object[] counts: commentsCounts){
+			for(Object[] counts: countList){
 				long dateLong = ((java.sql.Date) counts[0]).getTime();
 				long count = (long) counts[1];
 				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
 					pair.getValue().commentsCount = count;
 			}
 		}
-
-		String generalStatsJson = mapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
-		String dateStatsJson = mapper.writeValueAsString(stats);
-		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 	}
 }

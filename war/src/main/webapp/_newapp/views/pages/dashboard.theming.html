@@ -1,0 +1,128 @@
+<div class="card md-whiteframe-z1">
+    <div class="card-heading">
+        <h2 translate="settings.SET_COLOR">Configure as paletas de cores</h2>
+    </div>
+    <div class="theming card-body">
+    	  <md-content>
+
+          <md-content class="palette pull-left m-r m-b">
+            <div class="p-r-10" layout="row" layout-align="center center" style="background-color:{{primaryPalette.base}};"
+              ng-class="{'palette-color-light': !isLight(primaryPalette.base), 'palette-color-dark': isLight(primaryPalette.base)}">
+              <div class="md-toolbar-tools text-md">
+              {{primaryPalette.name}}
+              </div>
+              <span flex></span>
+                  <spectrum-colorpicker ng-model="primaryPalette.base" options="{ clickoutFiresChange: true }" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(0)"></spectrum-colorpicker>
+            </div>
+            <md-list flex class="palette-colors spaced">
+                <md-list-item class="light-canvas" ng-repeat="color in primaryPalette.colors | filter: baseColorFilter">
+                    <div class="palette-color" style="background-color:{{color.hex}};" ng-class="{'palette-color-light': !color.darkContrast, 'palette-color-dark': color.darkContrast}">
+                        <span class="name color-text w-48" ng-bind="color.name"></span>
+                        <span ng-bind="color.hex" class="palette-color-hex color-text"></span>
+                        <a class="palette-color-hex color-text" href="http://colorhexa.com/{{color.hex.replace('#', '')}}" target="_blank">
+                              <ng-md-icon icon="open_in_new" size="12" style="fill:#000; opacity:0.5"></ng-md-icon>
+                              <md-tooltip>Open Color In Colorhexa.com for Details</md-tooltip>
+                          </a>
+                          <div class="palette-color-mutators">
+                              <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
+                              <spectrum-colorpicker ng-model="color.hex" format="'hex'" options="{showInput: true, showPalette: true}"></spectrum-colorpicker>
+                          </div>
+                          <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
+                            <md-tooltip>Toggle contrast</md-tooltip>
+                          </div>
+                    </div>
+                </md-list-item>
+            </md-list>
+          </md-content>
+
+          <md-content class="palette pull-left m-r m-b">
+            <div class="p-r-10" layout="row" layout-align="center center" style="background-color:{{accentPalette.base}};"
+              ng-class="{'palette-color-light': !isLight(accentPalette.base), 'palette-color-dark': isLight(accentPalette.base)}">
+              <div class="md-toolbar-tools text-md">
+              {{accentPalette.name}}
+              </div>
+              <span flex></span>
+                  <spectrum-colorpicker ng-model="accentPalette.base" options="{ clickoutFiresChange: true }" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(1)"></spectrum-colorpicker>
+            </div>
+            <md-list flex class="palette-colors spaced">
+                <md-list-item class="light-canvas" ng-repeat="color in accentPalette.colors | filter: accentColorFilter | orderByAccent:'name'">
+                    <div class="palette-color" style="background-color:{{color.hex}};" ng-class="{'palette-color-light': !color.darkContrast, 'palette-color-dark': color.darkContrast}">
+                        <span class="name color-text w-48" ng-bind="color.name"></span>
+                        <span ng-bind="color.hex" class="palette-color-hex color-text"></span>
+                        <a class="palette-color-hex color-text" href="http://colorhexa.com/{{color.hex.replace('#', '')}}" target="_blank">
+                              <ng-md-icon icon="open_in_new" size="12" style="fill:#000; opacity:0.5"></ng-md-icon>
+                              <md-tooltip>Open Color In Colorhexa.com for Details</md-tooltip>
+                          </a>
+                          <div class="palette-color-mutators">
+                              <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
+                              <spectrum-colorpicker ng-model="color.hex" format="'hex'" options="{showInput: true, showPalette: true}"></spectrum-colorpicker>
+                          </div>
+                          <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
+                            <md-tooltip>Toggle contrast</md-tooltip>
+                          </div>
+                    </div>
+                </md-list-item>
+            </md-list>
+          </md-content>
+
+          <md-content class="palette pull-left m-r m-b">
+            <div class="p-r-10" layout="row" layout-align="center center" style="background-color:{{warnPalette.base}};"
+              ng-class="{'palette-color-light': !isLight(warnPalette.base), 'palette-color-dark': isLight(warnPalette.base)}">
+              <div class="md-toolbar-tools text-md">
+              {{warnPalette.name}}
+              </div>
+              <span flex></span>
+                  <spectrum-colorpicker ng-model="warnPalette.base" options="{ clickoutFiresChange: true }" ng-model-options="{ updateOn: 'default blur', debounce: {'default': 250, 'blur': 0} }" format="'hex'" options="{showInput: true, showPalette: true}" ng-change="calcPalette(2)"></spectrum-colorpicker>
+            </div>
+            <md-list flex class="palette-colors spaced">
+                <md-list-item class="light-canvas" ng-repeat="color in warnPalette.colors | filter: baseColorFilter">
+                    <div class="palette-color" style="background-color:{{color.hex}};" ng-class="{'palette-color-light': !color.darkContrast, 'palette-color-dark': color.darkContrast}">
+                        <span class="name color-text w-48" ng-bind="color.name"></span>
+                        <span ng-bind="color.hex" class="palette-color-hex color-text"></span>
+                        <a class="palette-color-hex color-text" href="http://colorhexa.com/{{color.hex.replace('#', '')}}" target="_blank">
+                              <ng-md-icon icon="open_in_new" size="12" style="fill:#000; opacity:0.5"></ng-md-icon>
+                              <md-tooltip>Open Color In Colorhexa.com for Details</md-tooltip>
+                          </a>
+                          <div class="palette-color-mutators">
+                              <!-- Removed lighten and darken buttons until saturation issues are worked out. -->
+                              <spectrum-colorpicker ng-model="color.hex" format="'hex'" options="{showInput: true, showPalette: true}"></spectrum-colorpicker>
+                          </div>
+                          <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
+                            <md-tooltip>Toggle contrast</md-tooltip>
+                          </div>
+                    </div>
+                </md-list-item>
+            </md-list>
+          </md-content>
+          
+          <md-content class="palette pull-left m-b" style="background-color:{{backgroundPalette}};">
+            <div layout="row" layout-align="center center" style="padding-right: 15px;"
+                ng-class="{'palette-color-light': !isLight(backgroundPalette), 'palette-color-dark': isLight(backgroundPalette)}">
+              <div class="md-toolbar-tools text-md" translate="settings.COLOR_BACKGROUND">
+                Cor de Fundo
+              </div>
+            </div>
+            <div class="p text-center m-t-lg m-b-lg p-t-md">
+              <md-menu md-position-mode="target-right target">
+                <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                  <i class="mdi-editor-format-color-fill i-24" ng-class="{'palette-color-light': !isLight(backgroundPalette), 'palette-color-dark': isLight(backgroundPalette)}"
+                  ></i>
+                </md-button>
+                <md-menu-content width="3" class="no-padding">
+                  <md-menu-item ng-repeat="color in backgrounds">
+                    <md-button ng-click="changeBackgroundColor(color);" style="background-color:{{color}};" ng-class="{'palette-color-light': !isLight(color), 'palette-color-dark': isLight(color)}">
+                        {{color}}
+                    </md-button>
+                  </md-menu-item>
+                </md-menu-content>
+              </md-menu>
+            </div>
+          </md-content>
+
+        </md-content>
+    </div>
+</div>
+
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" ng-click="setTheme()">
+    <i class="mdi-content-save i-24"></i>
+</md-button>

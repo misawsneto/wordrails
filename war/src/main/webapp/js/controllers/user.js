@@ -1,3 +1,4 @@
+
 app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$mdDialog', '$mdSidenav',
 	function($scope , $log ,  $timeout ,  $rootScope ,  $state ,  trix ,  FileUploader, TRIX, cfpLoadingBar, $mdToast , $mdDialog, $mdSidenav) {
 
@@ -28,6 +29,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	  		// trix.postImage(imageObject).success(function(imageId){
 	  			var myCoverImage = TRIX.baseUrl + "/api/images/" + response.imageId;
 	  			$scope.person.cover = myCoverImage
+	  			$("#user-cover-pic").css('background-image', 'url(' + response.filelink + ')');
 	  			trix.putPerson($scope.person).success(function(){
 	  				$scope.app.initData.person.coverLargeId = $scope.person.coverLargeId = $scope.userCover.imageId;
 	  				$scope.app.initData.person.coverMediumId = $scope.person.coverMediumId = $scope.userCover.imageId;
@@ -70,6 +72,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	  		// trix.postImage(imageObject).success(function(imageId){
 	  			var myImageImage = TRIX.baseUrl + "/api/images/" + response.imageId;
 	  			$scope.person.image = myImageImage
+				$("#user-profile-pic").css('background-image', 'url(' + response.filelink + ')');
 	  			trix.putPerson($scope.person).success(function(){
 	  				$scope.app.initData.person.imageMediumId = $scope.person.imageMediumId = $scope.userImage.imageId;
 	  				$scope.app.initData.person.imageSmallId = $scope.person.imageSmallId = $scope.userImage.imageId;
@@ -191,6 +194,8 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     };
 
     $scope.showEditProfile = function(ev){
+    	$scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
+    	
     	$mdSidenav('right').toggle();
     }
 
@@ -224,7 +229,8 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     		$scope.editingPerson.password = null;
     		$scope.editingPerson.passwordConfirm = null;
     		$scope.person = $scope.app.initData.person = $scope.editingPerson;
-				$scope.app.showSuccessToast('Alterações realizadas com sucesso')    		
+				$scope.app.showSuccessToast('Alterações realizadas com sucesso')
+			$scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
     	});
     }
 
@@ -521,4 +527,4 @@ $scope.page = 0;
 		$scope.commentFocused = false;
 	}
 
-}])		
+}])

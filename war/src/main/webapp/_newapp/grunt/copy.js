@@ -35,7 +35,7 @@ module.exports = {
                     'ngstorage/ngStorage.js',
                     'oclazyload/dist/**',
                     'textAngular/dist/**',
-                    'venturocket-angular-slider/build/**',
+                    'venturocket-angular-slider/build/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',
@@ -59,9 +59,27 @@ module.exports = {
                     'flot-spline/js/jquery.flot.spline.min.js',
                     'flot.orderbars/js/jquery.flot.orderBars.js',
                     'moment/moment.js',
-                    'waves/dist/**'
+                    'moment/min/moment-with-locales.min.js',
+                    'waves/dist/**',
+                    'screenfull/**',
+                    'jquery.easy-pie-chart/**',
+                    'jquery.sparkline/**',
+                    'bower-jvectormap-2/**',
+                    'slimScroll/jquery.slimscroll.min.js'
                 ],
                 dest: 'libs/jquery',
+                cwd:  'bower_components',
+                expand: true
+            },
+            {
+                src: [
+                    'spectrum/spectrum.css',
+                    'spectrum/spectrum.js',
+                    'angular-spectrum-colorpicker/dist/angular-spectrum-colorpicker.min.js',
+                    'tinycolor/tinycolor.js',
+                    'angular-toArrayFilter/toArrayFilter.js'
+                ],
+                dest: 'libs/theming',
                 cwd:  'bower_components',
                 expand: true
             },
@@ -75,28 +93,28 @@ module.exports = {
                 cwd:  'bower_components',
                 expand: true
             },
-            {src: '**', cwd: 'bower_components/bootstrap/dist/fonts', dest: 'app/fonts', expand: true}
+            {src: '**', cwd: 'bower_components/bootstrap/dist/fonts', dest: 'fonts', expand: true}
         ]
     },
     // webapp: {
     //     files: [
-    //         {expand: true, src: '**', cwd: 'app/api',     dest: 'angular/api'},
-    //         {expand: true, src: '**', cwd: 'app/apps',    dest: 'angular/apps'},
-    //         {expand: true, src: '**', cwd: 'app/fonts',   dest: 'angular/fonts'},
-    //         {expand: true, src: '**', cwd: 'app/i18n',    dest: 'angular/i18n'},
-    //         {expand: true, src: '**', cwd: 'app/images',  dest: 'angular/images'},
-    //         {expand: true, src: '**', cwd: 'app/scripts', dest: 'angular/scripts'},
-    //         {expand: true, src: '**', cwd: 'app/styles',  dest: 'angular/styles'},
-    //         {expand: true, src: '**', cwd: 'app/views',   dest: 'angular/views'},
-    //         {src: 'app/index.min.html', dest: 'angular/index.html'}
+    //         {expand: true, src: '**', cwd: 'api',     dest: 'angular/api'},
+    //         {expand: true, src: '**', cwd: 'apps',    dest: 'angular/apps'},
+    //         {expand: true, src: '**', cwd: 'fonts',   dest: 'angular/fonts'},
+    //         {expand: true, src: '**', cwd: 'i18n',    dest: 'angular/i18n'},
+    //         {expand: true, src: '**', cwd: 'images',  dest: 'angular/images'},
+    //         {expand: true, src: '**', cwd: 'scripts', dest: 'angular/scripts'},
+    //         {expand: true, src: '**', cwd: 'styles',  dest: 'angular/styles'},
+    //         {expand: true, src: '**', cwd: 'views',   dest: 'angular/views'},
+    //         {src: 'index.min.html', dest: 'angular/index.html'}
     //     ]
     // },
     html: {
         files: [
-            {expand: true, src: '**', cwd: 'app/api',       dest: 'html/api'},
-            {expand: true, src: '**', cwd: 'app/fonts/',    dest: 'html/fonts/'},
-            {expand: true, src: '**', cwd: 'app/images/',   dest: 'html/images/'},
-            {expand: true, src: '**', cwd: 'app/styles/',   dest: 'html/styles/'},
+            {expand: true, src: '**', cwd: 'api',       dest: 'html/api'},
+            {expand: true, src: '**', cwd: 'fonts/',    dest: 'html/fonts/'},
+            {expand: true, src: '**', cwd: 'images/',   dest: 'html/images/'},
+            {expand: true, src: '**', cwd: 'styles/',   dest: 'html/styles/'},
             {expand: true, src: '**', cwd: 'swig/scripts/', dest: 'html/scripts/'}
         ]
     }

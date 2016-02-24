@@ -42,20 +42,6 @@ public interface PostProjection {
 
 	boolean getImageLandscape();
 
-	Integer getImageId();
-
-	Integer getImageSmallId();
-
-	Integer getImageMediumId();
-
-	Integer getImageLargeId();
-
-	String getImageSmallHash();
-
-	String getImageMediumHash();
-
-	String getImageLargeHash();
-
 	Integer getBookmarksCount();
 
 	Integer getReadsCount();

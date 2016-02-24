@@ -26,6 +26,11 @@ public class SchedulingConfig {
 	@Autowired
 	ApplicationContext applicationContext;
 
+//	@Bean
+//	public Executor taskExecutor() {
+//		return Executors.newScheduledThreadPool(10);
+//	}
+
 	@Bean
 	public SchedulerFactoryBean quartzScheduler() {
 		SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();

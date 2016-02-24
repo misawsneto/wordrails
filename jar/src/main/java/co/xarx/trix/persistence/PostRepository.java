@@ -19,6 +19,11 @@ import java.util.stream.Stream;
 @EventLoggableRepository
 public interface PostRepository extends JpaRepository<Post, Integer>, CustomPostRepository {
 
+	@Modifying
+	@RestResource(exported = false)
+	@Query("UPDATE Post p set p.readsCount = p.readsCount + 1 where p.id = :postId")
+	void incrementReadCount(@Param("postId") int postId);
+
 	@Query("select post from Post post where post.id in ( select p.id from Post p where p.station.id = :stationId ) order by post.date desc")
 	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);
 

@@ -1,13 +1,11 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.WordrailsService;
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-import co.xarx.trix.domain.Network;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,11 +29,8 @@ public class AmazonResource {
 	String accessKey;
 	@Value("${amazon.accessSecretKey}")
 	String accessSecretKey;
-	@Value("${amazon.publicBucket}")
+	@Value("${amazon.bucketName}")
 	String publicBucket;
-
-	@Autowired
-	private WordrailsService wordrailsService;
 
 	private AmazonS3 s3() {
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, accessSecretKey);
@@ -45,8 +40,7 @@ public class AmazonResource {
 	@GET
 	@Path("/signedUrl")
 	public Response generateSignedUrl(@QueryParam("hash") String hash, @QueryParam("type") String type, @Context HttpServletRequest request) throws IOException {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		String objectKey = network.subdomain + "/" + type + "/" + hash;
+		String objectKey = TenantContextHolder.getCurrentTenantId() + "/" + type + "/" + hash;
 
 		System.out.println("Generating pre-signed URL.");
 		java.util.Date expiration = new java.util.Date();

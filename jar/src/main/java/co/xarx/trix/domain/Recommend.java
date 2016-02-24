@@ -1,45 +1,31 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import co.xarx.trix.annotation.SdkInclude;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
+@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"post_id", "person_id"}))
-public class Recommend {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public Integer id;
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "person_id"}))
+public class Recommend extends BaseEntity {
 
+	@Id
+	@Setter(AccessLevel.NONE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+
+	@SdkInclude
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "post_id")
-	public Post post;
+	private Post post;
 
+	@SdkInclude
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "person_id")
-	public Person person;
-	
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date createdAt;
-
-	@PrePersist
-	void onCreate() {
-		createdAt = new Date();
-	}
-
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@PreUpdate
-	void onUpdate() {
-		updatedAt = new Date();
-	}
+	private Person person;
 }

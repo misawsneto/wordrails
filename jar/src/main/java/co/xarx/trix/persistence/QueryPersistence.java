@@ -1,15 +1,13 @@
 package co.xarx.trix.persistence;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -162,4 +160,93 @@ public class QueryPersistence {
                 .setFirstResult(page * size)
                 .getResultList();
     }
+
+	@Transactional
+	public List<Object[]> getRepeatedImage(){
+		return manager.createNativeQuery("SELECT id, originalHash, count(originalHash) AS c FROM Image WHERE originalHash IS NOT NULL GROUP BY originalHash HAVING c > 1").getResultList();
+	}
+
+	@Transactional
+	public List<Integer> getRepeatedImageHash(String hash){
+		return manager.createNativeQuery("select id from Image where originalHash = :hash")
+				.setParameter("hash", hash)
+				.getResultList();
+	}
+
+	@Transactional
+	public void updatePostFeaturedImageId(List<Integer> repeatedImages, Integer imageId){
+		manager.createQuery("update Post set featuredImage.id = :imageId where featuredImage.id in (:repeatedImages)")
+				.setParameter("imageId", imageId)
+				.setParameter("repeatedImages", repeatedImages)
+				.executeUpdate();
+	}
+
+	@Transactional
+	public void updateNetworkLoginImageId(List<Integer> repeatedImages, Integer imageId){
+		manager.createQuery("update Network set loginImage.id = :imageId where loginImage.id in (:repeatedImages)")
+				.setParameter("imageId", imageId)
+				.setParameter("repeatedImages", repeatedImages)
+				.executeUpdate();
+	}
+
+	@Transactional
+	public void updateNetworkFaviconId(List<Integer> repeatedImages, Integer imageId){
+		manager.createNativeQuery("update Network set faviconId = :imageId where faviconId in (:repeatedImages)")
+				.setParameter("imageId", imageId)
+				.setParameter("repeatedImages", repeatedImages)
+				.executeUpdate();
+	}
+
+	@Transactional
+	public void updateNetworkFavicon(List<Integer> repeatedImages){
+		manager.createNativeQuery("update Network set favicon_id = NULL where network.favicon_id in (:repeatedImages)")
+				.setParameter("repeatedImages", repeatedImages)
+				.executeUpdate();
+	}
+
+
+	@Transactional
+	public void updateNetworkSplashImageId(List<Integer> repeatedImages, Integer imageId){
+		manager.createQuery("update Network set splashImage.id = :imageId where splashImage.id in (:repeatedImages)")
+				.setParameter("imageId", imageId)
+				.setParameter("repeatedImages", repeatedImages)
+				.executeUpdate();
+	}
+
+	@Transactional
+	public void updateStationLogo(List<Integer> repeatedImages, Integer imageId){
+		manager.createNativeQuery("update Station set logo_id = :imageId where station.logo_id in (:repeatedImages)")
+				.setParameter("imageId", imageId)
+				.setParameter("repeatedImages", repeatedImages)
+				.executeUpdate();
+	}
+
+	@Transactional
+	public void updateImagePicture(List<Integer> repeatedImages, Integer imageId){
+		manager.createNativeQuery("update image_picture set image_id = :imageId where image_picture.image_id in (:repeatedImages)")
+				.setParameter("imageId", imageId)
+				.setParameter("repeatedImages", repeatedImages)
+				.executeUpdate();
+	}
+
+	@Transactional
+	public void deleteImagePicture(List<Integer> ids){
+		manager.createNativeQuery("DELETE FROM image_picture WHERE image_picture.image_id in (:ids)")
+				.setParameter("ids", ids)
+				.executeUpdate();
+	}
+
+	@Transactional
+	public void deleteImageHash(List<Integer> ids){
+		manager.createNativeQuery("DELETE FROM image_hash WHERE image_hash.image_id in (:ids)")
+				.setParameter("ids", ids)
+				.executeUpdate();
+	}
+
+	@Transactional
+	public void deleteImageList(List<Integer> ids){
+		manager.createNativeQuery("DELETE FROM image WHERE id in (:ids)")
+				.setParameter("ids", ids)
+				.executeUpdate();
+	}
 }

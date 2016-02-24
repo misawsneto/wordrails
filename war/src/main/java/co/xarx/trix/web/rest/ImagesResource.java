@@ -20,6 +20,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,8 +36,19 @@ public class ImagesResource {
 
 	@Autowired
 	private ImageService imageService;
+
+	@Context
+	private HttpServletRequest request;
 	@Autowired
 	private AmazonCloudService amazonCloudService;
+
+	public static class ImageUpload {
+		public String hash;
+		public Integer imageId;
+		public String link;
+		public String fileLink;
+	}
+
 
 	@Autowired
 	@Qualifier("simpleMapper")
@@ -46,7 +58,7 @@ public class ImagesResource {
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadImage(@QueryParam("imageType") String type, @Context HttpServletRequest request) throws FileUploadException, IOException {
+	public Response uploadImage(@QueryParam("imageType") String type, @Context HttpServletRequest request) throws Exception {
 		FileItem item = FileUtil.getFileFromRequest(request);
 
 		if (item == null) {
@@ -55,11 +67,23 @@ public class ImagesResource {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 
-		String hash = FileUtil.getHash(item.getInputStream());
 
+		Image newImage = new Image(type);
+		newImage.title = item.getName();
+		File originalFile = FileUtil.createNewTempFile(item.getInputStream());
 
-		Image newImage = imageService.createNewImage(type, item.getInputStream(), item.getContentType(), true, true);
+		newImage = imageService.createAndSaveNewImage(type, item.getName(), originalFile, item.getContentType());
 
+		if (originalFile.exists())
+			originalFile.delete();
+
+		ImageUpload imageUpload = new ImageUpload();
+		imageUpload.hash = FileUtil.getHash(item.getInputStream());
+		imageUpload.imageId = newImage.id;
+		imageUpload.link = amazonCloudService.getPublicImageURL(imageUpload.hash);
+		imageUpload.fileLink = imageUpload.link;
+
+		String hash = imageUpload.hash;
 		ImageUploadResponse iur = new ImageUploadResponse();
 		iur.hash = hash;
 		iur.imageId = newImage.id;
@@ -89,7 +113,7 @@ public class ImagesResource {
 		try {
 			hashes = imageService.getHashes(hash);
 		} catch (EntityNotFoundException e) {
-			throw new NotFoundException("Image does not exist");
+			throw new NotFoundException("Image does not exist. Hash:" + hash);
 		}
 
 		hash = hashes.get(size);

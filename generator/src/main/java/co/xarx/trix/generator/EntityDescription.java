@@ -9,11 +9,11 @@ public class EntityDescription {
 	public String nameLowercase;
 	public String plural;
 	public String pluralLowercase;
-	public FieldDescription id;	
-	public List<FieldDescription> fields = new ArrayList<FieldDescription>();
-	public List<FieldDescription> relationships = new ArrayList<FieldDescription>();
+	public FieldDescription id;
+	public List<FieldDescription> fields = new ArrayList<>();
+	public List<FieldDescription> relationships = new ArrayList<>();
 	public String repositoryFullName;
-	public String repositoryName;	
-	public List<QueryDescription> queries = new ArrayList<QueryDescription>();
-	public List<EntityDescription> projections = new ArrayList<EntityDescription>();
+	public String repositoryName;
+	public List<QueryDescription> queries = new ArrayList<>();
+	public List<EntityDescription> projections = new ArrayList<>();
 }

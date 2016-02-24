@@ -32,11 +32,11 @@ public class EmailService {
 
 	@Async
 	public void sendSimpleMail(String emailTo, String subject, String emailBody) {
-        sendSimpleMail(NO_REPLY, emailTo, subject, emailBody);
-    }
+		sendSimpleMail(NO_REPLY, emailTo, subject, emailBody);
+	}
 
-    @Async
-    public void sendSimpleMail(String emailFrom, String emailTo, String subject, String emailBody) {
+	@Async
+	public void sendSimpleMail(String emailFrom, String emailTo, String subject, String emailBody) {
 
 //		 Construct an object to contain the recipient address.
 		Destination destination = new Destination().withToAddresses(new String[]{emailTo});
@@ -67,59 +67,59 @@ public class EmailService {
 
 	}
 
-    @Async
-    public void sendNetworkInvitation(Network network, Set<Invitation> invitations){
-        if(invitations!= null)
-        for (Invitation i : invitations){
-            sendNetworkInvitation(network, i);
-        }
-    }
+	@Async
+	public void sendNetworkInvitation(Network network, Set<Invitation> invitations){
+		if(invitations!= null)
+		for (Invitation i : invitations){
+			sendNetworkInvitation(network, i);
+		}
+	}
 
-    @Async
-    public void sendNetworkInvitation(Network network, Invitation invitation){
-        try {
-            String filePath = getClass().getClassLoader().getResource("tpl/network-invitation-email.html").getFile();
+	@Async
+	public void sendNetworkInvitation(Network network, Invitation invitation){
+		try {
+			String filePath = getClass().getClassLoader().getResource("tpl/network-invitation-email.html").getFile();
 
-            filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
+			filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
 
-            byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-            String template = new String(bytes, Charset.forName("UTF-8"));
-            sendNetworkInvitation(network, invitation, template);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+			String template = new String(bytes, Charset.forName("UTF-8"));
+			sendNetworkInvitation(network, invitation, template);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 
-    @Async
-    public void sendNetworkInvitation(Network network, Invitation invitation, String template){
-        try{
-            Color c1 = Color.decode(network.mainColor);
-            Color c2 = Color.decode(network.navbarColor);
+	@Async
+	public void sendNetworkInvitation(Network network, Invitation invitation, String template){
+		try{
+			Color c1 = Color.decode(network.mainColor);
+			Color c2 = Color.decode(network.navbarColor);
 
-            HashMap<String, Object> scopes = new HashMap<String, Object>();
-            scopes.put("name", invitation.personName);
-            scopes.put("networkName", network.name);
-            scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", "+ c1.getBlue() +" )");
-            scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", "+ c2.getBlue() +" )");
-            scopes.put("link", "http://"+ (network.domain != null ? network.domain : network.subdomain+".trix.rocks"));
-            scopes.put("invitationUrl", invitation.getInvitationUrl());
-            scopes.put("networkSubdomain", network.subdomain);
-            scopes.put("network", network);
-            scopes.put("hash", invitation.hash);
+			HashMap<String, Object> scopes = new HashMap<String, Object>();
+			scopes.put("name", invitation.personName);
+			scopes.put("networkName", network.name);
+			scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", " + c1.getBlue() + " )");
+			scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", " + c2.getBlue() + " )");
+			scopes.put("link", "http://" + (network.domain != null ? network.domain : network.getTenantId() + ".trix.rocks"));
+			scopes.put("invitationUrl", invitation.getUrl());
+			scopes.put("networkSubdomain", network.getTenantId());
+			scopes.put("network", network);
+			scopes.put("hash", invitation.hash);
 
-            StringWriter writer = new StringWriter();
+			StringWriter writer = new StringWriter();
 
-            MustacheFactory mf = new DefaultMustacheFactory();
+			MustacheFactory mf = new DefaultMustacheFactory();
 
-            Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
-            mustache.execute(writer, scopes);
-            writer.flush();
+			Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
+			mustache.execute(writer, scopes);
+			writer.flush();
 
-            String emailBody = writer.toString();
-            String subject = "[ "+ network.name +" ]" + " Convite ";
-            sendSimpleMail(invitation.email, subject, emailBody);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+			String emailBody = writer.toString();
+			String subject = "[ "+ network.name +" ]" + " Convite ";
+			sendSimpleMail(invitation.email, subject, emailBody);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 }

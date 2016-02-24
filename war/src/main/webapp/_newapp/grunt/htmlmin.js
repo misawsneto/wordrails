@@ -2,7 +2,7 @@ module.exports = {
 	// min: {
  //      files: [{
  //          expand: true,
- //          cwd: 'app/views/',
+ //          cwd: 'views/',
  //          src: ['*.html', '**/*.html'],
  //          dest: 'angular/views/',
  //          ext: '.html',

@@ -12,7 +12,7 @@ import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.PersonService;
-import co.xarx.trix.services.PostService;
+import co.xarx.trix.services.elasticsearch.ESPostService;
 import co.xarx.trix.util.Constants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -44,7 +44,7 @@ public class BookmarksResource {
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
-	private PostService postService;
+	private ESPostService esPostService;
 	@Autowired
 	private TrixAuthenticationProvider authProvider;
 
@@ -78,12 +78,12 @@ public class BookmarksResource {
 			e1.printStackTrace();
 		}
 
-		BoolQueryBuilder mainQuery = postService.getBoolQueryBuilder(q, person.getId(), Constants.Post.STATE_PUBLISHED, readableIds, person.bookmarkPosts);
+		BoolQueryBuilder mainQuery = esPostService.getBoolQueryBuilder(q, person.getId(), Constants.Post.STATE_PUBLISHED, readableIds, person.bookmarkPosts);
 
 		Pageable pageable = new PageRequest(page, size);
 
 
-		Pair<Integer, List<PostView>> postsViews = postService.searchIndex(mainQuery, pageable, null);
+		Pair<Integer, List<PostView>> postsViews = esPostService.searchIndex(mainQuery, pageable, null);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postsViews.getRight();

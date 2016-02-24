@@ -1,9 +1,9 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.aspect.annotations.Profile;
+import co.xarx.trix.aspect.annotations.TimeIt;
 import co.xarx.trix.domain.page.*;
 import co.xarx.trix.persistence.PageRepository;
-import co.xarx.trix.services.PageService;
+import co.xarx.trix.services.QueryableSectionService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,9 +24,9 @@ public class WebResource {
 	@Autowired
 	private PageRepository pageRepository;
 	@Autowired
-	private PageService pageService;
+	private QueryableSectionService queryableSectionService;
 
-	@Profile
+	@TimeIt
 	@GET
 	@Path("/{stationId}/pages")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -39,7 +39,7 @@ public class WebResource {
 					.filter(section -> section != null)
 					.filter(section -> section instanceof QueryableSection)
 					.forEach(section -> {
-						Map<Integer, Block> blocks = pageService.fetchQueries((QueryableListSection) section, 0);
+						Map<Integer, Block> blocks = queryableSectionService.fetchQueries((QueryableListSection) section, 0);
 						if (section instanceof ListSection) {
 							((ListSection) section).setBlocks(blocks);
 						}

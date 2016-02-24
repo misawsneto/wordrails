@@ -63,8 +63,7 @@ public class StationsResource {
 		Person person = authProvider.getLoggedPerson();
 		Station station = stationRepository.findOne(stationId);
 
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		NetworkRole role = networkRolesRepository.findByNetworkAndPerson(network, person);
+		NetworkRole role = networkRolesRepository.findByPerson(person);
 
 		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
 
@@ -79,14 +78,12 @@ public class StationsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response setMainStation(@PathParam("stationId") Integer stationId, @FormParam("value") boolean value) {
 		Person person = authProvider.getLoggedPerson();
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		NetworkRole role = networkRolesRepository.findByNetworkAndPerson(network, person);
+		NetworkRole role = networkRolesRepository.findByPerson(person);
 
 		List<Station> stations = new ArrayList<Station>();
 
 		if (role.admin) {
-			stations = stationRepository.findByNetworkId(network.id);
-			for (Station station : stations ) {
+			for (Station station : stationRepository.findAll()) {
 				if (station.id.equals(stationId)) station.main = value;
 				else station.main = false;
 

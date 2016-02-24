@@ -1,25 +1,35 @@
 package co.xarx.trix.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+
+@Getter
+@Setter
 @Entity
-@Table(uniqueConstraints=@UniqueConstraint(columnNames={"subdomain"}))
-public class Network implements Serializable{
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
+@JsonIgnoreProperties(value = {
+		"faviconHash", "splashImageHash", "loginImageHash", "loginImageSmallHash", "subdomain"
+}, allowGetters = true)
+public class Network extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7723825842358687233L;
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
 	@NotNull
@@ -47,9 +57,6 @@ public class Network implements Serializable{
 	@OneToMany(mappedBy="network", cascade=CascadeType.ALL)
 	public Set<Sponsor> sponsors;
 
-	@OneToMany(mappedBy="network")
-	public Set<Section> sections;
-
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
 	
@@ -67,12 +74,12 @@ public class Network implements Serializable{
 
 	public String googleAppID;
 
-    public String facebookLink;
-    public String youtubeLink;
-    public String googlePlusLink;
-    public String twitterLink;
+	public String facebookLink;
+	public String youtubeLink;
+	public String googlePlusLink;
+	public String twitterLink;
 
-    public String webFooter;
+	public String webFooter;
 
 	@JsonIgnore
 	public String googleAppSecret;
@@ -80,10 +87,10 @@ public class Network implements Serializable{
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;
 
-    public String stationMenuName;
-    public String homeTabName;
+	public String stationMenuName;
+	public String homeTabName;
 
-    public String domain;
+	public String domain;
 
 	@JsonIgnore
 	public String networkCreationToken;
@@ -93,54 +100,28 @@ public class Network implements Serializable{
 
 	@Lob
 	public String loginFooterMessage;
-	
-//	@Column(columnDefinition="TEXT default '#F3F5F9'")
+
 	public String backgroundColor = "#F3F5F9";
-//	@Column(columnDefinition="TEXT default '#242424'")
 	public String navbarColor = "#242424";
-//	@Column(columnDefinition="TEXT default '#505050'")
 	public String navbarSecondaryColor  = "#505050";
-//	@Column(columnDefinition="TEXT default '#040404'")
 	public String mainColor = "#111111";
-//	@Column(columnDefinition="TEXT default 'Lato'")
 	public String primaryFont = "Lato";
-//	@Column(columnDefinition="TEXT default 'PT Serif'")
 	public String secondaryFont = "PT Serif";
 	@Column(columnDefinition="Decimal(10,2) default '4.0'")
 	public Double titleFontSize = 4.0;
 	@Column(columnDefinition="Decimal(10,2) default '1.0'")
 	public Double newsFontSize = 1.0;
-	
-	@NotNull
-	@Pattern(regexp = "^((?!-)[A-Za-z0-9-]{1,63})$", message = "Invalid subdomain")
-	public String subdomain;
-	
-	public boolean configured;
-	
-	@OneToOne
-	public Image logo;
-	public Integer logoId;
-	public Integer logoSmallId;
 
-	public String logoHash;
-	public String logoSmallHash;
-	public String faviconHash;
-	public String splashImageHash;
-	public String loginImageHash;
-	public String loginImageSmallHash;
+	public boolean configured;
 
 	@OneToOne
 	public Image favicon;
-	public Integer faviconId;
 	
 	@OneToOne
 	public Image splashImage;
-	public Integer splashImageId;
 	
 	@OneToOne
 	public Image loginImage;
-	public Integer loginImageId;
-	public Integer loginImageSmallId;
 	
 	@Column(columnDefinition = "varchar(255) default 'D'", nullable = false)
 	public String defaultReadMode;
@@ -168,107 +149,105 @@ public class Network implements Serializable{
 	@Lob
 	public String appleStoreAddress;
 
-    @Column(columnDefinition = "boolean default false", nullable = false)
-    public boolean addStationRolesOnSignup;
+	@Column(columnDefinition = "boolean default false", nullable = false)
+	public boolean addStationRolesOnSignup;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_primary_color", joinColumns = @JoinColumn(name = "network_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> primaryColors;
+
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_secondary_color", joinColumns = @JoinColumn(name = "network_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> secondaryColors;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_alert_color", joinColumns = @JoinColumn(name = "network_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> alertColors;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_background_color", joinColumns = @JoinColumn(name = "network_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> backgroundColors;
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null) {
 			try {
 				Network network = (Network) obj;
-				return Objects.equals(id, network.id) && Objects.equals(name, network.name);
+				return Objects.equals(id, network.id) && Objects.equals(tenantId, network.tenantId);
 			} catch (ClassCastException e) {}
 		}
 		return false;
 	}
-	
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable=false)
-	public Date createdAt;
 
 	@PrePersist
 	void onCreate() {
-		createdAt = new Date();
 		if(defaultReadMode == null || defaultReadMode.isEmpty())
 			defaultReadMode = "D";
 		if(defaultOrientationMode == null || defaultOrientationMode.isEmpty())
 			defaultOrientationMode = "H";
-		
-		onChange();
-	}
-	
-	@JsonFormat(shape=JsonFormat.Shape.NUMBER)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date updatedAt;
-
-	@PreUpdate
-	void onUpdate() {
-		updatedAt = new Date();
-		onChange();
 	}
 
-	private void onChange() {
-		if(logo != null && logo.originalHash != null){
-			logoHash = logo.originalHash;
-			logoSmallHash = logo.smallHash;
-
-			logoId = logo.original.id;
-			logoSmallId = logo.small.id;
-		}else{
-			logoHash = null;
-			logoSmallHash = null;
-			logoId = null;
-			logoSmallId = null;
-		}
-
-		if(favicon != null && favicon.originalHash != null){
-			faviconHash = favicon.originalHash;
-			faviconId = favicon.original.id;
-		}else{
-			faviconHash = null;
-			faviconId = null;
-		}
-
-		if(splashImage != null && splashImage.originalHash != null){
-			splashImageHash = splashImage.originalHash;
-			splashImageId = splashImage.original.id;
-		}else{
-			splashImageHash = null;
-			splashImageId = null;
-		}
-
-		if(loginImage != null && loginImage.originalHash != null){
-			loginImageHash = loginImage.originalHash;
-			loginImageSmallHash = loginImage.smallHash;
-			loginImageId = loginImage.original.id;
-			loginImageSmallId = loginImage.small.id;
-		}else{
-			loginImageHash = null;
-			loginImageSmallHash = null;
-			loginImageId = null;
-			loginImageSmallId = null;
-		}
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
+	@SdkInclude
 	public boolean isFacebookLoginAllowed() {
-		return
-				this.facebookAppID != null && !this.facebookAppID.isEmpty() &&
+		return this.facebookAppID != null && !this.facebookAppID.isEmpty() &&
 						this.facebookAppSecret != null && !this.facebookAppSecret.isEmpty();
 	}
 
+	@SdkInclude
 	public boolean isGoogleLoginAllowed() {
-		return
-				this.googleAppID != null && !this.googleAppID.isEmpty() &&
+		return this.googleAppID != null && !this.googleAppID.isEmpty() &&
 						this.googleAppSecret != null && !this.googleAppSecret.isEmpty();
+	}
+
+	@SdkInclude
+	public String getFaviconHash() {
+		if (favicon != null) return favicon.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getSplashImageHash() {
+		if (splashImage != null) return splashImage.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getLoginImageHash() {
+		if (loginImage != null) return loginImage.getOriginalHash();
+
+		return null;
+	}
+
+	@SdkInclude
+	public String getSubdomain() {
+		return tenantId;
+	}
+
+	@JsonIgnore
+	public String getRealDomain() {
+		if(getDomain() != null)
+			return getDomain();
+
+		return getSubdomain() + ".trix.rocks";
+	}
+
+	@Deprecated
+	@SdkInclude
+	public String getLoginImageSmallHash() {
+		if (loginImage != null) return loginImage.getSmallHash();
+
+		return null;
 	}
 
 }

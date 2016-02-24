@@ -45,11 +45,11 @@ class AuthenticationRequestInterceptor implements RequestInterceptor {
 			request.addHeader("Cookie", "JSESSIONID=" + cookie);
 		}
 		if (manager.isConnectedOrConnecting()) {
-            int maxAge = 0;
-            request.addHeader("Cache-Control", "max-age=" + maxAge);
+			int maxAge = 0;
+			request.addHeader("Cache-Control", "max-age=" + maxAge);
 		} else {
 			int maxStale = Integer.MAX_VALUE;
-            request.addHeader("Cache-Control", "only-if-cached, max-stale=" + maxStale);				
+			request.addHeader("Cache-Control", "only-if-cached, max-stale=" + maxStale);
 		}
 	}
 	
