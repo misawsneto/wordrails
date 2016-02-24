@@ -14,6 +14,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 @EventLoggableRepository
 public interface PostRepository extends JpaRepository<Post, Integer>, CustomPostRepository {
@@ -115,4 +116,14 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 	@RestResource(exported = false)
 	@Query("select post from Post post join post.terms term where term.id in (:termId) and post.featuredImage is not null")
 	List<Post> findByFeaturedImageByTermId(@Param("termId") Integer termId, Pageable page);
+
+	@RestResource(exported = false)
+	@Modifying
+	@Query("DELETE from Post post WHERE post.id in (:ids)")
+	void forceDeleteAll(@Param("ids") List<Integer> ids);
+
+	@RestResource(exported = false)
+	@Modifying
+	@Query("DELETE from Post post WHERE post.id = :id")
+	void forceDelete(@Param("id") Integer id);
 }
