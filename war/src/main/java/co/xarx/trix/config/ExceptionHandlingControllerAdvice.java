@@ -8,8 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -29,10 +29,10 @@ public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHa
 		return new ResponseEntity<>(stackTrace, HttpStatus.FORBIDDEN);
 	}
 
-	@Override
-	public ResponseEntity<Object> handleHttpRequestMethodNotSupported
-			(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-		return super.handleHttpRequestMethodNotSupported(ex, headers, status, request);
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<String> accessDeniedException(AccessDeniedException exception) {
+		String stackTrace = ExceptionUtils.getStackTrace(exception);
+		return new ResponseEntity<>(stackTrace, HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(NotImplementedException.class)
