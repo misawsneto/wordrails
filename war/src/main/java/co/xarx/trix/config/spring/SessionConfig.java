@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,6 +23,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 import org.springframework.session.web.http.HttpSessionStrategy;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -34,7 +36,7 @@ public class SessionConfig extends CachingConfigurerSupport {
 
 	public RedisTemplate redisTemplate() {
 		RedisTemplate redisTemplate = new RedisTemplate();
-		redisTemplate.setConnectionFactory(jedisConnectionFactory());
+		redisTemplate.setConnectionFactory(redisConnectionFactory());
 		redisTemplate.setKeySerializer(new StringRedisSerializer());
 		return redisTemplate;
 	}
@@ -52,18 +54,19 @@ public class SessionConfig extends CachingConfigurerSupport {
 		RedisTemplate imageRedisTemplate = redisTemplate();
 		imageRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(Map.class));
 
+		RedisTemplate stationsIdsRedisTemplate = redisTemplate();
+		imageRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(List.class));
+
 		templates.put("person", new HashMap<RedisTemplate, Integer>(){{put(personRedisTemplate, 60);}});
 		templates.put("user", new HashMap<RedisTemplate, Integer>(){{put(userRedisTemplate, 60);}});
 		templates.put("image", new HashMap<RedisTemplate, Integer>(){{put(imageRedisTemplate, 600);}});
+		templates.put("stationsIds", new HashMap<RedisTemplate, Integer>(){{put(stationsIdsRedisTemplate, 600);}});
 
 		return new MultitenantCacheManager(templates);
 	}
 
 	@Bean
 	public HttpSessionStrategy httpSessionStrategy() {
-//		CookieHttpSessionStrategy cookieHttpSessionStrategy = new CookieHttpSessionStrategy();
-//		cookieHttpSessionStrategy.setCookieName("JSESSIONID");
-
 		CookieAndHeaderHttpSessionStrategy sessionStrategy = new CookieAndHeaderHttpSessionStrategy();
 		sessionStrategy.setCookieName("JSESSIONID");
 		sessionStrategy.setHeaderName(trixAuthHeader);
@@ -72,7 +75,7 @@ public class SessionConfig extends CachingConfigurerSupport {
 	}
 
 	@Bean
-	public JedisConnectionFactory jedisConnectionFactory() {
+	public RedisConnectionFactory redisConnectionFactory() {
 		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
 		jedisConnectionFactory.setHostName("meminstance1");
 		jedisConnectionFactory.setPort(6379);

@@ -7,7 +7,7 @@ import co.xarx.trix.domain.QNotification;
 import co.xarx.trix.elasticsearch.domain.ESPerson;
 import co.xarx.trix.elasticsearch.repository.ESPersonRepository;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.ESStartupIndexerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ public class PersonEventHandler {
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
-	private ElasticSearchService elasticSearchService;
+	private ESStartupIndexerService elasticSearchService;
 	@Autowired
 	private ESPersonRepository esPersonRepository;
 	@Autowired
@@ -76,7 +76,7 @@ public class PersonEventHandler {
 		notificationRepository.delete(notifications);
 		mobileDeviceRepository.deleteByPersonId(person.id);
 		userRepository.delete(person.user.id);
-		elasticSearchService.deleteIndex(person.getId(), esPersonRepository);
+		esPersonRepository.delete(person.getId());
 	}
 
 	@HandleAfterSave

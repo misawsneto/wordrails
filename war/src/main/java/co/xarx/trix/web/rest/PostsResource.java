@@ -1,11 +1,8 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.PermissionId;
-import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
-import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.QPost;
@@ -13,9 +10,10 @@ import co.xarx.trix.dto.StationTermsDto;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.PostService;
+import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.auth.StationPermissionService;
 import co.xarx.trix.services.elasticsearch.ESPostService;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -43,7 +41,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 @Path("/posts")
 @Consumes(MediaType.WILDCARD)
@@ -60,7 +57,7 @@ public class PostsResource {
 	@Autowired
 	private AsyncService asyncService;
 	@Autowired
-	private WordrailsService wordrailsService;
+	private StationPermissionService stationPermissionService;
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
@@ -152,10 +149,10 @@ public class PostsResource {
 	@Path("/{stationId}/findPostsByStationIdAndAuthorIdAndState")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> findPostsByStationIdAndAuthorIdAndState(@PathParam("stationId") Integer stationId,
-	                                                                               @QueryParam("authorId") Integer authorId,
-	                                                                               @QueryParam("state") String state,
-	                                                                               @QueryParam("page") int page,
-	                                                                               @QueryParam("size") int size) throws ServletException, IOException {
+																				   @QueryParam("authorId") Integer authorId,
+																				   @QueryParam("state") String state,
+																				   @QueryParam("page") int page,
+																				   @QueryParam("size") int size) throws ServletException, IOException {
 
 		Pageable pageable = new PageRequest(page, size);
 
@@ -173,58 +170,30 @@ public class PostsResource {
 	@Path("/search/networkPosts")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> searchPosts(@Context HttpServletRequest request,
-	                                               @QueryParam("query") String q,
-	                                               @QueryParam("stationIds") String stationIds,
-	                                               @QueryParam("personId") Integer personId,
-	                                               @QueryParam("publicationType") String publicationType,
-	                                               @QueryParam("noHighlight") Boolean noHighlight,
-	                                               @QueryParam("sortByDate") Boolean sortByDate,
-	                                               @QueryParam("page") Integer page,
-	                                               @QueryParam("size") Integer size) {
+												   @QueryParam("query") String q,
+												   @QueryParam("stationIds") String stationIds,
+												   @QueryParam("personId") Integer personId,
+												   @QueryParam("publicationType") String publicationType,
+												   @QueryParam("noHighlight") Boolean noHighlight,
+												   @QueryParam("sortByDate") Boolean sortByDate,
+												   @QueryParam("page") Integer page,
+												   @QueryParam("size") Integer size) {
 
-		if (q == null) {
-//			ContentResponse<SearchView> response = new ContentResponse<>();
-//			response.content = new SearchView();
-//			response.content.hits = 0;
-//			response.content.posts = new ArrayList<>();
-//
-//			return response;
+		if (q == null)
 			q = "";
+
+		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
+
+		if (stationsWithPermission == null || stationsWithPermission.isEmpty()) {
+			ContentResponse<SearchView> response = new ContentResponse<>();
+			response.content = new SearchView();
+			response.content.hits = 0;
+			response.content.posts = new ArrayList<>();
+
+			return response;
 		}
 
-		Person person = authProvider.getLoggedPerson();
-		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-
-		PermissionId pId = new PermissionId();
-		pId.baseUrl = baseUrl;
-		pId.networkId = network.id;
-		pId.personId = person.id;
-
-		List<Integer> readableIds = new ArrayList<>();
-		List<Integer> stationIdIntegers = new ArrayList<>();
-
-		try {
-			if (stationIds != null) {
-				List<String> stringIds = Arrays.asList(stationIds.replaceAll("\\s*", "").split(","));
-				for (String id : stringIds)
-					stationIdIntegers.add(Integer.parseInt(id));
-			}
-
-			if (stationIdIntegers.size() == 0) {
-				StationsPermissions permissions = wordrailsService.getPersonPermissions(pId);
-				readableIds = wordrailsService.getReadableStationIds(permissions);
-			} else {
-				readableIds = stationIdIntegers;
-			}
-		} catch (ExecutionException e1) {
-			e1.printStackTrace();
-		}
-
-
-
-
-		BoolQueryBuilder mainQuery = esPostService.getBoolQueryBuilder(q, personId, publicationType, readableIds, null);
+			BoolQueryBuilder mainQuery = esPostService.getBoolQueryBuilder(q, personId, publicationType, stationsWithPermission, null);
 		FieldSortBuilder sort = null;
 
 		if(sortByDate != null && sortByDate){
@@ -243,15 +212,14 @@ public class PostsResource {
 		response.content.posts = postsViews.getRight();
 
 		return response;
-
 	}
 
 	@GET
 	@Path("/{stationId}/postRead")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getPostRead(@PathParam("stationId") Integer stationId,
-	                                                   @QueryParam("page") Integer page,
-	                                                   @QueryParam("size") Integer size) throws BadRequestException{
+													   @QueryParam("page") Integer page,
+													   @QueryParam("size") Integer size) throws BadRequestException{
 
 		if (stationId == null || page == null || size == null) {
 			throw new BadRequestException("Invalid null parameter(s).");
@@ -283,8 +251,8 @@ public class PostsResource {
 	@Path("/{stationId}/popular")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getPopular(@PathParam("stationId") Integer stationId,
-	                                                  @QueryParam("page") Integer page,
-	                                                  @QueryParam("size") Integer size) {
+													  @QueryParam("page") Integer page,
+													  @QueryParam("size") Integer size) {
 
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPopularPosts(stationId, pageable);
@@ -298,8 +266,8 @@ public class PostsResource {
 	@Path("/{stationId}/recent")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> getRecent(@PathParam("stationId") Integer stationId,
-	                                                 @QueryParam("page") Integer page,
-	                                                 @QueryParam("size") Integer size) {
+													 @QueryParam("page") Integer page,
+													 @QueryParam("size") Integer size) {
 		Pageable pageable = new PageRequest(page, size);
 		List<Post> posts = postRepository.findPostsOrderByDateDesc(stationId, pageable);
 
@@ -340,7 +308,7 @@ public class PostsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tags") String tagsString, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		if (tagsString == null || !tagsString.isEmpty()) {
-			// TODO: throw badrequest
+			// TODO-ALL: throw badrequest
 		}
 
 		Set<String> tags = new HashSet<String>(Arrays.asList(tagsString.split(",")));

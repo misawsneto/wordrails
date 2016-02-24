@@ -7,7 +7,7 @@ import co.xarx.trix.elasticsearch.repository.ESStationRepository;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
-import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.ESStartupIndexerService;
 import co.xarx.trix.services.LogBuilderExecutor;
 import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class StationEventHandler {
 	@Autowired
 	private AuthService authProvider;
 	@Autowired
-	private ElasticSearchService elasticSearchService;
+	private ESStartupIndexerService elasticSearchService;
 	@Autowired
 	private ESStationRepository esStationRepository;
 
@@ -224,7 +224,7 @@ public class StationEventHandler {
 				postRepository.delete(posts);
 			}
 
-			elasticSearchService.deleteIndex(station.getId(), esStationRepository);
+			esStationRepository.delete(station.getId());
 
 		}else{
 			throw new UnauthorizedException();

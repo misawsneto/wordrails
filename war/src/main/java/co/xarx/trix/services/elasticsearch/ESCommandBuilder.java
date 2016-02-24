@@ -2,6 +2,7 @@ package co.xarx.trix.services.elasticsearch;
 
 import co.xarx.trix.domain.query.CommandBuilder;
 import co.xarx.trix.domain.query.statement.PostStatement;
+import co.xarx.trix.services.auth.StationPermissionService;
 import co.xarx.trix.util.Constants;
 import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -9,15 +10,24 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service
 public class ESCommandBuilder implements CommandBuilder<ElasticSearchCommand> {
+
+	private StationPermissionService stationPermissionService;
+
+	@Autowired
+	public ESCommandBuilder(StationPermissionService stationPermissionService) {
+		this.stationPermissionService = stationPermissionService;
+	}
 
 	@Override
 	public ElasticSearchCommand build(PostStatement query) {
@@ -40,14 +50,15 @@ public class ESCommandBuilder implements CommandBuilder<ElasticSearchCommand> {
 		BoolQueryBuilder mainQuery = boolQuery();
 		mainQuery = mainQuery.must(matchQuery("state", Constants.Post.STATE_PUBLISHED));
 		if (query.isAllReadableStations()) {
-			//TODO when groups are implemented
-		} else {
-			BoolQueryBuilder stationQuery = boolQuery();
-			for (Integer stationId : query.getStationIds()) {
-				stationQuery.should(matchQuery("stationId", String.valueOf(stationId)));
-			}
-			mainQuery = mainQuery.must(stationQuery);
+			query.setStationIds(new HashSet<>(stationPermissionService.findStationsWithPermission()));
 		}
+
+		BoolQueryBuilder stationQuery = boolQuery();
+		for (Integer stationId : query.getStationIds()) {
+			stationQuery.should(matchQuery("stationId", String.valueOf(stationId)));
+		}
+		mainQuery = mainQuery.must(stationQuery);
+
 
 		if(query.getRichText() != null){
 			queryText = multiMatchQuery(query.getRichText())

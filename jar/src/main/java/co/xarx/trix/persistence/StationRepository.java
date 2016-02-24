@@ -1,6 +1,10 @@
 package co.xarx.trix.persistence;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.User;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,23 +16,39 @@ import java.util.List;
 
 public interface StationRepository extends JpaRepository<Station, Integer>, QueryDslPredicateExecutor<Station> {
 
+
+	@RestResource(exported = false)
+	@Cacheable(value = "stationsIds", key = "#p0")
+	@Query("select id from Station station where tenantId = :tenantId")
+	List<Integer> findIds(@Param("tenantId") String tenantId);
+
+	@Override
+	@CacheEvict(value = "stationsIds")
+	Station save(Station station);
+
+	@Override
+	@SdkExclude
+	@CacheEvict(value = "stationsIds")
+	void delete(Station user);
+
+
+
 	@RestResource(exported=false)
 	@Query(value="SELECT CASE WHEN (count(st) > 0) then true else false end FROM Station st WHERE st.id = :stationId AND st.visibility = 'UNRESTRICTED'")
 	boolean isUnrestricted(@Param("stationId") Integer stationId);
 
-	//@Query("select station from Station station where station.id IN (select station.id from Station station join station.personsStationRoles personRoles join personRoles.person person where person.id = :personId and :networkId = station.network.id) or station.id IN (select station.id from Station station where (station.visibility = 'UNRESTRICTED' or station.visibility = 'RESTRICTED_TO_NETWORKS') and :networkId = station.network.id)")
 	@RestResource(exported = false)
 	@Query("select station from Station station join station.personsStationRoles personRoles join personRoles.person person where (person.id = :personId or station.visibility = 'UNRESTRICTED') GROUP BY station")
 	List<Station> findByPersonId(@Param("personId") Integer personId);
 
+	@RestResource(exported = false)
 	@Query("select station from Station station join station.personsStationRoles personRoles join personRoles.person person " +
 			"where person.id = :personId and station.id = :stationId")
-	@RestResource(exported=false)
 	Station belongsToStation(@Param("personId") Integer personId, @Param("stationId") Integer stationId);
 
+	@RestResource(exported = false)
 	@Query("select station from Station station join station.personsStationRoles personRoles join personRoles.person person " +
 			"where person.id = :personId and station.id IN (:stationsId)")
-	@RestResource(exported=false)
 	List<Station> belongsToStations(@Param("personId") Integer personId, @Param("stationsId") List<Integer> stationsId);
 
 	@RestResource(exported=false)

@@ -1,17 +1,14 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.PermissionId;
-import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.BooleanResponse;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
-import co.xarx.trix.api.StationsPermissions;
-import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.PersonRepository;
-import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.auth.StationPermissionService;
 import co.xarx.trix.services.elasticsearch.ESPostService;
 import co.xarx.trix.util.Constants;
 import org.apache.commons.collections.CollectionUtils;
@@ -28,7 +25,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @Path("/bookmarks")
 @Consumes(MediaType.WILDCARD)
@@ -38,7 +34,7 @@ public class BookmarksResource {
 	@Context
 	private HttpServletRequest request;
 	@Autowired
-	private WordrailsService wordrailsService;
+	private StationPermissionService stationPermissionService;
 	@Autowired
 	private PersonService personService;
 	@Autowired
@@ -52,8 +48,8 @@ public class BookmarksResource {
 	@Path("/searchBookmarks")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q,
-	                                                         @QueryParam("page") Integer page,
-	                                                         @QueryParam("size") Integer size){
+															 @QueryParam("page") Integer page,
+															 @QueryParam("size") Integer size){
 		Person person = personRepository.findByUsername(authProvider.getUser().getUsername());
 		if(CollectionUtils.isEmpty(person.getBookmarkPosts())) {
 			ContentResponse<List<PostView>> response = new ContentResponse<>();
@@ -62,23 +58,17 @@ public class BookmarksResource {
 			return response;
 		}
 
-		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
 
-		PermissionId pId = new PermissionId();
-		pId.baseUrl = baseUrl;
-		pId.networkId = network.id;
-		pId.personId = person.id;
+		if (stationsWithPermission == null || stationsWithPermission.isEmpty()) {
+			ContentResponse<List<PostView>> response = new ContentResponse<>();
+			response.content = new ArrayList<>();
 
-		List<Integer> readableIds = new ArrayList<>();
-		try {
-			StationsPermissions permissions = wordrailsService.getPersonPermissions(pId);
-			readableIds = wordrailsService.getReadableStationIds(permissions);
-		} catch (ExecutionException e1) {
-			e1.printStackTrace();
+			return response;
 		}
 
-		BoolQueryBuilder mainQuery = esPostService.getBoolQueryBuilder(q, person.getId(), Constants.Post.STATE_PUBLISHED, readableIds, person.bookmarkPosts);
+		BoolQueryBuilder mainQuery = esPostService.getBoolQueryBuilder(q, person.getId(),
+				Constants.Post.STATE_PUBLISHED, stationsWithPermission, person.bookmarkPosts);
 
 		Pageable pageable = new PageRequest(page, size);
 

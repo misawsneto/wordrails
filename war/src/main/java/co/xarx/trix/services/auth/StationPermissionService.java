@@ -1,11 +1,16 @@
 package co.xarx.trix.services.auth;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Station;
+import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.security.acl.TrixPermission;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -13,13 +18,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PermissionService {
+public class StationPermissionService {
 
 	private MutableAclService aclService;
+	private StationRepository stationRepository;
+	private PermissionEvaluator permissionEvaluator;
 
 	@Autowired
-	public PermissionService(MutableAclService aclService) {
+	public StationPermissionService(MutableAclService aclService,
+									StationRepository stationRepository,
+									PermissionEvaluator permissionEvaluator) {
 		this.aclService = aclService;
+		this.stationRepository = stationRepository;
+		this.permissionEvaluator = permissionEvaluator;
+	}
+
+	public List<Integer> findStationsWithPermission() {
+		List<Integer> result = new ArrayList<>();
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		List<Integer> stationIds = stationRepository.findIds(TenantContextHolder.getCurrentTenantId());
+		for (Integer stationId : stationIds) {
+			if (permissionEvaluator.hasPermission(auth, stationId, Station.class.getName(), TrixPermission.READ)) {
+				result.add(stationId);
+			}
+		}
+
+		return result;
 	}
 
 	public void updateStationsPermissions(List<String> usernames, List<Integer> stationIds, boolean publisher, boolean editor, boolean admin) {
@@ -30,8 +55,6 @@ public class PermissionService {
 		int permissionMask = TrixPermission.READ.getMask();
 
 		//in simple words, the three next lines adds the following permissions to the permission list
-		//I never thought I'd use the |= operator
-
 		if (editor) permissionMask |= TrixPermission.MODERATION.getMask() |
 				TrixPermission.CREATE.getMask() |
 				TrixPermission.UPDATE.getMask() |

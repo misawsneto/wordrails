@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ElasticSearchService {
+public class ESStartupIndexerService {
 
 	Logger log = Logger.getLogger(this.getClass().getName());
 
@@ -96,9 +96,5 @@ public class ElasticSearchService {
 	public <T extends ElasticSearchEntity> void saveIndex(Object object, Class<T> objectClass, ESRepository esRepository) {
 		ElasticSearchEntity entity = modelMapper.map(object, objectClass);
 		esRepository.save(entity);
-	}
-
-	public void deleteIndex(Integer id, ESRepository esRepository) {
-		esRepository.delete(id);
 	}
 }

@@ -3,7 +3,7 @@ package co.xarx.trix.web.rest;
 import co.xarx.trix.api.StationRolesUpdate;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.services.auth.AuthService;
-import co.xarx.trix.services.auth.PermissionService;
+import co.xarx.trix.services.auth.StationPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -22,7 +22,7 @@ import javax.ws.rs.core.Response;
 public class PermissionResource {
 
 	@Autowired
-	private PermissionService permissionService;
+	private StationPermissionService stationPermissionService;
 	@Autowired
 	private AuthService authService;
 
@@ -41,7 +41,7 @@ public class PermissionResource {
 			throw new UnauthorizedException("Permission denied");
 		}
 
-		permissionService.updateStationsPermissions(dto.usernames, dto.stationsIds, dto.writer, dto.editor, dto.admin);
+		stationPermissionService.updateStationsPermissions(dto.usernames, dto.stationsIds, dto.writer, dto.editor, dto.admin);
 
 		return Response.status(Response.Status.OK).build();
 	}
@@ -57,7 +57,7 @@ public class PermissionResource {
 
 		dto.usernames.remove(authService.getLoggedUsername());
 
-		permissionService.deleteStationPermissions(dto.usernames, dto.stationsIds);
+		stationPermissionService.deleteStationPermissions(dto.usernames, dto.stationsIds);
 
 		return Response.status(Response.Status.OK).build();
 	}

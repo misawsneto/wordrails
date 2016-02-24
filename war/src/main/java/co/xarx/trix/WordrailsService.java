@@ -3,28 +3,20 @@ package co.xarx.trix;
 import co.xarx.trix.api.*;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Station;
-import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.util.StringUtil;
 import co.xarx.trix.web.rest.PerspectiveResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.NotFoundException;
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 @Component("wordrailsService")
 public class WordrailsService {
@@ -45,33 +37,6 @@ public class WordrailsService {
 	private StationRepository stationRepository;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
-
-	private LoadingCache<PermissionId, StationsPermissions> stationsPermissions;
-
-	@PostConstruct
-	public void init(){
-		// ------------- init person cache
-		stationsPermissions = CacheBuilder.newBuilder().maximumSize(1000)
-				.expireAfterWrite(1, TimeUnit.MINUTES)
-						//	       .removalListener(MY_LISTENER)
-				.build(
-						new CacheLoader<PermissionId, StationsPermissions>() {
-							public StationsPermissions load(PermissionId id) {
-								List<StationPermission> permissions = getStationPermissions(id.baseUrl, id.personId);
-								if (permissions != null) {
-									StationsPermissions stationsPermissions = new StationsPermissions();
-									stationsPermissions.stationPermissionDtos = permissions;
-									return stationsPermissions;
-								} else {
-									return null;
-								}
-							}
-						});
-	}
-
-	public StationsPermissions getPersonPermissions(PermissionId id) throws ExecutionException{
-		return stationsPermissions.get(id);
-	}
 
 	public List<Link> generateSelfLinks(String self){
 		Link link = new Link();
@@ -212,49 +177,6 @@ public class WordrailsService {
 		term.termPerspectives = null;
 		term.cells = null;
 		term.taxonomy = null;
-	}
-
-	public List<StationPermission> getStationPermissions(String baseUrl, Integer personId) {
-		//Stations Permissions
-		List<StationPermission> stationPermissionDtos = new ArrayList<>();
-		try {
-			List<Station> stations = stationRepository.findByPersonId(personId);
-			for (Station station : stations) {
-				StationPermission stationPermissionDto = new StationPermission();
-				StationDto stationDto = new StationDto();
-				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
-
-				//Station Fields
-				stationPermissionDto.stationId = station.id;
-				stationPermissionDto.stationName = station.name;
-				stationPermissionDto.writable = station.writable;
-				stationPermissionDto.main = station.main;
-				stationPermissionDto.visibility = station.visibility;
-				stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
-
-				stationPermissionDto.subheading = station.subheading;
-				stationPermissionDto.sponsored = station.sponsored;
-				stationPermissionDto.topper = station.topper;
-
-				stationPermissionDto.allowComments = station.allowComments;
-				stationPermissionDto.allowSocialShare = station.allowSocialShare;
-
-				stationDto = objectMapper.readValue(objectMapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
-				stationDto.links = generateSelfLinks(baseUrl + "/api/stations/" + station.id);
-				//StationRoles Fields
-				StationRole stationRole = stationRolesRepository.findByStationAndPersonId(station, personId);
-				if(stationRole != null){
-					stationPermissionDto.admin = stationRole.admin;
-					stationPermissionDto.editor = stationRole.editor;
-					stationPermissionDto.writer = stationRole.writer;
-				}
-
-				stationPermissionDtos.add(stationPermissionDto);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return stationPermissionDtos;
 	}
 
 	public List<Integer> getReadableStationIds(StationsPermissions permissions) {

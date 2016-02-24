@@ -17,10 +17,9 @@ import java.util.List;
 @EventLoggableRepository
 public interface PostRepository extends JpaRepository<Post, Integer>, CustomPostRepository {
 
-	@Modifying
-	@RestResource(exported = false)
-	@Query("UPDATE Post p set p.readsCount = p.readsCount + 1 where p.id = :postId")
-	void incrementReadCount(@Param("postId") int postId);
+	@PostAuthorize("hasPermission(returnObject, 'read')")
+	@Query("SELECT post FROM Post post where post.slug = :slug and post is not null")
+	Post findBySlug(@Param("slug") String slug);
 
 	@Deprecated
 	@Query("select post from Post post where post.id in ( select p.id from Post p where p.station.id = :stationId ) order by post.date desc")
@@ -36,12 +35,22 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 			"order by post.date desc")
 	List<Post> findPostsNotPositioned(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, @Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);
 
-	@RestResource(exported = false)
-	List<Post> findByStation(Station station);
-
 	@Deprecated
 	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
 	List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);
+
+	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
+	List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
+
+	// ---------------------------------- NOT EXPOSED ----------------------------------
+
+	@Modifying
+	@RestResource(exported = false)
+	@Query("UPDATE Post p set p.readsCount = p.readsCount + 1 where p.id = :postId")
+	void incrementReadCount(@Param("postId") int postId);
+
+	@RestResource(exported = false)
+	List<Post> findByStation(Station station);
 
 	@RestResource(exported = false)
 	@Query("select post from Post post join post.station station " +
@@ -55,16 +64,9 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 			"(select pr.id from PostRead pr join pr.person person where person.id=:personId)")
 	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
-	List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
-
 	@RestResource(exported = false)
 	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.id DESC")
 	List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
-
-	@PostAuthorize("hasPermission(returnObject, 'read')")
-	@Query("SELECT post FROM Post post where post.slug = :slug and post is not null")
-	Post findBySlug(@Param("slug") String slug);
 
 	@RestResource(exported = false)
 	@Query("SELECT post FROM Post post where " +

@@ -45,7 +45,7 @@ public class ImageUtil {
 		java.io.File newFile = FileUtil.createNewTempFile();
 		BufferedImage bi = ImageIO.read(file);
 		if(bi == null) {
-			// favicon TODO: this needs security and validation
+			// favicon TODO-ARTHUR: this needs security and validation
 			return new ImageFile(file, 32, 32, FileUtil.getHash(new FileInputStream(file)));
 		}
 
@@ -67,7 +67,7 @@ public class ImageUtil {
 
 		BufferedImage bi = ImageIO.read(file);
 		if(bi == null){
-			// favicon TODO: this needs security and validation
+			// favicon TODO-ARTHUR: this needs security and validation
 			return new ImageFile(file, 32, 32, FileUtil.getHash(new FileInputStream(file)));
 		}
 		return new ImageFile(file, bi.getHeight(), bi.getWidth(), FileUtil.getHash(new FileInputStream(file)));

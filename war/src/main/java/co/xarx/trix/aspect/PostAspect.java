@@ -3,7 +3,7 @@ package co.xarx.trix.aspect;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.elasticsearch.domain.ESPost;
 import co.xarx.trix.elasticsearch.repository.ESPostRepository;
-import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.ESStartupIndexerService;
 import co.xarx.trix.services.SchedulerService;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,7 +19,7 @@ public class PostAspect {
 	@Autowired
 	private SchedulerService schedulerService;
 	@Autowired
-	private ElasticSearchService elasticSearchService;
+	private ESStartupIndexerService elasticSearchService;
 
 	@AfterReturning("within(co.xarx.trix.persistence.PostRepository+) && execution(* *..save(*)) && args(post)")
 	public void savePost(Post post) throws Throwable {
@@ -35,8 +35,7 @@ public class PostAspect {
 			//post = findOne(post.getId()); //do it again so modelmapper don't cry... stupid framework
 			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 		} else {
-			elasticSearchService.deleteIndex(post.getId(), esPostRepository);
-
+			esPostRepository.delete(post.getId());
 		}
 	}
 }

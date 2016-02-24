@@ -1,7 +1,6 @@
 package co.xarx.trix.config.spring;
 
 import co.xarx.trix.scheduler.AutowiringSpringBeanJobFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -19,20 +18,10 @@ import java.util.Properties;
 @EnableScheduling
 public class SchedulingConfig {
 
-	@Autowired
-	DataSource dataSource;
-	@Autowired
-	PlatformTransactionManager transactionManager;
-	@Autowired
-	ApplicationContext applicationContext;
-
-//	@Bean
-//	public Executor taskExecutor() {
-//		return Executors.newScheduledThreadPool(10);
-//	}
-
 	@Bean
-	public SchedulerFactoryBean quartzScheduler() {
+	public SchedulerFactoryBean quartzScheduler(DataSource dataSource,
+												PlatformTransactionManager transactionManager,
+												ApplicationContext applicationContext) {
 		SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
 		schedulerFactoryBean.setQuartzProperties(quartzProperties());
 		schedulerFactoryBean.setDataSource(dataSource);

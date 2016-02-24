@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.persistence.jpa.jpql.Assert;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -57,9 +58,13 @@ public class ESPostService {
 	}
 
 	public Pair<Integer, List<PostView>> searchIndex(BoolQueryBuilder boolQuery, Pageable pageable, SortBuilder sort) {
+		Assert.isNotNull(boolQuery, "boolQuery must not be null");
+		Assert.isNotNull(pageable, "pageable must not be null");
+
 		boolQuery.must(matchQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
-		if (sort != null) nativeSearchQueryBuilder.withSort(sort);
+		if (sort != null)
+			nativeSearchQueryBuilder.withSort(sort);
 		SearchQuery query = nativeSearchQueryBuilder.withPageable(pageable).withHighlightFields(new HighlightBuilder.Field("body")).withQuery(boolQuery).build();
 
 		Long[] totalHits = new Long[1];

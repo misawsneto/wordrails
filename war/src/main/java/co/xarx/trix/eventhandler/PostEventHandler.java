@@ -8,7 +8,7 @@ import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.PostAndCommentSecurityChecker;
-import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.services.ESStartupIndexerService;
 import co.xarx.trix.services.PostService;
 import co.xarx.trix.services.SchedulerService;
 import co.xarx.trix.util.StringUtil;
@@ -35,15 +35,13 @@ public class PostEventHandler {
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
-	private ImageRepository imageRepository;
-	@Autowired
 	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
 	@Autowired
 	private RecommendRepository recommendRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
-	private ElasticSearchService elasticSearchService;
+	private ESStartupIndexerService elasticSearchService;
 	@Autowired
 	private ESPostRepository esPostRepository;
 
@@ -107,7 +105,7 @@ public class PostEventHandler {
 			notificationRepository.deleteByPost(post);
 			recommendRepository.deleteByPost(post);
 			if (post.state.equals(Post.STATE_PUBLISHED)) {
-				elasticSearchService.deleteIndex(post.id, esPostRepository); // evitando bug de remoção de post que tiveram post alterado.
+				esPostRepository.delete(post.id); // evitando bug de remoção de post que tiveram post alterado.
 			}
 		} else {
 			throw new UnauthorizedException();

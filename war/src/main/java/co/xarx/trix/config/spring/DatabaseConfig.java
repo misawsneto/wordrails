@@ -3,7 +3,6 @@ package co.xarx.trix.config.spring;
 import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.flyway.FlywayIntegrator;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,10 +26,6 @@ import java.util.Properties;
 )
 public class DatabaseConfig {
 
-	@Autowired
-	DataSource dataSource;
-
-
 	@Bean
 	public FlywayIntegrator flywayIntegrator() {
 		return new FlywayIntegrator();
@@ -38,7 +33,7 @@ public class DatabaseConfig {
 
 	@Bean
 	@DependsOn("flywayIntegrator")
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		vendorAdapter.setGenerateDdl(true);
 
@@ -71,10 +66,10 @@ public class DatabaseConfig {
 
 
 	@Bean
-	public JpaTransactionManager transactionManager(){
+	public JpaTransactionManager transactionManager(DataSource dataSource){
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
 //		jpaTransactionManager.setDataSource(dataSource);
-		jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+		jpaTransactionManager.setEntityManagerFactory(entityManagerFactory(dataSource).getObject());
 		return jpaTransactionManager;
 	}
 

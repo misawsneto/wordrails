@@ -16,6 +16,7 @@ import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.auth.StationPermissionService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
@@ -90,6 +91,8 @@ public class PersonsResource {
 	private PersonEventHandler personEventHandler;
 	@Autowired
 	private MenuEntryRepository menuEntryRepository;
+	@Autowired
+	private StationPermissionService stationPermissionService;
 
 	@Autowired
 	@Qualifier("objectMapper")
@@ -265,22 +268,11 @@ public class PersonsResource {
 																 @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
-		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
 
-		Person person = authProvider.getLoggedPerson();
+		List<Post> posts = postRepository.findPostByPersonIdAndStations(personId, stationsWithPermission, pageable);
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id);
-
-		List<Integer> stationIds = new ArrayList<>();
-		if(permissions != null && permissions.size() > 0){
-			for (StationPermission stationPermission : permissions) {
-				stationIds.add(stationPermission.stationId);
-			}
-		}
-
-		List<Post> posts = postRepository.findPostByPersonIdAndStations(personId, stationIds, pageable);
-
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
@@ -291,8 +283,6 @@ public class PersonsResource {
 																		@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
-		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-
 		Person person;
 		if(personId == null){
 			person = authProvider.getLoggedPerson();
@@ -300,18 +290,11 @@ public class PersonsResource {
 			person = personRepository.findOne(personId);
 		}
 
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id);
+		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
 
-		List<Integer> stationIds = new ArrayList<Integer>();
-		if(permissions != null && permissions.size() > 0){
-			for (StationPermission stationPermission : permissions) {
-				stationIds.add(stationPermission.stationId);
-			}
-		}
+		List<Post> posts = postRepository.findPostByPersonIdAndStationsAndState(person.id, state, stationsWithPermission, pageable);
 
-		List<Post> posts = postRepository.findPostByPersonIdAndStationsAndState(person.id, state, stationIds, pageable);
-
-		ContentResponse<List<PostView>> response = new ContentResponse<List<PostView>>();
+		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
@@ -322,51 +305,14 @@ public class PersonsResource {
 																		   @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
-		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
 
-		Person person = authProvider.getLoggedPerson();
-
-		List<StationPermission> permissions = wordrailsService.getStationPermissions(baseUrl, person.id);
-
-		List<Integer> stationIds = new ArrayList<>();
-		if(permissions != null && permissions.size() > 0){
-			for (StationPermission stationPermission : permissions) {
-				stationIds.add(stationPermission.stationId);
-			}
-		}
-
-		List<Post> posts = postRepository.findRecommendationsByPersonIdAndStations(personId, stationIds, pageable);
+		List<Post> posts = postRepository.findRecommendationsByPersonIdAndStations(personId, stationsWithPermission, pageable);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
-
-	@GET
-	@Path("/logout")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response logout(){
-//		try{
-//			authProvider.logout();
-//
-//		}catch(BadCredentialsException | UsernameNotFoundException e){
-//			return Response.status(Status.UNAUTHORIZED).build();
-//		}
-		return Response.status(Status.OK).build();
-	}
-
-//	@PUT
-//	@Path("/me/password")
-//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
-//
-//		try{
-//			org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//			String username = user.getUsername();
-//			if(!username.equalsIgnoreCase("wordrails")) // don't allow users to change wordrails password
-//				userDetailsManager.changePassword(oldPassword, newPassword);
-//		}catch(Exception e){}
-//	}
 
 	@GET
 	@Path("/me")
@@ -393,7 +339,7 @@ public class PersonsResource {
 	@Path("/stats/count")
 	@GET
 	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q){
-		ContentResponse<Integer> resp = new ContentResponse<Integer>();
+		ContentResponse<Integer> resp = new ContentResponse<>();
 		resp.content = 0;
 		if(q != null && !q.isEmpty()) {
 			resp.content = personRepository.countPersonsByString(q).intValue();
