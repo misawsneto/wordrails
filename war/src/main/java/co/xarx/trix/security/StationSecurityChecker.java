@@ -110,9 +110,4 @@ public class StationSecurityChecker {
 //		}
 		return isAdmin;
 	}
-
-	public boolean isAdmin() {
-		Person person = authProvider.getLoggedPerson();
-		return personRepository.isAdmin(person.id) > 0;
-	}
 }
