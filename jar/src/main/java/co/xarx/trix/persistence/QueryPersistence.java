@@ -88,11 +88,6 @@ public class QueryPersistence {
 	}
 
 	@Transactional
-	public void deleteBookmarksInPosts(List<Integer> ids) {
-		manager.createQuery("delete from Bookmark bookmark where bookmark.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
-	}
-	
-	@Transactional
 	public void deleteCellsInPosts(List<Integer> ids) {
 		manager.createQuery("delete from Cell cell where cell.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
 	}

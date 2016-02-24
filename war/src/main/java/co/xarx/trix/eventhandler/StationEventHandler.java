@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RepositoryEventHandler(Station.class)
 @Component
@@ -215,7 +216,6 @@ public class StationEventHandler {
 				for (Post post : posts) {
 					ids.add(post.id);
 				}
-				queryPersistence.deleteBookmarksInPosts(ids);
 				queryPersistence.deleteCellsInPosts(ids);
 				queryPersistence.deleteCommentsInPosts(ids);
 				queryPersistence.deleteImagesInPosts(ids);
@@ -223,7 +223,9 @@ public class StationEventHandler {
 				queryPersistence.deletePostReadsInPosts(ids);
 				queryPersistence.deleteRecommendsInPosts(ids);
 
-				postRepository.delete(posts);
+				postRepository.forceDeleteAll(posts.stream().map(post -> {
+					return post.id;
+				}).collect(Collectors.toList()));
 			}
 
 			List<Notification> notifications = notificationRepository.findByStation(station);
