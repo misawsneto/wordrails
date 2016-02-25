@@ -32,9 +32,9 @@ public class ElasticSearchService {
 
 	Logger log = Logger.getLogger(this.getClass().getName());
 
-	@Value("${elasticsearch.index}")
+	@Value("${spring.data.elasticsearch.index}")
 	private String index;
-	@Value("#{systemProperties['indexES'] ?: false}")
+	@Value("${trix.elasticsearch.reindex}")
 	private boolean indexES;
 
 

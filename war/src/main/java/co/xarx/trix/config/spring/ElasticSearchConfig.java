@@ -23,15 +23,15 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 )
 public class ElasticSearchConfig {
 
-	@Value("${elasticsearch.host:'localhost'}")
+	@Value("${spring.data.elasticsearch.host}")
 	private String host;
-	@Value("${elasticsearch.port:9300}")
+	@Value("${spring.data.elasticsearch.port}")
 	private Integer port;
-	@Value("${elasticsearch.cluster:'trix'}")
+	@Value("${spring.data.elasticsearch.cluster-name}")
 	private String cluster;
-	@Value("${elasticsearch.username:'trix_admin'}")
+	@Value("${spring.data.elasticsearch.username}")
 	private String user;
-	@Value("${elasticsearch.password}")
+	@Value("${spring.data.elasticsearch.password}")
 	private String password;
 
 	@Bean

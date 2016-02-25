@@ -12,30 +12,24 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @Configuration
 @EnableAsync
-@PropertySource(name = "props",
-		value = {"classpath:application.properties",
-				"classpath:application_${spring.profiles.active:dev}.properties"
-		}
-)
 @ComponentScan(basePackages = "co.xarx.trix")
 public class ApplicationConfig {
 
-	@Value("${amazon.accessKey}")
+	@Value("${trix.amazon.key}")
 	private String accessKey;
-	@Value("${amazon.accessSecretKey}")
+	@Value("${trix.amazon.secret}")
 	private String accessSecretKey;
-	@Value("${amazon.cloudfrontUrl}")
+	@Value("${trix.amazon.cloudfront}")
 	private String cloudfrontUrl;
-	@Value("${amazon.bucketName}")
+	@Value("${trix.amazon.bucket}")
 	private String bucketName;
-	@Value("${gcm.key}")
-	private String GCM_KEY;
+	@Value("${trix.gcm.key}")
+	private String gcmKey;
 
 	@Bean
 	public ObjectMapper simpleMapper() {
@@ -45,7 +39,7 @@ public class ApplicationConfig {
 
 	@Bean
 	public Sender gcmSender() {
-		return new Sender(GCM_KEY);
+		return new Sender(gcmKey);
 	}
 
 	@Bean
