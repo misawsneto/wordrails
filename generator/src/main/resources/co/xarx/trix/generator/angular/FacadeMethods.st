@@ -7,9 +7,9 @@ FacadeMethods(entity) ::=
     this.get$entity.plural$ = function(_page, _size, _sort, projection) {
         var config = {};
         config.params = {};
-        config.params["page"] = page;
-        config.params["size"] = size;
-        config.params["sort"] = sort;
+        config.params["page"] = _page;
+        config.params["size"] = _size;
+        config.params["sort"] = _sort;
         config.params["projection"] = projection;
 		return \$http.get(_config.url + "/api/$entity.pluralLowercase$",  config)
     }
