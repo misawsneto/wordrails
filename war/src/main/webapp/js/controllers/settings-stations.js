@@ -16,7 +16,12 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 
 		$scope.setMainStation = function(station){
 			trix.setMainStation(station.id, station.main).success(function(){
-				$scope.app.getInitData();
+				//$scope.app.getInitData();
+        // trix.allInitData().success(function(response){
+        //   initData = response;
+        //   $scope.app.initData = angular.copy(initData);
+        //   $scope.app.refreshData();
+        // });
 				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			})
 		}
