@@ -100,7 +100,7 @@ public class BookmarksResource {
 
 		Person person = authProvider.getLoggedPerson();
 		person = personRepository.findOne(person.getId());
-		if (person == null || person.username.equals("wordrails")) throw new UnauthorizedException();
+		if (person == null || "wordrails".equals(person.username)) throw new UnauthorizedException();
 
 		bookmarkInserted.response = personService.toggleBookmark(person, postId);
 
