@@ -87,6 +87,7 @@ public class ImagesResource {
 		ImageUploadResponse iur = new ImageUploadResponse();
 		iur.hash = hash;
 		iur.imageId = newImage.id;
+		iur.id = newImage.id;
 		iur.imageHash = newImage.hashs.get(Image.SIZE_ORIGINAL);
 		iur.link = amazonCloudService.getPublicImageURL(hash);
 		iur.filelink = amazonCloudService.getPublicImageURL(hash);

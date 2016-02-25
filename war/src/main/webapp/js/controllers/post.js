@@ -765,11 +765,12 @@ function isTermSelected(terms){
 
 			$scope.app.refreshPerspective();
 			trix.getPost(postId, 'postProjection').success(function(response){
+				var uploadedImage = angular.copy($scope.app.editingPost.uploadedImage);
 				createPostObject();
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, response);
 				customSlug = true;
-				if($scope.app.editingPost.uploadedImage)
-                    $scope.app.editingPost.uploadedImage = {filelink: $scope.app.mediaUrl($scope.app.editingPost.featuredImage.hashs.large) }
+				if(uploadedImage && uploadedImage.imageId)
+                    $scope.app.editingPost.uploadedImage = uploadedImage;
 				setWritableStationById(response.station.id)
 				updateTermTree();
 				$timeout(function() {
