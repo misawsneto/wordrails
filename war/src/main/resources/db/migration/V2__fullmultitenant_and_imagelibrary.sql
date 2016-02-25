@@ -30,6 +30,9 @@ DROP INDEX FK_t2gabdofdotdaxia4yamfwve5 ON image;
 -- -----------------------------------------------------------------------------
 
 #--------------------------------- ADD TENANT ID ---------------------------------#
+DELETE FROM postread;
+DELETE FROM notification;
+
 ALTER TABLE cell ADD tenantId VARCHAR(255) DEFAULT '';
 ALTER TABLE comment ADD tenantId VARCHAR(255) DEFAULT '';
 ALTER TABLE invitation ADD tenantId VARCHAR(255) DEFAULT '';
