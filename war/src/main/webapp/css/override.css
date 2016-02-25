@@ -2935,7 +2935,7 @@ md-backdrop.md-opaque.ng-leave {
     z-index: 59;
 }
 
-#user-profile md-sidenav{
+md-sidenav#edit-profile{
   position: fixed;
 }
 
@@ -2944,7 +2944,7 @@ md-backdrop.md-opaque.ng-leave {
       z-index: 58;
     }
 
-  #user-profile md-sidenav, #publications md-sidenav{
+  md-sidenav#edit-profile, #publications md-sidenav{
     width: 450px;
     min-width: 450px;
     max-width: 450px;
