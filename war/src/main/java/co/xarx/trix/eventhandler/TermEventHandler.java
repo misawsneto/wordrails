@@ -87,9 +87,6 @@ public class TermEventHandler {
 	@Transactional
 	public void handleBeforeDelete(Term term) {
 		if(taxonomySecurityChecker.canEdit(term.taxonomy)){
-			Event event = term.build(Event.EVENT_DELETE, logBuilderExecutor);
-			eventRepository.save(event);
-
 			deleteCascade(term, term);
 		}else{
 			throw new UnauthorizedException();

@@ -22,7 +22,7 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {
 		"imageHash", "imageLargeHash", "imageMediumHash", "imageSmallHash"
 }, allowGetters = true)
-public class Post extends BaseEntity implements Serializable, ElasticSearchEntity, Loggable {
+public class Post extends BaseEntity implements Serializable, ElasticSearchEntity{
 
 	public static final String STATE_DRAFT = "DRAFT";
 	public static final String STATE_NO_AUTHOR = "NOAUTHOR";
@@ -213,11 +213,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public String toString() {
 		return "Post [id=" + id + ", date=" + date
 				+ ", lastModificationDate=" + lastModificationDate + ", title=" + title + ", state=" + state + "]";
-	}
-
-	@Override
-	public PostEvent build(String type, LogBuilder builder) {
-		return builder.build(type, this);
 	}
 
 	@SdkInclude
