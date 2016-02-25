@@ -14,6 +14,13 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 		$interval(function(){
 			$(".redactor-box > textarea").css('opacity', 1)
+			$(".redactor-editor iframe").each(function(){
+				var someIframe = $(this);
+				var src = someIframe.attr('src')
+				if(src && src.indexOf('slideshare') > -1){
+					someIframe.css('width', '100%')
+				}
+			})
 		}, 500);
 
 		var createPostObject = function(){

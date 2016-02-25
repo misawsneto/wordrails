@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(uniqueConstraints = {
 		@UniqueConstraint(columnNames={"taxonomy_id","name_parent"})
 })
-public class Term extends BaseEntity implements Serializable, Loggable {
+public class Term extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = 7891255759575029731L;
 
 	@Id
@@ -187,10 +187,5 @@ public class Term extends BaseEntity implements Serializable, Loggable {
 
 	public void setTaxonomyName(String taxonomyName) {
 		this.taxonomyName = taxonomyName;
-	}
-
-	@Override
-	public Event build(String type, LogBuilder builder) {
-		return builder.build(type, this);
 	}
 }
