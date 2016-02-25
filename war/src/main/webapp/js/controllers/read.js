@@ -36,7 +36,7 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$interval', '$rootSco
 		$("iframe").each(function(){
 			var someIframe = $(this);
 			var src = someIframe.attr('src')
-			if(src.indexOf('slideshare') > -1){
+			if(src && src.indexOf('slideshare') > -1){
 				someIframe.css('width', '100%')
 			}
 		})

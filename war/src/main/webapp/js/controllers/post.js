@@ -17,7 +17,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 			$(".redactor-editor iframe").each(function(){
 				var someIframe = $(this);
 				var src = someIframe.attr('src')
-				if(src.indexOf('slideshare') > -1){
+				if(src && src.indexOf('slideshare') > -1){
 					someIframe.css('width', '100%')
 				}
 			})
