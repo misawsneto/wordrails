@@ -18,7 +18,7 @@ import java.util.Set;
 @Table(name = "statement")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
-public abstract class AbstractStatement extends BaseEntity implements Statement {
+public abstract class AbstractStatement extends BaseEntity implements Statement, SortedStatement {
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -45,7 +45,6 @@ public abstract class AbstractStatement extends BaseEntity implements Statement 
 		sorts.put(attribute, asc);
 	}
 
-	@Override
 	public void addIdExclusion(Serializable id) {
 		this.exceptionIds.add(id);
 	}
