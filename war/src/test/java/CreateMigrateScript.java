@@ -13,8 +13,9 @@ public class CreateMigrateScript {
 //	--passwordReset.sql
 //	--refactoring_notification.sql
 //	--insert_mobiledevice.sql
+// 	  bookmarks-fix.sql
 
-	private static final String SCRIPT_NAME = "insert_mobiledevice";
+	private static final String SCRIPT_NAME = "bookmarks-fix";
 
 	public static void main(String[] args) throws IOException {
 		CreateMigrateScript script = new CreateMigrateScript();

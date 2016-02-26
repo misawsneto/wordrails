@@ -2,8 +2,10 @@ package co.xarx.trix.config.spring;
 
 import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
+import com.jolbox.bonecp.BoneCPDataSource;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +18,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.sql.DataSource;
-import java.util.Arrays;
 import java.util.Properties;
 
 @Configuration
@@ -31,20 +31,22 @@ public class DatabaseConfig {
 
 	@Autowired
 	Environment env;
-	@Autowired
-	DataSource dataSource;
+
+	@Value("${spring.datasource.url}")
+	private String url;
+	@Value("${spring.datasource.username}")
+	private String username;
+	@Value("${spring.datasource.password}")
+	private String password;
+
+	@Value("${trix.flyway.migrate}")
+	private boolean migrate;
 
 	@Bean
 	public Flyway flyway() {
 		Flyway flyway = new Flyway();
-		flyway.setDataSource(dataSource);
-		if(Arrays.asList(env.getActiveProfiles()).contains("dev")) {
-//			if(flyway.getBaselineVersion().getVersion().equals("1")) {
-//				flyway.setBaselineVersionAsString(env.getProperty("flyway.baseline"));
-//				flyway.baseline();
-//			}
-
-//			flyway.setPlaceholderReplacement(false);
+		flyway.setDataSource(dataSource());
+		if(migrate) {
 			flyway.setBaselineOnMigrate(true);
 
 			//yes, this is a hack. not my fault setPlaceholderReplacement doesnt work
@@ -56,13 +58,24 @@ public class DatabaseConfig {
 	}
 
 	@Bean
+	public BoneCPDataSource dataSource() {
+		BoneCPDataSource dataSource = new BoneCPDataSource();
+		dataSource.setDriverClass("com.mysql.jdbc.Driver");
+		dataSource.setJdbcUrl(url);
+		dataSource.setUsername(username);
+		dataSource.setPassword(username);
+
+		return dataSource;
+	}
+
+	@Bean
 	@DependsOn("flyway")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		vendorAdapter.setGenerateDdl(true);
 
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-		factory.setDataSource(dataSource);
+		factory.setDataSource(dataSource());
 		factory.setPersistenceUnitName("wordrails");
 		factory.setPersistenceProviderClass(MultiTenantHibernatePersistence.class);
 		factory.setJpaVendorAdapter(vendorAdapter);

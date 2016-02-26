@@ -55,12 +55,14 @@ public class ImageService {
 		Image image = createNewImage(type, name, originalFile, mime);
 
 		for (Picture picture : image.pictures) {
-			File temp = fileRepository.findOne(QFile.file.hash.eq(picture.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
 
-			if(temp == null){
-				fileRepository.save(picture.file);
-			} else {
-				picture.file = temp;
+			if (picture.getFile().getId() == null) {
+				File temp = fileRepository.findOne(QFile.file.hash.eq(picture.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
+				if (temp == null) {
+					fileRepository.save(picture.file);
+				} else {
+					picture.file = temp;
+				}
 			}
 
 			pictureRepository.save(picture);

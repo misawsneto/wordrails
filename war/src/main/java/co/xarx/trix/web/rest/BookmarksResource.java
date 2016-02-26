@@ -20,6 +20,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -78,11 +80,11 @@ public class BookmarksResource {
 			e1.printStackTrace();
 		}
 
-		BoolQueryBuilder mainQuery = esPostService.getBoolQueryBuilder(q, person.getId(), Constants.Post.STATE_PUBLISHED, readableIds, person.bookmarkPosts);
+		List<Integer> reverseBookmarks = new ArrayList<>(person.bookmarkPosts);
+		Collections.reverse(reverseBookmarks);
+		BoolQueryBuilder mainQuery = esPostService.getBoolQueryBuilder(q, null, Constants.Post.STATE_PUBLISHED, readableIds, reverseBookmarks);
 
 		Pageable pageable = new PageRequest(page, size);
-
-
 		Pair<Integer, List<PostView>> postsViews = esPostService.searchIndex(mainQuery, pageable, null);
 
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
@@ -100,7 +102,7 @@ public class BookmarksResource {
 
 		Person person = authProvider.getLoggedPerson();
 		person = personRepository.findOne(person.getId());
-		if (person == null || person.username.equals("wordrails")) throw new UnauthorizedException();
+		if (person == null || "wordrails".equals(person.username)) throw new UnauthorizedException();
 
 		bookmarkInserted.response = personService.toggleBookmark(person, postId);
 

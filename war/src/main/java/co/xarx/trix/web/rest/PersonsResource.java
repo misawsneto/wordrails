@@ -777,7 +777,7 @@ public class PersonsResource {
 		return personData;
 	}
 
-	@Value("${amazon.cloudfrontUrl}")
+	@Value("${trix.amazon.cloudfront}")
 	String cloudfrontUrl;
 
 	@GET

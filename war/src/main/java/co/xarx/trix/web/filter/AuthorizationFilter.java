@@ -797,21 +797,6 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
-	protected boolean isFindByEmailAuthorized(String email) {
-		return false;
-	}
-
-	@Override
-	protected boolean isIsAdminAuthorized(Integer personId) {
-		return false;
-	}
-
-	@Override
-	protected boolean isFindByUsernameAndNetworkIdAuthorized(String username, Integer networkId) {
-		return false;
-	}
-
-	@Override
 	protected boolean isExistsByUsernameAuthorized(String username) {
 		return false;
 	}

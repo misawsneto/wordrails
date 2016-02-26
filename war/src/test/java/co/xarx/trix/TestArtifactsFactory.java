@@ -94,7 +94,7 @@ public class TestArtifactsFactory {
 		Person person = new Person();
 		person.setTenantId(TENANT);
 		person.id = 10;
-		person.bookmarkPosts = Sets.newHashSet(10, 11, 12);
+		person.bookmarkPosts = Lists.newArrayList(10, 11, 12);
 		person.name = "Dummy Person";
 		person.email = "dummy@dummy.com";
 		person.username = "dummyuser";

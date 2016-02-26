@@ -29,7 +29,7 @@ import java.util.Map;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ESPostExecutor implements Executor<PostView, ElasticSearchCommand> {
 
-	@Value("${elasticsearch.index}")
+	@Value("${spring.data.elasticsearch.index}")
 	private String indexName;
 	@Autowired
 	protected Client client;

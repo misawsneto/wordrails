@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 public class TrixProperties {
 
 
-	@Value("${elasticsearch.index}")
+	@Value("${spring.data.elasticsearch.index}") //important. don't delete
 	public String index;
 }
