@@ -1,6 +1,5 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.annotation.EventLoggableRepository;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.custom.CustomPostRepository;
@@ -13,9 +12,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 
 import java.util.List;
-import java.util.stream.Stream;
 
-@EventLoggableRepository
 public interface PostRepository extends JpaRepository<Post, Integer>, CustomPostRepository {
 
 	@PostAuthorize("hasPermission(returnObject, 'read')")
