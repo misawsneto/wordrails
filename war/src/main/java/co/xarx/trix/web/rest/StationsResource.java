@@ -84,8 +84,10 @@ public class StationsResource {
 
 		if (role.admin) {
 			for (Station station : stationRepository.findAll()) {
-				if (station.id.equals(stationId)) station.main = value;
-				else station.main = false;
+				if (station.id.equals(stationId))
+					station.main = value;
+				else
+					station.main = false;
 
 				stationRepository.save(station);
 			}

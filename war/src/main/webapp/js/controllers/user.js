@@ -1,6 +1,6 @@
 
-app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$mdDialog', '$mdSidenav',
-	function($scope , $log ,  $timeout ,  $rootScope ,  $state ,  trix ,  FileUploader, TRIX, cfpLoadingBar, $mdToast , $mdDialog, $mdSidenav) {
+app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$interval','$rootScope', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$mdDialog', '$mdSidenav',
+	function($scope , $log ,  $timeout , $interval,  $rootScope ,  $state ,  trix ,  FileUploader, TRIX, cfpLoadingBar, $mdToast , $mdDialog, $mdSidenav) {
 
 	// set left side post list to initial scroll
 	//$("#post-left-content .left-content-wrap").scrollTop(0);
@@ -198,6 +198,13 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     	
     	$mdSidenav('right').toggle();
     }
+
+    $interval(function(){
+    	var sidenav = $mdSidenav('right')
+    	if(sidenav && !sidenav.isOpen())
+    		$scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
+    	
+    }, 500);
 
     $scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
 

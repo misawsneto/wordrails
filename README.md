@@ -1,26 +1,41 @@
-﻿Manual de configuração local
+﻿#Manual de configuração local
 
- - Baixe o IntelliJ. (opcional)
- - Execute o comando: mvn -DskipTests=true
- - Criar base de dados MySQL em localhost:3306 com nome de scheme trix_dev, usuario wordrails e senha wordrails. Importar o dump da base fornecido.
- - Se estiver usando Linux, setar o MySQL para case insensitive. Abra o arquivo /etc/mysql/my.conf e em baixo da linha [mysqld] adicionar esse parametro: lower_case_table_names=1
- - Instalar Tomcat versão 7
- - Instalar o Redis e rodar o server com configuracoes padrão
- - Instalar o Elastic Search
- - Edite o arquivo elasticsearch.yml e sete o parametro cluster.name=trix_dev
- - Execute elasticsearch/bin/plugin -install mobz/elasticsearch-head
- - Deixe tanto o Redis quanto o Elastic Search rodando. Pra trix rodar, é necessario esses dois servicos rodando em background.
- - No Ubuntu: sudo service redis start && sudo service elasticsearch start
- - No Arch Linux: sudo systemctl start redis && sudo systemctl start elasticsearch
+ - Compile with: mvn clean package
+ - Install MySQL
+ - Set the following parameters in mysql config file:
+    - Under [mysqld] add: lower_case_table_names=1
+    - Under [mysqld] add: character-set-server=utf8
+    - Under [client] add: default-character-set=utf8
+ - Install Tomcat 7
+ - Install Redis
+ - Edit redis config file (default: /etc/redis/6379.conf)
+    - Uncomment attr requirepass and set your password
+ - Install ElasticSearch
+ - Edit elasticsearch config file 
+     - Set attr cluster.name=trix_dev
+     - Execute elasticsearch/bin/plugin -install mobz/elasticsearch-head
+     - Execute elasticsearch/bin/plugin -install elasticsearch/license/latest
+     - Execute elasticsearch/bin/plugin -install elasticsearch/shield/latest
+     - Execute sudo bin/shield/esusers useradd [password] -r [username]
+ - Run redis and elasticsearch on background
+     - Ubuntu: sudo service redis start && sudo service elasticsearch start
+     - Arch Linux: sudo systemctl start redis && sudo systemctl start elasticsearch
   
- - Para rodar a aplicação:
-    - rodar a classe RunTomcat que se encontra no modulo trix-war, pacote co.xarx.trix.test
-    ou
-    - executar mvn tomcat7:run
+##Executing
 
-Elasticsearch
+_mvn run:tomcat7_
 
-- Download elasticsearch: https://www.elastic.co/downloads/elasticsearch
-- Instale de acordo com a plataforma e inicie o serviço
+###Required Parameters
+dbName - Database schema name
+dbUser - Database username
+dbPass - Database password
+redisPass - Redis password
+esUser = Elasticsearch username
+esPass = Elasticsearch password
 
-* Um tutorial para implantação no servidor: https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-on-an-ubuntu-vps
+
+###Optional Parameters
+spring.profiles.active - Active profile (dev or prod)
+indexES - Run elasticsearch indexer on startup
+
+ **In the first time you must set indexES=true so all data are indexed to elasticsearch**

@@ -184,9 +184,6 @@ public class StationEventHandler {
 	@Transactional
 	public void handleBeforeDelete(Station station) throws UnauthorizedException{
 		if(stationSecurityChecker.canEdit(station)){
-			Event event = station.build(Event.EVENT_DELETE, logBuilderExecutor);
-			eventRepository.save(event);
-
 			stationRepository.deleteStationNetwork(station.id);
 
 			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);

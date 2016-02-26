@@ -21,17 +21,9 @@ public interface PersonProjection {
 
 	User getUser();
 
-	Integer getCoverLargeId();
+	String getCoverLargeHash();
 
-	Integer getCoverMediumId();
-
-	Integer getImageLargeId();
-
-	Integer getImageMediumId();
-
-	Integer getImageSmallId();
-
-	String getImageLargeHash();
+	String getCoverMediumHash();
 
 	String getImageMediumHash();
 

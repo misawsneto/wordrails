@@ -14,6 +14,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
@@ -44,14 +45,11 @@ public class Person extends BaseEntity implements Serializable {
 	@Pattern(regexp = "^[a-z0-9\\._-]{3,50}$")
 	public String username;
 
-	@OrderColumn(name = "order")
+	@OrderColumn(name = "list_order")
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "person_bookmark",
-			joinColumns = @JoinColumn(name = "person_id")
-
-	)
+	@CollectionTable(name = "person_bookmark",joinColumns = @JoinColumn(name = "person_id"))
 	@Column(name = "post_id")
-	public Set<Integer> bookmarkPosts;
+	public List<Integer> bookmarkPosts;
 
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
