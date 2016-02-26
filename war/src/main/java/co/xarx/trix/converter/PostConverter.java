@@ -53,9 +53,9 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.imageSmallHash = post.getImageSmallHash();
 			postView.imageMediumHash = post.getImageMediumHash();
 			postView.imageLargeHash = post.getImageLargeHash();
-			postView.imageCaptionText = post.featuredImage.caption;
-			postView.imageCreditsText = post.featuredImage.credits;
-			postView.imageTitleText = post.featuredImage.title;
+			postView.imageCaptionText = post.featuredImage.getCaption();
+			postView.imageCreditsText = post.featuredImage.getCredits();
+			postView.imageTitleText = post.featuredImage.getTitle();
 		}
 
 		postView.imageLandscape = post.imageLandscape;

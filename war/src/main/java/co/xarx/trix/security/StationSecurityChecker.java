@@ -20,7 +20,7 @@ public class StationSecurityChecker {
 	private @Autowired NetworkRepository networkRepository;
 	private @Autowired StationRolesRepository stationRolesRepository;
 	private @Autowired PersonRepository personRepository;
-	
+
 	public boolean canEdit(Station station){
 		return isStationAdminOrEditor(station);
 	}
@@ -32,7 +32,7 @@ public class StationSecurityChecker {
 
 		return false;
 	}
-	
+
 	public boolean isStationAdmin(Station station){
 		Person personLogged = authProvider.getLoggedPerson();
 

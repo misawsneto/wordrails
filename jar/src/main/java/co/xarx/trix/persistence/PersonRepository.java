@@ -27,10 +27,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@CacheEvict(value = "person", key = "#p0.username")
 	void delete(Person person);
 
-	@Deprecated
-	@Query("SELECT person FROM Person person where person.username = :username and (:networkId is null or :networkId > 0)")
-	Person findByUsernameAndNetworkId(@Param("username") String username, @Param("networkId") Integer networkId);
-
+	@RestResource(exported = false)
 	Person findByEmail(@Param("email") String email);
 
 	@RestResource(exported = false)
@@ -38,6 +35,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 			"(select count(*) from Comment comment where comment.post.author.id = p.id) " +
 			"from Person p where p.id = :authorId")
 	List<Object[]> findPersonStats(@Param("authorId") Integer authorId);
+
 	@RestResource(exported = false)
 	@Query("select count(*) from Person person")
 	Long countPersons();

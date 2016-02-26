@@ -3,6 +3,8 @@ package co.xarx.trix.config.spring;
 import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.flyway.FlywayIntegrator;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
+import com.jolbox.bonecp.BoneCPDataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,19 +28,44 @@ import java.util.Properties;
 )
 public class DatabaseConfig {
 
+	@Value("${spring.datasource.url}")
+	private String url;
+	@Value("${spring.datasource.username}")
+	private String username;
+	@Value("${spring.datasource.password}")
+	private String password;
+
 	@Bean
+	public DataSource dataSource() {
+		BoneCPDataSource ds = new BoneCPDataSource();
+		ds.setDriverClass("com.mysql.jdbc.Driver");
+		ds.setJdbcUrl(url);
+		ds.setUsername(username);
+		ds.setPassword(password);
+		ds.setPartitionCount(3);
+		ds.setMinConnectionsPerPartition(3);
+		ds.setMaxConnectionsPerPartition(128);
+		ds.setAcquireIncrement(5);
+		ds.setIdleMaxAgeInSeconds(60);
+		ds.setMaxConnectionAgeInSeconds(120);
+
+		return ds;
+	}
+
+	@Bean
+	@DependsOn("dataSource")
 	public FlywayIntegrator flywayIntegrator() {
 		return new FlywayIntegrator();
 	}
 
 	@Bean
 	@DependsOn("flywayIntegrator")
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		vendorAdapter.setGenerateDdl(true);
 
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-		factory.setDataSource(dataSource);
+		factory.setDataSource(dataSource());
 		factory.setPersistenceUnitName("wordrails");
 		factory.setPersistenceProviderClass(MultiTenantHibernatePersistence.class);
 		factory.setJpaVendorAdapter(vendorAdapter);
@@ -66,10 +93,9 @@ public class DatabaseConfig {
 
 
 	@Bean
-	public JpaTransactionManager transactionManager(DataSource dataSource){
+	public JpaTransactionManager transactionManager(){
 		JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-//		jpaTransactionManager.setDataSource(dataSource);
-		jpaTransactionManager.setEntityManagerFactory(entityManagerFactory(dataSource).getObject());
+		jpaTransactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 		return jpaTransactionManager;
 	}
 

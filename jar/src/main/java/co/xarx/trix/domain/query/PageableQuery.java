@@ -78,6 +78,7 @@ public class PageableQuery extends BaseEntity implements Query {
 
 	@Override
 	public Map<Integer, Block> fetch(QueryRunner executor) {
-		return executor.execute(this, size - indexExceptions.size(), from - startShift);
+		int sizeExceptions = indexExceptions == null ? 0 : indexExceptions.size();
+		return executor.execute(this, this.size - sizeExceptions, from - startShift);
 	}
 }

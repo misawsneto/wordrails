@@ -1,6 +1,6 @@
 
-app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$mdDialog', '$mdSidenav',
-	function($scope , $log ,  $timeout ,  $rootScope ,  $state ,  trix ,  FileUploader, TRIX, cfpLoadingBar, $mdToast , $mdDialog, $mdSidenav) {
+app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$interval','$rootScope', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$mdDialog', '$mdSidenav',
+	function($scope , $log ,  $timeout , $interval,  $rootScope ,  $state ,  trix ,  FileUploader, TRIX, cfpLoadingBar, $mdToast , $mdDialog, $mdSidenav) {
 
 	// set left side post list to initial scroll
 	//$("#post-left-content .left-content-wrap").scrollTop(0);
@@ -29,6 +29,7 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	  		// trix.postImage(imageObject).success(function(imageId){
 	  			var myCoverImage = TRIX.baseUrl + "/api/images/" + response.imageId;
 	  			$scope.person.cover = myCoverImage
+	  			$("#user-cover-pic").css('background-image', 'url(' + response.filelink + ')');
 	  			trix.putPerson($scope.person).success(function(){
 	  				$scope.app.initData.person.coverLargeId = $scope.person.coverLargeId = $scope.userCover.imageId;
 	  				$scope.app.initData.person.coverMediumId = $scope.person.coverMediumId = $scope.userCover.imageId;
@@ -65,12 +66,13 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	  };
 
 	  image.onSuccessItem = function(fileItem, response, status, headers) {
-	  	if(response.fileLink){
+	  	if(response.filelink){
 	  		$scope.userImage = response;
 	  		// var imageObject = { original: TRIX.baseUrl + "/api/files/" + $scope.userImage.id }
 	  		// trix.postImage(imageObject).success(function(imageId){
 	  			var myImageImage = TRIX.baseUrl + "/api/images/" + response.imageId;
 	  			$scope.person.image = myImageImage
+				$("#user-profile-pic").css('background-image', 'url(' + response.filelink + ')');
 	  			trix.putPerson($scope.person).success(function(){
 	  				$scope.app.initData.person.imageMediumId = $scope.person.imageMediumId = $scope.userImage.imageId;
 	  				$scope.app.initData.person.imageSmallId = $scope.person.imageSmallId = $scope.userImage.imageId;
@@ -196,6 +198,13 @@ app.controller('UserCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
     	
     	$mdSidenav('right').toggle();
     }
+
+    $interval(function(){
+    	var sidenav = $mdSidenav('right')
+    	if(sidenav && !sidenav.isOpen())
+    		$scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
+    	
+    }, 500);
 
     $scope.editingPerson = angular.copy($scope.app.getLoggedPerson());
 

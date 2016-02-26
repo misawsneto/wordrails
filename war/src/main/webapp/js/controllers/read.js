@@ -1,10 +1,11 @@
-app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state', 'trix', '$mdToast', '$mdSidenav', 'TRIX',
-	function($scope, $log, $timeout, $rootScope, $state, trix, $mdToast, $mdSidenav, TRIX) {
+app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$interval', '$rootScope', '$state', 'trix', '$mdToast', '$mdSidenav', 'TRIX', 
+	function($scope, $log, $timeout, $interval, $rootScope, $state, trix, $mdToast, $mdSidenav, TRIX) {
 	var slug = $state.params.slug;
 
 	var invitation = $state.params.invitation;
 	var redirect = $state.params.redirect
 	$scope.newComment = {body: null}
+
 
 	if(slug){
 		trix.findBySlug(slug, 'postProjection').success(function(response){
@@ -20,7 +21,9 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 		            authorName: $scope.app.nowReading.author.name
 		        }
 
-		        $scope.showComments($scope.app.nowReading.postId);
+		        $timeout(function(){
+		        	$scope.showComments($scope.app.nowReading.postId);
+		        });
 			}
 			$("title").html($scope.app.nowReading.title);
 			//console.log($scope.app.nowReading);
@@ -28,6 +31,17 @@ app.controller('ReadCtrl', ['$scope', '$log', '$timeout', '$rootScope', '$state'
 	}else{
 		// TODO error
 	}
+
+	$interval(function(){
+		$("iframe").each(function(){
+			var someIframe = $(this);
+			var src = someIframe.attr('src')
+			if(src && src.indexOf('slideshare') > -1){
+				someIframe.css('width', '100%')
+			}
+		})
+	}, 500);
+
 
 	// $scope.$watch('app.nowReading', function(postView){
 	// 	if(postView){

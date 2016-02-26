@@ -25,11 +25,11 @@ import java.net.URL;
 @Component
 public class AmazonResource {
 
-	@Value("${amazon.accessKey}")
+	@Value("${trix.amazon.key}")
 	String accessKey;
-	@Value("${amazon.accessSecretKey}")
+	@Value("${trix.amazon.secret}")
 	String accessSecretKey;
-	@Value("${amazon.bucketName}")
+	@Value("${trix.amazon.bucket}")
 	String publicBucket;
 
 	private AmazonS3 s3() {

@@ -9,10 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -31,7 +28,7 @@ public class Image extends BaseEntity implements Serializable {
 	@Id
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer id;
+	private Integer id;
 
 	public enum Size {
 
@@ -94,6 +91,7 @@ public class Image extends BaseEntity implements Serializable {
 	}
 
 	protected Image() {
+		this.sizes = new HashSet<>();
 		this.pictures = new HashSet<>();
 		this.hashs = new HashMap<>();
 	}
@@ -110,33 +108,22 @@ public class Image extends BaseEntity implements Serializable {
 	}
 
 	@Transient
+	@Setter(AccessLevel.NONE)
 	private Set<Size> sizes;
 
 	public Set<String> getSizeTags() {
 		return sizes.stream().map(Size::toString).collect(Collectors.toSet());
 	}
 
-	public Set<Size> getSizes() {
-		return sizes;
-	}
-
-	public Set<Size> getQualitySizes() {
-		return sizes.stream().filter(size -> size.quality != null).collect(Collectors.toSet());
-	}
-
-	public Set<Size> getAbsoluteSizes() {
-		return sizes.stream().filter(size -> size.xy != null).collect(Collectors.toSet());
-	}
-
 	@javax.validation.constraints.Size(min=1, max=100)
-	public String title;
+	private String title;
 	
 	@Lob
 	@Deprecated
-	public String caption;
+	private String caption;
 	
 	@Lob
-	public String credits;
+	private String credits;
 
 	private String originalHash;
 
@@ -146,15 +133,36 @@ public class Image extends BaseEntity implements Serializable {
 			uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "sizeTag", "image_id"}))
 	@MapKeyColumn(name = "sizeTag", nullable = false)
 	@Column(name = "hash", nullable = false)
-	public Map<String, String> hashs;
+	private Map<String, String> hashs;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
-	public boolean vertical = false;
+	private boolean vertical = false;
 
 	@SdkExclude
 	@ManyToMany
 	@JoinTable(name = "image_picture", joinColumns = @JoinColumn(name = "image_id"))
-	public Set<Picture> pictures;
+	private Set<Picture> pictures;
+
+	private Set<String> getPicturesSizes() {
+		return getPictures().stream().map(Picture::getSizeTag).collect(Collectors.toSet());
+	}
+
+	public void setPictures(Set<Picture> pictures) {
+		pictures.forEach(this::addPicture);
+	}
+
+	public boolean addPicture(Picture picture) {
+		if(getPicturesSizes().contains(picture.getSizeTag())) {
+			return false;
+		}
+
+		getPictures().add(picture);
+
+		if(!Objects.equals(picture.getSizeTag(), "original"))
+			sizes.add(Size.findByAbbr(picture.getSizeTag()));
+
+		return true;
+	}
 
 	@PrePersist
 	public void create(){
@@ -167,8 +175,8 @@ public class Image extends BaseEntity implements Serializable {
 	}
 
 	private void createOrUpdate() {
-		for(Picture pic : pictures) {
-			hashs.put(pic.sizeTag, pic.file.hash);
+		for(Picture pic : getPictures()) {
+			getHashs().put(pic.sizeTag, pic.file.hash);
 		}
 	}
 
@@ -180,18 +188,18 @@ public class Image extends BaseEntity implements Serializable {
 	@Deprecated
 	@SdkInclude
 	public String getLargeHash() {
-		return hashs.get(SIZE_LARGE);
+		return getHashs().get(SIZE_LARGE);
 	}
 
 	@Deprecated
 	@SdkInclude
 	public String getMediumHash() {
-		return hashs.get(SIZE_MEDIUM);
+		return getHashs().get(SIZE_MEDIUM);
 	}
 
 	@Deprecated
 	@SdkInclude
 	public String getSmallHash() {
-		return hashs.get(SIZE_SMALL);
+		return getHashs().get(SIZE_SMALL);
 	}
 }

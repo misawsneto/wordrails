@@ -18,7 +18,11 @@ public interface PersonProjection {
 
 	User getUser();
 
-	ImageProjection getImage();
+	String getCoverLargeHash();
 
-	ImageProjection getCover();
+	String getCoverMediumHash();
+
+	String getImageMediumHash();
+
+	String getImageSmallHash();
 }

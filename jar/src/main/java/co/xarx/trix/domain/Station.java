@@ -22,7 +22,7 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {
 		"logoHash", "logoMediumHash"
 }, allowGetters = true)
-public class Station extends BaseEntity implements Serializable, Loggable {
+public class Station extends BaseEntity implements Serializable {
 	public static final String RESTRICTED = "RESTRICTED";
 	public static final String RESTRICTED_TO_NETWORKS = "RESTRICTED_TO_NETWORKS";
 	public static final String UNRESTRICTED = "UNRESTRICTED";
@@ -144,11 +144,6 @@ public class Station extends BaseEntity implements Serializable, Loggable {
 			if (other.visibility != null) return false;
 		} else if (!visibility.equals(other.visibility)) return false;
 		return writable == other.writable;
-	}
-
-	@Override
-	public Event build(String type, LogBuilder builder) {
-		return builder.build(type, this);
 	}
 
 	@SdkInclude

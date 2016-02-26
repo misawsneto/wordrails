@@ -14,6 +14,13 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 
 		$interval(function(){
 			$(".redactor-box > textarea").css('opacity', 1)
+			$(".redactor-editor iframe").each(function(){
+				var someIframe = $(this);
+				var src = someIframe.attr('src')
+				if(src && src.indexOf('slideshare') > -1){
+					someIframe.css('width', '100%')
+				}
+			})
 		}, 500);
 
 		var createPostObject = function(){
@@ -729,7 +736,7 @@ function isTermSelected(terms){
 			post.tags = $scope.chipTags.tags;
 			post.state = state;
 
-			if ($scope.app.editingPost.uploadedImage) {
+			if ($scope.app.editingPost.uploadedImage && $scope.app.editingPost.uploadedImage.imageId) {
 				post.featuredImage = TRIX.baseUrl + "/api/images/" + $scope.app.editingPost.uploadedImage.imageId;
 			} 
 
@@ -765,11 +772,12 @@ function isTermSelected(terms){
 
 			$scope.app.refreshPerspective();
 			trix.getPost(postId, 'postProjection').success(function(response){
+				var uploadedImage = angular.copy($scope.app.editingPost.uploadedImage);
 				createPostObject();
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, response);
 				customSlug = true;
-				if($scope.app.editingPost.imageLargeId)
-				$scope.app.editingPost.uploadedImage = {filelink: $scope.app.mediaUrl($scope.app.editingPost.featuredImage.hashs.large) }
+				if(uploadedImage && uploadedImage.imageId)
+                    $scope.app.editingPost.uploadedImage = uploadedImage;
 				setWritableStationById(response.station.id)
 				updateTermTree();
 				$timeout(function() {

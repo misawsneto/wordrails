@@ -38,8 +38,7 @@ public class NotificationsResource {
 		Person person = authProvider.getLoggedPerson();
 		ContentResponse<List<NotificationView>> response = new ContentResponse<>();
 
-		List<Notification> notifications = Lists.newArrayList(
-				notificationRepository.findNotificationsByPersonIdOrderByDate(person.id, new PageRequest(page, size)) );
+		List<Notification> notifications = Lists.newArrayList(notificationRepository.findNotificationsByPersonIdOrderByDate(person.id, new PageRequest(page, size)) );
 
 		response.content = notifications.stream().map(notification ->
 				notificationConverter.convertTo(notification)).collect(Collectors.toList());

@@ -15,8 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class PostSearchService {
@@ -30,7 +30,7 @@ public class PostSearchService {
 		this.stationPermissionService = stationPermissionService;
 	}
 
-	public Pair searchPosts(String q, Integer personId, Integer page, Integer size, Set<Integer> postIds) {
+	public Pair searchPosts(String q, Integer personId, Integer page, Integer size, Collection<Integer> postIds) {
 		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
 
 		if (CollectionUtils.isEmpty(stationsWithPermission) || CollectionUtils.isEmpty(postIds)) {

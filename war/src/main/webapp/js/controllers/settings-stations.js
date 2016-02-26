@@ -17,6 +17,11 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 		$scope.setMainStation = function(station){
 			trix.setMainStation(station.id, station.main).success(function(){
 				$scope.app.getInitData();
+        trix.allInitData().success(function(response){
+          initData = response;
+          $scope.app.initData = angular.copy(initData);
+          $scope.app.refreshData();
+        });
 				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			})
 		}
@@ -470,7 +475,7 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 
     if(!$scope.allLoaded){
       $scope.showProgress = true;
-      trix.findAllByNetwork(initData.network.id, page, $scope.window, null, 'personProjection').success(function(response){
+      trix.getPersons(page, $scope.window, null, 'personProjection').success(function(response){
         if((!response.persons || response.persons.length == 0) && direction == 'right'){
           $scope.allLoaded = true;
         }else{

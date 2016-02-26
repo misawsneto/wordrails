@@ -12,11 +12,11 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FlywayIntegrator implements Integrator, ApplicationContextAware {
+
 
 	public final Logger logger = Logger.getLogger(getClass().getSimpleName());
 
@@ -27,9 +27,10 @@ public class FlywayIntegrator implements Integrator, ApplicationContextAware {
 						  final SessionFactoryServiceRegistry sessionFactoryServiceRegistry) {
 
 		Environment env = applicationContext.getEnvironment();
+		Boolean migrate = env.getRequiredProperty("trix.flyway.migrate", Boolean.class);
 		DataSource dataSource = (DataSource) applicationContext.getBean("dataSource");
 
-		if (Arrays.asList(env.getActiveProfiles()).contains("dev")) {
+		if (migrate) {
 			logger.log(Level.INFO, "Starting Flyway Migration");
 			Flyway flyway = new Flyway();
 			flyway.setDataSource(dataSource);

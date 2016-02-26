@@ -12,8 +12,8 @@ public class PostMap<T extends Post> extends PropertyMap<T, ESPost> {
 		map(source.getTerms(), destination.getCategories());
 		map().setSponsored(source.sponsor != null);
 		map().setFeaturedImage(source.getFeaturedImage().getOriginalHash());
-		map().setFeaturedImageCaption(source.getFeaturedImage().caption);
-		map().setFeaturedImageCredits(source.getFeaturedImage().credits);
-		map().setFeaturedImageTitle(source.getFeaturedImage().title);
+		map().setFeaturedImageCaption(source.getFeaturedImage().getCaption());
+		map().setFeaturedImageCredits(source.getFeaturedImage().getCredits());
+		map().setFeaturedImageTitle(source.getFeaturedImage().getTitle());
 	}
 }

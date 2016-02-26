@@ -29,34 +29,36 @@ var trix = angular.module('trix', [])
 			\$rootScope.\$broadcast('HTTP_ERROR',rejection);
 			return \$q.reject(rejection);
 		},
-		// optional method
-		response: function(response) {
-		// do something on success
-			if (_config.url && response.config.method === "GET" &&
-				response.config.url.indexOf(_config.url + "/api") > -1 &&
-				response.data && response.data._embedded){
-					response.data = response.data._embedded;
-					return response
-			}else if (_config.url && response.config.method === "GET" &&
-				response.config.url.indexOf(_config.url + "/api") > -1 &&
-				response.data && response.data.content){
-					response.data = response.data.content;
-					return response
-			}else if(response.config.method === "POST" || response.config.method === "PUT"){
-				var _value = response.headers("Location");
-				if (_value) {
-					var _index = _value.lastIndexOf("/");
-					var _suffix = _value.substring(_index + 1);
-					var id = _suffix;
-					response.data = id
-				}
-				return response;
-			}else
-				return response;
-		},
-		request: function(config) {
-		  return config;
-		}
+	    // optional method
+	    response: function(response) {
+	    // do something on success
+	    	if (_config.url && response.config.method === "GET" &&
+	    		response.config.url.indexOf(_config.url + "/api") > -1 &&
+	    		response.data && response.data._embedded){
+                if(Object.keys(response.data._embedded).length > 0)
+                    response.data = response.data._embedded;
+
+                return response
+	    	}else if (_config.url && response.config.method === "GET" &&
+	    		response.config.url.indexOf(_config.url + "/api") > -1 &&
+	    		response.data && response.data.content){
+	    			response.data = response.data.content;
+		    		return response
+		    }else if(response.config.method === "POST" || response.config.method === "PUT"){
+		    	var _value = response.headers("Location");
+                if (_value) {
+                    var _index = _value.lastIndexOf("/");
+                    var _suffix = _value.substring(_index + 1);
+                    var id = _suffix;
+                    response.data = id
+                }
+                return response;
+	    	}else
+	     		return response;
+	  	},
+	  	request: function(config) {
+	      return config;
+	    }
 		};
 		return requestInterceptor;
 	})

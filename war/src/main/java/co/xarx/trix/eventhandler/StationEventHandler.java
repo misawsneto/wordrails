@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RepositoryEventHandler(Station.class)
 @Component
@@ -181,9 +182,6 @@ public class StationEventHandler {
 	@Transactional
 	public void handleBeforeDelete(Station station) throws UnauthorizedException{
 		if(stationSecurityChecker.canEdit(station)){
-			Event event = station.build(Event.EVENT_DELETE, logBuilderExecutor);
-			eventRepository.save(event);
-
 			stationRepository.deleteStationNetwork(station.id);
 
 			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
@@ -218,7 +216,9 @@ public class StationEventHandler {
 				queryPersistence.deleteNotificationsInPosts(ids);
 				queryPersistence.deletePostReadsInPosts(ids);
 
-				postRepository.delete(posts);
+				postRepository.forceDeleteAll(posts.stream().map(post -> {
+					return post.id;
+				}).collect(Collectors.toList()));
 			}
 
 			esStationRepository.delete(station.getId());
