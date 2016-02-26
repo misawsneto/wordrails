@@ -18,6 +18,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
@@ -58,14 +59,20 @@ public class DatabaseConfig {
 	}
 
 	@Bean
-	public BoneCPDataSource dataSource() {
-		BoneCPDataSource dataSource = new BoneCPDataSource();
-		dataSource.setDriverClass("com.mysql.jdbc.Driver");
-		dataSource.setJdbcUrl(url);
-		dataSource.setUsername(username);
-		dataSource.setPassword(username);
+	public DataSource dataSource() {
 
-		return dataSource;
+		BoneCPDataSource ds = new BoneCPDataSource();
+		ds.setJdbcUrl(url);
+		ds.setUsername(username);
+		ds.setPassword(password);
+		ds.setPartitionCount(3);
+		ds.setMinConnectionsPerPartition(3);
+		ds.setMaxConnectionsPerPartition(128);
+		ds.setAcquireIncrement(5);
+		ds.setIdleMaxAgeInSeconds(60);
+		ds.setMaxConnectionAgeInSeconds(120);
+
+		return ds;
 	}
 
 	@Bean
