@@ -21,7 +21,6 @@ import java.util.TreeMap;
 
 public class TestArtifactsFactory {
 
-	public static final Integer NETWORK = 5;
 	public static final String TENANT = "dummy";
 
 
@@ -57,11 +56,11 @@ public class TestArtifactsFactory {
 	public static Image createImage(Image.Type type) {
 		Image image = new Image(type);
 		for (String s : image.getSizeTags()) {
-			image.hashs.put(s, generateToken());
+			image.getHashs().put(s, generateToken());
 		}
-		image.caption = "Dummy caption";
-		image.credits = "Dummy credits";
-		image.title = "Dummy title";
+		image.setCaption("Dummy caption");
+		image.setCredits("Dummy credits");
+		image.setTitle("Dummy title");
 
 		return image;
 	}
@@ -112,7 +111,6 @@ public class TestArtifactsFactory {
 		station.name = "TUPY";
 		station.visibility = "UNRESTRICTED";
 		station.logo = createImage(Image.Type.LOGIN);
-		station.logo.id = 16119;
 		station.defaultPerspectiveId = 7;
 		station.categoriesTaxonomyId = 140;
 		station.tagsTaxonomyId = 183;

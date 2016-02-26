@@ -54,7 +54,7 @@ public class ModelMapperTest {
 //		System.out.println(objectMapper.writeValueAsString(esStation));
 
 		assertEquals(station.id, esStation.id);
-		assertEquals(station.logo.hashs, esStation.logo);
+		assertEquals(station.logo.getHashs(), esStation.logo);
 	}
 
 	@Test

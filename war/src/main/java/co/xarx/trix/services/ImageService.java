@@ -5,6 +5,7 @@ import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
+import co.xarx.trix.util.ImageFile;
 import co.xarx.trix.util.ImageUtil;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,13 +29,15 @@ public class ImageService {
 	private AmazonCloudService amazonCloudService;
 	private FileRepository fileRepository;
 	private PictureRepository pictureRepository;
+	private ImageUtil imageUtil;
 
 	@Autowired
-	public ImageService(ImageRepository imageRepository, AmazonCloudService amazonCloudService, FileRepository fileRepository, PictureRepository pictureRepository) {
+	public ImageService(ImageRepository imageRepository, AmazonCloudService amazonCloudService, FileRepository fileRepository, PictureRepository pictureRepository, ImageUtil imageUtil) {
 		this.imageRepository = imageRepository;
 		this.amazonCloudService = amazonCloudService;
 		this.fileRepository = fileRepository;
 		this.pictureRepository = pictureRepository;
+		this.imageUtil = imageUtil;
 	}
 
 
@@ -47,14 +49,14 @@ public class ImageService {
 			throw new EntityNotFoundException("Image does not exist");
 		}
 
-		return images.get(0).hashs;
+		return images.get(0).getHashs();
 	}
 
 	@Transactional
 	public Image createAndSaveNewImage(String type, String name, java.io.File originalFile, String mime) throws Exception {
 		Image image = createNewImage(type, name, originalFile, mime);
 
-		for (Picture picture : image.pictures) {
+		for (Picture picture : image.getPictures()) {
 
 			if (picture.getFile().getId() == null) {
 				File temp = fileRepository.findOne(QFile.file.hash.eq(picture.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
@@ -74,11 +76,10 @@ public class ImageService {
 	}
 
 	public Image createNewImage(String type, String name, java.io.File originalFile, String mime) throws Exception {
-		Set<Picture> pictures = new HashSet<>();
 
-		ImageUtil.ImageFile imageFile = ImageUtil.getImageFile(originalFile);
+		ImageFile imageFile = imageUtil.getImageFile(originalFile);
 		Image newImage = new Image(type);
-		newImage.title = name;
+		newImage.setTitle(name);
 		newImage.setOriginalHash(imageFile.hash);
 
 		Set<String> sizeTags = newImage.getSizeTags(); //this is all the sizes we need to upload
@@ -86,18 +87,18 @@ public class ImageService {
 		if (existingImage != null) {
 			//if this image that we've found with the same original hash has all the needed sizes,
 			//we can return this one because it matches what we need. Otherwise, upload the sizes we need
-			if (existingImage.hashs.keySet().stream().allMatch(sizeTags::contains)) {
+			if (existingImage.getSizeTags().stream().allMatch(sizeTags::contains)) {
 				return existingImage;
 			} else {
 				newImage = existingImage;
 
 				//this filters all values that already exist in the existing image and keep only the ones we need to upload
-				sizeTags = sizeTags.stream().filter(s -> !existingImage.hashs.keySet().contains(s)).collect(Collectors.toSet());
-				pictures = existingImage.pictures;
+				sizeTags = sizeTags.stream().filter(s -> !existingImage.getSizeTags().contains(s)).collect(Collectors.toSet());
+				newImage.setPictures(existingImage.getPictures());
 			}
 		} else {
 			Picture originalPic = getOriginalPicture(mime, originalFile, imageFile);
-			pictures.add(originalPic);
+			newImage.addPicture(originalPic);
 		}
 
 		for (String sizeTag : sizeTags) {
@@ -109,18 +110,17 @@ public class ImageService {
 				pic = getPictureByQuality(originalFile, size.toString(), size.quality);
 			}
 
-			pictures.add(pic);
+			newImage.addPicture(pic);
 		}
 
-		newImage.vertical = imageFile.vertical;
-		newImage.pictures = pictures;
+		newImage.setVertical(imageFile.vertical);
 
 		return newImage;
 	}
 
-	private Picture getOriginalPicture(String mime, java.io.File originalFile, ImageUtil.ImageFile imageFile) throws IOException {
+	private Picture getOriginalPicture(String mime, java.io.File originalFile, ImageFile imageFile) throws IOException {
 		Picture originalPic = new Picture();
-		originalPic.file = ImageUtil.createNewImageTrixFile(mime, originalFile.length());
+		originalPic.file = imageUtil.createNewImageTrixFile(mime, originalFile.length());
 		originalPic.sizeTag = Image.SIZE_ORIGINAL;
 
 		File existingFile = fileRepository.findOne(QFile.file.hash.eq(imageFile.hash));
@@ -143,22 +143,22 @@ public class ImageService {
 	}
 
 	Picture getPictureBySize(java.io.File originalFile, String sizeTag, Integer[] xy) throws Exception {
-		Callable<ImageUtil.ImageFile> callable = () -> ImageUtil.resizeImage(originalFile, xy[0], xy[1], "png");
+		Callable<ImageFile> callable = () -> imageUtil.resizeImage(originalFile, xy[0], xy[1], "png");
 
 		return getPicture(callable, originalFile, sizeTag);
 	}
 
 	Picture getPictureByQuality(java.io.File originalFile, String sizeTag, Integer quality) throws Exception {
-		Callable<ImageUtil.ImageFile> callable = () -> ImageUtil.resizeImage(originalFile, quality, "png", false, true);
+		Callable<ImageFile> callable = () -> imageUtil.resizeImage(originalFile, quality, "png", false, true);
 
 		return getPicture(callable, originalFile, sizeTag);
 	}
 
-	private Picture getPicture(Callable<ImageUtil.ImageFile> callable, java.io.File originalFile, String sizeTag) throws Exception {
-		ImageUtil.ImageFile imageFile;
+	private Picture getPicture(Callable<ImageFile> callable, java.io.File originalFile, String sizeTag) throws Exception {
+		ImageFile imageFile;
 		File existingFile;
 		Picture pic = new Picture();
-		pic.file = ImageUtil.createNewImageTrixFile("image/png", originalFile.length());
+		pic.file = imageUtil.createNewImageTrixFile("image/png", originalFile.length());
 		pic.sizeTag = sizeTag;
 
 		imageFile = callable.call();

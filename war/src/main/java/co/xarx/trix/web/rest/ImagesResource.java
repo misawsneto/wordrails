@@ -69,7 +69,7 @@ public class ImagesResource {
 
 
 		Image newImage = new Image(type);
-		newImage.title = item.getName();
+		newImage.setTitle(item.getName());
 		File originalFile = FileUtil.createNewTempFile(item.getInputStream());
 
 		newImage = imageService.createAndSaveNewImage(type, item.getName(), originalFile, item.getContentType());
@@ -79,16 +79,16 @@ public class ImagesResource {
 
 		ImageUpload imageUpload = new ImageUpload();
 		imageUpload.hash = FileUtil.getHash(item.getInputStream());
-		imageUpload.imageId = newImage.id;
+		imageUpload.imageId = newImage.getId();
 		imageUpload.link = amazonCloudService.getPublicImageURL(imageUpload.hash);
 		imageUpload.fileLink = imageUpload.link;
 
 		String hash = imageUpload.hash;
 		ImageUploadResponse iur = new ImageUploadResponse();
 		iur.hash = hash;
-		iur.imageId = newImage.id;
-		iur.id = newImage.id;
-		iur.imageHash = newImage.hashs.get(Image.SIZE_ORIGINAL);
+		iur.imageId = newImage.getId();
+		iur.id = newImage.getId();
+		iur.imageHash = newImage.getHashs().get(Image.SIZE_ORIGINAL);
 		iur.link = amazonCloudService.getPublicImageURL(hash);
 		iur.filelink = amazonCloudService.getPublicImageURL(hash);
 

@@ -75,12 +75,12 @@ public class JacksonTest {
 
 	private Image createImage() {
 		Image image = new Image(Image.Type.POST);
-		image.pictures = Sets.newHashSet(
+		image.setPictures(Sets.newHashSet(
 				new Picture("original", createFile()),
 				new Picture("large", createFile()),
 				new Picture("medium", createFile()),
 				new Picture("small", createFile())
-		);
+		));
 
 		image.create();
 
