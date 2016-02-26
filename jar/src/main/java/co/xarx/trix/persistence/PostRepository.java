@@ -1,6 +1,5 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.annotation.EventLoggableRepository;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
@@ -14,9 +13,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
-@EventLoggableRepository
 public interface PostRepository extends JpaRepository<Post, Integer>, CustomPostRepository {
 
 	@Modifying
