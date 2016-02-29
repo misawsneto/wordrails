@@ -1,65 +1,65 @@
 <div id="settings-stations">
   <div class="wrapper-lg m-b-xxl p-b">
     <div class="row">
-      <div class="col-sm-4" ng-repeat="station in app.stations">
+      <div class="col-lg-3 col-sm-4" ng-repeat="station in app.stations">
         <div class="md-list md-whiteframe-z1 bg-white m-b">
 
           <div class="md-list-item list-group-item b-n text-md font-bold">
             {{station.name}}
           </div>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.pagebuilder">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm" ui-sref="app.pagebuilder">
             <div class="md-list-item-content">
               <i class="mdi mdi-view-quilt fa-fw text-muted"></i> 
               {{'titles.PAGES' | translate}}
             </div>
           </a>
           
-          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.settings.perspectives({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm" ui-sref="app.settings.perspectives({'stationId': station.id})">
             <div class="md-list-item-content">
               <i class="mdi mdi-view-quilt fa-fw text-muted"></i> 
               {{'titles.PERSPECTIVE' | translate}}s
             </div>
           </a>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.settings.stationcategories({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm" ui-sref="app.settings.stationcategories({'stationId': station.id})">
             <div class="md-list-item-content">
               <i class="mdi mdi-sitemap fa-fw text-muted"></i> 
               {{'titles.CATEGORIES' | translate}}
             </div>
           </a>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.settings.stationusers({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm" ui-sref="app.settings.stationusers({'stationId': station.id})">
             <div class="md-list-item-content">
               <i class="mdi mdi-account-key fa-fw text-muted"></i> 
               {{'titles.USER' | translate}}s
             </div>
           </a>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.settings.stationconfig({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm" ui-sref="app.settings.stationconfig({'stationId': station.id})">
             <div class="md-list-item-content">
                 <i class="mdi mdi-settings fa-fw text-muted"></i> 
                 {{'titles.CONFIGURATION' | translate}}
             </div>
           </a>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n" ui-sref="app.analysis">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm" ui-sref="app.analysis">
             <div class="md-list-item-content">
               <i class="mdi mdi-chart-bar fa-fw text-muted"></i> 
               {{'titles.STATS' | translate}}
             </div>
           </a>
 
-          <div class="md-list-item list-group-item b-n">
-            <div class="md-list-item-content wrapper">
-              <div class="text-md text-right">
-                <div class="pull-left m-t-xs">
-                  <label class="md-check">
-                    <input type="checkbox" ng-model="station.main" ng-change="setMainStation(station)">
-                    <i class="blue"></i>
-                    {{'titles.DEFAULT_STATION' | translate}}
-                  </label>
-                </div>
+          <div class="md-list-item list-group-item b-n p-sm">
+            <div class="md-list-item-content">
+              <div class="m-t-xs p-sm text-left">
+                <label class="md-check">
+                  <input type="checkbox" ng-model="station.main" ng-change="setMainStation(station)">
+                  <i class="blue"></i>
+                  {{'titles.DEFAULT_STATION' | translate}}
+                </label>
+              </div>
+              <div class="text-right p-xs">
                 <button ng-click="openDeleteStation(station.id)"
                 md-ink-ripple class="md-btn md-flat" translate="actions.REMOVE">Excluir</button>
               </div>

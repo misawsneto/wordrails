@@ -950,7 +950,7 @@ sup {
 .list-group-item {
   padding: 12px 16px;
   background: transparent;
-  border-color: rgba(110, 115, 120, 0.045);
+  border-color: rgba(115, 115, 115, 0.045);
   border-right-color: transparent;
   border-left-color: transparent;
 }
@@ -963,7 +963,7 @@ a.list-group-item:hover,
 a.list-group-item:focus,
 a.list-group-item.hover {
   color: inherit;
-  background-color: rgba(110, 115, 120, 0.075);
+  background-color: rgba(115, 115, 115, 0.075);
 }
 
 .list-group-item.media {
@@ -974,9 +974,9 @@ a.list-group-item.hover {
 .list-group-item.active:hover,
 .list-group-item.active:focus {
   color: inherit;
-  background-color: rgba(110, 115, 120, 0.075);
+  background-color: rgba(115, 115, 115, 0.075);
   border-color: transparent;
-  border-bottom-color: 1px solid rgba(110, 115, 120, 0.075);
+  border-bottom-color: 1px solid rgba(115, 115, 115, 0.075);
 }
 
 .list-group-item.active a,
@@ -986,11 +986,11 @@ a.list-group-item.hover {
 }
 
 .list-group-alt .list-group-item:nth-child(2n+2) {
-  background-color: rgba(110, 115, 120, 0.075);
+  background-color: rgba(115, 115, 115, 0.075);
 }
 
 .list-group-alt .list-group-item.active:nth-child(2n+2) {
-  background-color: rgba(110, 115, 120, 0.075);
+  background-color: rgba(115, 115, 115, 0.075);
 }
 
 .list-group-lg .list-group-item {
@@ -5850,6 +5850,14 @@ bg-none {
   padding: 32px;
 }
 
+.p-xl {
+  padding: 40px;
+}
+
+.p-xxl {
+  padding: 48px;
+}
+
 .p-10 {
   padding: 10px;
 }
@@ -6472,6 +6480,10 @@ bg-none {
 
 .block-800 {
   max-width: 800px;
+}
+
+.block-800 {
+  max-width: 600px;
 }
 
 .block-600 {
@@ -7383,6 +7395,14 @@ bg-none {
 }
 
 /* /settings-color-selector */
+/* general */
+
+.font-500 {
+  font-weight: 500;
+}
+
+/* /general */
+
 /* toast */
 
 md-toast {
@@ -7407,3 +7427,25 @@ md-toast {
 }
 
 /* /search */
+
+/* color-settings */
+
+div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
+  display: none;
+}
+
+/* /color-settings */
+
+/* settings */
+
+.settings-list {
+  padding: 0;
+  margin: 0 20px;
+  list-style: none;
+}
+
+.settings-list li {
+  padding: 10px;
+}
+
+/* /settings */
