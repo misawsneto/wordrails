@@ -42,7 +42,8 @@
 	},
 	"settings":{
 		"aside":{
-			"SETTINGS": "Settings"
+			"SETTINGS": "Settings",
+			"MY_PROFILE": "My Profile"
 		},
 		"network":{
 			"tabs": {
