@@ -1,4 +1,4 @@
-package co.xarx.trix.generator;
+package co.xarx.trix.generator.scope;
 
 public class FieldDescription {
 	public String type;

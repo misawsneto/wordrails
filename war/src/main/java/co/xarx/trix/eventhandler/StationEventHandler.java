@@ -1,14 +1,12 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.*;
-import co.xarx.trix.domain.event.Event;
 import co.xarx.trix.elasticsearch.domain.ESStation;
 import co.xarx.trix.elasticsearch.repository.ESStationRepository;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.services.ESStartupIndexerService;
-import co.xarx.trix.services.LogBuilderExecutor;
 import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
@@ -172,17 +170,10 @@ public class StationEventHandler {
 		station.stationPerspectives = new HashSet<>(stationPerspectiveRepository.findByStationId(station.id));
 	}
 
-	@Autowired
-	private LogBuilderExecutor logBuilderExecutor;
-
-	@Autowired
-	private EventRepository eventRepository;
-
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Station station) throws UnauthorizedException{
 		if(stationSecurityChecker.canEdit(station)){
-			stationRepository.deleteStationNetwork(station.id);
 
 			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
 			stationPerspectiveRepository.delete(stationsPerspectives);
@@ -202,23 +193,13 @@ public class StationEventHandler {
 			List<Post> posts = postRepository.findByStation(station);
 
 			if(posts != null && posts.size() > 0){
-//				for (Post post : posts) {
-//					postEventHandler.handleBeforeDelete(post);
-//					postRepository.delete(posts);
-//				}
-
-				List<Integer> ids = new ArrayList<Integer>();
-				for (Post post : posts) {
-					ids.add(post.id);
-				}
+				List<Integer> ids = posts.stream().map(post -> post.id).collect(Collectors.toList());
 				queryPersistence.deleteCellsInPosts(ids);
 				queryPersistence.deleteCommentsInPosts(ids);
 				queryPersistence.deleteNotificationsInPosts(ids);
 				queryPersistence.deletePostReadsInPosts(ids);
 
-				postRepository.forceDeleteAll(posts.stream().map(post -> {
-					return post.id;
-				}).collect(Collectors.toList()));
+				postRepository.forceDeleteAll(posts.stream().map(post -> post.id).collect(Collectors.toList()));
 			}
 
 			esStationRepository.delete(station.getId());

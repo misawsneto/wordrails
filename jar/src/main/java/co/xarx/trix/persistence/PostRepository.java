@@ -1,11 +1,11 @@
 package co.xarx.trix.persistence;
 
 import co.xarx.trix.annotation.EventLoggableRepository;
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.custom.CustomPostRepository;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,18 +13,18 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @EventLoggableRepository
-public interface PostRepository extends JpaRepository<Post, Integer>, CustomPostRepository {
+public interface PostRepository extends TrixRepository<Post>, CustomPostRepository {
 
 	@PostAuthorize("hasPermission(returnObject, 'read')")
 	@Query("SELECT post FROM Post post where post.slug = :slug and post is not null")
 	Post findBySlug(@Param("slug") String slug);
 
-	@Deprecated
-	@Query("select post from Post post where post.id in ( select p.id from Post p where p.station.id = :stationId ) order by post.date desc")
-	List<Post> findPostsFromOrPromotedToStation(@Param("stationId") int stationId, Pageable pageable);
+	@Override
+	@SdkExclude
+	@RestResource(exported = false)
+	void delete(Post entity);
 
 	@Query("select post from Post post join post.terms t where " +
 			"post.station.id = :stationId and t.id in (:termsIds) and post.state = 'PUBLISHED' group by post order by post.date desc")

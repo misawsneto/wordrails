@@ -1,5 +1,6 @@
-package co.xarx.trix.generator;
+package co.xarx.trix.generator.generator;
 
+import co.xarx.trix.generator.PersistenceUnitDescription;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupDir;
 

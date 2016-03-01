@@ -2,8 +2,6 @@ package co.xarx.trix.config.cache;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.exception.TargetLookupFailureException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.cache.RedisCache;
@@ -62,6 +60,4 @@ public final class MultitenantCacheManager implements CacheManager {
 		}
 		return context;
 	}
-
-	private final Logger logger = LoggerFactory.getLogger(MultitenantCacheManager.class);
 }

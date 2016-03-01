@@ -29,7 +29,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>co.xarx.trix.generator.JavaScriptClientGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.generator.JavaScriptClientGenerator</mainClass>
 							<arguments>
 								<argument>${basedir}/src/main/webapp/js</argument>
 							</arguments>
@@ -43,7 +43,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>co.xarx.trix.generator.AngularClientGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.generator.AngularClientGenerator</mainClass>
 							<arguments>
 								<argument>${basedir}/src/main/webapp/js</argument>
 							</arguments>
@@ -424,6 +424,11 @@
 		<dependency>
 			<groupId>com.notnoop.apns</groupId>
 			<artifactId>apns</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
 		</dependency>
 
 		<!--<dependency>-->
