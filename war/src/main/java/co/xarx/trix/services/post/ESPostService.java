@@ -67,7 +67,11 @@ public class ESPostService {
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 		if (sort != null)
 			nativeSearchQueryBuilder.withSort(sort);
-		SearchQuery query = nativeSearchQueryBuilder.withPageable(pageable).withHighlightFields(new HighlightBuilder.Field("body")).withQuery(boolQuery).build();
+		SearchQuery query = nativeSearchQueryBuilder
+				.withPageable(pageable)
+				.withHighlightFields(new HighlightBuilder.Field("body"))
+				.withQuery(boolQuery)
+				.build();
 
 		Long[] totalHits = new Long[1];
 		ResultsExtractor<List<PostView>> resultsExtractor = response -> {
