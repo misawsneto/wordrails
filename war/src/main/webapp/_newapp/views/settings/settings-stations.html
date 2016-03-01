@@ -1,8 +1,13 @@
+<div class="md-primary-hue-1 background md-whiteframe-z1 p-xl ng-scope pos-fix w-full top-0 left-0 z-index-n-1">
+  <div class="p-xl">
+  </div>
+</div>
+
 <div id="settings-stations">
   <div class="wrapper-lg m-b-xxl p-b">
     <div class="row">
       <div class="col-lg-3 col-sm-4" ng-repeat="station in app.stations">
-        <div class="md-list md-whiteframe-z1 md-background-hue-1 background m-b">
+        <div class="md-list md-whiteframe-z1 md-background-hue-1 background m-b animated zoomIn">
 
           <div class="md-list-item list-group-item b-n text-md font-bold">
             {{station.name}}
@@ -32,7 +37,7 @@
           <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.settings.stationusers({'stationId': station.id})">
             <div class="md-list-item-content">
               <i class="mdi mdi-communication-vpn-key p-r fa-fw text-muted"></i> 
-              {{'titles.USER' | translate}}s
+              {{'titles.PERMISSIONS' | translate}}s
             </div>
           </a>
 

@@ -7397,6 +7397,56 @@ bg-none {
   font-weight: 500;
 }
 
+.animated {
+  -webkit-animation-duration: 0.3s!important;
+          animation-duration: 0.3s!important;
+}
+
+.animated3x {
+  -webkit-animation-duration: 0.3s!important;
+          animation-duration: 0.3s!important;
+}
+
+.animated5x {
+  -webkit-animation-duration: 0.5s!important;
+}
+
+.z-index-n-1 {
+  z-index: -1;
+}
+
+.z-index-n-2 {
+  z-index: -2;
+}
+
+.z-index-n-3 {
+  z-index: -3;
+}
+
+.z-index-n-4 {
+  z-index: -4;
+}
+
+.z-index-1 {
+  z-index: 1;
+}
+
+.z-index-2 {
+  z-index: 2;
+}
+
+.z-index-3 {
+  z-index: 3;
+}
+
+.z-index-4 {
+  z-index: 4;
+}
+
+.z-index-5 {
+  z-index: 5;
+}
+
 /* /general */
 
 /* toast */
@@ -7436,7 +7486,7 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
 
 .settings-list {
   padding: 0;
-  margin: 40px 0 16px;
+  margin: 70px 0 16px;
   list-style: none;
 }
 

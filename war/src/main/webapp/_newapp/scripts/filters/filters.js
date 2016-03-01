@@ -9,6 +9,25 @@ angular.module('app')
     }
   })
 
+  .filter('fromNow', function() {
+  return function(date) {
+    return moment(date).fromNow();
+  }
+})
+
+.filter('fromNow2', function() {
+  return function(date) {
+    return moment(date).format('DD [de] MMMM [de] YYYY | HH:mm');
+  }
+})
+
+.filter('fromNow3', function() {
+  return function(date) {
+    return moment(date).format('DD/MM/YY - HH:mm');
+  }
+})
+
+
 /**
  * Filters for modifying colors
  */

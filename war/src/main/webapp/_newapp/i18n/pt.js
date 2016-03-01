@@ -12,6 +12,8 @@
 		"CATEGORIES": "Categorias",
 		"USER": "Usuário",
 		"USERS": "Usuários",
+		"PERMISSION": "Permissão",
+		"PERMISSIONS": "Permissões",
 		"CONFIGURATION": "Configurações",
 		"STATS": "Estatísticas",
 		"SETTINGS": "Configurações",
