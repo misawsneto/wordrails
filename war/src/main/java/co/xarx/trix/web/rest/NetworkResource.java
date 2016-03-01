@@ -1,12 +1,11 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.NetworkPermission;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
 import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.aspect.annotations.IgnoreMultitenancy;
+import co.xarx.trix.annotations.IgnoreMultitenancy;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.dto.NetworkCreateDto;
 import co.xarx.trix.eventhandler.PostEventHandler;

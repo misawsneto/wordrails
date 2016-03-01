@@ -1,4 +1,4 @@
-package co.xarx.trix.domain.event;
+package co.xarx.trix.config.audit;
 
 public class Author {
 

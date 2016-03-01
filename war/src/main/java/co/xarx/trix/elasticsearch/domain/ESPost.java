@@ -33,7 +33,6 @@ public class ESPost implements ElasticSearchEntity {
 
 	public Set<Category> categories;
 	public Set<String> tags;
-	public Boolean sponsored;
 	public Date date;
 	public String body;
 	public String topper;
@@ -142,14 +141,6 @@ public class ESPost implements ElasticSearchEntity {
 
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
-	}
-
-	public Boolean getSponsored() {
-		return sponsored;
-	}
-
-	public void setSponsored(Boolean sponsored) {
-		this.sponsored = sponsored;
 	}
 
 	public Date getDate() {

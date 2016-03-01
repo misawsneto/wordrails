@@ -10,7 +10,6 @@ public class PostMap<T extends Post> extends PropertyMap<T, ESPost> {
 	protected void configure() {
 		map().setStationId(source.getStation().id);
 		map(source.getTerms(), destination.getCategories());
-		map().setSponsored(source.sponsor != null);
 		map().setFeaturedImage(source.getFeaturedImage().getOriginalHash());
 		map().setFeaturedImageCaption(source.getFeaturedImage().getCaption());
 		map().setFeaturedImageCredits(source.getFeaturedImage().getCredits());

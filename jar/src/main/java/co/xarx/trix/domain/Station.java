@@ -1,7 +1,6 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkInclude;
-import co.xarx.trix.domain.event.Event;
 import co.xarx.trix.domain.page.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

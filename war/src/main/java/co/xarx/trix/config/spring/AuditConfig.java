@@ -1,6 +1,6 @@
 package co.xarx.trix.config.spring;
 
-import co.xarx.trix.config.EventAuthorProvider;
+import co.xarx.trix.config.audit.EventAuthorProvider;
 import org.javers.core.Javers;
 import org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook;
 import org.javers.repository.sql.ConnectionProvider;

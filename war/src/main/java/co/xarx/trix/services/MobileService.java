@@ -1,7 +1,7 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.api.NotificationView;
-import co.xarx.trix.aspect.annotations.TenantAuthorize;
+import co.xarx.trix.annotations.TenantAuthorize;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.NotificationException;

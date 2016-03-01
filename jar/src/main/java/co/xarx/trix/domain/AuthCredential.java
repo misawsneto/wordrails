@@ -1,11 +1,13 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rometools.utils.Strings;
 
 import javax.persistence.*;
 
 @Entity
+@SdkExclude
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId"}))
 public class AuthCredential extends BaseEntity {
 

@@ -1,7 +1,6 @@
 package co.xarx.trix.domain;
 
 
-import co.xarx.trix.domain.event.Event;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Setter;

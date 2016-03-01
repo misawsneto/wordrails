@@ -1,7 +1,7 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.api.ContentResponse;
-import co.xarx.trix.aspect.annotations.TimeIt;
+import co.xarx.trix.annotations.TimeIt;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.StationRole;

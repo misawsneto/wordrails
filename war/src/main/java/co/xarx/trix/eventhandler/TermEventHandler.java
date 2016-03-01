@@ -1,11 +1,12 @@
 package co.xarx.trix.eventhandler;
 
-import co.xarx.trix.domain.*;
-import co.xarx.trix.domain.event.Event;
+import co.xarx.trix.domain.Row;
+import co.xarx.trix.domain.StationPerspective;
+import co.xarx.trix.domain.Term;
+import co.xarx.trix.domain.TermPerspective;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.TaxonomySecurityChecker;
-import co.xarx.trix.services.LogBuilderExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
@@ -24,7 +25,6 @@ public class TermEventHandler {
 	private @Autowired TermRepository termRepository;
 	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
 	private @Autowired RowRepository rowRepository;
-	private @Autowired CellRepository cellRepository;
 	private @Autowired TaxonomySecurityChecker taxonomySecurityChecker;
 	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
 
@@ -76,12 +76,6 @@ public class TermEventHandler {
 			}
 		}
 	}
-
-	@Autowired
-	private LogBuilderExecutor logBuilderExecutor;
-
-	@Autowired
-	private EventRepository eventRepository;
 
 	@HandleBeforeDelete
 	@Transactional
