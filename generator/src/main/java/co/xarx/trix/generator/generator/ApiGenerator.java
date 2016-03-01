@@ -1,6 +1,7 @@
 package co.xarx.trix.generator.generator;
 
 import co.xarx.trix.generator.PersistenceUnitDescription;
+import co.xarx.trix.generator.exception.InvalidProjectionException;
 import co.xarx.trix.generator.scope.EntityDescription;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupDir;
@@ -18,14 +19,14 @@ class ApiGenerator {
 	private PersistenceUnitDescription unit;
 	private STGroupDir templates;
 
-	private ApiGenerator(String directory, String apiPackage, String unitPackage) {
+	private ApiGenerator(String directory, String apiPackage, String unitPackage) throws InvalidProjectionException {
 		this.directory = new File(directory);
 		this.apiPackage = apiPackage;
 		this.unit = new PersistenceUnitDescription(unitPackage);
 		this.templates = new STGroupDir("co/xarx/trix/generator/java/api", ENCODING, '$', '$');
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InvalidProjectionException {
 		ApiGenerator generator = new ApiGenerator(args[0] + "/co/xarx/trix/api", "co.xarx.trix.api", "co.xarx.trix");
 		generator.generate();
 	}
@@ -53,7 +54,7 @@ class ApiGenerator {
 	}
 
 	private void generateDtos() throws IOException {
-		for (EntityDescription entity : unit.entities) {
+		for (EntityDescription entity : unit.getEntities()) {
 			generateDto(entity);
 		}
 	}
@@ -67,7 +68,7 @@ class ApiGenerator {
 
 	private void generateProjections() throws IOException {
 		Set<EntityDescription> projections = new HashSet<>();
-		for (EntityDescription entity : unit.entities) {
+		for (EntityDescription entity : unit.getEntities()) {
 			for (EntityDescription projection : entity.projections) {
 				projections.add(projection);
 			}

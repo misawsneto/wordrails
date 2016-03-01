@@ -1,4 +1,4 @@
-package co.xarx.trix.config;
+package co.xarx.trix.config.exception;
 
 import co.xarx.trix.exception.*;
 import com.amazonaws.AmazonClientException;

@@ -1,4 +1,4 @@
-package co.xarx.trix.config.spring;
+package co.xarx.trix.config;
 
 import co.xarx.trix.web.filter.UserPassAuthenticationFilter;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package co.xarx.trix.config.spring;
+package co.xarx.trix.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;

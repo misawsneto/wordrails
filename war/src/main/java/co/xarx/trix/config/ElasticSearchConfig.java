@@ -1,4 +1,4 @@
-package co.xarx.trix.config.spring;
+package co.xarx.trix.config;
 
 import co.xarx.trix.domain.query.ExecutorFactory;
 import co.xarx.trix.elasticsearch.ESRepositoryFactoryBean;

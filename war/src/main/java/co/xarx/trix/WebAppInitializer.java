@@ -1,7 +1,7 @@
 //package co.xarx.trix;
 //
 //import co.xarx.trix.config.TrixContextLoaderListener;
-//import co.xarx.trix.config.spring.DatabaseConfig;
+//import co.xarx.trix.config.DatabaseConfig;
 //import co.xarx.trix.config.spring.SecurityConfig;
 //import co.xarx.trix.web.filter.CORSCustomFilter;
 //import co.xarx.trix.web.filter.NetworkDomainFilter;

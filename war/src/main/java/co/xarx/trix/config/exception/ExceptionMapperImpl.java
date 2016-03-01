@@ -1,4 +1,4 @@
-package co.xarx.trix.config;
+package co.xarx.trix.config.exception;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.exception.BadRequestException;

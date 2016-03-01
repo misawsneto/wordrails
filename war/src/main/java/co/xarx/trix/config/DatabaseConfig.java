@@ -1,4 +1,4 @@
-package co.xarx.trix.config.spring;
+package co.xarx.trix.config;
 
 import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.flyway.FlywayIntegrator;

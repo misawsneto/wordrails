@@ -1,4 +1,4 @@
-package co.xarx.trix.config.spring;
+package co.xarx.trix.config;
 
 import org.reflections.Reflections;
 import org.springframework.context.annotation.Configuration;

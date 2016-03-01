@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityDescription {
-	public String pkg;
 	public String fullName;
 	public String name;
 	public String nameLowercase;
@@ -17,6 +16,11 @@ public class EntityDescription {
 	public String repositoryName;
 	public List<QueryDescription> queries = new ArrayList<>();
 	public List<EntityDescription> projections = new ArrayList<>();
+
+	public boolean findAll;
+	public boolean findOne;
+	public boolean save;
+	public boolean delete;
 
 	@Override
 	public String toString() {

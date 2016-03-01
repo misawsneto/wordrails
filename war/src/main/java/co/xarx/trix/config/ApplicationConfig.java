@@ -1,4 +1,4 @@
-package co.xarx.trix.config.spring;
+package co.xarx.trix.config;
 
 import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;

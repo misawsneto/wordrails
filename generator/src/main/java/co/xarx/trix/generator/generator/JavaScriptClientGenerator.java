@@ -1,6 +1,7 @@
 package co.xarx.trix.generator.generator;
 
 import co.xarx.trix.generator.PersistenceUnitDescription;
+import co.xarx.trix.generator.exception.InvalidProjectionException;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupDir;
 
@@ -13,9 +14,9 @@ class JavaScriptClientGenerator {
 	private File directory;
 	private String facade;
 	private PersistenceUnitDescription unit;
-	private STGroupDir templates;		
+	private STGroupDir templates;
 	
-	private JavaScriptClientGenerator(String directory, String facade, String unitPackage) {
+	private JavaScriptClientGenerator(String directory, String facade, String unitPackage) throws InvalidProjectionException {
 		this.directory = new File(directory);
 		this.facade = facade;
 		this.unit = new PersistenceUnitDescription(unitPackage);
@@ -31,11 +32,11 @@ class JavaScriptClientGenerator {
 	public void generateJavaScript() throws IOException {
 		ST template = templates.getInstanceOf("Facade");
 		template.add("facade", facade);
-		template.add("entities", unit.entities);
+		template.add("entities", unit.getEntities());
 		template.write(new File(directory, "Base" + facade + ".js"), null, ENCODING);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InvalidProjectionException {
 		JavaScriptClientGenerator generator = new JavaScriptClientGenerator(args[0], "Trix", "co.xarx.trix");
 		generator.generate();
 	}		

@@ -1,4 +1,4 @@
-package co.xarx.trix.config.spring;
+package co.xarx.trix.config;
 
 import co.xarx.trix.scheduler.AutowiringSpringBeanJobFactory;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
