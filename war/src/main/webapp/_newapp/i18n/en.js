@@ -54,7 +54,7 @@
 				"THEMING": "Appearance"
 			},
 			"settings":{
-				"NAME": "Name",
+				"NAME": "Network name",
 				"ALLOW_SIGNUP": "Allow signup on public stations.",
 				"ADD_ROLES_ON_STARTUP": "Create read permissions on all stations upon user signup.",
 				"ALLOW_SOCIAL_LOGIN": "Allow social signup on public stations.",
