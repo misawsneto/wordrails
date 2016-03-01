@@ -3,6 +3,9 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
 		$scope.toggleRight = buildToggler('palette-selector');
 
+		$scope.settings = {'tab': 'settings'} 
+
+
 		function buildToggler(navID) {
 	      return function() {
 	        $mdSidenav(navID)

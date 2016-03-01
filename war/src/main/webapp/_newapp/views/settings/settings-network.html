@@ -1,27 +1,39 @@
-<div class="row">
-  <div class="col-md-3 p-sm text-md font-500">
-      <ul class="settings-list text-muted">
-        <li> <span translate='settings.network.tabs.SETTINGS'></span></li>
-        <li> <span translate='settings.network.tabs.DOMAINS_ANALYTICS'></span></li>
-        <li> <span translate='settings.network.tabs.LOGOS'></span></li>
-        <li> <span translate='settings.network.tabs.FOOTER'></span></li>
-        <li> <span translate='settings.network.tabs.CUSTOMIZATION'></span></li>
+<div class="row m-l-xs m-r-xs">
+  <div class="col-md-3 col-sm-3 p-sm text-md font-500">
+    <div class="pos-fix">
+      <ul class="settings-list text-muted m-t-xxl pos-rlt">
+        <li ng-class="{'active': settings.tab === 'settings'}">
+          <a ng-click="settings.tab = 'settings'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.SETTINGS'></span></a>
+        </li>
+        <li ng-class="{'active': settings.tab === 'domain-analytics'}">
+          <a ng-click="settings.tab = 'domain-analytics'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.DOMAINS_ANALYTICS'></span></a>
+        </li>
+        <li ng-class="{'active': settings.tab === 'logos'}">
+          <a ng-click="settings.tab = 'logos'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.LOGOS'></span></a>
+        </li>
+        <li ng-class="{'active': settings.tab === 'footer'}">
+          <a ng-click="settings.tab = 'footer'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.FOOTER'></span></a>
+        </li>
+        <li ng-class="{'active': settings.tab === 'customization'}">
+          <a ng-click="settings.tab = 'customization'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.CUSTOMIZATION'></span></a>
+        </li>
       </ul>
+    </div>
   </div>
 
-  <div class="col-md-9">
-    <div id="settings-network" class="pos-abt bottom-0 top-0 left-0 right-0">
+  <div class="col-md-9 col-sm-9 m-b-xl">
+    <div id="settings-network" class="m-b-xl">
   <!-- <div class="p-xl pos-abt top-0 left-0 w-full md-whiteframe-z1 md-primary-hue-1 background">
     <div class="text-lg m-b-xl font-thin">
       Configurações de Rede
     </div>
   </div> -->
 
-    <div class="bg-white block-800 m-h-auto pos-rlt md-whiteframe-z1">
+    <div class="bg-white b-a w-full m-h-auto pos-rlt md-whiteframe-z1">
       <!-- <md-tabs md-dynamic-height md-border-bottom class="md-primary"> -->
         <!-- start of network configuration -->
         <!-- <md-tab label="{{'settings.network.tabs.SETTINGS' | translate}}"> -->
-          <div class="md-padding">
+          <div class="md-padding" ng-class="{'hide': settings.tab !== 'settings'}">
             <div class="w-xxl m-h-auto p-t-md p-b-md">
               <md-input-container class="m-b-sm m-t-sm w-full">
                 <label translate="settings.network.settings.NAME">Nome</label>
@@ -86,7 +98,7 @@
 
         <!-- domain and analytics -->
         <!-- <md-tab label="{{'settings.network.tabs.DOMAINS_ANALYTICS' | translate}}"> -->
-          <div class="md-padding">
+          <div class="md-padding" ng-class="{'hide': settings.tab !== 'domain-analytics'}">
             <div class="m-b text-muted text-md text-u-c" translate="titles.DOMAIN">Domínio</div>
               <div class="row pos-rlt">
                 <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
@@ -140,7 +152,7 @@
 
         <!-- logos -->
         <!-- <md-tab label="{{'settings.network.tabs.LOGOS' | translate}}"> -->
-          <div class="md-padding">
+          <div class="md-padding"  ng-class="{'hide': settings.tab !== 'logos'}">
             <!-- /color preferences -->
             <!-- logo section -->
             <ul class="list-group list-group-lg no-bg auto">
@@ -183,7 +195,7 @@
 
       <!-- footer -->
         <!-- <md-tab label="{{'settings.network.tabs.FOOTER' | translate}}"> -->
-          <div class="md-padding">
+          <div class="md-padding"  ng-class="{'hide': settings.tab !== 'footer'}">
               <div class="m-b text-muted text-md text-u-c">RODAPÉ DA PÁGINA</div>
                 <div class="p row">
                   <div class="col-lg-6">
@@ -211,14 +223,14 @@
               <div class="m-b text-muted text-md text-u-c">Rodapé da tela de login</div>
                 <!-- <div class="p-r-xxl p-l-xxl">
                                 <div class="m-t-lg md-form-group  m-t text-md">
-                                  <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="3"></textarea>
+                                  <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="10"></textarea>
                                   <label></label>
                                   <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
                                 </div>
                               </div> -->
 
                 <md-input-container class="md-block">
-                  <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="5" md-select-on-focus>
+                  <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="10" md-select-on-focus>
                   </textarea>
                   <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
                 </md-input-container>
@@ -228,7 +240,7 @@
 
         <!-- customization -->
         <!-- <md-tab label="{{'settings.network.tabs.CUSTOMIZATION' | translate}}"> -->
-          <div class="md-padding">
+          <div class="md-padding" ng-class="{'hide': settings.tab !== 'customization'}">
             <div class="m-t-xxl text-muted text-md text-u-c">Personalização</div>
             <md-input-container class="m-b-sm m-t-sm ">
               <label>Aba de estações</label>
@@ -243,7 +255,7 @@
             </md-input-container>
             <md-input-container class="m-b-sm m-t-sm md-block">
               <label>Texto de convite por email</label>
-              <textarea ng-model="network.invitationMessage" columns="1" rows="5"></textarea>
+              <textarea ng-model="network.invitationMessage" columns="1" rows="10"></textarea>
               <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
                   Mensagem enviada em emails de convites a usuários</small> -->
               <span class="md-input-msg left">Mensagem enviada em emails de convites a usuários</span>

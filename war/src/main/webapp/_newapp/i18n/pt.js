@@ -54,7 +54,7 @@
 				"THEMING": "Aparência"
 			},
 			"settings":{
-				"NAME": "Nome",
+				"NAME": "Nome da rede",
 				"ALLOW_SIGNUP": "Permitir cadastro em estações públicas.",
 				"ADD_ROLES_ON_STARTUP": "Ao cadastrar usuário, criar permissões de leitura em todas as estações.",
 				"ALLOW_SOCIAL_LOGIN": "Autenticação através de redes sociais em estações públicas.",

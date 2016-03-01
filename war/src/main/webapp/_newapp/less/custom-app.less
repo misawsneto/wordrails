@@ -34,11 +34,26 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop{
 /* settings */
 .settings-list {
   padding: 0;
-  margin: 0 20px;
+  margin: 40px 0 16px;
   list-style: none;
 }
 
-.settings-list li {
-  padding: 10px;
+.settings-list > li {
+  padding: 0;
+  width: 100%;
 }
+
+.settings-list > li a.settings-items {
+	display: block;
+	width: inherit;
+	border-radius: 2px;
+	padding: 12px;
+	transition: background 0.15s ease-in-out;
+}
+
+.settings-list > li.active a.settings-items,
+.settings-list > li a.settings-items:hover{
+	background-color: rgba(0,0,0,0.08);
+}
+
 /* /settings */
