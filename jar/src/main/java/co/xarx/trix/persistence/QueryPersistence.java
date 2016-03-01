@@ -96,11 +96,6 @@ public class QueryPersistence {
 	}
 	
 	@Transactional
-	public void deleteImagesInPosts(List<Integer> ids) {
-		manager.createQuery("delete from Image image where image.postId in (:ids)").setParameter("ids", ids).executeUpdate();
-	}
-	
-	@Transactional
 	public void deletePromotionsInPosts(List<Integer> ids) {
 		manager.createQuery("delete from Promotion promotion where promotion.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
 	}
@@ -248,5 +243,10 @@ public class QueryPersistence {
 		manager.createNativeQuery("DELETE FROM image WHERE id in (:ids)")
 				.setParameter("ids", ids)
 				.executeUpdate();
+	}
+
+	@Transactional
+	public void deleteAuthoritiesByStation(Integer id) {
+		manager.createNativeQuery("DELETE from authorities where station_id = (:id)").setParameter("id", id).executeUpdate();
 	}
 }
