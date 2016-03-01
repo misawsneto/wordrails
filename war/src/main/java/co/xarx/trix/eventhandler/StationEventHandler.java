@@ -213,14 +213,15 @@ public class StationEventHandler {
 				for (Post post : posts) {
 					ids.add(post.id);
 				}
+				queryPersistence.deleteAuthoritiesByStation(station.id);
 				queryPersistence.deleteCellsInPosts(ids);
 				queryPersistence.deleteCommentsInPosts(ids);
-				queryPersistence.deleteImagesInPosts(ids);
 				queryPersistence.deleteNotificationsInPosts(ids);
 				queryPersistence.deletePostReadsInPosts(ids);
 				queryPersistence.deleteRecommendsInPosts(ids);
 
 				postRepository.forceDeleteAll(posts.stream().map(post -> {
+					postEventHandler.handleBeforeDelete(post);
 					return post.id;
 				}).collect(Collectors.toList()));
 			}

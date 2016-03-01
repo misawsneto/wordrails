@@ -249,6 +249,15 @@ angular.module('app')
       var themeName = $filter('generateRandom')(4,"aA");
 
       $scope.app.applyNetworkTheme = function (){
+
+        if(!$scope.app.network.primaryColors || !$scope.app.network.primaryColors['50']){
+          $scope.app.network.primaryColors =
+          $scope.app.network.secondaryColors =
+          $scope.app.network.alertColors =
+          $scope.app.network.backgroundColors =
+          {'500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'}
+        }
+        
         themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
         themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
         themeProvider.definePalette('myWarn', $scope.app.network.alertColors);

@@ -62,6 +62,7 @@ public class DatabaseConfig {
 	public DataSource dataSource() {
 
 		BoneCPDataSource ds = new BoneCPDataSource();
+		ds.setDriverClass("com.mysql.jdbc.Driver");
 		ds.setJdbcUrl(url);
 		ds.setUsername(username);
 		ds.setPassword(password);
