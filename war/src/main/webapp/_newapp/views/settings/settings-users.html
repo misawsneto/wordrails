@@ -9,7 +9,7 @@
 		<div class="md-whiteframe-z1 md-background-hue-1 background animated zoomIn block-1000 m-auto" ng-if="!(creating || editing)">
 			<div class="panel-heading h4 wrapper-md">
 				<span>Usuários</span>
-				<div class="pos-abt" ng-if="showProgress" layout="row" layout-sm="column" layout-align="space-around" style="transform: scale(0.5); right: 0; margin:-65px 5px 0 0;">
+				<div class="pos-abt" ng-if="showProgress" layout="row" layout-sm="column" layout-align="space-around" style="transform: scale(0.9); right: 0; margin:-40px 0px 0 0;">
 		      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
 		    </div>
 			</div>
@@ -84,7 +84,7 @@
 						<tbody>
 							<tr ng-repeat="person in persons" ng-click="loadPerson(person)">
 								<td>
-									<label class="md-check" ng-if="person.id != app.initData.person.id">
+									<label class="md-check p-t-sm" ng-if="person.id != app.initData.person.id">
 										<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
 										<i class="blue"></i>
 									</label>
@@ -105,20 +105,20 @@
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
 								<td class="text-center">
 									<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-									 	<label class="md-switch">
+									 	<label class="md-switch p-t-sm">
 			              	<input type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
 			              	<i class="blue"></i>
 			            	</label>
 									</div>
 								</td>
 								<td class="text-center">
-									<label class="md-check" ng-if="person.id != app.person.id">
+									<label class="md-check p-t-sm" ng-if="person.id != app.person.id">
 										<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
 										<i class="blue"></i>
 									</label>
 								</td>
 								<td>
-									<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+									<div ng-if="person.id != app.person.id" class="p-t-sm dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
 										<a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
 										</a>
 										<!-- dropdown -->
