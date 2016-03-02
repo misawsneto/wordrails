@@ -14,6 +14,9 @@
 		"USERS": "Users",
 		"PERMISSION": "Permission",
 		"PERMISSIONS": "Permissions",
+		"PUBLICATIONS": "Publications",
+		"COMMENTS": "Comments",
+		"MEDIA_LIBRARY": "Media library",
 		"CONFIGURATION": "Configuration",
 		"STATS": "Analytics",
 		"SETTINGS": "Settings",
@@ -44,8 +47,12 @@
 	},
 	"settings":{
 		"aside":{
+			"DASHBOARD": "Dashboard",
+			"CONTENT": "Content",
 			"SETTINGS": "Settings",
-			"MY_PROFILE": "My Profile"
+			"MY_PROFILE": "My profile",
+			"BOOKMARKS": "Bookmarks",
+			"Notifications": "Notifications"
 		},
 		"network":{
 			"tabs": {

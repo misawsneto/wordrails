@@ -1,5 +1,39 @@
 <nav ui-nav>
+  <ul class="nav m-t">
+    <li ui-sref-active="active">
+      <a md-ink-ripple ui-sref="app.dashboard">
+        <i class="icon mdi-action-dashboard i-20"></i>
+        <span class="font-normal" translate="settings.aside.DASHBOARD">Painel de administração</span>
+      </a>
+    </li>
+  </ul>
   <ul class="nav">
+    <li class="m-v-sm b-b b"></li>
+    <li class="nav-header m-v-sm hidden-folded" translate="settings.aside.CONTENT">
+      Conteúdo
+    </li>
+    <li ui-sref-active="active">
+      <a md-ink-ripple ui-sref="app.stations">
+        <i class="icon mdi-editor-mode-edit i-20"></i>
+        <span class="font-normal" translate="titles.PUBLICATIONS">Publicações</span>
+      </a>
+    </li>
+    <li ui-sref-active="active">
+      <a md-ink-ripple ui-sref="app.stations">
+        <i class="icon mdi-editor-mode-comment i-20"></i>
+        <span class="font-normal" translate="titles.COMMENTS">Comentários</span>
+      </a>
+    </li>
+    <li ui-sref-active="active">
+      <a md-ink-ripple ui-sref="app.stations">
+        <i class="icon mdi-action-perm-media i-20"></i>
+        <span class="font-normal" translate="titles.MEDIA_LIBRARY">Biblioteca de mídia</span>
+      </a>
+    </li>
+  </ul>
+
+  <ul class="nav">
+    <li class="m-v-sm b-b b"></li>
     <li class="nav-header m-v-sm hidden-folded" translate="settings.aside.SETTINGS">
       Configurações
     </li>
@@ -13,7 +47,7 @@
 
     <li ui-sref-active="active">
       <a md-ink-ripple ui-sref="app.users">
-        <i class="icon mdi-action-account-child i-20"></i>
+        <i class="icon mdi-social-people i-20"></i>
         <span class="font-normal" translate="titles.USERS">Usuários</span>
       </a>
     </li>
@@ -22,6 +56,13 @@
       <a md-ink-ripple ui-sref="app.network">
         <i class="icon mdi-action-settings i-20"></i>
         <span class="font-normal" translate="titles.NETWORK">Rede</span>
+      </a>
+    </li>
+
+    <li ui-sref-active="active">
+      <a md-ink-ripple ui-sref="app.chart">
+        <i class="icon mdi-device-signal-cellular-null i-20"></i>
+        <span class="font-normal" translate="titles.STATS">Estatísticas</span>
       </a>
     </li>
 

@@ -238,8 +238,11 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         index += 3; 
       }
       if(cssname === 'background' && name === 'hue-1'){
-        stylesheet.insertRule(".card { background-color: " + color + "!important; " + contrast + " }", index);
-        index ++;
+        stylesheet.insertRule(".card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index);
+        stylesheet.insertRule(".default-bg-text button.md-button { " + contrast + " }", index);
+        stylesheet.insertRule(".default-bg-text md-input-container:not(.md-input-invalid).md-input-has-value label { " + contrast + " }", index);
+        stylesheet.insertRule(".default-bg-text md-input-container .md-input { " + contrast + "!important }", index);
+        index += 4;
       }
     };
     clearStyleSheet = function() {

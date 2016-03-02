@@ -81,6 +81,13 @@ angular.module('app')
                   }
                   , controller:'SettingsUsersCtrl'
               })
+              // chart
+              .state('app.chart', {
+                url: '/chart',
+                templateUrl: '/views/ui/chart/chart.html',
+                data : { title: 'Charts' },
+                resolve: load('/scripts/controllers/chart.js')
+              })
               .state('app.network', {
                 url: '/network',
                 templateUrl: '/views/settings/settings-network.html',

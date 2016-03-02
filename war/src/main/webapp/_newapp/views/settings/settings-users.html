@@ -45,18 +45,18 @@
 				<!-- /persons pagination -->
 				<!-- actions -->
 					<div class="col-sm-2 m-b-xs text-right m-t-n-sm">
-		        <md-menu md-position-mode="target-right target md-neutral-theme">
-		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r">
-		          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
-		          </button>
-		          <md-menu-content width="4" >
-		            <md-menu-item ng-repeat="action in bulkActions">
-		              <md-button ng-click="selectBulkAction(action.id); openBulkActionsDialog($event);">
-                    {{action.name}}
-		              </md-button>
-		            </md-menu-item>
-		          </md-menu-content>
-		        </md-menu>
+				        <md-menu md-position-mode="target-right target">
+				          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r">
+				          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
+				          </button>
+				          <md-menu-content width="4" class="default-bg-text">
+				            <md-menu-item ng-repeat="action in bulkActions">
+				              <md-button ng-click="selectBulkAction(action.id); openBulkActionsDialog($event);">
+		                    {{action.name}}
+				              </md-button>
+				            </md-menu-item>
+				          </md-menu-content>
+				        </md-menu>
 					</div>
 				<!-- /actions -->
 				</div>
@@ -72,8 +72,11 @@
 								</th>
 								<th>usuários</th>
 								<th class="text-center">último login</th>
-								<th ng-if="app.networkAdmin" style="max-width:115px;" class="text-center">
+								<th style="max-width:115px;" class="text-center">
 									ativar/desativar
+								</th>
+								<th style="max-width:115px;" class="text-center">
+									administrador
 								</th>
 								<th style="width:30px;"></th>
 							</tr>
@@ -87,34 +90,40 @@
 									</label>
 								</td>
 								<td class="clearfix">
-					              <span class="pull-left thumb-sm avatar m-r">
-					                <div back-img="{{person.imageSmallId}}" 
-										class="bg-cover m-t-sm bg-img bg-cover-round pull-left m-r m-t-n-xxs m-b-n-xxs pos-rlt b-t-sm"
-										title="{{person.name}}">
-									</div>
-					              </span>
-					              <span class="clear">
-					                <span class="text-md font-bold">{{person.name}}</span>
-					                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
-					              </span>
+		              <span class="pull-left thumb-sm avatar m-r">
+		                <div back-img="{{person.imageSmallId}}" 
+											class="bg-cover m-t-sm bg-img bg-cover-round pull-left m-r m-t-n-xxs m-b-n-xxs pos-rlt b-t-sm"
+											title="{{person.name}}">
+										</div>
+		              </span>
+		              <span class="clear">
+		                <span class="text-md font-bold">{{person.name}}</span>
+		                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
+		              </span>
 								</td>
 								<td class="text-center" ng-if="!person.lastLogin"> - </td>
 								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
-								<td class="text-center" ng-if="app.networkAdmin">
-									<div ng-if="person.id != app.initData.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-									 <label class="md-switch">
-				              <input type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
-				              <i class="blue"></i>
-				            </label>
+								<td class="text-center">
+									<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+									 	<label class="md-switch">
+			              	<input type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
+			              	<i class="blue"></i>
+			            	</label>
 									</div>
 								</td>
+								<td class="text-center">
+									<label class="md-check" ng-if="person.id != app.person.id">
+										<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
+										<i class="blue"></i>
+									</label>
+								</td>
 								<td>
-									<div ng-if="person.id != app.initData.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
-										<a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-dots-vertical mdi" dropdown-toggle>
+									<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+										<a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
 										</a>
 										<!-- dropdown -->
 										<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
-											<li ng-if="app.networkAdmin" > <a href> Reconfigurar a senha </a> </li>
+											<li > <a href> Reconfigurar a senha </a> </li>
 											<!-- <li class="divider"></li> -->
 											<li> <a ng-click="openDeletePersonRole(role.id);"> Alterar permissões </a> </li>
 										</ul>
@@ -190,7 +199,7 @@
 							<div class="cover-abstract-mask ng-scope" ng-if="!selectedPerson.coverLargeId">
 							</div>
 							<div back-img="{{selectedPerson.imageSmallId}}" class="bg-cover bg-img-xl bg-cover-round m-l-lg m-t-lg pos-rlt" title="{{selectedPerson.name}}">
-								<div id="image-button-wrapper" ng-if="app.networkAdmin">
+								<div id="image-button-wrapper">
 									<div id="image-button" class="custom-btn bg-img-xl border-radius-50">
 										<i class="mdi mdi-pencil text-3x text-white image-edit" style="margin: 40px;"></i>
 										<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
