@@ -37,7 +37,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
 	List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);
 
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId and post.state = 'PUBLISHED' ORDER BY post.date DESC")
 	List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 
 	// ---------------------------------- NOT EXPOSED ----------------------------------
@@ -63,7 +63,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 
 	@RestResource(exported = false)
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.id DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId AND post.state = 'PUBLISHED' ORDER BY post.readsCount DESC, post.id DESC")
 	List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
 
 	@RestResource(exported = false)
