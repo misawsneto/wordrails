@@ -3,6 +3,7 @@ package co.xarx.trix.services.post;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.services.auth.StationPermissionService;
 import co.xarx.trix.util.Constants;
+import co.xarx.trix.util.Logger;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
