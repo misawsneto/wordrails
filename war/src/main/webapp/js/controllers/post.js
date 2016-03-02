@@ -142,7 +142,7 @@ app.controller('PostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state',
 				$("#video-url-input").focus();
 				$scope.videoUrl = $scope.app.editingPost.externalVideoUrl;
 			}else if($scope.app.editingPost.featuredImage){
-				$scope.app.editingPost.uploadedImage = {filelink: $scope.app.mediaUrl($scope.app.editingPost.featuredImage.hashs.large) }
+				$scope.app.editingPost.uploadedImage = {filelink: $scope.app.mediaUrl($scope.app.editingPost.featuredImage.originalHash) }
 				$scope.checkLandscape();
 			}
 

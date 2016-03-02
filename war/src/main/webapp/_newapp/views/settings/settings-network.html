@@ -1,3 +1,8 @@
+<div class="md-primary-hue-1 background md-whiteframe-z1 p-xl ng-scope pos-fix w-full top-0 left-0 z-index-n-1">
+  <div class="p-xl">
+  </div>
+</div>
+
 <div class="row m-l-xs m-r-xs">
   <div class="col-md-3 col-sm-3 p-sm text-md font-500">
     <div class="pos-fix">
@@ -29,7 +34,7 @@
     </div>
   </div> -->
 
-    <div class="bg-white b-a w-full m-h-auto pos-rlt md-whiteframe-z1">
+    <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z1 animated zoomIn">
       <!-- <md-tabs md-dynamic-height md-border-bottom class="md-primary"> -->
         <!-- start of network configuration -->
         <!-- <md-tab label="{{'settings.network.tabs.SETTINGS' | translate}}"> -->
@@ -80,7 +85,7 @@
                     </label>
                   </p>
                   <p>
-                    <md-input-container class="m-b-sm m-t-sm w-lg">
+                    <md-input-container class="m-b-sm m-t-lg w-lg">
                       <label translate="settings.network.settings.LANGUAGE">Idioma</label>
                       <md-select ng-model="network.language" ng-change="setLanguage(network.language)">
                         <md-option ng-repeat="language in [{ref:'en', name: 'English'}, {ref: 'pt', name: 'Português'}]" value="{{language.ref}}">

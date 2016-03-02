@@ -219,12 +219,30 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".background { background-color: " + color + "; " + contrast + " }", index + 1);
       index += 2;
       if(cssname === 'warn' && name === 'default'){
-        stylesheet.insertRule("md-toast.md-" + cssname + "-" + name + " > div { background-color: " + color + "!important; " + contrast + " }", index);
+        stylesheet.insertRule("md-toast.md-" + cssname + "-" + name + " > div { background-color: " + color + "!important; color: #f5f5f5 }", index);
         index ++;
       }
+      if(cssname === 'accent' && name === 'default'){
+        stylesheet.insertRule(
+          "#loading-bar {webkit-box-shadow: " + color + " 1px 0 6px 1px;" +
+            "box-shadow: " + color + " 1px 0 6px 1px;"+
+            "-moz-border-radius: 100%;"+
+            "-webkit-border-radius: 100%;}" , index);
+        stylesheet.insertRule(
+          "#loading-bar .bar {background-color: " + color + " }" , index);
+        stylesheet.insertRule(
+          "#loading-bar-spinner .spinner-icon {"+
+            "border-top-color: " + color + ";" +
+            "border-left-color: " + color + ";" +
+          "}" , index);
+        index += 3; 
+      }
       if(cssname === 'background' && name === 'hue-1'){
-        stylesheet.insertRule(".card { background-color: " + color + "!important; " + contrast + " }", index);
-        index ++;
+        stylesheet.insertRule(".card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index);
+        stylesheet.insertRule(".default-bg-text button.md-button { " + contrast + " }", index);
+        stylesheet.insertRule(".default-bg-text md-input-container:not(.md-input-invalid).md-input-has-value label { " + contrast + " }", index);
+        stylesheet.insertRule(".default-bg-text md-input-container .md-input { " + contrast + "!important }", index);
+        index += 4;
       }
     };
     clearStyleSheet = function() {

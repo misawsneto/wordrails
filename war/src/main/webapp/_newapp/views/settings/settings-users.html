@@ -1,0 +1,428 @@
+<div class="md-primary-hue-1 background md-whiteframe-z1 p-xl ng-scope pos-fix w-full top-0 left-0 z-index-n-1">
+  <div class="p-xl">
+  </div>
+</div>
+
+<div id="settings-stations-users">
+	<div class="m-b-xxl">
+		<!-- start of user panel list -->
+		<div class="md-whiteframe-z1 md-background-hue-1 background animated zoomIn block-1000 m-auto" ng-if="!(creating || editing)">
+			<div class="panel-heading h4 wrapper-md">
+				<span>Usuários</span>
+				<div class="pos-abt" ng-if="showProgress" layout="row" layout-sm="column" layout-align="space-around" style="transform: scale(0.9); right: 0; margin:-40px 0px 0 0;">
+		      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+		    </div>
+			</div>
+			<div class="panel-body p-n" style="min-height: 200px;">
+				<div class="row wrapper">
+					<div class="col-sm-6">
+						<div class="md-form-group m-t-n-md float-label">
+							<!-- <i class="mdi mdi-magnify text-muted text-shadow-none pos-abt text-lg m-t-xs"></i> -->
+		          <input class="md-input ng-pristine ng-invalid ng-invalid-required ng-touched" ng-model="user.firstName" required="" tabindex="0" aria-required="true" aria-invalid="true" style="">
+		          <label>
+		          <i class="mdi mdi-magnify"></i>
+		          Busque por usuário, nome ou email</label>
+		        </div>
+	        </div>
+					<!-- persons pagination -->
+					<div class="col-sm-4">
+						<div ng-if="persons && personsCount">
+							<span class="font-bold">
+								{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
+							</span>
+							<span class="p-l-xs p-r-xs">de</span> 
+							<span class="p-r font-bold">
+								{{personsCount}}
+							</span>
+							<div class="inline">
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('left')" ng-disabled="beginning">
+								<span class="mdi mdi-chevron-left"></span></button>
+								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('right')" ng-disabled="allLoaded || personsCount <= window">
+								<span class="mdi mdi-chevron-right"></span></button>
+			        </div>
+						</div>
+					</div>
+				<!-- /persons pagination -->
+				<!-- actions -->
+					<div class="col-sm-2 m-b-xs text-right m-t-n-sm">
+				        <md-menu md-position-mode="target-right target">
+				          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r">
+				          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
+				          </button>
+				          <md-menu-content width="4" class="default-bg-text">
+				            <md-menu-item ng-repeat="action in bulkActions">
+				              <md-button ng-click="selectBulkAction(action.id); openBulkActionsDialog($event);">
+		                    {{action.name}}
+				              </md-button>
+				            </md-menu-item>
+				          </md-menu-content>
+				        </md-menu>
+					</div>
+				<!-- /actions -->
+				</div>
+				<div class="table-responsive o-visible text-base">
+					<table class="table b-t b-light">
+						<thead>
+							<tr>
+								<th style="width:15px;">
+									<label class="md-check">
+										<input type="checkbox" ng-model="toggleSelectValue" ng-change="toggleAll(toggleSelectValue)">
+										<i class="blue"></i>
+									</label>
+								</th>
+								<th>usuários</th>
+								<th class="text-center">último login</th>
+								<th style="max-width:115px;" class="text-center">
+									ativar/desativar
+								</th>
+								<th style="max-width:115px;" class="text-center">
+									administrador
+								</th>
+								<th style="width:30px;"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="person in persons" ng-click="loadPerson(person)">
+								<td>
+									<label class="md-check p-t-sm" ng-if="person.id != app.initData.person.id">
+										<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
+										<i class="blue"></i>
+									</label>
+								</td>
+								<td class="clearfix">
+		              <span class="pull-left thumb-sm avatar m-r">
+		                <div back-img="{{person.imageSmallId}}" 
+											class="bg-cover m-t-sm bg-img bg-cover-round pull-left m-r m-t-n-xxs m-b-n-xxs pos-rlt b-t-sm"
+											title="{{person.name}}">
+										</div>
+		              </span>
+		              <span class="clear">
+		                <span class="text-md font-bold">{{person.name}}</span>
+		                <div class="text-muted clear text-ellipsis">{{person.username}} | {{person.email}}</div>
+		              </span>
+								</td>
+								<td class="text-center" ng-if="!person.lastLogin"> - </td>
+								<td class="text-center" ng-if="person.lastLogin">{{person.lastLogin | fromNow3}}</td>
+								<td class="text-center">
+									<div ng-if="person.id != app.person.id" class="dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+									 	<label class="md-switch p-t-sm">
+			              	<input type="checkbox" ng-change="app.enableDisablePerson(person)" ng-model="person.user.enabled">
+			              	<i class="blue"></i>
+			            	</label>
+									</div>
+								</td>
+								<td class="text-center">
+									<label class="md-check p-t-sm" ng-if="person.id != app.person.id">
+										<input type="checkbox" ng-model="person.selected" ng-click="app.stopPropagation($event)">
+										<i class="blue"></i>
+									</label>
+								</td>
+								<td>
+									<div ng-if="person.id != app.person.id" class="p-t-sm dropdown hidden-sm" dropdown ng-click="app.stopPropagation($event)">
+										<a href angular-ripple class="dropdown-toggle border-radius-50 i-24 mdi-navigation-more-vert mdi" dropdown-toggle>
+										</a>
+										<!-- dropdown -->
+										<ul class="dropdown-menu dropdown-menu-scale animated w-sm pull-right">
+											<li > <a href> Reconfigurar a senha </a> </li>
+											<!-- <li class="divider"></li> -->
+											<li> <a ng-click="openDeletePersonRole(role.id);"> Alterar permissões </a> </li>
+										</ul>
+										<!-- / dropdown -->
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+			<!-- /end of user panel list -->
+
+			<!-- new user panel -->
+		<div class="panel material-shadow-light panel-card block-600 m-auto" ng-if="creating">
+			<div class="panel-heading h4 wrapper-md">
+				<span>Novo usuário</span>
+			</div>
+			<div class="panel-body wrapper-md">
+				<div class="row pos-rlt">
+					<div class="w-xxl m-auto">
+						<div class="md-form-group md-neutral-theme text-lg">
+							<input class="md-input text-xl" ng-model="person.name">
+							<label>Nome completo</label>
+						</div>
+						<div class="md-form-group md-neutral-theme">
+							<input class="md-input" ng-model="person.email" required>
+							<label>Email</label>
+						</div>
+						<div class="md-form-group md-neutral-theme">
+							<input class="md-input" ng-model="person.username" required>
+							<label>Usuário</label>
+						</div>
+						<div class="md-form-group md-neutral-theme">
+							<input type="password" class="md-input" ng-model="person.password" required>
+							<label>Senha</label>
+							<span class="md-input-msg right">(opcional) se não fornecido, criaremos uma senha automaticamente.</span>
+						</div>
+					</div>
+				</div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="m-b text-muted text-md text-u-c">Notificar usuário</div>
+						<p>
+							<label class="md-switch">
+								<input type="checkbox" ng-model="person.emailNotification"
+								ng-true-value="true" ng-false-value="false">
+								<i class="blue"></i>
+								Enviar link de configuração do perfil via email.
+							</label>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="m-t text-right text-lg" >
+				<button ui-sref="app.settings.users({'newUser': null, 'username': null})"
+				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+
+				<button ng-click="createPerson($event)"
+				md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
+			</div>
+		</div>
+			<!-- /new user panel-->
+
+			<!-- editing user panel -->
+			<div class="panel material-shadow-light panel-card block-600 m-auto animated fadeIn" ng-if="editing && selectedPerson">
+				<div class="panel-body wrapper-md p-t-none">
+					<div id="editing-user-profile" class="row">
+						<div class="profile-cover abstract-bg bg-cover pos-rlt m-l-n-xs m-r-n-xs o-h" style="border-radius:3px 3px 0 0;"
+						back-img-cover="{{selectedPerson.coverMediumId}}">
+							<div class="cover-abstract-mask ng-scope" ng-if="!selectedPerson.coverLargeId">
+							</div>
+							<div back-img="{{selectedPerson.imageSmallId}}" class="bg-cover bg-img-xl bg-cover-round m-l-lg m-t-lg pos-rlt" title="{{selectedPerson.name}}">
+								<div id="image-button-wrapper">
+									<div id="image-button" class="custom-btn bg-img-xl border-radius-50">
+										<i class="mdi mdi-pencil text-3x text-white image-edit" style="margin: 40px;"></i>
+										<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+									</div>
+								</div>
+							</div>
+							
+							<div id="settings-users-name" class="pos-rlt text-white text-xl p-l-lg p-r-lg p-t p-b text-xl"
+							style="text-shadow:1px 1px 1px #000; margin-top: -90px; margin-left: 140px;">
+							{{selectedPerson.name}}
+							</div>
+							
+							<div id="cover-image-button" style="overflow:hidden;" 
+							 class="pos-abt right-0 bottom-0 m-r-xs m-b-xs wrapper-sm">
+								<div style="z-index: 2; position: absolute; width: 100%;height:100%;overflow:hidden; vertical-align: bottom;">
+									<input style="opacity: 0;cursor:pointer" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
+								</div>	
+								<span class="p-r-xs text-md" style="text-shadow:1px 1px 1px #000; vertical-align: sub;">
+									Trocar imagem de capa
+								</span>
+								<i class="mdi mdi-camera text-2x icon-text-shadow v-middle p-r-xs"></i>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="line line-dashed b-b line-lg pull-in"></div> -->
+					<!-- user's data -->
+					<div class="wrapper">
+						<form class="bs-example form-horizontal text-md">
+							<div class="form-group m-b-n">
+								<label class="col-lg-2 control-label font-bold">Usuário</label>
+								<div class="col-lg-10">
+									<div class="form-control b-none text-md">
+										{{selectedPerson.username}}
+									</div>
+								</div>
+							</div>
+							<div class="form-group m-b-n">
+								<label class="col-lg-2 control-label font-bold">Email</label>
+								<div class="col-lg-10">
+									<div class="form-control b-none text-md" ng-class="{'font-italic text-muted': !selectedPerson.email}">
+										{{selectedPerson.email ? selectedPerson.email : 'Usuário ainda não forneceu seu email.'}}
+									</div>
+								</div>
+							</div>
+							<div class="form-group m-b-n">
+								<label class="col-lg-2 control-label font-bold">Biografia</label>
+								<div class="col-lg-10">
+									<div class="form-control b-none text-md" ng-class="{'font-italic text-muted': !selectedPerson.bio}">
+										{{selectedPerson.bio ? selectedPerson.bio : 'Usuário ainda não possui biografia.'}}
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<!-- /user's data -->
+				</div>
+				<div class="m-t text-right text-lg" >
+					<button ui-sref="app.settings.users({'newUser': null, 'username': null})"
+					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+
+					<button ng-if="creating" ng-click="createPerson()"
+					md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Salvar</button>
+				</div>
+			</div>
+			<!-- /editing user panel -->
+
+		</div>
+		<!--  /wrapper -->
+
+		<!-- create user -->
+	<md-button ng-hide="creating || editing"
+		id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+		ui-sref="app.settings.users({'newUser': true})" ng-if="app.writableStations && app.writableStations.length > 0 && app.isLogged"
+		aria-label="Novo usuário">
+		<i class="mdi mdi-plus"></i>
+	</md-button>
+
+</div>
+<!-- /settings-users -->
+
+ 	<script type="text/ng-template" id="conflicting_person.html">
+ 		<md-dialog aria-label="Adicionar notícia">
+			<md-content>
+			  <div class="wrapper text-center">
+		    		<div class="h3 m-b-lg">
+							Esta rede já possui um usuário cadastrado <br> com estes dados!
+						</div>
+			      <div back-img="{{app.conflictingData.conflictingPerson.imageSmallId}}" 
+			      class="bg-cover bg-img-lg bg-cover-round m-auto" 
+			      title="{{app.conflictingData.conflictingPerson.name}}"></div>
+			      <div class="h3 m-b-xs">{{app.conflictingData.conflictingPerson.name}}</div>
+			      <div class="h4">
+			      {{app.conflictingData.conflictingPerson.username}} | {{app.conflictingData.conflictingPerson.email}}
+		    		</div>
+		    		<div class="m-t-lg">
+		    			<md-button ng-click="cancel()" md-ink-ripple class="text-xl font-bold p-l-sm p-r-sm p-t-xs p-b-xs md-button md-ink-ripple">Fechar</mg-button>
+		    		</div>
+		  		</div>
+		  </md-content>
+		</md-dialog>
+ 	</script>
+
+ 	<script type="text/ng-template" id="bulk_change_permissions.html">
+   	<md-dialog aria-label="Editar permissão" id="user-permissions-dialog">
+	  	<md-content>
+				<div class="wrapper">
+					<div class="wrapper-xxs text-md">
+						Estações:
+					</div>
+					<div class="wrapper-sm stations-permissions-dialog-list m-t-sm" >
+						<ul class="no-style">
+							<li ng-repeat="station in pe.adminStations" class="clearfix wrapper-xxs font-thin">
+								<span class="pull-right">
+									<label class="md-check">
+										<input type="checkbox" ng-model="station.selected" ng-change="station.selected = true;">
+										<i class="blue"></i>
+									</label>
+								</span>
+					      <span class="clear m-r-xxl">
+					        <span>{{station.stationName}}</span>
+					        <small class="text-muted clear text-ellipsis">
+					        	Visibilidade: {{(station.visibility == 'UNRESTRICTED') ? 'Pública' : 'Privada'}} | Todos podem escrever: {{(station.writable) ? 'Sim' : 'Não'}}
+					        </small>
+					      </span>
+					    </li>
+						</ul>
+					</div>
+					<div class="wrapper-xxs text-base m-t-sm">
+						<span class="text-md">Permissões:</span>
+						<ul class="station-permissions m-t">
+							<li class="m-r">
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="pe.stationRole" value="READER">
+									<i class="blue"></i>
+									Leitor
+								</label>
+							</p>
+							<li class="m-r">
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="pe.stationRole" value="WRITER">
+									<i class="blue"></i>
+									Escritor
+								</label>
+							</p>
+							<li class="m-r">
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="pe.stationRole" value="EDITOR">
+									<i class="blue"></i>
+									Editor
+								</label>
+							</p>
+							<li class="m-r">
+								<label class="md-check">
+									<input type="radio" name="c" ng-model="pe.stationRole" value="ADMIN">
+									<i class="blue"></i>
+									Administrador
+								</label>
+							</p>
+						</ul>
+					</div>
+					<div class="pos-abt bottom-0 right-0 wrapper-sm">
+						<button ng-click="pe.applyPermissions(pe.adminStations, pe.stationRole)" md-ink-ripple class="md-btn md-flat btn-fw">Confirmar</button>
+						<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+					<div>
+				</div>
+		  </md-content>
+		</md-dialog>
+ 	</script>
+
+ 	<script type="text/ng-template" id="bulk_change_permissions_back.html">
+		<md-dialog aria-label="Adicionar notícia" id="user-remove-dialog">
+			<md-content>
+				<div class="wrapper">
+					<div class="wrapper-xxs stations-permissions-dialog-list m-t-sm" >
+						<ul class="no-style">
+							<li ng-repeat="station in app.adminStations" class="clearfix wrapper-xxs font-thin" >
+					      <span class="pull-right">
+									<a angular-ripple class="border-radius-50 text-lg p-sm mdi-plus mdi"></a>
+								</span>
+					      <span class="clear m-r-xxl">
+					        <span>{{station.stationName}}</span>
+					        <small class="text-muted clear text-ellipsis" ng-bind-html="station.stationName">
+					        </small>
+					      </span>
+					    </li>
+						</ul>
+					</div>
+					<div class="pos-abt bottom-0 right-0 wrapper-sm">
+						<button ng-click="cancel()" md-ink-ripple class="md-btn md-flat btn-fw">Fechar</button>
+					<div>
+				</div>
+			</md-content>
+		</md-dialog>
+	</script>
+
+ 	<script type="text/ng-template" id="confirm_no_person_selected.html">
+   	<md-dialog aria-label="Nenum usuário selecionado">
+	  	<md-content>
+	  		<div class="wrapper">
+	  			<div class="h3 wrapper-sm m-t-md text-center">Nenhum usuário foi selecionado.</div>
+					<div class="m-t text-center wrapper-sm text-lg">
+						<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
+					<div>
+				</div>
+		  </md-content>
+		</md-dialog>
+ 	</script>
+
+ 	<script type="text/ng-template" id="confirm_bulk_action.html">
+ 		<md-dialog aria-label="Confimar alterações">
+	  	<md-content>
+ 				<div class="wrapper">
+						<div class="text-lg wrapper-sm m-t-md text-center">
+							{{pe.bulkActionSelected == 2? 
+							     							'Tem certeza que deseja habilitar os usuários selecionados?':
+							     							'Tem certeza que deseja desativar os usuários selecionados?'
+							     							}}
+						</div>
+						<div class="m-t text-center wrapper-sm text-lg">
+							<button ng-click="pe.activateDeactivateUsers()" md-ink-ripple class="md-btn md-flat btn-fw m-r">Confirmar</button>
+						<button ng-click="cancel()" md-ink-ripple class="btn-muted md-btn md-flat btn-fw">Fechar</button>
+					<div>
+				</div>
+ 			</md-dialog>
+ 		</md-content>
+ 	</script>

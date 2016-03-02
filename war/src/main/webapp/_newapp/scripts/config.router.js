@@ -69,6 +69,25 @@ angular.module('app')
                 resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-stations.js']),
                 controller: 'SettingsStationsCtrl'
               })
+              .state('app.users', {
+                  url: '/users?username?newUser',
+                  templateUrl: '/views/settings/settings-users.html?',
+                  data : { titleTranslate: 'titles.USERS', title: 'Usuários', folded: false },
+                  resolve: {
+                    deps: ['$ocLazyLoad',
+                      function( $ocLazyLoad ){
+                        return $ocLazyLoad.load(['angularFileUpload', 'angularFileUpload', '/scripts/controllers/settings/settings-users.js?']);
+                    }]
+                  }
+                  , controller:'SettingsUsersCtrl'
+              })
+              // chart
+              .state('app.chart', {
+                url: '/chart',
+                templateUrl: '/views/ui/chart/chart.html',
+                data : { title: 'Charts' },
+                resolve: load('/scripts/controllers/chart.js')
+              })
               .state('app.network', {
                 url: '/network',
                 templateUrl: '/views/settings/settings-network.html',

@@ -12,6 +12,11 @@
 		"CATEGORIES": "Categorias",
 		"USER": "Usuário",
 		"USERS": "Usuários",
+		"PERMISSION": "Permissão",
+		"PERMISSIONS": "Permissões",
+		"PUBLICATIONS": "Publicações",
+		"COMMENTS": "Comentários",
+		"MEDIA_LIBRARY": "Biblioteca de mídia",
 		"CONFIGURATION": "Configurações",
 		"STATS": "Estatísticas",
 		"SETTINGS": "Configurações",
@@ -42,7 +47,12 @@
 	},
 	"settings":{
 		"aside":{
-			"SETTINGS": "Configurações"
+			"DASHBOARD": "Painel",
+			"CONTENT": "Conteúdo",
+			"SETTINGS": "Configurações",
+			"MY_PROFILE": "Meu perfil",
+			"BOOKMARKS": "Minhas leituras",
+			"Notifications": "Notificações"
 		},
 		"network":{
 			"tabs": {
