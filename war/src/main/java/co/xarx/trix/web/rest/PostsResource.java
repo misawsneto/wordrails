@@ -170,8 +170,8 @@ public class PostsResource {
 												   @QueryParam("stationIds") String stationIds,
 												   @QueryParam("personId") Integer personId,
 												   @QueryParam("publicationType") String publicationType,
-												   @QueryParam("noHighlight") Boolean noHighlight,
-												   @QueryParam("sortByDate") Boolean sortByDate,
+												   @QueryParam("noHighlight") boolean noHighlight,
+												   @QueryParam("sortByDate") boolean sortByDate,
 												   @QueryParam("page") Integer page,
 												   @QueryParam("size") Integer size) {
 

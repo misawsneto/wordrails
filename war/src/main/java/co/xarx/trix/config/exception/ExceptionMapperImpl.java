@@ -26,7 +26,10 @@ public class ExceptionMapperImpl implements ExceptionMapper<Throwable> {
 	public Response toResponse(Throwable throwable) {
 		Status status;
 
-        log.error("NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" + throwable.getMessage(), throwable);
+        log.error("LOG FATAL ERROR\n" +
+				"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
+				"MESSAGE: " + throwable.getMessage(),
+				throwable);
 
 		if (throwable instanceof EntityNotFoundException) {
 			status = Status.NOT_FOUND;

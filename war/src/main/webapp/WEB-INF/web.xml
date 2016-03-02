@@ -60,7 +60,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			co.xarx.trix.config.spring
+			co.xarx.trix.config
 		</param-value>
 	</context-param>
 

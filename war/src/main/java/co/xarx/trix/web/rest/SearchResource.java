@@ -22,12 +22,16 @@ import java.util.List;
 @Component
 public class SearchResource {
 
-	@Autowired
 	private PostSearchService postSearchService;
-	@Autowired
 	private PersonRepository personRepository;
-	@Autowired
 	private AuthService authProvider;
+
+	@Autowired
+	public SearchResource(PostSearchService postSearchService, PersonRepository personRepository, AuthService authProvider) {
+		this.postSearchService = postSearchService;
+		this.personRepository = personRepository;
+		this.authProvider = authProvider;
+	}
 
 	@GET
 	@Path("/bookmarks")
