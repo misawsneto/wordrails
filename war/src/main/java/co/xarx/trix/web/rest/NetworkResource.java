@@ -160,7 +160,8 @@ public class NetworkResource {
 		try {
 			Network network = new Network();
 			network.name = networkCreate.name;
-			network.setTenantId(networkCreate.subdomain);
+//			network.setTenantId(networkCreate.subdomain);
+			network.tenantId = networkCreate.subdomain;
 
 			//Station Default Taxonomy
 			Taxonomy nTaxonomy = new Taxonomy();

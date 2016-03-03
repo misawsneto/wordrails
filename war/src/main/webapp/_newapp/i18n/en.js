@@ -27,7 +27,11 @@
 		"SEARCH": "Search",
 		"YES": "Yes",
 		"NO": "No",
-		"CANCEL": "Cancel"
+		"CANCEL": "Cancel",
+		"PUBLISHED": "Published",
+		"SCHEDULED": "Scheduled",
+		"DRAFTS": "Drafts",
+		"TRASH": "Trash"
 	},
 	"actions":{
 		"ADD": "Add",

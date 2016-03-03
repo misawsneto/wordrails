@@ -92,8 +92,14 @@ angular.module('app')
                 url: '/network',
                 templateUrl: '/views/settings/settings-network.html',
                 data : { titleTranslate: 'titles.NETWORK', title: 'Rede', folded: false },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
-                    '/styles/theming.css']),
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js']),
+                controller: 'SettingsNetworkCtrl'
+              })
+              .state('app.publications', {
+                url: '/publications',
+                templateUrl: '/views/settings/settings-publications.html',
+                data : { titleTranslate: 'titles.PUBLICATIONS', title: 'Rede', folded: false },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js']),
                 controller: 'SettingsNetworkCtrl'
               })
               .state('app.colors', {
