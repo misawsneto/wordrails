@@ -8,7 +8,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
-public interface CellRepository extends TrixRepository<Cell> {
+public interface CellRepository extends DatabaseRepository<Cell> {
 
 	@RestResource(exported=false)
 	@Query("select cell from Cell cell " +

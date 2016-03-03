@@ -1,4 +1,4 @@
-package co.xarx.trix.domain.query.statement;
+package co.xarx.trix.domain.page.query.statement;
 
 import java.util.Map;
 

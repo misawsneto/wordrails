@@ -1,7 +1,6 @@
-package co.xarx.trix.domain.query.statement;
+package co.xarx.trix.domain.page.query.statement;
 
 import co.xarx.trix.domain.BaseEntity;
-import co.xarx.trix.domain.query.Command;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package co.xarx.trix.services.elasticsearch;
 
-import co.xarx.trix.domain.query.CommandBuilder;
-import co.xarx.trix.domain.query.statement.PostStatement;
+import co.xarx.trix.domain.page.query.CommandBuilder;
+import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.services.auth.StationPermissionService;
 import co.xarx.trix.util.Constants;
 import org.apache.commons.collections.CollectionUtils;

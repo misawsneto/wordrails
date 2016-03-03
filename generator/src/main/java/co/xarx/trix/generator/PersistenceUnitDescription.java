@@ -13,6 +13,8 @@ public class PersistenceUnitDescription {
 
 	private String packageToScan;
 
+	private List<EntityDescription> entities;
+
 	private Map<Class<?>, List<QueryDescription>> queries;
 	private Map<Class<?>, Class<?>> repositories;
 	private Map<Class<?>, EntityDescription> projections;
@@ -30,9 +32,15 @@ public class PersistenceUnitDescription {
 		queries = repositoryExtractor.getRepositoryQueries();
 		repositories = repositoryExtractor.getRepositoryEntities();
 		projections = projectionExtractor.getProjections();
+
+		entities = getEntityDescriptions();
 	}
 
 	public List<EntityDescription> getEntities() {
+		return entities;
+	}
+
+	private List<EntityDescription> getEntityDescriptions() {
 		EntityExtractor entityExtractor = new EntityExtractor();
 		Set<Class<?>> entityClasses = entityExtractor.getEntityClasses(packageToScan);
 		Map<Class<?>, EntityDescription> entityMap = entityExtractor.extractEntities(entityClasses, queries,

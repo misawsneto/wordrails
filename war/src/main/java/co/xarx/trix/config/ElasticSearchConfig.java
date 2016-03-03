@@ -1,6 +1,6 @@
 package co.xarx.trix.config;
 
-import co.xarx.trix.domain.query.ExecutorFactory;
+import co.xarx.trix.domain.page.query.ExecutorFactory;
 import co.xarx.trix.elasticsearch.ESRepositoryFactoryBean;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;

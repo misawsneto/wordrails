@@ -15,7 +15,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import java.util.List;
 
 @EventLoggableRepository
-public interface PostRepository extends TrixRepository<Post>, CustomPostRepository {
+public interface PostRepository extends DatabaseRepository<Post>, CustomPostRepository {
 
 	@PostAuthorize("hasPermission(returnObject, 'read')")
 	@Query("SELECT post FROM Post post where post.slug = :slug and post is not null")

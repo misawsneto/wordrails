@@ -3,8 +3,8 @@ package co.xarx.trix.services;
 import co.xarx.trix.domain.Identifiable;
 import co.xarx.trix.domain.page.Block;
 import co.xarx.trix.domain.page.BlockImpl;
-import co.xarx.trix.domain.query.*;
-import co.xarx.trix.domain.query.statement.Statement;
+import co.xarx.trix.domain.page.query.*;
+import co.xarx.trix.domain.page.query.statement.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

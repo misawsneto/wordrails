@@ -1,8 +1,8 @@
-package co.xarx.trix.domain.query.statement;
+package co.xarx.trix.domain.page.query.statement;
 
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.query.Command;
-import co.xarx.trix.domain.query.CommandBuilder;
+import co.xarx.trix.domain.page.query.Command;
+import co.xarx.trix.domain.page.query.CommandBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

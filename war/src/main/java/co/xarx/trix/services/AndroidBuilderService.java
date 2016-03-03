@@ -1,7 +1,7 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.domain.AndroidApp;
-import co.xarx.trix.persistence.AndroidAppRepository;
+import co.xarx.trix.domain.DBAndroidApp;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.StreamGobbler;
 import com.github.slugify.Slugify;
@@ -43,12 +43,10 @@ public class AndroidBuilderService {
 	private static final String BUILDS_DIR = "builder/builds/";
 
 	@Autowired
-	private AndroidAppRepository androidAppRepository;
-	@Autowired
 	private AmazonCloudService amazonCloudService;
 
 
-	public void run(String configPath, AndroidApp androidApp) throws Exception {
+	public File run(String configPath, AndroidApp androidApp) throws Exception {
 		String separator = "/";
 		if (configPath.endsWith("/")) {
 			separator = "";
@@ -63,11 +61,11 @@ public class AndroidBuilderService {
 		log.debug(pullResult.toString());
 
 		File templateProjectDir = new File(configPath + separator + DEFAULT_PROJECT_NAME);
-		File projectDir = new File(configPath + separator + RELEASES_DIR, androidApp.projectName);
-		File buildDir = new File(configPath + separator + BUILDS_DIR, androidApp.projectName);
+		File projectDir = new File(configPath + separator + RELEASES_DIR, androidApp.getProjectName());
+		File buildDir = new File(configPath + separator + BUILDS_DIR, androidApp.getProjectName());
 		File resourcesDir = new File(buildDir.getAbsolutePath(), "resources");
 		File apk = new File(projectDir, "/app/build/outputs/apk/app-production-release.apk");
-		String packageName = ROOT_PACKAGE + "." + androidApp.packageSuffix;
+		String packageName = ROOT_PACKAGE + "." + androidApp.getPackageSuffix();
 
 		if (pullResult.getMergeResult().getMergeStatus() != MergeResult.MergeStatus.ALREADY_UP_TO_DATE
 				&& !apk.exists()) {
@@ -84,19 +82,11 @@ public class AndroidBuilderService {
 			throw new Exception("Build failed!");
 		}
 
-		String hash = amazonCloudService.uploadAPK(apk, apk.length(), "application/vnd.android.package-archive", false);
-		String fileUrl = amazonCloudService.getPublicApkURL(hash);
-
-		androidApp.apkUrl = fileUrl;
-		androidAppRepository.save(androidApp);
-
-		log.debug(fileUrl);
-
-		log.debug("Done!");
+		return apk;
 	}
 
 	private Collection<File> createProject(AndroidApp androidApp, File projectDir, File templateProjectDir, File resourcesDir, String packageName) throws Exception {
-		log.debug("Creating App \"" + androidApp.appName + "\"...");
+		log.debug("Creating App \"" + androidApp.getAppName() + "\"...");
 
 		if (projectDir.exists()) {
 			FileUtils.deleteDirectory(projectDir);
@@ -123,8 +113,8 @@ public class AndroidBuilderService {
 
 		File drawableDir = new File(projectDir, "/app/src/main/res");
 
-		if(androidApp.icon != null) {
-			String originalUrl = amazonCloudService.getPublicImageURL(androidApp.icon.hash);
+		if(androidApp.getIcon() != null) {
+			String originalUrl = amazonCloudService.getPublicImageURL(androidApp.getIcon().hash);
 			File originalIcon = FileUtil.downloadFile(new File(drawableDir, "ic_launcher.png"), originalUrl);
 
 			BufferedImage bufferedImage = ImageIO.read(originalIcon);
@@ -133,29 +123,29 @@ public class AndroidBuilderService {
 
 			File mdpi = new File(drawableDir, "drawable-mdpi/ic_launcher.png");
 			if(mdpi.createNewFile()) {
-				createResizableImage(mdpi, bufferedImage, AndroidApp.MDPI_SIZE, extension);
+				createResizableImage(mdpi, bufferedImage, DBAndroidApp.MDPI_SIZE, extension);
 			}
 			File hdpi = new File(drawableDir, "drawable-hdpi/ic_launcher.png");
 			if(hdpi.createNewFile()) {
-				createResizableImage(hdpi, bufferedImage, AndroidApp.HDPI_SIZE, extension);
+				createResizableImage(hdpi, bufferedImage, DBAndroidApp.HDPI_SIZE, extension);
 			}
 			File xhdpi = new File(drawableDir, "drawable-xhdpi/ic_launcher.png");
 			if(xhdpi.createNewFile()) {
-				createResizableImage(xhdpi, bufferedImage, AndroidApp.XHDPI_SIZE, extension);
+				createResizableImage(xhdpi, bufferedImage, DBAndroidApp.XHDPI_SIZE, extension);
 			}
 			File xxhdpi = new File(drawableDir, "drawable-xxhdpi/ic_launcher.png");
 			if(xxhdpi.createNewFile()) {
-				createResizableImage(xxhdpi, bufferedImage, AndroidApp.XXHDPI_SIZE, extension);
+				createResizableImage(xxhdpi, bufferedImage, DBAndroidApp.XXHDPI_SIZE, extension);
 			}
 			File xxxhdpi = new File(drawableDir, "drawable-xxxhdpi/ic_launcher.png");
 			if(xxxhdpi.createNewFile()) {
-				createResizableImage(xxxhdpi, bufferedImage, AndroidApp.XXXHDPI_SIZE, extension);
+				createResizableImage(xxxhdpi, bufferedImage, DBAndroidApp.XXXHDPI_SIZE, extension);
 			}
 		}
 
 		FileUtils.copyDirectory(resourcesDir, new File(projectDir + "/app/src/main/res"));
 		FileUtils.moveDirectory(new File(projectDir.getAbsolutePath() + "/app/src/main/java/" + DEFAULT_PACKAGE_NAME.replaceAll("\\.", "/")), new File(projectDir.getAbsolutePath() + "/app/src/main/java/" + packageName.replaceAll("\\.", "/")));
-		FileUtils.moveFile(new File(projectDir.getAbsolutePath() + "/" + DEFAULT_PROJECT_NAME + ".iml"), new File(projectDir.getAbsolutePath() + "/" + androidApp.projectName + ".iml"));
+		FileUtils.moveFile(new File(projectDir.getAbsolutePath() + "/" + DEFAULT_PROJECT_NAME + ".iml"), new File(projectDir.getAbsolutePath() + "/" + androidApp.getProjectName() + ".iml"));
 
 		return FileUtils.listFiles(new File(projectDir.getAbsolutePath() + "/app"), new String[]{"java", "xml", "gradle", "properties", "iml"}, true);
 	}
@@ -171,24 +161,24 @@ public class AndroidBuilderService {
 		File listingDir = new File(projectDir.getAbsolutePath(), "/app/src/release/play/pt-BR/listing");
 		listingDir.mkdirs();
 
-		if (!isNullOrEmpty(androidApp.appName)) {
+		if (!isNullOrEmpty(androidApp.getAppName())) {
 			File titleFile = new File(listingDir.getAbsolutePath(), "title");
-			FileUtils.writeStringToFile(titleFile, androidApp.appName);
+			FileUtils.writeStringToFile(titleFile, androidApp.getAppName());
 		}
 
-		if (!isNullOrEmpty(androidApp.fullDescription)) {
+		if (!isNullOrEmpty(androidApp.getFullDescription())) {
 			File fullDescriptionFile = new File(listingDir.getAbsolutePath(), "fulldescription");
-			FileUtils.writeStringToFile(fullDescriptionFile, androidApp.fullDescription);
+			FileUtils.writeStringToFile(fullDescriptionFile, androidApp.getFullDescription());
 		}
 
-		if (!isNullOrEmpty(androidApp.shortDescription)) {
+		if (!isNullOrEmpty(androidApp.getShortDescription())) {
 			File shortDescriptionFile = new File(listingDir.getAbsolutePath(), "shortdescription");
-			FileUtils.writeStringToFile(shortDescriptionFile, androidApp.shortDescription);
+			FileUtils.writeStringToFile(shortDescriptionFile, androidApp.getShortDescription());
 		}
 
-		if (!isNullOrEmpty(androidApp.videoUrl)) {
+		if (!isNullOrEmpty(androidApp.getVideoUrl())) {
 			File videoFile = new File(listingDir.getAbsolutePath(), "video");
-			FileUtils.writeStringToFile(videoFile, androidApp.videoUrl);
+			FileUtils.writeStringToFile(videoFile, androidApp.getVideoUrl());
 		}
 
 		copyFileToDir(buildPath + "/icon.png", listingDir.getAbsolutePath() + "/icon");
@@ -217,12 +207,12 @@ public class AndroidBuilderService {
 
 	private void refactorFile(File file, AndroidApp androidApp, String packageName) throws Exception {
 		String content = FileUtils.readFileToString(file, Charsets.UTF_8.toString()).replace("DEBUG = true", "DEBUG = false")
-				.replaceAll(DEFAULT_KEY_ALIAS, androidApp.keyAlias)
+				.replaceAll(DEFAULT_KEY_ALIAS, androidApp.getKeyAlias())
 				.replaceAll(DEFAULT_PACKAGE_NAME, packageName)
-				.replaceAll(DEFAULT_APP_NAME, androidApp.appName)
-				.replaceAll(DEFAULT_PROJECT_NAME, androidApp.projectName)
-				.replaceAll(DEFAULT_HOST, androidApp.host.replace("http://", ""));
-		if (androidApp.host.equals("demo.trix.rocks")) {
+				.replaceAll(DEFAULT_APP_NAME, androidApp.getAppName())
+				.replaceAll(DEFAULT_PROJECT_NAME, androidApp.getProjectName())
+				.replaceAll(DEFAULT_HOST, androidApp.getHost().replace("http://", ""));
+		if (androidApp.getHost().equals("demo.trix.rocks")) {
 			content = content.replace("MULTI_NETWORK = false", "MULTI_NETWORK = true");
 		} else {
 			content = content.replace("MULTI_NETWORK = true", "MULTI_NETWORK = false");

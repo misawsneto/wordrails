@@ -1,7 +1,7 @@
-package co.xarx.trix.domain.query;
+package co.xarx.trix.domain.page.query;
 
 import co.xarx.trix.domain.page.Block;
-import co.xarx.trix.domain.query.statement.Statement;
+import co.xarx.trix.domain.page.query.statement.Statement;
 
 import java.util.List;
 import java.util.Map;

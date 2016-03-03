@@ -1,9 +1,9 @@
-package co.xarx.trix.domain.query;
+package co.xarx.trix.domain.page.query;
 
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.domain.page.Block;
-import co.xarx.trix.domain.query.statement.AbstractStatement;
+import co.xarx.trix.domain.page.query.statement.AbstractStatement;
 import lombok.AccessLevel;
 import lombok.Setter;
 

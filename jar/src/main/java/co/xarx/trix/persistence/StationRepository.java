@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
-public interface StationRepository extends TrixRepository<Station> {
+public interface StationRepository extends DatabaseRepository<Station> {
 
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")

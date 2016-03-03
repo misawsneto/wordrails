@@ -7,12 +7,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
 @NoRepositoryBean
-public interface TrixRepository<T> extends JpaRepository<T, Integer>, QueryDslPredicateExecutor<T> {
+@RepositoryRestResource(exported = false)
+public interface DatabaseRepository<T> extends JpaRepository<T, Integer>, QueryDslPredicateExecutor<T> {
 
 	@Override
 	@RestResource(exported = false)

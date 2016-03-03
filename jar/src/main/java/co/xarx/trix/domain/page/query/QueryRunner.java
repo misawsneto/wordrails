@@ -1,4 +1,4 @@
-package co.xarx.trix.domain.query;
+package co.xarx.trix.domain.page.query;
 
 import co.xarx.trix.domain.page.Block;
 
