@@ -218,6 +218,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".text { " + contrast + " !important }", index);
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".background { background-color: " + color + "; " + contrast + " }", index + 1);
       index += 2;
+
       if(cssname === 'warn' && name === 'default'){
         stylesheet.insertRule("md-toast.md-" + cssname + "-" + name + " > div { background-color: " + color + "!important; color: #f5f5f5 }", index);
         index ++;

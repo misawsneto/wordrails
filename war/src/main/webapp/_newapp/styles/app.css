@@ -7447,6 +7447,67 @@ bg-none {
   z-index: 5;
 }
 
+.hbox {
+  display: table;
+  width: 100%;
+  height: 100%;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.hbox .col {
+  display: table-cell;
+  float: none;
+  height: 100%;
+  vertical-align: top;
+}
+
+.v-middle {
+  vertical-align: middle !important;
+}
+
+.v-top {
+  vertical-align: top !important;
+}
+
+.v-bottom {
+  vertical-align: bottom !important;
+}
+
+.vbox {
+  position: relative;
+  display: table;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  border-spacing: 0;
+}
+
+.vbox .row-row {
+  display: table-row;
+  height: 100%;
+}
+
+.vbox .row-row .cell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ie .vbox .row-row .cell {
+  display: table-cell;
+}
+
+.vbox .row-row .cell .cell-inner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
 /* /general */
 
 /* toast */
@@ -7506,6 +7567,10 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
 .settings-list > li.active a.settings-items,
 .settings-list > li a.settings-items:hover {
   background-color: rgba(0, 0, 0, 0.12);
+}
+
+.settings-list > li.active a.settings-items {
+  font-weight: 700;
 }
 
 /* /settings */

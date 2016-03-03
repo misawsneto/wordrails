@@ -27,7 +27,11 @@
 		"SEARCH": "Buscar",
 		"YES": "Sim",
 		"NO": "Não",
-		"CANCEL": "Cancel"
+		"CANCEL": "Cancel",
+		"PUBLISHED": "Publicados",
+		"SCHEDULED": "Agendados",
+		"DRAFTS": "Rascunhos",
+		"TRASH": "Lixeira"
 	},
 	"actions":{
 		"ADD": "Adicionar",
