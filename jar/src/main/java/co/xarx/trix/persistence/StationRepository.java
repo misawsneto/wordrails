@@ -38,7 +38,7 @@ public interface StationRepository extends JpaRepository<Station, Integer>, Quer
 	boolean isUnrestricted(@Param("stationId") Integer stationId);
 
 	@RestResource(exported = false)
-	@Query("select station from Station station join station.personsStationRoles personRoles join personRoles.person person where (person.id = :personId or station.visibility = 'UNRESTRICTED') GROUP BY station")
+	@Query("select station from Station station join station.personsStationRoles personRoles join personRoles.person person where (person.id = :personId or station.visibility = 'UNRESTRICTED') GROUP BY station ORDER BY station.main desc, station.name")
 	List<Station> findByPersonId(@Param("personId") Integer personId);
 
 	@RestResource(exported = false)
