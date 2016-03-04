@@ -1,7 +1,7 @@
 package co.xarx.trix.config.database;
 
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.persistence.CustomPostRepositoryImpl;
+import co.xarx.trix.persistence.custom.CustomPostRepositoryImpl;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.repository.core.RepositoryMetadata;

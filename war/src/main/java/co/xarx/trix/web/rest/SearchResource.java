@@ -70,7 +70,7 @@ public class SearchResource {
 											 @QueryParam("page") Integer page,
 											 @QueryParam("size") Integer size,
 											 @QueryParam("personId") Integer personId,
-											 @QueryParam("sortByDate") Boolean sortByDate) {
+											 @QueryParam("sortByDate") boolean sortByDate) {
 
 		if (q == null) q = "";
 

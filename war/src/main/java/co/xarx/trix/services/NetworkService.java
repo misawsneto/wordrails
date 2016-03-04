@@ -1,5 +1,6 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.util.StringUtil;

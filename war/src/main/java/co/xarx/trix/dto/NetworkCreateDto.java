@@ -5,6 +5,6 @@ import co.xarx.trix.domain.Person;
 
 public class NetworkCreateDto extends Network {
 
-	public String subdomain;
+	public String newSubdomain;
 	public Person person;
 }

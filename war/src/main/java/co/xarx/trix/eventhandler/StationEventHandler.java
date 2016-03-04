@@ -194,6 +194,7 @@ public class StationEventHandler {
 
 			if(posts != null && posts.size() > 0){
 				List<Integer> ids = posts.stream().map(post -> post.id).collect(Collectors.toList());
+				queryPersistence.deleteAuthoritiesByStation(station.id);
 				queryPersistence.deleteCellsInPosts(ids);
 				queryPersistence.deleteCommentsInPosts(ids);
 				queryPersistence.deleteNotificationsInPosts(ids);

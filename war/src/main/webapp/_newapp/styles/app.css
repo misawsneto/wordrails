@@ -950,7 +950,7 @@ sup {
 .list-group-item {
   padding: 12px 16px;
   background: transparent;
-  border-color: rgba(110, 115, 120, 0.045);
+  border-color: rgba(115, 115, 115, 0.045);
   border-right-color: transparent;
   border-left-color: transparent;
 }
@@ -963,7 +963,7 @@ a.list-group-item:hover,
 a.list-group-item:focus,
 a.list-group-item.hover {
   color: inherit;
-  background-color: rgba(110, 115, 120, 0.075);
+  background-color: rgba(115, 115, 115, 0.075);
 }
 
 .list-group-item.media {
@@ -974,9 +974,9 @@ a.list-group-item.hover {
 .list-group-item.active:hover,
 .list-group-item.active:focus {
   color: inherit;
-  background-color: rgba(110, 115, 120, 0.075);
+  background-color: rgba(115, 115, 115, 0.075);
   border-color: transparent;
-  border-bottom-color: 1px solid rgba(110, 115, 120, 0.075);
+  border-bottom-color: 1px solid rgba(115, 115, 115, 0.075);
 }
 
 .list-group-item.active a,
@@ -986,11 +986,11 @@ a.list-group-item.hover {
 }
 
 .list-group-alt .list-group-item:nth-child(2n+2) {
-  background-color: rgba(110, 115, 120, 0.075);
+  background-color: rgba(115, 115, 115, 0.075);
 }
 
 .list-group-alt .list-group-item.active:nth-child(2n+2) {
-  background-color: rgba(110, 115, 120, 0.075);
+  background-color: rgba(115, 115, 115, 0.075);
 }
 
 .list-group-lg .list-group-item {
@@ -5850,6 +5850,14 @@ bg-none {
   padding: 32px;
 }
 
+.p-xl {
+  padding: 40px;
+}
+
+.p-xxl {
+  padding: 48px;
+}
+
 .p-10 {
   padding: 10px;
 }
@@ -7383,6 +7391,125 @@ bg-none {
 }
 
 /* /settings-color-selector */
+/* general */
+
+.font-500 {
+  font-weight: 500;
+}
+
+.animated {
+  -webkit-animation-duration: 0.3s!important;
+          animation-duration: 0.3s!important;
+}
+
+.animated3x {
+  -webkit-animation-duration: 0.3s!important;
+          animation-duration: 0.3s!important;
+}
+
+.animated5x {
+  -webkit-animation-duration: 0.5s!important;
+}
+
+.z-index-n-1 {
+  z-index: -1;
+}
+
+.z-index-n-2 {
+  z-index: -2;
+}
+
+.z-index-n-3 {
+  z-index: -3;
+}
+
+.z-index-n-4 {
+  z-index: -4;
+}
+
+.z-index-1 {
+  z-index: 1;
+}
+
+.z-index-2 {
+  z-index: 2;
+}
+
+.z-index-3 {
+  z-index: 3;
+}
+
+.z-index-4 {
+  z-index: 4;
+}
+
+.z-index-5 {
+  z-index: 5;
+}
+
+.hbox {
+  display: table;
+  width: 100%;
+  height: 100%;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.hbox .col {
+  display: table-cell;
+  float: none;
+  height: 100%;
+  vertical-align: top;
+}
+
+.v-middle {
+  vertical-align: middle !important;
+}
+
+.v-top {
+  vertical-align: top !important;
+}
+
+.v-bottom {
+  vertical-align: bottom !important;
+}
+
+.vbox {
+  position: relative;
+  display: table;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  border-spacing: 0;
+}
+
+.vbox .row-row {
+  display: table-row;
+  height: 100%;
+}
+
+.vbox .row-row .cell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ie .vbox .row-row .cell {
+  display: table-cell;
+}
+
+.vbox .row-row .cell .cell-inner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* /general */
+
 /* toast */
 
 md-toast {
@@ -7407,3 +7534,43 @@ md-toast {
 }
 
 /* /search */
+
+/* color-settings */
+
+div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
+  display: none;
+}
+
+/* /color-settings */
+
+/* settings */
+
+.settings-list {
+  padding: 0;
+  margin: 70px 0 16px;
+  list-style: none;
+}
+
+.settings-list > li {
+  width: 100%;
+  padding: 0;
+}
+
+.settings-list > li a.settings-items {
+  display: block;
+  width: inherit;
+  padding: 12px;
+  border-radius: 2px;
+  transition: background 0.15s ease-in-out;
+}
+
+.settings-list > li.active a.settings-items,
+.settings-list > li a.settings-items:hover {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.settings-list > li.active a.settings-items {
+  font-weight: 700;
+}
+
+/* /settings */

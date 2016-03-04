@@ -12,6 +12,11 @@
 		"CATEGORIES": "Categorias",
 		"USER": "Usuário",
 		"USERS": "Usuários",
+		"PERMISSION": "Permissão",
+		"PERMISSIONS": "Permissões",
+		"PUBLICATIONS": "Publicações",
+		"COMMENTS": "Comentários",
+		"MEDIA_LIBRARY": "Biblioteca de mídia",
 		"CONFIGURATION": "Configurações",
 		"STATS": "Estatísticas",
 		"SETTINGS": "Configurações",
@@ -22,7 +27,11 @@
 		"SEARCH": "Buscar",
 		"YES": "Sim",
 		"NO": "Não",
-		"CANCEL": "Cancel"
+		"CANCEL": "Cancel",
+		"PUBLISHED": "Publicados",
+		"SCHEDULED": "Agendados",
+		"DRAFTS": "Rascunhos",
+		"TRASH": "Lixeira"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -42,7 +51,12 @@
 	},
 	"settings":{
 		"aside":{
-			"SETTINGS": "Configurações"
+			"DASHBOARD": "Painel",
+			"CONTENT": "Conteúdo",
+			"SETTINGS": "Configurações",
+			"MY_PROFILE": "Meu perfil",
+			"BOOKMARKS": "Minhas leituras",
+			"Notifications": "Notificações"
 		},
 		"network":{
 			"tabs": {
@@ -54,7 +68,7 @@
 				"THEMING": "Aparência"
 			},
 			"settings":{
-				"NAME": "Nome",
+				"NAME": "Nome da rede",
 				"ALLOW_SIGNUP": "Permitir cadastro em estações públicas.",
 				"ADD_ROLES_ON_STARTUP": "Ao cadastrar usuário, criar permissões de leitura em todas as estações.",
 				"ALLOW_SOCIAL_LOGIN": "Autenticação através de redes sociais em estações públicas.",

@@ -1,11 +1,11 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.annotation.EventLoggableRepository;
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.custom.CustomPostRepository;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,9 +15,8 @@ import org.springframework.security.access.prepost.PostAuthorize;
 
 import java.util.List;
 
-@EventLoggableRepository
 @RepositoryRestResource(exported = true)
-public interface PostRepository extends DatabaseRepository<Post>, CustomPostRepository {
+public interface PostRepository extends JpaRepository<Post, Integer>, CustomPostRepository {
 
 	@PostAuthorize("hasPermission(returnObject, 'read') or returnObject==null")
 	@Query("SELECT post FROM Post post where post.slug = :slug and post is not null")
@@ -53,7 +52,7 @@ public interface PostRepository extends DatabaseRepository<Post>, CustomPostRepo
 	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
 	List<Integer> findPostReadByPerson(@Param("personId") Integer personId, Pageable pageable);
 
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.date DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId and post.state = 'PUBLISHED' ORDER BY post.date DESC")
 	List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 
 	// ---------------------------------- NOT EXPOSED ----------------------------------
@@ -79,7 +78,7 @@ public interface PostRepository extends DatabaseRepository<Post>, CustomPostRepo
 	List<Post> findPostReadByStationAndPerson(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 
 	@RestResource(exported = false)
-	@Query("SELECT post FROM Post post where post.station.id = :stationId ORDER BY post.readsCount DESC, post.id DESC")
+	@Query("SELECT post FROM Post post where post.station.id = :stationId AND post.state = 'PUBLISHED' ORDER BY post.readsCount DESC, post.id DESC")
 	List<Post> findPopularPosts(@Param("stationId") Integer stationId, Pageable pageable);
 
 	@RestResource(exported = false)

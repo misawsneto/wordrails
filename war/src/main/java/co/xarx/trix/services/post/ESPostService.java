@@ -14,8 +14,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.persistence.jpa.jpql.Assert;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.text.Text;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.highlight.HighlightField;
@@ -36,9 +38,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service
 public class ESPostService {
@@ -67,7 +67,11 @@ public class ESPostService {
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 		if (sort != null)
 			nativeSearchQueryBuilder.withSort(sort);
-		SearchQuery query = nativeSearchQueryBuilder.withPageable(pageable).withHighlightFields(new HighlightBuilder.Field("body")).withQuery(boolQuery).build();
+		SearchQuery query = nativeSearchQueryBuilder
+				.withPageable(pageable)
+				.withHighlightFields(new HighlightBuilder.Field("body"))
+				.withQuery(boolQuery)
+				.build();
 
 		Long[] totalHits = new Long[1];
 		ResultsExtractor<List<PostView>> resultsExtractor = response -> {
@@ -125,7 +129,15 @@ public class ESPostService {
 		BoolQueryBuilder mainQuery = boolQuery();
 
 		if (Strings.hasText(q)) {
-			MultiMatchQueryBuilder queryText = multiMatchQuery(q).field("body", 2).field("title", 5).field("topper").field("subheading").field("authorName").field("terms.name").prefixLength(1);
+			MultiMatchQueryBuilder queryText = multiMatchQuery(q)
+					.field("body", 2)
+					.field("title", 5)
+					.field("topper")
+					.field("subheading")
+					.field("authorName")
+					.field("terms.name")
+					.fuzziness(Fuzziness.AUTO)
+					.prefixLength(1);
 
 			mainQuery = mainQuery.must(queryText);
 		}

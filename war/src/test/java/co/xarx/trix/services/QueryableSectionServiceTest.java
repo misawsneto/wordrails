@@ -21,8 +21,8 @@ import static junit.framework.TestCase.assertEquals;
 
 public class QueryableSectionServiceTest {
 
-	private static final Integer PAGEABLE_ID_BASE = 30;
-	private static final Integer FIXED_ID_BASE = 80;
+	private static final Integer PAGEABLE_ID_BASE = 10;
+	private static final Integer FIXED_ID_BASE = 100;
 
 	QueryableSectionService service;
 	QueryableSection section;
@@ -53,11 +53,11 @@ public class QueryableSectionServiceTest {
 	private class ExecutorFactoryMock implements ExecutorFactory {
 		@Override
 		public Executor getExecutor(String alias) {
-			return new ExecutorMock();
+			return new FakeExecutor();
 		}
 	}
 
-	private class ExecutorMock implements Executor<Identifiable, CommandMock> {
+	private class FakeExecutor implements Executor<Identifiable, CommandMock> {
 
 		@Override
 		public List<Identifiable> execute(CommandMock command, Integer size, Integer from) {
@@ -101,7 +101,7 @@ public class QueryableSectionServiceTest {
 		iFixed = 0;
 		Map<Integer, Block> blocks = service.fetchQueries(section, 0);
 
-		List<Serializable> expectedIdList = Lists.newArrayList(30, 81, 82, 31, 32, 33, 34, 35, 88, 36);
+		List<Serializable> expectedIdList = Lists.newArrayList(10, 101, 102, 11, 12, 13, 14, 15, 108, 16);
 		List<Serializable> idList = blocks.values().stream().map(block -> block.getObject().getId()).collect(Collectors.toList());
 
 		assertEquals(expectedIdList, idList);
@@ -112,7 +112,7 @@ public class QueryableSectionServiceTest {
 		iFixed = 0;
 		Map<Integer, Block> blocks = service.fetchQueries(section, section.getSize());
 
-		List<Serializable> expectedIdList = Lists.newArrayList(37, 38, 39, 93, 40, 95, 41, 42, 43, 44);
+		List<Serializable> expectedIdList = Lists.newArrayList(17, 18, 19, 113, 20, 115, 21, 22, 23, 24);
 		List<Serializable> idList = blocks.values().stream().map(block -> block.getObject().getId()).collect(Collectors.toList());
 
 		assertEquals(expectedIdList, idList);
@@ -123,7 +123,7 @@ public class QueryableSectionServiceTest {
 		iFixed = 0;
 		Map<Integer, Block> blocks = service.fetchQueries(section, section.getSize() * 2);
 
-		List<Serializable> expectedIdList = Lists.newArrayList(45, 46, 47, 48, 49, 50, 51, 52, 53, 54);
+		List<Serializable> expectedIdList = Lists.newArrayList(25, 26, 27, 28, 29, 30, 31, 32, 33, 34);
 		List<Serializable> idList = blocks.values().stream().map(block -> block.getObject().getId()).collect(Collectors.toList());
 
 		assertEquals(expectedIdList, idList);

@@ -71,4 +71,11 @@ public interface PostProjection {
 	Double getLng();
 
     Set<String> getTags();
+
+	// images ------------------
+	String getImageSmallHash();
+
+	String getImageMediumHash();
+
+	String getImageLargeHash();
 }

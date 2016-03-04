@@ -5,6 +5,9 @@ import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.PostViewMap;
 import co.xarx.trix.elasticsearch.mapper.StationMap;
 import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.services.notification.APNSClient;
+import co.xarx.trix.services.notification.GCMClient;
+import co.xarx.trix.services.notification.MobileNotificationSender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.Sender;
 import org.modelmapper.ModelMapper;
@@ -46,6 +49,16 @@ public class ApplicationConfig {
 	@Bean
 	public Sender gcmSender() {
 		return new Sender(gcmKey);
+	}
+
+	@Bean
+	public MobileNotificationSender appleNS(APNSClient client) {
+		return new MobileNotificationSender(client, 8999);
+	}
+
+	@Bean
+	public MobileNotificationSender androidNS(GCMClient client) {
+		return new MobileNotificationSender(client, 1000);
 	}
 
 	@Bean
