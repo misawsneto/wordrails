@@ -1,3 +1,100 @@
+/* general */
+.font-500{
+	font-weight: 500;
+}
+
+.animated{
+ -webkit-animation-duration: 0.3s!important;
+ animation-duration: 0.3s!important; 
+}
+
+.animated3x{
+ -webkit-animation-duration: 0.3s!important;
+ animation-duration: 0.3s!important; 
+}
+
+.animated5x{
+ -webkit-animation-duration: 0.5s!important;
+ }
+
+ .z-index-n-1{
+	z-index: -1;
+ }
+ .z-index-n-2{
+	z-index: -2;
+ }
+ .z-index-n-3{
+	z-index: -3;
+ }
+ .z-index-n-4{
+	z-index: -4;
+ }
+.z-index-1{
+	z-index: 1;
+ }
+ .z-index-2{
+	z-index: 2;
+ }
+ .z-index-3{
+	z-index: 3;
+ }
+ .z-index-4{
+	z-index: 4;
+ }
+ .z-index-5{
+	z-index: 5;
+ }
+
+.hbox{
+	display: table;
+	table-layout: fixed;
+	border-spacing: 0;
+	width: 100%;
+	height: 100%;
+	.col{
+		display: table-cell;
+		vertical-align: top;
+		height: 100%;
+		float: none;
+	}
+}
+
+.v-middle{vertical-align: middle !important;}
+.v-top{vertical-align: top !important;}
+.v-bottom{vertical-align: bottom !important;}
+
+.vbox{
+	display: table;
+	border-spacing:0;
+	position: relative;	
+	width: 100%;
+	height: 100%;
+	min-height: 240px;
+	.row-row {
+		display: table-row;
+		height: 100%;
+		.cell {
+			position: relative;
+			height: 100%;
+			width: 100%;
+			-webkit-overflow-scrolling:touch;
+			overflow: auto;
+			.ie & {
+				display: table-cell;
+			}
+			.cell-inner {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+			}
+		}
+	}
+}
+
+/* /general */
+
 /* toast */
 md-toast {
 	color: white!important;
@@ -18,3 +115,37 @@ md-toast {
     border-radius: 3px;
 }
 /* /search */
+
+/* color-settings */
+div#settings-colors ~ md-backdrop.md-sidenav-backdrop{
+	display: none;
+}
+/* /color-settings */
+
+/* settings */
+.settings-list {
+  padding: 0;
+  margin: 70px 0 16px;
+  list-style: none;
+}
+
+.settings-list > li {
+  padding: 0;
+  width: 100%;
+}
+
+.settings-list > li a.settings-items {
+	display: block;
+	width: inherit;
+	border-radius: 2px;
+	padding: 12px;
+	transition: background 0.15s ease-in-out;
+}
+
+.settings-list > li.active a.settings-items,
+.settings-list > li a.settings-items:hover{
+	background-color: rgba(0,0,0,0.12);
+}
+.settings-list > li.active a.settings-items {font-weight: 700;}
+
+/* /settings */

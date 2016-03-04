@@ -64,7 +64,7 @@ angular.module('app')
     $mdThemingProvider.theme('blue-grey').primaryPalette('blue-grey').accentPalette('clear');
 
     $mdThemingProvider.definePalette('myPrimary',{
-     '500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'
+        '500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'
     });
 
     $mdThemingProvider.definePalette('myAccent',{
@@ -218,13 +218,32 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".text { " + contrast + " !important }", index);
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".background { background-color: " + color + "; " + contrast + " }", index + 1);
       index += 2;
+
       if(cssname === 'warn' && name === 'default'){
-        stylesheet.insertRule("md-toast.md-" + cssname + "-" + name + " > div { background-color: " + color + "!important; " + contrast + " }", index);
+        stylesheet.insertRule("md-toast.md-" + cssname + "-" + name + " > div { background-color: " + color + "!important; color: #f5f5f5 }", index);
         index ++;
       }
+      if(cssname === 'accent' && name === 'default'){
+        stylesheet.insertRule(
+          "#loading-bar {webkit-box-shadow: " + color + " 1px 0 6px 1px;" +
+            "box-shadow: " + color + " 1px 0 6px 1px;"+
+            "-moz-border-radius: 100%;"+
+            "-webkit-border-radius: 100%;}" , index);
+        stylesheet.insertRule(
+          "#loading-bar .bar {background-color: " + color + " }" , index);
+        stylesheet.insertRule(
+          "#loading-bar-spinner .spinner-icon {"+
+            "border-top-color: " + color + ";" +
+            "border-left-color: " + color + ";" +
+          "}" , index);
+        index += 3; 
+      }
       if(cssname === 'background' && name === 'hue-1'){
-        stylesheet.insertRule(".card { background-color: " + color + "!important; " + contrast + " }", index);
-        index ++;
+        stylesheet.insertRule(".card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index);
+        stylesheet.insertRule(".default-bg-text button.md-button { " + contrast + " }", index);
+        stylesheet.insertRule(".default-bg-text md-input-container:not(.md-input-invalid).md-input-has-value label { " + contrast + " }", index);
+        stylesheet.insertRule(".default-bg-text md-input-container .md-input { " + contrast + "!important }", index);
+        index += 4;
       }
     };
     clearStyleSheet = function() {

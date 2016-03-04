@@ -12,6 +12,11 @@
 		"CATEGORIES": "Categories",
 		"USER": "User",
 		"USERS": "Users",
+		"PERMISSION": "Permission",
+		"PERMISSIONS": "Permissions",
+		"PUBLICATIONS": "Publications",
+		"COMMENTS": "Comments",
+		"MEDIA_LIBRARY": "Media library",
 		"CONFIGURATION": "Configuration",
 		"STATS": "Analytics",
 		"SETTINGS": "Settings",
@@ -22,7 +27,11 @@
 		"SEARCH": "Search",
 		"YES": "Yes",
 		"NO": "No",
-		"CANCEL": "Cancel"
+		"CANCEL": "Cancel",
+		"PUBLISHED": "Published",
+		"SCHEDULED": "Scheduled",
+		"DRAFTS": "Drafts",
+		"TRASH": "Trash"
 	},
 	"actions":{
 		"ADD": "Add",
@@ -42,7 +51,12 @@
 	},
 	"settings":{
 		"aside":{
-			"SETTINGS": "Settings"
+			"DASHBOARD": "Dashboard",
+			"CONTENT": "Content",
+			"SETTINGS": "Settings",
+			"MY_PROFILE": "My profile",
+			"BOOKMARKS": "Bookmarks",
+			"Notifications": "Notifications"
 		},
 		"network":{
 			"tabs": {
@@ -54,7 +68,7 @@
 				"THEMING": "Appearance"
 			},
 			"settings":{
-				"NAME": "Name",
+				"NAME": "Network name",
 				"ALLOW_SIGNUP": "Allow signup on public stations.",
 				"ADD_ROLES_ON_STARTUP": "Create read permissions on all stations upon user signup.",
 				"ALLOW_SOCIAL_LOGIN": "Allow social signup on public stations.",

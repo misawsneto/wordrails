@@ -5,7 +5,7 @@ app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 
 		$scope.$watch('createNetworkObject.name', function(){
 			if(!subdomainChanged)
-				$scope.createNetworkObject.subdomain = $scope.createNetworkObject.name.toSlug();
+				$scope.createNetworkObject.newSubdomain = $scope.createNetworkObject.name.toSlug();
 		})
 
 		$scope.changeSubdomain= function(){ subdomainChanged = true; }
@@ -18,8 +18,8 @@ app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 
 		$scope.changePersonName= function(){ personNameChanged = true; }
 
-		$scope.$watch('createNetworkObject.subdomain', function(){
-			$scope.createNetworkObject.subdomain = $scope.createNetworkObject.subdomain.toSlug();
+		$scope.$watch('createNetworkObject.newSubdomain', function(){
+			$scope.createNetworkObject.newSubdomain = $scope.createNetworkObject.newSubdomain.toSlug();
 		})
 
 		$scope.$watch('createNetworkObject.person.username', function(){
@@ -31,7 +31,7 @@ app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 		}
 
 		$scope.app.createNetwork = function(createNetworkObject){
-			if(!(checkValue(createNetworkObject.name) && checkValue(createNetworkObject.subdomain) &&
+			if(!(checkValue(createNetworkObject.name) && checkValue(createNetworkObject.newSubdomain) &&
 							checkValue(createNetworkObject.person.name) && checkValue(createNetworkObject.person.username)&& 
 							checkValue(createNetworkObject.person.email) && checkValue(createNetworkObject.person.password)) ){
 
@@ -40,13 +40,13 @@ app.controller('SettingsCtrl', ['$scope', '$log', '$state', '$filter', '$timeout
 			}
 
 			trix.createNetwork(createNetworkObject).success(function(data){
-				window.location.href = location.protocol + '//' + createNetworkObject.subdomain + '.' + location.hostname.split('.').reverse()[1] + 
+				window.location.href = location.protocol + '//' + createNetworkObject.newSubdomain + '.' + location.hostname.split('.').reverse()[1] + 
 				'.' + location.hostname.split('.').reverse()[0] + '/access/networkcreated?token=' + data.token;
 			}).error(function(data, status){
 				if(status == 400){
 					if(data.error && data.error.message && data.error.message.indexOf('Duplicate') > -1
-						&& data.error.message.indexOf($scope.createNetworkObject.subdomain) > -1){
-						$scope.showErrorToast('O subdomínio \"' + $scope.createNetworkObject.subdomain + '\" já foi cadastrado.')
+						&& data.error.message.indexOf($scope.createNetworkObject.newSubdomain) > -1){
+						$scope.showErrorToast('O subdomínio \"' + $scope.createNetworkObject.newSubdomain + '\" já foi cadastrado.')
 					}
 					else if(data.errors){
 						var errorMsg = ''

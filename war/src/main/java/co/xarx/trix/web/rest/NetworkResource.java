@@ -150,10 +150,13 @@ public class NetworkResource {
 		try {
 			Network network = new Network();
 			network.name = networkCreate.name;
-			network.setTenantId(networkCreate.subdomain);
+			network.setTenantId(networkCreate.newSubdomain);
+
+			TenantContextHolder.setCurrentTenantId(networkCreate.newSubdomain);
 
 			//Station Default Taxonomy
 			Taxonomy nTaxonomy = new Taxonomy();
+			nTaxonomy.setTenantId(network.getTenantId());
 
 			nTaxonomy.name = "Categoria da Rede " + network.name;
 			nTaxonomy.type = Taxonomy.NETWORK_TAXONOMY;
@@ -187,16 +190,21 @@ public class NetworkResource {
 			// Create Person ------------------------------
 
 			Person person = networkCreate.person;
+			person.setTenantId(network.getTenantId());
 			User user = null;
 
 			try {
 				user = new User();
+				user.setTenantId(network.getTenantId());
 				user.enabled = true;
 				user.username = person.username;
 				user.password = person.password;
 
 				UserGrantedAuthority authority = new UserGrantedAuthority(user, "ROLE_USER");
 				UserGrantedAuthority nauthority = new UserGrantedAuthority(user, "ROLE_NETWORK_ADMIN");
+
+				authority.setTenantId(network.getTenantId());
+				nauthority.setTenantId(network.getTenantId());
 
 				user.addAuthority(authority);
 				user.addAuthority(nauthority);
@@ -240,9 +248,11 @@ public class NetworkResource {
 			taxonomyRepository.save(nTaxonomy);
 
 			Term nterm1 = new Term();
+			nterm1.setTenantId(network.getTenantId());
 			nterm1.name = "Categoria 1";
 
 			Term nterm2 = new Term();
+			nterm2.setTenantId(network.getTenantId());
 			nterm2.name = "Categoria 2";
 
 			nterm1.taxonomy = nTaxonomy;
@@ -261,6 +271,7 @@ public class NetworkResource {
 			networkRepository.save(network);
 
 			Station station = new Station();
+			station.setTenantId(network.getTenantId());
 			station.name = network.name;
 			station.main = true;
 //			station.networks = new HashSet<Network>();
@@ -273,6 +284,7 @@ public class NetworkResource {
 
 			//Perspective Default
 			StationPerspective stationPerspective = new StationPerspective();
+			stationPerspective.setTenantId(network.getTenantId());
 			stationPerspective.station = station;
 			stationPerspective.name = station.name + " (Default)";
 			perspectives.add(stationPerspective);
@@ -282,6 +294,7 @@ public class NetworkResource {
 
 			//Station Default Taxonomy
 			Taxonomy sTaxonomy = new Taxonomy();
+			sTaxonomy.setTenantId(network.getTenantId());
 			sTaxonomy.name = "Station: " + station.name;
 			sTaxonomy.owningStation = station;
 			sTaxonomy.type = Taxonomy.STATION_TAXONOMY;
@@ -301,11 +314,13 @@ public class NetworkResource {
 						station.categoriesTaxonomyId = tax.id;
 						// ---- create sample terms...
 						term1 = new Term();
+						term1.setTenantId(network.getTenantId());
 						term1.name = "Categoria 1";
 
 						defaultPostTerm = term1;
 
 						term2 = new Term();
+						term2.setTenantId(network.getTenantId());
 						term2.name = "Categoria 2";
 
 						term1.taxonomy = tax;
@@ -322,6 +337,7 @@ public class NetworkResource {
 			}
 
 			StationRole role = new StationRole();
+			role.setTenantId(network.getTenantId());
 			role.person = person;
 			role.station = station;
 			role.writer = true;
@@ -333,6 +349,7 @@ public class NetworkResource {
 
 			try {
 				TermPerspective tp = new TermPerspective();
+				tp.setTenantId(network.getTenantId());
 				tp.term = null;
 				tp.perspective = stationPerspective;
 				tp.stationId = station.id;
@@ -340,12 +357,14 @@ public class NetworkResource {
 				tp.rows = new ArrayList<Row>();
 
 				Row row1 = new Row();
+				row1.setTenantId(network.getTenantId());
 				row1.term = term1;
 				row1.type = Row.ORDINARY_ROW;
 				row1.index = 0;
 				tp.rows.add(row1);
 
 				Row row2 = new Row();
+				row2.setTenantId(network.getTenantId());
 				row2.term = term2;
 				row2.type = Row.ORDINARY_ROW;
 				row2.index = 1;
@@ -370,6 +389,7 @@ public class NetworkResource {
 			stationRepository.save(station);
 
 			Post post = new Post();
+			post.setTenantId(network.getTenantId());
 
 			post.title = "Bem Vindo a TRIX";
 			post.body = "<p>Trix é uma plataforma para a criação e gestão de redes de informação e pensada primeiramente para dispositivos móveis. Através do editor é possível criar conteúdos baseados em textos, imagens, áudios e vídeos.</p><p>Adicione usuários com permissão de leitura, escrita, edição ou administração e através das funções de administração personalize a sua rede.</p>";

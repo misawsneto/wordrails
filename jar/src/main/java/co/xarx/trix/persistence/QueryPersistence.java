@@ -84,4 +84,9 @@ public class QueryPersistence {
 				.setFirstResult(page * size)
 				.getResultList();
 	}
+
+	@Transactional
+	public void deleteAuthoritiesByStation(Integer id) {
+		manager.createNativeQuery("DELETE from authorities where station_id = (:id)").setParameter("id", id).executeUpdate();
+	}
 }
