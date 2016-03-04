@@ -107,6 +107,16 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isGetFilesAuthorized() {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetFileAuthorized(Integer fileId) {
+		return true;
+	}
+
+	@Override
 	protected boolean isGetImagesAuthorized() {
 		return false;
 	}
@@ -114,6 +124,21 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	@Override
 	protected boolean isGetImageAuthorized(Integer imageId) {
 		return true;
+	}
+
+	@Override
+	protected boolean isGetImageLargeAuthorized(Integer imageId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetImageMediumAuthorized(Integer imageId) {
+		return false;
+	}
+
+	@Override
+	protected boolean isGetImageSmallAuthorized(Integer imageId) {
+		return false;
 	}
 
 	@Override

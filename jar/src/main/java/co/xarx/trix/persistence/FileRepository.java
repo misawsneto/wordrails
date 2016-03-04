@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-@RepositoryRestResource(exported = false)
+
 public interface FileRepository extends JpaRepository<File, Integer>, QueryDslPredicateExecutor<File> {
 
 	@RestResource(exported = false)
