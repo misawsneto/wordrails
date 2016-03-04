@@ -80,4 +80,6 @@ public interface PostProjection {
 	String getImageMediumHash();
 
 	String getImageLargeHash();
+
+	Integer getImageId();
 }

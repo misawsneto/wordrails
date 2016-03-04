@@ -46,7 +46,7 @@ angular.module('app')
                   })
                   return deferred.promise;
                 },
-                deps:load( ['/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js'] ).deps
+                deps:load( ['/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', '/libs/jquery/moment/min/moment-with-locales.min.js'] ).deps
               },
               url: '',
               views: {
@@ -97,10 +97,11 @@ angular.module('app')
               })
               .state('app.publications', {
                 url: '/publications',
+                reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-publications.html',
-                data : { titleTranslate: 'titles.PUBLICATIONS', title: 'Rede', folded: false },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js']),
-                controller: 'SettingsNetworkCtrl'
+                data : { titleTranslate: 'titles.PUBLICATIONS', title: 'Publicações', folded: false },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-publications.js']),
+                controller: 'SettingsPublicationsCtrl'
               })
               .state('app.colors', {
                 url: '/colors',
