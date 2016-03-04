@@ -6,8 +6,7 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.MobileDeviceRepository;
-import co.xarx.trix.services.notification.AndroidNotificationSender;
-import co.xarx.trix.services.notification.AppleNotificationSender;
+import co.xarx.trix.services.notification.MobileNotificationSender;
 import co.xarx.trix.services.notification.NotificationService;
 import com.mysema.commons.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +29,13 @@ public class MobileService {
 	private NotificationService notificationService;
 	private AsyncService asyncService;
 	private MobileDeviceRepository mobileDeviceRepository;
-	private AppleNotificationSender appleNS;
-	private AndroidNotificationSender androidNS;
+	private MobileNotificationSender appleNS;
+	private MobileNotificationSender androidNS;
 
 	@Autowired
 	public MobileService(NotificationService notificationService,
 						 AsyncService asyncService, MobileDeviceRepository mobileDeviceRepository,
-						 AppleNotificationSender appleNS, AndroidNotificationSender androidNS) {
+						 MobileNotificationSender appleNS, MobileNotificationSender androidNS) {
 		this.notificationService = notificationService;
 		this.asyncService = asyncService;
 		this.mobileDeviceRepository = mobileDeviceRepository;

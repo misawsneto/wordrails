@@ -13,16 +13,16 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
-public class AndroidNotificationSender implements NotificationSender {
+public class GCMClient implements NotificationServerClient {
 
 	private ObjectMapper mapper;
 	private Sender sender;
 
-	AndroidNotificationSender() {
-	}
+	private Map<String, NotificationResult> errorDevices;
 
 	@Autowired
-	public AndroidNotificationSender(Sender sender) {
+	public GCMClient(Sender sender) {
+		this.errorDevices = new HashMap<>();
 		this.sender = sender;
 		this.mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
@@ -31,7 +31,12 @@ public class AndroidNotificationSender implements NotificationSender {
 	}
 
 	@Override
-	public Map<String, NotificationResult> sendMessageToDevices(NotificationView notification, Collection<String> d) throws IOException {
+	public Map<String, NotificationResult> getErrorDevices() {
+		return errorDevices;
+	}
+
+	@Override
+	public void send(NotificationView notification, Collection<String> d) throws IOException {
 		MulticastResult multicastResult;
 
 		List<String> devices = new ArrayList<>(d);
@@ -41,24 +46,18 @@ public class AndroidNotificationSender implements NotificationSender {
 
 		multicastResult = sender.send(message, devices, 5);
 
-		Map<String, NotificationResult> resultMap = new HashMap<>();
 		List<Result> results = multicastResult.getResults();
 		for (int i = 0; i < results.size(); i++) {
 			Result r = results.get(i);
-			NotificationResult notificationResult = new NotificationResult();
-			notificationResult.setStatus(r.getMessageId() == null ?
-					Notification.Status.SERVER_ERROR : Notification.Status.SUCCESS);
-			notificationResult.setErrorMessage(r.getErrorCodeName());
-			if(Constants.ERROR_NOT_REGISTERED.equals(notificationResult.getErrorMessage())) {
-				notificationResult.setDeviceDeactivated(true);
+			if(r.getMessageId() == null) {
+				NotificationResult notificationResult = new NotificationResult();
+				notificationResult.setStatus(Notification.Status.SERVER_ERROR);
+				notificationResult.setErrorMessage(r.getErrorCodeName());
+				if (Constants.ERROR_NOT_REGISTERED.equals(notificationResult.getErrorMessage())) {
+					notificationResult.setDeviceDeactivated(true);
+				}
+				errorDevices.put(devices.get(i), notificationResult);
 			}
-			resultMap.put(devices.get(i), notificationResult);
 		}
-		return resultMap;
-	}
-
-	@Override
-	public Integer getBatchSize() {
-		return 1000;
 	}
 }
