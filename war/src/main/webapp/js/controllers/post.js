@@ -771,14 +771,14 @@ function isTermSelected(terms){
 			// $state.go($state.current.name, {'id': postId}, {location: 'replace', inherit: false, notify: false, reload: false})
 
 			$scope.app.refreshPerspective();
-			trix.getPost(postId, 'postProjection').success(function(response){
+			trix.getPostViewById(postId, true).success(function(response){
 				var uploadedImage = angular.copy($scope.app.editingPost.uploadedImage);
 				createPostObject();
 				$scope.app.editingPost = angular.extend($scope.app.editingPost, response);
 				customSlug = true;
 				if(uploadedImage && uploadedImage.imageId)
                     $scope.app.editingPost.uploadedImage = uploadedImage;
-				setWritableStationById(response.station.id)
+				setWritableStationById(response.station ? response.station.id : response.stationId)
 				updateTermTree();
 				$timeout(function() {
 					$scope.app.editingPost.editingExisting = false;
