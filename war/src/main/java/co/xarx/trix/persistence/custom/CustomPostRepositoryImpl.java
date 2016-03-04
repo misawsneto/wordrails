@@ -1,7 +1,6 @@
-package co.xarx.trix.persistence;
+package co.xarx.trix.persistence.custom;
 
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.persistence.custom.CustomPostRepository;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.QueryDslJpaRepository;
 import org.springframework.transaction.annotation.Transactional;

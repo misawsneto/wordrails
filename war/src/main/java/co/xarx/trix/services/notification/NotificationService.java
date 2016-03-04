@@ -24,7 +24,8 @@ public class NotificationService {
 		List<Notification> notifications = new ArrayList<>();
 
 		List<List<String>> parts = ListUtil.partition(new ArrayList<>(devices), sender.getBatchSize());
-		for (List<String> part : parts) {
+		for (int i = 0; i < parts.size(); i++) {
+			List<String> part = parts.get(i);
 			try {
 				Logger.info(deviceType.toString() + ": Sending notification to " +
 						devices.size() + " devices. Notification hash: " + notification.hash);
@@ -35,9 +36,12 @@ public class NotificationService {
 				notifications.addAll(this.getErrorNotifications(new HashSet<>(part), notification, post, e, deviceType));
 			}
 
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
+			boolean isNotLast = i + 1 < parts.size();
+			if (isNotLast) {
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+				}
 			}
 		}
 

@@ -53,11 +53,11 @@ public class QueryableSectionServiceTest {
 	private class ExecutorFactoryMock implements ExecutorFactory {
 		@Override
 		public Executor getExecutor(String alias) {
-			return new ExecutorMock();
+			return new FakeExecutor();
 		}
 	}
 
-	private class ExecutorMock implements Executor<Identifiable, CommandMock> {
+	private class FakeExecutor implements Executor<Identifiable, CommandMock> {
 
 		@Override
 		public List<Identifiable> execute(CommandMock command, Integer size, Integer from) {
