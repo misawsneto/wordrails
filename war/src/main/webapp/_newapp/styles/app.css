@@ -5251,6 +5251,136 @@ bg-none {
   background: transparent;
 }
 
+.avatar {
+  position: relative;
+  display: block;
+  white-space: nowrap;
+  border-radius: 500px;
+}
+
+.avatar img {
+  width: 100%;
+  border-radius: 500px;
+}
+
+.avatar i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  margin: 2px;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 100%;
+}
+
+.avatar i.right {
+  right: 0;
+  left: auto;
+}
+
+.avatar i.bottom {
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: auto;
+}
+
+.avatar i.left {
+  top: auto;
+  bottom: 0;
+}
+
+.avatar i.on {
+  background-color: #4caf50;
+}
+
+.avatar i.off {
+  background-color: rgba(0, 0, 0, 0.54);
+}
+
+.avatar i.busy {
+  background-color: #f44336;
+}
+
+.avatar i.away {
+  background-color: #ffc107;
+}
+
+.avatar.thumb-md i {
+  width: 12px;
+  height: 12px;
+  margin: 3px;
+}
+
+.avatar.thumb-sm i {
+  margin: 1px;
+}
+
+.avatar.thumb-xs i {
+  margin: 0;
+}
+
+.thumb-xl {
+  display: inline-block;
+  width: 128px;
+}
+
+.thumb-lg {
+  display: inline-block;
+  width: 96px;
+}
+
+.thumb-md {
+  display: inline-block;
+  width: 64px;
+}
+
+.thumb {
+  display: inline-block;
+  width: 50px;
+}
+
+.thumb-sm {
+  display: inline-block;
+  width: 40px;
+}
+
+.thumb-xs {
+  display: inline-block;
+  width: 34px;
+}
+
+.thumb-xxs {
+  display: inline-block;
+  width: 30px;
+}
+
+.thumb-wrapper {
+  padding: 2px;
+  border: 1px solid #dddee0;
+}
+
+.thumb img,
+.thumb-xs img,
+.thumb-sm img,
+.thumb-md img,
+.thumb-lg img,
+.thumb-btn img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.img-full {
+  width: 100%;
+}
+
+.img-full img {
+  width: 100%;
+}
+
 .no-border {
   border-color: transparent;
   border-width: 0;
@@ -7397,6 +7527,69 @@ bg-none {
   font-weight: 500;
 }
 
+.min-h-100 {
+  min-height: 100px;
+}
+
+.min-h-200 {
+  min-height: 200px;
+}
+
+.min-h-300 {
+  min-height: 300px;
+}
+
+.min-h-400 {
+  min-height: 400px;
+}
+
+.min-h-500 {
+  min-height: 500px;
+}
+
+.ph-dk::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+
+  color: #333;
+  opacity: 0.7;
+}
+
+.ph-dk:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+
+  color: #333;
+  opacity: 0.7;
+}
+
+.ph-dk::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+
+  color: #333;
+  opacity: 0.7;
+}
+
+.ph-dk:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+
+  color: #333;
+  opacity: 0.7;
+}
+
+.ph-dk:placeholder-shown {
+  /* Standard (https://drafts.csswg.org/selectors-4/#placeholder) */
+
+  color: #333;
+  opacity: 0.7;
+}
+
+.o-f-v {
+  overflow: visible!important;
+}
+
+.bg-t {
+  background-color: transparent;
+}
+
 .animated {
   -webkit-animation-duration: 0.3s!important;
           animation-duration: 0.3s!important;
@@ -7559,7 +7752,7 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
 .settings-list > li a.settings-items {
   display: block;
   width: inherit;
-  padding: 12px;
+  padding: 12px 18px;
   border-radius: 2px;
   transition: background 0.15s ease-in-out;
 }
