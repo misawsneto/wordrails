@@ -194,4 +194,30 @@ public class Image extends BaseEntity implements Serializable {
 	public String getSmallHash() {
 		return hashs.get(SIZE_SMALL);
 	}
+
+	@SdkInclude
+	public File getSmall(){
+		for (Picture picture : pictures)
+			if("small".equals(picture.getSizeTag()))
+				return picture.file;
+		return  null;
+	}
+
+	@SdkInclude
+	public File getMedium(){
+		for (Picture picture : pictures)
+			if("medium".equals(picture.getSizeTag()))
+				return picture.file;
+
+		return  null;
+	}
+
+	@SdkInclude
+	public File getLarge(){
+		for (Picture picture : pictures)
+			if("large".equals(picture.getSizeTag()))
+				return picture.file;
+
+		return  null;
+	}
 }
