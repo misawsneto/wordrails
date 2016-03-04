@@ -23,29 +23,29 @@ import java.util.Map;
 public class APNSClient implements NotificationServerClient {
 
 	private ApnsService service;
+	private AppleCertificateRepository appleCertificateRepository;
 
 	@Autowired
 	public APNSClient(AppleCertificateRepository appleCertificateRepository) throws IOException {
-		String tenantId = TenantContextHolder.getCurrentTenantId();
-		AppleCertificate certificate = appleCertificateRepository.findByTenantId(tenantId);
-		Assert.isNotNull(certificate, "Apple certificate not found");
-
-		try {
-			initService(certificate.file.getBinaryStream(), certificate.password);
-		} catch (SQLException e) {
-			throw new IOException(e);
-		}
+		this.appleCertificateRepository = appleCertificateRepository;
 	}
 
-	private void initService(InputStream certificateInputStream, String password) {
-		Assert.isNotNull(password, "Password must not be null");
-		Assert.isNotNull(certificateInputStream, "Certificate must not be null");
+	@Override
+	public void send(NotificationView notification, Collection<String> devices) throws IOException {
+		initService();
 
-		service = APNS
-				.newService()
-				.withCert(certificateInputStream, password)
-				.withProductionDestination()
+		String payload = APNS.newPayload()
+				.badge(1)
+				.sound("default")
+				.alertBody(notification.message)
+				.alertTitle(notification.post.stationName)
+				.customField("stationName", notification.post.stationName)
+				.customField("postId", notification.postId)
+				.forNewsstand()
+				.shrinkBody("...")
 				.build();
+
+		service.push(devices, payload);
 	}
 
 	@Override
@@ -62,20 +62,28 @@ public class APNSClient implements NotificationServerClient {
 		return errorDevices;
 	}
 
-	@Override
-	public void send(NotificationView notification, Collection<String> devices) throws IOException {
+	private void initService() throws IOException {
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		AppleCertificate certificate = appleCertificateRepository.findByTenantId(tenantId);
+		Assert.isNotNull(certificate, "Apple certificate not found");
 
-		String payload = APNS.newPayload()
-				.badge(1)
-				.sound("default")
-				.alertBody(notification.message)
-				.alertTitle(notification.post.stationName)
-				.customField("stationName", notification.post.stationName)
-				.customField("postId", notification.postId)
-				.forNewsstand()
-				.shrinkBody("...")
+		InputStream is;
+		String password;
+
+		try {
+			is = certificate.file.getBinaryStream();
+			password = certificate.password;
+		} catch (SQLException e) {
+			throw new IOException(e);
+		}
+
+		Assert.isNotNull(password, "Password must not be null");
+		Assert.isNotNull(is, "Certificate must not be null");
+
+		service = APNS
+				.newService()
+				.withCert(is, password)
+				.withProductionDestination()
 				.build();
-
-		service.push(devices, payload);
 	}
 }
