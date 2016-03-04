@@ -9,15 +9,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 
 import java.util.List;
 
 @EventLoggableRepository
+@RepositoryRestResource(exported = true)
 public interface PostRepository extends DatabaseRepository<Post>, CustomPostRepository {
 
-	@PostAuthorize("hasPermission(returnObject, 'read')")
+	@PostAuthorize("hasPermission(returnObject, 'read') or returnObject==null")
 	@Query("SELECT post FROM Post post where post.slug = :slug and post is not null")
 	Post findBySlug(@Param("slug") String slug);
 
@@ -25,6 +27,17 @@ public interface PostRepository extends DatabaseRepository<Post>, CustomPostRepo
 	@SdkExclude
 	@RestResource(exported = false)
 	void delete(Post entity);
+
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	Post findOne(Integer id);
+
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	List<Post> findAll();
+
 
 	@Query("select post from Post post join post.terms t where " +
 			"post.station.id = :stationId and t.id in (:termsIds) and post.state = 'PUBLISHED' group by post order by post.date desc")

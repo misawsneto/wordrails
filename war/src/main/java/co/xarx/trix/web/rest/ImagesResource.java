@@ -6,8 +6,6 @@ import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +30,6 @@ import java.util.Map;
 @Path("/images")
 @Consumes(MediaType.WILDCARD)
 @Component
-@Api(value = "/images", description = "Operations about pets")
 public class ImagesResource {
 
 	private static final Integer MAX_SIZE = 6291456;
@@ -58,7 +55,6 @@ public class ImagesResource {
 	ObjectMapper simpleMapper;
 
 	@POST
-	@ApiOperation("Upload a new image and return or only return if already exists")
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -111,7 +107,6 @@ public class ImagesResource {
 	}
 
 	@GET
-	@ApiOperation("Get a image giving the original hash")
 	@Path("/get/{hash}")
 	public Response getImage(@PathParam("hash") String hash, @QueryParam("size") String size, @Context HttpServletResponse response) throws IOException {
 
