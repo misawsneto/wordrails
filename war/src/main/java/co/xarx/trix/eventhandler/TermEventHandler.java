@@ -59,7 +59,10 @@ public class TermEventHandler {
 						rows.add(row);
 					}
 				}
-				rowRepository.save(rows);
+
+				for (Row row :rows) {
+					rowRepository.save(row);
+				}
 			}
 		}else{
 			throw new UnauthorizedException();

@@ -31,7 +31,13 @@
 		"PUBLISHED": "Published",
 		"SCHEDULED": "Scheduled",
 		"DRAFTS": "Drafts",
-		"TRASH": "Trash"
+		"TRASH": "Trash",
+		"FILTER": "Filter",
+		"FILTERS": "Filters",
+		"START_DATE": "Start date",
+		"END_DATE": "End date",
+		"START_TIME": "Start time",
+		"END_TIME": "End time"
 	},
 	"actions":{
 		"ADD": "Add",

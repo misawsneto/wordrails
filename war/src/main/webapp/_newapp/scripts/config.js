@@ -17,7 +17,8 @@ angular.module('app')
     }
   ])
   .constant('TRIX', {
-    baseUrl: location.protocol + '//' + location.host})
+    //baseUrl: location.protocol + '//' + location.host})
+    baseUrl: location.protocol + '//' + 'demo.xarxlocal.com'})
 
   .config(['$translateProvider', function($translateProvider){
     // Register a loader for the static files
@@ -29,6 +30,7 @@ angular.module('app')
     });
     // Tell the module what language to use by default
     $translateProvider.preferredLanguage('pt');
+    moment.locale('pt');
     // Tell the module to store the language in the local storage
     // $translateProvider.useLocalStorage();
   }])
@@ -238,6 +240,20 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
           "}" , index);
         index += 3; 
       }
+      if(cssname === 'background' && name === 'default'){
+        stylesheet.insertRule(".mdp-datepicker .md-content,"+
+                              ".mdp-datepicker md-dialog-content,"+
+                              ".mdp-datepicker md-dialog-actions,"+
+                              ".mdp-timepicker .md-content,"+
+                              ".mdp-timepicker md-dialog-content,"+
+                              ".mdp-timepicker md-dialog-actions,"+
+                              ".default-bg md-content,"+
+                              ".default-bg md-dialog-actions,"+
+                              ".default-bg md-dialog-content{ "+
+                              "   background-color: " + color + "!important; " + contrast + " }", index);
+        stylesheet.insertRule(".advanced-search-menu > .arrow:after { border-bottom-color: " + color + "!important; }", index);
+        index += 2;
+      }
       if(cssname === 'background' && name === 'hue-1'){
         stylesheet.insertRule(".card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index);
         stylesheet.insertRule(".default-bg-text button.md-button { " + contrast + " }", index);
@@ -245,6 +261,9 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         stylesheet.insertRule(".default-bg-text md-input-container .md-input { " + contrast + "!important }", index);
         index += 4;
       }
+      // if(cssname === 'background' && name === 'hue-3'){
+      //   index += 1;
+      // }
     };
     clearStyleSheet = function() {
       var results;

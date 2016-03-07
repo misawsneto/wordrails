@@ -52,40 +52,30 @@
                       <div class="block-600 p-lg m-h-auto">
                         <div class="m-l">
                           <p>
-                            <label class="md-switch">
-                              <input type="checkbox" ng-model="network.allowSignup"
-                              ng-true-value="true" ng-false-value="false">
-                              <i class="blue"></i>
-                              <!-- Permitir cadastro em estações públicas -->
-                              {{'settings.network.settings.ALLOW_SIGNUP' | translate}}
-                            </label>
+                            <md-switch ng-model="network.allowSignup" ng-true-value="true" ng-false-value="false">
+                              {{'settings.network.settings.ALLOW_SIGNUP' | translate}}</md-switch>
                           </p>
                           <p>
-                            <label class="md-check p-l-lg">
-                              <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.addStationRolesOnSignup"
+                            <label class="md-check p-l-xl">
+                              <md-checkbox ng-disabled="!network.allowSignup" ng-model="network.addStationRolesOnSignup"
                               ng-true-value="true" ng-false-value="false">
-                              <i class="blue"></i>
                               <!-- Ao cadastrar usuário, criar permissões de leitura em todas as estações -->
-                              {{'settings.network.settings.ADD_ROLES_ON_STARTUP' | translate}}
+                                {{'settings.network.settings.ADD_ROLES_ON_STARTUP' | translate}}</md-checkbox>
                             </label>
                           </p>
                           <p>
-                            <label class="md-switch">
-                              <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.allowSocialLogin"
+                              <md-switch  ng-disabled="!network.allowSignup" ng-model="network.allowSocialLogin"
                               ng-true-value="true" ng-false-value="false">
-                              <i class="blue"></i>
-                              <!-- Autenticação através de redes sociais em estações públicas -->
                               {{'settings.network.settings.ALLOW_SOCIAL_LOGIN' | translate}}
-                            </label>
+                              </md-switch>
+                              <!-- Autenticação através de redes sociais em estações públicas -->
                           </p>
                           <p>
-                            <label class="md-switch">
-                              <input type="checkbox" ng-model="network.allowSponsors"
+                              <md-switch type="checkbox" ng-model="network.allowSponsors"
                               ng-true-value="true" ng-false-value="false">
-                              <i class="blue"></i>
-                              <!-- Ativar/Desativar patrocinadores -->
                               {{'settings.network.settings.ALLOW_SPONSOR' | translate}}
-                            </label>
+                              </md-switch>
+                              <!-- Ativar/Desativar patrocinadores -->
                           </p>
                           <p>
                             <md-input-container class="m-b-sm m-t-lg w-lg">

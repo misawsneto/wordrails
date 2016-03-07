@@ -1,9 +1,17 @@
 app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'trix', 'FileUploader', 'TRIX', 'cfpLoadingBar', '$mdToast', '$translate', '$mdSidenav',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state, trix , FileUploader, TRIX, cfpLoadingBar, $mdToast, $translate, $mdSidenav){
 
-		$scope.toggleRight = buildToggler('palette-selector');
+		$scope.toggleAdvancedSearch = buildToggler('advanced-search');
 
 		$scope.settings = {'tab': 'publications'}
+
+		$scope.dateValue = new Date();
+
+		$scope.advancedMenuOpen = false;
+
+		$scope.searchFilterActive = true;
+
+		$scope.stationsPermissions = angular.copy($scope.app.stationsPermissions);
 
 		function buildToggler(navID) {
 	      return function() {

@@ -50,7 +50,9 @@ public class TaxonomyEventHandler {
 			for (Term term : terms) {
 				term.taxonomyName = taxonomy.name;
 			}
-			termRepository.save(terms);
+			for (Term term: terms) {
+				termRepository.save(term);
+			}
 		}
 	}
 

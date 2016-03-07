@@ -28,7 +28,7 @@
     "angular-translate-loader-static-files": "~2.9.0",
     "angular-translate-storage-cookie": "~2.9.0",
     "angular-translate-storage-local": "~2.9.0",
-    "angular-bootstrap": "~0.12.0",
+    "angular-bootstrap": "1.2.3",
     "angular-loading-bar": "0.7.1",
     "angular-bootstrap-nav-tree": "*",
     "angular-ui-router": "~0.2.11",
@@ -62,6 +62,7 @@
     "flot.orderbars": "*",
     "flot-spline": "*",
     "waves": "~0.7.2",
-    "mcg": "https://github.com/mbitson/mcg.git"
+    "mcg": "https://github.com/mbitson/mcg.git",
+    "mdPickers": "^0.5.2"
   }
 }

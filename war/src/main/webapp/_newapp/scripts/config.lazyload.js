@@ -11,6 +11,37 @@ angular.module('app')
           ]
       },
       {
+          name: 'mdDateTime',
+          module: true,
+          files: [
+            '/libs/angular/md-date-time/dist/md-date-time.js',
+            '/libs/angular/md-date-time/dist/md-date-time.css'
+          ]
+      },
+      {
+          name: 'ngMaterial.components',
+          module: true,
+          files: [
+            '/libs/angular/angular-material-components/dist/angular-material-components.min.js',
+            '/libs/angular/angular-material-components/dist/angular-material-components.min.css'
+          ]
+      },
+      {
+          name: 'ngMaterialDatePicker',
+          module: true,
+          files: [
+            '/libs/angular/angular-material-datetimepicker/css/material-datetimepicker.min.css',
+            '/libs/angular/angular-material-datetimepicker/js/angular-material-datetimepicker.min.js'
+          ]
+      },
+      {
+          name: 'mdPickers',
+          files: [
+              '/libs/angular/mdPickers/dist/mdPickers.css',
+              '/libs/angular/mdPickers/dist/mdPickers.js'
+          ]
+      },
+      {
           name: 'textAngular',
           module: true,
           files: [
