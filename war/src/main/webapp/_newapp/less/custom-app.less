@@ -1,4 +1,141 @@
 /* general */
+	/* material design icons */
+	@font-face {
+	  font-family: 'Material Icons';
+	  font-style: normal;
+	  font-weight: 400;
+	  src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v12/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+	}
+
+	.material-icons {
+	  font-family: 'Material Icons';
+	  font-weight: normal;
+	  font-style: normal;
+	  font-size: 24px;
+	  line-height: 1;
+	  letter-spacing: normal;
+	  text-transform: none;
+	  display: inline-block;
+	  white-space: nowrap;
+	  word-wrap: normal;
+	  direction: ltr;
+	  -webkit-font-feature-settings: 'liga';
+	  -webkit-font-smoothing: antialiased;
+	}
+
+	@font-face {
+      font-family:"icomoon";
+      src:url("https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot");
+      font-weight:normal;
+      font-style:normal;
+    }
+    @font-face {
+      font-family: 'icomoon';
+      src:url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?-cmq1um');
+      src:url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?#iefix-cmq1um') format('embedded-opentype'),
+      url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.woff?-cmq1um') format('woff'),
+      url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.ttf?-cmq1um') format('truetype'),
+      url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.svg?-cmq1um#icomoon') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+	/* /material design icons */
+
+	/* material datepicker */
+	.mdp-calendar-monthyear,  .mdp-datepicker-year, .mdp-calendar-week-days,
+	.mdp-datepicker-select-year .repeated-year .md-button{
+		font-size: inherit!important;
+	}
+
+	.mdp-datepicker-date, .mdp-datepicker-select-year .repeated-year .md-button.current{
+		font-size: 28px!important;
+	}
+
+	.mdp-calendar button.md-icon-button.md-button{
+		margin: 5px 0;
+	}
+
+	.mdp-calendar button.md-raised:not([disabled]){
+		background-color: transparent;
+	}
+
+	.mdp-calendar button.md-raised, .mdp-timepicker button.md-raised:not(.md-primary){
+		color: inherit!important;
+	}
+
+	.mdp-clock, .mdp-calendar .md-button.md-raised:not(.md-accent):not([disabled]):hover{
+		background-color: transparent!important;
+	}
+
+	/* /material datepicker */
+
+	/* bootstrap overrides */
+	// .advanced-search-popover .arrow{
+	//     top: -11px;
+	//     left: 50%;
+	//     margin-left: -11px;
+	//     border-top-width: 0;
+	//     border-bottom-color: #999;
+	//     border-bottom-color: rgba(0, 0, 0, .25);
+	// }
+
+	// .advanced-search-popover .arrow:after {
+	//     position: absolute;
+	//     display: block;
+	//     width: 0;
+	//     height: 0;
+	//     border-color: transparent;
+	//     border-style: solid;
+	// }
+	// 
+	.advanced-search-menu .arrow{
+		top: -11px;
+		right: 0;
+	}
+
+	.advanced-search-menu .arrow.lft{
+		left: 12px;
+	}
+
+	.advanced-search-menu .arrow:before {
+	  position: absolute;
+	  top: -9px;
+	  right: 15px;
+	  display: inline-block;
+	  border-right: solid transparent;
+	  border-bottom: solid #ccc;
+	  border-left: solid transparent;
+	  border-width: 10px;
+	  border-bottom-color: rgba(0, 0, 0, 0.2);
+	  content: '';
+	}
+
+	.advanced-search-menu .arrow.lft:before {
+		left: 0px;
+	}
+
+	.advanced-search-menu .arrow:after {
+	  position: absolute;
+	  top: -7px;
+	  right: 16px;
+	  display: inline-block;
+	  border-right: solid transparent;
+	  border-bottom: solid #ffffff;
+	  border-left: solid transparent;
+	  border-width: 9px;
+	  content: '';
+	}
+
+	.advanced-search-menu .arrow.lft:after {
+		left: 1px;
+	}
+
+	.popover-content{
+		padding: 0px;
+	}
+	/* bootstrap overrides */
+
+
 .font-500{
 	font-weight: 500;
 }

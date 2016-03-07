@@ -6584,6 +6584,22 @@ bg-none {
   width: 320px;
 }
 
+.w-1200 {
+  width: 1200px;
+}
+
+.w-800 {
+  width: 800px;
+}
+
+.w-600 {
+  width: 600px;
+}
+
+.w-400 {
+  width: 400px;
+}
+
 .w-full {
   width: 100%;
 }
@@ -6614,6 +6630,10 @@ bg-none {
 
 .block-600 {
   max-width: 600px;
+}
+
+.block-400 {
+  max-width: 400px;
 }
 
 @media (max-width: 991px) {
@@ -7522,6 +7542,132 @@ bg-none {
 
 /* /settings-color-selector */
 /* general */
+
+/* material design icons */
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v12/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
+
+.material-icons {
+  display: inline-block;
+  font-family: 'Material Icons';
+  font-size: 24px;
+  -webkit-font-smoothing: antialiased;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+}
+
+@font-face {
+  font-family: "icomoon";
+  font-style: normal;
+  font-weight: normal;
+  src: url("https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot");
+}
+
+@font-face {
+  font-family: 'icomoon';
+  font-style: normal;
+  font-weight: normal;
+  src: url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?-cmq1um');
+  src: url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?#iefix-cmq1um') format('embedded-opentype'), url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.woff?-cmq1um') format('woff'), url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.ttf?-cmq1um') format('truetype'), url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.svg?-cmq1um#icomoon') format('svg');
+}
+
+/* /material design icons */
+
+/* material datepicker */
+
+.mdp-calendar-monthyear,
+.mdp-datepicker-year,
+.mdp-calendar-week-days,
+.mdp-datepicker-select-year .repeated-year .md-button {
+  font-size: inherit!important;
+}
+
+.mdp-datepicker-date,
+.mdp-datepicker-select-year .repeated-year .md-button.current {
+  font-size: 28px!important;
+}
+
+.mdp-calendar button.md-icon-button.md-button {
+  margin: 5px 0;
+}
+
+.mdp-calendar button.md-raised:not([disabled]) {
+  background-color: transparent;
+}
+
+.mdp-calendar button.md-raised,
+.mdp-timepicker button.md-raised:not(.md-primary) {
+  color: inherit!important;
+}
+
+.mdp-clock,
+.mdp-calendar .md-button.md-raised:not(.md-accent):not([disabled]):hover {
+  background-color: transparent!important;
+}
+
+/* /material datepicker */
+
+/* bootstrap overrides */
+
+.advanced-search-menu .arrow {
+  top: -11px;
+  right: 0;
+}
+
+.advanced-search-menu .arrow.lft {
+  left: 12px;
+}
+
+.advanced-search-menu .arrow:before {
+  position: absolute;
+  top: -9px;
+  right: 15px;
+  display: inline-block;
+  border-right: solid transparent;
+  border-bottom: solid #ccc;
+  border-left: solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  border-width: 10px;
+  content: '';
+}
+
+.advanced-search-menu .arrow.lft:before {
+  left: 0;
+}
+
+.advanced-search-menu .arrow:after {
+  position: absolute;
+  top: -7px;
+  right: 16px;
+  display: inline-block;
+  border-right: solid transparent;
+  border-bottom: solid #ffffff;
+  border-left: solid transparent;
+  border-width: 9px;
+  content: '';
+}
+
+.advanced-search-menu .arrow.lft:after {
+  left: 1px;
+}
+
+.popover-content {
+  padding: 0;
+}
+
+/* bootstrap overrides */
 
 .font-500 {
   font-weight: 500;

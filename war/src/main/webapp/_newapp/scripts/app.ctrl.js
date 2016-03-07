@@ -281,6 +281,18 @@ angular.module('app')
 
       $scope.app.applyNetworkTheme();
 
+      $scope.getBackgroundImage = function(postView, size){
+        var img = $filter('bgImageLink')(postView, size);
+        if(postView.externalVideoUrl){
+          img = $filter('videoThumb')(postView.externalVideoUrl);
+        }
+        return img;
+      }
+
+      $scope.app.getBackgroundImage = function(postView, size){
+        return $scope.getBackgroundImage(postView, size);
+      }
+
       // ---------- /theming ----------
 
     }

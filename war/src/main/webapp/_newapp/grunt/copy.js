@@ -35,7 +35,8 @@ module.exports = {
                     'ngstorage/ngStorage.js',
                     'oclazyload/dist/**',
                     'textAngular/dist/**',
-                    'venturocket-angular-slider/build/**'
+                    'venturocket-angular-slider/build/**',
+                    'mdPickers/dist/**',
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

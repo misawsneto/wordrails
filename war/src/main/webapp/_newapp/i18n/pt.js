@@ -31,7 +31,13 @@
 		"PUBLISHED": "Publicados",
 		"SCHEDULED": "Agendados",
 		"DRAFTS": "Rascunhos",
-		"TRASH": "Lixeira"
+		"TRASH": "Lixeira",
+		"FILTER": "Filtro",
+		"FILTERS": "Filtros",
+		"START_DATE": "Data inicial",
+		"END_DATE": "Data final",
+		"START_TIME": "Hora inicial",
+		"END_TIME": "Hora final"
 	},
 	"actions":{
 		"ADD": "Adicionar",

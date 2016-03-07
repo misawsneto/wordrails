@@ -33,12 +33,70 @@
     <div class="col animated zoomIn">
       <div class="vbox p-t-lg p-r">
       
-        <div class="m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
-          <input placeholder="Busca" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
-          <div class="pos-abt top-0 right-0 m-t">
-            <md-button class="md-icon-button" aria-label="More">
-              <i class="icon mdi-content-filter-list i-24"></i></md-icon>
+        <div class="search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
+          <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
+          <div class="pos-abt top-0 right-0 m-t pull-right" uib-dropdown auto-close="disabled" is-open="advancedMenuOpen">
+            <!-- <md-button uib-dropdown-toggle class="md-icon-button" aria-label="More" uib-popover-template="'advanced-search-popover.html'" popover-append-to-body="false" popover-placement="bottom-right" popover-trigger="click">
+              <i class="icon mdi-content-filter-list i-24"></i>
+            </md-button> -->
+            <md-button uib-dropdown-toggle class="md-icon-button" aria-label="More" popover-trigger="click">
+              <i class="icon mdi-content-filter-list i-24" md-style="{'color': 'default'}" ></i>
             </md-button>
+            <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="advanced-search-menu m-h-auto md-background-default background p w-400 default-bg">
+                <!-- <time-date-picker orientation="true" class="m-h-auto" ng-model="dateValue"></time-date-picker> -->
+              <div class="arrow"></div>
+              <md-content>
+                <div class="m-b">
+                  <a ng-click="advancedMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+                </div>
+                <div class="m-b-sm text-u-c">
+                  Filtar por estação
+                </div>
+                <div class="m-b">
+                  <md-menu>
+                    <!-- Trigger element is a md-button with an icon -->
+                   <md-button ng-click="$mdOpenMenu($event)" class="md-button text-u-c" aria-label="Open sample menu">
+                     <!-- <md-icon md-font-set="material-icons" class="ng-scope ng-isolate-scope material-icons"> phone </md-icon> -->
+                     <i class="mdi mdi2-radio-tower"></i>
+                      {{'titles.STATIONS' | translate}}
+                   </md-button>
+                   <md-menu-content>
+                    <div class="p">
+                     <ul class="list-unstyled">
+                       <li ng-repeat="perm in stationsPermissions">
+                        <md-checkbox ng-model="perm.filter" aria-label="{{perm.stationName}}">
+                         {{ perm.stationName }}
+                         </md-checkbox>
+                       </li>
+                     </ul>
+                    </div>
+                   </md-menu-content>
+                  </md-menu>
+                </div>
+                <div class="m-b-lg text-u-c">
+                  Filtar por data
+                </div>
+                <div class="text-center">
+                  <md-input-container style="width: 140px" class="no-margin m-b-sm">
+                    <label translate="titles.START_DATE">Data inicial</label>
+                    <input type="date" mdp-date-picker ng-model="filter.initialDate" />
+                  </md-input-container>
+                  <md-input-container style="width: 140px" class="no-margin m-b-sm">
+                    <label translate="titles.END_DATE">Data final</label>
+                    <input type="date" mdp-date-picker ng-model="filter.finalDate" />
+                  </md-input-container>
+                  <md-input-container style="width: 140px" class="no-margin m-b-sm">
+                    <label translate="titles.START_TIME">Hora inicial</label>
+                    <input type="time" mdp-time-picker ng-model="filter.initialTime" />
+                  </md-input-container>
+                  <md-input-container style="width: 140px" class="no-margin m-b-sm">
+                    <label translate="titles.END_TIME">Hora final</label>
+                    <input type="time" mdp-time-picker ng-model="filter.finalTime" />
+                  </md-input-container>
+                </div>
+              <!-- -->
+              </md-content>
+            </div>
           </div>
         </div>
         <div class="row-row">
@@ -49,15 +107,24 @@
                 <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'publications'}">
                   <ul class="list-group bg-t">
                     <li class="list-group-item" ng-repeat="publication in publications">
-                      <a href class="pull-left m-r"><img src="images/a1.jpg" class="img-responsive thumb-lg"></a>
+                      <a href class="pull-left m-r" ng-if="publication.featuredImageHash" style="height: 96px;">
+                        <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full">
+                        </div>
+                      </a>
                       <div class="clear font-thin">
                         <a href class="font-bold block text-md">{{publication.title}}</a>
                         {{publication.snippet | characters:170}}
-                        <div class="list-group-item b-n">
-                          <a href class="pull-left m-r"><img src="images/a1.jpg" class="img-responsive img-circle thumb-xxs"></a>
-                          <div class="clear font-normal">
-                            <a href class="font-500 block">Jonathan Doe</a>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                        <div class="p-t-sm text-xs font-500">
+                          <div class="text-u-c r" ng-click="" class="p-xs" md-ink-ripple ng-click="">editar
+                          </div>
+                          <span class="text-u-c p-l r">
+                            <a class="p-xs" md-ink-ripple ng-click="">remover</a>
+                          </span>
+                        </div>
+                        <div class="list-group-item b-n p-sm p-t no-padding-h">
+                          <a href class="pull-left m-r-sm"><img src="images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
+                          <div class="clear font-normal p-xs">
+                            <a href class="font-500 block">{{publication.authorName}}</a>
                           </div>
                         </div>
                       </div>
@@ -107,7 +174,35 @@
   </div>
 </div>
 
-
+<!-- <md-sidenav class="md-background-hue-1 w-xl background md-sidenav-right md-whiteframe-z2 theming" md-component-id="advanced-search"> -->
+<script type="text/ng-template" id="advanced-search-popover.html">
+    <!-- primary -->
+  <div id="advanced-search-popover" class="m-h-auto md-background-default background p w-400 default-bg" style="margin-left: -106px;">
+    <!-- <time-date-picker orientation="true" class="m-h-auto" ng-model="dateValue"></time-date-picker> -->
+    <md-content>
+      <md-input-container style="width: 140px" class="no-margin m-b-sm">
+        <label translate="titles.START_DATE">Data inicial</label>
+        <input type="date" mdp-date-picker ng-model="currentDate1" />
+      </md-input-container>
+      <md-input-container style="width: 140px" class="no-margin m-b-sm">
+        <label translate="titles.START_TIME">Hora inicial</label>
+        <input type="time" mdp-time-picker ng-model="currentTime1" />
+      </md-input-container>
+      <!-- -->
+      <md-input-container style="width: 140px" class="no-margin m-b-sm">
+        <label translate="titles.END_DATE">Data final</label>
+        <input type="date" mdp-date-picker ng-model="currentDate2" />
+      </md-input-container>
+      <md-input-container style="width: 140px" class="no-margin m-b-sm">
+        <label translate="titles.END_TIME">Hora final</label>
+        <input type="time" mdp-time-picker ng-model="currentTime2" />
+      </md-input-container>
+    <!-- -->
+    </md-content>
+  </div>
+</script>
+  <!-- /background -->
+<!-- </md-sidenav> -->
   
   <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg">
     <i class="mdi-editor-mode-edit i-24"></i>
