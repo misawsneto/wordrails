@@ -16,11 +16,13 @@ public class PersonService {
 
 	private UserService userService;
 	private PersonRepository personRepository;
+	private EmailService emailService;
 
 	@Autowired
-	public PersonService(UserService userService, PersonRepository personRepository) {
+	public PersonService(UserService userService, PersonRepository personRepository, EmailService emailService) {
 		this.userService = userService;
 		this.personRepository = personRepository;
+		this.emailService = emailService;
 	}
 
 	public boolean toggleRecommend(Person person, Integer postId) {
@@ -49,7 +51,7 @@ public class PersonService {
 		return bookmarkInserted;
 	}
 
-	public Person create(String name, String username, String password, String email) {
+	public Person create(String name, String username, String password, String email, boolean emailNotification) {
 		if (personRepository.findOne(QPerson.person.username.eq(username)) != null) {
 			throw new AlreadyExistsException("User with username " + username + " already exists");
 		} else if (personRepository.findOne(QPerson.person.email.eq(email)) != null) {
@@ -66,6 +68,14 @@ public class PersonService {
 
 		personRepository.save(person);
 
+		if(emailNotification){
+			emailService.sendSimpleMail(email, "Boas vindas", createNetworkInvitation());
+		}
+
 		return person;
+	}
+
+	private String createNetworkInvitation(){
+		return "Boas vindas ao site ...";
 	}
 }

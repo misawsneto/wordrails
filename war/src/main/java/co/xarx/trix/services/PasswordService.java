@@ -18,16 +18,21 @@ import java.util.UUID;
 @Service
 public class PasswordService {
 
-	@Autowired
 	private PersonRepository personRepository;
-	@Autowired
 	private UserRepository userRepository;
-	@Autowired
 	private EmailService emailService;
-	@Autowired
 	private PasswordResetRepository passwordResetRepository;
-	@Autowired
 	private NetworkRepository networkRepository;
+
+	@Autowired
+	public PasswordService(PersonRepository personRepository, UserRepository userRepository,
+						   EmailService emailService, NetworkRepository networkRepository, PasswordResetRepository passwordResetRepository){
+		this.personRepository = personRepository;
+		this.userRepository = userRepository;
+		this.emailService = emailService;
+		this.passwordResetRepository = passwordResetRepository;
+		this.networkRepository = networkRepository;
+	}
 
 	public void resetPassword(String email){
 		Assert.hasText(email, "Null email");
