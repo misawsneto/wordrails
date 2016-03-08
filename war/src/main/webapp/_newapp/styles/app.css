@@ -7693,6 +7693,11 @@ bg-none {
   min-height: 500px;
 }
 
+.fr-toolbar .fr-command.fr-btn,
+.fr-popup .fr-command.fr-btn:focus {
+  color: #222;
+}
+
 .ph-dk::-webkit-input-placeholder {
   /* WebKit, Blink, Edge */
 
@@ -7730,6 +7735,14 @@ bg-none {
 
 .o-f-v {
   overflow: visible!important;
+}
+
+.o-f-h {
+  overflow: hidden;
+}
+
+.d-i-b {
+  display: inline-block;
 }
 
 .bg-t {
@@ -7784,10 +7797,6 @@ bg-none {
 
 .z-index-5 {
   z-index: 5;
-}
-
-.o-f-h {
-  overflow: hidden;
 }
 
 .hbox {

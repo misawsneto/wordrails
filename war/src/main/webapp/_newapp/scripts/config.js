@@ -95,6 +95,11 @@ angular.module('app')
   })
 
   .config(configCustomMDCssTheme)
+  .value('froalaConfig', {
+    toolbarInline: false,
+    placeholderText: 'Edit Your Content Here!'
+    
+  })
 
   .run(function($rootScope){
     $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){ 
@@ -221,6 +226,11 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".background { background-color: " + color + "; " + contrast + " }", index + 1);
       index += 2;
 
+      if(cssname === 'primary' && name === 'default'){
+        stylesheet.insertRule(".fr-toolbar { border-color: " + color + "}", index);
+        index ++;
+      }
+
       if(cssname === 'warn' && name === 'default'){
         stylesheet.insertRule("md-toast.md-" + cssname + "-" + name + " > div { background-color: " + color + "!important; color: #f5f5f5 }", index);
         index ++;
@@ -252,18 +262,22 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
                               ".default-bg md-dialog-content{ "+
                               "   background-color: " + color + "!important; " + contrast + " }", index);
         stylesheet.insertRule(".advanced-search-menu > .arrow:after { border-bottom-color: " + color + "!important; }", index);
-        index += 2;
+        stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn, .fr-popup .fr-command.fr-btn{" + contrast + "}", index);
+        stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn.fr-dropdown::after, .fr-popup .fr-command.fr-btn.fr-dropdown::after{" + contrast + "}", index);
+        console.log(contrast);
+        index += 4;
       }
       if(cssname === 'background' && name === 'hue-1'){
-        stylesheet.insertRule(".card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index);
+        stylesheet.insertRule(".fr-toolbar, .card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index);
         stylesheet.insertRule(".default-bg-text button.md-button { " + contrast + " }", index);
         stylesheet.insertRule(".default-bg-text md-input-container:not(.md-input-invalid).md-input-has-value label { " + contrast + " }", index);
         stylesheet.insertRule(".default-bg-text md-input-container .md-input { " + contrast + "!important }", index);
         index += 4;
       }
-      // if(cssname === 'background' && name === 'hue-3'){
-      //   index += 1;
-      // }
+      if(cssname === 'background' && name === 'hue-3'){
+        stylesheet.insertRule(".fr-box.fr-basic .fr-wrapper { background-color: " + color + ";" + contrast + " }", index);
+        index += 1;
+      }
     };
     clearStyleSheet = function() {
       var results;

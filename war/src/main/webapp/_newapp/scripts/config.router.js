@@ -69,7 +69,7 @@ angular.module('app')
                 url: '/post',
                 templateUrl: '/views/settings/settings-post.html',
                 data : { titleTranslate: 'titles.POST', title: 'Publicação', folded: true },
-                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-post.js']),
+                resolve: load(['froala', 'angularFileUpload', '/scripts/controllers/settings/settings-post.js']),
                 controller: 'SettingsPostCtrl'
               })
 

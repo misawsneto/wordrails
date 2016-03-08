@@ -19,6 +19,60 @@ angular.module('app')
           ]
       },
       {
+          name: 'froala',
+          module: true,
+          files: [
+            // froala style
+            '/libs/angular/froala-wysiwyg-editor/css/froala_editor.min.css',
+            '/libs/angular/froala-wysiwyg-editor/css/froala_style.min.css',
+            // plugins styles
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/char_counter.css',
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/code_view.css',
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/colors.css',
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/emoticons.css',
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/file.css',
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/fullscreen.css',
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/image_manager.css',
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/image.css',
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/line_breaker.css',
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/table.css',
+            '/libs/angular/froala-wysiwyg-editor/css/plugins/video.css',
+            // // froala js
+            // '/libs/angular/froala-wysiwyg-editor/js/froala_editor.min.js',
+            // // froala plugins js
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/align.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/char_counter.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/code_beautifier.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/code_view.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/colors.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/emoticons.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/entities.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/file.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/font_family.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/font_size.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/fullscreen.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/image.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/image_manager.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/inline_style.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/line_breaker.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/link.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/lists.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/paragraph_format.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/paragraph_style.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/quote.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/save.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/table.min.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/plugins/video.min.js',
+            // // langueges
+            // '/libs/angular/froala-wysiwyg-editor/js/languages/en_gb.js',
+            // '/libs/angular/froala-wysiwyg-editor/js/languages/pt_br.js',
+            // angular froala
+            '/scripts/froala.all.js',
+            '/libs/angular/angular-froala/src/angular-froala.js',
+            '/libs/angular/angular-froala/src/froala-sanitize.js'
+          ]
+      },
+      {
           name: 'ngMaterial.components',
           module: true,
           files: [
