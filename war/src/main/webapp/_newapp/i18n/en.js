@@ -44,7 +44,8 @@
 		"FILTER_BY_STATION": "Filter by station",
 		"FILTER_BY_DATE": "Filter by date",
 		"POST": "Post",
-		"NEW_POST": "New publication"
+		"NEW_POST": "New publication",
+		"PUBLISH": "Publish"
 	},
 	"actions":{
 		"ADD": "Add",

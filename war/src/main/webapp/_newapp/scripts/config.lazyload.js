@@ -19,6 +19,13 @@ angular.module('app')
           ]
       },
       {
+          name: 'monospaced.elastic',
+          module: true,
+          files: [
+            '/libs/angular/angular-elastic/elastic.js'
+          ]
+      },
+      {
           name: 'froala',
           module: true,
           files: [

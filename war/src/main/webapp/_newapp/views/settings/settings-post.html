@@ -1,4 +1,34 @@
-<div class="pos-abt w-full top-0 bottom-0 left-0"> <!-- abs -->
+<div class="p-xs top-0 left-0 w-full pos-abt md-whiteframe-z1 md-primary-hue-1 background">
+	<md-button class="pull-right font-bold" translate="titles.PUBLISH">
+		Publicar
+	</md-button>
+	
+	<!-- left links-->
+	<md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
+    <i class="mdi mdi2-delete i-20"></i>
+  </md-button>
+	<md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
+    <i class="mdi mdi2-information-outline i-20"></i>
+  </md-button>
+	<md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
+    <i class="mdi mdi2-calendar i-20"></i>
+  </md-button>
+  <md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
+    <i class="mdi mdi2-calendar-clock i-20"></i>
+  </md-button>
+	<md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
+    <i class="mdi mdi2-link-variant i-20"></i>
+  </md-button>
+  <md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
+    <i class="mdi mdi2-file i-20"></i>
+  </md-button>
+  <md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
+    <i class="mdi mdi2-library-plus i-20"></i>
+  </md-button>
+  <!-- /left links-->
+</div>
+
+<div class="pos-abt w-full top-0 bottom-0 left-0" style="margin-top: 56px;"> <!-- abs -->
   <div class="hbox">
     <div class="col"> <!-- col -->
       <div class="vbox"> <!-- vbox -->
@@ -7,7 +37,7 @@
             <div class="cell-inner"><!-- cell -->
 
 							<!-- main content -->
-							<div class="block-800 m-auto">
+							<div class="block-800 m-auto p-r p-l animated zoomIn">
 								<!-- image speed dial -->
 								<div class="media-speed-dial p">
 									<div class="lock-size" layout="row" layout-align="center center">
@@ -20,10 +50,10 @@
 							    </div>
 								</div>
 								<!-- image speed dial -->
-								<div class="text-lg"> 
-					      	<textarea rows="1" placeholder="Title" class="w-full ph-dk p-sm r m-b md-whiteframe-z0 md-background-hue-3 background" style="resize: none;"></textarea>
-					      </div>
-								<textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-model="sample2Text"></textarea>
+					      	<textarea rows="1" msd-elastic ng-model="editingPost.title" placeholder="Title" class="text-lg w-full ph-dk p-sm r m-b md-whiteframe-z1 md-background-hue-3 background" style="resize: none;"></textarea>
+									<div class="md-whiteframe-z2 m-b-lg"> 
+										<textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-model="sample2Text"></textarea>
+						      </div>
 							</div>
 							<!-- /main content -->
 
