@@ -115,13 +115,12 @@
                         <a href class="font-bold block text-md">{{publication.title}}</a>
                         {{publication.snippet | characters:170}}
                         <div class="p-t-sm text-xs font-500">
-                          <div class="text-u-c r" ng-click="" class="p-xs" md-ink-ripple ng-click="">editar
+                          <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
                           </div>
-                          <span class="text-u-c p-l r">
-                            <a class="p-xs" md-ink-ripple ng-click="">remover</a>
-                          </span>
+                          <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
+                          </div>
                         </div>
-                        <div class="list-group-item b-n p-sm p-t no-padding-h">
+                        <div class="list-group-item b-n p-sm p-t-sm no-padding-h">
                           <a href class="pull-left m-r-sm"><img src="images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
                           <div class="clear font-normal p-xs">
                             <a href class="font-500 block">{{publication.authorName}}</a>
@@ -204,6 +203,7 @@
   <!-- /background -->
 <!-- </md-sidenav> -->
   
-  <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg">
+  <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
+    ui-sref="app.post">
     <i class="mdi-editor-mode-edit i-24"></i>
   </md-button>

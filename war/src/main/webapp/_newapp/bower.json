@@ -63,6 +63,7 @@
     "flot-spline": "*",
     "waves": "~0.7.2",
     "mcg": "https://github.com/mbitson/mcg.git",
-    "mdPickers": "^0.5.2"
+    "mdPickers": "^0.5.2",
+    "angular-froala": "^2.2.1"
   }
 }
