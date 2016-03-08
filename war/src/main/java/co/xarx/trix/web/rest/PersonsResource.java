@@ -407,7 +407,7 @@ public class PersonsResource {
 
 	@POST
 	@Path("/create")
-	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, IOException{
+	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request, @QueryParam("invitation") String invitation) throws ConflictException, BadRequestException, IOException{
 		Person person = null;
 		User user;
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
