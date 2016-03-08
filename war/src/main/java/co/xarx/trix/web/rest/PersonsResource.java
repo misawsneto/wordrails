@@ -641,7 +641,10 @@ public class PersonsResource {
 				sr.writer = stationRolesUpdate.writer;
 			}
 
-			stationRolesRepository.save(roles);
+			for (StationRole sr: roles) {
+				stationRolesRepository.save(sr);
+			}
+
 
 			List<Person> persons = personRepository.findAll(stationRolesUpdate.personsIds);
 			List<Station> stations = stationRepository.findAll(stationRolesUpdate.stationsIds);
@@ -693,7 +696,10 @@ public class PersonsResource {
 				person.user.enabled = true;
 			}
 
-			personRepository.save(persons);
+			for (Person person: persons) {
+				personRepository.save(person);
+			}
+
 		}
 		return Response.status(Status.CREATED).build();
 	}
@@ -710,7 +716,9 @@ public class PersonsResource {
 				person.user.enabled = false;
 			}
 
-			personRepository.save(persons);
+			for (Person person : persons) {
+				personRepository.save(person);
+			}
 		}
 		return Response.status(Status.CREATED).build();
 	}
