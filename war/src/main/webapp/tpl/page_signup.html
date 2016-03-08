@@ -5,7 +5,7 @@
             <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
           </div>
         </div>
-        <form name="form" class="form-validation" ng-submit="app.signup(user)">
+        <form name="form" class="form-validation" ng-submit="app.signup(user, $state.params.invitation)">
           <div class="text-danger wrapper text-center" ng-show="authError">
               {{authError}}
           </div>

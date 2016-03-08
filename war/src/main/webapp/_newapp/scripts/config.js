@@ -264,7 +264,6 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         stylesheet.insertRule(".advanced-search-menu > .arrow:after { border-bottom-color: " + color + "!important; }", index);
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn, .fr-popup .fr-command.fr-btn{" + contrast + "}", index);
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn.fr-dropdown::after, .fr-popup .fr-command.fr-btn.fr-dropdown::after{" + contrast + "}", index);
-        console.log(contrast);
         index += 4;
       }
       if(cssname === 'background' && name === 'hue-1'){
