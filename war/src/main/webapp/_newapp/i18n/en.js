@@ -45,7 +45,8 @@
 		"FILTER_BY_DATE": "Filter by date",
 		"POST": "Post",
 		"NEW_POST": "New publication",
-		"PUBLISH": "Publish"
+		"PUBLISH": "Publish",
+		"SAVE_DRAFT": "Save Draft"
 	},
 	"actions":{
 		"ADD": "Add",

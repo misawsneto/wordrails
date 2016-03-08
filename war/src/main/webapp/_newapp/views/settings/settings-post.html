@@ -1,6 +1,12 @@
 <div class="p-xs top-0 left-0 w-full pos-abt md-whiteframe-z1 md-primary-hue-1 background">
+	<md-button class="pull-right md-icon-button" style="margin-top: 2px;">
+		<i class="mdi mdi2-menu i-20"></i>
+	</md-button>
 	<md-button class="pull-right font-bold" translate="titles.PUBLISH">
 		Publicar
+	</md-button>
+	<md-button class="pull-right font-bold" translate="titles.SAVE_DRAFT">
+		Salvar rascunho
 	</md-button>
 	
 	<!-- left links-->
@@ -47,10 +53,13 @@
 									  <md-button aria-label="menu" class="md-fab md-accent md-mini">
 									    <i class="mdi mdi2-video i-20"></i>
 									  </md-button>
+									  <md-button aria-label="menu" class="md-fab md-accent md-mini">
+									    <i class="mdi mdi2-microphone i-20"></i>
+									  </md-button>
 							    </div>
 								</div>
 								<!-- image speed dial -->
-					      	<textarea rows="1" msd-elastic ng-model="editingPost.title" placeholder="Title" class="text-lg w-full ph-dk p-sm r m-b md-whiteframe-z1 md-background-hue-3 background" style="resize: none;"></textarea>
+					      	<textarea rows="1" msd-elastic ng-model="editingPost.title" placeholder="Title" class="font-500 text-lg w-full ph-dk p-sm r m-b md-whiteframe-z1 md-background-hue-3 background" style="resize: none;"></textarea>
 									<div class="md-whiteframe-z2 m-b-lg"> 
 										<textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-model="sample2Text"></textarea>
 						      </div>

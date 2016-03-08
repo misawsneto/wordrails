@@ -864,12 +864,6 @@ angular.module('app')
               .state('access.signup', {
                   url: '/signup?invitation',
                   templateUrl: 'tpl/page_signup.html?' + GLOBAL_URL_HASH,
-                  resolve: {
-                      deps: ['uiLoad',
-                        function( uiLoad ){
-                          return uiLoad.load( ['js/controllers/signup.js'] );
-                      }]
-                  }
               })
               .state('access.forgotpwd', {
                   url: '/forgotpwd',
