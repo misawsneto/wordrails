@@ -37,6 +37,8 @@ module.exports = {
                     'textAngular/dist/**',
                     'venturocket-angular-slider/build/**',
                     'mdPickers/dist/**',
+                    'froala-wysiwyg-editor/**',
+                    'angular-froala/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

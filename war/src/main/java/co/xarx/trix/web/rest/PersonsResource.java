@@ -673,7 +673,10 @@ public class PersonsResource {
 				}
 			}
 
-			stationRolesRepository.save(allRoles);
+			for (StationRole sr : allRoles ) {
+				stationRolesRepository.save(sr);
+			}
+
 		}
 		return Response.status(Status.CREATED).build();
 	}
