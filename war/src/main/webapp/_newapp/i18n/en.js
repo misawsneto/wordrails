@@ -37,7 +37,14 @@
 		"START_DATE": "Start date",
 		"END_DATE": "End date",
 		"START_TIME": "Start time",
-		"END_TIME": "End time"
+		"END_TIME": "End time",
+		"EDIT": "Edit",
+		"REMOVE": "Remove"
+		"FILTER_BY": "Filter by",
+		"FILTER_BY_STATION": "Filter by station",
+		"FILTER_BY_DATE": "Filter by date",
+		"POST": "Post",
+		"NEW_POST": "New publication"
 	},
 	"actions":{
 		"ADD": "Add",

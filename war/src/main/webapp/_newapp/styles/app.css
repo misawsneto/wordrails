@@ -7786,6 +7786,10 @@ bg-none {
   z-index: 5;
 }
 
+.o-f-h {
+  overflow: hidden;
+}
+
 .hbox {
   display: table;
   width: 100%;
