@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 @Service
-public class EmailService {
+	public class EmailService {
 
 	private final String NO_REPLY = "noreply@trix.rocks";
 	private final String USERNAME = "AKIAJKZJWC7NU3RF3URQ";
@@ -97,12 +97,12 @@ public class EmailService {
 			Color c2 = Color.decode(network.navbarColor);
 
 			HashMap<String, Object> scopes = new HashMap<String, Object>();
-			scopes.put("name", invitation.personName);
+			scopes.put("name", invitation.person.name);
 			scopes.put("networkName", network.name);
 			scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", " + c1.getBlue() + " )");
 			scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", " + c2.getBlue() + " )");
-			scopes.put("link", "http://" + (network.domain != null ? network.domain : network.getTenantId() + ".trix.rocks"));
-			scopes.put("invitationUrl", invitation.getUrl());
+			scopes.put("link", "http://" + network.getRealDomain());
+			scopes.put("invitationUrl", invitation.getInvitationUrl());
 			scopes.put("networkSubdomain", network.getTenantId());
 			scopes.put("network", network);
 			scopes.put("hash", invitation.hash);
@@ -117,7 +117,7 @@ public class EmailService {
 
 			String emailBody = writer.toString();
 			String subject = "[ "+ network.name +" ]" + " Convite ";
-			sendSimpleMail(invitation.email, subject, emailBody);
+			sendSimpleMail(invitation.person.email, subject, emailBody);
 		}catch (Exception e){
 			e.printStackTrace();
 		}

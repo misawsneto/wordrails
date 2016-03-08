@@ -40,8 +40,8 @@ public class PasswordService {
 		Assert.notNull(person, "Person not found");
 
 		PasswordReset passwordReset = new PasswordReset();
-		passwordReset.user = person.user;
-		passwordReset.hash = UUID.randomUUID().toString();
+		passwordReset.setUser(person.user);
+		passwordReset.setHash(UUID.randomUUID().toString());
 
 		passwordResetRepository.save(passwordReset);
 
@@ -58,7 +58,7 @@ public class PasswordService {
 			throw new IllegalIdentifierException("No hash to recover password");
 		}
 
-		passwordReset.user.password = password;
+		passwordReset.user.setPassword(password);
 		userRepository.save(passwordReset.user);
 
 		passwordResetRepository.deleteByUserId(passwordReset.user.id);
