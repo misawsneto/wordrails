@@ -261,7 +261,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
                               ".default-bg md-dialog-actions,"+
                               ".default-bg md-dialog-content{ "+
                               "   background-color: " + color + "!important; " + contrast + " }", index);
-        stylesheet.insertRule(".advanced-search-menu > .arrow:after { border-bottom-color: " + color + "!important; }", index);
+        stylesheet.insertRule(".with-arrow > .arrow:after, .advanced-search-menu > .arrow:after { border-bottom-color: " + color + "!important; }", index);
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn, .fr-popup .fr-command.fr-btn{" + contrast + "}", index);
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn.fr-dropdown::after, .fr-popup .fr-command.fr-btn.fr-dropdown::after{" + contrast + "}", index);
         index += 4;

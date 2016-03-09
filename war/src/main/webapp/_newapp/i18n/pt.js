@@ -47,7 +47,9 @@
 		"NEW_POST": "Nova publicação",
 		"PUBLISH": "Publicar",
 		"SAVE_DRAFT": "Salvar Rascunho",
-		"TITLE": "Título"
+		"SAVE": "Savar",
+		"TITLE": "Título",
+		"ENTER_TAG": "Insira uma tag"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -106,7 +108,26 @@
 			"ALERT": "Mensagem de alerta!"
 		},
 		"post": {
-			"OPTIONS": "Opções de publicação"
+			"menu":{
+				"INFO": "Informações",
+				"SCHEDULE_PUBLICATION": "Agendar publicação",
+				"CLEAR_POST": "Limpar",
+				"POST_DATE": "Data de publicação",
+				"DELETE_DATE": "Data de remoção automática",
+				"CUSTOMIZE_LINK": "Personalização do link",
+				"ATTACH_POST": "Anexar outras notícias"
+			},
+			"OPTIONS": "Opções de publicação",
+			"CUSTOMIZE_LINK_DESC": "Endereço web personalizado para acesso através da web",
+			"SCHEDULED_DATE_DESC": "Agendamento de publicação automática",
+			"SCHEDULED_DATE": "Data de agendamento",
+			"SCHEDULED_TIME": "Horário de agendamento",
+			"POST_DATE_DESC": "Data da publicação que é exibida na leitura",
+			"POST_DATE": "Data da publicação",
+			"POST_TIME": "Hora da publicação",
+			"DELETE_DATE_DESC": "Data e hora de remoção automática da publicação",
+			"DELETE_DATE": "Data de remoção",
+			"DELETE_TIME": "Hora da remoção"
 		},
 		"SET_COLOR": "Configure as paletas de cores",
 		"COLOR_PALETTE": "Paleta de Cores",

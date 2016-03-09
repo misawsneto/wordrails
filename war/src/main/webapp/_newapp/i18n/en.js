@@ -47,7 +47,9 @@
 		"NEW_POST": "New publication",
 		"PUBLISH": "Publish",
 		"SAVE_DRAFT": "Save Draft",
-		"TITLE": "Title"
+		"SAVE": "Save",
+		"TITLE": "Title",
+		"ENTER_TAG": "Enter a tag"
 	},
 	"actions":{
 		"ADD": "Add",
@@ -106,7 +108,26 @@
 			"ALERT": "Alert message!"
 		},
 		"post": {
-			"OPTIONS": "Publication options"
+			"menu":{
+				"INFO": "Post informations",
+				"SCHEDULE_PUBLICATION": "Schedule publication",
+				"CLEAR_POST": "Start from scratch",
+				"POST_DATE": "Post date",
+				"DELETE_DATE": "Post auto delete date",
+				"CUSTOMIZE_LINK": "Customize link",
+				"ATTACH_POST": "Attach other posts to this one"
+			},
+			"OPTIONS": "Publication options",
+			"CUSTOMIZE_LINK_DESC": "Customized URL address for the web",
+			"SCHEDULED_DATE_DESC": "Schedule date for auto publishing",
+			"SCHEDULED_DATE": "Scheduled date",
+			"SCHEDULED_TIME": "Scheduled time",
+			"POST_DATE_DESC": "Publication date shown while reading",
+			"POST_DATE": "Post date",
+			"POST_TIME": "Post time",
+			"DELETE_DATE_DESC": "Automatic deletion date and time",
+			"DELETE_DATE": "Deletion date",
+			"DELETE_TIME": "Deletion time"
 		},
 		"SET_COLOR": "Set the color palettes",
 		"COLOR_PALETTE": "Color Palette",

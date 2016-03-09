@@ -2,33 +2,166 @@
 	<md-button class="pull-right md-icon-button" style="margin-top: 2px;" ng-click="toggleOptions()">
 		<i class="mdi mdi2-menu i-20"></i>
 	</md-button>
-	<md-button class="pull-right font-bold" translate="titles.PUBLISH">
+	<md-button class="pull-right font-bold visible-sm visible-md visible-lg" translate="titles.PUBLISH">
 		Publicar
 	</md-button>
-	<md-button class="pull-right font-bold" translate="titles.SAVE_DRAFT">
+	<md-button class="pull-right font-bold visible-sm visible-md visible-lg" translate="titles.SAVE_DRAFT">
 		Salvar rascunho
+	</md-button>
+
+	<md-button class="pull-right md-icon-button visible-xs" style="margin: 5px 0 0 0;">
+		<i class="mdi mdi2-send i-20"></i>
+	</md-button>
+	<md-button class="pull-right md-icon-button visible-xs" style="margin: 5px 0 0 0;">
+		<i class="mdi mdi2-content-save i-20"></i>
 	</md-button>
 	
 	<!-- left links-->
-	<md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
+	<md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+		<md-tooltip md-direction="top">
+      {{'settings.post.menu.CLEAR_POST' | translate}}
+    </md-tooltip>
     <i class="mdi mdi2-delete i-20"></i>
   </md-button>
-	<md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
+	<md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+			<md-tooltip md-direction="top">
+        {{'settings.post.menu.INFO' | translate}}
+      </md-tooltip>
     <i class="mdi mdi2-information-outline i-20"></i>
   </md-button>
-	<md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
-    <i class="mdi mdi2-calendar i-20"></i>
-  </md-button>
-  <md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
-    <i class="mdi mdi2-calendar-clock i-20"></i>
-  </md-button>
-	<md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
-    <i class="mdi mdi2-link-variant i-20"></i>
-  </md-button>
-  <md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
-    <i class="mdi mdi2-file i-20"></i>
-  </md-button>
-  <md-button aria-label="Open demo menu" class="md-icon-button pull-left" style="margin-top: 5px;">
+
+  <!-- date button and dropdown -->
+	<div uib-dropdown class="inline" auto-close="disabled" is-open="postDateMenuOpen">
+		<md-button ng-click="resetPostDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+				<md-tooltip md-direction="top">
+          {{'settings.post.menu.POST_DATE' | translate}}
+        </md-tooltip>
+	    <i class="mdi mdi2-calendar i-20"></i>
+	  </md-button>
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="p-sm md-background-default background with-arrow z-index-5">
+	  	<div class="arrow lft" ></div>
+      <md-content class="w">
+	      <div class="pull-right">
+	        <a ng-click="postDateMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+	      </div>
+	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.POST_DATE_DESC' | translate}}
+	      </div>
+      	<md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.POST_DATE">Data inicial</label>
+          <input type="date" mdp-date-picker ng-model="postDate" ng-change="changePostDate()"/>
+        </md-input-container>
+        <md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.POST_TIME">Hora inicial</label>
+          <input type="time" mdp-time-picker ng-model="postDate" ng-change="changePostDate()" />
+        </md-input-container>
+        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
+					Salvar
+				</md-button>
+      </md-content>
+	  </div>
+  </div>
+  <!-- /date button and dropdown -->
+
+	<!-- schedule button and dropdown -->
+	<div uib-dropdown class="inline" auto-close="disabled" is-open="postScheduleMenuOpen" ng-if="postState !== 'PUBLISHED'">
+	  <md-button uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+	  		<md-tooltip md-direction="top">
+          {{'settings.post.menu.SCHEDULE_PUBLICATION' | translate}}
+        </md-tooltip>
+	    <i class="mdi mdi2-calendar-clock i-20"></i>
+	  </md-button>
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="p-sm md-background-default background with-arrow z-index-5">
+	  	<div class="arrow lft" ></div>
+      <md-content class="w">
+	      <div class="pull-right">
+	        <a ng-click="postScheduleMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+	      </div>
+	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.SCHEDULED_DATE_DESC' | translate}}
+	      </div>
+      	<md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.SCHEDULED_DATE">Data inicial</label>
+          <input type="date" mdp-date-picker ng-model="postScheduleDate" mdp-options="{minDate: postDate}" ng-change="changeScheduleDate();" />
+        </md-input-container>
+        <md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.SCHEDULED_TIME">Hora inicial</label>
+          <input type="time" mdp-time-picker ng-model="postScheduleDate" ng-change="changeScheduleDate();" />
+        </md-input-container>
+        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
+					Salvar
+				</md-button>
+      </md-content>
+	  </div>
+  </div>
+  <!-- /schedule button and dropdown -->
+
+  <!-- auto delete button and dropdown -->
+	<div uib-dropdown class="inline" auto-close="disabled" is-open="postDeleteMenuOpen">
+		<md-button uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+				<md-tooltip md-direction="top">
+          {{'settings.post.menu.DELETE_DATE' | translate}}
+        </md-tooltip>
+	    <i class="mdi mdi2-calendar-remove i-20"></i>
+	  </md-button>
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="p-sm md-background-default background with-arrow z-index-5">
+	  	<div class="arrow lft" ></div>
+      <md-content class="w">
+	      <div class="pull-right">
+	        <a ng-click="postDeleteMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+	      </div>
+	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.DELETE_DATE_DESC' | translate}}
+	      </div>
+      	<md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.DELETE_DATE">Data inicial</label>
+          <input type="date" mdp-date-picker ng-model="postDeleteDate" ng-change="changeDeleteDate();"/>
+        </md-input-container>
+        <md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.DELETE_TIME">Hora inicial</label>
+          <input type="time" mdp-time-picker ng-model="postDeleteDate" ng-change="changeDeleteDate();"/>
+        </md-input-container>
+        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
+					Salvar
+				</md-button>
+      </md-content>
+	  </div>
+  </div>
+  <!-- /auto delete button and dropdown -->
+
+	<!-- customize link and dropdown -->
+	<div uib-dropdown class="inline" auto-close="disabled" is-open="postPermalinkMenuOpen">
+		<md-button uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+			<md-tooltip md-direction="top">
+        {{'settings.post.menu.CUSTOMIZE_LINK' | translate}}
+      </md-tooltip>
+	    <i class="mdi mdi2-link-variant i-20"></i>
+	  </md-button>
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="p-sm md-background-default background with-arrow z-index-5">
+	  	<div class="arrow lft" ></div>
+      <md-content class="w-xxl">
+	      <div class="pull-right">
+	        <a ng-click="postPermalinkMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+	      </div>
+	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.CUSTOMIZE_LINK_DESC' | translate}}
+	      </div>
+      	<md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.menu.CUSTOMIZE_LINK"></label>
+          <input ng-model="customizedLink.slug" />
+        </md-input-container>
+        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
+					Salvar
+				</md-button>
+      </md-content>
+	  </div>
+  </div>
+  <!-- /customize link and dropdown -->
+
+  <md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+  	<md-tooltip md-direction="top">
+      {{'settings.post.menu.ATTACH_POST' | translate}}
+    </md-tooltip>
     <i class="mdi mdi2-library-plus i-20"></i>
   </md-button>
   <!-- /left links-->
@@ -59,13 +192,14 @@
 							    </div>
 								</div>
 								<!-- image speed dial -->
-				      	<textarea rows="1" msd-elastic ng-model="editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 text-lg w-full ph-dk p-sm r m-b-sm md-whiteframe-z1 md-background-hue-3 background" style="resize: none;"></textarea>
+				      	<textarea rows="1" msd-elastic ng-model="editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 text-lg w-full ph-dk p-sm r m-b-sm md-whiteframe-z1 md-background-hue-3 background" style="resize: none;">
+				      	</textarea>
 
-				      	<md-chips ng-model="tags" placeholder="Enter a tag" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag">
+				      	<md-chips ng-model="tags" placeholder="{{'titles.ENTER_TAG' | translate}}" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag">
 				      	</md-chips>
 
 								<div class="md-whiteframe-z2 m-b-lg"> 
-									<textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-model="sample2Text"></textarea>
+									<textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-model="editingPost.body"></textarea>
 					      </div>
 							</div>
 							<!-- /main content -->
