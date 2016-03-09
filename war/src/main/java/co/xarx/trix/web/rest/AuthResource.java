@@ -105,4 +105,10 @@ public class AuthResource {
 		passwordService.updatePassword(hash, password);
 		return Response.status(Response.Status.OK).build();
 	}
+
+	@PUT
+	@Path("/")
+	public Response configInvited(){
+
+	}
 }
