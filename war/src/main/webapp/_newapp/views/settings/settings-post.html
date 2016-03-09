@@ -1,5 +1,5 @@
 <div class="p-xs top-0 left-0 w-full pos-abt md-whiteframe-z1 md-primary-hue-1 background">
-	<md-button class="pull-right md-icon-button" style="margin-top: 2px;">
+	<md-button class="pull-right md-icon-button" style="margin-top: 2px;" ng-click="toggleOptions()">
 		<i class="mdi mdi2-menu i-20"></i>
 	</md-button>
 	<md-button class="pull-right font-bold" translate="titles.PUBLISH">
@@ -59,10 +59,14 @@
 							    </div>
 								</div>
 								<!-- image speed dial -->
-					      	<textarea rows="1" msd-elastic ng-model="editingPost.title" placeholder="Title" class="font-500 text-lg w-full ph-dk p-sm r m-b md-whiteframe-z1 md-background-hue-3 background" style="resize: none;"></textarea>
-									<div class="md-whiteframe-z2 m-b-lg"> 
-										<textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-model="sample2Text"></textarea>
-						      </div>
+				      	<textarea rows="1" msd-elastic ng-model="editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 text-lg w-full ph-dk p-sm r m-b-sm md-whiteframe-z1 md-background-hue-3 background" style="resize: none;"></textarea>
+
+				      	<md-chips ng-model="tags" placeholder="Enter a tag" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag">
+				      	</md-chips>
+
+								<div class="md-whiteframe-z2 m-b-lg"> 
+									<textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-model="sample2Text"></textarea>
+					      </div>
 							</div>
 							<!-- /main content -->
 
@@ -73,3 +77,11 @@
 		</div><!-- /col -->
 	</div>
 </div> <!-- /abs -->
+
+<md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 theming" md-component-id="more-options">
+  <md-toolbar class="md-theme-light">
+    <h1 class="md-toolbar-tools" translate="settings.post.OPTIONS"></h1>
+  </md-toolbar>
+  <md-content class="m-b">
+  </md-content>
+</md-sidenav>

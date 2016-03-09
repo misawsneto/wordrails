@@ -39,14 +39,15 @@
 		"START_TIME": "Start time",
 		"END_TIME": "End time",
 		"EDIT": "Edit",
-		"REMOVE": "Remove"
+		"REMOVE": "Remove",
 		"FILTER_BY": "Filter by",
 		"FILTER_BY_STATION": "Filter by station",
 		"FILTER_BY_DATE": "Filter by date",
 		"POST": "Post",
 		"NEW_POST": "New publication",
 		"PUBLISH": "Publish",
-		"SAVE_DRAFT": "Save Draft"
+		"SAVE_DRAFT": "Save Draft",
+		"TITLE": "Title"
 	},
 	"actions":{
 		"ADD": "Add",
@@ -103,6 +104,9 @@
 			"APPLY_THEME_DIALOG": "<strong>Attention!</strong> Changes to colors and appearance will be applied to all devices. Do you want to continue?",
 			"TAB": "Tab",
 			"ALERT": "Alert message!"
+		},
+		"post": {
+			"OPTIONS": "Publication options"
 		},
 		"SET_COLOR": "Set the color palettes",
 		"COLOR_PALETTE": "Color Palette",

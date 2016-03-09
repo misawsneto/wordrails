@@ -1,16 +1,21 @@
-app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval){
+app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate){
 
 	$scope.content = '';
 
 	$scope.mediaOptionsOpen = false;
 
+	var lang = $translate.use();
+
+	$scope.tags = [];
+
 	$scope.froalaOptions = {
- 		toolbarInline: false,
+		toolbarInline: false,
       placeholderText: 'Enter Text Here',
       heightMin: 200,
       fontSizeDefaultSelection: '18',
       codeMirror: true,
+      language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
       codeMirrorOptions: {
 		  indentWithTabs: true,
 		  lineNumbers: true,
@@ -27,4 +32,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 				$(this).remove();
 		});
 	});
+
+	// sidenav toggle
+	$scope.toggleOptions = buildToggler('more-options');
+
+	function buildToggler(navID) {
+      return function() {
+        $mdSidenav(navID)
+          .toggle()
+      }
+    }
+    // -----------
 }]);

@@ -46,7 +46,8 @@
 		"POST": "Publicação",
 		"NEW_POST": "Nova publicação",
 		"PUBLISH": "Publicar",
-		"SAVE_DRAFT": "Salvar Rascunho"
+		"SAVE_DRAFT": "Salvar Rascunho",
+		"TITLE": "Título"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -103,6 +104,9 @@
 			"APPLY_THEME_DIALOG": "<strong>Atenção!</strong> As modificações de aparência serão aplicadas a todos os dispositivos. Tem certeza que deseja continuar?",
 			"TAB": "Aba",
 			"ALERT": "Mensagem de alerta!"
+		},
+		"post": {
+			"OPTIONS": "Opções de publicação"
 		},
 		"SET_COLOR": "Configure as paletas de cores",
 		"COLOR_PALETTE": "Paleta de Cores",
