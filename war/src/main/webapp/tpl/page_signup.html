@@ -1,34 +1,33 @@
-  <div class="center-block w-xxl w-auto-xs p-v-md">
-    <div class="navbar">
-      <div class="wrapper text-center">
-        <div class="text-center thumb-lg">
-          <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
-        </div>
+<div class="center-block w-xxl w-auto-xs p-v-md">
+  <div class="navbar">
+    <div class="wrapper text-center">
+      <div class="text-center thumb-lg">
+        <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
       </div>
     </div>
-
-    <div class="p-lg panel md-whiteframe-z1 text-color m">
-      <form name="form" class="form-validation" ng-submit="app.signup(user, $state.params.invitation ? $state.params.invitation : $state.params.hash)">
-        <div class="md-form-group">
-          <input class="md-input" ng-model="user.name" required>
-          <label>Nome</label>
-        </div>
-        <div class="md-form-group">
-          <input class="md-input" ng-model="user.username" required>
-          <label>Usuário</label>
-        </div>
-        <div class="md-form-group">
-          <input type="email" class="md-input" ng-model="user.email" required>
-          <label>Email</label>
-        </div>
-        <div class="md-form-group">
-          <input type="password" class="md-input" ng-model="user.password" required>
-          <label>Senha</label>
-        </div>
-        <button md-ink-ripple type="submit" class="btn-custom md-btn text-u-c btn-block">Cadastrar</button>
-      </form>
-    </div>
-    <div class="text-center" ng-bind-html="app.initData.network.loginFooterMessage">
-      </div>
-
   </div>
+
+  <div class="p-lg panel md-whiteframe-z1 text-color m">
+    <form name="form" ng-submit="app.signup(user, $state.params.invitation ? $state.params.invitation : $state.params.hash)">
+      <div class="md-form-group">
+        <input class="md-input" ng-model="user.name" required>
+        <label>Nome</label>
+      </div>
+      <div class="md-form-group">
+        <input class="md-input" ng-model="user.username" required>
+        <label>Usuário</label>
+      </div>
+      <div class="md-form-group">
+        <input type="email" class="md-input" ng-model="user.email" required>
+        <label>Email</label>
+      </div>
+      <div class="md-form-group">
+        <input type="password" class="md-input" ng-model="user.password" required>
+        <label>Senha</label>
+      </div>
+      <button md-ink-ripple type="submit" class="btn-custom md-btn text-u-c btn-block">Cadastrar</button>
+    </form>
+  </div>
+  <div class="text-center" ng-bind-html="app.initData.network.loginFooterMessage">
+  </div>
+</div>
