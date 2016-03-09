@@ -115,6 +115,9 @@ public class PersonsResource {
 	@Autowired
 	private AmazonCloudService amazonCloudService;
 
+	@Autowired
+	private InvitationRepository invitationRepository;
+
 	@Context
 	private HttpServletRequest request;
 	@Context
@@ -437,6 +440,22 @@ public class PersonsResource {
 				person.user = user;
 
 				personRepository.save(person);
+
+				String invitation = personCreationObject.invitation;
+				if(invitation != null && !invitation.isEmpty()){
+					Invitation inv = invitationRepository.findByHash(invitation);
+					if(inv != null){
+						Station station = inv.station;
+						if(station != null){
+							StationRole sr = new StationRole();
+							sr.person = person;
+							sr.station = station;
+							stationRolesRepository.save(sr);
+							if(!inv.multipleUser)
+								invitationRepository.delete(inv);
+						}
+					}
+				}
 			}catch (javax.validation.ConstraintViolationException e){
 				BadRequestException badRequest = new BadRequestException();
 
@@ -641,7 +660,10 @@ public class PersonsResource {
 				sr.writer = stationRolesUpdate.writer;
 			}
 
-			stationRolesRepository.save(roles);
+			for (StationRole sr: roles) {
+				stationRolesRepository.save(sr);
+			}
+
 
 			List<Person> persons = personRepository.findAll(stationRolesUpdate.personsIds);
 			List<Station> stations = stationRepository.findAll(stationRolesUpdate.stationsIds);
@@ -693,7 +715,10 @@ public class PersonsResource {
 				person.user.enabled = true;
 			}
 
-			personRepository.save(persons);
+			for (Person person: persons) {
+				personRepository.save(person);
+			}
+
 		}
 		return Response.status(Status.CREATED).build();
 	}
@@ -710,7 +735,9 @@ public class PersonsResource {
 				person.user.enabled = false;
 			}
 
-			personRepository.save(persons);
+			for (Person person : persons) {
+				personRepository.save(person);
+			}
 		}
 		return Response.status(Status.CREATED).build();
 	}

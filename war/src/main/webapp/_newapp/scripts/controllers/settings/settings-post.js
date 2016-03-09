@@ -6,10 +6,19 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.mediaOptionsOpen = false;
 
 	$scope.froalaOptions = {
-     	toolbarInline: false,
+ 		toolbarInline: false,
       placeholderText: 'Enter Text Here',
       heightMin: 200,
-      fontSizeDefaultSelection: '18'
+      fontSizeDefaultSelection: '18',
+      codeMirror: true,
+      codeMirrorOptions: {
+		  indentWithTabs: true,
+		  lineNumbers: true,
+		  lineWrapping: true,
+		  mode: 'text/html',
+		  tabMode: 'indent',
+		  tabSize: 2
+		}
     }
 
 	$timeout(function(){

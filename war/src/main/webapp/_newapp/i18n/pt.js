@@ -44,7 +44,9 @@
 		"FILTER_BY_STATION": "Filtrar por estação",
 		"FILTER_BY_DATE": "Filtar por data",
 		"POST": "Publicação",
-		"NEW_POST": "Nova publicação"
+		"NEW_POST": "Nova publicação",
+		"PUBLISH": "Publicar",
+		"SAVE_DRAFT": "Salvar Rascunho"
 	},
 	"actions":{
 		"ADD": "Adicionar",

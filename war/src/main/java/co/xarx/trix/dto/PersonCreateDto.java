@@ -7,4 +7,5 @@ public class PersonCreateDto extends Person {
 
 	public StationRole stationRole;
 	public Boolean emailNotification;
+	public String invitation;
 }

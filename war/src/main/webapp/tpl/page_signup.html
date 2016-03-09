@@ -1,11 +1,11 @@
-    <div class="container w-xxl w-auto-xs" ng-controller="SignupFormController" ng-init="app.settings.container = false;">
+    <div class="container w-xxl w-auto-xs" ng-init="app.settings.container = false;">
       <div class="m-b-lg p-t-lg">
         <div class="wrapper text-center">
           <div class="text-center thumb-lg">
             <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
           </div>
         </div>
-        <form name="form" class="form-validation" ng-submit="app.signup(user)">
+        <form name="form" class="form-validation" ng-submit="app.signup(user, $state.params.invitation)">
           <div class="text-danger wrapper text-center" ng-show="authError">
               {{authError}}
           </div>
