@@ -30,6 +30,8 @@ public class Invitation extends BaseEntity {
 
 	public String invitationUrl;
 
+	public boolean multipleUser = false;
+
 	public boolean active = true;
 
 	@ManyToOne

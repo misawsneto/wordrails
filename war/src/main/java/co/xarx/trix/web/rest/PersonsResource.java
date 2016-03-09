@@ -115,6 +115,9 @@ public class PersonsResource {
 	@Autowired
 	private AmazonCloudService amazonCloudService;
 
+	@Autowired
+	private InvitationRepository invitationRepository;
+
 	@Context
 	private HttpServletRequest request;
 	@Context
@@ -407,7 +410,7 @@ public class PersonsResource {
 
 	@POST
 	@Path("/create")
-	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request, @QueryParam("invitation") String invitation) throws ConflictException, BadRequestException, IOException{
+	public Response create(PersonCreateDto personCreationObject, @Context HttpServletRequest request) throws ConflictException, BadRequestException, IOException{
 		Person person = null;
 		User user;
 		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
@@ -437,6 +440,22 @@ public class PersonsResource {
 				person.user = user;
 
 				personRepository.save(person);
+
+				String invitation = personCreationObject.invitation;
+				if(invitation != null && !invitation.isEmpty()){
+					Invitation inv = invitationRepository.findByHash(invitation);
+					if(inv != null){
+						Station station = inv.station;
+						if(station != null){
+							StationRole sr = new StationRole();
+							sr.person = person;
+							sr.station = station;
+							stationRolesRepository.save(sr);
+							if(!inv.multipleUser)
+								invitationRepository.delete(inv);
+						}
+					}
+				}
 			}catch (javax.validation.ConstraintViolationException e){
 				BadRequestException badRequest = new BadRequestException();
 
