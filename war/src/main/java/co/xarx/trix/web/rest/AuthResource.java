@@ -107,8 +107,8 @@ public class AuthResource {
 	}
 
 	@PUT
-	@Path("/")
-	public Response configInvited(){
-
+	@Path("/invitation/{hash}")
+	public Response configInvited(@PathParam("hash") String hash){
+		return Response.status(Response.Status.OK).build();
 	}
 }
