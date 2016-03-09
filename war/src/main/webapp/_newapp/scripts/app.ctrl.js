@@ -294,6 +294,6 @@ angular.module('app')
       }
 
       // ---------- /theming ----------
-
+      
     }
   ]);

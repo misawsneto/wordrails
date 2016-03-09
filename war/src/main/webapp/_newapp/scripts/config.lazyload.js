@@ -98,8 +98,8 @@ angular.module('app')
       {
           name: 'mdPickers',
           files: [
-              '/libs/angular/mdPickers/dist/mdPickers.css',
-              '/libs/angular/mdPickers/dist/mdPickers.js'
+              '/libs/angular/mdPickers/dist/mdPickers.min.css',
+              '/libs/angular/mdPickers/dist/mdPickers.min.js'
           ]
       },
       {
