@@ -35,10 +35,9 @@
       
         <div class="search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
           <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
+
+          <!-- dropdown filter -->
           <div class="pos-abt top-0 right-0 m-t pull-right" uib-dropdown auto-close="disabled" is-open="advancedMenuOpen">
-            <!-- <md-button uib-dropdown-toggle class="md-icon-button" aria-label="More" uib-popover-template="'advanced-search-popover.html'" popover-append-to-body="false" popover-placement="bottom-right" popover-trigger="click">
-              <i class="icon mdi-content-filter-list i-24"></i>
-            </md-button> -->
             <md-button uib-dropdown-toggle class="md-icon-button" aria-label="More" popover-trigger="click">
               <i class="icon mdi-content-filter-list i-24" md-style="{'color': 'default'}" ></i>
             </md-button>
@@ -98,6 +97,7 @@
               </md-content>
             </div>
           </div>
+          <!-- /dropdown -->
         </div>
         <div class="row-row">
           <div class="cell">

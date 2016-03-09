@@ -7621,16 +7621,19 @@ bg-none {
 
 /* bootstrap overrides */
 
-.advanced-search-menu .arrow {
+.advanced-search-menu .arrow,
+.with-arrow .arrow {
   top: -11px;
   right: 0;
 }
 
-.advanced-search-menu .arrow.lft {
-  left: 12px;
+.advanced-search-menu .arrow.lft,
+.with-arrow .arrow.lft {
+  left: 9px;
 }
 
-.advanced-search-menu .arrow:before {
+.advanced-search-menu .arrow:before,
+.with-arrow .arrow:before {
   position: absolute;
   top: -9px;
   right: 15px;
@@ -7643,11 +7646,13 @@ bg-none {
   content: '';
 }
 
-.advanced-search-menu .arrow.lft:before {
+.advanced-search-menu .arrow.lft:before,
+.with-arrow .arrow.lft:before {
   left: 0;
 }
 
-.advanced-search-menu .arrow:after {
+.advanced-search-menu .arrow:after,
+.with-arrow .arrow:after {
   position: absolute;
   top: -7px;
   right: 16px;
@@ -7659,7 +7664,8 @@ bg-none {
   content: '';
 }
 
-.advanced-search-menu .arrow.lft:after {
+.advanced-search-menu .arrow.lft:after,
+.with-arrow .arrow.lft:after {
   left: 1px;
 }
 
@@ -7667,7 +7673,7 @@ bg-none {
   padding: 0;
 }
 
-/* bootstrap overrides */
+/* /bootstrap overrides */
 
 .font-500 {
   font-weight: 500;
@@ -7754,13 +7760,14 @@ bg-none {
           animation-duration: 0.3s!important;
 }
 
-.animated3x {
-  -webkit-animation-duration: 0.3s!important;
-          animation-duration: 0.3s!important;
+.animated4x {
+  -webkit-animation-duration: 0.4s!important;
+          animation-duration: 0.4s!important;
 }
 
 .animated5x {
   -webkit-animation-duration: 0.5s!important;
+          animation-duration: 0.5s!important;
 }
 
 .z-index-n-1 {

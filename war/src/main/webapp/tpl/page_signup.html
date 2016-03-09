@@ -1,39 +1,34 @@
-    <div class="container w-xxl w-auto-xs" ng-init="app.settings.container = false;">
-      <div class="m-b-lg p-t-lg">
-        <div class="wrapper text-center">
-          <div class="text-center thumb-lg">
-            <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
-          </div>
+  <div class="center-block w-xxl w-auto-xs p-v-md">
+    <div class="navbar">
+      <div class="wrapper text-center">
+        <div class="text-center thumb-lg">
+          <img class="img-responsive max-logo m-auto" ng-src="{{app.initData.network.loginImageLink}}" />
         </div>
-        <form name="form" class="form-validation" ng-submit="app.signup(user, $state.params.invitation ? $state.params.invitation : $state.params.hash)">
-          <div class="text-danger wrapper text-center" ng-show="authError">
-              {{authError}}
-          </div>
-          <div class="list-group list-group-sm">
-            <div class="list-group-item">
-              <input placeholder="Nome" class="form-control no-border" ng-model="user.name" required>
-            </div>
-            <div class="list-group-item">
-              <input placeholder="Usuário" class="form-control no-border" ng-model="user.username" required>
-            </div>
-            <div class="list-group-item">
-              <input type="email" placeholder="Email" class="form-control no-border" ng-model="user.email" required>
-            </div>
-            <div class="list-group-item">
-               <input type="password" placeholder="Senha" class="form-control no-border" ng-model="user.password" required>
-            </div>
-          </div>
-          <!-- <div class="checkbox m-b-md m-t-none">
-            <label class="i-checks">
-              <input type="checkbox" ng-model="agree" required><i></i> Agree the <a href>terms and policy</a>
-            </label>
-          </div> -->
-          <div class="text-lg">
-            <button md-ink-ripple type="submit" class="btn-custom md-btn text-u-c btn-block " ng-disabled='form.$invalid'>Cadastrar</button>
-          </div>
-          <p class="text-center p-t">Já possui uma conta? <a ui-sref="access.signin">Clique aqui para entrar.</a></p>
-        </form>
-      </div>
-      <div class="text-center" ng-bind-html="app.initData.network.loginFooterMessage">
       </div>
     </div>
+
+    <div class="p-lg panel md-whiteframe-z1 text-color m">
+      <form name="form" class="form-validation" ng-submit="app.signup(user, $state.params.invitation ? $state.params.invitation : $state.params.hash)">
+        <div class="md-form-group">
+          <input class="md-input" ng-model="user.name" required>
+          <label>Nome</label>
+        </div>
+        <div class="md-form-group">
+          <input class="md-input" ng-model="user.username" required>
+          <label>Usuário</label>
+        </div>
+        <div class="md-form-group">
+          <input type="email" class="md-input" ng-model="user.email" required>
+          <label>Email</label>
+        </div>
+        <div class="md-form-group">
+          <input type="password" class="md-input" ng-model="user.password" required>
+          <label>Senha</label>
+        </div>
+        <button md-ink-ripple type="submit" class="btn-custom md-btn text-u-c btn-block">Cadastrar</button>
+      </form>
+    </div>
+    <div class="text-center" ng-bind-html="app.initData.network.loginFooterMessage">
+      </div>
+
+  </div>
