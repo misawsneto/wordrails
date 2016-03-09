@@ -862,7 +862,7 @@ angular.module('app')
                   controller: 'NetworkCreatedCtrl'
               })
               .state('access.signup', {
-                  url: '/signup?invitation',
+                  url: '/signup?invitation?hash',
                   templateUrl: 'tpl/page_signup.html?' + GLOBAL_URL_HASH,
               })
               .state('access.forgotpwd', {
