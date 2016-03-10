@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v1.0.6
+ * v0.11.3
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -126,7 +126,7 @@ function MdProgressLinearDirective($mdTheming, $mdUtil, $log) {
             container.addClass( lastMode = "md-mode-" + mode );
             break;
           default:
-            if (lastMode) container.removeClass( lastMode );
+            container.removeClass( lastMode );
             container.addClass('ng-hide');
             lastMode = undefined;
             break;

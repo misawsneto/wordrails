@@ -15,7 +15,6 @@
     "commit": "3852e28d49ee37a9b28bb788f0e3b14aa0c9ea14"
   },
   "_source": "git://github.com/angular/bower-angular-cookies.git",
-  "_target": "^1.5.0",
-  "_originalSource": "angular-cookies",
-  "_direct": true
+  "_target": "1.5.0",
+  "_originalSource": "angular-cookies"
 }
