@@ -16,8 +16,8 @@ import java.util.UUID;
 public class Invitation extends BaseEntity {
 
 	public Invitation(String baseUrl){
-		hash = UUID.randomUUID().toString();
-		invitationUrl = "http://" + baseUrl + "invitation?hash=" + hash;
+		this.hash = UUID.randomUUID().toString();
+		this.invitationUrl = "http://" + baseUrl + "/invitation?hash=" + hash;
 	}
 
 	@Id

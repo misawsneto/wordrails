@@ -10,10 +10,12 @@ import com.amazonaws.services.simpleemail.model.*;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
@@ -77,10 +79,12 @@ import java.util.Set;
 
 	@Async
 	public void sendNetworkInvitation(Network network, Invitation invitation){
-		try {
-			String filePath = getClass().getClassLoader().getResource("tpl/network-invitation-email.html").getFile();
+		String s = File.separator;
+		String appVersion = "1.1.0";
 
-			filePath = System.getProperty("os.name").contains("indow") ? filePath.substring(1) : filePath;
+		try {
+			String filePath = new FileSystemResource("target" + s + "trix-war-" + appVersion + s + "tpl" + s + "network-invitation-email.html")
+					.getFile().getAbsolutePath();
 
 			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
 			String template = new String(bytes, Charset.forName("UTF-8"));

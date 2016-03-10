@@ -4,8 +4,8 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AuthCredential;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
-import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.PasswordService;
+import co.xarx.trix.services.auth.AuthService;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.builder.api.GoogleApi;
@@ -103,12 +103,6 @@ public class AuthResource {
 	@Path("/{hash}")
 	public Response updatePassword(@PathParam("hash") String hash, @FormParam("password") String password) {
 		passwordService.updatePassword(hash, password);
-		return Response.status(Response.Status.OK).build();
-	}
-
-	@PUT
-	@Path("/invitation/{hash}")
-	public Response configInvited(@PathParam("hash") String hash){
 		return Response.status(Response.Status.OK).build();
 	}
 }

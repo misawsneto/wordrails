@@ -1,10 +1,12 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.domain.*;
+import co.xarx.trix.dto.PersonCreateDto;
 import co.xarx.trix.persistence.InvitationRepository;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
+import org.eclipse.persistence.jpa.jpql.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,5 +103,13 @@ public class PersonService {
 		invitationRepository.save(invitation);
 
 		emailService.sendNetworkInvitation(network, invitation);
+	}
+
+	public void configInvitedPerson(String hash, PersonCreateDto person){
+		Assert.isNotNull(person, "Person is null");
+
+		Invitation invitation = invitationRepository.findByHash(hash);
+		Assert.isNotNull(invitation, "No such invitation");
+
 	}
 }
