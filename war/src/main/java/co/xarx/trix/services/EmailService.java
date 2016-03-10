@@ -2,6 +2,7 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.domain.Invitation;
 import co.xarx.trix.domain.Network;
+import co.xarx.trix.domain.Person;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -10,6 +11,8 @@ import com.amazonaws.services.simpleemail.model.*;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -27,11 +30,13 @@ import java.util.Set;
 @Service
 	public class EmailService {
 
+	private final Logger log = LoggerFactory.getLogger(getClass().getSimpleName());
+
 	private final String NO_REPLY = "noreply@trix.rocks";
 	private final String USERNAME = "AKIAJKZJWC7NU3RF3URQ";
 	private final String PASSWORD = "2knHnAfeG5uVXmCXcLjquUUiNnxyWjJcIuCp2mxg";
 	private final String HOST = "email-smtp.us-east-1.amazonaws.com";
-
+	private final String defaultMessage = "{{inviterName}} convidou você para fazer parte da rede {{networkName}}.\n";
 	@Async
 	public void sendSimpleMail(String emailTo, String subject, String emailBody) {
 		sendSimpleMail(NO_REPLY, emailTo, subject, emailBody);
@@ -70,15 +75,15 @@ import java.util.Set;
 	}
 
 	@Async
-	public void sendNetworkInvitation(Network network, Set<Invitation> invitations){
+	public void sendNetworkInvitation(Network network, Set<Invitation> invitations, Person inviter){
 		if(invitations!= null)
 		for (Invitation i : invitations){
-			sendNetworkInvitation(network, i);
+			sendNetworkInvitation(network, i, inviter);
 		}
 	}
 
 	@Async
-	public void sendNetworkInvitation(Network network, Invitation invitation){
+	public void sendNetworkInvitation(Network network, Invitation invitation, Person inviter){
 		String s = File.separator;
 		String appVersion = "1.1.0";
 
@@ -88,42 +93,52 @@ import java.util.Set;
 
 			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
 			String template = new String(bytes, Charset.forName("UTF-8"));
-			sendNetworkInvitation(network, invitation, template);
+			sendNetworkInvitation(network, invitation, template, inviter);
 		}catch (Exception e){
 			e.printStackTrace();
 		}
 	}
 
 	@Async
-	public void sendNetworkInvitation(Network network, Invitation invitation, String template){
+	public void sendNetworkInvitation(Network network, Invitation invitation, String template, Person inviter){
+		Color c1 = Color.decode(network.mainColor);
+		Color c2 = Color.decode(network.navbarColor);
+		Integer bgColor = Integer.parseInt(network.backgroundColor.replace("#", ""), 16);
+		Integer referenceColor = Integer.parseInt("ffffff", 16);
+
+		String networkNameColor = (bgColor > referenceColor / 2) ? "black" : "white";
+
+		if (network.invitationMessage == null) network.invitationMessage = defaultMessage
+				.replace("{{inviterName}}", inviter.getName())
+				.replace("{{networkName}}", network.getName());
+
+		HashMap<String, Object> scopes = new HashMap<String, Object>();
+		scopes.put("name", invitation.getPerson().getName());
+		scopes.put("networkName", network.name);
+		scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", " + c1.getBlue() + " )");
+		scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", " + c2.getBlue() + " )");
+		scopes.put("link", "http://" + network.getRealDomain());
+		scopes.put("invitationUrl", invitation.getInvitationUrl());
+		scopes.put("networkSubdomain", network.getTenantId());
+		scopes.put("network", network);
+		scopes.put("hash", invitation.getHash());
+		scopes.put("inviterName", inviter.getName());
+		scopes.put("inviterEmail", inviter.getEmail());
+		scopes.put("networkNameColor", networkNameColor);
+
+		StringWriter writer = new StringWriter();
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
+
 		try{
-			Color c1 = Color.decode(network.mainColor);
-			Color c2 = Color.decode(network.navbarColor);
-
-			HashMap<String, Object> scopes = new HashMap<String, Object>();
-			scopes.put("name", invitation.person.name);
-			scopes.put("networkName", network.name);
-			scopes.put("primaryColor", "rgb(" + c1.getRed() + ", " + c1.getGreen() + ", " + c1.getBlue() + " )");
-			scopes.put("secondaryColor", "rgb(" + c2.getRed() + ", " + c2.getGreen() + ", " + c2.getBlue() + " )");
-			scopes.put("link", "http://" + network.getRealDomain());
-			scopes.put("invitationUrl", invitation.getInvitationUrl());
-			scopes.put("networkSubdomain", network.getTenantId());
-			scopes.put("network", network);
-			scopes.put("hash", invitation.hash);
-
-			StringWriter writer = new StringWriter();
-
-			MustacheFactory mf = new DefaultMustacheFactory();
-
-			Mustache mustache = mf.compile(new StringReader(template), "invitation-email");
 			mustache.execute(writer, scopes);
 			writer.flush();
 
 			String emailBody = writer.toString();
-			String subject = "[ "+ network.name +" ]" + " Convite ";
+			String subject = network.name + " - Convite enviado por " + inviter.getName();
 			sendSimpleMail(invitation.person.email, subject, emailBody);
 		}catch (Exception e){
-			e.printStackTrace();
+			log.info(e.getMessage());
 		}
 	}
 }

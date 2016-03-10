@@ -1,12 +1,11 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.domain.*;
-import co.xarx.trix.dto.PersonCreateDto;
 import co.xarx.trix.persistence.InvitationRepository;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
-import org.eclipse.persistence.jpa.jpql.Assert;
+import co.xarx.trix.services.auth.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +25,19 @@ public class PersonService {
 	private NetworkRepository networkRepository;
 	private StationRolesRepository stationRolesRepository;
 	private InvitationRepository invitationRepository;
+	private AuthService authService;
 
 	@Autowired
 	public PersonService(UserService userService, PersonRepository personRepository, EmailService emailService,
-						 NetworkRepository networkRepository, StationRolesRepository stationRolesRepository, InvitationRepository invitationRepository) {
+						 NetworkRepository networkRepository, StationRolesRepository stationRolesRepository,
+						 InvitationRepository invitationRepository, AuthService authService) {
 		this.userService = userService;
 		this.personRepository = personRepository;
 		this.emailService = emailService;
 		this.networkRepository = networkRepository;
 		this.stationRolesRepository = stationRolesRepository;
 		this.invitationRepository = invitationRepository;
+		this.authService = authService;
 	}
 
 	public boolean toggleRecommend(Person person, Integer postId) {
@@ -102,14 +104,6 @@ public class PersonService {
 
 		invitationRepository.save(invitation);
 
-		emailService.sendNetworkInvitation(network, invitation);
-	}
-
-	public void configInvitedPerson(String hash, PersonCreateDto person){
-		Assert.isNotNull(person, "Person is null");
-
-		Invitation invitation = invitationRepository.findByHash(hash);
-		Assert.isNotNull(invitation, "No such invitation");
-
+		emailService.sendNetworkInvitation(network, invitation, authService.getLoggedPerson());
 	}
 }

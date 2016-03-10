@@ -107,7 +107,7 @@ public class PostsResource {
 	@Path("/{postId}/getPostViewById")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public PostView getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
+	public PostView getPostViewById(@PathParam("postId") Integer postId, @QueryParam("f") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findOne(postId);
 		PostView postView = null;
 		if (post != null) {

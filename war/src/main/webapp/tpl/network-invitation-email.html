@@ -167,7 +167,7 @@
                                             <td width="20" align="left" style="font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;border-collapse: collapse;" class="emhide">
                                             </td>
                                             <td height="66" width="100" valign="middle" align="center" class="devicewidthinner" style="text-align: center;font-family: Arial, Helvetica, sans-serif;font-size: 16px;color: rgb(255, 255, 255);border-collapse: collapse;">
-                                                <a href="#" border="0" style="border: none; outline: none; color:white; fron-size:16px; text-decoration: none; display: block;">{{networkName}}</a>
+                                                <a href="#" border="0" style="border: none; outline: none; color:{{networkNameColor}}; fron-size:16px; text-decoration: none; display: block;">{{networkName}}</a>
                                             </td>
                                             <td width="190" align="left" style="font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;border-collapse: collapse;" class="emhide">
                                             </td>
@@ -348,7 +348,7 @@
                                         <!-- text -->
 
                                         <tr>
-                                            <td width="100%" height="20" style="font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;border-collapse: collapse;">
+                                            <td width="100%" height=2"0" style="font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;border-collapse: collapse;">
                                             </td>
                                         </tr>
 
@@ -360,19 +360,6 @@
                                             <td width="100%" height="20" style="font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;border-collapse: collapse;">
                                             </td>
                                         </tr>
-
-                                        <!-- spacing -->
-
-                                        <!-- Title -->
-                                        <!--
-                                                                                <tr>
-                                                                                    <td style="font-family: arial, Helvetica, sans-serif;font-size: 18px;color: rgb(51, 51, 51);text-align: center;line-height: 20px;position: relative;border-collapse: collapse;">
-                                                                                        PRIMEIRO ACESSO?
-                                                                                    </td>
-                                                                                </tr> -->
-                                        <!-- End of Title -->
-
-                                        <!-- spacing -->
 
                                         <tr>
                                             <td height="5" style="font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;border-collapse: collapse;">
@@ -385,7 +372,7 @@
                                         <tr>
                                             <td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(149, 165, 166);text-align: center;line-height: 30px;position: relative;border-collapse: collapse;">
                                                 <!--    Para definir sua senha, clique no botão abaixo: -->
-                                                Para ter acesso aos canais exclusivos para colaboradores, acesse:
+                                                Para confirmar o convite, por favor, acesse:
                                             </td>
                                         </tr>
                                         <!-- End of content -->
@@ -413,7 +400,7 @@
                                                                         <span style="color: #ffffff; font-weight: 300;">
                                                                             <a style="color: #ffffff; text-align:center;text-decoration: none;" href="{{invitationUrl}}">
                                                                                 <!-- Defina sua senha -->
-                                                                                {{hash}}
+                                                                                {{networkName}}
                                                                             </a></span>
                                                                     </td>
                                                                 </tr>
@@ -434,6 +421,24 @@
                                             </td>
                                         </tr>
                                         <!-- Spacing -->
+
+                                        <tr>
+                                            <td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(102, 102, 102);text-align: center;line-height: 30px;position: relative;border-collapse: collapse;">
+                                                Para mais informações, entre em contato com o administrador da {{networkName}}: {{inviterName}}, {{inviterEmail}}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="100%" height="30" style="font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;border-collapse: collapse;">
+                                            </td>
+                                        </tr>
+                                        <!-- Spacing -->
+
+                                        <tr>
+                                            <td style="font-family: arial, Helvetica, sans-serif;font-size: 14px;color: rgb(149, 165, 166);text-align: center;line-height: 30px;position: relative;border-collapse: collapse;">
+                                                <a href="http://xarx.co">TRIX</a> - Nossas histórias em rede móvel, em tempo real!
+                                            </td>
+                                        </tr>
 
                                         </tbody>
                                     </table>
@@ -524,9 +529,6 @@
                             <tbody>
                             <tr>
                                 <td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">
-                                    <a style="text-decoration: none; color: #999999;" href="http://xarx.co/api/unsubscribe/{{passwordReset.email}}">Cancelar assinatura</a>
-                                </td>
-                                <td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">
                                     <a style="text-decoration: none; color: #999999;" href="http://xarx.co">Política de privacidade</a>
                                 </td>
                                 <td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">
@@ -535,12 +537,12 @@
                                 <td width="20" style="border-collapse: collapse;">
                                 </td>
                                 <td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">
-                                    <a style="text-decoration: none; color: #999999;" href="http://xarx.co/home/#about">Sobre</a>
+                                    <a style="text-decoration: none; color: #999999;" href="http://xarx.co">Sobre</a>
                                 </td>
                                 <td width="20" style="border-collapse: collapse;">
                                 </td>
                                 <td align="center" valign="middle" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;color: rgb(153, 153, 153);text-align: center;line-height: 24px;position: relative;border-collapse: collapse;" class="menu">
-                                    <a style="text-decoration: none; color: #999999;" href="http://xarx.co/home/#contact">Contatos</a>
+                                    <a style="text-decoration: none; color: #999999;" href="http://xarx.co/#contact">Contatos</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -577,12 +579,6 @@
                             <!-- /Spacing -->
 
                             <!-- postfooter text -->
-
-                            <tr>
-                                <td align="center" valign="middle" style="font-family: arial, Helvetica, sans-serif;font-size: 10px;color: rgb(153, 153, 153);text-align: center;position: relative;border-collapse: collapse;">
-                                    Não quer mais receber emails? <a class="hlite" style="text-decoration: none; color: rgb(47, 80, 113);" href="#">Cancelar assinatura</a>
-                                </td>
-                            </tr>
                             <!-- /postfooter text -->
 
                             <!-- Spacing -->

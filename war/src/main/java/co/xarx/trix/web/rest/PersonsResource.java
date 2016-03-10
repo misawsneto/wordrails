@@ -789,11 +789,4 @@ public class PersonsResource {
 			}
 		}
 	}
-
-	@POST
-	@Path("/invitation/{hash}")
-	public Response configInvited(@PathParam("hash") String hash, PersonCreateDto person) {
-		personService.configInvitedPerson(hash, person);
-		return Response.status(Response.Status.OK).build();
-	}
 }
