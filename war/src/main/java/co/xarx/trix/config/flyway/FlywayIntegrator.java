@@ -27,14 +27,12 @@ public class FlywayIntegrator implements Integrator, ApplicationContextAware {
 
 		Environment env = applicationContext.getEnvironment();
 		Boolean migrate = env.getRequiredProperty("trix.flyway.migrate", Boolean.class);
-		String baselineVersion = env.getRequiredProperty("trix.flyway.baselineVersion", String.class);
 		DataSource dataSource = (DataSource) applicationContext.getBean("dataSource");
 
 		if (migrate) {
 			logger.log(Level.INFO, "Starting Flyway Migration");
 			Flyway flyway = new Flyway();
 			flyway.setDataSource(dataSource);
-			flyway.setBaselineVersionAsString(baselineVersion);
 			flyway.setOutOfOrder(true);
 
 			//yes, this is a hack. not my fault setPlaceholderReplacement doesnt work
