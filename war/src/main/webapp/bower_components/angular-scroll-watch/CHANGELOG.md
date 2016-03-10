@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.6.1
+
+- Fix package name typo
+
+## v0.6.0
+
+- Publish to NPM ([#8](https://github.com/pc035860/angular-scroll-watch/issues/8))
+- Support browserify/webpack/requirejs with UMD
+
 ## v0.5.5
 
 - Fix `sw-stage` destroy issue ([#6](https://github.com/pc035860/angular-scroll-watch/issues/6))

@@ -2,29 +2,36 @@
  * Outlayer Item
  */
 
-( function( window ) {
+( function( window, factory ) {
+  // universal module definition
+  /* jshint strict: false */ /* globals define, module, require */
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD - RequireJS
+    define( [
+        'ev-emitter/ev-emitter',
+        'get-size/get-size'
+      ],
+      factory
+    );
+  } else if ( typeof module == 'object' && module.exports ) {
+    // CommonJS - Browserify, Webpack
+    module.exports = factory(
+      require('ev-emitter'),
+      require('get-size')
+    );
+  } else {
+    // browser global
+    window.Outlayer = {};
+    window.Outlayer.Item = factory(
+      window.EvEmitter,
+      window.getSize
+    );
+  }
 
+}( window, function factory( EvEmitter, getSize ) {
 'use strict';
 
-// ----- get style ----- //
-
-var getComputedStyle = window.getComputedStyle;
-var getStyle = getComputedStyle ?
-  function( elem ) {
-    return getComputedStyle( elem, null );
-  } :
-  function( elem ) {
-    return elem.currentStyle;
-  };
-
-
-// extend objects
-function extend( a, b ) {
-  for ( var prop in b ) {
-    a[ prop ] = b[ prop ];
-  }
-  return a;
-}
+// ----- helpers ----- //
 
 function isEmptyObj( obj ) {
   for ( var prop in obj ) {
@@ -34,51 +41,28 @@ function isEmptyObj( obj ) {
   return true;
 }
 
-// http://jamesroberts.name/blog/2010/02/22/string-functions-for-javascript-trim-to-camel-case-to-dashed-and-to-underscore/
-function toDash( str ) {
-  return str.replace( /([A-Z])/g, function( $1 ){
-    return '-' + $1.toLowerCase();
-  });
-}
-
-// -------------------------- Outlayer definition -------------------------- //
-
-function outlayerItemDefinition( EventEmitter, getSize, getStyleProperty ) {
-
 // -------------------------- CSS3 support -------------------------- //
 
-var transitionProperty = getStyleProperty('transition');
-var transformProperty = getStyleProperty('transform');
-var supportsCSS3 = transitionProperty && transformProperty;
-var is3d = !!getStyleProperty('perspective');
+
+var docElemStyle = document.documentElement.style;
+
+var transitionProperty = typeof docElemStyle.transition == 'string' ?
+  'transition' : 'WebkitTransition';
+var transformProperty = typeof docElemStyle.transform == 'string' ?
+  'transform' : 'WebkitTransform';
 
 var transitionEndEvent = {
   WebkitTransition: 'webkitTransitionEnd',
-  MozTransition: 'transitionend',
-  OTransition: 'otransitionend',
   transition: 'transitionend'
 }[ transitionProperty ];
 
-// properties that could have vendor prefix
-var prefixableProperties = [
-  'transform',
-  'transition',
-  'transitionDuration',
-  'transitionProperty'
-];
-
-// cache all vendor properties
-var vendorProperties = ( function() {
-  var cache = {};
-  for ( var i=0, len = prefixableProperties.length; i < len; i++ ) {
-    var prop = prefixableProperties[i];
-    var supportedProp = getStyleProperty( prop );
-    if ( supportedProp && supportedProp !== prop ) {
-      cache[ prop ] = supportedProp;
-    }
-  }
-  return cache;
-})();
+// cache all vendor properties that could have vendor prefix
+var vendorProperties = {
+  transform: transformProperty,
+  transition: transitionProperty,
+  transitionDuration: transitionProperty + 'Duration',
+  transitionProperty: transitionProperty + 'Property'
+};
 
 // -------------------------- Item -------------------------- //
 
@@ -98,10 +82,11 @@ function Item( element, layout ) {
   this._create();
 }
 
-// inherit EventEmitter
-extend( Item.prototype, EventEmitter.prototype );
+// inherit EvEmitter
+var proto = Item.prototype = Object.create( EvEmitter.prototype );
+proto.constructor = Item;
 
-Item.prototype._create = function() {
+proto._create = function() {
   // transition objects
   this._transn = {
     ingProperties: {},
@@ -115,14 +100,14 @@ Item.prototype._create = function() {
 };
 
 // trigger specified handler for event type
-Item.prototype.handleEvent = function( event ) {
+proto.handleEvent = function( event ) {
   var method = 'on' + event.type;
   if ( this[ method ] ) {
     this[ method ]( event );
   }
 };
 
-Item.prototype.getSize = function() {
+proto.getSize = function() {
   this.size = getSize( this.element );
 };
 
@@ -130,7 +115,7 @@ Item.prototype.getSize = function() {
  * apply CSS styles to element
  * @param {Object} style
  */
-Item.prototype.css = function( style ) {
+proto.css = function( style ) {
   var elemStyle = this.element.style;
 
   for ( var prop in style ) {
@@ -141,19 +126,23 @@ Item.prototype.css = function( style ) {
 };
 
  // measure position, and sets it
-Item.prototype.getPosition = function() {
-  var style = getStyle( this.element );
-  var layoutOptions = this.layout.options;
-  var isOriginLeft = layoutOptions.isOriginLeft;
-  var isOriginTop = layoutOptions.isOriginTop;
-  var x = parseInt( style[ isOriginLeft ? 'left' : 'right' ], 10 );
-  var y = parseInt( style[ isOriginTop ? 'top' : 'bottom' ], 10 );
+proto.getPosition = function() {
+  var style = getComputedStyle( this.element );
+  var isOriginLeft = this.layout._getOption('originLeft');
+  var isOriginTop = this.layout._getOption('originTop');
+  var xValue = style[ isOriginLeft ? 'left' : 'right' ];
+  var yValue = style[ isOriginTop ? 'top' : 'bottom' ];
+  // convert percent to pixels
+  var layoutSize = this.layout.size;
+  var x = xValue.indexOf('%') != -1 ?
+    ( parseFloat( xValue ) / 100 ) * layoutSize.width : parseInt( xValue, 10 );
+  var y = yValue.indexOf('%') != -1 ?
+    ( parseFloat( yValue ) / 100 ) * layoutSize.height : parseInt( yValue, 10 );
 
   // clean up 'auto' or other non-integer values
   x = isNaN( x ) ? 0 : x;
   y = isNaN( y ) ? 0 : y;
   // remove padding from measurement
-  var layoutSize = this.layout.size;
   x -= isOriginLeft ? layoutSize.paddingLeft : layoutSize.paddingRight;
   y -= isOriginTop ? layoutSize.paddingTop : layoutSize.paddingBottom;
 
@@ -162,44 +151,51 @@ Item.prototype.getPosition = function() {
 };
 
 // set settled position, apply padding
-Item.prototype.layoutPosition = function() {
+proto.layoutPosition = function() {
   var layoutSize = this.layout.size;
-  var layoutOptions = this.layout.options;
   var style = {};
+  var isOriginLeft = this.layout._getOption('originLeft');
+  var isOriginTop = this.layout._getOption('originTop');
 
-  if ( layoutOptions.isOriginLeft ) {
-    style.left = ( this.position.x + layoutSize.paddingLeft ) + 'px';
-    // reset other property
-    style.right = '';
-  } else {
-    style.right = ( this.position.x + layoutSize.paddingRight ) + 'px';
-    style.left = '';
-  }
+  // x
+  var xPadding = isOriginLeft ? 'paddingLeft' : 'paddingRight';
+  var xProperty = isOriginLeft ? 'left' : 'right';
+  var xResetProperty = isOriginLeft ? 'right' : 'left';
 
-  if ( layoutOptions.isOriginTop ) {
-    style.top = ( this.position.y + layoutSize.paddingTop ) + 'px';
-    style.bottom = '';
-  } else {
-    style.bottom = ( this.position.y + layoutSize.paddingBottom ) + 'px';
-    style.top = '';
-  }
+  var x = this.position.x + layoutSize[ xPadding ];
+  // set in percentage or pixels
+  style[ xProperty ] = this.getXValue( x );
+  // reset other property
+  style[ xResetProperty ] = '';
+
+  // y
+  var yPadding = isOriginTop ? 'paddingTop' : 'paddingBottom';
+  var yProperty = isOriginTop ? 'top' : 'bottom';
+  var yResetProperty = isOriginTop ? 'bottom' : 'top';
+
+  var y = this.position.y + layoutSize[ yPadding ];
+  // set in percentage or pixels
+  style[ yProperty ] = this.getYValue( y );
+  // reset other property
+  style[ yResetProperty ] = '';
 
   this.css( style );
   this.emitEvent( 'layout', [ this ] );
 };
 
+proto.getXValue = function( x ) {
+  var isHorizontal = this.layout._getOption('horizontal');
+  return this.layout.options.percentPosition && !isHorizontal ?
+    ( ( x / this.layout.size.width ) * 100 ) + '%' : x + 'px';
+};
 
-// transform translate function
-var translate = is3d ?
-  function( x, y ) {
-    return 'translate3d(' + x + 'px, ' + y + 'px, 0)';
-  } :
-  function( x, y ) {
-    return 'translate(' + x + 'px, ' + y + 'px)';
-  };
+proto.getYValue = function( y ) {
+  var isHorizontal = this.layout._getOption('horizontal');
+  return this.layout.options.percentPosition && isHorizontal ?
+    ( ( y / this.layout.size.height ) * 100 ) + '%' : y + 'px';
+};
 
-
-Item.prototype._transitionTo = function( x, y ) {
+proto._transitionTo = function( x, y ) {
   this.getPosition();
   // get current x & y from top/left
   var curX = this.position.x;
@@ -221,11 +217,7 @@ Item.prototype._transitionTo = function( x, y ) {
   var transX = x - curX;
   var transY = y - curY;
   var transitionStyle = {};
-  // flip cooridinates if origin on right or bottom
-  var layoutOptions = this.layout.options;
-  transX = layoutOptions.isOriginLeft ? transX : -transX;
-  transY = layoutOptions.isOriginTop ? transY : -transY;
-  transitionStyle.transform = translate( transX, transY );
+  transitionStyle.transform = this.getTranslate( transX, transY );
 
   this.transition({
     to: transitionStyle,
@@ -236,17 +228,24 @@ Item.prototype._transitionTo = function( x, y ) {
   });
 };
 
+proto.getTranslate = function( x, y ) {
+  // flip cooridinates if origin on right or bottom
+  var isOriginLeft = this.layout._getOption('originLeft');
+  var isOriginTop = this.layout._getOption('originTop');
+  x = isOriginLeft ? x : -x;
+  y = isOriginTop ? y : -y;
+  return 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+};
+
 // non transition + transform support
-Item.prototype.goTo = function( x, y ) {
+proto.goTo = function( x, y ) {
   this.setPosition( x, y );
   this.layoutPosition();
 };
 
-// use transition and transforms if supported
-Item.prototype.moveTo = supportsCSS3 ?
-  Item.prototype._transitionTo : Item.prototype.goTo;
+proto.moveTo = proto._transitionTo;
 
-Item.prototype.setPosition = function( x, y ) {
+proto.setPosition = function( x, y ) {
   this.position.x = parseInt( x, 10 );
   this.position.y = parseInt( y, 10 );
 };
@@ -259,7 +258,7 @@ Item.prototype.setPosition = function( x, y ) {
  */
 
 // non transition, just trigger callback
-Item.prototype._nonTransition = function( args ) {
+proto._nonTransition = function( args ) {
   this.css( args.to );
   if ( args.isCleaning ) {
     this._removeStyles( args.to );
@@ -277,7 +276,7 @@ Item.prototype._nonTransition = function( args ) {
  *   @param {Boolean} isCleaning - removes transition styles after transition
  *   @param {Function} onTransitionEnd - callback
  */
-Item.prototype._transition = function( args ) {
+proto.transition = function( args ) {
   // redirect to nonTransition if no transition duration
   if ( !parseFloat( this.layout.options.transitionDuration ) ) {
     this._nonTransition( args );
@@ -315,54 +314,57 @@ Item.prototype._transition = function( args ) {
 
 };
 
-var itemTransitionProperties = transformProperty && ( toDash( transformProperty ) +
-  ',opacity' );
+// dash before all cap letters, including first for
+// WebkitTransform => -webkit-transform
+function toDashedAll( str ) {
+  return str.replace( /([A-Z])/g, function( $1 ) {
+    return '-' + $1.toLowerCase();
+  });
+}
 
-Item.prototype.enableTransition = function(/* style */) {
-  // only enable if not already transitioning
-  // bug in IE10 were re-setting transition style will prevent
-  // transitionend event from triggering
+var transitionProps = 'opacity,' + toDashedAll( transformProperty );
+
+proto.enableTransition = function(/* style */) {
+  // HACK changing transitionProperty during a transition
+  // will cause transition to jump
   if ( this.isTransitioning ) {
     return;
   }
 
-  // make transition: foo, bar, baz from style object
-  // TODO uncomment this bit when IE10 bug is resolved
-  // var transitionValue = [];
+  // make `transition: foo, bar, baz` from style object
+  // HACK un-comment this when enableTransition can work
+  // while a transition is happening
+  // var transitionValues = [];
   // for ( var prop in style ) {
   //   // dash-ify camelCased properties like WebkitTransition
-  //   transitionValue.push( toDash( prop ) );
+  //   prop = vendorProperties[ prop ] || prop;
+  //   transitionValues.push( toDashedAll( prop ) );
   // }
   // enable transition styles
-  // HACK always enable transform,opacity for IE10
   this.css({
-    transitionProperty: itemTransitionProperties,
+    transitionProperty: transitionProps,
     transitionDuration: this.layout.options.transitionDuration
   });
   // listen for transition end event
   this.element.addEventListener( transitionEndEvent, this, false );
 };
 
-Item.prototype.transition = Item.prototype[ transitionProperty ? '_transition' : '_nonTransition' ];
-
 // ----- events ----- //
 
-Item.prototype.onwebkitTransitionEnd = function( event ) {
+proto.onwebkitTransitionEnd = function( event ) {
   this.ontransitionend( event );
 };
 
-Item.prototype.onotransitionend = function( event ) {
+proto.onotransitionend = function( event ) {
   this.ontransitionend( event );
 };
 
 // properties that I munge to make my life easier
 var dashedVendorProperties = {
-  '-webkit-transform': 'transform',
-  '-moz-transform': 'transform',
-  '-o-transform': 'transform'
+  '-webkit-transform': 'transform'
 };
 
-Item.prototype.ontransitionend = function( event ) {
+proto.ontransitionend = function( event ) {
   // disregard bubbled events from children
   if ( event.target !== this.element ) {
     return;
@@ -394,7 +396,7 @@ Item.prototype.ontransitionend = function( event ) {
   this.emitEvent( 'transitionEnd', [ this ] );
 };
 
-Item.prototype.disableTransition = function() {
+proto.disableTransition = function() {
   this.removeTransitionStyles();
   this.element.removeEventListener( transitionEndEvent, this, false );
   this.isTransitioning = false;
@@ -404,7 +406,7 @@ Item.prototype.disableTransition = function() {
  * removes style property from element
  * @param {Object} style
 **/
-Item.prototype._removeStyles = function( style ) {
+proto._removeStyles = function( style ) {
   // clean up transition styles
   var cleanStyle = {};
   for ( var prop in style ) {
@@ -418,7 +420,7 @@ var cleanTransitionStyle = {
   transitionDuration: ''
 };
 
-Item.prototype.removeTransitionStyles = function() {
+proto.removeTransitionStyles = function() {
   // remove transition
   this.css( cleanTransitionStyle );
 };
@@ -426,12 +428,14 @@ Item.prototype.removeTransitionStyles = function() {
 // ----- show/hide/remove ----- //
 
 // remove element from DOM
-Item.prototype.removeElem = function() {
+proto.removeElem = function() {
   this.element.parentNode.removeChild( this.element );
+  // remove display: none
+  this.css({ display: '' });
   this.emitEvent( 'remove', [ this ] );
 };
 
-Item.prototype.remove = function() {
+proto.remove = function() {
   // just remove element if no transition support or no transition
   if ( !transitionProperty || !parseFloat( this.layout.options.transitionDuration ) ) {
     this.removeElem();
@@ -439,52 +443,87 @@ Item.prototype.remove = function() {
   }
 
   // start transition
-  var _this = this;
-  this.on( 'transitionEnd', function() {
-    _this.removeElem();
-    return true; // bind once
+  this.once( 'transitionEnd', function() {
+    this.removeElem();
   });
   this.hide();
 };
 
-Item.prototype.reveal = function() {
+proto.reveal = function() {
   delete this.isHidden;
   // remove display: none
   this.css({ display: '' });
 
   var options = this.layout.options;
+
+  var onTransitionEnd = {};
+  var transitionEndProperty = this.getHideRevealTransitionEndProperty('visibleStyle');
+  onTransitionEnd[ transitionEndProperty ] = this.onRevealTransitionEnd;
+
   this.transition({
     from: options.hiddenStyle,
     to: options.visibleStyle,
-    isCleaning: true
+    isCleaning: true,
+    onTransitionEnd: onTransitionEnd
   });
 };
 
-Item.prototype.hide = function() {
+proto.onRevealTransitionEnd = function() {
+  // check if still visible
+  // during transition, item may have been hidden
+  if ( !this.isHidden ) {
+    this.emitEvent('reveal');
+  }
+};
+
+/**
+ * get style property use for hide/reveal transition end
+ * @param {String} styleProperty - hiddenStyle/visibleStyle
+ * @returns {String}
+ */
+proto.getHideRevealTransitionEndProperty = function( styleProperty ) {
+  var optionStyle = this.layout.options[ styleProperty ];
+  // use opacity
+  if ( optionStyle.opacity ) {
+    return 'opacity';
+  }
+  // get first property
+  for ( var prop in optionStyle ) {
+    return prop;
+  }
+};
+
+proto.hide = function() {
   // set flag
   this.isHidden = true;
   // remove display: none
   this.css({ display: '' });
 
   var options = this.layout.options;
+
+  var onTransitionEnd = {};
+  var transitionEndProperty = this.getHideRevealTransitionEndProperty('hiddenStyle');
+  onTransitionEnd[ transitionEndProperty ] = this.onHideTransitionEnd;
+
   this.transition({
     from: options.visibleStyle,
     to: options.hiddenStyle,
     // keep hidden stuff hidden
     isCleaning: true,
-    onTransitionEnd: {
-      opacity: function() {
-        // check if still hidden
-        // during transition, item may have been un-hidden
-        if ( this.isHidden ) {
-          this.css({ display: 'none' });
-        }
-      }
-    }
+    onTransitionEnd: onTransitionEnd
   });
 };
 
-Item.prototype.destroy = function() {
+proto.onHideTransitionEnd = function() {
+  // check if still hidden
+  // during transition, item may have been un-hidden
+  if ( this.isHidden ) {
+    this.css({ display: 'none' });
+    this.emitEvent('hide');
+  }
+};
+
+proto.destroy = function() {
   this.css({
     position: '',
     left: '',
@@ -498,33 +537,4 @@ Item.prototype.destroy = function() {
 
 return Item;
 
-}
-
-// -------------------------- transport -------------------------- //
-
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( [
-      'eventEmitter/EventEmitter',
-      'get-size/get-size',
-      'get-style-property/get-style-property'
-    ],
-    outlayerItemDefinition );
-} else if (typeof exports === 'object') {
-  // CommonJS
-  module.exports = outlayerItemDefinition(
-    require('wolfy87-eventemitter'),
-    require('get-size'),
-    require('desandro-get-style-property')
-  );
-} else {
-  // browser global
-  window.Outlayer = {};
-  window.Outlayer.Item = outlayerItemDefinition(
-    window.EventEmitter,
-    window.getSize,
-    window.getStyleProperty
-  );
-}
-
-})( window );
+}));

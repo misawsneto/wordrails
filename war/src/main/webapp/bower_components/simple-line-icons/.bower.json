@@ -1,6 +1,6 @@
 {
   "name": "simple-line-icons",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "authors": [
     "Sabbir Ahmed <sabbiirr@gmail.com>"
   ],
@@ -30,13 +30,14 @@
     "test",
     "tests"
   ],
-  "_release": "2.2.3",
+  "_release": "2.2.4",
   "_resolution": {
     "type": "version",
-    "tag": "2.2.3",
-    "commit": "fc5d2413c7dc282ec11d7dae51af75a478fda7d5"
+    "tag": "2.2.4",
+    "commit": "7327b618b5de020f9220670a72915b9620006e64"
   },
   "_source": "git://github.com/thesabbir/simple-line-icons.git",
-  "_target": "*",
-  "_originalSource": "simple-line-icons"
+  "_target": "^2.2.4",
+  "_originalSource": "simple-line-icons",
+  "_direct": true
 }

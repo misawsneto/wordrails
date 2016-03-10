@@ -52,6 +52,6 @@
     "commit": "9bc2445db99c34a8be8e19ddbd086f73ea4ed483"
   },
   "_source": "git://github.com/taye/interact.js.git",
-  "_target": "~1.2.4",
+  "_target": "^1.2.6",
   "_originalSource": "interact"
 }

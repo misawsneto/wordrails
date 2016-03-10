@@ -1,9 +1,10 @@
 {
   "name": "bootstrap-tagsinput",
-  "version": "0.4.2",
+  "version": "0.8.0",
   "homepage": "https://github.com/TimSchlechter/bootstrap-tagsinput",
   "authors": [
-    "Tim Schlechter"
+    "Tim Schlechter",
+    "Luckner Jr Jean-Baptiste"
   ],
   "description": "jQuery plugin providing a Twitter Bootstrap user interface for managing tags.",
   "main": [
@@ -22,28 +23,30 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "lib",
+    "test"
   ],
   "dependencies": {
     "jquery": "~2.1.1"
   },
   "devDependencies": {
     "bootstrap-3": "bootstrap#~3.2.0",
-    "bootstrap-2.3.2": "bootstrap#2.3.2",
+    "bootstrap-2.3.2": "bootstrap#~2.3.2",
     "angular": "~1.2.21",
     "typeahead.js": "~0.10.4",
-    "jasmine": "~2.0.1",
-    "rainbow": "~1.1.9"
+    "jasmine": "~2.0.1"
   },
-  "_release": "0.4.2",
+  "resolutions": {
+    "jquery": ">= 1.9.0"
+  },
+  "_release": "0.8.0",
   "_resolution": {
     "type": "version",
-    "tag": "0.4.2",
-    "commit": "b86ebdcb1bce6cb52d8d593649508b5d08514e57"
+    "tag": "0.8.0",
+    "commit": "22cf5f913022dc459e82754202903d85a45483b3"
   },
   "_source": "git://github.com/TimSchlechter/bootstrap-tagsinput.git",
-  "_target": "~0.4.2",
+  "_target": "^0.8.0",
   "_originalSource": "bootstrap-tagsinput",
   "_direct": true
 }

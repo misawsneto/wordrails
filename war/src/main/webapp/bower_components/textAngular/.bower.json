@@ -1,13 +1,17 @@
 {
   "name": "textAngular",
-  "version": "1.2.2",
-  "main": "./dist/textAngular.min.js",
+  "version": "1.5.0",
+  "main": [
+    "./dist/textAngular.js",
+    "./dist/textAngular-sanitize.js",
+    "./dist/textAngularSetup.js",
+    "./dist/textAngular.css"
+  ],
   "description": "A radically powerful Text-Editor/Wysiwyg editor for Angular.js",
   "keywords": [
     "editor",
     "angular",
-    "wysiwyg",
-    "jquery"
+    "wysiwyg"
   ],
   "ignore": [
     "**/.*",
@@ -19,24 +23,24 @@
     "package.json"
   ],
   "dependencies": {
-    "angular": "~1.2.x"
+    "angular": ">=1.3.x",
+    "font-awesome": ">=4.0.x",
+    "rangy": "~1.3.0"
   },
   "devDependencies": {
-    "angular-mocks": "~1.2.x",
-    "jquery": "1.9.x",
-    "bootstrap": "3.0.x",
-    "font-awesome": "4.0.x",
-    "rangy": "1.2.x"
+    "angular-mocks": ">=1.3.x",
+    "jquery": "1.9.x"
   },
   "license": "MIT",
   "homepage": "https://github.com/fraywing/textAngular",
-  "_release": "1.2.2",
+  "_release": "1.5.0",
   "_resolution": {
     "type": "version",
-    "tag": "v1.2.2",
-    "commit": "75f8ede6f2a7a834179ca336bc5159f4a6615da5"
+    "tag": "v1.5.0",
+    "commit": "94e03e94a1bbd2d42ae717c64627ba4733d9396f"
   },
   "_source": "git://github.com/fraywing/textAngular.git",
-  "_target": "~1.2.2",
-  "_originalSource": "textAngular"
+  "_target": "^1.5.0",
+  "_originalSource": "textAngular",
+  "_direct": true
 }

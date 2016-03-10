@@ -144,9 +144,9 @@ angular.module('splash', ['ui.splash']);
 // Re-usable $splash module
 angular.module('ui.splash', ['ui.bootstrap'])
 .service('$splash', [
-  '$modal',
+  '$uibModal',
   '$rootScope',
-  function($modal, $rootScope) {
+  function($uibModal, $rootScope) {
     return {
       open: function (opts) {
         if(!opts){
@@ -155,7 +155,7 @@ angular.module('ui.splash', ['ui.bootstrap'])
         opts.backdrop = false;
         opts.windowTemplateUrl = 'splash_index.html';
 
-        return $modal.open(opts);
+        return $uibModal.open(opts);
       }
     };
   }

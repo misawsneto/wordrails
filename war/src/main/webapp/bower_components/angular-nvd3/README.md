@@ -1,6 +1,7 @@
 # Angular-nvD3
 
 [![Build Status](https://travis-ci.org/krispo/angular-nvd3.svg?branch=master)](https://travis-ci.org/krispo/angular-nvd3)
+[![NPM Version](http://img.shields.io/npm/v/angular-nvd3.svg?style=flat)](https://www.npmjs.org/package/angular-nvd3)
 
 This thing is designed to make it easier to work with [nvd3.js](https://github.com/novus/nvd3) re-usable charting library. This directive allows you to easily customize your charts via JSON API.
 
@@ -12,7 +13,11 @@ Try it [online](http://krispo.github.io/angular-nvd3/).
 
 ### Install
 
-Install it via bower:
+##### cdnjs
+
+    https://cdnjs.cloudflare.com/ajax/libs/angular-nvd3/1.0.4/angular-nvd3.min.js
+
+##### bower
 
     $ bower install angular-nvd3
     
@@ -27,12 +32,18 @@ Add dependencies to the `<head>` section of your main html:
 <meta charset="utf-8">  <!-- it's important for d3.js -->
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/d3/d3.js"></script>
-<script src="bower_components/nvd3/nv.d3.js"></script> <!-- or use another assembly -->
+<script src="bower_components/nvd3/build/nv.d3.js"></script> <!-- or use another assembly -->
 <script src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
-<link rel="stylesheet" href="bower_components/nvd3/nv.d3.css">
+<link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.css">
 ```
 
-If you don't use bower, you can manually download and unpack directive the latest version ([zip](https://github.com/krispo/angular-nvd3/archive/v1.0.2.zip), [tar.gz](https://github.com/krispo/angular-nvd3/archive/v1.0.2.tar.gz)).
+##### npm
+
+    $ npm install angular-nvd3
+
+##### download
+
+If you don't use bower or npm, you can manually download and unpack directive with the latest version ([zip](https://github.com/krispo/angular-nvd3/archive/v1.0.5.zip), [tar.gz](https://github.com/krispo/angular-nvd3/archive/v1.0.5.tar.gz)).
 
 ### Basic usage
 
@@ -123,8 +134,28 @@ Then build using [grunt](http://gruntjs.com/) (*node.js must be installed*):
 
 ## Release Notes
 
-### [1.0.2 (current, nvd3 v1.8.1)](https://github.com/krispo/angular-nvd3/releases/tag/v1.0.2)
-* Fixed `tooltip` [issue](https://github.com/krispo/angular-nvd3/pull/222) for interactive guideline.
+### [1.0.5 (current, nvd3 v1.8.1)](https://github.com/krispo/angular-nvd3/releases/tag/v1.0.5)
+* fixed `index.js`
+* fixed `onReady` attribute
+* added `getElement` api method
+
+### 1.0.4
+* `deepWatchData = true` by default
+* deleted `autorefresh`, `deepWatchConfig` configs
+* added `deepWatchDataDepth = 2` config to specify watch depth level for data: 0 - by reference (cheap), 1 - by collection item (the middle), 2 - by value (expensive)
+* added `onReady` attribute
+* added `updateWithTimeout`, `refreshWithTimeout` methods to `api`
+* fixed bugs
+
+### 1.0.3
+* Fixed width and height issues for IE: [#16](https://github.com/krispo/angular-nvd3/issues/16), [#158](https://github.com/krispo/angular-nvd3/issues/158), [#200](https://github.com/krispo/angular-nvd3/issues/200), [#226](https://github.com/krispo/angular-nvd3/issues/226).
+* Fixed tooltip issue [#172](https://github.com/krispo/angular-nvd3/issues/172)
+* Set `refreshDataOnly = true` by default
+* Added `zoom & pan` functionality
+* Fixed tooltip content, subtitle and many other issues...
+
+### 1.0.2
+* Fixed `tooltip` [#222](https://github.com/krispo/angular-nvd3/pull/222) for interactive guideline.
 * Set `deepWatchData` to `false` by default
 * Added `deepWatchOptions` and `deepWatchConfig` properties
 

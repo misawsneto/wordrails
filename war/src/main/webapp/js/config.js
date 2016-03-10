@@ -30,12 +30,12 @@ angular.module('app')
       }
     ])
 
-  .config(['$tooltipProvider', function($tooltipProvider) {
-    var triggers = {};
-    triggers['popoverToggleShow'] = 'popoverToggleHide';
+  // .config(['$tooltipProvider', function($tooltipProvider) {
+  //   var triggers = {};
+  //   triggers['popoverToggleShow'] = 'popoverToggleHide';
 
-    $tooltipProvider.setTriggers(triggers);
-  }])
+  //   $tooltipProvider.setTriggers(triggers);
+  // }])
 
 
   // .config(['$translateProvider', function($translateProvider){

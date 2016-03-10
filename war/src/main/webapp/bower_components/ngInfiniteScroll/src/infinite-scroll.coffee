@@ -9,7 +9,8 @@ mod.directive 'infiniteScroll', ['$rootScope', '$window', '$interval', 'THROTTLE
     infiniteScrollContainer: '='
     infiniteScrollDistance: '='
     infiniteScrollDisabled: '='
-    infiniteScrollUseDocumentBottom: '='
+    infiniteScrollUseDocumentBottom: '=',
+    infiniteScrollListenForEvent: '@'
 
   link: (scope, elem, attrs) ->
     windowElement = angular.element($window)
@@ -20,6 +21,8 @@ mod.directive 'infiniteScroll', ['$rootScope', '$window', '$interval', 'THROTTLE
     container = null
     immediateCheck = true
     useDocumentBottom = false
+    unregisterEventListener = null
+    checkInterval = false
 
     height = (elem) ->
       elem = elem[0] or elem
@@ -69,6 +72,7 @@ mod.directive 'infiniteScroll', ['$rootScope', '$window', '$interval', 'THROTTLE
           else
             scope.$apply(scope.infiniteScroll)
       else
+        if checkInterval then $interval.cancel checkInterval
         checkWhenEnabled = false
 
     # The optional THROTTLE_MILLISECONDS configuration value specifies
@@ -103,6 +107,9 @@ mod.directive 'infiniteScroll', ['$rootScope', '$window', '$interval', 'THROTTLE
 
     scope.$on '$destroy', ->
       container.unbind 'scroll', handler
+      if unregisterEventListener?
+        unregisterEventListener()
+        unregisterEventListener = null
 
     # infinite-scroll-distance specifies how close to the bottom of the page
     # the window is allowed to be before we trigger a new scroll. The value
@@ -155,6 +162,9 @@ mod.directive 'infiniteScroll', ['$rootScope', '$window', '$interval', 'THROTTLE
 
     changeContainer windowElement
 
+    if scope.infiniteScrollListenForEvent
+      unregisterEventListener = $rootScope.$on scope.infiniteScrollListenForEvent, handler
+
     handleInfiniteScrollContainer = (newContainer) ->
       # TODO: For some reason newContainer is sometimes null instead
       # of the empty array, which Angular is supposed to pass when the
@@ -190,8 +200,8 @@ mod.directive 'infiniteScroll', ['$rootScope', '$window', '$interval', 'THROTTLE
     if attrs.infiniteScrollImmediateCheck?
       immediateCheck = scope.$eval(attrs.infiniteScrollImmediateCheck)
 
-    $interval (->
+    checkInterval = $interval (->
       if immediateCheck
         handler()
-    ), 0, 1
+    ), 0
 ]

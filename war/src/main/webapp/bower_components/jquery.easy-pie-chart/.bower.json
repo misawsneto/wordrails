@@ -24,7 +24,6 @@
     "commit": "29636bc1cc0ecbd8de9490525724a12dbf723888"
   },
   "_source": "git://github.com/rendro/easy-pie-chart.git",
-  "_target": "~2.1.6",
-  "_originalSource": "jquery.easy-pie-chart",
-  "_direct": true
+  "_target": "^2.1.6",
+  "_originalSource": "jquery.easy-pie-chart"
 }
