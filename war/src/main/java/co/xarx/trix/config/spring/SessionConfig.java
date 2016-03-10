@@ -55,7 +55,7 @@ public class SessionConfig extends CachingConfigurerSupport {
 		imageRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(Map.class));
 
 		RedisTemplate stationsIdsRedisTemplate = redisTemplate();
-		imageRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(List.class));
+		stationsIdsRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(List.class));
 
 		templates.put("person", new HashMap<RedisTemplate, Integer>(){{put(personRedisTemplate, 60);}});
 		templates.put("user", new HashMap<RedisTemplate, Integer>(){{put(userRedisTemplate, 60);}});
