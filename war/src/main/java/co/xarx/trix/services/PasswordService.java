@@ -8,7 +8,6 @@ import co.xarx.trix.persistence.PasswordResetRepository;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserRepository;
 import com.mysema.commons.lang.Assert;
-import org.hibernate.metamodel.relational.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,10 +48,8 @@ public class PasswordService {
 
 		PasswordReset passwordReset = passwordResetRepository.findByHash(hash);
 
-		if(passwordReset == null){
-			throw new IllegalIdentifierException("No hash to recover password");
-		}
-
+		Assert.notNull(passwordReset, "No hash to recover password");
+		
 		passwordReset.user.password = password;
 		userRepository.save(passwordReset.user);
 
