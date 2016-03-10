@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-touchspin",
-  "version": "3.1.1",
+  "version": "3.0.3",
   "homepage": "http://www.virtuosoft.eu/code/bootstrap-touchspin/",
   "authors": [
     {
@@ -27,14 +27,13 @@
     "test",
     "tests"
   ],
-  "_release": "3.1.1",
+  "_release": "3.0.3",
   "_resolution": {
     "type": "version",
-    "tag": "3.1.1",
-    "commit": "22a89d22b6218cfb1abe368238b78ec5b442b7ef"
+    "tag": "3.0.3",
+    "commit": "81fc55dd525f08a6af6f3a8465026ae1e672bdae"
   },
   "_source": "git://github.com/istvan-ujjmeszaros/bootstrap-touchspin.git",
-  "_target": "^3.1.1",
-  "_originalSource": "bootstrap-touchspin",
-  "_direct": true
+  "_target": "~3.0.1",
+  "_originalSource": "bootstrap-touchspin"
 }

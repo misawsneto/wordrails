@@ -1,31 +1,15 @@
 # AngularJS Masonry Directive [![Build Status](https://travis-ci.org/passy/angular-masonry.png)](https://travis-ci.org/passy/angular-masonry) [![Dependency Status](https://gemnasium.com/passy/angular-masonry.png)](https://gemnasium.com/passy/angular-masonry) [![Code Climate](https://codeclimate.com/github/passy/angular-masonry.png)](https://codeclimate.com/github/passy/angular-masonry)
 
-[Homepage](https://passy.github.io/angular-masonry)
+[Homepage](http://passy.github.io/angular-masonry)
 
-An [AngularJS 1](https://angularjs.org/) directive to work with David Desandro's [Masonry](http://masonry.desandro.com/).
+An [AngularJS](http://angularjs.org/) directive to work with David Desandro's [Masonry](http://masonry.desandro.com/).
 
 ## Usage
 
-1. Install via either [bower](http://bower.io/) or [npm](https://www.npmjs.com/):
-    1. `bower install --save angular-masonry`
-    2. `npm install --save angular-masonry`
+1. `bower install --save angular-masonry`
 2. Add `wu.masonry` to your application's module dependencies.
-3. Include dependencies in your HTML.
-      ```html
-      <script src="bower_components/jquery/dist/jquery.js"></script>
-      <script src="bower_components/jquery-bridget/jquery-bridget.js"></script>
-      <script src="bower_components/ev-emitter/ev-emitter.js"></script>
-      <script src="bower_components/desandro-matches-selector/matches-selector.js"></script>
-      <script src="bower_components/fizzy-ui-utils/utils.js"></script>
-      <script src="bower_components/outlayer/item.js"></script>
-      <script src="bower_components/outlayer/outlayer.js"></script>
-      <script src="bower_components/masonry/masonry.js"></script>
-      <script src="bower_components/imagesloaded/imagesloaded.js"></script>
-      <script src="bower_components/angular/angular.js"></script>
-      <script src="bower_components/angular-masonry/angular-masonry.js"></script>
-      ```
-    
-4. Use the `masonry` directive.
+2. Include dependencies in your HTML.
+3. Use the `masonry` directive.
 
 ## Example
 
@@ -132,24 +116,6 @@ hidden it may not render properly when shown again.
 
 When `showList` changes from falsey to truthy `ctrl.reload` will be called.
 
-
-### `reload-on-resize`
-
-The `reload-on-resize` attribute triggers a reload when the masonry element changes
-its width, useful when only the parent element is resized (and not the window) and 
-you want the elements to be rearranged. Without this if the parent is resized then 
-some blank space may be left on the sides.
-
-*Example:*
-
-```html
-<masonry reload-on-resize>
-    <div class="masonry-brick">...</div>
-    <div class="masonry-brick">...</div>
-</masonry>
-```
-
-
 ### `masonry-options`
 
 You can provide [additional options](http://masonry.desandro.com/options.html)
@@ -169,19 +135,6 @@ Equivalent to:
 </div>
 ```
 
-### `prepend`
-
-Bricks are appended by default. This behavior can be specified for each brick by
-providing the `prepend` attribute.
-
-*Example:*
-
-```html
-<div masonry>
-    <div class="masonry-brick" prepend="isPrepended()">...</div>
-</div>
-```
-
 ## Credits
 
 The directive is based on
@@ -191,8 +144,9 @@ answered by James Sharp.
 
 ## Contributing
 
-Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) before opening issues or pull
-requests.
+Pull requests welcome. Only change files in `src` and don't bump any versions.
+Please respect the code style in place. Follow the
+[AngularJS commit guidelines](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit-message-format).
 
 ## License
 

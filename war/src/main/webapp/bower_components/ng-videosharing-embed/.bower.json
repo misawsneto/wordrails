@@ -34,6 +34,6 @@
     "commit": "c85b136accd2d93c8e31cf41d15fad669d8709eb"
   },
   "_source": "git://github.com/erost/ng-videosharing-embed.git",
-  "_target": "^0.3.4",
+  "_target": "~0.3.2",
   "_originalSource": "ng-videosharing-embed"
 }

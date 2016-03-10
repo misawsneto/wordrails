@@ -1,6 +1,6 @@
 /*!
- * angular-masonry 0.16.0
- * Pascal Hartig, https://passy.me/
+ * angular-masonry 0.11.0
+ * Pascal Hartig, weluse GmbH, http://weluse.de/
  * License: MIT
  */
 (function () {
@@ -46,11 +46,11 @@
       function defaultLoaded($element) {
         $element.addClass('loaded');
       }
-      this.addBrick = function addBrick(method, element, id) {
+      this.appendBrick = function appendBrick(element, id) {
         if (destroyed) {
           return;
         }
-        function _add() {
+        function _append() {
           if (Object.keys(bricks).length === 0) {
             $element.masonry('resize');
           }
@@ -58,7 +58,7 @@
             // Keep track of added elements.
             bricks[id] = true;
             defaultLoaded(element);
-            $element.masonry(method, element, true);
+            $element.masonry('appended', element, true);
           }
         }
         function _layout() {
@@ -69,14 +69,14 @@
           self.scheduleMasonryOnce('layout');
         }
         if (!self.loadImages) {
-          _add();
+          _append();
           _layout();
         } else if (self.preserveOrder) {
-          _add();
+          _append();
           element.imagesLoaded(_layout);
         } else {
           element.imagesLoaded(function imagesLoaded() {
-            _add();
+            _append();
             _layout();
           });
         }
@@ -96,7 +96,7 @@
           $element.masonry('destroy');
         }
         $scope.$emit('masonry.destroyed');
-        bricks = {};
+        bricks = [];
       };
       this.reload = function reload() {
         $element.masonry();
@@ -115,7 +115,6 @@
               columnWidth: parseInt(attrs.columnWidth, 10) || attrs.columnWidth
             }, attrOptions || {});
           element.masonry(options);
-          scope.masonryContainer = element[0];
           var loadImages = scope.$eval(attrs.loadImages);
           ctrl.loadImages = loadImages !== false;
           var preserveOrder = scope.$eval(attrs.preserveOrder);
@@ -126,14 +125,6 @@
               return element.prop('offsetParent');
             }, function (isVisible, wasVisible) {
               if (isVisible && !wasVisible) {
-                ctrl.reload();
-              }
-            });
-          }
-          var reloadOnResize = scope.$eval(attrs.reloadOnResize);
-          if (reloadOnResize !== false && attrs.reloadOnResize !== undefined) {
-            scope.$watch('masonryContainer.offsetWidth', function (newWidth, oldWidth) {
-              if (newWidth != oldWidth) {
                 ctrl.reload();
               }
             });
@@ -151,9 +142,7 @@
       link: {
         pre: function preLink(scope, element, attrs, ctrl) {
           var id = scope.$id, index;
-          var prependBrick = scope.$eval(attrs.prepend);
-          var method = prependBrick ? 'prepended' : 'appended';
-          ctrl.addBrick(method, element, id);
+          ctrl.appendBrick(element, id);
           element.on('$destroy', function () {
             ctrl.removeBrick(id, element);
           });

@@ -6,8 +6,7 @@ ng.module('smart-table')
       displayedPages: 5
     },
     search: {
-      delay: 400, // ms
-      inputEvent: 'input'
+      delay: 400 // ms
     },
     select: {
       mode: 'single',
@@ -15,11 +14,6 @@ ng.module('smart-table')
     },
     sort: {
       ascentClass: 'st-sort-ascent',
-      descentClass: 'st-sort-descent',
-      skipNatural: false,
-      delay:300
-    },
-    pipe: {
-      delay: 100 //ms
+      descentClass: 'st-sort-descent'
     }
   });

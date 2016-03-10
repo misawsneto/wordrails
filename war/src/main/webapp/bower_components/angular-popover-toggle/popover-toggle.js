@@ -25,18 +25,11 @@
             $scope.$watch($attrs.popoverToggle, function(newValue) {
                 $timeout(function(){
                     if(newValue) {
-                        dispatchEvent(POPOVER_SHOW, $element);
+                        $element.triggerHandler(POPOVER_SHOW);
                     } else {
-                        dispatchEvent(POPOVER_HIDE, $element);
+                        $element.triggerHandler(POPOVER_HIDE);
                     }
                 });
-
-                function dispatchEvent(eventName, $element) {
-                    var event = document.createEvent('Event');
-                    event.initEvent(eventName, true, true);
-
-                    $element[0].dispatchEvent(event);
-                }
             })
         }
     }]);

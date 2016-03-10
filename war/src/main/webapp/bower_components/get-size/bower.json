@@ -1,9 +1,10 @@
 {
   "name": "get-size",
-  "version": "2.0.2",
+  "version": "1.2.2",
   "main": "get-size.js",
   "description": "measures element size",
   "dependencies": {
+    "get-style-property": "1.x"
   },
   "devDependencies": {
     "qunit": "~1.10"
@@ -12,11 +13,11 @@
     "test/",
     "**/.*",
     "package.json",
+    "component.json",
     "node_modules",
     "bower_components",
     "test",
-    "tests",
-    "sandbox.html"
+    "tests"
   ],
   "homepage": "https://github.com/desandro/get-size",
   "authors": [

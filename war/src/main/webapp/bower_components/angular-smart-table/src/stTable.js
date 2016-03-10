@@ -11,8 +11,7 @@ ng.module('smart-table')
       sort: {},
       search: {},
       pagination: {
-        start: 0,
-        totalItemCount: 0
+        start: 0
       }
     };
     var filtered;
@@ -31,34 +30,12 @@ ng.module('smart-table')
       }
     }
 
-    function deepDelete (object, path) {
-      if (path.indexOf('.') != -1) {
-        var partials = path.split('.');
-        var key = partials.pop();
-        var parentPath = partials.join('.');
-        var parentObject = $parse(parentPath)(object)
-        delete parentObject[key];
-        if (Object.keys(parentObject).length == 0) {
-          deepDelete(object, parentPath);
-        }
-      } else {
-        delete object[path];
-      }
-    }
-
     if ($attrs.stSafeSrc) {
       safeGetter = $parse($attrs.stSafeSrc);
       $scope.$watch(function () {
         var safeSrc = safeGetter($scope);
-        return safeSrc && safeSrc.length ? safeSrc[0] : undefined;
-      }, function (newValue, oldValue) {
-        if (newValue !== oldValue) {
-          updateSafeCopy();
-        }
-      });
-      $scope.$watch(function () {
-        var safeSrc = safeGetter($scope);
         return safeSrc ? safeSrc.length : 0;
+
       }, function (newValue, oldValue) {
         if (newValue !== safeCopy.length) {
           updateSafeCopy();
@@ -68,7 +45,6 @@ ng.module('smart-table')
         return safeGetter($scope);
       }, function (newValue, oldValue) {
         if (newValue !== oldValue) {
-          tableState.pagination.start = 0;
           updateSafeCopy();
         }
       });
@@ -103,10 +79,10 @@ ng.module('smart-table')
       var prop = predicate ? predicate : '$';
 
       input = ng.isString(input) ? input.trim() : input;
-      $parse(prop).assign(predicateObject, input);
+      predicateObject[prop] = input;
       // to avoid to filter out null value
       if (!input) {
-        deepDelete(predicateObject, prop);
+        delete predicateObject[prop];
       }
       tableState.search.predicateObject = predicateObject;
       tableState.pagination.start = 0;
@@ -123,7 +99,6 @@ ng.module('smart-table')
       if (tableState.sort.predicate) {
         filtered = orderBy(filtered, tableState.sort.predicate, tableState.sort.reverse);
       }
-      pagination.totalItemCount = filtered.length;
       if (pagination.number !== undefined) {
         pagination.numberOfPages = filtered.length > 0 ? Math.ceil(filtered.length / pagination.number) : 1;
         pagination.start = pagination.start >= filtered.length ? (pagination.numberOfPages - 1) * pagination.number : pagination.start;
@@ -138,7 +113,7 @@ ng.module('smart-table')
      * @param {String} [mode] - "single" or "multiple" (multiple by default)
      */
     this.select = function select (row, mode) {
-      var rows = copyRefs(displayGetter($scope));
+      var rows = safeCopy;
       var index = rows.indexOf(row);
       if (index !== -1) {
         if (mode === 'single') {

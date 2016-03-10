@@ -12,7 +12,7 @@ var size = getSize('#selector')
 
 Returns an object with:  `width`, `height`, `innerWidth/Height`, `outerWidth/Height`, `paddingLeft/Top/Right/Bottom`, `marginLeft/Top/Right/Bottom`, `borderLeft/Top/Right/BottomWidth` and `isBorderBox`.
 
-Browser support: IE10+, Android 4.0+, iOS 5+, and modern browsers
+Tested in IE8, IE9 and good browsers.
 
 ## Install
 
@@ -31,6 +31,10 @@ Install with npm: `npm install get-size`
   left: -999em;
 }
 ```
+
+## Fractional values in IE8
+
+For percentage or `em`-based sizes, IE8 does not support fractional values. getSize will round to the nearest value.
 
 ## MIT License
 

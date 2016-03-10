@@ -33,10 +33,21 @@ module.exports = function (grunt) {
 					'dist/screenfull.min.js': 'src/screenfull.js'
 				}
 			}
+		},
+		jshint: {
+			options: {
+				jshintrc: '.jshintrc'
+			},
+			all: [
+				'Gruntfile.js',
+				'src/screenfull.js'
+			]
 		}
 	});
 
-	grunt.registerTask('default', [
+	grunt.registerTask('default', ['jshint']);
+	grunt.registerTask('release', [
+		'jshint',
 		'concat',
 		'uglify'
 	]);

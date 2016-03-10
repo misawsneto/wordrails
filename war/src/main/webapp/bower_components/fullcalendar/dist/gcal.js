@@ -1,15 +1,12 @@
 /*!
- * FullCalendar v2.6.1 Google Calendar Plugin
- * Docs & License: http://fullcalendar.io/
- * (c) 2015 Adam Shaw
+ * FullCalendar v2.2.7 Google Calendar Plugin
+ * Docs & License: http://arshaw.com/fullcalendar/
+ * (c) 2013 Adam Shaw
  */
  
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
 		define([ 'jquery' ], factory);
-	}
-	else if (typeof exports === 'object') { // Node/CommonJS
-		module.exports = factory(require('jquery'));
 	}
 	else {
 		factory(jQuery);
@@ -18,11 +15,11 @@
 
 
 var API_BASE = 'https://www.googleapis.com/calendar/v3/calendars';
-var FC = $.fullCalendar;
-var applyAll = FC.applyAll;
+var fc = $.fullCalendar;
+var applyAll = fc.applyAll;
 
 
-FC.sourceNormalizers.push(function(sourceOptions) {
+fc.sourceNormalizers.push(function(sourceOptions) {
 	var googleCalendarId = sourceOptions.googleCalendarId;
 	var url = sourceOptions.url;
 	var match;
@@ -32,7 +29,7 @@ FC.sourceNormalizers.push(function(sourceOptions) {
 
 		// detect if the ID was specified as a single string.
 		// will match calendars like "asdf1234@calendar.google.com" in addition to person email calendars.
-		if (/^[^\/]+@([^\/\.]+\.)*(google|googlemail|gmail)\.com$/.test(url)) {
+		if ((match = /^[^\/]+@([^\/\.]+\.)*(google|googlemail|gmail)\.com$/.test(url))) {
 			googleCalendarId = url;
 		}
 		// try to scrape it out of a V1 or V3 API feed URL
@@ -64,7 +61,7 @@ FC.sourceNormalizers.push(function(sourceOptions) {
 });
 
 
-FC.sourceFetchers.push(function(sourceOptions, start, end, timezone) {
+fc.sourceFetchers.push(function(sourceOptions, start, end, timezone) {
 	if (sourceOptions.googleCalendarId) {
 		return transformOptions(sourceOptions, start, end, timezone, this); // `this` is the calendar
 	}
@@ -80,13 +77,17 @@ function transformOptions(sourceOptions, start, end, timezone, calendar) {
 
 	function reportError(message, apiErrorObjs) {
 		var errorObjs = apiErrorObjs || [ { message: message } ]; // to be passed into error handlers
+		var consoleObj = window.console;
+		var consoleWarnFunc = consoleObj ? (consoleObj.warn || consoleObj.log) : null;
 
 		// call error handlers
 		(sourceOptions.googleCalendarError || $.noop).apply(calendar, errorObjs);
 		(calendar.options.googleCalendarError || $.noop).apply(calendar, errorObjs);
 
 		// print error to debug console
-		FC.warn.apply(null, [ message ].concat(apiErrorObjs || []));
+		if (consoleWarnFunc) {
+			consoleWarnFunc.apply(consoleObj, [ message ].concat(apiErrorObjs || []));
+		}
 	}
 
 	if (!apiKey) {

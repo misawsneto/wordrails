@@ -16,10 +16,9 @@ module.exports = function (config) {
 			'bower_components/rangy/rangy-selectionsaverestore.js',
 			'bower_components/angular/angular.min.js',
 			'bower_components/angular-mocks/angular-mocks.js',
-			'dist/textAngular-sanitize.js',
-			'dist/textAngularSetup.js',
-			'dist/textAngular.js',
-			'test/helpers.js',
+			'src/textAngular-sanitize.js',
+			'src/textAngularSetup.js',
+			'src/textAngular.js',
 			'bower_components/jquery/jquery.min.js',
 			'test/**/*.spec.js'
 		],
@@ -30,8 +29,8 @@ module.exports = function (config) {
 		],
 
 		preprocessors: {
-			'dist/textAngular.js': ['coverage'],
-			'dist/textAngularSetup.js': ['coverage']
+			'src/textAngular.js': ['coverage'],
+			'src/textAngularSetup.js': ['coverage']
 		},
 
 		// test results reporter to use
@@ -39,8 +38,8 @@ module.exports = function (config) {
 		reporters: ['progress', 'coverage'],
 		coverageReporter: {
 			reporters: [
-				{type: 'json', dir: 'coverage'},
-				{type: 'lcov', dir: 'coverage'}
+				{type: 'json', dir: 'coverage/'},
+				{type: 'lcov', dir: 'coverage/'}
 			]
 		},
 

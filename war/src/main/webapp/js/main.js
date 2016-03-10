@@ -3,8 +3,8 @@
 /* Controllers */
 
 angular.module('app')
-.controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$uibModal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast', 'TRIX', 'cfpLoadingBar', '$q', '$mdSidenav',
-  function(              $scope,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $uibModal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast, TRIX   ,  cfpLoadingBar ,  $q ,  $mdSidenav) {
+.controller('AppCtrl', ['$scope', '$localStorage', '$window', '$rootScope', '$log', 'trixService', '$filter', '$splash', '$modal', 'trix', '$state', '$http', 'JQ_CONFIG', 'uiLoad', '$timeout', '$mdDialog', '$interval', '$mdToast', 'TRIX', 'cfpLoadingBar', '$q', '$mdSidenav',
+  function(              $scope,   $localStorage,   $window,   $rootScope,   $log ,  trixService ,  $filter ,  $splash ,  $modal ,  trix ,  $state ,  $http ,  JQ_CONFIG ,  uiLoad ,  $timeout ,  $mdDialog ,  $interval ,  $mdToast, TRIX   ,  cfpLoadingBar ,  $q ,  $mdSidenav) {
     // add 'ie' classes to html
     var isIE = !!navigator.userAgent.match(/MSIE/i);
     isIE && angular.element($window.document.body).addClass('ie');
@@ -414,7 +414,7 @@ angular.module('app')
 
 
       $scope.openModal = function(templateId, size){
-        $scope.modalInstance = $uibModal.open({
+        $scope.modalInstance = $modal.open({
                           templateUrl: templateId, // the id of the <script> template
                           size: size,
                           scope: $scope, // pass the current scope. no need for a new controller

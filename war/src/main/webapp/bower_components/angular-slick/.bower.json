@@ -33,6 +33,6 @@
     "commit": "63d0822cb5aff98b3a70617b753c0cd6178803d0"
   },
   "_source": "git://github.com/vasyabigi/angular-slick.git",
-  "_target": "^0.2.1",
+  "_target": "~0.2.1",
   "_originalSource": "angular-slick"
 }

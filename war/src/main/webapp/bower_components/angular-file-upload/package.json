@@ -1,22 +1,19 @@
 {
     "name": "angular-file-upload",
-    "version": "2.2.0",
+    "version": "1.1.6",
     "homepage": "https://github.com/nervgh/angular-file-upload",
     "description": "Angular File Upload is a module for the AngularJS framework",
     "author": {
         "name": "nerv",
         "url": "https://github.com/nervgh"
     },
-    "main": "dist/angular-file-upload.min.js",
-    "devDependencies": {
-        "babel": "^4.7.16",
-        "babel-loader": "^4.0.0",
-        "event-stream": "^3.3.2",
-        "extend": "^3.0.0",
-        "gulp": "^3.9.0",
-        "html-loader": "^0.2.3",
-        "json-loader": "^0.5.1",
-        "webpack": "^1.10.1",
-        "webpack-stream": "^2.0.0"
+    "main": "angular-file-upload.min.js",
+    "dependencies": {
+        "coffee-script": "~1.6.2",
+        "grunt-contrib-copy": "~0.4.1",
+        "grunt-contrib-clean": "~0.4.0",
+        "grunt-contrib-concat": "~0.3.0",
+        "grunt-contrib-uglify": "~0.2.1",
+        "grunt": "~0.4.1"
     }
 }

@@ -2,7 +2,7 @@
 angular.module('afkl.lazyImage', []);
 /* global angular */
 angular.module('afkl.lazyImage')
-    .service('afklSrcSetService', ['$window', '$timeout', function($window, $timeout) {
+    .service('afklSrcSetService', ['$window', function($window) {
         'use strict';
 
         /**
@@ -46,7 +46,7 @@ angular.module('afkl.lazyImage')
                         out[lastChar] = intVal;
                     } else if (!isNaN(floatVal) && lastChar === 'x') {
                         out[lastChar] = floatVal;
-                    }
+                    } 
 
                 }
             }
@@ -94,7 +94,7 @@ angular.module('afkl.lazyImage')
             return images;
 
         };
-
+      
         /**
         * Direct implementation of "processing the image candidates":
         * http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content-1.html#processing-the-image-candidates
@@ -285,31 +285,13 @@ angular.module('afkl.lazyImage')
 
         };
 
-        // debouncer function to be used in directive
-        function debounce(call, delay) {
-          var preventCalls = false;
-
-          return function() {
-            if (!preventCalls) {
-              call();
-
-              preventCalls = true;
-
-              $timeout(function() {
-                preventCalls = false;
-              }, delay);
-            }
-          };
-        }
-
 
         /**
          * PUBLIC API
          */
         return {
             get: getSrcset,        // RETURNS BEST IMAGE AND IMAGE CANDIDATES
-            image: getBestImage,   // RETURNS BEST IMAGE WITH GIVEN CANDIDATES
-            debounce: debounce     // RETURNS A DEBOUNCER FUNCTION
+            image: getBestImage    // RETURNS BEST IMAGE WITH GIVEN CANDIDATES
         };
 
 
@@ -328,7 +310,7 @@ angular.module('afkl.lazyImage')
             }]
         };
     })
-    .directive('afklLazyImage', ['$rootScope', '$window', '$timeout', 'afklSrcSetService', '$parse', function ($rootScope, $window, $timeout, srcSetService, $parse) {
+    .directive('afklLazyImage', ['$window', '$timeout', 'afklSrcSetService', '$parse', function ($window, $timeout, srcSetService, $parse) {
         'use strict';
 
         // Use srcSetService to find out our best available image
@@ -345,20 +327,6 @@ angular.module('afkl.lazyImage')
             restrict: 'A',
             link: function (scope, element, attrs) {
 
-                var _concatImgAttrs = function (imgAttrs) {
-                    var result = [];
-                    if (!!options.imgAttrs) {
-                        result = Array.prototype.map.call(imgAttrs, function(item) {
-                            for (var key in item) {
-                                if (item.hasOwnProperty(key)) {
-                                    return String.prototype.concat.call(key, '="', item[key], '"');
-                                }
-                            }
-                        });
-                    }
-                    return result.join(' ');
-                };
-
                 // CONFIGURATION VARS
                 var $container = element.inheritedData('afklImageContainer');
                 if (!$container) {
@@ -371,14 +339,18 @@ angular.module('afkl.lazyImage')
                 var images = attrs.afklLazyImage; // srcset attributes
                 var options = attrs.afklLazyImageOptions ? $parse(attrs.afklLazyImageOptions)(scope) : {}; // options (background, offset)
 
-                var img = null; // Angular element to image which will be placed
+                var img; // Angular element to image which will be placed
                 var currentImage = null; // current image url
                 var offset = options.offset ? options.offset : 50; // default offset
-                var imgAttrs = _concatImgAttrs(options.imgAttrs); // all image attributes like class, title, onerror
+                var alt = options.alt ? 'alt="' + options.alt + '"' : 'alt=""';
 
                 var LOADING = 'afkl-lazy-image-loading';
 
-
+                var IMAGECLASSNAME = 'afkl-lazy-image';
+                
+                if (options.className) {
+                    IMAGECLASSNAME = IMAGECLASSNAME + ' ' + options.className;
+                }
 
                 attrs.afklLazyImageLoaded = false;
 
@@ -427,7 +399,6 @@ angular.module('afkl.lazyImage')
                     return box.top + _containerScrollTop() - document.documentElement.clientTop;
                 };
 
-
                 var _elementOffsetContainer = function () {
                     if (element.offset) {
                         return element.offset().top - $container.offset().top;
@@ -439,7 +410,7 @@ angular.module('afkl.lazyImage')
                 var _setImage = function () {
                     if (options.background) {
                         element[0].style.backgroundImage = 'url("' + currentImage +'")';
-                    } else if (!!img) {
+                    } else {
                         img[0].src = currentImage;
                     }
                 };
@@ -454,12 +425,11 @@ angular.module('afkl.lazyImage')
                     if (hasImage) {
                         // we have to make an image if background is false (default)
                         if (!options.background) {
-
+                            
                             if (!img) {
-                                element.addClass(LOADING);
-                                img = angular.element('<img ' + imgAttrs + ' />');
-                                img.one('load', _loaded);
-                                img.one('error', _error);
+                                // element.addClass(LOADING);
+                                img = angular.element('<img ' + alt + ' class="' + IMAGECLASSNAME + '"/>');
+                                // img.one('load', _loaded);
                                 // remove loading class when image is acually loaded
                                 element.append(img);
                             }
@@ -479,13 +449,16 @@ angular.module('afkl.lazyImage')
                 var _checkIfNewImage = function () {
                     if (loaded) {
                         var newImage = bestImage(images);
-                        
                         if (newImage !== currentImage) {
                             // update current url
                             currentImage = newImage;
 
-                            // TODO: loading state...
-
+                            if (!options.background) {
+                                element.addClass(LOADING);
+                                img.one('load', _loaded);
+                                img.one('error', _error);
+                            }
+                            
                             // update image url
                             _setImage();
                         }
@@ -511,37 +484,29 @@ angular.module('afkl.lazyImage')
 
                 // Check if the container is in view for the first time. Utilized by the scroll and resize events.
                 var _onViewChange = function () {
-                    // only do stuff when not set already
-                    if (!loaded) {
+                    // Config vars
+                    var remaining, shouldLoad, windowBottom;
 
-                        // Config vars
-                        var remaining, shouldLoad, windowBottom;
+                    var height = _containerInnerHeight();
+                    var scroll = _containerScrollTop();
 
-                        var height = _containerInnerHeight();
-                        var scroll = _containerScrollTop();
+                    var elOffset = $container[0] === $window ? _elementOffset() : _elementOffsetContainer();
+                    windowBottom = $container[0] === $window ? height + scroll : height;
 
-                        var elOffset = $container[0] === $window ? _elementOffset() : _elementOffsetContainer();
-                        windowBottom = $container[0] === $window ? height + scroll : height;
+                    remaining = elOffset - windowBottom;
 
-                        remaining = elOffset - windowBottom;
-
-                        // Is our top of our image container in bottom of our viewport?
-                        //console.log($container[0].className, _elementOffset(), _elementPosition(), height, scroll, remaining, elOffset);
-                        shouldLoad = remaining <= offset;
+                    // Is our top of our image container in bottom of our viewport?
+                    //console.log($container[0].className, _elementOffset(), _elementPosition(), height, scroll, remaining, elOffset);
+                    shouldLoad = remaining <= offset;
 
 
-                        // Append image first time when it comes into our view, after that only resizing can have influence
-                        if (shouldLoad) {
+                    // Append image first time when it comes into our view, after that only resizing can have influence
+                    if (shouldLoad && !loaded) {
 
-                            _placeImage();
-
-                        }
+                        _placeImage();
 
                     }
-
                 };
-
-                var _onViewChangeDebounced = srcSetService.debounce(_onViewChange, 300);
 
                 // EVENT: RESIZE THROTTLED
                 var _onResize = function () {
@@ -558,12 +523,10 @@ angular.module('afkl.lazyImage')
 
                     $timeout.cancel(timeout);
 
+                    $container.off('scroll', _onViewChange);
                     angular.element($window).off('resize', _onResize);
-                    angular.element($window).off('scroll', _onViewChangeDebounced);
-
                     if ($container[0] !== $window) {
                         $container.off('resize', _onResize);
-                        $container.off('scroll', _onViewChangeDebounced);
                     }
 
                     // remove image being placed
@@ -574,18 +537,14 @@ angular.module('afkl.lazyImage')
                     img = timeout = currentImage = undefined;
                 };
 
-                // set events for scrolling and resizing on window
-                // even if container is not window it is important
-                // to cover two cases:
-                //  - when container size is bigger than window's size
-                //  - when container's side is out of initial window border
-                angular.element($window).on('resize', _onResize);
-                angular.element($window).on('scroll', _onViewChangeDebounced);
 
-                // if container is not window, set events for container as well
+
+                // Set events for scrolling and resizing
+                $container.on('scroll', _onViewChange);
+                angular.element($window).on('resize', _onResize);
+
                 if ($container[0] !== $window) {
                     $container.on('resize', _onResize);
-                    $container.on('scroll', _onViewChangeDebounced);
                 }
 
                 // events for image change
@@ -601,14 +560,8 @@ angular.module('afkl.lazyImage')
                     _placeImage();
                 }
 
-
-                scope.$on('afkl.lazyImage.destroyed', _onResize);
-
                 // Remove all events when destroy takes place
                 scope.$on('$destroy', function () {
-                    // tell our other kids, i got removed
-                    $rootScope.$broadcast('afkl.lazyImage.destroyed');
-                    // remove our events and image
                     return _eventsOff();
                 });
 

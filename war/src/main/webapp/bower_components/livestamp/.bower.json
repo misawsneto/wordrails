@@ -9,6 +9,6 @@
     "commit": "139dd44bbf96486e02f5061a8313d1b2c74bf41a"
   },
   "_source": "git://github.com/mattbradley/livestampjs.git",
-  "_target": "^1.1.2",
+  "_target": "~1.1.2",
   "_originalSource": "livestamp"
 }

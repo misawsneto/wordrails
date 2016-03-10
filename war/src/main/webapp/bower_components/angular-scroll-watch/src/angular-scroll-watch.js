@@ -1,16 +1,4 @@
-/* jshint node:true */
-/* global define */
-(function (root, factory) {
-  if (typeof exports === "object" || (typeof module === "object" && module.exports)) {
-    module.exports = factory(require("angular"));
-  } else if (typeof define === "function" && define.amd) {
-    define(["angular"], factory);
-  } else {
-    root.returnExports = factory(root.angular);
-  }
-}(this, function (angular) {
-
-  var MODULE_NAME = 'pc035860.scrollWatch';
+(function (module) {
 
   var DIR_STYLE = 'swStyle',
       DIR_CLASS = 'swClass',
@@ -21,7 +9,7 @@
 
   var CACHE_ID_STAGE_POOL = 'scrollWatch.stages';
 
-  angular.module(MODULE_NAME, [])
+  module
 
   .factory('scrollWatchStageFactory', function (
     $window, $document, $parse, $log, $rootScope, $animate
@@ -783,5 +771,4 @@
     return dst || src;
   }
 
-  return MODULE_NAME;
-}));
+})(angular.module('pc035860.scrollWatch', []));

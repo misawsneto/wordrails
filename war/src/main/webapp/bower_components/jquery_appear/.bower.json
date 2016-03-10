@@ -28,6 +28,6 @@
     "commit": "b4bf422ce6dca1071501c77b05afae6e0777784b"
   },
   "_source": "git://github.com/morr/jquery.appear.git",
-  "_target": "^0.3.6",
+  "_target": "~0.3.3",
   "_originalSource": "jquery_appear"
 }

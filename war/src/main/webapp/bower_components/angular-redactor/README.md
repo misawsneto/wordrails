@@ -1,4 +1,3 @@
-[![Stories in Ready](https://badge.waffle.io/TylerGarlick/angular-redactor.png?label=ready&title=Ready)](https://waffle.io/TylerGarlick/angular-redactor)
 angular-redactor
 ================
 
@@ -8,7 +7,6 @@ Angular Redactor is an angular directive for the Redactor editor.  http://impera
 Important Changes
 --------------
 
-There is an additional file (angular-redactor-2) for Redactor II.
 As of version 1.1.0, there is an additional file (angular-redactor-9.x) has been added to accommodate the the 9.x version of redactor, the angular-redactor.js will support the latest version of redactor.
 
 
@@ -36,11 +34,6 @@ Bare Minimum Html
 With Options
 ```html
 <textarea ng-model="content" redactor="{buttons: ['formatting', '|', 'bold', 'italic']}" cols="30" rows="10"></textarea>
-```
-
-With Plugins
-```html
-<textarea ng-model="content" redactor="{plugins: ['source']}" cols="30" rows="10"></textarea>
 ```
 
 You can pass options directly to Redactor by specifying them as the value of the `redactor` attribute.

@@ -1,42 +1,21 @@
 /*!
- * angular-translate - v2.10.0 - 2016-02-28
- * 
- * Copyright (c) 2016 The angular-translate team, Pascal Precht; Licensed MIT
+ * angular-translate - v2.5.2 - 2014-12-10
+ * http://github.com/angular-translate/angular-translate
+ * Copyright (c) 2014 ; Licensed MIT
  */
-(function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module unless amdModuleId is set
-    define([], function () {
-      return (factory());
-    });
-  } else if (typeof exports === 'object') {
-    // Node. Does not work with strict CommonJS, but
-    // only CommonJS-like environments that support module.exports,
-    // like Node.
-    module.exports = factory();
-  } else {
-    factory();
-  }
-}(this, function () {
-
 angular.module('pascalprecht.translate')
 
 /**
  * @ngdoc object
  * @name pascalprecht.translate.$translateLocalStorage
  * @requires $window
- * @requires $translateCookieStorage
  *
  * @description
  * Abstraction layer for localStorage. This service is used when telling angular-translate
  * to use localStorage as storage.
  *
  */
-.factory('$translateLocalStorage', $translateLocalStorageFactory);
-
-function $translateLocalStorageFactory($window, $translateCookieStorage) {
-
-  'use strict';
+.factory('$translateLocalStorage', ['$window', '$translateCookieStorage', function ($window, $translateCookieStorage) {
 
   // Setup adapter
   var localStorageAdapter = (function(){
@@ -114,10 +93,4 @@ function $translateLocalStorageFactory($window, $translateCookieStorage) {
   }
   var $translateLocalStorage = hasLocalStorageSupport ? localStorageAdapter : $translateCookieStorage;
   return $translateLocalStorage;
-}
-$translateLocalStorageFactory.$inject = ['$window', '$translateCookieStorage'];
-
-$translateLocalStorageFactory.displayName = '$translateLocalStorageFactory';
-return 'pascalprecht.translate';
-
-}));
+}]);

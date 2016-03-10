@@ -37,7 +37,6 @@
     "commit": "7327b618b5de020f9220670a72915b9620006e64"
   },
   "_source": "git://github.com/thesabbir/simple-line-icons.git",
-  "_target": "^2.2.4",
-  "_originalSource": "simple-line-icons",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "simple-line-icons"
 }

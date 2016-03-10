@@ -1,5 +1,5 @@
 /**
- * @license videogular v1.4.2 http://videogular.com
+ * @license videogular v1.2.8 http://videogular.com
  * Two Fucking Developers http://twofuckingdevelopers.com
  * License: MIT
  */
@@ -251,13 +251,12 @@ angular.module("com.2fdevs.videogular.plugins.controls")
  * @description
  * Directive to display a playback buttom to control the playback rate.
  *
- * @param {array} vgSpeeds Bindable array with a list of speed options as strings. Default ['0.5', '1', '1.5', '2']
  * <pre>
  * <videogular vg-theme="config.theme.url">
  *    <vg-media vg-src="sources"></vg-media>
  *
  *    <vg-controls vg-autohide='config.autohide' vg-autohide-time='config.autohideTime'>
- *        <vg-playback-button vg-speeds='config.playbackSpeeds'></vg-playback-button>
+ *        <vg-playback-button></vg-playback-button>
  *    </vg-controls>
  * </videogular>
  * </pre>
@@ -271,18 +270,15 @@ angular.module("com.2fdevs.videogular.plugins.controls")
     }]
 )
     .directive("vgPlaybackButton",
-    [function () {
+    ["VG_UTILS", function (VG_UTILS) {
         return {
             restrict: "E",
             require: "^videogular",
             templateUrl: function (elem, attrs) {
                 return attrs.vgTemplate || 'vg-templates/vg-playback-button';
             },
-            scope: {
-                vgSpeeds: '=?'
-            },
             link: function (scope, elem, attr, API) {
-                scope.playback = '1';
+                scope.playback = '1.0';
 
                 scope.setPlayback = function(playback) {
                     scope.playback = playback;
@@ -290,8 +286,8 @@ angular.module("com.2fdevs.videogular.plugins.controls")
                 };
 
                 scope.onClickPlayback = function onClickPlayback() {
-                    var playbackOptions = scope.vgSpeeds || ['0.5', '1', '1.5', '2'];
-                    var nextPlaybackRate = playbackOptions.indexOf(scope.playback.toString()) + 1;
+                    var playbackOptions = ['.5', '1.0', '1.5', '2.0'];
+                    var nextPlaybackRate = playbackOptions.indexOf(scope.playback) + 1 || 1;
 
                     if (nextPlaybackRate >= playbackOptions.length) {
                         scope.playback = playbackOptions[0];
@@ -317,58 +313,6 @@ angular.module("com.2fdevs.videogular.plugins.controls")
         }
     }]
 );
-
-/**
- * @ngdoc directive
- * @name com.2fdevs.videogular.plugins.controls.directive:vgScrubBarBuffer
- * @restrict E
- * @description
- * Layer inside vg-scrub-bar to display the buffer.
- *
- * <pre>
- * <videogular vg-theme="config.theme.url">
- *    <vg-media vg-src="sources"></vg-media>
- *
- *    <vg-controls vg-autohide='config.autohide' vg-autohide-time='config.autohideTime'>
- *        <vg-scrub-bar>
- *            <vg-scrub-bar-buffer></vg-scrub-bar-buffer>
- *        </vg-scrub-bar>
- *    </vg-controls>
- * </videogular>
- * </pre>
- *
- */
-angular.module("com.2fdevs.videogular.plugins.controls")
-    .directive("vgScrubBarBuffer",
-    [function () {
-        return {
-            restrict: "E",
-            require: "^videogular",
-            link: function (scope, elem, attr, API) {
-                var percentTime = 0;
-
-                scope.onUpdateBuffer = function onUpdateBuffer(newBuffer) {
-                    if (typeof newBuffer === 'number' && API.totalTime) {
-                        percentTime = 100 * (newBuffer / API.totalTime);
-                        elem.css("width", percentTime + "%");
-                    } else {
-                        elem.css("width", 0);
-                    }
-                };
-
-                scope.$watch(
-                    function () {
-                        return API.bufferEnd;
-                    },
-                    function (newVal, oldVal) {
-                        scope.onUpdateBuffer(newVal);
-                    }
-                );
-            }
-        }
-    }]
-);
-
 /**
  * @ngdoc directive
  * @name com.2fdevs.videogular.plugins.controls.directive:vgScrubBarCuePoints
@@ -390,67 +334,67 @@ angular.module("com.2fdevs.videogular.plugins.controls")
  *
  */
 angular.module("com.2fdevs.videogular.plugins.controls")
-    .run(["$templateCache",
-        function ($templateCache) {
-            $templateCache.put("vg-templates/vg-scrub-bar-cue-points",
-                '<div class="cue-point-timeline">' +
-                    '<div ng-repeat="cuePoint in vgCuePoints" class="cue-point" ng-style="cuePoint.$$style"></div>' +
-                '</div>');
-        }
-    ])
-    .directive("vgScrubBarCuePoints", [
-        function () {
-            return {
-                restrict: "E",
-                require: "^videogular",
-                templateUrl: function (elem, attrs) {
-                    return attrs.vgTemplate || 'vg-templates/vg-scrub-bar-cue-points';
-                },
-                scope: {
-                    "vgCuePoints": "="
-                },
-                link: function (scope, elem, attr, API) {
-                    scope.onPlayerReady = function onPlayerReady() {
-                        scope.updateCuePoints(scope.vgCuePoints);
-                    };
-                    scope.updateCuePoints = function onUpdateCuePoints(cuePoints) {
-                        var totalWidth;
+    .run(
+    ["$templateCache", function ($templateCache) {
+        $templateCache.put("vg-templates/vg-scrub-bar-cue-points",
+            '<div class="cue-point-timeline" ng-style="timelineWidth">' +
+            '<div ng-repeat="cuePoint in vgCuePoints" class="cue-point" ng-style="cuePoint.$$style"></div>' +
+            '</div>');
+    }]
+)
+    .directive("vgScrubBarCuePoints",
+    [function () {
+        return {
+            restrict: "E",
+            require: "^videogular",
+            templateUrl: function (elem, attrs) {
+                return attrs.vgTemplate || 'vg-templates/vg-scrub-bar-cue-points';
+            },
+            scope: {
+                "vgCuePoints": "="
+            },
+            link: function (scope, elem, attr, API) {
+                scope.onPlayerReady = function onPlayerReady() {
+                    scope.updateCuePoints(scope.vgCuePoints);
+                };
 
-                        if (cuePoints) {
-                            totalWidth = parseInt(elem[0].clientWidth);
+                scope.updateCuePoints = function onUpdateCuePoints(cuePoints) {
+                    var totalWidth;
 
-                            for (var i = 0, l = cuePoints.length; i < l; i++) {
-                                var end = (cuePoints[i].timeLapse.end >= 0) ? cuePoints[i].timeLapse.end : cuePoints[i].timeLapse.start + 1;
-                                var cuePointDuration = (end - cuePoints[i].timeLapse.start) * 1000;
-                                var position = (cuePoints[i].timeLapse.start * 100 / (Math.round(API.totalTime / 1000))) + "%";
-                                var percentWidth = 0;
+                    if (cuePoints) {
+                        totalWidth = parseInt(elem[0].clientWidth);
 
-                                if (typeof cuePointDuration === 'number' && API.totalTime) {
-                                    percentWidth = ((cuePointDuration * 100) / API.totalTime) + "%";
-                                }
+                        for (var i = 0, l = cuePoints.length; i < l; i++) {
+                            var cuePointDuration = (cuePoints[i].timeLapse.end - cuePoints[i].timeLapse.start) * 1000;
+                            var position = (cuePoints[i].timeLapse.start * 100 / API.totalTime * 1000) + "%";
+                            var percentWidth = 0;
 
-                                cuePoints[i].$$style = {
-                                    width: percentWidth,
-                                    left: position
-                                };
+                            if (typeof cuePointDuration === 'number' && API.totalTime) {
+                                percentWidth = ((cuePointDuration * 100) / API.totalTime) + "%";
                             }
-                        }
-                    };
 
-                    scope.$watch("vgCuePoints", scope.updateCuePoints);
-
-                    scope.$watch(
-                        function () {
-                            return API.totalTime;
-                        },
-                        function (newVal, oldVal) {
-                            if (newVal > 0) scope.onPlayerReady();
+                            cuePoints[i].$$style = {
+                                width: percentWidth,
+                                left: position
+                            };
                         }
-                    );
-                }
+                    }
+                };
+
+                scope.$watch("vgCuePoints", scope.updateCuePoints);
+
+                scope.$watch(
+                    function () {
+                        return API.totalTime;
+                    },
+                    function (newVal, oldVal) {
+                        if (newVal > 0) scope.onPlayerReady();
+                    }
+                );
             }
         }
-    ]);
+    }]
+);
 
 /**
  * @ngdoc directive
@@ -505,238 +449,6 @@ angular.module("com.2fdevs.videogular.plugins.controls")
 
 /**
  * @ngdoc directive
- * @name com.2fdevs.videogular.plugins.controls.directive:vgScrubBarThumbnails
- * @restrict E
- * @description
- * Layer inside vg-scrub-bar to display thumbnails.
- *
- * Param thumbnails could be a string url pointing to a strip of thumbnails or an array of objects with the same
- * format that you can find in cue points.
- *
- * **Strip of thumbnails**
- * Must be an image with exactly 100 thumbnails. Recommended size per each thumbnail 107x60
- * Example of param value: "assets/images/strip-of-thumbnails.jpg"
- *
- * To create a strip of thumbnails you can use ffmpeg:
- * ffmpeg -loglevel panic -y -i app/assets/videos/videogular.mp4 -frames 1 -q:v 1 -vf
- * "select=not(mod(n\,29)),scale=-1:60,tile=100x1" app/assets/thumbnails/thumbnail.jpg
- *
- * **List of thumbnails**
- * Array with a list of cue points as images. You can specify start or a lapse with start and end.
- * Example of param value:
- *
- * [
- *     {
- *         "timeLapse": {
- *             "start": 5
- *         },
- *         params: {
- *             "thumbnail": "assets/thumbnails/thumbnail-shown-at-second-5.jpg"
- *         }
- *     },
- *     {
- *         "timeLapse": {
- *             "start": 49,
- *             "end": 60
- *         },
- *         "params": {
- *             "thumbnail": "assets/thumbnails/thumbnail-shown-between-seconds-49-and-60.jpg"
- *         }
- *     }
- * ]
- *
- * <pre>
- * <videogular vg-theme="config.theme.url">
- *    <vg-media vg-src="sources"></vg-media>
- *
- *    <vg-controls>
- *        <vg-scrub-bar>
- *            <vg-scrub-bar-thumbnails vg-thumbnails='config.thumbnails'></vg-scrub-bar-thumbnails>
- *        </vg-scrub-bar>
- *    </vg-controls>
- * </videogular>
- * </pre>
- *
- */
-angular.module("com.2fdevs.videogular.plugins.controls")
-    .run(["$templateCache",
-        function ($templateCache) {
-            $templateCache.put("vg-templates/vg-scrub-bar-thumbnails",
-                '<div class="vg-thumbnails" ng-show="thumbnails" ng-style="thumbnailContainer">' +
-                    '<div class="image-thumbnail" ng-style="thumbnails"></div>' +
-                '</div>' +
-                '<div class="background"></div>'
-            );
-        }
-    ])
-    .directive("vgScrubBarThumbnails", ["VG_UTILS",
-        function (VG_UTILS) {
-            return {
-                restrict: "E",
-                require: "^videogular",
-                templateUrl: function (elem, attrs) {
-                    return attrs.vgTemplate || 'vg-templates/vg-scrub-bar-thumbnails';
-                },
-                scope: {
-                    "vgThumbnails": "="
-                },
-                link: function (scope, elem, attr, API) {
-                    var thumbnailsWidth = 0;
-                    var thumbWidth = 0;
-                    var slider = elem[0].querySelector(".background");
-                    var isStrip = (typeof scope.vgThumbnails === "string");
-
-                    scope.thumbnails = false;
-                    scope.thumbnailContainer = {};
-
-                    scope.getOffset = function getOffset(event) {
-                        var el = event.target,
-                            x = 0;
-
-                        while (el && !isNaN(el.offsetLeft)) {
-                            x += el.offsetLeft - el.scrollLeft;
-                            el = el.offsetParent;
-                        }
-
-                        return event.clientX - x;
-                    };
-
-                    scope.onLoadThumbnails = function(event) {
-                        thumbnailsWidth = event.currentTarget.naturalWidth;
-                        thumbWidth = thumbnailsWidth / 100;
-                    };
-
-                    scope.onLoadThumbnail = function(event) {
-                        thumbWidth = event.currentTarget.naturalWidth;
-                    };
-
-                    scope.updateThumbnails = function(second) {
-                        var percentage = Math.round(second * 100 / (API.totalTime / 1000));
-                        var thPos = (slider.scrollWidth * percentage / 100) - (thumbWidth / 2);
-
-                        if (isStrip) {
-                            var bgPos = Math.round(thumbnailsWidth * percentage / 100);
-
-                            scope.thumbnailContainer = {
-                                "width": thumbWidth + "px",
-                                "left": thPos + "px"
-                            };
-
-                            scope.thumbnails = {
-                                "background-image": 'url("' + scope.vgThumbnails + '")',
-                                "background-position": -bgPos + "px 0px"
-                            };
-                        }
-                        else {
-                            var secondsByPixel = API.totalTime / slider.scrollWidth / 1000;
-                            var lapse = {
-                                start: Math.floor(second - (secondsByPixel / 2)),
-                                end: Math.ceil(second)
-                            };
-
-                            if (lapse.start < 0) lapse.start = 0;
-                            if (lapse.end > API.totalTime) lapse.end = API.totalTime;
-
-                            scope.thumbnailContainer = {
-                                "left": thPos + "px"
-                            };
-
-                            scope.thumbnails = {
-                                "background-image": 'none'
-                            };
-
-                            for (var i=0, l=scope.vgThumbnails.length; i<l; i++) {
-                                var th = scope.vgThumbnails[i];
-
-                                if (th.timeLapse.end >= 0) {
-                                    if (lapse.start >= th.timeLapse.start && (lapse.end <= th.timeLapse.end || lapse.end <= th.timeLapse.start)) {
-                                        scope.thumbnails = {
-                                            "background-image": 'url("' + th.params.thumbnail + '")'
-                                        };
-                                        break;
-                                    }
-                                }
-                                else {
-                                    if (th.timeLapse.start >= lapse.start && th.timeLapse.start <= lapse.end) {
-                                        scope.thumbnails = {
-                                            "background-image": 'url("' + th.params.thumbnail + '")'
-                                        };
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    };
-
-                    scope.onMouseMove = function($event) {
-                        var second = Math.round($event.offsetX * API.mediaElement[0].duration / slider.scrollWidth);
-
-                        scope.updateThumbnails(second);
-
-                        scope.$apply();
-                    };
-
-                    scope.onTouchMove = function($event) {
-                        var touches = $event.touches;
-                        var touchX = scope.getOffset(touches[0]);
-                        var second = Math.round(touchX * API.mediaElement[0].duration / slider.scrollWidth);
-
-                        scope.updateThumbnails(second);
-
-                        scope.$apply();
-                    };
-
-                    scope.onMouseLeave = function(event) {
-                        scope.thumbnails = false;
-
-                        scope.$apply();
-                    };
-
-                    scope.onTouchLeave = function(event) {
-                        scope.thumbnails = false;
-
-                        scope.$apply();
-                    };
-
-                    scope.onDestroy = function() {
-                        elem.unbind("touchmove", scope.onTouchMove);
-                        elem.unbind("touchleave", scope.onTouchLeave);
-                        elem.unbind("touchend", scope.onTouchLeave);
-                        elem.unbind("mousemove", scope.onMouseMove);
-                        elem.unbind("mouseleave", scope.onMouseLeave);
-                    };
-
-                    var thLoader;
-                    if (isStrip) {
-                        thLoader = new Image();
-                        thLoader.onload = scope.onLoadThumbnails.bind(scope);
-                        thLoader.src = scope.vgThumbnails;
-                    }
-                    else {
-                        thLoader = new Image();
-                        thLoader.onload = scope.onLoadThumbnail.bind(scope);
-                        thLoader.src = scope.vgThumbnails[0].params.thumbnail;
-                    }
-
-                    // Touch move is really buggy in Chrome for Android, maybe we could use mouse move that works ok
-                    if (VG_UTILS.isMobileDevice()) {
-                        elem.bind("touchmove", scope.onTouchMove);
-                        elem.bind("touchleave", scope.onTouchLeave);
-                        elem.bind("touchend", scope.onTouchLeave);
-                    }
-                    else {
-                        elem.bind("mousemove", scope.onMouseMove);
-                        elem.bind("mouseleave", scope.onMouseLeave);
-                    }
-
-                    scope.$on('destroy', scope.onDestroy.bind(scope));
-                }
-            }
-        }
-    ]);
-
-/**
- * @ngdoc directive
  * @name com.2fdevs.videogular.plugins.controls.directive:vgScrubBar
  * @restrict E
  * @description
@@ -755,261 +467,186 @@ angular.module("com.2fdevs.videogular.plugins.controls")
  *
  */
 angular.module("com.2fdevs.videogular.plugins.controls")
-    .run(["$templateCache",
-        function ($templateCache) {
-            $templateCache.put("vg-templates/vg-scrub-bar",
-                '<div role="slider" ' +
-                      'aria-valuemax="{{ariaTime(API.totalTime)}}" ' +
-                      'aria-valuenow="{{ariaTime(API.currentTime)}}" ' +
-                      'aria-valuemin="0" ' +
-                      'aria-label="Time scrub bar" ' +
-                      'tabindex="0" ' +
-                      'ng-keydown="onScrubBarKeyDown($event)">' +
-                '</div>' +
-                '<div class="container" ng-transclude></div>'
-            );
-        }]
-    )
-    .directive("vgScrubBar", ["VG_STATES", "VG_UTILS",
-        function (VG_STATES, VG_UTILS) {
-            return {
-                restrict: "E",
-                require: "^videogular",
-                transclude: true,
-                templateUrl: function (elem, attrs) {
-                    return attrs.vgTemplate || 'vg-templates/vg-scrub-bar';
-                },
-                scope: {
-                    vgThumbnails: "="
-                },
-                link: function (scope, elem, attr, API) {
-                    var isSeeking = false;
-                    var isPlaying = false;
-                    var isPlayingWhenSeeking = false;
-                    var LEFT = 37;
-                    var RIGHT = 39;
-                    var NUM_PERCENT = 5;
-                    var thumbnailsWidth = 0;
-                    var thumbWidth = 0;
-                    var slider = elem[0].querySelector("div[role=slider]");
+    .run(
+    ["$templateCache", function ($templateCache) {
+        $templateCache.put("vg-templates/vg-scrub-bar",
+            '<div role="slider" aria-valuemax="{{ariaTime(API.totalTime)}}" aria-valuenow="{{ariaTime(API.currentTime)}}" aria-valuemin="0" aria-label="Time scrub bar" tabindex="0" ng-transclude ng-keydown="onScrubBarKeyDown($event)"></div>');
+    }]
+)
+    .directive("vgScrubBar",
+    ["VG_STATES", "VG_UTILS", function (VG_STATES, VG_UTILS) {
+        return {
+            restrict: "E",
+            require: "^videogular",
+            transclude: true,
+            templateUrl: function (elem, attrs) {
+                return attrs.vgTemplate || 'vg-templates/vg-scrub-bar';
+            },
+            link: function (scope, elem, attr, API) {
+                var isSeeking = false;
+                var isPlaying = false;
+                var isPlayingWhenSeeking = false;
+                var touchStartX = 0;
+                var LEFT = 37;
+                var RIGHT = 39;
+                var NUM_PERCENT = 5;
 
-                    scope.thumbnails = false;
-                    scope.thumbnailContainer = {};
+                scope.API = API;
+                scope.ariaTime = function (time) {
+                    return Math.round(time / 1000);
+                };
 
-                    scope.API = API;
+                scope.onScrubBarTouchStart = function onScrubBarTouchStart($event) {
+                    var event = $event.originalEvent || $event;
+                    var touches = event.touches;
+                    var touchX;
 
-                    scope.onLoadThumbnails = function(event) {
-                        thumbnailsWidth = event.path[0].naturalWidth;
-                        thumbWidth = thumbnailsWidth / 100;
-                    };
-
-                    scope.ariaTime = function (time) {
-                        return Math.round(time / 1000);
-                    };
-
-                    scope.getOffset = function getOffset(event) {
-                        var el = event.target,
-                        x = 0;
-
-                        while (el && !isNaN(el.offsetLeft)) {
-                            x += el.offsetLeft - el.scrollLeft;
-                            el = el.offsetParent;
-                        }
-
-                        return event.clientX - x;
-                    };
-
-                    scope.onScrubBarTouchStart = function onScrubBarTouchStart($event) {
-                        var event = $event.originalEvent || $event;
-                        var touches = event.touches;
-                        var touchX = scope.getOffset(touches[0]);
-
-                        isSeeking = true;
-                        if (isPlaying) isPlayingWhenSeeking = true;
-                        API.pause();
-                        API.seekTime(touchX * API.mediaElement[0].duration / slider.scrollWidth);
-
-                        scope.$apply();
-                    };
-
-                    scope.onScrubBarTouchEnd = function onScrubBarTouchEnd($event) {
-                        var event = $event.originalEvent || $event;
-                        if (isPlayingWhenSeeking) {
-                            isPlayingWhenSeeking = false;
-                            API.play();
-                        }
-                        isSeeking = false;
-
-                        scope.$apply();
-                    };
-
-                    scope.onScrubBarTouchMove = function onScrubBarTouchMove($event) {
-                        var event = $event.originalEvent || $event;
-                        var touches = event.touches;
-                        var touchX = scope.getOffset(touches[0]);
-
-                        if (scope.vgThumbnails && scope.vgThumbnails.length) {
-                            var second = Math.round(touchX * API.mediaElement[0].duration / slider.scrollWidth);
-                            var percentage = Math.round(second * 100 / (API.totalTime / 1000));
-
-                            scope.updateThumbnails(percentage);
-                        }
-
-                        if (isSeeking) {
-                            API.seekTime(touchX * API.mediaElement[0].duration / slider.scrollWidth);
-                        }
-
-                        scope.$apply();
-                    };
-
-                    scope.onScrubBarTouchLeave = function onScrubBarTouchLeave(event) {
-                        isSeeking = false;
-                        scope.thumbnails = false;
-
-                        scope.$apply();
-                    };
-
-                    scope.onScrubBarMouseDown = function onScrubBarMouseDown(event) {
-                        event = VG_UTILS.fixEventOffset(event);
-
-                        isSeeking = true;
-                        if (isPlaying) isPlayingWhenSeeking = true;
-                        API.pause();
-
-                        API.seekTime(event.offsetX * API.mediaElement[0].duration / slider.scrollWidth);
-
-                        scope.$apply();
-                    };
-
-                    scope.onScrubBarMouseUp = function onScrubBarMouseUp(event) {
-                        //event = VG_UTILS.fixEventOffset(event);
-
-                        if (isPlayingWhenSeeking) {
-                            isPlayingWhenSeeking = false;
-                            API.play();
-                        }
-                        isSeeking = false;
-                        //API.seekTime(event.offsetX * API.mediaElement[0].duration / slider.scrollWidth);
-
-                        scope.$apply();
-                    };
-
-                    scope.onScrubBarMouseMove = function onScrubBarMouseMove(event) {
-                        if (scope.vgThumbnails && scope.vgThumbnails.length) {
-                            var second = Math.round(event.offsetX * API.mediaElement[0].duration / slider.scrollWidth);
-                            var percentage = Math.round(second * 100 / (API.totalTime / 1000));
-
-                            scope.updateThumbnails(percentage);
-                        }
-
-                        if (isSeeking) {
-                            event = VG_UTILS.fixEventOffset(event);
-                            API.seekTime(event.offsetX * API.mediaElement[0].duration / slider.scrollWidth);
-                        }
-
-                        scope.$apply();
-                    };
-
-                    scope.onScrubBarMouseLeave = function onScrubBarMouseLeave(event) {
-                        isSeeking = false;
-                        scope.thumbnails = false;
-
-                        scope.$apply();
-                    };
-
-                    scope.onScrubBarKeyDown = function onScrubBarKeyDown(event) {
-                        var currentPercent = (API.currentTime / API.totalTime) * 100;
-
-                        if (event.which === LEFT || event.keyCode === LEFT) {
-                            API.seekTime(currentPercent - NUM_PERCENT, true);
-                            event.preventDefault();
-                        }
-                        else if (event.which === RIGHT || event.keyCode === RIGHT) {
-                            API.seekTime(currentPercent + NUM_PERCENT, true);
-                            event.preventDefault();
-                        }
-                    };
-
-                    scope.updateThumbnails = function updateThumbnails(percentage) {
-                        var bgPos = Math.round(thumbnailsWidth * percentage / 100);
-                        var thPos = (slider.scrollWidth * percentage / 100) - (thumbWidth / 2);
-
-                        scope.thumbnailContainer = {
-                            "width": thumbWidth + "px",
-                            "left": thPos + "px"
-                        };
-
-                        scope.thumbnails = {
-                            "background-image": 'url("' + scope.vgThumbnails + '")',
-                            "background-position": -bgPos + "px 0px"
-                        };
-                    };
-
-                    scope.setState = function setState(newState) {
-                        if (!isSeeking) {
-                            switch (newState) {
-                                case VG_STATES.PLAY:
-                                    isPlaying = true;
-                                    break;
-
-                                case VG_STATES.PAUSE:
-                                    isPlaying = false;
-                                    break;
-
-                                case VG_STATES.STOP:
-                                    isPlaying = false;
-                                    break;
-                            }
-                        }
-                    };
-
-                    scope.onDestroy = function() {
-                        elem.unbind("touchstart", scope.onScrubBarTouchStart);
-                        elem.unbind("touchend", scope.onScrubBarTouchEnd);
-                        elem.unbind("touchmove", scope.onScrubBarTouchMove);
-                        elem.unbind("touchleave", scope.onScrubBarTouchLeave);
-                        elem.unbind("mousedown", scope.onScrubBarMouseDown);
-                        elem.unbind("mouseup", scope.onScrubBarMouseUp);
-                        elem.unbind("mousemove", scope.onScrubBarMouseMove);
-                        elem.unbind("mouseleave", scope.onScrubBarMouseLeave);
-                    };
-
-                    scope.$watch(
-                        function () {
-                            return API.currentState;
-                        },
-                        function (newVal, oldVal) {
-                            if (newVal != oldVal) {
-                                scope.setState(newVal);
-                            }
-                        }
-                    );
-
-                    if (scope.vgThumbnails) {
-                        var thLoader = new Image();
-                        thLoader.onload = scope.onLoadThumbnails.bind(scope);
-                        thLoader.src = scope.vgThumbnails;
-                    }
-
-                    // Touch move is really buggy in Chrome for Android, maybe we could use mouse move that works ok
-                    if (VG_UTILS.isMobileDevice()) {
-                        elem.bind("touchstart", scope.onScrubBarTouchStart);
-                        elem.bind("touchend", scope.onScrubBarTouchEnd);
-                        elem.bind("touchmove", scope.onScrubBarTouchMove);
-                        elem.bind("touchleave", scope.onScrubBarTouchLeave);
+                    if (VG_UTILS.isiOSDevice()) {
+                        touchStartX = (touches[0].clientX - event.layerX) * -1;
                     }
                     else {
-                        elem.bind("mousedown", scope.onScrubBarMouseDown);
-                        elem.bind("mouseup", scope.onScrubBarMouseUp);
-                        elem.bind("mousemove", scope.onScrubBarMouseMove);
-                        elem.bind("mouseleave", scope.onScrubBarMouseLeave);
+                        touchStartX = event.layerX;
                     }
 
-                    scope.$on('destroy', scope.onDestroy.bind(scope));
+                    touchX = touches[0].clientX + touchStartX - touches[0].target.offsetLeft;
+
+                    isSeeking = true;
+                    if (isPlaying) isPlayingWhenSeeking = true;
+                    API.pause();
+                    API.seekTime(touchX * API.mediaElement[0].duration / elem[0].scrollWidth);
+
+                    scope.$apply();
+                };
+
+                scope.onScrubBarTouchEnd = function onScrubBarTouchEnd($event) {
+                    var event = $event.originalEvent || $event;
+                    if (isPlayingWhenSeeking) {
+                        isPlayingWhenSeeking = false;
+                        API.play();
+                    }
+                    isSeeking = false;
+
+                    scope.$apply();
+                };
+
+                scope.onScrubBarTouchMove = function onScrubBarTouchMove($event) {
+                    var event = $event.originalEvent || $event;
+                    var touches = event.touches;
+                    var touchX;
+
+                    if (isSeeking) {
+                        touchX = touches[0].clientX + touchStartX - touches[0].target.offsetLeft;
+                        API.seekTime(touchX * API.mediaElement[0].duration / elem[0].scrollWidth);
+                    }
+
+                    scope.$apply();
+                };
+
+                scope.onScrubBarTouchLeave = function onScrubBarTouchLeave(event) {
+                    isSeeking = false;
+
+                    scope.$apply();
+                };
+
+                scope.onScrubBarMouseDown = function onScrubBarMouseDown(event) {
+                    event = VG_UTILS.fixEventOffset(event);
+
+                    isSeeking = true;
+                    if (isPlaying) isPlayingWhenSeeking = true;
+                    API.pause();
+
+                    API.seekTime(event.offsetX * API.mediaElement[0].duration / elem[0].scrollWidth);
+
+                    scope.$apply();
+                };
+
+                scope.onScrubBarMouseUp = function onScrubBarMouseUp(event) {
+                    //event = VG_UTILS.fixEventOffset(event);
+
+                    if (isPlayingWhenSeeking) {
+                        isPlayingWhenSeeking = false;
+                        API.play();
+                    }
+                    isSeeking = false;
+                    //API.seekTime(event.offsetX * API.mediaElement[0].duration / elem[0].scrollWidth);
+
+                    scope.$apply();
+                };
+
+                scope.onScrubBarMouseMove = function onScrubBarMouseMove(event) {
+                    if (isSeeking) {
+                        event = VG_UTILS.fixEventOffset(event);
+                        API.seekTime(event.offsetX * API.mediaElement[0].duration / elem[0].scrollWidth);
+                    }
+
+                    scope.$apply();
+                };
+
+                scope.onScrubBarMouseLeave = function onScrubBarMouseLeave(event) {
+                    isSeeking = false;
+
+                    scope.$apply();
+                };
+
+                scope.onScrubBarKeyDown = function onScrubBarKeyDown(event) {
+                    var currentPercent = (API.currentTime / API.totalTime) * 100;
+
+                    if (event.which === LEFT || event.keyCode === LEFT) {
+                        API.seekTime(currentPercent - NUM_PERCENT, true);
+                        event.preventDefault();
+                    }
+                    else if (event.which === RIGHT || event.keyCode === RIGHT) {
+                        API.seekTime(currentPercent + NUM_PERCENT, true);
+                        event.preventDefault();
+                    }
+                };
+
+                scope.setState = function setState(newState) {
+                    if (!isSeeking) {
+                        switch (newState) {
+                            case VG_STATES.PLAY:
+                                isPlaying = true;
+                                break;
+
+                            case VG_STATES.PAUSE:
+                                isPlaying = false;
+                                break;
+
+                            case VG_STATES.STOP:
+                                isPlaying = false;
+                                break;
+                        }
+                    }
+                };
+
+                scope.$watch(
+                    function () {
+                        return API.currentState;
+                    },
+                    function (newVal, oldVal) {
+                        if (newVal != oldVal) {
+                            scope.setState(newVal);
+                        }
+                    }
+                );
+
+                // Touch move is really buggy in Chrome for Android, maybe we could use mouse move that works ok
+                if (VG_UTILS.isMobileDevice()) {
+                    elem.bind("touchstart", scope.onScrubBarTouchStart);
+                    elem.bind("touchend", scope.onScrubBarTouchEnd);
+                    elem.bind("touchmove", scope.onScrubBarTouchMove);
+                    elem.bind("touchleave", scope.onScrubBarTouchLeave);
+                }
+                else {
+                    elem.bind("mousedown", scope.onScrubBarMouseDown);
+                    elem.bind("mouseup", scope.onScrubBarMouseUp);
+                    elem.bind("mousemove", scope.onScrubBarMouseMove);
+                    elem.bind("mouseleave", scope.onScrubBarMouseLeave);
                 }
             }
         }
-    ]);
+    }]
+);
 
 /**
  * @ngdoc directive
@@ -1110,7 +747,7 @@ angular.module("com.2fdevs.videogular.plugins.controls")
     .run(
     ["$templateCache", function ($templateCache) {
         $templateCache.put("vg-templates/vg-mute-button",
-            '<button type="button" class="iconButton" ng-class="muteIcon" ng-click="onClickMute()" ng-focus="onMuteButtonFocus()" ng-blur="onMuteButtonLoseFocus()" ng-mouseleave="onMuteButtonLeave()" ng-keydown="onMuteButtonKeyDown($event)" aria-label="Mute"></button>');
+            '<button type="button" class="iconButton" ng-class="muteIcon" ng-click="onClickMute()" ng-focus="onMuteButtonFocus()" ng-blur="onMuteButtonLoseFocus()" ng-keydown="onMuteButtonKeyDown($event)" aria-label="Mute"></button>');
     }]
 )
     .directive("vgMuteButton",
@@ -1147,10 +784,6 @@ angular.module("com.2fdevs.videogular.plugins.controls")
 
                 scope.onMuteButtonLoseFocus = function onMuteButtonLoseFocus() {
                     scope.volumeVisibility = "hidden";
-                };
-
-                scope.onMuteButtonLeave = function onMuteButtonLeave() {
-                    document.activeElement.blur();
                 };
 
                 scope.onMuteButtonKeyDown = function onMuteButtonKeyDown(event) {
@@ -1376,11 +1009,6 @@ angular.module("com.2fdevs.videogular.plugins.controls")
                     });
                 };
 
-                scope.onDestroy = function() {
-                    elem.unbind("mouseover", scope.onScrubBarTouchStart);
-                    elem.unbind("mouseleave", scope.onScrubBarTouchEnd);
-                };
-
                 // We hide volume controls on mobile devices
                 if (VG_UTILS.isMobileDevice()) {
                     elem.css("display", "none");
@@ -1391,8 +1019,6 @@ angular.module("com.2fdevs.videogular.plugins.controls")
                     elem.bind("mouseover", scope.onMouseOverVolume);
                     elem.bind("mouseleave", scope.onMouseLeaveVolume);
                 }
-
-                scope.$on('destroy', scope.onDestroy.bind(scope));
             }
         }
     }]

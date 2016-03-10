@@ -3,14 +3,14 @@
 'use strict';
 
 describe('directiveTemplate', function () {
+	createDirectives();
+
 	var toaster, scope, $compile;
 
 	beforeEach(function () {
-        createDirectives(); 
-        
 		// load dependencies
 		module('testApp');
-		module('toaster');
+		module('toaster')
 		
 		// inject the toaster service
         inject(function (_toaster_, _$rootScope_, _$compile_) {
@@ -62,38 +62,20 @@ describe('directiveTemplate', function () {
 		expect(container[0].innerText).toBe('Unrestricted Template');
 	});
 
-	it('should not bind Element-only-restricted templates', function () {
-		var hasError = false;
+	it('should not bind Element-restricted templates', function () {
 		var container = compileContainer();
-        
-        try {
-		  pop({ type: 'info', body: 'element-template', bodyOutputType: 'directive' });
-        } catch(e) {
-            var message = 'Directives must be usable as attributes. ' + 
-                'Add "A" to the restrict option (or remove the option entirely). Occurred for directive element-template.';
-            
-            expect(e.message).toBe(message);
-            hasError = true;
-        }
+		pop({ type: 'info', body: 'element-template', bodyOutputType: 'directive' });
 
-        expect(hasError).toBe(true);
+		expect(container[0].innerText).toBe('');
+		expect(container[0].innerText).not.toBe('Element Template');
 	});
 
-	it('should not bind Class-only-restricted templates', function () {
-        var hasError = false;
+	it('should not bind Class-restricted templates', function () {
 		var container = compileContainer();
-        
-        try {
-		  pop({ type: 'info', body: 'class-template', bodyOutputType: 'directive' });
-        } catch(e) {
-            var message = 'Directives must be usable as attributes. ' + 
-                'Add "A" to the restrict option (or remove the option entirely). Occurred for directive class-template.';
-            
-            expect(e.message).toBe(message);
-            hasError = true;
-        }
+		pop({ type: 'info', body: 'class-template', bodyOutputType: 'directive' });
 
-        expect(hasError).toBe(true);
+		expect(container[0].innerText).toBe('');
+		expect(container[0].innerText).not.toBe('Class Template');
 	});
 
 	it('should throw an error if directiveName argument is not passed via body', function () {
@@ -138,34 +120,12 @@ describe('directiveTemplate', function () {
 		try {
 			pop({ type: 'info', body: 'non-existent-directive', bodyOutputType: 'directive' });
 		} catch (e) {
-            var message = 'non-existent-directive could not be found. ' + 
-                'The name should appear as it exists in the markup,' + 
-                ' not camelCased as it would appear in the directive declaration,' +
-                ' e.g. directive-name not directiveName.'
-            
-			expect(e.message).toBe(message);
+			expect(e.message).toBe('non-existent-directive could not be found.');
 			hasError = true;
 		}
 
 		expect(hasError).toBe(true);
 	});
-    
-    it('should throw an error if the directive uses isolate scope', function () {
-        var hasError = false;
-		compileContainer();
-        
-        try {
-            pop({ type: 'info', body: 'isolate-scope', bodyOutputType: 'directive' });
-        } catch (e) {
-            var message = 'Cannot use a directive with an isolated scope.' +
-                ' The scope must be either true or falsy (e.g. false/null/undefined). Occurred for directive isolate-scope.';
-            
-            expect(e.message).toBe(message)
-            hasError = true;
-        }
-        
-        expect(hasError).toBe(true);
-    })
 
 
 	function compileContainer() {
@@ -205,9 +165,6 @@ describe('directiveTemplate', function () {
 			})
 			.directive('unrestrictedTemplate', function () {
 				return { template: 'Unrestricted Template' }
-			})
-            .directive('isolateScope', function () {
-                return { template: 'isolate scope template', scope: {}}
-            }); 
+			});
 	}
 })

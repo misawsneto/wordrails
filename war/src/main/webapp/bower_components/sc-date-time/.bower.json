@@ -31,6 +31,6 @@
     "commit": "31d7a20bf57b7de2c7d89adcf17062e715cf1de6"
   },
   "_source": "git://github.com/SimeonC/sc-date-time.git",
-  "_target": "^1.1.6",
+  "_target": "1.1.6",
   "_originalSource": "sc-date-time"
 }

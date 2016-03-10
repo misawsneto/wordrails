@@ -1,21 +1,9 @@
-/*! angular-scroll-watch
-version: 0.6.1
-build date: 2016-2-13
-author: [object Object]
+/*! anguar-scroll-watch
+version: 0.5.5
+build date: 2015-7-25
+author: Chih-Hsuan Fan
 https://github.com/pc035860/angular-scroll-watch.git */
-/* jshint node:true */
-/* global define */
-(function (root, factory) {
-  if (typeof exports === "object" || (typeof module === "object" && module.exports)) {
-    module.exports = factory(require("angular"));
-  } else if (typeof define === "function" && define.amd) {
-    define(["angular"], factory);
-  } else {
-    root.returnExports = factory(root.angular);
-  }
-}(this, function (angular) {
-
-  var MODULE_NAME = 'pc035860.scrollWatch';
+(function (module) {
 
   var DIR_STYLE = 'swStyle',
       DIR_CLASS = 'swClass',
@@ -26,7 +14,7 @@ https://github.com/pc035860/angular-scroll-watch.git */
 
   var CACHE_ID_STAGE_POOL = 'scrollWatch.stages';
 
-  angular.module(MODULE_NAME, [])
+  module
 
   .factory('scrollWatchStageFactory', ["$window", "$document", "$parse", "$log", "$rootScope", "$animate", function (
     $window, $document, $parse, $log, $rootScope, $animate
@@ -788,5 +776,4 @@ https://github.com/pc035860/angular-scroll-watch.git */
     return dst || src;
   }
 
-  return MODULE_NAME;
-}));
+})(angular.module('pc035860.scrollWatch', []));

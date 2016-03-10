@@ -1,6 +1,6 @@
 # screenfull.js
 
-> Simple wrapper for cross-browser usage of the JavaScript [Fullscreen API](https://developer.mozilla.org/en/DOM/Using_full-screen_mode), which lets you bring the page or any element into fullscreen. Smoothens out the browser implementation differences, so you don't have to.
+> Simple wrapper for cross-browser usage of the JavaScript [Fullscreen API](https://developer.mozilla.org/en/DOM/Using_full-screen_mode), which lets you bring the page or any element into fullscreen. Smoothens out the browser implementation differences, so you don't have too.
 
 
 ### [Demo](http://sindresorhus.com/screenfull.js)
@@ -17,11 +17,13 @@ Download the [production version][min] or the [development version][max].
 [min]: https://github.com/sindresorhus/screenfull.js/raw/gh-pages/dist/screenfull.min.js
 [max]: https://github.com/sindresorhus/screenfull.js/raw/gh-pages/dist/screenfull.js
 
-```
+```sh
 $ npm install --save screenfull
 ```
 
-Also available on [cdnjs](https://cdnjs.com/libraries/screenfull.js).
+```sh
+$ bower install --save screenfull
+```
 
 
 ## Why?
@@ -61,7 +63,7 @@ if (document.fullscreenEnabled) {
 
 [Supported browsers](http://caniuse.com/fullscreen)
 
-Safari doesn't support use of the keyboard in fullscreen.
+Safari 5.1 doesn't support use of the keyboard in fullscreen.
 
 
 ## Documentation
@@ -129,28 +131,10 @@ if (screenfull.enabled) {
 }
 ```
 
-#### Detect fullscreen error
-
-```js
-if (screenfull.enabled) {
-	document.addEventListener(screenfull.raw.fullscreenerror, function (event) {
-		console.error('Failed to enable fullscreen', event);
-	});
-}
-```
-
 See the [demo](http://sindresorhus.com/screenfull.js) for more examples, and view the source.
 
-#### Fullscreen an element with Angular.js
+You can check for fullscreen support by checking the truthy/falsy value of `screenfull` as done in the example above.
 
-You can use the [Angular.js binding](https://github.com/hrajchert/angular-screenfull) to do something like:
-
-```html
-<div ngsf-fullscreen>
-    <p>This is a fullscreen element</p>
-    <button ngsf-toggle-fullscreen>Toggle fullscreen</button>
-</div>
-```
 
 ### Methods
 
@@ -171,6 +155,26 @@ Brings you out of fullscreen.
 #### .toggle()
 
 Requests fullscreen if not active, otherwise exits.
+
+#### .onchange()
+
+<del>Override this method to get notified about fullscreen changes.</del>
+
+You should rather use a real event listener:
+
+```js
+document.addEventListener(screenfull.raw.fullscreenchange, function () {});
+```
+
+#### .onerror()
+
+<del>Override this method to get notified about fullscreen errors.</del>
+
+You should rather use a real event listener:
+
+```js
+document.addEventListener(screenfull.raw.fullscreenerror, function () {});
+```
 
 
 ### Properties
@@ -194,33 +198,6 @@ Exposes the raw properties (prefixed if needed) used internally: `requestFullscr
 ```js
 $(document).on(screenfull.raw.fullscreenchange, function () {
 	console.log('Fullscreen change');
-});
-```
-
-
-## FAQ
-
-### How can I navigate to a new page when fullscreen?
-
-That's not supported by browsers for security reasons. There is, however, a dirty workaround. Create a seamless iframe that fills the screen and navigate to the page in that instead.
-
-```js
-$('#new-page-btn').click(function () {
-	var iframe = document.createElement('iframe')
-
-	iframe.setAttribute('id', 'external-iframe');
-	iframe.setAttribute('src', 'http://new-page-website.com');
-	iframe.setAttribute('frameborder', 'no');
-	iframe.style.position = 'absolute';
-	iframe.style.top = '0';
-	iframe.style.right = '0';
-	iframe.style.bottom = '0';
-	iframe.style.left = '0';
-	iframe.style.width = '100%';
-	iframe.style.height = '100%';
-
-	$(document.body).prepend(iframe);
-	document.body.style.overflow = 'hidden';
 });
 ```
 

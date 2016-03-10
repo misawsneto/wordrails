@@ -36,9 +36,6 @@ $(document).ready(function() {
       if ($('#showWeekNumbers').is(':checked'))
         options.showWeekNumbers = true;
 
-      if ($('#showISOWeekNumbers').is(':checked'))
-        options.showISOWeekNumbers = true;
-
       if ($('#timePicker').is(':checked'))
         options.timePicker = true;
       
@@ -88,9 +85,6 @@ $(document).ready(function() {
 
       if (!$('#autoUpdateInput').is(':checked'))
         options.autoUpdateInput = false;
-
-      if ($('#alwaysShowCalendars').is(':checked'))
-        options.alwaysShowCalendars = true;
 
       if ($('#parentEl').val().length)
         options.parentEl = $('#parentEl').val();

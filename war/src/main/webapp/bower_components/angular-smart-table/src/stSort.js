@@ -1,5 +1,5 @@
 ng.module('smart-table')
-  .directive('stSort', ['stConfig', '$parse', '$timeout', function (stConfig, $parse, $timeout) {
+  .directive('stSort', ['stConfig', '$parse', function (stConfig, $parse) {
     return {
       restrict: 'A',
       require: '^stTable',
@@ -12,10 +12,6 @@ ng.module('smart-table')
         var classDescent = attr.stClassDescent || stConfig.sort.descentClass;
         var stateClasses = [classAscent, classDescent];
         var sortDefault;
-        var skipNatural = attr.stSkipNatural !== undefined ? attr.stSkipNatural : stConfig.sort.skipNatural;
-        var descendingFirst = attr.stDescendingFirst === 'true';
-        var promise = null;
-        var throttle = attr.stDelay || stConfig.sort.delay;
 
         if (attr.stSortDefault) {
           sortDefault = scope.$eval(attr.stSortDefault) !== undefined ? scope.$eval(attr.stSortDefault) : attr.stSortDefault;
@@ -23,30 +19,16 @@ ng.module('smart-table')
 
         //view --> table state
         function sort () {
-          if (descendingFirst) {
-            index = index === 0 ? 2 : index - 1;
-          } else {
-            index++;
-          }
-
-          var func;
-          predicate = ng.isFunction(getter(scope)) || ng.isArray(getter(scope)) ? getter(scope) : attr.stSort;
-          if (index % 3 === 0 && !!skipNatural !== true) {
+          index++;
+          predicate = ng.isFunction(getter(scope)) ? getter(scope) : attr.stSort;
+          if (index % 3 === 0 && attr.stSkipNatural === undefined) {
             //manual reset
             index = 0;
             ctrl.tableState().sort = {};
             ctrl.tableState().pagination.start = 0;
-            func = ctrl.pipe.bind(ctrl);
+            ctrl.pipe();
           } else {
-            func = ctrl.sortBy.bind(ctrl, predicate, index % 2 === 0);
-          }
-          if (promise !== null) {
-            $timeout.cancel(promise);
-          }
-          if (throttle < 0) {
-            func();
-          } else {
-            promise = $timeout(func, throttle);
+            ctrl.sortBy(predicate, index % 2 === 0);
           }
         }
 

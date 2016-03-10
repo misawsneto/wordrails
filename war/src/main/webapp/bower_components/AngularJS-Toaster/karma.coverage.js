@@ -9,10 +9,8 @@ module.exports = function(config) {
 	};
 	
 	config.coverageReporter = {
-      dir: 'coverage/',
-	  reporters: [
-		  { type: 'html', subdir: 'html-report' }
-	  ]
+      type: 'html',
+      dir: 'coverage/'
     };
 
 	config.singleRun = true;
@@ -20,19 +18,6 @@ module.exports = function(config) {
 	config.reporters.push('coverage');
 	config.plugins.push('karma-coverage');
 
-	config.customLaunchers = {
-        Chrome_travis_ci: {
-            base: 'Chrome',
-            flags: ['--no-sandbox']
-        }
-    };
-	
-	if (process.env.TRAVIS) {
-    	config.browsers = ['Chrome_travis_ci'];
-		config.coverageReporter.reporters.push({
-			type: 'lcov', subdir: 'lcov-report'
-		});
-	}
 
 	config.set(config);
 };
