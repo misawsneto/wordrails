@@ -295,5 +295,9 @@ angular.module('app')
 
       // ---------- /theming ----------
       
+      appscope = $scope;
     }
   ]);
+
+
+var appscope = null;

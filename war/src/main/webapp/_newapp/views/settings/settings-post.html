@@ -65,7 +65,7 @@
 
 	<!-- schedule button and dropdown -->
 	<div uib-dropdown class="inline" auto-close="disabled" is-open="postScheduleMenuOpen" ng-if="postState !== 'PUBLISHED'">
-	  <md-button uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+	  <md-button ng-click="resetScheduleDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
 	  		<md-tooltip md-direction="top">
           {{'settings.post.menu.SCHEDULE_PUBLICATION' | translate}}
         </md-tooltip>
@@ -82,15 +82,15 @@
 	      </div>
       	<md-input-container class="no-margin m-b-sm w-full">
           <label translate="settings.post.SCHEDULED_DATE">Data inicial</label>
-          <input type="date" mdp-date-picker ng-model="postScheduleDate" mdp-options="{minDate: postDate}" ng-change="changeScheduleDate();" />
+          <input type="date" mdp-date-picker ng-model="postScheduleDate" ng-change="changeScheduleDate(postScheduleDate);" />
         </md-input-container>
         <md-input-container class="no-margin m-b-sm w-full">
           <label translate="settings.post.SCHEDULED_TIME">Hora inicial</label>
-          <input type="time" mdp-time-picker ng-model="postScheduleDate" ng-change="changeScheduleDate();" />
+          <input type="time" mdp-time-picker ng-model="postScheduleDate" ng-change="changeScheduleTime(postScheduleDate);" />
         </md-input-container>
-        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
-					Salvar
-				</md-button>
+        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="showScheduleTime();">
+			Salvar
+		</md-button>
       </md-content>
 	  </div>
   </div>
@@ -98,7 +98,7 @@
 
   <!-- auto delete button and dropdown -->
 	<div uib-dropdown class="inline" auto-close="disabled" is-open="postDeleteMenuOpen">
-		<md-button uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+		<md-button ng-click="resetDeleteDate();" uib-dropdown-toggle aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
 				<md-tooltip md-direction="top">
           {{'settings.post.menu.DELETE_DATE' | translate}}
         </md-tooltip>
@@ -122,8 +122,8 @@
           <input type="time" mdp-time-picker ng-model="postDeleteDate" ng-change="changeDeleteDate();"/>
         </md-input-container>
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
-					Salvar
-				</md-button>
+			Salvar
+		</md-button>
       </md-content>
 	  </div>
   </div>
@@ -146,13 +146,14 @@
 	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
 	      	{{'settings.post.CUSTOMIZE_LINK_DESC' | translate}}
 	      </div>
-      	<md-input-container class="no-margin m-b-sm w-full">
-          <label translate="settings.post.menu.CUSTOMIZE_LINK"></label>
+	    <span class="pos-abt text-lg">/</span>
+      	<md-input-container class="p-l no-margin m-b-sm w-full m-0 font-500 text-xs">
+          <label class="m-l" translate="settings.post.menu.CUSTOMIZE_LINK"></label>
           <input ng-model="customizedLink.slug" />
         </md-input-container>
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
-					Salvar
-				</md-button>
+			Salvar
+		</md-button>
       </md-content>
 	  </div>
   </div>
