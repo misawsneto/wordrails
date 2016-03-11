@@ -313,14 +313,14 @@ public class PersonsResource {
 	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
 		Asserts.notEmpty(oldPassword, "Old password it empty or null");
 		Asserts.notEmpty(newPassword, "New password it empty or null");
-		Asserts.check((newPassword.length() < 5), "Password too short");
+
+		if(newPassword.length() < 5)throw new BadRequestException("Password too short");
 
 		Person loggedPerson = authProvider.getLoggedPerson();
 		if (!oldPassword.equals(loggedPerson.user.password)) throw new UnauthorizedException("Wrong password");
 
 		loggedPerson.user.password = newPassword;
 		personRepository.save(loggedPerson);
-
 	}
 
 	@POST
