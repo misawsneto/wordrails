@@ -1,7 +1,5 @@
-app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate){
-
-	$scope.content = '';
+app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$interval', '$mdSidenav', '$translate', '$filter',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $interval, $mdSidenav, $translate, $filter){
 
 	var lang = $translate.use();
 
@@ -115,10 +113,256 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 	// --- /post delete
 
+	// ---------- /time config ---------- 
+	
+	
+	// --- slug
 	$scope.customizedLink = {
 		slug: ""
 	}
 
+	$scope.customizedLink = {
+		slug: ""
+	}
+	// --- slug
+
+	// --- watch post change
+	
+	$scope.postObjectChanged = false;
+	/**
+	 * Watch post and set the page not to change if post was edited.
+	 * The postObjectChanged flag is used here.
+	 * @see $scope.$watch('postObjectChanged'
+	 * @param  {[type]} true    [description]
+	 */
+	$scope.$watch('editingPost', function(newVal, oldVal) {
+		if(oldVal){
+			// post has been edited
+			if(newVal.title !== oldVal.title || 
+				newVal.body !== oldVal.body){
+
+				// TODO: save draft
+
+				// set post changed so $scope.watch can see postObjectChanged
+				if(!$scope.postObjectChanged){
+					$log.info('post changed, avoid page change...')
+					$scope.postObjectChanged = true;
+				}
+			}
+		}
+	}, true);
+
+	/**
+	 * Watch value of postObjectChanged and set alert messages.
+	 * @param  boolean newVal
+	 */
+	$scope.$watch('postObjectChanged', function(newVal, oldVal){
+		if(newVal){
+			window.onbeforeunload = function(){ return $filter('translate')('settings.post.messages.PAGE_CHANGE_ALERT') };
+		}else{
+			window.onbeforeunload = null;
+		}
+	});
+
+	// --- /watch post change
+	
+
+	// --- clear post
+	$scope.showClearPostDialog = function(event){
+		// show term alert
+		
+		$scope.app.editingPost = $scope.editingPost;
+
+		$mdDialog.show({
+			controller: $scope.app.defaultDialog,
+			templateUrl: 'clear-post-dialog.html',
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose:true
+			// onComplete: function(){
+
+			// }
+		})
+	}
+
+	$scope.app.clearPostContent = function(){
+		$scope.app.editingPost.title = '';
+		$scope.app.editingPost.body = '';
+		$mdDialog.cancel();
+	}
+
+	// /clear post
+	
+	// --- post info
+	$scope.showPostInfoDialog = function(event){
+		// show term alert
+		
+		$scope.app.editingPost = $scope.editingPost;
+
+		$mdDialog.show({
+			controller: $scope.app.defaultDialog,
+			template: 	'<md-dialog id="post-info-dialog">'+
+									'<div class="pos-fix top-0 right-0 p">'+
+										'<md-button class="md-icon-button md-icon-button-lg" ng-click="app.cancelDialog();"><i class="mdi mdi2-close i-40"></i></md-button>'+
+									'</div>'+
+							'<div class="content md-animation-zoom">'+
+								'<div class="row">'+
+								  '<div class="m-b-sm"><code>/{{app.editingPost.slug}}</code></div>'+
+								  '<div class="h3 font-bold m-b-md">{{app.editingPost.title}}</div>'+
+								  '<div class="text-md m-b-sm">'+
+								    '<strong>Status:</strong>'+
+								    '<span class="text-u-c m-l-sm">'+
+								    	'{{app.getStateText()}}'+
+							    	'</span>'+
+								  '</div>'+
+								  '<div class="text-md m-b-sm">'+
+								    '<strong>Data de publicação:</strong>'+
+								    '<span class="text-u-c m-l-sm">{{app.editingPost.date | fromNow2}}</span>'+
+								  '</div>'+
+								  '<div class="text-md m-b-sm" ng-if="app.editingPost.createdAt">'+
+								    '<strong>Criado em:</strong>'+
+								    '<span class="text-u-c m-l-sm">{{app.editingPost.createdAt | fromNow2}}</span>'+
+								  '</div>'+
+								  '<div class="text-md m-b-sm" ng-if="app.editingPost.updatedAt">'+
+								    '<strong>Atualizado em:</strong>'+
+								    '<span class="text-u-c m-l-sm">{{app.editingPost.updatedAt | fromNow2}}</span>'+
+								  '</div>'+
+								  '<div class="text-md m-b-sm" ng-if="app.editingPost.body">'+
+								    '<strong>Título:</strong>'+
+								    '<span class="m-l-sm m-r-sm">{{app.countTitleWords()}} palavras</span> | <span class="m-l-sm">{{app.countTitleCharacters()}} caracteres</span>'+
+								  '</div>'+
+								  '<div class="text-md m-b-sm" ng-if="app.editingPost.body">'+
+								    '<strong>Texto:</strong>'+
+								    '<span class="m-l-sm m-r-sm">{{app.countBodyWords()}} palavras</span> | <span class="m-l-sm">{{app.countBodyCharacters()}} caracteres</span>'+
+								  '</div>'+
+								'</div>'+
+							'</div>'+
+						'</md-dialog>',
+			parent: angular.element(document.body),
+			// targetEvent: event,
+			clickOutsideToClose:false
+			// onComplete: function(){
+
+			// }
+		})
+	}
+
+	$scope.app.checkState = function(state){
+		if(!$scope.app.editingPost)
+			return null;
+
+		state = state ? state : $scope.app.editingPost.state;
+		if(!state)
+			return null;
+		if(state == "PUBLISHED"){
+			return 1;
+		}else if(state == "DRAFT"){
+			return 2;
+		}else if(state == "SCHEDULED"){
+			return 3;
+		}else if(state == "TRASH"){
+			return 4;
+		}else{
+			return null;
+		}
+	}
+
+	$scope.app.getStateText = function(state){
+		if(!$scope.app.editingPost)
+			return null;
+
+		state = state ? state : $scope.app.editingPost.state;
+		if(!state)
+			return null;
+		if(state == "PUBLISHED"){
+			return $filter('translate')('settings.post.states.PUBLISHED');
+		}else if(state == "DRAFT"){
+			return $filter('translate')('settings.post.states.DRAFT');
+		}else if(state == "SCHEDULED"){
+			return $filter('translate')('settings.post.states.SCHEDULED');
+		}else if(state == "TRASH"){
+			return $filter('translate')('settings.post.states.TRASH');
+		}else{
+			return null;
+		}
+	}
+
+	$scope.app.countBodyCharacters = function(){
+		return $scope.app.editingPost.body.stripHtml().length
+	}
+
+	$scope.app.countTitleCharacters = function(){
+		return $scope.app.editingPost.title.stripHtml().length
+	}
+
+	$scope.app.countTitleWords = function(){
+		return countWords($scope.app.editingPost.title.stripHtml())
+	}
+
+	$scope.app.countBodyWords = function(){
+		return countWords($scope.app.editingPost.body.stripHtml())
+	}
+
+	function countWords(str) {
+		var regex = /\s+/gi;
+		return str.trim().replace(regex, ' ').split(' ').length;
+	}
+
+	// --- /post info
+	
+	// ------------------- image uploader -------------
+
+	var uploader = $scope.uploader = new FileUploader({
+		url: TRIX.baseUrl + "/api/images/upload?imageType=POST"
+	});
+
+	uploader.onAfterAddingFile = function(fileItem) {
+		$scope.app.editingPost.uploadedImage = null;
+		uploader.uploadAll();
+	};
+	uploader.onSuccessItem = function(fileItem, response, status, headers) {
+		if(response.filelink){
+			$scope.app.editingPost.uploadedImage = response;
+			$scope.app.editingPost.uploadedImage.filelink = $scope.app.editingPost.uploadedImage.filelink
+			$scope.app.editingPost.showMediaButtons = false;
+			$scope.checkLandscape();
+			$("#image-config").removeClass("hide");
+			$mdToast.hide();
+			$scope.postCtrl.imageHasChanged = true
+		}
+	};
+
+	uploader.onErrorItem = function(fileItem, response, status, headers) {
+		if(status == 413)
+			$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+		else
+			$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+	}
+
+	$scope.clearImage = function(){ 
+		$("#image-config").addClass("hide");
+		$scope.app.editingPost.uploadedImage = null;
+		uploader.clearQueue();
+		uploader.cancelAll()
+		$scope.checkLandscape();
+		$scope.postCtrl.imageHasChanged = true;
+	}
+
+	uploader.onProgressItem = function(fileItem, progress) {
+		cfpLoadingBar.start();
+		cfpLoadingBar.set(progress/10)
+		if(progress == 100){
+			cfpLoadingBar.complete()
+			toastPromise = $mdToast.show(
+				$mdToast.simple()
+				.content('Processando...')
+				.position('top right')
+				.hideDelay(false)
+				);
+		}
+	};
+
+	// ------------------- end of image uploader -------------
 	var mockPostLoad = function(){
 		$scope.editingPost = createPostStub();
 		$scope.customizedLink.slug = $scope.editingPost.slug;
@@ -128,9 +372,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		mockPostLoad();
 	}
 
-	test();
-
-	// ---------- /time config ----------    
+	$timeout(function(){
+		test();  
+	}, 1000);
 
 	settingsPostCtrl = $scope;
 }]);

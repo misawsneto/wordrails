@@ -127,7 +127,21 @@
 			"POST_TIME": "Post time",
 			"DELETE_DATE_DESC": "Automatic deletion date and time",
 			"DELETE_DATE": "Deletion date",
-			"DELETE_TIME": "Deletion time"
+			"DELETE_TIME": "Deletion time",
+			"CLEAR_CONTENT": "Clear content",
+			"NEW_POST": "New post",
+			"messages":{
+				"PAGE_CHANGE_ALERT": "You have edited your post and there's unsaved content.",
+				"CLEAR_CONTENT_MSG": "Clear all post content.",
+				"CONTENT_LOST_ALERT": "Attention! All non-saved content will be list.",
+				"NEW_POST_MSG": "Start an entire new post?"
+			},
+			"states": {
+				"PUBLISHED": "Published",
+				"SCHEDULED": "Scheduled",
+				"DRAFT": "Draft",
+				"Trash": "On trash"
+			}
 		},
 		"SET_COLOR": "Set the color palettes",
 		"COLOR_PALETTE": "Color Palette",

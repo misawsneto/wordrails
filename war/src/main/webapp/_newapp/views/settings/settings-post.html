@@ -17,18 +17,19 @@
 	</md-button>
 	
 	<!-- left links-->
-	<md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+	<md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showClearPostDialog($event)">
 		<md-tooltip md-direction="top">
-      {{'settings.post.menu.CLEAR_POST' | translate}}
-    </md-tooltip>
-    <i class="mdi mdi2-delete i-20"></i>
-  </md-button>
-	<md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
-			<md-tooltip md-direction="top">
-        {{'settings.post.menu.INFO' | translate}}
-      </md-tooltip>
-    <i class="mdi mdi2-information-outline i-20"></i>
-  </md-button>
+      	{{'settings.post.menu.CLEAR_POST' | translate}}
+  	</md-tooltip>
+  	<i class="mdi mdi2-delete i-20"></i>
+	</md-button>
+
+	<md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showPostInfoDialog($event)">
+		<md-tooltip md-direction="top">
+      {{'settings.post.menu.INFO' | translate}}
+    	</md-tooltip>
+  	<i class="mdi mdi2-information-outline i-20"></i>
+	</md-button>
 
   <!-- date button and dropdown -->
 	<div uib-dropdown class="inline" auto-close="disabled" is-open="postDateMenuOpen">
@@ -193,14 +194,14 @@
 							    </div>
 								</div>
 								<!-- image speed dial -->
-				      	<textarea rows="1" msd-elastic ng-model="editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 text-lg w-full ph-dk p-sm r m-b-sm md-whiteframe-z1 md-background-hue-3 background" style="resize: none;">
+				      	<textarea rows="1" msd-elastic ng-model="editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 text-lg w-full ph-dk p-sm r m-b md-whiteframe-z1 md-background-hue-3 background" style="resize: none;">
 				      	</textarea>
 
 				      	<md-chips ng-model="tags" placeholder="{{'titles.ENTER_TAG' | translate}}" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag">
 				      	</md-chips>
 
 								<div class="md-whiteframe-z2 m-b-lg"> 
-									<textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-model="editingPost.body"></textarea>
+									<textarea id="texteditor" froala="froalaOptions" class="md-whiteframe-z1" ng-change="postBodyChanged(editingPost.body)" ng-model="editingPost.body"></textarea>
 					      </div>
 							</div>
 							<!-- /main content -->
@@ -220,3 +221,40 @@
   <md-content class="m-b">
   </md-content>
 </md-sidenav>
+
+
+<script type="text/ng-template" id="clear-post-dialog.html">
+	<md-dialog-content layout="row" layout-wrap>
+		<div layout="column" layout-align="start center">
+			<md-toolbar layout-align="start start" flex class="md-warn text-center p" layout="column">
+				<div class="p-t-sm p-b-sm"><i class="mdi mdi2-alert text-2x"></i></div>
+	        </md-toolbar>
+	    </div>
+		<div class="p-sm">
+			<div class="text-md p block-400 text-center">
+				{{'settings.post.messages.CLEAR_CONTENT_MSG' | translate }}
+				<span ng-if="app.editingPost.id">
+					{{'settings.post.messages.NEW_POST_MSG' | translate}}
+				</span>
+				{{'settings.post.messages.CONTENT_LOST_ALERT' | translate}}
+			</div>
+			<!-- <md-dialog-actions layout="row">
+			            	<span flex></span>
+				<md-button ng-click="app.clearPostContent();" class="m-0">
+					{{'settings.post.CLEAR_CONTENT' | translate}}
+				</md-button>
+			</md-dialog-actions> -->
+			<div class="text-center p-t">
+				<md-button ng-click="app.cancelDialog();" class="m-0">
+					{{'titles.CANCEL' | translate}}
+				</md-button>
+				<md-button ng-click="app.clearPostContent();" class="m-0">
+					{{'settings.post.CLEAR_CONTENT' | translate}}
+				</md-button>
+				<md-button class="m-0">
+					{{'settings.post.NEW_POST' | translate}}
+				</md-button>
+			</div>
+		</div>
+	</md-dialog-content>
+</script>

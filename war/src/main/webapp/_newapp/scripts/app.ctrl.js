@@ -116,8 +116,8 @@ angular.module('app')
     }
   ])
 
-  .controller('AppDataCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast',
-    function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast) {
+  .controller('AppDataCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog',
+    function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog) {
 
       //window.console && console.log(appData);
       // ---------- util -------------
@@ -293,11 +293,61 @@ angular.module('app')
         return $scope.getBackgroundImage(postView, size);
       }
 
+      $scope.app.defaultDialog = function(scope, $mdDialog) {
+        scope.app = $scope.app;
+
+        scope.hide = function() {
+          $mdDialog.hide();
+        };
+
+        scope.cancel = function() {
+          $mdDialog.cancel();
+        }
+      };
+
+      $scope.app.cancelDialog = function() {
+        $mdDialog.cancel();
+      }
+
+
       // ---------- /theming ----------
       
-      appscope = $scope;
+      appDataCtrl = $scope;
     }
   ]);
 
+var appDataCtrl = null;
 
-var appscope = null;
+String.prototype.toSlug = function(){
+  var str = this;
+  str = str.replace(/^\s+|\s+$/g, ''); // trim
+  str = str.toLowerCase();
+
+  // remove accents, swap ñ for n, etc
+  var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+  var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+  for (var i=0, l=from.length ; i<l ; i++) {
+    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+  }
+
+  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+    .replace(/\s+/g, '-') // collapse whitespace and replace by -
+    .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
+}
+
+String.prototype.getYoutubeCode = function(){
+  var url = this;
+  var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  var match = url.match(regExp);
+  if (match && match[2].length == 11) {
+    return match[2];
+  } else {
+    return null;
+  }
+}
+
+String.prototype.stripHtml = function(){
+  return this.replace(/(<([^>]+)>)/ig,"");
+}

@@ -27,7 +27,7 @@
 		"SEARCH": "Buscar",
 		"YES": "Sim",
 		"NO": "Não",
-		"CANCEL": "Cancel",
+		"CANCEL": "Cancelar",
 		"PUBLISHED": "Publicados",
 		"SCHEDULED": "Agendados",
 		"DRAFTS": "Rascunhos",
@@ -127,7 +127,21 @@
 			"POST_TIME": "Hora da publicação",
 			"DELETE_DATE_DESC": "Data e hora de remoção automática da publicação",
 			"DELETE_DATE": "Data de remoção",
-			"DELETE_TIME": "Hora da remoção"
+			"DELETE_TIME": "Hora da remoção",
+			"CLEAR_CONTENT": "Limpar conteúdo",
+			"NEW_POST": "Nova publicação",
+			"messages":{
+				"PAGE_CHANGE_ALERT": "Você possui conteúdo que ainda não foi salvo.",
+				"CLEAR_CONTENT_MSG": "Limpar todo o conteúdo desta publicação?",
+				"CONTENT_LOST_ALERT": "Atenção! Todo o conteúdo que não foi salvo será perdido.",
+				"NEW_POST_MSG": "Iniciar uma nova publicação por inteiro?"
+			},
+			"states": {
+				"PUBLISHED": "Publicado",
+				"SCHEDULED": "Agendado",
+				"DRAFT": "Agendamento",
+				"Trash": "Lixeira"
+			}
 		},
 		"SET_COLOR": "Configure as paletas de cores",
 		"COLOR_PALETTE": "Paleta de Cores",
