@@ -144,6 +144,8 @@
 				"DRAFT": "Draft",
 				"Trash": "On trash"
 			},
+			"PREFERENCES": "Preferences",
+			"CATEGORIES": "Categories",
 			"INSERT_FEATURED_IMAGE": "Insert featured image",
 			"INSERT_FEATURED_VIDEO": "Insert featured video",
 			"INSERT_FEATURED_AUDIO": "Insert featured audio",
@@ -152,6 +154,7 @@
 			"FOUCUS_POINT": "Set focus point",
 			"CROP_IMAGE": "Crop image",
 			"CROP_IMAGE_DESC": "Click and drag to create a selection to crop the given image.",
+			"FOCUS_IMAGE_DESC": "Drag the marker to set the focuspoint.",
 			"TOGGLE_LANDSCAPE": "On/off landscape"
 		},
 		"SET_COLOR": "Set the color palettes",

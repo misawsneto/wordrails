@@ -144,6 +144,8 @@
 				"DRAFT": "Agendamento",
 				"Trash": "Lixeira"
 			},
+			"PREFERENCES": "Preferências",
+			"CATEGORIES": "Categorias",
 			"INSERT_FEATURED_IMAGE": "Inserir imagem destaque",
 			"INSERT_FEATURED_VIDEO": "Inserir vídeo destaque",
 			"INSERT_FEATURED_AUDIO": "Inserir áudio destaque",
@@ -152,6 +154,7 @@
 			"FOUCUS_POINT": "Ponto focal",
 			"CROP_IMAGE": "Recortar imagem",
 			"CROP_IMAGE_DESC": "Clique e arraste para criar uma seleção e cortar a imagem.",
+			"FOCUS_IMAGE_DESC": "Arraste o marcador para configurar o ponto focal.",
 			"TOGGLE_LANDSCAPE": "Ligar/desligar modo paisagem"
 		},
 		"SET_COLOR": "Configure as paletas de cores",

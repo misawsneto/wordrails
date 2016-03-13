@@ -184,9 +184,9 @@
           <div class="cell"> <!-- cell -->
             <div class="cell-inner"><!-- cell -->
 							
-							<div id="post-image-container" class="m-h-auto bg-cover md-whiteframe-z2 m-b-md" ng-if="postFeaturedImage"  ng-class="{'w-full h-400': landscape, 'block-800 h-300 m-t': !landscape}"
+							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="m-h-auto bg-cover md-whiteframe-z2 m-b-md" ng-if="postFeaturedImage"  ng-class="{'w-full h-400': landscape, 'block-800 h-300 m-t': !landscape}"
 							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': '50% 30%'}">
-					
+								<img id="img-stub" ng-src="{{postFeaturedImage}}" class="z-index-n-1" style="opacity: 0">
 								<md-fab-speed-dial md-open="openImageOptions" md-direction="down" class="md-scale pull-right p-t p-r">
 								  <md-fab-trigger>
 								    <md-button aria-label="Add..." class="md-fab md-warn md-mini">
@@ -206,7 +206,7 @@
 								  		</md-tooltip>
 								    	<i class="mdi i-20" ng-class="{'mdi2-crop-landscape': !landscape, 'mdi2-crop-square': landscape}"></i>
 								    </md-button>
-								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini">
+								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showImageFocuspointDialog();">
 								    	<md-tooltip md-direction="left">
 								      	{{'settings.post.FOUCUS_POINT' | translate}}
 								  		</md-tooltip>
@@ -297,7 +297,7 @@
             <div class="cell-inner">
 
               <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0">
-                <md-tab label="Categorias">
+                <md-tab label="{{'settings.post.CATEGORIES' | translate}}">
                   <md-content >
                     <!-- list categories -->
                     <div class="p-sm term-tree">
@@ -315,7 +315,7 @@
                   </md-content>
                 </md-tab>
 
-                <md-tab label="Preferências">
+                <md-tab label="{{'settings.post.PREFERENCES' | translate}}">
                   <md-content class="p">
                     <div>
                       <md-checkbox ng-model="landscape" ng-change="landscape = !landscape; toggleLandscape();">
@@ -352,51 +352,6 @@
 
     </md-content>
 </md-sidenav>
-
-<script type="text/ng-template" id="crop-image-dialog.html">
-	<md-dialog-content class="p-sm">
-		<div class="w-500 min-h-400">
-			<div class="pos-abt w-full top-0 bottom-0 left-0">
-			  <div class="hbox">
-			    <div class="col text-md font-500">
-			      <div class="vbox">
-			        <div class="row-row">
-			          <div class="cell">
-			            <div class="cell-inner">
-			            	<div translate="settings.post.CROP_IMAGE_DESC" class="p-t-sm text-center"></div>
-			            	<div class="center-img-container m-h-auto o-f-h">
-											<!-- <img class="center-img" ng-src="{{app.postFeaturedImage}}" /> -->
-											<div ng-jcrop="app.postFeaturedImage" selection="app.cropSelection"></div>
-										</div>
-			            </div>
-			          </div>
-			        </div>
-			      </div>
-			    </div>
-			    <!-- div class="col w text-md font-500">
-			      <div class="vbox">
-			        <div class="row-row">
-			          <div class="cell">
-			            <div class="cell-inner">
-			            	asdfasd
-			            </div>
-			          </div>
-			        </div>
-			      </div>
-			    </div> -->
-		    </div>
-	    </div>
-    </div>
-		<div class="text-center p-t">
-			<md-button ng-click="app.cancelDialog();" class="m-0">
-				{{'titles.CANCEL' | translate}}
-			</md-button>
-			<md-button ng-click="app.clearPostContent();" class="m-0">
-				{{'titles.SAVE' | translate}}
-			</md-button>
-		</div>
-	</md-dialog-content>
-</script>
 
 <script type="text/ng-template" id="clear-post-dialog.html">
 	<md-dialog-content layout="row" layout-wrap>

@@ -8019,7 +8019,7 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
 
 /* settings-post */
 
-#post-info-dialog {
+.splash-dialog {
   position: absolute;
   top: 0;
   right: 0;
@@ -8045,7 +8045,7 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
   align-items: center;
 }
 
-#post-info-dialog > .content {
+.splash-dialog > .content {
   position: relative;
   max-width: 100%;
   max-height: 100%;
