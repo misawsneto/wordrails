@@ -1,21 +1,43 @@
 <div class="p-xs top-0 left-0 w-full pos-abt md-whiteframe-z1 md-primary-hue-1 background">
+	<!-- menu -->
 	<md-button class="pull-right md-icon-button" style="margin-top: 2px;" ng-click="toggleOptions()">
 		<i class="mdi mdi2-menu i-20"></i>
 	</md-button>
-	<md-button class="pull-right font-bold visible-sm visible-md visible-lg" translate="titles.PUBLISH">
-		Publicar
-	</md-button>
-	<md-button class="pull-right font-bold visible-sm visible-md visible-lg" translate="titles.SAVE_DRAFT">
-		Salvar rascunho
-	</md-button>
-
-	<md-button class="pull-right md-icon-button visible-xs" style="margin: 5px 0 0 0;">
-		<i class="mdi mdi2-send i-20"></i>
-	</md-button>
-	<md-button class="pull-right md-icon-button visible-xs" style="margin: 5px 0 0 0;">
-		<i class="mdi mdi2-content-save i-20"></i>
-	</md-button>
+	<!-- /menu -->
 	
+	<!-- publish -->
+	<div uib-dropdown class="inline pull-right" auto-close="disabled" is-open="postPublishMenuOpen">
+		<md-button uib-dropdown-toggle class="pull-right font-bold visible-sm visible-md visible-lg" translate="titles.PUBLISH">
+			Publicar
+		</md-button>
+		<md-button uib-dropdown-toggle class="pull-right md-icon-button visible-xs" style="margin: 5px 0 0 0;">
+			<i class="mdi mdi2-send i-20"></i>
+		</md-button>
+		<div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm md-background-default background with-arrow z-index-5">
+	  	<div class="arrow" ></div>
+      <md-content class="w">
+	      <div class="pull-right">
+	        <a ng-click="postPublishMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+	      </div>
+	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.POST_DATE_DESC' | translate}}
+	      </div>
+      	<md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.POST_DATE">Data inicial</label>
+          <input type="date" mdp-date-picker ng-model="postDate" ng-change="changePostDate()"/>
+        </md-input-container>
+        <md-input-container class="no-margin m-b-sm w-full">
+          <label translate="settings.post.POST_TIME">Hora inicial</label>
+          <input type="time" mdp-time-picker ng-model="postDate" ng-change="changePostDate()" />
+        </md-input-container>
+        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
+					Salvar
+				</md-button>
+      </md-content>
+	  </div>
+	</div>
+	<!-- /publish -->
+
 	<!-- left links-->
 	<md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showClearPostDialog($event)">
 		<md-tooltip md-direction="top">
@@ -185,26 +207,26 @@
             <div class="cell-inner"><!-- cell -->
 							
 							<img id="img-stub" ng-src="{{postFeaturedImage}}" class="z-index-n-1 pos-abt" style="opacity: 0">
-							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="m-h-auto bg-cover md-whiteframe-z2 m-b-md" ng-if="postFeaturedImage"  ng-class="{'w-full h-400': landscape, 'block-800 h-300 m-t': !landscape}"
+							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md" ng-if="postFeaturedImage"  ng-class="{'w-full h-400': landscape, 'block-800 h-300 m-t': !landscape}"
 							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
-								<md-fab-speed-dial md-open="openImageOptions" md-direction="down" class="md-scale pull-right p-t p-r">
+								<md-fab-speed-dial md-open="openImageOptions" md-direction="up" class="md-scale pull-right p-t p-r p-b pos-abt bottom-0 right-0">
 								  <md-fab-trigger>
 								    <md-button aria-label="Add..." class="md-fab md-warn md-mini">
 								    	<i class="mdi mdi2-settings i-20"></i>
 								    </md-button>
 								  </md-fab-trigger>
 								  <md-fab-actions>
-								    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="showImageCropDialog()">
-								    	<md-tooltip md-direction="left">
-								      	{{'settings.post.CROP_IMAGE' | translate}}
-								  		</md-tooltip>
-								    	<i class="mdi mdi2-crop i-20"></i>
-								    </md-button>
 								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="toggleLandscape();">
 								    	<md-tooltip md-direction="left">
 								      	{{'settings.post.TOGGLE_LANDSCAPE' | translate}}
 								  		</md-tooltip>
 								    	<i class="mdi i-20" ng-class="{'mdi2-crop-landscape': !landscape, 'mdi2-crop-square': landscape}"></i>
+								    </md-button>
+								    <md-button aria-label="Add User" class="md-fab md-raised md-mini" ng-click="showImageCropDialog()">
+								    	<md-tooltip md-direction="left">
+								      	{{'settings.post.CROP_IMAGE' | translate}}
+								  		</md-tooltip>
+								    	<i class="mdi mdi2-crop i-20"></i>
 								    </md-button>
 								    <md-button aria-label="Add Group" class="md-fab md-raised md-mini" ng-click="showImageFocuspointDialog();">
 								    	<md-tooltip md-direction="left">
