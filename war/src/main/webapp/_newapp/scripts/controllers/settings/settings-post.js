@@ -379,9 +379,43 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		})
 	}
 
+	// --- /image crop
+	// --- image focuspoint
+
 	$scope.app.imgToolsProps = {
-		width: 0
+		width: 0,
+		x: 50,
+		y: 50,
+		onMouseDown: function (e) {
+      $scope.update(e);
+      $scope.app.imgToolsProps.dragging = true;
+    },
+    onMouseMove: function (e) {
+      if ($scope.app.imgToolsProps.dragging === true) {
+        $scope.update(e);
+      }
+    },
+		onMouseUp: function (e) {
+      e.preventDefault();
+      $scope.app.imgToolsProps.dragging = false;
+    }
 	}
+
+	$scope.update = function (e) {
+    e.preventDefault();
+    var offset = $scope.offset(e.target);
+    $scope.app.imgToolsProps.x = Math.round(((e.pageX - offset.left) / e.target.clientWidth) * 100);
+    $scope.app.imgToolsProps.y = Math.round(((e.pageY - offset.top) / e.target.clientHeight) * 100);
+  };
+  
+  $scope.offset = function (elm) {
+    try { return elm.offset(); } catch (e) { }
+    var body = document.documentElement || document.body;
+    return {
+        left: elm.getBoundingClientRect().left + (window.pageXOffset || body.scrollLeft),
+        top: elm.getBoundingClientRect().top + (window.pageYOffset || body.scrollTop)
+    };
+  };
 
 	var setImgToolsImageWidth = function(){
 		var featuredImage = $('#img-stub');
@@ -408,10 +442,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		setImgToolsImageWidth();
 	}, 500);
 
-
-
-	// --- /image crop
-	// --- image focuspoint
+	
 	$scope.showImageFocuspointDialog = function(event){
 		// show term alert
 		
@@ -555,10 +586,11 @@ function createPostStub(){
 			        '<div class="row-row">'+
 			          '<div class="cell">'+
 			            '<div class="cell-inner">'+
-			            	'<div class="center-img-container pull-right o-f-h p-xxl m-r-xl">'+
+			            	'<div class="focus-point center-img-container pull-right o-f-h">'+
 				            	'<div ng-style="{\'width\': app.imgToolsProps.width + \'px\', \'height\': app.imgToolsProps.height + \'px\', \'background-image\': \'url(\' + app.postFeaturedImage + \')\', \'background-position\': \'50% 50%\'}" '+
-				            	'class="bg-cover center-img md-whiteframe-z2">'+
-				            		
+				            	'class="bg-cover center-img md-whiteframe-z2 focus-area" '+
+				            	'ng-mousemove="app.imgToolsProps.onMouseMove($event)" ng-mousedown="app.imgToolsProps.onMouseDown($event)" ng-mouseup="app.imgToolsProps.onMouseUp($event)">'+
+				            		'<span class="target lfy-focuspoint-button" ng-style="{\'left\': app.imgToolsProps.x + \'%\', \'top\': app.imgToolsProps.y + \'%\'}"></span>'+
 				            	'</div>'+
 										'</div>'+
 			            '</div>'+
@@ -571,30 +603,27 @@ function createPostStub(){
 			        '<div class="row-row">'+
 			          '<div class="cell">'+
 			            '<div class="cell-inner" style="background-image: url(/images/device-stubs.png); background-position: center bottom; background-repeat: no-repeat;">'+
-			            	'<figure class="pos-abt lfy-focuspoint-view bg-cover" id="focuspoint-tablet" '+ 
+			            	'<figure class="pos-abt bg-cover" id="focuspoint-tablet" '+ 
 			            		'style=" width: 82px;'+
 									    'height: 124px;'+
-									    'background-position: 50% 50%;'+
 									    'border-radius: 3px;'+
 									    'top: 30px;'+
 									    'left: 107px;"'+
-									    'ng-style="{\'background-image\': \'url(\' + app.postFeaturedImage+ \')\'}"></figure>'+
-										'<figure class="pos-abt lfy-focuspoint-view bg-cover" id="focuspoint-mobile" '+
+									    'ng-style="{\'background-image\': \'url(\' + app.postFeaturedImage+ \')\', \'background-position\': app.imgToolsProps.x + \'% \' + app.imgToolsProps.y + \'%\'}"></figure>'+
+										'<figure class="pos-abt bg-cover" id="focuspoint-mobile" '+
 											'style="width: 100px;'+
 									    'height: 43px;'+
-									    'background-position: 50% 50%;'+
 									    'border-radius: 3px;'+
 									    'top: 183px;'+
 									    'left: 104px;"'+
-									    'ng-style="{\'background-image\': \'url(\' + app.postFeaturedImage+ \')\'}"></figure>'+
-										'<figure class="pos-abt lfy-focuspoint-view bg-cover" id="focuspoint-laptop" '+
+									    'ng-style="{\'background-image\': \'url(\' + app.postFeaturedImage+ \')\', \'background-position\': app.imgToolsProps.x + \'% \' + app.imgToolsProps.y + \'%\'}"></figure>'+
+										'<figure class="pos-abt bg-cover" id="focuspoint-laptop" '+
 											'style="width: 124px;'+
 									    'height: 85px;'+
-									    'background-position: 50% 50%;'+
 									    'border-radius: 3px;'+
 									    'top: 248px;'+
 									    'left: 94px;"'+
-									    'ng-style="{\'background-image\': \'url(\' + app.postFeaturedImage+ \')\'}"></figure>'+
+									    'ng-style="{\'background-image\': \'url(\' + app.postFeaturedImage+ \')\', \'background-position\': app.imgToolsProps.x + \'% \' + app.imgToolsProps.y + \'%\'}"></figure>'+
 			            '</div>'+
 			          '</div>'+
 			        '</div>'+

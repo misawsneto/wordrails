@@ -184,9 +184,9 @@
           <div class="cell"> <!-- cell -->
             <div class="cell-inner"><!-- cell -->
 							
+							<img id="img-stub" ng-src="{{postFeaturedImage}}" class="z-index-n-1 pos-abt" style="opacity: 0">
 							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="m-h-auto bg-cover md-whiteframe-z2 m-b-md" ng-if="postFeaturedImage"  ng-class="{'w-full h-400': landscape, 'block-800 h-300 m-t': !landscape}"
-							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': '50% 30%'}">
-								<img id="img-stub" ng-src="{{postFeaturedImage}}" class="z-index-n-1" style="opacity: 0">
+							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
 								<md-fab-speed-dial md-open="openImageOptions" md-direction="down" class="md-scale pull-right p-t p-r">
 								  <md-fab-trigger>
 								    <md-button aria-label="Add..." class="md-fab md-warn md-mini">

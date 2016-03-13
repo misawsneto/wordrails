@@ -7941,7 +7941,75 @@ bg-none {
   background-size: cover;
 }
 
-/* These are the base rule to set the dead center */
+/* focus point */
+
+.focus-point {
+  overflow: hidden;
+  clear: both;
+}
+
+.focus-point .focus-area {
+  /* float: left;
+    position: relative;
+    */
+
+  overflow: hidden;
+}
+
+.focus-point .source {
+  margin: 0 5px 5px 0;
+  -webkit-user-select: none;
+   -khtml-user-select: none;
+     -moz-user-select: none;
+       -o-user-select: none;
+          user-select: none;
+}
+
+.focus-point img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.focus-point .target {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  margin: -50px 0 0 -50px;
+  pointer-events: none;
+  border: 1px solid #fff;
+  -webkit-border-radius: 100%;
+     -moz-border-radius: 100%;
+          border-radius: 100%;
+}
+
+.focus-point .preview,
+.focus-point .preview-portrait,
+.focus-point .preview-landscape,
+.focus-point .preview-wide {
+  display: block;
+  float: left;
+  width: 100px;
+  height: 100px;
+  margin: 0 5px 5px 0;
+  background-size: cover;
+}
+
+.focus-point .preview-portrait {
+  width: 75px;
+}
+
+.focus-point .preview-landscape {
+  width: 133.33px;
+}
+
+.focus-point .preview-wide {
+  width: 156.25px;
+}
+
+.focus-point .info {
+  clear: both;
+}
 
 /* center-img */
 

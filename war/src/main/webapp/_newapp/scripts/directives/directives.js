@@ -126,10 +126,6 @@
       
       return {
           restrict: 'A',
-          replace: true,
-          scope: {
-              model: '=ngModel'
-          },
           template: '<div class="focus-point">' +
           '<div class="focus-area">' +
           '<span class="target" style="left: {{ x }}%; top: {{ y }}%"></span>' +
