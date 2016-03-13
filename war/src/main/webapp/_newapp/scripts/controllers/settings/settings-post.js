@@ -239,7 +239,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}else if(state == "TRASH"){
 			return 4;
 		}else{
-			return null;
+			return " - ";
 		}
 	}
 
@@ -461,6 +461,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		})
 	}
 	// --- /image focuspoint
+
 
 	// --- resize zoom class workaround
 	

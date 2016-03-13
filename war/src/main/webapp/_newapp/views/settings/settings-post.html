@@ -1,6 +1,9 @@
 <div class="p-xs top-0 left-0 w-full pos-abt md-whiteframe-z1 md-primary-hue-1 background">
 	<!-- menu -->
 	<md-button class="pull-right md-icon-button" style="margin-top: 2px;" ng-click="toggleOptions()">
+		<md-tooltip md-direction="top">
+    	{{'settings.post.OPTIONS' | translate}}
+  	</md-tooltip>
 		<i class="mdi mdi2-menu i-20"></i>
 	</md-button>
 	<!-- /menu -->
@@ -14,24 +17,25 @@
 			<i class="mdi mdi2-send i-20"></i>
 		</md-button>
 		<div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm md-background-default background with-arrow z-index-5">
-	  	<div class="arrow" ></div>
-      <md-content class="w">
+	  	<div class="arrow"></div>
+      <md-content class="w-xxl">
 	      <div class="pull-right">
 	        <a ng-click="postPublishMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
 	      </div>
-	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
-	      	{{'settings.post.POST_DATE_DESC' | translate}}
+	      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base">
+	      	{{'settings.post.menu.PUBLICATION_MSG' | translate}}
 	      </div>
-      	<md-input-container class="no-margin m-b-sm w-full">
-          <label translate="settings.post.POST_DATE">Data inicial</label>
-          <input type="date" mdp-date-picker ng-model="postDate" ng-change="changePostDate()"/>
-        </md-input-container>
-        <md-input-container class="no-margin m-b-sm w-full">
-          <label translate="settings.post.POST_TIME">Hora inicial</label>
-          <input type="time" mdp-time-picker ng-model="postDate" ng-change="changePostDate()" />
-        </md-input-container>
-        <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
-					Salvar
+	      <md-button class="font-bold no-margin m-b-sm" translate="titles.SAVE_AS_DRAFT">
+				</md-button>
+				<div class="block p-l-xs">
+					<span translate="titles.POST_STATE" class="inline"></span>: <span class="font-500 text-u-c">{{app.getStateText()}}</span>
+				</div>
+				<md-divider class="m-t-sm"></md-divider>
+	      <div class="p-xs m-b m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.menu.AUTO_SAVE_MSG' | translate}}
+	      </div>
+	      <md-divider class="m-b-sm"></md-divider>
+        <md-button class="pull-right font-bold no-margin" translate="titles.PUBLISH">
 				</md-button>
       </md-content>
 	  </div>
@@ -195,6 +199,13 @@
     </md-tooltip>
     <i class="mdi mdi2-bell-ring i-20"></i>
   </md-button>
+
+  <md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showClearPostDialog($event)">
+		<md-tooltip md-direction="top">
+      	{{'settings.post.menu.PREVIEW_POST' | translate}}
+  	</md-tooltip>
+  	<i class="mdi mdi2-eye i-20"></i>
+	</md-button>
   <!-- /left links-->
 </div>
 
@@ -298,6 +309,11 @@
 		</div><!-- /col -->
 	</div>
 </div> <!-- /abs -->
+
+
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg hide">
+  <i class="mdi mdi2-eye i-24"></i>
+</md-button>
 
 <md-sidenav class="md-background-hue-1 background md-sidenav-right md-whiteframe-z2 w-400" md-component-id="more-options">
   <md-toolbar class="md-theme-light">
