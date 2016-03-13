@@ -115,7 +115,8 @@
 				"POST_DATE": "Data de publicação",
 				"DELETE_DATE": "Data de remoção automática",
 				"CUSTOMIZE_LINK": "Personalização do link",
-				"ATTACH_POST": "Anexar outras notícias"
+				"ATTACH_POST": "Anexar outras notícias",
+				"NOTIFY_STATION_USERS": "Notificar usuários"
 			},
 			"OPTIONS": "Opções de publicação",
 			"CUSTOMIZE_LINK_DESC": "Endereço web personalizado para acesso através da web",
@@ -130,6 +131,7 @@
 			"DELETE_TIME": "Hora da remoção",
 			"CLEAR_CONTENT": "Limpar conteúdo",
 			"NEW_POST": "Nova publicação",
+			"NOTIFY_STATION_USERS_DESC": "Notificar usuários da estação em seus dispositivos.",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "Você possui conteúdo que ainda não foi salvo.",
 				"CLEAR_CONTENT_MSG": "Limpar todo o conteúdo desta publicação?",
@@ -141,7 +143,16 @@
 				"SCHEDULED": "Agendado",
 				"DRAFT": "Agendamento",
 				"Trash": "Lixeira"
-			}
+			},
+			"INSERT_FEATURED_IMAGE": "Inserir imagem destaque",
+			"INSERT_FEATURED_VIDEO": "Inserir vídeo destaque",
+			"INSERT_FEATURED_AUDIO": "Inserir áudio destaque",
+			"REMOVE_FEATURED_IMAGE": "Remover imagem",
+			"IMAGE_LIBRARY": "Biblioteca de imagem",
+			"FOUCUS_POINT": "Ponto focal",
+			"CROP_IMAGE": "Recortar imagem",
+			"CROP_IMAGE_DESC": "Clique e arraste para criar uma seleção e cortar a imagem.",
+			"TOGGLE_LANDSCAPE": "Ligar/desligar modo paisagem"
 		},
 		"SET_COLOR": "Configure as paletas de cores",
 		"COLOR_PALETTE": "Paleta de Cores",

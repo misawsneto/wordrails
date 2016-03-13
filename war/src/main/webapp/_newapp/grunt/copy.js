@@ -39,7 +39,9 @@ module.exports = {
                     'mdPickers/dist/**',
                     'froala-wysiwyg-editor/**',
                     'angular-froala/**',
-                    'angular-elastic/elastic.js'
+                    'angular-elastic/elastic.js',
+                    'lifely-focuspoint/**',
+                    'ng-jcrop/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',
@@ -69,7 +71,9 @@ module.exports = {
                     'jquery.easy-pie-chart/**',
                     'jquery.sparkline/**',
                     'bower-jvectormap-2/**',
-                    'slimScroll/jquery.slimscroll.min.js'
+                    'slimScroll/jquery.slimscroll.min.js',
+                    'jquery-focuspoint/**',
+                    'jcrop/**'
                 ],
                 dest: 'libs/jquery',
                 cwd:  'bower_components',

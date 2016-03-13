@@ -71,7 +71,10 @@
     "Flot": "flot#^0.8.3",
     "Waves": "waves#^0.7.5",
     "ng-img-crop": "ngImgCrop#^0.3.2",
-    "angular-ui-select3": "ui-select#*"
+    "angular-ui-select3": "ui-select#*",
+    "jquery-focuspoint": "^1.1.1",
+    "lifely-focuspoint": "focuspoint#^1.0.5",
+    "ng-jcrop": "^2.1.2"
   },
   "resolutions": {
     "moment": "^2.12.0",

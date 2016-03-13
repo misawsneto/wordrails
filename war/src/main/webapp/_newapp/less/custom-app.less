@@ -190,6 +190,16 @@
 	background-color: transparent;
 }
 
+.animated1x{
+ -webkit-animation-duration: 0.1s!important;
+ animation-duration: 0.1s!important; 
+}
+
+.animated2x{
+ -webkit-animation-duration: 0.2s!important;
+ animation-duration: 0.2s!important; 
+}
+
 .animated{
  -webkit-animation-duration: 0.3s!important;
  animation-duration: 0.3s!important; 
@@ -281,10 +291,54 @@
 	}
 }
 
+.bg-cover{
+  background-size: cover;
+}
+
+
+/* These are the base rule to set the dead center */
+
+/* center-img */
+.center-img-container{
+  position : relative;
+}
+
+.center-img{
+  position : absolute;
+  top: 0 ;
+  right: 0 ;
+  bottom : 0 ;
+  left : 0 ;
+  margin : auto;
+}
+
+.center-img-container{
+  width : 400px;
+  height: 400px;
+}
+
+.center-img{
+  text-align:center;
+  line-height:100px;
+}
+
+.ng-jcrop-image-wrapper{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    height: 400px;
+    width: 400px;
+}
+.jcrop-keymgr{
+	opacity:0;
+}
+/* /center-img */
+
+
 /* /general */
 
 /* toast */
-md-toast {
+.md-toast-content {
 	color: white!important;
 }
 
@@ -342,6 +396,20 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop{
     max-height: 100%;
     position: relative;
 }
+
+#image-upload{
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 40px;
+  direction: ltr;
+  cursor: pointer;
+  display: block;
+}
+
 /* /settings-post */
 
 /* settings */

@@ -115,7 +115,8 @@
 				"POST_DATE": "Post date",
 				"DELETE_DATE": "Post auto delete date",
 				"CUSTOMIZE_LINK": "Customize link",
-				"ATTACH_POST": "Attach other posts to this one"
+				"ATTACH_POST": "Attach other posts to this one",
+				"NOTIFY_STATION_USERS": "Notify users"
 			},
 			"OPTIONS": "Publication options",
 			"CUSTOMIZE_LINK_DESC": "Customized URL address for the web",
@@ -130,6 +131,7 @@
 			"DELETE_TIME": "Deletion time",
 			"CLEAR_CONTENT": "Clear content",
 			"NEW_POST": "New post",
+			"NOTIFY_STATION_USERS_DESC": "Notify station users on their devices.",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "You have edited your post and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all post content.",
@@ -141,7 +143,16 @@
 				"SCHEDULED": "Scheduled",
 				"DRAFT": "Draft",
 				"Trash": "On trash"
-			}
+			},
+			"INSERT_FEATURED_IMAGE": "Insert featured image",
+			"INSERT_FEATURED_VIDEO": "Insert featured video",
+			"INSERT_FEATURED_AUDIO": "Insert featured audio",
+			"REMOVE_FEATURED_IMAGE": "Remove featured image",
+			"IMAGE_LIBRARY": "Image library",
+			"FOUCUS_POINT": "Set focus point",
+			"CROP_IMAGE": "Crop image",
+			"CROP_IMAGE_DESC": "Click and drag to create a selection to crop the given image.",
+			"TOGGLE_LANDSCAPE": "On/off landscape"
 		},
 		"SET_COLOR": "Set the color palettes",
 		"COLOR_PALETTE": "Color Palette",

@@ -11,6 +11,22 @@ angular.module('app')
           ]
       },
       {
+        name: 'focuspoint',
+          files: [
+            '/libs/angular/lifely-focuspoint/dist/focuspoint.min.js',
+            '/libs/angular/lifely-focuspoint/dist/focuspoint.min.css'
+          ]
+      },
+      {
+        name: 'ngJcrop',
+        module: true,
+          files: [
+            '/libs/jquery/jcrop/css/jquery.Jcrop.min.css',
+            '/libs/jquery/jcrop/js/jquery.Jcrop.min.js',
+            '/libs/angular/ng-jcrop/ng-jcrop.js'
+          ]
+      },
+      {
           name: 'mdDateTime',
           module: true,
           files: [
@@ -250,6 +266,14 @@ angular.module('app')
               '/libs/theming/angular-spectrum-colorpicker/dist/angular-spectrum-colorpicker.min.js',
               '/libs/theming/tinycolor/tinycolor.js',
               '/libs/theming/angular-toArrayFilter/toArrayFilter.js'
+          ]
+      },
+      {
+          name: 'focuspoint',
+          module: false,
+          files: [
+              '/libs/jquery/jquery-focuspoint/css/focuspoint.css',
+              '/libs/jquery/jquery-focuspoint/js/jquery.focuspoint.min.js'
           ]
       }
     ]

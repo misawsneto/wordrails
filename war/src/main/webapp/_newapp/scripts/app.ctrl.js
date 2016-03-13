@@ -261,7 +261,7 @@ angular.module('app')
         themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
         themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
         themeProvider.definePalette('myWarn', $scope.app.network.alertColors);
-        if($scope.app.network.backgroundColors && $scope.app.network.backgroundColors.length > 0)
+        if($scope.app.network.backgroundColors && $scope.app.network.backgroundColors['50'])
           themeProvider.definePalette('myBackground', $scope.app.network.backgroundColors);
         else
           themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject(computeColors($scope.app.network.backgroundColor)))

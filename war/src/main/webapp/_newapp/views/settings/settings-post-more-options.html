@@ -1,0 +1,126 @@
+<md-dialog aria-label="MAIS OPÇÕES" id="more-options-dialog">
+<div id="post-more-options" ng-cloak>
+  <md-content>
+  <md-tabs md-no-ink md-dynamic-height>
+  <md-tab label="Detalhes">
+  <md-content>
+  <div class="b-t post-general-info clear" flex>
+    <div class="row m-n">
+      <div class="col-sm-5 wrapper-md p-l-xl info-side-panel scrollable" ng-class="{'hide': app.editingPost.id}">
+        <span class="text-md font-bold">
+          Pronto para publicar sua notícia?
+        </span>
+        <div class="m-t">
+          Quando estiver pronto para publicar a notícia, escolha uma categoria, preencha as opções desejadas e pressione o botão de <strong>publicar</strong>.
+        </div>
+        <img id="publication-img" src="img/publication-img.png">
+      </div>
+      <div class="col-sm-5 wrapper-md p-l-xl info-side-panel scrollable" ng-class="{'hide': !app.editingPost.id}">
+        <div class="m-t-sm m-b-md text-lg">
+          <span>
+            {{app.checkState() == 1 ? 'Publicado na estação ' : app.checkState() == 2 ? 'Salvo como rascunho na estação' : app.checkState() == 3 ? 'Agendado para publicação na estação ' : ''}}
+          </span>
+          <strong>{{app.editingPost.station.name}}</strong>
+        </div>
+        <span class="pos-abt wrapper-xl text-3x" style="right:0">
+          <i class="mdi mdi-check text-3x text-success" ng-if="app.checkState() == 1"></i>
+          <i class="mdi mdi-pencil text-3x" ng-if="app.checkState() == 2"></i>
+          <i class="mdi mdi-timer text-3x" ng-if="app.checkState() == 3"></i>
+        </span>
+        <img id="publication-img" src="img/publication-img.png">
+      </div>
+      <div class="col-sm-7 b-l wrapper-md p-r-lg info-side-panel scrollable">
+        <div class="m-t-sm">
+          <div ng-if="app.editingPost.showTimepicker" class="input-group w-md m-auto" ng-click="app.editingPost.dateTouched = true">
+            <input type="text" class="form-control" datepicker-popup="{{app.editingPost.format}}" ng-model="app.editingPost.customDate" is-open="app.editingPost.opened" datepicker-options="app.editingPost.dateOptions" ng-required="true" close-text="Fechar" current-text="Hoje" clear-text="Limpar"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="app.editingPost.open($event); app.editingPost.dateTouched = true;"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </div>
+          <div class="m-t-xs" ng-if="!app.editingPost.showTimepicker">
+            <a ng-click="app.editingPost.showTimepicker = !app.editingPost.showTimepicker"><i class="fa fa-fw m-r-xs fa-clock-o"></i>Personalizar data e horário da publicação</a>
+          </div>
+          <div ng-if="app.editingPost.showTimepicker" class="timepicker-container m-l-sm">
+            <div class="pull-left m-t-xl m-r-sm">horário, </div>
+            <timepicker class="pull-left" ng-model="app.editingPost.mytime" hour-step="app.editingPost.hstep" minute-step="app.editingPost.mstep" show-meridian="app.editingPost.ismeridian"></timepicker>
+            <div class="m-t-xl m-l-sm pull-left h3">
+              <a ng-click="app.editingPost.showTimepicker = !app.editingPost.showTimepicker">
+                <i class="mdi mdi-close-circle-outline"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="wrapper" ng-if="writableStations && writableStations.length > 1">
+          <span ng-class="{'hide': !app.editingPost.id}">Estação: 
+            <strong>{{app.editingPost.id ? + app.editingPost.selectedStation.stationName : ''}}</strong>
+          </span>
+          <div ng-class="{'hide': app.editingPost.id}" class="m-t">
+            Escolha a estação em que deseja publicar:
+          </div>
+          <select ng-class="{'hide': app.editingPost.id}" class="form-control w-lg m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
+          ng-options="station as station.stationName for station in writableStations track by station.stationId">
+        </select>
+      </div>
+      <div class="slug-editor">
+        <span class="pull-left m-t-lg m-r-sm h3">/</span>
+        <md-input-container flex>
+        <label>Endereço único</label>
+        <input ng-focus="app.changeCustomSlug()" ng-model="app.editingPost.slug">
+      </md-input-container>
+    </div>
+                <!-- <div class="notification">
+                  <md-checkbox aria-label="{{app.editingPost.notify}}" ng-model="app.editingPost.notify" ng-click="app.editingPost.notify = !app.editingPost.notify" class="pull-left"></md-checkbox>
+                  <span>Notificar usuários em dispositivos móveis</span>
+                </div>
+                <div class="notification">
+                  <md-checkbox aria-label="{{app.editingPost.notify}}" ng-model="app.editingPost.notify" ng-click="app.editingPost.notify = !app.editingPost.notify" class="pull-left"></md-checkbox>
+                  <span>Ultimas Notícias</span>
+                </div>
+              </div> -->
+              <ul class="notification-settings no-style">
+                <li class="">
+                  <div>
+                    <md-checkbox aria-label="{{app.editingPost.notify}}" ng-model="app.editingPost.notify" class="pull-left"></md-checkbox>
+                    <div>Notificar usuários em seus dispositivos móveis</div>
+                  </div>
+                </li>
+                  <!-- <li class="">
+                    <div>
+                      <md-checkbox aria-label="{{app.editingPost.breakingNews}}" ng-model="app.editingPost.breakingNews" class="pull-left"></md-checkbox>
+                      <div class="font-bold text-u-c">Últimas Notícias</div>
+                    </div>
+                  </li> -->
+                </ul>
+              </div>
+            </div>
+          </div>
+          </md-content>
+        </md-tab>
+        <!-- notifications tab -->
+       <md-tab md-no-ink angular-ripple class="bg-custom" label="Geo-Notificações" ng-disabled="true">
+         <div class="b-t wrapper-sm" flex>
+         </div>
+       </md-tab>
+      <!-- /notifications tab -->
+      <!-- sponsor tab -->
+      <!-- <md-tab md-no-ink angular-ripple ng-if="app.editingPost.selectedStation.sponsored" class="bg-custom" label="Patrocinadores" ng-disabled="true">
+      <div class="b-t wrapper-sm" flex>
+      </div>
+          </md-tab> -->
+        <!-- /sponsor tab
+        /tab -->
+      </md-tabs>
+    </md-content>
+  </div>
+
+  <div class="md-actions" layout="row">
+
+    <button ng-click="cancel()"
+    md-ink-ripple class="md-btn md-flat btn-fw" style="font-size: 18px">Fechar</button>
+
+    <!-- <md-button ng-click="publish()" class="md-primary">
+      Publicar
+    </md-button> -->
+  </div>
+
+</md-dialog>
