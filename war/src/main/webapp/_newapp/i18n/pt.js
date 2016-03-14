@@ -151,6 +151,7 @@
 				"DRAFT": "Agendamento",
 				"Trash": "Lixeira"
 			},
+			"GEO_NOTIFICATION_DESC": "Para limitar a área geográfica de envio de notificações aos dispositivos dos usuários, crie círculos ou polígonos utlizando as ferramentas no canto esquerdo do mapa ao lado.",
 			"PREFERENCES": "Preferências",
 			"CATEGORIES": "Categorias",
 			"INSERT_FEATURED_IMAGE": "Inserir imagem destaque",

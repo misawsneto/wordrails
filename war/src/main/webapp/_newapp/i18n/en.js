@@ -151,6 +151,7 @@
 				"DRAFT": "Draft",
 				"Trash": "On trash"
 			},
+			"GEO_NOTIFICATION_DESC": "To limit the geographical area of notification to user's devices, create circles or polygons using the tools on the left corner of the map.",
 			"PREFERENCES": "Preferences",
 			"CATEGORIES": "Categories",
 			"INSERT_FEATURED_IMAGE": "Insert featured image",
