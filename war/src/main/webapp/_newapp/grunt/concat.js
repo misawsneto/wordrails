@@ -46,6 +46,21 @@ module.exports = {
     ],
     dest:'html/scripts/app.src.js'
   },
+  leafletjs:{
+    src:[
+    'libs/angular/leaflet/dist/leaflet.js',
+    'libs/angular/leaflet-draw/dist/leaflet.draw.js',
+    'libs/angular/angular-leaflet-directive/dist/angular-leaflet-directive.min.js',
+    ],
+    dest:'scripts/leafletjs.all.js'
+  },
+  leafletcss:{
+    src:[
+    'libs/angular/leaflet-draw/dist/leaflet.draw.css',
+    'libs/angular/leaflet/dist/leaflet.css',
+    ],
+    dest:'styles/leafletcss.all.css'
+  },
   froala:{
     src:[
     // froala js

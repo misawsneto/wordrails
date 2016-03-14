@@ -21,7 +21,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	};
 
 	// Must be [x, y, x2, y2, w, h]
-   $scope.app.cropSelection = [100, 100, 200, 200, 100, 100];
+   $scope.app.cropSelection = [100, 100, 200, 200];
 
 	$scope.froalaOptions = {
 		toolbarInline: false,
@@ -239,7 +239,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}else if(state == "TRASH"){
 			return 4;
 		}else{
-			return " - ";
+			return 5;
 		}
 	}
 
@@ -249,7 +249,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 		state = state ? state : $scope.app.editingPost.state;
 		if(!state)
-			return null;
+			return " - ";
 		if(state == "PUBLISHED"){
 			return $filter('translate')('settings.post.states.PUBLISHED');
 		}else if(state == "DRAFT"){
@@ -259,7 +259,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}else if(state == "TRASH"){
 			return $filter('translate')('settings.post.states.TRASH');
 		}else{
-			return null;
+			return " - ";
 		}
 	}
 
@@ -337,7 +337,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 	};
 
-	$scope.postFeaturedImage = {url: null, hash: null};
+	$scope.postFeaturedImage = null
 	var setPostFeaturedImage = function(hash){
 		$scope.postFeaturedImage = $filter('imageLink')(hash, 'large')
 	}
@@ -461,7 +461,39 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		})
 	}
 	// --- /image focuspoint
+	
+	var draftAutoSaveCheck = function(){
+		//if($scope.editingPost.title && $scope.editingPost.body)
+	}
 
+	$interval(function(){
+	}, 500);
+
+	// --- auto save
+	
+
+	// --- /auto save
+
+	// --- geolocation
+
+	$scope.showGeoNotificationDialog = function(event){
+		// show term alert
+		
+		$scope.app.editingPost = $scope.app.editingPost;
+		$scope.app.postFeaturedImage = $scope.postFeaturedImage;
+
+		$mdDialog.show({
+			controller: $scope.app.defaultDialog,
+			templateUrl: 	'geolocation-dialog.html',
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose:true
+			// onComplete: function(){
+
+			// }
+		})
+	}
+	// --- /geolocation
 
 	// --- resize zoom class workaround
 	
@@ -485,8 +517,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$timeout(function(){
-		test();  
-	}, 1000);
+		// test();
+	}, 3000);
 
 	settingsPostCtrl = $scope;
 }]);

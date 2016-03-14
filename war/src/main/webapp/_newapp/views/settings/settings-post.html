@@ -27,8 +27,8 @@
 	      </div>
 	      <md-button class="font-bold no-margin m-b-sm" translate="titles.SAVE_AS_DRAFT">
 				</md-button>
-				<div class="block p-l-xs">
-					<span translate="titles.POST_STATE" class="inline"></span>: <span class="font-500 text-u-c">{{app.getStateText()}}</span>
+				<div class="block p-l-xs" ng-if="app.editingPost">
+					<span translate="titles.POST_STATE" class="inline"></span>: <span class="font-500 text-u-c">{{app.getStateText();}}</span>
 				</div>
 				<md-divider class="m-t-sm"></md-divider>
 	      <div class="p-xs m-b m-t-sm l-h-1x text-sm">
@@ -179,8 +179,8 @@
           <input ng-model="customizedLink.slug" />
         </md-input-container>
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
-			Salvar
-		</md-button>
+					Salvar
+				</md-button>
       </md-content>
 	  </div>
   </div>
@@ -192,13 +192,32 @@
     </md-tooltip>
     <i class="mdi mdi2-library-plus i-20"></i>
   </md-button> -->
-
-  <md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
-  	<md-tooltip md-direction="top">
-      {{'settings.post.menu.NOTIFY_STATION_USERS' | translate}}
-    </md-tooltip>
-    <i class="mdi mdi2-bell-ring i-20"></i>
-  </md-button>
+	<div uib-dropdown class="inline" auto-close="disabled" is-open="postNotificatioMenuOpen">
+	  <md-button uib-dropdown-toggle  aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;">
+	  	<md-tooltip md-direction="top">
+	      {{'settings.post.menu.NOTIFY_STATION_USERS' | translate}}
+	    </md-tooltip>
+	    <i class="mdi mdi2-bell-ring i-20"></i>
+	  </md-button>
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm md-background-default background with-arrow z-index-5">
+	  	<div class="arrow lft" ></div>
+      <md-content class="w-md">
+	      <div class="pull-right">
+	        <a ng-click="postNotificatioMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+	      </div>
+	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
+	      	{{'settings.post.NOTIFY_STATION_USERS_DESC' | translate}}
+	      </div>
+	      <div class="p-h-xs">
+		      <md-checkbox ng-model="app.editingPost.notify" class="">
+		      	{{'titles.NOTIFY' | translate}}
+		      </md-checkbox>
+	      </div>
+        <md-button class="pull-right font-bold no-margin" translate="titles.GEO_NOTIFICATION" ng-click="showGeoNotificationDialog($event)">
+				</md-button>
+      </md-content>
+	  </div>
+  </div>
 
   <md-button aria-label="Open demo menu" class="md-icon-button" style="margin: 5px 0 0 0;" ng-click="showClearPostDialog($event)">
 		<md-tooltip md-direction="top">
@@ -217,7 +236,7 @@
           <div class="cell"> <!-- cell -->
             <div class="cell-inner"><!-- cell -->
 							
-							<img id="img-stub" ng-src="{{postFeaturedImage}}" class="z-index-n-1 pos-abt" style="opacity: 0">
+							<img id="img-stub" ng-src="{{postFeaturedImage}}" ng-if="postFeaturedImage" class="z-index-n-1 pos-fix" style="opacity: 0">
 							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md" ng-if="postFeaturedImage"  ng-class="{'w-full h-400': landscape, 'block-800 h-300 m-t': !landscape}"
 							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
 								<md-fab-speed-dial md-open="openImageOptions" md-direction="up" class="md-scale pull-right p-t p-r p-b pos-abt bottom-0 right-0">
@@ -396,8 +415,8 @@
 		<div layout="column" layout-align="start center">
 			<md-toolbar layout-align="start start" flex class="md-warn text-center p" layout="column">
 				<div class="p-t-sm p-b-sm"><i class="mdi mdi2-alert text-2x"></i></div>
-	        </md-toolbar>
-	    </div>
+      </md-toolbar>
+    </div>
 		<div class="p-sm">
 			<div class="text-md p block-400 text-center">
 				{{'settings.post.messages.CLEAR_CONTENT_MSG' | translate }}
@@ -423,6 +442,31 @@
 					{{'settings.post.NEW_POST' | translate}}
 				</md-button>
 			</div>
+		</div>
+	</md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="geolocation-dialog.html">
+	<md-dialog-content layout="row" layout-wrap>
+		<div layout="column" layout-align="start center">
+			<md-toolbar layout-align="start start" flex class="md-primary md-hue-1 text-center" layout="column">
+				<div class="w-lg">
+					<div class="p">
+						
+					</div>
+					<div class="pos-abt bottom-0 text-center w-full p-t p-b">
+						<md-button ng-click="app.cancelDialog();" class="m-0">
+							{{'titles.CANCEL' | translate}}
+						</md-button>
+						<md-button ng-click="app.clearPostContent();" class="m-0">
+							{{'titles.SAVE' | translate}}
+						</md-button>
+					</div>
+				</div>
+      </md-toolbar>
+    </div>
+		<div ng-controller="GeoLocationController">
+			<leaflet center="center" controls='controls'></leaflet>
 		</div>
 	</md-dialog-content>
 </script>

@@ -74,7 +74,9 @@
     "angular-ui-select3": "ui-select#*",
     "jquery-focuspoint": "^1.1.1",
     "lifely-focuspoint": "focuspoint#^1.0.5",
-    "ng-jcrop": "^2.1.2"
+    "ng-jcrop": "^2.1.2",
+    "angular-leaflet-directive": "^0.10.0",
+    "leaflet-draw": "^0.2.3"
   },
   "resolutions": {
     "moment": "^2.12.0",

@@ -41,7 +41,10 @@ module.exports = {
                     'angular-froala/**',
                     'angular-elastic/elastic.js',
                     'lifely-focuspoint/**',
-                    'ng-jcrop/**'
+                    'ng-jcrop/**',
+                    'angular-leaflet-directive/dist/**',
+                    'leaflet/dist/**',
+                    'leaflet-draw/dist/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

@@ -7876,6 +7876,10 @@ bg-none {
   z-index: 5;
 }
 
+.z-index-6 {
+  z-index: 6;
+}
+
 .hbox {
   display: table;
   width: 100%;
@@ -8131,6 +8135,15 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
   opacity: 0;
   -ms-filter: 'alpha(opacity=0)';
   direction: ltr;
+}
+
+.angular-leaflet-map {
+  width: 500px;
+  height: 400px;
+}
+
+.md-chip-input-container .md-input {
+  z-index: 4!important;
 }
 
 /* /settings-post */

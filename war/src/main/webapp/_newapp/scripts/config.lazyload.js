@@ -11,6 +11,15 @@ angular.module('app')
           ]
       },
       {
+        name: 'leaflet-directive',
+        module: true,
+          files: [
+            '/libs/angular/angular-leaflet-directive/dist/angular-leaflet-directive.min.js',
+            '/styles/leafletcss.all.css',
+            '/scripts/leafletjs.all.js',
+          ]
+      },
+      {
         name: 'ngJcrop',
         module: true,
           files: [

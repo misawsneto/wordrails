@@ -51,7 +51,9 @@
 		"SAVE_AS_DRAFT": "Save as draft",
 		"SAVE": "Save",
 		"TITLE": "Title",
-		"ENTER_TAG": "Enter a tag"
+		"ENTER_TAG": "Enter a tag",
+		"GEO_NOTIFICATION": "Geonotification",
+		"NOTIFY": "Notificar"
 	},
 	"actions":{
 		"ADD": "Add",

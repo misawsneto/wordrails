@@ -51,7 +51,9 @@
 		"SAVE_AS_DRAFT": "Salvar como rascunho",
 		"SAVE": "Savar",
 		"TITLE": "Título",
-		"ENTER_TAG": "Insira uma tag"
+		"ENTER_TAG": "Insira uma tag",
+		"GEO_NOTIFICATION": "Geonotificação",
+		"NOTIFY": "Notificar"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -121,7 +123,7 @@
 				"ATTACH_POST": "Anexar outras notícias",
 				"NOTIFY_STATION_USERS": "Notificar usuários",
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
-				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada minuto uma vez que o título, conteúdo, estações e categorias sejam inseridos. As versões da publicação pode ser visualizado no meno \"Opções de publicação\""
+				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada minuto uma vez que o título, conteúdo, estações e categorias sejam inseridos. As versões da publicação pode ser visualizado no meno \"Opções de publicação\"."
 			},
 			"OPTIONS": "Opções de publicação",
 			"CUSTOMIZE_LINK_DESC": "Endereço web personalizado para acesso através da web",
