@@ -1,7 +1,6 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkInclude;
-import co.xarx.trix.domain.event.PostEvent;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;

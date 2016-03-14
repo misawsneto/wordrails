@@ -33,7 +33,9 @@ public class AuthResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/signin")
-	public Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
+	public Response signin(@FormParam("provider") String providerId,
+						   @FormParam("userId") String userId,
+						   @FormParam("accessToken") String accessToken) throws IOException {
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
 		if(network.authCredential == null) {

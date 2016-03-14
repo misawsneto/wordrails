@@ -6,6 +6,7 @@ import lombok.Getter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @SdkExclude
@@ -39,4 +40,14 @@ public class UserConnection extends BaseEntity implements Serializable {
 	public String email;
 
 	public String imageUrl;
+
+	@PreUpdate
+	public void onUpdate() {
+		updatedAt = new Date();
+	}
+
+	@PrePersist
+	public void onCreate() {
+		createdAt = new Date();
+	}
 }
