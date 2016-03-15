@@ -76,17 +76,21 @@ public class QueryPersistence {
 				.setParameter("perspectiveId", perspectiveId).setParameter("notId", notId).executeUpdate();
 	}
 
-	public List<Post> findPostsByTag(Set<String> tags, Integer stationId, int page, int size) {
-		return manager.createQuery("select p from Post p join p.tags tgs where tgs in :tags and p.station.id = :stationId", Post.class)
-				.setParameter("tags", tags).setParameter("stationId", stationId)
+	public List<Post> findPostsByTag(Set<String> tags, int page, int size) {
+		return manager.createQuery("select distinct p from Post p join p.tags tgs where tgs in :tags", Post.class)
+				.setParameter("tags", tags)
 				.setMaxResults(size)
 				.setFirstResult(page * size)
 				.getResultList();
 	}
 
 	public List<Post> findPostsByTagAndStationId(Set<String> tags, Integer stationId, int page, int size) {
-		return manager.createQuery("select distinct p from Post p join p.tags tgs where tgs in :tags and p.station.id = :stationId", Post.class)
-				.setParameter("tags", tags).setParameter("stationId", stationId).setMaxResults(size).setFirstResult(page * size).getResultList();
+		return manager.createQuery("select distinct p from Post p join p.tags tgs where tgs in (:tags) and p.station.id = :stationId", Post.class)
+				.setParameter("tags", tags)
+				.setParameter("stationId", stationId)
+				.setMaxResults(size)
+				.setFirstResult(page * size)
+				.getResultList();
 	}
 
 	@Transactional
