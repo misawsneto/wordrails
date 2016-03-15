@@ -4,11 +4,13 @@ import co.xarx.trix.domain.Cell;
 import co.xarx.trix.domain.Post;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
-public interface CellRepository extends DatabaseRepository<Cell> {
+@RepositoryRestResource(exported = true)
+public interface CellRepository extends DatabaseRepository<Cell, Integer> {
 
 	@RestResource(exported=false)
 	@Query("select cell from Cell cell " +

@@ -1,8 +1,8 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.elasticsearch.domain.ESPost;
-import co.xarx.trix.elasticsearch.repository.ESPostRepository;
+import co.xarx.trix.domain.ESPost;
+import co.xarx.trix.persistence.ESPostRepository;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;

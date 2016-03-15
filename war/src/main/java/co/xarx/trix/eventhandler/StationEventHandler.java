@@ -1,8 +1,8 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.*;
-import co.xarx.trix.elasticsearch.domain.ESStation;
-import co.xarx.trix.elasticsearch.repository.ESStationRepository;
+import co.xarx.trix.domain.ESStation;
+import co.xarx.trix.persistence.ESStationRepository;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.StationSecurityChecker;

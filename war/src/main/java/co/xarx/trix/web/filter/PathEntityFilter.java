@@ -46,14 +46,14 @@ public class PathEntityFilter implements Filter {
 				!path.equals("/mystats") &&
 				!path.contains("/@")) {
 
-			Post post = postRepository.findBySlug(path.replace("/", ""));
-
-			if (post != null) {
-				request.setAttribute("requestedEntityJson", objectMapper.writeValueAsString(post));
-				request.setAttribute("requestedEntityMetas", metaTagsBuilder(post));
-				request.setAttribute("requestedEntityHiddenHtml", hiddenHtmlBuilder(post));
-				request.setAttribute("entityType", "POST");
-			}
+//			Post post = postRepository.findBySlug(path.replace("/", ""));
+//
+//			if (post != null) {
+//				request.setAttribute("requestedEntityJson", objectMapper.writeValueAsString(post));
+//				request.setAttribute("requestedEntityMetas", metaTagsBuilder(post));
+//				request.setAttribute("requestedEntityHiddenHtml", hiddenHtmlBuilder(post));
+//				request.setAttribute("entityType", "POST");
+//			}
 		}
 
 		chain.doFilter(req, res);

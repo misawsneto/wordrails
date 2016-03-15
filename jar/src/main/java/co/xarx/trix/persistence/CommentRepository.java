@@ -1,19 +1,34 @@
 package co.xarx.trix.persistence;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Comment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Date;
 import java.util.List;
 
 @RepositoryRestResource(exported = true)
-public interface CommentRepository extends DatabaseRepository<Comment> {
+public interface CommentRepository extends DatabaseRepository<Comment, Integer> {
 
-	@Query("SELECT comment FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	Comment findOne(Integer id);
+
+	@Override
+	@SdkExclude
+	@PreAuthorize("hasPermission(#c.post, 'read')")
+	@RestResource(exported = true)
+	Comment save(@P("c") Comment entity);
+
+	@PreAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
+	@Query("FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
 	List<Comment> findPostCommentsOrderByDate(@Param("postId") Integer postId, Pageable pageable);
 
 	@RestResource(exported = false)

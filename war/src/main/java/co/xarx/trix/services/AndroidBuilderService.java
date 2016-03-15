@@ -1,7 +1,6 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.domain.AndroidApp;
-import co.xarx.trix.domain.DBAndroidApp;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.StreamGobbler;
 import com.github.slugify.Slugify;
@@ -123,23 +122,23 @@ public class AndroidBuilderService {
 
 			File mdpi = new File(drawableDir, "drawable-mdpi/ic_launcher.png");
 			if(mdpi.createNewFile()) {
-				createResizableImage(mdpi, bufferedImage, DBAndroidApp.MDPI_SIZE, extension);
+				createResizableImage(mdpi, bufferedImage, AndroidApp.MDPI_SIZE, extension);
 			}
 			File hdpi = new File(drawableDir, "drawable-hdpi/ic_launcher.png");
 			if(hdpi.createNewFile()) {
-				createResizableImage(hdpi, bufferedImage, DBAndroidApp.HDPI_SIZE, extension);
+				createResizableImage(hdpi, bufferedImage, AndroidApp.HDPI_SIZE, extension);
 			}
 			File xhdpi = new File(drawableDir, "drawable-xhdpi/ic_launcher.png");
 			if(xhdpi.createNewFile()) {
-				createResizableImage(xhdpi, bufferedImage, DBAndroidApp.XHDPI_SIZE, extension);
+				createResizableImage(xhdpi, bufferedImage, AndroidApp.XHDPI_SIZE, extension);
 			}
 			File xxhdpi = new File(drawableDir, "drawable-xxhdpi/ic_launcher.png");
 			if(xxhdpi.createNewFile()) {
-				createResizableImage(xxhdpi, bufferedImage, DBAndroidApp.XXHDPI_SIZE, extension);
+				createResizableImage(xxhdpi, bufferedImage, AndroidApp.XXHDPI_SIZE, extension);
 			}
 			File xxxhdpi = new File(drawableDir, "drawable-xxxhdpi/ic_launcher.png");
 			if(xxxhdpi.createNewFile()) {
-				createResizableImage(xxxhdpi, bufferedImage, DBAndroidApp.XXXHDPI_SIZE, extension);
+				createResizableImage(xxxhdpi, bufferedImage, AndroidApp.XXXHDPI_SIZE, extension);
 			}
 		}
 

@@ -1,7 +1,5 @@
-package co.xarx.trix.elasticsearch.domain;
+package co.xarx.trix.domain;
 
-import co.xarx.trix.api.Category;
-import co.xarx.trix.domain.ElasticSearchEntity;
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
@@ -31,7 +29,6 @@ public class ESPost implements ElasticSearchEntity {
 
 	public String title;
 
-	public Set<Category> categories;
 	public Set<String> tags;
 	public Date date;
 	public String body;
@@ -133,14 +130,6 @@ public class ESPost implements ElasticSearchEntity {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public Set<Category> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(Set<Category> categories) {
-		this.categories = categories;
 	}
 
 	public Date getDate() {

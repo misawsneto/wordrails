@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -71,6 +72,7 @@ public class Station extends BaseEntity implements Serializable {
 	@ManyToOne
 	public Network network;
 
+	@RestResource(exported = false)
 	@OneToMany(mappedBy = "station", cascade = CascadeType.REMOVE)
 	public Set<StationRole> personsStationRoles;
 

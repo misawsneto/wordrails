@@ -1,8 +1,8 @@
 package co.xarx.trix.aspect;
 
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.elasticsearch.domain.ESPost;
-import co.xarx.trix.elasticsearch.repository.ESPostRepository;
+import co.xarx.trix.domain.ESPost;
+import co.xarx.trix.persistence.ESPostRepository;
 import co.xarx.trix.services.ESStartupIndexerService;
 import co.xarx.trix.services.SchedulerService;
 import org.aspectj.lang.annotation.AfterReturning;

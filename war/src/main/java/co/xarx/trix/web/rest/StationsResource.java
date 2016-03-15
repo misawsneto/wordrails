@@ -11,6 +11,7 @@ import co.xarx.trix.services.QueryableSectionService;
 import co.xarx.trix.services.auth.AuthService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -85,6 +86,7 @@ public class StationsResource {
 
 	@PUT
 	@Path("/{stationId}/setMainStation")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response setMainStation(@PathParam("stationId") Integer stationId, @FormParam("value") boolean value) {
 		Person person = authProvider.getLoggedPerson();

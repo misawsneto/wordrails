@@ -6,11 +6,7 @@ import org.springframework.web.context.ContextLoaderListener;
 
 import javax.servlet.ServletContext;
 
-public class TrixContextLoaderListener extends ContextLoaderListener {
-
-//	public TrixContextLoaderListener(WebApplicationContext context) {
-//		super(context);
-//	}
+public class SpringResteasyContextLoaderListener extends ContextLoaderListener {
 
 	@Override
 	protected void customizeContext(ServletContext servletContext, ConfigurableWebApplicationContext configurableWebApplicationContext) {

@@ -33,6 +33,12 @@ public class SessionConfig extends CachingConfigurerSupport {
 
 	@Value("${trix.auth.header:'x-auth-trix-token'}")
 	private String trixAuthHeader;
+	@Value("${spring.redis.host}")
+	private String redisHost;
+	@Value("${spring.redis.port}")
+	private int redisPort;
+	@Value("${spring.redis.password:}")
+	private String redisPassword;
 
 	public RedisTemplate redisTemplate() {
 		RedisTemplate redisTemplate = new RedisTemplate();
@@ -57,10 +63,14 @@ public class SessionConfig extends CachingConfigurerSupport {
 		RedisTemplate stationsIdsRedisTemplate = redisTemplate();
 		stationsIdsRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(List.class));
 
+		RedisTemplate postsIdsRedisTemplate = redisTemplate();
+		postsIdsRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(List.class));
+
 		templates.put("person", new HashMap<RedisTemplate, Integer>(){{put(personRedisTemplate, 60);}});
 		templates.put("user", new HashMap<RedisTemplate, Integer>(){{put(userRedisTemplate, 60);}});
 		templates.put("image", new HashMap<RedisTemplate, Integer>(){{put(imageRedisTemplate, 600);}});
 		templates.put("stationsIds", new HashMap<RedisTemplate, Integer>(){{put(stationsIdsRedisTemplate, 600);}});
+		templates.put("postsIds", new HashMap<RedisTemplate, Integer>(){{put(postsIdsRedisTemplate, 600);}});
 
 		return new MultitenantCacheManager(templates);
 	}
@@ -77,10 +87,11 @@ public class SessionConfig extends CachingConfigurerSupport {
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
 		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-		jedisConnectionFactory.setHostName("meminstance1");
-		jedisConnectionFactory.setPort(6379);
-		jedisConnectionFactory.setPassword("108dbd3786884ddc94ec2669e948273b09828ec44FFd55a6cdd3b007c" +
-				"c018a16e93cb1Fc68060a9c7095324056d1bF9b08Fdd1b78c1c96351ceb129e6e959357");
+		jedisConnectionFactory.setHostName(redisHost);
+		jedisConnectionFactory.setPort(redisPort);
+		if (redisPassword != null && !redisPassword.isEmpty()) {
+			jedisConnectionFactory.setPassword(redisPassword);
+		}
 		return jedisConnectionFactory;
 	}
 

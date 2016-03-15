@@ -1,13 +1,17 @@
 package co.xarx.trix.generator;
 
+import co.xarx.trix.generator.exception.InvalidEntityException;
 import co.xarx.trix.generator.exception.InvalidProjectionException;
 import co.xarx.trix.generator.scope.EntityDescription;
 import co.xarx.trix.generator.scope.QueryDescription;
 import org.reflections.Reflections;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.config.Projection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class PersistenceUnitDescription {
 
@@ -19,14 +23,14 @@ public class PersistenceUnitDescription {
 	private Map<Class<?>, Class<?>> repositories;
 	private Map<Class<?>, EntityDescription> projections;
 
-	public PersistenceUnitDescription(String packageToScan) throws InvalidProjectionException {
+	public PersistenceUnitDescription(String packageToScan) throws InvalidProjectionException, InvalidEntityException {
 		this.packageToScan = packageToScan;
 
 		Reflections reflections = new Reflections(packageToScan);
 		Set<Class<?>> projectionClasses = reflections.getTypesAnnotatedWith(Projection.class);
 		ProjectionExtractor projectionExtractor = new ProjectionExtractor(projectionClasses);
 
-		Set repositoryClasses = reflections.getSubTypesOf(JpaRepository.class);
+		Set repositoryClasses = reflections.getTypesAnnotatedWith(RepositoryRestResource.class);
 		RepositoryExtractor repositoryExtractor = new RepositoryExtractor(repositoryClasses);
 
 		queries = repositoryExtractor.getRepositoryQueries();
@@ -40,7 +44,7 @@ public class PersistenceUnitDescription {
 		return entities;
 	}
 
-	private List<EntityDescription> getEntityDescriptions() {
+	private List<EntityDescription> getEntityDescriptions() throws InvalidEntityException {
 		EntityExtractor entityExtractor = new EntityExtractor();
 		Set<Class<?>> entityClasses = entityExtractor.getEntityClasses(packageToScan);
 		Map<Class<?>, EntityDescription> entityMap = entityExtractor.extractEntities(entityClasses, queries,

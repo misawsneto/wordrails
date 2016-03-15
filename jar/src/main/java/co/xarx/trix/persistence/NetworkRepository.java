@@ -1,15 +1,15 @@
 package co.xarx.trix.persistence;
 
 import co.xarx.trix.domain.Network;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
-public interface NetworkRepository extends JpaRepository<Network, Integer>, QueryDslPredicateExecutor<Network> {
+@RepositoryRestResource(exported = true)
+public interface NetworkRepository extends DatabaseRepository<Network, Integer> {
 
 	@RestResource(exported = true)
 	Network findByTenantId(@Param("tenantId") String tenantId);
@@ -25,4 +25,7 @@ public interface NetworkRepository extends JpaRepository<Network, Integer>, Quer
 			"(select count(*) from MobileDevice md where md.type = 1)" +
 			" from Station s")
 	List<Object[]> findStats();
+
+	@Override
+	Network save(Network entity);
 }

@@ -1,6 +1,8 @@
 package co.xarx.trix.persistence;
 
 
+import co.xarx.trix.domain.MultiTenantEntity;
+import co.xarx.trix.persistence.custom.MultiTenantRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -10,11 +12,13 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.io.Serializable;
 import java.util.List;
 
 @NoRepositoryBean
 @RepositoryRestResource(exported = false)
-public interface DatabaseRepository<T> extends JpaRepository<T, Integer>, QueryDslPredicateExecutor<T> {
+public interface DatabaseRepository<T extends MultiTenantEntity, K extends Serializable> extends JpaRepository<T, K>,
+		QueryDslPredicateExecutor<T>, MultiTenantRepository<T, K> {
 
 	@Override
 	@RestResource(exported = false)
@@ -26,11 +30,11 @@ public interface DatabaseRepository<T> extends JpaRepository<T, Integer>, QueryD
 
 	@Override
 	@RestResource(exported = false)
-	T findOne(Integer id);
+	T findOne(K id);
 
 	@Override
 	@RestResource(exported = false)
-	boolean exists(Integer id);
+	boolean exists(K id);
 
 	@Override
 	@RestResource(exported = false)
@@ -38,7 +42,7 @@ public interface DatabaseRepository<T> extends JpaRepository<T, Integer>, QueryD
 
 	@Override
 	@RestResource(exported = false)
-	List<T> findAll(Iterable<Integer> ids);
+	List<T> findAll(Iterable<K> ids);
 
 	@Override
 	@RestResource(exported = false)
@@ -46,7 +50,7 @@ public interface DatabaseRepository<T> extends JpaRepository<T, Integer>, QueryD
 
 	@Override
 	@RestResource(exported = false)
-	void delete(Integer id);
+	void delete(K id);
 
 	@Override
 	@RestResource(exported = false)
@@ -78,7 +82,7 @@ public interface DatabaseRepository<T> extends JpaRepository<T, Integer>, QueryD
 
 	@Override
 	@RestResource(exported = false)
-	T getOne(Integer integer);
+	T getOne(K integer);
 
 	@Override
 	@RestResource(exported = false)

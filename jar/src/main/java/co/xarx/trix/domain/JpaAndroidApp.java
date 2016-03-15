@@ -13,16 +13,9 @@ import javax.validation.constraints.NotNull;
 @SdkExclude
 @Entity
 @Table(name="androidapp", uniqueConstraints = @UniqueConstraint(columnNames = "tenantId"))
-public class DBAndroidApp extends BaseEntity implements AndroidApp {
+public class JpaAndroidApp extends BaseEntity implements AndroidApp {
 
 	private static final long serialVersionUID = 6858234763575719281L;
-
-	public static final Integer MDPI_SIZE = 48;
-	public static final Integer HDPI_SIZE = 72;
-	public static final Integer XHDPI_SIZE = 96;
-	public static final Integer XXHDPI_SIZE = 144;
-	public static final Integer XXXHDPI_SIZE = 192;
-	public static final Integer ORIGINAL_SIZE = 512;
 
 	private String projectName;
 	private String appName;

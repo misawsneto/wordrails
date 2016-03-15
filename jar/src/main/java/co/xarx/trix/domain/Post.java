@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -92,6 +93,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
 
+	@RestResource(exported = false)
 	@OneToMany
 	@JoinTable(
 			name="post_video",

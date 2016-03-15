@@ -1,6 +1,7 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkExclude;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,6 +39,7 @@ public class UserGrantedAuthority extends BaseEntity implements GrantedAuthority
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
+	@JsonIgnore
 	@ManyToOne
 	public User user;
 

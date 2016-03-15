@@ -32,6 +32,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -138,5 +139,10 @@ public class GlobalSecurityConfig extends GlobalMethodSecurityConfiguration {
 			e.printStackTrace();
 		}
 		return expressionHandler;
+	}
+
+	@Bean
+	public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
+		return new SecurityEvaluationContextExtension();
 	}
 }

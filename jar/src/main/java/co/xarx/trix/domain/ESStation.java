@@ -1,6 +1,5 @@
-package co.xarx.trix.elasticsearch.domain;
+package co.xarx.trix.domain;
 
-import co.xarx.trix.domain.ElasticSearchEntity;
 import co.xarx.trix.util.Constants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;

@@ -58,5 +58,7 @@ public class NetworkDomainFilter implements Filter {
 		response.setDateHeader("Expires", 0);
 
 		chain.doFilter(req, res);
+
+		TenantContextHolder.setCurrentTenantId("dull");
 	}
 }

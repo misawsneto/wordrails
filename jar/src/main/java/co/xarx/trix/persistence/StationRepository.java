@@ -13,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 @RepositoryRestResource(exported = true)
-public interface StationRepository extends DatabaseRepository<Station> {
+public interface StationRepository extends DatabaseRepository<Station, Integer> {
 
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -30,7 +30,7 @@ public interface StationRepository extends DatabaseRepository<Station> {
 
 	@RestResource(exported = false)
 	@Cacheable(value = "stationsIds", key = "#p0")
-	@Query("select id from Station station where tenantId = :tenantId")
+	@Query("select station.id from Station station where station.tenantId = :tenantId")
 	List<Integer> findIds(@Param("tenantId") String tenantId);
 
 	@RestResource(exported=false)

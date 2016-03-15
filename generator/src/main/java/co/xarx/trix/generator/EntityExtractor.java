@@ -6,17 +6,21 @@ import co.xarx.trix.domain.BaseEntity;
 import co.xarx.trix.generator.domain.AbstractField;
 import co.xarx.trix.generator.domain.JavaField;
 import co.xarx.trix.generator.domain.TrixField;
+import co.xarx.trix.generator.exception.InvalidEntityException;
 import co.xarx.trix.generator.scope.EntityDescription;
 import co.xarx.trix.generator.scope.FieldDescription;
 import co.xarx.trix.generator.scope.QueryDescription;
+import com.google.common.collect.Lists;
 import org.reflections.Reflections;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -28,7 +32,7 @@ public class EntityExtractor {
 	public Map<Class<?>, EntityDescription> extractEntities(Set<Class<?>> entityClasses,
 															Map<Class<?>, List<QueryDescription>> entityQueries,
 															Map<Class<?>, Class<?>> entityRepositories,
-															Map<Class<?>, EntityDescription> projections) {
+															Map<Class<?>, EntityDescription> projections) throws InvalidEntityException {
 		Map<Class<?>, EntityDescription> result = new HashMap<>();
 
 		for (Class<?> entityClass : entityClasses) {
@@ -37,6 +41,9 @@ public class EntityExtractor {
 				EntityDescription entity = getEntityDescription(entityClass, repositoryClass,
 						entityQueries.get(entityClass), projections.get(entityClass));
 				List<AbstractField> fields = getFieldsFromEntity(entityClass);
+
+				if(fields.size() == 0)
+					throw new InvalidEntityException("Entity " + entityClass.getSimpleName() + " has no fields");
 
 				for (AbstractField field : fields) {
 					FieldDescription fd = new FieldDescription();
@@ -147,10 +154,9 @@ public class EntityExtractor {
 				if (pd.getReadMethod() != null) {
 					try {
 						Field f = entityClass.getDeclaredField(pd.getName());
+						boolean shouldInclude = shouldIncludeField(f);
 
-						if (!Modifier.isStatic(f.getModifiers())
-								&& !f.isAnnotationPresent(Transient.class)
-								&& !f.isAnnotationPresent(SdkExclude.class)) {
+						if (shouldInclude) {
 							JavaField jf = new JavaField(f);
 							fields.add(jf);
 						}
@@ -167,6 +173,23 @@ public class EntityExtractor {
 			e.printStackTrace();
 		}
 		return fields;
+	}
+
+	public boolean shouldIncludeField(Field f) {
+		if(Modifier.isStatic(f.getModifiers()))
+			return false;
+
+		List<Annotation> annotations = Lists.newArrayList(f.getAnnotations());
+		for (Annotation annotation : annotations) {
+			if (annotation.annotationType().equals(Transient.class)
+					|| annotation.annotationType().equals(SdkExclude.class)) {
+				return false;
+			} else if (annotation.annotationType().equals(RestResource.class)) {
+				boolean isExported = ((RestResource) annotation).exported();
+				return isExported;
+			}
+		}
+		return true;
 	}
 
 	public Set<Class<?>> getEntityClasses(String packageToScan) {

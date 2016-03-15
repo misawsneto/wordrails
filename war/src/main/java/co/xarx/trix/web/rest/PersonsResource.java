@@ -33,6 +33,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -347,6 +348,7 @@ public class PersonsResource {
 	}
 
 	@PUT
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/deleteMany/network")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
@@ -390,6 +392,7 @@ public class PersonsResource {
 	}
 
 	@PUT
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/{personId}/disable")
 	public Response disablePerson(@PathParam("personId") Integer personId){
 		Person self = authProvider.getLoggedPerson();
@@ -402,6 +405,7 @@ public class PersonsResource {
 	}
 
 	@PUT
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/{personId}/enable")
 	public Response enablePerson(@PathParam("personId") Integer personId){
 		Person self = authProvider.getLoggedPerson();
@@ -414,6 +418,7 @@ public class PersonsResource {
 	}
 
 	@PUT
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/updateStationRoles")
 	@Transactional
 	public Response updateStationRoles(StationRolesUpdate stationRolesUpdate){
@@ -471,6 +476,7 @@ public class PersonsResource {
 	}
 
 	@PUT
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/enable/all")
 	public Response enablePerson(IdsList idsList){
 		Person self = authProvider.getLoggedPerson();
@@ -488,6 +494,7 @@ public class PersonsResource {
 	}
 
 	@PUT
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/disable/all")
 	public Response disablePerson(IdsList idsList){
 		Person self = authProvider.getLoggedPerson();
@@ -731,6 +738,7 @@ public class PersonsResource {
 
 	@GET
 	@Path("/me/stats")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException{
 		if(date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");

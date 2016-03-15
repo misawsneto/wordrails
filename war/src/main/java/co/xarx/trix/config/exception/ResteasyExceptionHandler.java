@@ -6,6 +6,7 @@ import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.OperationNotSupportedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import org.apache.log4j.Logger;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,9 +19,9 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 @Component
-public class ExceptionMapperImpl implements ExceptionMapper<Throwable> {
+public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 
-	static Logger log = Logger.getLogger(ExceptionMapperImpl.class.getName());
+	static Logger log = Logger.getLogger(ResteasyExceptionHandler.class.getName());
 
 	@Override
 	public Response toResponse(Throwable throwable) {
@@ -33,6 +34,8 @@ public class ExceptionMapperImpl implements ExceptionMapper<Throwable> {
 
 		if (throwable instanceof EntityNotFoundException) {
 			status = Status.NOT_FOUND;
+		} else if (throwable instanceof AccessDeniedException) {
+				status = Status.FORBIDDEN;
 		} else if (throwable instanceof UnauthorizedException) {
 			status = Status.FORBIDDEN;
 		} else if (throwable instanceof OperationNotSupportedException) {

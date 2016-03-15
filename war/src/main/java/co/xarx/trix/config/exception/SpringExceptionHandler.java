@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ControllerAdvice
-public class ExceptionHandlingControllerAdvice extends ResponseEntityExceptionHandler {
+public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(UnauthorizedException.class)
 	public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException exception) {

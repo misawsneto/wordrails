@@ -5,6 +5,7 @@ import co.xarx.trix.generator.scope.FieldDescription;
 import co.xarx.trix.generator.scope.QueryDescription;
 import co.xarx.trix.persistence.DatabaseRepository;
 import com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -20,6 +21,8 @@ import java.util.*;
 
 public class RepositoryExtractor {
 
+	Logger log = Logger.getLogger(this.getClass().getName());
+
 	private static final String JAVA_LANG = "java.lang.";
 
 	private Map<Class<?>, List<QueryDescription>> repositoryQueries;
@@ -29,8 +32,16 @@ public class RepositoryExtractor {
 		repositoryQueries = new HashMap<>();
 		repositoryEntities = new HashMap<>();
 
-		Set<Class<?>> classes = getRepositoryClasses(repositoryClasses);
-		extractQueriesFromRepositories(classes);
+		Set<Class<?>> classes = excludeIgnoredRepositories(repositoryClasses);
+
+		log.info("Generating SDK for the following repositories:");
+		for (Class<?> aClass : classes) {
+			log.info("\t" + aClass.getSimpleName());
+		}
+
+		for (Class<?> repositoryClass : classes) {
+			repositoryQueries.putAll(getQueriesFromRepository(repositoryClass));
+		}
 	}
 
 	public Map<Class<?>, List<QueryDescription>> getRepositoryQueries() {
@@ -41,31 +52,33 @@ public class RepositoryExtractor {
 		return repositoryEntities;
 	}
 
-	private <T> Set<Class<? extends T>> getRepositoryClasses(Set<Class<? extends T>> classes) {
-		Set<Class<? extends T>> classes2 = new HashSet(classes);
-		for (Class<? extends T> c : classes) {
-			List<Annotation> annotations = Lists.newArrayList(c.getAnnotations());
-			for (Annotation annotation : annotations) {
-				if (annotation.annotationType().equals(NoRepositoryBean.class)) {
-					classes2.remove(c);
-				} else if (annotation.annotationType().equals(RepositoryRestResource.class)
-						&& !((RepositoryRestResource) annotation).exported()) {
-					classes2.remove(c);
-				}
-			}
-		}
+	private Set<Class> excludeIgnoredRepositories(Set<Class> classes) {
+		Set<Class> classes2 = new HashSet(classes);
+		classes.stream().filter(this::isIgnored).forEach(classes2::remove);
 		classes = classes2;
 		return classes;
 	}
 
-	private void extractQueriesFromRepositories(Set<Class<?>> classes) {
-		for (Class<?> repositoryClass : classes) {
-			RepositoryRestResource repositoryResource = repositoryClass.getAnnotation(RepositoryRestResource.class);
-			SdkExclude repositoryIgnore = repositoryClass.getAnnotation(SdkExclude.class);
-			if (repositoryIgnore == null && (repositoryResource == null || repositoryResource.exported())) {
-				repositoryQueries.putAll(getQueriesFromRepository(repositoryClass));
+	public boolean isIgnored(Class c) {
+		boolean isIgnored = false;
+
+		List<Annotation> annotations = Lists.newArrayList(c.getAnnotations());
+		for (Annotation annotation : annotations) {
+			if (annotation.annotationType().equals(NoRepositoryBean.class)) {
+				return true;
+			} else if (annotation.annotationType().equals(RepositoryRestResource.class)) {
+				boolean isNotExported = !((RepositoryRestResource) annotation).exported();
+				return isNotExported;
 			}
 		}
+
+		Class[] interfaces = c.getInterfaces();
+		for (Class anInterface : interfaces) {
+			if(isIgnored(anInterface))
+				return true;
+		}
+
+		return isIgnored;
 	}
 
 	private Map<Class<?>, List<QueryDescription>> getQueriesFromRepository(Class<?> repositoryClass) {

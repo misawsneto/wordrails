@@ -3,20 +3,28 @@ package co.xarx.trix.persistence;
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
-import co.xarx.trix.persistence.custom.CustomPostRepository;
+import co.xarx.trix.persistence.custom.PostRepositoryCustom;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
 @RepositoryRestResource(exported = true)
-public interface PostRepository extends JpaRepository<Post, Integer>, CustomPostRepository {
+public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post, Integer>,
+		QueryDslPredicateExecutor<Post> {
 
 	@PostAuthorize("hasPermission(returnObject, 'read') or returnObject==null")
 	@Query("SELECT post FROM Post post where post.slug = :slug and post is not null")
@@ -24,29 +32,35 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 
 	@Override
 	@SdkExclude
+	@CacheEvict(value = "postsIds")
 	@RestResource(exported = false)
 	void delete(Post entity);
 
 	@Override
-	@SdkExclude
 	@RestResource(exported = true)
-	Post findOne(Integer id);
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'read')")
+	Post findOne(@P("id") Integer id);
+
+	@Override
+	@RestResource(exported = true)
+	@PostFilter("hasPermission(filterObject, 'read')")
+	List<Post> findAll();
+
+	@Override
+	@RestResource(exported = true)
+	Page<Post> findAll(Pageable pageable);
 
 	@Override
 	@SdkExclude
 	@RestResource(exported = true)
-	List<Post> findAll();
+	@CacheEvict(value = "postsIds")
+	@PreAuthorize("hasPermission(#entity.station, 'write')")
+	Post save(Post entity);
 
-
+	@PostFilter("hasPermission(filterObject, 'read')")
 	@Query("select post from Post post join post.terms t where " +
 			"post.station.id = :stationId and t.id in (:termsIds) and post.state = 'PUBLISHED' group by post order by post.date desc")
 	List<Post> findPostsPublished(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);
-
-	@Query("select post from Post post " +
-			"where post.id in " +
-			"(select p.id from Post p join p.terms t where p.station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)) " +
-			"order by post.date desc")
-	List<Post> findPostsNotPositioned(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, @Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);
 
 	@Deprecated
 	@Query("select pr.post.id from PostRead pr where pr.person.id=:personId")
@@ -56,6 +70,18 @@ public interface PostRepository extends JpaRepository<Post, Integer>, CustomPost
 	List<Post> findPostsOrderByDateDesc(@Param("stationId") Integer stationId, Pageable pageable);
 
 	// ---------------------------------- NOT EXPOSED ----------------------------------
+
+	@RestResource(exported = false)
+	@Query("select post from Post post " +
+			"where post.id in " +
+			"(select p.id from Post p join p.terms t where p.station.id = :stationId and t.id in (:termsIds) and p.id not in (:idsToExclude)) " +
+			"order by post.date desc")
+	List<Post> findPostsNotPositioned(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, @Param("idsToExclude") List<Integer> idsToExclude, Pageable pageable);
+
+	@RestResource(exported = false)
+	@Query("select post.id from Post post where post.tenantId = :tenantId")
+	@Cacheable(value = "postsIds", key = "#p0")
+	List<Integer> findIds(@Param("tenantId") String tenantId);
 
 	@Modifying
 	@RestResource(exported = false)

@@ -1,6 +1,7 @@
 package co.xarx.trix.generator.generator;
 
 import co.xarx.trix.generator.PersistenceUnitDescription;
+import co.xarx.trix.generator.exception.InvalidEntityException;
 import co.xarx.trix.generator.exception.InvalidProjectionException;
 import co.xarx.trix.generator.scope.EntityDescription;
 import org.stringtemplate.v4.ST;
@@ -19,14 +20,14 @@ class ApiGenerator {
 	private PersistenceUnitDescription unit;
 	private STGroupDir templates;
 
-	private ApiGenerator(String directory, String apiPackage, String unitPackage) throws InvalidProjectionException {
+	private ApiGenerator(String directory, String apiPackage, String unitPackage) throws InvalidProjectionException, InvalidEntityException {
 		this.directory = new File(directory);
 		this.apiPackage = apiPackage;
 		this.unit = new PersistenceUnitDescription(unitPackage);
 		this.templates = new STGroupDir("co/xarx/trix/generator/java/api", ENCODING, '$', '$');
 	}
 
-	public static void main(String[] args) throws IOException, InvalidProjectionException {
+	public static void main(String[] args) throws IOException, InvalidProjectionException, InvalidEntityException {
 		ApiGenerator generator = new ApiGenerator(args[0] + "/co/xarx/trix/api", "co.xarx.trix.api", "co.xarx.trix");
 		generator.generate();
 	}

@@ -1,8 +1,8 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.domain.DBAndroidApp;
-import co.xarx.trix.persistence.DBAndroidAppRepository;
+import co.xarx.trix.domain.JpaAndroidApp;
+import co.xarx.trix.persistence.JpaAndroidAppRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.AndroidBuilderService;
 import co.xarx.trix.services.AsyncService;
@@ -21,7 +21,7 @@ import java.io.File;
 public class BuilderResource {
 
 	@Autowired
-	private DBAndroidAppRepository dbAndroidAppRepository;
+	private JpaAndroidAppRepository jpaAndroidAppRepository;
 	@Autowired
 	private AsyncService asyncService;
 	@Autowired
@@ -32,7 +32,7 @@ public class BuilderResource {
 	@GET
 	@Path("/generateApk")
 	public Response getApk(@Context HttpServletRequest request) {
-		DBAndroidApp androidApp = dbAndroidAppRepository.findAll().get(0);
+		JpaAndroidApp androidApp = jpaAndroidAppRepository.findAll().get(0);
 
 		asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> {
 			try {
@@ -40,7 +40,7 @@ public class BuilderResource {
 				String hash = amazonCloudService.uploadAPK(apk, apk.length(), "application/vnd.android.package-archive", false);
 				String fileUrl = amazonCloudService.getPublicApkURL(hash);
 				androidApp.setApkUrl(fileUrl);
-				dbAndroidAppRepository.save(androidApp);
+				jpaAndroidAppRepository.save(androidApp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

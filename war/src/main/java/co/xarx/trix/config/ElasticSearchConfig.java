@@ -2,6 +2,7 @@ package co.xarx.trix.config;
 
 import co.xarx.trix.domain.page.query.ExecutorFactory;
 import co.xarx.trix.elasticsearch.ESRepositoryFactoryBean;
+import co.xarx.trix.persistence.ESRepository;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
@@ -18,7 +19,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 
 @Configuration
 @EnableElasticsearchRepositories(
-		basePackages = "co.xarx.trix.elasticsearch",
+		basePackageClasses = {ESRepository.class},
 		repositoryFactoryBeanClass = ESRepositoryFactoryBean.class
 )
 public class ElasticSearchConfig {

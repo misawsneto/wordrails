@@ -1,7 +1,6 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
@@ -20,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,6 +107,7 @@ public class PostsResource {
 	@Path("/{postId}/getPostViewById")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
+	@PostAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
 	public PostView getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findOne(postId);
 		PostView postView = null;
@@ -250,8 +251,7 @@ public class PostsResource {
 		Post post = postRepository.findOne(postId);
 
 		String requestedSessionId = request.getRequestedSessionId();
-		asyncService.run(TenantContextHolder.getCurrentTenantId(), () ->
-				postService.countPostRead(post.id, person.id, requestedSessionId));
+		postService.countPostRead(post.id, person.id, requestedSessionId);
 
 		StringResponse content = new StringResponse();
 		content.response = body;
