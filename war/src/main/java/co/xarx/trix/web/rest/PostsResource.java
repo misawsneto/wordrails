@@ -270,14 +270,23 @@ public class PostsResource {
 	@GET
 	@Path("/search/findPostsByTags")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tags") String tagsString, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-		if (tagsString == null || !tagsString.isEmpty()) {
-			// TODO-ALL: throw badrequest
+	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tags") String tagsString,
+																	  @QueryParam("stationId") Integer stationId,
+																	  @QueryParam("page") int page,
+																	  @QueryParam("size") int size) throws ServletException, IOException {
+		if (tagsString == null || tagsString.isEmpty()) {
+			throw new BadRequestException("Tags list is empty or null");
 		}
 
 		Set<String> tags = new HashSet<String>(Arrays.asList(tagsString.split(",")));
 
-		List<Post> posts = queryPersistence.findPostsByTag(tags, stationId, page, size);
+		List<Post> posts;
+
+		if(stationId == null){
+			posts = queryPersistence.findPostsByTag(tags, page, size);
+		} else {
+			posts = queryPersistence.findPostsByTagAndStationId(tags, stationId, page, size);
+		}
 
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
