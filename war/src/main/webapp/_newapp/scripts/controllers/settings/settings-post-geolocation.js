@@ -1,4 +1,4 @@
-app.controller('GeoLocationController', ['$scope', 'leafletData', '$log', '$timeout', function ($scope, leafletData, $log, $timeout) {
+app.controller('GeoLocationCtrl', ['$scope', 'leafletData', '$log', '$timeout', function ($scope, leafletData, $log, $timeout) {
 
     // --- define current lat/long
     $scope.pos = null;
@@ -63,14 +63,29 @@ app.controller('GeoLocationController', ['$scope', 'leafletData', '$log', '$time
         controls: {
         	draw: {
               draw: {
-                polygon: true,
+                position: 'topleft',
+                polygon: {
+                  shapeOptions: {
+                    color: "#555555"
+                  }
+                },
                 polyline: false,
                 rectangle: false,
-                circle: true,
+                circle: {
+                  shapeOptions: {
+                    color: "#555555"
+                  }
+                },
                 marker: false
               },
       	     edit: {
-    				  featureGroup: drawnItems
+    				  featureGroup: drawnItems,
+              edit: {   // this property shouldn't be needed
+                selectedPathOptions: {
+                  color: "#555555",
+                  fillColor: '#555555'
+                }
+              }
     				}
     			}
         }
@@ -80,6 +95,10 @@ app.controller('GeoLocationController', ['$scope', 'leafletData', '$log', '$time
     leafletData.getMap().then(function (map) {
 
         var drawnItems = $scope.controls.draw.edit.featureGroup;
+
+        $scope.map = map;
+        $scope.drawnItems = drawnItems;
+
         drawnItems.addTo(map);
 /*        
         // Init the map with the saved elements
@@ -90,6 +109,9 @@ app.controller('GeoLocationController', ['$scope', 'leafletData', '$log', '$time
 */
         map.on('draw:created', function (e) {
             var layer = e.layer;
+            if($scope.app.network.primaryColors)
+              layer.options.color = $scope.app.rgb2hex($scope.app.network.primaryColors['300'].value)
+
             drawnItems.addLayer(layer);
 
             $scope.savedItems.push({
@@ -121,4 +143,9 @@ app.controller('GeoLocationController', ['$scope', 'leafletData', '$log', '$time
             });
         });
     });
+
+    geoLocationCtrl = $scope;
 }])
+
+
+var geoLocationCtrl = null;

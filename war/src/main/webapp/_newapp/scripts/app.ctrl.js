@@ -81,14 +81,17 @@ angular.module('app')
       }
 
       //Function to convert hex format to a rgb color
-      function rgb2hex(rgb) {
+      var rgb2hex = function (rgb) {
         return "#" + hex(rgb[0]) + hex(rgb[1]) + hex(rgb[2]);
       }
 
-      function hex(x) {
+      var hex = function (x) {
         var hexDigits = new Array("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
         return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
       }
+
+      $scope.app.rgb2hex = rgb2hex;
+      $scope.app.hex = rgb2hex;
 
       $rootScope.$on('$stateChangeSuccess', openPage);
 

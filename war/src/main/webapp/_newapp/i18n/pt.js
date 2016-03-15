@@ -49,7 +49,7 @@
 		"PUBLISH": "Publicar",
 		"SAVE_DRAFT": "Salvar rascunho",
 		"SAVE_AS_DRAFT": "Salvar como rascunho",
-		"SAVE": "Savar",
+		"SAVE": "Salvar",
 		"TITLE": "Título",
 		"ENTER_TAG": "Insira uma tag",
 		"GEO_NOTIFICATION": "Geonotificação",
