@@ -84,6 +84,8 @@ public class PostView implements Serializable, Identifiable {
 	public Date scheduledDate;
 	public boolean notify;
 
+	public ImageView featuredImage;
+
 	@Override
 	public Serializable getId() {
 		return postId;

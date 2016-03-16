@@ -10,8 +10,11 @@
 	
 	<!-- publish -->
 	<div uib-dropdown class="inline pull-right" auto-close="disabled" is-open="postPublishMenuOpen">
-		<md-button uib-dropdown-toggle class="pull-right font-bold visible-sm visible-md visible-lg" translate="titles.PUBLISH">
+		<md-button ng-if="!app.checkState() || app.checkState() > 1" uib-dropdown-toggle class="pull-right font-bold visible-sm visible-md visible-lg" translate="titles.PUBLISH">
 			Publicar
+		</md-button>
+		<md-button ng-if="app.checkState() === 1" uib-dropdown-toggle class="pull-right font-bold visible-sm visible-md visible-lg" translate="actions.UPDATE">
+			Atualizar
 		</md-button>
 		<md-button uib-dropdown-toggle class="pull-right md-icon-button visible-xs" style="margin: 5px 0 0 0;">
 			<i class="mdi mdi2-send i-20"></i>
@@ -25,9 +28,9 @@
 	      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base">
 	      	{{'settings.post.menu.PUBLICATION_MSG' | translate}}
 	      </div>
-	      <md-button class="font-bold no-margin m-b-sm" translate="titles.SAVE_AS_DRAFT">
+	      <md-button ng-if="app.checkState() !== 2" class="font-bold no-margin m-b-sm" translate="titles.SAVE_AS_DRAFT">
 				</md-button>
-				<md-divider class="m-b-sm"></md-divider>
+				<md-divider ng-if="app.checkState() !== 2" class="m-b-sm"></md-divider>
 				<div class="block p-l-xs" ng-if="app.editingPost">
 					<span translate="titles.POST_STATE" class="inline"></span>: <span class="font-500 text-u-c">{{app.getStateText();}}</span>
 				</div>
@@ -36,7 +39,11 @@
 	      	{{'settings.post.menu.AUTO_SAVE_MSG' | translate}}
 	      </div>
 	      <md-divider class="m-b-sm"></md-divider>
-        <md-button class="pull-right font-bold no-margin" translate="titles.PUBLISH">
+        <md-button ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin" translate="titles.PUBLISH">
+				</md-button>
+				<md-button ng-if="!app.checkState() || app.checkState() > 1" class="pull-right font-bold no-margin" translate="actions.SAVE_CHANGES">
+				</md-button>
+				<md-button ng-if="app.checkState() === 1" class="pull-right font-bold no-margin" translate="actions.UPDATE">
 				</md-button>
       </md-content>
 	  </div>
@@ -238,7 +245,7 @@
             <div class="cell-inner"><!-- cell -->
 							
 							<img id="img-stub" ng-src="{{postFeaturedImage}}" ng-if="postFeaturedImage" class="z-index-n-1 pos-fix" style="opacity: 0">
-							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md" ng-if="postFeaturedImage"  ng-class="{'w-full h-400': landscape, 'block-800 h-300 m-t': !landscape}"
+							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md" ng-if="postFeaturedImage"  ng-class="{'w-full h-400': landscape, 'block-800 h-300 m-t': !landscape}"
 							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
 								<md-fab-speed-dial md-open="openImageOptions" md-direction="up" class="md-scale pull-right p-t p-r p-b pos-abt bottom-0 right-0">
 								  <md-fab-trigger>
@@ -396,6 +403,23 @@
                       </md-checkbox>
                     </div>
                   </md-content>
+                </md-tab>
+                <md-tab label="{{'settings.post.REVISIONS' | translate}}">
+                	<md-list-item class="md-2-line" ng-repeat="revision in revisions">
+					          <!-- <i class="mdi mdi2-phone i-20"></i> -->
+					          <img ng-src="{{phone.options.face}}?25" class="md-avatar"/>
+					          <div class="md-list-item-text" >
+					            <h3> {{ revision.date | fromNow3}} </h3>
+					            <!-- <p> {{revision.author.name}} </p> -->
+					          </div>
+					          <md-button class="md-secondary md-icon-button" aria-label="call">
+					          	<md-tooltip md-direction="bottom">
+												{{'settings.post.SHOW_VERSION' | translate}}
+					          	</md-tooltip>
+					            <i class="mdi mdi2-backup-restore i-20"></i>
+					          </md-button>
+					          <md-divider></md-divider>
+					        </md-list-item>
                 </md-tab>
               </md-tabs>
 

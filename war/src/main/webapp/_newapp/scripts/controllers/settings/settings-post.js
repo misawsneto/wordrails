@@ -300,10 +300,8 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	uploader.onSuccessItem = function(fileItem, response, status, headers) {
 		if(response.filelink){
-			$scope.uploadedImage = response;
-			var hash = $scope.uploadedImage.hash
-			setPostFeaturedImage(hash)
-			// $scope.checkLandscape();
+			$scope.featuredImage = $scope.uploadedImage = response;
+			setPostFeaturedImage($scope.uploadedImage.hash)
 			$mdToast.hide();
 		}
 	};
@@ -353,6 +351,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$scope.removeFeaturedImage = function(){
+		$scope.featureImage = null;
 		$scope.postFeaturedImage = null;
 	}
 
@@ -475,7 +474,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	// --- /auto save
 
 	// --- geolocation
-
 	$scope.showGeoNotificationDialog = function(event){
 		// show term alert
 		
@@ -495,6 +493,36 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 	// --- /geolocation
 
+	// --- save post as published
+	$scope.savePostAsPublished = function(){
+
+	}
+	// --- /save post as published
+
+	// --- save post as draft
+	$scope.savePostAsDraft = function(){
+		
+	}
+	// --- save post as draft
+
+	// --- save post as scheduled
+	$scope.savePostAsScheduled = function(){
+		
+	}
+	// --- /save post as scheduled
+
+	// --- save post as trash
+	$scope.savePostAsTrash = function(){
+		
+	}
+	// --- /save post as trash
+
+	// --- save post as trash
+	$scope.saveVersion = function(){
+		
+	}
+	// --- /save post as trash
+
 	// --- resize zoom class workaround
 	
 	$scope.zoomActive = true;
@@ -506,8 +534,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	var mockPostLoad = function(){
 		$scope.app.editingPost = createPostStub();
+		$scope.revisions = createVersions();
+
 		var hash = $scope.app.editingPost.featuredImageHash ? $scope.app.editingPost.featuredImageHash : $scope.app.editingPost.featuredImage.originalHash
 		setPostFeaturedImage(hash)
+		$scope.featuredImage = $scope.app.editingPost.featuredImage
 		$scope.landscape = $scope.app.editingPost.imageLandscape;
 		$scope.customizedLink.slug = $scope.app.editingPost.slug;
 	}
@@ -517,7 +548,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$timeout(function(){
-		 test();
+		test();
 	}, 1000);
 
 	settingsPostCtrl = $scope;
@@ -525,13 +556,35 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 var settingsPostCtrl = null;
 
+// --- TEST
 /**
  * Post Stub
  * @return {Post} [mock]
  */
 function createPostStub(){
-	return {"title":"Foi o amor pela Rainha do Sul que tramou El Chapo Guzmán","featuredImageHash":"a1eb4d302ad9413be802d5d0bf119028","imageSmallHash":"44c8067b27a4a6a8d12ffdef6b34f5d8","imageMediumHash":"44c8067b27a4a6a8d12ffdef6b34f5d8","imageLargeHash":"a1eb4d302ad9413be802d5d0bf119028","categories":[{"id":1297,"name":"PODER"}],"tags":["sinaloa","el chapo","kate del castillo"],"terms":[{"termId":1297,"termName":"PODER","parentId":null,"taxonomyId":140,"imageHash":null,"children":null}],"sponsored":null,"date":1452799663000,"snippet":"Quem vê telenovelas mexicanas sabe que o amor tanto pode ser a salvação como uma perdição. E no caso do mais famoso barão do narcotráfico JoaquinEl Chapo Guzmán, um dos homens mais procurados da América do Norte, a paixão pela actriz Kate del Castillo acabou por revelar-se fatídica: foi a sua obsessão por ela, que o levou a organizar um encontro clandestino em plena selva para que pudessem conhecer-se melhor, que conduziu a polícia até ao seu esconderijo. A vistosa actriz de 43 anos, uma das mais famosas estrelas de cinema e televisão do México , chamou a atenção do","body":"<p>Quem vê telenovelas mexicanas sabe que o amor tanto pode ser a salvação como uma perdição. E no caso do mais famoso barão do narcotráfico Joaquin<em>El Chapo</em> Guzmán, um dos homens mais procurados da América do Norte, a paixão pela actriz Kate del Castillo acabou por revelar-se fatídica: foi a sua obsessão por ela, que o levou a organizar um encontro clandestino em plena selva para que pudessem conhecer-se melhor, que conduziu a polícia até ao seu esconderijo.\n</p><p>A vistosa actriz de 43 anos, uma das mais famosas estrelas de cinema e televisão do México , chamou a atenção do chefe do cartel de Sinaloa por causa de uma polémica mensagem que publicou no Twitter, no início de 2012, quando a guerra do Exército mexicano ao narcotráfico estava ao rubro. Era uma declaração política, mas que <em>El Chapo</em> terá interpretado como uma manifestação de afecto: dizia Kate que confiava mais nele do que no Governo, e como “seria maravilhoso se começasse a traficar com amor”.\n</p><p>Perante o impacto político das suas palavras, Castillo publicou uma série de justificações, incluindo que não estava a falar a sério, ou que a sua ironia e sarcasmo estavam a ser mal entendidas. Mas tomadas no seu todo, as suas declarações no Twitter constituem uma espécie de declaração – que se os perfis psicológicos de Joaquin Guzmán forem minimamente fidedignos, terá sido música para os ouvidos deste homem “sedutor, esplêndido e protector”, que apesar de ignorante e pouco interessado é “astuto e inteligente”, além de “compulsivo e tenaz”, que nunca desiste até conseguir o que quer.\n</p><p>As biografias de Kate também salientam a sua inteligência, a par da sua beleza e capacidade de trabalho. Filha de Éric del Castillo, uma das lendas da chamada época de ouro do cinema mexicano e estrela de telenovelas, Kate entrou para o negócio de família logo aos oito anos de idade. Nunca mais parou desde então, representando no teatro, cinema e também séries televisivas de enorme popularidade e audiência, tanto no México como nos Estados Unidos. Por várias vezes, interpretou o papel de mulheres ambiciosas, poderosas e temidas: na novela <em>A Rainha do Sul</em>, baseada no livro de Arturo Pérez-Reverte; na série <em>Erva</em> e na produção internacional <em>Donos do Paraíso</em> – todas estas protagonistas eram narcotraficantes.\n</p><p><em>El Chapo</em> estava detido na prisão de alta segurança de Altiplano quando iniciou contacto com a actriz. À sua mensagem inicial no Twitter respondeu com flores; depois iniciaram uma correspondência, ora manuscrita, ora por mensagens em código utilizando o telefone móvel do seu advogado, Andrés Granado, que se tornou mediador do diálogo entre os dois. Em Agosto de 2014 surgiu a hipótese de trabalharem juntos na produção de um <em>biopic</em>, alegadamente porque Guzmán lhe confessou o seu desejo de ver a sua história passada ao cinema.\n</p><p>A comunicação intensificou-se após a espectacular fuga da cadeia de El Chapo, em Julho de 2015, sempre usando o mesmo método, até que decidiu prescindir do intermediário: segundo revelam transcrições das mensagens, divulgadas pelo jornal <em>Milénio</em>, o narcotraficante fez chegar a Kate del Castillo o último modelo de telefone lançado pela Blackberry, para poderem falar directamente.\n</p><p>A conversa entre os dois nas mensagens entretanto publicadas é idêntica à de muitos casais apaixonados, sem referência a filmes ou negócios. No último capítulo do seu namoro electrónico, <em>El Chapo</em> já não esconde os seus sentimentos: convida-a para um encontro nas montanhas onde está escondido, e empenha-se para que tudo esteja a gosto da actriz – a proposta é para que passem três dias juntos. “Se trouxeres vinho, também bebo”, promete, informando-a que habitualmente não bebe, mas quando o faz prefere tequila e whisky.\n</p><p>A resposta de Kate é calorosa. Pode ser que nessa altura, como escreve o jornal <em>El País</em>, já tivesse cruzado definitivamente a linha que separa realidade e ficção, transmutando-se na sua personagem da <em>Rainha do Sul</em>, Teresa Mendoza, uma jovem inocente de Sinaloa que depois do assassinato do noivo se torna na líder implacável de um cartel da droga. “Fico muito comovida quando me dizes que vais cuidar de mim, nunca ninguém o fez por isso obrigada”, diz. “Não fazes ideia de como estou entusiasmada. E ansiosa por olhar-te nos olhos, em pessoa”, acrescenta.\n</p>","topper":"DROGAS","state":"PUBLISHED","readsCount":12,"bookmarksCount":0,"recommendsCount":0,"commentsCount":0,"readTime":8,"imageLandscape":true,"authorName":"Demo","authorUsername":"demo","authorId":51,"authorEmail":"demo@demo.com","authorTwitter":null,"authorCover":"2eeb3bc6887ab6a24168e9492b5dbdbf","authorProfilePicture":"bc3c2042f9c3474ccbebd9b8b40533c4","authorCoverMediumHash":"2eeb3bc6887ab6a24168e9492b5dbdbf","authorImageSmallHash":"3a10d25d632ec336bc31bc1e6f17f8e1","authorCoverUrl":null,"authorImageUrl":null,"stationName":"O MUNDO","stationId":11,"stationIdString":null,"slug":"foi-o-amor-pela-rainha-do-sul-que-tramou-el-chapo-guzman-n8r2q8ub","externalFeaturedImgUrl":null,"externalVideoUrl":null,"imageCaptionText":"Vários DVD's da A Rainha do Sul foram encontrados no esconderijo de Guzmán DR","imageCreditsText":null,"imageTitleText":null,"featuredVideoHash":null,"featuredAudioHash":null,"lat":null,"lng":null,"subheading":"Mensagens trocadas entre o perigoso narcotraficante, chefe do cartel Sinaloa, e a actriz mexicana Kate del Castillo, revelam um homem apaixonado.","scheduledDate":null,"notify":false,"id":6017,"postId":6017}
+	return {"title":"Foi o amor pela Rainha do Sul que tramou El Chapo Guzmán","featuredImageHash":"a1eb4d302ad9413be802d5d0bf119028","imageSmallHash":"44c8067b27a4a6a8d12ffdef6b34f5d8","imageMediumHash":"44c8067b27a4a6a8d12ffdef6b34f5d8","imageLargeHash":"a1eb4d302ad9413be802d5d0bf119028","categories":[{"id":1297,"name":"PODER"}],"tags":["sinaloa","el chapo","kate del castillo"],"terms":[{"termId":1297,"termName":"PODER","parentId":null,"taxonomyId":140,"imageHash":null,"children":null}],"sponsored":null,"date":1452799663000,"snippet":"Quem vê telenovelas mexicanas sabe que o amor tanto pode ser a salvação como uma perdição. E no caso do mais famoso barão do narcotráfico JoaquinEl Chapo Guzmán, um dos homens mais procurados da América do Norte, a paixão pela actriz Kate del Castillo acabou por revelar-se fatídica: foi a sua obsessão por ela, que o levou a organizar um encontro clandestino em plena selva para que pudessem conhecer-se melhor, que conduziu a polícia até ao seu esconderijo. A vistosa actriz de 43 anos, uma das mais famosas estrelas de cinema e televisão do México , chamou a atenção do","body":"<p>Quem vê telenovelas mexicanas sabe que o amor tanto pode ser a salvação como uma perdição. E no caso do mais famoso barão do narcotráfico Joaquin<em>El Chapo</em> Guzmán, um dos homens mais procurados da América do Norte, a paixão pela actriz Kate del Castillo acabou por revelar-se fatídica: foi a sua obsessão por ela, que o levou a organizar um encontro clandestino em plena selva para que pudessem conhecer-se melhor, que conduziu a polícia até ao seu esconderijo.\n</p><p>A vistosa actriz de 43 anos, uma das mais famosas estrelas de cinema e televisão do México , chamou a atenção do chefe do cartel de Sinaloa por causa de uma polémica mensagem que publicou no Twitter, no início de 2012, quando a guerra do Exército mexicano ao narcotráfico estava ao rubro. Era uma declaração política, mas que <em>El Chapo</em> terá interpretado como uma manifestação de afecto: dizia Kate que confiava mais nele do que no Governo, e como “seria maravilhoso se começasse a traficar com amor”.\n</p><p>Perante o impacto político das suas palavras, Castillo publicou uma série de justificações, incluindo que não estava a falar a sério, ou que a sua ironia e sarcasmo estavam a ser mal entendidas. Mas tomadas no seu todo, as suas declarações no Twitter constituem uma espécie de declaração – que se os perfis psicológicos de Joaquin Guzmán forem minimamente fidedignos, terá sido música para os ouvidos deste homem “sedutor, esplêndido e protector”, que apesar de ignorante e pouco interessado é “astuto e inteligente”, além de “compulsivo e tenaz”, que nunca desiste até conseguir o que quer.\n</p><p>As biografias de Kate também salientam a sua inteligência, a par da sua beleza e capacidade de trabalho. Filha de Éric del Castillo, uma das lendas da chamada época de ouro do cinema mexicano e estrela de telenovelas, Kate entrou para o negócio de família logo aos oito anos de idade. Nunca mais parou desde então, representando no teatro, cinema e também séries televisivas de enorme popularidade e audiência, tanto no México como nos Estados Unidos. Por várias vezes, interpretou o papel de mulheres ambiciosas, poderosas e temidas: na novela <em>A Rainha do Sul</em>, baseada no livro de Arturo Pérez-Reverte; na série <em>Erva</em> e na produção internacional <em>Donos do Paraíso</em> – todas estas protagonistas eram narcotraficantes.\n</p><p><em>El Chapo</em> estava detido na prisão de alta segurança de Altiplano quando iniciou contacto com a actriz. À sua mensagem inicial no Twitter respondeu com flores; depois iniciaram uma correspondência, ora manuscrita, ora por mensagens em código utilizando o telefone móvel do seu advogado, Andrés Granado, que se tornou mediador do diálogo entre os dois. Em Agosto de 2014 surgiu a hipótese de trabalharem juntos na produção de um <em>biopic</em>, alegadamente porque Guzmán lhe confessou o seu desejo de ver a sua história passada ao cinema.\n</p><p>A comunicação intensificou-se após a espectacular fuga da cadeia de El Chapo, em Julho de 2015, sempre usando o mesmo método, até que decidiu prescindir do intermediário: segundo revelam transcrições das mensagens, divulgadas pelo jornal <em>Milénio</em>, o narcotraficante fez chegar a Kate del Castillo o último modelo de telefone lançado pela Blackberry, para poderem falar directamente.\n</p><p>A conversa entre os dois nas mensagens entretanto publicadas é idêntica à de muitos casais apaixonados, sem referência a filmes ou negócios. No último capítulo do seu namoro electrónico, <em>El Chapo</em> já não esconde os seus sentimentos: convida-a para um encontro nas montanhas onde está escondido, e empenha-se para que tudo esteja a gosto da actriz – a proposta é para que passem três dias juntos. “Se trouxeres vinho, também bebo”, promete, informando-a que habitualmente não bebe, mas quando o faz prefere tequila e whisky.\n</p><p>A resposta de Kate é calorosa. Pode ser que nessa altura, como escreve o jornal <em>El País</em>, já tivesse cruzado definitivamente a linha que separa realidade e ficção, transmutando-se na sua personagem da <em>Rainha do Sul</em>, Teresa Mendoza, uma jovem inocente de Sinaloa que depois do assassinato do noivo se torna na líder implacável de um cartel da droga. “Fico muito comovida quando me dizes que vais cuidar de mim, nunca ninguém o fez por isso obrigada”, diz. “Não fazes ideia de como estou entusiasmada. E ansiosa por olhar-te nos olhos, em pessoa”, acrescenta.\n</p>","topper":"DROGAS","state":"DRAFT","readsCount":12,"bookmarksCount":0,"recommendsCount":0,"commentsCount":0,"readTime":8,"imageLandscape":true,"authorName":"Demo","authorUsername":"demo","authorId":51,"authorEmail":"demo@demo.com","authorTwitter":null,"authorCover":"2eeb3bc6887ab6a24168e9492b5dbdbf","authorProfilePicture":"bc3c2042f9c3474ccbebd9b8b40533c4","authorCoverMediumHash":"2eeb3bc6887ab6a24168e9492b5dbdbf","authorImageSmallHash":"3a10d25d632ec336bc31bc1e6f17f8e1","authorCoverUrl":null,"authorImageUrl":null,"stationName":"O MUNDO","stationId":11,"stationIdString":null,"slug":"foi-o-amor-pela-rainha-do-sul-que-tramou-el-chapo-guzman-n8r2q8ub","externalFeaturedImgUrl":null,"externalVideoUrl":null,"imageCaptionText":"Vários DVD's da A Rainha do Sul foram encontrados no esconderijo de Guzmán DR","imageCreditsText":null,"imageTitleText":null,"featuredVideoHash":null,"featuredAudioHash":null,"lat":null,"lng":null,"subheading":"Mensagens trocadas entre o perigoso narcotraficante, chefe do cartel Sinaloa, e a actriz mexicana Kate del Castillo, revelam um homem apaixonado.","scheduledDate":null,"notify":false,"id":6017,"postId":6017}
 }
+
+function createVersions(){
+	 var revisions = [{
+			"date": 1458079387000,
+			"tag": "",
+			"payload": createPostStub()
+		},
+		{
+			"date": 1458067270000,
+			"tag": "",
+			"payload": createPostStub()
+		},
+		{
+			"date": 1458052152000,
+			"tag": "",
+			"payload": createPostStub()
+		}]
+
+		return revisions;
+}
+// --- /TEST
 
 	var postInfoTemplate = '<md-dialog class="splash-dialog">'+
 		'<div class="pos-fix top-0 right-0 p">'+

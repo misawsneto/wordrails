@@ -1,6 +1,7 @@
 package co.xarx.trix.converter;
 
 import co.xarx.trix.api.Category;
+import co.xarx.trix.api.ImageView;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
 import co.xarx.trix.domain.Post;
@@ -56,6 +57,8 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			postView.imageCaptionText = post.featuredImage.caption;
 			postView.imageCreditsText = post.featuredImage.credits;
 			postView.imageTitleText = post.featuredImage.title;
+			postView.featuredImage = new ImageView();
+			postView.featuredImage.originalHash = post.featuredImage.getOriginalHash();
 		}
 
 		postView.imageLandscape = post.imageLandscape;

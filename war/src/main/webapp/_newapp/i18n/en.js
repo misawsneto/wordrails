@@ -58,6 +58,7 @@
 	"actions":{
 		"ADD": "Add",
 		"CREATE": "Create",
+		"SAVE_CHANGES": "Save changes",
 		"UPDATE": "Update",
 		"REMOVE": "Remove",
 		"EXCLUDE": "Exclude",
@@ -125,6 +126,7 @@
 				"PUBLICATION_MSG": "The content will be published when you click Publish.",
 				"AUTO_SAVE_MSG": "Drafts will be saved automatically every minute once the title, content, station and categories are set. All publication versions can be accessed through the \"Publication options\" menu."
 			},
+			"REVISIONS": "Revisions",
 			"OPTIONS": "Publication options",
 			"CUSTOMIZE_LINK_DESC": "Customized URL address for the web",
 			"SCHEDULED_DATE_DESC": "Schedule date for auto publishing",
@@ -163,7 +165,8 @@
 			"CROP_IMAGE": "Crop image",
 			"CROP_IMAGE_DESC": "Click and drag to create a selection to crop the given image.",
 			"FOCUS_IMAGE_DESC": "Drag the marker to set the focuspoint.",
-			"TOGGLE_LANDSCAPE": "On/off landscape"
+			"TOGGLE_LANDSCAPE": "On/off landscape",
+			"SHOW_VERSION": "Show version"
 		},
 		"SET_COLOR": "Set the color palettes",
 		"COLOR_PALETTE": "Color Palette",

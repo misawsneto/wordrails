@@ -58,6 +58,7 @@
 	"actions":{
 		"ADD": "Adicionar",
 		"CREATE": "Criar",
+		"SAVE_CHANGES": "Salvar alterações",
 		"UPDATE": "Atualizar",
 		"REMOVE": "Remover",
 		"EXCLUDE": "Remover",
@@ -125,6 +126,7 @@
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
 				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada minuto uma vez que o título, conteúdo, estações e categorias sejam inseridos. As versões da publicação pode ser visualizado no meno \"Opções de publicação\"."
 			},
+			"REVISIONS": "Revisões",
 			"OPTIONS": "Opções de publicação",
 			"CUSTOMIZE_LINK_DESC": "Endereço web personalizado para acesso através da web",
 			"SCHEDULED_DATE_DESC": "Agendamento de publicação automática",
@@ -148,7 +150,7 @@
 			"states": {
 				"PUBLISHED": "Publicado",
 				"SCHEDULED": "Agendado",
-				"DRAFT": "Agendamento",
+				"DRAFT": "Rascunho",
 				"Trash": "Lixeira"
 			},
 			"GEO_NOTIFICATION_DESC": "Para limitar a área geográfica de envio de notificações aos dispositivos dos usuários, crie círculos ou polígonos utlizando as ferramentas no canto esquerdo do mapa ao lado.",
@@ -163,7 +165,8 @@
 			"CROP_IMAGE": "Recortar imagem",
 			"CROP_IMAGE_DESC": "Clique e arraste para criar uma seleção e cortar a imagem.",
 			"FOCUS_IMAGE_DESC": "Arraste o marcador para configurar o ponto focal.",
-			"TOGGLE_LANDSCAPE": "Ligar/desligar modo paisagem"
+			"TOGGLE_LANDSCAPE": "Ligar/desligar modo paisagem",
+			"SHOW_VERSION": "Exibir versão"
 		},
 		"SET_COLOR": "Configure as paletas de cores",
 		"COLOR_PALETTE": "Paleta de Cores",
