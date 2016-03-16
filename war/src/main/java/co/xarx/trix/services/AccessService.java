@@ -1,5 +1,6 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.aspect.annotations.AccessGroup;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,15 @@ public class AccessService {
 	public AccessService(@Value("${spring.profiles.active:'dev'}") String profile, TenantProvider tenantProvider) {
 		this.profile = profile;
 		this.tenantProvider = tenantProvider;
+	}
+
+	public boolean hasPermissionOnAccessGroup(AccessGroup accessGroup) throws Throwable {
+		boolean isGrant = accessGroup.inclusion();
+
+		boolean hasPermissionOnTenant = hasPermissionOnProfile(isGrant, accessGroup.tenants());
+		boolean hasPermissionOnProfile = hasPermissionOnProfile(isGrant, accessGroup.profiles());
+
+		return hasPermissionOnProfile || hasPermissionOnTenant;
 	}
 
 	public boolean hasPermissionOnTenant(boolean isGranted, String[] tenants) {

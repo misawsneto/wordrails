@@ -57,22 +57,17 @@ public class MultitenantAspect {
 	public void accessGroup(AccessGroup accessGroup) throws Throwable {
 		Set<String> profiles = Sets.newHashSet(accessGroup.profiles());
 		Set<String> tenants = Sets.newHashSet(accessGroup.tenants());
-		boolean isGrant = accessGroup.inclusion();
 
 		String msg = "Operation not supported for profiles "
 				+ profiles + " and tenants " + tenants;
 
-		if(isGrant)
+		if(accessGroup.inclusion())
 			msg = "Operation supported for profiles "
 					+ profiles + " and tenants " + tenants + " only";
 
-		OperationNotSupportedException e =
-				new OperationNotSupportedException(msg);
-
-		boolean hasPermissionOnTenant = accessService.hasPermissionOnProfile(isGrant, accessGroup.tenants());
-		boolean hasPermissionOnProfile = accessService.hasPermissionOnProfile(isGrant, accessGroup.profiles());
-		if(!hasPermissionOnProfile && !hasPermissionOnTenant)
-			throw e;
+		boolean hasPermissionOnAccessGroup = accessService.hasPermissionOnAccessGroup(accessGroup);
+		if(!hasPermissionOnAccessGroup)
+			throw new OperationNotSupportedException(msg);
 	}
 
 	public <T> List<T> getFields(Class<T> classType, Object obj) throws IllegalAccessException, ClassNotFoundException {
