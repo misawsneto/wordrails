@@ -37,16 +37,19 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	void delete(Post entity);
 
 	@Override
+	@SdkExclude
 	@RestResource(exported = true)
 	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'read')")
 	Post findOne(@P("id") Integer id);
 
 	@Override
+	@SdkExclude
 	@RestResource(exported = true)
 	@PostFilter("hasPermission(filterObject, 'read')")
 	List<Post> findAll();
 
 	@Override
+	@SdkExclude
 	@RestResource(exported = true)
 	Page<Post> findAll(Pageable pageable);
 

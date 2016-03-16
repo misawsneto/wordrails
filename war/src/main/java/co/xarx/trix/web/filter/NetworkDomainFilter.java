@@ -39,7 +39,6 @@ public class NetworkDomainFilter implements Filter {
 		if (host.equals("xarx.co") || host.equals("trix.rocks") || host.equals("xarxlocal.com")) {
 			response.sendRedirect("/home");
 		} else {
-			TenantContextHolder.setCurrentTenantId(null);
 			String tenantId = networkService.getTenantFromHost(host);
 
 			if (tenantId == null) {
@@ -58,7 +57,5 @@ public class NetworkDomainFilter implements Filter {
 		response.setDateHeader("Expires", 0);
 
 		chain.doFilter(req, res);
-
-		TenantContextHolder.setCurrentTenantId("dull");
 	}
 }

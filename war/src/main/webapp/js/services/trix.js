@@ -89,7 +89,7 @@ angular.module('app').service('trixService', function(){
 	 }
 
 	 this.isNetworkAdmin = function(){
-	 	return initData.networkRole ? initData.networkRole.admin : false;
+	 	return initData.isAdmin;
 	 }
 
 	 	/**

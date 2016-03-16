@@ -334,8 +334,8 @@ public class PersonsResource {
 		}
 	}
 
-	@Path("/stats/count")
 	@GET
+	@Path("/stats/count")
 	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q){
 		ContentResponse<Integer> resp = new ContentResponse<>();
 		resp.content = 0;
@@ -348,9 +348,9 @@ public class PersonsResource {
 	}
 
 	@PUT
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/deleteMany/network")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
 		Person person = authProvider.getLoggedPerson();
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
@@ -374,26 +374,9 @@ public class PersonsResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@DELETE
-	@Path("/{personId}")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws IOException {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		Person person = personRepository.findOne(personId);
-
-		if(person != null && person.networkAdmin && person.user.getTenantId().equals(network.getTenantId())){
-			personEventHandler.handleBeforeDelete(person);
-			personRepository.delete(person.id);
-			return Response.status(Status.OK).build();
-		}else{
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
-
-	}
-
 	@PUT
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/{personId}/disable")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response disablePerson(@PathParam("personId") Integer personId){
 		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
@@ -405,8 +388,8 @@ public class PersonsResource {
 	}
 
 	@PUT
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/{personId}/enable")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response enablePerson(@PathParam("personId") Integer personId){
 		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
@@ -418,9 +401,9 @@ public class PersonsResource {
 	}
 
 	@PUT
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@Path("/updateStationRoles")
 	@Transactional
+	@Path("/updateStationRoles")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response updateStationRoles(StationRolesUpdate stationRolesUpdate){
 		Person self = authProvider.getLoggedPerson();
 		if(stationRolesUpdate != null && stationRolesUpdate.personsIds != null && stationRolesUpdate.stationsIds != null){
@@ -476,8 +459,8 @@ public class PersonsResource {
 	}
 
 	@PUT
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/enable/all")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response enablePerson(IdsList idsList){
 		Person self = authProvider.getLoggedPerson();
 		if(idsList != null && idsList.ids != null){
@@ -494,8 +477,8 @@ public class PersonsResource {
 	}
 
 	@PUT
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Path("/disable/all")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response disablePerson(IdsList idsList){
 		Person self = authProvider.getLoggedPerson();
 		if(idsList != null && idsList.ids != null){
@@ -515,6 +498,7 @@ public class PersonsResource {
 	@Path("/deletePersonStationRoles")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Transactional(readOnly = false)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response deletePersonStationRoles(List<Integer> stationRolesIds) throws IOException{
 
 		List<Station> stations = stationRepository.findByStationRolesIds(stationRolesIds);
@@ -594,10 +578,6 @@ public class PersonsResource {
 
 		PersonPermissions personPermissions = new PersonPermissions();
 
-		//Network Permissions
-		NetworkPermission networkPermissionDto = new NetworkPermission();
-
-		networkPermissionDto.admin = person.networkAdmin;
 
 		List<StationDto> stationDtos = new ArrayList<>();
 		List<Station> stations = stationRepository.findByPersonId(person.id);
@@ -607,13 +587,13 @@ public class PersonsResource {
 			stationDtos.add(stationDto);
 		}
 
-		personPermissions.networkPermission = networkPermissionDto;
 		personPermissions.stationPermissions = getStationPermissions(stations, person.id);
 		personPermissions.personId = person.id;
 		personPermissions.username = person.username;
 		personPermissions.personName = person.name;
 
 		PersonData initData = new PersonData();
+		initData.isAdmin = person.networkAdmin;
 
 		if(person.user != null && (person.password == null || person.password.equals(""))){
 			initData.noPassword = true;
@@ -690,40 +670,9 @@ public class PersonsResource {
 		return stationPermissionDtos;
 	}
 
-
-	@GET
-	@Path("/me/bookmarkedRecommended")
-	public ContentResponse<List<BooleanResponse>> checkBookmarkedRecommendedByMe(@QueryParam("postId") Integer postId){
-		Person person = authProvider.getLoggedPerson();
-		List<BooleanResponse> resp = new ArrayList<>();
-
-		if(person.getBookmarkPosts().contains(postId)){
-			BooleanResponse bool = new BooleanResponse();
-			bool.response = true;
-			resp.add(bool);
-		}else{
-			BooleanResponse bool = new BooleanResponse();
-			bool.response = false;
-			resp.add(bool);
-		}
-
-		if(person.getRecommendPosts().contains(postId)){
-			BooleanResponse bool = new BooleanResponse();
-			bool.response = true;
-			resp.add(bool);
-		}else{
-			BooleanResponse bool = new BooleanResponse();
-			bool.response = false;
-			resp.add(bool);
-		}
-
-		ContentResponse<List<BooleanResponse>> response = new ContentResponse<>();
-		response.content = resp;
-		return response;
-	}
-
 	@GET
 	@Path("/me/publicationsCount")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public Response publicationsCount(@QueryParam("personId") Integer personId)throws IOException {
 		Person person = null;
 		if(personId != null){

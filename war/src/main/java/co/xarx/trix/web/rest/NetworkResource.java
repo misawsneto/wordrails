@@ -1,11 +1,10 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.api.NetworkPermission;
+import co.xarx.trix.annotations.IgnoreMultitenancy;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
 import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.annotations.IgnoreMultitenancy;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.dto.NetworkCreateDto;
 import co.xarx.trix.eventhandler.PostEventHandler;
@@ -79,13 +78,10 @@ public class NetworkResource {
 		PersonPermissions personPermissions = new PersonPermissions();
 		Person person = authProvider.getLoggedPerson();
 
-		//Network Permissions
-		NetworkPermission networkPermissionDto = new NetworkPermission();
-		networkPermissionDto.admin = person.networkAdmin;
 
 		//Stations Permissions
 		List<Station> stations = stationRepository.findByPersonId(person.id);
-		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>(stations.size());
+		List<StationPermission> stationPermissionDtos = new ArrayList<>(stations.size());
 		for (Station station : stations) {
 			StationPermission stationPermissionDto = new StationPermission();
 
@@ -114,7 +110,7 @@ public class NetworkResource {
 
 			stationPermissionDtos.add(stationPermissionDto);
 		}
-		personPermissions.networkPermission = networkPermissionDto;
+
 		personPermissions.stationPermissions = stationPermissionDtos;
 		personPermissions.personId = person.id;
 		personPermissions.username = person.username;

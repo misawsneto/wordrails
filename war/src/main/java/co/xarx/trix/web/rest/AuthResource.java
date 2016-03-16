@@ -4,14 +4,15 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AuthCredential;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
-import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.PasswordService;
+import co.xarx.trix.services.auth.AuthService;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.builder.api.GoogleApi;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -31,8 +32,9 @@ public class AuthResource {
 	private PasswordService passwordService;
 
 	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Path("/signin")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@PreAuthorize("isAnonymous()")
 	public Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
@@ -94,6 +96,7 @@ public class AuthResource {
 	@POST
 	@Path("/forgotPassword")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@PreAuthorize("isAnonymous()")
 	public Response resetePassword(@FormParam("email") String email) {
 		passwordService.resetPassword(email);
 		return Response.status(Response.Status.OK).build();
@@ -101,6 +104,7 @@ public class AuthResource {
 
 	@PUT
 	@Path("/{hash}")
+	@PreAuthorize("isAnonymous()")
 	public Response updatePassword(@PathParam("hash") String hash, @FormParam("password") String password) {
 		passwordService.updatePassword(hash, password);
 		return Response.status(Response.Status.OK).build();

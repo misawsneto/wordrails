@@ -1,5 +1,6 @@
 package co.xarx.trix.persistence;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Network;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,5 +28,7 @@ public interface NetworkRepository extends DatabaseRepository<Network, Integer> 
 	List<Object[]> findStats();
 
 	@Override
+	@SdkExclude
+	@RestResource(exported = true)
 	Network save(Network entity);
 }
