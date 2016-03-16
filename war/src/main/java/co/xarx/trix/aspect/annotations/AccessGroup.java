@@ -7,11 +7,11 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface TenantAuthorize {
+public @interface AccessGroup {
 
-	String[] profiles();
+	String[] profiles() default {};
 
-	String[] tenants();
+	String[] tenants() default {};
 
-	boolean isGrant() default true;
+	boolean inclusion() default true;
 }

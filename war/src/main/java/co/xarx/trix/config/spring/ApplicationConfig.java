@@ -1,10 +1,12 @@
 package co.xarx.trix.config.spring;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.PostViewMap;
 import co.xarx.trix.elasticsearch.mapper.StationMap;
 import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.services.TenantProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.Sender;
 import org.modelmapper.ModelMapper;
@@ -40,6 +42,11 @@ public class ApplicationConfig {
 	@Bean
 	public ObjectMapper simpleMapper() {
 		return new ObjectMapper();
+	}
+
+	@Bean
+	public TenantProvider tenantProvider() {
+		return TenantContextHolder::getCurrentTenantId;
 	}
 
 
