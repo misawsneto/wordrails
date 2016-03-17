@@ -74,10 +74,14 @@ public interface PostProjection {
 
     Set<String> getTags();
 
-	// images ------------------
+	// multimedia: images, video, audio ------------------
 	String getImageSmallHash();
 
 	String getImageMediumHash();
 
 	String getImageLargeHash();
+
+	String getFeaturedAudioHash();
+
+	String getFeaturedVideoHash();
 }
