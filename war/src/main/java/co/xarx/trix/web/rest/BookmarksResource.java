@@ -4,10 +4,9 @@ import co.xarx.trix.api.BooleanResponse;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.services.PersonService;
-import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.post.PostSearchService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,14 +21,16 @@ import java.util.List;
 @Component
 public class BookmarksResource {
 
-	@Autowired
 	private PostSearchService postSearchService;
-	@Autowired
 	private PersonService personService;
-	@Autowired
-	private PersonRepository personRepository;
-	@Autowired
 	private AuthService authProvider;
+
+	@Autowired
+	public BookmarksResource(PostSearchService postSearchService, PersonService personService, AuthService authProvider) {
+		this.postSearchService = postSearchService;
+		this.personService = personService;
+		this.authProvider = authProvider;
+	}
 
 	@GET
 	@Path("/searchBookmarks")
@@ -38,7 +39,7 @@ public class BookmarksResource {
 	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q,
 															 @QueryParam("page") Integer page,
 															 @QueryParam("size") Integer size){
-		Person person = personRepository.findByUsername(authProvider.getUser().getUsername());
+		Person person = authProvider.getLoggedPerson();
 
 		Pair<Integer, List<PostView>> postsViews = postSearchService.searchPosts(q, person.getId(),
 				page, size, person.getBookmarkPosts());
@@ -57,7 +58,7 @@ public class BookmarksResource {
 	public BooleanResponse toggleBookmark(@FormParam("postId") Integer postId){
 		BooleanResponse bookmarkInserted = new BooleanResponse();
 
-		Person person = personRepository.findByUsername(authProvider.getUser().getUsername());
+		Person person = authProvider.getLoggedPerson();
 
 		bookmarkInserted.response = personService.toggleBookmark(person, postId);
 

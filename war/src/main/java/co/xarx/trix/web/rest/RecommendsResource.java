@@ -58,7 +58,7 @@ public class RecommendsResource {
 
 		Person person = personRepository.findByUsername(authProvider.getUser().getUsername());
 
-		bookmarkInserted.response = personService.toggleBookmark(person, postId);
+		bookmarkInserted.response = personService.toggleRecommend(person, postId);
 
 		return bookmarkInserted;
 	}

@@ -22,7 +22,7 @@ public interface UserRepository extends DatabaseRepository<User, Integer> {
 	User findUserByUsername(@Param("username") String username);
 
 	@RestResource(exported = false)
-	@Query("select user from User user where user.username = :username")
+	@Query("select user from Person person join person.user as user where person.email = :email")
 	User findUserByEmail(@Param("email") String email);
 
 	@Override
