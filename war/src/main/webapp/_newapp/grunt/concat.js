@@ -95,5 +95,20 @@ module.exports = {
     ],
     // dest:'angular/scripts/app.src.js'
     dest:'scripts/froala.all.js'
+  },
+  masonry: {
+    src:[
+      'libs/angular/jquery-bridget/jquery-bridget.js',
+      'libs/angular/ev-emitter/ev-emitter.js',
+      'libs/angular/desandro-matches-selector/matches-selector.js',
+      'libs/angular/fizzy-ui-utils/utils.js',
+      'libs/angular/get-size/get-size.js',
+      'libs/angular/outlayer/item.js',
+      'libs/angular/outlayer/outlayer.js',
+      'libs/angular/masonry/masonry.js',
+      'libs/angular/imagesloaded/imagesloaded.js',
+      'libs/angular/angular-masonry/angular-masonry.js'
+    ],
+    dest:'scripts/masonry.all.js'
   }
 }

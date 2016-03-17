@@ -147,9 +147,27 @@ angular.module('app')
               })
               .state('app.pagebuilder', {
                 url: '/pagebuilder',
-                templateUrl: '/views/settings/settings-stations-pagebuilder.html',
-                data : { title: 'Page Builder', folded: true }
+                templateUrl: '/views/settings/settings-pagebuilder.html',
+                data : { title: 'Page Builder', folded: true },
+                resolve: load(['wu.masonry'])
               })
+              .state('app.pagebuilder.list', {
+                url: '/list',
+                templateUrl: '/views/settings/settings-pagebuilder-list.html',
+                data : { title: 'Page Builder', folded: true },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-pagebuilder-list.js']),
+                controller: 'PageBuilderListCtrl'
+              })
+              .state('app.pagebuilder.editor', {
+                url: '/editor',
+                templateUrl: '/views/settings/settings-pagebuilder-editor.html',
+                data : { title: 'Page Builder', folded: true },
+              })
+              // .state('app.pagebuilder.stationslist', {
+              //   url: '/stationslist',
+              //   templateUrl: '/views/settings/settings-pagebuilder-stations-list.html',
+              //   data : { title: 'Page Builder', folded: true },
+              // })
               .state('app.analysis', {
                 url: '/analysis',
                 templateUrl: '/views/pages/dashboard.analysis.html',

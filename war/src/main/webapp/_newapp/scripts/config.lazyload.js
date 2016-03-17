@@ -20,6 +20,13 @@ angular.module('app')
           ]
       },
       {
+        name: 'wu.masonry',
+        module: true,
+          files: [
+            '/scripts/masonry.all.js'
+          ]
+      },
+      {
         name: 'ngJcrop',
         module: true,
           files: [

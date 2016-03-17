@@ -170,6 +170,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	public String imageTitleText;
 
 	public String featuredVideoHash;
+
 	public String featuredAudioHash;
 
 	@PrePersist

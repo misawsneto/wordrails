@@ -76,7 +76,10 @@
     "lifely-focuspoint": "focuspoint#^1.0.5",
     "ng-jcrop": "^2.1.2",
     "angular-leaflet-directive": "^0.10.0",
-    "leaflet-draw": "^0.2.3"
+    "leaflet-draw": "^0.2.3",
+    "angular-masonry": "^0.16.0",
+    "fizzy-ui-utils": "^2.0.1",
+    "get-style-property": "^1.0.4"
   },
   "resolutions": {
     "moment": "^2.12.0",

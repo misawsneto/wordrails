@@ -1,0 +1,47 @@
+<div masonry class="pos-rlt animated fadeIn">
+  <div class="col-lg-4 col-sm-6 col-xs-12 masonry-brick" ng-repeat="station in app.stations">
+    <div class="md-list md-whiteframe-z1 md-background-hue-1 background m-b">
+
+      <div class="md-list-item list-group-item b-n text-md font-bold">
+        {{station.name}}
+      </div>
+
+      <li class="md-list-item list-group-item b-n p-sm p-l">
+        <div class="md-list-item-content">
+          {{'titles.PAGES' | translate}}
+        </div>
+      </li>
+      
+      <li ng-if="$index % 2 == 0" class="md-list-item list-group-item b-n p-sm p-l">
+        <div class="md-list-item-content">
+          {{'titles.PERSPECTIVE' | translate}}s
+        </div>
+      </li>
+
+      <li class="md-list-item list-group-item b-n p-sm p-l">
+        <div class="md-list-item-content">
+          {{'titles.CATEGORIES' | translate}}
+        </div>
+      </li>
+
+      <li class="md-list-item list-group-item b-n p-sm p-l">
+        <div class="md-list-item-content">
+          {{'titles.PERMISSIONS' | translate}}
+        </div>
+      </li>
+
+      <li class="md-list-item list-group-item b-n p-sm p-l">
+        <div class="md-list-item-content">
+            {{'titles.CONFIGURATION' | translate}}
+        </div>
+      </li>
+
+      <li class="md-list-item list-group-item b-n p-sm p-l">
+        <div class="md-list-item-content">
+          {{'titles.STATS' | translate}}
+        </div>
+      </li>
+
+    </div>
+  </div>
+</div>

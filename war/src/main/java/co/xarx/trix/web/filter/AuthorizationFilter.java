@@ -868,7 +868,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetPagesAuthorized() {
-		return false;
+		return true;
 	}
 
 	@Override

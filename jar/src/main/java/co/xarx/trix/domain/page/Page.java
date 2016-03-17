@@ -11,16 +11,19 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 
-@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
+@lombok.Getter @lombok.Setter
 @Entity
 @Table(name = "page")
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
 public class Page extends BaseEntity {
 
 	public String title;
+
+	public Page(){}
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -33,7 +36,7 @@ public class Page extends BaseEntity {
 			joinColumns = @JoinColumn(name = "page_id"),
 			inverseJoinColumns = @JoinColumn(name = "section_id"))
 	@MapKeyJoinColumn(name = "list_index")
-	public Map<Integer, AbstractSection> sections;
+	public Map<Integer, AbstractSection> sections = new HashMap<Integer, AbstractSection>();
 
 	@JsonProperty("sections")
 	public Collection<AbstractSection> getSectionList() {

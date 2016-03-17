@@ -44,7 +44,17 @@ module.exports = {
                     'ng-jcrop/**',
                     'angular-leaflet-directive/dist/**',
                     'leaflet/dist/**',
-                    'leaflet-draw/dist/**'
+                    'leaflet-draw/dist/**',
+                      'jquery-bridget/jquery-bridget.js',
+                      'ev-emitter/ev-emitter.js',
+                      'desandro-matches-selector/matches-selector.js',
+                      'fizzy-ui-utils/utils.js',
+                      'get-size/get-size.js',
+                      'outlayer/item.js',
+                      'outlayer/outlayer.js',
+                      'masonry/masonry.js',
+                      'imagesloaded/imagesloaded.js',
+                      'angular-masonry/angular-masonry.js'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

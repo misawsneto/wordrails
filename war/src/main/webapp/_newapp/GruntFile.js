@@ -9,7 +9,7 @@ module.exports = function(grunt) {
     gtx.config(gruntConfig);
 
     // We need our bower components in order to develop
-    gtx.alias('build:webapp', ['recess:less', 'clean:webapp', 'copy:libs', 'concat:froala','concat:leafletcss','concat:leafletjs','concat:froala', /*'copy:webapp'*/, /*'recess:webapp'*/, /*'concat:webapp'*/, /*'uglify:webapp'*/]);
+    gtx.alias('build:webapp', ['recess:less', 'clean:webapp', 'copy:libs', 'concat:froala','concat:leafletcss','concat:leafletjs','concat:masonry', /*'copy:webapp'*/, /*'recess:webapp'*/, /*'concat:webapp'*/, /*'uglify:webapp'*/]);
     gtx.alias('build:html', ['clean:html', 'copy:html', 'recess:html', 'swig:html', 'concat:html', 'uglify:html']);
     gtx.alias('build:landing', ['copy:landing', 'swig:landing']);
 

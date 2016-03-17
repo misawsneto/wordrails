@@ -6583,7 +6583,7 @@ bg-none {
   height: 64px;
 }
 
-.w-xxl {
+.w-xxs {
   width: 60px;
 }
 
@@ -8144,6 +8144,14 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
 
 .md-chip-input-container .md-input {
   z-index: 4!important;
+}
+
+.leaflet-draw-actions a {
+  background-color: #C0C0B8!important;
+}
+
+.leaflet-draw-actions a:hover {
+  background-color: #C0D0C8!important;
 }
 
 /* /settings-post */
