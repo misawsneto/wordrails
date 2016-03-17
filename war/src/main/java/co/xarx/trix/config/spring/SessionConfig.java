@@ -33,6 +33,12 @@ public class SessionConfig extends CachingConfigurerSupport {
 
 	@Value("${trix.auth.header:'x-auth-trix-token'}")
 	private String trixAuthHeader;
+	@Value("${spring.redis.host}")
+	private String redisHost;
+	@Value("${spring.redis.port}")
+	private int redisPort;
+	@Value("${spring.redis.password:}")
+	private String redisPassword;
 
 	public RedisTemplate redisTemplate() {
 		RedisTemplate redisTemplate = new RedisTemplate();
@@ -77,10 +83,11 @@ public class SessionConfig extends CachingConfigurerSupport {
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
 		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-		jedisConnectionFactory.setHostName("meminstance1");
-		jedisConnectionFactory.setPort(6379);
-		jedisConnectionFactory.setPassword("108dbd3786884ddc94ec2669e948273b09828ec44FFd55a6cdd3b007c" +
-				"c018a16e93cb1Fc68060a9c7095324056d1bF9b08Fdd1b78c1c96351ceb129e6e959357");
+		jedisConnectionFactory.setHostName(redisHost);
+		jedisConnectionFactory.setPort(redisPort);
+		if (redisPassword != null && !redisPassword.isEmpty()) {
+			jedisConnectionFactory.setPassword(redisPassword);
+		}
 		return jedisConnectionFactory;
 	}
 
