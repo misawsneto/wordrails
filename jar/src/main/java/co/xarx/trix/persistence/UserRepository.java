@@ -21,6 +21,10 @@ public interface UserRepository extends DatabaseRepository<User, Integer> {
 	@Query("select user from User user where user.username = :username")
 	User findUserByUsername(@Param("username") String username);
 
+	@RestResource(exported = false)
+	@Query("select user from User user where user.username = :username")
+	User findUserByEmail(@Param("email") String email);
+
 	@Override
 	@SdkExclude
 	@CacheEvict(value = "user", key = "#p0.username")

@@ -24,12 +24,16 @@ import java.io.IOException;
 @Component
 public class AuthResource {
 
-	@Autowired
 	private NetworkRepository networkRepository;
-	@Autowired
 	private AuthService authProvider;
-	@Autowired
 	private PasswordService passwordService;
+
+	@Autowired
+	public AuthResource(NetworkRepository networkRepository, AuthService authProvider, PasswordService passwordService) {
+		this.networkRepository = networkRepository;
+		this.authProvider = authProvider;
+		this.passwordService = passwordService;
+	}
 
 	@POST
 	@Path("/signin")
@@ -97,7 +101,7 @@ public class AuthResource {
 	@Path("/forgotPassword")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@PreAuthorize("isAnonymous()")
-	public Response resetePassword(@FormParam("email") String email) {
+	public Response resetPassword(@FormParam("email") String email) {
 		passwordService.resetPassword(email);
 		return Response.status(Response.Status.OK).build();
 	}
