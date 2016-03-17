@@ -1,3 +1,8 @@
+var SettingsStationsCtrl = null;
+var SettingsStationsConfigCtrl = null
+var SettingsStationsCategoriesCtrl = null;
+var SettingsStationsUsersCtrl = null;
+
 app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 		$scope.app.lastSettingState = "app.settings.stations";
@@ -25,6 +30,8 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			})
 		}
+
+    SettingsStationsCtrl = $scope;
 	}])
 
 app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
@@ -113,6 +120,8 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
           );
         }
       };
+
+      SettingsStationsConfigCtrl = $scope;
 
 	}])
 
@@ -243,6 +252,8 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
     trix.getTermTree(null, $scope.thisStation.categoriesTaxonomyId).success(function(response){
       $scope.termTree = response;
     });
+
+    SettingsStationsCategoriesCtrl = $scope;
 
   }])
 
@@ -608,4 +619,5 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 
 		// $scope.changePersonStation
 
+  SettingsStationsUsersCtrl = $scope;
 	}]);
