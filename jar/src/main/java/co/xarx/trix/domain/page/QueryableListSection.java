@@ -17,7 +17,7 @@ import java.util.Map;
 @Entity
 @lombok.Getter
 @lombok.Setter
-@lombok.NoArgsConstructor(access = AccessLevel.PROTECTED)
+@lombok.NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "sectionqueryablelist")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class QueryableListSection extends AbstractSection implements ListSection, QueryableSection {
@@ -61,6 +61,8 @@ public class QueryableListSection extends AbstractSection implements ListSection
 
 	@NotNull
 	public Integer size;
+
+	public Integer mSize;
 
 	@Override
 	public String getType() {

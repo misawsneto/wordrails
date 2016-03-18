@@ -20,8 +20,14 @@ import lombok.Setter;
 @Table(name = "section")
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
-@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-@JsonSubTypes({ @JsonSubTypes.Type(value = QueryableListSection.class, name = "qlist"), @JsonSubTypes.Type(value = ContainerSection.class, name = "container") })
+@JsonTypeInfo(
+		use = JsonTypeInfo.Id.CLASS,
+		include = JsonTypeInfo.As.PROPERTY,
+		property = "sectionType")
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = QueryableListSection.class, name = "QueryableListSection"),
+		@JsonSubTypes.Type(value = ContainerSection.class, name = "ContainerSection")
+})
 public abstract class AbstractSection extends BaseEntity implements Section, Serializable {
 
 	private static final long serialVersionUID = 3219789942521409531L;
