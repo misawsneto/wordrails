@@ -39,8 +39,7 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@Override
 	@SdkExclude
 	@RestResource(exported = true)
-	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'read')")
-	Post findOne(@P("id") Integer id);
+	Post findOne(Integer id);
 
 	@Override
 	@SdkExclude
@@ -60,7 +59,7 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@PreAuthorize("hasPermission(#entity.station, 'write')")
 	Post save(Post entity);
 
-	@PostFilter("hasPermission(filterObject, 'read')")
+//	@PostFilter("hasPermission(filterObject, 'read')")
 	@Query("select post from Post post join post.terms t where " +
 			"post.station.id = :stationId and t.id in (:termsIds) and post.state = 'PUBLISHED' group by post order by post.date desc")
 	List<Post> findPostsPublished(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);

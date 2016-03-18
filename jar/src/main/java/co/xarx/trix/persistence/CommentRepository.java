@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Date;
@@ -23,9 +22,8 @@ public interface CommentRepository extends DatabaseRepository<Comment, Integer> 
 
 	@Override
 	@SdkExclude
-	@PreAuthorize("hasPermission(#c.post, 'read')")
 	@RestResource(exported = true)
-	Comment save(@P("c") Comment entity);
+	Comment save(Comment entity);
 
 	@PreAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
 	@Query("FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")

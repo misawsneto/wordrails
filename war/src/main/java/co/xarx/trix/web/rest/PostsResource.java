@@ -5,11 +5,9 @@ import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.QPost;
-import co.xarx.trix.dto.StationTermsDto;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.post.PostService;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -19,8 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.Arrays;
@@ -52,8 +49,6 @@ public class PostsResource {
 	@Context
 	private HttpServletResponse response;
 	@Autowired
-	private AsyncService asyncService;
-	@Autowired
 	private PostRepository postRepository;
 	@Autowired
 	private SearchResource searchResource;
@@ -68,10 +63,49 @@ public class PostsResource {
 	private PostService postService;
 
 	private void forward() throws ServletException, IOException {
-		String path = request.getServletPath() + uriInfo.getPath();
+		forward(uriInfo.getPath());
+	}
+
+	private void forward(String uri) throws ServletException, IOException {
+		String path = request.getServletPath() + uri;
 		request.getServletContext().getRequestDispatcher(path).forward(request, response);
 	}
 
+//	@GET
+//	@Path("/")
+//	public void getPosts() throws ServletException, IOException {
+//		forward();
+//	}
+
+	@GET
+	@Path("/{id}")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'read')")
+	public void getPost(@PathParam("id") @P("id") int postId) throws ServletException, IOException {
+		forward();
+	}
+
+	@PUT
+	@Path("/{id}")
+	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
+		forward();
+	}
+
+	@DELETE
+	@Path("/{id}")
+	public void deletePost(@PathParam("id") Integer id) throws ServletException, IOException {
+		forward();
+	}
+
+
+	@POST
+	@Path("/{postId}/comments")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
+	public void addComment(@PathParam("postId") @P("p") Integer postId) throws ServletException,
+			IOException {
+		forward("/comments");
+	}
 
 	@PUT
 	@Path("/{postId}/updatePostTags")
@@ -118,27 +152,6 @@ public class PostsResource {
 		}
 
 		return postView;
-	}
-
-	@GET
-	@Path("/{postId}")
-	public void getPost(@PathParam("postId") int postId) throws ServletException, IOException {
-		String userIp = request.getRemoteAddr();
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//		analytics.postViewed(username, userIp, postId);
-		forward();
-	}
-
-	@PUT
-	@Path("/{id}")
-	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
-		forward();
-	}
-
-	@DELETE
-	@Path("/{id}")
-	public void deletePost(@PathParam("id") Integer id) throws ServletException, IOException {
-		forward();
 	}
 
 	@GET
@@ -256,15 +269,6 @@ public class PostsResource {
 		StringResponse content = new StringResponse();
 		content.response = body;
 		return content;
-	}
-
-	@PUT
-	@Path("/{postId}")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
-	public Response promote(@PathParam("postId") Integer postId, StationTermsDto stationTerms){
-		return Response.status(Status.OK).build();
 	}
 
 	@GET
