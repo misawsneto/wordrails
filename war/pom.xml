@@ -426,11 +426,10 @@
 			<artifactId>apns</artifactId>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>org.mortbay.jetty.alpn</groupId>-->
-			<!--<artifactId>alpn-boot</artifactId>-->
-			<!--<scope>runtime</scope>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
 
 
 	</dependencies>

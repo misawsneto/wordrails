@@ -28,13 +28,13 @@
          <div ng-class="{'b-t': !$first}"></div>
           <div class="clear p-t-sm padder-v padder-md post-list news-item">
             <!-- image -->
-            <a class="block-image m-l m-t" ng-if="result.mediumId" >
+            <a class="block-image m-l m-t" ng-if="result.featuredImageHash" >
               <div class="cell-wrap r r-2x" ng-style="getBackgroundImage(result, 'medium')">
               </div>
             </a>
             <!-- /image -->
             <!-- /content -->
-            <div class="m-t-sm" ng-class="{'content-block': result.mediumId}">
+            <div class="m-t-sm" ng-class="{'content-block': result.featuredImageHash}">
               <span class="no-radius normal p-xxs topper text-md bg-custom-primary" ng-if="result.topper">{{result.topper}}</span>
               <a  class="h3 font-bold m-b m-t-sm block" ui-sref="app.read({'slug': result.slug})">
                 {{result.title}}
