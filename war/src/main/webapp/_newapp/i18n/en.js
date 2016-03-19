@@ -112,6 +112,10 @@
 			"TAB": "Tab",
 			"ALERT": "Alert message!"
 		},
+		"pages":{
+			"HOME_PAGE": "Category pages",
+			"CATEGORY_PAGES": "Category pages"
+		},
 		"post": {
 			"menu":{
 				"INFO": "Post informations",

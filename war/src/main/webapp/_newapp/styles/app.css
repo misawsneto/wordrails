@@ -8054,6 +8054,11 @@ bg-none {
 
 /* /center-img */
 
+.w-30 {
+  width: 30px!important;
+  height: 30px!important;
+}
+
 /* /general */
 
 /* toast */

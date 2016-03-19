@@ -2,6 +2,7 @@ package co.xarx.trix.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Filter;
@@ -33,6 +34,7 @@ public abstract class BaseEntity implements MultiTenantEntity, Identifiable, Ver
 	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
+	@JsonProperty
 	public Date createdAt;
 
 	@Version

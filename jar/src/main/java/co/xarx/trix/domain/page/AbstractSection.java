@@ -21,7 +21,7 @@ import lombok.Setter;
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
 @JsonTypeInfo(
-		use = JsonTypeInfo.Id.CLASS,
+		use = JsonTypeInfo.Id.MINIMAL_CLASS,
 		include = JsonTypeInfo.As.PROPERTY,
 		property = "sectionType")
 @JsonSubTypes({

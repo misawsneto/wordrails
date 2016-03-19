@@ -104,6 +104,10 @@
 				"CUSTOM_DOMAIN": "Domínio personalizado"
 			}
 		},
+		"pages":{
+			"HOME_PAGE": "Página principal",
+			"CATEGORY_PAGES": "Páginas de categorias"
+		},
 		"colors":{
 			"TEST_THEME": "Testar Cores",
 			"RESET_THEME": "Reset Colors",

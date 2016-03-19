@@ -473,6 +473,9 @@ var trix = angular.module('trix', [])
       return \$http.put(_config.url + "/api/auth/" + hash, \$.param({"password": password}), config)
     }
 
+    this.getStationPages = function(stationId) {
+        return \$http.get(_config.url + "/api/web/" + stationId + "/pages")
+    }
 
   	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
   }
