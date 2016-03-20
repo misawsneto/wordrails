@@ -53,7 +53,10 @@
 		"TITLE": "Título",
 		"ENTER_TAG": "Insira uma tag",
 		"GEO_NOTIFICATION": "Geonotificação",
-		"NOTIFY": "Notificar"
+		"NOTIFY": "Notificar",
+		"PAGES": "Páginas",
+		"ADVANCED_SETTINGS": "Configurações avançadas",
+		"OPTIONS": "Opções"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -106,7 +109,8 @@
 		},
 		"pages":{
 			"HOME_PAGE": "Página principal",
-			"CATEGORY_PAGES": "Páginas de categorias"
+			"CATEGORY_PAGES": "Páginas de categorias",
+			"ADD_SECTION": "Adicionar seção"
 		},
 		"colors":{
 			"TEST_THEME": "Testar Cores",

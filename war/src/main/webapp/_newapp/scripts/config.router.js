@@ -162,11 +162,24 @@ angular.module('app')
                 url: '/editor',
                 templateUrl: '/views/settings/settings-pagebuilder-editor.html',
                 data : { title: 'Page Builder', folded: true },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-pagebuilder-editor.js']),
+                controller: 'PageBuilderEditorCtrl'
               })
-              // .state('app.pagebuilder.stationslist', {
-              //   url: '/stationslist',
-              //   templateUrl: '/views/settings/settings-pagebuilder-stations-list.html',
-              //   data : { title: 'Page Builder', folded: true },
+              .state('app.pagebuilder.stationcolors', {
+                url: '/stationcolors',
+                templateUrl: '/views/settings/settings-colors.html',
+                data : { title: 'Page Builder', folded: true },
+                  resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
+                    '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
+                controller: 'ColorGeneratorCtrl'
+              })
+              // .state('app.colors', {
+              //   url: '/colors',
+              //   templateUrl: '/views/settings/settings-colors.html',
+              //   data : { titleTranslate: 'titles.THEMING', title: 'Aparência', folded: false },
+              //   resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-network.js', 'angularSpectrumColorpicker', '/scripts/controllers/color-generator.js',
+              //       '/styles/theming.css', '/libs/jquery/slimScroll/jquery.slimscroll.min.js']),
+              //   controller: 'ColorGeneratorCtrl'
               // })
               .state('app.analysis', {
                 url: '/analysis',

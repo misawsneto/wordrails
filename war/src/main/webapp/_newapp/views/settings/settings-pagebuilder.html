@@ -18,25 +18,63 @@
         <div class="box-inner"> <!-- box-inner -->
           <nav> <!-- nav -->
             <ul class="nav"> <!-- ul -->
+              <li>
+                <a md-ink-ripple style="line-height: 50px;">
+                  <i class="icon mdi2-settings i-20"></i>
+                  <div style="height: 50px;"></div>
+                </a>
+              </li>
               <li> 
+                <md-divider></md-divider>
                 <a md-ink-ripple style="line-height: 50px;" ui-sref="app.pagebuilder.list">
+                  <md-tooltip md-direction="left">
+                    {{'titles.PAGES' | translate}}
+                  </md-tooltip>
                   <i class="icon mdi mdi2-view-list i-20"></i>
                   <div style="height: 50px;"></div>
                 </a>
               </li>
-              <li>
-              <md-divider></md-divider>
+              <li ng-if="$state.includes('app.pagebuilder.editor')">
+                <md-divider></md-divider>
+              </li>
+              <li ng-if="$state.includes('app.pagebuilder.editor')">
+                <a md-ink-ripple style="line-height: 50px;" data-toggle="modal" data-target="#pagebuilder-tools">
+                  <md-tooltip md-direction="left">
+                    {{'titles.OPTIONS' | translate}}
+                  </md-tooltip>
+                  <i class="icon mdi-image-tune i-20"></i>
+                  <div style="height: 50px;"></div>
+                </a>
+              </li>
+              <!-- <li ng-if="$state.includes('app.pagebuilder.editor')">
                 <a md-ink-ripple style="line-height: 50px;" ui-sref="app.pagebuilder.editor">
                   <i class="icon mdi-editor-mode-edit i-20"></i>
                   <div style="height: 50px;"></div>
                 </a>
-              </li>
+              </li> -->
             </ul> <!-- /ul -->
           </nav> <!-- /nav -->
         </div> <!-- /box-inner -->
       </div> <!-- /box-cell -->
     </div> <!-- /col w-xxs -->
   </div> <!-- /hbox -->
+</div>
+
+<div class="modal fade inactive" id="pagebuilder-tools" data-backdrop="false">
+  <div class="right w-xxl bg-white md-whiteframe-z2">
+    <div class="box">
+      <div class="p p-h-md">
+        <a data-dismiss="modal" class="pull-right text-muted-lt text-2x m-t-n inline p-sm">&times;</a>
+        <strong>Members</strong>
+      </div>
+      <div class="box-row">
+        <div class="box-cell">
+          <div class="box-inner">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <md-sidenav>

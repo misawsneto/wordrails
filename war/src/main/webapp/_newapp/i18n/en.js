@@ -53,7 +53,10 @@
 		"TITLE": "Title",
 		"ENTER_TAG": "Enter a tag",
 		"GEO_NOTIFICATION": "Geonotification",
-		"NOTIFY": "Notificar"
+		"NOTIFY": "Notificar",
+		"PAGES": "Pages",
+		"ADVANCED_SETTINGS": "Advanced settings",
+		"OPTIONS": "Options"
 	},
 	"actions":{
 		"ADD": "Add",
@@ -114,7 +117,8 @@
 		},
 		"pages":{
 			"HOME_PAGE": "Category pages",
-			"CATEGORY_PAGES": "Category pages"
+			"CATEGORY_PAGES": "Category pages",
+			"ADD_SECTION": "Add section"
 		},
 		"post": {
 			"menu":{

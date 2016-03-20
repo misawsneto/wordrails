@@ -6317,6 +6317,10 @@ bg-none {
   border-radius: 9px;
 }
 
+.r-50 {
+  border-radius: 50%;
+}
+
 .scrollable {
   overflow-x: hidden;
   overflow-y: auto;

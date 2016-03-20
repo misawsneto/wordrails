@@ -37,6 +37,9 @@ public class Station extends BaseEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
+	@Size(min = 1, max = 100)
+	public String stationSlug;
+
 	@NotNull
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean writable;
