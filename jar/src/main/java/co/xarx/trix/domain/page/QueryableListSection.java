@@ -9,10 +9,7 @@ import lombok.AccessLevel;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @lombok.Getter
@@ -67,6 +64,11 @@ public class QueryableListSection extends AbstractSection implements ListSection
 	@Override
 	public String getType() {
 		return Constants.Section.QUERYABLE_LIST;
+	}
+
+	@JsonProperty("createdAt")
+	public Date getCreatedAt(){
+		return this.createdAt;
 	}
 
 	@PrePersist

@@ -6,7 +6,7 @@
 		</h2>
 	</div>
 
-	<div class="p">
+	<div class="p" ng-repeat="section in getSections(app.editingPage.sections)">
 		<md-divider></md-divider>
 		<div class="w-full text-center" style="margin-top: -28px">
 			<md-button class="md-accent md-fab md-mini" aria-label="Eat cake">
@@ -16,16 +16,236 @@
         <i class="mdi mdi2-plus i-20"></i>
       </md-button>
 		</div>
-		<div>
-			<div class="text-right">
-				<div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px">
-					<md-tooltip md-direction="top">
-			    	{{'settings.pages.ADD_SECTION' | translate}}
-			  	</md-tooltip>
-          <i class="mdi mdi2-plus i-20"></i>
-        </div>
+		<!-- section container tools -->
+		<div class="text-right">
+			<div class="inline text-md p-h-xs" style="vertical-align:30%">
+				Subseções:
+			</div>
+			<div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px">
+				<md-tooltip md-direction="top">
+		    	{{'settings.pages.ADD_SECTION' | translate}}
+		  	</md-tooltip>
+        <i class="mdi mdi2-plus i-20"></i>
+      </div>
+      <div class="inline text-md p-h-xs" style="vertical-align:30%">
+      	{{getChildrenSectionsLength(section)}}
+      </div>
+      <div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px">
+				<md-tooltip md-direction="top">
+		    	{{'settings.pages.ADD_SECTION' | translate}}
+		  	</md-tooltip>
+        <i class="mdi mdi2-minus i-20"></i>
+      </div>
+		</div>
+		<!-- /section container tools -->
+
+
+		<!-- content -->
+		<div class="pagebuilder-content" layout="row">
+			<div flex="{{childSection.pctSize}}" ng-repeat="childSection in getChildrenSections(section)" class="p-xs" style="background: #dddddd; border: rgba(85, 85, 85, 0.5) 1px dashed;">
+				
+				<!-- section content tools -->
+				<div class="text-left sub-section-tools">
+					<div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px">
+						<md-tooltip md-direction="top">
+				    	{{'settings.pages.ADD_SECTION' | translate}}
+				  	</md-tooltip>
+		        <i class="mdi mdi2-plus i-16"></i>
+		      </div>
+		      <div class="inline text p-h-xs" style="vertical-align:30%">
+		      	{{childSection.size}}
+		      </div>
+		      <div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px">
+						<md-tooltip md-direction="top">
+				    	{{'settings.pages.ADD_SECTION' | translate}}
+				  	</md-tooltip>
+		        <i class="mdi mdi2-minus i-16"></i>
+		      </div>
+
+		      <div class="inline b-r m-h-xs" style="height: 25px; width: 2px; border-color: #555;">
+		      </div>
+
+		      <div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px"
+		      ng-class="{'active': childSection.properties.type === 'CARD'}">
+						<md-tooltip md-direction="top">
+				    	{{'settings.pages.ADD_SECTION' | translate}}
+				  	</md-tooltip>
+		        <i class="mdi mdi2-view-grid i-16"></i>
+		      </div>
+		      <!-- view-carousel -->
+		      <div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px"
+		      ng-class="{'active': childSection.properties.type === 'LIST'}">
+						<md-tooltip md-direction="top">
+				    	{{'settings.pages.ADD_SECTION' | translate}}
+				  	</md-tooltip>
+		        <i class="mdi mdi2-format-list-bulleted i-16"></i>
+		      </div>
+		      <div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px"
+		      ng-class="{'active': childSection.properties.type === 'CAROUSEL'}">
+						<md-tooltip md-direction="top">
+				    	{{'settings.pages.ADD_SECTION' | translate}}
+				  	</md-tooltip>
+		        <i class="mdi mdi2-view-carousel i-16"></i>
+		      </div>
+
+		      <div class="inline b-r m-h-xs" style="height: 25px; width: 2px; border-color: #555;">
+		      </div>
+
+		      <div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px">
+						<md-tooltip md-direction="top">
+				    	{{'settings.pages.ADD_SECTION' | translate}}
+				  	</md-tooltip>
+		        <i class="mdi mdi2-arrow-expand i-16"></i>
+		      </div>
+
+				</div>
+				<!-- /section content tools -->			
+				<!-- section content -->
+				<div ng-if="childSection.properties.type === 'CAROUSEL'" style="">
+		      <uib-carousel active="active" interval="myInterval" interval="10">
+			      <uib-slide ng-repeat="block in childSection.blocks" index="0">
+			        <div ng-style="{{block.featuredImage | bgImageLink2: 'large'}}" class="bg-cover" style="margin:auto; height: 370px">
+				        <div class="carousel-caption">
+				          <h4>{{block.title}}</h4>
+				          <p>{{block.snippet}}</p>
+				        </div>
+			        </div>
+			      </uib-slide>
+			    </uib-carousel>
+				</div>
+				<div ng-if="childSection.properties.type === 'CARD'">
+        	<div class="row p">
+            <div class="col-lg-6">
+              <div class="card md-whiteframe-z1">
+                <div class="item">
+                  <img src="/images/c8.jpg" class="w-full r-t" alt="Washed Out">
+                  <div class="bottom text-white p">
+                    Title
+                  </div>
+                </div>
+                <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                <div class="p">
+                  <h3>Paracosm</h3>
+                  <p>
+                    The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                    two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card md-whiteframe-z1">
+                <div class="item">
+                  <img src="/images/c1.jpg" class="w-full r-t" alt="Washed Out">
+                  <div class="bottom text-white p">
+                    Title
+                  </div>
+                </div>
+                <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                <div class="p">
+                  <h3>Paracosm</h3>
+                  <p>
+                    The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                    two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card md-whiteframe-z1">
+                <div class="item">
+                  <img src="/images/c6.jpg" class="w-full r-t" alt="Washed Out">
+                  <div class="bottom text-white p">
+                    Title
+                  </div>
+                </div>
+                <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                <div class="p">
+                  <h3>Paracosm</h3>
+                  <p>
+                    The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                    two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card md-whiteframe-z1">
+                <div class="item">
+                  <img src="/images/c2.jpg" class="w-full r-t" alt="Washed Out">
+                  <div class="bottom text-white p">
+                    Title
+                  </div>
+                </div>
+                <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
+                <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
+                <div class="p">
+                  <h3>Paracosm</h3>
+                  <p>
+                    The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                    two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+				</div>
+				<div ng-if="childSection.properties.type === 'LIST'">
+					<div class="row p">
+						<div class="col-lg-12">
+							<div class="card md-whiteframe-z1">
+								<md-list class="md-dense" flex>
+					        <md-list-item class="md-3-line" style="min-height: 30px">
+					          <img src="/images/c2.jpg" class="md-avatar" alt="{{item.who}}" style="margin-top: 10px;" />
+					          <div class="md-list-item-text" layout="column">
+					            <h3>Título</h3>
+					            <h4>Isso é um test 1</h4>
+					          </div>
+					          <md-divider></md-divider>
+					        </md-list-item>
+					        <md-list-item class="md-3-line" style="min-height: 30px">
+					          <img src="/images/c2.jpg" class="md-avatar" alt="{{item.who}}" style="margin-top: 10px;" />
+					          <div class="md-list-item-text" layout="column">
+					            <h3>Título</h3>
+					            <h4>Isso é um test 1</h4>
+					          </div>
+					          <md-divider></md-divider>
+					        </md-list-item>
+					        <md-list-item class="md-3-line" style="min-height: 30px">
+					          <img src="/images/c2.jpg" class="md-avatar" alt="{{item.who}}" style="margin-top: 10px;" />
+					          <div class="md-list-item-text" layout="column">
+					            <h3>Título</h3>
+					            <h4>Isso é um test 1</h4>
+					          </div>
+					          <md-divider></md-divider>
+					        </md-list-item>
+					        <md-list-item class="md-3-line" style="min-height: 30px">
+					          <img src="/images/c2.jpg" class="md-avatar" alt="{{item.who}}" style="margin-top: 10px;" />
+					          <div class="md-list-item-text" layout="column">
+					            <h3>Título</h3>
+					            <h4>Isso é um test 1</h4>
+					          </div>
+					          <md-divider></md-divider>
+					        </md-list-item>
+					        <md-list-item class="md-3-line" style="min-height: 30px">
+					          <img src="/images/c2.jpg" class="md-avatar" alt="{{item.who}}" style="margin-top: 10px;" />
+					          <div class="md-list-item-text" layout="column">
+					            <h3>Título</h3>
+					            <h4>Isso é um test 1</h4>
+					          </div>
+					        </md-list-item>
+				        </md-list>
+			        </div>
+						</div>
+					</div>
+				</div>
+				<!-- /section content -->
 			</div>
 		</div>
+		<!-- /content -->
 	</div>
 
 	<div class="p">
@@ -33,10 +253,10 @@
 		<div class="w-full text-center" style="margin-top: -28px">
 			<md-button class="md-accent md-fab md-mini" aria-label="Eat cake">
 				<md-tooltip md-direction="top">
-			    	{{'settings.pages.ADD_SECTION' | translate}}
-			  	</md-tooltip>
-	          <i class="mdi mdi2-plus i-20"></i>
-	        </md-button>
+		    	{{'settings.pages.ADD_SECTION' | translate}}
+		  	</md-tooltip>
+        <i class="mdi mdi2-plus i-20"></i>
+      </md-button>
 		</div>
 	</div>
 </div>

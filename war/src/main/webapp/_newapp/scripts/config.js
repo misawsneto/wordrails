@@ -18,7 +18,9 @@ angular.module('app')
   ])
   .constant('TRIX', {
     //baseUrl: location.protocol + '//' + location.host})
-    baseUrl: location.protocol + '//' + 'demo.xarxlocal.com'})
+    baseUrl: location.protocol + '//' + 'demo.xarxlocal.com',
+    defaultMargin: 0
+  })
 
   .config(['$translateProvider', function($translateProvider){
     // Register a loader for the static files
@@ -248,7 +250,8 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
             "border-top-color: " + color + ";" +
             "border-left-color: " + color + ";" +
           "}" , index);
-        index += 3; 
+        stylesheet.insertRule(".sub-section-tools .active i{color: " + color + "}", index)
+        index += 4; 
       }
       if(cssname === 'background' && name === 'default'){
         stylesheet.insertRule(".mdp-datepicker .md-content,"+

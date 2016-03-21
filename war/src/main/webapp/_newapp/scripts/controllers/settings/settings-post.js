@@ -532,6 +532,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// --- /resize zoom class workaround
 
+	// --- mock and test
 	var mockPostLoad = function(){
 		$scope.app.editingPost = createPostStub();
 		$scope.revisions = createVersions();
@@ -552,6 +553,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}, 1000);
 
 	settingsPostCtrl = $scope;
+	// --- /mock & test
 }]);
 
 var settingsPostCtrl = null;

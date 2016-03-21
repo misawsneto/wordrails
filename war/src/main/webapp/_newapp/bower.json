@@ -79,7 +79,8 @@
     "leaflet-draw": "^0.2.3",
     "angular-masonry": "^0.16.0",
     "fizzy-ui-utils": "^2.0.1",
-    "get-style-property": "^1.0.4"
+    "get-style-property": "^1.0.4",
+    "angular-carousel": "^1.0.1"
   },
   "resolutions": {
     "moment": "^2.12.0",

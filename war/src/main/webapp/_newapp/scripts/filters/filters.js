@@ -128,6 +128,15 @@ angular.module('app')
   }
 })
 
+.filter('bgImageLink2', function pvimageLink(TRIX) {
+  return function(featuredImage, size) {
+    if(featuredImage)
+      return {"background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ ((featuredImage.originalHash) ? featuredImage.originalHash : featuredImage)  + "?size=" + size + ")", "background-position": "50% 20%"};
+    else
+      return {};
+  }
+})
+
 .filter('imageLink', function imageLink(TRIX) {
   return function(featuredImage, size) {
     if(featuredImage)
