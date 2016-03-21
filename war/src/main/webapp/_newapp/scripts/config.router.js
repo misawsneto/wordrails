@@ -149,7 +149,7 @@ angular.module('app')
                 url: '/pagebuilder',
                 templateUrl: '/views/settings/settings-pagebuilder.html',
                 data : { title: 'Page Builder', folded: true },
-                resolve: load(['wu.masonry'])
+                resolve: load(['wu.masonry', 'ui.ace'])
               })
               .state('app.pagebuilder.list', {
                 url: '/list',

@@ -56,7 +56,9 @@
 		"NOTIFY": "Notificar",
 		"PAGES": "Páginas",
 		"ADVANCED_SETTINGS": "Configurações avançadas",
-		"OPTIONS": "Opções"
+		"OPTIONS": "Opções",
+		"RESTORE_DEFAULT": "Restore defaults",
+		"CUSTOMIZE": "Personalizar"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -107,11 +109,6 @@
 				"CUSTOM_DOMAIN": "Domínio personalizado"
 			}
 		},
-		"pages":{
-			"HOME_PAGE": "Página principal",
-			"CATEGORY_PAGES": "Páginas de categorias",
-			"ADD_SECTION": "Adicionar seção"
-		},
 		"colors":{
 			"TEST_THEME": "Testar Cores",
 			"RESET_THEME": "Reset Colors",
@@ -119,6 +116,14 @@
 			"APPLY_THEME_DIALOG": "<strong>Atenção!</strong> As modificações de aparência serão aplicadas a todos os dispositivos. Tem certeza que deseja continuar?",
 			"TAB": "Aba",
 			"ALERT": "Mensagem de alerta!"
+		},
+		"pages":{
+			"HOME_PAGE": "Página principal",
+			"CATEGORY_PAGES": "Páginas de categorias",
+			"ADD_SECTION": "Adicionar seção",
+			"BOXED_LAYOUT": "Boxed layout",
+			"MARGIN": "Margem",
+			"PADDING": "Preenchimento"
 		},
 		"post": {
 			"menu":{

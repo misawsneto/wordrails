@@ -1,12 +1,13 @@
-<div class="m-r-lg m-l-lg m-b-xxl animated zoomIn">
-	
+<div class="m-b-xxl" ng-class="{'m-r-xxl m-l-xxl': app.editingPage.boxedLayout, 'animated zoomIn': $state.includes('app.pagebuilder.editor')}">
+	<div id="content-padding-margin" ng-style="getContentPaddingMargin();">
+
 	<div class="m">
 		<h2>
 			{{'settings.pages.HOME_PAGE' | translate}}
 		</h2>
 	</div>
 
-	<div class="p" ng-repeat="section in getSections(app.editingPage.sections)">
+	<div class="p-v" ng-repeat="section in getSections(app.editingPage.sections)">
 		<md-divider></md-divider>
 		<div class="w-full text-center" style="margin-top: -28px">
 			<md-button class="md-accent md-fab md-mini" aria-label="Eat cake">
@@ -248,7 +249,7 @@
 		<!-- /content -->
 	</div>
 
-	<div class="p">
+	<div class="p-v">
 		<md-divider></md-divider>
 		<div class="w-full text-center" style="margin-top: -28px">
 			<md-button class="md-accent md-fab md-mini" aria-label="Eat cake">
@@ -259,8 +260,54 @@
       </md-button>
 		</div>
 	</div>
+
+	</div>
 </div>
 
-<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" style="margin-right: 80px;">
-<i class="mdi mdi2-content-save i-24"></i>
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" style="margin-right: 100px;">
+	<i class="mdi mdi2-content-save i-24"></i>
 </md-button>
+
+<div class="modal fade inactive" id="pagebuilder-tools" data-backdrop="false">
+  <div class="right w-xxl bg-white md-whiteframe-z2">
+    <div class="box">
+      <div class="p p-h-md">
+        <a data-dismiss="modal" class="pull-right text-muted-lt text-2x m-t-n inline p-sm">&times;</a>
+        <strong>{{'titles.OPTIONS' | translate}}</strong>
+      </div>
+      <div class="box-row">
+        <div class="box-cell">
+          <div class="box-inner p">
+          	<md-input-container class="w-full m-v-sm">
+			        <label>{{'titles.TITLE' | translate}}</label>
+			        <input ng-model="editingPage.title">
+			      </md-input-container>
+			      <md-slider-container>
+				      <label>{{'settings.pages.MARGIN' | translate}}</label>
+				      <md-slider flex md-discrete min="0" max="100" step="10" ng-model="app.editingPage.margin" aria-label="red">
+				      </md-slider>
+				    </md-slider-container>
+				    <md-slider-container>
+				      <label>{{'settings.pages.PADDING' | translate}}</label>
+				      <md-slider flex md-discrete min="0" max="100" step="10" ng-model="app.editingPage.padding" aria-label="red">
+				      </md-slider>
+				    </md-slider-container>
+				    <div class="text-right">
+				    	<div>
+				    		<md-checkbox ng-model="app.editingPage.boxedLayout" class="text-u-c font-500">
+				    			{{'settings.pages.BOXED_LAYOUT' | translate}}
+				    		</md-checkbox>
+				    	</div>
+				    	<md-button>
+				    		{{'titles.CUSTOMIZE' | translate}}
+				    	</md-button>
+				    	<md-button>
+				    		{{'titles.RESTORE_DEFAULT' | translate}}
+				    	</md-button>
+				    </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

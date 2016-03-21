@@ -4,7 +4,7 @@
       <div class="vbox"> <!-- vbox -->
         <div class="row-row"> <!-- row-row -->
           <div class="cell scrollable" style="background: #EFEFEF; color: rgba(0,0,0,0.87)!important;"> <!-- cell -->
-            <div class="cell-inner p"><!-- cell -->	
+            <div class="cell-inner" ng-class="{'p': !$state.includes('app.pagebuilder.editor'), 'p-v': $state.includes('app.pagebuilder.editor')}"><!-- cell -->	
 
               <div ui-view class="m-b"></div>
 
@@ -59,26 +59,3 @@
     </div> <!-- /col w-xxs -->
   </div> <!-- /hbox -->
 </div>
-
-<div class="modal fade inactive" id="pagebuilder-tools" data-backdrop="false">
-  <div class="right w-xxl bg-white md-whiteframe-z2">
-    <div class="box">
-      <div class="p p-h-md">
-        <a data-dismiss="modal" class="pull-right text-muted-lt text-2x m-t-n inline p-sm">&times;</a>
-        <strong>Members</strong>
-      </div>
-      <div class="box-row">
-        <div class="box-cell">
-          <div class="box-inner">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<md-sidenav>
-</md-sidenav>
-
-<md-sidenav>
-</md-sidenav>

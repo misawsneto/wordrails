@@ -20,6 +20,14 @@ angular.module('app')
           ]
       },
       {
+        name: 'ui.ace',
+        module: true,
+          files: [
+            '/libs/angular/ace-builds/src-min-noconflict/ace.js',
+            '/libs/angular/angular-ui-ace/ui-ace.min.js'
+          ]
+      },
+      {
         name: 'wu.masonry',
         module: true,
           files: [

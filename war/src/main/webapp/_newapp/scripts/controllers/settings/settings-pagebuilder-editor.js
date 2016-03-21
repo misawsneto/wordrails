@@ -32,6 +32,15 @@ app.controller('PageBuilderEditorCtrl', ['$scope', '$rootScope', '$log', '$timeo
 				return [];
 	}
 
+	$scope.getContentPaddingMargin = function(){
+		return {
+			'padding-left': $scope.app.editingPage.padding,
+			'padding-right': $scope.app.editingPage.padding,
+			'margin-left': $scope.app.editingPage.margin,
+			'margin-right': $scope.app.editingPage.margin
+			}
+	}
+
 	// --- mock % test
 	var mockPageLoad = function(){
 		$scope.app.editingPage = createPageStub();
@@ -58,6 +67,9 @@ function createPageStub(){
 	return {
     "title" : "page 1",
     "id" : 6,
+    "boxedLayout": true,
+    "margin": 10,
+    "padding": 0,
     "sections" : {
     	"0" : {
     		"sectionType" : ".ContainerSection",

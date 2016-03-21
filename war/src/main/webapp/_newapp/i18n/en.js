@@ -56,7 +56,9 @@
 		"NOTIFY": "Notificar",
 		"PAGES": "Pages",
 		"ADVANCED_SETTINGS": "Advanced settings",
-		"OPTIONS": "Options"
+		"OPTIONS": "Options",
+		"RESTORE_DEFAULT": "Restore defaults",
+		"CUSTOMIZE": "Customize"
 	},
 	"actions":{
 		"ADD": "Add",
@@ -118,7 +120,10 @@
 		"pages":{
 			"HOME_PAGE": "Category pages",
 			"CATEGORY_PAGES": "Category pages",
-			"ADD_SECTION": "Add section"
+			"ADD_SECTION": "Add section",
+			"BOXED_LAYOUT": "Encaixotado",
+			"MARGIN": "Margin",
+			"PADDING": "Padding"
 		},
 		"post": {
 			"menu":{
