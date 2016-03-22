@@ -125,7 +125,7 @@
 			"MARGIN": "Margem",
 			"PADDING": "Preenchimento",
 			"PREVIEW_MODE": "Modo de visualização",
-			"SUBSECTION": "Subsection"
+			"SUBSECTION": "Subseção"
 		},
 		"post": {
 			"menu":{
