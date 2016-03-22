@@ -41,6 +41,14 @@ app.controller('PageBuilderEditorCtrl', ['$scope', '$rootScope', '$log', '$timeo
 			}
 	}
 
+	$scope.previewMode = false
+	$scope.getSectionGridStyle = function(){
+		if(!$scope.previewMode)
+			return {'background': '#dddddd', 'border': 'rgba(85, 85, 85, 0.5) 1px dashed'}
+		else 
+			return {};
+	}
+
 	// --- mock % test
 	var mockPageLoad = function(){
 		$scope.app.editingPage = createPageStub();

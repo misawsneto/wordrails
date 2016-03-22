@@ -57,7 +57,7 @@
 		"PAGES": "Páginas",
 		"ADVANCED_SETTINGS": "Configurações avançadas",
 		"OPTIONS": "Opções",
-		"RESTORE_DEFAULT": "Restore defaults",
+		"RESTORE_DEFAULT": "Restaurar padrões",
 		"CUSTOMIZE": "Personalizar"
 	},
 	"actions":{
@@ -121,9 +121,11 @@
 			"HOME_PAGE": "Página principal",
 			"CATEGORY_PAGES": "Páginas de categorias",
 			"ADD_SECTION": "Adicionar seção",
-			"BOXED_LAYOUT": "Boxed layout",
+			"BOXED_LAYOUT": "Modo encaixotado",
 			"MARGIN": "Margem",
-			"PADDING": "Preenchimento"
+			"PADDING": "Preenchimento",
+			"PREVIEW_MODE": "Modo de visualização",
+			"SUBSECTION": "Subsection"
 		},
 		"post": {
 			"menu":{

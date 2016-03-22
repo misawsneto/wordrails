@@ -118,12 +118,14 @@
 			"ALERT": "Alert message!"
 		},
 		"pages":{
-			"HOME_PAGE": "Category pages",
+			"HOME_PAGE": "Home page",
 			"CATEGORY_PAGES": "Category pages",
 			"ADD_SECTION": "Add section",
-			"BOXED_LAYOUT": "Encaixotado",
+			"BOXED_LAYOUT": "Boxed layout",
 			"MARGIN": "Margin",
-			"PADDING": "Padding"
+			"PADDING": "Padding",
+			"PREVIEW_MODE": "Preview mode",
+			"SUBSECTION": "Subsection"
 		},
 		"post": {
 			"menu":{

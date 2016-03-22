@@ -1,15 +1,15 @@
 <div class="m-b-xxl" ng-class="{'m-r-xxl m-l-xxl': app.editingPage.boxedLayout, 'animated zoomIn': $state.includes('app.pagebuilder.editor')}">
 	<div id="content-padding-margin" ng-style="getContentPaddingMargin();">
 
-	<div class="m">
+	<div class="m" ng-hide="previewMode">
 		<h2>
 			{{'settings.pages.HOME_PAGE' | translate}}
 		</h2>
 	</div>
 
 	<div class="p-v" ng-repeat="section in getSections(app.editingPage.sections)">
-		<md-divider></md-divider>
-		<div class="w-full text-center" style="margin-top: -28px">
+		<md-divider ng-hide="previewMode"></md-divider>
+		<div class="w-full text-center" style="margin-top: -28px" ng-hide="previewMode">
 			<md-button class="md-accent md-fab md-mini" aria-label="Eat cake">
 				<md-tooltip md-direction="top">
 		    	{{'settings.pages.ADD_SECTION' | translate}}
@@ -18,9 +18,9 @@
       </md-button>
 		</div>
 		<!-- section container tools -->
-		<div class="text-right">
+		<div class="text-right section-tools" ng-hide="previewMode">
 			<div class="inline text-md p-h-xs" style="vertical-align:30%">
-				Subseções:
+				{{'settings.pages.SUBSECTION' | translate}}:
 			</div>
 			<div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px">
 				<md-tooltip md-direction="top">
@@ -43,10 +43,10 @@
 
 		<!-- content -->
 		<div class="pagebuilder-content" layout="row">
-			<div flex="{{childSection.pctSize}}" ng-repeat="childSection in getChildrenSections(section)" class="p-xs" style="background: #dddddd; border: rgba(85, 85, 85, 0.5) 1px dashed;">
+			<div flex="{{childSection.pctSize}}" ng-repeat="childSection in getChildrenSections(section)" class="p-xs" ng-style="getSectionGridStyle()">
 				
 				<!-- section content tools -->
-				<div class="text-left sub-section-tools">
+				<div class="text-left sub-section-tools section-tools" ng-hide="previewMode">
 					<div md-ink-ripple class="p-xs r-50 o-f-h inline pointer" style="line-height: 10px">
 						<md-tooltip md-direction="top">
 				    	{{'settings.pages.ADD_SECTION' | translate}}
@@ -96,7 +96,7 @@
 						<md-tooltip md-direction="top">
 				    	{{'settings.pages.ADD_SECTION' | translate}}
 				  	</md-tooltip>
-		        <i class="mdi mdi2-arrow-expand i-16"></i>
+		        <i class="mdi mdi2-settings i-16"></i>
 		      </div>
 
 				</div>
@@ -249,7 +249,7 @@
 		<!-- /content -->
 	</div>
 
-	<div class="p-v">
+	<div class="p-v" ng-hide="previewMode">
 		<md-divider></md-divider>
 		<div class="w-full text-center" style="margin-top: -28px">
 			<md-button class="md-accent md-fab md-mini" aria-label="Eat cake">
@@ -292,8 +292,13 @@
 				      <md-slider flex md-discrete min="0" max="100" step="10" ng-model="app.editingPage.padding" aria-label="red">
 				      </md-slider>
 				    </md-slider-container>
-				    <div class="text-right">
-				    	<div>
+				    <div class="text-left">
+				    	<div class="p-r">
+				    		<md-checkbox ng-model="previewMode" class="text-u-c font-500">
+				    			{{'settings.pages.PREVIEW_MODE' | translate}}
+				    		</md-checkbox>
+				    	</div>
+				    	<div class="p-r">
 				    		<md-checkbox ng-model="app.editingPage.boxedLayout" class="text-u-c font-500">
 				    			{{'settings.pages.BOXED_LAYOUT' | translate}}
 				    		</md-checkbox>
