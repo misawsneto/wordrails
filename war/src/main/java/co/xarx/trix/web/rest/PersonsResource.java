@@ -308,8 +308,9 @@ public class PersonsResource {
 	}
 
 	@PUT
-	@Path("/me/password")
 	@Transactional
+	@Path("/me/password")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
 		Asserts.notEmpty(oldPassword, "Old password it empty or null");

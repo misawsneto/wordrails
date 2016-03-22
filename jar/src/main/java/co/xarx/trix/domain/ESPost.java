@@ -22,7 +22,6 @@ public class ESPost implements ElasticSearchEntity {
 	@Id
 	public Integer id;
 	public String tenantId;
-	public Integer networkId;
 
 	public Integer authorId;
 

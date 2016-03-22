@@ -27,7 +27,7 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 	public Response toResponse(Throwable throwable) {
 		Status status;
 
-        log.error("LOG FATAL ERROR\n" +
+		log.error("LOG FATAL ERROR\n" +
 				"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
 				"MESSAGE: " + throwable.getMessage(),
 				throwable);
@@ -35,7 +35,7 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 		if (throwable instanceof EntityNotFoundException) {
 			status = Status.NOT_FOUND;
 		} else if (throwable instanceof AccessDeniedException) {
-				status = Status.FORBIDDEN;
+			status = Status.FORBIDDEN;
 		} else if (throwable instanceof UnauthorizedException) {
 			status = Status.FORBIDDEN;
 		} else if (throwable instanceof OperationNotSupportedException) {
@@ -51,8 +51,8 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 		}
 
 //		String stackTrace = ExceptionUtils.getStackTrace(throwable);
-        String message = throwable.getMessage();
-        message = message != null && !message.isEmpty() ? message.replaceAll("\"", "\\\"") : "";
+		String message = throwable.getMessage();
+		message = message != null && !message.isEmpty() ? message.replaceAll("\"", "\\\"") : "";
 		return Response.status(status).entity("{\"error\": \"" + throwable.getClass() + " - " + message +"\"}").type(MediaType.APPLICATION_JSON).build();
-    }
+	}
 }

@@ -71,11 +71,11 @@ public class PostsResource {
 		request.getServletContext().getRequestDispatcher(path).forward(request, response);
 	}
 
-//	@GET
-//	@Path("/")
-//	public void getPosts() throws ServletException, IOException {
-//		forward();
-//	}
+	@GET
+	@Path("/")
+	public void getPosts() throws ServletException, IOException {
+		forward();
+	}
 
 	@GET
 	@Path("/{id}")
@@ -86,12 +86,14 @@ public class PostsResource {
 
 	@PUT
 	@Path("/{id}")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write')")
 	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
 		forward();
 	}
 
 	@DELETE
 	@Path("/{id}")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write')")
 	public void deletePost(@PathParam("id") Integer id) throws ServletException, IOException {
 		forward();
 	}
@@ -102,9 +104,31 @@ public class PostsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
-	public void addComment(@PathParam("postId") @P("p") Integer postId) throws ServletException,
+	public void postComment(@PathParam("postId") @P("p") Integer postId) throws ServletException,
 			IOException {
 		forward("/comments");
+	}
+
+
+	@GET
+	@Path("/{postId}/terms")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
+	public void getTerms(@PathParam("postId") @P("p") Integer postId) throws ServletException,
+			IOException {
+		forward("/comments");
+	}
+
+
+	@PUT
+	@Path("/{postId}/comments/{commentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
+	public void putComment(@PathParam("postId") @P("p") Integer postId, @PathParam("commentId") Integer commentId) throws ServletException,
+			IOException {
+		forward("/comments/" + commentId);
 	}
 
 	@PUT
@@ -125,6 +149,7 @@ public class PostsResource {
 	@Path("/getPostViewBySlug")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
+	@PostAuthorize("hasPermission(#returnObject.postId, 'co.xarx.trix.domain.Post', 'read') or returnObject==null")
 	public PostView getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findBySlug(slug);
 		PostView postView = null;
@@ -258,6 +283,7 @@ public class PostsResource {
 	@Path("/{postId}/body")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
+	@PostAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
 	public StringResponse getPostBody(@PathParam("postId") Integer postId){
 		Person person = authProvider.getLoggedPerson();
 		String body = postRepository.findPostBodyById(postId);
