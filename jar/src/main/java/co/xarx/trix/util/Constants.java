@@ -42,6 +42,7 @@ public final class Constants {
 		public static final String PERSON = "person";
 		public static final String STATION = "station";
 		public static final String BOOKMARK = "bookmark";
+		public static final String NGINX = "nginx_access";
 	}
 
 	public static class Post {
