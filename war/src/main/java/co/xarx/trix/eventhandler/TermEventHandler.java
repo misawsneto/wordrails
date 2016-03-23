@@ -4,9 +4,10 @@ import co.xarx.trix.domain.Row;
 import co.xarx.trix.domain.StationPerspective;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.domain.TermPerspective;
-import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.TaxonomySecurityChecker;
+import co.xarx.trix.persistence.RowRepository;
+import co.xarx.trix.persistence.StationPerspectiveRepository;
+import co.xarx.trix.persistence.TermPerspectiveRepository;
+import co.xarx.trix.persistence.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
@@ -25,44 +26,38 @@ public class TermEventHandler {
 	private @Autowired TermRepository termRepository;
 	private @Autowired TermPerspectiveRepository termPerspectiveRepository;
 	private @Autowired RowRepository rowRepository;
-	private @Autowired TaxonomySecurityChecker taxonomySecurityChecker;
 	private @Autowired StationPerspectiveRepository stationPerspectiveRepository;
 
 	@HandleAfterCreate
 	public void handleAfterCreate(Term term) {
-		if(taxonomySecurityChecker.canCreate(term.taxonomy)){
-
-			List<StationPerspective> perspectives = stationPerspectiveRepository.findByTaxonomy(term.taxonomy);
-			if(perspectives != null && perspectives.size() > 0){
-				List<Row> rows = new ArrayList<Row>(perspectives.size());
-				for (StationPerspective stationPerspective : perspectives) {
-					TermPerspective perspective = null;
-					if(term.parent != null){
-						perspective = termPerspectiveRepository.findPerspectiveAndTerm(stationPerspective.id, term.parent.id);
-					}else{
-						perspective = termPerspectiveRepository.findPerspectiveAndTermNull(stationPerspective.id);
-					}
-
-					if(perspective != null) {
-
-						Row lastRow = rowRepository.findFirstByPerspectiveOrderByIndexDesc(perspective);
-						int lastIndex = 0;
-						if(lastRow != null){
-							lastIndex = lastRow.index == null ? 0 : lastRow.index;
-						}
-
-						Row row = new Row();
-						row.term = term;
-						row.type = Row.ORDINARY_ROW;
-						row.index = lastIndex + 1;
-						row.perspective = perspective;
-						rows.add(row);
-					}
+		List<StationPerspective> perspectives = stationPerspectiveRepository.findByTaxonomy(term.taxonomy);
+		if (perspectives != null && perspectives.size() > 0) {
+			List<Row> rows = new ArrayList<Row>(perspectives.size());
+			for (StationPerspective stationPerspective : perspectives) {
+				TermPerspective perspective = null;
+				if (term.parent != null) {
+					perspective = termPerspectiveRepository.findPerspectiveAndTerm(stationPerspective.id, term.parent.id);
+				} else {
+					perspective = termPerspectiveRepository.findPerspectiveAndTermNull(stationPerspective.id);
 				}
-				rowRepository.save(rows);
+
+				if (perspective != null) {
+
+					Row lastRow = rowRepository.findFirstByPerspectiveOrderByIndexDesc(perspective);
+					int lastIndex = 0;
+					if (lastRow != null) {
+						lastIndex = lastRow.index == null ? 0 : lastRow.index;
+					}
+
+					Row row = new Row();
+					row.term = term;
+					row.type = Row.ORDINARY_ROW;
+					row.index = lastIndex + 1;
+					row.perspective = perspective;
+					rows.add(row);
+				}
 			}
-		}else{
-			throw new UnauthorizedException();
+			rowRepository.save(rows);
 		}
 	}
 
@@ -80,11 +75,7 @@ public class TermEventHandler {
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Term term) {
-		if(taxonomySecurityChecker.canEdit(term.taxonomy)){
-			deleteCascade(term, term);
-		}else{
-			throw new UnauthorizedException();
-		}
+		deleteCascade(term, term);
 	}
 
 	public void deleteCascade(Term termToDelete, Term term){

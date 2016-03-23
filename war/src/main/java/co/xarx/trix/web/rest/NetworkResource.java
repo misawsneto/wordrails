@@ -6,7 +6,6 @@ import co.xarx.trix.api.StationPermission;
 import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.dto.NetworkCreateDto;
 import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
@@ -38,6 +37,12 @@ import java.util.*;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class NetworkResource {
+
+	private class NetworkCreateDto extends Network {
+
+		public String newSubdomain;
+		public Person person;
+	}
 
 	@Autowired
 	public ObjectMapper objectMapper;

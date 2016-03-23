@@ -26,6 +26,7 @@ public interface TermRepository extends DatabaseRepository<Term, Integer> {
 	@Override
 	@SdkExclude
 	@RestResource(exported = true)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Term save(Term term);
 
 	@RestResource(path="findRootsPage")

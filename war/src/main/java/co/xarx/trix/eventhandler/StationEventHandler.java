@@ -1,11 +1,8 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.*;
-import co.xarx.trix.domain.ESStation;
-import co.xarx.trix.persistence.ESStationRepository;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.services.ESStartupIndexerService;
 import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +27,6 @@ public class StationEventHandler {
 	StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
 	StationRepository stationRepository;
-	@Autowired
-	StationSecurityChecker stationSecurityChecker;
 	@Autowired
 	TaxonomyEventHandler taxonomyEventHandler;
 	@Autowired
@@ -173,41 +168,35 @@ public class StationEventHandler {
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Station station) throws UnauthorizedException{
-		if(stationSecurityChecker.canEdit(station)){
+		List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
+		stationPerspectiveRepository.delete(stationsPerspectives);
 
-			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
-			stationPerspectiveRepository.delete(stationsPerspectives);
+		Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
 
-			Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
-
-			if (taxonomy != null) {
-				taxonomyEventHandler.handleBeforeDelete(taxonomy);
-				taxonomyRepository.delete(taxonomy);
-			}
-
-			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
-			if(stationsRoles != null && stationsRoles.size() > 0){
-				personStationRolesRepository.delete(stationsRoles);
-			}
-
-			List<Post> posts = postRepository.findByStation(station);
-
-			if(posts != null && posts.size() > 0){
-				List<Integer> ids = posts.stream().map(post -> post.id).collect(Collectors.toList());
-				queryPersistence.deleteAuthoritiesByStation(station.id);
-				queryPersistence.deleteCellsInPosts(ids);
-				queryPersistence.deleteCommentsInPosts(ids);
-				queryPersistence.deleteNotificationsInPosts(ids);
-				queryPersistence.deletePostReadsInPosts(ids);
-
-				postRepository.forceDeleteAll(posts.stream().map(post -> post.id).collect(Collectors.toList()));
-			}
-
-			esStationRepository.delete(station.getId());
-
-		}else{
-			throw new UnauthorizedException();
+		if (taxonomy != null) {
+			taxonomyEventHandler.handleBeforeDelete(taxonomy);
+			taxonomyRepository.delete(taxonomy);
 		}
+
+		List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
+		if (stationsRoles != null && stationsRoles.size() > 0) {
+			personStationRolesRepository.delete(stationsRoles);
+		}
+
+		List<Post> posts = postRepository.findByStation(station);
+
+		if (posts != null && posts.size() > 0) {
+			List<Integer> ids = posts.stream().map(post -> post.id).collect(Collectors.toList());
+			queryPersistence.deleteAuthoritiesByStation(station.id);
+			queryPersistence.deleteCellsInPosts(ids);
+			queryPersistence.deleteCommentsInPosts(ids);
+			queryPersistence.deleteNotificationsInPosts(ids);
+			queryPersistence.deletePostReadsInPosts(ids);
+
+			postRepository.forceDeleteAll(posts.stream().map(post -> post.id).collect(Collectors.toList()));
+		}
+
+		esStationRepository.delete(station.getId());
 	}
 
 	@HandleAfterSave
