@@ -63,7 +63,7 @@
     "flot-spline": "^0.8.2",
     "waves": "~0.7.2",
     "mcg": "https://github.com/mbitson/mcg.git",
-    "mdPickers": "^0.7.1",
+    "mdPickers": "^0.7.2",
     "angular-froala": "^2.2.1",
     "angular-elastic": "^2.5.1",
     "ui-select": "angular-ui-select#^0.16.0",

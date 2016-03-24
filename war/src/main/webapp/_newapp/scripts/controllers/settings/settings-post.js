@@ -359,6 +359,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		if ( angular.isDefined($localStorage.landscape) )
 	    $scope.landscape = $localStorage.landscape;
 	}
+
+	$scope.showImageUploadDialog = function(){
+		$("#image-buttom").trigger('click');
+	}
+
 	// load imageConfig
 	$scope.loadImageConfigFromStorage();
 

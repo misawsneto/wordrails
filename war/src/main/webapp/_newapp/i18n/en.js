@@ -51,6 +51,8 @@
 		"SAVE_AS_DRAFT": "Save as draft",
 		"SAVE": "Save",
 		"TITLE": "Title",
+		"SUBTITLE": "Subtitle",
+		"HEADING": "Heading",
 		"ENTER_TAG": "Enter a tag",
 		"GEO_NOTIFICATION": "Geonotification",
 		"NOTIFY": "Notificar",
@@ -141,6 +143,7 @@
 				"PUBLICATION_MSG": "The content will be published when you click Publish.",
 				"AUTO_SAVE_MSG": "Drafts will be saved automatically every minute once the title, content, station and categories are set. All publication versions can be accessed through the \"Publication options\" menu."
 			},
+			"DETAILS": "Details",
 			"REVISIONS": "Revisions",
 			"OPTIONS": "Publication options",
 			"CUSTOMIZE_LINK_DESC": "Customized URL address for the web",
@@ -156,6 +159,7 @@
 			"CLEAR_CONTENT": "Clear content",
 			"NEW_POST": "New post",
 			"NOTIFY_STATION_USERS_DESC": "Notify station users on their devices.",
+			"NOTIFY_USERS": "Notify users",
 			"messages":{
 				"PAGE_CHANGE_ALERT": "You have edited your post and there's unsaved content.",
 				"CLEAR_CONTENT_MSG": "Clear all post content.",

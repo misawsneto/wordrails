@@ -295,29 +295,36 @@
 								<!-- image speed dial -->
 								<div class="media-speed-dial p" ng-if="!postFeaturedImage">
 									<div class="lock-size" layout="row" layout-align="center center">
-							      <md-button aria-label="menu" class="md-fab md-accent md-mini" ng-click="loadImageConfigFromStorage()">
+							      <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm" ng-click="loadImageConfigFromStorage();">
+											<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
 						      		<md-tooltip md-direction="top">
 								      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
 								  		</md-tooltip>
-									    <i class="mdi mdi2-image-area i-20"></i>
-									    <input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
-									  </md-button>
-									  <md-button aria-label="menu" class="md-fab md-accent md-mini">
+									    <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
+									  </div>
+									  <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
 									  	<md-tooltip md-direction="top">
 								      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
 								  		</md-tooltip>
-									    <i class="mdi mdi2-video i-20"></i>
-									  </md-button>
-									  <md-button aria-label="menu" class="md-fab md-accent md-mini">
+									    <i class="mdi mdi2-video i-20" style="vertical-align: 20%"></i>
+									  </div>
+									  <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
 									  	<md-tooltip md-direction="top">
 								      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
 								  		</md-tooltip>
-									    <i class="mdi mdi2-microphone i-20"></i>
-									  </md-button>
+									    <i class="mdi mdi2-microphone i-20" style="vertical-align: 20%"></i>
+									  </div>
 							    </div>
 								</div>
 								<!-- image speed dial -->
-				      	<textarea rows="1" msd-elastic ng-model="app.editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 h1 w-full ph-dk p-sm r m-b" style="resize: none; background: transparent; border: none;">
+								<textarea rows="1" ng-if="useHeading" msd-elastic ng-model="app.editingPost.topper" placeholder="{{'titles.HEADING' | translate }}" class="w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
+				      	</textarea>
+
+				      	<textarea rows="1" msd-elastic ng-model="app.editingPost.title" placeholder="{{'titles.TITLE' | translate }}" class="font-500 h1 w-full ph-dk p-sm r" style="resize: none; background: transparent; border: none;"
+				      	ng-class="{'m-b-sm': (useHeading || useSubtitle), 'm-b': !(useHeading || useSubtitle)}">
+				      	</textarea>
+
+				      	<textarea rows="1" ng-if="useSubtitle" msd-elastic ng-model="app.editingPost.subtitle" placeholder="{{'titles.SUBTITLE' | translate }}" class="font-thin h4 w-full ph-dk p-sm r m-b-sm" style="resize: none; background: transparent; border: none;">
 				      	</textarea>
 
 				      	<md-chips ng-model="tags" placeholder="{{'titles.ENTER_TAG' | translate}}" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag">
@@ -348,7 +355,7 @@
   </md-toolbar>
   <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
       <div id="post-options-sidebar" class="vbox">
-        <div class="p" ng-if="(writableStations && writableStations.length > 0) || app.editingPost.id">
+        <div class="p hide" ng-if="(writableStations && writableStations.length > 0) || app.editingPost.id">
           <span>Estação: <strong>{{app.editingPost.id ? app.editingPost.selectedStation.stationName : ''}}</strong></span>
           <select ng-class="{'hide': app.editingPost.id}" class="form-control m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
           ng-options="station as station.stationName for station in writableStations track by station.stationId">
@@ -362,7 +369,7 @@
             <div class="cell-inner">
 
               <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0">
-                <md-tab label="{{'settings.post.CATEGORIES' | translate}}">
+                <md-tab label="{{'settings.post.DETAILS' | translate}}">
                   <md-content >
                     <!-- list categories -->
                     <div class="p-sm term-tree">
@@ -388,18 +395,18 @@
                       </md-checkbox>
                     </div>
                     <div>
-                      <md-checkbox ng-model="app.editingPost.selectedStation.topper">
-                        Chapéu
+                      <md-checkbox ng-model="useHeading">
+                        {{'titles.HEADING' | translate}}
                       </md-checkbox>
                     </div>
                     <div>
-                      <md-checkbox ng-model="app.editingPost.selectedStation.subheading">
-                        Subtítulo
+                      <md-checkbox ng-model="useSubtitle">
+                        {{'titles.SUBTITLE' | translate}}
                       </md-checkbox>
                     </div>
                     <div>
                       <md-checkbox ng-model="app.editingPost.notify">
-                        Notificar usuários
+                        {{'settings.post.NOTIFY_USERS' | translate}}
                       </md-checkbox>
                     </div>
                   </md-content>
