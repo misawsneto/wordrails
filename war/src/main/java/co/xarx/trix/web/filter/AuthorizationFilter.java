@@ -375,7 +375,7 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 
 	@Override
 	protected boolean isGetStationsAuthorized() {
-		return false;
+		return true;
 	}
 
 	@Override

@@ -20,6 +20,21 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	  boxHeight: 400
 	};
 
+	trix.getStations().success(function(stations){
+		$scope.stations = stations;
+		stations && (stations.length > 0) && $scope.stations.forEach(function(station){
+			getTermTree(station)	
+		})
+	}).error(function(error){
+
+	})
+
+	function getTermTree(station){
+		trix.getTermTree(null, station.categoriesTaxonomyId).success(function(categories){
+			console.log(categories);
+		});
+	}
+
 	// Must be [x, y, x2, y2, w, h]
    $scope.app.cropSelection = [100, 100, 200, 200];
 
