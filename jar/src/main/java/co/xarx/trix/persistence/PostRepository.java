@@ -15,10 +15,8 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -33,8 +31,8 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@Override
 	@SdkExclude
 	@CacheEvict(value = "postsIds")
-	@RestResource(exported = false)
-	void delete(Post entity);
+	@RestResource(exported = true)
+	void delete(Integer id);
 
 	@Override
 	@SdkExclude
@@ -56,10 +54,14 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@SdkExclude
 	@RestResource(exported = true)
 	@CacheEvict(value = "postsIds")
-	@PreAuthorize("hasPermission(#entity.station, 'write')")
-	Post save(Post entity);
+	<S extends Post> S save(S entity);
 
-//	@PostFilter("hasPermission(filterObject, 'read')")
+//	@Override
+//	@SdkExclude
+//	@RestResource(exported = true)
+//	@CacheEvict(value = "postsIds")
+//	<S extends Post> List<S> save(Iterable<S> entities);
+
 	@Query("select post from Post post join post.terms t where " +
 			"post.station.id = :stationId and t.id in (:termsIds) and post.state = 'PUBLISHED' group by post order by post.date desc")
 	List<Post> findPostsPublished(@Param("stationId") Integer stationId, @Param("termsIds") List<Integer> termsIds, Pageable pageable);

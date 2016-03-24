@@ -22,7 +22,7 @@ public class AuthResourceTest {
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		NetworkRepository networkRepository = mock(NetworkRepository.class);
-		AuthService authService = new AuthService();
+		AuthService authService = new AuthService(null, null, null);
 		PasswordService passwordService = mock(PasswordService.class);
 
 		AuthResource resource = new AuthResource(networkRepository, authService, passwordService);

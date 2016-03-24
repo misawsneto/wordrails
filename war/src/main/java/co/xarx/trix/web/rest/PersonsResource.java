@@ -56,10 +56,12 @@ import java.util.*;
 @Component
 public class PersonsResource {
 
-	private class PersonCreateDto extends Person {
+	private class PersonCreateDto {
 
-		public StationRole stationRole;
-		public Boolean emailNotification;
+		public String name;
+		public String username;
+		public String email;
+		public String password;
 	}
 
 	@Context
@@ -192,7 +194,7 @@ public class PersonsResource {
 
 		personRepository.save(loadedPerson);
 
-		authProvider.updateLoggedPerson(loadedPerson);
+		authProvider.updateLoggedPerson(user);
 
 		return Response.status(Status.OK).build();
 	}
@@ -319,7 +321,7 @@ public class PersonsResource {
 
 	@POST
 	@Path("/create")
-	public Response create(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException{
+	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException{
 		Person person = personService.create(dto.name, dto.username, dto.password, dto.email);
 
 		if (person != null) {

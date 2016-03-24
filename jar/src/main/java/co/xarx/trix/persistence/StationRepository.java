@@ -37,7 +37,6 @@ public interface StationRepository extends StationRepositoryCustom, JpaRepositor
 	@Override
 	@SdkExclude
 	@RestResource(exported = true)
-	@PreAuthorize("hasPermission(#p0, 'co.xarx.trix.domain.Station', 'read')")
 	Station findOne(Integer id);
 
 	@Override

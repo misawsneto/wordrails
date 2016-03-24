@@ -31,9 +31,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
 	@Override
 	@Transactional
-	public void delete(Post post) {
+	public void delete(Integer id) {
 		em.createNativeQuery("UPDATE post SET state=:state where id = :postId")
-				.setParameter("postId", post.id).setParameter("state", Post.STATE_TRASH).executeUpdate();
+				.setParameter("postId", id).setParameter("state", Post.STATE_TRASH).executeUpdate();
 	}
 
 	@Override

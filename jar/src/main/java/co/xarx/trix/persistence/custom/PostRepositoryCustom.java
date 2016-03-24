@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostRepositoryCustom {
 
-	void delete(Post post);
+	void delete(Integer id);
 
 	Page<Post> findAll(Pageable pageable);
 }

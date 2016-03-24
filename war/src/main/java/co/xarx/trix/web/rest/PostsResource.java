@@ -37,7 +37,8 @@ import java.util.List;
 import java.util.Set;
 
 @Path("/posts")
-@Consumes(MediaType.WILDCARD)
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Component
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PostsResource {
@@ -91,6 +92,13 @@ public class PostsResource {
 		forward();
 	}
 
+	@POST
+	@Path("/")
+//	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write')")
+	public void postPost() throws ServletException, IOException {
+		forward();
+	}
+
 	@DELETE
 	@Path("/{id}")
 	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write')")
@@ -101,8 +109,6 @@ public class PostsResource {
 
 	@POST
 	@Path("/{postId}/comments")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
 	public void postComment(@PathParam("postId") @P("p") Integer postId) throws ServletException,
 			IOException {
@@ -112,8 +118,6 @@ public class PostsResource {
 
 	@GET
 	@Path("/{postId}/terms")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
 	public void getTerms(@PathParam("postId") @P("p") Integer postId) throws ServletException,
 			IOException {
@@ -123,8 +127,6 @@ public class PostsResource {
 
 	@PUT
 	@Path("/{postId}/comments/{commentId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
 	public void putComment(@PathParam("postId") @P("p") Integer postId, @PathParam("commentId") Integer commentId) throws ServletException,
 			IOException {
@@ -133,8 +135,6 @@ public class PostsResource {
 
 	@PUT
 	@Path("/{postId}/updatePostTags")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
 	public ContentResponse<PostView> updatePostTerms(@PathParam("postId") Integer postId, List<TermDto> terms) throws ServletException, IOException {
 
@@ -147,7 +147,6 @@ public class PostsResource {
 
 	@GET
 	@Path("/getPostViewBySlug")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
 	@PostAuthorize("hasPermission(#returnObject.postId, 'co.xarx.trix.domain.Post', 'read') or returnObject==null")
 	public PostView getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
@@ -164,7 +163,6 @@ public class PostsResource {
 
 	@GET
 	@Path("/{postId}/getPostViewById")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
 	@PostAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
 	public PostView getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {

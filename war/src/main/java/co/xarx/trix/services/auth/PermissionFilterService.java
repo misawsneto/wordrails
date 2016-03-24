@@ -30,7 +30,7 @@ public class PermissionFilterService {
 	}
 
 	public List<Integer> filterIds(List<Integer> items, Class clazz, String permission) {
-		List<Integer> result = new ArrayList();
+		List<Integer> result = new ArrayList<>();
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		items.stream()
 				.filter(item -> permissionEvaluator.hasPermission(authentication, item, clazz.getName(), permission))
