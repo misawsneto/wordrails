@@ -37,5 +37,4 @@ public class StatisticsResource {
 		response.content = statisticsService.getPorpularNetworks();
 		return response;
 	}
-
 }

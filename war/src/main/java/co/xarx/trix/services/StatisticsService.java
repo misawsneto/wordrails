@@ -7,11 +7,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.cluster.ClusterState;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
-import org.elasticsearch.index.query.FilterBuilders;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +23,7 @@ public class StatisticsService {
 
 	private ElasticsearchTemplate elasticsearchTemplate;
 	@Value("${spring.data.elasticsearch.nginx_log}")
-	private String indexName;
+	private String nginxIndex;
 	private Client client;
 
 	@Autowired
@@ -41,9 +37,9 @@ public class StatisticsService {
 	}
 
 	public List<String> getNginxFields(){
-		ClusterState cs = client.admin().cluster().prepareState().setIndices(indexName).execute().actionGet().getState();
+		ClusterState cs = client.admin().cluster().prepareState().setIndices(nginxIndex).execute().actionGet().getState();
 
-		IndexMetaData indexMetaData = cs.getMetaData().index(indexName);
+		IndexMetaData indexMetaData = cs.getMetaData().index(nginxIndex);
 		MappingMetaData mappingMetaData = indexMetaData.mapping(Constants.ObjectType.NGINX);
 		Map<String, Object> map = null;
 
