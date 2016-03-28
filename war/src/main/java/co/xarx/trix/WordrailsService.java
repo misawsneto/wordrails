@@ -1,27 +1,21 @@
 package co.xarx.trix;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.domain.Network;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.Term;
-import co.xarx.trix.persistence.*;
-import co.xarx.trix.util.StringUtil;
+import co.xarx.trix.persistence.PersonRepository;
+import co.xarx.trix.persistence.TaxonomyRepository;
 import co.xarx.trix.web.rest.PerspectiveResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.NotFoundException;
 import java.util.*;
 
 @Component("wordrailsService")
 public class WordrailsService {
-
-	Logger log = Logger.getLogger(WordrailsService.class.getName());
 
 	@Autowired
 	public ObjectMapper objectMapper;
@@ -30,52 +24,13 @@ public class WordrailsService {
 	@Autowired
 	public PersonRepository personRepository;
 	@Autowired
-	private NetworkRepository networkRepository;
-	@Autowired
 	private PerspectiveResource perspectiveResource;
-	@Autowired
-	private StationRepository stationRepository;
-	@Autowired
-	private StationRolesRepository stationRolesRepository;
 
 	public List<Link> generateSelfLinks(String self){
 		Link link = new Link();
 		link.href = self;
 		link.rel = "self";
 		return Collections.singletonList(link);
-	}
-
-	@Autowired
-	private HttpServletResponse response;
-
-	public Network getNetworkFromHost(String host) {
-		Network network = null;
-		String subdomain = StringUtil.getSubdomainFromHost(host);
-		if (subdomain != null && !subdomain.isEmpty()) {
-			if (subdomain.equals("settings")) {
-				network = new Network();
-				network.name = "Settings";
-				network.tenantId = "settings";
-				network.id = 0;
-			}
-
-			try {
-				network = networkRepository.findByTenantId(subdomain);
-			} catch (Exception e) {
-				// no network found in cache or db.
-				e.printStackTrace();
-			}
-			if (network != null) return network;
-		}
-
-		try {
-			network = networkRepository.findByDomain(host);
-			if (network != null) return network;
-			response.setStatus(400);
-			return null;
-		} catch (Exception e) {
-			throw new NotFoundException();
-		}
 	}
 
 	public StationDto getDefaultStation(PersonData personData, Integer currentStationId){

@@ -3,17 +3,15 @@ package co.xarx.trix.persistence;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.PostRead;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Date;
 import java.util.List;
 
-public interface PostReadRepository extends JpaRepository<PostRead, Integer>, QueryDslPredicateExecutor<PostRead> {
+public interface PostReadRepository extends DatabaseRepository<PostRead, Integer> {
 
 	@Override
 	@RestResource(exported = false)

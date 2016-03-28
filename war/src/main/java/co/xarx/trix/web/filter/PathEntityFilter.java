@@ -1,10 +1,8 @@
 package co.xarx.trix.web.filter;
 
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.util.StringUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +14,7 @@ import java.io.IOException;
 public class PathEntityFilter implements Filter {
 
 	@Autowired
-	private PostRepository postRepository;
-	@Autowired
 	private HttpServletRequest request;
-	@Autowired
-	private ObjectMapper objectMapper;
 	@Autowired
 	private AmazonCloudService amazonCloudService;
 
@@ -46,14 +40,14 @@ public class PathEntityFilter implements Filter {
 				!path.equals("/mystats") &&
 				!path.contains("/@")) {
 
-			Post post = postRepository.findBySlug(path.replace("/", ""));
-
-			if (post != null) {
-				request.setAttribute("requestedEntityJson", objectMapper.writeValueAsString(post));
-				request.setAttribute("requestedEntityMetas", metaTagsBuilder(post));
-				request.setAttribute("requestedEntityHiddenHtml", hiddenHtmlBuilder(post));
-				request.setAttribute("entityType", "POST");
-			}
+//			Post post = postRepository.findBySlug(path.replace("/", ""));
+//
+//			if (post != null) {
+//				request.setAttribute("requestedEntityJson", objectMapper.writeValueAsString(post));
+//				request.setAttribute("requestedEntityMetas", metaTagsBuilder(post));
+//				request.setAttribute("requestedEntityHiddenHtml", hiddenHtmlBuilder(post));
+//				request.setAttribute("entityType", "POST");
+//			}
 		}
 
 		chain.doFilter(req, res);

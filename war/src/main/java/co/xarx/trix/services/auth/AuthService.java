@@ -6,12 +6,9 @@ import co.xarx.trix.domain.UserConnection;
 import co.xarx.trix.domain.social.SocialUser;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.UserConnectionRepository;
-import co.xarx.trix.persistence.UserRepository;
-import co.xarx.trix.util.Constants;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,20 +17,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Objects;
 
 
 @Component
 public class AuthService {
 
-	@Autowired
 	private PersonRepository personRepository;
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired
 	private UserConnectionRepository userConnectionRepository;
-	@Autowired
 	private SocialAuthenticationService socialAuthenticationService;
+
+	@Autowired
+	public AuthService(PersonRepository personRepository, UserConnectionRepository
+			userConnectionRepository, SocialAuthenticationService socialAuthenticationService) {
+		this.personRepository = personRepository;
+		this.userConnectionRepository = userConnectionRepository;
+		this.socialAuthenticationService = socialAuthenticationService;
+	}
 
 	public User getUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -80,16 +79,11 @@ public class AuthService {
 		return person;
 	}
 
-	public void updateLoggedPerson(Person person) {
+	public void updateLoggedPerson(User user) {
 		logout();
-		person = personRepository.findByUsername(person.username);
 
-		Authentication auth = new UsernamePasswordAuthenticationToken(person.user, person.user.password, person.user.getAuthorities());
+		Authentication auth = new UsernamePasswordAuthenticationToken(user, user.password, user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
-	}
-
-	public boolean isLogged() {
-		return !getUser().isAnonymous();
 	}
 
 	public Authentication passwordAuthentication(User user, String password) throws BadCredentialsException {
@@ -99,22 +93,10 @@ public class AuthService {
 			Authentication auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(auth);
 
-//			asyncService.updatePersonLastLoginDate(TenantContextHolder.getCurrentNetworkId(), user.username);
-
 			return auth;
 		}
 
 		throw new BadCredentialsException("Wrong password");
-	}
-
-	public Authentication passwordAuthentication(String username, String password) throws BadCredentialsException {
-		if(username.equals("wordrails"))
-			return new AnonymousAuthenticationToken("anonymousKey",
-					Constants.Authentication.ANONYMOUS_USER, Constants.Authentication.ANONYMOUS_USER.authorities);
-
-		User user = userRepository.findUserByUsername(username);
-
-		return passwordAuthentication(user, password);
 	}
 
 	public boolean socialAuthentication(String providerId, OAuthService service, String userId, Token token) throws BadCredentialsException, IOException {
@@ -154,12 +136,6 @@ public class AuthService {
 		SecurityContextHolder.getContext().setAuthentication(auth);
 
 		return true;
-	}
-
-	public boolean isLogged(Integer personId) {
-		Person person = getLoggedPerson();
-
-		return person != null && Objects.equals(personId, person.id);
 	}
 
 	public void logout() {

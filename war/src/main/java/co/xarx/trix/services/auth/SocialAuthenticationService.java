@@ -1,6 +1,9 @@
 package co.xarx.trix.services.auth;
 
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.User;
+import co.xarx.trix.domain.UserConnection;
+import co.xarx.trix.domain.UserGrantedAuthority;
 import co.xarx.trix.domain.social.FacebookUser;
 import co.xarx.trix.domain.social.GoogleUser;
 import co.xarx.trix.domain.social.SocialUser;
@@ -9,7 +12,7 @@ import co.xarx.trix.persistence.UserRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
@@ -23,17 +26,20 @@ import java.io.IOException;
 import java.text.Normalizer;
 import java.util.HashSet;
 
+@Slf4j
 @Service
 public class SocialAuthenticationService {
 
-	static Logger log = Logger.getLogger(SocialAuthenticationService.class.getName());
-
-	@Autowired
 	private PersonRepository personRepository;
-	@Autowired
 	private UserRepository userRepository;
 
-	public boolean facebookLogin(String userId, OAuthService service, Token token) {
+	@Autowired
+	public SocialAuthenticationService(PersonRepository personRepository, UserRepository userRepository) {
+		this.personRepository = personRepository;
+		this.userRepository = userRepository;
+	}
+
+	boolean facebookLogin(String userId, OAuthService service, Token token) {
 		try {
 			getFacebookUserFromOAuth(userId, service, token);
 			return true;
@@ -42,7 +48,7 @@ public class SocialAuthenticationService {
 		}
 	}
 
-	public boolean googleLogin(String userId, String accessToken) {
+	boolean googleLogin(String userId, String accessToken) {
 		try {
 			getGoogleUserFromOAuth(userId, accessToken);
 			return true;
@@ -51,7 +57,7 @@ public class SocialAuthenticationService {
 		}
 	}
 
-	public GoogleUser getGoogleUserFromOAuth(String userId, String accessToken) throws IOException {
+	GoogleUser getGoogleUserFromOAuth(String userId, String accessToken) throws IOException {
 		OAuthRequest request = new OAuthRequest(Verb.GET, "https://www.googleapis.com/plus/v1/people/" + userId + "?fields=cover/coverPhoto/url,emails,id,name,image");
 		request.addHeader("Authorization", "Bearer " + accessToken);
 		System.out.println(MapUtils.toString(request.getOauthParameters()));
@@ -142,7 +148,7 @@ public class SocialAuthenticationService {
 		return person;
 	}
 
-	public FacebookUser getFacebookUserFromOAuth(String userId, OAuthService service, Token token) throws IOException {
+	FacebookUser getFacebookUserFromOAuth(String userId, OAuthService service, Token token) throws IOException {
 		OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/v2.5/" + userId + "?fields=id,name,email,cover,picture.type(large)");
 		service.signRequest(token, request);
 		Response response = request.send();
@@ -158,7 +164,7 @@ public class SocialAuthenticationService {
 		return fbUser;
 	}
 
-	public Person getPersonFromSocialUser(SocialUser socialUser) throws IOException {
+	Person getPersonFromSocialUser(SocialUser socialUser) throws IOException {
 		Person person = findExistingUser(socialUser);
 		User user;
 		if (person.user == null) {

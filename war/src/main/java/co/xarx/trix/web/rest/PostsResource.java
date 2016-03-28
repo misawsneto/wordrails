@@ -1,16 +1,13 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.api.*;
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.QPost;
-import co.xarx.trix.dto.StationTermsDto;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.post.PostService;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -20,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.Arrays;
@@ -40,7 +37,8 @@ import java.util.List;
 import java.util.Set;
 
 @Path("/posts")
-@Consumes(MediaType.WILDCARD)
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Component
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PostsResource {
@@ -51,8 +49,6 @@ public class PostsResource {
 	private UriInfo uriInfo;
 	@Context
 	private HttpServletResponse response;
-	@Autowired
-	private AsyncService asyncService;
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
@@ -68,15 +64,77 @@ public class PostsResource {
 	private PostService postService;
 
 	private void forward() throws ServletException, IOException {
-		String path = request.getServletPath() + uriInfo.getPath();
+		forward(uriInfo.getPath());
+	}
+
+	private void forward(String uri) throws ServletException, IOException {
+		String path = request.getServletPath() + uri;
 		request.getServletContext().getRequestDispatcher(path).forward(request, response);
+	}
+
+	@GET
+	@Path("/")
+	public void getPosts() throws ServletException, IOException {
+		forward();
+	}
+
+	@GET
+	@Path("/{id}")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'read')")
+	public void getPost(@PathParam("id") @P("id") int postId) throws ServletException, IOException {
+		forward();
+	}
+
+	@PUT
+	@Path("/{id}")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write')")
+	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
+		forward();
+	}
+
+	@POST
+	@Path("/")
+//	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write')")
+	public void postPost() throws ServletException, IOException {
+		forward();
+	}
+
+	@DELETE
+	@Path("/{id}")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write')")
+	public void deletePost(@PathParam("id") Integer id) throws ServletException, IOException {
+		forward();
+	}
+
+
+	@POST
+	@Path("/{postId}/comments")
+	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
+	public void postComment(@PathParam("postId") @P("p") Integer postId) throws ServletException,
+			IOException {
+		forward("/comments");
+	}
+
+
+	@GET
+	@Path("/{postId}/terms")
+	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
+	public void getTerms(@PathParam("postId") @P("p") Integer postId) throws ServletException,
+			IOException {
+		forward("/comments");
 	}
 
 
 	@PUT
+	@Path("/{postId}/comments/{commentId}")
+	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
+	public void putComment(@PathParam("postId") @P("p") Integer postId, @PathParam("commentId") Integer commentId) throws ServletException,
+			IOException {
+		forward("/comments/" + commentId);
+	}
+
+	@PUT
 	@Path("/{postId}/updatePostTags")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
 	public ContentResponse<PostView> updatePostTerms(@PathParam("postId") Integer postId, List<TermDto> terms) throws ServletException, IOException {
 
@@ -89,8 +147,8 @@ public class PostsResource {
 
 	@GET
 	@Path("/getPostViewBySlug")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
+	@PostAuthorize("hasPermission(#returnObject.postId, 'co.xarx.trix.domain.Post', 'read') or returnObject==null")
 	public PostView getPostViewBySlug(@QueryParam("slug") String slug, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findBySlug(slug);
 		PostView postView = null;
@@ -105,8 +163,8 @@ public class PostsResource {
 
 	@GET
 	@Path("/{postId}/getPostViewById")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
+	@PostAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
 	public PostView getPostViewById(@PathParam("postId") Integer postId, @QueryParam("withBody") Boolean withBody) throws ServletException, IOException {
 		Post post = postRepository.findOne(postId);
 		PostView postView = null;
@@ -117,27 +175,6 @@ public class PostsResource {
 		}
 
 		return postView;
-	}
-
-	@GET
-	@Path("/{postId}")
-	public void getPost(@PathParam("postId") int postId) throws ServletException, IOException {
-		String userIp = request.getRemoteAddr();
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//		analytics.postViewed(username, userIp, postId);
-		forward();
-	}
-
-	@PUT
-	@Path("/{id}")
-	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
-		forward();
-	}
-
-	@DELETE
-	@Path("/{id}")
-	public void deletePost(@PathParam("id") Integer id) throws ServletException, IOException {
-		forward();
 	}
 
 	@GET
@@ -244,27 +281,18 @@ public class PostsResource {
 	@Path("/{postId}/body")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
+	@PostAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
 	public StringResponse getPostBody(@PathParam("postId") Integer postId){
 		Person person = authProvider.getLoggedPerson();
 		String body = postRepository.findPostBodyById(postId);
 		Post post = postRepository.findOne(postId);
 
 		String requestedSessionId = request.getRequestedSessionId();
-		asyncService.run(TenantContextHolder.getCurrentTenantId(), () ->
-				postService.countPostRead(post.id, person.id, requestedSessionId));
+		postService.countPostRead(post.id, person.id, requestedSessionId);
 
 		StringResponse content = new StringResponse();
 		content.response = body;
 		return content;
-	}
-
-	@PUT
-	@Path("/{postId}")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
-	public Response promote(@PathParam("postId") Integer postId, StationTermsDto stationTerms){
-		return Response.status(Status.OK).build();
 	}
 
 	@GET

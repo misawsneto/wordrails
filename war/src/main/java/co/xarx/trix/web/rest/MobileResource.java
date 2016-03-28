@@ -6,6 +6,7 @@ import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
@@ -29,6 +30,7 @@ public class MobileResource {
 	@PUT
 	@Path("/location")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@PreAuthorize("permitAll()")
 	public Response updateLocation(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String device,
 							 @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		return updateMobile(token, lat, lng, device.equals("apple") ? MobileDevice.Type.APPLE : MobileDevice.Type.ANDROID);

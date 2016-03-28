@@ -1,14 +1,11 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.api.NetworkPermission;
+import co.xarx.trix.annotations.IgnoreMultitenancy;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
 import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.aspect.annotations.IgnoreMultitenancy;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.dto.NetworkCreateDto;
 import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
@@ -21,6 +18,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
@@ -39,6 +37,12 @@ import java.util.*;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class NetworkResource {
+
+	private class NetworkCreateDto extends Network {
+
+		public String newSubdomain;
+		public Person person;
+	}
 
 	@Autowired
 	public ObjectMapper objectMapper;
@@ -79,13 +83,10 @@ public class NetworkResource {
 		PersonPermissions personPermissions = new PersonPermissions();
 		Person person = authProvider.getLoggedPerson();
 
-		//Network Permissions
-		NetworkPermission networkPermissionDto = new NetworkPermission();
-		networkPermissionDto.admin = person.networkAdmin;
 
 		//Stations Permissions
 		List<Station> stations = stationRepository.findByPersonId(person.id);
-		List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>(stations.size());
+		List<StationPermission> stationPermissionDtos = new ArrayList<>(stations.size());
 		for (Station station : stations) {
 			StationPermission stationPermissionDto = new StationPermission();
 
@@ -114,7 +115,7 @@ public class NetworkResource {
 
 			stationPermissionDtos.add(stationPermissionDto);
 		}
-		personPermissions.networkPermission = networkPermissionDto;
+
 		personPermissions.stationPermissions = stationPermissionDtos;
 		personPermissions.personId = person.id;
 		personPermissions.username = person.username;
@@ -420,6 +421,7 @@ public class NetworkResource {
 
 	@GET
 	@Path("/stats")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public JsonStats networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("postId") Integer postId) throws IOException {
 		if (date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");

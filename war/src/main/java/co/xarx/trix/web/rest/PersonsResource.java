@@ -4,16 +4,15 @@ import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.dto.PersonCreateDto;
 import co.xarx.trix.eventhandler.PersonEventHandler;
 import co.xarx.trix.eventhandler.StationRoleEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.StationSecurityChecker;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.MobileService;
+import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.auth.StationPermissionService;
@@ -33,6 +32,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -56,6 +56,14 @@ import java.util.*;
 @Component
 public class PersonsResource {
 
+	private class PersonCreateDto {
+
+		public String name;
+		public String username;
+		public String email;
+		public String password;
+	}
+
 	@Context
 	private HttpServletRequest httpServletRequest;
 	@Context
@@ -73,6 +81,8 @@ public class PersonsResource {
 	@Autowired
 	private WordrailsService wordrailsService;
 	@Autowired
+	private NetworkService networkService;
+	@Autowired
 	private PersonService personService;
 	@Autowired
 	private PostRepository postRepository;
@@ -82,8 +92,8 @@ public class PersonsResource {
 	private PostReadRepository postReadRepository;
 	@Autowired
 	private CommentRepository commentRepository;
-	@Autowired
-	private StationSecurityChecker stationSecurityChecker;
+//	@Autowired
+//	private StationSecurityChecker stationSecurityChecker;
 	@Autowired
 	private QueryPersistence queryPersistence;
 	@Autowired
@@ -119,21 +129,6 @@ public class PersonsResource {
 		String path = request.getServletPath() + uriInfo.getPath();
 		request.getServletContext().getRequestDispatcher(path).forward(request, response);
 	}
-
-//    @GET
-//    @Path("/findByUsername")
-//    @Transactional
-//    public Person findByUsername(@PathParam("username") String username) throws ServletException, IOException {
-//        Person person = authProvider.getLoggedPerson();
-//
-//        Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-//
-//        if(person.id.equals(id) || networkSecurityChecker.isNetworkAdmin(network)) {
-//            forward();
-//            return Response.status(Status.OK).build();
-//        }else
-//            return Response.status(Status.UNAUTHORIZED).build();
-//    }
 
 	@GET
 	@Path("/{id}")
@@ -199,7 +194,7 @@ public class PersonsResource {
 
 		personRepository.save(loadedPerson);
 
-		authProvider.updateLoggedPerson(loadedPerson);
+		authProvider.updateLoggedPerson(user);
 
 		return Response.status(Status.OK).build();
 	}
@@ -232,7 +227,7 @@ public class PersonsResource {
 		return updateMobile(token, lat, lng, MobileDevice.Type.APPLE);
 	}
 
-	public Response updateMobile(String token, Double lat, Double lng, MobileDevice.Type type) {
+	private Response updateMobile(String token, Double lat, Double lng, MobileDevice.Type type) {
 		Person person = authProvider.getLoggedPerson();
 		Logger.info("Updating " + type.toString() + " device " + token + " for person " + person.id);
 		mobileService.updateDevice(person, token, lat, lng, type);
@@ -244,7 +239,7 @@ public class PersonsResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response tokenSignin(@Context HttpServletRequest request, @FormParam("token") String token) {
 		try{
-			Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+			Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
 			if(network.networkCreationToken == null || !network.networkCreationToken.equals(token))
 				throw new BadRequestException("Invalid Token");
 
@@ -307,8 +302,9 @@ public class PersonsResource {
 	}
 
 	@PUT
-	@Path("/me/password")
 	@Transactional
+	@Path("/me/password")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
 		Asserts.notEmpty(oldPassword, "Old password it empty or null");
@@ -325,7 +321,7 @@ public class PersonsResource {
 
 	@POST
 	@Path("/create")
-	public Response create(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException{
+	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException{
 		Person person = personService.create(dto.name, dto.username, dto.password, dto.email);
 
 		if (person != null) {
@@ -335,8 +331,8 @@ public class PersonsResource {
 		}
 	}
 
-	@Path("/stats/count")
 	@GET
+	@Path("/stats/count")
 	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q){
 		ContentResponse<Integer> resp = new ContentResponse<>();
 		resp.content = 0;
@@ -351,6 +347,7 @@ public class PersonsResource {
 	@PUT
 	@Path("/deleteMany/network")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
 		Person person = authProvider.getLoggedPerson();
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
@@ -374,25 +371,9 @@ public class PersonsResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@DELETE
-	@Path("/{personId}")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response deletePersonFromNetwork (@Context HttpServletRequest request, @PathParam("personId") Integer personId) throws IOException {
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
-		Person person = personRepository.findOne(personId);
-
-		if(person != null && person.networkAdmin && person.user.getTenantId().equals(network.getTenantId())){
-			personEventHandler.handleBeforeDelete(person);
-			personRepository.delete(person.id);
-			return Response.status(Status.OK).build();
-		}else{
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
-
-	}
-
 	@PUT
 	@Path("/{personId}/disable")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response disablePerson(@PathParam("personId") Integer personId){
 		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
@@ -405,6 +386,7 @@ public class PersonsResource {
 
 	@PUT
 	@Path("/{personId}/enable")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response enablePerson(@PathParam("personId") Integer personId){
 		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
@@ -416,8 +398,9 @@ public class PersonsResource {
 	}
 
 	@PUT
-	@Path("/updateStationRoles")
 	@Transactional
+	@Path("/updateStationRoles")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response updateStationRoles(StationRolesUpdate stationRolesUpdate){
 		Person self = authProvider.getLoggedPerson();
 		if(stationRolesUpdate != null && stationRolesUpdate.personsIds != null && stationRolesUpdate.stationsIds != null){
@@ -474,6 +457,7 @@ public class PersonsResource {
 
 	@PUT
 	@Path("/enable/all")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response enablePerson(IdsList idsList){
 		Person self = authProvider.getLoggedPerson();
 		if(idsList != null && idsList.ids != null){
@@ -491,6 +475,7 @@ public class PersonsResource {
 
 	@PUT
 	@Path("/disable/all")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response disablePerson(IdsList idsList){
 		Person self = authProvider.getLoggedPerson();
 		if(idsList != null && idsList.ids != null){
@@ -506,33 +491,11 @@ public class PersonsResource {
 		return Response.status(Status.CREATED).build();
 	}
 
-	@PUT
-	@Path("/deletePersonStationRoles")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Transactional(readOnly = false)
-	public Response deletePersonStationRoles(List<Integer> stationRolesIds) throws IOException{
-
-		List<Station> stations = stationRepository.findByStationRolesIds(stationRolesIds);
-
-		Set<Integer> stationIds = new HashSet<Integer>();
-
-		for (Station station : stations) {
-			stationIds.add(station.id);
-		}
-
-		if(stationSecurityChecker.isStationsAdmin(new ArrayList<Integer>(stationIds))){
-			stationRolesRepository.deleteByIds(stationRolesIds);
-			return Response.status(Status.OK).build();
-		}else{
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
-	}
-
 	@GET
 	@Path("/allInit")
 	public PersonData   getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws IOException {
 
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
 		Integer stationId = wordrailsService.getStationIdFromCookie(request);
 		PersonData personData = getInitialData(request);
 
@@ -585,14 +548,10 @@ public class PersonsResource {
 			throw new UnauthorizedException("User is not authorized");
 		}
 
-		Network network = wordrailsService.getNetworkFromHost(request.getHeader("Host"));
+		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
 
 		PersonPermissions personPermissions = new PersonPermissions();
 
-		//Network Permissions
-		NetworkPermission networkPermissionDto = new NetworkPermission();
-
-		networkPermissionDto.admin = person.networkAdmin;
 
 		List<StationDto> stationDtos = new ArrayList<>();
 		List<Station> stations = stationRepository.findByPersonId(person.id);
@@ -602,13 +561,13 @@ public class PersonsResource {
 			stationDtos.add(stationDto);
 		}
 
-		personPermissions.networkPermission = networkPermissionDto;
 		personPermissions.stationPermissions = getStationPermissions(stations, person.id);
 		personPermissions.personId = person.id;
 		personPermissions.username = person.username;
 		personPermissions.personName = person.name;
 
 		PersonData initData = new PersonData();
+		initData.isAdmin = person.networkAdmin;
 
 		if(person.user != null && (person.password == null || person.password.equals(""))){
 			initData.noPassword = true;
@@ -685,40 +644,9 @@ public class PersonsResource {
 		return stationPermissionDtos;
 	}
 
-
-	@GET
-	@Path("/me/bookmarkedRecommended")
-	public ContentResponse<List<BooleanResponse>> checkBookmarkedRecommendedByMe(@QueryParam("postId") Integer postId){
-		Person person = authProvider.getLoggedPerson();
-		List<BooleanResponse> resp = new ArrayList<>();
-
-		if(person.getBookmarkPosts().contains(postId)){
-			BooleanResponse bool = new BooleanResponse();
-			bool.response = true;
-			resp.add(bool);
-		}else{
-			BooleanResponse bool = new BooleanResponse();
-			bool.response = false;
-			resp.add(bool);
-		}
-
-		if(person.getRecommendPosts().contains(postId)){
-			BooleanResponse bool = new BooleanResponse();
-			bool.response = true;
-			resp.add(bool);
-		}else{
-			BooleanResponse bool = new BooleanResponse();
-			bool.response = false;
-			resp.add(bool);
-		}
-
-		ContentResponse<List<BooleanResponse>> response = new ContentResponse<>();
-		response.content = resp;
-		return response;
-	}
-
 	@GET
 	@Path("/me/publicationsCount")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public Response publicationsCount(@QueryParam("personId") Integer personId)throws IOException {
 		Person person = null;
 		if(personId != null){
@@ -733,6 +661,7 @@ public class PersonsResource {
 
 	@GET
 	@Path("/me/stats")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException{
 		if(date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");

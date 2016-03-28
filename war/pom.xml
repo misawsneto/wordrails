@@ -29,7 +29,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>co.xarx.trix.generator.JavaScriptClientGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.generator.JavaScriptClientGenerator</mainClass>
 							<arguments>
 								<argument>${basedir}/src/main/webapp/js</argument>
 							</arguments>
@@ -43,7 +43,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>co.xarx.trix.generator.AngularClientGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.generator.AngularClientGenerator</mainClass>
 							<arguments>
 								<argument>${basedir}/src/main/webapp/js</argument>
 							</arguments>
@@ -98,6 +98,11 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
@@ -164,6 +169,25 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson2-provider</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxb-provider</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>tjws</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
 		</dependency>
@@ -191,11 +215,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
 
 
@@ -402,18 +421,6 @@
 			<artifactId>powermock-module-junit4</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<!--<dependency>-->
-			<!--<groupId>org.powermock</groupId>-->
-			<!--<artifactId>powermock-module-junit4-rule</artifactId>-->
-			<!--<scope>test</scope>-->
-		<!--</dependency>-->
-
-		<!--<dependency>-->
-			<!--<groupId>org.powermock</groupId>-->
-			<!--<artifactId>powermock-classloading-xstream</artifactId>-->
-			<!--<scope>test</scope>-->
-		<!--</dependency>-->
 
 		<dependency>
 			<groupId>org.hsqldb</groupId>
