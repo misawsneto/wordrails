@@ -80,14 +80,14 @@ public class PostsResource {
 
 	@GET
 	@Path("/{id}")
-	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'read')")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'read') or hasRole('ADMIN')")
 	public void getPost(@PathParam("id") @P("id") int postId) throws ServletException, IOException {
 		forward();
 	}
 
 	@PUT
 	@Path("/{id}")
-	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write')")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write') or hasRole('ADMIN')")
 	public void putPost(@PathParam("id") Integer id) throws ServletException, IOException {
 		forward();
 	}
@@ -101,7 +101,7 @@ public class PostsResource {
 
 	@DELETE
 	@Path("/{id}")
-	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write')")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'delete') or hasRole('ADMIN')")
 	public void deletePost(@PathParam("id") Integer id) throws ServletException, IOException {
 		forward();
 	}
@@ -109,7 +109,7 @@ public class PostsResource {
 
 	@POST
 	@Path("/{postId}/comments")
-	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
+	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read') or hasRole('ADMIN')")
 	public void postComment(@PathParam("postId") @P("p") Integer postId) throws ServletException,
 			IOException {
 		forward("/comments");
@@ -118,7 +118,7 @@ public class PostsResource {
 
 	@GET
 	@Path("/{postId}/terms")
-	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read')")
+	@PreAuthorize("hasPermission(#p, 'co.xarx.trix.domain.Post', 'read') or hasRole('ADMIN')")
 	public void getTerms(@PathParam("postId") @P("p") Integer postId) throws ServletException,
 			IOException {
 		forward("/comments");
