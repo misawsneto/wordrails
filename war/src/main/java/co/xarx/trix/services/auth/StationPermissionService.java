@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StationPermissionService {
@@ -38,11 +39,8 @@ public class StationPermissionService {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		List<Integer> stationIds = stationRepository.findIds(TenantContextHolder.getCurrentTenantId());
-		for (Integer stationId : stationIds) {
-			if (permissionEvaluator.hasPermission(auth, stationId, Station.class.getName(), TrixPermission.READ)) {
-				result.add(stationId);
-			}
-		}
+		List<Integer> stationIdsWithPermission = stationIds.stream().filter(stationId -> permissionEvaluator.hasPermission(auth, stationId, Station.class.getName(), TrixPermission.READ)).collect(Collectors.toList());
+		result.addAll(stationIdsWithPermission);
 
 		return result;
 	}

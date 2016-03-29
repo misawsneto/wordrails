@@ -35,6 +35,7 @@ public class BookmarksResource {
 	@GET
 	@Path("/searchBookmarks")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q,
 															 @QueryParam("page") Integer page,
 															 @QueryParam("size") Integer size){

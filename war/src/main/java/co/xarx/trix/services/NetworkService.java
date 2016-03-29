@@ -1,6 +1,5 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.util.StringUtil;
@@ -31,6 +30,19 @@ public class NetworkService {
 			tenantIds.put(n.tenantId, n.id);
 			if (n.domain != null) domains.put(n.domain, n.id);
 		}
+	}
+
+	public Network getNetworkFromHost(String host) {
+		String tenantId = getTenantFromHost(host);
+
+		if (tenantId.equals("settings")) { //gambiarra
+			Network network = new Network();
+			network.name = "Settings";
+			network.tenantId = "settings";
+			network.id = 0;
+		}
+
+		return networkRepository.findByTenantId(tenantId);
 	}
 
 	public String getTenantFromHost(String host) {

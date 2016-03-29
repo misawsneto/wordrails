@@ -24,8 +24,6 @@ public interface PostProjection {
 
 	String getBody();
 
-	Sponsor getSponsor();
-
 	Person getAuthor();
 
 	Station getStation();

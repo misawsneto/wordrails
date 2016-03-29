@@ -1,20 +1,25 @@
 package co.xarx.trix.persistence;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Image;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
-public interface ImageRepository extends JpaRepository<Image, Integer>, QueryDslPredicateExecutor<Image> {
+@RepositoryRestResource(exported = true)
+public interface ImageRepository extends DatabaseRepository<Image, Integer> {
 
 	@Modifying
 	@RestResource(exported = false)
 	@Query("DELETE FROM Image image where image.id in (:ids)")
 	void deleteImages(@Param("ids") List<Integer> ids);
 
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	Image findOne(Integer id);
 }

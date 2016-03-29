@@ -41,7 +41,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>co.xarx.trix.generator.ApiGenerator</mainClass>
+					<mainClass>co.xarx.trix.generator.generator.ApiGenerator</mainClass>
 					<arguments>
 						<argument>${project.build.directory}/generated-sources/java</argument>
 					</arguments>

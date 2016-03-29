@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -103,6 +104,7 @@ public class TermsResource {
 
 	@GET
 	@Path("/allTerms")
+	@PreAuthorize("permitAll()")
 	public ContentResponse<List<TermView>> getAllTerms(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws IOException {
 		List<Term> allTerms;
 		if(perspectiveId != null){
@@ -118,6 +120,7 @@ public class TermsResource {
 
 	@GET
 	@Path("/search/findPostsByTagAndStationId")
+	@PreAuthorize("permitAll()")
 	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tagName") String tagName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
 
@@ -127,10 +130,4 @@ public class TermsResource {
 		response.content = postConverter.convertToViews(posts);
 		return response;
 	}
-
-    @GET
-    @Path("/search/findPostsByCategory")
-    public ContentResponse<List<PostView>> findPostsByCategory(@QueryParam("categoryName") String categoryName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
-        return findPostsByTagAndStationId(categoryName, stationId, page, size);
-    }
 }

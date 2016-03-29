@@ -1,7 +1,7 @@
 package co.xarx.trix.aspect;
 
-import co.xarx.trix.aspect.annotations.IgnoreMultitenancy;
-import co.xarx.trix.aspect.annotations.TenantAuthorize;
+import co.xarx.trix.annotations.IgnoreMultitenancy;
+import co.xarx.trix.annotations.TenantAuthorize;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.MultiTenantEntity;
 import co.xarx.trix.exception.OperationNotSupportedException;

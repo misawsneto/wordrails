@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Setter;
-import org.javers.core.metamodel.annotation.DiffIgnore;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -71,10 +71,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@Column(length = 1024)
 	public String subheading;
 
-	@DiffIgnore
-	@ManyToOne
-	public Sponsor sponsor;
-
 	@Lob
 	public String originalSlug;
 
@@ -97,6 +93,7 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
 
+	@RestResource(exported = false)
 	@OneToMany
 	@JoinTable(
 			name="post_video",
