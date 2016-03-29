@@ -42,7 +42,7 @@ public class Invitation extends BaseEntity {
 
 	@PrePersist
 	void onCreate() {
-		createdAt = new Date();
+		setCreatedAt(new Date());
 		invitationUrl = getUrl();
 	}
 
@@ -52,6 +52,6 @@ public class Invitation extends BaseEntity {
 
 	@PreUpdate
 	void onUpdate() {
-		updatedAt = new Date();
+		setUpdatedAt(new Date());
 	}
 }

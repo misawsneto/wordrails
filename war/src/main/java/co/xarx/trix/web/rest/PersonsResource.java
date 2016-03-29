@@ -10,10 +10,7 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.AmazonCloudService;
-import co.xarx.trix.services.MobileService;
-import co.xarx.trix.services.NetworkService;
-import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.*;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.auth.StationPermissionService;
 import co.xarx.trix.util.Logger;
@@ -102,6 +99,8 @@ public class PersonsResource {
 	private MenuEntryRepository menuEntryRepository;
 	@Autowired
 	private StationPermissionService stationPermissionService;
+	@Autowired
+	private StatisticsService statisticsService;
 
 	@Autowired
 	@Qualifier("objectMapper")
@@ -661,10 +660,11 @@ public class PersonsResource {
 
 	@GET
 	@Path("/me/stats")
-	@PreAuthorize("hasRole('ROLE_USER')")
-	public Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException{
-		if(date == null)
-			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
+	@PreAuthorize("isAuthenticated()")
+	public Response personStats(@QueryParam("date") String date,
+								@QueryParam("postId") Integer postId) throws IOException {
+
+		statisticsService.personStats(date, postId);
 
 		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 

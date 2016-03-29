@@ -45,11 +45,11 @@ public class UserConnection extends BaseEntity implements Serializable {
 
 	@PreUpdate
 	public void onUpdate() {
-		updatedAt = new Date();
+		setUpdatedAt(new Date());
 	}
 
 	@PrePersist
 	public void onCreate() {
-		createdAt = new Date();
+		setCreatedAt(new Date());
 	}
 }

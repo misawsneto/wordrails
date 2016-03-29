@@ -104,7 +104,7 @@ public class TermsResource {
 
 	@GET
 	@Path("/allTerms")
-	@PreAuthorize("permitAll()")
+	@PreAuthorize("permitAll")
 	public ContentResponse<List<TermView>> getAllTerms(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws IOException {
 		List<Term> allTerms;
 		if(perspectiveId != null){
@@ -120,7 +120,7 @@ public class TermsResource {
 
 	@GET
 	@Path("/search/findPostsByTagAndStationId")
-	@PreAuthorize("permitAll()")
+	@PreAuthorize("permitAll")
 	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tagName") String tagName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
 

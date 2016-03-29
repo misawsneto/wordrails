@@ -40,7 +40,7 @@ public class AmazonResource {
 
 	@GET
 	@Path("/signedUrl")
-	@PreAuthorize("permitAll()")
+	@PreAuthorize("permitAll")
 	public Response generateSignedUrl(@QueryParam("hash") String hash,
 									  @QueryParam("type") String type) throws IOException {
 		String objectKey = TenantContextHolder.getCurrentTenantId() + "/" + type + "/" + hash;

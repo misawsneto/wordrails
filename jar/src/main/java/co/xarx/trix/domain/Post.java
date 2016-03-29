@@ -174,15 +174,15 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 		if (date == null)
 			date = new Date();
-		createdAt = new Date();
+		setCreatedAt(new Date());
 	}
 
 	@PreUpdate
 	public void onUpdate() {
 		onChanges();
 
-		updatedAt = new Date();
-		lastModificationDate = updatedAt;
+		lastModificationDate = getUpdatedAt();
+		setUpdatedAt(new Date());
 	}
 
 	private void onChanges() {
