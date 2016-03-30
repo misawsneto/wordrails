@@ -1,6 +1,5 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
-import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.*;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
@@ -10,7 +9,7 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.services.InitService;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.PersonService;
@@ -19,10 +18,11 @@ import co.xarx.trix.services.auth.StationPermissionService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.PersonsApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.http.util.Asserts;
-import org.jboss.resteasy.spi.HttpRequest;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,44 +30,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.*;
 
-@Path("/persons")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 @Component
-public class PersonsResource {
+public class PersonsResource extends AbstractResource implements PersonsApi {
 
-	private class PersonCreateDto {
-
-		public String name;
-		public String username;
-		public String email;
-		public String password;
-	}
-
-	@Context
-	private HttpServletRequest httpServletRequest;
-	@Context
-	private HttpRequest httpRequest;
 	@Autowired
 	private PersonRepository personRepository;
 	@Autowired
@@ -78,8 +55,6 @@ public class PersonsResource {
 	private StationRolesRepository stationRolesRepository;
 	@Autowired
 	private NetworkRepository networkRepository;
-	@Autowired
-	private WordrailsService wordrailsService;
 	@Autowired
 	private NetworkService networkService;
 	@Autowired
@@ -92,14 +67,12 @@ public class PersonsResource {
 	private PostReadRepository postReadRepository;
 	@Autowired
 	private CommentRepository commentRepository;
-//	@Autowired
-//	private StationSecurityChecker stationSecurityChecker;
 	@Autowired
 	private QueryPersistence queryPersistence;
 	@Autowired
 	private PersonEventHandler personEventHandler;
 	@Autowired
-	private MenuEntryRepository menuEntryRepository;
+	private InitService initService;
 	@Autowired
 	private StationPermissionService stationPermissionService;
 
@@ -115,25 +88,13 @@ public class PersonsResource {
 	private UserRepository userRepository;
 	@Autowired
 	private AuthService authProvider;
-	@Autowired
-	private AmazonCloudService amazonCloudService;
 
-	@Context
-	private HttpServletRequest request;
-	@Context
-	private UriInfo uriInfo;
-	@Context
-	private HttpServletResponse response;
+	@Value("${trix.amazon.cloudfront}")
+	String cloudfrontUrl;
 
-	private void forward() throws ServletException, IOException {
-		String path = request.getServletPath() + uriInfo.getPath();
-		request.getServletContext().getRequestDispatcher(path).forward(request, response);
-	}
-
-	@GET
-	@Path("/{id}")
+	@Override
 	@Transactional
-	public Response findPerson(@PathParam("id") Integer id) throws ServletException, IOException {
+	public Response findPerson(Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
 		if(person.id.equals(id) || person.networkAdmin) {
@@ -143,8 +104,7 @@ public class PersonsResource {
 			return Response.status(Status.UNAUTHORIZED).build();
 	}
 
-	@PUT
-	@Path("/update")
+	@Override
 	@Transactional
 	public Response update(Person person){
 		Person loggedPerson = authProvider.getLoggedPerson();
@@ -199,10 +159,9 @@ public class PersonsResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@PUT
-	@Path("/{id}")
+	@Override
 	@Transactional
-	public void updatePerson(@PathParam("id") Integer id) throws ServletException, IOException {
+	public void updatePerson(Integer id) throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
 
 		if(person.id.equals(id) || person.networkAdmin)
@@ -211,19 +170,15 @@ public class PersonsResource {
 			throw new BadRequestException();
 	}
 
+	@Override
 	@Deprecated
-	@PUT
-	@Path("/me/regId")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response putRegId(@FormParam("regId") String regId, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
+	public Response putRegId(String regId, Integer networkId, Double lat, Double lng) {
 		return updateMobile(regId, lat, lng, MobileDevice.Type.ANDROID);
 	}
 
+	@Override
 	@Deprecated
-	@PUT
-	@Path("/me/token")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response putToken(@Context HttpServletRequest request, @FormParam("token") String token, @FormParam("networkId") Integer networkId, @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
+	public Response putToken(String token, Integer networkId, Double lat, Double lng) {
 		return updateMobile(token, lat, lng, MobileDevice.Type.APPLE);
 	}
 
@@ -234,10 +189,8 @@ public class PersonsResource {
 		return Response.status(Response.Status.OK).build();
 	}
 
-	@POST
-	@Path("/tokenSignin")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response tokenSignin(@Context HttpServletRequest request, @FormParam("token") String token) {
+	@Override
+	public Response tokenSignin(String token) {
 		try{
 			Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
 			if(network.networkCreationToken == null || !network.networkCreationToken.equals(token))
@@ -256,10 +209,11 @@ public class PersonsResource {
 		}
 	}
 
-	@GET
-	@Path("/{personId}/posts")
-	public ContentResponse<List<PostView>> getPersonNetworkPosts(@Context HttpServletRequest request, @PathParam("personId") Integer personId, @QueryParam("networkId") Integer networkId,
-																 @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+	@Override
+	public ContentResponse<List<PostView>> getPersonNetworkPosts(Integer personId,
+																 Integer networkId,
+																 int page,
+																 int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		List<Integer> stationsWithPermission = stationPermissionService.findStationsWithPermission();
@@ -271,10 +225,11 @@ public class PersonsResource {
 		return response;
 	}
 
-	@GET
-	@Path("/getPostsByState")
-	public ContentResponse<List<PostView>> getPersonNetworkPostsByState(@Context HttpServletRequest request, @QueryParam("personId") Integer personId, @QueryParam("state") String state,
-																		@QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+	@Override
+	public ContentResponse<List<PostView>> getPersonNetworkPostsByState(Integer personId,
+																		String state,
+																		int page,
+																		int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size);
 
 		Person person;
@@ -293,20 +248,16 @@ public class PersonsResource {
 		return response;
 	}
 
-	@GET
-	@Path("/me")
-	public void getCurrentPerson() {
+	@Override
+	public void getCurrentPerson() throws ServletException, IOException {
 		Person person = authProvider.getLoggedPerson();
-		String path = httpServletRequest.getServletPath() + "/persons/search/findByUsername?username=" + person.username;
-		httpRequest.forward(path);
+		forward("/persons/search/findByUsername?username=" + person.username);
 	}
 
-	@PUT
+	@Override
 	@Transactional
-	@Path("/me/password")
-	@PreAuthorize("hasRole('ROLE_USER')")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
+	public void putPassword(String oldPassword,
+							String newPassword) {
 		Asserts.notEmpty(oldPassword, "Old password it empty or null");
 		Asserts.notEmpty(newPassword, "New password it empty or null");
 
@@ -319,8 +270,7 @@ public class PersonsResource {
 		personRepository.save(loggedPerson);
 	}
 
-	@POST
-	@Path("/create")
+	@Override
 	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException{
 		Person person = personService.create(dto.name, dto.username, dto.password, dto.email);
 
@@ -331,8 +281,7 @@ public class PersonsResource {
 		}
 	}
 
-	@GET
-	@Path("/stats/count")
+	@Override
 	public ContentResponse<Integer> countPersonsByNetwork(@QueryParam("q") String q){
 		ContentResponse<Integer> resp = new ContentResponse<>();
 		resp.content = 0;
@@ -344,11 +293,8 @@ public class PersonsResource {
 		return resp;
 	}
 
-	@PUT
-	@Path("/deleteMany/network")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public Response deleteMany (@Context HttpServletRequest request, List<Integer> personIds){
+	@Override
+	public Response deleteMany(List<Integer> personIds){
 		Person person = authProvider.getLoggedPerson();
 		List<Person> persons = personRepository.findPersonsByIds(personIds);
 
@@ -371,10 +317,8 @@ public class PersonsResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@PUT
-	@Path("/{personId}/disable")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public Response disablePerson(@PathParam("personId") Integer personId){
+	@Override
+	public Response disablePerson(Integer personId){
 		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
 		if(!self.id.equals(person.id)) {
@@ -384,10 +328,8 @@ public class PersonsResource {
 		return Response.status(Status.CREATED).build();
 	}
 
-	@PUT
-	@Path("/{personId}/enable")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public Response enablePerson(@PathParam("personId") Integer personId){
+	@Override
+	public Response enablePerson(Integer personId){
 		Person self = authProvider.getLoggedPerson();
 		Person person = personRepository.findOne(personId);
 		if(!self.id.equals(person.id)) {
@@ -397,10 +339,8 @@ public class PersonsResource {
 		return Response.status(Status.CREATED).build();
 	}
 
-	@PUT
+	@Override
 	@Transactional
-	@Path("/updateStationRoles")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public Response updateStationRoles(StationRolesUpdate stationRolesUpdate){
 		Person self = authProvider.getLoggedPerson();
 		if(stationRolesUpdate != null && stationRolesUpdate.personsIds != null && stationRolesUpdate.stationsIds != null){
@@ -455,9 +395,7 @@ public class PersonsResource {
 		return Response.status(Status.CREATED).build();
 	}
 
-	@PUT
-	@Path("/enable/all")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@Override
 	public Response enablePerson(IdsList idsList){
 		Person self = authProvider.getLoggedPerson();
 		if(idsList != null && idsList.ids != null){
@@ -473,9 +411,7 @@ public class PersonsResource {
 		return Response.status(Status.CREATED).build();
 	}
 
-	@PUT
-	@Path("/disable/all")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@Override
 	public Response disablePerson(IdsList idsList){
 		Person self = authProvider.getLoggedPerson();
 		if(idsList != null && idsList.ids != null){
@@ -491,163 +427,28 @@ public class PersonsResource {
 		return Response.status(Status.CREATED).build();
 	}
 
-	@GET
-	@Path("/allInit")
-	public PersonData   getAllInitData (@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("setAttributes") Boolean setAttributes) throws IOException {
-
-		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
-		Integer stationId = wordrailsService.getStationIdFromCookie(request);
-		PersonData personData = getInitialData(request);
-
-		StationDto defaultStation = wordrailsService.getDefaultStation(personData, stationId);
-
-			if(defaultStation != null){
-			Integer stationPerspectiveId = defaultStation.defaultPerspectiveId;
-
-			TermPerspectiveView termPerspectiveView = wordrailsService.getDefaultPerspective(stationPerspectiveId, 10);
-
-			Pageable pageable = new PageRequest(0, 10);
-			//			Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
-
-			List<Post> popular = postRepository.findPopularPosts(defaultStation.id, pageable);
-			List<Post> recent = postRepository.findPostsOrderByDateDesc(defaultStation.id, pageable);
-			personData.popular = postConverter.convertToViews(popular);
-			personData.recent = postConverter.convertToViews(recent);
-
-
-			if(setAttributes != null && setAttributes){
-				request.setAttribute("personData", simpleMapper.writeValueAsString(personData));
-				request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
-				request.setAttribute("networkName", personData.network.name);
-				request.setAttribute("networkId", personData.network.id);
-				if(network.favicon != null)
-					request.setAttribute("faviconLink", amazonCloudService.getPublicImageURL(network.getFaviconHash()));
-				request.setAttribute("networkDesciption", "");
-				request.setAttribute("networkKeywords", "");
-			}
-		}else {
-			personData.noVisibleStation = true;
-			request.setAttribute("personData", simpleMapper.writeValueAsString(personData));
-			request.setAttribute("networkName", personData.network.name);
-		}
-
-		return personData;
-	}
-
-	@Value("${trix.amazon.cloudfront}")
-	String cloudfrontUrl;
-
-	@GET
-	@Path("/init")
-	public PersonData getInitialData (@Context HttpServletRequest request) throws IOException{
+	@Override
+	public PersonData getAllInitData() throws IOException {
 		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-
-		Person person = authProvider.getLoggedPerson();
-
-		if(person == null){
-			throw new UnauthorizedException("User is not authorized");
-		}
-
 		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
+		Integer stationId = initService.getStationIdFromCookie(request);
+		PersonData personData = initService.getInitialData(baseUrl, network);
 
-		PersonPermissions personPermissions = new PersonPermissions();
-
-
-		List<StationDto> stationDtos = new ArrayList<>();
-		List<Station> stations = stationRepository.findByPersonId(person.id);
-		for(Station station : stations) {
-			StationDto stationDto = mapper.readValue(mapper.writeValueAsString(station).getBytes("UTF-8"), StationDto.class);
-			stationDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/stations/" + station.id);
-			stationDtos.add(stationDto);
-		}
-
-		personPermissions.stationPermissions = getStationPermissions(stations, person.id);
-		personPermissions.personId = person.id;
-		personPermissions.username = person.username;
-		personPermissions.personName = person.name;
-
-		PersonData initData = new PersonData();
-		initData.isAdmin = person.networkAdmin;
-
-		if(person.user != null && (person.password == null || person.password.equals(""))){
-			initData.noPassword = true;
-		}
-
-		initData.publicCloudfrontUrl = cloudfrontUrl;
-		initData.privateCloudfrontUrl = cloudfrontUrl;
-
-		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
-		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
-
-		initData.stations = stationDtos;
-		initData.personPermissions = personPermissions;
-
-		List<MenuEntry> entries = menuEntryRepository.findAll();
-		List<MenuEntryDto> menuEntries = new ArrayList<>();
-		if (entries != null) {
-			for (MenuEntry menuEntry : entries) {
-				MenuEntryDto sectionDto = mapper.readValue(mapper.writeValueAsString(menuEntry).getBytes("UTF-8"), MenuEntryDto.class);
-				sectionDto.links = wordrailsService.generateSelfLinks(baseUrl + "/api/menuEntries/" + sectionDto.id);
-				menuEntries.add(sectionDto);
-
-			}
-		}
-		initData.menuEntries = menuEntries;
-		initData.sections = menuEntries;
-
-		initData.person.links = wordrailsService.generateSelfLinks(baseUrl + "/api/persons/" + person.id);
-		initData.network.links = wordrailsService.generateSelfLinks(baseUrl + "/api/network/" + network.id);
-
-		Pageable pageable2 = new PageRequest(0, 100, new Sort(Direction.DESC, "id"));
-		if(initData.person != null && !initData.person.username.equals("wordrails")){
-			List<Integer> postsRead = postRepository.findPostReadByPerson(initData.person.id, pageable2);
-			List<Integer> bookmarks = new ArrayList(person.getBookmarkPosts());
-			List<Integer> recommends = new ArrayList(person.getRecommendPosts());
-			initData.postsRead = postsRead;
-			initData.bookmarks = bookmarks;
-			initData.recommends = recommends;
-		}
-
-		return initData;
+		PersonData data = initService.getData(personData, stationId);
+		request.setAttribute("personData", simpleMapper.writeValueAsString(data));
+		request.setAttribute("networkName", data.network.name);
+		return data;
 	}
 
-	private List<StationPermission> getStationPermissions(List<Station> stations, Integer personId) {
-		List<StationPermission> stationPermissionDtos = new ArrayList<>();
-		for (Station station : stations) {
-			StationPermission stationPermissionDto = new StationPermission();
-
-			stationPermissionDto.stationId = station.id;
-			stationPermissionDto.stationName = station.name;
-			stationPermissionDto.writable = station.writable;
-			stationPermissionDto.main = station.main;
-			stationPermissionDto.visibility = station.visibility;
-			stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
-
-			stationPermissionDto.subheading = station.subheading;
-			stationPermissionDto.sponsored = station.sponsored;
-			stationPermissionDto.topper = station.topper;
-
-			stationPermissionDto.allowComments = station.allowComments;
-			stationPermissionDto.allowSocialShare = station.allowSocialShare;
-
-			//StationRoles Fields
-			StationRole stationRole = stationRolesRepository.findByStationAndPersonId(station, personId);
-			if (stationRole != null) {
-				stationPermissionDto.admin = stationRole.admin;
-				stationPermissionDto.editor = stationRole.editor;
-				stationPermissionDto.writer = stationRole.writer;
-			}
-
-			stationPermissionDtos.add(stationPermissionDto);
-		}
-
-		return stationPermissionDtos;
+	@Override
+	public PersonData getInitialData() throws IOException{
+		String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		Network network = networkService.getNetworkFromHost(request.getHeader("Host"));
+		return initService.getInitialData(baseUrl, network);
 	}
 
-	@GET
-	@Path("/me/publicationsCount")
-	@PreAuthorize("hasRole('ROLE_USER')")
-	public Response publicationsCount(@QueryParam("personId") Integer personId)throws IOException {
+	@Override
+	public Response publicationsCount(Integer personId)throws IOException {
 		Person person = null;
 		if(personId != null){
 			person = personRepository.findOne(personId);
@@ -659,10 +460,8 @@ public class PersonsResource {
 		return Response.status(Status.OK).entity("{\"publicationsCounts\": " + (counts.size() > 0 ? mapper.writeValueAsString(counts.get(0)) : null) + "}").build();
 	}
 
-	@GET
-	@Path("/me/stats")
-	@PreAuthorize("hasRole('ROLE_USER')")
-	public Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException{
+	@Override
+	public Response personStats(String date, Integer postId) throws IOException{
 		if(date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
 
@@ -709,7 +508,7 @@ public class PersonsResource {
 		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 	}
 
-	public void checkDateAndMapCounts(List<Object[]> countList, Iterator it) {
+	private void checkDateAndMapCounts(List<Object[]> countList, Iterator it) {
 		while (it.hasNext()){
 			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
 			long key = (Long)pair.getKey();

@@ -1,30 +1,25 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.AmazonApi;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import reactor.util.Assert;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
-@Path("/amazon")
+@Slf4j
 @Component
-public class AmazonResource {
+public class AmazonResource extends AbstractResource implements AmazonApi {
 
 	@Value("${trix.amazon.key}")
 	String accessKey;
@@ -38,11 +33,11 @@ public class AmazonResource {
 		return new AmazonS3Client(awsCreds);
 	}
 
-	@GET
-	@Path("/signedUrl")
-	@PreAuthorize("permitAll()")
-	public Response generateSignedUrl(@QueryParam("hash") String hash,
-									  @QueryParam("type") String type) throws IOException {
+	@Override
+	public Response generateSignedUrl(String hash, String type) throws IOException {
+		Assert.hasText(hash, "Hash must not be empty");
+		Assert.hasText(type, "Type must not be empty");
+
 		String objectKey = TenantContextHolder.getCurrentTenantId() + "/" + type + "/" + hash;
 
 		System.out.println("Generating pre-signed URL.");
@@ -59,27 +54,8 @@ public class AmazonResource {
 		URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
 		String signedUrl = url.toString();
 
-		System.out.println("Pre-Signed URL = " + signedUrl);
+		log.debug("Pre-Signed URL = " + signedUrl);
 
 		return Response.ok().entity(signedUrl).build();
-	}
-
-	@POST
-	@Path("/testSignedUrl")
-	public Response UploadObject(@Context HttpServletRequest request) throws IOException {
-//		String url = (String) this.generateSignedUrl("teste", "videos", request).getEntity();
-		String url = "https://public-server-test.s3.amazonaws.com/demo/videos/af9317eacdd00d88f72279004f57ab2d?AWSAccessKeyId=AKIAJ2L7I36ADEIBW6FQ&Expires=1444419499&Signature=9qLgUUCHdF13PdbR8b3KSARlxL4%3D";
-
-		HttpURLConnection connection=(HttpURLConnection) new URL(url).openConnection();
-		connection.setDoOutput(true);
-		connection.setRequestMethod("PUT");
-		OutputStreamWriter out = new OutputStreamWriter(
-				connection.getOutputStream());
-		out.write("This text uploaded as object.");
-		out.close();
-		int responseCode = connection.getResponseCode();
-		System.out.println("Service returned response code " + responseCode);
-
-		return Response.ok().build();
 	}
 }

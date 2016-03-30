@@ -1,4 +1,4 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.annotations.IgnoreMultitenancy;
 import co.xarx.trix.api.PersonPermissions;
@@ -12,37 +12,25 @@ import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.NetworkApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.util.*;
 
-@Path("/networks")
 @Component
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-public class NetworkResource {
-
-	private class NetworkCreateDto extends Network {
-
-		public String newSubdomain;
-		public Person person;
-	}
+public class NetworkResource extends AbstractResource implements NetworkApi {
 
 	@Autowired
 	public ObjectMapper objectMapper;
@@ -77,9 +65,8 @@ public class NetworkResource {
 	@Autowired
 	private RowRepository rowRepository;
 
-	@Path("/{id}/permissions")
-	@GET
-	public PersonPermissions getNetworkPersonPermissions(@PathParam("id") Integer id) {
+	@Override
+	public PersonPermissions getNetworkPersonPermissions(Integer id) {
 		PersonPermissions personPermissions = new PersonPermissions();
 		Person person = authProvider.getLoggedPerson();
 
@@ -124,9 +111,8 @@ public class NetworkResource {
 		return personPermissions;
 	}
 
-	@Path("/updateTheme")
-	@PUT
-	public Response updateTheme (ThemeView themeView){
+	@Override
+	public Response updateTheme(ThemeView themeView){
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 		if(themeView.primaryColors == null || themeView.primaryColors.size() < 14 ||
 			themeView.secondaryColors == null || themeView.primaryColors.size() < 14 ||
@@ -144,9 +130,8 @@ public class NetworkResource {
 		return Response.status(Status.OK).build();
 	}
 
-	@POST
+	@Override
 	@IgnoreMultitenancy
-	@Path("/createNetwork")
 	public Response createNetwork (NetworkCreateDto networkCreate)  throws ConflictException, BadRequestException, IOException {
 		try {
 			Network network = new Network();
@@ -407,9 +392,8 @@ public class NetworkResource {
 		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 	}
 
-	@GET
-	@Path("/publicationsCount")
-	public Response publicationsCount(@Context HttpServletRequest request)throws IOException {
+	@Override
+	public Response publicationsCount()throws IOException {
 		List<Integer> ids = new ArrayList<>();
 
 		for (Station station: stationRepository.findAll()){
@@ -419,10 +403,10 @@ public class NetworkResource {
 		return Response.status(Status.OK).entity("{\"publicationsCounts\": " + (counts.size() > 0 ? objectMapper.writeValueAsString(counts.get(0)) : null) + "}").build();
 	}
 
-	@GET
-	@Path("/stats")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public JsonStats networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("postId") Integer postId) throws IOException {
+	@Override
+	public JsonStats networkStats(String date,
+								  String beginning,
+								  Integer postId) throws IOException {
 		if (date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
 
@@ -491,8 +475,5 @@ public class NetworkResource {
 		return jsonStats;
 	}
 
-	public static class JsonStats{
-		public Object generalStatsJson;
-		public TreeMap<Long, ReadsCommentsRecommendsCount> dateStatsJson;
-	}
+
 }

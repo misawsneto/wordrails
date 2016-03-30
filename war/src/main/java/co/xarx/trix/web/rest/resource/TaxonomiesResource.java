@@ -1,16 +1,14 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
-import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.TaxonomiesApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,11 +16,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/taxonomies")
 @Component
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
-public class TaxonomiesResource {
+public class TaxonomiesResource extends AbstractResource implements TaxonomiesApi {
+
 	@Autowired
 	public ObjectMapper objectMapper;
 	@Autowired
@@ -38,9 +34,8 @@ public class TaxonomiesResource {
 	@Autowired
 	private AuthService authProvider;
 
-	@Path("/networks/{networkId}/taxonomiesToEdit")
-	@GET
-	public Response getTaxonomiesToEdit(@PathParam("networkId") Integer networkId) throws IOException {
+	@Override
+	public Response getTaxonomiesToEdit(Integer networkId) throws IOException {
 		List<Taxonomy> taxonomies = null;
 
 		Network network = networkRepository.findOne(networkId);
@@ -63,9 +58,8 @@ public class TaxonomiesResource {
 		return Response.ok().entity(objectMapper.writeValueAsString(taxonomies)).build();
 	}
 
-	@Path("/allCategories")
-	@GET
-	public List<Taxonomy> getCategories(@Context HttpServletRequest request, @QueryParam("stationId") Integer stationId) throws IOException {
+	@Override
+	public List<Taxonomy> getCategories(Integer stationId) throws IOException {
 		Taxonomy category;
 
 		Station station = stationRepository.findOne(stationId);

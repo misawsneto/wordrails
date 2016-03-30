@@ -1,4 +1,4 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.NotificationView;
@@ -7,35 +7,34 @@ import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.NotificationRepository;
 import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.NotificationsApi;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/notifications")
-@Consumes(MediaType.WILDCARD)
 @Component
-public class NotificationsResource {
+public class NotificationsResource extends AbstractResource implements NotificationsApi {
 
-	@Autowired
-	private NotificationRepository notificationRepository;
-	@Autowired
 	private AuthService authProvider;
-
-	@Autowired
+	private NotificationRepository notificationRepository;
 	private NotificationConverter notificationConverter;
 
-	@GET
-	@Path("/searchNotifications")
-	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_USER')")
-	public ContentResponse<List<NotificationView>> searchNotifications(@QueryParam("query") String query, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
+	@Autowired
+	public NotificationsResource(AuthService authProvider,
+								 NotificationRepository notificationRepository,
+								 NotificationConverter notificationConverter) {
+		this.authProvider = authProvider;
+		this.notificationRepository = notificationRepository;
+		this.notificationConverter = notificationConverter;
+	}
+
+	@Override
+	public ContentResponse<List<NotificationView>> searchNotifications(String query, Integer page, Integer size) {
 		Person person = authProvider.getLoggedPerson();
 		ContentResponse<List<NotificationView>> response = new ContentResponse<>();
 

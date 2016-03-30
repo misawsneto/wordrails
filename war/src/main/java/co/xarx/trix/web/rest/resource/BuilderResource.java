@@ -1,4 +1,4 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.JpaAndroidApp;
@@ -6,32 +6,33 @@ import co.xarx.trix.persistence.JpaAndroidAppRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.AndroidBuilderService;
 import co.xarx.trix.services.AsyncService;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.BuilderApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.io.File;
 
-@Path("/builder")
 @Component
-public class BuilderResource {
+public class BuilderResource extends AbstractResource implements BuilderApi {
 
-	@Autowired
 	private JpaAndroidAppRepository jpaAndroidAppRepository;
-	@Autowired
 	private AsyncService asyncService;
-	@Autowired
 	private AmazonCloudService amazonCloudService;
-	@Autowired
-	public AndroidBuilderService androidBuilderService;
+	private AndroidBuilderService androidBuilderService;
 
-	@GET
-	@Path("/generateApk")
-	public Response getApk(@Context HttpServletRequest request) {
+	@Autowired
+	public BuilderResource(JpaAndroidAppRepository jpaAndroidAppRepository, AsyncService asyncService,
+						   AmazonCloudService amazonCloudService, AndroidBuilderService androidBuilderService) {
+		this.jpaAndroidAppRepository = jpaAndroidAppRepository;
+		this.asyncService = asyncService;
+		this.amazonCloudService = amazonCloudService;
+		this.androidBuilderService = androidBuilderService;
+	}
+
+	@Override
+	public Response getApk() {
 		JpaAndroidApp androidApp = jpaAndroidAppRepository.findAll().get(0);
 
 		asyncService.run(TenantContextHolder.getCurrentTenantId(), () -> {

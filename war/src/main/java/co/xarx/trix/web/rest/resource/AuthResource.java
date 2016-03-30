@@ -1,4 +1,4 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.AuthCredential;
@@ -6,23 +6,22 @@ import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.services.PasswordService;
 import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.AuthApi;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.builder.api.GoogleApi;
 import org.scribe.model.Token;
 import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
-@Path("/auth")
 @Component
-public class AuthResource {
+public class AuthResource extends AbstractResource implements AuthApi {
 
 	private NetworkRepository networkRepository;
 	private AuthService authProvider;
@@ -35,11 +34,8 @@ public class AuthResource {
 		this.passwordService = passwordService;
 	}
 
-	@POST
-	@Path("/signin")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@PreAuthorize("isAnonymous()")
-	public Response signin(@FormParam("provider") String providerId, @FormParam("userId") String userId, @FormParam("accessToken") String accessToken) throws IOException {
+	@Override
+	public Response signin(String providerId, String userId, String accessToken) throws IOException {
 		Network network = networkRepository.findByTenantId(TenantContextHolder.getCurrentTenantId());
 
 		if(network.authCredential == null) {
@@ -97,19 +93,14 @@ public class AuthResource {
 		return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 
-	@POST
-	@Path("/forgotPassword")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@PreAuthorize("isAnonymous()")
-	public Response resetPassword(@FormParam("email") String email) {
+	@Override
+	public Response resetPassword(String email) {
 		passwordService.resetPassword(email);
 		return Response.status(Response.Status.OK).build();
 	}
 
-	@PUT
-	@Path("/{hash}")
-	@PreAuthorize("isAnonymous()")
-	public Response updatePassword(@PathParam("hash") String hash, @FormParam("password") String password) {
+	@Override
+	public Response updatePassword(String hash, String password) {
 		passwordService.updatePassword(hash, password);
 		return Response.status(Response.Status.OK).build();
 	}

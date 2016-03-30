@@ -1,4 +1,4 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.annotations.TimeIt;
 import co.xarx.trix.api.ContentResponse;
@@ -9,30 +9,22 @@ import co.xarx.trix.domain.page.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.QueryableSectionService;
 import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.StationsApi;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@Path("/stations")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 @Component
-public class StationsResource {
+public class StationsResource extends AbstractResource implements StationsApi {
+
 	@Autowired
 	private AuthService authProvider;
 	@Autowired
@@ -43,41 +35,24 @@ public class StationsResource {
 	private StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
 	private QueryPersistence queryPersistence;
-
 	@Autowired
 	private PageRepository pageRepository;
 	@Autowired
 	private QueryableSectionService queryableSectionService;
 
-
-	@Context
-	private HttpServletRequest request;
-	@Context
-	private HttpServletResponse response;
-	@Context
-	private UriInfo uriInfo;
-
-	private void forward() throws ServletException, IOException {
-		forward(uriInfo.getPath());
-	}
-
-	private void forward(String uri) throws ServletException, IOException {
-		String path = request.getServletPath() + uri;
-		request.getServletContext().getRequestDispatcher(path).forward(request, response);
-	}
-
-	@GET
-	@Path("/{id}")
-	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Station', 'read')")
-	public void getStation(@PathParam("id") @P("id") int postId) throws ServletException, IOException {
+	@Override
+	public void getStations() throws ServletException, IOException {
 		forward();
 	}
 
+	@Override
+	public void getStation(int postId) throws ServletException, IOException {
+		forward();
+	}
+
+	@Override
 	@TimeIt
-	@GET
-	@Path("/{stationId}/pages")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Page> getPages(@PathParam("stationId") Integer stationId) throws IOException {
+	public List<Page> getPages(Integer stationId) throws IOException {
 		QPage qPage = QPage.page;
 		Iterable<Page> pages = pageRepository.findAll(qPage.station.id.eq(stationId));
 
@@ -94,14 +69,12 @@ public class StationsResource {
 		return Lists.newArrayList(pages);
 	}
 
-	@PUT
-	@Path("/{stationId}/setDefaultPerspective")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId") Integer perspectiveId) {
+	@Override
+	public Response setDefaultPerspective(Integer stationId, Integer perspectiveId) {
 		Person person = authProvider.getLoggedPerson();
 		Station station = stationRepository.findOne(stationId);
 
-		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
+		StationRole sRole = stationRolesRepository.findByStationAndPersonId(station, person.id);
 
 		if ((person.networkAdmin || sRole.admin) && stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
 			queryPersistence.updateDefaultPerspective(station.id, perspectiveId);
@@ -109,11 +82,8 @@ public class StationsResource {
 		} else return Response.status(Status.UNAUTHORIZED).build();
 	}
 
-	@PUT
-	@Path("/{stationId}/setMainStation")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response setMainStation(@PathParam("stationId") Integer stationId, @FormParam("value") boolean value) {
+	@Override
+	public Response setMainStation(Integer stationId, boolean value) {
 		Person person = authProvider.getLoggedPerson();
 
 		if (person.networkAdmin) {
@@ -126,18 +96,17 @@ public class StationsResource {
 		} else return Response.status(Status.UNAUTHORIZED).build();
 	}
 
-	@GET
-	@Path("/stats/roles/count")
-	public ContentResponse<Integer> countRolesByStationIds(@QueryParam("stationIds") List<Integer> stationIds, @QueryParam("q") String q){
+	@Override
+	public ContentResponse<Integer> countRolesByStationIds(List<Integer> stationIds, String q) {
 		ContentResponse<Integer> resp = new ContentResponse<>();
 		resp.content = 0;
-		if(stationIds != null && !stationIds.isEmpty()) {
+		if (stationIds != null && !stationIds.isEmpty()) {
 			if (q != null && !q.isEmpty()) {
 				resp.content = stationRolesRepository.countRolesByStationIdsAndNameOrUsernameOrEmail(stationIds, q).intValue();
-			}else {
+			} else {
 				resp.content = stationRolesRepository.countRolesByStationIds(stationIds).intValue();
 			}
-		}else {
+		} else {
 			throw new co.xarx.trix.exception.BadRequestException();
 		}
 		return resp;

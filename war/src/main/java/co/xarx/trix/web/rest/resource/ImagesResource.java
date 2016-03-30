@@ -1,10 +1,12 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.ImagesApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -14,11 +16,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
@@ -27,26 +26,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-@Path("/images")
-@Consumes(MediaType.WILDCARD)
 @Component
-public class ImagesResource {
+public class ImagesResource extends AbstractResource implements ImagesApi {
 
 	private static final Integer MAX_SIZE = 6291456;
 
-	@Autowired
 	private ImageService imageService;
-
-	@Context
-	private HttpServletRequest request;
-	@Autowired
 	private AmazonCloudService amazonCloudService;
 
-	public static class ImageUpload {
-		public String hash;
-		public Integer imageId;
-		public String link;
-		public String fileLink;
+	@Autowired
+	public ImagesResource(ImageService imageService, AmazonCloudService amazonCloudService) {
+		this.imageService = imageService;
+		this.amazonCloudService = amazonCloudService;
+	}
+
+	private static class ImageUpload {
+		String hash;
+		Integer imageId;
+		String link;
+		String fileLink;
 	}
 
 
@@ -54,11 +52,8 @@ public class ImagesResource {
 	@Qualifier("simpleMapper")
 	ObjectMapper simpleMapper;
 
-	@POST
-	@Path("/upload")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadImage(@QueryParam("imageType") String type, @Context HttpServletRequest request) throws Exception {
+	@Override
+	public Response uploadImage(@QueryParam("imageType") String type) throws Exception {
 		FileItem item = FileUtil.getFileFromRequest(request);
 
 		if (item == null) {
@@ -106,9 +101,8 @@ public class ImagesResource {
 		return false;
 	}
 
-	@GET
-	@Path("/get/{hash}")
-	public Response getImage(@PathParam("hash") String hash, @QueryParam("size") String size, @Context HttpServletResponse response) throws IOException {
+	@Override
+	public Response getImage(String hash, String size) throws IOException {
 
 		Map<String, String> hashes;
 		try {

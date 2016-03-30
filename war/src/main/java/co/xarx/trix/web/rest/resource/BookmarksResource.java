@@ -1,4 +1,4 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.api.BooleanResponse;
 import co.xarx.trix.api.ContentResponse;
@@ -7,19 +7,16 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.post.PostSearchService;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.BookmarksApi;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/bookmarks")
-@Consumes(MediaType.WILDCARD)
 @Component
-public class BookmarksResource {
+public class BookmarksResource extends AbstractResource implements BookmarksApi {
 
 	private PostSearchService postSearchService;
 	private PersonService personService;
@@ -32,13 +29,8 @@ public class BookmarksResource {
 		this.authProvider = authProvider;
 	}
 
-	@GET
-	@Path("/searchBookmarks")
-	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_USER')")
-	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q,
-															 @QueryParam("page") Integer page,
-															 @QueryParam("size") Integer size){
+	@Override
+	public ContentResponse<List<PostView>> searchBookmarks(String q, Integer page, Integer size) {
 		Person person = authProvider.getLoggedPerson();
 
 		Pair<Integer, List<PostView>> postsViews = postSearchService.searchPosts(q, person.getId(),
@@ -50,12 +42,8 @@ public class BookmarksResource {
 		return response;
 	}
 
-	@PUT
-	@Path("/toggleBookmark")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_USER')")
-	public BooleanResponse toggleBookmark(@FormParam("postId") Integer postId){
+	@Override
+	public BooleanResponse toggleBookmark(Integer postId) {
 		BooleanResponse bookmarkInserted = new BooleanResponse();
 
 		Person person = authProvider.getLoggedPerson();

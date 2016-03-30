@@ -1,6 +1,5 @@
-package co.xarx.trix.web.rest;
+package co.xarx.trix.web.rest.resource;
 
-import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
@@ -13,38 +12,28 @@ import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.TermPerspectiveRepository;
 import co.xarx.trix.persistence.TermRepository;
 import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.web.rest.AbstractResource;
+import co.xarx.trix.web.rest.api.TermsApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jboss.resteasy.spi.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Path("/terms")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 @Component
-public class TermsResource {
-	@Context
-	private HttpServletRequest httpServletRequest;
-	@Context
-	private HttpRequest httpRequest;
-	@Autowired
-	private WordrailsService wordrailsService;
+public class TermsResource extends AbstractResource implements TermsApi {
+
 	@Autowired
 	private TermRepository termRepository;
 	@Autowired
@@ -56,16 +45,13 @@ public class TermsResource {
 	@Autowired
 	@Qualifier("simpleMapper")
 	private ObjectMapper simpleMapper;
+	@Autowired
+	private AmazonCloudService amazonCloudService;
+	@Autowired
+	private PostRepository postRepository;
 
-	private @Autowired
-	AmazonCloudService amazonCloudService;
-
-	private @Autowired
-	PostRepository postRepository;
-
-	@GET
-	@Path("/termTree")
-	public Response getTermTree(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws IOException {
+	@Override
+	public Response getTermTree(Integer taxonomyId, Integer perspectiveId) throws IOException {
 		List<Term> allTerms;
 		if(perspectiveId != null){
 			allTerms = termRepository.findByPerspectiveId(perspectiveId);
@@ -73,15 +59,60 @@ public class TermsResource {
 			allTerms = termRepository.findByTaxonomyId(taxonomyId);
 		}
 
-		List<Term> roots =  wordrailsService.createTermTree(allTerms);
+		List<Term> roots =  createTermTree(allTerms);
 
 		String json = simpleMapper.writeValueAsString(roots);
 		return Response.status(Status.OK).entity(json).build();
 	}
 
-	@GET
-	@Path("/{termId}/image")
-	public Response getTermImage(@PathParam("termId") Integer termId, @QueryParam("perspectiveId") Integer perspectiveId, @Context HttpServletResponse response, @Context HttpServletRequest request) throws IOException {
+	private List<Term> createTermTree(List<Term> allTerms) {
+		List<Term> roots = getRootTerms(allTerms);
+		for (Term term : roots) {
+			getChilds(term, allTerms);
+		}
+		return roots;
+	}
+
+	private List<Term> getRootTerms(List<Term> allTerms) {
+		List<Term> roots = new ArrayList<Term>();
+		for (Term term : allTerms) {
+			if (term.parent == null) {
+				roots.add(term);
+			}
+		}
+		return roots;
+	}
+
+	private Set<Term> getChilds(Term parent, List<Term> allTerms) {
+		cleanTerm(parent);
+		parent.children = new HashSet<Term>();
+		for (Term term : allTerms) {
+			if (term.parent != null && parent.id.equals(term.parent.id)) {
+				parent.children.add(term);
+				term.parent = null;
+				term.cells = null;
+				term.termPerspectives = null;
+				term.posts = null;
+			}
+		}
+
+		for (Term term : parent.children) {
+			getChilds(term, allTerms);
+		}
+
+		return parent.children;
+	}
+
+	private void cleanTerm(Term term) {
+		term.posts = null;
+		term.rows = null;
+		term.termPerspectives = null;
+		term.cells = null;
+		term.taxonomy = null;
+	}
+
+	@Override
+	public Response getTermImage(Integer termId, Integer perspectiveId) throws IOException {
 		TermPerspective tp = termPerspectiveRepository.findPerspectiveAndTerm(perspectiveId, termId);
 		String hash = ""; // termRepository.findValidHash(perspectiveId, termId);
 
@@ -102,10 +133,8 @@ public class TermsResource {
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
-	@GET
-	@Path("/allTerms")
-	@PreAuthorize("permitAll()")
-	public ContentResponse<List<TermView>> getAllTerms(@QueryParam("taxonomyId") Integer taxonomyId, @QueryParam("perspectiveId") Integer perspectiveId) throws IOException {
+	@Override
+	public ContentResponse<List<TermView>> getAllTerms(Integer taxonomyId, Integer perspectiveId) throws IOException {
 		List<Term> allTerms;
 		if(perspectiveId != null){
 			allTerms = termRepository.findByPerspectiveId(perspectiveId);
@@ -118,10 +147,9 @@ public class TermsResource {
 		return response;
 	}
 
-	@GET
-	@Path("/search/findPostsByTagAndStationId")
-	@PreAuthorize("permitAll()")
-	public ContentResponse<List<PostView>> findPostsByTagAndStationId(@QueryParam("tagName") String tagName, @QueryParam("stationId") Integer stationId, @QueryParam("page") int page, @QueryParam("size") int size) throws ServletException, IOException {
+	@Override
+	public ContentResponse<List<PostView>> findPostsByTagAndStationId(String tagName, Integer stationId,
+																	  int page, int size) throws ServletException, IOException {
 		Pageable pageable = new PageRequest(page, size, new Sort(new Sort.Order(Sort.Direction.DESC, "id")));
 
 		List<Post> posts = termRepository.findPostsByTagAndStationId(tagName, stationId, pageable);
