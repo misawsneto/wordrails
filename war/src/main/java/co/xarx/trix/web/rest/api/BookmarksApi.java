@@ -16,7 +16,7 @@ public interface BookmarksApi {
 	@GET
 	@Path("/searchBookmarks")
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q,
 													@QueryParam("page") Integer page,
 													@QueryParam("size") Integer size);
@@ -25,6 +25,6 @@ public interface BookmarksApi {
 	@Path("/toggleBookmark")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	BooleanResponse toggleBookmark(@FormParam("postId") Integer postId);
 }

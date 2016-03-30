@@ -84,7 +84,7 @@ public interface PersonsApi {
 	@PUT
 	@Transactional
 	@Path("/me/password")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword);
 
@@ -138,11 +138,11 @@ public interface PersonsApi {
 
 	@GET
 	@Path("/me/publicationsCount")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	Response publicationsCount(@QueryParam("personId") Integer personId) throws IOException;
 
 	@GET
 	@Path("/me/stats")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException;
 }

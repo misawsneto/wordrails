@@ -24,6 +24,6 @@ public interface RecommendsApi {
 	@Path("/toggleRecommend")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	BooleanResponse toggleRecommend(@FormParam("postId") Integer postId);
 }
