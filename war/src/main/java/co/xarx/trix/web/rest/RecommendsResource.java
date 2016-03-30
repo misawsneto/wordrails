@@ -52,7 +52,7 @@ public class RecommendsResource {
 	@Path("/toggleRecommend")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	public BooleanResponse toggleRecommend(@FormParam("postId") Integer postId) {
 		BooleanResponse bookmarkInserted = new BooleanResponse();
 

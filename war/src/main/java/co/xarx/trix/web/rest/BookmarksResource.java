@@ -35,7 +35,7 @@ public class BookmarksResource {
 	@GET
 	@Path("/searchBookmarks")
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	public ContentResponse<List<PostView>> searchBookmarks(@QueryParam("query") String q,
 															 @QueryParam("page") Integer page,
 															 @QueryParam("size") Integer size){
@@ -54,7 +54,7 @@ public class BookmarksResource {
 	@Path("/toggleBookmark")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	public BooleanResponse toggleBookmark(@FormParam("postId") Integer postId){
 		BooleanResponse bookmarkInserted = new BooleanResponse();
 

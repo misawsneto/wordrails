@@ -304,7 +304,7 @@ public class PersonsResource {
 	@PUT
 	@Transactional
 	@Path("/me/password")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public void putPassword(@FormParam("oldPassword") String oldPassword, @FormParam("newPassword") String newPassword) {
 		Asserts.notEmpty(oldPassword, "Old password it empty or null");
@@ -646,7 +646,7 @@ public class PersonsResource {
 
 	@GET
 	@Path("/me/publicationsCount")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	public Response publicationsCount(@QueryParam("personId") Integer personId)throws IOException {
 		Person person = null;
 		if(personId != null){
@@ -661,7 +661,7 @@ public class PersonsResource {
 
 	@GET
 	@Path("/me/stats")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	public Response personStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws IOException{
 		if(date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");

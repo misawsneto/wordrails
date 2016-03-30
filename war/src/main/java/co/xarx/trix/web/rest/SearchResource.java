@@ -35,7 +35,7 @@ public class SearchResource {
 
 	@GET
 	@Path("/bookmarks")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> bookmarks(@QueryParam("query") String q,
 												 @QueryParam("page") Integer page,
@@ -50,7 +50,7 @@ public class SearchResource {
 
 	@GET
 	@Path("/recommends")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> recommends(@QueryParam("query") String q,
 												  @QueryParam("page") Integer page,
