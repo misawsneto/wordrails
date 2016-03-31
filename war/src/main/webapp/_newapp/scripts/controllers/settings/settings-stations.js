@@ -20,7 +20,37 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			})
 		}
+
+    $scope.createSlugsFromName = function(){
+      $scope.app.stations && $scope.app.stations.forEach(function(station){
+        trix.getStation(station.id).success(function(response){
+          if(response.stationSlug){
+            response.stationSlug = response.name.toSlug();
+            trix.putStation(response)
+          }
+        })
+      });
+    }
+
+    $scope.showStationConfigDialog = function(event){
+      $mdDialog.show({
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'station-config-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }
+
+    $scope.createSlugsFromName();
+
+    settingsStationsCtrl = $scope;
 	}])
+
+var settingsStationsCtrl = null;
 
 app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){

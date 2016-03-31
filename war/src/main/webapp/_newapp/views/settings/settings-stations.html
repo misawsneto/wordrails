@@ -34,7 +34,7 @@
             </div>
           </a>
 
-          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.settings.stationconfig({'stationId': station.id})">
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ng-click="showStationConfigDialog($event);">
             <div class="md-list-item-content">
                 <i class="mdi mdi-action-settings p-r fa-fw text-muted"></i> 
                 {{'titles.CONFIGURATION' | translate}}
@@ -95,4 +95,135 @@
      </div>
    </div>
  </div>
+</script>
+
+
+<script type="text/ng-template" id="station-config-dialog.html">
+  <md-dialog aria-label="Remove Categories Dialog" >
+    <md-content role="document" class="md-background-default background">
+      <div class="p">
+        <div class="md-dialog-content-body p-r p-l m-b">
+          <div ng-if="creating" class="panel-heading h4 wrapper-md">
+            <span>Nova Estação</span>
+          </div>
+          <div class="panel-body wrapper-md">
+            <div class="row pos-rlt">
+              <div class="w-xxl m-auto">
+                <md-input-container flex class="md-neutral-theme text-lg" >
+                  <label>Nome da estação</label>
+                  <input ng-model="station.name">
+                </md-input-container>
+              </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="m-b text-muted text-md text-u-c">Configurações principais</div>
+                <p>
+                  <md-switch ng-model="station.allowComments" aria-label="Comemnts">
+                    Permitir comentários
+                  </md-switch>
+                </p>
+                <p>
+                  <md-switch ng-disabled="station.visibility !== 'UNRESTRICTED'"  ng-model="station.allowSocialShare"
+                    ng-true-value="true" ng-false-value="false" aria-label="Comemnts">
+                    Permitir compartilhamento em redes sociais
+                  </md-switch>
+                </p>
+                <p>
+                  <md-switch ng-model="station.showAuthorSocialData" aria-label="Comemnts">
+                    Exibir email e dados sociais do autor no corpo das notícias.
+                  </md-switch>
+                </p>
+                <div class="m-b m-t text-muted text-md text-u-c">Permissões avançadas</div>
+                <p>
+                  <label class="md-switch">
+                    <input type="checkbox" ng-model="station.allowWritersToNotify"
+                    ng-true-value="true" ng-false-value="false">
+                    <i class="md-accent"></i>
+                    Escritores podem notificar usuários em dispositivos móveis.
+                  </label>
+                </p>
+                <p ng-if="app.initData.network.allowSponsors">
+                  <label class="md-switch">
+                    <input type="checkbox" ng-model="station.allowWritersToAddSponsors"
+                    ng-true-value="true" ng-false-value="false">
+                    <i class="blue"></i>
+                    Escritores podem associar patrocinadores às notícias.
+                  </label>
+                </p>
+              </div>
+              <div class="col-sm-6">
+                <div class="m-b text-muted text-md text-u-c">Leitura</div>
+                <p>
+                  <label class="md-check">
+                    <input type="radio" name="c" ng-model="station.visibility" value="UNRESTRICTED">
+                    <i class="blue"></i>
+                    Qualquer usuário
+                    <small>(inclusive usuário não autenticados)</small>
+                  </label>
+                </p>
+                <p>
+                  <label class="md-check">
+                    <input type="radio" name="c" ng-model="station.visibility" value="RESTRICTED">
+                    <i class="blue"></i>
+                    Apenas usuários com permissão
+                  </label>
+                </p>
+                <div class="m-b text-muted text-md text-u-c">Escrita</div>
+                <p>
+                  <label class="md-check">
+                    <input type="radio" name="d" ng-model="station.writable" ng-value="false">
+                    <i class="blue"></i>
+                    Apenas usuários com permissão de escrita
+                  </label>
+                </p>
+                <p>
+                  <label class="md-check">
+                    <input type="radio" name="d" ng-model="station.writable" ng-value="true">
+                    <i class="blue"></i>
+                    Todos os usuários autenticados
+                  </label>
+                </p>
+                <p>
+                  <label class="md-switch">
+                    <input type="checkbox" ng-model="station.subheading"
+                    ng-true-value="true" ng-false-value="false">
+                    <i class="blue"></i>
+                    Subtítulo
+                  </label>
+                </p>
+              </div>
+            </div>
+            <div class="line line-dashed b-b line-lg pull-in"></div>
+            <div class="m-b text-muted text-md text-u-c">Logotipo da Barra superior</div>
+            <div class="bg-cover text-center" src="img/img-stub.png">
+              <div ng-if="logoImage.link" class="text-center w-xxl m-auto">
+                <img class="img-responsive bg-header p-sm r-3x" style="display:block; margin:auto; max-height: 80px;" ng-src="{{logoImage.link}}">
+                <div class="pull-right m-r-n-md m-t-n-xxl">
+                  <a ng-click="logoImage.link = null;"><i class="mdi mdi-close-circle-outline text-2x"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="m-t-n-xs text-right text-lg">
+            <button ng-if="creating" ui-sref="app.settings.stations"
+            md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+          
+            <button ng-if="creating" ng-click="createStation()"
+            md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button ng-click="app.applyTheme()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw" ng-disabled="!app.enableButtons">
+            {{'titles.YES' | translate }}
+          </button>
+          <button ng-click="cancel()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw" ng-disabled="!app.enableButtons">
+            {{'titles.NO' | translate }}
+          </button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
 </script>
