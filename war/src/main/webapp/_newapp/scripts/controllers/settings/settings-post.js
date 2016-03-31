@@ -224,7 +224,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	
 	// --- post info
 	$scope.showPostInfoDialog = function(event){
-		$scope.app.editingPost = $scope.app.editingPost;
 
 		$mdDialog.show({
 			controller: $scope.app.defaultDialog,
@@ -482,7 +481,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	// --- /image focuspoint
 	
 	var draftAutoSaveCheck = function(){
-		//if($scope.editingPost.title && $scope.editingPost.body)
 	}
 
 	$interval(function(){

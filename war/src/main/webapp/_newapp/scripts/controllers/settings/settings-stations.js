@@ -32,6 +32,13 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       });
     }
 
+    $scope.editStation = function(event, station){
+      $scope.app.newStation = false;
+      $scope.app.editingStation = true;
+      $scope.app.stationObj = angular.copy(station);
+      $scope.showStationConfigDialog(event)
+    }
+
     $scope.showStationConfigDialog = function(event){
       $mdDialog.show({
         controller: $scope.app.defaultDialog,
@@ -43,6 +50,26 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 
         // }
       })
+    }
+
+    $scope.app.createStation = function(station){
+      station.network = TRIX.baseUrl + "/api/stations/" + $scope.app.network.id;
+      if(station.name == null || station.name.trim() !== ''){
+        trix.postStation(station).success(function(response){
+        });
+      }
+    }
+
+    $scope.createNewStation = function(event){
+      $scope.app.newStation = true
+      $scope.app.editingStation = false;
+      $scope.app.stationObj = {
+        'visibility': 'UNRESTRICTED',
+        'writable': false,
+        'main': false,
+        'network': TRIX.baseUrl + '/api/networks/' + $scope.app.network.id
+      };
+      $scope.showStationConfigDialog(event)
     }
 
     $scope.createSlugsFromName();
