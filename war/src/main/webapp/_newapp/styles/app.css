@@ -6691,6 +6691,26 @@ bg-none {
   max-width: 400px;
 }
 
+.col-400 {
+  max-height: 400px;
+}
+
+.col-350 {
+  max-height: 350px;
+}
+
+.col-300 {
+  max-height: 300px;
+}
+
+.col-250 {
+  max-height: 250px;
+}
+
+.col-200 {
+  max-height: 200px;
+}
+
 @media (max-width: 991px) {
   .w-auto-sm {
     width: auto;
@@ -7679,6 +7699,20 @@ bg-none {
 .md-icon-button-lg {
   width: 58px!important;
   height: 58px!important;
+}
+
+md-switch:not(.md-checked) .md-bar {
+  background-color: #9e9e9e !important;
+}
+
+md-switch[disabled] .md-thumb,
+md-switch[disabled] .md-thumb {
+  background-color: #bdbdbd !important;
+}
+
+md-switch[disabled] .md-bar,
+md-switch[disabled] .md-bar {
+  background-color: rgba(0, 0, 0, 0.12) !important;
 }
 
 /* /material override */

@@ -44,6 +44,7 @@ value('froalaConfig', {})
                     element.froalaEditor('html.set', ngModel.$viewValue || '', true);
                     //This will reset the undo stack everytime the model changes externally. Can we fix this?
                     element.froalaEditor('undo.reset');
+                    element.froalaEditor('undo.saveStep');
                 };
 
                 ngModel.$isEmpty = function (value) {
@@ -85,12 +86,12 @@ value('froalaConfig', {})
             ctrl.initListeners = function () {
                 if (ctrl.options.immediateAngularModelUpdate) {
                     ctrl.froalaElement.on('keyup', function () {
-                        ctrl.updateModelView();
+                        scope.$evalAsync(ctrl.updateModelView);
                     });
                 }
 
                 element.on('froalaEditor.contentChanged', function () {
-                    ctrl.updateModelView();
+                    scope.$evalAsync(ctrl.updateModelView);
                 });
 
                 scope.$on('$destroy', function () {
