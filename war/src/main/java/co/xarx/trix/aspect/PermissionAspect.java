@@ -27,42 +27,6 @@ public class PermissionAspect {
 		this.aclService = aclService;
 	}
 
-	private void savePermission(Class clazz, Integer id, Permission p) {
-		String username = authService.getLoggedUsername();
-		ObjectIdentity oi = new ObjectIdentityImpl(clazz, id);
-
-		String tenantId = TenantContextHolder.getCurrentTenantId();
-		Sid sid = new MultitenantPrincipalSid(username, tenantId);
-
-		MutableAcl acl;
-		try {
-			acl = aclService.createAcl(oi);
-		} catch (AlreadyExistsException e) {
-			return;
-		}
-
-		acl.insertAce(acl.getEntries().size(), p, sid, true);
-		aclService.updateAcl(acl);
-	}
-
-	private void saveWithParent(Class clazz, Integer id, Class parentClazz, Integer parentId) {
-		ObjectIdentity oi = new ObjectIdentityImpl(clazz, id);
-
-		MutableAcl acl;
-		try {
-			acl = aclService.createAcl(oi);
-		} catch (AlreadyExistsException e) {
-			return;
-		}
-
-		MutableAcl parentAcl;
-		ObjectIdentity parentOi = new ObjectIdentityImpl(parentClazz, parentId);
-		parentAcl = (MutableAcl) aclService.readAclById(parentOi);
-
-		acl.setParent(parentAcl);
-		aclService.updateAcl(acl);
-	}
-
 	@AfterReturning("within(co.xarx.trix.persistence.StationRepository+) && execution(* *..save(*)) && args(entity)")
 	public void saveStation(Station entity) {
 		savePermission(Station.class, entity.getId(), TrixPermission.ADMINISTRATION);
@@ -70,11 +34,66 @@ public class PermissionAspect {
 
 	@AfterReturning("within(co.xarx.trix.persistence.PostRepository+) && execution(* *..save(*)) && args(entity)")
 	public void savePost(Post entity) {
-		saveWithParent(Post.class, entity.getId(), Station.class, entity.station.id);
+		TrixPermission permission = getPermissionRWD();
+		savePermissionWithParent(Post.class, entity.getId(), permission, Station.class, entity.station.id);
 	}
 
 	@AfterReturning("within(co.xarx.trix.persistence.CommentRepository+) && execution(* *..save(*)) && args(entity)")
 	public void saveComment(Comment entity) {
-		saveWithParent(Comment.class, entity.getId(), Post.class, entity.post.id);
+		TrixPermission permission = getPermissionRWD();
+		savePermissionWithParent(Comment.class, entity.getId(), permission, Post.class, entity.post.id);
+	}
+
+	private TrixPermission getPermissionRWD() {
+		int mask = TrixPermission.READ.getMask();
+		mask |= TrixPermission.UPDATE.getMask();
+		mask |= TrixPermission.DELETE.getMask();
+
+		return new TrixPermission(mask);
+	}
+
+	private void savePermission(Class clazz, Integer id, Permission permission) {
+		MutableAcl acl = getAcl(clazz, id);
+		if(acl == null) return;
+
+		setPermission(permission, getSid(), acl);
+	}
+
+	private void savePermissionWithParent(Class clazz, Integer id, Permission permission, Class parentClazz, Integer parentId) {
+		MutableAcl acl = getAcl(clazz, id);
+		if (acl == null) return;
+
+		setParent(parentClazz, parentId, acl);
+		setPermission(permission, getSid(), acl);
+	}
+
+	private MutableAcl getAcl(Class clazz, Integer id) {
+		ObjectIdentity oi = new ObjectIdentityImpl(clazz, id);
+
+		try {
+			return aclService.createAcl(oi);
+		} catch (AlreadyExistsException e) {
+			return null;
+		}
+	}
+
+	private Sid getSid() {
+		String username = authService.getLoggedUsername();
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		return new MultitenantPrincipalSid(username, tenantId);
+	}
+
+	private void setPermission(Permission permission, Sid sid, MutableAcl acl) {
+		acl.insertAce(acl.getEntries().size(), permission, sid, true);
+		aclService.updateAcl(acl);
+	}
+
+	private void setParent(Class parentClazz, Integer parentId, MutableAcl acl) {
+		MutableAcl parentAcl;
+		ObjectIdentity parentOi = new ObjectIdentityImpl(parentClazz, parentId);
+		parentAcl = (MutableAcl) aclService.readAclById(parentOi);
+
+		acl.setParent(parentAcl);
+		aclService.updateAcl(acl);
 	}
 }

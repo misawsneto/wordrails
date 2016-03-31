@@ -15,10 +15,11 @@ public class TrixPermission extends AbstractPermission {
 		super(mask, code);
 	}
 
-	public static final Permission READ = new TrixPermission(1, 'R'); // 1
-	public static final Permission UPDATE = new TrixPermission(1 << 1, 'U'); // 2
-	public static final Permission CREATE = new TrixPermission(1 << 2, 'C'); // 4
-	public static final Permission DELETE = new TrixPermission(1 << 3, 'D'); // 8
-	public static final Permission ADMINISTRATION = new TrixPermission(1 << 4, 'A'); // 16
+	public static final Permission ADMINISTRATION = new TrixPermission(1, 'A'); // 1
+
+	public static final Permission READ = new TrixPermission(1 << 1, 'R'); // 2
+	public static final Permission UPDATE = new TrixPermission(1 << 2, 'U'); // 4
+	public static final Permission CREATE = new TrixPermission(1 << 3, 'C'); // 8
+	public static final Permission DELETE = new TrixPermission(1 << 4, 'D'); // 16
 	public static final Permission MODERATION = new TrixPermission(1 << 5, 'M'); // 32
 }

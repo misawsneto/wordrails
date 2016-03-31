@@ -33,9 +33,16 @@ public class BitMaskPermissionGrantingStrategy implements PermissionGrantingStra
 				boolean scanNextSid = true;
 
 				for (AccessControlEntry ace : aces) {
+					int mask = ace.getPermission().getMask();
+
+					boolean isAdmin = (mask & 1) != 0;
+					boolean belongsToCurrentSid = ace.getSid().equals(sid);
+					if(isAdmin && belongsToCurrentSid) {
+						return true;
+					}
 
 					//Bit-wise comparison
-					if (containsPermission(ace.getPermission().getMask(), p.getMask()) && ace.getSid().equals(sid)) {
+					if (containsPermission(mask, p.getMask()) && belongsToCurrentSid) {
 						// Found a matching ACE, so its authorization decision will prevail
 						if (ace.isGranting()) {
 							// Success
