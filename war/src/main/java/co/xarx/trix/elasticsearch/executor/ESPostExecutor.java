@@ -1,7 +1,7 @@
 package co.xarx.trix.elasticsearch.executor;
 
 import co.xarx.trix.api.PostView;
-import co.xarx.trix.domain.query.Executor;
+import co.xarx.trix.domain.page.query.Executor;
 import co.xarx.trix.services.elasticsearch.ElasticSearchCommand;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;

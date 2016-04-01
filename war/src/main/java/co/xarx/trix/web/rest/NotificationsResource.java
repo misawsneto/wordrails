@@ -10,7 +10,7 @@ import co.xarx.trix.services.auth.AuthService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -34,6 +34,7 @@ public class NotificationsResource {
 	@GET
 	@Path("/searchNotifications")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("isAuthenticated()")
 	public ContentResponse<List<NotificationView>> searchNotifications(@QueryParam("query") String query, @QueryParam("page") Integer page, @QueryParam("size") Integer size) {
 		Person person = authProvider.getLoggedPerson();
 		ContentResponse<List<NotificationView>> response = new ContentResponse<>();

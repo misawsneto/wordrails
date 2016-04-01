@@ -1,6 +1,6 @@
 package co.xarx.trix.services.elasticsearch;
 
-import co.xarx.trix.domain.query.Command;
+import co.xarx.trix.domain.page.query.Command;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 

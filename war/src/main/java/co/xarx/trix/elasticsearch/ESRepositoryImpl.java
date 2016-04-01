@@ -1,6 +1,7 @@
 package co.xarx.trix.elasticsearch;
 
 import co.xarx.trix.domain.ElasticSearchEntity;
+import co.xarx.trix.persistence.ESRepository;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.repository.support.AbstractElasticsearchRepository;
 import org.springframework.data.elasticsearch.repository.support.ElasticsearchEntityInformation;

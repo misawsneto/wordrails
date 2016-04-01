@@ -22,16 +22,20 @@ import java.util.List;
 @Component
 public class SearchResource {
 
-	@Autowired
 	private PostSearchService postSearchService;
-	@Autowired
 	private PersonRepository personRepository;
-	@Autowired
 	private AuthService authProvider;
+
+	@Autowired
+	public SearchResource(PostSearchService postSearchService, PersonRepository personRepository, AuthService authProvider) {
+		this.postSearchService = postSearchService;
+		this.personRepository = personRepository;
+		this.authProvider = authProvider;
+	}
 
 	@GET
 	@Path("/bookmarks")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> bookmarks(@QueryParam("query") String q,
 												 @QueryParam("page") Integer page,
@@ -46,7 +50,7 @@ public class SearchResource {
 
 	@GET
 	@Path("/recommends")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("isAuthenticated()")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ContentResponse<SearchView> recommends(@QueryParam("query") String q,
 												  @QueryParam("page") Integer page,

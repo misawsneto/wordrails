@@ -5,23 +5,23 @@ var trix = angular.module('trix', [])
 
 .provider('trix', function trixProvider(\$httpProvider) {
 
-  var _config = {}
-  _config.url = null;
-  var provider = {};
+	var _config = {}
+	_config.url = null;
+	var provider = {};
 
-  provider.setUrl = function(u){
+	provider.setUrl = function(u){
 		_config.url = u;
-  }
+	}
 
-  provider.getConfig = function(){
+	provider.getConfig = function(){
 		return _config;
-  }
+	}
 
-  provider.setConfig = function(c){
-	_config = c
-  }
+	provider.setConfig = function(c){
+		_config = c
+	}
 
-  \$httpProvider.defaults.useXDomain = true;
+	\$httpProvider.defaults.useXDomain = true;
 	\$httpProvider.defaults.withCredentials = true;
 	\$httpProvider.interceptors.push(function trix_httpInterceptor(\$q, \$rootScope) {
 		var requestInterceptor = {
@@ -29,36 +29,36 @@ var trix = angular.module('trix', [])
 			\$rootScope.\$broadcast('HTTP_ERROR',rejection);
 			return \$q.reject(rejection);
 		},
-	    // optional method
-	    response: function(response) {
-	    // do something on success
-	    	if (_config.url && response.config.method === "GET" &&
-	    		response.config.url.indexOf(_config.url + "/api") > -1 &&
-	    		response.data && response.data._embedded){
-                if(Object.keys(response.data._embedded).length > 0)
-                    response.data = response.data._embedded;
+		// optional method
+		response: function(response) {
+		// do something on success
+			if (_config.url && response.config.method === "GET" &&
+				response.config.url.indexOf(_config.url + "/api") > -1 &&
+				response.data && response.data._embedded){
+				if(Object.keys(response.data._embedded).length > 0)
+				   response.data = response.data._embedded;
 
-                return response
-	    	}else if (_config.url && response.config.method === "GET" &&
-	    		response.config.url.indexOf(_config.url + "/api") > -1 &&
-	    		response.data && response.data.content){
-	    			response.data = response.data.content;
-		    		return response
-		    }else if(response.config.method === "POST" || response.config.method === "PUT"){
-		    	var _value = response.headers("Location");
-                if (_value) {
-                    var _index = _value.lastIndexOf("/");
-                    var _suffix = _value.substring(_index + 1);
-                    var id = _suffix;
-                    response.data = id
-                }
-                return response;
-	    	}else
-	     		return response;
-	  	},
-	  	request: function(config) {
-	      return config;
-	    }
+				return response
+			}else if (_config.url && response.config.method === "GET" &&
+				response.config.url.indexOf(_config.url + "/api") > -1 &&
+				response.data && response.data.content){
+					response.data = response.data.content;
+					return response
+			}else if(response.config.method === "POST" || response.config.method === "PUT"){
+				var _value = response.headers("Location");
+				if (_value) {
+					var _index = _value.lastIndexOf("/");
+					var _suffix = _value.substring(_index + 1);
+					var id = _suffix;
+					response.data = id
+				}
+				return response;
+			}else
+				return response;
+		},
+		request: function(config) {
+		  return config;
+		}
 		};
 		return requestInterceptor;
 	})
@@ -109,14 +109,14 @@ var trix = angular.module('trix', [])
 	  return \$http.post(_config.url + "/api/networks/createNetwork", createNetwork, config)
 	}
 
-    this.updateTheme = function(theme) {
-        var config = {"headers": {"Content-Type": "application/json"}}
-        return \$http.put(_config.url + "/api/networks/updateTheme", theme, config)
-    };
+	this.updateTheme = function(theme) {
+		var config = {"headers": {"Content-Type": "application/json"}}
+		return \$http.put(_config.url + "/api/networks/updateTheme", theme, config)
+	};
 
-    this.logout = function() {
-    	return \$http.get(_config.url + "/j_spring_security_logout")
-    }
+	this.logout = function() {
+		return \$http.get(_config.url + "/j_spring_security_logout")
+	}
 
 	this.initData = function() {
 	  return \$http.get(_config.url + "/api/persons/init");
@@ -461,20 +461,20 @@ var trix = angular.module('trix', [])
 		return \$http.get(_config.url + "/api/taxonomies/allCategories",  config)
 	};
 
-    this.recoverPassword = function(email) {
-      var config = {};
-      config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
-      return \$http.post(_config.url + "/api/auth/forgotPassword", \$.param({"email": email}), config)
-    }
+	this.recoverPassword = function(email) {
+	  var config = {};
+	  config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
+	  return \$http.post(_config.url + "/api/auth/forgotPassword", \$.param({"email": email}), config)
+	}
 
-    this.updatePassword = function(hash, password) {
-      var config = {};
-      config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
-      return \$http.put(_config.url + "/api/auth/" + hash, \$.param({"password": password}), config)
-    }
+	this.updatePassword = function(hash, password) {
+	  var config = {};
+	  config.headers = {"Content-Type": "application/x-www-form-urlencoded"}
+	  return \$http.put(_config.url + "/api/auth/" + hash, \$.param({"password": password}), config)
+	}
 
 
-  	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
+	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$
   }
 
   provider.\$get = function(\$http){

@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -51,15 +52,13 @@ public class Network extends BaseEntity implements Serializable {
 	@ManyToMany
 	public Set<Taxonomy> taxonomies;
 
-	@OneToMany(mappedBy="network", cascade=CascadeType.ALL)
-	public Set<Sponsor> sponsors;
-
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
 
 	public boolean allowSignup;
 
 	@OneToOne
+	@SdkExclude
 	public AuthCredential authCredential;
 
 	public boolean allowSocialLogin;

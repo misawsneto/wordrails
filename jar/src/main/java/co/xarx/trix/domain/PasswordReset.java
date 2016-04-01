@@ -2,6 +2,7 @@ package co.xarx.trix.domain;
 
 import lombok.AccessLevel;
 import lombok.Setter;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ public class PasswordReset extends BaseEntity {
 	@NotNull
 	public String hash;
 
+	@RestResource(exported = false)
 	@NotNull
 	@OneToOne
 	public User user;

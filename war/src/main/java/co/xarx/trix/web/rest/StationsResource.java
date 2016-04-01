@@ -1,7 +1,7 @@
 package co.xarx.trix.web.rest;
 
+import co.xarx.trix.annotations.TimeIt;
 import co.xarx.trix.api.ContentResponse;
-import co.xarx.trix.aspect.annotations.TimeIt;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.StationRole;
@@ -11,14 +11,19 @@ import co.xarx.trix.services.QueryableSectionService;
 import co.xarx.trix.services.auth.AuthService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +33,6 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 @Component
 public class StationsResource {
-
-	@Context
-	private HttpServletRequest request;
 	@Autowired
 	private AuthService authProvider;
 	@Autowired
@@ -46,6 +48,30 @@ public class StationsResource {
 	private PageRepository pageRepository;
 	@Autowired
 	private QueryableSectionService queryableSectionService;
+
+
+	@Context
+	private HttpServletRequest request;
+	@Context
+	private HttpServletResponse response;
+	@Context
+	private UriInfo uriInfo;
+
+	private void forward() throws ServletException, IOException {
+		forward(uriInfo.getPath());
+	}
+
+	private void forward(String uri) throws ServletException, IOException {
+		String path = request.getServletPath() + uri;
+		request.getServletContext().getRequestDispatcher(path).forward(request, response);
+	}
+
+	@GET
+	@Path("/{id}")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Station', 'read')")
+	public void getStation(@PathParam("id") @P("id") int postId) throws ServletException, IOException {
+		forward();
+	}
 
 	@TimeIt
 	@GET
@@ -85,6 +111,7 @@ public class StationsResource {
 
 	@PUT
 	@Path("/{stationId}/setMainStation")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response setMainStation(@PathParam("stationId") Integer stationId, @FormParam("value") boolean value) {
 		Person person = authProvider.getLoggedPerson();

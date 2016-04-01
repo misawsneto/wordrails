@@ -2,9 +2,9 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.domain.page.Block;
 import co.xarx.trix.domain.page.QueryableSection;
-import co.xarx.trix.domain.query.FixedQuery;
-import co.xarx.trix.domain.query.PageableQuery;
-import co.xarx.trix.domain.query.QueryRunner;
+import co.xarx.trix.domain.page.query.FixedQuery;
+import co.xarx.trix.domain.page.query.PageableQuery;
+import co.xarx.trix.domain.page.query.QueryRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
