@@ -3,6 +3,7 @@ package co.xarx.trix.web.rest;
 import co.xarx.trix.WordrailsService;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.domain.*;
+import co.xarx.trix.eventhandler.StationEventHandler;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.CacheService;
@@ -55,6 +56,10 @@ public class StationsResource {
 	private
 	@Autowired
 	QueryPersistence queryPersistence;
+
+	private
+	@Autowired
+	StationEventHandler stationEventHandler;
 
 	@PUT
 	@Path("/{stationId}/setDefaultPerspective")
@@ -110,5 +115,22 @@ public class StationsResource {
 			throw new co.xarx.trix.exception.BadRequestException();
 		}
 		return resp;
+	}
+
+	@DELETE
+	@Path("/{stationId}/force")
+	public Response forceDelete(@PathParam("stationId") Integer stationId) {
+		Person person = authProvider.getLoggedPerson();
+		Station station = stationRepository.findOne(stationId);
+
+		NetworkRole role = networkRolesRepository.findByPerson(person);
+
+		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
+
+		if (role.admin || sRole.admin) {
+			stationEventHandler.handleBeforeDelete(station);
+			stationRepository.delete(station.id);
+			return Response.status(Status.OK).build();
+		} else return Response.status(Status.UNAUTHORIZED).build();
 	}
 }

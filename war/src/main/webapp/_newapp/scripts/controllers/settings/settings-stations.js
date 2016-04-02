@@ -80,16 +80,15 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     }
 
     $scope.app.removeStation = function(id){
-      station.network = TRIX.baseUrl + "/api/stations/" + $scope.app.network.id;
-      if(station.name == null || station.name.trim() !== ''){
-        trix.deleteStation(station).success(function(response, stations, headers){
-          $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_REMOVED_SUCCESS'))
-          $mdDialog.cancel();
-          trix.getStation(response).success(function(stationResponse){
-            $scope.app.stations.push(stationResponse);
-          })
-        });
-      }
+      trix.forceDeleteStation(id).success(function(response, stations, headers){
+        $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_REMOVED_SUCCESS'))
+        $mdDialog.cancel();
+        for(var i = $scope.app.stations.length - 1; i >= 0; i--) {
+            if($scope.app.stations[i].id === id) {
+              $scope.app.stations.splice(i, 1);
+            }
+        }
+      });
     }
 
     $scope.createNewStation = function(event){

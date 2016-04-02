@@ -201,7 +201,7 @@
 			"READING": "Leitura",
 			"ALL_USERS": "Todos os usuários (inclusive os não autenticados)",
 			"ALLOWED_USERS": "Only users with read permissions on this station",
-			"PUBLISHING": "Publishing",
+			"PUBLISHING": "Escrita",
 			"ONLY_WRITERS": "Apenas usuários com permissões de escrita nessa estação",
 			"AUTHENTICATED": "Todos os usuários autenticados nesta estação",
 			"STATION_LOGO": "Logotipo",
