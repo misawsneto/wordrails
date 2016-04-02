@@ -41,7 +41,7 @@ angular.module('app')
               resolve: {
                 appData: function($stateParams, $q, trix){
                   var deferred = $q.defer();
-                  trix.login('demo', 'Dem0Pass').success(function(){
+                  trix.login('demo', 'Dem0PASS').success(function(){
                     trix.allInitData().success(function(response){
                       deferred.resolve(response);
                     });
@@ -586,7 +586,7 @@ angular.module('app')
               resolve: {
                 appData: function($stateParams, $q, trix){
                   var deferred = $q.defer();
-                  trix.login('demo', 'Dem0Pass').success(function(){
+                  trix.login('demo', 'Dem0PASS').success(function(){
                     trix.allInitData().success(function(response){
                       deferred.resolve(response);
                     });

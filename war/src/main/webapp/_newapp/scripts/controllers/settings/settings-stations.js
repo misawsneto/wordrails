@@ -1,5 +1,5 @@
-app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
-	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
+app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location', '$filter',
+	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $filter){
 		$scope.app.lastSettingState = "app.settings.stations";
 
 		$scope.openDeleteStation = function(stationId){
@@ -55,7 +55,39 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     $scope.app.createStation = function(station){
       station.network = TRIX.baseUrl + "/api/stations/" + $scope.app.network.id;
       if(station.name == null || station.name.trim() !== ''){
-        trix.postStation(station).success(function(response){
+        trix.postStation(station).success(function(stationId, stations, headers){
+          $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_CREATION_SUCCESS'))
+          $mdDialog.cancel();
+          trix.getStation(stationId).success(function(stationResponse){
+            $scope.app.stations.push(stationResponse);
+          })
+        });
+      }
+    }
+
+    $scope.showRemoveStationDialog = function(station){
+      $scope.app.stationObj = station;
+      $mdDialog.show({
+        controller: $scope.app.defaultDialog,
+        templateUrl: 'station-remove-dialog.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose:true
+        // onComplete: function(){
+
+        // }
+      })
+    }
+
+    $scope.app.removeStation = function(id){
+      station.network = TRIX.baseUrl + "/api/stations/" + $scope.app.network.id;
+      if(station.name == null || station.name.trim() !== ''){
+        trix.deleteStation(station).success(function(response, stations, headers){
+          $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_REMOVED_SUCCESS'))
+          $mdDialog.cancel();
+          trix.getStation(response).success(function(stationResponse){
+            $scope.app.stations.push(stationResponse);
+          })
         });
       }
     }
@@ -72,7 +104,7 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       $scope.showStationConfigDialog(event)
     }
 
-    $scope.createSlugsFromName();
+    //$scope.createSlugsFromName();
 
     settingsStationsCtrl = $scope;
 	}])
@@ -167,6 +199,8 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
       };
 
 	}])
+
+var HEADERS_func = null;
 
 app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
                                           function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){

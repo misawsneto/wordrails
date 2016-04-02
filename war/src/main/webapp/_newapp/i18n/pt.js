@@ -60,7 +60,8 @@
 		"ADVANCED_SETTINGS": "Configurações avançadas",
 		"OPTIONS": "Opções",
 		"RESTORE_DEFAULT": "Restaurar padrões",
-		"CUSTOMIZE": "Personalizar"
+		"CUSTOMIZE": "Personalizar",
+		"REMOVE_CONFIRMATION_MSG": "Tem certeza que deseja prosseguir"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -203,7 +204,9 @@
 			"PUBLISHING": "Publishing",
 			"ONLY_WRITERS": "Apenas usuários com permissões de escrita nessa estação",
 			"AUTHENTICATED": "Todos os usuários autenticados nesta estação",
-			"STATION_LOGO": "Logotipo"
+			"STATION_LOGO": "Logotipo",
+			"STATION_CREATION_SUCCESS": "Estação foi criada com sucesso",
+			"STATION_REMOVED_SUCCESS": "Estação removida com sucesso"
 		},
 		"SET_COLOR": "Configure as paletas de cores",
 		"COLOR_PALETTE": "Paleta de Cores",

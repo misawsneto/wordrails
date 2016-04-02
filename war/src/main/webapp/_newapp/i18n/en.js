@@ -60,7 +60,8 @@
 		"ADVANCED_SETTINGS": "Advanced settings",
 		"OPTIONS": "Options",
 		"RESTORE_DEFAULT": "Restore defaults",
-		"CUSTOMIZE": "Customize"
+		"CUSTOMIZE": "Customize",
+		"REMOVE_CONFIRMATION_MSG": "Are you sure wish to proceed"
 	},
 	"actions":{
 		"ADD": "Add",
@@ -203,7 +204,9 @@
 			"PUBLISHING": "Publishing",
 			"ONLY_WRITERS": "Only users with write permissions on this station",
 			"AUTHENTICATED": "All authenticated users on this station",
-			"STATION_LOGO": "Station logo"
+			"STATION_LOGO": "Station logo",
+			"STATION_CREATION_SUCCESS": "Station was successfully created",
+			"STATION_REMOVED_SUCCESS": "Station was removed"
 		},
 		"SET_COLOR": "Set the color palettes",
 		"COLOR_PALETTE": "Color Palette",

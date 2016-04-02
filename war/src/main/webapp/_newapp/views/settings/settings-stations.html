@@ -55,7 +55,7 @@
                 {{'titles.DEFAULT_STATION' | translate}}</md-checkbox>
               </div>
               <div class="text-right p-xs">
-                <button ng-click="openDeleteStation(station.id)"
+                <button ng-click="showRemoveStationDialog(station)"
                 md-ink-ripple class="md-btn md-flat" translate="actions.REMOVE">Excluir</button>
               </div>
             </div>
@@ -117,7 +117,7 @@
         </div>
       </div>
     </md-toolbar>
-    <div class="p col-400 scrollable card m-0">
+    <div class="p col-400 scrollable md-background-hue-1 background">
       <div class="wrapper-md">
         <div class="row pos-rlt">
           <div class="p p-l-lg p-r-lg">
@@ -145,7 +145,7 @@
           ng-true-value="true" ng-false-value="false">
             {{'settings.station.SHOW_AUTHOR_PERSONAL_DATA' | translate}}
           </md-switch>
-          <md-switch ng-model="app.stationObj.allowWritersToNotify"
+          <md-switch class="m-v-xs" ng-model="app.stationObj.allowWritersToNotify"
             ng-true-value="true" ng-false-value="false">
             {{'settings.station.ALLOW_PUBLISHERS_TO_NOTIFY' | translate}}
           </md-switch>
@@ -167,18 +167,39 @@
               {{'settings.station.AUTHENTICATED' | translate}}
             </md-radio-button>
           </md-radio-group>
-          <div class="line line-dashed b-b line-lg pull-in"></div>
-          <div class="m-b text-muted text-md text-u-c">{{'settings.station.STATION_LOGO' | translate}}</div>
+          <!-- <div class="line line-dashed b-b line-lg pull-in"></div> -->
+          <!-- <div class="m-b text-muted text-md text-u-c">{{'settings.station.STATION_LOGO' | translate}}</div>
           <div class="bg-cover text-center" src="img/img-stub.png">
             <div ng-if="logoImage.link" class="text-center w-xxl m-auto">
               <img class="img-responsive bg-header p-sm r-3x" style="display:block; margin:auto; max-height: 80px;" ng-src="{{logoImage.link}}">
               <div class="pull-right m-r-n-md m-t-n-xxl">
                 <a ng-click="logoImage.link = null;"><i class="mdi mdi-close-circle-outline text-2x"></i></a>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
     </div>
   </md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="station-remove-dialog.html">
+  <md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+        <div class="md-dialog-content-body text-md text-center p-r p-l w-xxl p m-b">
+          {{'titles.REMOVE_CONFIRMATION_MSG' | translate}}?
+        </div>
+
+        <div class="text-center">
+          <md-button ng-click="app.deleteStation();">
+            {{'titles.YES' | translate}}
+          </md-button>
+          <md-button ng-click="cancel()">
+            {{'titles.NO' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
 </script>
