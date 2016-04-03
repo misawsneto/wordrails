@@ -1,8 +1,25 @@
 /*!
- * angular-translate - v2.5.2 - 2014-12-10
- * http://github.com/angular-translate/angular-translate
- * Copyright (c) 2014 ; Licensed MIT
+ * angular-translate - v2.11.0 - 2016-03-20
+ * 
+ * Copyright (c) 2016 The angular-translate team, Pascal Precht; Licensed MIT
  */
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module unless amdModuleId is set
+    define([], function () {
+      return (factory());
+    });
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else {
+    factory();
+  }
+}(this, function () {
+
+$translateCookieStorageFactory.$inject = ['$cookieStore'];
 angular.module('pascalprecht.translate')
 
 /**
@@ -15,7 +32,11 @@ angular.module('pascalprecht.translate')
  * to use cookieStore as storage.
  *
  */
-.factory('$translateCookieStorage', ['$cookieStore', function ($cookieStore) {
+  .factory('$translateCookieStorage', $translateCookieStorageFactory);
+
+function $translateCookieStorageFactory($cookieStore) {
+
+  'use strict';
 
   var $translateCookieStorage = {
 
@@ -68,4 +89,9 @@ angular.module('pascalprecht.translate')
   };
 
   return $translateCookieStorage;
-}]);
+}
+
+$translateCookieStorageFactory.displayName = '$translateCookieStorage';
+return 'pascalprecht.translate';
+
+}));

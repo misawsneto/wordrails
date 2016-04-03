@@ -9,7 +9,6 @@
     "commit": "0ab30df52d464f54ea0fb4b8b58c317ecba0fb8d"
   },
   "_source": "git://github.com/gwatts/jquery.sparkline.git",
-  "_target": "~2.1.2",
-  "_originalSource": "jquery.sparkline",
-  "_direct": true
+  "_target": "^2.1.2",
+  "_originalSource": "jquery.sparkline"
 }

@@ -1,3 +1,65 @@
+<a name="0.16.0"></a>
+# [0.16.0](https://github.com/passy/angular-masonry/compare/v0.15.0...v0.16.0) (2016-02-14)
+
+
+### Features
+
+* **deps:** update AngularJS to 1.5 ([c043a9f](https://github.com/passy/angular-masonry/commit/c043a9f))
+
+
+
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/passy/angular-masonry/compare/v0.14.1...v0.15.0) (2016-01-23)
+
+
+### Features
+
+* **deps:** masonry v4, imagesloaded v4 ([81ec0dc](https://github.com/passy/angular-masonry/commit/81ec0dc))
+
+
+
+<a name="0.14.1"></a>
+# [0.14.1](https://github.com/passy/angular-masonry/compare/v0.14.0...v0.14.1) (2015-09-09)
+
+### Bug Fixes
+
+* **dist:** fix missing build artifacts
+
+<a name="0.14.0"></a>
+# [0.14.0](https://github.com/passy/angular-masonry/compare/v0.13.0...v0.14.0) (2015-12-03)
+
+
+### Features
+
+* **directive:** allow to prepend bricks ([a5e73aa](https://github.com/passy/angular-masonry/commit/a5e73aa))
+
+
+
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/passy/angular-masonry/compare/v0.12.0...v0.13.0) (2015-09-27)
+
+
+### Features
+
+* **deps:** upgrade to Masonry 3.3 ([3267e4c](https://github.com/passy/angular-masonry/commit/3267e4c))
+
+
+
+<a name="0.12.0"></a>
+# [0.12.0](https://github.com/passy/angular-masonry/compare/v0.11.1...v0.12.0) (2015-09-09)
+
+
+### Bug Fixes
+
+* **test:** make reload-on-resize tests more specific ([bf280d0](https://github.com/passy/angular-masonry/commit/bf280d0))
+
+### Features
+
+* **bower:** make the module compatible with angular 1.4 ([38c9fee](https://github.com/passy/angular-masonry/commit/38c9fee))
+* **directive:** add `reload-on-resize` option ([6065e18](https://github.com/passy/angular-masonry/commit/6065e18))
+
+
+
 <a name="0.11.1"></a>
 ### 0.11.1 (2015-06-18)
 

@@ -2,16 +2,12 @@
 <html lang="en" itemscope itemtype="http://schema.org/Product">
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="author" content="Sindre Sorhus">
 		<meta name="description" content="JavaScript Fullscreen API demo">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta itemprop="name" content="screenfull.js">
 		<meta itemprop="description" content="Simple wrapper for cross-browser usage of the JavaScript Fullscreen API, which lets you bring the page or any element into fullscreen. Smoothens out the browser implementation differences, so you don't have too.">
 		<title>screenfull.js demo</title>
-		<!--[if lt IE 9]>
-		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-		<![endif]-->
 		<style>
 		html {
 			font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -108,10 +104,10 @@
 		</style>
 	</head>
 	<body>
-		<a id="repo-link" href="https://github.com/sindresorhus/screenfull.js/">⬅ Back to the repo</a>
+		<a id="repo-link" href="https://github.com/sindresorhus/screenfull.js">⬅ Back to the repo</a>
 		<div id="social" class="container">
 			<a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-text="screenfull.js - Simple wrapper for cross-browser usage of the Fullscreen API" data-via="sindresorhus">Tweet</a>
-			<div class="g-plusone" data-size="medium" data-annotation="none" data-href="https://github.com/sindresorhus/screenfull.js/"></div>
+			<div class="g-plusone" data-size="medium" data-annotation="none" data-href="https://github.com/sindresorhus/screenfull.js"></div>
 		</div>
 		<section id="container" class="container">
 			<header>
@@ -136,23 +132,8 @@
 			<input autofocus placeholder="Keyboard test">
 			<hr>
 			<section>
-				<p>How to open external pages while in fullscreen</p>
-				<button id="iframe">Click when in fullscreen</button>
-			</section>
-			<hr>
-			<section>
 				<p>Click the image to make it fullscreen</p>
-				<img width="500" height="206" id="demo-img" src="http://sindresorhus.com/img/slideshow/4.jpg">
-			</section>
-			<hr>
-			<section>
-				<p>Click the video to make it fullscreen</p>
-				<video id="demo-video" width="500" height="281" poster="http://wroug.com/stuff/host/demo-video/poster-500px.jpg" controls>
-					<source src="http://wroug.com/stuff/host/demo-video/midnight_sun_sv1_720p.mp4">
-					<source src="http://wroug.com/stuff/host/demo-video/midnight_sun_sv1_720p.webm">
-				</video>
-				<small>Press Esc to exit</small>
-				<p style="font-size:12px">Video by <a href="http://scientifantastic.com">Joe Capra</a></p>
+				<img width="500" height="206" id="demo-img" src="https://sindresorhus.com/img/slideshow/4.jpg">
 			</section>
 		</section>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
@@ -163,7 +144,7 @@
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 		})();
 		</script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script src="src/screenfull.js"></script>
 		<script>
 		$(function () {
@@ -195,30 +176,7 @@
 				screenfull.toggle(this);
 			});
 
-			$('#demo-video').click(function () {
-				screenfull.toggle(this);
-			});
-
-			// a little hack to be able to switch pages while in fullscreen.
-			// we basically just creates a seamless iframe and navigate in that instead.
-			$('#iframe').click(function () {
-				// We create an iframe and fill the window with it
-				var iframe = document.createElement('iframe')
-				iframe.setAttribute('id', 'external-iframe');
-				iframe.setAttribute('src', 'http://bbc.com');
-				iframe.setAttribute('frameborder', 'no');
-				iframe.style.position = 'absolute';
-				iframe.style.top = '0';
-				iframe.style.right = '0';
-				iframe.style.bottom = '0';
-				iframe.style.left = '0';
-				iframe.style.width = '100%';
-				iframe.style.height = '100%';
-				$('#container').prepend(iframe);
-				document.body.style.overflow = 'hidden';
-			})
-
-			document.addEventListener(screenfull.raw.fullscreenchange, function () {
+			function fullscreenchange() {
 				var elem = screenfull.element;
 
 				$('#status').text('Is fullscreen: ' + screenfull.isFullscreen);
@@ -231,14 +189,12 @@
 					$('#external-iframe').remove();
 					document.body.style.overflow = 'auto';
 				}
-			});
+			}
 
-			$(document).on(screenfull.raw.fullscreenchange, function () {
-				console.log('Fullscreen change');
-			});
+			document.addEventListener(screenfull.raw.fullscreenchange, fullscreenchange);
 
-			// trigger the onchange() to set the initial values
-			screenfull.onchange();
+			// set the initial values
+			fullscreenchange();
 		});
 		</script>
 		<script>

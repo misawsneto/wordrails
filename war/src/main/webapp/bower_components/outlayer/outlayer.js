@@ -1,92 +1,53 @@
 /*!
- * Outlayer v1.3.0
+ * Outlayer v2.0.1
  * the brains and guts of a layout library
  * MIT license
  */
 
-( function( window ) {
+( function( window, factory ) {
+  'use strict';
+  // universal module definition
+  /* jshint strict: false */ /* globals define, module, require */
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD - RequireJS
+    define( [
+        'ev-emitter/ev-emitter',
+        'get-size/get-size',
+        'fizzy-ui-utils/utils',
+        './item'
+      ],
+      function( EvEmitter, getSize, utils, Item ) {
+        return factory( window, EvEmitter, getSize, utils, Item);
+      }
+    );
+  } else if ( typeof module == 'object' && module.exports ) {
+    // CommonJS - Browserify, Webpack
+    module.exports = factory(
+      window,
+      require('ev-emitter'),
+      require('get-size'),
+      require('fizzy-ui-utils'),
+      require('./item')
+    );
+  } else {
+    // browser global
+    window.Outlayer = factory(
+      window,
+      window.EvEmitter,
+      window.getSize,
+      window.fizzyUIUtils,
+      window.Outlayer.Item
+    );
+  }
 
+}( window, function factory( window, EvEmitter, getSize, utils, Item ) {
 'use strict';
 
 // ----- vars ----- //
 
-var document = window.document;
 var console = window.console;
 var jQuery = window.jQuery;
 var noop = function() {};
-
-// -------------------------- helpers -------------------------- //
-
-// extend objects
-function extend( a, b ) {
-  for ( var prop in b ) {
-    a[ prop ] = b[ prop ];
-  }
-  return a;
-}
-
-
-var objToString = Object.prototype.toString;
-function isArray( obj ) {
-  return objToString.call( obj ) === '[object Array]';
-}
-
-// turn element or nodeList into an array
-function makeArray( obj ) {
-  var ary = [];
-  if ( isArray( obj ) ) {
-    // use object if already an array
-    ary = obj;
-  } else if ( obj && typeof obj.length === 'number' ) {
-    // convert nodeList to array
-    for ( var i=0, len = obj.length; i < len; i++ ) {
-      ary.push( obj[i] );
-    }
-  } else {
-    // array of single index
-    ary.push( obj );
-  }
-  return ary;
-}
-
-// http://stackoverflow.com/a/384380/182183
-var isElement = ( typeof HTMLElement === 'function' || typeof HTMLElement === 'object' ) ?
-  function isElementDOM2( obj ) {
-    return obj instanceof HTMLElement;
-  } :
-  function isElementQuirky( obj ) {
-    return obj && typeof obj === 'object' &&
-      obj.nodeType === 1 && typeof obj.nodeName === 'string';
-  };
-
-// index of helper cause IE8
-var indexOf = Array.prototype.indexOf ? function( ary, obj ) {
-    return ary.indexOf( obj );
-  } : function( ary, obj ) {
-    for ( var i=0, len = ary.length; i < len; i++ ) {
-      if ( ary[i] === obj ) {
-        return i;
-      }
-    }
-    return -1;
-  };
-
-function removeFrom( obj, ary ) {
-  var index = indexOf( ary, obj );
-  if ( index !== -1 ) {
-    ary.splice( index, 1 );
-  }
-}
-
-// http://jamesroberts.name/blog/2010/02/22/string-functions-for-javascript-trim-to-camel-case-to-dashed-and-to-underscore/
-function toDashed( str ) {
-  return str.replace( /(.)([A-Z])/g, function( match, $1, $2 ) {
-    return $1 + '-' + $2;
-  }).toLowerCase();
-}
-
-
-function outlayerDefinition( eventie, docReady, EventEmitter, getSize, matchesSelector, Item ) {
 
 // -------------------------- Outlayer -------------------------- //
 
@@ -102,23 +63,22 @@ var instances = {};
  * @constructor
  */
 function Outlayer( element, options ) {
-  // use element as selector string
-  if ( typeof element === 'string' ) {
-    element = document.querySelector( element );
-  }
-
-  // bail out if not proper element
-  if ( !element || !isElement( element ) ) {
+  var queryElement = utils.getQueryElement( element );
+  if ( !queryElement ) {
     if ( console ) {
-      console.error( 'Bad ' + this.constructor.namespace + ' element: ' + element );
+      console.error( 'Bad element for ' + this.constructor.namespace +
+        ': ' + ( queryElement || element ) );
     }
     return;
   }
-
-  this.element = element;
+  this.element = queryElement;
+  // add jQuery
+  if ( jQuery ) {
+    this.$element = jQuery( this.element );
+  }
 
   // options
-  this.options = extend( {}, this.constructor.defaults );
+  this.options = utils.extend( {}, this.constructor.defaults );
   this.option( options );
 
   // add id for Outlayer.getFromElement
@@ -129,7 +89,8 @@ function Outlayer( element, options ) {
   // kick it off
   this._create();
 
-  if ( this.options.isInitLayout ) {
+  var isInitLayout = this._getOption('initLayout');
+  if ( isInitLayout ) {
     this.layout();
   }
 }
@@ -143,11 +104,11 @@ Outlayer.defaults = {
   containerStyle: {
     position: 'relative'
   },
-  isInitLayout: true,
-  isOriginLeft: true,
-  isOriginTop: true,
-  isResizeBound: true,
-  isResizingContainer: true,
+  initLayout: true,
+  originLeft: true,
+  originTop: true,
+  resize: true,
+  resizeContainer: true,
   // item options
   transitionDuration: '0.4s',
   hiddenStyle: {
@@ -160,34 +121,56 @@ Outlayer.defaults = {
   }
 };
 
-// inherit EventEmitter
-extend( Outlayer.prototype, EventEmitter.prototype );
+var proto = Outlayer.prototype;
+// inherit EvEmitter
+utils.extend( proto, EvEmitter.prototype );
 
 /**
  * set options
  * @param {Object} opts
  */
-Outlayer.prototype.option = function( opts ) {
-  extend( this.options, opts );
+proto.option = function( opts ) {
+  utils.extend( this.options, opts );
 };
 
-Outlayer.prototype._create = function() {
+/**
+ * get backwards compatible option value, check old name
+ */
+proto._getOption = function( option ) {
+  var oldOption = this.constructor.compatOptions[ option ];
+  return oldOption && this.options[ oldOption ] !== undefined ?
+    this.options[ oldOption ] : this.options[ option ];
+};
+
+Outlayer.compatOptions = {
+  // currentName: oldName
+  initLayout: 'isInitLayout',
+  horizontal: 'isHorizontal',
+  layoutInstant: 'isLayoutInstant',
+  originLeft: 'isOriginLeft',
+  originTop: 'isOriginTop',
+  resize: 'isResizeBound',
+  resizeContainer: 'isResizingContainer'
+};
+
+proto._create = function() {
   // get items from children
   this.reloadItems();
   // elements that affect layout, but are not laid out
   this.stamps = [];
   this.stamp( this.options.stamp );
   // set container style
-  extend( this.element.style, this.options.containerStyle );
+  utils.extend( this.element.style, this.options.containerStyle );
 
   // bind resize method
-  if ( this.options.isResizeBound ) {
+  var canBindResize = this._getOption('resize');
+  if ( canBindResize ) {
     this.bindResize();
   }
 };
 
 // goes through all children again and gets bricks in proper order
-Outlayer.prototype.reloadItems = function() {
+proto.reloadItems = function() {
   // collection of item elements
   this.items = this._itemize( this.element.children );
 };
@@ -198,14 +181,14 @@ Outlayer.prototype.reloadItems = function() {
  * @param {Array or NodeList or HTMLElement} elems
  * @returns {Array} items - collection of new Outlayer Items
  */
-Outlayer.prototype._itemize = function( elems ) {
+proto._itemize = function( elems ) {
 
   var itemElems = this._filterFindItemElements( elems );
   var Item = this.constructor.Item;
 
   // create new Outlayer Items for collection
   var items = [];
-  for ( var i=0, len = itemElems.length; i < len; i++ ) {
+  for ( var i=0; i < itemElems.length; i++ ) {
     var elem = itemElems[i];
     var item = new Item( elem, this );
     items.push( item );
@@ -219,48 +202,18 @@ Outlayer.prototype._itemize = function( elems ) {
  * @param {Array or NodeList or HTMLElement} elems
  * @returns {Array} items - item elements
  */
-Outlayer.prototype._filterFindItemElements = function( elems ) {
-  // make array of elems
-  elems = makeArray( elems );
-  var itemSelector = this.options.itemSelector;
-  var itemElems = [];
-
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    // check that elem is an actual element
-    if ( !isElement( elem ) ) {
-      continue;
-    }
-    // filter & find items if we have an item selector
-    if ( itemSelector ) {
-      // filter siblings
-      if ( matchesSelector( elem, itemSelector ) ) {
-        itemElems.push( elem );
-      }
-      // find children
-      var childElems = elem.querySelectorAll( itemSelector );
-      // concat childElems to filterFound array
-      for ( var j=0, jLen = childElems.length; j < jLen; j++ ) {
-        itemElems.push( childElems[j] );
-      }
-    } else {
-      itemElems.push( elem );
-    }
-  }
-
-  return itemElems;
+proto._filterFindItemElements = function( elems ) {
+  return utils.filterFindElements( elems, this.options.itemSelector );
 };
 
 /**
  * getter method for getting item elements
  * @returns {Array} elems - collection of item elements
  */
-Outlayer.prototype.getItemElements = function() {
-  var elems = [];
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
-    elems.push( this.items[i].element );
-  }
-  return elems;
+proto.getItemElements = function() {
+  return this.items.map( function( item ) {
+    return item.element;
+  });
 };
 
 // ----- init & layout ----- //
@@ -268,13 +221,14 @@ Outlayer.prototype.getItemElements = function() {
 /**
  * lays out all items
  */
-Outlayer.prototype.layout = function() {
+proto.layout = function() {
   this._resetLayout();
   this._manageStamps();
 
   // don't animate first layout
-  var isInstant = this.options.isLayoutInstant !== undefined ?
-    this.options.isLayoutInstant : !this._isLayoutInited;
+  var layoutInstant = this._getOption('layoutInstant');
+  var isInstant = layoutInstant !== undefined ?
+    layoutInstant : !this._isLayoutInited;
   this.layoutItems( this.items, isInstant );
 
   // flag for initalized
@@ -282,17 +236,17 @@ Outlayer.prototype.layout = function() {
 };
 
 // _init is alias for layout
-Outlayer.prototype._init = Outlayer.prototype.layout;
+proto._init = proto.layout;
 
 /**
  * logic before any new layout
  */
-Outlayer.prototype._resetLayout = function() {
+proto._resetLayout = function() {
   this.getSize();
 };
 
 
-Outlayer.prototype.getSize = function() {
+proto.getSize = function() {
   this.size = getSize( this.element );
 };
 
@@ -306,7 +260,7 @@ Outlayer.prototype.getSize = function() {
  * @param {String} size - width or height
  * @private
  */
-Outlayer.prototype._getMeasurement = function( measurement, size ) {
+proto._getMeasurement = function( measurement, size ) {
   var option = this.options[ measurement ];
   var elem;
   if ( !option ) {
@@ -314,9 +268,9 @@ Outlayer.prototype._getMeasurement = function( measurement, size ) {
     this[ measurement ] = 0;
   } else {
     // use option as an element
-    if ( typeof option === 'string' ) {
+    if ( typeof option == 'string' ) {
       elem = this.element.querySelector( option );
-    } else if ( isElement( option ) ) {
+    } else if ( option instanceof HTMLElement ) {
       elem = option;
     }
     // use size of element, if element
@@ -328,7 +282,7 @@ Outlayer.prototype._getMeasurement = function( measurement, size ) {
  * layout a collection of item elements
  * @api public
  */
-Outlayer.prototype.layoutItems = function( items, isInstant ) {
+proto.layoutItems = function( items, isInstant ) {
   items = this._getItemsForLayout( items );
 
   this._layoutItems( items, isInstant );
@@ -342,15 +296,10 @@ Outlayer.prototype.layoutItems = function( items, isInstant ) {
  * @param {Array} items
  * @returns {Array} items
  */
-Outlayer.prototype._getItemsForLayout = function( items ) {
-  var layoutItems = [];
-  for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
-    if ( !item.isIgnored ) {
-      layoutItems.push( item );
-    }
-  }
-  return layoutItems;
+proto._getItemsForLayout = function( items ) {
+  return items.filter( function( item ) {
+    return !item.isIgnored;
+  });
 };
 
 /**
@@ -358,32 +307,24 @@ Outlayer.prototype._getItemsForLayout = function( items ) {
  * @param {Array} items
  * @param {Boolean} isInstant
  */
-Outlayer.prototype._layoutItems = function( items, isInstant ) {
-  var _this = this;
-  function onItemsLayout() {
-    _this.emitEvent( 'layoutComplete', [ _this, items ] );
-  }
+proto._layoutItems = function( items, isInstant ) {
+  this._emitCompleteOnItems( 'layout', items );
 
   if ( !items || !items.length ) {
     // no items, emit event with empty array
-    onItemsLayout();
     return;
   }
 
-  // emit layoutComplete when done
-  this._itemsOn( items, 'layout', onItemsLayout );
-
   var queue = [];
 
-  for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
+  items.forEach( function( item ) {
     // get x/y object from method
     var position = this._getItemLayoutPosition( item );
     // enqueue
     position.item = item;
     position.isInstant = isInstant || item.isLayoutInstant;
     queue.push( position );
-  }
+  }, this );
 
   this._processLayoutQueue( queue );
 };
@@ -393,7 +334,7 @@ Outlayer.prototype._layoutItems = function( items, isInstant ) {
  * @param {Outlayer.Item} item
  * @returns {Object} x and y position
  */
-Outlayer.prototype._getItemLayoutPosition = function( /* item */ ) {
+proto._getItemLayoutPosition = function( /* item */ ) {
   return {
     x: 0,
     y: 0
@@ -406,11 +347,10 @@ Outlayer.prototype._getItemLayoutPosition = function( /* item */ ) {
  * thx @paul_irish
  * @param {Array} queue
  */
-Outlayer.prototype._processLayoutQueue = function( queue ) {
-  for ( var i=0, len = queue.length; i < len; i++ ) {
-    var obj = queue[i];
+proto._processLayoutQueue = function( queue ) {
+  queue.forEach( function( obj ) {
     this._positionItem( obj.item, obj.x, obj.y, obj.isInstant );
-  }
+  }, this );
 };
 
 /**
@@ -420,7 +360,7 @@ Outlayer.prototype._processLayoutQueue = function( queue ) {
  * @param {Number} y - vertical position
  * @param {Boolean} isInstant - disables transitions
  */
-Outlayer.prototype._positionItem = function( item, x, y, isInstant ) {
+proto._positionItem = function( item, x, y, isInstant ) {
   if ( isInstant ) {
     // if not transition, just set CSS
     item.goTo( x, y );
@@ -433,12 +373,13 @@ Outlayer.prototype._positionItem = function( item, x, y, isInstant ) {
  * Any logic you want to do after each layout,
  * i.e. size the container
  */
-Outlayer.prototype._postLayout = function() {
+proto._postLayout = function() {
   this.resizeContainer();
 };
 
-Outlayer.prototype.resizeContainer = function() {
-  if ( !this.options.isResizingContainer ) {
+proto.resizeContainer = function() {
+  var isResizingContainer = this._getOption('resizeContainer');
+  if ( !isResizingContainer ) {
     return;
   }
   var size = this._getContainerSize();
@@ -454,13 +395,13 @@ Outlayer.prototype.resizeContainer = function() {
  *   @param {Number} width
  *   @param {Number} height
  */
-Outlayer.prototype._getContainerSize = noop;
+proto._getContainerSize = noop;
 
 /**
  * @param {Number} measure - size of width or height
  * @param {Boolean} isWidth
  */
-Outlayer.prototype._setContainerMeasure = function( measure, isWidth ) {
+proto._setContainerMeasure = function( measure, isWidth ) {
   if ( measure === undefined ) {
     return;
   }
@@ -479,27 +420,59 @@ Outlayer.prototype._setContainerMeasure = function( measure, isWidth ) {
 };
 
 /**
- * trigger a callback for a collection of items events
- * @param {Array} items - Outlayer.Items
+ * emit eventComplete on a collection of items events
  * @param {String} eventName
- * @param {Function} callback
+ * @param {Array} items - Outlayer.Items
  */
-Outlayer.prototype._itemsOn = function( items, eventName, callback ) {
-  var doneCount = 0;
-  var count = items.length;
-  // event callback
+proto._emitCompleteOnItems = function( eventName, items ) {
   var _this = this;
+  function onComplete() {
+    _this.dispatchEvent( eventName + 'Complete', null, [ items ] );
+  }
+
+  var count = items.length;
+  if ( !items || !count ) {
+    onComplete();
+    return;
+  }
+
+  var doneCount = 0;
   function tick() {
     doneCount++;
-    if ( doneCount === count ) {
-      callback.call( _this );
+    if ( doneCount == count ) {
+      onComplete();
     }
-    return true; // bind once
   }
+
   // bind callback
-  for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
-    item.on( eventName, tick );
+  items.forEach( function( item ) {
+    item.once( eventName, tick );
+  });
+};
+
+/**
+ * emits events via EvEmitter and jQuery events
+ * @param {String} type - name of event
+ * @param {Event} event - original event
+ * @param {Array} args - extra arguments
+ */
+proto.dispatchEvent = function( type, event, args ) {
+  // add original event to arguments
+  var emitArgs = event ? [ event ].concat( args ) : args;
+  this.emitEvent( type, emitArgs );
+
+  if ( jQuery ) {
+    // set this.$element
+    this.$element = this.$element || jQuery( this.element );
+    if ( event ) {
+      // create jQuery event
+      var $event = jQuery.Event( event );
+      $event.type = type;
+      this.$element.trigger( $event, args );
+    } else {
+      // just trigger with type if no event available
+      this.$element.trigger( type, args );
+    }
   }
 };
 
@@ -511,7 +484,7 @@ Outlayer.prototype._itemsOn = function( items, eventName, callback ) {
  * ignored items do not get skipped in layout
  * @param {Element} elem
  */
-Outlayer.prototype.ignore = function( elem ) {
+proto.ignore = function( elem ) {
   var item = this.getItem( elem );
   if ( item ) {
     item.isIgnored = true;
@@ -522,7 +495,7 @@ Outlayer.prototype.ignore = function( elem ) {
  * return item to layout collection
  * @param {Element} elem
  */
-Outlayer.prototype.unignore = function( elem ) {
+proto.unignore = function( elem ) {
   var item = this.getItem( elem );
   if ( item ) {
     delete item.isIgnored;
@@ -533,7 +506,7 @@ Outlayer.prototype.unignore = function( elem ) {
  * adds elements to stamps
  * @param {NodeList, Array, Element, or String} elems
  */
-Outlayer.prototype.stamp = function( elems ) {
+proto.stamp = function( elems ) {
   elems = this._find( elems );
   if ( !elems ) {
     return;
@@ -541,29 +514,24 @@ Outlayer.prototype.stamp = function( elems ) {
 
   this.stamps = this.stamps.concat( elems );
   // ignore
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    this.ignore( elem );
-  }
+  elems.forEach( this.ignore, this );
 };
 
 /**
  * removes elements to stamps
  * @param {NodeList, Array, or Element} elems
  */
-Outlayer.prototype.unstamp = function( elems ) {
+proto.unstamp = function( elems ) {
   elems = this._find( elems );
   if ( !elems ){
     return;
   }
 
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
+  elems.forEach( function( elem ) {
     // filter out removed stamp elements
-    removeFrom( elem, this.stamps );
+    utils.removeFrom( this.stamps, elem );
     this.unignore( elem );
-  }
-
+  }, this );
 };
 
 /**
@@ -571,33 +539,30 @@ Outlayer.prototype.unstamp = function( elems ) {
  * @param {NodeList, Array, Element, or String} elems
  * @returns {Array} elems
  */
-Outlayer.prototype._find = function( elems ) {
+proto._find = function( elems ) {
   if ( !elems ) {
     return;
   }
   // if string, use argument as selector string
-  if ( typeof elems === 'string' ) {
+  if ( typeof elems == 'string' ) {
     elems = this.element.querySelectorAll( elems );
   }
-  elems = makeArray( elems );
+  elems = utils.makeArray( elems );
   return elems;
 };
 
-Outlayer.prototype._manageStamps = function() {
+proto._manageStamps = function() {
   if ( !this.stamps || !this.stamps.length ) {
     return;
   }
 
   this._getBoundingRect();
 
-  for ( var i=0, len = this.stamps.length; i < len; i++ ) {
-    var stamp = this.stamps[i];
-    this._manageStamp( stamp );
-  }
+  this.stamps.forEach( this._manageStamp, this );
 };
 
 // update boundingLeft / Top
-Outlayer.prototype._getBoundingRect = function() {
+proto._getBoundingRect = function() {
   // get bounding rect for container element
   var boundingRect = this.element.getBoundingClientRect();
   var size = this.size;
@@ -612,14 +577,14 @@ Outlayer.prototype._getBoundingRect = function() {
 /**
  * @param {Element} stamp
 **/
-Outlayer.prototype._manageStamp = noop;
+proto._manageStamp = noop;
 
 /**
  * get x/y position of element relative to container element
  * @param {Element} elem
  * @returns {Object} offset - has left, top, right, bottom
  */
-Outlayer.prototype._getElementOffset = function( elem ) {
+proto._getElementOffset = function( elem ) {
   var boundingRect = elem.getBoundingClientRect();
   var thisRect = this._boundingRect;
   var size = getSize( elem );
@@ -636,55 +601,31 @@ Outlayer.prototype._getElementOffset = function( elem ) {
 
 // enable event handlers for listeners
 // i.e. resize -> onresize
-Outlayer.prototype.handleEvent = function( event ) {
-  var method = 'on' + event.type;
-  if ( this[ method ] ) {
-    this[ method ]( event );
-  }
-};
+proto.handleEvent = utils.handleEvent;
 
 /**
  * Bind layout to window resizing
  */
-Outlayer.prototype.bindResize = function() {
-  // bind just one listener
-  if ( this.isResizeBound ) {
-    return;
-  }
-  eventie.bind( window, 'resize', this );
+proto.bindResize = function() {
+  window.addEventListener( 'resize', this );
   this.isResizeBound = true;
 };
 
 /**
  * Unbind layout to window resizing
  */
-Outlayer.prototype.unbindResize = function() {
-  if ( this.isResizeBound ) {
-    eventie.unbind( window, 'resize', this );
-  }
+proto.unbindResize = function() {
+  window.removeEventListener( 'resize', this );
   this.isResizeBound = false;
 };
 
-// original debounce by John Hann
-// http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
-
-// this fires every resize
-Outlayer.prototype.onresize = function() {
-  if ( this.resizeTimeout ) {
-    clearTimeout( this.resizeTimeout );
-  }
-
-  var _this = this;
-  function delayed() {
-    _this.resize();
-    delete _this.resizeTimeout;
-  }
-
-  this.resizeTimeout = setTimeout( delayed, 100 );
+proto.onresize = function() {
+  this.resize();
 };
 
-// debounced, layout on resize
-Outlayer.prototype.resize = function() {
+utils.debounceMethod( Outlayer, 'onresize', 100 );
+
+proto.resize = function() {
   // don't trigger if size did not change
   // or if resize was unbound. See #9
   if ( !this.isResizeBound || !this.needsResizeLayout() ) {
@@ -698,7 +639,7 @@ Outlayer.prototype.resize = function() {
  * check if layout is needed post layout
  * @returns Boolean
  */
-Outlayer.prototype.needsResizeLayout = function() {
+proto.needsResizeLayout = function() {
   var size = getSize( this.element );
   // check that this.size and size are there
   // IE8 triggers resize on body size change, so they might not be
@@ -713,7 +654,7 @@ Outlayer.prototype.needsResizeLayout = function() {
  * @param {Array or NodeList or Element} elems
  * @returns {Array} items - Outlayer.Items
 **/
-Outlayer.prototype.addItems = function( elems ) {
+proto.addItems = function( elems ) {
   var items = this._itemize( elems );
   // add items to collection
   if ( items.length ) {
@@ -726,7 +667,7 @@ Outlayer.prototype.addItems = function( elems ) {
  * Layout newly-appended item elements
  * @param {Array or NodeList or Element} elems
  */
-Outlayer.prototype.appended = function( elems ) {
+proto.appended = function( elems ) {
   var items = this.addItems( elems );
   if ( !items.length ) {
     return;
@@ -740,7 +681,7 @@ Outlayer.prototype.appended = function( elems ) {
  * Layout prepended elements
  * @param {Array or NodeList or Element} elems
  */
-Outlayer.prototype.prepended = function( elems ) {
+proto.prepended = function( elems ) {
   var items = this._itemize( elems );
   if ( !items.length ) {
     return;
@@ -762,30 +703,46 @@ Outlayer.prototype.prepended = function( elems ) {
  * reveal a collection of items
  * @param {Array of Outlayer.Items} items
  */
-Outlayer.prototype.reveal = function( items ) {
-  var len = items && items.length;
-  if ( !len ) {
+proto.reveal = function( items ) {
+  this._emitCompleteOnItems( 'reveal', items );
+  if ( !items || !items.length ) {
     return;
   }
-  for ( var i=0; i < len; i++ ) {
-    var item = items[i];
+  items.forEach( function( item ) {
     item.reveal();
-  }
+  });
 };
 
 /**
  * hide a collection of items
  * @param {Array of Outlayer.Items} items
  */
-Outlayer.prototype.hide = function( items ) {
-  var len = items && items.length;
-  if ( !len ) {
+proto.hide = function( items ) {
+  this._emitCompleteOnItems( 'hide', items );
+  if ( !items || !items.length ) {
     return;
   }
-  for ( var i=0; i < len; i++ ) {
-    var item = items[i];
+  items.forEach( function( item ) {
     item.hide();
-  }
+  });
+};
+
+/**
+ * reveal item elements
+ * @param {Array}, {Element}, {NodeList} items
+ */
+proto.revealItemElements = function( elems ) {
+  var items = this.getItems( elems );
+  this.reveal( items );
+};
+
+/**
+ * hide item elements
+ * @param {Array}, {Element}, {NodeList} items
+ */
+proto.hideItemElements = function( elems ) {
+  var items = this.getItems( elems );
+  this.hide( items );
 };
 
 /**
@@ -794,11 +751,11 @@ Outlayer.prototype.hide = function( items ) {
  * @param {Function} callback
  * @returns {Outlayer.Item} item
  */
-Outlayer.prototype.getItem = function( elem ) {
+proto.getItem = function( elem ) {
   // loop through items to get the one that matches
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
+  for ( var i=0; i < this.items.length; i++ ) {
     var item = this.items[i];
-    if ( item.element === elem ) {
+    if ( item.element == elem ) {
       // return item
       return item;
     }
@@ -810,18 +767,15 @@ Outlayer.prototype.getItem = function( elem ) {
  * @param {Array} elems
  * @returns {Array} items - Outlayer.Items
  */
-Outlayer.prototype.getItems = function( elems ) {
-  if ( !elems || !elems.length ) {
-    return;
-  }
+proto.getItems = function( elems ) {
+  elems = utils.makeArray( elems );
   var items = [];
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
+  elems.forEach( function( elem ) {
     var item = this.getItem( elem );
     if ( item ) {
       items.push( item );
     }
-  }
+  }, this );
 
   return items;
 };
@@ -830,41 +784,36 @@ Outlayer.prototype.getItems = function( elems ) {
  * remove element(s) from instance and DOM
  * @param {Array or NodeList or Element} elems
  */
-Outlayer.prototype.remove = function( elems ) {
-  elems = makeArray( elems );
-
+proto.remove = function( elems ) {
   var removeItems = this.getItems( elems );
+
+  this._emitCompleteOnItems( 'remove', removeItems );
+
   // bail if no items to remove
   if ( !removeItems || !removeItems.length ) {
     return;
   }
 
-  this._itemsOn( removeItems, 'remove', function() {
-    this.emitEvent( 'removeComplete', [ this, removeItems ] );
-  });
-
-  for ( var i=0, len = removeItems.length; i < len; i++ ) {
-    var item = removeItems[i];
+  removeItems.forEach( function( item ) {
     item.remove();
     // remove item from collection
-    removeFrom( item, this.items );
-  }
+    utils.removeFrom( this.items, item );
+  }, this );
 };
 
 // ----- destroy ----- //
 
 // remove and disable Outlayer instance
-Outlayer.prototype.destroy = function() {
+proto.destroy = function() {
   // clean up dynamic styles
   var style = this.element.style;
   style.height = '';
   style.position = '';
   style.width = '';
   // destroy items
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
-    var item = this.items[i];
+  this.items.forEach( function( item ) {
     item.destroy();
-  }
+  });
 
   this.unbindResize();
 
@@ -886,6 +835,7 @@ Outlayer.prototype.destroy = function() {
  * @returns {Outlayer}
  */
 Outlayer.data = function( elem ) {
+  elem = utils.getQueryElement( elem );
   var id = elem && elem.outlayerGUID;
   return id && instances[ id ];
 };
@@ -899,69 +849,22 @@ Outlayer.data = function( elem ) {
  */
 Outlayer.create = function( namespace, options ) {
   // sub-class Outlayer
-  function Layout() {
-    Outlayer.apply( this, arguments );
-  }
-  // inherit Outlayer prototype, use Object.create if there
-  if ( Object.create ) {
-    Layout.prototype = Object.create( Outlayer.prototype );
-  } else {
-    extend( Layout.prototype, Outlayer.prototype );
-  }
-  // set contructor, used for namespace and Item
-  Layout.prototype.constructor = Layout;
-
-  Layout.defaults = extend( {}, Outlayer.defaults );
-  // apply new options
-  extend( Layout.defaults, options );
-  // keep prototype.settings for backwards compatibility (Packery v1.2.0)
-  Layout.prototype.settings = {};
+  var Layout = subclass( Outlayer );
+  // apply new options and compatOptions
+  Layout.defaults = utils.extend( {}, Outlayer.defaults );
+  utils.extend( Layout.defaults, options );
+  Layout.compatOptions = utils.extend( {}, Outlayer.compatOptions  );
 
   Layout.namespace = namespace;
 
   Layout.data = Outlayer.data;
 
   // sub-class Item
-  Layout.Item = function LayoutItem() {
-    Item.apply( this, arguments );
-  };
-
-  Layout.Item.prototype = new Item();
+  Layout.Item = subclass( Item );
 
   // -------------------------- declarative -------------------------- //
 
-  /**
-   * allow user to initialize Outlayer via .js-namespace class
-   * options are parsed from data-namespace-option attribute
-   */
-  docReady( function() {
-    var dashedNamespace = toDashed( namespace );
-    var elems = document.querySelectorAll( '.js-' + dashedNamespace );
-    var dataAttr = 'data-' + dashedNamespace + '-options';
-
-    for ( var i=0, len = elems.length; i < len; i++ ) {
-      var elem = elems[i];
-      var attr = elem.getAttribute( dataAttr );
-      var options;
-      try {
-        options = attr && JSON.parse( attr );
-      } catch ( error ) {
-        // log error, do not initialize
-        if ( console ) {
-          console.error( 'Error parsing ' + dataAttr + ' on ' +
-            elem.nodeName.toLowerCase() + ( elem.id ? '#' + elem.id : '' ) + ': ' +
-            error );
-        }
-        continue;
-      }
-      // initialize
-      var instance = new Layout( elem, options );
-      // make available via $().data('layoutname')
-      if ( jQuery ) {
-        jQuery.data( elem, namespace, instance );
-      }
-    }
-  });
+  utils.htmlInit( Layout, namespace );
 
   // -------------------------- jQuery bridge -------------------------- //
 
@@ -973,6 +876,17 @@ Outlayer.create = function( namespace, options ) {
   return Layout;
 };
 
+function subclass( Parent ) {
+  function SubClass() {
+    Parent.apply( this, arguments );
+  }
+
+  SubClass.prototype = Object.create( Parent.prototype );
+  SubClass.prototype.constructor = SubClass;
+
+  return SubClass;
+}
+
 // ----- fin ----- //
 
 // back in global
@@ -980,41 +894,4 @@ Outlayer.Item = Item;
 
 return Outlayer;
 
-}
-
-// -------------------------- transport -------------------------- //
-
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( [
-      'eventie/eventie',
-      'doc-ready/doc-ready',
-      'eventEmitter/EventEmitter',
-      'get-size/get-size',
-      'matches-selector/matches-selector',
-      './item'
-    ],
-    outlayerDefinition );
-} else if ( typeof exports === 'object' ) {
-  // CommonJS
-  module.exports = outlayerDefinition(
-    require('eventie'),
-    require('doc-ready'),
-    require('wolfy87-eventemitter'),
-    require('get-size'),
-    require('desandro-matches-selector'),
-    require('./item')
-  );
-} else {
-  // browser global
-  window.Outlayer = outlayerDefinition(
-    window.eventie,
-    window.docReady,
-    window.EventEmitter,
-    window.getSize,
-    window.matchesSelector,
-    window.Outlayer.Item
-  );
-}
-
-})( window );
+}));

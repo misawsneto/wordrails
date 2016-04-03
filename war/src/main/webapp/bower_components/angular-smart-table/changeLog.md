@@ -114,3 +114,62 @@ function(tableState, tableController){
 * use a global configuration
 * expose filtered collection result
 
+## version 2.0.0
+
+* use interpolation rather than binding for st-search directive (to avoid the creation of isolated scope)
+
+**This is a breaking change as now, you will have to remove the single quote around the predicate property name, and if you were using a binding, you'll have to interpolate it with the curly brace notation**
+
+## version 2.0.1
+
+* fix #328
+
+## version 2.0.2
+
+* add debounce to custom pipe function to make sure tableState is stable
+* fix #329
+
+## version 2.0.3
+
+* implements #379
+* fix #390
+
+## version 2.1.0
+
+* support nested search (thanks to @jansabbe)
+* fix #254
+* fix wrong path to default config for stSkipNatural (@phuvo)
+* fix #406
+
+## version 2.1.1
+
+* support commonjs 
+* add totalItemCount on tableState (@eirikbell)
+
+## version 2.1.2
+
+* improve build #461 [stanleyxu](https://github.com/stanleyxu2005)
+
+## version 2.1.3
+
+* fix #477
+
+## version 2.1.4
+
+* add throttle to sort
+* add watch to first item in collection (@matthewbednarski)
+
+## version 2.1.5
+
+* #544
+* #533
+* #515
+
+## version 2.1.6
+
+* #559
+
+## version 2.1.7
+
+* fix [#468](https://github.com/lorenzofox3/Smart-Table/issues/468) thanks to Douglas-Treadwell
+

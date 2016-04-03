@@ -10,6 +10,5 @@
   },
   "_source": "git://github.com/datatables/plugins.git",
   "_target": "~1.0.1",
-  "_originalSource": "datatables/plugins",
-  "_direct": true
+  "_originalSource": "datatables/plugins"
 }

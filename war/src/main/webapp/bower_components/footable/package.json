@@ -1,9 +1,9 @@
 {
   "name": "footable",
-  "title": "FooTable",
-  "description": "jQuery plugin to make HTML tables responsive",
-  "version": "2.0.3",
-  "homepage": "http://themergency.com/footable/",
+  "title": "FooTable v3",
+  "description": "FooTable is a jQuery plugin that aims to make HTML tables on smaller devices look awesome.",
+  "version": "3.0.7",
+  "homepage": "http://fooplugins.com",
   "author": {
     "name": "FooPlugins",
     "url": "http://fooplugins.com"
@@ -12,7 +12,7 @@
     {
       "name": "Steven Usher",
       "email": "steveush@gmail.com",
-      "url": "http://gnarf.net"
+      "url": "https://github.com/steveush"
     },
     {
       "name": "Brad Vincent",
@@ -22,34 +22,23 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bradvin/FooTable.git"
-  },
-  "bugs": {
-    "url": "https://github.com/bradvin/FooTable/issues"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/bradvin/FooTable/blob/master/LICENSE"
-    }
-  ],
-  "dependencies": {
-    "jquery": ">=1.4.4"
+    "url": "https://github.com/fooplugins/footable.git"
   },
   "devDependencies": {
-    "grunt-contrib-jshint": "~0.1.1",
-    "grunt-contrib-uglify": "~0.1.1",
-    "grunt-contrib-watch": "~0.2.0",
-    "grunt-contrib-clean": "~0.4.0",
-    "grunt": "~0.4.1",
-    "grunt-contrib-less": "~0.5.2",
-    "grunt-contrib-csslint": "~0.1.2",
-    "grunt-contrib-concat": "~0.3.0"
+    "grunt": "^0.4.1",
+    "grunt-contrib-clean": "^0.4.1",
+    "grunt-contrib-compress": "^0.13.0",
+    "grunt-contrib-concat": "^0.3.0",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-contrib-cssmin": "^0.14.0",
+    "grunt-contrib-uglify": "^0.11.0",
+    "grunt-jsdoc": "^1.1.0"
   },
   "scripts": {
     "test": "grunt test"
   },
   "keywords": [
+    "jquery",
     "table",
     "responsive"
   ]
