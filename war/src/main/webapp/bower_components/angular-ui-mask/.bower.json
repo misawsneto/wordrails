@@ -1,0 +1,23 @@
+{
+  "author": "AngularUI Team",
+  "name": "angular-ui-mask",
+  "homepage": "https://github.com/angular-ui/ui-mask",
+  "main": "./dist/mask.js",
+  "license": "MIT",
+  "dependencies": {
+    "angular": ">= 1.3.6"
+  },
+  "devDependencies": {
+    "angular-mocks": ">=1.3.6"
+  },
+  "version": "1.8.3",
+  "_release": "1.8.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.8.3",
+    "commit": "1716ea34fa87ad307e581c7f9fecf3cbb62d2e1e"
+  },
+  "_source": "git://github.com/angular-ui/ui-mask.git",
+  "_target": "*",
+  "_originalSource": "angular-ui-mask"
+}

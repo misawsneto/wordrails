@@ -1,0 +1,175 @@
+<div id="settings-stations-config">
+
+<div class="header-custom text-center animated box-shadow">
+</div>
+
+<div class="wrapper-lg animated zoomIn">
+    <div class="panel material-shadow-light panel-card block-600 m-auto">
+      <div ng-if="!creating" class="panel-heading h4 wrapper-md">
+        <a ui-sref="app.settings.stations">Estações</a><i class="mdi mdi-chevron-right"></i><span class="font-bold">{{station.name}}</span>
+      </div>
+      <div ng-if="creating" class="panel-heading h4 wrapper-md">
+        <span>Nova Estação</span>
+      </div>
+      <div class="panel-body wrapper-md">
+        <div class="row pos-rlt">
+          <div class="w-xxl m-auto">
+            <!-- <div class="md-neutral-theme text-lg"> -->
+              <!-- <label>Nome da estação</label>
+              <input class="md-input" ng-model="station.name"> -->
+            <!-- </div> -->
+            <md-input-container flex class="md-neutral-theme text-lg" >
+	          <label>Nome da estação</label>
+	          <input ng-model="station.name">
+	        </md-input-container>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="m-b text-muted text-md text-u-c">Configurações principais</div>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.allowComments"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Permitir comentários
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-disabled="station.visibility !== 'UNRESTRICTED'"  ng-model="station.allowSocialShare"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Permitir compartilhamento em redes sociais
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.showAuthorSocialData"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Exibir email e dados sociais do autor no corpo das notícias.
+              </label>
+            </p>
+            <div class="m-b m-t text-muted text-md text-u-c">Permissões avançadas</div>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.allowWritersToNotify"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Escritores podem notificar usuários em dispositivos móveis.
+              </label>
+            </p>
+            <p ng-if="app.initData.network.allowSponsors">
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.allowWritersToAddSponsors"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Escritores podem associar patrocinadores às notícias.
+              </label>
+            </p>
+          </div>
+          <div class="col-sm-6">
+            <div class="m-b text-muted text-md text-u-c">Leitura</div>
+            <p>
+              <label class="md-check">
+                <input type="radio" name="c" ng-model="station.visibility" value="UNRESTRICTED">
+                <i class="blue"></i>
+                Qualquer usuário
+                <small>(inclusive usuário não autenticados)</small>
+              </label>
+            </p>
+            <p>
+              <label class="md-check">
+                <input type="radio" name="c" ng-model="station.visibility" value="RESTRICTED">
+                <i class="blue"></i>
+                Apenas usuários com permissão
+              </label>
+            </p>
+            <div class="m-b text-muted text-md text-u-c">Escrita</div>
+            <p>
+              <label class="md-check">
+                <input type="radio" name="d" ng-model="station.writable" ng-value="false">
+                <i class="blue"></i>
+                Apenas usuários com permissão de escrita
+              </label>
+            </p>
+            <p>
+              <label class="md-check">
+                <input type="radio" name="d" ng-model="station.writable" ng-value="true">
+                <i class="blue"></i>
+                Todos os usuários autenticados
+              </label>
+            </p>
+            <div class="m-b m-t text-muted text-md text-u-c">Configurações de edição</div>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.topper"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Chapéu
+              </label>
+            </p>
+            <p>
+              <label class="md-switch">
+                <input type="checkbox" ng-model="station.subheading"
+                ng-true-value="true" ng-false-value="false">
+                <i class="blue"></i>
+                Subtítulo
+              </label>
+            </p>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="m-b text-muted text-md text-u-c">Logotipo da Barra superior</div>
+        <div class="bg-cover text-center" src="img/img-stub.png">
+          <div ng-if="logoImage.link" class="text-center w-xxl m-auto">
+            <img class="img-responsive bg-header p-sm r-3x" style="display:block; margin:auto; max-height: 80px;" ng-src="{{logoImage.link}}">
+            <div class="pull-right m-r-n-md m-t-n-xxl">
+              <a ng-click="logoImage.link = null;"><i class="mdi mdi-close-circle-outline text-2x"></i></a>
+            </div>
+          </div>
+          <button id="logo-upload" md-ink-ripple class="md-btn md-flat m-t m-b btn-fw" ng-if="!logoImage.link">
+            <span class="text-lg v-middle">Adicionar Logotipo</span>
+            <i class="fa-fw mdi mdi-file-image-box text-2x v-bottom"></i>
+            <input id="image-upload" type="file" nv-file-select="" uploader="logo" name="contents" accept="image/*"/>
+          </button>
+        </div>
+      </div>
+      <div class="m-t-n-xs text-right text-lg">
+        <button ng-if="creating" ui-sref="app.settings.stations"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Voltar</button>
+      
+        <button ng-if="creating" ng-click="createStation()"
+        md-ink-ripple class="md-btn md-flat m-b btn-fw m-r">Criar</button>
+      </div>
+    </div>
+  </div>
+    <md-button ng-if="!creating" ng-click="updateStation()"
+      id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+      tooltip="Salvar" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      aria-label="Salvar">
+      <i class="mdi mdi-content-save"></i>
+    </md-button>
+    <!-- <md-button ng-if="creating" ng-click="createStation()"
+      id="station-fab" class="custom-fab-button md-fab text-2x animated zoomIn" 
+      tooltip="Criar" tooltip-placement="left" tooltip-append-to-body="true" tooltip-popup-delay="700"
+      aria-label="Salvar">
+      <i class="mdi mdi-content-save"></i>
+    </md-button> -->
+    <!-- <md-fab-speed-dial md-direction="up" class="md-fling">
+      <md-fab-trigger>
+        <md-button aria-label="menu" class="md-fab md-warn">
+        </md-button>
+      </md-fab-trigger>
+      <md-fab-actions>
+        <md-button aria-label="Twitter" class="md-fab md-raised md-mini">
+        </md-button>
+        <md-button aria-label="Facebook" class="md-fab md-raised md-mini">
+        </md-button>
+        <md-button aria-label="Google Hangout" class="md-fab md-raised md-mini">
+        </md-button>
+      </md-fab-actions>
+    </md-fab-speed-dial> -->
+</div>

@@ -1,0 +1,20 @@
+<div class="padding">
+	<form ng-submit="addItem()" class="panel panel-card p-sm">
+	  <input placeholder="Quick add note" ng-model="newItem" autofocus class="form-control input-lg no-border no-bg">
+	</form>
+	<div>
+	  <div ng-repeat="item in items | filter:app.search.content | orderBy:'date':true track by $index" ui-sref="app.note.item({id: item.id})" class="panel panel-card p m-b-sm pointer" ng-class="item.color">
+	    {{item.title}}
+	  </div>
+	</div>
+	<div ng-hide="items.length">
+		<div class="p-lg text-center animated fadeInUp">
+			<span class="text-3x">
+				<i class="mdi-action-note-add text-2x text-white"></i>
+			</span>
+			<h3 class="font-thin">
+				Create your first note!
+			</h3>
+		</div>
+	</div>
+</div>

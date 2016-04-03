@@ -1,0 +1,210 @@
+<div class="md-primary-hue-1 background md-whiteframe-z1 p-xl ng-scope pos-fix w-full top-0 left-0 z-index-n-1">
+  <div class="p-xl">
+  </div>
+</div>
+
+<div id="settings-stations">
+  <div class="wrapper-lg m-b-xxl p-b">
+    <div class="row">
+      <div class="col-lg-3 col-sm-4" ng-repeat="station in app.stations">
+        <div class="md-list md-whiteframe-z1 md-background-hue-1 background m-b animated zoomIn">
+
+          <div class="md-list-item list-group-item b-n text-md font-bold">
+            {{station.name}}
+          </div>
+
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.settings.perspectives({'stationId': station.id})">
+            <div class="md-list-item-content">
+              <i class="mdi mdi-hardware-phone-android p-r fa-fw text-muted"></i> 
+              {{'titles.PERSPECTIVE' | translate}}s
+            </div>
+          </a>
+
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.settings.stationcategories({'stationId': station.id})">
+            <div class="md-list-item-content">
+              <i class="mdi mdi2-view-grid p-r fa-fw text-muted"></i> 
+              {{'titles.CATEGORIES' | translate}}
+            </div>
+          </a>
+
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.settings.stationusers({'stationId': station.id})">
+            <div class="md-list-item-content">
+              <i class="mdi mdi-communication-vpn-key p-r fa-fw text-muted"></i> 
+              {{'titles.PERMISSIONS' | translate}}
+            </div>
+          </a>
+
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ng-click="editStation($event,station)">
+            <div class="md-list-item-content">
+                <i class="mdi mdi-action-settings p-r fa-fw text-muted"></i> 
+                {{'titles.CONFIGURATION' | translate}}
+            </div>
+          </a>
+
+          <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.analysis">
+            <div class="md-list-item-content">
+              <i class="mdi mdi2-chart-areaspline p-r fa-fw text-muted"></i> 
+              {{'titles.STATS' | translate}}
+            </div>
+          </a>
+
+          <div class="md-list-item list-group-item b-n p-sm">
+            <div class="md-list-item-content">
+              <div class="m-t-xs p-sm text-left">
+                <md-checkbox type="checkbox" ng-model=" station.main" ng-change="setMainStation(station)">
+                {{'titles.DEFAULT_STATION' | translate}}</md-checkbox>
+              </div>
+              <div class="text-right p-xs">
+                <button ng-click="showRemoveStationDialog(station)"
+                md-ink-ripple class="md-btn md-flat" translate="actions.REMOVE">Excluir</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg" ng-click="createNewStation($event)">
+    <i class="mdi-content-add i-24"></i>
+</md-button>
+
+<script type="text/ng-template" id="confirm_delete_station.html">
+  <a class="splash-close-button" ng-click="app.cancelModal()">×</a>
+  <div class="splash-content text-center" ng-cloak>
+    <div class="row">
+      <div class="col-xs-6 col-xs-offset-3">
+        <div class="p-lg text-color wrapper-lg">
+          <div class="m-b-lg">
+            Tem certeza que deseja excluir esta estação e todo o seu conteúdo? Esta operação não poderá ser desfeita!
+          </div>
+          <button ng-click="app.deleteStation();" angular-ripple type="submit" class="m-t-md btn-danger btn text-lg text-u-c btn-block ">
+           Sim
+         </button>
+         <button ng-click="app.cancelModal()" angular-ripple type="submit" style="margin-top: 10px;" class="btn-muted btn text-lg text-u-c btn-block ">
+           Não
+         </button>
+       </div>
+     </div>
+   </div>
+ </div>
+</script>
+
+<script type="text/ng-template" id="station-config-dialog.html">
+  <md-dialog-content layout="row" layout-wrap>
+    <md-toolbar layout-align="start start" flex class="md-primary layout-align-start-start layout-column md-hue-1 text-center" layout="column">
+      <div class="w-lg">
+
+        <div ng-if="app.editingStation" class="text-center p w-full" translate="settings.station.STATION_SETTINGS"></div>
+        <div ng-if="app.newStation" class="text-center p w-full" translate="settings.station.NEW_STATION"></div>
+
+        <div class="text-center p p-t-lg w-full m-t-lg">
+          <i class="mdi mdi2-radio-tower text-4x"></i>
+        </div>
+
+        <div class="pos-abt bottom-0 text-center w-full p-t p-b">
+          <md-button ng-click="app.cancelDialog();" class="m-0">
+            {{'titles.CANCEL' | translate}}
+          </md-button>
+          <md-button ng-click="app.updateStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.editingStation">
+            {{'titles.SAVE' | translate}}
+          </md-button>
+          <md-button ng-click="app.createStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.newStation">
+            {{'actions.CREATE' | translate}}
+          </md-button>
+        </div>
+      </div>
+    </md-toolbar>
+    <div class="p col-400 scrollable md-background-hue-1 background">
+      <div class="wrapper-md">
+        <div class="pos-rlt">
+          <div class="p">
+            <div>
+              <md-input-container class="text-md m-v-sm w-lg m-r">
+                <label translate="settings.station.STATION_NAME"></label>
+                <input ng-model="app.stationObj.name" ng-change="app.stationNameChange(app.stationObj)">
+              </md-input-container>
+            </div>
+            <div>
+              <span class="pos-abt text-2x" style="margin-left: -16px;margin-top: 2px;">/</span>
+              <md-input-container class="m-v-sm w-lg">
+                <label translate="settings.station.STATION_ADDRESS"></label>
+                <input ng-model="app.stationObj.stationSlug" ng-focus="app.stationSlugFocus()" ng-change="app.stationSlugChange(app.stationObj)">
+              </md-input-container>
+            </div>
+          </div>
+        </div>
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+        <div class="p-l p-r">
+          <div class="m-b text-muted text-md text-u-c" translate="settings.station.SETTINGS"></div>
+          <md-switch class="m-v-xs" ng-model="app.stationObj.allowComments" aria-label="Comemnts">
+            {{'settings.station.ALLOW_COMMENTS' | translate}}
+          </md-switch>
+          <md-switch class="m-v-xs" ng-disabled="app.stationObj.visibility !== 'UNRESTRICTED'"  ng-model="app.stationObj.allowSocialShare"
+            ng-true-value="true" ng-false-value="false" aria-label="Comemnts">
+            {{'settings.station.ALLOW_SOCIAL_SHARING' | translate}}
+          </md-switch>
+          <md-switch class="m-v-xs" ng-model="app.stationObj.showAuthorSocialData" aria-label="Comemnts"
+          ng-true-value="true" ng-false-value="false">
+            {{'settings.station.SHOW_AUTHOR_PERSONAL_DATA' | translate}}
+          </md-switch>
+          <md-switch class="m-v-xs" ng-model="app.stationObj.allowWritersToNotify"
+            ng-true-value="true" ng-false-value="false">
+            {{'settings.station.ALLOW_PUBLISHERS_TO_NOTIFY' | translate}}
+          </md-switch>
+          <div class="m-b text-muted text-md text-u-c">{{'settings.station.READING' | translate}}</div>
+          <md-radio-group ng-model="app.stationObj.visibility">
+            <md-radio-button name="c" value="UNRESTRICTED">
+              {{'settings.station.ALL_USERS' | translate}}
+              </md-radio-button>
+            <md-radio-button name="c" ng-model="app.stationObj.visibility" value="RESTRICTED">
+              {{'settings.station.ALLOWED_USERS' | translate}}
+            </md-radio-button>
+          </md-radio-group>
+          <div class="m-b text-muted text-md text-u-c">{{'settings.station.PUBLISHING' | translate}}</div>
+          <md-radio-group ng-model="app.stationObj.writable">
+            <md-radio-button name="d" ng-value="false">
+              {{'settings.station.ONLY_WRITERS' | translate}}
+            </md-radio-button>
+            <md-radio-button name="d" ng-value="true">
+              {{'settings.station.AUTHENTICATED' | translate}}
+            </md-radio-button>
+          </md-radio-group>
+          <!-- <div class="line line-dashed b-b line-lg pull-in"></div> -->
+          <!-- <div class="m-b text-muted text-md text-u-c">{{'settings.station.STATION_LOGO' | translate}}</div>
+          <div class="bg-cover text-center" src="img/img-stub.png">
+            <div ng-if="logoImage.link" class="text-center w-xxl m-auto">
+              <img class="img-responsive bg-header p-sm r-3x" style="display:block; margin:auto; max-height: 80px;" ng-src="{{logoImage.link}}">
+              <div class="pull-right m-r-n-md m-t-n-xxl">
+                <a ng-click="logoImage.link = null;"><i class="mdi mdi-close-circle-outline text-2x"></i></a>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="station-remove-dialog.html">
+  <md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
+    <md-content role="document" class="md-background-hue-1 background">
+      <div class="p-xs">
+        <div class="md-dialog-content-body text-md text-center p-r p-l w-xxl p m-b">
+          {{'titles.REMOVE_CONFIRMATION_MSG' | translate}}?
+        </div>
+
+        <div class="text-center">
+          <md-button ng-click="app.removeStation(app.stationObj.id); disabled = true;" ng-disabled="disabled">
+            {{'titles.YES' | translate}}
+          </md-button>
+          <md-button ng-click="cancel()">
+            {{'titles.NO' | translate}}
+          </md-button>
+        <div>
+      </div>
+    </md-content>
+  </md-dialog>
+</script>
