@@ -15,7 +15,7 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
     $scope.createSlugsFromName = function(){
       $scope.app.stations && $scope.app.stations.forEach(function(station){
         trix.getStation(station.id).success(function(response){
-          if(response.stationSlug){
+          if(!response.stationSlug){
             response.stationSlug = response.name.toSlug();
             trix.putStation(response)
           }
@@ -55,8 +55,9 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
         station.stationSlug = station.stationSlug.toSlug();
     }
 
-    $scope.app.stationSlugFocus = function(){
-      $scope.slugFocused = true;
+    $scope.app.stationSlugFocus = function(station){
+      if(station.stationSlug)
+        $scope.slugFocused = true;
     }
 
     $scope.app.createStation = function(station){
@@ -78,6 +79,11 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       station.network = TRIX.baseUrl + "/api/networks/" + $scope.app.network.id;
       if(station.name == null || station.name.trim() !== ''){
         trix.putStation(station).success(function(stationId, stations, headers){
+          $scope.app.stations.forEach(function(st){
+            if(st.id === station.id){
+              angular.extend(st, station)
+            }
+          })
           $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_CREATION_SUCCESS'))
           $mdDialog.cancel();
         });

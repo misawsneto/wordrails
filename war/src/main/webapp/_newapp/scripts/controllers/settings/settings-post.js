@@ -566,9 +566,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		mockPostLoad();
 	}
 
-	$timeout(function(){
-		test();
-	}, 1000);
+	// $timeout(function(){
+	// 	test();
+	// }, 1000);
 
 	settingsPostCtrl = $scope;
 	// --- /mock & test
