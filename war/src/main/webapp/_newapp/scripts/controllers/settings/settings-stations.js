@@ -2,23 +2,14 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location, $filter){
 		$scope.app.lastSettingState = "app.settings.stations";
 
-		$scope.openDeleteStation = function(stationId){
-			$scope.app.openSplash('confirm_delete_station.html')
-			$scope.deleteStationId = stationId;
-		}
-
-		$scope.app.deleteStation = function(){
-			trix.deleteStation($scope.deleteStationId).success(function(){
-				$scope.app.getInitData();
-				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
-			});
-		}
-
 		$scope.setMainStation = function(station){
 			trix.setMainStation(station.id, station.main).success(function(){
-				$scope.app.getInitData();
 				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			})
+      $scope.app.stations.forEach(function(st){
+        st.main = false;
+      })
+      station.main = true;
 		}
 
     $scope.createSlugsFromName = function(){
@@ -52,8 +43,24 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
       })
     }
 
+    $scope.slugFocused = false
+
+    $scope.app.stationNameChange = function(station){
+      if(!station.id && !$scope.slugFocused){
+        station.stationSlug = station.name.toSlug();
+      }
+    }
+
+    $scope.app.stationSlugChange = function(station){
+        station.stationSlug = station.stationSlug.toSlug();
+    }
+
+    $scope.app.stationSlugFocus = function(){
+      $scope.slugFocused = true;
+    }
+
     $scope.app.createStation = function(station){
-      station.network = TRIX.baseUrl + "/api/stations/" + $scope.app.network.id;
+      station.network = TRIX.baseUrl + "/api/networks/" + $scope.app.network.id;
       if(station.name == null || station.name.trim() !== ''){
         trix.postStation(station).success(function(stationId, stations, headers){
           $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_CREATION_SUCCESS'))
@@ -62,6 +69,20 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
             $scope.app.stations.push(stationResponse);
           })
         });
+      }else{
+        $scope.app.showSuccessToast($filter('translate')('messages.ERROR_MSG'))
+      }
+    }
+
+    $scope.app.updateStation = function(station){
+      station.network = TRIX.baseUrl + "/api/networks/" + $scope.app.network.id;
+      if(station.name == null || station.name.trim() !== ''){
+        trix.putStation(station).success(function(stationId, stations, headers){
+          $scope.app.showSuccessToast($filter('translate')('settings.station.STATION_CREATION_SUCCESS'))
+          $mdDialog.cancel();
+        });
+      }else{
+        $scope.app.showSuccessToast($filter('translate')('messages.ERROR_MSG'))
       }
     }
 

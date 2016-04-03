@@ -108,10 +108,10 @@
           <md-button ng-click="app.cancelDialog();" class="m-0">
             {{'titles.CANCEL' | translate}}
           </md-button>
-          <md-button ng-click="app.clearPostContent();" class="m-0" ng-if="app.editingStation">
+          <md-button ng-click="app.updateStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.editingStation">
             {{'titles.SAVE' | translate}}
           </md-button>
-          <md-button ng-click="app.createStation(app.stationObj);" class="m-0" ng-if="app.newStation">
+          <md-button ng-click="app.createStation(app.stationObj); disabled = true;" ng-disabled="disabled" class="m-0" ng-if="app.newStation">
             {{'actions.CREATE' | translate}}
           </md-button>
         </div>
@@ -119,16 +119,21 @@
     </md-toolbar>
     <div class="p col-400 scrollable md-background-hue-1 background">
       <div class="wrapper-md">
-        <div class="row pos-rlt">
-          <div class="p p-l-lg p-r-lg">
-            <md-input-container class="text-md m-v-sm w-lg m-r">
-              <label translate="settings.station.STATION_NAME"></label>
-              <input ng-model="app.stationObj.name">
-            </md-input-container>
-            <md-input-container class="m-v-sm w-lg">
-              <label translate="settings.station.STATION_ADDRESS"></label>
-              <input ng-model="app.stationObj.stationSlug">
-            </md-input-container>
+        <div class="pos-rlt">
+          <div class="p">
+            <div>
+              <md-input-container class="text-md m-v-sm w-lg m-r">
+                <label translate="settings.station.STATION_NAME"></label>
+                <input ng-model="app.stationObj.name" ng-change="app.stationNameChange(app.stationObj)">
+              </md-input-container>
+            </div>
+            <div>
+              <span class="pos-abt text-2x" style="margin-left: -16px;margin-top: 2px;">/</span>
+              <md-input-container class="m-v-sm w-lg">
+                <label translate="settings.station.STATION_ADDRESS"></label>
+                <input ng-model="app.stationObj.stationSlug" ng-focus="app.stationSlugFocus()" ng-change="app.stationSlugChange(app.stationObj)">
+              </md-input-container>
+            </div>
           </div>
         </div>
         <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -137,7 +142,7 @@
           <md-switch class="m-v-xs" ng-model="app.stationObj.allowComments" aria-label="Comemnts">
             {{'settings.station.ALLOW_COMMENTS' | translate}}
           </md-switch>
-          <md-switch class="m-v-xs" ng-disabled="station.visibility !== 'UNRESTRICTED'"  ng-model="app.stationObj.allowSocialShare"
+          <md-switch class="m-v-xs" ng-disabled="app.stationObj.visibility !== 'UNRESTRICTED'"  ng-model="app.stationObj.allowSocialShare"
             ng-true-value="true" ng-false-value="false" aria-label="Comemnts">
             {{'settings.station.ALLOW_SOCIAL_SHARING' | translate}}
           </md-switch>
@@ -192,7 +197,7 @@
         </div>
 
         <div class="text-center">
-          <md-button ng-click="app.removeStation(app.stationObj.id);">
+          <md-button ng-click="app.removeStation(app.stationObj.id); disabled = true;" ng-disabled="disabled">
             {{'titles.YES' | translate}}
           </md-button>
           <md-button ng-click="cancel()">
