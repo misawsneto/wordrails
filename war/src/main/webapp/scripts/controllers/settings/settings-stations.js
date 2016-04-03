@@ -71,7 +71,7 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
           })
         });
       }else{
-        $scope.app.showSuccessToast($filter('translate')('messages.ERROR_MSG'))
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
       }
     }
 
@@ -88,7 +88,7 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
           $mdDialog.cancel();
         });
       }else{
-        $scope.app.showSuccessToast($filter('translate')('messages.ERROR_MSG'))
+        $scope.app.showErrorToast($filter('translate')('messages.ERROR_MSG'))
       }
     }
 
