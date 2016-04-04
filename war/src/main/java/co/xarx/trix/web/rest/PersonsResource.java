@@ -194,7 +194,7 @@ public class PersonsResource {
 
 		personRepository.save(loadedPerson);
 
-		authProvider.updateLoggedPerson(user);
+		authProvider.updateLoggedPerson(loadedPerson.user);
 
 		return Response.status(Status.OK).build();
 	}
