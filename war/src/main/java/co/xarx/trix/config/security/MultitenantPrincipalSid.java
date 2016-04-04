@@ -1,4 +1,4 @@
-package co.xarx.trix.security.acl;
+package co.xarx.trix.config.security;
 
 import co.xarx.trix.domain.MultiTenantEntity;
 import org.springframework.security.acls.domain.PrincipalSid;

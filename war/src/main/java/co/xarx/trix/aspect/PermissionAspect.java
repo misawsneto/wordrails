@@ -4,12 +4,13 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Comment;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
-import co.xarx.trix.security.acl.MultitenantPrincipalSid;
-import co.xarx.trix.security.acl.TrixPermission;
+import co.xarx.trix.config.security.MultitenantPrincipalSid;
+import co.xarx.trix.config.security.Permissions;
 import co.xarx.trix.services.auth.AuthService;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.domain.CumulativePermission;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.model.*;
 import org.springframework.stereotype.Component;
@@ -29,27 +30,29 @@ public class PermissionAspect {
 
 	@AfterReturning("within(co.xarx.trix.persistence.StationRepository+) && execution(* *..save(*)) && args(entity)")
 	public void saveStation(Station entity) {
-		savePermission(Station.class, entity.getId(), TrixPermission.ADMINISTRATION);
+		savePermission(Station.class, entity.getId(), Permissions.ADMINISTRATION);
 	}
 
 	@AfterReturning("within(co.xarx.trix.persistence.PostRepository+) && execution(* *..save(*)) && args(entity)")
 	public void savePost(Post entity) {
-		TrixPermission permission = getPermissionRWD();
+		Permission permission = getPermissionRWD();
 		savePermissionWithParent(Post.class, entity.getId(), permission, Station.class, entity.station.id);
 	}
 
 	@AfterReturning("within(co.xarx.trix.persistence.CommentRepository+) && execution(* *..save(*)) && args(entity)")
 	public void saveComment(Comment entity) {
-		TrixPermission permission = getPermissionRWD();
+		Permission permission = getPermissionRWD();
 		savePermissionWithParent(Comment.class, entity.getId(), permission, Post.class, entity.post.id);
 	}
 
-	private TrixPermission getPermissionRWD() {
-		int mask = TrixPermission.READ.getMask();
-		mask |= TrixPermission.UPDATE.getMask();
-		mask |= TrixPermission.DELETE.getMask();
+	@SuppressWarnings("Duplicates")
+	private Permission getPermissionRWD() {
+		CumulativePermission permission = new CumulativePermission();
+		permission.set(Permissions.READ);
+		permission.set(Permissions.WRITE);
+		permission.set(Permissions.DELETE);
 
-		return new TrixPermission(mask);
+		return permission;
 	}
 
 	private void savePermission(Class clazz, Integer id, Permission permission) {
