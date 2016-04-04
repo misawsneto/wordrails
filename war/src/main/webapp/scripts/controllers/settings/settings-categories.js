@@ -30,7 +30,7 @@ app.controller('SettingsCategoriesCtrl', ['$scope', '$log', '$timeout', '$mdDial
   }
 
   $scope.app.toDeleteCategory = null;
-  $scope.showDeleteCategorySplash = function(category, ev){
+  $scope.showDeleteCategoryDialog = function(category, ev){
     $scope.app.toDeleteCategory = category;
     $scope.parentCategory = parent;
     $mdDialog.show({

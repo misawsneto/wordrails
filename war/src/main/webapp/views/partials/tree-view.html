@@ -15,15 +15,24 @@
  </span>
  	<button ng-if="editing" ng-click="showAddCategorySplash(node)"
  	md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+ 		<md-tooltip md-direction="top">
+ 			{{'settings.category.ADD_CHILD' | translate}}
+ 		</md-tooltip>
  		<i class="mdi mdi2-plus i-20" style="vertical-align: 44%; line-height: normal;"></i>
  	</button>
  	<button ng-if="editing" ng-click="node.editing=!node.editing; node.editingName = node.name;"
  	md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+ 		<md-tooltip md-direction="top">
+ 			{{'titles.EDIT' | translate}}
+ 		</md-tooltip>
  		<i ng-if="!node.editing" class="mdi mdi2-pencil i-20" style="vertical-align: 44%; line-height: normal;"></i>
  		<i ng-if="node.editing" class="mdi mdi2-close i-20" style="vertical-align: 44%; line-height: normal;"></i>
  	</button>
  	<button ng-if="editing" md-ink-ripple class="md-btn md-mini md-fab md-fab-sm bg-white v-top" style="width:35px;height:35px;">
+ 		<md-tooltip md-direction="top">
+ 			{{'titles.REMOVE' | translate}}
+ 		</md-tooltip>
  		<i class="mdi mdi2-delete i-20" style="vertical-align: 44%; line-height: normal;"
- 		ng-click="showDeleteCategorySplash(node)"></i>
+ 		ng-click="showDeleteCategoryDialog(node, $event)"></i>
  	</button>
 </li>

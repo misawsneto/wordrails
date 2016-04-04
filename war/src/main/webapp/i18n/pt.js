@@ -211,6 +211,11 @@
 			"STATION_CREATION_SUCCESS": "Estação foi criada com sucesso",
 			"STATION_REMOVED_SUCCESS": "Estação removida com sucesso"
 		},
+		"category": {
+			"NEW_CATEGORY": "Nova categoria",
+			"ADD_CHILD": "Nova subcategoria",
+			"BACK_TO_STATIONS": "Voltar a lista de estações"
+		},
 		"SET_COLOR": "Configure as paletas de cores",
 		"COLOR_PALETTE": "Paleta de Cores",
 		"COLOR_PRIMARY": "Cores Primárias",
