@@ -22,7 +22,7 @@
 
           <a md-ink-ripple class="md-list-item list-group-item b-n p-sm p-l" ui-sref="app.categories({'slug': station.stationSlug})">
             <div class="md-list-item-content">
-              <i class="mdi mdi2-view-grid p-r fa-fw text-muted"></i> 
+              <i class="mdi mdi2-format-list-bulleted p-r fa-fw text-muted"></i> 
               {{'titles.CATEGORIES' | translate}}
             </div>
           </a>
@@ -131,7 +131,7 @@
               <span class="pos-abt text-2x" style="margin-left: -16px;margin-top: 2px;">/</span>
               <md-input-container class="m-v-sm w-lg">
                 <label translate="settings.station.STATION_ADDRESS"></label>
-                <input ng-model="app.stationObj.stationSlug" ng-focus="app.stationSlugFocus()" ng-change="app.stationSlugChange(app.stationObj)">
+                <input ng-model="app.stationObj.stationSlug" ng-focus="app.stationSlugFocus()" ng-change="app.stationSlugChange(app.stationObj)" ng-disabled="app.stationObj.id > 0">
               </md-input-container>
             </div>
           </div>

@@ -77,7 +77,7 @@
 					<form ng-submit="app.addCategory(newCategoryName);">
 						<div class="md-form-group float-label md-neutral-theme text-lg">
 							<md-input-container class="md-block p-b-sm" flex-gt-sm>
-		            <label>Nova categoria</label>
+		            <label>{{'settings.category.NEW_CATEGORY' | translate}}</label>
 		            <input ng-model="newCategoryName">
 		          </md-input-container>
 				    </div>
@@ -85,7 +85,7 @@
 				</div>
 
 				<div class="text-center">
-					<md-button ng-click="app.addCategory(newCategoryName);" md-ink-ripple style="font-size:16px;" class="">{{'actions.CREATE' | translate}}</md-button>
+					<md-button ng-click="app.addCategory(newCategoryName); disabled = true;" ng-disabled="disabled" md-ink-ripple style="font-size:16px;" class="">{{'actions.CREATE' | translate}}</md-button>
 					<md-button ng-click="cancel()" md-ink-ripple style="font-size:16px;" class="">{{'titles.CANCEL' | translate}}</md-button>
 				</div>
 			</div>

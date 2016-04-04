@@ -29,6 +29,6 @@
     "commit": "5ce37da75c9e1c41b0344afd4a8dd6eea92424e7"
   },
   "_source": "git://github.com/fians/Waves.git",
-  "_target": "^0.7.5",
+  "_target": "~0.7.2",
   "_originalSource": "waves"
 }

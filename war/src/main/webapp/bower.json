@@ -81,6 +81,7 @@
     "fizzy-ui-utils": "^2.0.1",
     "get-style-property": "^1.0.4",
     "angular-carousel": "^1.0.1",
-    "angular-ui-ace": "^0.2.3"
+    "angular-ui-ace": "^0.2.3",
+    "ng-directive-lazy-image": "^0.3.1"
   }
 }

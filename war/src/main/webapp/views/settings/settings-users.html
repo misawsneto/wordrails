@@ -36,27 +36,27 @@
 							</span>
 							<div class="inline">
 								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('left')" ng-disabled="beginning">
-								<span class="mdi mdi-chevron-left"></span></button>
+								<span class="mdi mdi2-chevron-left"></span></button>
 								<button md-ink-ripple class="m-t-n-xxs md-btn md-raised bg-white" ng-click="paginate('right')" ng-disabled="allLoaded || personsCount <= window">
-								<span class="mdi mdi-chevron-right"></span></button>
+								<span class="mdi mdi2-chevron-right"></span></button>
 			        </div>
 						</div>
 					</div>
 				<!-- /persons pagination -->
 				<!-- actions -->
 					<div class="col-sm-2 m-b-xs text-right m-t-n-sm">
-				        <md-menu md-position-mode="target-right target">
-				          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r">
-				          	<i class="mdi mdi-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
-				          </button>
-				          <md-menu-content width="4" class="default-bg-text">
-				            <md-menu-item ng-repeat="action in bulkActions">
-				              <md-button ng-click="selectBulkAction(action.id); openBulkActionsDialog($event);">
-		                    {{action.name}}
-				              </md-button>
-				            </md-menu-item>
-				          </md-menu-content>
-				        </md-menu>
+		        <md-menu md-position-mode="target-right target">
+		          <button md-ink-ripple ng-click="$mdOpenMenu($event)" class="m-b-n md-mini md-fab md-btn-sm md-btn m-b bg-white m-r">
+		          	<i class="mdi mdi2-menu i-24 text-black" style="line-height: 24px; vertical-align: 12%;"></i>
+		          </button>
+		          <md-menu-content width="4" class="default-bg-text">
+		            <md-menu-item ng-repeat="action in bulkActions">
+		              <md-button ng-click="selectBulkAction(action.id); openBulkActionsDialog($event);">
+                    {{action.name}}
+		              </md-button>
+		            </md-menu-item>
+		          </md-menu-content>
+		        </md-menu>
 					</div>
 				<!-- /actions -->
 				</div>

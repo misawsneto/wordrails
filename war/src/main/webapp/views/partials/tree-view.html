@@ -10,7 +10,7 @@
     </span>
     <form ng-submit="updateCategory(node)" ng-if="node.editing">
     	<input style="padding:0; background-color: transparent;" ng-click="$event.stopPropagation();"
-    	ng-model="node.editingName" type="text" class="b-none" placeholder="Nome da categoria" />
+    	ng-model="node.editingName" type="text" class="no-border" placeholder="Nome da categoria" />
  	</form>
  </span>
  	<button ng-if="editing" ng-click="showAddCategorySplash(node)"
