@@ -249,7 +249,7 @@ angular.module('app')
         return exportable;
       };
 
-      var themeName = $filter('generateRandom')(4,"aA");
+      var themeName = $scope.app.themeName = $filter('generateRandom')(4,"aA");
 
       $scope.app.applyNetworkTheme = function (){
 

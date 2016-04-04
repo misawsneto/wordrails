@@ -56,7 +56,6 @@
 		"ENTER_TAG": "Enter a tag",
 		"GEO_NOTIFICATION": "Geonotification",
 		"NOTIFY": "Notificar",
-		"PAGES": "Pages",
 		"ADVANCED_SETTINGS": "Advanced settings",
 		"OPTIONS": "Options",
 		"RESTORE_DEFAULT": "Restore defaults",
@@ -128,7 +127,10 @@
 			"MARGIN": "Margin",
 			"PADDING": "Padding",
 			"PREVIEW_MODE": "Preview mode",
-			"SUBSECTION": "Subsection"
+			"SUBSECTION": "Subsection",
+			"SIDEBAR": "Sidebar",
+			"FOOTER": "Footer",
+			"HEADER": "Header"
 		},
 		"post": {
 			"menu":{

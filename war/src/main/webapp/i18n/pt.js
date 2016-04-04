@@ -56,7 +56,6 @@
 		"ENTER_TAG": "Insira uma tag",
 		"GEO_NOTIFICATION": "Geonotificação",
 		"NOTIFY": "Notificar",
-		"PAGES": "Páginas",
 		"ADVANCED_SETTINGS": "Configurações avançadas",
 		"OPTIONS": "Opções",
 		"RESTORE_DEFAULT": "Restaurar padrões",
@@ -114,7 +113,7 @@
 		},
 		"colors":{
 			"TEST_THEME": "Testar Cores",
-			"RESET_THEME": "Reset Colors",
+			"RESET_THEME": "Cancelar",
 			"APPLY_THEME": "Aplicar Cores",
 			"APPLY_THEME_DIALOG": "<strong>Atenção!</strong> As modificações de aparência serão aplicadas a todos os dispositivos. Tem certeza que deseja continuar?",
 			"TAB": "Aba",
@@ -128,7 +127,10 @@
 			"MARGIN": "Margem",
 			"PADDING": "Preenchimento",
 			"PREVIEW_MODE": "Modo de visualização",
-			"SUBSECTION": "Subseção"
+			"SUBSECTION": "Subseção",
+			"SIDEBAR": "Barra lateral",
+			"FOOTER": "Rodapé",
+			"HEADER": "Barra superior"
 		},
 		"post": {
 			"menu":{

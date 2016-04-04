@@ -61,6 +61,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
 	$scope.changeBackgroundColor = function(color){
 		$scope.backgroundPalette = color
+		$scope.setTheme(false, true)
 	}
 
 	// Init function.
@@ -111,9 +112,11 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		$scope.app.testingTheme = testing;			
 	}
 
-	$scope.setTheme = function(applying){
+	$scope.editingThemeName = $scope.app.themeName;
+
+	$scope.setTheme = function(applying, editing){
 		applying = !applying;
-		if(applying){
+		if(applying && !editing){
 			$scope.app.testingTheme = !$scope.app.testingTheme;
 			if(!$scope.app.testingTheme){
 				$scope.app.applyNetworkTheme();
@@ -123,23 +126,26 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 
 		themeProvider.definePalette('myPrimary', $scope.app.makeColorsJsonObject($scope.palettes[0].colors));
 		themeProvider.definePalette('myAccent', $scope.app.makeColorsJsonObject($scope.palettes[1].colors));
-    	themeProvider.definePalette('myWarn', $scope.app.makeColorsJsonObject($scope.palettes[2].colors));
-    	themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette)))
+  	themeProvider.definePalette('myWarn', $scope.app.makeColorsJsonObject($scope.palettes[2].colors));
+  	themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject($scope.computeColors($scope.backgroundPalette)))
 
-    	var themeName = $filter('generateRandom')(4,"aA");
-    	themeProvider.theme(themeName)
-    	
-    	.primaryPalette('myPrimary')
-    	.accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
-    	.warnPalette('myWarn')
-    	.backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
+  	var themeName = $scope.editingThemeName = $filter('generateRandom')(4,"aA");
+  	themeProvider.theme(themeName)
+  	
+  	.primaryPalette('myPrimary')
+  	.accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
+  	.warnPalette('myWarn')
+  	.backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
 
-    	// $mdTheming.generateTheme('asdfa')
-    	themeProvider.reload($injector);
+  	// $mdTheming.generateTheme('asdfa')
+  	themeProvider.reload($injector);
+
+  	if(!editing){
     	themeProvider.setDefaultTheme(themeName)
-
     	createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
-    	$scope.app.backgroundPalette = $scope.backgroundPalette
+  	}
+
+  	$scope.app.backgroundPalette = $scope.backgroundPalette
 	}
 
 	$scope.initSpeedDial = function(){
@@ -273,6 +279,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
 		$scope.app.setThemeTesting(false);
 		$scope.palettes[key].orig = $scope.computeColors($scope.palettes[key].base);
 		$scope.palettes[key].colors = $scope.palettes[key].orig;
+		$scope.setTheme(false, true)
 	};
 
 	// Function to make the definePalette code for a palette.

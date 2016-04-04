@@ -14,6 +14,10 @@ app.controller('PageBuilderListCtrl', ['$scope', '$rootScope', '$log', '$timeout
 			})
 		})
 
+		$timeout(function(){
+			$scope.showHomePage = true;
+		})
+
 		// var i = 0;
 		// for(;i < 6;i++){
 		// 	var j=0;

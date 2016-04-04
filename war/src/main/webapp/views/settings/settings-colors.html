@@ -20,7 +20,7 @@
     <div class="p-t-lg">
       <div class="color-selector-container animated zoomIn">
         <div class="content m-t-md">
-          <div class="mockup-browser md-whiteframe-z2" ng-class="{'mobile': isMobile}">
+          <div class="mockup-browser md-whiteframe-z2" ng-class="{'mobile': isMobile}" md-theme="{{editingThemeName}}" md-theme-watch="true">
             <md-content>
               <md-sidenav class="md-sidenav-left md-whiteframe-z2 w-lg" md-component-id="sidenav-demo">
                 <div class="box md-background-hue-1 background ng-scope">
@@ -69,14 +69,14 @@
                 </div>
               </md-sidenav>
 
-              <md-toast class="md-warn-default ng-scope md-top md-right" style="width: 150px; min-width: 150px; z-index: 51">
-                <div class="md-toast-content w-sm pull-right m-t" style="padding: 0 10px; min-height: 45px;" translate="settings.colors.ALERT">Alerta</div>
+              <md-toast class="ng-scope md-top md-right" style="width: 150px; min-width: 150px; z-index: 51">
+                <md-toolbar class="md-warn md-{{editingThemeName}}-theme w-sm pull-right m-t text-base r" style="padding: 5px 10px; min-height: 45px;" translate="settings.colors.ALERT">Alerta</md-toolbar>
               </md-toast>
 
-              <div class="navbar no-radius md-primary-default background">
+              <md-toolbar class="navbar no-radius md-primary">
                 <a md-ink-ripple ng-click="toggleDemo()" class="navbar-item pull-left">
                 <i class="mdi-navigation-menu i-24"></i></a>
-              </div>
+              </md-toolbar>
 
               <md-content ng-if="!isMobile">
                 <div class="p">
@@ -91,13 +91,13 @@
                         </div>
                         <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                         <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
-                        <div class="p">
+                        <md-content class="p text-base md-hue-1">
                           <h3>Paracosm</h3>
                           <p>
                             The titles of Washed Out's breakthrough song and the first single from Paracosm share the
                             two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
                           </p>
-                        </div>
+                        </md-content>
                       </div>
                     </div>
                     <div class="col-lg-4">
@@ -110,13 +110,13 @@
                         </div>
                         <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                         <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
-                        <div class="p">
+                        <md-content class="p text-base md-hue-1">
                           <h3>Paracosm</h3>
                           <p>
                             The titles of Washed Out's breakthrough song and the first single from Paracosm share the
                             two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
                           </p>
-                        </div>
+                        </md-content>
                       </div>
                     </div>
                     <div class="col-lg-4">
@@ -129,13 +129,13 @@
                         </div>
                         <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                         <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
-                        <div class="p">
+                        <md-content class="p text-base md-hue-1">
                           <h3>Paracosm</h3>
                           <p>
                             The titles of Washed Out's breakthrough song and the first single from Paracosm share the
                             two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
                           </p>
-                        </div>
+                        </md-content>
                       </div>
                     </div>
                   </div>
@@ -155,13 +155,13 @@
                         </div>
                         <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                         <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
-                        <div class="p">
+                        <md-content class="p text-base md-hue-1">
                           <h3>Paracosm</h3>
                           <p>
                             The titles of Washed Out's breakthrough song and the first single from Paracosm share the
                             two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
                           </p>
-                        </div>
+                        </md-content>
                       </div>
                     </div>
                   </md-tab>
@@ -176,13 +176,13 @@
                         </div>
                         <md-button md-ink-ripple style="line-height:20px;" class="m-t-n md-btn md-mini md-raised md-fab md-accent m-r right-0">
                         <i style="line-height:30px;" class="mdi-action-thumb-up"></i></md-button>
-                        <div class="p">
+                        <md-content class="p text-base md-hue-1">
                           <h3>Paracosm</h3>
                           <p>
                             The titles of Washed Out's breakthrough song and the first single from Paracosm share the
                             two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
                           </p>
-                        </div>
+                        </md-content>
                       </div>
                     </div>
                   </md-tab>

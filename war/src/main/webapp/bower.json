@@ -23,7 +23,7 @@
     "angular-resource": "^1.5.3",
     "angular-sanitize": "^1.5.3",
     "angular-touch": "^1.5.3",
-    "angular-material": "^1.0.6",
+    "angular-material": "^1.0.7",
     "angular-translate": "^2.11.0",
     "angular-translate-loader-static-files": "^2.11.0",
     "angular-translate-storage-cookie": "^2.11.0",
