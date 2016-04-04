@@ -29,6 +29,10 @@ public interface StationsApi {
 	@Path("/{id}")
 	void putStation() throws ServletException, IOException;
 
+	@DELETE
+	@Path("/{id}")
+	void deleteStation() throws ServletException, IOException;
+
 	@GET
 	@Path("/{id}")
 	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Station', 'read')")

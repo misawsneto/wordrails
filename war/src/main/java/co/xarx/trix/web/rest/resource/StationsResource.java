@@ -56,6 +56,11 @@ public class StationsResource extends AbstractResource implements StationsApi {
 	}
 
 	@Override
+	public void deleteStation() throws ServletException, IOException {
+		forward();
+	}
+
+	@Override
 	public void getStation(int stationId) throws ServletException, IOException {
 		forward();
 	}
