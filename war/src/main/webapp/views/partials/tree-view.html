@@ -2,7 +2,7 @@
  <span ng-if="!editing" class="check-term" ng-click="nodeClicked(node)">
     <md-checkbox md-no-ink aria-label="{{node.name}}" ng-model="node.checked" ng-click="node.checked = !node.checked" class="pull-left"></md-checkbox>
  </span>
- <span class="leaf box-shadow animated fadeIn" tooltip="{{node.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
+ <span class="leaf box-shadow animated fadeIn" ng-class="{'w-400': node.editing}" tooltip="{{node.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
  	<span ng-if="!node.editing">
 	 	{{node.name}}
 	    <!-- <i class="{{ switcher( isLeaf(node), '', 'fa fa-remove' ) }}"></i> -->

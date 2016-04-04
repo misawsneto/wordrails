@@ -56,7 +56,8 @@ module.exports = {
                     'imagesloaded/imagesloaded.js',
                     'angular-masonry/angular-masonry.js',
                     'ace-builds/src-min-noconflict/ace.js',
-                    'angular-ui-ace/ui-ace.min.js'
+                    'angular-ui-ace/ui-ace.min.js',
+                    'ng-directive-lazy-image/release/**'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

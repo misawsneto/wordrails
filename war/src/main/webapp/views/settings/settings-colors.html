@@ -73,8 +73,10 @@
                 <md-toolbar class="md-warn md-{{editingThemeName}}-theme w-sm pull-right m-t text-base r" style="padding: 5px 10px; min-height: 45px;" translate="settings.colors.ALERT">Alerta</md-toolbar>
               </md-toast>
 
-              <md-toolbar class="navbar no-radius md-primary">
-                <a md-ink-ripple ng-click="toggleDemo()" class="navbar-item pull-left">
+              <md-toolbar class="no-radius md-primary" style="min-height: 50px; height: 50px">
+                <a md-ink-ripple ng-click="toggleDemo()" class="pull-left" style="    padding: 0 16px;
+                  line-height: 50px;
+                  max-width: 55px;">
                 <i class="mdi-navigation-menu i-24"></i></a>
               </md-toolbar>
 
@@ -229,7 +231,7 @@
                           <spectrum-colorpicker ng-model="color.hex" format="'hex'" ng-change="app.setThemeTesting(false);" options="{clickoutFiresChange: true, showInput: true, showPalette: true}"></spectrum-colorpicker>
                       </div>
                       <div class="palette-color-contrast" ng-click="color.darkContrast = !color.darkContrast">
-                        <md-tooltip>Toggle contrast</md-tooltip>
+                        <md-tooltip>{{'settings.CONTRAST' | translate}}</md-tooltip>
                       </div>
                 </div>
             </md-list-item>

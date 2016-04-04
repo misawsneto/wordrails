@@ -189,7 +189,8 @@
 			"CROP_IMAGE_DESC": "Clique e arraste para criar uma seleção e cortar a imagem.",
 			"FOCUS_IMAGE_DESC": "Arraste o marcador para configurar o ponto focal.",
 			"TOGGLE_LANDSCAPE": "Ligar/desligar modo paisagem",
-			"SHOW_VERSION": "Exibir versão"
+			"SHOW_VERSION": "Exibir versão",
+			"CONTRAST": "Contraste"
 		},
 		"station": {
 			"STATION_SETTINGS": "Configurações de estação",
