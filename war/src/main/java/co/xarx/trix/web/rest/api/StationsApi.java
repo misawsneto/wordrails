@@ -21,10 +21,23 @@ public interface StationsApi {
 	@Path("/")
 	void getStations() throws ServletException, IOException;
 
+	@POST
+	@Path("/")
+	void postStation() throws ServletException, IOException;
+
+	@PUT
+	@Path("/{id}")
+	void putStation() throws ServletException, IOException;
+
 	@GET
 	@Path("/{id}")
 	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Station', 'read')")
-	void getStation(@PathParam("id") @P("id") int postId) throws ServletException, IOException;
+	void getStation(@PathParam("id") @P("id") int stationId) throws ServletException, IOException;
+
+	@GET
+	@Path("/{id}/stationPerspectives")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Station', 'read')")
+	void getStationPerspectives(@PathParam("id") @P("id") int stationId) throws ServletException, IOException;
 
 	@GET
 	@Path("/{stationId}/pages")

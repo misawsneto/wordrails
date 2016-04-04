@@ -26,9 +26,19 @@ public interface PersonsApi {
 	}
 
 	@GET
+	@Path("/")
+	@Transactional
+	void getPersons() throws  IOException;
+
+	@GET
 	@Path("/{id}")
 	@Transactional
-	Response findPerson(@PathParam("id") Integer id) throws ServletException, IOException;
+	Response findPerson(@PathParam("id") Integer id) throws IOException;
+
+	@GET
+	@Path("/search/findByUsername")
+	@Transactional
+	Response findPersonByUsername() throws IOException;
 
 	@PUT
 	@Path("/update")

@@ -51,6 +51,26 @@ public class TermsResource extends AbstractResource implements TermsApi {
 	private PostRepository postRepository;
 
 	@Override
+	public void getTerms() throws IOException {
+		forward();
+	}
+
+	@Override
+	public void postTerm() throws IOException {
+		forward();
+	}
+
+	@Override
+	public void putTerm() throws IOException {
+		forward();
+	}
+
+	@Override
+	public void deleteTerm() throws IOException {
+		forward();
+	}
+
+	@Override
 	public Response getTermTree(Integer taxonomyId, Integer perspectiveId) throws IOException {
 		List<Term> allTerms;
 		if(perspectiveId != null){

@@ -35,6 +35,11 @@ public class TaxonomiesResource extends AbstractResource implements TaxonomiesAp
 	private AuthService authProvider;
 
 	@Override
+	public void findNetworkCategories() throws IOException {
+		forward();
+	}
+
+	@Override
 	public Response getTaxonomiesToEdit(Integer networkId) throws IOException {
 		List<Taxonomy> taxonomies = null;
 

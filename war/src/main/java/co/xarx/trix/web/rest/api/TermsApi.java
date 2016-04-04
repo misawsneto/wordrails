@@ -18,6 +18,22 @@ import java.util.List;
 public interface TermsApi {
 
 	@GET
+	@Path("/")
+	void getTerms() throws IOException;
+
+	@POST
+	@Path("/")
+	void postTerm() throws IOException;
+
+	@PUT
+	@Path("/{id}")
+	void putTerm() throws IOException;
+
+	@DELETE
+	@Path("/{id}")
+	void deleteTerm() throws IOException;
+
+	@GET
 	@Path("/termTree")
 	Response getTermTree(@QueryParam("taxonomyId") Integer taxonomyId,
 						 @QueryParam("perspectiveId") Integer perspectiveId) throws IOException;

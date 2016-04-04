@@ -66,6 +66,11 @@ public class NetworkResource extends AbstractResource implements NetworkApi {
 	private RowRepository rowRepository;
 
 	@Override
+	public void putNetwork(Integer id) throws IOException {
+		forward();
+	}
+
+	@Override
 	public PersonPermissions getNetworkPersonPermissions(Integer id) {
 		PersonPermissions personPermissions = new PersonPermissions();
 		Person person = authProvider.getLoggedPerson();

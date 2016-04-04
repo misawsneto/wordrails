@@ -21,6 +21,10 @@ import java.util.TreeMap;
 @Produces(MediaType.APPLICATION_JSON)
 public interface NetworkApi {
 
+	@PUT
+	@Path("/{id}")
+	void putNetwork(@PathParam("id") Integer id) throws IOException;
+
 	@Path("/{id}/permissions")
 	@GET
 	PersonPermissions getNetworkPersonPermissions(@PathParam("id") Integer id);

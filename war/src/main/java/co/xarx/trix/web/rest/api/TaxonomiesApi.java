@@ -14,6 +14,10 @@ import java.util.List;
 public interface TaxonomiesApi {
 
 	@GET
+	@Path("/search/findNetworkCategories")
+	void findNetworkCategories() throws IOException;
+
+	@GET
 	@Path("/networks/{networkId}/taxonomiesToEdit")
 	Response getTaxonomiesToEdit(@PathParam("networkId") Integer networkId) throws IOException;
 

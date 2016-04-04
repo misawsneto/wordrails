@@ -93,8 +93,13 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 	String cloudfrontUrl;
 
 	@Override
+	public void getPersons() throws IOException {
+		forward();
+	}
+
+	@Override
 	@Transactional
-	public Response findPerson(Integer id) throws ServletException, IOException {
+	public Response findPerson(Integer id) throws IOException {
 		Person person = authProvider.getLoggedPerson();
 
 		if(person.id.equals(id) || person.networkAdmin) {
@@ -102,6 +107,12 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 			return Response.status(Status.OK).build();
 		}else
 			return Response.status(Status.UNAUTHORIZED).build();
+	}
+
+	@Override
+	public Response findPersonByUsername() throws IOException {
+		forward();
+		return null;
 	}
 
 	@Override
@@ -154,7 +165,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 		personRepository.save(loadedPerson);
 
-		authProvider.updateLoggedPerson(user);
+		authProvider.updateLoggedPerson(loadedPerson.user);
 
 		return Response.status(Status.OK).build();
 	}
