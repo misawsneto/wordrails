@@ -85,6 +85,15 @@ angular.module('app')
                 resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-stations.js']),
                 controller: 'SettingsStationsCtrl'
               })
+
+              .state('app.categories', {
+                url: '/categories?slug',
+                templateUrl: '/views/settings/settings-categories.html',
+                data : { titleTranslate: 'titles.CATEGORIES', title: 'Categorias', folded: false },
+                resolve: load(['angularFileUpload', '/scripts/controllers/settings/settings-categories.js']),
+                controller: 'SettingsCategoriesCtrl'
+              })
+
               .state('app.users', {
                   url: '/users?username?newUser',
                   templateUrl: '/views/settings/settings-users.html?',

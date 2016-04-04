@@ -27,6 +27,7 @@
 		"SEARCH": "Search",
 		"YES": "Yes",
 		"NO": "No",
+		"BACK": "Back",
 		"CANCEL": "Cancel",
 		"PUBLISHED": "Published",
 		"SCHEDULED": "Scheduled",

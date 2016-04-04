@@ -1,3 +1,70 @@
+angular.module('app')
+  .directive('nodeTree', function() {
+    return {
+      template: '<node ng-repeat="node in tree"></node>',
+      replace: true,
+      transclude: true,
+      restrict: 'E',
+      scope: {
+        tree: '=ngModel'
+      }
+    };
+  })
+
+  .directive('node', function($compile) {
+    return { 
+      replace: true,
+      restrict: 'E',
+      templateUrl: '/views/partials/tree-view.html',
+      link: function(scope, elm, attrs) {
+
+        //$(elm).parent('ul').find('span.leaf').on('click', function (e) {
+         $(elm).find('span.leaf').on('click', function (e) {
+
+           var children = $(elm).find('li');
+
+           if (children.is(":visible")) {
+            children.hide('fast');
+            // $(elm).find('span.leaf i.icon-minus-sign').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+          }
+          else{
+
+            children.show('fast');
+            // $(elm).find('span.leaf i.icon-plus-sign').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+          }
+          e.stopPropagation();
+        });
+
+         scope.nodeClicked = function(node) {
+          node.checked = !node.checked;
+          /*function checkChildren(c) {
+            angular.forEach(c.children, function(c) {
+              c.checked = node.checked;
+              checkChildren(c);
+            });
+          }
+          checkChildren(node);*/
+        };
+        
+        scope.switcher = function(booleanExpr, trueValue, falseValue) {
+          return booleanExpr ? trueValue : falseValue;
+        };
+        
+        scope.isLeaf = function(_data) {
+          if (_data.children.length == 0) {
+            return true;
+          }
+          return false;
+        };
+
+        if (scope.node.children.length > 0) {
+          var childNode = $compile('<ul><node-tree ng-model="node.children"></node-tree></ul>')(scope)
+          elm.append(childNode);
+        }
+      }
+    };
+  });
+
 (function() {
 
   angular.module('mdxUtil', ['ngMaterial'])
@@ -119,61 +186,6 @@
         }
       });
     };
-  })
-
-  .directive('focusPoint', function () {
-      'use strict';
-      
-      return {
-          restrict: 'A',
-          template: '<div class="focus-point">' +
-          '<div class="focus-area">' +
-          '<span class="target" style="left: {{ x }}%; top: {{ y }}%"></span>' +
-          '<img src="{{ src }}" alt="" ng-mousemove="onMouseMove($event)" ng-mousedown="onMouseDown($event)" ng-mouseup="onMouseUp($event)" draggable="false" class="source" />' +
-          '</div>' +
-          '<span style="background-image: url(\'{{ src }}\'); background-position: {{ x }}% {{ y }}%" class="preview-portrait"></span>' +
-          '<span style="background-image: url(\'{{ src }}\'); background-position: {{ x }}% {{ y }}%" class="preview"></span>' +
-          '<span style="background-image: url(\'{{ src }}\'); background-position: {{ x }}% {{ y }}%" class="preview-landscape"></span>' +
-          '<span style="background-image: url(\'{{ src }}\'); background-position: {{ x }}% {{ y }}%" class="preview-wide"></span>' +
-          '<div class="info">{{ x }}% / {{ y }}%</div>' +
-          '</div>',
-          link: function (scope, element, attr) {
-              var dragging = false;
-              scope.src = attr.src;
-              
-              scope.onMouseDown = function (e) {
-                  scope.update(e);
-                  dragging = true;
-              };
-              
-              scope.onMouseMove = function (e) {
-                  if (dragging === true) {
-                      scope.update(e);
-                  }
-              };
-              
-              scope.onMouseUp = function (e) {
-                  e.preventDefault();
-                  dragging = false;
-              };
-              
-              scope.update = function (e) {
-                  e.preventDefault();
-                  var offset = scope.offset(e.target);
-                  scope.x = Math.round(((e.pageX - offset.left) / e.target.clientWidth) * 100);
-                  scope.y = Math.round(((e.pageY - offset.top) / e.target.clientHeight) * 100);
-              };
-              
-              scope.offset = function (elm) {
-                  try { return elm.offset(); } catch (e) { }
-                  var body = document.documentElement || document.body;
-                  return {
-                      left: elm.getBoundingClientRect().left + (window.pageXOffset || body.scrollLeft),
-                      top: elm.getBoundingClientRect().top + (window.pageYOffset || body.scrollTop)
-                  };
-              };
-          }
-      };
   })
 
   // Couldn't get access to _PALETTES any other way?
