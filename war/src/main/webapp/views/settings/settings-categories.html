@@ -1,0 +1,89 @@
+<div id="settings-stations-categories">
+
+	<div class="header-custom text-center animated box-shadow">
+	</div>
+
+	<div class="wrapper-lg animated zoomIn m-b-xxl">
+		<!-- start of user panel list -->
+		<div class="panel material-shadow-light panel-card block-800 m-auto pos-rlt material-shadow-light">
+
+			<div class="pos-abt top-0 right-0">
+				<md-button ui-sref="app.stations"
+				md-ink-ripple class="m-b" translate="titles.BACK"></md-button>
+			</div>
+
+			<div ng-if="$state.current.name != 'app.settings.categories'" class="panel-heading h4 wrapper-md">
+				<span>Categorias da estação <strong>{{stationName}}</strong></span>
+			</div>
+
+			<div ng-if="$state.current.name == 'app.settings.categories'" class="panel-heading h4 wrapper-md">
+				Categories da Rede
+			</div>
+
+			<div class="panel-body p-n" style="min-height: 100px;">
+				<div class="m-l-xxl m-t">
+					<button md-ink-ripple="" class="md-btn md-raised m-b btn-fw bg-white" ng-click="showAddCategorySplash(null, $event)">
+						<i class="mdi mdi-plus"></i> Nova categoria
+					</button>
+				</div>
+				<div class="term-tree p-l-xl p-r-xl p-b-xl">
+					<div class="article-tree animated fadeIn">
+						<div ng-style="{'overflow': 'auto'}">
+							<div class="tree well text-lg">
+								<ul>
+									<node ng-repeat="node in termTree"></node>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/ng-template" id="delete_category.html">
+	<md-dialog aria-label="Remove Categories Dialog" id="remove-categories-dialog">
+		<md-content role="document" >
+			<div class="wrapper">
+				<div class="md-dialog-content-body text-lg p-r p-l w-xxl">
+					<strong>Atenção! </strong> Tem certeza que deseja remover esta categoria? Esta operação não pode ser desfeita.
+				</div>
+
+				<div class="text-center">
+					<button ng-click="app.deleteCategory();" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw">
+						Sim
+					</button>
+					<button ng-click="cancel()" md-ink-ripple style="font-size:18px;" class="md-btn md-flat btn-fw">
+						Não
+					</button>
+				<div>
+			</div>
+		</md-content>
+	</md-dialog>
+</script>
+
+<script type="text/ng-template" id="add_category.html">
+	<md-dialog aria-label="Add Categories Dialog" id="add-categories-dialog">
+		<md-content role="document" >
+			<div class="wrapper">
+				<div class="md-dialog-content-body text-lg p-r p-l w-xxl">
+					<form ng-submit="app.addCategory(newCategoryName);">
+						<div class="md-form-group float-label md-neutral-theme text-lg">
+							<md-input-container class="md-block p-b-sm" flex-gt-sm>
+		            <label>Nova categoria</label>
+		            <input ng-model="newCategoryName">
+		          </md-input-container>
+				    </div>
+				  </form>
+				</div>
+
+				<div class="text-center">
+					<button ng-click="app.addCategory(newCategoryName);" md-ink-ripple style="font-size:16px;" class="md-btn md-flat btn-fw">Criar</button>
+					<button ng-click="cancel()" md-ink-ripple style="font-size:16px;" class="md-btn md-flat btn-fw">Fechar</button>
+				<div>
+			</div>
+		</md-content>
+	</md-dialog>
+</script>
