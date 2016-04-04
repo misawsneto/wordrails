@@ -56,7 +56,7 @@ import java.util.*;
 @Component
 public class PersonsResource {
 
-	private class PersonCreateDto {
+	public static class PersonCreateDto {
 
 		public String name;
 		public String username;
