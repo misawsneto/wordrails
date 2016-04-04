@@ -4,6 +4,7 @@ import co.xarx.trix.api.BooleanResponse;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.services.PersonService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.post.PostSearchService;
@@ -19,12 +20,15 @@ import java.util.List;
 public class BookmarksResource extends AbstractResource implements BookmarksApi {
 
 	private PostSearchService postSearchService;
+	private PersonRepository personRepository;
 	private PersonService personService;
 	private AuthService authProvider;
 
 	@Autowired
-	public BookmarksResource(PostSearchService postSearchService, PersonService personService, AuthService authProvider) {
+	public BookmarksResource(PostSearchService postSearchService, PersonRepository personRepository,
+							 PersonService personService, AuthService authProvider) {
 		this.postSearchService = postSearchService;
+		this.personRepository = personRepository;
 		this.personService = personService;
 		this.authProvider = authProvider;
 	}
@@ -47,8 +51,10 @@ public class BookmarksResource extends AbstractResource implements BookmarksApi 
 		BooleanResponse bookmarkInserted = new BooleanResponse();
 
 		Person person = authProvider.getLoggedPerson();
+		person = personRepository.findOne(person.id); //we must ensure this object comes from DB to update it
 
 		bookmarkInserted.response = personService.toggleBookmark(person, postId);
+		personRepository.save(person);
 
 		return bookmarkInserted;
 	}

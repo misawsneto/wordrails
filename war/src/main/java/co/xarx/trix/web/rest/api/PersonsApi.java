@@ -18,7 +18,7 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public interface PersonsApi {
 
-	public class PersonCreateDto {
+	public static class PersonCreateDto {
 		public String name;
 		public String username;
 		public String email;

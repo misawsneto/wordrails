@@ -1,4 +1,4 @@
-package co.xarx.trix.security.acl;
+package co.xarx.trix.config.security;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import org.springframework.security.acls.jdbc.JdbcMutableAclService;

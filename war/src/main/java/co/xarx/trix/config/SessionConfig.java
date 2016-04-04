@@ -39,6 +39,8 @@ public class SessionConfig extends CachingConfigurerSupport {
 	private int redisPort;
 	@Value("${spring.redis.password:}")
 	private String redisPassword;
+	@Value("${spring.redis.db:}")
+	private Integer redisDB;
 
 	public RedisTemplate redisTemplate() {
 		RedisTemplate redisTemplate = new RedisTemplate();
@@ -87,6 +89,7 @@ public class SessionConfig extends CachingConfigurerSupport {
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
 		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+		jedisConnectionFactory.setDatabase(redisDB);
 		jedisConnectionFactory.setHostName(redisHost);
 		jedisConnectionFactory.setPort(redisPort);
 		if (redisPassword != null && !redisPassword.isEmpty()) {

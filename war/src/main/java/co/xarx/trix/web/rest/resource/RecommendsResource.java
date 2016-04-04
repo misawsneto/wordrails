@@ -50,9 +50,11 @@ public class RecommendsResource extends AbstractResource implements RecommendsAp
 	public BooleanResponse toggleRecommend(Integer postId) {
 		BooleanResponse bookmarkInserted = new BooleanResponse();
 
-		Person person = personRepository.findByUsername(authProvider.getUser().getUsername());
+		Person person = authProvider.getLoggedPerson();
+		person = personRepository.findOne(person.id); //we must ensure this object comes from DB to update it
 
 		bookmarkInserted.response = personService.toggleRecommend(person, postId);
+		personRepository.save(person);
 
 		return bookmarkInserted;
 	}
