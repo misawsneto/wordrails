@@ -1,25 +1,14 @@
 package co.xarx.trix.services;
 
-import co.xarx.trix.domain.ElasticSearchEntity;
-import co.xarx.trix.domain.MultiTenantEntity;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.QPost;
-import co.xarx.trix.persistence.ESRepository;
-import co.xarx.trix.domain.ESPerson;
-import co.xarx.trix.domain.ESPost;
-import co.xarx.trix.domain.ESStation;
-import co.xarx.trix.persistence.ESPersonRepository;
-import co.xarx.trix.persistence.ESPostRepository;
-import co.xarx.trix.persistence.ESStationRepository;
-import co.xarx.trix.persistence.PersonRepository;
-import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.persistence.StationRepository;
+import co.xarx.trix.domain.*;
+import co.xarx.trix.persistence.*;
 import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
@@ -90,11 +79,26 @@ public class ESStartupIndexerService {
 					" entities of type " + itens.get(0).getClass().getSimpleName() + " threw mapping error");
 			if (entities.size() > 0) log.info("indexing " + entities.size() + " elements of type " + itens.get(0).getClass().getSimpleName());
 		}
-		entities.forEach(esRepository::save);
+
+		for(MultiTenantEntity entity: entities){
+			saveIndex(entity, ESPost.class);
+		}
 	}
 
 	public <T extends ElasticSearchEntity> void saveIndex(Object object, Class<T> objectClass, ESRepository esRepository) {
 		ElasticSearchEntity entity = modelMapper.map(object, objectClass);
 		esRepository.save(entity);
+	}
+
+	public <T extends ElasticSearchEntity> void saveIndex(Object object, Class<T> objectClass) {
+		ElasticSearchEntity entity = modelMapper.map(object, objectClass);
+		elasticsearchTemplate.putMapping(objectClass);
+		elasticsearchTemplate.refresh(objectClass, true);
+
+		IndexQuery indexQuery = new IndexQuery();
+		indexQuery.setId(String.valueOf(((ElasticSearchEntity) object).getId()));
+		indexQuery.setObject(object);
+
+		elasticsearchTemplate.index(indexQuery);
 	}
 }

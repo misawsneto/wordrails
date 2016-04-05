@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.Date;
@@ -45,6 +46,7 @@ public class ESPost implements ElasticSearchEntity {
 	public int recommendsCount;
 	public int commentsCount;
 
+	@Field(index = FieldIndex.not_analyzed)
 	public String slug;
 	public Integer readTime;
 
