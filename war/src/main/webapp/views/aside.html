@@ -18,8 +18,11 @@
     <div class="box-cell scrollable hover">
       <div class="box-inner">
         <div class="p hidden-folded" ng-class="$state.current.data.theme ? $state.current.data.theme.primary+'-50' : app.setting.theme.primary+'-50'" style="background-image:url(images/bg.png); background-size:cover">
-          <div class="rounded w-64 bg-white inline pos-rlt">
-            <img src="/images/a0.jpg" class="img-responsive rounded">
+          <div ng-if="userImageSmall" class="rounded w-64 bg-white inline pos-rlt">
+            <img ng-src="{{userImageSmall}}" class="img-responsive rounded">
+          </div>
+          <div ng-if="!userImageSmall" class="rounded w-64 bg-white inline pos-rlt md-primary-hue-1 background text-center">
+            <i class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
           </div>
           <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account">
             <span class="block font-bold">{{app.person.name}}</span>

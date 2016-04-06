@@ -312,6 +312,33 @@ angular.module('app')
         $mdDialog.cancel();
       }
 
+      $scope.userImageSmall = null
+      $scope.userImageMedium = null
+      $scope.userImageLarge = null
+      var setUserImage = function(person){
+        $scope.userImageSmall = $filter('userImage')(person, 'small')
+        $scope.userImageMedium = $filter('userImage')(person, 'medium')
+        $scope.userImageLarge = $filter('userImage')(person, 'large')
+      }
+
+      $scope.coverImageSmall = null
+      $scope.coverImageMedium = null
+      $scope.coverImageLarge = null
+      var setCoverImage = function(person){
+        $scope.coverImageSmall = $filter('coverImage')(person, 'small')
+        $scope.coverImageMedium = $filter('coverImage')(person, 'medium')
+        $scope.coverImageLarge = $filter('coverImage')(person, 'large')
+      }
+
+      $scope.$watch('app.person', function(newVal, oldVal){
+        if(newVal){
+          setUserImage(newVal);
+          setCoverImage(newVal);
+        }
+      });
+
+      setUserImage(app.person);
+      setCoverImage(app.person);
 
       // ---------- /theming ----------
       
@@ -352,5 +379,5 @@ String.prototype.getYoutubeCode = function(){
 }
 
 String.prototype.stripHtml = function(){
-  return this.replace(/(<([^>]+)>)/ig,"");
+  return jQuery(this).text();
 }

@@ -82,6 +82,8 @@
     "get-style-property": "^1.0.4",
     "angular-carousel": "^1.0.1",
     "angular-ui-ace": "^0.2.3",
-    "ng-directive-lazy-image": "^0.3.1"
+    "ng-directive-lazy-image": "^0.3.1",
+    "angularAudioRecorder": "^1.4.1",
+    "webcam": "webcam-directive#^3.1.1"
   }
 }

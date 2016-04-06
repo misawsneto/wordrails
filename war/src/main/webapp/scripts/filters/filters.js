@@ -146,6 +146,24 @@ angular.module('app')
   }
 })
 
+.filter('coverImage', function imageLink(TRIX) {
+  return function(person, size) {
+    if(person && person.imageHash)
+        return TRIX.baseUrl + "/api/images/get/"+ person.coverHash  + "?size=" + size;
+
+    return "";
+  }
+})
+
+.filter('userImage', function imageLink(TRIX) {
+  return function(person, size) {
+    if(person && person.imageHash)
+        return TRIX.baseUrl + "/api/images/get/"+ person.imageHash  + "?size=" + size;
+
+    return "";
+  }
+})
+
 .filter('default_user_image', function imageLink(TRIX) {
   return function(imgId) {
     if(imgId)

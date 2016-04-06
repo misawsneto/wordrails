@@ -243,7 +243,7 @@
         <div class="row-row"> <!-- row-row -->
           <div class="cell"> <!-- cell -->
             <div class="cell-inner"><!-- cell -->
-							
+							<!-- stub image to get height -->
 							<img id="img-stub" ng-src="{{postFeaturedImage}}" ng-if="postFeaturedImage" class="z-index-n-1 pos-fix" style="opacity: 0">
 							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md" ng-if="postFeaturedImage"  ng-class="{'w-full h-400': landscape, 'block-800 h-300 m-t': !landscape}"
 							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
@@ -355,22 +355,24 @@
   </md-toolbar>
   <md-content class="pos-abt bottom-0 right-0 left-0 md-background-default background" style="top:64px">
       <div id="post-options-sidebar" class="vbox">
-        <div class="p hide" ng-if="(writableStations && writableStations.length > 0) || app.editingPost.id">
-          <span>Estação: <strong>{{app.editingPost.id ? app.editingPost.selectedStation.stationName : ''}}</strong></span>
-          <select ng-class="{'hide': app.editingPost.id}" class="form-control m-t-xs" ng-model="app.editingPost.selectedStation" ng-change="selectStation(app.editingPost.selectedStation)"
-          ng-options="station as station.stationName for station in writableStations track by station.stationId">
-          </select>
-          <!--
-          <br>
-           <dropdown-multiselect ng-if="!app.editingPost.id" model="selectedStations"  options="writableStations"></dropdown-multiselect> -->
-        </div>
         <div class="row-row">
           <div class="cell">
             <div class="cell-inner">
 
               <md-tabs  md-border-bottom class="pos-abt bottom-0 right-0 left-0 top-0">
                 <md-tab label="{{'settings.post.DETAILS' | translate}}">
-                  <md-content >
+                  <md-content>
+
+										<div class="p text-md" ng-if="selectedStation">{{'settings.post.SELECT_STATION' | translate}}:</div>
+
+                  	<div class="p-l p-r text-lg">
+	                  	<md-input-container>
+												<md-select ng-model="selectedStation" placeholder="{{'titles.STATION' | translate}}">
+													<md-option ng-value="station" ng-repeat="station in app.stations">{{ station.name }}</md-option>
+												</md-select>
+											</md-input-container>
+										</div>
+										<div class="p-h text-md" ng-if="termTree">{{'titles.CATEGORIES' | translate}}:</div>
                     <!-- list categories -->
                     <div class="p-sm term-tree">
                       <div class="span5 article-tree animated fadeIn">

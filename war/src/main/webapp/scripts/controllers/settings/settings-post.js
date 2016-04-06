@@ -51,6 +51,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		  mode: 'text/html',
 		  tabMode: 'indent',
 		  tabSize: 2,
+		  fontSizeDefaultSelection: 18,
 		// Set the image upload parameter.
         imageUploadParam: 'image_param',
 
@@ -167,10 +168,11 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	 * @param  {[type]} true    [description]
 	 */
 	$scope.$watch('app.editingPost', function(newVal, oldVal) {
-		if(oldVal){
+		if(oldVal && ('title' in oldVal) && ('body' in oldVal)){
 			// post has been edited
+
 			if(newVal.title !== oldVal.title || 
-				newVal.body !== oldVal.body){
+				newVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"") !== oldVal.body.stripHtml().replace(/(\r\n|\n|\r)/gm,"")){
 
 				// TODO: save draft
 
@@ -387,7 +389,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.showImageCropDialog = function(event){
 		// show term alert
 		
-		$scope.app.editingPost = $scope.app.editingPost;
 		$scope.app.postFeaturedImage = $scope.postFeaturedImage;
 
 		$mdDialog.show({
@@ -464,7 +465,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.showImageFocuspointDialog = function(event){
 		// show term alert
 		
-		$scope.app.editingPost = $scope.app.editingPost;
 		$scope.app.postFeaturedImage = $scope.postFeaturedImage;
 
 		$mdDialog.show({
@@ -495,7 +495,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.showGeoNotificationDialog = function(event){
 		// show term alert
 		
-		$scope.app.editingPost = $scope.app.editingPost;
 		$scope.app.postFeaturedImage = $scope.postFeaturedImage;
 
 		$mdDialog.show({
@@ -550,6 +549,54 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// --- /resize zoom class workaround
 
+	// ------------------- update term tree ---------------
+
+	$scope.selectedStation = null;
+	$scope.$watch('selectedStation', function(newVal){
+		updateTermTree()
+	})
+
+	function updateTermTree(){
+		if($scope.selectedStation)
+			trix.getTermTree(null, $scope.selectedStation.categoriesTaxonomyId).success(function(response){
+				$scope.termTree = response;
+				selectTerms($scope.termTree, $scope.app.editingPost.terms)
+			});
+	}
+
+	function selectTerms(terms, termList){
+			if(!termList || !terms)
+				return;
+			var termIds = []
+			termList.forEach(function(termItem, index){
+				termIds.push(termItem.id)
+			});
+
+			terms && terms.forEach(function(term, index){
+				if(termIds.indexOf(term.id) > -1)
+					term.checked = true;
+				selectTerms(term.children, termList)
+			});
+		}
+
+		function getTermList(terms, retTerms){
+			if(!retTerms)
+				retTerms = []
+
+			terms && terms.forEach(function(term, index){
+				if(term.checked)
+					retTerms.push(term)
+				var ts = getTermList(term.children)
+				ts.forEach(function(t){
+					retTerms.push(t)
+				});
+			});
+			return retTerms;
+		}
+
+	// ------------------- end of update term tree ---------------
+
+
 	// --- mock and test
 	var mockPostLoad = function(){
 		$scope.app.editingPost = createPostStub();
@@ -566,9 +613,9 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		mockPostLoad();
 	}
 
-	// $timeout(function(){
-	// 	test();
-	// }, 1000);
+	$timeout(function(){
+		test();
+	}, 1000);
 
 	settingsPostCtrl = $scope;
 	// --- /mock & test

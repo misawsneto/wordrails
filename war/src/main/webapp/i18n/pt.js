@@ -190,7 +190,8 @@
 			"FOCUS_IMAGE_DESC": "Arraste o marcador para configurar o ponto focal.",
 			"TOGGLE_LANDSCAPE": "Ligar/desligar modo paisagem",
 			"SHOW_VERSION": "Exibir versão",
-			"CONTRAST": "Contraste"
+			"CONTRAST": "Contraste",
+			"SELECT_STATION": "Selecione uma estação e categorias para indexar sua publicação"
 		},
 		"station": {
 			"STATION_SETTINGS": "Configurações de estação",

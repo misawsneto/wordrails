@@ -190,7 +190,8 @@
 			"FOCUS_IMAGE_DESC": "Drag the marker to set the focuspoint.",
 			"TOGGLE_LANDSCAPE": "On/off landscape",
 			"SHOW_VERSION": "Show version",
-			"CONTRAST": "Contrast"
+			"CONTRAST": "Contrast",
+			"SELECT_STATION": "Select a station and categories for indexing your publication"
 		},
 		"station": {
 			"STATION_SETTINGS": "Station settings",

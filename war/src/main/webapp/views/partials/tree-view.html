@@ -1,6 +1,6 @@
 <li class="parent_li">
  <span ng-if="!editing" class="check-term" ng-click="nodeClicked(node)">
-    <md-checkbox md-no-ink aria-label="{{node.name}}" ng-model="node.checked" ng-click="node.checked = !node.checked" class="pull-left"></md-checkbox>
+    <md-checkbox style="margin-top: 4px; margin-bottom: 2px;" md-no-ink aria-label="{{node.name}}" ng-model="node.checked" ng-click="node.checked = !node.checked" class="pull-left"></md-checkbox>
  </span>
  <span class="leaf box-shadow animated fadeIn" ng-class="{'w-400': node.editing}" tooltip="{{node.name}}" tooltip-placement="top" tooltip-append-to-body="true" tooltip-popup-delay="700">
  	<span ng-if="!node.editing">
