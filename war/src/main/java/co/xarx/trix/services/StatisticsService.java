@@ -4,11 +4,11 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
-import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
 import org.elasticsearch.action.count.CountRequestBuilder;
 import org.elasticsearch.action.count.CountResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.cluster.ClusterState;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
@@ -26,11 +26,13 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.util.*;
 
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+
 @Service
 public class StatisticsService {
 
 	private Client client;
-	@Value("${spring.data.elasticsearch.analyticsIndex}")
+	@Value("${elasticsearch.analyticsIndex}")
 	private String analyticsIndex;
 	private ElasticsearchTemplate elasticsearchTemplate;
 	private AuthService authService;
@@ -144,6 +146,8 @@ public class StatisticsService {
 		List<Integer> commentsCounts;
 		List<Integer> generalStatus;
 
+		countPostReadByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
+
 		if (person == null) {
 			postReadCounts = countPostReadByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
 			commentsCounts = countCommentByPostAndDate(postId, firstDay.minusDays(30).toDate(), firstDay.toDate());
@@ -167,14 +171,12 @@ public class StatisticsService {
 	}
 
 	public List<Integer> countPostReadByPostAndDate(Integer postId, Date dateStart, Date dateEnd){
+		CountRequestBuilder search = client.prepareCount();
 
-		CountRequestBuilder countRequestBuilder = client.prepareCount("countPostReadByPostAndDate");
+		search.setTypes(Constants.ObjectType.ANALYTICS_POSTREAD);
+		search.setQuery(termQuery("post_id", postId));
 
-
-//
-//		countRequestBuilder.
-
-//		CountResponse response = countRequestBuilder.execute().actionGet();
+		CountResponse response = search.execute().actionGet();
 
 		return null;
 	}

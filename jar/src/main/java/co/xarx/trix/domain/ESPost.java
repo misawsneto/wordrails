@@ -46,7 +46,7 @@ public class ESPost implements ElasticSearchEntity {
 	public int recommendsCount;
 	public int commentsCount;
 
-	@Field(index = FieldIndex.not_analyzed)
+	@Field(index = FieldIndex.not_analyzed, type = FieldType.String)
 	public String slug;
 	public Integer readTime;
 
