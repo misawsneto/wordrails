@@ -8,6 +8,8 @@ import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PasswordResetRepository;
 import co.xarx.trix.persistence.UserRepository;
 import com.mysema.commons.lang.Assert;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,29 +17,25 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PasswordService {
 
+	@NonNull
 	private UserRepository userRepository;
+	@NonNull
 	private EmailService emailService;
+	@NonNull
 	private PasswordResetRepository passwordResetRepository;
+	@NonNull
 	private NetworkRepository networkRepository;
-
-	@Autowired
-	public PasswordService(UserRepository userRepository, EmailService emailService, PasswordResetRepository
-			passwordResetRepository, NetworkRepository networkRepository) {
-		this.userRepository = userRepository;
-		this.emailService = emailService;
-		this.passwordResetRepository = passwordResetRepository;
-		this.networkRepository = networkRepository;
-	}
 
 	public void resetPassword(String email){
 		Assert.hasText(email, "Null email");
 		User user = userRepository.findUserByEmail(email);
 
 		PasswordReset passwordReset = new PasswordReset();
-		passwordReset.user = user;
-		passwordReset.hash = UUID.randomUUID().toString();
+		passwordReset.setUser(user);
+		passwordReset.setHash(UUID.randomUUID().toString());
 
 		passwordResetRepository.save(passwordReset);
 
@@ -51,7 +49,7 @@ public class PasswordService {
 		PasswordReset passwordReset = passwordResetRepository.findByHash(hash);
 
 		Assert.notNull(passwordReset, "No hash to recover password");
-		
+
 		passwordReset.user.password = password;
 		userRepository.save(passwordReset.user);
 
