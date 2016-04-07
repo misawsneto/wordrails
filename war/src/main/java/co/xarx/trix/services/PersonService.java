@@ -90,11 +90,7 @@ public class PersonService {
 			}
 		}
 
-		if(emailNotification){
-			invitePerson(person);
-
-		}
-
+		if(emailNotification) invitePerson(person);
 		return person;
 	}
 

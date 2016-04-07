@@ -13,12 +13,11 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
-import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
@@ -84,12 +83,8 @@ import java.util.Set;
 
 	@Async
 	public void sendNetworkInvitation(Network network, Invitation invitation, Person inviter){
-		String s = File.separator;
-		String appVersion = "1.1.0";
-
 		try {
-			String filePath = new FileSystemResource("target" + s + "trix-war-" + appVersion + s + "tpl" + s + "network-invitation-email.html")
-					.getFile().getAbsolutePath();
+			String filePath = new ClassPathResource("network-invitation-email.html").getFile().getAbsolutePath();
 
 			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
 			String template = new String(bytes, Charset.forName("UTF-8"));

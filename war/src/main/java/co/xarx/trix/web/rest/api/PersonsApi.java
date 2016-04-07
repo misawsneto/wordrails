@@ -2,6 +2,7 @@ package co.xarx.trix.web.rest.api;
 
 import co.xarx.trix.api.*;
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.StationRole;
 import co.xarx.trix.exception.ConflictException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,8 @@ public interface PersonsApi {
 		public String username;
 		public String email;
 		public String password;
+		public boolean emailNotification;
+		public List<StationRole> stationsRole;
 	}
 
 	@GET
