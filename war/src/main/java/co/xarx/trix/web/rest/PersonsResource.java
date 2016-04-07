@@ -760,7 +760,6 @@ public class PersonsResource {
 			personData.popular = postConverter.convertToViews(popular);
 			personData.recent = postConverter.convertToViews(recent);
 
-
 			if(setAttributes != null && setAttributes){
 				request.setAttribute("personData", simpleMapper.writeValueAsString(personData));
 				request.setAttribute("termPerspectiveView", simpleMapper.writeValueAsString(termPerspectiveView));
@@ -831,6 +830,9 @@ public class PersonsResource {
 
 		initData.person = mapper.readValue(mapper.writeValueAsString(person).getBytes("UTF-8"), PersonDto.class);
 		initData.network = mapper.readValue(mapper.writeValueAsString(network).getBytes("UTF-8"), NetworkDto.class);
+
+		initData.person.coverOriginalHash = person.coverOriginalHash;
+		initData.person.imageOriginalHash = person.imageOriginalHash;
 
 		initData.networkRole = mapper.readValue(mapper.writeValueAsString(networkRole).getBytes("UTF-8"), NetworkRoleDto.class);
 		initData.stations = stationDtos;

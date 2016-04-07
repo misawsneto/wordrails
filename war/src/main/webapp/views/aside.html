@@ -17,28 +17,35 @@
   <div class="box-row">
     <div class="box-cell scrollable hover">
       <div class="box-inner">
-        <div class="p hidden-folded" ng-class="$state.current.data.theme ? $state.current.data.theme.primary+'-50' : app.setting.theme.primary+'-50'" style="background-image:url(images/bg.png); background-size:cover">
-          <div ng-if="userImageSmall" class="rounded w-64 bg-white inline pos-rlt">
-            <img ng-src="{{userImageSmall}}" class="img-responsive rounded">
+        <!-- profile -->
+        <div ng-if="app.userImageUploader" class="hidden-folded bg-cover" ng-style="{'background-image': 'url(' + app.coverImageMedium + ')'}">
+          <div class="md-whiteframe-z1 m-t m-l user-avatar rounded w-64 bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}">
+            <i ng-if="!app.userImageSmall" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
+            <!-- image profile upload -->
+            <div class="profile-image-button rounded o-f-h w-64 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
+              <i class="mdi2-pencil i-32 text-white image-edit" style="opacity: 0.92; position: relative; top: 24%"></i>
+              <input class="image-upload" type="file" nv-file-select="" uploader="app.userImageUploader" name="contents" accept="image/*">
+            </div>
+            <!-- /image profile upload -->
           </div>
-          <div ng-if="!userImageSmall" class="rounded w-64 bg-white inline pos-rlt md-primary-hue-1 background text-center">
-            <i class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
+          <div class="p-v-sm p-h black-grad m-t text-white">
+            <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account" style="opacity:0.92">
+              <span class="block font-bold">{{app.person.name}}</span>
+              <span class="pull-right auto">
+                <i class="fa inline fa-caret-down"></i>
+                <i class="fa none fa-caret-up"></i>
+              </span>
+              {{app.person.email}}
+            </a>
           </div>
-          <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account">
-            <span class="block font-bold">{{app.person.name}}</span>
-            <span class="pull-right auto">
-              <i class="fa inline fa-caret-down"></i>
-              <i class="fa none fa-caret-up"></i>
-            </span>
-            {{app.person.email}}
-          </a>
         </div>
+        <!-- /profile -->
         <div id="nav" ng-include="'views/partials/aside.nav.uikit.html'"></div>
         <div id="account" class="hide m-v-xs">
           <nav>
             <ul class="nav">
               <li>
-                <a md-ink-ripple ui-sref="page.profile">
+                <a md-ink-ripple ui-sref="app.profile">
                   <i class="icon mdi-action-perm-contact-cal i-20"></i>
                   <span translate="settings.aside.MY_PROFILE">My Profile</span>
                 </a>

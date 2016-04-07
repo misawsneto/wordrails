@@ -135,8 +135,8 @@ public class SocialAuthenticationService {
 			person.name = socialUser.getName();
 			person.username = username;
 			person.email = email;
-			person.coverUrl = socialUser.getCoverUrl();
-			person.imageUrl = socialUser.getProfileImageUrl();
+//			person.coverUrl = socialUser.getCoverUrl();
+//			person.imageUrl = socialUser.getProfileImageUrl();
 		}
 
 		return person;

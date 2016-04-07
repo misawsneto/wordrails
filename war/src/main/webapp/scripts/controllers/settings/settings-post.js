@@ -614,7 +614,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$timeout(function(){
-		test();
+		// test();
 	}, 1000);
 
 	settingsPostCtrl = $scope;

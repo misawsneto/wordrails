@@ -13,6 +13,9 @@ public class PersonData implements Serializable {
 	public List<PostView> recent;
 	public List<PostView> popular;
 
+	public String imageHash;
+	public String coverHash;
+
 	public List<Integer> postsRead;
 	public List<Integer> bookmarks;
 	public List<Integer> recommends;

@@ -8186,6 +8186,34 @@ md-switch[disabled] .md-bar {
   cursor: pointer;
 }
 
+.show-on-hover,
+.user-avatar .profile-image-button {
+  display: none;
+}
+
+.show-on-hover:hover,
+.user-avatar:hover .profile-image-button {
+  display: block!important;
+}
+
+.black-grad {
+  background: #333;
+  /* For browsers that do not support gradients */
+
+  background: -webkit-linear-gradient(bottom, #444444, rgba(68, 68, 68, 0) 95%);
+  /* For Safari 5.1 to 6.0 */
+
+  background: -o-linear-gradient(top, #444444, rgba(68, 68, 68, 0) 95%);
+  /* For Opera 11.1 to 12.0 */
+
+  background: -moz-linear-gradient(top, #444444, rgba(68, 68, 68, 0) 95%);
+  /* For Firefox 3.6 to 15 */
+
+  background: linear-gradient(to top, #444444, rgba(68, 68, 68, 0) 95%);
+  /* Standard syntax */
+
+}
+
 /* /general */
 
 /* toast */
@@ -8256,7 +8284,8 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
   min-width: 240px;
 }
 
-#image-upload {
+#image-upload,
+.image-upload {
   position: absolute;
   top: 0;
   right: 0;

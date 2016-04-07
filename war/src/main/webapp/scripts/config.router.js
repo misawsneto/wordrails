@@ -53,7 +53,7 @@ angular.module('app')
                   })
                   return deferred.promise;
                 },
-                deps:load( ['/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage'] ).deps
+                deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage'] ).deps
               },
               url: '/settings',
               views: {
@@ -106,6 +106,12 @@ angular.module('app')
                   }
                   , controller:'SettingsUsersCtrl'
               })
+              .state('app.profile', {
+                url: '/profile',
+                templateUrl: '/views/settings/settings-profile.html',
+                data : { title: 'Profile', theme: { primary: 'green'} }
+              })
+
               // chart
               .state('app.chart', {
                 url: '/chart',
@@ -543,11 +549,7 @@ angular.module('app')
                 }
               }
             })
-              .state('page.profile', {
-                url: '/profile',
-                templateUrl: '/views/pages/profile.html',
-                data : { title: 'Profile', theme: { primary: 'green'} }
-              })
+              
               .state('page.settings', {
                 url: '/settings',
                 templateUrl: '/views/pages/settings.html',

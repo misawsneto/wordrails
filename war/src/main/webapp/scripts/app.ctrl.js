@@ -119,8 +119,8 @@ angular.module('app')
     }
   ])
 
-  .controller('AppDataCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog',
-    function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog) {
+  .controller('AppDataCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar',
+    function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar) {
 
       //window.console && console.log(appData);
       // ---------- util -------------
@@ -312,22 +312,22 @@ angular.module('app')
         $mdDialog.cancel();
       }
 
-      $scope.userImageSmall = null
-      $scope.userImageMedium = null
-      $scope.userImageLarge = null
+      $scope.app.userImageSmall = null
+      $scope.app.userImageMedium = null
+      $scope.app.userImageLarge = null
       var setUserImage = function(person){
-        $scope.userImageSmall = $filter('userImage')(person, 'small')
-        $scope.userImageMedium = $filter('userImage')(person, 'medium')
-        $scope.userImageLarge = $filter('userImage')(person, 'large')
+        $scope.app.userImageSmall = $filter('userImage')(person, 'small')
+        $scope.app.userImageMedium = $filter('userImage')(person, 'medium')
+        $scope.app.userImageLarge = $filter('userImage')(person, 'large')
       }
 
-      $scope.coverImageSmall = null
-      $scope.coverImageMedium = null
-      $scope.coverImageLarge = null
+      $scope.app.coverImageSmall = null
+      $scope.app.coverImageMedium = null
+      $scope.app.coverImageLarge = null
       var setCoverImage = function(person){
-        $scope.coverImageSmall = $filter('coverImage')(person, 'small')
-        $scope.coverImageMedium = $filter('coverImage')(person, 'medium')
-        $scope.coverImageLarge = $filter('coverImage')(person, 'large')
+        $scope.app.coverImageSmall = $filter('coverImage')(person, 'small')
+        $scope.app.coverImageMedium = $filter('coverImage')(person, 'medium')
+        $scope.app.coverImageLarge = $filter('coverImage')(person, 'large')
       }
 
       $scope.$watch('app.person', function(newVal, oldVal){
@@ -337,10 +337,123 @@ angular.module('app')
         }
       });
 
-      setUserImage(app.person);
-      setCoverImage(app.person);
+      setUserImage($scope.app.person);
+      setCoverImage($scope.app.person);
 
       // ---------- /theming ----------
+
+      // ------------------- image userImageUploader -------------
+      // user image upload
+      var toastPromise;
+      var userImageUploader = $scope.app.userImageUploader = new FileUploader({
+        url: TRIX.baseUrl + "/api/images/upload?imageType=PROFILE_PICTURE"
+      });
+
+      $scope.uploadedImage = null;
+      userImageUploader.onAfterAddingFile = function(fileItem) {
+        $scope.uploadedImage = null;
+        userImageUploader.uploadAll();
+      };
+
+      userImageUploader.onSuccessItem = function(fileItem, response, status, headers) {
+        if(response.filelink){
+          $scope.uploadedUserImage = response;
+          trix.getPerson($scope.app.person.id).success(function(personResponse){
+            
+            personResponse.image = TRIX.baseUrl + "/api/images/" + $scope.uploadedUserImage.id
+
+            trix.putPerson(personResponse).success(function(){
+              $scope.app.person.imageHash = response.hash
+              setUserImage($scope.app.person)
+            })
+
+          })
+          $mdToast.hide();
+        }
+      };
+
+      userImageUploader.onErrorItem = function(fileItem, response, status, headers) {
+        if(status == 413)
+          $scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+        else
+          $scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+      }
+
+      $scope.clearImage = function(){ 
+        $scope.uploadedImage = null;
+        userImageUploader.clearQueue();
+        userImageUploader.cancelAll()
+        $scope.checkLandscape();
+        $scope.postCtrl.imageHasChanged = true;
+      }
+
+      userImageUploader.onProgressItem = function(fileItem, progress) {
+        cfpLoadingBar.start();
+        cfpLoadingBar.set(progress/10)
+        if(progress == 100){
+          cfpLoadingBar.complete()
+          toastPromise = $mdToast.show(
+            $mdToast.simple()
+            .content('Processando...')
+            .position('top right')
+            .hideDelay(false)
+            );
+        }
+      };
+
+      // cover upload
+      var coverImageUploader = $scope.app.coverImageUploader = new FileUploader({
+        url: TRIX.baseUrl + "/api/images/upload?imageType=COVER"
+      });
+
+      $scope.uploadedImage = null;
+      coverImageUploader.onAfterAddingFile = function(fileItem) {
+        $scope.uploadedImage = null;
+        coverImageUploader.uploadAll();
+      };
+
+      coverImageUploader.onSuccessItem = function(fileItem, response, status, headers) {
+        if(response.filelink){
+          $scope.uploadedCoverImage = response;
+          $scope.app.person.cover = TRIX.baseUrl + "/api/images/" + $scope.uploadedCoverImage.id
+          trix.putPerson($scope.app.person, function(personResponse){
+            setCoverImage(personResponse)
+          })
+          $mdToast.hide();
+        }
+      };
+
+      coverImageUploader.onErrorItem = function(fileItem, response, status, headers) {
+        if(status == 413)
+          $scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
+        else
+          $scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+      }
+
+      $scope.clearImage = function(){ 
+        $scope.uploadedImage = null;
+        coverImageUploader.clearQueue();
+        coverImageUploader.cancelAll()
+        $scope.checkLandscape();
+        $scope.postCtrl.imageHasChanged = true;
+      }
+
+      coverImageUploader.onProgressItem = function(fileItem, progress) {
+        cfpLoadingBar.start();
+        cfpLoadingBar.set(progress/10)
+        if(progress == 100){
+          cfpLoadingBar.complete()
+          toastPromise = $mdToast.show(
+            $mdToast.simple()
+            .content('Processando...')
+            .position('top right')
+            .hideDelay(false)
+            );
+        }
+      };
+
+
+      // ------------------- end of image userImageUploader -------------
       
       appDataCtrl = $scope;
     }

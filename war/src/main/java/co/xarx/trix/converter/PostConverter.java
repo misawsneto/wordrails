@@ -83,8 +83,8 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 			}
 
 
-			postView.authorImageUrl = post.author.imageUrl;
-			postView.authorCoverUrl = post.author.coverUrl;
+//			postView.authorImageUrl = post.author.imageUrl;
+//			postView.authorCoverUrl = post.author.coverUrl;
 			postView.authorId = post.author.id;
 			postView.authorEmail = post.author.email;
 			postView.authorTwitter = post.author.twitterHandle;

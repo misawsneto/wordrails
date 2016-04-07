@@ -3,6 +3,8 @@ package co.xarx.trix.domain;
 import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
 import com.amazonaws.services.cloudfront.model.InvalidArgumentException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Sets;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @lombok.Getter @lombok.Setter
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"tenantId", "originalHash"}))
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Image extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6607038985063216969L;
@@ -112,6 +115,7 @@ public class Image extends BaseEntity implements Serializable {
 	@Transient
 	private Set<Size> sizes;
 
+	@JsonIgnore
 	public Set<String> getSizeTags() {
 		return sizes.stream().map(Size::toString).collect(Collectors.toSet());
 	}
@@ -120,10 +124,12 @@ public class Image extends BaseEntity implements Serializable {
 		return sizes;
 	}
 
+	@JsonIgnore
 	public Set<Size> getQualitySizes() {
 		return sizes.stream().filter(size -> size.quality != null).collect(Collectors.toSet());
 	}
 
+	@JsonIgnore
 	public Set<Size> getAbsoluteSizes() {
 		return sizes.stream().filter(size -> size.xy != null).collect(Collectors.toSet());
 	}
@@ -154,6 +160,7 @@ public class Image extends BaseEntity implements Serializable {
 	@SdkExclude
 	@ManyToMany
 	@JoinTable(name = "image_picture", joinColumns = @JoinColumn(name = "image_id"))
+	@JsonIgnore
 	public Set<Picture> pictures;
 
 	@PrePersist

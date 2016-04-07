@@ -148,8 +148,11 @@ angular.module('app')
 
 .filter('coverImage', function imageLink(TRIX) {
   return function(person, size) {
-    if(person && person.imageHash)
-        return TRIX.baseUrl + "/api/images/get/"+ person.coverHash  + "?size=" + size;
+    if(person && (person.coverHash || person.coverOriginalHash)){
+      if(!person.coverHash)
+        person.coverHash = person.coverOriginalHash
+      return TRIX.baseUrl + "/api/images/get/"+ (person.coverHash ? person.coverHash : person.coverOriginalHash)  + "?size=" + size;
+    }
 
     return "";
   }
@@ -157,8 +160,11 @@ angular.module('app')
 
 .filter('userImage', function imageLink(TRIX) {
   return function(person, size) {
-    if(person && person.imageHash)
-        return TRIX.baseUrl + "/api/images/get/"+ person.imageHash  + "?size=" + size;
+    if(person && (person.imageHash || person.imageOriginalHash)){
+      if(!person.imageHash)
+        person.imageHash = person.imageOriginalHash
+      return TRIX.baseUrl + "/api/images/get/"+ (person.imageHash ? person.imageHash : person.imageOriginalHash)  + "?size=" + size;
+    }
 
     return "";
   }

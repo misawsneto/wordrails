@@ -157,9 +157,11 @@ public class PersistenceUnitDescription {
 							try {
 								Field f = entityClass.getDeclaredField(pd.getName());
 
-								if (!Modifier.isStatic(f.getModifiers())
+								if ((!Modifier.isStatic(f.getModifiers())
 										&& !f.isAnnotationPresent(Transient.class)
-										&& !f.isAnnotationPresent(SdkExclude.class)) {
+										&& !f.isAnnotationPresent(SdkExclude.class)) ||
+									(f.isAnnotationPresent(Transient.class) && f.isAnnotationPresent(SdkInclude.class))
+										){
 									JavaField jf = new JavaField(f);
 									fields.add(jf);
 								}
