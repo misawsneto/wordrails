@@ -224,7 +224,16 @@
 		"COLOR_PRIMARY": "Cores Primárias",
 		"COLOR_ACCENT": "Cores Secundárias",
 		"COLOR_WARN": "Cores de Alertas",
-		"COLOR_BACKGROUND": "Cor de Fundo"
+		"COLOR_BACKGROUND": "Cor de Fundo",
+		"profile":{
+			"CHANGE_COVER":"Trocar imagem de capa",
+			"NAME": "Nome",
+			"USERNAME": "Usuário",
+			"EMAIL": "Email",
+			"PASSWORD": "Senha",
+			"CONFIRM_PASSWORD": "Confirmar senha",
+			"BIOGRAPHY": "Biografia"
+		}
 	},
 	"messages": {
 		"ERROR_MSG": "Houve um erro ao tentar aplicar as alterações! Tente novamente ou entre em contato com nossa equipe.",

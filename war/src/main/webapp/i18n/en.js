@@ -224,7 +224,16 @@
 		"COLOR_PRIMARY": "Primary Colors",
 		"COLOR_ACCENT": "Secondary Colors",
 		"COLOR_WARN": "Warning Colors",
-		"COLOR_BACKGROUND": "Background Color"
+		"COLOR_BACKGROUND": "Background Color",
+		"profile":{
+			"CHANGE_COVER":"Change profile cover",
+			"NAME": "Name",
+			"USERNAME": "Username",
+			"EMAIL": "Email",
+			"PASSWORD": "Password",
+			"CONFIRM_PASSWORD": "Confirm password",
+			"BIOGRAPHY": "Biography"
+		}
 	},
 	"messages": {
 		"ERROR_MSG": "There was an error while applying changes! Try again or contact our team.",
