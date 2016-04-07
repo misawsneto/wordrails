@@ -82,14 +82,14 @@ angular.module('app').service('trixService', function(){
 	 this.getWritableStations = function(){
 	 	var stations = [];
 	 	initData.personPermissions.stationPermissions.forEach(function(permissions, index){
-	 		if(permissions.writable || permissions.writer)
+	 		if(permissions.writable || permissions.writer || permissions.admin || permissions.editor)
 	 			stations.push(permissions)
 	 	});
 	 	return stations;
 	 }
 
 	 this.isNetworkAdmin = function(){
-	 	return initData.networkRole ? initData.networkRole.admin : false;
+	 	return initData.isAdmin;
 	 }
 
 	 	/**

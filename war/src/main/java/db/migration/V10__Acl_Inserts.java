@@ -3,13 +3,14 @@ package db.migration;
 import co.xarx.trix.config.flyway.SpringContextMigration;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.security.acl.TrixPermission;
+import co.xarx.trix.config.security.Permissions;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.acls.domain.CumulativePermission;
 import org.springframework.security.acls.domain.GrantedAuthoritySid;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.domain.PrincipalSid;
@@ -66,10 +67,7 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 				MutableAcl acl = aclService.createAcl(oi);
 				acl.setParent(postsAcl.get(postId));
 
-				int permissionMask = TrixPermission.READ.getMask() | TrixPermission.UPDATE.getMask() | TrixPermission.DELETE.getMask();
-
-				Permission permission = new TrixPermission(permissionMask);
-				acl.insertAce(acl.getEntries().size(), permission, sid, true);
+				acl.insertAce(acl.getEntries().size(), getPermissionRWD(), sid, true);
 				aclService.updateAcl(acl);
 			}
 		}
@@ -95,10 +93,7 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 				MutableAcl acl = aclService.createAcl(oi);
 				acl.setParent(stationAcls.get(stationId));
 
-				int permissionMask = TrixPermission.READ.getMask() | TrixPermission.UPDATE.getMask() | TrixPermission.DELETE.getMask();
-
-				Permission permission = new TrixPermission(permissionMask);
-				acl.insertAce(acl.getEntries().size(), permission, sid, true);
+				acl.insertAce(acl.getEntries().size(), getPermissionRWD(), sid, true);
 				aclService.updateAcl(acl);
 				postsAcl.put(post.getId(), acl);
 			}
@@ -126,29 +121,43 @@ public class V10__Acl_Inserts extends SpringContextMigration {
 			for (StationRole stationRole : stationRoles.getLeft()) {
 				Sid sid = new PrincipalSid(stationRole.person.username);
 
-				int permissionMask = TrixPermission.READ.getMask();
+				CumulativePermission permission = new CumulativePermission();
+				permission.set(Permissions.READ);
 
-				if (stationRole.editor) permissionMask |= TrixPermission.MODERATION.getMask() |
-						TrixPermission.CREATE.getMask() |
-						TrixPermission.UPDATE.getMask() |
-						TrixPermission.DELETE.getMask();
-				if (stationRole.writer || stationRole.station.writable)
-					permissionMask |= TrixPermission.CREATE.getMask();
-				if (stationRole.admin) permissionMask |= TrixPermission.ADMINISTRATION.getMask();
-
-				if (stationRole.station.getVisibility().equals(Station.UNRESTRICTED)) {
-					acl.insertAce(acl.getEntries().size(), TrixPermission.READ, new GrantedAuthoritySid("ROLE_ANONYMOUS"), true);
+				if (stationRole.editor) {
+					permission.set(Permissions.MODERATION);
+					permission.set(Permissions.CREATE);
+					permission.set(Permissions.WRITE);
+					permission.set(Permissions.DELETE);
+				}
+				if (stationRole.writer || stationRole.station.writable) {
+					permission.set(Permissions.CREATE);
+				}
+				if (stationRole.admin) {
+					permission.set(Permissions.ADMINISTRATION);
 				}
 
-				Permission permission = new TrixPermission(permissionMask);
+				if (stationRole.station.getVisibility().equals(Station.UNRESTRICTED)) {
+					acl.insertAce(acl.getEntries().size(), Permissions.READ, new GrantedAuthoritySid("ROLE_ANONYMOUS"), true);
+				}
 
 				acl.insertAce(acl.getEntries().size(), permission, sid, true);
-				acl.insertAce(acl.getEntries().size(), TrixPermission.ADMINISTRATION, new GrantedAuthoritySid("ROLE_ADMIN"), true);
+				acl.insertAce(acl.getEntries().size(), Permissions.ADMINISTRATION, new GrantedAuthoritySid("ROLE_ADMIN"), true);
 			}
 			aclService.updateAcl(acl);
 		}
 
 		return stationAcls;
+	}
+
+	@SuppressWarnings("Duplicates")
+	private Permission getPermissionRWD() {
+		CumulativePermission permission = new CumulativePermission();
+		permission.set(Permissions.READ);
+		permission.set(Permissions.WRITE);
+		permission.set(Permissions.DELETE);
+
+		return permission;
 	}
 
 	private static class StationRoleRowMapper implements RowMapper<StationRole> {

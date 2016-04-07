@@ -3,8 +3,8 @@ package co.xarx.trix.services;
 import co.xarx.trix.domain.Identifiable;
 import co.xarx.trix.domain.page.Block;
 import co.xarx.trix.domain.page.BlockImpl;
-import co.xarx.trix.domain.query.*;
-import co.xarx.trix.domain.query.statement.Statement;
+import co.xarx.trix.domain.page.query.*;
+import co.xarx.trix.domain.page.query.statement.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class QueryRunnerService implements QueryRunner {
 		this.executorFactory = executorFactory;
 	}
 
-	protected Map<Integer, Block> getBlocks(Iterator<Identifiable> itens, Iterator<Integer> indexes, Class objectType) {
+	private Map<Integer, Block> getBlocks(Iterator<Identifiable> itens, Iterator<Integer> indexes, Class objectType) {
 		Map<Integer, Block> blocks = new TreeMap<>();
 
 		while (itens.hasNext() && indexes.hasNext()) {
@@ -39,7 +39,7 @@ public class QueryRunnerService implements QueryRunner {
 		return blocks;
 	}
 
-	protected List<Identifiable> getItens(Query query, Integer size, Integer from) {
+	private List getItens(Query query, Integer size, Integer from) {
 		String objectType = query.getType().getSimpleName();
 		Statement objectStatement = query.getObjectStatement();
 		Executor executor = executorFactory.getExecutor(objectType + "_executor");

@@ -8,6 +8,7 @@ public class PersonData implements Serializable {
 	public PersonDto person;
 	public NetworkDto network;
 	public List<StationDto> stations;
+	public StationDto defaultStation;
 	public PersonPermissions personPermissions;
 	public List<PostView> recent;
 	public List<PostView> popular;
@@ -23,6 +24,7 @@ public class PersonData implements Serializable {
 	public String privateCloudfrontUrl;
 	public boolean noVisibleStation = false;
 
+	public boolean isAdmin = false;
 	public boolean noPassword = false;
 }
 

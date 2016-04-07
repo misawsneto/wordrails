@@ -1,6 +1,5 @@
 package co.xarx.trix.config;
 
-import co.xarx.trix.config.database.RepositoryFactoryBean;
 import co.xarx.trix.config.multitenancy.MultiTenantHibernatePersistence;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +18,8 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-		basePackages = "co.xarx.trix.persistence"
-		,repositoryFactoryBeanClass = RepositoryFactoryBean.class
+		basePackages = {"co.xarx.trix.persistence", "co.xarx.trix.api.data"}
+//		,repositoryFactoryBeanClass = RepositoryFactoryBean.class
 )
 public class DatabaseTestConfig {
 

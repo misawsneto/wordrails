@@ -3,9 +3,10 @@ package co.xarx.trix.services.auth;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.persistence.StationRepository;
-import co.xarx.trix.security.acl.TrixPermission;
+import co.xarx.trix.config.security.Permissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.acls.domain.CumulativePermission;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;
@@ -16,6 +17,9 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.security.acls.domain.BasePermission.READ;
 
 @Service
 public class StationPermissionService {
@@ -38,11 +42,8 @@ public class StationPermissionService {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		List<Integer> stationIds = stationRepository.findIds(TenantContextHolder.getCurrentTenantId());
-		for (Integer stationId : stationIds) {
-			if (permissionEvaluator.hasPermission(auth, stationId, Station.class.getName(), TrixPermission.READ)) {
-				result.add(stationId);
-			}
-		}
+		List<Integer> stationIdsWithPermission = stationIds.stream().filter(stationId -> permissionEvaluator.hasPermission(auth, stationId, Station.class.getName(), READ)).collect(Collectors.toList());
+		result.addAll(stationIdsWithPermission);
 
 		return result;
 	}
@@ -52,17 +53,21 @@ public class StationPermissionService {
 		Assert.notEmpty(stationIds, "Station ids must have elements");
 
 
-		int permissionMask = TrixPermission.READ.getMask();
+		CumulativePermission permission = new CumulativePermission();
+		permission.set(Permissions.READ);
 
-		//in simple words, the three next lines adds the following permissions to the permission list
-		if (editor) permissionMask |= TrixPermission.MODERATION.getMask() |
-				TrixPermission.CREATE.getMask() |
-				TrixPermission.UPDATE.getMask() |
-				TrixPermission.DELETE.getMask();
-		if (publisher) permissionMask |= TrixPermission.CREATE.getMask();
-		if (admin) permissionMask |= TrixPermission.ADMINISTRATION.getMask();
-
-		Permission p = new TrixPermission(permissionMask);
+		if (editor) {
+			permission.set(Permissions.MODERATION);
+			permission.set(Permissions.CREATE);
+			permission.set(Permissions.WRITE);
+			permission.set(Permissions.DELETE);
+		}
+		if (publisher) {
+			permission.set(Permissions.CREATE);
+		}
+		if (admin) {
+			permission.set(Permissions.ADMINISTRATION);
+		}
 
 		List<MutableAcl> acls = findAcls(stationIds);
 		for (MutableAcl acl : acls) {
@@ -71,9 +76,9 @@ public class StationPermissionService {
 				AccessControlEntry ace = findAce(entries, username, acl.getObjectIdentity());
 				if(ace == null) {
 					Sid sid = new PrincipalSid(username);
-					acl.insertAce(acl.getEntries().size(), p, sid, true);
+					acl.insertAce(acl.getEntries().size(), permission, sid, true);
 				} else {
-					acl.updateAce(entries.indexOf(ace), p);
+					acl.updateAce(entries.indexOf(ace), permission);
 				}
 
 				aclService.updateAcl(acl);

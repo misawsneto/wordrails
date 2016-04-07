@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>co.xarx</groupId>
 		<artifactId>trix-parent</artifactId>
-		<version>1.1.0</version>
+		<version>1.2.0</version>
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 
@@ -29,7 +29,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>co.xarx.trix.generator.JavaScriptClientGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.generator.JavaScriptClientGenerator</mainClass>
 							<arguments>
 								<argument>${basedir}/src/main/webapp/js</argument>
 							</arguments>
@@ -43,7 +43,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>co.xarx.trix.generator.AngularClientGenerator</mainClass>
+							<mainClass>co.xarx.trix.generator.generator.AngularClientGenerator</mainClass>
 							<arguments>
 								<argument>${basedir}/src/main/webapp/js</argument>
 							</arguments>
@@ -98,6 +98,11 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
@@ -164,6 +169,25 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson2-provider</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxb-provider</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>tjws</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
 		</dependency>
@@ -191,11 +215,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
 
 
@@ -352,6 +371,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-keyvalue</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 		</dependency>
@@ -403,18 +427,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>org.powermock</groupId>-->
-			<!--<artifactId>powermock-module-junit4-rule</artifactId>-->
-			<!--<scope>test</scope>-->
-		<!--</dependency>-->
-
-		<!--<dependency>-->
-			<!--<groupId>org.powermock</groupId>-->
-			<!--<artifactId>powermock-classloading-xstream</artifactId>-->
-			<!--<scope>test</scope>-->
-		<!--</dependency>-->
-
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -426,11 +438,16 @@
 			<artifactId>apns</artifactId>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>org.mortbay.jetty.alpn</groupId>-->
-			<!--<artifactId>alpn-boot</artifactId>-->
-			<!--<scope>runtime</scope>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.0.0</version>
+			<scope>test</scope>
+		</dependency>
 
 
 	</dependencies>

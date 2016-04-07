@@ -33,9 +33,16 @@ public class BitMaskPermissionGrantingStrategy implements PermissionGrantingStra
 				boolean scanNextSid = true;
 
 				for (AccessControlEntry ace : aces) {
+					Permission cumulativePermission = ace.getPermission();
+
+					boolean isAdmin = containsPermission(cumulativePermission, Permissions.ADMINISTRATION);
+					boolean belongsToCurrentSid = ace.getSid().equals(sid);
+					if(isAdmin && belongsToCurrentSid) {
+						return true;
+					}
 
 					//Bit-wise comparison
-					if (containsPermission(ace.getPermission().getMask(), p.getMask()) && ace.getSid().equals(sid)) {
+					if (containsPermission(cumulativePermission, p) && belongsToCurrentSid) {
 						// Found a matching ACE, so its authorization decision will prevail
 						if (ace.isGranting()) {
 							// Success
@@ -86,7 +93,7 @@ public class BitMaskPermissionGrantingStrategy implements PermissionGrantingStra
 		}
 	}
 
-	private boolean containsPermission(int mask, int permission) {
-		return (mask & permission) == permission;
+	private boolean containsPermission(Permission cumulativePermission, Permission singlePermission) {
+		return (cumulativePermission.getMask() & singlePermission.getMask()) == singlePermission.getMask();
 	}
 }

@@ -1,7 +1,6 @@
 package co.xarx.trix.domain.projection;
 
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.User;
 import org.springframework.data.rest.core.config.Projection;
 
 
@@ -15,8 +14,6 @@ public interface PersonProjection {
 	String getUsername();
 
 	String getEmail();
-
-	User getUser();
 
 	String getCoverLargeHash();
 

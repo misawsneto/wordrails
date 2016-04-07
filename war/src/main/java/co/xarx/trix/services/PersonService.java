@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class PersonService {
 		this.authService = authService;
 	}
 
+	@Transactional
 	public boolean toggleRecommend(Person person, Integer postId) {
 		boolean recommendInserted = false;
 		if (person.getRecommendPosts().contains(postId)) {
@@ -49,10 +51,10 @@ public class PersonService {
 			person.getRecommendPosts().add(postId);
 		}
 
-		personRepository.save(person);
 		return recommendInserted;
 	}
 
+	@Transactional
 	public boolean toggleBookmark(Person person, Integer postId) {
 		boolean bookmarkInserted = false;
 		if (person.getBookmarkPosts().contains(postId)) {
@@ -62,7 +64,6 @@ public class PersonService {
 			person.getBookmarkPosts().add(postId);
 		}
 
-		personRepository.save(person);
 		return bookmarkInserted;
 	}
 

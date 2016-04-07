@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-         version="3.0" metadata-complete="true">
-
-	<resource-ref>
-		<res-ref-name>jdbc/trix</res-ref-name>
-		<res-type>com.jolbox.bonecp.BoneCPDataSource</res-type>
-		<res-auth>Container</res-auth>
-	</resource-ref>
-	<resource-ref>
-		<res-ref-name>jdbc/quartz</res-ref-name>
-		<res-type>com.jolbox.bonecp.BoneCPDataSource</res-type>
-		<res-auth>Container</res-auth>
-	</resource-ref>
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+		 version="3.0" metadata-complete="true">
 
 	<session-config>
 		<session-timeout>5760</session-timeout>
@@ -23,32 +12,36 @@
 		<listener-class>co.xarx.trix.ContextServletListener</listener-class>
 	</listener>
 
-	<!--<listener>-->
-		<!--<listener-class>co.xarx.trix.config.flyway.FlywayServletContextListener</listener-class>-->
-	<!--</listener>-->
-
-	<!-- RESTEasy -->
 	<listener>
 		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
 	</listener>
+
+	<listener>
+		<listener-class>co.xarx.trix.config.web.SpringResteasyContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- RESTEasy -->
+	<servlet>
+		<servlet-name>Resteasy</servlet-name>
+		<servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+		</servlet-class>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>co.xarx.trix.ResteasyApplication</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Resteasy</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
 
 	<context-param>
 		<param-name>resteasy.servlet.mapping.prefix</param-name>
 		<param-value>/api</param-value>
 	</context-param>
-
-	<filter>
-		<filter-name>FilterDispatcher</filter-name>
-		<filter-class>org.jboss.resteasy.plugins.server.servlet.FilterDispatcher</filter-class>
-	</filter>
 	<!-- RESTEasy -->
-
-	<!-- Spring -->
-	<!-- <listener> <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
-		</listener> -->
-	<listener>
-		<listener-class>co.xarx.trix.config.web.TrixContextLoaderListener</listener-class>
-	</listener>
 
 	<context-param>
 		<param-name>contextClass</param-name>
@@ -60,7 +53,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			co.xarx.trix.config.spring
+			co.xarx.trix.config
 		</param-value>
 	</context-param>
 
@@ -84,7 +77,7 @@
 
 	<servlet-mapping>
 		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/data/*</url-pattern>
 	</servlet-mapping>
 	<!-- Spring Data REST -->
 
@@ -138,19 +131,26 @@
 
 	<!-- Cache -->
 	<filter>
+		<filter-name>NotFoundFilter</filter-name>
+		<filter-class>co.xarx.trix.web.filter.NotFoundFilter</filter-class>
+	</filter>
+	<!-- Cache -->
+
+	<!-- Cache -->
+	<filter>
 		<filter-name>CacheFilter</filter-name>
 		<filter-class>co.xarx.trix.web.filter.CacheFilter</filter-class>
 	</filter>
 	<!-- Cache -->
 
-	<filter>
-		<filter-name>PostFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		<init-param>
-			<param-name>targetBeanName</param-name>
-			<param-value>postFilter</param-value>
-		</init-param>
-	</filter>
+	<!--<filter>-->
+		<!--<filter-name>PostFilter</filter-name>-->
+		<!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
+		<!--<init-param>-->
+			<!--<param-name>targetBeanName</param-name>-->
+			<!--<param-value>postFilter</param-value>-->
+		<!--</init-param>-->
+	<!--</filter>-->
 
 	<filter>
 		<filter-name>NetworkDomainFilter</filter-name>
@@ -198,23 +198,18 @@
 	</filter>
 
 	<filter-mapping>
+		<filter-name>NotFoundFilter</filter-name>
+		<url-pattern>/data/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
 		<filter-name>CORSCustomFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-	<filter-mapping>
-		<filter-name>PathEntityFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping>
-
-	<filter-mapping>
-		<filter-name>UrlRewriteFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
@@ -235,6 +230,17 @@
 		<!--<url-pattern>/mystats/*</url-pattern>-->
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>PathEntityFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
@@ -263,6 +269,7 @@
 	<filter-mapping>
 		<filter-name>OpenEntityManagerInViewFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/data/*</url-pattern>
 		<url-pattern>/index.jsp</url-pattern>
 		<url-pattern>/search/*</url-pattern>
 		<url-pattern>/post/*</url-pattern>
@@ -277,18 +284,13 @@
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 
-	<filter-mapping>
-		<filter-name>FilterDispatcher</filter-name>
-		<url-pattern>/api/*</url-pattern>
-	</filter-mapping>
-
-	<filter-mapping>
-		<filter-name>PostFilter</filter-name>
-		<url-pattern>/api/posts</url-pattern>
-		<url-pattern>/api/posts/*</url-pattern>
-		<dispatcher>FORWARD</dispatcher>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping>
+	<!--<filter-mapping>-->
+		<!--<filter-name>PostFilter</filter-name>-->
+		<!--<url-pattern>/api/posts</url-pattern>-->
+		<!--<url-pattern>/api/posts/*</url-pattern>-->
+		<!--<dispatcher>FORWARD</dispatcher>-->
+		<!--<dispatcher>REQUEST</dispatcher>-->
+	<!--</filter-mapping>-->
 
 	<filter-mapping>
 		<filter-name>CacheFilter</filter-name>
