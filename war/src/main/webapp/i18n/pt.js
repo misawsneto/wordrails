@@ -41,6 +41,7 @@
 		"START_TIME": "Hora inicial",
 		"END_TIME": "Hora final",
 		"EDIT": "Editar",
+		"EDIT_PROFILE": "Editar perfil",
 		"REMOVE": "Remover",
 		"FILTER_BY": "Filtar por",
 		"FILTER_BY_STATION": "Filtrar por estação",

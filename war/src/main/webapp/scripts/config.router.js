@@ -103,13 +103,15 @@ angular.module('app')
                       function( $ocLazyLoad ){
                         return $ocLazyLoad.load(['angularFileUpload', 'angularFileUpload', '/scripts/controllers/settings/settings-users.js?']);
                     }]
-                  }
-                  , controller:'SettingsUsersCtrl'
+                  },
+                  controller:'SettingsUsersCtrl'
               })
               .state('app.profile', {
                 url: '/profile',
                 templateUrl: '/views/settings/settings-profile.html',
-                data : { title: 'Profile', theme: { primary: 'green'} }
+                data : { titleTranslate: 'settings.aside.MY_PROFILE', title: 'Perfil', folded: true },
+                resolve: load(['/scripts/controllers/settings/settings-profile.js', 'ngJcrop']),
+                controller:'SettingsProfileCtrl'
               })
 
               // chart

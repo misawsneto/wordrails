@@ -24,7 +24,7 @@
             <!-- image profile upload -->
             <div class="profile-image-button rounded o-f-h w-64 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
               <i class="mdi2-pencil i-32 text-white image-edit" style="opacity: 0.92; position: relative; top: 24%"></i>
-              <input class="image-upload" type="file" nv-file-select="" uploader="app.userImageUploader" name="contents" accept="image/*">
+              <input class="image-upload" style="height: 64px;" type="file" nv-file-select="" uploader="app.userImageUploader" name="contents" accept="image/*">
             </div>
             <!-- /image profile upload -->
           </div>
@@ -32,8 +32,8 @@
             <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account" style="opacity:0.92">
               <span class="block font-bold">{{app.person.name}}</span>
               <span class="pull-right auto">
-                <i class="fa inline fa-caret-down"></i>
-                <i class="fa none fa-caret-up"></i>
+                <i class="inline mdi2-settings"></i>
+                <i class="none mdi2-account"></i>
               </span>
               {{app.person.email}}
             </a>

@@ -152,6 +152,10 @@ angular.module('app')
       if(!person.coverHash)
         person.coverHash = person.coverOriginalHash
       return TRIX.baseUrl + "/api/images/get/"+ (person.coverHash ? person.coverHash : person.coverOriginalHash)  + "?size=" + size;
+    }else{
+      if(person){
+        return TRIX.baseUrl + "/images/"+getLastDigit(person.id)+".jpg"
+      }
     }
 
     return "";

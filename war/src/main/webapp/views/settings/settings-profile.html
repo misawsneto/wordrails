@@ -1,181 +1,168 @@
-<div class="row row-sm">
-  <div class="col-sm-3">
-    <div class="panel panel-card">
-      <div class="r-t pos-rlt" md-ink-ripple style="background:url(images/a0.jpg) center center; background-size:cover">
-        <div class="p-lg bg-white-overlay text-center r-t">
-          <a href class="w-xs inline">
-            <img src="/images/a0.jpg" class="img-circle img-responsive">
-          </a>
-          <div class="m-b m-t-sm h2">
-            <span class="">David M.</span>
-          </div>
-          <a class="btn btn-sm btn-success m-b p-h no-border">Edit</a>
-          <p>
-            I am designing something.
-          </p>
-        </div>
+<div class="md-whiteframe-z2 block-800 m-auto md-primary-hue-1 background bg-cover pos-rlt" ng-style="{'background-image': 'url(' + app.coverImageMedium + ')', 'width': '100%', 'height': '50%', 'min-height': '250px', 'margin-top': '-32px', 'background-position': '50% 50%'}">
+
+  <div id="cover-image-button" class="pos-abt right-0 top-0 m-t m-r p-sm o-f-h">
+    <div style="z-index: 2; position: absolute; width: 100%;height:100%;overflow:hidden; vertical-align: bottom;">
+      <input style="opacity: 0;cursor:pointer" type="file" nv-file-select="" uploader="app.coverImageUploader" name="contents" accept="image/*"/>
+    </div>  
+    <span class="p-r-xs text-md" style="text-shadow:1px 1px 1px #000; vertical-align: sub;">
+      Trocar imagem de capa
+    </span>
+    <i class="mdi mdi2-camera text-2x icon-text-shadow v-middle p-r-xs"></i>
+  </div>
+  
+  <!-- headshot -->
+  <div class="bg-white rounded m-t-md m-l-md inline md-whiteframe-z1" style="width: 128px; height: 128px;">
+    <div class="m-xs user-avatar rounded w-120 bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageMedium + ')', 'background-position': '50% 50%'}">
+      <i ng-if="!app.userImageMedium" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
+      <!-- image profile upload -->
+      <div class="profile-image-button rounded o-f-h w-120 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
+        <i class="mdi2-pencil i-44 text-white image-edit" style="opacity: 0.92; position: relative; top: 32%"></i>
+        <input class="image-upload" style="height: 120px" type="file" nv-file-select="" uploader="app.userImageUploader" name="contents" accept="image/*">
       </div>
-      <div class="list-group no-radius no-border">
-        <a class="list-group-item">
-          <span class="pull-right badge">12</span> Messages
-        </a>
-        <a class="list-group-item">
-          <span class="pull-right badge">23</span> Photos
-        </a>
-        <a class="list-group-item">
-          <span class="pull-right badge">564</span> Posts
-        </a>
-      </div>
-      <div class="text-center b-b b-light">
-        <a href class="inline m text-color">
-          <span class="h3 block font-bold">221</span>
-          <em class="text-xs">Followers</em>
-        </a>
-        <a href class="inline m text-color">
-          <span class="h3 block font-bold">250</span>
-          <em class="text-xs">Following</em>
-        </a>
-      </div>
-      <div class="p">
-        <p>About</p>
-        <p>Lorem ipsum dolor sit amet, consecteter adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet. </p>
-        <div class="m-v">
-          <a class="text-muted">
-            <i class="fa ui-icon fa-facebook"></i>
-          </a>
-          <a class="text-muted">
-            <i class="fa ui-icon fa-twitter"></i>
-          </a>
-          <a class="text-muted">
-            <i class="fa ui-icon fa-linkedin"></i>
-          </a>
-        </div>
-      </div>
+      <!-- /image profile upload -->
     </div>
   </div>
-  <div class="col-sm-9">
-    <div class="panel panel-card">
-      <form>
-        <textarea class="form-control no-border" rows="3" placeholder="Write something..."></textarea>
-      </form>
-      <div class="lt p">
-        <button class="btn btn-info pull-right btn-sm p-h font-bold">Post</button>
-        <ul class="nav nav-pills nav-sm">
-          <li><a href><i class="fa fa-camera"></i></a></li>
-          <li><a href><i class="fa fa-video-camera"></i></a></li>
-        </ul>
-      </div>
+  <!-- /headshot -->
+
+  <div class="p-v p-h-md black-grad text-md text-white pos-abt bottom-0 right-0 left-0">
+    <button md-ink-ripple class="pull-right md-btn md-raised btn-fw bg-white text-black text-base m-t p-sm">
+      {{'titles.EDIT_PROFILE' | translate}}
+    </button>
+    <span class="block font-bold text-lg">{{app.person.name}}</span>
+    {{app.person.email}}
+  </div>
+
+</div>
+
+<div class="m-t-lg">
+</div>
+
+<div class="block-800 m-auto p-h">
+  <div class="panel panel-card">
+    <form>
+      <textarea class="form-control no-border" rows="3" placeholder="Write something..."></textarea>
+    </form>
+    <div class="lt p">
+      <button class="btn btn-info pull-right btn-sm p-h font-bold">Post</button>
+      <ul class="nav nav-pills nav-sm">
+        <li><a href><i class="fa fa-camera"></i></a></li>
+        <li><a href><i class="fa fa-video-camera"></i></a></li>
+      </ul>
     </div>
-    <div class="panel panel-card clearfix">
-      <div class="p-h b-b b-light">
-        <ul class="nav nav-lines nav-md b-info">
-          <li class="active"><a href>Stream</a></li>
-          <li><a href>Photos <span class="badge">3</span></a></li>
-          <li><a href>Posts <span class="badge">9</span></a></li>
-        </ul>
-      </div>
-      <div class="p-h-lg m-b-lg">      
-        <div class="streamline b-l p-v m-l-xs">
-          <div>
-            <a class="pull-left w-32 m-l-n m-t-xs m-r">
-              <img src="/images/a2.jpg" class="img-responsive rounded" alt="...">
-            </a>
-            <div class="clear">
-              <div class="m-b-xs">
-                <a href>James</a> said
-                <span class="text-muted block text-xs">
-                  Just now
-                </span>
-              </div>
-              <div class="m-b">
-                <div>Lorem ipsum dolor sit amet, consecteter adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet. ullamcorper sodales nisi nec adipiscing elit. Morbi id neque quam. Aliquam sollicitudin </div>
-                <div class="m-t-sm">
-                  <a href class="text-muted m-xs">Like</a>
-                  <a href class="text-muted m-xs">Comment</a>
-                </div>
+  </div>
+  <div class="panel panel-card clearfix">
+    <div class="p-h b-b b-light">
+      <ul class="nav nav-lines nav-md b-info">
+        <li class="active"><a href>Stream</a></li>
+        <li><a href>Photos <span class="badge">3</span></a></li>
+        <li><a href>Posts <span class="badge">9</span></a></li>
+      </ul>
+    </div>
+    <div class="p-h-lg m-b-lg">      
+      <div class="streamline b-l p-v m-l-xs">
+        <div>
+          <a class="pull-left w-32 m-l-n m-t-xs m-r">
+            <img src="/images/a2.jpg" class="img-responsive rounded" alt="...">
+          </a>
+          <div class="clear">
+            <div class="m-b-xs">
+              <a href>James</a> said
+              <span class="text-muted block text-xs">
+                Just now
+              </span>
+            </div>
+            <div class="m-b">
+              <div>Lorem ipsum dolor sit amet, consecteter adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet. ullamcorper sodales nisi nec adipiscing elit. Morbi id neque quam. Aliquam sollicitudin </div>
+              <div class="m-t-sm">
+                <a href class="text-muted m-xs">Like</a>
+                <a href class="text-muted m-xs">Comment</a>
               </div>
             </div>
           </div>
+        </div>
 
-          <div>
-            <a class="pull-left w-32 m-l-n m-t-xs m-r">
-              <img src="/images/a3.jpg" class="img-responsive rounded" alt="...">
-            </a>
-            <div class="clear">
-              <div class="m-b-xs">
-                <a href>Oscar</a> upload a file
-                <span class="text-muted block text-xs">
-                  3 minutes ago
-                </span>
-              </div>
-              <div class="m-b">
-                <div class="w-xl w-auto-xs">
-                  <div class="box bg-light">
-                    <div class="box-col w-xs text-center dk p-md v-m">
-                      <i class="fa fa-file-text-o text-3x text-muted-lt"></i>
-                    </div>
-                    <div class="box-col p">
-                      <a href>Geuismod tincidunt</a>
-                      <div>Diam nonummy nibh euismod tincidunt ut laoreet. </div>
-                    </div>
+        <div>
+          <a class="pull-left w-32 m-l-n m-t-xs m-r">
+            <img src="/images/a3.jpg" class="img-responsive rounded" alt="...">
+          </a>
+          <div class="clear">
+            <div class="m-b-xs">
+              <a href>Oscar</a> upload a file
+              <span class="text-muted block text-xs">
+                3 minutes ago
+              </span>
+            </div>
+            <div class="m-b">
+              <div class="w-xl w-auto-xs">
+                <div class="box bg-light">
+                  <div class="box-col w-xs text-center dk p-md v-m">
+                    <i class="fa fa-file-text-o text-3x text-muted-lt"></i>
+                  </div>
+                  <div class="box-col p">
+                    <a href>Geuismod tincidunt</a>
+                    <div>Diam nonummy nibh euismod tincidunt ut laoreet. </div>
                   </div>
                 </div>
-                <div class="m-t-sm">
-                  <a href class="text-muted m-xs">Like</a>
-                  <a href class="text-muted m-xs">Comment</a>
-                </div>
+              </div>
+              <div class="m-t-sm">
+                <a href class="text-muted m-xs">Like</a>
+                <a href class="text-muted m-xs">Comment</a>
               </div>
             </div>
           </div>
-
-          <div>
-            <a class="pull-left w-32 m-l-n m-t-xs m-r">
-              <img src="/images/a4.jpg" class="img-responsive rounded" alt="...">
-            </a>
-            <div class="clear">
-              <div class="m-b-xs">
-                <a href>Anny</a> post a photo
-                <span class="text-muted block text-xs">
-                  6 minutes ago
-                </span>
-              </div>
-              <div class="m-b">
-                <div><img src="/images/a10.jpg" class="b p-xs"></div>
-                <div class="m-t-sm">
-                  <a href class="text-muted m-xs">Like</a>
-                  <a href class="text-muted m-xs">Comment</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <a class="pull-left w-32 m-l-n m-t-xs m-r">
-              <img src="/images/a5.jpg" class="img-responsive rounded" alt="...">
-            </a>
-            <div class="clear">
-              <div class="m-b-xs">
-                <a href>Michel</a> post a comment
-                <span class="text-muted block text-xs">
-                  10 minutes ago
-                </span>
-              </div>
-              <div class="m-b bg-light">
-                <div class="p-sm b-b b-white">
-                  <img src="/images/a4.jpg" class="rounded w-20 pull-left m-r-sm" alt="...">
-                  <a href>Tony</a> liked it
-                </div>
-                <div class="p-sm">
-                  <img src="/images/a6.jpg" class="rounded w-20 pull-left m-r-sm" alt="...">
-                  <a href>Anney</a> Commented it
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
+
+        <div>
+          <a class="pull-left w-32 m-l-n m-t-xs m-r">
+            <img src="/images/a4.jpg" class="img-responsive rounded" alt="...">
+          </a>
+          <div class="clear">
+            <div class="m-b-xs">
+              <a href>Anny</a> post a photo
+              <span class="text-muted block text-xs">
+                6 minutes ago
+              </span>
+            </div>
+            <div class="m-b">
+              <div><img src="/images/a10.jpg" class="b p-xs"></div>
+              <div class="m-t-sm">
+                <a href class="text-muted m-xs">Like</a>
+                <a href class="text-muted m-xs">Comment</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <a class="pull-left w-32 m-l-n m-t-xs m-r">
+            <img src="/images/a5.jpg" class="img-responsive rounded" alt="...">
+          </a>
+          <div class="clear">
+            <div class="m-b-xs">
+              <a href>Michel</a> post a comment
+              <span class="text-muted block text-xs">
+                10 minutes ago
+              </span>
+            </div>
+            <div class="m-b bg-light">
+              <div class="p-sm b-b b-white">
+                <img src="/images/a4.jpg" class="rounded w-20 pull-left m-r-sm" alt="...">
+                <a href>Tony</a> liked it
+              </div>
+              <div class="p-sm">
+                <img src="/images/a6.jpg" class="rounded w-20 pull-left m-r-sm" alt="...">
+                <a href>Anney</a> Commented it
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </div>
-<a md-ink-ripple class="md-btn md-fab md-fab-bottom-right pos-fix green"><i class="mdi-editor-mode-edit i-24"></i></a>
+
+<md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
+  ui-sref="app.post">
+  <i class="mdi-editor-mode-edit i-24"></i>
+</md-button>

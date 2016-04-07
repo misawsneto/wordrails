@@ -436,10 +436,52 @@
 
 .black-grad {
   background: #333; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(bottom, rgba(68,68,68,1), rgba(68,68,68,0) 95%); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(top, rgba(68,68,68,1), rgba(68,68,68,0) 95%); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(top, rgba(68,68,68,1), rgba(68,68,68,0) 95%); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(to top, rgba(68,68,68,1), rgba(68,68,68,0)95%); /* Standard syntax */
+  background: -webkit-linear-gradient(bottom, rgba(0,0,0,0.77), rgba(0,0,0,0) 95%); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(top, rgba(0,0,0,0.77), rgba(0,0,0,0) 95%); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(top, rgba(0,0,0,0.77), rgba(0,0,0,0) 95%); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to top, rgba(0,0,0,0.77), rgba(0,0,0,0)95%); /* Standard syntax */
+}
+
+.icon-text-shadow{text-shadow:2px 2px 15px #000}
+.font-code{font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;}
+
+#cover-image-button #image-button #image-upload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 142px;
+  direction: ltr;
+  cursor: pointer;
+  display: block;
+}
+
+#cover-image-button{
+  color: rgba(255,255,255,0.8);
+}
+
+#cover-image-button{
+  color: rgba(255,255,255,0.8);
+}
+
+#cover-image-button:hover{
+  color: rgba(255,255,255,0.9);
+}
+
+#cover-image-button span{
+  opacity: 0;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+#cover-image-button:hover span{opacity: 1;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 /* /general */

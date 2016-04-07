@@ -413,11 +413,26 @@ angular.module('app')
       };
 
       coverImageUploader.onSuccessItem = function(fileItem, response, status, headers) {
-        if(response.filelink){
+        // if(response.filelink){
+        //   $scope.uploadedCoverImage = response;
+        //   $scope.app.person.cover = TRIX.baseUrl + "/api/images/" + $scope.uploadedCoverImage.id
+        //   trix.putPerson($scope.app.person, function(personResponse){
+        //     setCoverImage(personResponse)
+        //   })
+        //   $mdToast.hide();
+        // }
+
+         if(response.filelink){
           $scope.uploadedCoverImage = response;
-          $scope.app.person.cover = TRIX.baseUrl + "/api/images/" + $scope.uploadedCoverImage.id
-          trix.putPerson($scope.app.person, function(personResponse){
-            setCoverImage(personResponse)
+          trix.getPerson($scope.app.person.id).success(function(personResponse){
+            
+            personResponse.cover = TRIX.baseUrl + "/api/images/" + $scope.uploadedCoverImage.id
+
+            trix.putPerson(personResponse).success(function(){
+              $scope.app.person.coverHash = response.hash
+              setCoverImage($scope.app.person)
+            })
+
           })
           $mdToast.hide();
         }
@@ -493,4 +508,13 @@ String.prototype.getYoutubeCode = function(){
 
 String.prototype.stripHtml = function(){
   return jQuery(this).text();
+}
+
+var getLastDigit = function(num){
+  if(num){
+    var temp = num.toString();
+    if(/\d+(\.\d+)?/.test(temp)) { 
+        return parseInt(temp[temp.length - 1]);
+    }
+  }
 }
