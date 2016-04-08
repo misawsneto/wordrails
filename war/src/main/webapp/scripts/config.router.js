@@ -53,7 +53,7 @@ angular.module('app')
                   })
                   return deferred.promise;
                 },
-                deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage'] ).deps
+                deps:load( ['infinite-scroll', 'angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage'] ).deps
               },
               url: '/settings',
               views: {

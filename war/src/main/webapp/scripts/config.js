@@ -218,10 +218,12 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
     LIGHT_CONTRAST_COLOR = [255, 255, 255, 0.87];
     STRONG_LIGHT_CONTRAST_COLOR = [255, 255, 255];
     addCustomStyle = function(cssname, name, color, contrast) {
+      var contrastColor = null;
       if (contrast == null) {
         contrast = '';
       }
       if (contrast) {
+        contrastColor = contrast;
         contrast = "color: " + contrast;
       }
       stylesheet.insertRule(".md-" + cssname + "-" + name + ".text { " + contrast + " !important }", index); index++;
@@ -230,6 +232,11 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
       if(cssname === 'primary' && name === 'default'){
         stylesheet.insertRule(".fr-toolbar { border-color: " + color + "}", index); index++;
         stylesheet.insertRule(".nav-lines > li.active:after{border-bottom-color: " + color + "}", index); index++;
+        stylesheet.insertRule(".md-primary-default .nav-lines > li.active:after{border-bottom-color: " + contrastColor + "}", index); index++;
+      }
+
+      if(cssname === 'primary' && name === 'hue-1'){
+        stylesheet.insertRule(".md-primary-hue-1 .nav-lines > li.active:after{border-bottom-color: " + contrastColor + "}", index); index++;
       }
 
       if(cssname === 'warn' && name === 'default'){

@@ -467,6 +467,13 @@ angular.module('app')
         }
       };
 
+      $scope.app.getStationFromSlug = function(slug){
+
+      }
+
+      $scope.app.getStationFromId = function(id){
+        
+      }
 
       // ------------------- end of image userImageUploader -------------
       

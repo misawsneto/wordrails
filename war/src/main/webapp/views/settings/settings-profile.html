@@ -80,19 +80,6 @@
 </div>
 
 <div class="block-800 m-auto p-h">
-  <!-- <div class="panel panel-card">
-    <form>
-      <textarea class="form-control no-border" rows="3" placeholder="Write something..."></textarea>
-    </form>
-    <div class="lt p">
-      <button class="btn btn-info pull-right btn-sm p-h font-bold">Post</button>
-      <ul class="nav nav-pills nav-sm">
-        <li><a href><i class="fa fa-camera"></i></a></li>
-        <li><a href><i class="fa fa-video-camera"></i></a></li>
-      </ul>
-    </div>
-  </div> -->
-
   <div class="search-with-filter p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
     <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
 
@@ -167,6 +154,21 @@
       <li md-ink-ripple><a href translate='titles.TRASH'></a></li>
     </ul>
   </div>
+</div>
+
+<div class="block-800 m-auto p-h">
+  <!-- <div class="panel panel-card">
+    <form>
+      <textarea class="form-control no-border" rows="3" placeholder="Write something..."></textarea>
+    </form>
+    <div class="lt p">
+      <button class="btn btn-info pull-right btn-sm p-h font-bold">Post</button>
+      <ul class="nav nav-pills nav-sm">
+        <li><a href><i class="fa fa-camera"></i></a></li>
+        <li><a href><i class="fa fa-video-camera"></i></a></li>
+      </ul>
+    </div>
+  </div> -->
 
   <div class="clearfix m-b-xxl">
     <div class="m-b-lg">      
@@ -174,7 +176,7 @@
       <ul class="bg-t no-padding">
         <li class="panel panel-card p" ng-repeat="publication in publications">
           <a href class="pull-left m-r-md" ng-if="publication.featuredImageHash" style="height: 128px;">
-            <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-xl h-full">
+            <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-xl h-full bg-cover">
             </div>
           </a>
           <div class="clear font-thin">

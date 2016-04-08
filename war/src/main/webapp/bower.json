@@ -86,6 +86,7 @@
     "angularAudioRecorder": "^1.4.1",
     "webcam": "^1.0.0",
     "angular-socialshare": "^1.4.5",
-    "df-tab-menu": "^0.3.0"
+    "df-tab-menu": "^0.3.0",
+    "ngInfiniteScroll": "^1.2.2"
   }
 }
