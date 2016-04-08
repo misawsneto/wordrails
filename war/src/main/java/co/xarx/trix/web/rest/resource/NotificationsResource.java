@@ -10,6 +10,7 @@ import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.NotificationsApi;
 import com.google.common.collect.Lists;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@NoArgsConstructor
 public class NotificationsResource extends AbstractResource implements NotificationsApi {
 
 	private AuthService authProvider;

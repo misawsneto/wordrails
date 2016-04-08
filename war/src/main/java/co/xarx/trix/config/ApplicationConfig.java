@@ -17,6 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @Configuration
@@ -27,6 +28,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 		}
 )
 @ComponentScan(basePackages = {"co.xarx.trix"})
+@EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
 public class ApplicationConfig {
 
 	@Value("${trix.amazon.key}")

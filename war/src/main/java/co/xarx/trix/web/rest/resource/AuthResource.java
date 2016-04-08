@@ -8,6 +8,7 @@ import co.xarx.trix.services.PasswordService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.AuthApi;
+import lombok.NoArgsConstructor;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.builder.api.GoogleApi;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Component
+@NoArgsConstructor
 public class AuthResource extends AbstractResource implements AuthApi {
 
 	private NetworkRepository networkRepository;

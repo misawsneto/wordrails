@@ -15,6 +15,7 @@ import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.NetworkApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Component
+@NoArgsConstructor
 public class NetworkResource extends AbstractResource implements NetworkApi {
 
 	@Autowired

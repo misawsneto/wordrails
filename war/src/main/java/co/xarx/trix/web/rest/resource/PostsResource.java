@@ -14,6 +14,7 @@ import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.PostApi;
 import com.google.common.collect.Lists;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
+@NoArgsConstructor
 public class PostsResource extends AbstractResource implements PostApi {
 
 	@Autowired

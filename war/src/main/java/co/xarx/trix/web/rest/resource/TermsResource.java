@@ -15,6 +15,7 @@ import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.TermsApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
+@NoArgsConstructor
 public class TermsResource extends AbstractResource implements TermsApi {
 
 	@Autowired

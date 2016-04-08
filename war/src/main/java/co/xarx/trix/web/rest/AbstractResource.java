@@ -1,8 +1,5 @@
 package co.xarx.trix.web.rest;
 
-import org.jboss.resteasy.spi.HttpRequest;
-import org.jboss.resteasy.spi.HttpResponse;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -22,10 +19,6 @@ public abstract class AbstractResource {
 	public HttpServletRequest request;
 	@Context
 	public HttpServletResponse response;
-	@Context
-	public HttpRequest httpRequest;
-	@Context
-	public HttpResponse httpResponse;
 
 	protected void forward() throws IOException {
 		forward(uriInfo.getPath());

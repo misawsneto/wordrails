@@ -1,7 +1,6 @@
 package co.xarx.trix.web.rest.api;
 
 import co.xarx.trix.api.ContentResponse;
-import co.xarx.trix.domain.page.Page;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -43,10 +42,10 @@ public interface StationsApi {
 	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Station', 'read')")
 	void getStationPerspectives(@PathParam("id") @P("id") int stationId) throws ServletException, IOException;
 
-	@GET
-	@Path("/{stationId}/pages")
-	@Produces(MediaType.APPLICATION_JSON)
-	List<Page> getPages(@PathParam("stationId") Integer stationId) throws IOException;
+//	@GET
+//	@Path("/{stationId}/pages")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	List<Page> getPages(@PathParam("stationId") Integer stationId) throws IOException;
 
 	@PUT
 	@Path("/{stationId}/setDefaultPerspective")

@@ -6,6 +6,7 @@ import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.auth.StationPermissionService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.PermissionApi;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import org.springframework.util.Assert;
 import javax.ws.rs.core.Response;
 
 @Component
+@NoArgsConstructor
 public class PermissionResource extends AbstractResource implements PermissionApi {
 
 	@Autowired

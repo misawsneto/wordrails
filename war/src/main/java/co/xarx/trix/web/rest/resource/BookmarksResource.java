@@ -10,6 +10,7 @@ import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.BookmarksApi;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@NoArgsConstructor
 public class BookmarksResource extends AbstractResource implements BookmarksApi {
 
 	private PostSearchService postSearchService;

@@ -1,6 +1,12 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.page.AbstractSection;
+import co.xarx.trix.domain.page.Page;
+import co.xarx.trix.domain.page.QueryableListSection;
+import co.xarx.trix.domain.page.Section;
+import co.xarx.trix.domain.page.query.PageableQuery;
+import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.ESStartupIndexerService;
@@ -51,6 +57,14 @@ public class StationEventHandler {
 	private ESStartupIndexerService elasticSearchService;
 	@Autowired
 	private ESStationRepository esStationRepository;
+	@Autowired
+	private PageRepository pageRepository;
+	@Autowired
+	private ObjectStatementRepository statementRepository;
+	@Autowired
+	private PageableQueryRepository pageableQueryRepository;
+	@Autowired
+	private BaseSectionRepository sectionRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
@@ -119,7 +133,7 @@ public class StationEventHandler {
 		role.editor = true;
 		personStationRolesRepository.save(role);
 
-		StationPerspective stationPerspective = new ArrayList<StationPerspective>(station.stationPerspectives).get(0);
+		StationPerspective stationPerspective = new ArrayList<>(station.stationPerspectives).get(0);
 		try {
 			TermPerspective tp = new TermPerspective();
 			tp.term = null;
@@ -155,9 +169,33 @@ public class StationEventHandler {
 			e.printStackTrace();
 		}
 
+		createDefaultPage(station);
+
 		station.defaultPerspectiveId = stationPerspective.id;
 		stationRepository.save(station);
 		elasticSearchService.saveIndex(station, ESStation.class, esStationRepository);
+	}
+
+	private void createDefaultPage(Station station) {
+		PostStatement postStatement = new PostStatement();
+		postStatement.addStationId(station.getId());
+		statementRepository.save(postStatement);
+
+		PageableQuery query = new PageableQuery(postStatement);
+		pageableQueryRepository.save(query);
+
+		Page page = new Page();
+		page.setTitle("Home");
+		page.setStation(station);
+
+		AbstractSection section = new QueryableListSection(10, query);
+		section.setStyle(Section.Style.VERTICAL_LIST);
+		section.setOrderPosition(0);
+		section.setTitle("All Posts");
+		section.setPage(page);
+
+		page.addSection(section);
+		pageRepository.save(page);
 	}
 
 	@HandleBeforeSave

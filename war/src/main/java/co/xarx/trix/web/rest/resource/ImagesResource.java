@@ -8,6 +8,7 @@ import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.ImagesApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +28,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Component
+@NoArgsConstructor
 public class ImagesResource extends AbstractResource implements ImagesApi {
 
 	private static final Integer MAX_SIZE = 6291456;
