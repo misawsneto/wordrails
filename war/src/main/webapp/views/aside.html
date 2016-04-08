@@ -29,13 +29,13 @@
             <!-- /image profile upload -->
           </div>
           <div class="p-v-sm p-h black-grad m-t text-white">
-            <a class="block m-t-sm" ui-toggle-class="hide, show" target="#nav, #account" style="opacity:0.92">
-              <span class="block font-bold">{{app.person.name}}</span>
-              <span class="pull-right auto">
+            <a class="block" ui-toggle-class="hide, show" target="#nav, #account" style="opacity:0.92">
+              <span class="pull-right auto text-lg m-t-sm">
                 <i class="inline mdi2-settings"></i>
-                <i class="none mdi2-account"></i>
+                <i class="none mdi2-account-circle"></i>
               </span>
-              {{app.person.email}}
+              <span class="block font-bold">{{app.person.name}}</span>
+              <span class="text-sm">{{app.person.email}}</span>
             </a>
           </div>
         </div>
@@ -46,7 +46,7 @@
             <ul class="nav">
               <li>
                 <a md-ink-ripple ui-sref="app.profile">
-                  <i class="icon mdi-action-perm-contact-cal i-20"></i>
+                  <i class="icon mdi2-account-circle i-20"></i>
                   <span translate="settings.aside.MY_PROFILE">My Profile</span>
                 </a>
               </li>
@@ -54,12 +54,6 @@
                 <a md-ink-ripple ui-sref="app.post">
                   <i class="icon mdi-editor-mode-edit i-20"></i>
                   <span translate="titles.NEW_POST">Nova publicação</span>
-                </a>
-              </li>
-              <li>
-                <a md-ink-ripple ui-sref="page.settings">
-                  <i class="icon mdi2-newspaper i-20"></i>
-                  <span>Minhas Publicações</span>
                 </a>
               </li>
               <li>

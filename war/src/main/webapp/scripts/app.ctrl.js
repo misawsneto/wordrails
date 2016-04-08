@@ -172,7 +172,7 @@ angular.module('app')
 
       $scope.app.showErrorToast = function(content) {
         $mdToast.show({
-          template: '<md-toast class="md-warn-default">'+content+'</md-toast>',
+          template: '<md-toast class="md-warn-default"><div class="md-toast-content">'+content+'</div></md-toast>',
           hideDelay: 3000,
           position: $scope.getToastPosition()
         });
@@ -180,15 +180,15 @@ angular.module('app')
 
       $scope.app.showSuccessToast = function(content) {
         $mdToast.show({
-          template: '<md-toast class="md-toast-success" >'+content+'</md-toast>',
-          hideDelay: 3000,
+          template: '<md-toast class="md-toast-success"><div class="md-toast-content">'+content+'</div></md-toast>',
+          hideDelay: 300000,
           position: $scope.getToastPosition()
         });
       };
 
       $scope.app.showInfoToast = function(content) {
         $mdToast.show({
-          template: '<md-toast class="md-toast-info" >'+content+'</md-toast>',
+          template: '<md-toast class="md-toast-info"><div class="md-toast-content">'+content+'</div></md-toast>',
           hideDelay: 3000,
           position: $scope.getToastPosition()
         });

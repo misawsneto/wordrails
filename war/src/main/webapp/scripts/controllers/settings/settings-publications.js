@@ -58,50 +58,6 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 
 	    $scope.app.publicationsCtrl = {page: 0, firstLoad: false};
 
-		$scope.datePickerOptions = {
-			"locale": {
-				"format": "DD/MM/YYYY",
-				"separator": " - ",
-				"applyLabel": "Aplicar",
-				"cancelLabel": "Cancelar",
-				"fromLabel": "De",
-				"toLabel": "Até",
-				"customRangeLabel": "Personalizado",
-				"daysOfWeek": [
-				"Dom",
-				"Seg",
-				"Ter",
-				"Qua",
-				"Qui",
-				"Sex",
-				"Sab"
-				],
-				"monthNames": [
-				"Janeiro",
-				"Fevereiro",
-				"Março",
-				"Abril",
-				"Maio",
-				"Junho",
-				"Julho",
-				"Agosto",
-				"Setembro",
-				"Outubro",
-				"Novembro",
-				"Dezembro"
-				],
-				"firstDay": 1
-			},
-			startDate: moment().add(-29, 'days'), endDate: moment(), opens: "left",
-			ranges: {
-				'Hoje': [moment(), moment()],
-				'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-				'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
-				'Esse mês': [moment().startOf('month'), moment().endOf('month')],
-				'Último mês': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')
-				]
-			}}
-
 			
 		$scope.$watch('settings.tab', function(){
 			if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){

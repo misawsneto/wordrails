@@ -3,7 +3,7 @@
   <md-toolbar class="bg-header">
     <h1 class="md-toolbar-tools bg-header-text">{{'titles.EDIT_PROFILE' | translate}}</h1>
   </md-toolbar>
-  <md-content layout-padding class="p-l-xl p-r-xl">
+  <md-content layout-padding class="p-l-sm p-r-sm">
     <div>
       <md-input-container class="w-full m-b-0">
         <label for="testInput">{{'titles.EDIT_PROFILE' | translate}}</label>
@@ -80,7 +80,7 @@
 </div>
 
 <div class="block-800 m-auto p-h">
-  <div class="panel panel-card">
+  <!-- <div class="panel panel-card">
     <form>
       <textarea class="form-control no-border" rows="3" placeholder="Write something..."></textarea>
     </form>
@@ -91,115 +91,111 @@
         <li><a href><i class="fa fa-video-camera"></i></a></li>
       </ul>
     </div>
-  </div>
-  <div class="panel panel-card clearfix">
-    <div class="p-h b-b b-light">
-      <ul class="nav nav-lines nav-md b-info">
-        <li class="active"><a href>Stream</a></li>
-        <li><a href>Photos <span class="badge">3</span></a></li>
-        <li><a href>Posts <span class="badge">9</span></a></li>
-      </ul>
-    </div>
-    <div class="p-h-lg m-b-lg">      
-      <div class="streamline b-l p-v m-l-xs">
-        <div>
-          <a class="pull-left w-32 m-l-n m-t-xs m-r">
-            <img src="/images/a2.jpg" class="img-responsive rounded" alt="...">
-          </a>
-          <div class="clear">
-            <div class="m-b-xs">
-              <a href>James</a> said
-              <span class="text-muted block text-xs">
-                Just now
-              </span>
-            </div>
-            <div class="m-b">
-              <div>Lorem ipsum dolor sit amet, consecteter adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet. ullamcorper sodales nisi nec adipiscing elit. Morbi id neque quam. Aliquam sollicitudin </div>
-              <div class="m-t-sm">
-                <a href class="text-muted m-xs">Like</a>
-                <a href class="text-muted m-xs">Comment</a>
-              </div>
-            </div>
-          </div>
-        </div>
+  </div> -->
 
-        <div>
-          <a class="pull-left w-32 m-l-n m-t-xs m-r">
-            <img src="/images/a3.jpg" class="img-responsive rounded" alt="...">
-          </a>
-          <div class="clear">
-            <div class="m-b-xs">
-              <a href>Oscar</a> upload a file
-              <span class="text-muted block text-xs">
-                3 minutes ago
-              </span>
-            </div>
-            <div class="m-b">
-              <div class="w-xl w-auto-xs">
-                <div class="box bg-light">
-                  <div class="box-col w-xs text-center dk p-md v-m">
-                    <i class="fa fa-file-text-o text-3x text-muted-lt"></i>
-                  </div>
-                  <div class="box-col p">
-                    <a href>Geuismod tincidunt</a>
-                    <div>Diam nonummy nibh euismod tincidunt ut laoreet. </div>
-                  </div>
-                </div>
-              </div>
-              <div class="m-t-sm">
-                <a href class="text-muted m-xs">Like</a>
-                <a href class="text-muted m-xs">Comment</a>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="search-with-filter p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
+    <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
 
-        <div>
-          <a class="pull-left w-32 m-l-n m-t-xs m-r">
-            <img src="/images/a4.jpg" class="img-responsive rounded" alt="...">
-          </a>
-          <div class="clear">
-            <div class="m-b-xs">
-              <a href>Anny</a> post a photo
-              <span class="text-muted block text-xs">
-                6 minutes ago
-              </span>
-            </div>
-            <div class="m-b">
-              <div><img src="/images/a10.jpg" class="b p-xs"></div>
-              <div class="m-t-sm">
-                <a href class="text-muted m-xs">Like</a>
-                <a href class="text-muted m-xs">Comment</a>
-              </div>
-            </div>
+    <!-- dropdown filter -->
+    <div class="pos-abt top-0 right-0 m-t pull-right" uib-dropdown auto-close="disabled" is-open="advancedMenuOpen">
+      <md-button uib-dropdown-toggle class="md-icon-button" aria-label="More" popover-trigger="click">
+        <i class="icon mdi-content-filter-list i-24" md-style="{'color': 'default'}" ></i>
+      </md-button>
+      <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn advanced-search-menu m-h-auto md-background-default background p w-400 default-bg">
+          <!-- <time-date-picker orientation="true" class="m-h-auto" ng-model="dateValue"></time-date-picker> -->
+        <div class="arrow"></div>
+        <md-content>
+          <div class="m-b">
+            <a ng-click="advancedMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
           </div>
-        </div>
-
-        <div>
-          <a class="pull-left w-32 m-l-n m-t-xs m-r">
-            <img src="/images/a5.jpg" class="img-responsive rounded" alt="...">
-          </a>
-          <div class="clear">
-            <div class="m-b-xs">
-              <a href>Michel</a> post a comment
-              <span class="text-muted block text-xs">
-                10 minutes ago
-              </span>
-            </div>
-            <div class="m-b bg-light">
-              <div class="p-sm b-b b-white">
-                <img src="/images/a4.jpg" class="rounded w-20 pull-left m-r-sm" alt="...">
-                <a href>Tony</a> liked it
-              </div>
-              <div class="p-sm">
-                <img src="/images/a6.jpg" class="rounded w-20 pull-left m-r-sm" alt="...">
-                <a href>Anney</a> Commented it
-              </div>
-            </div>
+          <div class="m-b-sm text-u-c">
+            Filtar por estação
           </div>
-        </div>
-
+          <div class="m-b">
+            <md-menu>
+              <!-- Trigger element is a md-button with an icon -->
+             <md-button ng-click="$mdOpenMenu($event)" class="md-button text-u-c" aria-label="Open sample menu">
+               <!-- <md-icon md-font-set="material-icons" class="ng-scope ng-isolate-scope material-icons"> phone </md-icon> -->
+               <i class="mdi mdi2-radio-tower"></i>
+                {{'titles.STATIONS' | translate}}
+             </md-button>
+             <md-menu-content>
+              <div class="p">
+               <ul class="list-unstyled">
+                 <li ng-repeat="perm in stationsPermissions">
+                  <md-checkbox ng-model="perm.filter" aria-label="{{perm.stationName}}">
+                   {{ perm.stationName }}
+                   </md-checkbox>
+                 </li>
+               </ul>
+              </div>
+             </md-menu-content>
+            </md-menu>
+          </div>
+          <div class="m-b-lg text-u-c">
+            Filtar por data
+          </div>
+          <div class="text-center">
+            <md-input-container style="width: 140px" class="no-margin m-b-sm">
+              <label translate="titles.START_DATE">Data inicial</label>
+              <input type="date" mdp-date-picker ng-model="filter.initialDate" />
+            </md-input-container>
+            <md-input-container style="width: 140px" class="no-margin m-b-sm">
+              <label translate="titles.END_DATE">Data final</label>
+              <input type="date" mdp-date-picker ng-model="filter.finalDate" />
+            </md-input-container>
+            <!-- <md-input-container style="width: 140px" class="no-margin m-b-sm">
+              <label translate="titles.START_TIME">Hora inicial</label>
+              <input type="time" mdp-time-picker ng-model="filter.initialTime" />
+            </md-input-container>
+            <md-input-container style="width: 140px" class="no-margin m-b-sm">
+              <label translate="titles.END_TIME">Hora final</label>
+              <input type="time" mdp-time-picker ng-model="filter.finalTime" />
+            </md-input-container> -->
+          </div>
+        <!-- -->
+        </md-content>
       </div>
+    </div>
+    <!-- /dropdown -->
+  </div>
+  <div class="b-b b-light text-md font-500 text-u-c bg-white md-whiteframe-z0 m-b-md">
+    <ul class="nav nav-lines nav-md b-info">
+      <li class="active" md-ink-ripple><a href translate='titles.PUBLISHED'></a></li>
+      <li md-ink-ripple><a href translate='titles.SCHEDULED'> <span class="badge">3</span></a></li>
+      <li md-ink-ripple><a href translate='titles.DRAFTS'> <span class="badge">9</span></a></li>
+      <li md-ink-ripple><a href translate='titles.TRASH'></a></li>
+    </ul>
+  </div>
+
+  <div class="clearfix m-b-xxl">
+    <div class="m-b-lg">      
+    
+      <ul class="bg-t no-padding">
+        <li class="panel panel-card p" ng-repeat="publication in publications">
+          <a href class="pull-left m-r-md" ng-if="publication.featuredImageHash" style="height: 128px;">
+            <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-xl h-full">
+            </div>
+          </a>
+          <div class="clear font-thin">
+            <a href class="font-bold block text-md">{{publication.title}}</a>
+            {{publication.snippet | characters:170}}
+            <div class="p-t-sm text-xs font-500">
+              <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
+              </div>
+              <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
+              </div>
+            </div>
+            <div class="list-group-item b-n p-sm p-t-sm no-padding-h">
+              <a href class="pull-left m-r-sm"><img src="/images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
+              <div class="clear font-normal p-xs">
+                <a href class="font-500 block">{{publication.authorName}}</a>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+      
     </div>
   </div>
 </div>

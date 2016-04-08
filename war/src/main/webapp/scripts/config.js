@@ -224,34 +224,31 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
       if (contrast) {
         contrast = "color: " + contrast;
       }
-      stylesheet.insertRule(".md-" + cssname + "-" + name + ".text { " + contrast + " !important }", index);
-      stylesheet.insertRule(".md-" + cssname + "-" + name + ".background { background-color: " + color + "; " + contrast + " }", index + 1);
-      index += 2;
+      stylesheet.insertRule(".md-" + cssname + "-" + name + ".text { " + contrast + " !important }", index); index++;
+      stylesheet.insertRule(".md-" + cssname + "-" + name + ".background { background-color: " + color + "; " + contrast + " }", index ); index++;
 
       if(cssname === 'primary' && name === 'default'){
-        stylesheet.insertRule(".fr-toolbar { border-color: " + color + "}", index);
-        index ++;
+        stylesheet.insertRule(".fr-toolbar { border-color: " + color + "}", index); index++;
+        stylesheet.insertRule(".nav-lines > li.active:after{border-bottom-color: " + color + "}", index); index++;
       }
 
       if(cssname === 'warn' && name === 'default'){
-        stylesheet.insertRule("md-toast.md-" + cssname + "-" + name + " > div { background-color: " + color + "!important; color: #f5f5f5 }", index);
-        index ++;
+        stylesheet.insertRule("md-toast.md-" + cssname + "-" + name + " > div { background-color: " + color + "!important; color: #f5f5f5 }", index); index ++;
       }
       if(cssname === 'accent' && name === 'default'){
         stylesheet.insertRule(
           "#loading-bar {webkit-box-shadow: " + color + " 1px 0 6px 1px;" +
             "box-shadow: " + color + " 1px 0 6px 1px;"+
             "-moz-border-radius: 100%;"+
-            "-webkit-border-radius: 100%;}" , index);
+            "-webkit-border-radius: 100%;}" , index); index++;
         stylesheet.insertRule(
-          "#loading-bar .bar {background-color: " + color + " }" , index);
+          "#loading-bar .bar {background-color: " + color + " }" , index); index++;
         stylesheet.insertRule(
           "#loading-bar-spinner .spinner-icon {"+
             "border-top-color: " + color + ";" +
             "border-left-color: " + color + ";" +
-          "}" , index);
-        stylesheet.insertRule(".sub-section-tools .active i{color: " + color + "}", index)
-        index += 4; 
+          "}" , index); index++;
+        stylesheet.insertRule(".sub-section-tools .active i{color: " + color + "}", index); index++;
       }
       if(cssname === 'background' && name === 'default'){
         stylesheet.insertRule(".mdp-datepicker .md-content,"+
@@ -263,22 +260,19 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
                               ".default-bg md-content,"+
                               ".default-bg md-dialog-actions,"+
                               ".default-bg md-dialog-content{ "+
-                              "   background-color: " + color + "!important; " + contrast + " }", index);
-        stylesheet.insertRule(".with-arrow > .arrow:after, .advanced-search-menu > .arrow:after { border-bottom-color: " + color + "!important; }", index);
-        stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn, .fr-popup .fr-command.fr-btn{" + contrast + "}", index);
-        stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn.fr-dropdown::after, .fr-popup .fr-command.fr-btn.fr-dropdown::after{" + contrast + "}", index);
-        index += 4;
+                              "   background-color: " + color + "!important; " + contrast + " }", index); index++;
+        stylesheet.insertRule(".with-arrow > .arrow:after, .advanced-search-menu > .arrow:after { border-bottom-color: " + color + "!important; }", index); index++;
+        stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn, .fr-popup .fr-command.fr-btn{" + contrast + "}", index); index++;
+        stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn.fr-dropdown::after, .fr-popup .fr-command.fr-btn.fr-dropdown::after{" + contrast + "}", index); index++;
       }
       if(cssname === 'background' && name === 'hue-1'){
-        stylesheet.insertRule(".fr-toolbar, .card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index);
-        stylesheet.insertRule(".default-bg-text button.md-button { " + contrast + " }", index);
-        stylesheet.insertRule(".default-bg-text md-input-container:not(.md-input-invalid).md-input-has-value label { " + contrast + " }", index);
-        stylesheet.insertRule(".default-bg-text md-input-container .md-input { " + contrast + "!important }", index);
-        index += 4;
+        stylesheet.insertRule(".fr-toolbar, .card, .panel, .panel-card { background-color: " + color + "!important; " + contrast + " }", index); index++;
+        stylesheet.insertRule(".default-bg-text button.md-button { " + contrast + " }", index); index++;
+        stylesheet.insertRule(".default-bg-text md-input-container:not(.md-input-invalid).md-input-has-value label { " + contrast + " }", index); index++;
+        stylesheet.insertRule(".default-bg-text md-input-container .md-input { " + contrast + "!important }", index); index++;
       }
       if(cssname === 'background' && name === 'hue-3'){
-        stylesheet.insertRule(".fr-box.fr-basic .fr-wrapper { background-color: " + color + ";" + contrast + " }", index);
-        index += 1;
+        stylesheet.insertRule(".fr-box.fr-basic .fr-wrapper { background-color: " + color + ";" + contrast + " }", index); index++;
       }
     };
     clearStyleSheet = function() {
