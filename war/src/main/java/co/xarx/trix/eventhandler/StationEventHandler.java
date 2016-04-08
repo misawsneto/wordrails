@@ -64,7 +64,7 @@ public class StationEventHandler {
 	@Autowired
 	private PageableQueryRepository pageableQueryRepository;
 	@Autowired
-	private BaseSectionRepository sectionRepository;
+	private SectionRepository sectionRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {

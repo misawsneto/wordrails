@@ -1,18 +1,20 @@
 package co.xarx.trix.web.rest.resource;
 
+import co.xarx.trix.api.hal.HalResources;
+import co.xarx.trix.api.hal.PageHal;
+import co.xarx.trix.api.hal.SectionHal;
+import co.xarx.trix.domain.page.*;
 import co.xarx.trix.domain.page.Page;
-import co.xarx.trix.domain.page.QueryableListSection;
-import co.xarx.trix.domain.page.QueryableSection;
+import co.xarx.trix.persistence.SectionRepository;
 import co.xarx.trix.persistence.PageRepository;
 import co.xarx.trix.services.QueryableSectionService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.PagesApi;
-import co.xarx.trix.api.hal.HalResources;
-import co.xarx.trix.api.hal.PageHal;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
@@ -33,9 +35,13 @@ public class PagesResource extends AbstractResource implements PagesApi {
 	@NonNull
 	private PageRepository pageRepository;
 	@NonNull
+	private SectionRepository sectionRepository;
+	@NonNull
 	private QueryableSectionService queryableSectionService;
 	@NonNull
-	private ResourceAssembler<Page, PageHal> assembler;
+	private ResourceAssembler<Page, PageHal> pageAssembler;
+	@NonNull
+	private ResourceAssembler<Section, SectionHal> sectionAssembler;
 
 	@Override
 	public Response getPages(Integer stationId) throws IOException {
@@ -45,13 +51,34 @@ public class PagesResource extends AbstractResource implements PagesApi {
 
 		List<PageHal> hals = new ArrayList<>();
 		for (Page page : pages) {
-			hals.add(assembler.toResource(page));
+			hals.add(pageAssembler.toResource(page));
 		}
 
 		HalResources<PageHal> response = new HalResources<>(hals);
 		Link self = JaxRsLinkBuilder
 				.linkTo(PagesResource.class)
 				.slash(stationId + "/pages")
+				.withSelfRel();
+		response.add(self);
+
+		return Response.ok(response).build();
+	}
+
+	@Override
+	public Response getSections(Integer stationId, Integer pageId, Integer size, Integer page) throws IOException {
+		Pageable pageable = new PageRequest(page, size);
+
+		QPage p = QAbstractSection.abstractSection.page;
+		org.springframework.data.domain.Page<AbstractSection> all = sectionRepository.findAll(p.id.eq(pageId),
+				pageable);
+		List<SectionHal> sectionHals = new ArrayList<>();
+
+		all.forEach(section -> sectionHals.add(sectionAssembler.toResource(section)));
+
+		HalResources<SectionHal> response = new HalResources<>(sectionHals);
+		Link self = JaxRsLinkBuilder
+				.linkTo(PagesResource.class)
+				.slash(stationId + "/pages/" + pageId + "/sections")
 				.withSelfRel();
 		response.add(self);
 
