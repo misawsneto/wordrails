@@ -62,7 +62,26 @@
 		"OPTIONS": "Opções",
 		"RESTORE_DEFAULT": "Restaurar padrões",
 		"CUSTOMIZE": "Personalizar",
-		"REMOVE_CONFIRMATION_MSG": "Tem certeza que deseja prosseguir"
+		"REMOVE_CONFIRMATION_MSG": "Tem certeza que deseja prosseguir",
+		"NAME": "Nome",
+		"USERNAME": "Usuário",
+		"EMAIL": "Email",
+		"PASSWORD": "Senha",
+		"HELP": "Ajuda",
+		"SEND": "Enviar"
+	},
+	"signin_signup": {
+		"OR": "ou",
+		"SIGNIN": "Entrar",
+		"SIGNUP": "Cadastrar-se",
+		"CREATE_ACCOUNT": "Criar uma conta",
+		"NOT_HAVE_AN_ACCOUNT": "Não tem uma conta",
+		"HAVE_AN_ACCOUNT": "Já tem uma conta",
+		"SIGNIN_MSG": "Entrar em",
+		"SIGNUP_MSG": "Cadastrar-se em",
+		"SIGNIN_OR_SIGNUP_MSG": "Entrar ou cadastrar-se em",
+		"FORGOT": "Esqueceu seus dados de acesso",
+		"FORGOT_MSG": "Insira seu email abaixo e nós enviaremos instruções para a troca de sua senha"
 	},
 	"actions":{
 		"ADD": "Adicionar",
@@ -78,7 +97,9 @@
 	    "DASHBOARD" : "Configurações",
 	    "EMAIL" : "Email",
 	    "UIKITS" : "UI Kits PT",
-	    "PAGES" : "Páginas"
+	    "PAGES" : "Páginas",
+	    "LOGOUT": "Sair",
+	    "NEW_POST" : "Nova publicação"
 	  }
 	},
 	"settings":{
@@ -143,7 +164,7 @@
 				"POST_DATE": "Data de publicação",
 				"DELETE_DATE": "Data de remoção automática",
 				"CUSTOMIZE_LINK": "Personalização do link",
-				"ATTACH_POST": "Anexar outras notícias",
+				"ATTACH_POST": "Anexar outras publicações",
 				"NOTIFY_STATION_USERS": "Notificar usuários",
 				"PUBLICATION_MSG": "O conteúdo será publicado ao clicar em Publicar.",
 				"AUTO_SAVE_MSG": "Rascunhos são salvos automaticamente a cada minuto uma vez que o título, conteúdo, estações e categorias sejam inseridos. As versões da publicação pode ser visualizado no meno \"Opções de publicação\"."

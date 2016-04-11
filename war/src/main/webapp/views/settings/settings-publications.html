@@ -108,7 +108,7 @@
                 <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'publications'}">
                   <ul class="list-group bg-t">
                     <li class="list-group-item" ng-repeat="publication in publications">
-                      <a href class="pull-left m-r" ng-if="publication.featuredImageHash" style="height: 96px;">
+                      <a href class="pull-left m-r" ng-if="publication.featuredImageHash || publication.imageHash" style="height: 96px;">
                         <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
                         </div>
                       </a>

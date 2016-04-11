@@ -122,6 +122,10 @@ angular.module('app')
   .controller('AppDataCtrl', ['$scope', '$translate', '$localStorage', '$window', '$document', '$location', '$rootScope', '$timeout', '$mdSidenav', '$mdColorPalette', '$anchorScroll', 'appData', 'trixService', 'trix', '$filter', '$mdTheming', '$mdColors', 'themeProvider', '$injector', 'colorsProvider', '$mdToast', '$mdDialog', 'FileUploader', 'TRIX', 'cfpLoadingBar',
     function (             $scope,   $translate,   $localStorage,   $window,   $document,   $location,   $rootScope,   $timeout,   $mdSidenav,   $mdColorPalette,   $anchorScroll, appData, trixService, trix, $filter, $mdTheming, $mdColors, themeProvider, $injector, colorsProvider, $mdToast, $mdDialog, FileUploader, TRIX, cfpLoadingBar) {
 
+      $scope.app.goToLink = function(link){
+        document.location.href = link;
+      }
+
       //window.console && console.log(appData);
       // ---------- util -------------
       // ---------- util-trix -------------
@@ -467,6 +471,34 @@ angular.module('app')
         }
       };
 
+
+      // ------------------- end of image userImageUploader -------------
+      $scope.app.signOut = function(){
+        trix.logout().success(function(){
+          document.location.href = '/';
+        })
+      }
+
+      $scope.app.signInButton =  function(){
+        $scope.app.signState = 'signin'
+        if($scope.app.person.id === 0){$scope.app.showSigninDialog();}
+      }
+
+      $scope.app.showSigninDialog = function(event){
+        // show term alert
+        
+        $mdDialog.show({
+          controller: $scope.app.defaultDialog,
+          templateUrl: 'signin-signup-dialog.html',
+          parent: angular.element(document.body),
+          targetEvent: event,
+          clickOutsideToClose:true
+          // onComplete: function(){
+
+          // }
+        })
+      }
+
       $scope.app.getStationFromSlug = function(slug){
 
       }
@@ -475,7 +507,6 @@ angular.module('app')
         
       }
 
-      // ------------------- end of image userImageUploader -------------
       
       appDataCtrl = $scope;
     }

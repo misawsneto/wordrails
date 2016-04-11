@@ -114,57 +114,61 @@ app.controller('SettingsProfileCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
       
     $scope.$watch('settings.tab', function(){
       if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
-    // trix.searchPosts(null, $scope.app.publicationsCtrl.page, 10, {'personId': $scope.app.getLoggedPerson().id,
-      // 'publicationType': 'DRAFT', sortByDate: true}).success(function(response){
-        trix.getPersonNetworkPostsByState(null, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
-          $scope.drafts = response;
+        trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'DRAFT', $scope.app.publicationsCtrl.page, 10).success(function(response){
+          $scope.drafts = response.posts;
           $scope.firstLoad = true;
         })
       }
       if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
-        trix.getPersonNetworkPostsByState(null, 'PUBLISHED', $scope.app.publicationsCtrl.page, 10).success(function(response){
-          $scope.publications = response;
+        trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'PUBLISHED', $scope.app.publicationsCtrl.page, 10).success(function(response){
+          $scope.publications = response.posts;
           $scope.firstLoad = true;
         })
       }
       if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
-        trix.getPersonNetworkPostsByState(null, 'SCHEDULED', $scope.app.publicationsCtrl.page, 10).success(function(response){
-          $scope.scheduleds = response;
+        trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'SCHEDULED', $scope.app.publicationsCtrl.page, 10).success(function(response){
+          $scope.scheduleds = response.posts;
           $scope.firstLoad = true;
         })
       }
       if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
-        trix.getPersonNetworkPostsByState(null, 'TRASH', $scope.app.publicationsCtrl.page, 10).success(function(response){
-          $scope.scheduleds = response;
+        trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, 'TRASH', $scope.app.publicationsCtrl.page, 10).success(function(response){
+          $scope.scheduleds = response.posts;
           $scope.firstLoad = true;
         })
       }
     });
 
 $scope.$on('POST_REMOVED', function(event, postId){
-  if($scope.app.publicationsCtrl && $scope.app.publicationsCtrl.publications){
-    for (var i = $scope.app.publicationsCtrl.publications.length - 1; i >= 0; i--) {
-      if(postId == $scope.app.publicationsCtrl.publications[i].postId)
-        $scope.app.publicationsCtrl.publications.splice(i,1)
+  if($scope.app.publicationsCtrl && $scope.publications){
+    for (var i = $scope.publications.length - 1; i >= 0; i--) {
+      if(postId == $scope.publications[i].postId)
+        $scope.publications.splice(i,1)
     };
   }
 })
 
 $scope.paginate = function(){
 
-  if(!$scope.app.publicationsCtrl.publications || $scope.app.publicationsCtrl.publications.length == 0)
+  if(!$scope.publications || $scope.publications.length == 0)
     return;
 
   if($scope.allLoaded)
     return;
 
   var type = '';
-  if($state.params.type == "drafts"){
+
+  if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
     type = 'DRAFT'
-  }else if($state.params.type == "publications"){
+  }
+  if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
     type = 'PUBLISHED'
-  }else if($state.params.type == "scheduled"){
+  }
+  if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
     type = 'SCHEDULED'
+  }
+  if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
+    type = 'TRASH'
   }
 
   if(!$scope.loadingPage){
@@ -172,8 +176,8 @@ $scope.paginate = function(){
       /*trix.searchPosts(null, $scope.app.publicationsCtrl.page + 1, 10, {'personId': $scope.app.getLoggedPerson().id,
         'publicationType': type, sortByDate: true}).success(function(response){*/
 
-      trix.getPersonNetworkPostsByState(null, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
-        var posts = response;
+      trix.findByAuthorUsernameAndStateOrderByDateDesc($scope.app.person.username, type, $scope.app.publicationsCtrl.page+1, 10).success(function(response){
+        var posts = response.posts;
 
         $scope.loadingPage = false;
         $scope.app.publicationsCtrl.page = $scope.app.publicationsCtrl.page + 1;
@@ -187,7 +191,7 @@ $scope.paginate = function(){
           $scope.pages = []
 
         posts && posts.forEach(function(element, index){
-          $scope.app.publicationsCtrl.publications.push(element)
+          $scope.publications.push(element)
         }); 
 
       })

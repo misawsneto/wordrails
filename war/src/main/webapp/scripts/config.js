@@ -17,8 +17,8 @@ angular.module('app')
     }
   ])
   .constant('TRIX', {
-    //baseUrl: location.protocol + '//' + location.host})
-    baseUrl: location.protocol + '//' + 'demo.xarxlocal.com',
+    baseUrl: location.protocol + '//' + location.host,
+    //baseUrl: location.protocol + '//' + 'demo.xarxlocal.com',
     defaultMargin: 0
   })
 
@@ -38,7 +38,7 @@ angular.module('app')
   }])
 
   .config(function(trixProvider, $mdThemingProvider, $mdColorPalette, $provide, $mdColorsProvider){
-    trixProvider.setConfig({ url: location.protocol + '//' + 'demo.xarxlocal.com' });
+    trixProvider.setConfig({ url: location.protocol + '//' + location.host });
 
     $mdThemingProvider.setNonce('default')
 

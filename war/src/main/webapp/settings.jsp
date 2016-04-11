@@ -20,6 +20,11 @@
   <link rel="stylesheet" href="/styles/font.css" type="text/css" />
   <link rel="stylesheet" href="/styles/app.css" type="text/css" />
 
+    <script type="text/javascript">
+        var GLOBAL_URL_HASH = "${buildNumber}"
+        var initData = ${not empty personData?personData:'\'\''};
+    </script>
+
     <style type="text/css">
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
             display: none !important;
@@ -64,7 +69,7 @@
   <script src="/libs/angular/angular-loading-bar/build/loading-bar.js"></script>
 
 <!-- App -->
-  <script src="/scripts/BaseTrix.js"></script>
+  <script src="/js/BaseTrix.js"></script>
   <script src="/scripts/app.js"></script>
   <script src="/libs/jquery/moment/min/moment-with-locales.min.js"></script>
   <script src="/scripts/config.js"></script>
@@ -82,7 +87,6 @@
   <script src="/scripts/filters/filters.js"></script>
   <script src="/scripts/services/ngstore.js"></script>
   <script src="/scripts/services/ui-load.js"></script>
-
 
 </body>
 </html>

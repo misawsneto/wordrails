@@ -148,10 +148,14 @@
   </div>
   <div class="b-b b-light text-md font-500 text-u-c bg-white md-whiteframe-z0 m-b-md">
     <ul class="nav nav-lines nav-md b-info">
-      <li class="active" md-ink-ripple><a href translate='titles.PUBLISHED'></a></li>
-      <li md-ink-ripple><a href translate='titles.SCHEDULED'> <span class="badge">3</span></a></li>
-      <li md-ink-ripple><a href translate='titles.DRAFTS'> <span class="badge">9</span></a></li>
-      <li md-ink-ripple><a href translate='titles.TRASH'></a></li>
+      <li ng-class="{'active': settings.tab == 'publications'}" md-ink-ripple ng-click="settings.tab = 'publications'">
+        <a href translate='titles.PUBLISHED'></a></li>
+      <li ng-class="{'active': settings.tab == 'scheduled'}" md-ink-ripple ng-click="settings.tab = 'scheduled'">
+        <a href translate='titles.SCHEDULED'> <span class="badge">3</span></a></li>
+      <li ng-class="{'active': settings.tab == 'drafts'}" md-ink-ripple ng-click="settings.tab = 'drafts'">
+        <a href translate='titles.DRAFTS'> <span class="badge">9</span></a></li>
+      <li ng-class="{'active': settings.tab == 'trash'}" md-ink-ripple ng-click="settings.tab = 'trash'">
+      <a href translate='titles.TRASH'></a></li>
     </ul>
   </div>
 </div>
@@ -171,17 +175,17 @@
   </div> -->
 
   <div class="clearfix m-b-xxl">
-    <div class="m-b-lg">      
+    <div class="m-b-lg" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"'>
     
       <ul class="bg-t no-padding">
         <li class="panel panel-card p" ng-repeat="publication in publications">
-          <a href class="pull-left m-r-md" ng-if="publication.featuredImageHash" style="height: 128px;">
+          <a href class="pull-left m-r-md" ng-if="publication.featuredImageHash || publication.imageHash" style="height: 128px;">
             <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-xl h-full bg-cover">
             </div>
           </a>
           <div class="clear font-thin">
             <a href class="font-bold block text-md">{{publication.title}}</a>
-            {{publication.snippet | characters:170}}
+            {{publication.body.stripHtml() | characters:170}}
             <div class="p-t-sm text-xs font-500">
               <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
               </div>

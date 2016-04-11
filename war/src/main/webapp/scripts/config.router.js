@@ -46,11 +46,11 @@ angular.module('app')
               resolve: {
                 appData: function($stateParams, $q, trix){
                   var deferred = $q.defer();
-                  trix.login('demo', 'Dem0PASS').success(function(){
-                    trix.allInitData().success(function(response){
-                      deferred.resolve(response);
-                    });
-                  })
+                   if(initData.person.id == 0){
+                     document.location.href = '/access/signin?next=/settings';
+                   }else{
+                    deferred.resolve(initData);
+                   }
                   return deferred.promise;
                 },
                 deps:load( ['infinite-scroll', 'angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage'] ).deps
@@ -575,26 +575,6 @@ angular.module('app')
                 url: '/505',
                 templateUrl: '/views/pages/505.html'
               })
-              .state('access', {
-                url: '/access',
-                template: '<div class="indigo bg-big"><div ui-view class="fade-in-down smooth"></div></div>'
-              })
-              .state('access.signin', {
-                url: '/signin',
-                templateUrl: '/views/pages/signin.html'
-              })
-              .state('access.signup', {
-                url: '/signup',
-                templateUrl: '/views/pages/signup.html'
-              })
-              .state('access.forgot-password', {
-                url: '/forgot-password',
-                templateUrl: '/views/pages/forgot-password.html'
-              })
-              .state('access.lockme', {
-                url: '/lockme',
-                templateUrl: '/views/pages/lockme.html'
-              });
         }
 
         var createHomeRoutes = function(){
@@ -608,14 +588,14 @@ angular.module('app')
               resolve: {
                 appData: function($stateParams, $q, trix){
                   var deferred = $q.defer();
-                  trix.login('demo', 'Dem0PASS').success(function(){
-                    trix.allInitData().success(function(response){
-                      deferred.resolve(response);
-                    });
-                  })
+                  // if(initData.person.id == 0){
+                  //   document.location.href = '/';
+                  // }else{
+                    deferred.resolve(initData);
+                  // }
                   return deferred.promise;
                 },
-                deps:load( ['/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js'] ).deps
+                deps:load( ['infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage'] ).deps
               },
               url: '',
               views: {
@@ -644,9 +624,10 @@ angular.module('app')
                 resolve: load(['/scripts/controllers/chart.js','/scripts/controllers/vectormap.js'])
               })
               .state('app.home', {
-                url: '/home',
+                url: '/',
                 templateUrl: '/views/pages/dashboard.home.html',
-                data : { title: 'Home', folded: false }
+                data : { title: 'Home', folded: false },
+                resolve: load(['angularFileUpload', 'wu.masonry'])
               })
               .state('app.wall', {
                 url: '/wall',
@@ -1018,33 +999,55 @@ angular.module('app')
                 url: '/505',
                 templateUrl: '/views/pages/505.html'
               })
-              .state('access', {
-                url: '/access',
-                template: '<div class="indigo bg-big"><div ui-view class="fade-in-down smooth"></div></div>'
-              })
-              .state('access.signin', {
-                url: '/signin',
-                templateUrl: '/views/pages/signin.html'
-              })
-              .state('access.signup', {
-                url: '/signup',
-                templateUrl: '/views/pages/signup.html'
-              })
-              .state('access.forgot-password', {
-                url: '/forgot-password',
-                templateUrl: '/views/pages/forgot-password.html'
-              })
-              .state('access.lockme', {
-                url: '/lockme',
-                templateUrl: '/views/pages/lockme.html'
-              })
+              
             ;
         }
 
-        // if(isSettigns)
+        if(isSettigns)
           createSettingsRoutes();
-        // else
-        //   createHomeRoutes();
+        else
+          createHomeRoutes();
+
+         $stateProvider
+          .state('access', {
+            url: '/access',
+            template: '<div class="md-background-default background bg-big"><div ui-view class="fade-in-down smooth"></div></div>',
+            resolve: {
+              appData: function($stateParams, $q, trix){
+                var deferred = $q.defer();
+                // if(initData.person.id == 0){
+                //   document.location.href = '/';
+                // }else{
+                  deferred.resolve(initData);
+                // }
+                return deferred.promise;
+              },
+              deps:load( ['angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage'] ).deps
+            },
+            controller: 'AppDataCtrl'
+          })
+          .state('access.signin', {
+            url: '/signin?next',
+            templateUrl: '/views/pages/signin.html',
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js']),
+            controller: 'AppSigninCtrl'
+          })
+          .state('access.signup', {
+            url: '/signup',
+            templateUrl: '/views/pages/signup.html',
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js']),
+            controller: 'AppSignupCtrl'
+          })
+          .state('access.forgot-password', {
+            url: '/forgot-password',
+            templateUrl: '/views/pages/forgot-password.html',
+            resolve: load(['/scripts/controllers/app/signin-signup-forgot.js']),
+            controller: 'AppForgotCtrl'
+          })
+          .state('access.lockme', {
+            url: '/lockme',
+            templateUrl: '/views/pages/lockme.html'
+          })
         
           function load(srcs, callback) {
             return {
