@@ -1,8 +1,5 @@
 package co.xarx.trix.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

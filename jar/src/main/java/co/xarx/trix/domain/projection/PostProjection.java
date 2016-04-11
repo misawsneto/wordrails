@@ -24,8 +24,6 @@ public interface PostProjection {
 
 	String getBody();
 
-	Sponsor getSponsor();
-
 	Person getAuthor();
 
 	Station getStation();
@@ -74,12 +72,14 @@ public interface PostProjection {
 
     Set<String> getTags();
 
-	// images ------------------
+	// multimedia: images, video, audio ------------------
 	String getImageSmallHash();
 
 	String getImageMediumHash();
 
 	String getImageLargeHash();
 
-	Integer getImageId();
+	String getFeaturedAudioHash();
+
+	String getFeaturedVideoHash();
 }

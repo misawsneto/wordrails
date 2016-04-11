@@ -4,16 +4,14 @@ import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.StationRole;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
-public interface StationRolesRepository extends JpaRepository<StationRole, Integer>, QueryDslPredicateExecutor<StationRole> {
+public interface StationRolesRepository extends DatabaseRepository<StationRole, Integer> {
 
 	@RestResource(exported=false)
 	StationRole findByStationAndPerson(Station station, Person person);
@@ -21,6 +19,7 @@ public interface StationRolesRepository extends JpaRepository<StationRole, Integ
 	@RestResource(exported=false)
 	StationRole findByStationAndPersonId(Station station, Integer personId);
 
+	@Query("select str FROM StationRole str WHERE str.station.id = :stationId and str.person.id = :personId")
 	StationRole findByStationIdAndPersonId(@Param("stationId") Integer stationId, @Param("personId") Integer personId);
 
 	@RestResource(exported=false)

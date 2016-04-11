@@ -1,6 +1,6 @@
 package co.xarx.trix.aspect;
 
-import co.xarx.trix.aspect.annotations.TimeIt;
+import co.xarx.trix.annotations.TimeIt;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

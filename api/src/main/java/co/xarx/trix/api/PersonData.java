@@ -7,7 +7,6 @@ public class PersonData implements Serializable {
 	private static final long serialVersionUID = 2078630211043976635L;
 	public PersonDto person;
 	public NetworkDto network;
-	public NetworkRoleDto networkRole;
 	public List<StationDto> stations;
 	public PersonPermissions personPermissions;
 	public List<PostView> recent;
@@ -27,6 +26,7 @@ public class PersonData implements Serializable {
 	public String privateCloudfrontUrl;
 	public boolean noVisibleStation = false;
 
+	public boolean isAdmin = false;
 	public boolean noPassword = false;
 }
 

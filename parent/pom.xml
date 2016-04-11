@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>co.xarx</groupId>
@@ -17,18 +17,6 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.flywaydb</groupId>
-					<artifactId>flyway-maven-plugin</artifactId>
-					<version>3.2.1</version>
-					<dependencies>
-						<dependency>
-							<groupId>mysql</groupId>
-							<artifactId>mysql-connector-java</artifactId>
-							<version>5.1.31</version>
-						</dependency>
-					</dependencies>
-				</plugin>
 				<plugin>
 					<groupId>org.apache.tomcat.maven</groupId>
 					<artifactId>tomcat7-maven-plugin</artifactId>
@@ -140,6 +128,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+				<!--<dependency>-->
+					<!--<groupId>org.springframework.data</groupId>-->
+					<!--<artifactId>spring-data-rest-hal-browser</artifactId>-->
+					<!--<version>2.4.4.RELEASE</version>-->
+				<!--</dependency>-->
+
 			<dependency>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-core</artifactId>
@@ -150,14 +144,6 @@
 				<groupId>org.elasticsearch</groupId>
 				<artifactId>elasticsearch-shield</artifactId>
 				<version>1.3.3</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-framework-bom</artifactId>
-				<version>4.2.1.RELEASE</version>
-				<type>pom</type>
-				<scope>import</scope>
 			</dependency>
 
 			<dependency>
@@ -309,19 +295,52 @@
 			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
 				<artifactId>resteasy-jackson2-provider</artifactId>
-				<version>3.0.8.Final</version>
+				<version>3.0.9.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-client</artifactId>
+				<version>3.0.9.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-jaxb-provider</artifactId>
+				<version>3.0.9.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>tjws</artifactId>
+				<version>3.0.9.Final</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-jaxrs</artifactId>
+				<version>3.0.9.Final</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
 				<artifactId>resteasy-spring</artifactId>
-				<version>3.0.8.Final</version>
+				<version>3.0.9.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-servlet-initializer</artifactId>
+				<version>3.0.9.Final</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.reflections</groupId>
 				<artifactId>reflections</artifactId>
 				<version>0.9.10</version>
+			</dependency>
+
+
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-commons</artifactId>
+				<version>1.9.4.RELEASE</version>
 			</dependency>
 
 			<dependency>
@@ -358,19 +377,19 @@
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-core</artifactId>
-				<version>4.0.8.RELEASE</version>
+				<version>4.1.8.RELEASE</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-jdbc</artifactId>
-				<version>4.0.8.RELEASE</version>
+				<version>4.1.8.RELEASE</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-aspects</artifactId>
-				<version>4.0.9.RELEASE</version>
+				<version>4.2.4.RELEASE</version>
 			</dependency>
 
 			<dependency>
@@ -383,13 +402,13 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
-				<version>4.2.2.RELEASE</version>
+				<version>4.2.4.RELEASE</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context-support</artifactId>
-				<version>4.0.9.RELEASE</version>
+				<version>4.2.4.RELEASE</version>
 				<exclusions>
 					<exclusion>
 						<groupId>commons-logging</groupId>
@@ -399,27 +418,48 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.2.4.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-data</artifactId>
+				<version>4.0.4.RELEASE</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-config</artifactId>
-				<version>3.2.9.RELEASE</version>
+				<version>4.0.4.RELEASE</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-web</artifactId>
-				<version>3.2.9.RELEASE</version>
+				<version>4.0.4.RELEASE</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-crypto</artifactId>
-				<version>3.2.9.RELEASE</version>
+				<version>4.0.4.RELEASE</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-acl</artifactId>
+				<version>4.0.4.RELEASE</version>
+			</dependency>
+
 
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-aws-context</artifactId>
-				<version>1.0.2.RELEASE</version>
+				<version>1.0.4.RELEASE</version>
 			</dependency>
 
 			<dependency>
@@ -634,16 +674,10 @@
 				<version>2.2</version>
 			</dependency>
 
-            <dependency>
-                <groupId>com.github.jknack</groupId>
-                <artifactId>handlebars</artifactId>
-                <version>4.0.2</version>
-            </dependency>
-
 			<dependency>
-				<groupId>com.github.spullara.mustache.java</groupId>
-				<artifactId>compiler</artifactId>
-				<version>0.9.1</version>
+				<groupId>com.github.jknack</groupId>
+				<artifactId>handlebars</artifactId>
+				<version>4.0.2</version>
 			</dependency>
 
 			<dependency>
@@ -658,11 +692,11 @@
 				<version>4.1.0.201509280440-r</version>
 			</dependency>
 
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-email</artifactId>
-                <version>1.4</version>
-            </dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-email</artifactId>
+				<version>1.4</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.aspectj</groupId>
@@ -758,6 +792,12 @@
 				<groupId>com.notnoop.apns</groupId>
 				<artifactId>apns</artifactId>
 				<version>1.0.0.Beta6</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.spullara.mustache.java</groupId>
+				<artifactId>compiler</artifactId>
+				<version>0.9.1</version>
 			</dependency>
 
 		</dependencies>

@@ -1,38 +1,33 @@
 package co.xarx.trix.persistence;
 
 import co.xarx.trix.annotation.SdkExclude;
-import co.xarx.trix.domain.NetworkRole;
 import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.projection.PersonProjection;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
-public interface PersonRepository extends JpaRepository<Person, Integer>, QueryDslPredicateExecutor<Person> {
+@RepositoryRestResource(exported = true, excerptProjection = PersonProjection.class)
+public interface PersonRepository extends DatabaseRepository<Person, Integer> {
 
 	@Cacheable(value = "person", key = "#p0")
 	Person findByUsername(@Param("username") String username);
-
-	@Override
-	@SdkExclude
-	@CacheEvict(value = "person", key = "#p0.username")
-	Person save(Person person);
-
-	@Override
-	@SdkExclude
-	@CacheEvict(value = "person", key = "#p0.username")
-	void delete(Person person);
 
 	@RestResource(exported = false)
 	Person findByEmail(@Param("email") String email);
 
 	@RestResource(exported = false)
-	@Query("select (select count(*) from PostRead pr where pr.post.author.id = p.id), (select count(*) from Comment comment where comment.post.author.id = p.id), (select count(*) from Recommend recommend where recommend.post.author.id = p.id) from Person p where p.id = :authorId")
+	@Query("select (select count(*) from PostRead pr where pr.post.author.id = p.id), " +
+			"(select count(*) from Comment comment where comment.post.author.id = p.id) " +
+			"from Person p where p.id = :authorId")
 	List<Object[]> findPersonStats(@Param("authorId") Integer authorId);
 
 	@RestResource(exported = false)
@@ -47,7 +42,34 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, QueryD
 	@Query("select person from Person person where person.id in (:personIds)")
 	List<Person> findPersonsByIds(@Param("personIds") List<Integer> personIds);
 
-	@RestResource(exported = false)
-	@Query("select nr from NetworkRole nr join fetch nr.person person join fetch person.user u")
-	List<NetworkRole> findNetworkAdmin();
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	@CacheEvict(value = "person", key = "#p0.username")
+	Person save(Person person);
+
+	@Override
+	@SdkExclude
+	@CacheEvict(value = "person", key = "#p0.username")
+	void delete(Person person);
+
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	Person findOne(Integer id);
+
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	List<Person> findAll();
+
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	List<Person> findAll(Sort sort);
+
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	Page<Person> findAll(Pageable pageable);
 }

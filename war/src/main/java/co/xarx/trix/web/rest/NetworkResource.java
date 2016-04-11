@@ -1,19 +1,16 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.WordrailsService;
-import co.xarx.trix.api.NetworkPermission;
+import co.xarx.trix.annotations.IgnoreMultitenancy;
 import co.xarx.trix.api.PersonPermissions;
 import co.xarx.trix.api.StationPermission;
 import co.xarx.trix.api.ThemeView;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
-import co.xarx.trix.aspect.annotations.IgnoreMultitenancy;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.dto.NetworkCreateDto;
 import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
@@ -21,6 +18,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
@@ -40,16 +38,20 @@ import java.util.*;
 @Produces(MediaType.APPLICATION_JSON)
 public class NetworkResource {
 
+	private class NetworkCreateDto extends Network {
+
+		public String newSubdomain;
+		public Person person;
+	}
+
 	@Autowired
 	public ObjectMapper objectMapper;
-	@Autowired
-	private NetworkRolesRepository networkRolesRepository;
 	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired
@@ -59,15 +61,11 @@ public class NetworkResource {
 	@Autowired
 	private TermRepository termRepository;
 	@Autowired
-	private WordrailsService wordrailsService;
-	@Autowired
 	private PostRepository postRepository;
 	@Autowired
 	private PostEventHandler postEventHandler;
 	@Autowired
 	private PostReadRepository postReadRepository;
-	@Autowired
-	private RecommendRepository recommendRepository;
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
@@ -81,55 +79,48 @@ public class NetworkResource {
 
 	@Path("/{id}/permissions")
 	@GET
-	public PersonPermissions getNetworkPersonPermissions(@PathParam("id") Integer id){
+	public PersonPermissions getNetworkPersonPermissions(@PathParam("id") Integer id) {
 		PersonPermissions personPermissions = new PersonPermissions();
 		Person person = authProvider.getLoggedPerson();
 
-		NetworkRole networkRole = networkRolesRepository.findByNetworkIdAndPersonId(id, person.id);
-		if(networkRole != null){
-			//Network Permissions
-			NetworkPermission networkPermissionDto = new NetworkPermission();
-			networkPermissionDto.networkId = networkRole.id;
-			networkPermissionDto.admin = networkRole.admin;
 
-			//Stations Permissions
-			List<Station> stations = stationRepository.findByPersonId(person.id);
-			List<StationPermission> stationPermissionDtos = new ArrayList<StationPermission>(stations.size());
-			for (Station station : stations) {
-				StationPermission stationPermissionDto = new StationPermission();
+		//Stations Permissions
+		List<Station> stations = stationRepository.findByPersonId(person.id);
+		List<StationPermission> stationPermissionDtos = new ArrayList<>(stations.size());
+		for (Station station : stations) {
+			StationPermission stationPermissionDto = new StationPermission();
 
-				//Station Fields
-				stationPermissionDto.stationId = station.id;
-				stationPermissionDto.stationName = station.name;
-				stationPermissionDto.writable = station.writable;
-				stationPermissionDto.main = station.main;
-				stationPermissionDto.visibility = station.visibility;
-				stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
+			//Station Fields
+			stationPermissionDto.stationId = station.id;
+			stationPermissionDto.stationName = station.name;
+			stationPermissionDto.writable = station.writable;
+			stationPermissionDto.main = station.main;
+			stationPermissionDto.visibility = station.visibility;
+			stationPermissionDto.defaultPerspectiveId = station.defaultPerspectiveId;
 
-				stationPermissionDto.subheading = station.subheading;
-				stationPermissionDto.sponsored = station.sponsored;
-				stationPermissionDto.topper = station.topper;
+			stationPermissionDto.subheading = station.subheading;
+			stationPermissionDto.sponsored = station.sponsored;
+			stationPermissionDto.topper = station.topper;
 
-				stationPermissionDto.allowComments = station.allowComments;
-				stationPermissionDto.allowSocialShare = station.allowSocialShare;
+			stationPermissionDto.allowComments = station.allowComments;
+			stationPermissionDto.allowSocialShare = station.allowSocialShare;
 
-				//StationRoles Fields
-				StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
-				if(stationRole != null){
-					stationPermissionDto.admin = stationRole.admin;
-					stationPermissionDto.editor = stationRole.editor;
-					stationPermissionDto.writer = stationRole.writer;
-				}
-
-				stationPermissionDtos.add(stationPermissionDto);
+			//StationRoles Fields
+			StationRole stationRole = stationRolesRepository.findByStationAndPerson(station, person);
+			if (stationRole != null) {
+				stationPermissionDto.admin = stationRole.admin;
+				stationPermissionDto.editor = stationRole.editor;
+				stationPermissionDto.writer = stationRole.writer;
 			}
-			personPermissions.networkPermission = networkPermissionDto;
-			personPermissions.stationPermissions = stationPermissionDtos;
-			personPermissions.personId = person.id;
-			personPermissions.username = person.username;
-			personPermissions.personName = person.name;
 
+			stationPermissionDtos.add(stationPermissionDto);
 		}
+
+		personPermissions.stationPermissions = stationPermissionDtos;
+		personPermissions.personId = person.id;
+		personPermissions.username = person.username;
+		personPermissions.personName = person.name;
+
 		return personPermissions;
 	}
 
@@ -220,6 +211,7 @@ public class NetworkResource {
 				user.addAuthority(nauthority);
 
 				person.user = user;
+				person.networkAdmin = true;
 
 				personRepository.save(person);
 			} catch (javax.validation.ConstraintViolationException e) {
@@ -250,13 +242,6 @@ public class NetworkResource {
 				networkRepository.delete(network);
 				e.printStackTrace();
 			}
-
-			NetworkRole networkRole = new NetworkRole();
-			networkRole.setTenantId(network.getTenantId());
-			networkRole.network = network;
-			networkRole.person = person;
-			networkRole.admin = true;
-			networkRolesRepository.save(networkRole);
 
 			// End Create Person ------------------------------
 
@@ -436,6 +421,7 @@ public class NetworkResource {
 
 	@GET
 	@Path("/stats")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public JsonStats networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("postId") Integer postId) throws IOException {
 		if (date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
@@ -461,18 +447,15 @@ public class NetworkResource {
 		}
 
 		List<Object[]> postReadCounts;
-		List<Object[]> recommendsCounts;
 		List<Object[]> commentsCounts;
 		List<Object[]> generalStatus;
 
 		if (postId != null && postId > 0) {
 			postReadCounts = postReadRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			recommendsCounts = recommendRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			commentsCounts = commentRepository.countByPostAndDate(postId, firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			generalStatus = postRepository.findPostStats(postId);
 		}else {
 			postReadCounts = postReadRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
-			recommendsCounts = recommendRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			commentsCounts = commentRepository.countByDate(firstDay.minusDays(dateDiference).toDate(), firstDay.toDate());
 			generalStatus = networkRepository.findStats();
 		}
@@ -494,18 +477,6 @@ public class NetworkResource {
 		while (it.hasNext()){
 			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
 			long key = (Long)pair.getKey();
-			for(Object[] counts: recommendsCounts){
-				long dateLong = ((java.sql.Date) counts[0]).getTime();
-				long count = (long) counts[1];
-				if(new DateTime(key).withTimeAtStartOfDay().equals(new DateTime(dateLong).withTimeAtStartOfDay()))
-					pair.getValue().recommendsCount = count;
-			}
-		}
-
-		it = stats.entrySet().iterator();
-		while (it.hasNext()){
-			Map.Entry<Long,ReadsCommentsRecommendsCount> pair = (Map.Entry<Long,ReadsCommentsRecommendsCount>)it.next();
-			long key = (Long)pair.getKey();
 			for(Object[] counts: commentsCounts){
 				long dateLong = ((java.sql.Date) counts[0]).getTime();
 				long count = (long) counts[1];
@@ -514,9 +485,6 @@ public class NetworkResource {
 			}
 		}
 
-		String generalStatsJson = objectMapper.writeValueAsString(generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null);
-		String dateStatsJson = objectMapper.writeValueAsString(stats);
-//		return Response.status(Status.OK).entity("{\"generalStatsJson\": " + generalStatsJson + ", \"dateStatsJson\": " + dateStatsJson + "}").build();
 		JsonStats jsonStats = new JsonStats();
 		jsonStats.generalStatsJson = generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null;
 		jsonStats.dateStatsJson = stats;

@@ -82,7 +82,7 @@ angular.module('app').service('trixService', function(){
 	 this.getWritableStations = function(){
 	 	var stations = [];
 	 	initData.personPermissions.stationPermissions.forEach(function(permissions, index){
-	 		if(permissions.writable || permissions.writer)
+	 		if(permissions.writable || permissions.writer || permissions.admin || permissions.editor)
 	 			stations.push(permissions)
 	 	});
 	 	return stations;

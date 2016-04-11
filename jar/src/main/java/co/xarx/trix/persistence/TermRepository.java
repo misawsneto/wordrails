@@ -1,23 +1,33 @@
 package co.xarx.trix.persistence;
 
-import co.xarx.trix.annotation.EventLoggableRepository;
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Taxonomy;
 import co.xarx.trix.domain.Term;
 
 import java.util.List;
 
-import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface TermRepository extends JpaRepository<Term, Integer>, QueryDslPredicateExecutor<Term> {
+@RepositoryRestResource(exported = true)
+public interface TermRepository extends DatabaseRepository<Term, Integer> {
 
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	void delete(Term term);
+
+	@Override
+	@SdkExclude
+	@RestResource(exported = true)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	Term save(Term term);
 
 	@RestResource(path="findRootsPage")
 	@Query("select term from Term term where term.parent is null and term.taxonomy.id = :taxonomyId")

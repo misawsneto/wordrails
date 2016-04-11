@@ -262,7 +262,6 @@ public final class CookieAndHeaderHttpSessionStrategy implements MultiHttpSessio
 		}
 		sessionCookie.setSecure(request.isSecure());
 		sessionCookie.setPath(cookiePath(request));
-		// TODO set domain?
 
 		if(sessionIds.isEmpty()) {
 			sessionCookie.setMaxAge(0);

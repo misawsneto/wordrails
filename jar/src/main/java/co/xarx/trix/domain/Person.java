@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -51,6 +52,19 @@ public class Person extends BaseEntity implements Serializable {
 	@Column(name = "post_id")
 	public List<Integer> bookmarkPosts;
 
+	@OrderColumn(name = "order")
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "person_recommend",
+			joinColumns = @JoinColumn(name = "person_id")
+
+	)
+	@Column(name = "post_id")
+	public Set<Integer> recommendPosts;
+
+	public boolean networkAdmin = false;
+
+	@JsonIgnore
+//	@RestResource(exported = false)
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	public User user;
@@ -62,9 +76,11 @@ public class Person extends BaseEntity implements Serializable {
 	@Email
 	public String email;
 
+//	@RestResource(exported = false)
 	@ManyToOne
 	public Image image;
 
+//	@RestResource(exported = false)
 	@ManyToOne
 	public Image cover;
 
@@ -80,7 +96,9 @@ public class Person extends BaseEntity implements Serializable {
 	public Date lastLogin;
 
 	@Transient
+	@RestResource(exported = false)
 	public String password;
+
 	@Transient
 	public String passwordConfirm;
 

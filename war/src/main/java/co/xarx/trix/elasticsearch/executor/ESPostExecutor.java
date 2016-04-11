@@ -1,7 +1,7 @@
 package co.xarx.trix.elasticsearch.executor;
 
 import co.xarx.trix.api.PostView;
-import co.xarx.trix.domain.query.Executor;
+import co.xarx.trix.domain.page.query.Executor;
 import co.xarx.trix.services.elasticsearch.ElasticSearchCommand;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -36,21 +36,21 @@ public class ESPostExecutor implements Executor<PostView, ElasticSearchCommand> 
 
 	private static final String ES_TYPE = "post";
 
-	public List<PostView> execute(ElasticSearchCommand query, Integer size, Integer from) {
+	public List<PostView> execute(ElasticSearchCommand command, Integer size, Integer from) {
 		SearchRequestBuilder searchRequestBuilder = client
 				.prepareSearch(indexName)
 				.setTypes(ES_TYPE)
-				.setQuery(query.getBoolQueryBuilder())
+				.setQuery(command.getBoolQueryBuilder())
 				.setSize(size)
 				.setFrom(from);
 
-		searchRequestBuilder.addHighlightedField(query.getHighlightedField(), 100, 4);
+		searchRequestBuilder.addHighlightedField(command.getHighlightedField(), 100, 4);
 		searchRequestBuilder.setHighlighterPreTags("{snippet}");
 		searchRequestBuilder.setHighlighterPostTags("{#snippet}");
 
-		if (Lists.isNotEmpty(query.getFieldSortBuilders())){
+		if (Lists.isNotEmpty(command.getFieldSortBuilders())){
 			searchRequestBuilder.addSort(new FieldSortBuilder("_score").order(SortOrder.DESC));
-			List<FieldSortBuilder> sortBuilders = query.getFieldSortBuilders();
+			List<FieldSortBuilder> sortBuilders = command.getFieldSortBuilders();
 			sortBuilders.stream().forEach(searchRequestBuilder::addSort);
 		}
 

@@ -1,11 +1,13 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkExclude;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @SdkExclude
@@ -24,6 +26,7 @@ public class UserConnection extends BaseEntity implements Serializable {
 
 	public String providerUserId;
 
+	@JsonIgnore
 	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
@@ -39,4 +42,14 @@ public class UserConnection extends BaseEntity implements Serializable {
 	public String email;
 
 	public String imageUrl;
+
+	@PreUpdate
+	public void onUpdate() {
+		updatedAt = new Date();
+	}
+
+	@PrePersist
+	public void onCreate() {
+		createdAt = new Date();
+	}
 }

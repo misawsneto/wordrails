@@ -1,61 +1,99 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.WordrailsService;
+import co.xarx.trix.annotations.TimeIt;
 import co.xarx.trix.api.ContentResponse;
-import co.xarx.trix.domain.*;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Station;
+import co.xarx.trix.domain.StationRole;
+import co.xarx.trix.domain.page.*;
 import co.xarx.trix.eventhandler.StationEventHandler;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
-import co.xarx.trix.services.CacheService;
+import co.xarx.trix.services.QueryableSectionService;
+import co.xarx.trix.services.auth.AuthService;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.ArrayList;
+import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.util.List;
-
-//import co.xarx.trix.auth.TrixAuthenticationProvider;
+import java.util.Map;
 
 @Path("/stations")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Component
 public class StationsResource {
+	@Autowired
+	private AuthService authProvider;
+	@Autowired
+	private StationRolesRepository stationRolesRepository;
+	@Autowired
+	private StationRepository stationRepository;
+	@Autowired
+	private StationPerspectiveRepository stationPerspectiveRepository;
+	@Autowired
+	private QueryPersistence queryPersistence;
 
-	private
+	@Autowired
+	private PageRepository pageRepository;
+	@Autowired
+	private QueryableSectionService queryableSectionService;
+
+
 	@Context
-	HttpServletRequest request;
-	@Autowired
-	private TrixAuthenticationProvider authProvider;
-	private
-	@Autowired
-	NetworkRolesRepository networkRolesRepository;
+	private HttpServletRequest request;
+	@Context
+	private HttpServletResponse response;
+	@Context
+	private UriInfo uriInfo;
 
-	@Autowired
-	StationRolesRepository stationRolesRepository;
+	private void forward() throws ServletException, IOException {
+		forward(uriInfo.getPath());
+	}
 
-	private
-	@Autowired
-	StationRepository stationRepository;
+	private void forward(String uri) throws ServletException, IOException {
+		String path = request.getServletPath() + uri;
+		request.getServletContext().getRequestDispatcher(path).forward(request, response);
+	}
 
-	private
-	@Autowired
-	StationPerspectiveRepository stationPerspectiveRepository;
+	@GET
+	@Path("/{id}")
+	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Station', 'read')")
+	public void getStation(@PathParam("id") @P("id") int postId) throws ServletException, IOException {
+		forward();
+	}
 
-	private
-	@Autowired
-	WordrailsService wordrailsService;
-	private
-	@Autowired
-	CacheService cacheService;
-	private
-	@Autowired
-	QueryPersistence queryPersistence;
+	@TimeIt
+	@GET
+	@Path("/{stationId}/pages")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Page> getPages(@PathParam("stationId") Integer stationId) throws IOException {
+		QPage qPage = QPage.page;
+		Iterable<Page> pages = pageRepository.findAll(qPage.station.id.eq(stationId));
+
+		for (Page page : pages) {
+			page.getSections().values().stream().filter(section -> section != null).filter(section -> section instanceof QueryableSection).forEach(section -> {
+				Map<Integer, Block> blocks = queryableSectionService.fetchQueries((QueryableListSection) section, 0);
+				if (section instanceof ListSection) {
+					((ListSection) section).setBlocks(blocks);
+				}
+			});
+		}
+
+
+		return Lists.newArrayList(pages);
+	}
 
 	private
 	@Autowired
@@ -68,11 +106,9 @@ public class StationsResource {
 		Person person = authProvider.getLoggedPerson();
 		Station station = stationRepository.findOne(stationId);
 
-		NetworkRole role = networkRolesRepository.findByPerson(person);
-
 		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
 
-		if ((role.admin || sRole.admin) && stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
+		if ((person.networkAdmin || sRole.admin) && stationPerspectiveRepository.findOne(perspectiveId).stationId.equals(station.id)) {
 			queryPersistence.updateDefaultPerspective(station.id, perspectiveId);
 			return Response.status(Status.OK).build();
 		} else return Response.status(Status.UNAUTHORIZED).build();
@@ -80,19 +116,14 @@ public class StationsResource {
 
 	@PUT
 	@Path("/{stationId}/setMainStation")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response setMainStation(@PathParam("stationId") Integer stationId, @FormParam("value") boolean value) {
 		Person person = authProvider.getLoggedPerson();
-		NetworkRole role = networkRolesRepository.findByPerson(person);
 
-		List<Station> stations = new ArrayList<Station>();
-
-		if (role.admin) {
+		if (person.networkAdmin) {
 			for (Station station : stationRepository.findAll()) {
-				if (station.id.equals(stationId))
-					station.main = value;
-				else
-					station.main = false;
+				station.main = station.id.equals(stationId) && value;
 
 				stationRepository.save(station);
 			}
@@ -103,7 +134,7 @@ public class StationsResource {
 	@GET
 	@Path("/stats/roles/count")
 	public ContentResponse<Integer> countRolesByStationIds(@QueryParam("stationIds") List<Integer> stationIds, @QueryParam("q") String q){
-		ContentResponse<Integer> resp = new ContentResponse<Integer>();
+		ContentResponse<Integer> resp = new ContentResponse<>();
 		resp.content = 0;
 		if(stationIds != null && !stationIds.isEmpty()) {
 			if (q != null && !q.isEmpty()) {
@@ -123,11 +154,9 @@ public class StationsResource {
 		Person person = authProvider.getLoggedPerson();
 		Station station = stationRepository.findOne(stationId);
 
-		NetworkRole role = networkRolesRepository.findByPerson(person);
-
 		StationRole sRole =  stationRolesRepository.findByStationAndPersonId(station, person.id);
 
-		if (role.admin || sRole.admin) {
+		if (sRole.admin) {
 			stationEventHandler.handleBeforeDelete(station);
 			stationRepository.delete(station.id);
 			return Response.status(Status.OK).build();

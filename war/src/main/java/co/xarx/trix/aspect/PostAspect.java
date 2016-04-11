@@ -1,9 +1,9 @@
 package co.xarx.trix.aspect;
 
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.elasticsearch.domain.ESPost;
-import co.xarx.trix.elasticsearch.repository.ESPostRepository;
-import co.xarx.trix.services.ElasticSearchService;
+import co.xarx.trix.domain.ESPost;
+import co.xarx.trix.persistence.ESPostRepository;
+import co.xarx.trix.services.ESStartupIndexerService;
 import co.xarx.trix.services.SchedulerService;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,12 +19,12 @@ public class PostAspect {
 	@Autowired
 	private SchedulerService schedulerService;
 	@Autowired
-	private ElasticSearchService elasticSearchService;
+	private ESStartupIndexerService elasticSearchService;
 
 	@AfterReturning("within(co.xarx.trix.persistence.PostRepository+) && execution(* *..save(*)) && args(post)")
 	public void savePost(Post post) throws Throwable {
 		if (post.state.equals(Post.STATE_SCHEDULED)) {
-				schedulerService.schedule(post.getId(), post.scheduledDate);
+			schedulerService.schedule(post.getId(), post.scheduledDate);
 		} else {
 			if (post.scheduledDate != null) { //if converting FROM scheduled, unschedule
 				schedulerService.unschedule(post.getId());
@@ -32,16 +32,10 @@ public class PostAspect {
 		}
 
 		if (post.state.equals(Post.STATE_PUBLISHED)) {
-			//				post = findOne(post.getId()); //do it again so modelmapper don't cry... stupid framework
+			//post = findOne(post.getId()); //do it again so modelmapper don't cry... stupid framework
 			elasticSearchService.saveIndex(post, ESPost.class, esPostRepository);
 		} else {
-			elasticSearchService.deleteIndex(post.getId(), esPostRepository);
-
+			esPostRepository.delete(post.getId());
 		}
-	}
-
-	@AfterReturning("within(co.xarx.trix.persistence.PostRepository+) && execution(* *..delete(*)) && args(post)")
-	public void deletePost(Post post) throws Throwable {
-
 	}
 }

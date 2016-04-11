@@ -1,6 +1,6 @@
 package co.xarx.trix.web.rest;
 
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,8 +28,6 @@ public class TaxonomiesResource {
 	@Autowired
 	private NetworkRepository networkRepository;
 	@Autowired
-	private NetworkRolesRepository networkRolesRepository;
-	@Autowired
 	private StationRepository stationRepository;
 	@Autowired
 	private StationPerspectiveRepository stationPerspectiveRepository;
@@ -38,7 +36,7 @@ public class TaxonomiesResource {
 	@Autowired
 	private StationRolesRepository stationRolesRepository;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 
 	@Path("/networks/{networkId}/taxonomiesToEdit")
 	@GET
@@ -48,8 +46,7 @@ public class TaxonomiesResource {
 		Network network = networkRepository.findOne(networkId);
 		if(network != null){
 			Person personLogged = authProvider.getLoggedPerson();
-			NetworkRole networkRole = networkRolesRepository.findByNetworkAndPerson(network, personLogged);
-			if(networkRole != null && networkRole.admin){
+			if(personLogged.networkAdmin){
 				taxonomies = taxonomyRepository.findNetworkOrStationTaxonomies(networkId);
 			}else{
 				List<StationRole> stationRoles = stationRolesRepository.findByPersonIdAndNetworkId(personLogged.id, network.id);

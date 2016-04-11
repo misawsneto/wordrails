@@ -2,10 +2,11 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
 import co.xarx.trix.services.MobileService;
+import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
@@ -22,13 +23,14 @@ import javax.ws.rs.core.Response;
 public class MobileResource {
 
 	@Autowired
-	private TrixAuthenticationProvider authService;
+	private AuthService authService;
 	@Autowired
 	private MobileService mobileService;
 
 	@PUT
 	@Path("/location")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@PreAuthorize("permitAll()")
 	public Response updateLocation(@NotNull @FormParam("deviceCode") String token, @NotNull @FormParam("device") String device,
 							 @FormParam("lat") Double lat, @FormParam("lng") Double lng) {
 		return updateMobile(token, lat, lng, device.equals("apple") ? MobileDevice.Type.APPLE : MobileDevice.Type.ANDROID);

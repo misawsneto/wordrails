@@ -1,16 +1,10 @@
 package co.xarx.trix.eventhandler;
 
 import co.xarx.trix.domain.*;
-import co.xarx.trix.domain.event.Event;
-import co.xarx.trix.elasticsearch.domain.ESStation;
-import co.xarx.trix.elasticsearch.repository.ESStationRepository;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.StationSecurityChecker;
-import co.xarx.trix.security.auth.TrixAuthenticationProvider;
-import co.xarx.trix.services.CacheService;
-import co.xarx.trix.services.ElasticSearchService;
-import co.xarx.trix.services.LogBuilderExecutor;
+import co.xarx.trix.services.ESStartupIndexerService;
+import co.xarx.trix.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
@@ -34,8 +28,6 @@ public class StationEventHandler {
 	@Autowired
 	StationRepository stationRepository;
 	@Autowired
-	StationSecurityChecker stationSecurityChecker;
-	@Autowired
 	TaxonomyEventHandler taxonomyEventHandler;
 	@Autowired
 	TaxonomyRepository taxonomyRepository;
@@ -43,8 +35,6 @@ public class StationEventHandler {
 	NotificationRepository notificationRepository;
 	@Autowired
 	PostReadRepository postReadRepository;
-	@Autowired
-	CacheService cacheService;
 	@Autowired
 	QueryPersistence queryPersistence;
 	@Autowired
@@ -56,15 +46,16 @@ public class StationEventHandler {
 	@Autowired
 	StationPerspectiveEventHandler stationPerspectiveEventHandler;
 	@Autowired
-	private TrixAuthenticationProvider authProvider;
+	private AuthService authProvider;
 	@Autowired
-	private ElasticSearchService elasticSearchService;
+	private ESStartupIndexerService elasticSearchService;
 	@Autowired
 	private ESStationRepository esStationRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Station station) throws UnauthorizedException {
-		if(stationSecurityChecker.canCreate(station)){
+		Person personLogged = authProvider.getLoggedPerson();
+		if(personLogged.networkAdmin){
 			if(station.stationPerspectives == null || station.stationPerspectives.size() == 0 
 					&& station.network != null){
 				Set<StationPerspective> perspectives = new HashSet<StationPerspective>(1);
@@ -174,63 +165,38 @@ public class StationEventHandler {
 		station.stationPerspectives = new HashSet<>(stationPerspectiveRepository.findByStationId(station.id));
 	}
 
-	@Autowired
-	private LogBuilderExecutor logBuilderExecutor;
-
-	@Autowired
-	private EventRepository eventRepository;
-
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Station station) throws UnauthorizedException{
-		if(stationSecurityChecker.canEdit(station)){
-			stationRepository.deleteStationNetwork(station.id);
+		List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
+		stationPerspectiveRepository.delete(stationsPerspectives);
 
-			List<StationPerspective> stationsPerspectives = stationPerspectiveRepository.findByStationId(station.id);
-			stationPerspectiveRepository.delete(stationsPerspectives);
+		Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
 
-			Taxonomy taxonomy = taxonomyRepository.findOne(station.categoriesTaxonomyId);
-
-			if (taxonomy != null) {
-				taxonomyEventHandler.handleBeforeDelete(taxonomy);
-				taxonomyRepository.delete(taxonomy);
-			}
-
-			List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
-			if(stationsRoles != null && stationsRoles.size() > 0){
-				personStationRolesRepository.delete(stationsRoles);
-			}
-
-			List<Post> posts = postRepository.findByStation(station);
-
-			if(posts != null && posts.size() > 0){
-//				for (Post post : posts) {
-//					postEventHandler.handleBeforeDelete(post);
-//					postRepository.delete(posts);
-//				}
-
-				List<Integer> ids = new ArrayList<Integer>();
-				for (Post post : posts) {
-					ids.add(post.id);
-				}
-				queryPersistence.deleteAuthoritiesByStation(station.id);
-				queryPersistence.deleteCellsInPosts(ids);
-				queryPersistence.deleteCommentsInPosts(ids);
-				queryPersistence.deleteNotificationsInPosts(ids);
-				queryPersistence.deletePostReadsInPosts(ids);
-				queryPersistence.deleteRecommendsInPosts(ids);
-
-				postRepository.forceDeleteAll(posts.stream().map(post -> {
-					postEventHandler.handleBeforeDelete(post);
-					return post.id;
-				}).collect(Collectors.toList()));
-			}
-
-			elasticSearchService.deleteIndex(station.getId(), esStationRepository);
-
-		}else{
-			throw new UnauthorizedException();
+		if (taxonomy != null) {
+			taxonomyEventHandler.handleBeforeDelete(taxonomy);
+			taxonomyRepository.delete(taxonomy);
 		}
+
+		List<StationRole> stationsRoles = personStationRolesRepository.findByStation(station);
+		if (stationsRoles != null && stationsRoles.size() > 0) {
+			personStationRolesRepository.delete(stationsRoles);
+		}
+
+		List<Post> posts = postRepository.findByStation(station);
+
+		if (posts != null && posts.size() > 0) {
+			List<Integer> ids = posts.stream().map(post -> post.id).collect(Collectors.toList());
+			queryPersistence.deleteAuthoritiesByStation(station.id);
+			queryPersistence.deleteCellsInPosts(ids);
+			queryPersistence.deleteCommentsInPosts(ids);
+			queryPersistence.deleteNotificationsInPosts(ids);
+			queryPersistence.deletePostReadsInPosts(ids);
+
+			postRepository.forceDeleteAll(posts.stream().map(post -> post.id).collect(Collectors.toList()));
+		}
+
+		esStationRepository.delete(station.getId());
 	}
 
 	@HandleAfterSave

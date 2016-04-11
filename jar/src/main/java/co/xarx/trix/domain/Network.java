@@ -1,5 +1,6 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
 import co.xarx.trix.annotation.SdkInclude;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -45,34 +46,33 @@ public class Network extends BaseEntity implements Serializable {
 	@Size(min=1, max=100)
 	public String trackingId;
 
-	@OneToMany(mappedBy="network")
-	public Set<NetworkRole> personsNetworkRoles;
-
 	@OneToMany(mappedBy="network", cascade=CascadeType.REMOVE)
 	public Set<Station> stations;
 
 	@ManyToMany
 	public Set<Taxonomy> taxonomies;
 
-	@OneToMany(mappedBy="network", cascade=CascadeType.ALL)
-	public Set<Sponsor> sponsors;
-
 	@OneToMany(mappedBy="owningNetwork")
 	public Set<Taxonomy> ownedTaxonomies;
-	
-	@Column(columnDefinition = "boolean default false", nullable = false)
+
 	public boolean allowSignup;
 
-	@Deprecated
-	@Column(columnDefinition = "boolean default false", nullable = false)
+	@OneToOne
+	@SdkExclude
+	public AuthCredential authCredential;
+
 	public boolean allowSocialLogin;
 
+	@Deprecated
 	public String facebookAppID;
-
+	@Deprecated
 	@JsonIgnore
 	public String facebookAppSecret;
-
+	@Deprecated
 	public String googleAppID;
+	@Deprecated
+	@JsonIgnore
+	public String googleAppSecret;
 
 	public String facebookLink;
 	public String youtubeLink;
@@ -80,9 +80,6 @@ public class Network extends BaseEntity implements Serializable {
 	public String twitterLink;
 
 	public String webFooter;
-
-	@JsonIgnore
-	public String googleAppSecret;
 	
 	@Column(columnDefinition = "boolean default false", nullable = false)
 	public boolean allowSponsors;

@@ -1,7 +1,7 @@
 package co.xarx.trix.domain.page;
 
-import co.xarx.trix.domain.query.FixedQuery;
-import co.xarx.trix.domain.query.PageableQuery;
+import co.xarx.trix.domain.page.query.FixedQuery;
+import co.xarx.trix.domain.page.query.PageableQuery;
 
 import java.util.List;
 

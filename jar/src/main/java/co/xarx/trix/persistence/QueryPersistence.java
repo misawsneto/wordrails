@@ -1,74 +1,17 @@
 package co.xarx.trix.persistence;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Post;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+import java.util.Set;
+
 @Component
 public class QueryPersistence {
 	private @PersistenceContext EntityManager manager;
-	
-	@Transactional
-	public void incrementReadsCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post post SET post.readsCount = post.readsCount + 1 WHERE post.id = :postId").setParameter("postId", postId).executeUpdate();
-	}
-	
-	@Transactional
-	public void decrementReadsCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post post SET post.readsCount = post.readsCount - 1 WHERE post.id = :postId and post.readsCount > 0").setParameter("postId", postId).executeUpdate();
-	}
-	
-	@Transactional
-	public void incrementBookmarksCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post post SET post.bookmarksCount = post.bookmarksCount + 1 WHERE post.id = :postId").setParameter("postId", postId).executeUpdate();
-	}
-	
-	@Transactional
-	public void decrementBookmarksCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post post SET post.bookmarksCount = post.bookmarksCount - 1 WHERE post.id = :postId and post.bookmarksCount > 0").setParameter("postId", postId).executeUpdate();
-	}
-	
-	@Transactional
-	public void incrementFavoritesCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post post SET post.favoritesCount = post.favoritesCount + 1 WHERE post.id = :postId").setParameter("postId", postId).executeUpdate();
-	}
-	
-	@Transactional
-	public void decrementFavoritesCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post post SET post.favoritesCount = post.favoritesCount - 1 WHERE post.id = :postId and post.favoritesCount > 0").setParameter("postId", postId).executeUpdate();
-	}
-	
-	@Transactional
-	public void incrementRecommendsCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post post SET post.recommendsCount = post.recommendsCount + 1 WHERE post.id = :postId").setParameter("postId", postId).executeUpdate();
-	}
-	
-	@Transactional
-	public void decrementRecommendsCount(Integer postId) {
-		manager.createNativeQuery("UPDATE Post post SET post.recommendsCount = post.recommendsCount - 1 WHERE post.id = :postId and post.recommendsCount > 0").setParameter("postId", postId).executeUpdate();
-	}
-	
-	@Transactional
-	public void deleteBookmark(Integer postId, Integer personId){
-		manager.createNativeQuery("DELETE FROM Bookmark WHERE post_id = :postId AND person_id = :personId").setParameter("postId", postId).setParameter("personId", personId).executeUpdate();
-	}
-
-	@Transactional
-	public void deleteRecommend(Integer postId, Integer personId) {
-		manager.createNativeQuery("DELETE FROM Recommend WHERE post_id = :postId AND person_id = :personId").setParameter("postId", postId).setParameter("personId", personId).executeUpdate();
-	}
-
-	@Transactional
-	public void changePostState(Integer postId, String state) {
-		manager.createNativeQuery("UPDATE post SET state=:state where id = :postId").setParameter("postId", postId).setParameter("state", state).executeUpdate();
-	}
 
 	@Transactional
 	public void updateCommentsCount(Integer postId) {
@@ -93,21 +36,6 @@ public class QueryPersistence {
 	@Transactional
 	public void deleteCommentsInPosts(List<Integer> ids) {
 		manager.createQuery("delete from Comment comment where comment.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
-	}
-	
-	@Transactional
-	public void deletePromotionsInPosts(List<Integer> ids) {
-		manager.createQuery("delete from Promotion promotion where promotion.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
-	}
-	
-	@Transactional
-	public void deleteRecommendsInPosts(List<Integer> ids) {
-		manager.createQuery("delete from Recommend recommend where recommend.post.id in (:ids)").setParameter("ids", ids).executeUpdate();
-	}
-
-	@Transactional
-	public void updateMainStation(Integer id, boolean main) {
-		manager.createNativeQuery("update Station station set main = :main where station.id = :id").setParameter("id", id).setParameter("main", main).executeUpdate();		
 	}
 
 	@Transactional
@@ -148,101 +76,21 @@ public class QueryPersistence {
 				.setParameter("perspectiveId", perspectiveId).setParameter("notId", notId).executeUpdate();
 	}
 
-    public List<Post> findPostsByTag(Set<String> tags, Integer stationId, int page, int size) {
-        return manager.createQuery("select p from Post p join p.tags tgs where tgs in :tags and p.station.id = :stationId", Post.class)
-                .setParameter("tags", tags).setParameter("stationId", stationId)
-                .setMaxResults(size)
-                .setFirstResult(page * size)
-                .getResultList();
-    }
-
-	@Transactional
-	public List<Object[]> getRepeatedImage(){
-		return manager.createNativeQuery("SELECT id, originalHash, count(originalHash) AS c FROM Image WHERE originalHash IS NOT NULL GROUP BY originalHash HAVING c > 1").getResultList();
-	}
-
-	@Transactional
-	public List<Integer> getRepeatedImageHash(String hash){
-		return manager.createNativeQuery("select id from Image where originalHash = :hash")
-				.setParameter("hash", hash)
+	public List<Post> findPostsByTag(Set<String> tags, int page, int size) {
+		return manager.createQuery("select distinct p from Post p join p.tags tgs where tgs in :tags", Post.class)
+				.setParameter("tags", tags)
+				.setMaxResults(size)
+				.setFirstResult(page * size)
 				.getResultList();
 	}
 
-	@Transactional
-	public void updatePostFeaturedImageId(List<Integer> repeatedImages, Integer imageId){
-		manager.createQuery("update Post set featuredImage.id = :imageId where featuredImage.id in (:repeatedImages)")
-				.setParameter("imageId", imageId)
-				.setParameter("repeatedImages", repeatedImages)
-				.executeUpdate();
-	}
-
-	@Transactional
-	public void updateNetworkLoginImageId(List<Integer> repeatedImages, Integer imageId){
-		manager.createQuery("update Network set loginImage.id = :imageId where loginImage.id in (:repeatedImages)")
-				.setParameter("imageId", imageId)
-				.setParameter("repeatedImages", repeatedImages)
-				.executeUpdate();
-	}
-
-	@Transactional
-	public void updateNetworkFaviconId(List<Integer> repeatedImages, Integer imageId){
-		manager.createNativeQuery("update Network set faviconId = :imageId where faviconId in (:repeatedImages)")
-				.setParameter("imageId", imageId)
-				.setParameter("repeatedImages", repeatedImages)
-				.executeUpdate();
-	}
-
-	@Transactional
-	public void updateNetworkFavicon(List<Integer> repeatedImages){
-		manager.createNativeQuery("update Network set favicon_id = NULL where network.favicon_id in (:repeatedImages)")
-				.setParameter("repeatedImages", repeatedImages)
-				.executeUpdate();
-	}
-
-
-	@Transactional
-	public void updateNetworkSplashImageId(List<Integer> repeatedImages, Integer imageId){
-		manager.createQuery("update Network set splashImage.id = :imageId where splashImage.id in (:repeatedImages)")
-				.setParameter("imageId", imageId)
-				.setParameter("repeatedImages", repeatedImages)
-				.executeUpdate();
-	}
-
-	@Transactional
-	public void updateStationLogo(List<Integer> repeatedImages, Integer imageId){
-		manager.createNativeQuery("update Station set logo_id = :imageId where station.logo_id in (:repeatedImages)")
-				.setParameter("imageId", imageId)
-				.setParameter("repeatedImages", repeatedImages)
-				.executeUpdate();
-	}
-
-	@Transactional
-	public void updateImagePicture(List<Integer> repeatedImages, Integer imageId){
-		manager.createNativeQuery("update image_picture set image_id = :imageId where image_picture.image_id in (:repeatedImages)")
-				.setParameter("imageId", imageId)
-				.setParameter("repeatedImages", repeatedImages)
-				.executeUpdate();
-	}
-
-	@Transactional
-	public void deleteImagePicture(List<Integer> ids){
-		manager.createNativeQuery("DELETE FROM image_picture WHERE image_picture.image_id in (:ids)")
-				.setParameter("ids", ids)
-				.executeUpdate();
-	}
-
-	@Transactional
-	public void deleteImageHash(List<Integer> ids){
-		manager.createNativeQuery("DELETE FROM image_hash WHERE image_hash.image_id in (:ids)")
-				.setParameter("ids", ids)
-				.executeUpdate();
-	}
-
-	@Transactional
-	public void deleteImageList(List<Integer> ids){
-		manager.createNativeQuery("DELETE FROM image WHERE id in (:ids)")
-				.setParameter("ids", ids)
-				.executeUpdate();
+	public List<Post> findPostsByTagAndStationId(Set<String> tags, Integer stationId, int page, int size) {
+		return manager.createQuery("select distinct p from Post p join p.tags tgs where tgs in (:tags) and p.station.id = :stationId", Post.class)
+				.setParameter("tags", tags)
+				.setParameter("stationId", stationId)
+				.setMaxResults(size)
+				.setFirstResult(page * size)
+				.getResultList();
 	}
 
 	@Transactional

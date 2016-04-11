@@ -97,7 +97,7 @@ public class $facade$ {
 			.setEndpoint(_url + "/api")
 			.build();
 		_builder.setLogLevel(_level);
-		IWordRails target = _builder.create(IWordRails.class);
+		ITrix target = _builder.create(ITrix.class);
 
 		ClassLoader _loader = I$facade$.class.getClassLoader();
 
@@ -527,11 +527,11 @@ public class $facade$ {
 	public void putRegId(String regId, Integer networkId, Double lat, Double lng, Callback<Response> _callback){
 		_facade.putRegId(regId, networkId, lat, lng, _callback);
 	}
-	
+
 	public Response putLocation(String deviceCode, String device, Double lat, Double lng){
 		return _facade.putLocation(deviceCode, device, lat, lng);
 	}
-	
+
 	public void putLocation(String deviceCode, String device, Double lat, Double lng, Callback<Response> _callback){
 		_facade.putLocation(deviceCode, device, lat, lng, _callback);
 	}

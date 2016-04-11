@@ -7,7 +7,4 @@ import org.springframework.data.rest.core.config.Projection;
 public interface ImageProjection {
 	Integer getId();
 	String getOriginalHash();
-	FileProjection getSmall();
-	FileProjection getMedium();
-	FileProjection getLarge();
 }

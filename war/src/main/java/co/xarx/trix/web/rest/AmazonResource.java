@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,9 @@ public class AmazonResource {
 
 	@GET
 	@Path("/signedUrl")
-	public Response generateSignedUrl(@QueryParam("hash") String hash, @QueryParam("type") String type, @Context HttpServletRequest request) throws IOException {
+	@PreAuthorize("permitAll()")
+	public Response generateSignedUrl(@QueryParam("hash") String hash,
+									  @QueryParam("type") String type) throws IOException {
 		String objectKey = TenantContextHolder.getCurrentTenantId() + "/" + type + "/" + hash;
 
 		System.out.println("Generating pre-signed URL.");

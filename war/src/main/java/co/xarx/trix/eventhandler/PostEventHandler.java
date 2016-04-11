@@ -1,16 +1,14 @@
 package co.xarx.trix.eventhandler;
 
+import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.domain.Post;
-import co.xarx.trix.elasticsearch.domain.ESPost;
-import co.xarx.trix.elasticsearch.repository.ESPostRepository;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.NotImplementedException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.security.PostAndCommentSecurityChecker;
-import co.xarx.trix.services.ElasticSearchService;
-import co.xarx.trix.services.PostService;
+import co.xarx.trix.services.ESStartupIndexerService;
 import co.xarx.trix.services.SchedulerService;
+import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,26 +33,15 @@ public class PostEventHandler {
 	@Autowired
 	private CommentRepository commentRepository;
 	@Autowired
-	private ImageRepository imageRepository;
-	@Autowired
-	private PostAndCommentSecurityChecker postAndCommentSecurityChecker;
-	@Autowired
-	private RecommendRepository recommendRepository;
-	@Autowired
 	private NotificationRepository notificationRepository;
 	@Autowired
-	private ElasticSearchService elasticSearchService;
+	private ESStartupIndexerService elasticSearchService;
 	@Autowired
 	private ESPostRepository esPostRepository;
 
 	@HandleBeforeCreate
 	public void handleBeforeCreate(Post post) throws UnauthorizedException, NotImplementedException, BadRequestException {
-
-		if (postAndCommentSecurityChecker.canWrite(post)) {
-			savePost(post);
-		} else {
-			throw new UnauthorizedException();
-		}
+		savePost(post);
 	}
 
 	public void savePost(Post post) {
@@ -99,18 +86,12 @@ public class PostEventHandler {
 	@HandleBeforeDelete
 	@Transactional
 	public void handleBeforeDelete(Post post) throws UnauthorizedException {
-		if (postAndCommentSecurityChecker.canRemove(post)) {
-
-			cellRepository.delete(cellRepository.findByPost(post));
-			commentRepository.delete(post.comments);
-			postReadRepository.deleteByPost(post);
-			notificationRepository.deleteByPost(post);
-			recommendRepository.deleteByPost(post);
-			if (post.state.equals(Post.STATE_PUBLISHED)) {
-				elasticSearchService.deleteIndex(post.id, esPostRepository); // evitando bug de remoção de post que tiveram post alterado.
-			}
-		} else {
-			throw new UnauthorizedException();
+		cellRepository.delete(cellRepository.findByPost(post));
+		commentRepository.delete(post.comments);
+		postReadRepository.deleteByPost(post);
+		notificationRepository.deleteByPost(post);
+		if (post.state.equals(Post.STATE_PUBLISHED)) {
+			esPostRepository.delete(post.id); // evitando bug de remoção de post que tiveram post alterado.
 		}
 	}
 }

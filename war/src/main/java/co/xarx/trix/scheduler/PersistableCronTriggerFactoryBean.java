@@ -1,7 +1,6 @@
 package co.xarx.trix.scheduler;
 
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
-import org.springframework.scheduling.quartz.JobDetailAwareTrigger;
 
 public class PersistableCronTriggerFactoryBean extends CronTriggerFactoryBean {
 
@@ -14,6 +13,6 @@ public class PersistableCronTriggerFactoryBean extends CronTriggerFactoryBean {
 		}
 
 		//Remove the JobDetail element
-		getJobDataMap().remove(JobDetailAwareTrigger.JOB_DETAIL_KEY);
+		getJobDataMap().remove("jobDetail");
 	}
 }

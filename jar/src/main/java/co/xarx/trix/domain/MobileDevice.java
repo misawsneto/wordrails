@@ -3,6 +3,7 @@ package co.xarx.trix.domain;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 
@@ -39,6 +40,7 @@ public class MobileDevice extends BaseEntity {
 
 	public boolean active;
 
+	@RestResource(exported = false)
 	public Type type;
 
 	@Override
