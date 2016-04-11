@@ -59,7 +59,7 @@
                      <i class="mdi mdi2-radio-tower"></i>
                       {{'titles.STATIONS' | translate}}
                    </md-button>
-                   <md-menu-content>
+                   <md-menu-content class="w-lg">
                     <div class="p">
                      <ul class="list-unstyled">
                        <li ng-repeat="perm in stationsPermissions">
@@ -115,13 +115,14 @@
                       <div class="clear font-thin">
                         <a href class="font-bold block text-md">{{publication.title}}</a>
                         {{publication.snippet | characters:170}}
-                        <div class="p-t-sm text-xs font-500">
-                          <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
+                        <div class="p-t-sm font-500">
+                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
                           </div>
-                          <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
+                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
                           </div>
                         </div>
-                        <div class="list-group-item b-n p-sm p-t-sm no-padding-h">
+                        <div class="m-t pull-right font-500 m-r-sm"><i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}</div>
+                        <div class="list-group-item b-n p-sm p-t-sm no-padding-h inline">
                           <a href class="pull-left m-r-sm"><img src="/images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
                           <div class="clear font-normal p-xs">
                             <a href class="font-500 block">{{publication.authorName}}</a>

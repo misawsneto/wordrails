@@ -202,4 +202,8 @@ $scope.paginate = function(){
 		$scope.commentFocused = false;
 	}
 
+	settingsPublicationsCtrl = $scope;
+
 }]);
+
+var settingsPublicationsCtrl = null;

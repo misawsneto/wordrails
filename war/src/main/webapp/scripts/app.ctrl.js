@@ -199,6 +199,32 @@ angular.module('app')
       };
 
       // ---------- /util-toast -------------
+      
+      $scope.app.defaultDialog = function(scope, $mdDialog) {
+        scope.app = $scope.app;
+
+        scope.hide = function() {
+          $mdDialog.hide();
+        };
+
+        scope.cancel = function() {
+          $mdDialog.cancel();
+        }
+      };
+
+      $scope.app.cancelDialog = function() {
+        $mdDialog.cancel();
+      } 
+
+      $scope.app.getStationById = function(id) {
+        var ret = null;
+        $scope.app.stations.forEach(function(station){
+          if(station.id == id)
+            ret = station
+        })
+        return ret
+      }
+
       // ---------- /util -------------
 
       // ---------- theming -----------
@@ -288,6 +314,10 @@ angular.module('app')
 
       $scope.app.applyNetworkTheme();
 
+      // ---------- /theming ------------------
+
+      // ---------- imageHelper -----------
+      
       $scope.getBackgroundImage = function(postView, size){
         var img = $filter('bgImageLink')(postView, size);
         if(postView.externalVideoUrl){
@@ -302,22 +332,6 @@ angular.module('app')
 
       $scope.app.getBackgroundImage = function(postView, size){
         return $scope.getBackgroundImage(postView, size);
-      }
-
-      $scope.app.defaultDialog = function(scope, $mdDialog) {
-        scope.app = $scope.app;
-
-        scope.hide = function() {
-          $mdDialog.hide();
-        };
-
-        scope.cancel = function() {
-          $mdDialog.cancel();
-        }
-      };
-
-      $scope.app.cancelDialog = function() {
-        $mdDialog.cancel();
       }
 
       $scope.app.userImageSmall = null
@@ -337,6 +351,7 @@ angular.module('app')
         $scope.app.coverImageMedium = $filter('coverImage')(person, 'medium')
         $scope.app.coverImageLarge = $filter('coverImage')(person, 'large')
       }
+      
 
       $scope.$watch('app.person', function(newVal, oldVal){
         if(newVal){
@@ -348,7 +363,7 @@ angular.module('app')
       setUserImage($scope.app.person);
       setCoverImage($scope.app.person);
 
-      // ---------- /theming ----------
+      // ---------- /imageHelper ----------
 
       // ------------------- image userImageUploader -------------
       // user image upload
@@ -475,8 +490,9 @@ angular.module('app')
         }
       };
 
-
       // ------------------- end of image userImageUploader -------------
+
+      // ----------- signin-signup-forgot --------------
       $scope.app.signOut = function(){
         trix.logout().success(function(){
           document.location.href = '/';
@@ -502,6 +518,8 @@ angular.module('app')
           // }
         })
       }
+
+      // ----------- /signin-signup-forgot --------------
 
       $scope.app.getStationFromSlug = function(slug){
 
