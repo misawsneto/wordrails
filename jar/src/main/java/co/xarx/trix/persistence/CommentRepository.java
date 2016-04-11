@@ -25,7 +25,6 @@ public interface CommentRepository extends DatabaseRepository<Comment, Integer> 
 	@RestResource(exported = true)
 	Comment save(Comment entity);
 
-	@PreAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
 	@Query("FROM Comment comment WHERE comment.post.id = :postId ORDER BY comment.date DESC")
 	List<Comment> findPostCommentsOrderByDate(@Param("postId") Integer postId, Pageable pageable);
 

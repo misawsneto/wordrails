@@ -12,29 +12,36 @@
 		<listener-class>co.xarx.trix.ContextServletListener</listener-class>
 	</listener>
 
-	<!-- RESTEasy -->
 	<listener>
 		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
 	</listener>
+
+	<listener>
+		<listener-class>co.xarx.trix.config.web.SpringResteasyContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- RESTEasy -->
+	<servlet>
+		<servlet-name>Resteasy</servlet-name>
+		<servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+		</servlet-class>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>co.xarx.trix.ResteasyApplication</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Resteasy</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
 
 	<context-param>
 		<param-name>resteasy.servlet.mapping.prefix</param-name>
 		<param-value>/api</param-value>
 	</context-param>
-
-	<filter>
-		<filter-name>FilterDispatcher</filter-name>
-		<filter-class>org.jboss.resteasy.plugins.server.servlet.FilterDispatcher</filter-class>
-	</filter>
 	<!-- RESTEasy -->
-
-	<!-- Spring -->
-	<!--<listener>-->
-		<!--<listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>-->
-	<!--</listener>-->
-	<listener>
-		<listener-class>co.xarx.trix.config.web.SpringResteasyContextLoaderListener</listener-class>
-	</listener>
 
 	<context-param>
 		<param-name>contextClass</param-name>
@@ -70,7 +77,7 @@
 
 	<servlet-mapping>
 		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/data/*</url-pattern>
 	</servlet-mapping>
 	<!-- Spring Data REST -->
 
@@ -133,6 +140,13 @@
 
 	<!-- Cache -->
 	<filter>
+		<filter-name>NotFoundFilter</filter-name>
+		<filter-class>co.xarx.trix.web.filter.NotFoundFilter</filter-class>
+	</filter>
+	<!-- Cache -->
+
+	<!-- Cache -->
+	<filter>
 		<filter-name>CacheFilter</filter-name>
 		<filter-class>co.xarx.trix.web.filter.CacheFilter</filter-class>
 	</filter>
@@ -191,6 +205,12 @@
 			<param-value>pathEntityFilter</param-value>
 		</init-param>
 	</filter>
+
+	<filter-mapping>
+		<filter-name>NotFoundFilter</filter-name>
+		<url-pattern>/data/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>CORSCustomFilter</filter-name>
@@ -259,6 +279,7 @@
 	<filter-mapping>
 		<filter-name>OpenEntityManagerInViewFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/data/*</url-pattern>
 		<url-pattern>/index.jsp</url-pattern>
 		<url-pattern>/search/*</url-pattern>
 		<url-pattern>/post/*</url-pattern>
@@ -271,11 +292,6 @@
 		<url-pattern>/mystats/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-
-	<filter-mapping>
-		<filter-name>FilterDispatcher</filter-name>
-		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 
 	<!--<filter-mapping>-->

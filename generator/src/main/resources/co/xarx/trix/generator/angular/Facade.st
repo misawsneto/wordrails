@@ -97,11 +97,12 @@ var trix = angular.module('trix', [])
 		return \$http.get(_config.url + "/api/terms/search/findPostsByTagAndStationId",  config)
 	};
 
-	this.createPerson = function(person) {
-	  var config = {};
-	  config.headers = {"Content-Type": "application/json"}
-	  return \$http.post(_config.url + "/api/persons/create", person, config)
-	}
+    this.createPerson = function(person, invitation) {
+      var config = {};
+      config.headers = {"Content-Type": "application/json"}
+      config.params = {invitation: invitation}
+      return \$http.post(_config.url + "/api/persons/create", person, config)
+    }
 
 	this.createNetwork = function(createNetwork) {
 	  var config = {};
