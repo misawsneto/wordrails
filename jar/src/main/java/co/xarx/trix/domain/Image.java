@@ -159,6 +159,7 @@ public class Image extends BaseEntity implements Serializable {
 	@SdkExclude
 	@ManyToMany
 	@JoinTable(name = "image_picture", joinColumns = @JoinColumn(name = "image_id"))
+	@JsonIgnore
 	private Set<Picture> pictures;
 
 	private Set<String> getPicturesSizes() {
