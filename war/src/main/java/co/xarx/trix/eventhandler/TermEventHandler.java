@@ -4,6 +4,7 @@ import co.xarx.trix.domain.Row;
 import co.xarx.trix.domain.StationPerspective;
 import co.xarx.trix.domain.Term;
 import co.xarx.trix.domain.TermPerspective;
+import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.RowRepository;
 import co.xarx.trix.persistence.StationPerspectiveRepository;
 import co.xarx.trix.persistence.TermPerspectiveRepository;
@@ -49,15 +50,20 @@ public class TermEventHandler {
 						lastIndex = lastRow.index == null ? 0 : lastRow.index;
 					}
 
-					Row row = new Row();
-					row.term = term;
-					row.type = Row.ORDINARY_ROW;
-					row.index = lastIndex + 1;
-					row.perspective = perspective;
-					rows.add(row);
+						Row row = new Row();
+						row.term = term;
+						row.type = Row.ORDINARY_ROW;
+						row.index = lastIndex + 1;
+						row.perspective = perspective;
+						rows.add(row);
+					}
 				}
-			}
-			rowRepository.save(rows);
+
+				for (Row row :rows) {
+					rowRepository.save(row);
+				}
+			} else{
+			throw new UnauthorizedException();
 		}
 	}
 

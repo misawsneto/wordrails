@@ -27,6 +27,5 @@
   },
   "_source": "git://github.com/bradvin/FooTable.git",
   "_target": "~2.0.3",
-  "_originalSource": "footable",
-  "_direct": true
+  "_originalSource": "footable"
 }

@@ -5251,6 +5251,136 @@ bg-none {
   background: transparent;
 }
 
+.avatar {
+  position: relative;
+  display: block;
+  white-space: nowrap;
+  border-radius: 500px;
+}
+
+.avatar img {
+  width: 100%;
+  border-radius: 500px;
+}
+
+.avatar i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  margin: 2px;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 100%;
+}
+
+.avatar i.right {
+  right: 0;
+  left: auto;
+}
+
+.avatar i.bottom {
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: auto;
+}
+
+.avatar i.left {
+  top: auto;
+  bottom: 0;
+}
+
+.avatar i.on {
+  background-color: #4caf50;
+}
+
+.avatar i.off {
+  background-color: rgba(0, 0, 0, 0.54);
+}
+
+.avatar i.busy {
+  background-color: #f44336;
+}
+
+.avatar i.away {
+  background-color: #ffc107;
+}
+
+.avatar.thumb-md i {
+  width: 12px;
+  height: 12px;
+  margin: 3px;
+}
+
+.avatar.thumb-sm i {
+  margin: 1px;
+}
+
+.avatar.thumb-xs i {
+  margin: 0;
+}
+
+.thumb-xl {
+  display: inline-block;
+  width: 128px;
+}
+
+.thumb-lg {
+  display: inline-block;
+  width: 96px;
+}
+
+.thumb-md {
+  display: inline-block;
+  width: 64px;
+}
+
+.thumb {
+  display: inline-block;
+  width: 50px;
+}
+
+.thumb-sm {
+  display: inline-block;
+  width: 40px;
+}
+
+.thumb-xs {
+  display: inline-block;
+  width: 34px;
+}
+
+.thumb-xxs {
+  display: inline-block;
+  width: 30px;
+}
+
+.thumb-wrapper {
+  padding: 2px;
+  border: 1px solid #dddee0;
+}
+
+.thumb img,
+.thumb-xs img,
+.thumb-sm img,
+.thumb-md img,
+.thumb-lg img,
+.thumb-btn img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.img-full {
+  width: 100%;
+}
+
+.img-full img {
+  width: 100%;
+}
+
 .no-border {
   border-color: transparent;
   border-width: 0;
@@ -6454,6 +6584,22 @@ bg-none {
   width: 320px;
 }
 
+.w-1200 {
+  width: 1200px;
+}
+
+.w-800 {
+  width: 800px;
+}
+
+.w-600 {
+  width: 600px;
+}
+
+.w-400 {
+  width: 400px;
+}
+
 .w-full {
   width: 100%;
 }
@@ -6484,6 +6630,10 @@ bg-none {
 
 .block-600 {
   max-width: 600px;
+}
+
+.block-400 {
+  max-width: 400px;
 }
 
 @media (max-width: 991px) {
@@ -7393,8 +7543,216 @@ bg-none {
 /* /settings-color-selector */
 /* general */
 
+/* material design icons */
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v12/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
+
+.material-icons {
+  display: inline-block;
+  font-family: 'Material Icons';
+  font-size: 24px;
+  -webkit-font-smoothing: antialiased;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+}
+
+@font-face {
+  font-family: "icomoon";
+  font-style: normal;
+  font-weight: normal;
+  src: url("https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot");
+}
+
+@font-face {
+  font-family: 'icomoon';
+  font-style: normal;
+  font-weight: normal;
+  src: url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?-cmq1um');
+  src: url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?#iefix-cmq1um') format('embedded-opentype'), url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.woff?-cmq1um') format('woff'), url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.ttf?-cmq1um') format('truetype'), url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.svg?-cmq1um#icomoon') format('svg');
+}
+
+/* /material design icons */
+
+/* material datepicker */
+
+.mdp-calendar-monthyear,
+.mdp-datepicker-year,
+.mdp-calendar-week-days,
+.mdp-datepicker-select-year .repeated-year .md-button {
+  font-size: inherit!important;
+}
+
+.mdp-datepicker-date,
+.mdp-datepicker-select-year .repeated-year .md-button.current {
+  font-size: 28px!important;
+}
+
+.mdp-calendar button.md-icon-button.md-button {
+  margin: 5px 0;
+}
+
+.mdp-calendar button.md-raised:not([disabled]) {
+  background-color: transparent;
+}
+
+.mdp-calendar button.md-raised,
+.mdp-timepicker button.md-raised:not(.md-primary) {
+  color: inherit!important;
+}
+
+.mdp-clock,
+.mdp-calendar .md-button.md-raised:not(.md-accent):not([disabled]):hover {
+  background-color: transparent!important;
+}
+
+/* /material datepicker */
+
+/* bootstrap overrides */
+
+.advanced-search-menu .arrow,
+.with-arrow .arrow {
+  top: -11px;
+  right: 0;
+}
+
+.advanced-search-menu .arrow.lft,
+.with-arrow .arrow.lft {
+  left: 9px;
+}
+
+.advanced-search-menu .arrow:before,
+.with-arrow .arrow:before {
+  position: absolute;
+  top: -9px;
+  right: 15px;
+  display: inline-block;
+  border-right: solid transparent;
+  border-bottom: solid #ccc;
+  border-left: solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  border-width: 10px;
+  content: '';
+}
+
+.advanced-search-menu .arrow.lft:before,
+.with-arrow .arrow.lft:before {
+  left: 0;
+}
+
+.advanced-search-menu .arrow:after,
+.with-arrow .arrow:after {
+  position: absolute;
+  top: -7px;
+  right: 16px;
+  display: inline-block;
+  border-right: solid transparent;
+  border-bottom: solid #ffffff;
+  border-left: solid transparent;
+  border-width: 9px;
+  content: '';
+}
+
+.advanced-search-menu .arrow.lft:after,
+.with-arrow .arrow.lft:after {
+  left: 1px;
+}
+
+.popover-content {
+  padding: 0;
+}
+
+/* /bootstrap overrides */
+
 .font-500 {
   font-weight: 500;
+}
+
+.min-h-100 {
+  min-height: 100px;
+}
+
+.min-h-200 {
+  min-height: 200px;
+}
+
+.min-h-300 {
+  min-height: 300px;
+}
+
+.min-h-400 {
+  min-height: 400px;
+}
+
+.min-h-500 {
+  min-height: 500px;
+}
+
+.fr-toolbar .fr-command.fr-btn,
+.fr-popup .fr-command.fr-btn:focus {
+  color: #222;
+}
+
+.ph-dk::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+
+  color: #333;
+  opacity: 0.7;
+}
+
+.ph-dk:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+
+  color: #333;
+  opacity: 0.7;
+}
+
+.ph-dk::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+
+  color: #333;
+  opacity: 0.7;
+}
+
+.ph-dk:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+
+  color: #333;
+  opacity: 0.7;
+}
+
+.ph-dk:placeholder-shown {
+  /* Standard (https://drafts.csswg.org/selectors-4/#placeholder) */
+
+  color: #333;
+  opacity: 0.7;
+}
+
+.o-f-v {
+  overflow: visible!important;
+}
+
+.o-f-h {
+  overflow: hidden;
+}
+
+.d-i-b {
+  display: inline-block;
+}
+
+.bg-t {
+  background-color: transparent;
 }
 
 .animated {
@@ -7402,13 +7760,14 @@ bg-none {
           animation-duration: 0.3s!important;
 }
 
-.animated3x {
-  -webkit-animation-duration: 0.3s!important;
-          animation-duration: 0.3s!important;
+.animated4x {
+  -webkit-animation-duration: 0.4s!important;
+          animation-duration: 0.4s!important;
 }
 
 .animated5x {
   -webkit-animation-duration: 0.5s!important;
+          animation-duration: 0.5s!important;
 }
 
 .z-index-n-1 {
@@ -7559,7 +7918,7 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
 .settings-list > li a.settings-items {
   display: block;
   width: inherit;
-  padding: 12px;
+  padding: 12px 18px;
   border-radius: 2px;
   transition: background 0.15s ease-in-out;
 }

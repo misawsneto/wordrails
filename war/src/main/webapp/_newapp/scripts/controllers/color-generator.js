@@ -450,7 +450,7 @@ function ($scope, $mdDialog, /*ColourLovers,*/ $rootScope, $mdColorPalette, $fil
     		$scope.app.showSuccessToast($filter('translate')('messages.SUCCESS_MSG'))
     		$mdDialog.cancel();
     		$scope.app.enableButtons = true;
-    	}).erro(function(){
+    	}).error(function(){
     		$scope.app.showSuccessToast($filter('translate')('messages.ERROR_MSG'))
     		$mdDialog.cancel();
     		$scope.app.enableButtons = true;

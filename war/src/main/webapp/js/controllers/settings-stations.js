@@ -1,3 +1,8 @@
+var SettingsStationsCtrl = null;
+var SettingsStationsConfigCtrl = null
+var SettingsStationsCategoriesCtrl = null;
+var SettingsStationsUsersCtrl = null;
+
 app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
 	function($scope ,  $log ,  $timeout ,  $mdDialog ,  $state ,  FileUploader ,  TRIX ,  cfpLoadingBar ,  trixService ,  trix ,  $http ,  $mdToast, $templateCache  , $location){
 		$scope.app.lastSettingState = "app.settings.stations";
@@ -25,6 +30,8 @@ app.controller('SettingsStationsCtrl', ['$scope', '$log', '$timeout', '$mdDialog
 				$scope.app.showSuccessToast('Alterações realizadas com sucesso.')
 			})
 		}
+
+    SettingsStationsCtrl = $scope;
 	}])
 
 app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '$state', 'FileUploader', 'TRIX', 'cfpLoadingBar', 'trixService', 'trix', '$http', '$mdToast', '$templateCache', '$location',
@@ -113,6 +120,8 @@ app.controller('SettingsStationsConfigCtrl', ['$scope', '$log', '$timeout', '$md
           );
         }
       };
+
+      SettingsStationsConfigCtrl = $scope;
 
 	}])
 
@@ -243,6 +252,8 @@ app.controller('SettingsStationsCategoriesCtrl', ['$scope', '$log', '$timeout', 
     trix.getTermTree(null, $scope.thisStation.categoriesTaxonomyId).success(function(response){
       $scope.termTree = response;
     });
+
+    SettingsStationsCategoriesCtrl = $scope;
 
   }])
 
@@ -445,8 +456,8 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 
   if(!$scope.editing && !$scope.creating){
     $scope.showProgress = true;
-    trix.findRolesByStationIds([$state.params.stationId], 0, $scope.window, null, 'stationRoleProjection').success(function(personsRoles){
-    	$scope.personsRoles = personsRoles.stationRoles;
+    trix.findRolesByStationIds([$state.params.stationId], $scope.page, $scope.window, null, 'stationRoleProjection').success(function(response){
+    	$scope.personsRoles = response.stationRoles;
       $scope.showProgress = false; 
     })
   }
@@ -475,21 +486,21 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 
     if(!$scope.allLoaded){
       $scope.showProgress = true;
-      trix.getPersons(page, $scope.window, null, 'personProjection').success(function(response){
-        if((!response.persons || response.persons.length == 0) && direction == 'right'){
+      trix.findRolesByStationIds([$state.params.stationId], page, $scope.window, null, 'stationRoleProjection').success(function(response){
+        if((!response.stationRoles || response.stationRoles.length == 0) && direction == 'right'){
           $scope.allLoaded = true;
         }else{
-          if(!$scope.persons && response.persons)
-            $scope.persons = response.persons;
-          else if(response.persons && response.persons.length > 0){
-            $scope.persons = response.persons;
+          if(!$scope.personsRoles && response.stationRoles)
+            $scope.personsRoles = response.stationRoles;
+          else if(response.stationRoles && response.stationRoles.length > 0){
+            $scope.personsRoles = response.stationRoles;
             $scope.page = page;
           }
 
           if($scope.page == 0)
             $scope.beginning = true;
 
-          if((($scope.page * $scope.window) + $scope.persons.length) == $scope.personsCount)
+          if((($scope.page * $scope.window) + $scope.personsRoles.length) == $scope.rolesCount)
             $scope.allLoaded = true;
         }
         $scope.showProgress = false;
@@ -608,4 +619,5 @@ app.controller('SettingsStationsUsersCtrl', ['$scope', '$log', '$timeout', '$mdD
 
 		// $scope.changePersonStation
 
+  SettingsStationsUsersCtrl = $scope;
 	}]);

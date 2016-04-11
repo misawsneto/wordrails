@@ -13,7 +13,6 @@ angular.module('app', [
     'ngStorage',
     'ui.router',
     'ui.bootstrap',
-    'ui.utils',
     'ui.load',
     'ui.jq',
     'ui.splash',

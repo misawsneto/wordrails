@@ -241,4 +241,12 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 		return null;
 	}
+
+	@Deprecated
+	@SdkInclude // fuck me!!
+	public Integer getImageId() {
+		if (featuredImage != null) return featuredImage.getId();
+
+		return null;
+	}
 }
