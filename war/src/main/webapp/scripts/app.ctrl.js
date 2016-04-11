@@ -296,6 +296,10 @@ angular.module('app')
         return img;
       }
 
+      $scope.app.hasImage = function(post){
+        return post.hash || post.hashes || post.featuredImage || post.featuredImageHash || post.imageHash;
+      }
+
       $scope.app.getBackgroundImage = function(postView, size){
         return $scope.getBackgroundImage(postView, size);
       }
