@@ -34,7 +34,6 @@ public class PersonService {
 			person.getRecommendPosts().add(postId);
 		}
 
-		personRepository.save(person);
 		return recommendInserted;
 	}
 
@@ -48,7 +47,6 @@ public class PersonService {
 			person.getBookmarkPosts().add(postId);
 		}
 
-		personRepository.save(person);
 		return bookmarkInserted;
 	}
 
