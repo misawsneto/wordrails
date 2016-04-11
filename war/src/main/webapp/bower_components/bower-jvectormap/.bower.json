@@ -21,6 +21,5 @@
   },
   "_source": "git://github.com/tlvince/bower-jvectormap.git",
   "_target": "~1.2.2",
-  "_originalSource": "bower-jvectormap",
-  "_direct": true
+  "_originalSource": "bower-jvectormap"
 }

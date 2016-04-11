@@ -28,6 +28,99 @@
         }
       }
     })
+
+  .directive('hashToLink', function(TRIX){
+    return function(scope, element, attrs){
+      attrs.$observe('hashToLink', function(obj) {
+        if(obj){
+          element.css({
+            "background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ obj.hash  + "?size=" +obj.size+ ")", "background-position": "50% 20%"
+          });
+        }
+      });
+    };
+  })
+
+  .directive('userHashToLink', function(TRIX){
+    return function(scope, element, attrs){
+      attrs.$observe('userHashToLink', function(obj) {
+        if(obj){
+          element.css({
+            "background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ obj.hash  + "?size=" +obj.size+ ")", "background-position": "50% 20%"
+          });
+        }else{
+          element.css({
+            'background-image': 'url(img/default-user.png)'
+          });
+        }
+      });
+    };
+  })
+
+  .directive('coverHashToLink', function(TRIX){
+    return function(scope, element, attrs){
+      attrs.$observe('coverHashToLink', function(obj) {
+        if(obj){
+          element.css({
+            "background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ obj.hash  + "?size=" +obj.size+ ")", "background-position": "50% 20%"
+          });
+        }else{
+          element.css({
+            'background-image': 'url(../img/abstract-cover-orig.png)'
+          });
+        }
+      });
+    };
+  })
+
+  .directive('backImgCover', function(TRIX){
+    return function(scope, element, attrs){
+      attrs.$observe('backImgCover', function(value) {
+        if(value){
+          element.css({
+            'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
+          });
+        }else{
+          element.css({
+            'background-image': 'url(../img/abstract-cover-orig.png)'
+          });
+        }
+      });
+    };
+  })
+
+  .directive('backImg', function(TRIX){
+    return function(scope, element, attrs){
+      attrs.$observe('backImg', function(value) {
+        if(value){
+          element.css({
+            'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
+          });
+        }else{
+          element.css({
+            'background-image': 'url(img/default-user.png)'
+          });
+        }
+      });
+    };
+  })
+
+  .directive('backImgCover', function(TRIX){
+    return function(scope, element, attrs){
+      attrs.$observe('backImgCover', function(value) {
+        if(value){
+          element.css({
+            'background-image': 'url(' + TRIX.baseUrl + "/api/files/"+ value +"/contents" +')'
+          });
+        }else{
+          element.css({
+            'background-image': 'url(../img/abstract-cover-orig.png)'
+          });
+        }
+      });
+    };
+  })
+
   // Couldn't get access to _PALETTES any other way?
   .provider('mdx',function($mdThemingProvider){
     return {

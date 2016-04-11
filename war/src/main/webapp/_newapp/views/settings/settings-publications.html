@@ -8,20 +8,20 @@
     <div class="col w-md text-md font-500">
       <div class="vbox p-t-lg">
         <div class="row-row">
-          <div class="cell">
+          <div class="cell o-f-v">
             <div class="cell-inner">
-              <ul class="settings-list text-muted m-t-xxl pos-rlt">
-                <li ng-class="{'active': settings.tab === 'settings'}">
-                  <a ng-click="settings.tab = 'settings'" md-ink-ripple class="settings-items"><span translate='titles.PUBLISHED'></span></a>
+              <ul class="settings-list text-muted m-t-xxl pos-rlt" style="margin-right: -7px">
+                <li ng-class="{'active': settings.tab === 'publications'}">
+                  <a ng-click="settings.tab = 'publications'" md-ink-ripple class="settings-items"><span translate='titles.PUBLISHED'></span></a>
                 </li>
-                <li ng-class="{'active': settings.tab === 'domain-analytics'}">
-                  <a ng-click="settings.tab = 'domain-analytics'" md-ink-ripple class="settings-items"><span translate='titles.SCHEDULED'></span></a>
+                <li ng-class="{'active': settings.tab === 'scheduled'}">
+                  <a ng-click="settings.tab = 'scheduled'" md-ink-ripple class="settings-items"><span translate='titles.SCHEDULED'></span></a>
                 </li>
-                <li ng-class="{'active': settings.tab === 'logos'}">
-                  <a ng-click="settings.tab = 'logos'" md-ink-ripple class="settings-items"><span translate='titles.DRAFTS'></span></a>
+                <li ng-class="{'active': settings.tab === 'drafts'}">
+                  <a ng-click="settings.tab = 'drafts'" md-ink-ripple class="settings-items"><span translate='titles.DRAFTS'></span></a>
                 </li>
-                <li ng-class="{'active': settings.tab === 'footer'}">
-                  <a ng-click="settings.tab = 'footer'" md-ink-ripple class="settings-items"><span translate='titles.TRASH'></span></a>
+                <li ng-class="{'active': settings.tab === 'trash'}">
+                  <a ng-click="settings.tab = 'trash'" md-ink-ripple class="settings-items"><span translate='titles.TRASH'></span></a>
                 </li>
               </ul>
             </div>
@@ -30,217 +30,139 @@
       </div>
     </div>
 
-    <div class="col">
-      <div class="vbox p-t-lg p-r-lg">
+    <div class="col animated zoomIn">
+      <div class="vbox p-t-lg p-r">
+      
+        <div class="search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
+          <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
+
+          <!-- dropdown filter -->
+          <div class="pos-abt top-0 right-0 m-t pull-right" uib-dropdown auto-close="disabled" is-open="advancedMenuOpen">
+            <md-button uib-dropdown-toggle class="md-icon-button" aria-label="More" popover-trigger="click">
+              <i class="icon mdi-content-filter-list i-24" md-style="{'color': 'default'}" ></i>
+            </md-button>
+            <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="advanced-search-menu m-h-auto md-background-default background p w-400 default-bg">
+                <!-- <time-date-picker orientation="true" class="m-h-auto" ng-model="dateValue"></time-date-picker> -->
+              <div class="arrow"></div>
+              <md-content>
+                <div class="m-b">
+                  <a ng-click="advancedMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+                </div>
+                <div class="m-b-sm text-u-c">
+                  Filtar por estação
+                </div>
+                <div class="m-b">
+                  <md-menu>
+                    <!-- Trigger element is a md-button with an icon -->
+                   <md-button ng-click="$mdOpenMenu($event)" class="md-button text-u-c" aria-label="Open sample menu">
+                     <!-- <md-icon md-font-set="material-icons" class="ng-scope ng-isolate-scope material-icons"> phone </md-icon> -->
+                     <i class="mdi mdi2-radio-tower"></i>
+                      {{'titles.STATIONS' | translate}}
+                   </md-button>
+                   <md-menu-content>
+                    <div class="p">
+                     <ul class="list-unstyled">
+                       <li ng-repeat="perm in stationsPermissions">
+                        <md-checkbox ng-model="perm.filter" aria-label="{{perm.stationName}}">
+                         {{ perm.stationName }}
+                         </md-checkbox>
+                       </li>
+                     </ul>
+                    </div>
+                   </md-menu-content>
+                  </md-menu>
+                </div>
+                <div class="m-b-lg text-u-c">
+                  Filtar por data
+                </div>
+                <div class="text-center">
+                  <md-input-container style="width: 140px" class="no-margin m-b-sm">
+                    <label translate="titles.START_DATE">Data inicial</label>
+                    <input type="date" mdp-date-picker ng-model="filter.initialDate" />
+                  </md-input-container>
+                  <md-input-container style="width: 140px" class="no-margin m-b-sm">
+                    <label translate="titles.END_DATE">Data final</label>
+                    <input type="date" mdp-date-picker ng-model="filter.finalDate" />
+                  </md-input-container>
+                  <md-input-container style="width: 140px" class="no-margin m-b-sm">
+                    <label translate="titles.START_TIME">Hora inicial</label>
+                    <input type="time" mdp-time-picker ng-model="filter.initialTime" />
+                  </md-input-container>
+                  <md-input-container style="width: 140px" class="no-margin m-b-sm">
+                    <label translate="titles.END_TIME">Hora final</label>
+                    <input type="time" mdp-time-picker ng-model="filter.finalTime" />
+                  </md-input-container>
+                </div>
+              <!-- -->
+              </md-content>
+            </div>
+          </div>
+          <!-- /dropdown -->
+        </div>
         <div class="row-row">
           <div class="cell">
-            <div class="cell-inner">
-
-                <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z1 animated zoomIn">
-                  <div class="md-padding" ng-class="{'hide': settings.tab !== 'settings'}">
-                    <div class="w-xxl m-h-auto p-t-md p-b-md">
-                      <md-input-container class="m-b-sm m-t-sm w-full">
-                        <label translate="settings.network.settings.NAME">Nome</label>
-                        <input ng-model="network.name">
-                      </md-input-container>
-                    </div>
-                    <div class="row">
-                      <div class="block-600 p-lg m-h-auto">
-                        <div class="m-l">
-                          <p>
-                            <label class="md-switch">
-                              <input type="checkbox" ng-model="network.allowSignup"
-                              ng-true-value="true" ng-false-value="false">
-                              <i class="blue"></i>
-                              <!-- Permitir cadastro em estações públicas -->
-                              {{'settings.network.settings.ALLOW_SIGNUP' | translate}}
-                            </label>
-                          </p>
-                          <p>
-                            <label class="md-check p-l-lg">
-                              <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.addStationRolesOnSignup"
-                              ng-true-value="true" ng-false-value="false">
-                              <i class="blue"></i>
-                              <!-- Ao cadastrar usuário, criar permissões de leitura em todas as estações -->
-                              {{'settings.network.settings.ADD_ROLES_ON_STARTUP' | translate}}
-                            </label>
-                          </p>
-                          <p>
-                            <label class="md-switch">
-                              <input type="checkbox" ng-disabled="!network.allowSignup" ng-model="network.allowSocialLogin"
-                              ng-true-value="true" ng-false-value="false">
-                              <i class="blue"></i>
-                              <!-- Autenticação através de redes sociais em estações públicas -->
-                              {{'settings.network.settings.ALLOW_SOCIAL_LOGIN' | translate}}
-                            </label>
-                          </p>
-                          <p>
-                            <label class="md-switch">
-                              <input type="checkbox" ng-model="network.allowSponsors"
-                              ng-true-value="true" ng-false-value="false">
-                              <i class="blue"></i>
-                              <!-- Ativar/Desativar patrocinadores -->
-                              {{'settings.network.settings.ALLOW_SPONSOR' | translate}}
-                            </label>
-                          </p>
-                          <p>
-                            <md-input-container class="m-b-sm m-t-lg w-lg">
-                              <label translate="settings.network.settings.LANGUAGE">Idioma</label>
-                              <md-select ng-model="network.language" ng-change="setLanguage(network.language)">
-                                <md-option ng-repeat="language in [{ref:'en', name: 'English'}, {ref: 'pt', name: 'Português'}]" value="{{language.ref}}">
-                                    {{language.name}}
-                                </md-option>
-                              </md-select>
-                            </md-input-container>
-                          </p>
+            <div class="cell-inner p-r-sm p-l-sm">
+              <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto;
+    max-height: 100%;">
+                <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'publications'}">
+                  <ul class="list-group bg-t">
+                    <li class="list-group-item" ng-repeat="publication in publications">
+                      <a href class="pull-left m-r" ng-if="publication.featuredImageHash" style="height: 96px;">
+                        <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full">
+                        </div>
+                      </a>
+                      <div class="clear font-thin">
+                        <a href class="font-bold block text-md">{{publication.title}}</a>
+                        {{publication.snippet | characters:170}}
+                        <div class="p-t-sm text-xs font-500">
+                          <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
+                          </div>
+                          <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
+                          </div>
+                        </div>
+                        <div class="list-group-item b-n p-sm p-t-sm no-padding-h">
+                          <a href class="pull-left m-r-sm"><img src="images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
+                          <div class="clear font-normal p-xs">
+                            <a href class="font-500 block">{{publication.authorName}}</a>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
+                    </li>
+                  </ul> 
+                </div>
                 <!-- end of network configurations -->
-
                 <!-- domain and analytics -->
-                  <div class="md-padding" ng-class="{'hide': settings.tab !== 'domain-analytics'}">
-                    <div class="m-b text-muted text-md text-u-c" translate="titles.DOMAIN">Domínio</div>
-                      <div class="row pos-rlt">
-                        <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
-                        <div class="w-xxl m-h-auto">
-                          <md-input-container class="m-b-sm m-t-sm w-full">
-                            <label translate="titles.SUBDOMAIN">Subdomínio</label>
-                            <input ng-model="network.subdomain" disabled>
-                          </md-input-container>
-                        </div>
-                        <div class="w-xxl m-h-auto">
-                          <md-input-container class="m-b-sm m-t-sm w-full">
-                            <label translate="settings.network.domain_analytics.CUSTOM_DOMAIN">Domínio personalizado</label>
-                            <input ng-model="network.domain">
-                          </md-input-container>
-                        </div>
+                <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'scheduled'}">
+                  <ul class="list-group bg-t">
+                    <li class="list-group-item" ng-repeat="scheduled in scheduleds">
+                      <a href class="pull-left w-40 m-r"><img src="images/a1.jpg" class="img-responsive img-circle"></a>
+                      <div class="clear">
+                        <a href class="font-bold block">{{scheduled.title}}</a>
+                        {{scheduled.snippet | characters:170}}
                       </div>
-                      <!-- /domain settings -->
-                      <!-- analytics settings -->
-                      <div class="line line-dashed b-b line-lg pull-in"></div>
-                      <div class="m-b text-muted text-md text-u-c">Analytics</div>
-                      <div class="row pos-rlt">
-                        <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
-                        <div class="w-xxl m-h-auto">
-                          <md-input-container class="m-b-sm m-t-sm w-full">
-                            <label>Google Analytics - TRACKING ID</label>
-                            <input ng-model="network.trackingId">
-                          </md-input-container>
-                        </div>
-                        <div class="w-xxl m-h-auto">
-                          <md-input-container class="m-b-sm m-t-sm w-full">
-                            <label>Flurry - API KEY</label>
-                            <input ng-model="network.flurryKey">
-                          </md-input-container>
-                        </div>
-                      </div>
-                  </div>
+                    </li>
+                  </ul> 
+                </div>
                 <!-- /domain and analytics -->
 
                 <!-- logos -->
-                  <div class="md-padding"  ng-class="{'hide': settings.tab !== 'logos'}">
-                    <!-- /color preferences -->
-                    <!-- logo section -->
-                    <ul class="list-group list-group-lg no-bg auto">
-                      <li class="list-group-item clearfix b-n">
-                        <div class="display-t-c thumb-xl">
-                          <img ng-src="{{loginImage.link ? loginImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
-                        </div>
-                        <div class="clear display-t-c v-middle p-l">
-                          <span class="font-bold">Login</span>
-                          <small class="text-muted clear text-ellipsis">
-                          Logotipo da rede. Exibido na tela de login no Android, iOS e Web.</small>
-                          <input id="image-upload" type="file" nv-file-select="" uploader="login" name="contents" accept="image/*"/>
-                        </div>
-                      </li>
-                      <li class="list-group-item clearfix b-n">
-                        <div class="display-t-c thumb-xl">
-                          <img ng-src="{{splashImage.link ? splashImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
-                        </div>
-                        <div class="clear display-t-c v-middle p-l">
-                          <span class="font-bold">Splash</span> <span>(dispositivos móveis apenas)</span>
-                          <small class="text-muted clear text-ellipsis">
-                          Logotipo da rede. Exibido na tela inicial dos aplicativos Android e iOS.</small>
-                          <input id="image-upload" type="file" nv-file-select="" uploader="splash" name="contents" accept="image/*"/>
-                        </div>
-                      </li>
-                      <li class="list-group-item clearfix b-n">
-                        <div class="display-t-c thumb">
-                          <img ng-src="{{faviconImage.link ? faviconImage.link : 'img/img-stub.png'}}" class="wrapper-xxs bg-white img-responsive" alt="...">
-                        </div>
-                        <div class="clear display-t-c v-middle p-l">
-                          <span class="font-bold">Favicon</span> <span>(cliente web apenas)</span>
-                          <small class="text-muted clear text-ellipsis">Favicon da home page. Exibido na aba do browser.</small>
-                          <input id="image-upload" class="text-xs" type="file" nv-file-select="" uploader="favicon" name="contents" accept="image/*"/>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-              <!-- /logo section -->
+                <div class="md-padding min-h-400"  ng-class="{'hide': settings.tab !== 'drafts'}">
+                  <ul class="list-group bg-t">
+                    <li class="list-group-item" ng-repeat="draft in drafts">
+                      <a href class="pull-left w-40 m-r"><img src="images/a1.jpg" class="img-responsive img-circle"></a>
+                      <div class="clear">
+                        <a href class="font-bold block">{{draft.title}}</a>
+                        {{draft.snippet | characters:170}}
+                      </div>
+                    </li>
+                  </ul> 
+                </div>
+                <!-- /logo section -->
 
-              <!-- footer -->
-                  <div class="md-padding"  ng-class="{'hide': settings.tab !== 'footer'}">
-                      <div class="m-b text-muted text-md text-u-c">RODAPÉ DA PÁGINA</div>
-                        <div class="p row">
-                          <div class="col-lg-6">
-                            <md-input-container class="m-b-sm m-t-sm w-full">
-                              <label>Link da página/perfil do Facebook</label>
-                              <input ng-model="network.facebookLink">
-                            </md-input-container>
-                            <md-input-container class="m-b-sm m-t-sm w-full">
-                              <label>Link do perfil do Twitter</label>
-                              <input ng-model="network.twitterLink">
-                            </md-input-container>
-                          </div>
-                          <div class="col-lg-6">
-                            <md-input-container class="m-b-sm m-t-sm w-full">
-                              <label>Link do canal do Youtube</label>
-                              <input ng-model="network.youtubeLink">
-                            </md-input-container>
-                            <md-input-container class="m-b-sm m-t-sm w-full">
-                              <label>Link da página/perfil do Google+</label>
-                              <input ng-model="network.googlePlusLink">
-                            </md-input-container>
-                          </div>
-                        </div>
-                      <div class="line line-dashed b-b line-lg pull-in"></div>
-                      <div class="m-b text-muted text-md text-u-c">Rodapé da tela de login</div>
-
-                        <md-input-container class="md-block">
-                          <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="10" md-select-on-focus>
-                          </textarea>
-                          <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
-                        </md-input-container>
-                  </div>
+                <!-- footer -->
+                <div class="md-padding min-h-400"  ng-class="{'hide': settings.tab !== 'trash'}">
+                </div>
                 <!-- /footer -->
-
-                <!-- customization -->
-                  <div class="md-padding" ng-class="{'hide': settings.tab !== 'customization'}">
-                    <div class="m-t-xxl text-muted text-md text-u-c">Personalização</div>
-                    <md-input-container class="m-b-sm m-t-sm ">
-                      <label>Aba de estações</label>
-                      <input ng-model="network.stationMenuName">
-                      <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
-                          Substituir a palavra "estação" do menu lateral.</small> -->
-                      <span class="md-input-msg left">Substituir a palavra "estação" do menu lateral.</span>
-                    </md-input-container>
-                    <md-input-container class="m-b-sm m-t-sm ">
-                      <label>Aba de início</label>
-                      <input ng-model="network.homeTabName">
-                    </md-input-container>
-                    <md-input-container class="m-b-sm m-t-sm md-block">
-                      <label>Texto de convite por email</label>
-                      <textarea ng-model="network.invitationMessage" columns="1" rows="10"></textarea>
-                      <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
-                          Mensagem enviada em emails de convites a usuários</small> -->
-                      <span class="md-input-msg left">Mensagem enviada em emails de convites a usuários</span>
-                    </md-input-container>
-                  </div>
-                <!-- </md-tab> -->
-                <!-- /customization -->
-              <!-- </md-tabs> -->
 
               </div>
             </div>
@@ -251,8 +173,37 @@
   </div>
 </div>
 
-
+<!-- <md-sidenav class="md-background-hue-1 w-xl background md-sidenav-right md-whiteframe-z2 theming" md-component-id="advanced-search"> -->
+<script type="text/ng-template" id="advanced-search-popover.html">
+    <!-- primary -->
+  <div id="advanced-search-popover" class="m-h-auto md-background-default background p w-400 default-bg" style="margin-left: -106px;">
+    <!-- <time-date-picker orientation="true" class="m-h-auto" ng-model="dateValue"></time-date-picker> -->
+    <md-content>
+      <md-input-container style="width: 140px" class="no-margin m-b-sm">
+        <label translate="titles.START_DATE">Data inicial</label>
+        <input type="date" mdp-date-picker ng-model="currentDate1" />
+      </md-input-container>
+      <md-input-container style="width: 140px" class="no-margin m-b-sm">
+        <label translate="titles.START_TIME">Hora inicial</label>
+        <input type="time" mdp-time-picker ng-model="currentTime1" />
+      </md-input-container>
+      <!-- -->
+      <md-input-container style="width: 140px" class="no-margin m-b-sm">
+        <label translate="titles.END_DATE">Data final</label>
+        <input type="date" mdp-date-picker ng-model="currentDate2" />
+      </md-input-container>
+      <md-input-container style="width: 140px" class="no-margin m-b-sm">
+        <label translate="titles.END_TIME">Hora final</label>
+        <input type="time" mdp-time-picker ng-model="currentTime2" />
+      </md-input-container>
+    <!-- -->
+    </md-content>
+  </div>
+</script>
+  <!-- /background -->
+<!-- </md-sidenav> -->
   
-  <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg">
-    <i class="mdi-content-save i-24"></i>
+  <md-button aria-label="menu" class="md-fab md-accent pos-fix right-0 bottom-0 m-r-xxl m-b-lg"
+    ui-sref="app.post">
+    <i class="mdi-editor-mode-edit i-24"></i>
   </md-button>

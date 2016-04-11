@@ -36,6 +36,5 @@
   },
   "_source": "git://github.com/Elijen/angular-popover-toggle.git",
   "_target": "~0.0.10",
-  "_originalSource": "angular-popover-toggle",
-  "_direct": true
+  "_originalSource": "angular-popover-toggle"
 }

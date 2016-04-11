@@ -6,12 +6,12 @@
           <i class="mdi mdi-menu"></i>
         </a>
         <a ui-sref="app.stations" class="bg-header-text">
-          <span ng-if="!app.currentStation.logoId" class="m-l">{{app.currentStation.name}}</span>
+          <span ng-if="!app.currentStation.logoHash" class="m-l">{{app.currentStation.name}}</span>
         </a>
       </div>
-      <div ng-if="app.currentStation.logoId" class="m-t-n-sm display-t-c wrapper-xs" style="height:48px;">
+      <div ng-if="app.currentStation.logoHash" class="m-t-n-sm display-t-c wrapper-xs" style="height:48px;">
         <a ui-sref="app.stations">
-        <img  class="post-thumb" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}"></a>
+        <img  class="post-thumb" style="height:48px;" ng-src="{{app.currentStation.logoHash | imageLink2: 'medium'}}"></a>
       </div>
     </div>
     <!-- nabar right -->

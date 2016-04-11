@@ -9,14 +9,14 @@
 		<i class="mdi mdi-view-dashboard custom-header"></i>
 	</button> -->
 	<!-- brand -->
-	<button class="pull-left visible-xs">
+	<button class="pull-left visible-xs" ng-click="app.toggleSelectStation()">
 		<i class="bg-header-text mdi-menu mdi custom-header"></i>
 	</button> 
 	<a ng-if="app.isMobile" ui-sref="app.stations" style="padding: 0;" class="navbar-brand text-lt" tooltip="{{app.currentStation.name}}" tooltip-placement="right" tooltip-append-to-body="true" tooltip-popup-delay="700">
 		<!-- <span class="hidden-folded m-l-xs">{{app.name}}</span> -->
-		<span ng-if="!app.currentStation.logoId" class="hidden-folded bg-header-text" style="font-weight: 400">{{app.currentStation.name}}</span>
-		<div ng-if="app.currentStation.logoId" class="hidden-folded" style="height:48px;">
-			<img class="img-responsive" style="height:48px;" ng-src="{{'/api/files/' + app.currentStation.logoId + '/contents'}}">
+		<span ng-if="!app.currentStation.logoHash" class="hidden-folded bg-header-text" style="font-weight: 400">{{app.currentStation.name}}</span>
+		<div ng-if="app.currentStation.logoHash" class="hidden-folded" style="height:48px;">
+			<img class="img-responsive" style="height:48px;" ng-src="{{app.currentStation.logoHash | imageLink2: 'medium'}}">
 		</div>
 	</a>
 	<a ng-if="!app.isMobile" class="navbar-brand text-lt" style="padding: 5px;" ui-sref="app.stations">
