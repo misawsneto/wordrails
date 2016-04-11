@@ -252,6 +252,7 @@
 	<filter-mapping>
 		<filter-name>PersonDataFilter</filter-name>
 		<url-pattern>/index.jsp</url-pattern>
+		<url-pattern>/settings.jsp</url-pattern>
 		<url-pattern>/search/*</url-pattern>
 		<url-pattern>/post/*</url-pattern>
 		<url-pattern>/bookmarks/*</url-pattern>

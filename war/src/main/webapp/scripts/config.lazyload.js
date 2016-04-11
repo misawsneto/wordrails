@@ -19,6 +19,13 @@ angular.module('app')
           ]
       },
       {
+          name: 'infinite-scroll',
+          module: true,
+          files: [
+              '/libs/angular/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
+          ]
+      },
+      {
         name: 'leaflet-directive',
         module: true,
           files: [

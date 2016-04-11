@@ -62,7 +62,27 @@
 		"OPTIONS": "Options",
 		"RESTORE_DEFAULT": "Restore defaults",
 		"CUSTOMIZE": "Customize",
-		"REMOVE_CONFIRMATION_MSG": "Are you sure wish to proceed"
+		"REMOVE_CONFIRMATION_MSG": "Are you sure wish to proceed",
+		"NAME": "Name",
+		"USERNAME": "Username",
+		"EMAIL": "Email",
+		"PASSWORD": "Password",
+		"HELP": "Help",
+		"SEND": "Send"
+	},
+	"signin_signup": {
+		"OR": "or",
+		"SIGNIN": "Sign in",
+		"SIGNUP": "Sign up",
+		"CREATE_ACCOUNT": "Create an account",
+		"NOT_HAVE_AN_ACCOUNT": "Do not have an account",
+		"HAVE_AN_ACCOUNT": "Already have an account",
+		"SIGNIN_MSG": "Sign in to",
+		"SIGNUP_MSG": "Sign up to",
+		"SIGNIN_OR_SIGNUP_MSG": "Sign in or sign up to",
+		"FORGOT": "Forgot your credentials",
+		"RETURN_TO_SIGNIN": "Return to",
+		"FORGOT_MSG": "Enter your email address below and we will send you instructions on how to change your password."
 	},
 	"actions":{
 		"ADD": "Add",
@@ -78,7 +98,9 @@
 	    "DASHBOARD" : "Dashboard",
 	    "EMAIL" : "Email",
 	    "UIKITS" : "UI Kits",
-	    "PAGES" : "Pages"
+	    "PAGES" : "Pages",
+	    "LOGOUT" : "Logout",
+	    "NEW_POST" : "New publication"
 	  }
 	},
 	"settings":{
@@ -143,7 +165,7 @@
 				"POST_DATE": "Post date",
 				"DELETE_DATE": "Post auto delete date",
 				"CUSTOMIZE_LINK": "Customize link",
-				"ATTACH_POST": "Attach other posts to this one",
+				"ATTACH_POST": "Attach other publications to this one",
 				"NOTIFY_STATION_USERS": "Notify users",
 				"PUBLICATION_MSG": "The content will be published when you click Publish.",
 				"AUTO_SAVE_MSG": "Drafts will be saved automatically every minute once the title, content, station and categories are set. All publication versions can be accessed through the \"Publication options\" menu."
@@ -162,14 +184,14 @@
 			"DELETE_DATE": "Deletion date",
 			"DELETE_TIME": "Deletion time",
 			"CLEAR_CONTENT": "Clear content",
-			"NEW_POST": "New post",
+			"NEW_POST": "New publication",
 			"NOTIFY_STATION_USERS_DESC": "Notify station users on their devices.",
 			"NOTIFY_USERS": "Notify users",
 			"messages":{
-				"PAGE_CHANGE_ALERT": "You have edited your post and there's unsaved content.",
-				"CLEAR_CONTENT_MSG": "Clear all post content.",
+				"PAGE_CHANGE_ALERT": "You have edited your publication and there's unsaved content.",
+				"CLEAR_CONTENT_MSG": "Clear all publication content.",
 				"CONTENT_LOST_ALERT": "Attention! All non-saved content will be list.",
-				"NEW_POST_MSG": "Start an entire new post?"
+				"NEW_POST_MSG": "Start an entire new publication?"
 			},
 			"states": {
 				"PUBLISHED": "Published",

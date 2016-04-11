@@ -1,20 +1,20 @@
 <div class="box">
   <!-- Content Navbar -->
-  <div class="navbar no-radius md-primary-default background">
+  <div class="navbar md-whiteframe-z1 no-radius md-primary-default background">
     <!-- Open side - Naviation on mobile -->
     <a md-ink-ripple ng-click="openAside()" ng-hide="$state.current.data.child" class="navbar-item pull-left"><i class="mdi-navigation-menu i-24"></i></a>
     <!-- / -->
     <div class="navbar-header pull-left">
       <a class="navbar-brand">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
+        <!-- <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" style="
               width: 24px; height: 24px;">
             <path d="M 50 0 L 100 14 L 92 80 Z" fill="rgba(139, 195, 74, 0.5)"></path>
             <path d="M 92 80 L 50 0 L 50 100 Z" fill="rgba(139, 195, 74, 0.8)"></path>
             <path d="M 8 80 L 50 0 L 50 100 Z" fill="#f3f3f3"></path>
             <path d="M 50 0 L 8 80 L 0 14 Z" fill="rgba(220, 220, 220, 0.6)"></path>
-          </svg>
+          </svg> -->
         <img src="/images/logo.png" alt="." style="max-height: 36px; display:none">
-        <span class="hidden-folded m-l inline">{{app.name}}</span>
+        <span class="hidden-folded inline">{{app.name}}</span>
       </a>
     </div>
     <!-- GoBack - Back to parent if $state has the param 'child' -->
@@ -32,6 +32,66 @@
           <i class="mdi-social-person-outline i-24 p-h-sm"></i>
         </a>
       </li> -->
+      <li class="dropdown m-r-lg" ng-if="!app.search.show" md-ink-ripple>
+        <a href class="dropdown-toggle clear" data-toggle="dropdown" ng-click="app.signInButton()">
+          <!-- <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+            <img src="/images/a0.jpg" alt="...">
+            <i class="on md b-white bottom"></i>
+          </span> -->
+          <div class="o-f-h pull-right md-whiteframe-z1 m-t-sm m-b-sm user-avatar rounded thumb-sm bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover text-center" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%', 'width': '46px', 'height': '46px'}">
+            <i ng-if="app.person.id == 0" class="mdi2-lock-open i-24" style="position: relative;top: -10px;"></i>
+            <i ng-if="app.person.id > 0 && !app.userImageSmall" class="mdi2-account i-24" style="position: relative;top: -10px;"></i>
+          </div>
+          <span class="hidden-sm hidden-md" ng-if="app.person.id > 0">{{app.person.name}}</span>
+          <b class="caret m-r" ng-if="app.person.id > 0"></b>
+        </a>
+        <!-- dropdown -->
+        <ul ng-if="app.person.id > 0" class="dropdown-menu dropdown-menu-scale o-f-h w-lg pull-right md-background-hue-1 background">
+          <li>
+            <div style="margin-top: -5px;" ng-if="app.userImageUploader" class="hidden-folded bg-cover" ng-style="{'background-image': 'url(' + app.coverImageMedium + ')'}">
+              <div class="md-whiteframe-z1 m-t m-l user-avatar rounded w-64 bg-white inline pos-rlt md-primary-hue-1 background text-center bg-cover" ng-style="{'background-image': 'url(' + app.userImageSmall + ')', 'background-position': '50% 50%'}">
+                <i ng-if="!app.userImageSmall" class="mdi2-account i-40" style="top: 16%;position: relative;"></i>
+                <!-- image profile upload -->
+                <div class="profile-image-button rounded o-f-h w-64 text-center pos-abt top-0" style="background-color: rgba(0,0,0,0.7)">
+                  <i class="mdi2-pencil i-32 text-white image-edit" style="opacity: 0.92; position: relative; top: 24%"></i>
+                  <input class="image-upload" style="height: 64px;" type="file" nv-file-select="" uploader="app.userImageUploader" name="contents" accept="image/*">
+                </div>
+                <!-- /image profile upload -->
+              </div>
+              <div class="p-v-sm p-h black-grad m-t text-white">
+                <span class="block font-bold">{{app.person.name}}</span>
+                <span class="text-sm">{{app.person.email}}</span>
+              </div>
+            </div>
+          </li>
+          <li md-ink-ripple>
+            <a ng-click="app.goToLink('/settings/profile');">
+              <i class="icon m-r i-16 mdi2-account-circle"></i>
+              {{'settings.aside.MY_PROFILE' | translate}}
+            </a>
+          </li>
+          <li md-ink-ripple>
+            <a ng-click="app.goToLink('/settings');">
+              <i class="icon m-r i-16 mdi2-settings"></i>
+              {{'titles.SETTINGS' | translate}}
+            </a>
+          </li>
+          <li md-ink-ripple>
+            <a ui-sref="app.docs">
+              <i class="icon m-r i-16 mdi2-help-circle mdi"></i>
+              {{'titles.HELP' | translate}}
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li md-ink-ripple>
+            <a href="">
+              <i class="icon m-r i-16 mdi2-logout"></i>
+              {{'header.navbar.LOGOUT' | translate}}
+            </a>
+          </li>
+        </ul>
+        <!-- / dropdown -->
+      </li>
       <!-- <li class="dropdown">
         <a md-ink-ripple data-toggle="dropdown">
           <i class="mdi-navigation-more-vert i-24"></i>
@@ -58,9 +118,9 @@
           <!-- bind to app.search.content -->
           <input class="form-control input-lg no-bg no-border" placeholder="{{'titles.SEARCH' | translate }}" ng-model="app.search.content">
         </div>
-        <div class="box-col w-56 text-center">
+        <!-- <div class="box-col w-56 text-center">
           <a md-ink-ripple class="navbar-item inline"><i class="mdi-av-mic i-24"></i></a>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- / -->
@@ -88,3 +148,104 @@
   </div>
   <!-- / -->
 </div>
+
+<script type="text/ng-template" id="signin-signup-dialog.html">
+  <md-dialog-content class="md-background-hue-1 background">
+    <!-- signin -->
+    <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
+      <div class="m-b-md m-t-md text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
+      <div class="text-center">
+        <md-button class="md-fab md-mini md-primary" style="background: #3B5999" aria-label="Use Android">
+          <i class="mdi2-facebook i-20"></i>
+        </md-button>
+        <md-button class="md-fab md-mini md-primary" style="background: #5EA9DD" aria-label="Use Android">
+          <i class="mdi2-twitter i-20"></i>
+        </md-button>
+        <md-button class="md-fab md-mini md-primary" style="background: #DC4A38" aria-label="Use Android">
+          <i class="mdi2-google-plus i-20"></i>
+        </md-button>
+      </div>
+        <div class="p-t text-md" translate="signin_signup.OR">ou</div>
+      <form name="form" ng-submit="signin()" class="text-md w-xxl">
+        <div class="p" style="padding-bottom: 0">
+          <md-input-container class="w-full m-b-0">
+            <label for="testInput">{{'titles.USERNAME' | translate}}</label>
+            <input class="p-xs" md-autofocus type="text" id="testInput" ng-model="person.username" md-autofocus>
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.PASSWORD' | translate}}</label>
+            <input class="p-xs" type="password" id="testInput" ng-model="person.password">
+          </md-input-container>
+        </div>
+        <md-button type="submit" class="md-accent m-b" translate="signin_signup.SIGNIN">Sign in</md-button>
+        <md-button class="md-accent m-b" ng-click="cancel()" translate="titles.CANCEL">Cancel</md-button>
+      </form>
+      <div class="text-center">
+        <div class="">
+          <button ng-click="app.signState = 'forgot';" class="md-btn">{{'signin_signup.FORGOT' | translate}}?</button>
+        </div>
+        <div>{{'signin_signup.NOT_HAVE_AN_ACCOUNT' | translate}}?
+        <button class="md-btn" ng-click="app.signState = 'signup';" translate="signin_signup.CREATE_ACCOUNT">Create an account</button>
+        </div>
+      </div>
+    </div>
+    <!-- /signin -->
+    <!-- signup -->
+    <div class="text-color m text-center" ng-if="app.signState === 'signup'">
+      <form name="form" class="text-md w-xxl">
+        <div class="p" style="padding-bottom: 0">
+          <div class="m-b-md m-t-xs text-md text-u-c font-500">{{'signin_signup.SIGNUP' | translate}}</div>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.NAME' | translate}}</label>
+            <input type="text" id="testInput" ng-model="person.username" md-autofocus>
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.USERNAME' | translate}}</label>
+            <input type="text" id="testInput" ng-model="person.username">
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.EMAIL' | translate}}</label>
+            <input type="email" id="testInput" ng-model="person.email">
+          </md-input-container>
+          <md-input-container class="w-full m-b-0 m-t-sm">
+            <label for="testInput">{{'titles.PASSWORD' | translate}}</label>
+            <input type="text" id="testInput" ng-model="person.username">
+          </md-input-container>
+        </div>
+        <md-button type="submit" class="md-accent m-b" translate="signin_signup.SIGNUP"></md-button>
+        <md-button class="md-accent m-b" ng-click="cancel()" translate="titles.CANCEL">Cancel</md-button>
+      </form>
+      <div class="text-center">
+        <div>{{'signin_signup.HAVE_AN_ACCOUNT' | translate}}?
+        <button class="md-btn" ng-click="app.signState = 'signin';" translate="signin_signup.SIGNIN">Entrar</button>
+        </div>
+      </div>
+    </div>
+    <!-- /signup -->
+    <!-- forgot -->
+    <div class="text-color m" ng-if="app.signState === 'forgot'">
+      <div class="m-b p-t p-h w-xxl">
+        <span class="text-md font-500">{{'signin_signup.FORGOT' | translate}}</span>
+        <p class="m-t" >{{'signin_signup.FORGOT_MSG' | translate}}.</p>
+      </div>
+      <form name="reset" class="text-md w-xxl">
+        <div class="p" style="padding-bottom: 0">
+          <md-input-container class="w-full m-b-0">
+            <label for="testInput">{{'titles.EMAIL' | translate}}</label>
+            <input type="text" id="testInput" ng-model="person.email" md-autofocus>
+          </md-input-container>
+        </div>
+        <div class="text-center">
+          <md-button type="submit" class="md-accent m-b" translate="titles.SEND"></md-button>
+          <md-button class="md-accent m-b" ng-click="cancel()" translate="titles.CANCEL">Cancel</md-button>
+        </div>
+      </form>
+      <div class="text-center">
+        <div>{{'signin_signup.HAVE_AN_ACCOUNT' | translate}}?
+        <button class="md-btn" ng-click="app.signState = 'signin';" translate="signin_signup.SIGNIN">Entrar</button>
+        </div>
+      </div>
+    </div>
+    <!-- /forgot -->
+  </md-dialog-content>
+</script>

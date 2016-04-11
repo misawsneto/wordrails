@@ -57,7 +57,8 @@ module.exports = {
                     'angular-masonry/angular-masonry.js',
                     'ace-builds/src-min-noconflict/ace.js',
                     'angular-ui-ace/ui-ace.min.js',
-                    'ng-directive-lazy-image/release/**'
+                    'ng-directive-lazy-image/release/**',
+                    'ngInfiniteScroll/build/ng-infinite-scroll.min.js'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

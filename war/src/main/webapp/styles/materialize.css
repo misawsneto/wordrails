@@ -5989,13 +5989,13 @@ a.waves-effect .waves-ripple {
 select:focus {
   outline: 1px solid #c9f3ef; }
 
-button:focus {
+/* button:focus {
   outline: none;
-  background-color: #2ab7a9; }
+  background-color: #2ab7a9; } */
 
-label {
+/* label {
   font-size: 0.8rem;
-  color: #9e9e9e; }
+  color: #9e9e9e; } */
 
 /***************************
    Text Inputs + Textarea
@@ -6014,7 +6014,7 @@ label {
 :-ms-input-placeholder {
   color: #d1d1d1; }
 
-input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
+/* input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
   background-color: transparent;
   border: none;
   border-bottom: 1px solid #9e9e9e;
@@ -6046,7 +6046,7 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
   input[type=text].invalid, input[type=text]:focus.invalid, input[type=password].invalid, input[type=password]:focus.invalid, input[type=email].invalid, input[type=email]:focus.invalid, input[type=url].invalid, input[type=url]:focus.invalid, input[type=time].invalid, input[type=time]:focus.invalid, input[type=date].invalid, input[type=date]:focus.invalid, input[type=datetime-local].invalid, input[type=datetime-local]:focus.invalid, input[type=tel].invalid, input[type=tel]:focus.invalid, input[type=number].invalid, input[type=number]:focus.invalid, input[type=search].invalid, input[type=search]:focus.invalid, textarea.materialize-textarea.invalid, textarea.materialize-textarea:focus.invalid {
     border-bottom: 1px solid #F44336;
     box-shadow: 0 1px 0 0 #F44336; }
-
+ */
 .input-field {
   position: relative;
   margin-top: 1rem; }

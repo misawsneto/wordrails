@@ -80,19 +80,6 @@
 </div>
 
 <div class="block-800 m-auto p-h">
-  <!-- <div class="panel panel-card">
-    <form>
-      <textarea class="form-control no-border" rows="3" placeholder="Write something..."></textarea>
-    </form>
-    <div class="lt p">
-      <button class="btn btn-info pull-right btn-sm p-h font-bold">Post</button>
-      <ul class="nav nav-pills nav-sm">
-        <li><a href><i class="fa fa-camera"></i></a></li>
-        <li><a href><i class="fa fa-video-camera"></i></a></li>
-      </ul>
-    </div>
-  </div> -->
-
   <div class="search-with-filter p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
     <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
 
@@ -161,25 +148,44 @@
   </div>
   <div class="b-b b-light text-md font-500 text-u-c bg-white md-whiteframe-z0 m-b-md">
     <ul class="nav nav-lines nav-md b-info">
-      <li class="active" md-ink-ripple><a href translate='titles.PUBLISHED'></a></li>
-      <li md-ink-ripple><a href translate='titles.SCHEDULED'> <span class="badge">3</span></a></li>
-      <li md-ink-ripple><a href translate='titles.DRAFTS'> <span class="badge">9</span></a></li>
-      <li md-ink-ripple><a href translate='titles.TRASH'></a></li>
+      <li ng-class="{'active': settings.tab == 'publications'}" md-ink-ripple ng-click="settings.tab = 'publications'">
+        <a href translate='titles.PUBLISHED'></a></li>
+      <li ng-class="{'active': settings.tab == 'scheduled'}" md-ink-ripple ng-click="settings.tab = 'scheduled'">
+        <a href translate='titles.SCHEDULED'> <span class="badge">3</span></a></li>
+      <li ng-class="{'active': settings.tab == 'drafts'}" md-ink-ripple ng-click="settings.tab = 'drafts'">
+        <a href translate='titles.DRAFTS'> <span class="badge">9</span></a></li>
+      <li ng-class="{'active': settings.tab == 'trash'}" md-ink-ripple ng-click="settings.tab = 'trash'">
+      <a href translate='titles.TRASH'></a></li>
     </ul>
   </div>
+</div>
+
+<div class="block-800 m-auto p-h">
+  <!-- <div class="panel panel-card">
+    <form>
+      <textarea class="form-control no-border" rows="3" placeholder="Write something..."></textarea>
+    </form>
+    <div class="lt p">
+      <button class="btn btn-info pull-right btn-sm p-h font-bold">Post</button>
+      <ul class="nav nav-pills nav-sm">
+        <li><a href><i class="fa fa-camera"></i></a></li>
+        <li><a href><i class="fa fa-video-camera"></i></a></li>
+      </ul>
+    </div>
+  </div> -->
 
   <div class="clearfix m-b-xxl">
-    <div class="m-b-lg">      
+    <div class="m-b-lg" infinite-scroll="paginate()" infinite-scroll-container='"#content .box-cell"'>      
     
       <ul class="bg-t no-padding">
         <li class="panel panel-card p" ng-repeat="publication in publications">
-          <a href class="pull-left m-r-md" ng-if="publication.featuredImageHash" style="height: 128px;">
-            <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-xl h-full">
+          <a href class="pull-left m-r-md" ng-if="publication.featuredImageHash || publication.imageHash" style="height: 128px;">
+            <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-xl h-full bg-cover">
             </div>
           </a>
           <div class="clear font-thin">
             <a href class="font-bold block text-md">{{publication.title}}</a>
-            {{publication.snippet | characters:170}}
+            {{publication.body.stripHtml() | characters:170}}
             <div class="p-t-sm text-xs font-500">
               <div class="font-500 text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
               </div>

@@ -273,6 +273,11 @@ public class AuthorizationFilter extends AbstractAuthorizationFilter {
 	}
 
 	@Override
+	protected boolean isFindByAuthorUsernameAndStateOrderByDateDescAuthorized(String username, String state, Integer page, Integer size, List<String> sort) {
+		return true;
+	}
+
+	@Override
 	protected boolean isFindPostsFromOrPromotedToStationAuthorized(int stationId, Integer page, Integer size, List<String> sort) {
 		return canVisualizeStation(stationId);
 	}

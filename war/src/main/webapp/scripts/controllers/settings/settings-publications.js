@@ -89,30 +89,34 @@ app.controller('SettingsPublicationsCtrl', ['$scope', '$log', '$timeout', '$mdDi
 		});
 
 $scope.$on('POST_REMOVED', function(event, postId){
-	if($scope.app.publicationsCtrl && $scope.app.publicationsCtrl.publications){
-		for (var i = $scope.app.publicationsCtrl.publications.length - 1; i >= 0; i--) {
-			if(postId == $scope.app.publicationsCtrl.publications[i].postId)
-				$scope.app.publicationsCtrl.publications.splice(i,1)
+	if($scope.app.publicationsCtrl && $scope.publications){
+		for (var i = $scope.publications.length - 1; i >= 0; i--) {
+			if(postId == $scope.publications[i].postId)
+				$scope.publications.splice(i,1)
 		};
 	}
 })
 
 $scope.paginate = function(){
 
-	if(!$scope.app.publicationsCtrl.publications || $scope.app.publicationsCtrl.publications.length == 0)
+	if(!$scope.publications || $scope.publications.length == 0)
 		return;
 
 	if($scope.allLoaded)
 		return;
 
-	var type = '';
-	if($state.params.type == "drafts"){
-		type = 'DRAFT'
-	}else if($state.params.type == "publications"){
-		type = 'PUBLISHED'
-	}else if($state.params.type == "scheduled"){
-		type = 'SCHEDULED'
-	}
+ 	if(/*$state.params.type == "drafts"*/ $scope.settings.tab == "drafts"){
+    type = 'DRAFT'
+  }
+  if(/*$state.params.type == "publications"*/ $scope.settings.tab == "publications"){
+    type = 'PUBLISHED'
+  }
+  if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "scheduled"){
+    type = 'SCHEDULED'
+  }
+  if(/*$state.params.type == "scheduled"*/ $scope.settings.tab == "trash"){
+    type = 'TRASH'
+  }
 
 	if(!$scope.loadingPage){
 		$scope.loadingPage = true;
@@ -134,7 +138,7 @@ $scope.paginate = function(){
 					$scope.pages = []
 
 				posts && posts.forEach(function(element, index){
-					$scope.app.publicationsCtrl.publications.push(element)
+					$scope.publications.push(element)
 				}); 
 
 			})

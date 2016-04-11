@@ -121,8 +121,10 @@ angular.module('app')
 
 .filter('bgImageLink', function pvimageLink(TRIX) {
   return function(post, size) {
-    if(post && (post.featuredImage || post.featuredImageHash))
-      return {"background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ ((post.featuredImageHash) ? post.featuredImageHash : post.featuredImage.originalHash)  + "?size=" +size+ ")", "background-position": "50% 20%"};
+    if(post && (post.featuredImage || post.featuredImageHash || post.imageHash)){
+      var hash = ((post.featuredImageHash) ? post.featuredImageHash : post.imageHash ? post.imageHash : post.featuredImage.originalHash)
+      return {"background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ hash + "?size=" +size+ ")", "background-position": "50% 20%"};
+    }
     else
       return {};
   }
