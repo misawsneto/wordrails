@@ -58,7 +58,8 @@ module.exports = {
                     'ace-builds/src-min-noconflict/ace.js',
                     'angular-ui-ace/ui-ace.min.js',
                     'ng-directive-lazy-image/release/**',
-                    'ngInfiniteScroll/build/ng-infinite-scroll.min.js'
+                    'ngInfiniteScroll/build/ng-infinite-scroll.min.js',
+                    'ng-videosharing-embed/build/ng-videosharing-embed.min.js'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

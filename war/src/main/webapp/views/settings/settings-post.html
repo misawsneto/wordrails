@@ -245,7 +245,7 @@
             <div class="cell-inner"><!-- cell -->
 							<!-- stub image to get height -->
 							<img id="img-stub" ng-src="{{postFeaturedImage}}" ng-if="postFeaturedImage" class="z-index-n-1 pos-fix" style="opacity: 0">
-							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md" ng-if="postFeaturedImage"  ng-class="{'w-full h-400': landscape, 'block-800 h-300 m-t': !landscape}"
+							<div id="post-image-container" data-img="{{postFeaturedImage}}" class="animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md h-400" ng-if="postFeaturedImage"  ng-class="{'w-full ': landscape, 'block-800': !landscape}"
 							ng-style="{'background-image': 'url(' + postFeaturedImage + ')', 'background-position': app.imgToolsProps.x + '% ' + app.imgToolsProps.y + '%'}">
 								<md-fab-speed-dial md-open="openImageOptions" md-direction="up" class="md-scale pull-right p-t p-r p-b pos-abt bottom-0 right-0">
 								  <md-fab-trigger>
@@ -288,12 +288,20 @@
 								</md-fab-speed-dial>
 							</div>
 							
-							<!-- <div id="post-image-container" class="w-full m-h-auto bg-cover md-whiteframe-z1 m-b-md h-400" focus-point ></div> -->
+							<div ng-if="useVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md">
+								<embed-video width=800 height=400 iframe-id="video1" api="1" player_id="video1" ng-href="{{app.videoUrl}}"></embed-video>
+								<md-button ng-click="removeVideo();" class="md-fab md-raised md-mini pos-abt right-0 right-0 m-r m-t ">
+									<md-tooltip md-direction="top">
+						      	{{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
+						  		</md-tooltip>
+									<i class="mdi mdi2-delete i-20"></i>
+								</md-button>
+							</div>
 
 							<!-- main content -->
 							<div class="block-800 m-auto p-r p-l" ng-class="{'animated zoomIn': zoomActive}">
 								<!-- image speed dial -->
-								<div class="media-speed-dial p" ng-if="!postFeaturedImage">
+								<div class="media-speed-dial p" ng-if="!postFeaturedImage && !useVideo">
 									<div class="lock-size" layout="row" layout-align="center center">
 							      <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm" ng-click="loadImageConfigFromStorage();">
 											<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
@@ -302,12 +310,37 @@
 								  		</md-tooltip>
 									    <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
 									  </div>
-									  <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
-									  	<md-tooltip md-direction="top">
-								      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
-								  		</md-tooltip>
-									    <i class="mdi mdi2-video i-20" style="vertical-align: 20%"></i>
-									  </div>
+
+								   	<md-menu id="bro">
+								      <button type="button" ng-click="$mdOpenMenu($event)" aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
+										  	<md-tooltip md-direction="top">
+									      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+									  		</md-tooltip>
+										    <i class="mdi mdi2-video i-20" style="vertical-align: 20%"></i>
+										  </button>
+
+								      <md-menu-content width="6" class="md-background-hue-1 background" style="max-height: 1000px">
+								        <div class="p p-t-xs p-b-xs">
+								        	<div class="m-b-sm"><i class="icon mdi2-video i-24"></i> {{'titles.VIDEO' | translate}}</div>
+								        	<md-input-container class="w-full m-b-0">
+								        		<label>http://</label>
+								        		<input ng-model="app.videoUrl" ng-change="videUrlChanged();" />
+								        		<code class="text-sm w-xl block pos-abt m-t-lg text-center">
+								        			Youtube,Dailymotion,Vimeo,Youku,Vine 
+								        		</code>
+								        	</md-input-container>
+								        	<div class="text-center m-t" ng-show="validVideoUrl">
+								        		<embed-video on-change="videoSelected(videoId, provider)" width=348 height=220 iframe-id="video2" api="1" player_id="video2" ng-href="{{app.videoUrl}}"></embed-video>
+								        	</div>
+								        	<div class="p-t">
+								        		<md-button class="pull-right m-0" ng-click="insertVideo()" ng-disabled="!validVideoUrl">
+								        			{{'actions.INSERT' | translate}}
+								        		</md-button>
+								        	</div>
+								        </div>
+							        </md-menu-content>
+					        	</md-menu>
+
 									  <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
 									  	<md-tooltip md-direction="top">
 								      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}

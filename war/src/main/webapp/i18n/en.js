@@ -68,7 +68,9 @@
 		"EMAIL": "Email",
 		"PASSWORD": "Password",
 		"HELP": "Help",
-		"SEND": "Send"
+		"SEND": "Send",
+		"VIDEO": "Video",
+		"AUDIO": "Audio"
 	},
 	"signin_signup": {
 		"OR": "or",
@@ -81,7 +83,6 @@
 		"SIGNUP_MSG": "Sign up to",
 		"SIGNIN_OR_SIGNUP_MSG": "Sign in or sign up to",
 		"FORGOT": "Forgot your credentials",
-		"RETURN_TO_SIGNIN": "Return to",
 		"FORGOT_MSG": "Enter your email address below and we will send you instructions on how to change your password."
 	},
 	"actions":{
@@ -91,7 +92,8 @@
 		"UPDATE": "Update",
 		"REMOVE": "Remove",
 		"EXCLUDE": "Exclude",
-		"LIST": "List"
+		"LIST": "List",
+		"INSERT": "Inserir"
 	},
 	"header" : {
 	  "navbar" : {

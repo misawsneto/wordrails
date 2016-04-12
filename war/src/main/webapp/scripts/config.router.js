@@ -74,7 +74,7 @@ angular.module('app')
                 url: '/post',
                 templateUrl: '/views/settings/settings-post.html',
                 data : { titleTranslate: 'titles.POST', title: 'Publicação', folded: true },
-                resolve: load(['/libs/angular/lifely-focuspoint/dist/focuspoint.css', 'leaflet-directive', 'ngJcrop', 'froala', 'monospaced.elastic', 'angularFileUpload', '/scripts/controllers/settings/settings-post.js', '/scripts/controllers/settings/settings-post-geolocation.js']),
+                resolve: load(['videosharing-embed','/libs/angular/lifely-focuspoint/dist/focuspoint.css', 'leaflet-directive', 'ngJcrop', 'froala', 'monospaced.elastic', 'angularFileUpload', '/scripts/controllers/settings/settings-post.js', '/scripts/controllers/settings/settings-post-geolocation.js']),
                 controller: 'SettingsPostCtrl'
               })
 

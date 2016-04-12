@@ -597,6 +597,35 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	// ------------------- end of update term tree ---------------
 
 
+	// ------------- video embeded ----------------
+
+	$scope.useVideo = false;
+	$scope.app.videoUrl = null;
+
+	$scope.videoSelected = function(videoId, provider){
+		if (videoId) 
+			$scope.validVideoUrl = true;
+		else
+			$scope.validVideoUrl = false;
+	}
+
+	$scope.insertVideo = function(){
+		$scope.useVideo = true;
+	}
+
+	$scope.removeVideo = function(){
+		$scope.useVideo = false;
+	}
+
+	// ------------- /video embeded ----------------
+
+
+	// ------------- andio embeded ----------------
+
+	
+
+	// ------------- /audio embeded ----------------
+
 	// --- mock and test
 	var mockPostLoad = function(){
 		$scope.app.editingPost = createPostStub();

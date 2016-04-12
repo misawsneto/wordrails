@@ -68,7 +68,9 @@
 		"EMAIL": "Email",
 		"PASSWORD": "Senha",
 		"HELP": "Ajuda",
-		"SEND": "Enviar"
+		"SEND": "Enviar",
+		"VIDEO": "Vídeo",
+		"AUDIO": "Áudio"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -90,7 +92,8 @@
 		"UPDATE": "Atualizar",
 		"REMOVE": "Remover",
 		"EXCLUDE": "Remover",
-		"LIST": "Listar"
+		"LIST": "Listar",
+		"INSERT": "Inserir"
 	},
 	"header" : {
 	  "navbar" : {

@@ -11,6 +11,13 @@ angular.module('app')
           ]
       },
       {
+          name: 'videosharing-embed',
+          module: true,
+          files: [
+              '/libs/angular/ng-videosharing-embed/build/ng-videosharing-embed.min.js'
+          ]
+      },
+      {
           name: 'afkl.lazyImage',
           module: true,
           files: [
