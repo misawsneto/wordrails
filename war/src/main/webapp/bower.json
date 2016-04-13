@@ -94,6 +94,7 @@
     "videogular-ima-ads": "^1.4.3",
     "videogular-overlay-play": "^1.4.3",
     "videogular-poster": "^1.4.3",
+    "videogular-themes-default": "^1.4.3",
     "sc-date-time": "^1.1.6",
     "ng-videosharing-embed": "^0.3.4"
   },

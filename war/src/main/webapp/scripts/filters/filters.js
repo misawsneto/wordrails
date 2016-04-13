@@ -148,6 +148,15 @@ angular.module('app')
   }
 })
 
+.filter('fileLink', function imageLink(TRIX) {
+  return function(hash, size) {
+    if(hash)
+      return TRIX.baseUrl + "/api/files/get/"+ hash;
+
+    return "";
+  }
+})
+
 .filter('coverImage', function imageLink(TRIX) {
   return function(person, size) {
     if(person && (person.coverHash || person.coverOriginalHash)){

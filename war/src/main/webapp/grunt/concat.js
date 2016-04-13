@@ -110,5 +110,16 @@ module.exports = {
       'libs/angular/angular-masonry/angular-masonry.js'
     ],
     dest:'scripts/masonry.all.js'
+  },
+  videogular:{
+    src:[
+      'libs/angular/videogular/videogular.min.js',
+      'libs/angular/videogular-buffering/vg-buffering.min.js',
+      'libs/angular/videogular-controls/vg-controls.min.js',
+      'libs/angular/videogular-ima-ads/vg-ima-ads.min.js',
+      'libs/angular/videogular-overlay-play/vg-overlay-play.min.js',
+      'libs/angular/videogular-poster/vg-poster.min.js'
+    ],
+    dest:'scripts/videogular.all.js'
   }
 }

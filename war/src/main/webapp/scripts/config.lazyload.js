@@ -11,10 +11,47 @@ angular.module('app')
           ]
       },
       {
+        name:'com.2fdevs.videogular',
+        module: true,
+        files: [
+            '/scripts/videogular.all.js',
+            '/libs/angular/videogular-themes-default/videogular.min.css'
+        ]
+      },
+      {
+        name:'com.2fdevs.videogular.plugins.controls',
+        module: true,
+        files: [
+            '/scripts/videogular.all.js'
+        ]
+      },
+      {
+        name:'com.2fdevs.videogular.plugins.overlayplay',
+        module: true,
+        files: [
+            '/scripts/videogular.all.js'
+        ]
+      },
+      {
+        name:'com.2fdevs.videogular.plugins.poster',
+        module: true,
+        files: [
+            '/scripts/videogular.all.js'
+        ]
+      },
+      {
           name: 'videosharing-embed',
           module: true,
           files: [
               '/libs/angular/ng-videosharing-embed/build/ng-videosharing-embed.min.js'
+          ]
+      },
+      {
+          name: 'angularAudioRecorder',
+          module: true,
+          files: [
+              '/libs/angular/angularAudioRecorder/dist/angular-audio-recorder.min.js',
+              '/libs/angular/wavesurfer.js/dist/wavesurfer.min.js'
           ]
       },
       {

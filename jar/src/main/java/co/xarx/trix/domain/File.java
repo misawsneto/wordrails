@@ -21,6 +21,9 @@ public class File extends BaseEntity implements Serializable {
 
 	public static final String DIR_IMAGES = "images";
 	public static final String DIR_VIDEO = "videos";
+	public static final String DIR_AUDIO = "audios";
+	public static final String DIR_DOC = "docs";
+
 
 	@Id
 	@Setter(AccessLevel.NONE)

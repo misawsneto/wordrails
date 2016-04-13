@@ -311,17 +311,36 @@
 									    <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
 									  </div>
 
-								   	<md-menu id="bro">
-								      <button type="button" ng-click="$mdOpenMenu($event)" aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
+							      <div ng-click="showVideoDialog()" aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
+									  	<md-tooltip md-direction="top">
+								      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+								  		</md-tooltip>
+									    <i class="mdi mdi2-video i-20" style="vertical-align: 20%"></i>
+									  </div>
+
+				        		<md-menu >
+										  <div ng-click="$mdOpenMenu($event)" aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
 										  	<md-tooltip md-direction="top">
-									      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+									      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
 									  		</md-tooltip>
-										    <i class="mdi mdi2-video i-20" style="vertical-align: 20%"></i>
-										  </button>
+										    <i class="mdi mdi2-microphone i-20" style="vertical-align: 20%"></i>
+										  </div>
 
 								      <md-menu-content width="6" class="md-background-hue-1 background" style="max-height: 1000px">
-								        <div class="p p-t-xs p-b-xs">
-								        	<div class="m-b-sm"><i class="icon mdi2-video i-24"></i> {{'titles.VIDEO' | translate}}</div>
+												<div class="md-whiteframe-z1" style="margin-top: -8px">
+													
+													<div md-ink-ripple class="m-0 inline" md-prevent-menu-close ng-click="recordAudio = true; uploadAudio = false;">
+														<div class="p-sm p-h p"> <i class="i-20 mdi2-link-variant"></i> </div>
+														<div ng-if="!uploadAudio" class="pos-abt w-full bottom-0 md-accent-default background" style="height: 2px"></div>
+													</div>
+
+													<div md-ink-ripple class="m-0 inline" md-prevent-menu-close ng-click="recordAudio = false; uploadAudio = true;">
+														<div class="p-sm p-h p"> <i class="i-20 mdi2-upload"></i> </div>
+														<div ng-if="uploadAudio" class="pos-abt w-full bottom-0 md-accent-default background" style="height: 2px"></div>
+													</div>
+												</div>
+								        <div class="p p-t p-b-xs" ng-class="{'hide': !recordAudio}">
+								        	<!-- <div class="m-b-sm"><i class="icon mdi2-video i-24"></i> {{'titles.VIDEO' | translate}}</div> -->
 								        	<md-input-container class="w-full m-b-0">
 								        		<label>http://</label>
 								        		<input ng-model="app.videoUrl" ng-change="videUrlChanged();" />
@@ -336,17 +355,23 @@
 								        		<md-button class="pull-right m-0" ng-click="insertVideo()" ng-disabled="!validVideoUrl">
 								        			{{'actions.INSERT' | translate}}
 								        		</md-button>
+								        		<md-button class="pull-right m-0">
+								        			{{'titles.CANCEL' | translate}}
+								        		</md-button>
 								        	</div>
+								        </div>
+								        <div class="p p-t p-b-xs" ng-class="{'hide': !uploadAudio}">
+								        	<div md-ink-ripple="" class="md-btn md-raised m-b btn-fw bg-white">
+														<input id="image-upload" type="file" nv-file-select="" uploader="auploader" name="contents" accept="video/mp4,video/x-m4v,video/*"/>
+									      		<md-tooltip md-direction="top">
+											      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
+											  		</md-tooltip>
+												    <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
+													</div>
 								        </div>
 							        </md-menu-content>
 					        	</md-menu>
 
-									  <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm">
-									  	<md-tooltip md-direction="top">
-								      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
-								  		</md-tooltip>
-									    <i class="mdi mdi2-microphone i-20" style="vertical-align: 20%"></i>
-									  </div>
 							    </div>
 								</div>
 								<!-- image speed dial -->
@@ -537,5 +562,82 @@
 		<div ng-controller="GeoLocationCtrl">
 			<leaflet center="center" controls='controls'></leaflet>
 		</div>
+	</md-dialog-content>
+</script>
+
+<script type="text/ng-template" id="video-dialog.html">
+	<md-dialog-content width="6" class="md-background-hue-1 background w-500 h-m-500" style="max-height: 1000px">
+		<div class="md-whiteframe-z1">
+			
+			<div md-ink-ripple class="m-0 inline" md-prevent-menu-close ng-click="insertVideolink = true; uploadVideo = false;">
+				<div class="p-sm p-h p"> <i class="i-24 mdi2-link-variant"></i> </div>
+				<div ng-if="!uploadVideo" class="pos-abt w-full bottom-0 md-accent-default background" style="height: 2px"></div>
+			</div>
+
+			<div md-ink-ripple class="m-0 inline" md-prevent-menu-close ng-click="insertVideolink = false; uploadVideo = true;">
+				<div class="p-sm p-h p"> <i class="i-24 mdi2-upload"></i> </div>
+				<div ng-if="uploadVideo" class="pos-abt w-full bottom-0 md-accent-default background" style="height: 2px"></div>
+			</div>
+
+		</div>
+
+	  <div class="p" ng-class="{'hide': !insertVideolink}">
+	  	<!-- <div class="m-b-sm"><i class="icon mdi2-video i-24"></i> {{'titles.VIDEO' | translate}}</div> -->
+	  	<md-input-container class="w-full m-b-0">
+	  		<label>http://</label>
+	  		<input ng-model="app.videoUrl" ng-change="videUrlChanged();" />
+	  		<code class="text-sm w-xl block pos-abt m-t-lg text-center">
+	  			Youtube,Dailymotion,Vimeo,Youku,Vine 
+	  		</code>
+	  	</md-input-container>
+	  	<div class="text-center m-t" ng-show="validVideoUrl">
+	  		<embed-video on-change="videoSelected(videoId, provider)" width=348 height=220 iframe-id="video2" api="1" player_id="video2" ng-href="{{app.videoUrl}}"></embed-video>
+	  	</div>
+	  	<div class="text-center m-t">
+	  		<md-button ng-click="insertVideo()" class="m-b-0" ng-disabled="!validVideoUrl">
+	  			{{'actions.INSERT' | translate}}
+	  		</md-button>
+	  		<md-button ng-click="cancel()" class="m-b-0">
+	  			{{'titles.CANCEL' | translate}}
+	  		</md-button>
+	  	</div>
+	  </div>
+	  <div class="p" ng-class="{'hide': !uploadVideo}">
+	  	<div md-ink-ripple="" class="md-btn md-raised m-b btn-fw bg-white">
+				<input id="image-upload" type="file" nv-file-select="" uploader="vuploader" name="contents" accept="video/mp4,video/x-m4v,video/*"/>
+	  		<md-tooltip md-direction="top">
+	      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
+	  		</md-tooltip>
+		    <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
+			</div>
+			<videogular md-prevent-menu-close vg-theme="videos.theme">
+				<vg-media vg-src="videos.sources">
+				</vg-media>
+				<vg-controls vg-autohide="videos.plugins.controls.autoHide" vg-autohide-time="videos.plugins.controls.autoHideTime">
+	          <vg-play-pause-button></vg-play-pause-button>
+	          <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+	          <vg-scrub-bar>
+	              <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+	          </vg-scrub-bar>
+	          <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+	          <vg-time-display>{{ totalTime | date:'mm:ss':'+0000' }}</vg-time-display>
+	          <vg-volume>
+	              <vg-mute-button></vg-mute-button>
+	              <vg-volume-bar></vg-volume-bar>
+	          </vg-volume>
+	<vg-playback-button></vg-playback-button>
+	          <vg-fullscreen-button></vg-fullscreen-button>
+	      </vg-controls>
+	      <vg-overlay-play></vg-overlay-play>
+			</videogular>
+			<div class="text-center m-t">
+	  		<md-button ng-click="insertVideo()" class="m-b-0" ng-disabled="!validVideoUrl">
+	  			{{'actions.INSERT' | translate}}
+	  		</md-button>
+	  		<md-button ng-click="cancel()" class="m-b-0">
+	  			{{'titles.CANCEL' | translate}}
+	  		</md-button>
+	  	</div>
+	  </div>
 	</md-dialog-content>
 </script>

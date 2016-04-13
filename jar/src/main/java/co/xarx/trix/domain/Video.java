@@ -4,26 +4,30 @@ import co.xarx.trix.annotation.SdkExclude;
 import lombok.AccessLevel;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-
+@SdkExclude
 @lombok.Getter
 @lombok.Setter
 @lombok.NoArgsConstructor
+@lombok.EqualsAndHashCode(callSuper = false)
 @Entity
-public class Video extends BaseEntity {
+public class Video extends BaseEntity implements Serializable {
+
+	private static final long serialVersionUID = 6417000117605453415L;
+
+	public Video(File file) {
+		this.file = file;
+	}
 
 	@Id
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
-	public Integer duration;
-
-	@SdkExclude
+	@NotNull
+	@ManyToOne(cascade=CascadeType.MERGE)
 	public File file;
-
 }

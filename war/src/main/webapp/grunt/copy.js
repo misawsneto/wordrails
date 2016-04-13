@@ -59,7 +59,16 @@ module.exports = {
                     'angular-ui-ace/ui-ace.min.js',
                     'ng-directive-lazy-image/release/**',
                     'ngInfiniteScroll/build/ng-infinite-scroll.min.js',
-                    'ng-videosharing-embed/build/ng-videosharing-embed.min.js'
+                    'ng-videosharing-embed/build/ng-videosharing-embed.min.js',
+                    'angularAudioRecorder/dist/angular-audio-recorder.min.js',
+                    'wavesurfer.js/dist/wavesurfer.min.js',
+                    "videogular/videogular.min.js",
+                    "videogular-buffering/vg-buffering.min.js",
+                    "videogular-controls/vg-controls.min.js",
+                    "videogular-ima-ads/vg-ima-ads.min.js",
+                    "videogular-overlay-play/vg-overlay-play.min.js",
+                    "videogular-poster/vg-poster.min.js",
+                    "videogular-themes-default/**"
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',
