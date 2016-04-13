@@ -609,6 +609,29 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		});
 	}
 
+	$scope.videos = {
+		// sources: [
+		// 	{src: $sce.trustAsResourceUrl("http://d3a3w0au60g0o7.cloudfront.net/demo/videos/7145a35b9391bb8d568c24ef8df59d6a"), type: "video/mp4"}
+		// ],
+		theme: "libs/angular/videogular-themes-default/videogular.min.css",
+		plugins: {
+            controls: {
+                autoHide: true,
+                autoHideTime: 5000
+            }
+        }
+	}
+
+	$scope.$watch('uploadedVideo', function(newVal, oldVal){
+		if(newVal){
+			$scope.videos.sources = [
+				{src: $sce.trustAsResourceUrl(newVal.filelink), type: "video/mp4"}
+			]
+		}else{
+			$scope.videos.sources = null;
+		}
+	});
+
 	// ------------------- end of update term tree ---------------
 
 	$scope.recordAudio = true;
@@ -772,18 +795,6 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$timeout(function(){
 		// test();
 	}, 1000);
-	$scope.videos = {
-		sources: [
-			{src: $sce.trustAsResourceUrl("http://d3a3w0au60g0o7.cloudfront.net/demo/videos/7145a35b9391bb8d568c24ef8df59d6a"), type: "video/mp4"}
-		],
-		theme: "libs/angular/videogular-themes-default/videogular.min.css",
-		plugins: {
-            controls: {
-                autoHide: true,
-                autoHideTime: 5000
-            }
-        }
-	}
 
 	settingsPostCtrl = $scope;
 	// --- /mock & test

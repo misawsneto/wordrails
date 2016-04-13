@@ -362,7 +362,7 @@
 								        </div>
 								        <div class="p p-t p-b-xs" ng-class="{'hide': !uploadAudio}">
 								        	<div md-ink-ripple="" class="md-btn md-raised m-b btn-fw bg-white">
-														<input id="image-upload" type="file" nv-file-select="" uploader="auploader" name="contents" accept="video/mp4,video/x-m4v,video/*"/>
+														<input id="image-upload" type="file" nv-file-select="" uploader="auploader" name="contents" accept="video/mp4"/>
 									      		<md-tooltip md-direction="top">
 											      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
 											  		</md-tooltip>
@@ -567,6 +567,7 @@
 
 <script type="text/ng-template" id="video-dialog.html">
 	<md-dialog-content width="6" class="md-background-hue-1 background w-500 h-m-500" style="max-height: 1000px">
+		<!-- tabs -->
 		<div class="md-whiteframe-z1">
 			
 			<div md-ink-ripple class="m-0 inline" md-prevent-menu-close ng-click="insertVideolink = true; uploadVideo = false;">
@@ -580,7 +581,9 @@
 			</div>
 
 		</div>
+		<!-- /tabs -->
 
+		<!-- video link menu -->
 	  <div class="p" ng-class="{'hide': !insertVideolink}">
 	  	<!-- <div class="m-b-sm"><i class="icon mdi2-video i-24"></i> {{'titles.VIDEO' | translate}}</div> -->
 	  	<md-input-container class="w-full m-b-0">
@@ -602,42 +605,56 @@
 	  		</md-button>
 	  	</div>
 	  </div>
+	  <!-- /video link menu -->
+	  <!-- video upload menu -->
 	  <div class="p" ng-class="{'hide': !uploadVideo}">
-	  	<div md-ink-ripple="" class="md-btn md-raised m-b btn-fw bg-white">
-				<input id="image-upload" type="file" nv-file-select="" uploader="vuploader" name="contents" accept="video/mp4,video/x-m4v,video/*"/>
-	  		<md-tooltip md-direction="top">
-	      	{{'settings.post.INSERT_FEATURED_IMAGE' | translate}}
-	  		</md-tooltip>
-		    <i class="mdi mdi2-image-area i-20" style="vertical-align: 20%"></i>
+			<div ng-if="uploadedVideo" class="animated zoomIn">
+				<!-- video player -->
+				<videogular md-prevent-menu-close vg-theme="videos.theme">
+					<vg-media vg-src="videos.sources">
+					</vg-media>
+					<vg-controls vg-autohide="videos.plugins.controls.autoHide" vg-autohide-time="videos.plugins.controls.autoHideTime">
+		          <vg-play-pause-button></vg-play-pause-button>
+		          <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+		          <vg-scrub-bar>
+		              <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+		          </vg-scrub-bar>
+		          <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+		          <vg-time-display>{{ totalTime | date:'mm:ss':'+0000' }}</vg-time-display>
+		          <vg-volume>
+		              <vg-mute-button></vg-mute-button>
+		              <vg-volume-bar></vg-volume-bar>
+		          </vg-volume>
+							<vg-playback-button></vg-playback-button>
+		          <vg-fullscreen-button></vg-fullscreen-button>
+		      </vg-controls>
+		      <vg-overlay-play></vg-overlay-play>
+				</videogular>
+				<!-- /video player -->
 			</div>
-			<videogular md-prevent-menu-close vg-theme="videos.theme">
-				<vg-media vg-src="videos.sources">
-				</vg-media>
-				<vg-controls vg-autohide="videos.plugins.controls.autoHide" vg-autohide-time="videos.plugins.controls.autoHideTime">
-	          <vg-play-pause-button></vg-play-pause-button>
-	          <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
-	          <vg-scrub-bar>
-	              <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-	          </vg-scrub-bar>
-	          <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
-	          <vg-time-display>{{ totalTime | date:'mm:ss':'+0000' }}</vg-time-display>
-	          <vg-volume>
-	              <vg-mute-button></vg-mute-button>
-	              <vg-volume-bar></vg-volume-bar>
-	          </vg-volume>
-	<vg-playback-button></vg-playback-button>
-	          <vg-fullscreen-button></vg-fullscreen-button>
-	      </vg-controls>
-	      <vg-overlay-play></vg-overlay-play>
-			</videogular>
+			<!-- video upload button -->
+			<div class="p text-center" ng-class="{'hide': uploadedVideo}">
+				<div md-ink-ripple="" class="md-btn md-fab md-raised md-accent-default background inline">
+					<input id="image-upload" type="file" nv-file-select="" uploader="vuploader" name="contents" accept="video/mp4"/>
+		  		<md-tooltip md-direction="top">
+		      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+		  		</md-tooltip>
+			    <i class="mdi mdi2-upload i-32"></i>
+				</div>
+			</div>
+			<!-- /video upload button -->
 			<div class="text-center m-t">
 	  		<md-button ng-click="insertVideo()" class="m-b-0" ng-disabled="!validVideoUrl">
 	  			{{'actions.INSERT' | translate}}
+	  		</md-button>
+	  		<md-button ng-show="uploadedVideo" class="m-b-0" ng-click="uploadedVideo = null;">
+	  			{{'titles.REMOVE' | translate}}
 	  		</md-button>
 	  		<md-button ng-click="cancel()" class="m-b-0">
 	  			{{'titles.CANCEL' | translate}}
 	  		</md-button>
 	  	</div>
 	  </div>
+	  <!-- /video upload menu -->
 	</md-dialog-content>
 </script>
