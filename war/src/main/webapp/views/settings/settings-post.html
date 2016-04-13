@@ -297,11 +297,40 @@
 									<i class="mdi mdi2-delete i-20"></i>
 								</md-button>
 							</div>
+	
+							<div ng-if="useUploadedVideo" class="block-800 h-400 animated2x zoomIn pos-rlt m-h-auto bg-cover md-whiteframe-z2 m-b-md">
+								<videogular md-prevent-menu-close vg-theme="videos.theme">
+									<vg-media vg-src="videos.sources">
+									</vg-media>
+									<vg-controls vg-autohide="videos.plugins.controls.autoHide" vg-autohide-time="videos.plugins.controls.autoHideTime">
+						          <vg-play-pause-button></vg-play-pause-button>
+						          <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+						          <vg-scrub-bar>
+						              <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+						          </vg-scrub-bar>
+						          <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+						          <vg-time-display>{{ totalTime | date:'mm:ss':'+0000' }}</vg-time-display>
+						          <vg-volume>
+						              <vg-mute-button></vg-mute-button>
+						              <vg-volume-bar></vg-volume-bar>
+						          </vg-volume>
+											<vg-playback-button></vg-playback-button>
+						          <vg-fullscreen-button></vg-fullscreen-button>
+						      </vg-controls>
+						      <vg-overlay-play></vg-overlay-play>
+								</videogular>
+								<md-button ng-click="removeUploadedVideo();" class="md-fab md-raised md-mini pos-abt right-0 right-0 m-r m-t ">
+									<md-tooltip md-direction="top">
+						      	{{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
+						  		</md-tooltip>
+									<i class="mdi mdi2-delete i-20"></i>
+								</md-button>
+							</div>
 
 							<!-- main content -->
 							<div class="block-800 m-auto p-r p-l" ng-class="{'animated zoomIn': zoomActive}">
 								<!-- image speed dial -->
-								<div class="media-speed-dial p" ng-if="!postFeaturedImage && !useVideo">
+								<div class="media-speed-dial p" ng-if="showFeaturedMediaSelector()">
 									<div class="lock-size" layout="row" layout-align="center center">
 							      <div aria-label="menu" md-ink-ripple class="md-accent-default background md-fab md-btn md-mini m-sm" ng-click="loadImageConfigFromStorage();">
 											<input id="image-upload" type="file" nv-file-select="" uploader="uploader" name="contents" accept="image/*"/>
@@ -644,7 +673,7 @@
 			</div>
 			<!-- /video upload button -->
 			<div class="text-center m-t">
-	  		<md-button ng-click="insertVideo()" class="m-b-0" ng-disabled="!validVideoUrl">
+	  		<md-button ng-click="insertUploadedVideo()" class="m-b-0" ng-disabled="!uploadedVideo">
 	  			{{'actions.INSERT' | translate}}
 	  		</md-button>
 	  		<md-button ng-show="uploadedVideo" class="m-b-0" ng-click="uploadedVideo = null;">

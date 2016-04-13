@@ -72,6 +72,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
     }
 
+    $scope.showFeaturedMediaSelector = function(){
+    	return !$scope.postFeaturedImage && !$scope.useVideo && !$scope.useUploadedVideo && !$scope.useAudio;
+    }
+
 	$timeout(function(){
 		$(".fr-box a").each(function(){
 			if($(this).html() === 'Unlicensed Froala Editor')
@@ -654,8 +658,17 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$mdDialog.cancel();
 	}
 
+	$scope.insertUploadedVideo = function(){
+		$scope.useUploadedVideo = true;
+		$mdDialog.cancel();
+	}
+
 	$scope.removeVideo = function(){
 		$scope.useVideo = false;
+	}
+
+	$scope.removeUploadedVideo = function(){
+		$scope.useUploadedVideo = false;
 	}
 
 	// ------------- /video embeded ----------------
