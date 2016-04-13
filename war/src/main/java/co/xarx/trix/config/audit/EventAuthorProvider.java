@@ -1,6 +1,6 @@
 package co.xarx.trix.config.audit;
 
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.javers.spring.auditable.AuthorProvider;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -8,7 +8,8 @@ import co.xarx.trix.domain.QPost;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.post.PostSearchParams;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.services.post.PostService;
 import co.xarx.trix.web.rest.AbstractResource;
@@ -17,6 +18,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -48,6 +51,49 @@ public class PostsResource extends AbstractResource implements PostApi {
 	@Autowired
 	private PostService postService;
 
+	@Override
+	public Response searchPosts(String query,
+								Integer author,
+								List<Integer> stations,
+								String state,
+								String from,
+								String until,
+								List<Integer> categories,
+								List<String> tags,
+								Integer size,
+								Integer page,
+								List<String> orders) {
+
+		Pageable pageable = getPageable(page, size, orders);
+
+		PostSearchParams params = new PostSearchParams(query, author, stations, state, from, until, categories, tags);
+
+		List<Integer> ids = postSearchService.searchIds(params, pageable);
+		List<Post> posts = postSearchService.search(ids, pageable);
+
+		Page p = new PageImpl(posts, pageable, ids.size());
+
+		return Response.ok().entity(p).build();
+	}
+
+	@Deprecated
+	public ContentResponse<SearchView> searchPosts(
+			String q,
+			String stationIds,
+			Integer personId,
+			String publicationType,
+			boolean noHighlight,
+			boolean sortByDate,
+			Integer page,
+			Integer size) {
+
+		if (q == null) q = "";
+
+		Pair<Integer, List<PostView>> postsViews = postSearchService.searchPosts(q, personId, page, size, sortByDate);
+
+		return getSearchView(postsViews);
+	}
+
 	public void getPosts() throws ServletException, IOException {
 		forward();
 	}
@@ -65,10 +111,10 @@ public class PostsResource extends AbstractResource implements PostApi {
 	public void getPost(int postId) throws ServletException, IOException {
 		forward();
 	}
-
 	public void putPost(Integer id) throws ServletException, IOException {
 		forward();
 	}
+
 	public void postPost() throws ServletException, IOException {
 		forward();
 	}
@@ -144,24 +190,6 @@ public class PostsResource extends AbstractResource implements PostApi {
 		ContentResponse<List<PostView>> response = new ContentResponse<>();
 		response.content = postConverter.convertToViews(posts);
 		return response;
-	}
-
-	@Deprecated
-	public ContentResponse<SearchView> searchPosts(
-												   String q,
-												   String stationIds,
-												   Integer personId,
-												   String publicationType,
-												   boolean noHighlight,
-												   boolean sortByDate,
-												   Integer page,
-												   Integer size) {
-
-		if (q == null) q = "";
-
-		Pair<Integer, List<PostView>> postsViews = postSearchService.searchPosts(q, personId, page, size, sortByDate);
-
-		return getSearchView(postsViews);
 	}
 
 	private ContentResponse<SearchView> getSearchView(Pair<Integer, List<PostView>> postsViews) {

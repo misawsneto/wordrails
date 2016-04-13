@@ -3,7 +3,7 @@ package co.xarx.trix.web.rest.resource;
 import co.xarx.trix.domain.MobileDevice;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.services.MobileService;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.MobileApi;

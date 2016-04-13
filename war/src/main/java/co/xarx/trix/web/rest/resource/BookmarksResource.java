@@ -6,7 +6,7 @@ import co.xarx.trix.api.PostView;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.services.PersonService;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.BookmarksApi;

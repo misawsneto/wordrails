@@ -10,7 +10,7 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 @Component
-public class JerseyObjectMapperProvider implements ContextResolver<ObjectMapper> {
+public class ResteasyObjectMapperProvider implements ContextResolver<ObjectMapper> {
 
 	@Override
 	public ObjectMapper getContext(Class<?> type) {

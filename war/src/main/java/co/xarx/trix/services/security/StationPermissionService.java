@@ -1,4 +1,4 @@
-package co.xarx.trix.services.auth;
+package co.xarx.trix.services.security;
 
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Station;

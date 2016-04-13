@@ -1,4 +1,4 @@
-package co.xarx.trix.services.auth;
+package co.xarx.trix.services.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
@@ -30,6 +30,9 @@ public class PermissionFilterService {
 	}
 
 	public List<Integer> filterIds(List<Integer> items, Class clazz, String permission) {
+		if(items == null)
+			return null;
+
 		List<Integer> result = new ArrayList<>();
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		items.stream()

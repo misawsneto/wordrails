@@ -2,6 +2,10 @@ package co.xarx.trix.web.rest;
 
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpResponse;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.util.Assert;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -11,7 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractResource {
@@ -61,5 +67,29 @@ public abstract class AbstractResource {
 		} catch (ServletException e) {
 			throw new IOException(e);
 		}
+	}
+
+	protected Pageable getPageable(Integer page, Integer size, List<String> order) {
+		Assert.notNull(page, "Page must not be null");
+		Assert.notNull(size, "Size must not be null");
+
+		Sort sort = null;
+
+		if (order != null && !order.isEmpty()) {
+			List<Sort.Order> orders = new ArrayList<>();
+			for (String s : order) {
+				Sort.Direction d = Sort.Direction.ASC;
+
+				if (s.charAt(0) == '-') {
+					d = Sort.Direction.DESC;
+					s = s.substring(1, s.length());
+				}
+				orders.add(new Sort.Order(d, s));
+			}
+
+			sort = new Sort(orders);
+		}
+
+		return new PageRequest(page, size, sort);
 	}
 }
