@@ -1,17 +1,21 @@
 package co.xarx.trix.api.v2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Map;
 
 
-@lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ImageData implements Serializable {
 
-	private String url;
-	private String credits;
-	private String caption;
-	private String title;
-	private boolean landscape;
+	@JsonUnwrapped
+	private Map<String, PictureData> pictures;
 }

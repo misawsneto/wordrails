@@ -1,8 +1,10 @@
 package co.xarx.trix.api.v2;
 
-import co.xarx.trix.api.Category;
 import co.xarx.trix.domain.Identifiable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -10,9 +12,9 @@ import java.util.Date;
 import java.util.Set;
 
 
-@lombok.Getter
-@lombok.Setter
-@lombok.NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostData implements Serializable, Identifiable {
 
@@ -26,20 +28,29 @@ public class PostData implements Serializable, Identifiable {
 	private String topper;
 	private String state;
 
-	private Set<Category> categories;
+	private Set<Integer> categoriesIds;
+	private Set<CategoryData> categories;
 	private Set<String> tags;
 
+	private Integer authorId;
 	private PersonData author;
 
 	private Date date;
 
 	private ImageData image;
 	private VideoData video;
+	private AudioData audio;
+
+	private String imageCredits;
+	private String imageCaption;
+	private String imageTitle;
+	private boolean imageLandscape;
+
 	private String slug;
 
 	private Double lat;
 	private Double lng;
 
 	private Date scheduledDate;
-	private boolean notify;
+	private boolean notified;
 }

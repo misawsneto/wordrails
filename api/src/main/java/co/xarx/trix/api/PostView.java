@@ -1,5 +1,6 @@
 package co.xarx.trix.api;
 
+import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.domain.Identifiable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,7 +30,7 @@ public class PostView implements Serializable, Identifiable {
 	public String imageMediumHash;
 	public String imageLargeHash;
 
-	public Set<Category> categories;
+	public Set<CategoryData> categories;
 	public Set<String> tags;
     public List<TermView> terms;
 	public Boolean sponsored;

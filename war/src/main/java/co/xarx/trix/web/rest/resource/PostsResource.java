@@ -1,6 +1,7 @@
 package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.api.*;
+import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Post;
@@ -8,14 +9,15 @@ import co.xarx.trix.domain.QPost;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.services.post.PostSearchParams;
 import co.xarx.trix.services.post.PostSearchService;
 import co.xarx.trix.services.post.PostService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.PostApi;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,6 +34,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class PostsResource extends AbstractResource implements PostApi {
@@ -50,6 +53,8 @@ public class PostsResource extends AbstractResource implements PostApi {
 
 	@Autowired
 	private PostService postService;
+	@Autowired
+	private ModelMapper mapper;
 
 	@Override
 	public Response searchPosts(String query,
@@ -70,8 +75,11 @@ public class PostsResource extends AbstractResource implements PostApi {
 
 		List<Integer> ids = postSearchService.searchIds(params, pageable);
 		List<Post> posts = postSearchService.search(ids, pageable);
+		List<PostData> data = posts.stream()
+				.map(post -> mapper.map(post, PostData.class))
+				.collect(Collectors.toList());
 
-		Page p = new PageImpl(posts, pageable, ids.size());
+		Page p = new PageImpl(data, pageable, ids.size());
 
 		return Response.ok().entity(p).build();
 	}

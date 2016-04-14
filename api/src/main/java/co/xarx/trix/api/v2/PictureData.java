@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VideoData implements Serializable {
+public class PictureData implements Serializable {
 
 	private String hash;
 	private String url;

@@ -23,12 +23,12 @@ public interface PostApi {
 	@GET
 	@Path("/search")
 	Response searchPosts(@QueryParam("q") String query,
-						 @QueryParam("author") Integer author,
-						 @QueryParam("station") List<Integer> stations,
+						 @QueryParam("authorId") Integer author,
+						 @QueryParam("stationId") List<Integer> stations,
 						 @QueryParam("state") String state,
 						 @QueryParam("from") String from,
 						 @QueryParam("until") String until,
-						 @QueryParam("category") List<Integer> categories,
+						 @QueryParam("categoryId") List<Integer> categories,
 						 @QueryParam("tag") List<String> tags,
 						 @QueryParam("size") @DefaultValue("10") Integer size,
 						 @QueryParam("page") @DefaultValue("0") Integer page,
