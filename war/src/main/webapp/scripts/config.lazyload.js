@@ -11,6 +11,16 @@ angular.module('app')
           ]
       },
       {
+        name: 'wavesurfer.angular',
+        module: true,
+        files: [
+            '/libs/angular/underscore/underscore-min.js',
+            '/libs/angular/wavesurfer.js/dist/wavesurfer.min.js',
+            '/libs/angular/wavesurfer-angular/dist/js/wavesurfer-angular.min.js',
+            '/libs/angular/wavesurfer-angular/dist/css/wavesurfer.angular.min.css'
+        ]
+      },
+      {
         name:'com.2fdevs.videogular',
         module: true,
         files: [
@@ -52,6 +62,13 @@ angular.module('app')
           files: [
               '/libs/angular/angularAudioRecorder/dist/angular-audio-recorder.min.js',
               '/libs/angular/wavesurfer.js/dist/wavesurfer.min.js'
+          ]
+      },
+      {
+        name: 'recorderServiceProvider',
+        module: true,
+          files: [
+              '/libs/angular/angularAudioRecorder/dist/angular-audio-recorder.min.js',
           ]
       },
       {

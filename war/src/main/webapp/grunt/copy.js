@@ -61,6 +61,7 @@ module.exports = {
                     'ngInfiniteScroll/build/ng-infinite-scroll.min.js',
                     'ng-videosharing-embed/build/ng-videosharing-embed.min.js',
                     'angularAudioRecorder/dist/angular-audio-recorder.min.js',
+                    'angularAudioRecorder/dist/angular-audio-recorder.js',
                     'wavesurfer.js/dist/wavesurfer.min.js',
                     "videogular/videogular.min.js",
                     "videogular-buffering/vg-buffering.min.js",
@@ -68,7 +69,11 @@ module.exports = {
                     "videogular-ima-ads/vg-ima-ads.min.js",
                     "videogular-overlay-play/vg-overlay-play.min.js",
                     "videogular-poster/vg-poster.min.js",
-                    "videogular-themes-default/**"
+                    "videogular-themes-default/**",
+                    "wavesurfer-angular/dist/js/wavesurfer-angular.min.js",
+                    "wavesurfer-angular/dist/css/wavesurfer.angular.min.css",
+                    "wavesurfer.js/dist/wavesurfer.min.js",
+                    "underscore/underscore-min.js"
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

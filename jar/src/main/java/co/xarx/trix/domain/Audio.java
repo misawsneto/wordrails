@@ -1,6 +1,7 @@
 package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkExclude;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Setter;
 
@@ -18,8 +19,7 @@ public class Audio extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6407170001176054415L;
 
-	public Audio(String sizeTag, File file) {
-		this.sizeTag = sizeTag;
+	public Audio(File file) {
 		this.file = file;
 	}
 
@@ -28,13 +28,14 @@ public class Audio extends BaseEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
 
-	public Integer height;
-
-	public Integer width;
-
-	public String sizeTag;
+	public String title;
 
 	@NotNull
 	@ManyToOne(cascade=CascadeType.MERGE)
 	public File file;
+
+	@SdkExclude
+	@ManyToOne(cascade=CascadeType.MERGE)
+	@JsonIgnore
+	private Picture cover;
 }

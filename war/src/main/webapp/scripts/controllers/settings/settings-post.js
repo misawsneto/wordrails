@@ -73,7 +73,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
     }
 
     $scope.showFeaturedMediaSelector = function(){
-    	return !$scope.postFeaturedImage && !$scope.useVideo && !$scope.useUploadedVideo && !$scope.useAudio;
+    	return !$scope.postFeaturedImage && !$scope.useVideo && !$scope.useUploadedVideo && !$scope.useUploadedAudio;
     }
 
 	$timeout(function(){
@@ -613,7 +613,35 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		});
 	}
 
+	$scope.showAudioDialog = function(){
+		$mdDialog.show({
+			scope: $scope,        // use parent scope in template
+          	preserveScope: true, // do not forget this if use parent scope
+			controller: $scope.app.defaultDialog,
+			templateUrl: 'audio-dialog.html',
+			parent: angular.element(document.body),
+			targetEvent: event,
+			clickOutsideToClose:true
+			// onComplete: function(){
+
+			// }
+		});
+	}
+
 	$scope.videos = {
+		// sources: [
+		// 	{src: $sce.trustAsResourceUrl("http://d3a3w0au60g0o7.cloudfront.net/demo/videos/7145a35b9391bb8d568c24ef8df59d6a"), type: "video/mp4"}
+		// ],
+		theme: "libs/angular/videogular-themes-default/videogular.min.css",
+		plugins: {
+            controls: {
+                autoHide: true,
+                autoHideTime: 5000
+            }
+        }
+	}
+
+	$scope.audios = {
 		// sources: [
 		// 	{src: $sce.trustAsResourceUrl("http://d3a3w0au60g0o7.cloudfront.net/demo/videos/7145a35b9391bb8d568c24ef8df59d6a"), type: "video/mp4"}
 		// ],
@@ -636,9 +664,21 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		}
 	});
 
+	// $scope.audioProcessing = $scope.videoProcessing = true;
+
+	$scope.$watch('uploadedAudio', function(newVal, oldVal){
+		if(newVal){
+			$scope.audios.sources = [
+				{src: $sce.trustAsResourceUrl(newVal.filelink), type: "audio/mpeg"}
+			]
+		}else{
+			$scope.audios.sources = null;
+		}
+	});
+
 	// ------------------- end of update term tree ---------------
 
-	$scope.recordAudio = true;
+	$scope.recordAudio = false; $scope.uploadAudio = true;
 	$scope.insertVideolink = true;
 
 	// ------------- video embeded ----------------
@@ -676,7 +716,15 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	// ------------- andio embeded ----------------
 
-	
+
+	$scope.insertUploadedAudio = function(){
+		$scope.useUploadedAudio = true;
+		$mdDialog.cancel();
+	}
+
+	$scope.removeUploadedAudio = function(){
+		$scope.useUploadedAudio = false;
+	}
 
 	// ------------- /audio embeded ----------------
 	
@@ -690,7 +738,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.uploadedAudio = null;
 	auploader.onAfterAddingFile = function(fileItem) {
 		$scope.uploadedAudio = null;
-		vuploader.uploadAll();
+		auploader.uploadAll();
 	};
 
 	auploader.onSuccessItem = function(fileItem, response, status, headers) {
@@ -699,6 +747,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			setPostFeaturedAudio($scope.uploadedAudio.hash)
 			$mdToast.hide();
 		}
+		$scope.audioProcessing = false;
 	};
 
 	auploader.onErrorItem = function(fileItem, response, status, headers) {
@@ -706,6 +755,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
 		else
 			$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+		$scope.audioProcessing = false;
 	}
 
 	$scope.clearImage = function(){ 
@@ -715,6 +765,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	auploader.onProgressItem = function(fileItem, progress) {
+		$scope.audioProcessing = true;
 		cfpLoadingBar.start();
 		cfpLoadingBar.set(progress/10)
 		if(progress == 100){
@@ -753,6 +804,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			setPostFeaturedVideo($scope.uploadedVideo.hash)
 			$mdToast.hide();
 		}
+		$scope.videoProcessing = false;
 	};
 
 	vuploader.onErrorItem = function(fileItem, response, status, headers) {
@@ -760,6 +812,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 			$scope.app.showErrorToast("A imagem não pode ser maior que 6MBs.");
 		else
 			$scope.app.showErrorToast("Não foi possível procesar a imagem. Por favor, tente mais tarde.");
+		$scope.videoProcessing = false;
 	}
 
 	$scope.clearImage = function(){ 
@@ -769,6 +822,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	vuploader.onProgressItem = function(fileItem, progress) {
+		$scope.videoProcessing = true;
 		cfpLoadingBar.start();
 		cfpLoadingBar.set(progress/10)
 		if(progress == 100){

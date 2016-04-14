@@ -125,7 +125,7 @@ public class FilesResource extends AbstractResource implements FilesApi {
 		FileUpload fileUpload = new FileUpload();
 		fileUpload.hash = FileUtil.getHash(item.getInputStream());
 		fileUpload.id = newAudio.getId();
-		fileUpload.link = amazonCloudService.getPublicImageURL(fileUpload.hash);
+		fileUpload.link = amazonCloudService.getPublicFileURL(fileUpload.hash, co.xarx.trix.domain.File.DIR_AUDIO);
 		fileUpload.filelink = fileUpload.link;
 
 		return Response.ok().entity(simpleMapper.writeValueAsString(fileUpload)).build();
