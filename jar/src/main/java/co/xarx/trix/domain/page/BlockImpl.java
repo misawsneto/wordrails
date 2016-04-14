@@ -1,8 +1,9 @@
 package co.xarx.trix.domain.page;
 
 import co.xarx.trix.domain.Identifiable;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 
+@Getter
 public class BlockImpl<T extends Identifiable> implements Block {
 
 	private T object;
@@ -15,16 +16,5 @@ public class BlockImpl<T extends Identifiable> implements Block {
 
 	public String getType() {
 		return objectType.getSimpleName().toLowerCase();
-	}
-
-	@Override
-	public T getObject() {
-		return object;
-	}
-
-	@Override
-	@JsonIgnore
-	public Class getObjectType() {
-		return objectType;
 	}
 }

@@ -1,4 +1,4 @@
-package co.xarx.trix.web.rest.mapper;
+package co.xarx.trix.web.rest.map;
 
 import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.api.v2.PostData;

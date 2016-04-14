@@ -1,23 +1,18 @@
 package co.xarx.trix.web.rest.resource;
 
-import co.xarx.trix.api.hal.HalResources;
-import co.xarx.trix.api.hal.PageHal;
-import co.xarx.trix.api.hal.SectionHal;
+import co.xarx.trix.api.v2.PageData;
+import co.xarx.trix.api.v2.SectionData;
 import co.xarx.trix.domain.page.*;
-import co.xarx.trix.domain.page.Page;
-import co.xarx.trix.persistence.SectionRepository;
 import co.xarx.trix.persistence.PageRepository;
+import co.xarx.trix.persistence.SectionRepository;
 import co.xarx.trix.services.QueryableSectionService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.PagesApi;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.ResourceAssembler;
-import org.springframework.hateoas.jaxrs.JaxRsLinkBuilder;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
@@ -29,19 +24,21 @@ import static co.xarx.trix.domain.page.QPage.page;
 
 @Component
 @NoArgsConstructor
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PagesResource extends AbstractResource implements PagesApi {
 
-	@NonNull
 	private PageRepository pageRepository;
-	@NonNull
 	private SectionRepository sectionRepository;
-	@NonNull
 	private QueryableSectionService queryableSectionService;
-	@NonNull
-	private ResourceAssembler<Page, PageHal> pageAssembler;
-	@NonNull
-	private ResourceAssembler<Section, SectionHal> sectionAssembler;
+	private ModelMapper mapper;
+
+	@Autowired
+	public PagesResource(PageRepository pageRepository, SectionRepository sectionRepository,
+						 QueryableSectionService queryableSectionService, ModelMapper mapper) {
+		this.pageRepository = pageRepository;
+		this.sectionRepository = sectionRepository;
+		this.queryableSectionService = queryableSectionService;
+		this.mapper = mapper;
+	}
 
 	@Override
 	public Response getPages(Integer stationId) throws IOException {
@@ -49,19 +46,12 @@ public class PagesResource extends AbstractResource implements PagesApi {
 
 		pages.forEach(this::populateQueryableSections);
 
-		List<PageHal> hals = new ArrayList<>();
+		List<PageData> hals = new ArrayList<>();
 		for (Page page : pages) {
-			hals.add(pageAssembler.toResource(page));
+			hals.add(mapper.map(page, PageData.class));
 		}
 
-		HalResources<PageHal> response = new HalResources<>(hals);
-		Link self = JaxRsLinkBuilder
-				.linkTo(PagesResource.class)
-				.slash(stationId + "/pages")
-				.withSelfRel();
-		response.add(self);
-
-		return Response.ok(response).build();
+		return Response.ok(hals).build();
 	}
 
 	@Override
@@ -71,18 +61,11 @@ public class PagesResource extends AbstractResource implements PagesApi {
 		QPage p = QAbstractSection.abstractSection.page;
 		org.springframework.data.domain.Page<AbstractSection> all = sectionRepository.findAll(p.id.eq(pageId),
 				pageable);
-		List<SectionHal> sectionHals = new ArrayList<>();
+		List<SectionData> sectionHals = new ArrayList<>();
 
-		all.forEach(section -> sectionHals.add(sectionAssembler.toResource(section)));
+		all.forEach(section -> sectionHals.add(mapper.map(section, SectionData.class)));
 
-		HalResources<SectionHal> response = new HalResources<>(sectionHals);
-		Link self = JaxRsLinkBuilder
-				.linkTo(PagesResource.class)
-				.slash(stationId + "/pages/" + pageId + "/sections")
-				.withSelfRel();
-		response.add(self);
-
-		return Response.ok(response).build();
+		return Response.ok(sectionHals).build();
 	}
 
 	private void populateQueryableSections(Page page) {

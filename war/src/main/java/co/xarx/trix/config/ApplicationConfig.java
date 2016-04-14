@@ -10,10 +10,7 @@ import co.xarx.trix.services.notification.APNSClient;
 import co.xarx.trix.services.notification.GCMClient;
 import co.xarx.trix.services.notification.MobileNotificationSender;
 import co.xarx.trix.services.TenantProvider;
-import co.xarx.trix.web.rest.mapper.ImageDataMap;
-import co.xarx.trix.web.rest.mapper.PersonDataMap;
-import co.xarx.trix.web.rest.mapper.PictureDataMap;
-import co.xarx.trix.web.rest.mapper.PostDataMap;
+import co.xarx.trix.web.rest.map.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.Sender;
 import org.modelmapper.ModelMapper;
@@ -84,6 +81,7 @@ public class ApplicationConfig {
 		modelMapper.addMappings(new ImageDataMap());
 		modelMapper.addMappings(new PersonDataMap());
 		modelMapper.addMappings(new PostDataMap());
+		modelMapper.addMappings(new PageDataMap());
 		modelMapper.addMappings(new PostViewMap());
 		return modelMapper;
 	}

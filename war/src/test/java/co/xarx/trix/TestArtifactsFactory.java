@@ -3,9 +3,7 @@ package co.xarx.trix;
 import co.xarx.trix.api.NotificationView;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
-import co.xarx.trix.domain.page.AbstractSection;
-import co.xarx.trix.domain.page.Page;
-import co.xarx.trix.domain.page.QueryableListSection;
+import co.xarx.trix.domain.page.*;
 import co.xarx.trix.domain.page.query.FixedQuery;
 import co.xarx.trix.domain.page.query.PageableQuery;
 import co.xarx.trix.domain.page.query.statement.PostStatement;
@@ -14,9 +12,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.RandomStringUtils;
 
+import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class TestArtifactsFactory {
@@ -131,25 +132,12 @@ public class TestArtifactsFactory {
 		page.setTenantId(TENANT);
 		page.setTitle("Home");
 
-		PostStatement postStatement1 = new PostStatement();
-		postStatement1.setStationIds(Sets.newHashSet(11));
-		postStatement1.setRichText("dilma");
-
-		PageableQuery pageableQuery = new PageableQuery(postStatement1);
+		QueryableListSection section1 = createQueryableListSection();
 
 		PostStatement postStatement2 = new PostStatement();
 		postStatement2.setStationIds(Sets.newHashSet(11));
 		postStatement2.setRichText("fhc");
-
-		FixedQuery fixedQuery1 = new FixedQuery(postStatement2, Lists.newArrayList(0, 2, 3));
-
 		FixedQuery fixedQuery2 = new FixedQuery(postStatement2, Lists.newArrayList(0, 1, 2, 3, 4));
-
-		QueryableListSection section1 = new QueryableListSection(10, pageableQuery);
-		section1.setTitle("Section 1");
-		section1.setPageable(true);
-		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
-
 		QueryableListSection section2 = new QueryableListSection(5, Lists.newArrayList(fixedQuery2));
 		section2.setTitle("Section 2");
 		section2.setPageable(false);
@@ -160,6 +148,36 @@ public class TestArtifactsFactory {
 		}});
 
 		return page;
+	}
+
+	public static QueryableListSection createQueryableListSection() {
+		PostStatement postStatement1 = new PostStatement();
+		postStatement1.setStationIds(Sets.newHashSet(11));
+		postStatement1.setRichText("dilma");
+
+		PageableQuery pageableQuery = new PageableQuery(postStatement1);
+
+		FixedQuery fixedQuery1 = new FixedQuery(postStatement1, Lists.newArrayList(0, 2, 3));
+		QueryableListSection section1 = new QueryableListSection(10, pageableQuery);
+		section1.setTitle("Section 1");
+		section1.setPageable(true);
+		section1.setFixedQueries(Lists.newArrayList(fixedQuery1));
+
+		Map<Integer, Block> blocks = new HashMap<>();
+		blocks.put(0, new BlockImpl<>(() -> 2, Integer.class));
+
+		try {
+			setPrivateField(section1.getClass().getField("blocks"), section1, blocks);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return section1;
+	}
+
+	static void setPrivateField(Field field, Object obj, Object newValue) throws Exception {
+		field.setAccessible(true);
+		field.set(obj, newValue);
 	}
 
 	public static NotificationView createNotification() {

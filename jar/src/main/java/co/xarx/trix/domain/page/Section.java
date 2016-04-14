@@ -10,6 +10,11 @@ public interface Section extends Identifiable {
 
 	public enum Style {
 		CARROUSEL, VERTICAL_LIST, HORIZONTAL_LIST, GRID;
+
+		@Override
+		public String toString() {
+			return super.toString().toLowerCase();
+		}
 	}
 
 	Map<String, String> getProperties();
