@@ -16,13 +16,10 @@ import java.util.Set;
 @lombok.NoArgsConstructor
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity
-public class Video extends BaseEntity implements Serializable {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Video extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 6417000117605453415L;
-
-	public Video(File file) {
-		this.file = file;
-	}
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -31,12 +28,10 @@ public class Video extends BaseEntity implements Serializable {
 
 	public String title;
 
-	@NotNull
-	@ManyToOne(cascade=CascadeType.MERGE)
-	public File file;
-
 	@SdkExclude
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JsonIgnore
 	private Picture cover;
+
+	public abstract String getUrl();
 }

@@ -51,7 +51,7 @@ public class FileService {
 			Exception {
 
 		VideoFile videoFile = new VideoFile(originalFile, mime);
-		Video newVideo = new Video();
+		VideoInternal newVideo = new VideoInternal();
 
 		Video existingImage = videoRepository.findOne(QVideo.video.file.hash.eq(videoFile.hash));
 		if (existingImage != null) {
@@ -139,7 +139,7 @@ public class FileService {
 	}
 
 	private Video getOriginalVideo(String mime, java.io.File originalFile, VideoFile videoFile) throws IOException {
-		Video originalVideo = new Video();
+		VideoInternal originalVideo = new VideoInternal();
 		originalVideo.file = createNewVideoTrixFile(mime, originalFile.length());
 
 		File existingFile = fileRepository.findOne(QFile.file.hash.eq(videoFile.hash));
@@ -163,7 +163,7 @@ public class FileService {
 	private Video getVideo(java.io.File originalFile) throws Exception {
 		VideoFile videoFile;
 		File existingFile;
-		Video video = new Video();
+		VideoInternal video = new VideoInternal();
 		video.file = createNewVideoTrixFile("video/mp4", originalFile.length());
 
 		java.io.File newFile = FileUtil.createNewTempFile();
@@ -247,7 +247,7 @@ public class FileService {
 	private Video getDocument(Callable<VideoFile> callable, java.io.File originalFile) throws Exception {
 		VideoFile videoFile;
 		File existingFile;
-		Video video = new Video();
+		VideoInternal video = new VideoInternal();
 		video.file = createNewVideoTrixFile("video/mp4", originalFile.length());
 
 		videoFile = callable.call();

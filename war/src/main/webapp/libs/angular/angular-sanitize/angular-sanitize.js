@@ -1,9 +1,9 @@
 /**
- * @license AngularJS v1.5.5-build.4748+sha.c4fb0ec
+ * @license AngularJS v1.5.3
  * (c) 2010-2016 Google, Inc. http://angularjs.org
  * License: MIT
  */
-(function(window, angular) {'use strict';
+(function(window, angular, undefined) {'use strict';
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *     Any commits to this file should be reviewed with security in mind.  *
@@ -349,7 +349,7 @@ function htmlParser(html, handler) {
     mXSSAttempts--;
 
     // strip custom-namespaced attributes on IE<=11
-    if (window.document.documentMode) {
+    if (document.documentMode <= 11) {
       stripCustomNsAttrs(inertBodyElement);
     }
     html = inertBodyElement.innerHTML; //trigger mXSS
@@ -369,7 +369,7 @@ function htmlParser(html, handler) {
 
     var nextNode;
     if (!(nextNode = node.firstChild)) {
-      if (node.nodeType === 1) {
+      if (node.nodeType == 1) {
         handler.end(node.nodeName.toLowerCase());
       }
       nextNode = node.nextSibling;
@@ -378,7 +378,7 @@ function htmlParser(html, handler) {
           node = node.parentNode;
           if (node === inertBodyElement) break;
           nextNode = node.nextSibling;
-          if (node.nodeType === 1) {
+          if (node.nodeType == 1) {
             handler.end(node.nodeName.toLowerCase());
           }
         }
@@ -489,7 +489,7 @@ function htmlSanitizeWriter(buf, uriValidator) {
  * @param node Root element to process
  */
 function stripCustomNsAttrs(node) {
-  if (node.nodeType === window.Node.ELEMENT_NODE) {
+  if (node.nodeType === Node.ELEMENT_NODE) {
     var attrs = node.attributes;
     for (var i = 0, l = attrs.length; i < l; i++) {
       var attrNode = attrs[i];

@@ -1,9 +1,9 @@
 /**
- * @license AngularJS v1.5.5-build.4748+sha.c4fb0ec
+ * @license AngularJS v1.5.3
  * (c) 2010-2016 Google, Inc. http://angularjs.org
  * License: MIT
  */
-(function(window, angular) {'use strict';
+(function(window, angular, undefined) {'use strict';
 
 /**
  * @ngdoc module

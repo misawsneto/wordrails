@@ -93,15 +93,6 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 	@ManyToOne(fetch = FetchType.EAGER)
 	public Image featuredImage;
 
-	@RestResource(exported = false)
-	@OneToMany
-	@JoinTable(
-			name="post_video",
-			joinColumns = @JoinColumn( name="post_id"),
-			inverseJoinColumns = @JoinColumn( name="video_id")
-	)
-	public Set<Video> videos;
-
 	@SdkInclude
 	@NotNull
 	@ManyToOne

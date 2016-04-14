@@ -648,8 +648,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		theme: "libs/angular/videogular-themes-default/videogular.min.css",
 		plugins: {
             controls: {
-                autoHide: true,
-                autoHideTime: 5000
+                autoHide: false
             }
         }
 	}

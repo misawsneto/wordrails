@@ -1,9 +1,9 @@
 /**
- * @license AngularJS v1.5.5-build.4748+sha.c4fb0ec
+ * @license AngularJS v1.5.3
  * (c) 2010-2016 Google, Inc. http://angularjs.org
  * License: MIT
  */
-(function(window, angular) {'use strict';
+(function(window, angular, undefined) {'use strict';
 
 /**
  * @ngdoc module
@@ -21,7 +21,7 @@
  *
  * For ngAria to do its magic, simply include the module `ngAria` as a dependency. The following
  * directives are supported:
- * `ngModel`, `ngChecked`, `ngReadonly`, `ngRequired`, `ngValue`, `ngDisabled`, `ngShow`, `ngHide`, `ngClick`,
+ * `ngModel`, `ngChecked`, `ngRequired`, `ngValue`, `ngDisabled`, `ngShow`, `ngHide`, `ngClick`,
  * `ngDblClick`, and `ngMessages`.
  *
  * Below is a more detailed breakdown of the attributes handled by ngAria:
@@ -30,9 +30,8 @@
  * |---------------------------------------------|----------------------------------------------------------------------------------------|
  * | {@link ng.directive:ngModel ngModel}        | aria-checked, aria-valuemin, aria-valuemax, aria-valuenow, aria-invalid, aria-required, input roles |
  * | {@link ng.directive:ngDisabled ngDisabled}  | aria-disabled                                                                          |
- * | {@link ng.directive:ngRequired ngRequired}  | aria-required
- * | {@link ng.directive:ngChecked ngChecked}    | aria-checked
- * | {@link ng.directive:ngReadonly ngReadonly}  | aria-readonly                                                                          ||
+ * | {@link ng.directive:ngRequired ngRequired}  | aria-required                                                                          |
+ * | {@link ng.directive:ngChecked ngChecked}    | aria-checked                                                                           |
  * | {@link ng.directive:ngValue ngValue}        | aria-checked                                                                           |
  * | {@link ng.directive:ngShow ngShow}          | aria-hidden                                                                            |
  * | {@link ng.directive:ngHide ngHide}          | aria-hidden                                                                            |
@@ -97,7 +96,6 @@ function $AriaProvider() {
   var config = {
     ariaHidden: true,
     ariaChecked: true,
-    ariaReadonly: true,
     ariaDisabled: true,
     ariaRequired: true,
     ariaInvalid: true,
@@ -115,7 +113,6 @@ function $AriaProvider() {
    *
    *  - **ariaHidden** – `{boolean}` – Enables/disables aria-hidden tags
    *  - **ariaChecked** – `{boolean}` – Enables/disables aria-checked tags
-   *  - **ariaReadonly** – `{boolean}` – Enables/disables aria-readonly tags
    *  - **ariaDisabled** – `{boolean}` – Enables/disables aria-disabled tags
    *  - **ariaRequired** – `{boolean}` – Enables/disables aria-required tags
    *  - **ariaInvalid** – `{boolean}` – Enables/disables aria-invalid tags
@@ -178,7 +175,6 @@ function $AriaProvider() {
    * The full list of directives that interface with ngAria:
    * * **ngModel**
    * * **ngChecked**
-   * * **ngReadonly**
    * * **ngRequired**
    * * **ngDisabled**
    * * **ngValue**
@@ -218,9 +214,6 @@ ngAriaModule.directive('ngShow', ['$aria', function($aria) {
 .directive('ngChecked', ['$aria', function($aria) {
   return $aria.$$watchExpr('ngChecked', 'aria-checked', nodeBlackList, false);
 }])
-.directive('ngReadonly', ['$aria', function($aria) {
-  return $aria.$$watchExpr('ngReadonly', 'aria-readonly', nodeBlackList, false);
-}])
 .directive('ngRequired', ['$aria', function($aria) {
   return $aria.$$watchExpr('ngRequired', 'aria-required', nodeBlackList, false);
 }])
@@ -233,8 +226,8 @@ ngAriaModule.directive('ngShow', ['$aria', function($aria) {
   function shouldAttachRole(role, elem) {
     // if element does not have role attribute
     // AND element type is equal to role (if custom element has a type equaling shape) <-- remove?
-    // AND element is not in nodeBlackList
-    return !elem.attr('role') && (elem.attr('type') === role) && !isNodeOneOf(elem, nodeBlackList);
+    // AND element is not INPUT
+    return !elem.attr('role') && (elem.attr('type') === role) && (elem[0].nodeName !== 'INPUT');
   }
 
   function getShape(attr, elem) {
@@ -270,8 +263,6 @@ ngAriaModule.directive('ngShow', ['$aria', function($aria) {
           }
 
           function getRadioReaction(newVal) {
-            // Strict comparison would cause a BC
-            /* jshint eqeqeq:false */
             var boolVal = (attr.value == ngModel.$viewValue);
             elem.attr('aria-checked', boolVal);
           }
