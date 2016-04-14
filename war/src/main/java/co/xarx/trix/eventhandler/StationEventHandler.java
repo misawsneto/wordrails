@@ -10,7 +10,7 @@ import co.xarx.trix.domain.page.query.statement.PostStatement;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.ESStartupIndexerService;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;

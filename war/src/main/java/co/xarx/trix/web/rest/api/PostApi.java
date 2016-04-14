@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import javax.servlet.ServletException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 
@@ -18,6 +19,20 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public interface PostApi {
+
+	@GET
+	@Path("/search")
+	Response searchPosts(@QueryParam("q") String query,
+						 @QueryParam("authorId") Integer author,
+						 @QueryParam("stationId") List<Integer> stations,
+						 @QueryParam("state") String state,
+						 @QueryParam("from") String from,
+						 @QueryParam("until") String until,
+						 @QueryParam("categoryId") List<Integer> categories,
+						 @QueryParam("tag") List<String> tags,
+						 @QueryParam("size") @DefaultValue("10") Integer size,
+						 @QueryParam("page") @DefaultValue("0") Integer page,
+						 @QueryParam("order") List<String> orders);
 
 	@GET
 	@Path("/")
@@ -33,12 +48,12 @@ public interface PostApi {
 	void getComments(@PathParam("postId") Integer postId) throws ServletException, IOException;
 
 	@GET
-	@Path("/{id}")
+	@Path("/{id:\\d+}")
 	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'read') or hasRole('ADMIN')")
 	void getPost(@PathParam("id") @P("id") int postId) throws ServletException, IOException;
 
 	@PUT
-	@Path("/{id}")
+	@Path("/{id:\\d+}")
 	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'write') or hasRole('ADMIN')")
 	void putPost(@PathParam("id") Integer id) throws ServletException, IOException;
 
@@ -47,7 +62,7 @@ public interface PostApi {
 	void postPost() throws ServletException, IOException;
 
 	@DELETE
-	@Path("/{id}")
+	@Path("/{id:\\d+}")
 	@PreAuthorize("hasPermission(#id, 'co.xarx.trix.domain.Post', 'delete') or hasRole('ADMIN')")
 	void deletePost(@PathParam("id") Integer id) throws ServletException, IOException;
 

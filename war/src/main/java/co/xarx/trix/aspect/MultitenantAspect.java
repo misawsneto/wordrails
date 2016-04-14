@@ -1,17 +1,18 @@
 package co.xarx.trix.aspect;
 
 import co.xarx.trix.annotations.IgnoreMultitenancy;
-import co.xarx.trix.annotations.TenantAuthorize;
+import co.xarx.trix.aspect.annotations.AccessGroup;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.MultiTenantEntity;
 import co.xarx.trix.exception.OperationNotSupportedException;
+import co.xarx.trix.services.AccessService;
 import com.google.common.collect.Sets;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -24,8 +25,12 @@ import java.util.*;
 @Component
 public class MultitenantAspect {
 
-	@Value("${spring.profiles.active:'dev'}")
-	private String profile;
+	private AccessService accessService;
+
+	@Autowired
+	public MultitenantAspect(AccessService accessService) {
+		this.accessService = accessService;
+	}
 
 	Logger log = Logger.getLogger(this.getClass().getName());
 
@@ -50,26 +55,21 @@ public class MultitenantAspect {
 		return output;
 	}
 
-	@Before("@annotation(tenantAuthorize)")
-	public void tenantAuthorize(TenantAuthorize tenantAuthorize) throws Throwable {
-		String tenantId = TenantContextHolder.getCurrentTenantId();
+	@Before("@annotation(accessGroup)")
+	public void accessGroup(AccessGroup accessGroup) throws Throwable {
+		Set<String> profiles = Sets.newHashSet(accessGroup.profiles());
+		Set<String> tenants = Sets.newHashSet(accessGroup.tenants());
 
-		Set<String> profiles = Sets.newHashSet(tenantAuthorize.profiles());
-		Set<String> tenants = Sets.newHashSet(tenantAuthorize.tenants());
-		boolean isGrant = tenantAuthorize.isGrant();
+		String msg = "Operation not supported for profiles "
+				+ profiles + " and tenants " + tenants;
 
-		OperationNotSupportedException e =
-				new OperationNotSupportedException("Operation not supported for profile "
-						+ profile + " and tenant " + tenantId);
-		if (isGrant) {
-			if (!profiles.contains(profile) || !tenants.contains(tenantId)) {
-				throw e;
-			}
-		} else {
-			if (profiles.contains(profile) || tenants.contains(tenantId)) {
-				throw e;
-			}
-		}
+		if(accessGroup.inclusion())
+			msg = "Operation supported for profiles "
+					+ profiles + " and tenants " + tenants + " only";
+
+		boolean hasPermissionOnAccessGroup = accessService.hasPermissionOnAccessGroup(accessGroup);
+		if(!hasPermissionOnAccessGroup)
+			throw new OperationNotSupportedException(msg);
 	}
 
 	public <T> List<T> getFields(Class<T> classType, Object obj) throws IllegalAccessException, ClassNotFoundException {

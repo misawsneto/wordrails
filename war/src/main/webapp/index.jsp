@@ -64,7 +64,7 @@
 
   <script src="${pageContext.request.contextPath}/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="${pageContext.request.contextPath}/bower_components/ngstorage/ngStorage.js"></script>
-  <script src="${pageContext.request.contextPath}/bower_components/angular-ui-utils/ui-utils.js"></script>
+  <!-- <script src="${pageContext.request.contextPath}/bower_components/angular-ui-utils/ui-utils.js"></script> -->
 
   <!-- bootstrap -->
   <script src="${pageContext.request.contextPath}/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>

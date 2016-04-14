@@ -25,9 +25,9 @@
 		        </div>
 						<!-- persons pagination -->
 						<div class="col-sm-4">
-							<div ng-if="personsRoles">
+							<div ng-if="personsRoles && rolesCount">
 								<span class="font-bold">
-									{{(page * window) + 1 + ' - ' + ((page * window) + (persons.length)) }} 
+									{{(page * window) + 1 + ' - ' + ((page * window) + (personsRoles.length)) }} 
 								</span>
 								<span class="p-l-xs p-r-xs">de</span> 
 								<span class="p-r font-bold">

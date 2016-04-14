@@ -862,14 +862,8 @@ angular.module('app')
                   controller: 'NetworkCreatedCtrl'
               })
               .state('access.signup', {
-                  url: '/signup?invitation',
+                  url: '/signup?invitation?hash',
                   templateUrl: 'tpl/page_signup.html?' + GLOBAL_URL_HASH,
-                  resolve: {
-                      deps: ['uiLoad',
-                        function( uiLoad ){
-                          return uiLoad.load( ['js/controllers/signup.js'] );
-                      }]
-                  }
               })
               .state('access.forgotpwd', {
                   url: '/forgotpwd',

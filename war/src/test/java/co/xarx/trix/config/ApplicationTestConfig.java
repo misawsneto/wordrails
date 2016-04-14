@@ -1,7 +1,5 @@
 package co.xarx.trix.config;
 
-import co.xarx.trix.aspect.MultitenantAspect;
-import co.xarx.trix.aspect.ProfilerAspect;
 import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.PostViewMap;
@@ -19,16 +17,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 //		excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "co.xarx.trix.config.spring.*")
 //)
 public class ApplicationTestConfig {
-
-	@Bean
-	public ProfilerAspect profilerAspect() {
-		return new ProfilerAspect();
-	}
-
-	@Bean
-	public MultitenantAspect multitenantRepositoryAspect() {
-		return new MultitenantAspect();
-	}
 
 	static {
 		System.setProperty("indexES", "false");

@@ -68,6 +68,15 @@ angular.module('app')
 	}
 })
 
+.filter('imageLink2', function imageLink(TRIX) {
+	return function(hash, size) {
+		if(hash)
+			return TRIX.baseUrl + "/api/images/get/"+ hash  + "?size=" + size;
+
+		return "";
+	}
+})
+
 .filter('default_user_image', function imageLink(TRIX) {
 	return function(imgId) {
 		if(imgId)

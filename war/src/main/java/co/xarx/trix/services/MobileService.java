@@ -1,7 +1,7 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.api.NotificationView;
-import co.xarx.trix.annotations.TenantAuthorize;
+import co.xarx.trix.aspect.annotations.AccessGroup;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.NotificationException;
@@ -54,13 +54,13 @@ public class MobileService {
 		return deviceCodes;
 	}
 
-	@TenantAuthorize(tenants = {"demo"}, profiles = {"dev"})
+	@AccessGroup(tenants = {"demo"}, profiles = {"prod"}, inclusion = true)
 	public List<Notification> sendNotifications(Post post, NotificationView notification,
 												Collection<String> androidDevices, Collection<String> appleDevices) throws NotificationException {
 		Assert.notNull(post, "Post should not be null");
 
 		Future<List<Notification>> futureAndroidNotifications = null;
-		Future<List<Notification>> futureAppleNotifications = null;
+		Future<List<Notification>> futureAppleNotifications;
 		try {
 			futureAndroidNotifications = asyncService.run(TenantContextHolder.getCurrentTenantId(),
 					() -> notificationService.sendNotifications(androidNS, notification, post, androidDevices, Notification.DeviceType.ANDROID));

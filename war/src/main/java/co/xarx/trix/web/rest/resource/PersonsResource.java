@@ -13,8 +13,8 @@ import co.xarx.trix.services.InitService;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.NetworkService;
 import co.xarx.trix.services.PersonService;
-import co.xarx.trix.services.auth.AuthService;
-import co.xarx.trix.services.auth.StationPermissionService;
+import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
@@ -285,7 +285,7 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Override
 	public Response signUp(PersonCreateDto dto) throws ConflictException, BadRequestException, IOException{
-		Person person = personService.create(dto.name, dto.username, dto.password, dto.email);
+		Person person = personService.create(dto.name, dto.username, dto.password, dto.email, dto.emailNotification, dto.stationsRole);
 
 		if (person != null) {
 			return Response.status(Status.CREATED).entity(mapper.writeValueAsString(person)).build();
@@ -371,7 +371,10 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 				sr.writer = stationRolesUpdate.writer;
 			}
 
-			stationRolesRepository.save(roles);
+			for (StationRole sr: roles) {
+				stationRolesRepository.save(sr);
+			}
+
 
 			List<Person> persons = personRepository.findAll(stationRolesUpdate.personsIds);
 			List<Station> stations = stationRepository.findAll(stationRolesUpdate.stationsIds);
@@ -403,7 +406,10 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 				}
 			}
 
-			stationRolesRepository.save(allRoles);
+			for (StationRole sr : allRoles ) {
+				stationRolesRepository.save(sr);
+			}
+
 		}
 		return Response.status(Status.CREATED).build();
 	}
@@ -419,7 +425,10 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 				person.user.enabled = true;
 			}
 
-			personRepository.save(persons);
+			for (Person person: persons) {
+				personRepository.save(person);
+			}
+
 		}
 		return Response.status(Status.CREATED).build();
 	}
@@ -435,7 +444,9 @@ public class PersonsResource extends AbstractResource implements PersonsApi {
 				person.user.enabled = false;
 			}
 
-			personRepository.save(persons);
+			for (Person person : persons) {
+				personRepository.save(person);
+			}
 		}
 		return Response.status(Status.CREATED).build();
 	}

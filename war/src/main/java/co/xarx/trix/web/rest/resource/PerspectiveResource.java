@@ -111,9 +111,12 @@ public class PerspectiveResource implements PerspectiveApi {
 				}
 				rows.addAll(ordinaryRows);
 			}
-			rowRepository.save(rows);
 
-			response = Response.status(Status.CREATED).entity("{\"id\": " + termPerspective.id +"}").build();
+			for (Row row : rows) {
+				rowRepository.save(row);
+			}
+
+			response = Response.status(Status.CREATED).entity("{\"id\": " + termPerspective.id + "}").build();
 		}
 		return response;
 	}

@@ -6,7 +6,7 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.config.security.MultitenantPrincipalSid;
 import co.xarx.trix.config.security.Permissions;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;

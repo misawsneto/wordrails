@@ -6,7 +6,7 @@ import co.xarx.trix.converter.NotificationConverter;
 import co.xarx.trix.domain.Notification;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.persistence.NotificationRepository;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.NotificationsApi;
 import com.google.common.collect.Lists;

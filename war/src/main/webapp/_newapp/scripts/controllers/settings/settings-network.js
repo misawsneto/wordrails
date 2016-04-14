@@ -3,7 +3,7 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 
 		$scope.toggleRight = buildToggler('palette-selector');
 
-		$scope.settings = {'tab': 'settings'} 
+		$scope.settings = {'tab': 'settings'}
 
 
 		function buildToggler(navID) {
@@ -217,9 +217,11 @@ app.controller('SettingsNetworkCtrl', ['$scope', '$log', '$timeout', '$mdDialog'
 		switch(languageRef) {
 			case 'en':
 				$translate.use(languageRef)
+				moment.locale(languageRef);
 				break;
 			case 'pt':
 				$translate.use(languageRef)
+				moment.locale(languageRef);
 				break;
 			default:
 				$scope.app.showErrorToast($filter('translate')('messages.settings.network.NO_LANGUAGE'))

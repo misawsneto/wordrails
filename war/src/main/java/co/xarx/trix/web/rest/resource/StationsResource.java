@@ -8,7 +8,7 @@ import co.xarx.trix.persistence.QueryPersistence;
 import co.xarx.trix.persistence.StationPerspectiveRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.StationsApi;
 import org.springframework.beans.factory.annotation.Autowired;

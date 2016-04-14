@@ -9,7 +9,7 @@ import co.xarx.trix.persistence.MenuEntryRepository;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
