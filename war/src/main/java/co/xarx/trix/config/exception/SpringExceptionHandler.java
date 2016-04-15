@@ -1,9 +1,14 @@
 package co.xarx.trix.config.exception;
 
+import co.xarx.trix.api.v2.ErrorData;
 import co.xarx.trix.exception.*;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,34 +22,58 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Produces;
 import java.util.ArrayList;
 import java.util.List;
 
 @ControllerAdvice
 public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 
+	@Autowired
+	@Qualifier("objectMapper")
+	public ObjectMapper mapper;
+
 	@ExceptionHandler(UnauthorizedException.class)
-	public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException exception) {
+	public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException exception) throws JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
-		return new ResponseEntity<>(stackTrace, HttpStatus.FORBIDDEN);
+
+		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
+
+		String error = mapper.writeValueAsString(new ErrorData(exception.getClass() + " - " + message ));
+
+		return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<String> accessDeniedException(AccessDeniedException exception) {
+	@Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+	public ResponseEntity<String> accessDeniedException(AccessDeniedException exception) throws JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
-		return new ResponseEntity<>(stackTrace, HttpStatus.FORBIDDEN);
+		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
+
+		String error = mapper.writeValueAsString(new ErrorData(exception.getClass() + " - " + message ));
+		return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(NotImplementedException.class)
-	public ResponseEntity<String> handleNotImplementedException(NotImplementedException exception) {
+	public ResponseEntity<String> handleNotImplementedException(NotImplementedException exception) throws JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
-		return new ResponseEntity<>(stackTrace, HttpStatus.NOT_IMPLEMENTED);
+
+		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
+
+		String error = mapper.writeValueAsString(new ErrorData(exception.getClass() + " - " + message ));
+
+		return new ResponseEntity<>(error, HttpStatus.NOT_IMPLEMENTED);
 	}
 
 	@ExceptionHandler(OperationNotSupportedException.class)
-	public ResponseEntity<String> handleOperationNotSupportedException(OperationNotSupportedException exception) {
+	public ResponseEntity<String> handleOperationNotSupportedException(OperationNotSupportedException exception) throws JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
-		return new ResponseEntity<>(stackTrace, HttpStatus.METHOD_NOT_ALLOWED);
+
+		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
+
+		String error = mapper.writeValueAsString(new ErrorData(exception.getClass() + " - " + message ));
+
+		return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
 	@ExceptionHandler(AmazonServiceException.class)
@@ -75,9 +104,14 @@ public class SpringExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(ConflictException.class)
-	public ResponseEntity<String> handleConflictException(ConflictException exception) {
+	public ResponseEntity<String> handleConflictException(ConflictException exception) throws JsonProcessingException {
 		String stackTrace = ExceptionUtils.getStackTrace(exception);
-		return new ResponseEntity<>(stackTrace, HttpStatus.CONFLICT);
+
+		String message = stackTrace != null && !stackTrace.isEmpty() ? stackTrace.replaceAll("\"", "\\\"") : "";
+
+		String error = mapper.writeValueAsString(new ErrorData(exception.getClass() + " - " + message ));
+
+		return new ResponseEntity<>(error, HttpStatus.CONFLICT);
 	}
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "IOException occured")

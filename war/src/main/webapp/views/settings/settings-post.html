@@ -508,10 +508,11 @@
             </div>
           </div>
         </div>
-        <div class="pointer p text-center text-u-c font-bold" ng-click="showMoreOptions($event)">
+        <div class="pointer text-center p text-u-c font-bold" ng-click="showMoreOptions($event)">
           <md-button class="md-raised md-primary p-h md-whiteframe-z2" >
           	<i class="icon mdi2-send i-16 m-r-sm"></i>{{'titles.PUBLISH' | translate}}
           </md-button>
+          <md-button class="" ng-click="toggleOptions();">{{'titles.CANCEL' | translate}}</md-button>
         </div>
       </div>
 

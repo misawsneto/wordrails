@@ -78,7 +78,7 @@ public class PostView implements Serializable, Identifiable {
 	public String featuredVideoHash;
 	public String featuredAudioHash;
 
-	public VideoExternalDto videoExternalDto;
+//	public VideoDto video;
 
 	public Double lat;
 	public Double lng;

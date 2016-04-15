@@ -10,16 +10,27 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Set;
 
-@SdkExclude
 @lombok.Getter
 @lombok.Setter
 @lombok.NoArgsConstructor
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Video extends BaseEntity implements Serializable {
+public class Video extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 6417000117605453415L;
+
+	public Video(File file) {
+		file.original = true;
+		this.file = file;
+	}
+
+	public Video(String identifier, String provider) {
+		this.identifier= identifier;
+		this.provider= provider;
+	}
+
+	public String identifier;
+	public String provider;
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -27,6 +38,11 @@ public abstract class Video extends BaseEntity implements Serializable {
 	public Integer id;
 
 	public String title;
+
+	@NotNull
+	@ManyToOne(cascade=CascadeType.MERGE)
+	@SdkExclude
+	public File file;
 
 	@SdkExclude
 	@ManyToOne(cascade=CascadeType.MERGE)

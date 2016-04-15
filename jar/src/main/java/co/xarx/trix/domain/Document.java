@@ -8,14 +8,30 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-@SdkExclude
 @lombok.Getter
 @lombok.Setter
 @lombok.NoArgsConstructor
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Document extends BaseEntity implements Serializable {
+public class Document extends BaseEntity implements Serializable {
+
+	public Document(File file) {
+		file.original = true;
+		this.file = file;
+	}
+
+	public Document(String identifier, String provider) {
+		this.identifier= identifier;
+		this.provider= provider;
+	}
+
+	public String identifier;
+	public String provider;
+
+	@NotNull
+	@ManyToOne(cascade= CascadeType.MERGE)
+	@SdkExclude
+	public File file;
 
 	private static final long serialVersionUID = -6407170001176054415L;
 

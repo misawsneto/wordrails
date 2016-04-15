@@ -65,9 +65,9 @@ public class ImageServiceTest {
 		imageRepository = mock(ImageRepository.class);
 		amazonCloudService = new AmazonCloudServiceMock(null);
 		fileRepository = mock(FileRepository.class);
-		DocumentInternalRepository dir = mock(DocumentInternalRepository.class);
-		VideoInternalRepository vir = mock(VideoInternalRepository.class);
-		AudioInternalRepository air = mock(AudioInternalRepository.class);
+		DocumentRepository dir = mock(DocumentRepository.class);
+		VideoRepository vir = mock(VideoRepository.class);
+		AudioRepository air = mock(AudioRepository.class);
 		fileRepository = mock(FileRepository.class);
 
 		ImageUtil imageUtil = new ImageUtil();

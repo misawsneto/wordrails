@@ -95,15 +95,11 @@ public class Post extends BaseEntity implements Serializable, ElasticSearchEntit
 
 	@SdkInclude
 	@ManyToOne(fetch = FetchType.EAGER)
-	public VideoInternal featuredVideo;
+	public Video featuredVideo;
 
 	@SdkInclude
 	@ManyToOne(fetch = FetchType.EAGER)
-	public AudioInternal featuredAudio;
-
-	@SdkInclude
-	@ManyToOne(fetch = FetchType.EAGER)
-	public VideoExternal externalVideo;
+	public Audio featuredAudio;
 
 	@SdkInclude
 	@NotNull

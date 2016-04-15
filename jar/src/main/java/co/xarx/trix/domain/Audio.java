@@ -9,14 +9,17 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-@SdkExclude
 @lombok.Getter
 @lombok.Setter
 @lombok.NoArgsConstructor
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Audio extends BaseEntity implements Serializable {
+public class Audio extends BaseEntity implements Serializable {
+
+	public Audio(File file) {
+		file.original = true;
+		this.file = file;
+	}
 
 	private static final long serialVersionUID = -6407170001176054415L;
 
@@ -31,4 +34,12 @@ public abstract class Audio extends BaseEntity implements Serializable {
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JsonIgnore
 	private Picture cover;
+
+	@NotNull
+	@SdkExclude
+	@ManyToOne(cascade= CascadeType.MERGE)
+	public File file;
+
+	public String identifier;
+	public String provider;
 }

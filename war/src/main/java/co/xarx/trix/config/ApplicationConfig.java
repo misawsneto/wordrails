@@ -83,6 +83,7 @@ public class ApplicationConfig {
 		modelMapper.addMappings(new PostDataMap());
 		modelMapper.addMappings(new PageDataMap());
 		modelMapper.addMappings(new PostViewMap());
+		modelMapper.addMappings(new VideoDataMap());
 		return modelMapper;
 	}
 
