@@ -1,12 +1,12 @@
-package co.xarx.trix.web.rest.api;
+package co.xarx.trix.web.rest.api.v2;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
-@Path("/stations")
-public interface PagesApi {
+@Path("/v2/stations")
+public interface V2PagesApi {
 
 	@GET
 	@Path("/{stationId}/pages")

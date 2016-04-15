@@ -51,6 +51,9 @@ public class TestArtifactsFactory {
 		post.subheading = "Dummy subheading";
 		post.scheduledDate = new Date();
 		post.notify = true;
+		post.setImageCaptionText("Dummy caption");
+		post.setImageCreditsText("Dummy credits");
+		post.setImageTitleText("Dummy title");
 		return post;
 	}
 
@@ -59,9 +62,7 @@ public class TestArtifactsFactory {
 		for (String s : image.getSizeTags()) {
 			image.addPicture(createPicture(s));
 		}
-		image.setCaption("Dummy caption");
-		image.setCredits("Dummy credits");
-		image.setTitle("Dummy title");
+		image.setOriginalHash(generateToken());
 
 		return image;
 	}

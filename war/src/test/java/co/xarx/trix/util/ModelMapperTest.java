@@ -17,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ModelMapperTest {
@@ -31,6 +32,7 @@ public class ModelMapperTest {
 		modelMapper.addMappings(new StationMap());
 		modelMapper.addMappings(new PictureDataMap());
 		modelMapper.addMappings(new ImageDataMap());
+		modelMapper.addMappings(new PostImageDataMap());
 		modelMapper.addMappings(new PersonDataMap());
 		modelMapper.addMappings(new PostDataMap());
 		modelMapper.addMappings(new PageDataMap());
@@ -51,6 +53,16 @@ public class ModelMapperTest {
 		PostData data = modelMapper.map(post, PostData.class);
 
 		assertEquals(post.getTags(), data.getTags());
+		assertNotNull(data.getVideo());
+		assertNotNull(data.getAuthor());
+		assertNotNull(data.getAudio());
+		assertNotNull(data.getImage());
+		assertNotNull(data.getImageHash());
+		assertNotNull(data.getImage().getPictures());
+		assertNotNull(data.getImage().getCaption());
+		assertNotNull(data.getImage().getCredits());
+		assertNotNull(data.getImage().getTitle());
+		assertNotNull(data.getImage().isLandscape());
 	}
 
 	@Test

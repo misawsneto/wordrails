@@ -1,4 +1,4 @@
-package co.xarx.trix.web.rest.resource;
+package co.xarx.trix.web.rest.resource.v2;
 
 import co.xarx.trix.api.v2.PageData;
 import co.xarx.trix.api.v2.SectionData;
@@ -7,7 +7,7 @@ import co.xarx.trix.persistence.PageRepository;
 import co.xarx.trix.persistence.SectionRepository;
 import co.xarx.trix.services.QueryableSectionService;
 import co.xarx.trix.web.rest.AbstractResource;
-import co.xarx.trix.web.rest.api.PagesApi;
+import co.xarx.trix.web.rest.api.v2.V2PagesApi;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import static co.xarx.trix.domain.page.QPage.page;
 
 @Component
 @NoArgsConstructor
-public class PagesResource extends AbstractResource implements PagesApi {
+public class V2PagesResource extends AbstractResource implements V2PagesApi {
 
 	private PageRepository pageRepository;
 	private SectionRepository sectionRepository;
@@ -32,8 +32,8 @@ public class PagesResource extends AbstractResource implements PagesApi {
 	private ModelMapper mapper;
 
 	@Autowired
-	public PagesResource(PageRepository pageRepository, SectionRepository sectionRepository,
-						 QueryableSectionService queryableSectionService, ModelMapper mapper) {
+	public V2PagesResource(PageRepository pageRepository, SectionRepository sectionRepository,
+					  QueryableSectionService queryableSectionService, ModelMapper mapper) {
 		this.pageRepository = pageRepository;
 		this.sectionRepository = sectionRepository;
 		this.queryableSectionService = queryableSectionService;

@@ -1,6 +1,5 @@
 package co.xarx.trix.web.rest.map;
 
-import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.api.v2.PostData;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class PostDataMap extends PropertyMap<Post, PostData> {
 
-	class TermToIntegerConverter extends AbstractConverter<Set<Term>, Set<Integer>> {
+	private class TermToIntegerConverter extends AbstractConverter<Set<Term>, Set<Integer>> {
 
 		@Override
 		protected Set<Integer> convert(Set<Term> terms) {
@@ -20,27 +19,27 @@ public class PostDataMap extends PropertyMap<Post, PostData> {
 		}
 	}
 
-	class TermToCategoryConverter extends AbstractConverter<Set<Term>, Set<CategoryData>> {
-
-		@Override
-		protected Set<CategoryData> convert(Set<Term> terms) {
-			return terms.stream()
-					.map(term -> new CategoryData(term.getId(), term.getName()))
-					.collect(Collectors.toSet());
-		}
-	}
-
 
 	@Override
 	protected void configure() {
-		map().setImageTitle(source.getImageTitleText());
-		map().setImageCredits(source.getImageCreditsText());
-		map().setImageCaption(source.getImageCaptionText());
-		map().setSnippet(null);
+		map(source.getFeaturedImage(), destination.getImage());
+		map(source.getFeaturedImage().getOriginalHash(), destination.getImageHash());
+		map(source.getImageTitleText(), destination.getImage().getTitle());
+		map(source.getImageCaptionText(), destination.getImage().getCaption());
+		map(source.getImageCreditsText(), destination.getImage().getCredits());
+		map(source.isImageLandscape(), destination.getImage().isLandscape());
+
 		map().setNotified(source.isNotify());
 		using(new TermToIntegerConverter()).map(source.getTerms(), destination.getCategoriesIds());
-		using(new TermToCategoryConverter()).map(source.getTerms(), destination.getCategories());
+		map(source.getTerms(), destination.getCategories());
 
-		map().setAuthor(null);
+//		Condition<Image, PostData> picsNull = c -> c.getSource().getPictures() == null;
+
+		skip(destination.getSnippet());
+//		skip(destination.getAuthor());
+//		when(picsNull).skip(source.getFeaturedImage(), destination.getImage());
+//		skip(destination.getVideo());
+//		skip(destination.getAudio());
+//		skip(destination.getCategories());
 	}
 }
