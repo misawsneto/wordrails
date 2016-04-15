@@ -6,6 +6,7 @@ import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.ESPerson;
 import co.xarx.trix.domain.ESPost;
 import co.xarx.trix.persistence.ESPersonRepository;
+import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
@@ -15,17 +16,19 @@ import org.eclipse.persistence.jpa.jpql.Assert;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.highlight.HighlightField;
+import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.ResultsExtractor;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
@@ -37,6 +40,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.elasticsearch.index.query.FilterBuilders.boolFilter;
+import static org.elasticsearch.index.query.FilterBuilders.rangeFilter;
+import static org.elasticsearch.index.query.FilterBuilders.termFilter;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Service
@@ -48,6 +54,7 @@ public class ESPostService {
 	private ElasticsearchTemplate elasticsearchTemplate;
 
 	@Autowired
+	@SuppressWarnings("SpringJavaAutowiringInspection")
 	public ESPostService(ESPersonRepository esPersonRepository, ObjectMapper objectMapper,
 						 ModelMapper modelMapper, ElasticsearchTemplate elasticsearchTemplate) {
 		this.esPersonRepository = esPersonRepository;
@@ -62,13 +69,16 @@ public class ESPostService {
 		Assert.isNotNull(boolQuery, "boolQuery must not be null");
 		Assert.isNotNull(pageable, "pageable must not be null");
 
-		boolQuery.must(matchQuery("tenantId", TenantContextHolder.getCurrentTenantId()));
+		BoolFilterBuilder f = boolFilter();
+
+		applyTenantFilter(f);
 		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
 		if (sort != null)
 			nativeSearchQueryBuilder.withSort(sort);
 		SearchQuery query = nativeSearchQueryBuilder
 				.withPageable(pageable)
 				.withHighlightFields(new HighlightBuilder.Field("body"))
+				.withFilter(f)
 				.withQuery(boolQuery)
 				.build();
 
@@ -125,21 +135,7 @@ public class ESPostService {
 	}
 
 	BoolQueryBuilder getBoolQueryBuilder(String q, Integer personId, String publicationType, Iterable<Integer> stationIds, Iterable<Integer> postIds) {
-		BoolQueryBuilder mainQuery = boolQuery();
-
-		if (Strings.hasText(q)) {
-			MultiMatchQueryBuilder queryText = multiMatchQuery(q)
-					.field("body", 2)
-					.field("title", 5)
-					.field("topper")
-					.field("subheading")
-					.field("authorName")
-					.field("terms.name")
-					.fuzziness(Fuzziness.AUTO)
-					.prefixLength(1);
-
-			mainQuery = mainQuery.must(queryText);
-		}
+		BoolQueryBuilder mainQuery = getBooleanQuery(q);
 
 		if (personId != null) {
 			mainQuery = mainQuery.must(matchQuery("authorId", personId));
@@ -168,5 +164,120 @@ public class ESPostService {
 		}
 
 		return mainQuery;
+	}
+
+	private BoolQueryBuilder getBooleanQuery(String q) {
+		BoolQueryBuilder mainQuery = boolQuery();
+
+		if (Strings.hasText(q)) {
+			MultiMatchQueryBuilder queryText = multiMatchQuery(q)
+					.field("body", 2)
+					.field("title", 5)
+					.field("topper")
+					.field("subheading")
+					.field("authorName")
+					.field("terms.name")
+					.fuzziness(Fuzziness.AUTO)
+					.prefixLength(1);
+
+			mainQuery = mainQuery.must(queryText);
+		}
+		return mainQuery;
+	}
+
+	List<Integer> findIds(PostSearchParams p, List<FieldSortBuilder> sorts) {
+		BoolQueryBuilder q = getBooleanQuery(p.getQuery());
+		BoolFilterBuilder f = boolFilter();
+
+		applyTenantFilter(f);
+		applyStateFilter(f, p.getState());
+		applyTypeFilter(f, Constants.ObjectType.POST);
+		applyDateFilter(f, p.getFrom(), p.getUntil());
+		applyAuthorFilter(f, p.getAuthor());
+		applyShouldFilter(f, p.getStations(), "stationId");
+		applyShouldFilter(f, p.getTags(), "tags");
+		applyShouldFilter(f, p.getCategories(), "categories");
+
+
+		SearchQuery query = getSearchQuery(p, sorts, q, f);
+
+		ResultsExtractor<List<Integer>> extractor = getExtractor();
+
+		return elasticsearchTemplate.query(query, extractor);
+	}
+
+	private ResultsExtractor<List<Integer>> getExtractor() {
+		return response -> {
+				List<Integer> ids = new ArrayList<>();
+				SearchHit[] hits = response.getHits().getHits();
+				for (SearchHit hit : hits) {
+					ids.add(Integer.valueOf(hit.getId()));
+				}
+
+				return ids;
+			};
+	}
+
+	private SearchQuery getSearchQuery(PostSearchParams p, List<FieldSortBuilder> sorts, BoolQueryBuilder q, BoolFilterBuilder f) {
+		NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+
+		if (p.getQuery() != null && !p.getQuery().isEmpty()) {
+			nativeSearchQueryBuilder.withQuery(q);
+		}
+
+		sorts.forEach(nativeSearchQueryBuilder::withSort);
+
+		NativeSearchQuery searchQuery = nativeSearchQueryBuilder
+				.withFilter(f)
+				.withFields("id")
+				.withPageable(new PageRequest(0, 99999999))
+				.build();
+
+		return searchQuery;
+	}
+
+	private void applyStateFilter(BoolFilterBuilder f, String state) {
+		if (state != null && !state.isEmpty()) {
+			f.must(termFilter("state", state));
+		}
+	}
+
+	private void applyTypeFilter(BoolFilterBuilder f, String type) {
+		if (type != null && !type.isEmpty()) {
+			f.must(termFilter("_type", type));
+		}
+	}
+
+	private void applyShouldFilter(BoolFilterBuilder f, List terms, String termName) {
+		if(terms != null && !terms.isEmpty()) {
+			BoolFilterBuilder boolFilter = boolFilter();
+			for (Object term : terms) {
+				boolFilter.should(termFilter(termName, term));
+			}
+			f.must(boolFilter);
+		}
+	}
+
+	private void applyAuthorFilter(BoolFilterBuilder f, Integer author) {
+		if(author != null) {
+			f.must(termFilter("authorId", author));
+		}
+	}
+
+	private void applyTenantFilter(BoolFilterBuilder q) {
+		q.must(termFilter("tenantId", TenantContextHolder.getCurrentTenantId()));
+	}
+
+	private void applyDateFilter(BoolFilterBuilder f, String from, String until) {
+		if(from != null || until != null) {
+			RangeFilterBuilder dateFilter = rangeFilter("date");
+
+			if(from != null)
+				dateFilter.from(from);
+			if(until != null)
+				dateFilter.to(until);
+
+			f.must(dateFilter);
+		}
 	}
 }

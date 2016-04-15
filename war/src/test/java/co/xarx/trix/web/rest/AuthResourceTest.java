@@ -2,7 +2,9 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.services.PasswordService;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.web.rest.api.AuthApi;
+import co.xarx.trix.web.rest.resource.AuthResource;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,7 +27,7 @@ public class AuthResourceTest {
 		AuthService authService = new AuthService(null, null, null);
 		PasswordService passwordService = mock(PasswordService.class);
 
-		AuthResource resource = new AuthResource(networkRepository, authService, passwordService);
+		AuthApi resource = new AuthResource(networkRepository, authService, passwordService);
 		server = InMemoryRestServer.create(resource);
 	}
 

@@ -35,6 +35,7 @@ public class ESPost implements ElasticSearchEntity {
 
 	public String title;
 
+	public Set<Integer> categories;
 	public Set<String> tags;
 	public Date date;
 	public String body;

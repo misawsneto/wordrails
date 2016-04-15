@@ -62,7 +62,11 @@ public class JpaMultiTenantRepository<T extends MultiTenantEntity> extends Query
 		SingleIdSpecification specification = new SingleIdSpecification();
 		TypedQuery<T> query = getQuery(specification, (Pageable) null);
 		query.setParameter(specification.parameter, integer);
-		return query.getSingleResult();
+		try {
+			return query.getSingleResult();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package co.xarx.trix.services.analytics;
 
 import co.xarx.trix.domain.Person;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.Constants;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StatsJson;

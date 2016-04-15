@@ -56,13 +56,22 @@ public class TestArtifactsFactory {
 	public static Image createImage(Image.Type type) {
 		Image image = new Image(type);
 		for (String s : image.getSizeTags()) {
-			image.getHashs().put(s, generateToken());
+			image.addPicture(createPicture(s));
 		}
 		image.setCaption("Dummy caption");
 		image.setCredits("Dummy credits");
 		image.setTitle("Dummy title");
 
 		return image;
+	}
+
+	public static Picture createPicture(String sizeTag) {
+		Picture p1 = new Picture();
+		p1.setSizeTag(sizeTag);
+		File f1 = new File();
+		f1.setHash(generateToken());
+		p1.setFile(f1);
+		return p1;
 	}
 
 	private static String generateToken() {

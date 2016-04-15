@@ -1,15 +1,18 @@
 package co.xarx.trix.util;
 
 import co.xarx.trix.TestArtifactsFactory;
-import co.xarx.trix.domain.Person;
-import co.xarx.trix.domain.Post;
-import co.xarx.trix.domain.Station;
-import co.xarx.trix.domain.ESPerson;
-import co.xarx.trix.domain.ESPost;
-import co.xarx.trix.domain.ESStation;
+import co.xarx.trix.api.v2.ImageData;
+import co.xarx.trix.api.v2.PersonData;
+import co.xarx.trix.api.v2.PictureData;
+import co.xarx.trix.api.v2.PostData;
+import co.xarx.trix.domain.*;
 import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.StationMap;
+import co.xarx.trix.web.rest.mapper.ImageDataMap;
+import co.xarx.trix.web.rest.mapper.PersonDataMap;
+import co.xarx.trix.web.rest.mapper.PictureDataMap;
+import co.xarx.trix.web.rest.mapper.PostDataMap;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +33,10 @@ public class ModelMapperTest {
 		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
+		modelMapper.addMappings(new PictureDataMap());
+		modelMapper.addMappings(new ImageDataMap());
+		modelMapper.addMappings(new PersonDataMap());
+		modelMapper.addMappings(new PostDataMap());
 	}
 
 	@Test
@@ -39,6 +46,14 @@ public class ModelMapperTest {
 
 		assertEquals(post.tags, esPost.tags);
 		assertEquals(post.station.id, esPost.stationId);
+	}
+
+	@Test
+	public void testPostToPostDataMapping() throws Exception {
+		Post post = TestArtifactsFactory.createPost();
+		PostData data = modelMapper.map(post, PostData.class);
+
+		assertEquals(post.getTags(), data.getTags());
 	}
 
 	@Test
@@ -57,6 +72,31 @@ public class ModelMapperTest {
 
 		assertEquals(person.id, esPerson.id);
 		assertEquals(person.cover.getOriginalHash(), esPerson.cover);
+	}
+
+	@Test
+	public void testPersonToPersonDataMapping() throws Exception {
+		Person person = TestArtifactsFactory.createPerson();
+		PersonData personData = modelMapper.map(person, PersonData.class);
+
+		assertEquals(person.id, personData.getId());
+		assertEquals(person.getEmail(), personData.getEmail());
+	}
+
+	@Test
+	public void testImageToImageDataMapping() throws Exception {
+		Image image = TestArtifactsFactory.createImage(Image.Type.COVER);
+		ImageData data = modelMapper.map(image, ImageData.class);
+
+		assertEquals(image.getPictures().size(), data.getPictures().size());
+	}
+
+	@Test
+	public void testPictureToPictureDataMapping() throws Exception {
+		Picture pic = TestArtifactsFactory.createPicture("original");
+		PictureData data = modelMapper.map(pic, PictureData.class);
+
+		assertEquals(pic.getFile().getHash(), data.getHash());
 	}
 
 	@After

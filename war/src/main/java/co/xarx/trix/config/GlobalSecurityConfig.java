@@ -1,8 +1,8 @@
 package co.xarx.trix.config;
 
 import co.xarx.trix.config.security.BitMaskPermissionGrantingStrategy;
-import co.xarx.trix.security.acl.MultitenantAclService;
-import co.xarx.trix.security.acl.TrixPermission;
+import co.xarx.trix.config.security.MultitenantAclService;
+import co.xarx.trix.config.security.Permissions;
 import org.hibernate.cache.CacheException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -108,7 +108,7 @@ public class GlobalSecurityConfig extends GlobalMethodSecurityConfiguration {
 
 	@Bean
 	public DefaultPermissionFactory aclPermissionFactory() {
-		return new DefaultPermissionFactory(TrixPermission.class);
+		return new DefaultPermissionFactory(Permissions.class);
 	}
 
 	@Bean

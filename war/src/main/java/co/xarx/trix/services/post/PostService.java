@@ -7,7 +7,7 @@ import co.xarx.trix.domain.*;
 import co.xarx.trix.exception.NotificationException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.MobileService;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -619,7 +619,11 @@ angular.module('app')
         })        
       };
 
-      $scope.app.signup = function(user){
+      $scope.app.signup = function(user, invitation){
+        var createPerson;
+        if(invitation)
+          user.invitation = invitation;
+
         trix.createPerson(user).success(function(response){
           window.location.href=window.location.protocol + '//' + window.location.host + "?signupSuccess=true"
           return;

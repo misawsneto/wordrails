@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 
-@SdkExclude
 @lombok.Getter @lombok.Setter @lombok.NoArgsConstructor
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"hash", "tenantId"}))

@@ -1,5 +1,6 @@
 package co.xarx.trix.config;
 
+import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.elasticsearch.mapper.PersonMap;
 import co.xarx.trix.elasticsearch.mapper.PostMap;
 import co.xarx.trix.elasticsearch.mapper.PostViewMap;
@@ -8,6 +9,11 @@ import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.notification.APNSClient;
 import co.xarx.trix.services.notification.GCMClient;
 import co.xarx.trix.services.notification.MobileNotificationSender;
+import co.xarx.trix.services.TenantProvider;
+import co.xarx.trix.web.rest.mapper.ImageDataMap;
+import co.xarx.trix.web.rest.mapper.PersonDataMap;
+import co.xarx.trix.web.rest.mapper.PictureDataMap;
+import co.xarx.trix.web.rest.mapper.PostDataMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gcm.server.Sender;
 import org.modelmapper.ModelMapper;
@@ -45,6 +51,11 @@ public class ApplicationConfig {
 		return new ObjectMapper();
 	}
 
+	@Bean
+	public TenantProvider tenantProvider() {
+		return TenantContextHolder::getCurrentTenantId;
+	}
+
 
 	@Bean
 	public Sender gcmSender() {
@@ -67,6 +78,10 @@ public class ApplicationConfig {
 		modelMapper.addMappings(new PersonMap());
 		modelMapper.addMappings(new PostMap());
 		modelMapper.addMappings(new StationMap());
+		modelMapper.addMappings(new PictureDataMap());
+		modelMapper.addMappings(new ImageDataMap());
+		modelMapper.addMappings(new PersonDataMap());
+		modelMapper.addMappings(new PostDataMap());
 		modelMapper.addMappings(new PostViewMap());
 		return modelMapper;
 	}
