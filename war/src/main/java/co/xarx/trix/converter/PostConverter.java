@@ -1,11 +1,13 @@
 package co.xarx.trix.converter;
 
 import co.xarx.trix.api.ImageView;
+import co.xarx.trix.api.VideoExternalDto;
 import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.Term;
+import co.xarx.trix.domain.VideoExternal;
 import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +93,18 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		postView.terms = getTermViews(post.terms);
 		postView.externalFeaturedImgUrl = post.externalFeaturedImgUrl;
 		postView.externalVideoUrl = post.externalVideoUrl;
+
+		postView.featuredAudioHash = post.getFeaturedAudioHash();
+		postView.featuredVideoHash = post.getFeaturedVideoHash();
+
+		VideoExternal ve = post.getExternalVideo();
+		if(ve == null) {
+			postView.videoExternalDto = new VideoExternalDto();
+			postView.videoExternalDto.identifier = ve.identifier;
+			postView.videoExternalDto.provider = ve.identifier;
+			postView.videoExternalDto.id = ve.id;
+		}
+
 		postView.readTime = post.readTime;
 		postView.state = post.state;
 		postView.scheduledDate = post.scheduledDate;

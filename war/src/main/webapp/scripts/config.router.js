@@ -71,7 +71,7 @@ angular.module('app')
             })
 
               .state('app.post', {
-                url: '/post',
+                url: '/post?id',
                 templateUrl: '/views/settings/settings-post.html',
                 data : { titleTranslate: 'titles.POST', title: 'Publicação', folded: true },
                 resolve: load([
@@ -627,7 +627,13 @@ angular.module('app')
               })
               .state('app.home', {
                 url: '/',
-                templateUrl: '/views/pages/dashboard.home.html',
+                templateUrl: '/views/pages/home.html',
+                data : { title: 'Home', folded: false },
+                resolve: load(['angularFileUpload', 'wu.masonry'])
+              })
+              .state('app.stationHome', {
+                url: '/{stationSlug}/home',
+                templateUrl: '/views/pages/home.html',
                 data : { title: 'Home', folded: false },
                 resolve: load(['angularFileUpload', 'wu.masonry'])
               })
