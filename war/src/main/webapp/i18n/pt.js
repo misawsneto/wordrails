@@ -93,7 +93,11 @@
 		"REMOVE": "Remover",
 		"EXCLUDE": "Remover",
 		"LIST": "Listar",
-		"INSERT": "Inserir"
+		"INSERT": "Inserir",
+		"UPLOAD_VIDEO": "Pressione o botão para enviar o vídeo",
+		"UPLOAD_AUDIO": "Pressione o botão para enviar o audio",
+		"UPLOAD_DOCUMENT": "Pressione o botão para enviar o documento",
+		"UPLOAD_IMAGE": "Pressione o botão para enviar imagens"
 	},
 	"header" : {
 	  "navbar" : {

@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 @SdkExclude
 @lombok.Getter
-@Setter
+@lombok.Setter
 @lombok.NoArgsConstructor
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity

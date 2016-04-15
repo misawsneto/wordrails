@@ -169,6 +169,12 @@ public class EntityExtractor {
 					}
 				}
 			}
+			if(entityClass.getSuperclass()!=null && !entityClass.getSuperclass().equals(BaseEntity.class)){ // we
+				// don't
+				// want to process Object.class
+				// do something with current's fields
+				fields.addAll(getFieldsFromEntity(entityClass.getSuperclass()));
+			}
 		} catch (IntrospectionException e) {
 			e.printStackTrace();
 		}

@@ -46,6 +46,8 @@ public class File extends BaseEntity implements Serializable {
 
 	public Long size;
 
+	public Boolean original;
+
 	@Lob
 	public String meta;
 

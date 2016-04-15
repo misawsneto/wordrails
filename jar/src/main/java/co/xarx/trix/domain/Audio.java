@@ -16,7 +16,7 @@ import java.io.Serializable;
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Audio extends BaseEntity implements Serializable {
+public abstract class Audio extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6407170001176054415L;
 

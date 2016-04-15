@@ -508,9 +508,10 @@
             </div>
           </div>
         </div>
-        <div md-ink-ripple angular-ripple class="pointer p text-center text-u-c font-bold" ng-click="showMoreOptions($event)"
-        translate="titles.PUBLISH">
-          Publicar
+        <div class="pointer p text-center text-u-c font-bold" ng-click="showMoreOptions($event)">
+          <md-button class="md-raised md-primary p-h md-whiteframe-z2" >
+          	<i class="icon mdi2-send i-16 m-r-sm"></i>{{'titles.PUBLISH' | translate}}
+          </md-button>
         </div>
       </div>
 
@@ -648,17 +649,16 @@
 				<!-- /video player -->
 			</div>
 			<!-- video upload button -->
+			<md-progress-linear class="pos-abt bottom-0 left-0" ng-if="videoProcessing" md-mode="indeterminate"></md-progress-linear>
 			<div class="p text-center pos-rlt" ng-class="{'hide': uploadedVideo}">
-				<md-progress-circular ng-if="videoProcessing" class="pos-abt" ng-disabled="!vm.activated" md-diameter="96"
-					style=";margin-left: -48px;left: 50%;z-index: 50;top: -4px;" >
-    		</md-progress-circular>
-				<div md-ink-ripple="" class="md-btn md-fab md-raised md-accent-default background inline">
+				<div md-ink-ripple="" class="md-btn md-fab md-raised md-accent-default background inline v-m">
 					<input id="image-upload" type="file" nv-file-select="" uploader="vuploader" name="contents" accept="video/mp4"/>
-		  		<md-tooltip md-direction="top">
-		      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
-		  		</md-tooltip>
-			    <i class="mdi mdi2-upload i-32"></i>
+			  		<md-tooltip md-direction="top">
+			      	{{'settings.post.INSERT_FEATURED_VIDEO' | translate}}
+			  		</md-tooltip>
+				    <i class="mdi mdi2-upload i-32"></i>
 				</div>
+				<div class="text-md font-500i inline v-m m-l"> {{'actions.UPLOAD_VIDEO' | translate}} </div>
 			</div>
 			<!-- /video upload button -->
 			<div class="text-center m-t">
@@ -759,17 +759,16 @@
 				<!-- /audio player -->
 			</div>
 			<!-- audio upload button -->
+			<md-progress-linear class="pos-abt bottom-0 left-0" ng-if="audioProcessing" md-mode="indeterminate"></md-progress-linear>
 			<div class="p text-center pos-rlt" ng-class="{'hide': uploadedAudio}">
-				<md-progress-circular ng-if="audioProcessing" class="pos-abt" ng-disabled="!vm.activated" md-diameter="96"
-					style=";margin-left: -48px;left: 50%;z-index: 50;top: -4px;" >
-    		</md-progress-circular>
-				<div md-ink-ripple="" class="md-btn md-fab md-raised md-accent-default background inline">
+				<div md-ink-ripple="" class="md-btn md-fab md-raised md-accent-default background inline v-m">
 					<input id="image-upload" type="file" nv-file-select="" uploader="auploader" name="contents" accept="audio/mp3"/>
-		  		<md-tooltip md-direction="top">
-		      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
-		  		</md-tooltip>
-			    <i class="mdi mdi2-upload i-32"></i>
+			  		<md-tooltip md-direction="top">
+			      	{{'settings.post.INSERT_FEATURED_AUDIO' | translate}}
+			  		</md-tooltip>
+				    <i class="mdi mdi2-upload i-32"></i>
 				</div>
+				<div class="text-md font-500 m-l inline v-m"> {{'actions.UPLOAD_AUDIO' | translate}} </div>
 			</div>
 			<!-- /audio upload button -->
 			<div class="text-center m-t">

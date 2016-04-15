@@ -31,15 +31,17 @@ public class ImageService {
 	private FileRepository fileRepository;
 	private PictureRepository pictureRepository;
 	private ImageUtil imageUtil;
+	private FileService fileService;
 
 	@Autowired
 	public ImageService(ImageRepository imageRepository, AmazonCloudService amazonCloudService, FileRepository
-			fileRepository, PictureRepository pictureRepository, ImageUtil imageUtil) {
+			fileRepository, PictureRepository pictureRepository, ImageUtil imageUtil, FileService fileService) {
 		this.imageRepository = imageRepository;
 		this.amazonCloudService = amazonCloudService;
 		this.fileRepository = fileRepository;
 		this.pictureRepository = pictureRepository;
 		this.imageUtil = imageUtil;
+		this.fileService = fileService;
 	}
 
 
@@ -64,7 +66,11 @@ public class ImageService {
 			if (picture.getFile().getId() == null) {
 				File temp = fileRepository.findOne(QFile.file.hash.eq(picture.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
 				if (temp == null) {
-					fileRepository.save(picture.file);
+
+					if(Image.SIZE_ORIGINAL.equals(picture.sizeTag))
+						picture.file.original = true;
+					picture.file.name = name;
+					fileService.saveFile(name, originalFile, picture.file);
 				} else {
 					picture.file = temp;
 				}

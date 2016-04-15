@@ -1,6 +1,7 @@
 package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.domain.Audio;
+import co.xarx.trix.domain.AudioInternal;
 import co.xarx.trix.domain.Document;
 import co.xarx.trix.domain.Video;
 import co.xarx.trix.persistence.FileRepository;
@@ -116,7 +117,7 @@ public class FilesResource extends AbstractResource implements FilesApi {
 
 		File originalFile = FileUtil.createNewTempFile(item.getInputStream());
 
-		Audio newAudio = fileService.createAndSaveNewAudio(item.getName(), originalFile, item
+		AudioInternal newAudio = fileService.createAndSaveNewAudio(item.getName(), originalFile, item
 				.getContentType());
 
 		if (originalFile.exists())

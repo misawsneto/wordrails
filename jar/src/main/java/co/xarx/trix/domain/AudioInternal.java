@@ -1,8 +1,10 @@
 package co.xarx.trix.domain;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import co.xarx.trix.annotation.SdkExclude;
+import lombok.AccessLevel;
+import lombok.Setter;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @lombok.Getter
@@ -13,10 +15,12 @@ import javax.validation.constraints.NotNull;
 public class AudioInternal extends Audio{
 
 	public AudioInternal(File file) {
+		file.original = true;
 		this.file = file;
 	}
 
 	@NotNull
+	@SdkExclude
 	@ManyToOne(cascade= CascadeType.MERGE)
 	public File file;
 }

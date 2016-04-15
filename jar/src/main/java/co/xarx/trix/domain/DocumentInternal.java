@@ -1,5 +1,7 @@
 package co.xarx.trix.domain;
 
+import co.xarx.trix.annotation.SdkExclude;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -13,10 +15,12 @@ import javax.validation.constraints.NotNull;
 public class DocumentInternal extends Document{
 
 	public DocumentInternal(File file) {
+		file.original = true;
 		this.file = file;
 	}
 
 	@NotNull
 	@ManyToOne(cascade= CascadeType.MERGE)
+	@SdkExclude
 	public File file;
 }

@@ -2,8 +2,7 @@ package co.xarx.trix.services;
 
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.domain.Picture;
-import co.xarx.trix.persistence.FileRepository;
-import co.xarx.trix.persistence.ImageRepository;
+import co.xarx.trix.persistence.*;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.ImageUtil;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -66,9 +65,15 @@ public class ImageServiceTest {
 		imageRepository = mock(ImageRepository.class);
 		amazonCloudService = new AmazonCloudServiceMock(null);
 		fileRepository = mock(FileRepository.class);
-		ImageUtil imageUtil = new ImageUtil();
+		DocumentInternalRepository dir = mock(DocumentInternalRepository.class);
+		VideoInternalRepository vir = mock(VideoInternalRepository.class);
+		AudioInternalRepository air = mock(AudioInternalRepository.class);
+		fileRepository = mock(FileRepository.class);
 
-		imageService = new ImageService(imageRepository, amazonCloudService, fileRepository, null, imageUtil);
+		ImageUtil imageUtil = new ImageUtil();
+		FileService fs = new FileService(amazonCloudService, fileRepository, dir, air, vir);
+
+		imageService = new ImageService(imageRepository, amazonCloudService, fileRepository, null, imageUtil, fs);
 	}
 
 	@Test

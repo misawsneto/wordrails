@@ -87,13 +87,15 @@ public class FileService {
 		return originalVideo;
 	}
 
-	private void saveFile(String name, java.io.File originalFile, File file){
+	public void saveFile(String name, java.io.File originalFile, File file){
 		try{
 			if(file.id == null) {
-				FileMeta meta = new FileMeta();
+				FileMeta meta = null;
 				try (FileInputStream is = new FileInputStream(originalFile)){
-					meta = extractMetadata(name, originalFile.length(), is);
+					meta = extractMetadata(name, is);
 				}
+				if(meta!=null)
+					file.meta = simpleMapper.writeValueAsString(meta.metadata);
 				fileRepository.save(file);
 			}
 		}catch (Throwable e){
@@ -103,7 +105,7 @@ public class FileService {
 	}
 
 	@Transactional
-	public Audio createAndSaveNewAudio(String name, java.io.File originalFile, String mime) throws
+	public AudioInternal createAndSaveNewAudio(String name, java.io.File originalFile, String mime) throws
 			Exception {
 
 		String hash = null;
@@ -115,15 +117,16 @@ public class FileService {
 
 		mime = mime != null && mime.contains("octet-stream") ? FileUtil.getMimeTypeFromName(name) : mime;
 
-		Audio existingImage = audioInternalRepository.findOne(QAudioInternal.audioInternal.file.hash.eq(audioFile.hash));
+		AudioInternal existingImage = audioInternalRepository.findOne(QAudioInternal.audioInternal.file.hash.eq(audioFile
+				.hash));
 		if (existingImage != null) {
 			return existingImage;
 		}
 
 		AudioInternal originalAudio = getOriginalAudio(mime, originalFile, audioFile, name);
 
-		if(originalAudio.file.id == null)
-			fileRepository.save(originalAudio.file);
+		saveFile(name, originalFile, originalAudio.file);
+
 		audioInternalRepository.save(originalAudio);
 
 		return originalAudio;
@@ -149,8 +152,8 @@ public class FileService {
 
 		DocumentInternal originalDoc = getOriginalDocument(mime, originalFile, docFile, name);
 
-		if(originalDoc.file.id == null)
-			fileRepository.save(originalDoc.file);
+		saveFile(name, originalFile, originalDoc.file);
+
 		documentInternalRepository.save(originalDoc);
 
 		return originalDoc;
@@ -330,7 +333,7 @@ public class FileService {
 		public List<String> metadata;
 	}
 
-	public FileMeta extractMetadata(String fileName, Long fileLength, FileInputStream fis) throws Throwable{
+	public FileMeta extractMetadata(String fileName, FileInputStream fis) throws Throwable{
 		/* extract file metadata and content */
 		try{
 			BodyContentHandler contenthandler = new BodyContentHandler(-1);
