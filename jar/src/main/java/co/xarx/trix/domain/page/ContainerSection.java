@@ -2,13 +2,21 @@ package co.xarx.trix.domain.page;
 
 import co.xarx.trix.util.Constants;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "sectioncontainer")
 @PrimaryKeyJoinColumn(name = "section_id", referencedColumnName = "id")
 public class ContainerSection extends AbstractSection {
@@ -24,28 +32,42 @@ public class ContainerSection extends AbstractSection {
 	@MapKeyJoinColumn(name = "list_index", referencedColumnName = "list_index", nullable = false)
 	public Map<Integer, AbstractSection> children;
 
-	public boolean isParent() {
-		return children != null && !children.isEmpty();
+	public String orientation = Constants.Layout.SECTION_HORIZONTAL_ORIENTATION;
+
+	@Min(value = 1)
+	@Max(value = 100)
+	private Integer pctSize;
+
+	private Integer topMargin;
+	private Integer leftMargin;
+	private Integer bottomMargin;
+	private Integer rightMargin;
+
+	private Integer topPadding;
+	private Integer leftPadding;
+	private Integer bottomPadding;
+	private Integer rightPadding;
+
+	@JsonProperty("blocks")
+	public List<Block> getBlocks() {
+		if (children == null)
+			children = new HashMap<>();
+
+		return new ArrayList(children.values());
 	}
 
-	public boolean isChild() {
-		return parent != null;
+	public void setMargin(Integer margin) {
+		this.setTopMargin(margin);
+		this.setLeftMargin(margin);
+		this.setBottomMargin(margin);
+		this.setRightMargin(margin);
 	}
 
-	public ContainerSection getParent() {
-		return parent;
-	}
-
-	public void setParent(ContainerSection parent) {
-		this.parent = parent;
-	}
-
-	public Map<Integer, AbstractSection> getChildren() {
-		return children;
-	}
-
-	public void setChildren(Map<Integer, AbstractSection> children) {
-		this.children = children;
+	public void setPadding(Integer padding) {
+		this.setTopPadding(padding);
+		this.setLeftPadding(padding);
+		this.setBottomPadding(padding);
+		this.setRightPadding(padding);
 	}
 
 	@Override

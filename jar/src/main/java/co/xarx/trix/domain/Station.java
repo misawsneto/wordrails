@@ -84,7 +84,7 @@ public class Station extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "station")
 	public Set<Post> posts;
 
-	@OneToMany(mappedBy = "station")
+	@OneToMany(mappedBy = "station", cascade = CascadeType.REMOVE)
 	public Set<Page> pages;
 
 	@SdkInclude

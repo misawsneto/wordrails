@@ -1,7 +1,5 @@
 package co.xarx.trix.web.rest;
 
-import org.jboss.resteasy.spi.HttpRequest;
-import org.jboss.resteasy.spi.HttpResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,10 +26,6 @@ public abstract class AbstractResource {
 	public HttpServletRequest request;
 	@Context
 	public HttpServletResponse response;
-	@Context
-	public HttpRequest httpRequest;
-	@Context
-	public HttpResponse httpResponse;
 
 	protected void forward() throws IOException {
 		forward(uriInfo.getPath());

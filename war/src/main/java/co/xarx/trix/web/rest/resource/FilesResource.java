@@ -10,6 +10,7 @@ import co.xarx.trix.services.FileService;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.FilesApi;
+import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Component
+@NoArgsConstructor
 public class FilesResource extends AbstractResource implements FilesApi {
 
 	private FileRepository fileRepository;

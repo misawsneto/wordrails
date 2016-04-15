@@ -40,7 +40,7 @@ public class QueryRunnerService implements QueryRunner {
 	}
 
 	private List getItens(Query query, Integer size, Integer from) {
-		String objectType = query.getType().getSimpleName();
+		String objectType = query.getType().getSimpleName().toLowerCase();
 		Statement objectStatement = query.getObjectStatement();
 		Executor executor = executorFactory.getExecutor(objectType + "_executor");
 		return  executor.execute(objectStatement.build(commandBuilder), size, from);

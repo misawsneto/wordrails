@@ -8,6 +8,7 @@ import co.xarx.trix.services.AndroidBuilderService;
 import co.xarx.trix.services.AsyncService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.BuilderApi;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +16,15 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 
 @Component
+@NoArgsConstructor
 public class BuilderResource extends AbstractResource implements BuilderApi {
 
 	private JpaAndroidAppRepository jpaAndroidAppRepository;
 	private AsyncService asyncService;
 	private AmazonCloudService amazonCloudService;
 	private AndroidBuilderService androidBuilderService;
+
+
 
 	@Autowired
 	public BuilderResource(JpaAndroidAppRepository jpaAndroidAppRepository, AsyncService asyncService,

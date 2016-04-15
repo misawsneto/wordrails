@@ -1,0 +1,1 @@
+ALTER TABLE section MODIFY title VARCHAR(255);

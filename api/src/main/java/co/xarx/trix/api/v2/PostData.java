@@ -37,14 +37,13 @@ public class PostData implements Serializable, Identifiable {
 
 	private Date date;
 
-	private ImageData image;
+	private String imageHash;
+	private String videoHash;
+	private String audioHash;
+
+	private PostImageData image;
 	private VideoData video;
 	private AudioData audio;
-
-	private String imageCredits;
-	private String imageCaption;
-	private String imageTitle;
-	private boolean imageLandscape;
 
 	private String slug;
 

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -17,9 +19,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.*;
 
 
-@lombok.Getter @lombok.Setter
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "page")
 @JsonIgnoreProperties({"updatedAt", "createdAt"})
@@ -28,28 +33,30 @@ public class Page extends BaseEntity {
 
 	public String title;
 
-	public Page(){}
-
 	@Id
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer id;
+	private Integer id;
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "page_section",
-			joinColumns = @JoinColumn(name = "page_id"),
-			inverseJoinColumns = @JoinColumn(name = "section_id"))
-	@MapKeyJoinColumn(name = "list_index")
-	@JsonProperty("sections")
-	public Map<Integer, AbstractSection> sections;
-
-	@JsonProperty("createdAt")
-	public Date getCreatedAt(){
-		return this.createdAt;
-	}
+	@OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
+	@MapKey(name = "orderPosition")
+	private Map<Integer, AbstractSection> sections;
 
 	@ManyToOne
-	@JsonBackReference("station")
-	public Station station;
+	private Station station;
 
+	public List<Section> getSectionList() {
+		if (sections != null) {
+			return new ArrayList<>(sections.values());
+		} else {
+			return new ArrayList<>();
+		}
+	}
+
+	public void addSection(AbstractSection section) {
+		if(sections == null)
+			sections = new HashMap();
+
+		sections.put(sections.size(), section);
+	}
 }
