@@ -5,7 +5,7 @@ import co.xarx.trix.domain.AuthCredential;
 import co.xarx.trix.domain.Network;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.services.PasswordService;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.AuthApi;
 import org.scribe.builder.ServiceBuilder;

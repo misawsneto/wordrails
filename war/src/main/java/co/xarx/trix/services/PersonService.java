@@ -5,7 +5,7 @@ import co.xarx.trix.persistence.InvitationRepository;
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.persistence.PersonRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

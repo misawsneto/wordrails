@@ -4,7 +4,7 @@ import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.domain.Post;
 import co.xarx.trix.domain.QPost;
 import co.xarx.trix.persistence.PostRepository;
-import co.xarx.trix.services.auth.PermissionFilterService;
+import co.xarx.trix.services.security.PermissionFilterService;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;

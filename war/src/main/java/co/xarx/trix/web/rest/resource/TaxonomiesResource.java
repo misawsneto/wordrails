@@ -2,7 +2,7 @@ package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.TaxonomiesApi;
 import com.fasterxml.jackson.databind.ObjectMapper;

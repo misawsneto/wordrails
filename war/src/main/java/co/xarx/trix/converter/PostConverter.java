@@ -1,7 +1,7 @@
 package co.xarx.trix.converter;
 
-import co.xarx.trix.api.Category;
 import co.xarx.trix.api.ImageView;
+import co.xarx.trix.api.v2.CategoryData;
 import co.xarx.trix.api.PostView;
 import co.xarx.trix.api.TermView;
 import co.xarx.trix.domain.Post;
@@ -45,7 +45,7 @@ public class PostConverter extends AbstractConverter<Post, PostView> {
 		if (post.terms != null && !post.terms.isEmpty()) {
 			postView.categories = new HashSet<>();
 			for (Term term : post.terms) {
-				postView.categories.add(new Category(term.id, term.name));
+				postView.categories.add(new CategoryData(term.id, term.name));
 			}
 		}
 

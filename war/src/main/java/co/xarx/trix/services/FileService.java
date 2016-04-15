@@ -1,12 +1,21 @@
 package co.xarx.trix.services;
 
 import co.xarx.trix.domain.*;
+import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.util.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.format.InputAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.internal.dynalink.beans.StaticClass;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.lang.StringUtils;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.apache.tika.sax.BodyContentHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
@@ -18,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
@@ -70,11 +80,26 @@ public class FileService {
 
 		VideoInternal originalVideo = getOriginalVideo(mime, originalFile, videoFile, name);
 
-		if(originalVideo.file.id == null)
-			fileRepository.save(originalVideo.file);
+		saveFile(name, originalFile, originalVideo.file);
+
 		videoInternalRepository.save(originalVideo);
 
 		return originalVideo;
+	}
+
+	private void saveFile(String name, java.io.File originalFile, File file){
+		try{
+			if(file.id == null) {
+				FileMeta meta = new FileMeta();
+				try (FileInputStream is = new FileInputStream(originalFile)){
+					meta = extractMetadata(name, originalFile.length(), is);
+				}
+				fileRepository.save(file);
+			}
+		}catch (Throwable e){
+			Logger.error("error getting metada data", e);
+		}
+
 	}
 
 	@Transactional
@@ -299,5 +324,57 @@ public class FileService {
 		}
 
 		return documentInternal;
+	}
+
+	public static class FileMeta {
+		public List<String> metadata;
+	}
+
+	public FileMeta extractMetadata(String fileName, Long fileLength, FileInputStream fis) throws Throwable{
+		/* extract file metadata and content */
+		try{
+			BodyContentHandler contenthandler = new BodyContentHandler(-1);
+			//DefaultHandler contenthandler = new DefaultHandler();
+			Metadata metadata = new Metadata();
+			//			metadata.set(Metadata.RESOURCE_NAME_KEY, fileName);
+			Parser parser = new AutoDetectParser();
+			parser.parse(fis, contenthandler, metadata,new ParseContext());
+			String contentType =  metadata.get(Metadata.CONTENT_TYPE);
+			if (StringUtils.isEmpty(contentType)) contentType="application/octet-stream";
+
+			HashMap<String,Object> extractedMetaData = new HashMap<String,Object>();
+			for (String key:metadata.names()){
+				try{
+					if (metadata.isMultiValued(key)){
+						//							if (Logger.isDebugEnabled()) Logger.debug(key + ": ");
+						for (String value: metadata.getValues(key)){
+//							if (Logger.isDebugEnabled()) Logger.debug("   " + value);
+						}
+						extractedMetaData.put(key.replace(":", "_").replace(" ", "_").trim(), Arrays.asList(metadata.getValues(key)));
+					}else{
+						//							if (Logger.isDebugEnabled()) Logger.debug(key + ": " + metadata.get(key));
+						extractedMetaData.put(key.replace(":", "_").replace(" ", "_").trim(), metadata.get(key));
+					}
+				}catch(Throwable e){
+					Logger.warn("Unable to extract metadata for file " + fileName + ", key " + key);
+				}
+			}
+
+			FileMeta fileMeta = new FileMeta();
+			if(extractedMetaData.size() > 0){
+				ArrayList<String> meta = new ArrayList<String>();
+				for (Map.Entry<String, Object> entry : extractedMetaData.entrySet()) {
+					String key = entry.getKey();
+					Object value = entry.getValue();
+					meta.add(key + " : " + value);
+				}
+				fileMeta.metadata = meta;
+			}
+
+			return fileMeta;
+		}catch ( JsonProcessingException e) {
+			//		    		throw new Exception ("Error parsing acl field. HINTS: is it a valid JSON string?", e);
+			throw new BadRequestException("Error parsing json");
+		}
 	}
 }

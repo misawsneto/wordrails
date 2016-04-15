@@ -2,7 +2,7 @@ package co.xarx.trix.web.rest;
 
 import co.xarx.trix.persistence.NetworkRepository;
 import co.xarx.trix.services.PasswordService;
-import co.xarx.trix.services.auth.AuthService;
+import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.api.AuthApi;
 import co.xarx.trix.web.rest.resource.AuthResource;
 import org.junit.AfterClass;

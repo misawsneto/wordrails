@@ -46,6 +46,9 @@ public class File extends BaseEntity implements Serializable {
 
 	public Long size;
 
+	@Lob
+	public String meta;
+
 	public String getExtension() {
 		if (mime != null && mime.split("/").length == 2)
 			return mime.split("/")[1];

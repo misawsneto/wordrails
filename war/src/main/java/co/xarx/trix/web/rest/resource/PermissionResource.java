@@ -2,8 +2,8 @@ package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.api.StationRolesUpdate;
 import co.xarx.trix.exception.UnauthorizedException;
-import co.xarx.trix.services.auth.AuthService;
-import co.xarx.trix.services.auth.StationPermissionService;
+import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.services.security.StationPermissionService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.PermissionApi;
 import org.springframework.beans.factory.annotation.Autowired;

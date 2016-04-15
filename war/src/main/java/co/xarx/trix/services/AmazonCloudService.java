@@ -3,12 +3,10 @@ package co.xarx.trix.services;
 import co.xarx.trix.config.multitenancy.TenantContextHolder;
 import co.xarx.trix.exception.OperationNotSupportedException;
 import co.xarx.trix.util.FileUtil;
-import co.xarx.trix.util.StringUtil;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -64,15 +62,6 @@ public class AmazonCloudService {
 		if(tenantId == null || tenantId.isEmpty())
 			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
 		return "http://" + cloudfrontUrl + "/" + tenantId + "/apk/" + fileName;
-	}
-
-	public String uploadPublicImage(InputStream input, Long lenght, String size, String mime) throws IOException, AmazonS3Exception {
-		java.io.File tmpFile = java.io.File.createTempFile(StringUtil.generateRandomString(5, "aA#"), ".tmp");
-
-		FileUtils.copyInputStreamToFile(input, tmpFile);
-		String hash = FileUtil.getHash(new FileInputStream(tmpFile));
-		uploadPublicImage(tmpFile, lenght, hash, size, mime, true);
-		return hash;
 	}
 
 	public String uploadAPK(java.io.File file, Long lenght, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
