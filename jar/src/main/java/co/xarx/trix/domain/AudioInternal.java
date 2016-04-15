@@ -3,7 +3,6 @@ package co.xarx.trix.domain;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
 
 @lombok.Getter
@@ -11,14 +10,13 @@ import javax.validation.constraints.NotNull;
 @lombok.NoArgsConstructor
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity
-public class VideoInternal extends Video{
+public class AudioInternal extends Audio{
 
-
-	public VideoInternal(File file) {
+	public AudioInternal(File file) {
 		this.file = file;
 	}
 
 	@NotNull
-	@ManyToOne(cascade=CascadeType.MERGE)
+	@ManyToOne(cascade= CascadeType.MERGE)
 	public File file;
 }

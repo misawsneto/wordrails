@@ -15,13 +15,10 @@ import java.io.Serializable;
 @lombok.NoArgsConstructor
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Audio extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6407170001176054415L;
-
-	public Audio(File file) {
-		this.file = file;
-	}
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -29,10 +26,6 @@ public class Audio extends BaseEntity implements Serializable {
 	public Integer id;
 
 	public String title;
-
-	@NotNull
-	@ManyToOne(cascade=CascadeType.MERGE)
-	public File file;
 
 	@SdkExclude
 	@ManyToOne(cascade=CascadeType.MERGE)

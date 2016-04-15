@@ -116,9 +116,6 @@ public class AmazonCloudService {
 
 		ObjectMetadata md = new ObjectMetadata();
 		md.setContentType(mime);
-		if(sizeTag!=null)
-			md.addUserMetadata("size", sizeTag);
-
 		String path = getKey(fileDir, hash);
 		uploadFile(file, lenght, path, md, deleteFileAfterUpload);
 

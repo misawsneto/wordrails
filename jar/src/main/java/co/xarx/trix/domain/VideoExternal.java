@@ -11,14 +11,13 @@ import javax.validation.constraints.NotNull;
 @lombok.NoArgsConstructor
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity
-public class VideoInternal extends Video{
+public class VideoExternal extends Video{
 
-
-	public VideoInternal(File file) {
-		this.file = file;
+	public VideoExternal(String identifier, String provider) {
+		this.identifier= identifier;
+		this.provider= provider;
 	}
 
-	@NotNull
-	@ManyToOne(cascade=CascadeType.MERGE)
-	public File file;
+	public String identifier;
+	public String provider;
 }

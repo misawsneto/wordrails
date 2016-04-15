@@ -5,6 +5,7 @@ import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.FileRepository;
 import co.xarx.trix.persistence.ImageRepository;
 import co.xarx.trix.persistence.PictureRepository;
+import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.util.ImageFile;
 import co.xarx.trix.util.ImageUtil;
 import com.google.common.collect.Lists;
@@ -32,7 +33,8 @@ public class ImageService {
 	private ImageUtil imageUtil;
 
 	@Autowired
-	public ImageService(ImageRepository imageRepository, AmazonCloudService amazonCloudService, FileRepository fileRepository, PictureRepository pictureRepository, ImageUtil imageUtil) {
+	public ImageService(ImageRepository imageRepository, AmazonCloudService amazonCloudService, FileRepository
+			fileRepository, PictureRepository pictureRepository, ImageUtil imageUtil) {
 		this.imageRepository = imageRepository;
 		this.amazonCloudService = amazonCloudService;
 		this.fileRepository = fileRepository;
@@ -54,6 +56,7 @@ public class ImageService {
 
 	@Transactional
 	public Image createAndSaveNewImage(String type, String name, java.io.File originalFile, String mime) throws Exception {
+		mime = mime != null && mime.contains("octet-stream") ? FileUtil.getMimeTypeFromName(name) : mime;
 		Image image = createNewImage(type, name, originalFile, mime);
 
 		for (Picture picture : image.getPictures()) {
@@ -122,8 +125,9 @@ public class ImageService {
 		Picture originalPic = new Picture();
 		originalPic.file = imageUtil.createNewImageTrixFile(mime, originalFile.length());
 		originalPic.sizeTag = Image.SIZE_ORIGINAL;
+		originalPic.file.name = originalFile.getName();
 
-		File existingFile = fileRepository.findOne(QFile.file.hash.eq(imageFile.hash));
+				File existingFile = fileRepository.findOne(QFile.file.hash.eq(imageFile.hash));
 		if (existingFile != null) {
 			originalPic.file = existingFile;
 		}

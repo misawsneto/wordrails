@@ -37,6 +37,6 @@ public interface FilesApi {
 	Response uploadDoc() throws Exception;
 
 	@GET
-	@Path("/get/{hash}")
-	Response getFile(@PathParam("hash") String hash) throws IOException;
+	@Path("/{type}/{hash}")
+	Response getFile(@PathParam("hash") String hash, @PathParam("type") String type) throws IOException;
 }

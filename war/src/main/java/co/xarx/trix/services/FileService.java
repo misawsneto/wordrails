@@ -3,19 +3,22 @@ package co.xarx.trix.services;
 import co.xarx.trix.domain.*;
 import co.xarx.trix.persistence.*;
 import co.xarx.trix.util.*;
+import com.fasterxml.jackson.core.format.InputAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.activation.MimetypesFileTypeMap;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Set;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 
 /**
  * Created by misael on 4/12/2016.
@@ -28,19 +31,20 @@ public class FileService {
 	public static final Integer MAX_SIZE_48 = 50331648;
 
 	@Autowired
-	public FileService(AmazonCloudService amazonCloudService, FileRepository fileRepository, DocumentRepository documentRepository, AudioRepository audioRepository, VideoRepository videoRepository) {
+	public FileService(AmazonCloudService amazonCloudService, FileRepository fileRepository, DocumentInternalRepository
+			documentInternalRepository, AudioInternalRepository audioInternalRepository, VideoInternalRepository videoInternalRepository) {
 		this.amazonCloudService = amazonCloudService;
 		this.fileRepository = fileRepository;
-		this.documentRepository = documentRepository;
-		this.audioRepository = audioRepository;
-		this.videoRepository = videoRepository;
+		this.documentInternalRepository = documentInternalRepository;
+		this.audioInternalRepository = audioInternalRepository;
+		this.videoInternalRepository = videoInternalRepository;
 	}
 
 	private AmazonCloudService amazonCloudService;
 	private FileRepository fileRepository;
-	private DocumentRepository documentRepository;
-	private AudioRepository audioRepository;
-	private VideoRepository videoRepository;
+	private DocumentInternalRepository documentInternalRepository;
+	private AudioInternalRepository audioInternalRepository;
+	private VideoInternalRepository videoInternalRepository;
 
 	@Autowired
 	@Qualifier("simpleMapper")
@@ -50,15 +54,25 @@ public class FileService {
 	public Video createAndSaveNewVideo(String name, java.io.File originalFile, String mime) throws
 			Exception {
 
-		VideoFile videoFile = new VideoFile(originalFile, mime);
-		VideoInternal newVideo = new VideoInternal();
+		String hash = null;
+		try (InputStream is = new FileInputStream(originalFile)){
+			hash = FileUtil.getHash(is);
+		}
 
-		Video existingImage = videoRepository.findOne(QVideo.video.file.hash.eq(videoFile.hash));
+		VideoFile videoFile = new VideoFile(originalFile, hash);
+
+		mime = mime != null && mime.contains("octet-stream") ? FileUtil.getMimeTypeFromName(name) : mime;
+
+		Video existingImage = videoInternalRepository.findOne(QVideoInternal.videoInternal.file.hash.eq(videoFile.hash));
 		if (existingImage != null) {
 			return existingImage;
 		}
 
-		Video originalVideo = getOriginalVideo(mime, originalFile, videoFile);
+		VideoInternal originalVideo = getOriginalVideo(mime, originalFile, videoFile, name);
+
+		if(originalVideo.file.id == null)
+			fileRepository.save(originalVideo.file);
+		videoInternalRepository.save(originalVideo);
 
 		return originalVideo;
 	}
@@ -67,15 +81,25 @@ public class FileService {
 	public Audio createAndSaveNewAudio(String name, java.io.File originalFile, String mime) throws
 			Exception {
 
-		AudioFile audioFile = new AudioFile(originalFile, mime);
-		Audio newAudio = new Audio();
+		String hash = null;
+		try (InputStream is = new FileInputStream(originalFile)){
+			hash = FileUtil.getHash(is);
+		}
 
-		Audio existingImage = audioRepository.findOne(QAudio.audio.file.hash.eq(audioFile.hash));
+		AudioFile audioFile = new AudioFile(originalFile, hash);
+
+		mime = mime != null && mime.contains("octet-stream") ? FileUtil.getMimeTypeFromName(name) : mime;
+
+		Audio existingImage = audioInternalRepository.findOne(QAudioInternal.audioInternal.file.hash.eq(audioFile.hash));
 		if (existingImage != null) {
 			return existingImage;
 		}
 
-		Audio originalAudio = getOriginalAudio(mime, originalFile, audioFile);
+		AudioInternal originalAudio = getOriginalAudio(mime, originalFile, audioFile, name);
+
+		if(originalAudio.file.id == null)
+			fileRepository.save(originalAudio.file);
+		audioInternalRepository.save(originalAudio);
 
 		return originalAudio;
 	}
@@ -84,15 +108,25 @@ public class FileService {
 	public Document createAndSaveNewDoc(String name, java.io.File originalFile, String mime) throws
 			Exception {
 
-		DocumentFile docFile = new DocumentFile(originalFile, mime);
-		Document newDoc = new Document();
-
-		Document existingImage = documentRepository.findOne(QDocument.document.file.hash.eq(docFile.hash));
-		if (existingImage != null) {
-			return existingImage;
+		String hash = null;
+		try (InputStream is = new FileInputStream(originalFile)){
+			hash = FileUtil.getHash(is);
 		}
 
-		Document originalDoc = getOriginalDocument(mime, originalFile, docFile);
+		DocumentFile docFile = new DocumentFile(originalFile, hash);
+
+		mime = mime != null && mime.contains("octet-stream") ? FileUtil.getMimeTypeFromName(name) : mime;
+
+		Document existingDocument = documentInternalRepository.findOne(QDocumentInternal.documentInternal.file.hash.eq(docFile.hash));
+		if (existingDocument != null) {
+			return existingDocument;
+		}
+
+		DocumentInternal originalDoc = getOriginalDocument(mime, originalFile, docFile, name);
+
+		if(originalDoc.file.id == null)
+			fileRepository.save(originalDoc.file);
+		documentInternalRepository.save(originalDoc);
 
 		return originalDoc;
 	}
@@ -138,9 +172,10 @@ public class FileService {
 		return false;
 	}
 
-	private Video getOriginalVideo(String mime, java.io.File originalFile, VideoFile videoFile) throws IOException {
+	private VideoInternal getOriginalVideo(String mime, java.io.File originalFile, VideoFile videoFile, String name) throws IOException {
 		VideoInternal originalVideo = new VideoInternal();
 		originalVideo.file = createNewVideoTrixFile(mime, originalFile.length());
+		originalVideo.file.name = originalVideo.title = name;
 
 		File existingFile = fileRepository.findOne(QFile.file.hash.eq(videoFile.hash));
 		if (existingFile != null) {
@@ -150,7 +185,7 @@ public class FileService {
 		String hash = null;
 		if (originalVideo.file.id == null) {
 			hash = amazonCloudService.uploadPublicFile(originalFile, originalFile.length(), null, null, originalVideo
-					.file.getExtension(), false, File.DIR_VIDEO);
+					.file.mime, false, File.DIR_VIDEO);
 		}
 
 		if (originalVideo.file.hash == null || originalVideo.file.hash.isEmpty()) {
@@ -167,22 +202,23 @@ public class FileService {
 		video.file = createNewVideoTrixFile("video/mp4", originalFile.length());
 
 		java.io.File newFile = FileUtil.createNewTempFile();
-		videoFile = new VideoFile(newFile, FileUtil.getHash(new FileInputStream(newFile)));
+		videoFile = new VideoFile(newFile, FileUtil.getHash(new FileInputStream(originalFile)));
 
 		existingFile = fileRepository.findOne(QFile.file.hash.eq(video.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
 		if (existingFile != null) {
 			video.file = existingFile;
 		} else {
 			amazonCloudService.uploadPublicFile(videoFile.file, videoFile.file.length(), videoFile.hash, null, video
-					.file.getExtension(), false, File.DIR_VIDEO);
+					.file.mime, false, File.DIR_VIDEO);
 		}
 
 		return video;
 	}
 
-	private Audio getOriginalAudio(String mime, java.io.File originalFile, AudioFile audioFile) throws IOException {
-		Audio originalAudio = new Audio();
+	private AudioInternal getOriginalAudio(String mime, java.io.File originalFile, AudioFile audioFile, String name) throws IOException {
+		AudioInternal originalAudio = new AudioInternal();
 		originalAudio.file = createNewVideoTrixFile(mime, originalFile.length());
+		originalAudio.file.name = originalAudio.title = name;
 
 		File existingFile = fileRepository.findOne(QFile.file.hash.eq(audioFile.hash));
 		if (existingFile != null) {
@@ -192,7 +228,7 @@ public class FileService {
 		String hash = null;
 		if (originalAudio.file.id == null) {
 			hash = amazonCloudService.uploadPublicFile(originalFile, originalFile.length(), null, null,
-					originalAudio.file.getExtension(), false, File.DIR_AUDIO);
+					originalAudio.file.mime, false, File.DIR_AUDIO);
 		}
 
 		if (originalAudio.file.hash == null || originalAudio.file.hash.isEmpty()) {
@@ -205,27 +241,28 @@ public class FileService {
 	private Audio getAudio(java.io.File originalFile) throws Exception {
 		AudioFile audioFile;
 		File existingFile;
-		Audio audio = new Audio();
-		audio.file = createNewVideoTrixFile("audio/x-mpeg-3", originalFile.length());
+		AudioInternal audioInternal = new AudioInternal();
+		audioInternal.file = createNewVideoTrixFile("audio/x-mpeg-3", originalFile.length());
 
 		java.io.File newFile = FileUtil.createNewTempFile();
-		audioFile = new AudioFile(newFile, FileUtil.getHash(new FileInputStream(newFile)));
+		audioFile = new AudioFile(newFile, FileUtil.getHash(new FileInputStream(originalFile)));
 
-		existingFile = fileRepository.findOne(QFile.file.hash.eq(audio.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
+		existingFile = fileRepository.findOne(QFile.file.hash.eq(audioInternal.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
 		if (existingFile != null) {
-			audio.file = existingFile;
+			audioInternal.file = existingFile;
 		} else {
-			amazonCloudService.uploadPublicFile(audioFile.file, audioFile.file.length(), audioFile.hash, null, audio
-					.file.getExtension(), false, File.DIR_VIDEO);
+			amazonCloudService.uploadPublicFile(audioFile.file, audioFile.file.length(), audioFile.hash, null, audioInternal
+					.file.mime, false, File.DIR_AUDIO);
 		}
 
-		return audio;
+		return audioInternal;
 	}
 
-	private Document getOriginalDocument(String mime, java.io.File originalFile, DocumentFile documentFile) throws
-			IOException {
-		Document originalDocument = new Document();
+	private DocumentInternal getOriginalDocument(String mime, java.io.File originalFile, DocumentFile documentFile,
+												 String name) throws IOException {
+		DocumentInternal originalDocument = new DocumentInternal();
 		originalDocument.file = createNewVideoTrixFile(mime, originalFile.length());
+		originalDocument.file.name = originalDocument.title = name;
 
 		File existingFile = fileRepository.findOne(QFile.file.hash.eq(documentFile.hash));
 		if (existingFile != null) {
@@ -234,7 +271,7 @@ public class FileService {
 
 		String hash = null;
 		if (originalDocument.file.id == null) {
-			hash = amazonCloudService.uploadPublicFile(originalFile, originalFile.length(), null, null, originalDocument.file.getExtension(), false, File.DIR_DOC);
+			hash = amazonCloudService.uploadPublicFile(originalFile, originalFile.length(), null, null, originalDocument.file.mime, false, File.DIR_DOC);
 		}
 
 		if (originalDocument.file.hash == null || originalDocument.file.hash.isEmpty()) {
@@ -244,25 +281,23 @@ public class FileService {
 		return originalDocument;
 	}
 
-	private Video getDocument(Callable<VideoFile> callable, java.io.File originalFile) throws Exception {
-		VideoFile videoFile;
+	private Document getDocument(Callable<VideoFile> callable, java.io.File originalFile) throws Exception {
+		DocumentFile documentFile;
 		File existingFile;
-		VideoInternal video = new VideoInternal();
-		video.file = createNewVideoTrixFile("video/mp4", originalFile.length());
+		DocumentInternal documentInternal = new DocumentInternal();
+		documentInternal.file = createNewVideoTrixFile("video/mp4", originalFile.length());
 
-		videoFile = callable.call();
+		java.io.File newFile = FileUtil.createNewTempFile();
+		documentFile = new DocumentFile(newFile, FileUtil.getHash(new FileInputStream(originalFile)));
 
-		existingFile = fileRepository.findOne(QFile.file.hash.eq(videoFile.hash).and(QFile.file.type.eq(File.EXTERNAL)));
+		existingFile = fileRepository.findOne(QFile.file.hash.eq(documentInternal.file.hash).and(QFile.file.type.eq(File.EXTERNAL)));
 		if (existingFile != null) {
-			video.file = existingFile;
+			documentInternal.file = existingFile;
 		} else {
-			amazonCloudService.uploadPublicImage(videoFile.file, videoFile.file.length(), videoFile.hash, null, video
-					.file.getExtension(), false);
+			amazonCloudService.uploadPublicFile(documentFile.file, documentFile.file.length(), documentFile.hash, null, documentInternal
+					.file.mime, false, File.DIR_DOC);
 		}
 
-		video.file.size = videoFile.file.length();
-		video.file.hash = videoFile.hash;
-
-		return video;
+		return documentInternal;
 	}
 }

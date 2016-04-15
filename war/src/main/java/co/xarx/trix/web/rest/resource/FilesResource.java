@@ -153,14 +153,14 @@ public class FilesResource extends AbstractResource implements FilesApi {
 		FileUpload fileUpload = new FileUpload();
 		fileUpload.hash = FileUtil.getHash(item.getInputStream());
 		fileUpload.id = newDoc.getId();
-		fileUpload.link = amazonCloudService.getPublicImageURL(fileUpload.hash);
+		fileUpload.link = amazonCloudService.getPublicFileURL(fileUpload.hash, co.xarx.trix.domain.File.DIR_DOC);
 		fileUpload.filelink = fileUpload.link;
 
 		return Response.ok().entity(simpleMapper.writeValueAsString(fileUpload)).build();
 	}
 
 	@Override
-	public Response getFile(String hash) throws IOException {
+	public Response getFile(String hash, String type) throws IOException {
 
 		if(StringUtils.isEmpty(hash))
 			return Response.status(Response.Status.NO_CONTENT).build();
@@ -174,7 +174,7 @@ public class FilesResource extends AbstractResource implements FilesApi {
 		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
 		response.setHeader("Expires", o);
 
-		response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
+		response.sendRedirect(amazonCloudService.getPublicFileURL(hash, type));
 		return Response.ok().build();
 	}
 }

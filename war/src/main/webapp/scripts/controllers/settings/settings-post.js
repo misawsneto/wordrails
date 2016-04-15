@@ -41,25 +41,13 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	$scope.froalaOptions = {
 		toolbarInline: false,
       heightMin: 200,
-      fontSizeDefaultSelection: '18',
-      codeMirror: true,
       language: (lang == 'en' ? 'en_gb' : lang == 'pt' ? 'pt_br' : null),
-      codeMirrorOptions: {
-		  indentWithTabs: true,
-		  lineNumbers: true,
-		  lineWrapping: true,
-		  mode: 'text/html',
-		  tabMode: 'indent',
-		  tabSize: 2,
-		  fontSizeDefaultSelection: 18,
+	  	fontSizeDefaultSelection: '18',
 		// Set the image upload parameter.
-        imageUploadParam: 'image_param',
+        imageUploadParam: 'contents',
 
         // Set the image upload URL.
-        imageUploadURL: '/upload_image',
-
-        // Additional upload params.
-        imageUploadParams: {id: 'my_editor'},
+        imageUploadURL: '/api/images/upload?imageType=POST',
 
         // Set request type.
         imageUploadMethod: 'POST',
@@ -68,8 +56,22 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
         imageMaxSize: 8 * 1024 * 1024,
 
         // Allow to upload PNG and JPG.
-        imageAllowedTypes: ['jpeg', 'jpg', 'png']
-		}
+        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+
+        // Set the file upload parameter.
+        fileUploadParam: 'contents',
+
+        // Set the file upload URL.
+        fileUploadURL: '/api/files/upload/doc',
+
+        // Set request type.
+        fileUploadMethod: 'POST',
+
+        // Set max file size to 20MB.
+        fileMaxSize: 20 * 1024 * 1024,
+
+        // Allow to upload any file.
+        fileAllowedTypes: ['*']
     }
 
     $scope.showFeaturedMediaSelector = function(){

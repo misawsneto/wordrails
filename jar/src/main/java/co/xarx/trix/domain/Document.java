@@ -14,27 +14,21 @@ import java.io.Serializable;
 @lombok.NoArgsConstructor
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity
-public class Document extends BaseEntity implements Serializable {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class Document extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6407170001176054415L;
 
-	public Document(String sizeTag, File file) {
-		this.sizeTag = sizeTag;
-		this.file = file;
+	public Document(String title) {
+		this.title = title;
 	}
+
+	public String title;
+
+	public String url;
 
 	@Id
 	@Setter(AccessLevel.NONE)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer id;
-
-	public Integer height;
-
-	public Integer width;
-
-	public String sizeTag;
-
-	@NotNull
-	@ManyToOne(cascade=CascadeType.MERGE)
-	public File file;
 }

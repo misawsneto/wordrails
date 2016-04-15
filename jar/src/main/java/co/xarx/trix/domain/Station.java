@@ -13,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -150,6 +151,31 @@ public class Station extends BaseEntity implements Serializable {
 		return writable == other.writable;
 	}
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_station_primary_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> primaryColors;
+
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_station_secondary_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> secondaryColors;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_station_alert_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> alertColors;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(name = "palette_station_background_color", joinColumns = @JoinColumn(name = "station_id"))
+	@MapKeyColumn(name = "name", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 100)
+	public Map<String, String> backgroundColors;
+	
 	@SdkInclude
 	public String getLogoHash() {
 		if (logo != null) return logo.getOriginalHash();

@@ -16,7 +16,7 @@ import java.util.Set;
 @lombok.NoArgsConstructor
 @lombok.EqualsAndHashCode(callSuper = false)
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Video extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 6417000117605453415L;
@@ -33,5 +33,5 @@ public abstract class Video extends BaseEntity implements Serializable {
 	@JsonIgnore
 	private Picture cover;
 
-	public abstract String getUrl();
+	public String url;
 }
