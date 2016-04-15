@@ -9,15 +9,11 @@ import co.xarx.trix.persistence.*;
 import co.xarx.trix.services.MobileService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.util.StringUtil;
-import com.mysema.commons.lang.Assert;
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Date;
@@ -110,29 +106,6 @@ public class PostService {
 			}
 
 			post.state = Post.STATE_PUBLISHED;
-		}
-	}
-
-	@Transactional(noRollbackFor = Exception.class)
-	public void countPostRead(int postId, int personId, String sessionId) {
-		Assert.isTrue(postId > 0, "Post id must be bigger than zero");
-
-		Person person = null;
-		if (personId > 0) {
-			person = personRepository.findOne(personId);
-			if(person.username.equals("wordrails"))
-				person = null;
-		}
-		Post post = postRepository.findOne(postId);
-		PostRead pr = getPostRead(post, person, sessionId);
-
-		try {
-			if (pr != null) {
-				postReadRepository.save(pr);
-				postRepository.incrementReadCount(postId);
-			}
-		} catch (ConstraintViolationException | DataIntegrityViolationException e) {
-			log.info("user already read this post");
 		}
 	}
 

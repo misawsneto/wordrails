@@ -283,13 +283,7 @@ public class PostsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@PostAuthorize("hasPermission(#postId, 'co.xarx.trix.domain.Post', 'read')")
 	public StringResponse getPostBody(@PathParam("postId") Integer postId){
-		Person person = authProvider.getLoggedPerson();
 		String body = postRepository.findPostBodyById(postId);
-		Post post = postRepository.findOne(postId);
-
-		String requestedSessionId = request.getRequestedSessionId();
-		postService.countPostRead(post.id, person.id, requestedSessionId);
-
 		StringResponse content = new StringResponse();
 		content.response = body;
 		return content;

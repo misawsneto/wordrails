@@ -10,8 +10,11 @@ import co.xarx.trix.eventhandler.PostEventHandler;
 import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.persistence.*;
+import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
+import co.xarx.trix.util.StatsJson;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
@@ -76,6 +79,8 @@ public class NetworkResource {
 	private TermPerspectiveRepository termPerspectiveRepository;
 	@Autowired
 	private RowRepository rowRepository;
+	@Autowired
+	private StatisticsService statisticsService;
 
 	@Path("/{id}/permissions")
 	@GET
@@ -421,8 +426,20 @@ public class NetworkResource {
 
 	@GET
 	@Path("/stats")
+	public Response newStats(@Context HttpServletRequest request,
+							 @QueryParam("date") String date,
+							 @QueryParam("size") Integer size,
+							 @QueryParam("postId") Integer postId) throws JsonProcessingException {
+		return Response.status(Status.OK).entity(statisticsService.personStats(date, size)).build();
+	}
+
+	@GET
+	@Path("/oldStats")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public JsonStats networkStats(@Context HttpServletRequest request, @QueryParam("date") String date, @QueryParam("beggining") String beginning, @QueryParam("postId") Integer postId) throws IOException {
+	public StatsJson networkStats(@Context HttpServletRequest request,
+								  @QueryParam("date") String date,
+								  @QueryParam("beggining") String beginning,
+								  @QueryParam("postId") Integer postId) throws IOException {
 		if (date == null)
 			throw new BadRequestException("Invalid date. Expected yyyy-MM-dd");
 
@@ -485,14 +502,9 @@ public class NetworkResource {
 			}
 		}
 
-		JsonStats jsonStats = new JsonStats();
-		jsonStats.generalStatsJson = generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null;
-		jsonStats.dateStatsJson = stats;
-		return jsonStats;
-	}
-
-	public static class JsonStats{
-		public Object generalStatsJson;
-		public TreeMap<Long, ReadsCommentsRecommendsCount> dateStatsJson;
+		StatsJson statsJson = new StatsJson();
+		statsJson.generalStatsJson = generalStatus != null && generalStatus.size() > 0 ? generalStatus.get(0) : null;
+		statsJson.dateStatsJson = stats;
+		return statsJson;
 	}
 }

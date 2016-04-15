@@ -10,12 +10,17 @@ import co.xarx.trix.exception.BadRequestException;
 import co.xarx.trix.exception.ConflictException;
 import co.xarx.trix.exception.UnauthorizedException;
 import co.xarx.trix.persistence.*;
-import co.xarx.trix.services.*;
+import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.services.MobileService;
+import co.xarx.trix.services.NetworkService;
+import co.xarx.trix.services.PersonService;
+import co.xarx.trix.services.analytics.StatisticsService;
 import co.xarx.trix.services.auth.AuthService;
 import co.xarx.trix.services.auth.StationPermissionService;
 import co.xarx.trix.util.Logger;
 import co.xarx.trix.util.ReadsCommentsRecommendsCount;
 import co.xarx.trix.util.StringUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.http.util.Asserts;
@@ -661,11 +666,15 @@ public class PersonsResource {
 	@GET
 	@Path("/me/stats")
 	@PreAuthorize("isAuthenticated()")
+	public Response newStats(@QueryParam("date") String date, @QueryParam("postId") Integer postId) throws JsonProcessingException {
+		return Response.status(Status.OK).entity(statisticsService.personStats(date, postId)).build();
+	}
+
+	@GET
+	@Path("/me/oldStats")
+	@PreAuthorize("isAuthenticated()")
 	public Response personStats(@QueryParam("date") String date,
 								@QueryParam("postId") Integer postId) throws IOException {
-
-		statisticsService.personStats(date, postId);
-
 		org.joda.time.format.DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 
 		Person person = null;

@@ -1,7 +1,7 @@
 package co.xarx.trix.web.rest;
 
 import co.xarx.trix.api.ContentResponse;
-import co.xarx.trix.services.StatisticsService;
+import co.xarx.trix.services.analytics.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
