@@ -20,9 +20,6 @@
                 <li ng-class="{'active': settings.tab === 'logos'}">
                   <a ng-click="settings.tab = 'logos'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.LOGOS'></span></a>
                 </li>
-                <li ng-class="{'active': settings.tab === 'footer'}">
-                  <a ng-click="settings.tab = 'footer'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.FOOTER'></span></a>
-                </li>
                 <li ng-class="{'active': settings.tab === 'customization'}">
                   <a ng-click="settings.tab = 'customization'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.CUSTOMIZATION'></span></a>
                 </li>
@@ -174,62 +171,56 @@
                   </div>
               <!-- /logo section -->
 
-              <!-- footer -->
-                  <div class="md-padding"  ng-class="{'hide': settings.tab !== 'footer'}">
-                      <div class="m-b text-muted text-md text-u-c">RODAPÉ DA PÁGINA</div>
-                        <div class="p row">
-                          <div class="col-lg-6">
-                            <md-input-container class="m-b-sm m-t-sm w-full">
-                              <label>Link da página/perfil do Facebook</label>
-                              <input ng-model="network.facebookLink">
-                            </md-input-container>
-                            <md-input-container class="m-b-sm m-t-sm w-full">
-                              <label>Link do perfil do Twitter</label>
-                              <input ng-model="network.twitterLink">
-                            </md-input-container>
-                          </div>
-                          <div class="col-lg-6">
-                            <md-input-container class="m-b-sm m-t-sm w-full">
-                              <label>Link do canal do Youtube</label>
-                              <input ng-model="network.youtubeLink">
-                            </md-input-container>
-                            <md-input-container class="m-b-sm m-t-sm w-full">
-                              <label>Link da página/perfil do Google+</label>
-                              <input ng-model="network.googlePlusLink">
-                            </md-input-container>
-                          </div>
-                        </div>
-                      <div class="line line-dashed b-b line-lg pull-in"></div>
-                      <div class="m-b text-muted text-md text-u-c">Rodapé da tela de login</div>
-
-                        <md-input-container class="md-block">
-                          <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="10" md-select-on-focus>
-                          </textarea>
-                          <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
-                        </md-input-container>
-                  </div>
-                <!-- /footer -->
-
                 <!-- customization -->
                   <div class="md-padding" ng-class="{'hide': settings.tab !== 'customization'}">
-                    <div class="m-t-xxl text-muted text-md text-u-c">Personalização</div>
-                    <md-input-container class="m-b-sm m-t-sm ">
-                      <label>Aba de estações</label>
-                      <input ng-model="network.stationMenuName">
-                      <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
-                          Substituir a palavra "estação" do menu lateral.</small> -->
-                      <span class="md-input-msg left">Substituir a palavra "estação" do menu lateral.</span>
+
+                    <div class="m-b text-muted text-md text-u-c">{{'titles.SOCIAL_NETWORK_PROFILES' | translate}}</div>
+                    <div class="p-h p-t row m-b-0">
+                      <div class="col-lg-6">
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>Link da página/perfil do Facebook</label>
+                          <input ng-model="network.facebookLink">
+                        </md-input-container>
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>Link do perfil do Twitter</label>
+                          <input ng-model="network.twitterLink">
+                        </md-input-container>
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>Link do perfil do instagram</label>
+                          <input ng-model="network.instagramLink">
+                        </md-input-container>
+                      </div>
+                      <div class="col-lg-6">
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>Link do canal do Youtube</label>
+                          <input ng-model="network.youtubeLink">
+                        </md-input-container>
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>Link da página/perfil do Google+</label>
+                          <input ng-model="network.googlePlusLink">
+                        </md-input-container>
+                        <md-input-container class="m-b-sm m-t-sm w-full">
+                          <label>Link do perfil do Pinterest</label>
+                          <input ng-model="network.piterestLink">
+                        </md-input-container>
+                      </div>
+                    </div>
+
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="text-muted m-b-lg text-md text-u-c">Texto de convite por email</div>
+                    <md-input-container class="md-block">
+                      <textarea ng-model="network.invitationMessage" rows="5"></textarea>
+                      <span class="md-input-msg right">Mensagem enviada em emails de convites a usuários</span>
                     </md-input-container>
-                    <md-input-container class="m-b-sm m-t-sm ">
-                      <label>Aba de início</label>
-                      <input ng-model="network.homeTabName">
-                    </md-input-container>
-                    <md-input-container class="m-b-sm m-t-sm md-block">
-                      <label>Texto de convite por email</label>
-                      <textarea ng-model="network.invitationMessage" columns="1" rows="10"></textarea>
-                      <!-- <small class="text-muted clear text-ellipsis pos-abt bottom-0">
-                          Mensagem enviada em emails de convites a usuários</small> -->
-                      <span class="md-input-msg left">Mensagem enviada em emails de convites a usuários</span>
+                  
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
+                    <div class="m-b text-muted text-md text-u-c">Rodapé da tela de login</div>
+                    <md-input-container class="md-block">
+                      <textarea class="md-input font-code" ng-model="network.loginFooterMessage" rows="5" md-select-on-focus>
+                      </textarea>
+                      <span class="md-input-msg right">(opcional) Exibido na parte inferior da tela de login. Use <code>tags HTML</code> para inserir links</span>
                     </md-input-container>
                   </div>
                 <!-- </md-tab> -->

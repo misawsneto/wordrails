@@ -70,7 +70,8 @@
 		"HELP": "Help",
 		"SEND": "Send",
 		"VIDEO": "Video",
-		"AUDIO": "Audio"
+		"AUDIO": "Audio",
+		"SOCIAL_NETWORK_PROFILES": "Social network profiles"
 	},
 	"signin_signup": {
 		"OR": "or",

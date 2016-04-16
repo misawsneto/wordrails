@@ -70,7 +70,8 @@
 		"HELP": "Ajuda",
 		"SEND": "Enviar",
 		"VIDEO": "Vídeo",
-		"AUDIO": "Áudio"
+		"AUDIO": "Áudio",
+		"SOCIAL_NETWORK_PROFILES": "Perfis de redes sociais"
 	},
 	"signin_signup": {
 		"OR": "ou",
@@ -158,9 +159,9 @@
 			"PADDING": "Preenchimento",
 			"PREVIEW_MODE": "Modo de visualização",
 			"SUBSECTION": "Subseção",
-			"SIDEBAR": "Barra lateral",
+			"SIDEBAR": "Menu lateral",
 			"FOOTER": "Rodapé",
-			"HEADER": "Barra superior"
+			"HEADER": "Menu superior"
 		},
 		"post": {
 			"menu":{
