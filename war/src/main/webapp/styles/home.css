@@ -461,7 +461,7 @@ li.logo-title {
 
 /*********************************************************** 3. Footer *****************************************************************/
 
-footer.page-footer { margin: 0; background-color:#3f51b5; padding-top: 0;}
+/* footer.page-footer { margin: 0; background-color:#3f51b5; padding-top: 0;}
 footer.page-footer .footer-copyright{
   background-color: #313fa0;
   color: #95a2e7;
@@ -534,7 +534,7 @@ footer.page-footer .footer-copyright{
 }
 .footer-menu > ul { margin: 0; width: 100%; text-align: right; padding: 0; border: none !important; }
 .footer-menu li{ display: inline-block; }
-.footer-menu a { padding: 5px 25px !important; }
+.footer-menu a { padding: 5px 25px !important; } */
 
 /****************************************************** 4. News Page 1  ******************************************************************/
 

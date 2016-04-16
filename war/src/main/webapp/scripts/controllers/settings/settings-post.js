@@ -359,7 +359,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 
 	$scope.postFeaturedImage = null
 	var setPostFeaturedImage = function(hash){
-		$scope.postFeaturedImage = $filter('imageLink')(hash, 'large')
+		$scope.postFeaturedImage = $filter('imageLink')({imageHash: hash}, 'large')
 	}
 
 

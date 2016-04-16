@@ -8469,3 +8469,13 @@ div#settings-colors ~ md-backdrop.md-sidenav-backdrop {
 }
 
 /* /settings */
+
+/* materialize override */
+
+footer.page-footer .footer-crt {
+  height: 50px;
+  overflow: hidden;
+  line-height: 50px;
+}
+
+/* /materialize override */
