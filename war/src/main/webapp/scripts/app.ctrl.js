@@ -496,13 +496,19 @@ angular.module('app')
       }
 
       $scope.app.signIn = function(person){
+        $scope.app.loading = true;
         trix.login(person.username, person.password).success(function(){
           trix.allInitData().success(function(response){
             appData = initData = response;
             startApp();
             $mdDialog.cancel();
+            $scope.app.loading = false;
+          }).error(function(){
+            $scope.app.loading = false;
           });
-        })
+        }).error(function(){
+          $scope.app.loading = false;
+        });
       }
 
       $scope.app.signInButton =  function(){

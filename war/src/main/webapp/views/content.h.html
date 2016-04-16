@@ -174,6 +174,7 @@
 
 <script type="text/ng-template" id="signin-signup-dialog.html">
   <md-dialog-content class="md-background-hue-1 background">
+    <md-progress-linear class="pos-abt top-0 left-0" ng-if="app.loading" md-mode="indeterminate"></md-progress-linear>
     <!-- signin -->
     <div class="text-color m text-center" ng-if="app.signState !== 'signup' && app.signState !== 'forgot'">
       <div class="m-b-md m-t-md text-md text-u-c font-500">{{'signin_signup.SIGNIN' | translate}}</div>
