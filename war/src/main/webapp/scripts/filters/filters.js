@@ -140,11 +140,12 @@ angular.module('app')
 })
 
 .filter('imageLink', function imageLink(TRIX) {
-  return function(featuredImage, size) {
-    if(featuredImage)
-      return TRIX.baseUrl + "/api/images/get/"+ ((featuredImage.originalHash) ? featuredImage.originalHash : featuredImage)  + "?size=" + size;
-
-    return "";
+  return function(post, size) {
+    if(post && (post.featuredImage || post.featuredImageHash || post.imageHash)){
+      var hash = ((post.featuredImageHash) ? post.featuredImageHash : post.imageHash ? post.imageHash : post.featuredImage.originalHash)
+      return TRIX.baseUrl + "/api/images/get/"+ hash + "?size=" +size;
+    }else
+      return "";
   }
 })
 

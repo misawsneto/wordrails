@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="/libs/jquery/bootstrap/dist/css/bootstrap.css" type="text/css" />
   
   <link rel="stylesheet" href="/styles/material-design-icons.css" type="text/css" />
+  <link rel="stylesheet" href="/styles/materialize.css" type="text/css" />
   <link rel="stylesheet" href="/styles/font.css" type="text/css" />
   <link rel="stylesheet" href="/styles/app.css" type="text/css" />
 

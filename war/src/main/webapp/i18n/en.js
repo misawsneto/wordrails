@@ -217,7 +217,7 @@
 			"CROP_IMAGE": "Crop image",
 			"CROP_IMAGE_DESC": "Click and drag to create a selection to crop the given image.",
 			"FOCUS_IMAGE_DESC": "Drag the marker to set the focuspoint.",
-			"TOGGLE_LANDSCAPE": "On/off landscape",
+			"TOGGLE_LANDSCAPE": "On/off landscape (image)",
 			"SHOW_VERSION": "Show version",
 			"CONTRAST": "Contrast",
 			"SELECT_STATION": "Select a station and categories for indexing your publication"

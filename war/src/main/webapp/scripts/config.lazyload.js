@@ -21,6 +21,21 @@ angular.module('app')
         ]
       },
       {
+        name: 'angularMoment',
+        module: true,
+        files:[
+          '/libs/angular/angular-moment/angular-moment.min.js',
+        ]
+      },
+      {
+        name: 'ui.materialize',
+        module: true,
+        files:[
+          '/libs/angular/materialize/dist/js/materialize.min.js',
+          '/libs/angular/angular-materialize/src/angular-materialize.js'
+        ]
+      },
+      {
         name:'com.2fdevs.videogular',
         module: true,
         files: [

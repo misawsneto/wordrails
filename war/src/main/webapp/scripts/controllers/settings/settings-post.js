@@ -634,7 +634,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		// sources: [
 		// 	{src: $sce.trustAsResourceUrl("http://d3a3w0au60g0o7.cloudfront.net/demo/videos/7145a35b9391bb8d568c24ef8df59d6a"), type: "video/mp4"}
 		// ],
-		theme: "libs/angular/videogular-themes-default/videogular.min.css",
+		theme: "/libs/angular/videogular-themes-default/videogular.min.css",
 		plugins: {
             controls: {
                 autoHide: true,
@@ -647,7 +647,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		// sources: [
 		// 	{src: $sce.trustAsResourceUrl("http://d3a3w0au60g0o7.cloudfront.net/demo/videos/7145a35b9391bb8d568c24ef8df59d6a"), type: "video/mp4"}
 		// ],
-		theme: "libs/angular/videogular-themes-default/videogular.min.css",
+		theme: "/libs/angular/videogular-themes-default/videogular.min.css",
 		plugins: {
             controls: {
                 autoHide: false

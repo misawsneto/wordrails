@@ -107,9 +107,9 @@
             <div class="cell-inner p-r-sm p-l-sm">
               <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto;
     max-height: 100%;">
-                <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'publications'}">
+                <div class="min-h-400" ng-class="{'hide': settings.tab !== 'publications'}">
                   <ul class="list-group bg-t">
-                    <li class="list-group-item" ng-repeat="publication in publications">
+                    <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActivePublication(publication)}" ng-repeat="publication in publications" ng-click="activatePublication(publication)" style="cursor: inherit;">
                       <a href class="pull-left m-r" ng-if="app.hasImage(publication)" style="height: 96px;">
                         <div ng-style="app.getBackgroundImage(publication, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
                         </div>
@@ -150,13 +150,29 @@
                 <!-- /domain and analytics -->
 
                 <!-- logos -->
-                <div class="md-padding min-h-400"  ng-class="{'hide': settings.tab !== 'drafts'}">
+                <div class="min-h-400"  ng-class="{'hide': settings.tab !== 'drafts'}">
                   <ul class="list-group bg-t">
-                    <li class="list-group-item" ng-repeat="draft in drafts">
-                      <a href class="pull-left w-40 m-r"><img src="/images/a1.jpg" class="img-responsive img-circle"></a>
-                      <div class="clear">
-                        <a href class="font-bold block">{{draft.title}}</a>
+                    <li class="no-border-radius list-group-item no-bg b-l-2x r-0" ng-class="{'b-l-primary': isActiveDraft(draft)}" ng-repeat="draft in drafts" ng-click="activateDraft(draft)" style="cursor: inherit;">
+                      <a href class="pull-left m-r" ng-if="app.hasImage(draft)" style="height: 96px;">
+                        <div ng-style="app.getBackgroundImage(draft, 'large')" class="img-responsive md-whiteframe-z1 thumb-lg h-full bg-cover">
+                        </div>
+                      </a>
+                      <div class="clear font-thin">
+                        <a href class="font-bold block text-md">{{draft.title}}</a>
                         {{draft.snippet | characters:170}}
+                        <div class="p-t-sm font-500">
+                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">editar
+                          </div>
+                          <div class="font-500 text-xs text-u-c r p-xs inline o-f-h" ng-click="" md-ink-ripple ng-click="">remover
+                          </div>
+                        </div>
+                        <div class="m-t pull-right font-500 m-r-sm"><i class="icon mdi2-radio-tower"></i> {{app.getStationById(draft.stationId).name}}</div>
+                        <div class="list-group-item b-n p-sm p-t-sm no-padding-h inline">
+                          <a href class="pull-left m-r-sm"><img src="/images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
+                          <div class="clear font-normal p-xs">
+                            <a href class="font-500 block">{{draft.authorName}}</a>
+                          </div>
+                        </div>
                       </div>
                     </li>
                   </ul> 

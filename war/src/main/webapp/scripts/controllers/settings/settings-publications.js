@@ -202,6 +202,24 @@ $scope.paginate = function(){
 		$scope.commentFocused = false;
 	}
 
+	var publicationActiveId = null;
+	$scope.activatePublication = function(publication){
+		publicationActiveId = publication.id;
+	}
+
+	$scope.isActivePublication = function(publication){
+		return publicationActiveId == publication.id
+	}
+
+	var draftActiveId = null;
+	$scope.activatePublication = function(draft){
+		draftActiveId = draft.id;
+	}
+
+	$scope.isActiveDraft = function(draft){
+		return draftActiveId == draft.id
+	}
+
 	settingsPublicationsCtrl = $scope;
 
 }]);

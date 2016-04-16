@@ -5734,6 +5734,10 @@ bg-none {
   }
 }
 
+.no-border-radius {
+  border-radius: 0!important;
+}
+
 .hover-action {
   display: none;
 }

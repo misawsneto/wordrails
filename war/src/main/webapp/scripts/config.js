@@ -237,6 +237,7 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
 
       if(cssname === 'primary' && name === 'hue-1'){
         stylesheet.insertRule(".md-primary-hue-1 .nav-lines > li.active:after{border-bottom-color: " + contrastColor + "}", index); index++;
+        stylesheet.insertRule(".b-l-primary {border-left-color: " + color + "}", index); index++;
       }
 
       if(cssname === 'warn' && name === 'default'){

@@ -671,7 +671,7 @@ ul.pgwSlider > li span, .pgwSlider > .ps-list > li span
   width: 100%;
   padding: 0 0 0 25px;
   top: 20px;
-  z-index: 99;
+  /* z-index: 99; */
 }
 .news-blog .news-category span
 {
@@ -686,7 +686,7 @@ ul.pgwSlider > li span, .pgwSlider > .ps-list > li span
   margin: 2px 25px 0 0;
   color: #7c7852;
   font-size: 22px;
-  z-index: 99;
+  /* z-index: 99; */
 }
 .news-blog .news-category .news-category-dropdown li ul{ top: 25px; width: 85px; }
 .news-blog .news-category .news-category-dropdown li ul li a{ display: inline-block; padding: 5px 10px; font-size: 13px;}

@@ -74,7 +74,10 @@ module.exports = {
                     "wavesurfer-angular/dist/css/wavesurfer.angular.min.css",
                     "wavesurfer.js/dist/wavesurfer.min.js",
                     "underscore/underscore-min.js",
-                    "angular-clamp/ng-clamp.js"
+                    "angular-clamp/ng-clamp.js",
+                    "materialize/dist/**",
+                    "angular-materialize/**",
+                    "angular-moment/angular-moment.min.js"
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

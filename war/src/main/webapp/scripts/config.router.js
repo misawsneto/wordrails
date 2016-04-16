@@ -53,7 +53,7 @@ angular.module('app')
                    }
                   return deferred.promise;
                 },
-                deps:load( ['infinite-scroll', 'angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage'] ).deps
+                deps:load( ['infinite-scroll', 'angularFileUpload', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize'] ).deps
               },
               url: '/settings',
               views: {
@@ -597,7 +597,7 @@ angular.module('app')
                   // }
                   return deferred.promise;
                 },
-                deps:load( ['infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage'] ).deps
+                deps:load( ['infinite-scroll', '/scripts/services/trix.js', '/libs/theming/tinycolor/tinycolor.js', 'mdPickers', 'afkl.lazyImage', 'angularMoment', 'ui.materialize'] ).deps
               },
               url: '',
               views: {
@@ -629,13 +629,15 @@ angular.module('app')
                 url: '/',
                 templateUrl: '/views/pages/home.html',
                 data : { title: 'Home', folded: false },
-                resolve: load(['angularFileUpload', 'wu.masonry'])
+                resolve: load(['angularFileUpload', 'wu.masonry', '/scripts/controllers/app/page.js']),
+                controller: 'PageCtrl'
+
               })
               .state('app.stationHome', {
                 url: '/{stationSlug}/home',
                 templateUrl: '/views/pages/home.html',
                 data : { title: 'Home', folded: false },
-                resolve: load(['angularFileUpload', 'wu.masonry'])
+                resolve: load(['angularFileUpload', 'wu.masonry', '/scripts/controllers/app/page.js'])
               })
               .state('app.wall', {
                 url: '/wall',
