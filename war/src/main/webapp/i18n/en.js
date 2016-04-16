@@ -71,7 +71,9 @@
 		"SEND": "Send",
 		"VIDEO": "Video",
 		"AUDIO": "Audio",
-		"SOCIAL_NETWORK_PROFILES": "Social network profiles"
+		"SOCIAL_NETWORK_PROFILES": "Social network profiles",
+		"BOOKMARKS": "Bookmarks",
+		"NOTIFICATIONS": "Notifications"
 	},
 	"signin_signup": {
 		"OR": "or",

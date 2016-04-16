@@ -15,6 +15,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -30,7 +31,10 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 
 	@Autowired
 	@Qualifier("objectMapper")
-	public ObjectMapper mapper;
+	private ObjectMapper mapper;
+
+	@Autowired
+	private HttpServletRequest request;
 
 	@Override
 	public Response toResponse(Throwable throwable) {
@@ -38,7 +42,8 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 
 		log.error("LOG FATAL ERROR\n" +
 				"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
-				"MESSAGE: " + throwable.getMessage(),
+				"MESSAGE: " + throwable.getMessage() + "\n" +
+				"URL: " + request.getRequestURI(),
 				throwable);
 
 		if (throwable instanceof EntityNotFoundException) {

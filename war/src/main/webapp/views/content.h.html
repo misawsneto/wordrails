@@ -84,7 +84,7 @@
           </li>
           <md-divider></md-divider>
           <li md-ink-ripple>
-            <a href="">
+            <a ng-click="app.signOut();">
               <i class="icon m-r i-16 mdi2-logout"></i>
               {{'header.navbar.LOGOUT' | translate}}
             </a>
@@ -189,7 +189,7 @@
         </md-button>
       </div>
         <div class="p-t text-md" translate="signin_signup.OR">ou</div>
-      <form name="form" ng-submit="signin()" class="text-md w-xxl">
+      <form name="form" ng-submit="app.signIn(person)" class="text-md w-xxl">
         <div class="p" style="padding-bottom: 0">
           <md-input-container class="w-full m-b-0">
             <label for="testInput">{{'titles.USERNAME' | translate}}</label>

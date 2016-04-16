@@ -126,193 +126,198 @@ angular.module('app')
         document.location.href = link;
       }
 
-      //window.console && console.log(appData);
-      // ---------- util -------------
-      // ---------- util-trix -------------
-      $scope.app = angular.extend($scope.app, appData)
-      $scope.app.name = $scope.app.network.name
-      $scope.app.currentStation = trixService.selectDefaultStation($scope.app.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
-      $scope.app.stationsPermissions = trixService.getStationPermissions(angular.copy($scope.app));
+      function startApp(){
 
-      var id = $scope.app.currentStation.defaultPerspectiveId
-      trix.findPerspectiveView(id, null, null, 0, 10).success(function(termPerspective){
-        $scope.app.termPerspectiveView = termPerspective
-      })
+        //window.console && console.log(appData);
+        // ---------- util -------------
+        // ---------- util-trix -------------
+        $scope.app = angular.extend($scope.app, appData)
+        $scope.app.name = $scope.app.network.name
+        $scope.app.currentStation = trixService.selectDefaultStation($scope.app.stations, $scope.app.currentStation ? $scope.app.currentStation.stationId : null);
+        $scope.app.stationsPermissions = trixService.getStationPermissions(angular.copy($scope.app));
 
-      $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-        $rootScope.previousState = fromState.name;
-        $rootScope.currentState = toState.name;
-
-        if(toState.data && (toState.data.title || toState.titleTranslate)){
-          $("title").html($scope.app.network.name + " | " + ((toState.data.titleTranslate) ? $filter('translate')(toState.data.titleTranslate) : toState.data.title));
-        }
-
-        window.console && console.log($rootScope.currentState);
-      });
-      // ---------- /util-trix -------------
-      
-      // ---------- util-toast -------------
-      $scope.toastPosition = {
-        bottom: false,
-        top: true,
-        left: false,
-        right: true
-      };
-
-      $scope.getToastPosition = function() {
-        return Object.keys($scope.toastPosition)
-        .filter(function(pos) { return $scope.toastPosition[pos]; })
-        .join(' ');
-      };
-
-      $scope.app.showSimpleToast = function(content) {
-        $mdToast.show(
-          $mdToast.simple()
-          .content(content)
-          .position($scope.getToastPosition())
-          .hideDelay(3000)
-          );
-      };
-
-      $scope.app.showErrorToast = function(content) {
-        $mdToast.show({
-          template: '<md-toast class="md-warn-default"><div class="md-toast-content">'+content+'</div></md-toast>',
-          hideDelay: 3000,
-          position: $scope.getToastPosition()
-        });
-      };
-
-      $scope.app.showSuccessToast = function(content) {
-        $mdToast.show({
-          template: '<md-toast class="md-toast-success"><div class="md-toast-content">'+content+'</div></md-toast>',
-          hideDelay: 300000,
-          position: $scope.getToastPosition()
-        });
-      };
-
-      $scope.app.showInfoToast = function(content) {
-        $mdToast.show({
-          template: '<md-toast class="md-toast-info"><div class="md-toast-content">'+content+'</div></md-toast>',
-          hideDelay: 3000,
-          position: $scope.getToastPosition()
-        });
-      };
-
-      // ---------- /util-toast -------------
-      
-      $scope.app.defaultDialog = function(scope, $mdDialog) {
-        scope.app = $scope.app;
-
-        scope.hide = function() {
-          $mdDialog.hide();
-        };
-
-        scope.cancel = function() {
-          $mdDialog.cancel();
-        }
-      };
-
-      $scope.app.cancelDialog = function() {
-        $mdDialog.cancel();
-      } 
-
-      $scope.app.getStationById = function(id) {
-        var ret = null;
-        $scope.app.stations.forEach(function(station){
-          if(station.id == id)
-            ret = station
+        var id = $scope.app.currentStation.defaultPerspectiveId
+        trix.findPerspectiveView(id, null, null, 0, 10).success(function(termPerspective){
+          $scope.app.termPerspectiveView = termPerspective
         })
-        return ret
-      }
 
-      // ---------- /util -------------
+        $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+          $rootScope.previousState = fromState.name;
+          $rootScope.currentState = toState.name;
 
-      // ---------- theming -----------
-      
-      // Function to calculate all colors from base
-      // These colors were determined by finding all
-      // HSL values for a google palette, calculating
-      // the difference in H, S, and L per color
-      // change individually, and then applying these
-      // here.
-      var computeColors = function(hex)
-      {
-        // Return array of color objects.
-        return [
-          getColorObject(tinycolor( hex ), '500'),
-          getColorObject(tinycolor( hex ).lighten( 52 ), '50'),
-          getColorObject(tinycolor( hex ).lighten( 37 ), '100'),
-          getColorObject(tinycolor( hex ).lighten( 26 ), '200'),
-          getColorObject(tinycolor( hex ).lighten( 12 ), '300'),
-          getColorObject(tinycolor( hex ).lighten( 6 ), '400'),
-          getColorObject(tinycolor( hex ).darken( 6 ), '600'),
-          getColorObject(tinycolor( hex ).darken( 12 ), '700'),
-          getColorObject(tinycolor( hex ).darken( 18 ), '800'),
-          getColorObject(tinycolor( hex ).darken( 24 ), '900'),
-          getColorObject(tinycolor( hex ).lighten( 52 ), 'A100'),
-          getColorObject(tinycolor( hex ).lighten( 37 ), 'A200'),
-          getColorObject(tinycolor( hex ).lighten( 6 ), 'A400'),
-          getColorObject(tinycolor( hex ).darken( 12 ), 'A700')
-        ];
-      };
-
-      function getColorObject(value, name) {
-        var c = tinycolor(value);
-        return {
-          name: name,
-          hex: c.toHexString(),
-          darkContrast: c.isLight()
-        };
-      }
-      
-      $scope.app.makeColorsJsonObject = function(colors){
-        var exportable = {};
-        var darkColors = [];
-        angular.forEach(colors, function(value, key){
-          exportable[value.name] = value.hex;
-          if (value.darkContrast) {
-            darkColors.push(value.name);
+          if(toState.data && (toState.data.title || toState.titleTranslate)){
+            $("title").html($scope.app.network.name + " | " + ((toState.data.titleTranslate) ? $filter('translate')(toState.data.titleTranslate) : toState.data.title));
           }
+
+          window.console && console.log($rootScope.currentState);
         });
-        exportable.contrastDefaultColor = 'light';
-        exportable.contrastDarkColors = darkColors.join(' ');
-        return exportable;
-      };
+        // ---------- /util-trix -------------
+        
+        // ---------- util-toast -------------
+        $scope.toastPosition = {
+          bottom: false,
+          top: true,
+          left: false,
+          right: true
+        };
 
-      var themeName = $scope.app.themeName = $filter('generateRandom')(4,"aA");
+        $scope.getToastPosition = function() {
+          return Object.keys($scope.toastPosition)
+          .filter(function(pos) { return $scope.toastPosition[pos]; })
+          .join(' ');
+        };
 
-      $scope.app.applyNetworkTheme = function (){
+        $scope.app.showSimpleToast = function(content) {
+          $mdToast.show(
+            $mdToast.simple()
+            .content(content)
+            .position($scope.getToastPosition())
+            .hideDelay(3000)
+            );
+        };
 
-        if(!$scope.app.network.primaryColors || !$scope.app.network.primaryColors['50']){
-          $scope.app.network.primaryColors =
-          $scope.app.network.secondaryColors =
-          $scope.app.network.alertColors =
-          $scope.app.network.backgroundColors =
-          {'500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'}
+        $scope.app.showErrorToast = function(content) {
+          $mdToast.show({
+            template: '<md-toast class="md-warn-default"><div class="md-toast-content">'+content+'</div></md-toast>',
+            hideDelay: 3000,
+            position: $scope.getToastPosition()
+          });
+        };
+
+        $scope.app.showSuccessToast = function(content) {
+          $mdToast.show({
+            template: '<md-toast class="md-toast-success"><div class="md-toast-content">'+content+'</div></md-toast>',
+            hideDelay: 3000,
+            position: $scope.getToastPosition()
+          });
+        };
+
+        $scope.app.showInfoToast = function(content) {
+          $mdToast.show({
+            template: '<md-toast class="md-toast-info"><div class="md-toast-content">'+content+'</div></md-toast>',
+            hideDelay: 3000,
+            position: $scope.getToastPosition()
+          });
+        };
+
+        // ---------- /util-toast -------------
+        
+        $scope.app.defaultDialog = function(scope, $mdDialog) {
+          scope.app = $scope.app;
+
+          scope.hide = function() {
+            $mdDialog.hide();
+          };
+
+          scope.cancel = function() {
+            $mdDialog.cancel();
+          }
+        };
+
+        $scope.app.cancelDialog = function() {
+          $mdDialog.cancel();
+        } 
+
+        $scope.app.getStationById = function(id) {
+          var ret = null;
+          $scope.app.stations.forEach(function(station){
+            if(station.id == id)
+              ret = station
+          })
+          return ret
+        }
+
+        // ---------- /util -------------
+
+        // ---------- theming -----------
+        
+        // Function to calculate all colors from base
+        // These colors were determined by finding all
+        // HSL values for a google palette, calculating
+        // the difference in H, S, and L per color
+        // change individually, and then applying these
+        // here.
+        var computeColors = function(hex)
+        {
+          // Return array of color objects.
+          return [
+            getColorObject(tinycolor( hex ), '500'),
+            getColorObject(tinycolor( hex ).lighten( 52 ), '50'),
+            getColorObject(tinycolor( hex ).lighten( 37 ), '100'),
+            getColorObject(tinycolor( hex ).lighten( 26 ), '200'),
+            getColorObject(tinycolor( hex ).lighten( 12 ), '300'),
+            getColorObject(tinycolor( hex ).lighten( 6 ), '400'),
+            getColorObject(tinycolor( hex ).darken( 6 ), '600'),
+            getColorObject(tinycolor( hex ).darken( 12 ), '700'),
+            getColorObject(tinycolor( hex ).darken( 18 ), '800'),
+            getColorObject(tinycolor( hex ).darken( 24 ), '900'),
+            getColorObject(tinycolor( hex ).lighten( 52 ), 'A100'),
+            getColorObject(tinycolor( hex ).lighten( 37 ), 'A200'),
+            getColorObject(tinycolor( hex ).lighten( 6 ), 'A400'),
+            getColorObject(tinycolor( hex ).darken( 12 ), 'A700')
+          ];
+        };
+
+        function getColorObject(value, name) {
+          var c = tinycolor(value);
+          return {
+            name: name,
+            hex: c.toHexString(),
+            darkContrast: c.isLight()
+          };
         }
         
-        themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
-        themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
-        themeProvider.definePalette('myWarn', $scope.app.network.alertColors);
-        if($scope.app.network.backgroundColors && $scope.app.network.backgroundColors['50'])
-          themeProvider.definePalette('myBackground', $scope.app.network.backgroundColors);
-        else
-          themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject(computeColors($scope.app.network.backgroundColor)))
-  
-        themeProvider.theme(themeName)
-        .primaryPalette('myPrimary')
-        .accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
-        .warnPalette('myWarn')
-        .backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
-  
-        themeProvider.reload($injector);
-        themeProvider.setDefaultTheme(themeName)
-  
-        createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
-        $scope.app.backgroundPalette = $scope.app.network.backgroundColor
+        $scope.app.makeColorsJsonObject = function(colors){
+          var exportable = {};
+          var darkColors = [];
+          angular.forEach(colors, function(value, key){
+            exportable[value.name] = value.hex;
+            if (value.darkContrast) {
+              darkColors.push(value.name);
+            }
+          });
+          exportable.contrastDefaultColor = 'light';
+          exportable.contrastDarkColors = darkColors.join(' ');
+          return exportable;
+        };
+
+        var themeName = $scope.app.themeName = $filter('generateRandom')(4,"aA");
+
+        $scope.app.applyNetworkTheme = function (){
+
+          if(!$scope.app.network.primaryColors || !$scope.app.network.primaryColors['50']){
+            $scope.app.network.primaryColors =
+            $scope.app.network.secondaryColors =
+            $scope.app.network.alertColors =
+            $scope.app.network.backgroundColors =
+            {'500': '#333333', '50': '#b8b8b8', '100': '#919191', '200': '#757575', '300': '#525252', '400': '#424242', '600': '#242424', '700': '#141414', '800': '#050505', '900': '#000000', 'A100': '#b8b8b8', 'A200': '#919191', 'A400': '#424242', 'A700': '#141414', 'contrastDefaultColor': 'light', 'contrastDarkColors': '50 100 A100 A200'}
+          }
+          
+          themeProvider.definePalette('myPrimary', $scope.app.network.primaryColors);
+          themeProvider.definePalette('myAccent', $scope.app.network.secondaryColors);
+          themeProvider.definePalette('myWarn', $scope.app.network.alertColors);
+          if($scope.app.network.backgroundColors && $scope.app.network.backgroundColors['50'])
+            themeProvider.definePalette('myBackground', $scope.app.network.backgroundColors);
+          else
+            themeProvider.definePalette('myBackground', $scope.app.makeColorsJsonObject(computeColors($scope.app.network.backgroundColor)))
+    
+          themeProvider.theme(themeName)
+          .primaryPalette('myPrimary')
+          .accentPalette('myAccent',{'default':'300', 'hue-1': '500', 'hue-2': '800', 'hue-3': 'A100'})
+          .warnPalette('myWarn')
+          .backgroundPalette('myBackground', {'default':'500', 'hue-1': '300', 'hue-2': '800', 'hue-3': 'A100'});
+    
+          themeProvider.reload($injector);
+          themeProvider.setDefaultTheme(themeName)
+    
+          createCustomMDCssTheme(themeProvider, colorsProvider, themeName);
+          $scope.app.backgroundPalette = $scope.app.network.backgroundColor
+        }
+
+        $scope.app.applyNetworkTheme();
       }
 
-      $scope.app.applyNetworkTheme();
+      startApp();
 
       // ---------- /theming ------------------
 
@@ -436,15 +441,6 @@ angular.module('app')
       };
 
       coverImageUploader.onSuccessItem = function(fileItem, response, status, headers) {
-        // if(response.filelink){
-        //   $scope.uploadedCoverImage = response;
-        //   $scope.app.person.cover = TRIX.baseUrl + "/api/images/" + $scope.uploadedCoverImage.id
-        //   trix.putPerson($scope.app.person, function(personResponse){
-        //     setCoverImage(personResponse)
-        //   })
-        //   $mdToast.hide();
-        // }
-
          if(response.filelink){
           $scope.uploadedCoverImage = response;
           trix.getPerson($scope.app.person.id).success(function(personResponse){
@@ -499,6 +495,16 @@ angular.module('app')
         })
       }
 
+      $scope.app.signIn = function(person){
+        trix.login(person.username, person.password).success(function(){
+          trix.allInitData().success(function(response){
+            appData = initData = response;
+            startApp();
+            $mdDialog.cancel();
+          });
+        })
+      }
+
       $scope.app.signInButton =  function(){
         $scope.app.signState = 'signin'
         if($scope.app.person.id === 0){$scope.app.showSigninDialog();}
@@ -529,6 +535,13 @@ angular.module('app')
         
       }
 
+      $timeout(function() {
+        $("#aside-scroller").perfectScrollbar({
+          wheelSpeed: 1,
+          wheelPropagation: true,
+          minScrollbarLength: 20
+        });
+      });
       
       appDataCtrl = $scope;
     }

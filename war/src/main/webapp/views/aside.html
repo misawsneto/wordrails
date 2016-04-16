@@ -15,7 +15,7 @@
       <!-- / brand -->
   </div>
   <div class="box-row">
-    <div class="box-cell scrollable hover">
+    <div id="aside-scroller" class="scroller box-cell">
       <div class="box-inner">
         <!-- profile -->
         <div ng-if="app.userImageUploader" class="hidden-folded bg-cover" ng-style="{'background-image': 'url(' + app.coverImageMedium + ')'}">
@@ -59,19 +59,19 @@
               <li>
                 <a md-ink-ripple ui-sref="page.settings">
                   <i class="icon mdi-social-notifications i-20"></i>
-                  <span>Notifications</span>
+                  <span translate="titles.NOTIFICATIONS">Notifications</span>
                 </a>
               </li>
               <li>
                 <a md-ink-ripple ui-sref="page.settings">
                   <i class="icon mdi-action-bookmark-outline i-20"></i>
-                  <span>Bookmarks</span>
+                  <span translate="titles.BOOKMARKS">Bookmarks</span>
                 </a>
               </li>
               <li>
                 <a md-ink-ripple ng-click="app.signOut();">
                   <i class="icon mdi2-logout i-20"></i>
-                  <span>Logout</span>
+                  <span translate="header.navbar.LOGOUT">Logout</span>
                 </a>
               </li>
               <!-- <li class="m-v-sm b-b b"></li> -->

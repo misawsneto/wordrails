@@ -77,7 +77,9 @@ module.exports = {
                     "angular-clamp/ng-clamp.js",
                     "materialize/dist/**",
                     "angular-materialize/**",
-                    "angular-moment/angular-moment.min.js"
+                    "angular-moment/angular-moment.min.js",
+                    'perfect-scrollbar/**',
+                    'angular-perfect-scrollbar/src/angular-perfect-scrollbar.js'
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

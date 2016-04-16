@@ -212,7 +212,7 @@ $scope.paginate = function(){
 	}
 
 	var draftActiveId = null;
-	$scope.activatePublication = function(draft){
+	$scope.activateDraft = function(draft){
 		draftActiveId = draft.id;
 	}
 
