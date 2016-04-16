@@ -73,7 +73,8 @@ module.exports = {
                     "wavesurfer-angular/dist/js/wavesurfer-angular.min.js",
                     "wavesurfer-angular/dist/css/wavesurfer.angular.min.css",
                     "wavesurfer.js/dist/wavesurfer.min.js",
-                    "underscore/underscore-min.js"
+                    "underscore/underscore-min.js",
+                    "angular-clamp/ng-clamp.js"
                 ],
                 dest: 'libs/angular',
                 cwd:  'bower_components',

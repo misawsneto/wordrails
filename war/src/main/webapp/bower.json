@@ -97,6 +97,7 @@
     "videogular-themes-default": "^1.4.3",
     "sc-date-time": "^1.1.6",
     "ng-videosharing-embed": "^0.3.4",
-    "wavesurfer-angular": "^1.0.1"
+    "wavesurfer-angular": "^1.0.1",
+    "angular-clamp": "*"
   }
 }

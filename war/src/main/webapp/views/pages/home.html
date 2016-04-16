@@ -162,8 +162,8 @@
                 <div class="news-time" md-style="{'color': 'default.50'}">
                     <i class="fa fa-clock-o"></i> 9 min ago 
                 </div>
-                <div class="news-title"><a href="javascript:void(0);"> {{cell.postView.title}} </a></div>
-                <div class="news-content"><p>{{::cell.postView.snippet | characters:200}}</p></div>
+                <div class="news-title" style="min-height: 66px"><a clamp="3"> {{::cell.postView.title}} </a></div>
+                <div class="news-content"><p clamp="4">{{::cell.postView.snippet}}</p></div>
             </div>
         </div>
     </div>
