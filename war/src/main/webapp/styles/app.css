@@ -8478,4 +8478,8 @@ footer.page-footer .footer-crt {
   line-height: 50px;
 }
 
+.slider .indicators .indicator-item {
+  background-color: rgba(31, 31, 31, 0.5);
+}
+
 /* /materialize override */

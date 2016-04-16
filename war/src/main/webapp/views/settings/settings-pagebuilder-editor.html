@@ -103,16 +103,45 @@
 				<!-- /section content tools -->			
 				<!-- section content -->
 				<div ng-if="childSection.properties.type === 'CAROUSEL'" style="">
-		      <uib-carousel active="active" interval="myInterval" interval="10">
-			      <uib-slide ng-repeat="block in childSection.blocks" index="0">
-			        <div ng-style="{{block.featuredImage | bgImageLink2: 'large'}}" class="bg-cover" style="margin:auto; height: 370px">
-				        <div class="carousel-caption">
-				          <h4>{{block.title}}</h4>
-				          <p>{{block.snippet}}</p>
-				        </div>
-			        </div>
-			      </uib-slide>
-			    </uib-carousel>
+		      <!-- <uib-carousel active="active" interval="myInterval" interval="10">
+		      			      <uib-slide ng-repeat="block in childSection.blocks" index="0">
+		      			        <div ng-style="{{block.featuredImage | bgImageLink2: 'large'}}" class="bg-cover" style="margin:auto; height: 370px">
+		      				        <div class="carousel-caption">
+		      				          <h4>{{block.title}}</h4>
+		      				          <p>{{block.snippet}}</p>
+		      				        </div>
+		      			        </div>
+		      			      </uib-slide>
+		      			    </uib-carousel> -->
+
+					<div slider class="slider">
+						<ul class="slides md-whiteframe-z2">
+			        <li>
+		            <div style="background-image: url('http://lorempixel.com/580/250/nature/1')" class="bg-cover h-full"></div>
+		            <!-- <img src="http://lorempixel.com/580/250/nature/1" class="responsive-img"> --> <!-- random image -->
+		            <div class="caption center-align">
+	                <h3>This is our big Tagline!</h3>
+	                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+		            </div>
+			        </li>
+			        <li>
+			            <!-- <img src="http://lorempixel.com/580/250/nature/2" class="responsive-img"> random image -->
+	            	<div style="background-image: url('http://lorempixel.com/580/250/nature/2')" class="bg-cover h-full"></div>
+		            <div class="caption left-align">
+	                <h3>Left Aligned Caption</h3>
+	                <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+		            </div>
+			        </li>
+			        <li>
+			                <!-- <img src="http://lorempixel.com/580/250/nature/3" class="responsive-img"> --> <!-- random image -->
+	                <div style="background-image: url('http://lorempixel.com/580/250/nature/3')" class="bg-cover h-full"></div>  
+	                <div class="caption right-align">
+		            <h3>Right Aligned Caption</h3>
+		            <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+		            </div>
+			        </li>
+				    </ul>
+			    </div>
 				</div>
 				<div ng-if="childSection.properties.type === 'CARD'">
         	<div class="row p">
