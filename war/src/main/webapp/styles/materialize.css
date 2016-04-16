@@ -3366,9 +3366,9 @@ nav ul a span.badge {
 /*******************
   Utility Classes
 *******************/
-.hide {
+/* .hide {
   display: none !important;
-}
+} */
 
 .left-align {
   text-align: left;
