@@ -128,9 +128,7 @@ public class StationsResource extends AbstractResource implements StationsApi {
 	@Autowired
 	StationEventHandler stationEventHandler;
 
-	@PUT
-	@Path("/{stationId}/setDefaultPerspective")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Override
 	public Response setDefaultPerspective(@PathParam("stationId") Integer stationId, @FormParam("perspectiveId") Integer perspectiveId) {
 		Person person = authProvider.getLoggedPerson();
 		Station station = stationRepository.findOne(stationId);
@@ -143,8 +141,7 @@ public class StationsResource extends AbstractResource implements StationsApi {
 		} else return Response.status(Status.UNAUTHORIZED).build();
 	}
 
-	@DELETE
-	@Path("/{stationId}/force")
+	@Override
 	public Response forceDelete(@PathParam("stationId") Integer stationId) {
 		Person person = authProvider.getLoggedPerson();
 		Station station = stationRepository.findOne(stationId);

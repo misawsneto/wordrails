@@ -19,12 +19,12 @@
 		<md-button uib-dropdown-toggle class="pull-right md-icon-button visible-xs" style="margin: 5px 0 0 0;">
 			<i class="mdi mdi2-send i-20"></i>
 		</md-button>
-		<div uib-dropdown-menu role="menu" aria-labelledby="single-button" class=" p-sm md-background-default background with-arrow z-index-5 dropdown-menu-scale pull-right">
+		<div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="p-sm with-arrow z-index-5 dropdown-menu-scale pull-right">
 	  	<div class="arrow"></div>
-      <md-content class="w-xxl">
-	      <div class="pull-right">
-	        <a ng-click="postPublishMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
-	      </div>
+      <div class="pull-right">
+        <a ng-click="postPublishMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+      </div>
+      <div class="w-xxl">
 	      <div class="p-xs m-b-sm m-t-sm l-h-1x text-base">
 	      	{{'settings.post.menu.PUBLICATION_MSG' | translate}}
 	      </div>
@@ -46,7 +46,7 @@
 				</md-button>
 				<md-button ng-if="app.checkState() === 1" class="pull-right font-bold no-margin" translate="actions.UPDATE">
 				</md-button>
-      </md-content>
+      </div>
 	  </div>
 	</div>
 	<!-- /publish -->
@@ -74,12 +74,12 @@
         </md-tooltip>
 	    <i class="mdi mdi2-calendar i-20"></i>
 	  </md-button>
-	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm md-background-default background with-arrow z-index-5">
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm with-arrow z-index-5">
 	  	<div class="arrow lft" ></div>
-      <md-content class="w">
-	      <div class="pull-right">
-	        <a ng-click="postDateMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
-	      </div>
+      <div class="pull-right">
+        <a ng-click="postDateMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+      </div>
+      <div class="w">
 	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
 	      	{{'settings.post.POST_DATE_DESC' | translate}}
 	      </div>
@@ -94,7 +94,7 @@
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
 					Salvar
 				</md-button>
-      </md-content>
+      </div>
 	  </div>
   </div>
   <!-- /date button and dropdown -->
@@ -107,12 +107,12 @@
         </md-tooltip>
 	    <i class="mdi mdi2-calendar-clock i-20"></i>
 	  </md-button>
-	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm md-background-default background with-arrow z-index-5">
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm with-arrow z-index-5">
 	  	<div class="arrow lft" ></div>
-      <md-content class="w">
-	      <div class="pull-right">
-	        <a ng-click="postScheduleMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
-	      </div>
+      <div class="pull-right">
+        <a ng-click="postScheduleMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+      </div>
+      <div class="w">
 	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
 	      	{{'settings.post.SCHEDULED_DATE_DESC' | translate}}
 	      </div>
@@ -125,9 +125,9 @@
           <input type="time" mdp-time-picker ng-model="postScheduleDate" ng-change="changeScheduleTime(postScheduleDate);" />
         </md-input-container>
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE" ng-click="showScheduleTime();">
-			Salvar
-		</md-button>
-      </md-content>
+					Salvar
+				</md-button>
+      </div>
 	  </div>
   </div>
   <!-- /schedule button and dropdown -->
@@ -140,12 +140,12 @@
         </md-tooltip>
 	    <i class="mdi mdi2-calendar-remove i-20"></i>
 	  </md-button>
-	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm md-background-default background with-arrow z-index-5">
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm with-arrow z-index-5">
 	  	<div class="arrow lft" ></div>
-      <md-content class="w">
-	      <div class="pull-right">
-	        <a ng-click="postDeleteMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
-	      </div>
+      <div class="pull-right">
+        <a ng-click="postDeleteMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+      </div>
+      <div class="w">
 	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
 	      	{{'settings.post.DELETE_DATE_DESC' | translate}}
 	      </div>
@@ -158,9 +158,9 @@
           <input type="time" mdp-time-picker ng-model="postDeleteDate" ng-change="changeDeleteDate();"/>
         </md-input-container>
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
-			Salvar
-		</md-button>
-      </md-content>
+					Salvar
+				</md-button>
+      </div>
 	  </div>
   </div>
   <!-- /auto delete button and dropdown -->
@@ -173,12 +173,12 @@
       </md-tooltip>
 	    <i class="mdi mdi2-link-variant i-20"></i>
 	  </md-button>
-	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm md-background-default background with-arrow z-index-5">
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm with-arrow z-index-5">
 	  	<div class="arrow lft" ></div>
-      <md-content class="w-xxl">
-	      <div class="pull-right">
-	        <a ng-click="postPermalinkMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
-	      </div>
+      <div class="pull-right">
+        <a ng-click="postPermalinkMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
+      </div>
+      <div class="w-xxl">
 	      <div class="p-xs m-b-md m-t-sm l-h-1x text-sm">
 	      	{{'settings.post.CUSTOMIZE_LINK_DESC' | translate}}
 	      </div>
@@ -190,7 +190,7 @@
         <md-button class="pull-right font-bold no-margin" translate="titles.SAVE">
 					Salvar
 				</md-button>
-      </md-content>
+      </div>
 	  </div>
   </div>
   <!-- /customize link and dropdown -->
@@ -208,9 +208,9 @@
 	    </md-tooltip>
 	    <i class="mdi mdi2-bell-ring i-20"></i>
 	  </md-button>
-	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm md-background-default background with-arrow z-index-5">
+	  <div uib-dropdown-menu role="menu" aria-labelledby="single-button" class="animated2x zoomIn p-sm with-arrow z-index-5">
 	  	<div class="arrow lft" ></div>
-      <md-content class="w-md">
+      <div class="w-md">
 	      <div class="pull-right">
 	        <a ng-click="postNotificatioMenuOpen = false;"><i class="mdi mdi-navigation-close"></i></a>
 	      </div>
@@ -224,7 +224,7 @@
 	      </div>
         <md-button class="pull-right font-bold no-margin" translate="titles.GEO_NOTIFICATION" ng-click="showGeoNotificationDialog($event)">
 				</md-button>
-      </md-content>
+      </div>
 	  </div>
   </div>
 
@@ -320,8 +320,8 @@
 						      </vg-controls>
 						      <vg-overlay-play></vg-overlay-play>
 								</videogular>
-								<md-button ng-click="removeUploadedVideo();" class="md-fab md-raised md-mini pos-abt right-0 right-0 m-r m-t ">
-									<md-tooltip md-direction="top">
+								<md-button ng-click="removeUploadedVideo();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
+									<md-tooltip md-direction="left">
 						      	{{'titles.REMOVE' | translate}} {{'titles.VIDEO' | translate}}
 						  		</md-tooltip>
 									<i class="mdi mdi2-delete i-20"></i>
@@ -354,8 +354,8 @@
 								    </vg-controls>
 								  </videogular>
 								<!-- /audio player -->
-								<md-button ng-click="removeUploadedAudio();" class="md-fab md-raised md-mini pos-abt right-0 right-0 m-r m-t ">
-									<md-tooltip md-direction="top">
+								<md-button ng-click="removeUploadedAudio();" class="md-fab md-raised md-mini pos-abt right-0 top-0 md-accent m-r m-t">
+									<md-tooltip md-direction="left">
 						      	{{'titles.REMOVE' | translate}} {{'titles.AUDIO' | translate}}
 						  		</md-tooltip>
 									<i class="mdi mdi2-delete i-20"></i>

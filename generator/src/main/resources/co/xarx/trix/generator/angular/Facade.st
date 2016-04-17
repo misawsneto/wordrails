@@ -1,8 +1,8 @@
 Facade(facade, entities) ::=
 
 <<$entities:{entity | $Dto(entity)$}; separator="\n\n"$
+var TRIX_BACKEND = null;
 var trix = angular.module('trix', [])
-
 .provider('trix', function trixProvider(\$httpProvider) {
 
 	var _config = {}
@@ -10,7 +10,7 @@ var trix = angular.module('trix', [])
 	var provider = {};
 
 	provider.setUrl = function(u){
-		_config.url = u;
+		_config.url = TRIX_BACKEND = u;
 	}
 
 	provider.getConfig = function(){
@@ -19,6 +19,7 @@ var trix = angular.module('trix', [])
 
 	provider.setConfig = function(c){
 		_config = c
+		provider.setUrl(c.url);
 	}
 
 	\$httpProvider.defaults.useXDomain = true;

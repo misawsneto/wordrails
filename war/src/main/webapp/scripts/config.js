@@ -270,7 +270,6 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
                               ".default-bg md-dialog-actions,"+
                               ".default-bg md-dialog-content{ "+
                               "   background-color: " + color + "!important; " + contrast + " }", index); index++;
-        stylesheet.insertRule(".with-arrow > .arrow:after, .advanced-search-menu > .arrow:after { border-bottom-color: " + color + "!important; }", index); index++;
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn, .fr-popup .fr-command.fr-btn{" + contrast + "}", index); index++;
         stylesheet.insertRule(".fr-toolbar .fr-command.fr-btn.fr-dropdown::after, .fr-popup .fr-command.fr-btn.fr-dropdown::after{" + contrast + "}", index); index++;
       }
@@ -281,7 +280,8 @@ var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i 
         stylesheet.insertRule(".default-bg-text md-input-container .md-input { " + contrast + "!important }", index); index++;
       }
       if(cssname === 'background' && name === 'hue-3'){
-        stylesheet.insertRule(".fr-box.fr-basic .fr-wrapper { background-color: " + color + ";" + contrast + " }", index); index++;
+        stylesheet.insertRule(".fr-box.fr-basic .fr-wrapper, .dropdown-menu { background-color: " + color + ";" + contrast + " }", index); index++;
+        stylesheet.insertRule(".with-arrow > .arrow:after, .advanced-search-menu > .arrow:after { border-bottom-color: " + color + "!important; }", index); index++;
       }
     };
     clearStyleSheet = function() {

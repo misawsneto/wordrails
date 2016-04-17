@@ -541,6 +541,47 @@ angular.module('app')
         
       }
 
+      $scope.app.selectTerms = function (terms, termList){
+        if(!termList || !terms)
+          return;
+        var termIds = []
+        termList.forEach(function(termItem, index){
+          termIds.push(termItem.id)
+        });
+
+        terms && terms.forEach(function(term, index){
+          if(termIds.indexOf(term.id) > -1)
+            term.checked = true;
+          selectTerms(term.children, termList)
+        });
+      }
+
+      $scope.app.getTermList = function (terms, retTerms){
+        if(!retTerms)
+          retTerms = []
+
+        terms && terms.forEach(function(term, index){
+          if(term.checked)
+            retTerms.push(term)
+          var ts = $scope.app.getTermList(term.children)
+          ts.forEach(function(t){
+            retTerms.push(t)
+          });
+        });
+        return retTerms;
+      }
+
+      $scope.app.getTermUris = function(terms){
+        var termList = $scope.app.getTermList(terms)
+        var termUris = []
+        termList.forEach(function(term){
+          term.id = term.id ? term.id : term.termId;
+          if(term.id)
+            termUris.push(TRIX.baseUrl + "/api/terms/" + term.id);
+        })
+        return termUris;
+      }
+
       $timeout(function() {
         $("#aside-scroller").perfectScrollbar({
           wheelSpeed: 1,
