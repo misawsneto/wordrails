@@ -552,7 +552,7 @@ angular.module('app')
         terms && terms.forEach(function(term, index){
           if(termIds.indexOf(term.id) > -1)
             term.checked = true;
-          selectTerms(term.children, termList)
+          $scope.app.selectTerms(term.children, termList)
         });
       }
 
@@ -627,7 +627,8 @@ String.prototype.getYoutubeCode = function(){
 }
 
 String.prototype.stripHtml = function(){
-  return jQuery(this).text();
+  var string = '<i>' + this + '</i>';
+  return jQuery(string).text();
 }
 
 var getLastDigit = function(num){

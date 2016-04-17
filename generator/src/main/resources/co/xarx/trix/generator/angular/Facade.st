@@ -36,7 +36,7 @@ var trix = angular.module('trix', [])
 			if (_config.url && response.config.method === "GET" &&
 				response.config.url.indexOf(_config.url + "/api") > -1 &&
 				response.data && response.data._embedded){
-				if(Object.keys(response.data._embedded).length > 0)
+				if(!response.data.id &&     Object.keys(response.data._embedded).length > 0)
 				   response.data = response.data._embedded;
 
 				return response
