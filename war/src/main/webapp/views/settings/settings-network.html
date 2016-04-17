@@ -8,9 +8,9 @@
     <div class="col w-lg text-md font-500">
       <div class="vbox p-t-lg">
         <div class="row-row">
-          <div class="cell">
+          <div class="cell o-f-v">
             <div class="cell-inner">
-              <ul class="settings-list text-muted m-t-xxl pos-rlt">
+              <ul class="settings-list text-muted m-t-xxl pos-rlt" style="margin-right: -7px">
                 <li ng-class="{'active': settings.tab === 'settings'}">
                   <a ng-click="settings.tab = 'settings'" md-ink-ripple class="settings-items"><span translate='settings.network.tabs.SETTINGS'></span></a>
                 </li>
@@ -31,14 +31,15 @@
     </div>
 
     <div class="col animated zoomIn">
-      <div class="vbox p-t-lg p-r-lg">
+      <div class="vbox p-t-lg p-r">
       
         <div class="row-row">
-          <div class="cell o-f-v">
-            <div class="cell-inner">
+          <div class="cell">
+            <div class="cell-inner p-r-sm p-l-sm">
+              <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 " style="overflow: auto;
+    max-height: 100%;">
 
-                <div class="md-background-hue-1 background w-full m-h-auto pos-rlt md-whiteframe-z2 ">
-                  <div class="md-padding" ng-class="{'hide': settings.tab !== 'settings'}">
+                  <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'settings'}">
                     <div class="w-xxl m-h-auto p-t-md p-b-md">
                       <md-input-container class="m-b-sm m-t-sm w-full">
                         <label translate="settings.network.settings.NAME">Nome</label>
@@ -91,7 +92,7 @@
                 <!-- end of network configurations -->
 
                 <!-- domain and analytics -->
-                  <div class="md-padding" ng-class="{'hide': settings.tab !== 'domain-analytics'}">
+                  <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'domain-analytics'}">
                     <div class="m-b text-muted text-md text-u-c" translate="titles.DOMAIN">Domínio</div>
                       <div class="row pos-rlt">
                         <a class="text-lg pos-abt right-0 top-0 m-r-xl"><i class="mdi mdi-help"></i></a>
@@ -131,7 +132,7 @@
                 <!-- /domain and analytics -->
 
                 <!-- logos -->
-                  <div class="md-padding"  ng-class="{'hide': settings.tab !== 'logos'}">
+                  <div class="md-padding min-h-400"  ng-class="{'hide': settings.tab !== 'logos'}">
                     <!-- /color preferences -->
                     <!-- logo section -->
                     <ul class="list-group list-group-lg no-bg auto">
@@ -172,7 +173,7 @@
               <!-- /logo section -->
 
                 <!-- customization -->
-                  <div class="md-padding" ng-class="{'hide': settings.tab !== 'customization'}">
+                  <div class="md-padding min-h-400" ng-class="{'hide': settings.tab !== 'customization'}">
 
                     <div class="m-b text-muted text-md text-u-c">{{'titles.SOCIAL_NETWORK_PROFILES' | translate}}</div>
                     <div class="p-h p-t row m-b-0">
