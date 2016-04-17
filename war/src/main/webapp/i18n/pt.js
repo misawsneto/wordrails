@@ -161,7 +161,7 @@
 			"PADDING": "Preenchimento",
 			"PREVIEW_MODE": "Modo de visualização",
 			"SUBSECTION": "Subseção",
-			"SIDEBAR": "Menu lateral",
+			"SIDENAV": "Menu lateral",
 			"FOOTER": "Rodapé",
 			"HEADER": "Menu superior"
 		},

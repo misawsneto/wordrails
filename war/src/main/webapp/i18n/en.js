@@ -161,7 +161,7 @@
 			"PADDING": "Padding",
 			"PREVIEW_MODE": "Preview mode",
 			"SUBSECTION": "Subsection",
-			"SIDEBAR": "Sidebar",
+			"SIDENAV": "Side menu",
 			"FOOTER": "Footer",
 			"HEADER": "Header"
 		},

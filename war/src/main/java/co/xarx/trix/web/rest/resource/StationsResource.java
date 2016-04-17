@@ -1,17 +1,18 @@
 package co.xarx.trix.web.rest.resource;
 
+import co.xarx.trix.annotations.TimeIt;
 import co.xarx.trix.api.ContentResponse;
 import co.xarx.trix.domain.Person;
 import co.xarx.trix.domain.Station;
 import co.xarx.trix.domain.StationRole;
+import co.xarx.trix.domain.page.*;
 import co.xarx.trix.eventhandler.StationEventHandler;
-import co.xarx.trix.persistence.QueryPersistence;
-import co.xarx.trix.persistence.StationPerspectiveRepository;
-import co.xarx.trix.persistence.StationRepository;
-import co.xarx.trix.persistence.StationRolesRepository;
+import co.xarx.trix.persistence.*;
+import co.xarx.trix.services.QueryableSectionService;
 import co.xarx.trix.services.security.AuthService;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.StationsApi;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class StationsResource extends AbstractResource implements StationsApi {
@@ -36,6 +38,12 @@ public class StationsResource extends AbstractResource implements StationsApi {
 	private StationPerspectiveRepository stationPerspectiveRepository;
 	@Autowired
 	private QueryPersistence queryPersistence;
+
+	@Autowired
+	private PageRepository pageRepository;
+
+	@Autowired
+	private QueryableSectionService queryableSectionService;
 
 	@Override
 	public void getStations() throws ServletException, IOException {
@@ -67,24 +75,24 @@ public class StationsResource extends AbstractResource implements StationsApi {
 		forward();
 	}
 
-//	@Override
-//	@TimeIt
-//	public List<Page> getPages(Integer stationId) throws IOException {
-//		QPage qPage = QPage.page;
-//		Iterable<Page> pages = pageRepository.findAll(qPage.station.id.eq(stationId));
-//
-//		for (Page page : pages) {
-//			page.getSections().values().stream().filter(section -> section != null).filter(section -> section instanceof QueryableSection).forEach(section -> {
-//				Map<Integer, Block> blocks = queryableSectionService.fetchQueries((QueryableListSection) section, 0);
+	@Override
+	@TimeIt
+	public List<Page> getPages(Integer stationId) throws IOException {
+		QPage qPage = QPage.page;
+		Iterable<Page> pages = pageRepository.findAll(qPage.station.id.eq(stationId));
+
+		for (Page page : pages) {
+			page.getSections().values().stream().filter(section -> section != null).filter(section -> section instanceof QueryableSection).forEach(section -> {
+				Map<Integer, Block> blocks = queryableSectionService.fetchQueries((QueryableListSection) section, 0);
 //				if (section instanceof ListSection) {
-//					((ListSection) section).setBlocks(blocks);
+					((QueryableListSection) section).blocks.putAll(blocks);
 //				}
-//			});
-//		}
-//
-//
-//		return Lists.newArrayList(pages);
-//	}
+			});
+		}
+
+
+		return Lists.newArrayList(pages);
+	}
 
 	@Override
 	public Response setMainStation(Integer stationId, boolean value) {

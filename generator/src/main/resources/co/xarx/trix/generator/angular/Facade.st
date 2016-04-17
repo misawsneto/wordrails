@@ -474,7 +474,7 @@ var trix = angular.module('trix', [])
 	  return \$http.put(_config.url + "/api/auth/" + hash, \$.param({"password": password}), config)
 	}
 
-    this.getStationPages = function(stationId) {
+    this.getAllStationPages = function(stationId) {
         return \$http.get(_config.url + "/api/web/" + stationId + "/pages")
     }
 
