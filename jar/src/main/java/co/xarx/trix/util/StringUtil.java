@@ -1,6 +1,5 @@
 package co.xarx.trix.util;
 
-import co.xarx.trix.exception.SubdomainNotFoundException;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -82,13 +81,13 @@ public class StringUtil {
 		return doc.text();
 	}
 
-	public static String getSubdomainFromHost(String host) throws SubdomainNotFoundException {
+	public static String getSubdomainFromHost(String host) {
 		String[] names = host.split("\\.");
 		String topDomain = null;
 		try {
 			topDomain = names[names.length - 2] + "." + names[names.length - 1];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new SubdomainNotFoundException();
+			throw new RuntimeException("Subdomain not found");
 		}
 		return !topDomain.equals(host) ? host.split("." + topDomain)[0] : null;
 	}

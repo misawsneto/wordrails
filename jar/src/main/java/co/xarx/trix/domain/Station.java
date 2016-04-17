@@ -2,6 +2,7 @@ package co.xarx.trix.domain;
 
 import co.xarx.trix.annotation.SdkInclude;
 import co.xarx.trix.domain.page.Page;
+import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
@@ -39,6 +40,7 @@ public class Station extends BaseEntity implements Serializable {
 	public Integer id;
 
 	@Size(min = 1, max = 100)
+	@Getter(AccessLevel.NONE)
 	public String stationSlug;
 
 	@NotNull
@@ -184,9 +186,12 @@ public class Station extends BaseEntity implements Serializable {
 	}
 
 	@SdkInclude
-	public String getLogoMediumHash() {
-		if (logo != null) return logo.getMediumHash();
+	public String getStationSlug(){
+		if (stationSlug == null)
+			return StringUtil.toSlug(this.name);
 
-		return null;
+		return stationSlug;
 	}
+
+
 }

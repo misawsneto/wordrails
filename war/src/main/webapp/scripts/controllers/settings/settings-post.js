@@ -854,6 +854,10 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 		$scope.featuredImage = $scope.app.editingPost.featuredImage
 		$scope.landscape = $scope.app.editingPost.imageLandscape;
 		$scope.customizedLink.slug = $scope.app.editingPost.slug;
+		$scope.app.editingPost.id = null;
+		trix.postPost($scope.app.editingPost).success(function(){
+			$scope.app.showSuccessToast("OK");
+		})
 	}
 
 	var test = function(){
@@ -861,7 +865,7 @@ app.controller('SettingsPostCtrl', ['$scope', '$log', '$timeout', '$mdDialog', '
 	}
 
 	$timeout(function(){
-		// test();
+		test();
 	}, 1000);
 
 	settingsPostCtrl = $scope;

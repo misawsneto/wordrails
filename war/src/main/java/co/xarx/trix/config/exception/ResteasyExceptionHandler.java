@@ -43,7 +43,7 @@ public class ResteasyExceptionHandler implements ExceptionMapper<Throwable> {
 		log.error("LOG FATAL ERROR\n" +
 				"NETWORK: " + TenantContextHolder.getCurrentTenantId() + "\n" +
 				"MESSAGE: " + throwable.getMessage() + "\n" +
-				"URL: " + request.getRequestURI(),
+				"URL: " + request.getRequestURL(),
 				throwable);
 
 		if (throwable instanceof EntityNotFoundException) {
