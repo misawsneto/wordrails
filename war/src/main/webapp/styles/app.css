@@ -8483,3 +8483,39 @@ footer.page-footer .footer-crt {
 }
 
 /* /materialize override */
+
+#loading-bar .peg,
+#loading-bar .bar {
+  height: 4px!important;
+}
+
+.animate-bg,
+md-toolbar,
+md-content,
+md-button,
+md-tabs-wrapper,
+button,
+.md-button,
+.md-btn,
+.md-btn .md-mini,
+.md-primary,
+.md-accent,
+.md-warn,
+.md-primary-default,
+.md-accent-default,
+.md-background-default,
+.md-primary-hue-1,
+.md-accent-hue-1,
+.md-background-hue-1,
+.md-warn-default {
+  -webkit-transition: background-color 333ms linear;
+  -webkit-transition: color 333ms linear;
+     -moz-transition: background-color 333ms linear;
+     -moz-transition: color 333ms linear;
+      -ms-transition: background-color 333ms linear;
+      -ms-transition: color 333ms linear;
+       -o-transition: background-color 333ms linear;
+       -o-transition: color 333ms linear;
+          transition: background-color 333ms linear;
+  transition: color 333ms linear;
+}
