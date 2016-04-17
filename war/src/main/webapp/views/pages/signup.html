@@ -1,0 +1,32 @@
+  <div class="center-block w-xxl w-auto-xs p-v-md">
+    <div class="navbar">
+      <div class="navbar-brand m-t-lg text-center">
+        <span class="m-l inline">{{app.name}}</span>
+      </div>
+    </div>
+
+    <div class="p panel md-whiteframe-z1 text-color text-center m">
+      <!-- <div class="m-b text-sm">
+        Sign up to your {{app.name}} Account
+      </div> -->
+      <form name="form">
+        <md-input-container class="w-full m-b-0">
+          <label for="testInput">{{'titles.USERNAME' | translate}}</label>
+          <input type="text" id="testInput" ng-model="person.username" md-autofocus>
+        </md-input-container>
+        <md-input-container class="w-full m-b-0">
+          <label for="testInput">{{'titles.EMAIL' | translate}}</label>
+          <input type="email" id="testInput" ng-model="person.email" md-autofocus>
+        </md-input-container>
+        <md-input-container class="w-full m-b-0 m-b-0">
+          <label for="testInput">{{'titles.PASSWORD' | translate}}</label>
+          <input type="text" id="testInput" ng-model="person.username" md-autofocus>
+        </md-input-container>
+        <md-button md-ink-ripple type="submit" class="m-0 md-accent btn-custom md-btn text-u-c">Cadastrar</md-button>
+      </form>
+    </div>
+
+    <div class="p-v-lg text-center">
+      <div>Already have an account? <button ui-sref="access.signin" class="md-btn">Sign in</button></div>
+    </div>
+  </div>

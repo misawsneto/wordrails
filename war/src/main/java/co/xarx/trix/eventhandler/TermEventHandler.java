@@ -50,19 +50,19 @@ public class TermEventHandler {
 						lastIndex = lastRow.index == null ? 0 : lastRow.index;
 					}
 
-						Row row = new Row();
-						row.term = term;
-						row.type = Row.ORDINARY_ROW;
-						row.index = lastIndex + 1;
-						row.perspective = perspective;
-						rows.add(row);
-					}
+					Row row = new Row();
+					row.term = term;
+					row.type = Row.ORDINARY_ROW;
+					row.index = lastIndex + 1;
+					row.perspective = perspective;
+					rows.add(row);
 				}
+			}
 
-				for (Row row :rows) {
-					rowRepository.save(row);
-				}
-			} else{
+			for (Row row :rows) {
+				rowRepository.save(row);
+			}
+		} else{
 			throw new UnauthorizedException();
 		}
 	}

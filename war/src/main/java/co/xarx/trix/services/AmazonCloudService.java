@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,13 @@ public class AmazonCloudService {
 		return "http://" + cloudfrontUrl + "/" + tenantId + "/images/" + fileName;
 	}
 
+	public String getPublicFileURL(String fileName, String diretory) throws IOException {
+		String tenantId = TenantContextHolder.getCurrentTenantId();
+		if (tenantId == null || tenantId.isEmpty())
+			throw new OperationNotSupportedException("This request is invalid because no Tenant ID was set");
+		return "http://" + cloudfrontUrl + "/" + tenantId + "/" + diretory + "/" + fileName;
+	}
+
 	public String getPublicApkURL(String fileName) throws IOException {
 		String tenantId = TenantContextHolder.getCurrentTenantId();
 		if(tenantId == null || tenantId.isEmpty())
@@ -77,15 +85,27 @@ public class AmazonCloudService {
 	 */
 	public String uploadPublicImage(java.io.File file, Long lenght, String hash,
 	                                String sizeTag, String mime, boolean deleteFileAfterUpload) throws IOException, AmazonS3Exception {
-		if(hash == null) {
-			hash = FileUtil.getHash(new FileInputStream(file));
+
+		return uploadPublicFile(file, lenght, hash, sizeTag, mime, deleteFileAfterUpload, IMAGE_DIR);
+	}
+
+	/**
+	 * send hash null if needs to generate it
+	 */
+	public String uploadPublicFile(java.io.File file, Long lenght, String hash,
+									String sizeTag, String mime, boolean deleteFileAfterUpload, String fileDir) throws
+			IOException,
+			AmazonS3Exception {
+
+		try (InputStream is = new FileInputStream(file)){
+			if (hash == null) {
+				hash = FileUtil.getHash(is);
+			}
 		}
 
 		ObjectMetadata md = new ObjectMetadata();
 		md.setContentType(mime);
-		md.addUserMetadata("size", sizeTag);
-
-		String path = getKey(IMAGE_DIR, hash);
+		String path = getKey(fileDir, hash);
 		uploadFile(file, lenght, path, md, deleteFileAfterUpload);
 
 		return hash;

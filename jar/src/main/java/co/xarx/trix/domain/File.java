@@ -21,6 +21,9 @@ public class File extends BaseEntity implements Serializable {
 
 	public static final String DIR_IMAGES = "images";
 	public static final String DIR_VIDEO = "videos";
+	public static final String DIR_AUDIO = "audios";
+	public static final String DIR_DOC = "docs";
+
 
 	@Id
 	@Setter(AccessLevel.NONE)
@@ -42,6 +45,11 @@ public class File extends BaseEntity implements Serializable {
 	public String hash;
 
 	public Long size;
+
+	public Boolean original;
+
+	@Lob
+	public String meta;
 
 	public String getExtension() {
 		if (mime != null && mime.split("/").length == 2)

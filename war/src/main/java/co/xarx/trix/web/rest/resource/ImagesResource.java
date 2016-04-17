@@ -3,13 +3,14 @@ package co.xarx.trix.web.rest.resource;
 import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.domain.Image;
 import co.xarx.trix.services.AmazonCloudService;
+import co.xarx.trix.services.FileService;
 import co.xarx.trix.services.ImageService;
 import co.xarx.trix.util.FileUtil;
 import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.ImagesApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,17 +28,22 @@ import java.util.Date;
 import java.util.Map;
 
 @Component
+@NoArgsConstructor
 public class ImagesResource extends AbstractResource implements ImagesApi {
-
-	private static final Integer MAX_SIZE = 6291456;
 
 	private ImageService imageService;
 	private AmazonCloudService amazonCloudService;
+	private FileService fileService;
 
 	@Autowired
-	public ImagesResource(ImageService imageService, AmazonCloudService amazonCloudService) {
+	@Qualifier("simpleMapper")
+	ObjectMapper simpleMapper;
+
+	@Autowired
+	public ImagesResource(ImageService imageService, AmazonCloudService amazonCloudService, FileService fileService) {
 		this.imageService = imageService;
 		this.amazonCloudService = amazonCloudService;
+		this.fileService = fileService;
 	}
 
 	private static class ImageUpload {
@@ -47,18 +53,13 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		String fileLink;
 	}
 
-
-	@Autowired
-	@Qualifier("simpleMapper")
-	ObjectMapper simpleMapper;
-
 	@Override
 	public Response uploadImage(@QueryParam("imageType") String type) throws Exception {
 		FileItem item = FileUtil.getFileFromRequest(request);
 
 		if (item == null) {
 			return Response.noContent().build();
-		} else if (!validate(item)) {
+		} else if (!fileService.validate(item, FileService.MAX_SIZE_8)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 
@@ -88,17 +89,6 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		iur.filelink = amazonCloudService.getPublicImageURL(hash);
 
 		return Response.ok().entity(simpleMapper.writeValueAsString(iur)).build();
-	}
-
-	private boolean validate(FileItem item) throws FileUploadException {
-		if (item.getFieldName().equals("contents") || item.getFieldName().equals("file")) {
-			if (item.getSize() > MAX_SIZE) {
-				throw new FileUploadException("Maximum file size is 6MB");
-			}
-
-			return true;
-		}
-		return false;
 	}
 
 	@Override

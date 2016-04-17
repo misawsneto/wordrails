@@ -7,6 +7,7 @@ import co.xarx.trix.domain.page.query.CommandBuilder;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -41,6 +42,13 @@ public class PostStatement extends AbstractStatement implements Statement {
 
 	@Column(name = "rich_text")
 	public String richText;
+
+	public void addStationId(Integer stationId) {
+		if(stationIds == null)
+			stationIds = new HashSet<>();
+
+		stationIds.add(stationId);
+	}
 
 	@Override
 	public Command build(CommandBuilder builder) {

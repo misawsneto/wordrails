@@ -150,4 +150,8 @@ public interface PostRepository extends PostRepositoryCustom, JpaRepository<Post
 	@Modifying
 	@Query("DELETE from Post post WHERE post.id = :id")
 	void forceDelete(@Param("id") Integer id);
+
+	@RestResource(exported = true)
+	List<Post> findByAuthorUsernameAndStateOrderByDateDesc(@Param("username") String username, @Param("state") String
+			state, Pageable pageable);
 }

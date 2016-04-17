@@ -1,5 +1,6 @@
 package co.xarx.trix.services;
 
+import co.xarx.trix.annotations.IgnoreMultitenancy;
 import co.xarx.trix.api.*;
 import co.xarx.trix.converter.PostConverter;
 import co.xarx.trix.domain.*;
@@ -10,7 +11,9 @@ import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.persistence.StationRepository;
 import co.xarx.trix.persistence.StationRolesRepository;
 import co.xarx.trix.services.security.AuthService;
+import co.xarx.trix.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +21,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -51,8 +58,20 @@ public class InitService {
 	@Autowired
 	private AuthService authProvider;
 
+	@PersistenceContext(type=javax.persistence.PersistenceContextType.EXTENDED)
+	EntityManager em;
+
+
 	@Value("${trix.amazon.cloudfront}")
 	String cloudfrontUrl;
+
+	public void systemInit() {
+//		List<Station> stations = em.createQuery("SELECT s from Station s").getResultList();
+//		for(Station station: stations){
+//			station.stationSlug = StringUtil.toSlug(station.name);
+//			em.persist(station);
+//		}
+	}
 
 	public PersonData getData(PersonData personData, Integer stationId) throws IOException {
 		StationDto defaultStation = getDefaultStation(personData, stationId);

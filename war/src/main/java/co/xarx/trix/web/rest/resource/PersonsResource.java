@@ -22,6 +22,7 @@ import co.xarx.trix.web.rest.AbstractResource;
 import co.xarx.trix.web.rest.api.PersonsApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import lombok.NoArgsConstructor;
 import org.apache.http.util.Asserts;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Component
+@NoArgsConstructor
 public class PersonsResource extends AbstractResource implements PersonsApi {
 
 	@Autowired
