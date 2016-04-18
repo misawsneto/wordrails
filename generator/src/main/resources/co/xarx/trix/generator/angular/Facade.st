@@ -36,8 +36,11 @@ var trix = angular.module('trix', [])
 			if (_config.url && response.config.method === "GET" &&
 				response.config.url.indexOf(_config.url + "/api") > -1 &&
 				response.data && response.data._embedded){
-				if(!response.data.id &&     Object.keys(response.data._embedded).length > 0)
+				if(!response.data.id && Object.keys(response.data._embedded).length > 0)
 				   response.data = response.data._embedded;
+			    else{
+			       response.data._embedded = null; response.data._links = null;
+		        }
 
 				return response
 			}else if (_config.url && response.config.method === "GET" &&
@@ -481,6 +484,14 @@ var trix = angular.module('trix', [])
 
     this.forceDeleteStation = function(stationId) {
         return \$http.delete(_config.url + "/api/stations/" + stationId + "/force")
+    }
+
+    this.getImagesPerson = function(id, size, type) {
+        return _config.url + "/api/images/persons/" + id + "?size=" + size + "&type=" + type;
+    }
+
+    this.getImagesPost = function(id) {
+        return _config.url + "/api/images/posts/" + id + "?size=" + size;
     }
 
 	$entities:{entity | $FacadeMethods(entity)$}; separator="\n\n"$

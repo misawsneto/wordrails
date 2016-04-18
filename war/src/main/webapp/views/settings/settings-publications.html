@@ -5,7 +5,7 @@
 
 <div class="pos-abt w-full top-0 bottom-0 left-0">
   <div class="hbox">
-    <div class="col w-md text-md font-500">
+    <div class="col w-lg text-md font-500">
       <div class="vbox p-t-lg">
         <div class="row-row">
           <div class="cell o-f-v">
@@ -31,7 +31,7 @@
     </div>
 
     <div class="col animated zoomIn">
-      <div class="vbox p-t-lg p-r">
+      <div class="vbox p-t-lg p-r-xxl">
       
         <div class="search-with-filter m-r-sm m-l-sm p-sm md-background-hue-3 background md-whiteframe-z1 pos-rlt z-index-2">
           <input placeholder="{{'titles.SEARCH' | translate }}" class="ph-dk w-full b-n p-sm w-full b-n text-lg bg-t">
@@ -125,7 +125,7 @@
                         </div>
                         <div class="m-t pull-right font-500 m-r-sm"><i class="icon mdi2-radio-tower"></i> {{app.getStationById(publication.stationId).name}}</div>
                         <div class="list-group-item b-n p-sm p-t-sm no-padding-h inline">
-                          <a href class="pull-left m-r-sm"><img src="/images/a1.jpg" class="img-responsive img-circle thumb-xxs md-whiteframe-z1"></a>
+                          <a href class="pull-left m-r-sm"><div ng-style="{{publication.authorId | getImagesPerson:'small':'PROFILE_PICTURE':true}}" style="height: 30px;" class="bg-cover img-responsive img-circle thumb-xxs md-whiteframe-z1"></div></a>
                           <div class="clear font-normal p-xs">
                             <a href class="font-500 block">{{publication.authorName}}</a>
                           </div>

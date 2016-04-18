@@ -106,7 +106,7 @@
 					<div slider class="slider">
 						<ul class="slides md-whiteframe-z2">
 			        <li ng-repeat="block in childSection.blocks" index="0">
-		            <div ng-style="{{block.featuredImage | bgImageLink2: 'large'}}" class="bg-cover h-full"></div>
+		            <div ng-style="{{block | bgImageLink: 'large'}}" class="bg-cover h-full"></div>
 		            <!-- <img src="http://lorempixel.com/580/250/nature/1" class="responsive-img"> --> <!-- random image -->
 		            <div class="pos-abt bottom-0 left-0 p-h black-grad w-full">
 	                <h3 class="font-500 light grey-text text-lighten-4">{{::block.title}}</h3>

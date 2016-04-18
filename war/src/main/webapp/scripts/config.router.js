@@ -134,7 +134,7 @@ angular.module('app')
                 url: '/publications',
                 reloadOnSearch: false,
                 templateUrl: '/views/settings/settings-publications.html',
-                data : { titleTranslate: 'titles.PUBLICATIONS', title: 'Publicações', folded: false },
+                data : { titleTranslate: 'titles.PUBLICATIONS', title: 'Publicações', folded: true },
                 // resolve: load(['mdDateTime', 'angularFileUpload', '/scripts/controllers/settings/settings-publications.js']),
                 resolve: {
                   deps: ['$ocLazyLoad', '$templateCache',

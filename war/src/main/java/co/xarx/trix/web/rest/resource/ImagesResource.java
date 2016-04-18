@@ -2,6 +2,10 @@ package co.xarx.trix.web.rest.resource;
 
 import co.xarx.trix.api.ImageUploadResponse;
 import co.xarx.trix.domain.Image;
+import co.xarx.trix.domain.Person;
+import co.xarx.trix.domain.Post;
+import co.xarx.trix.persistence.PersonRepository;
+import co.xarx.trix.persistence.PostRepository;
 import co.xarx.trix.services.AmazonCloudService;
 import co.xarx.trix.services.FileService;
 import co.xarx.trix.services.ImageService;
@@ -34,16 +38,21 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 	private ImageService imageService;
 	private AmazonCloudService amazonCloudService;
 	private FileService fileService;
+	private PersonRepository personRepository;
+	private PostRepository postRepository;
 
 	@Autowired
 	@Qualifier("simpleMapper")
 	ObjectMapper simpleMapper;
 
 	@Autowired
-	public ImagesResource(ImageService imageService, AmazonCloudService amazonCloudService, FileService fileService) {
+	public ImagesResource(ImageService imageService, AmazonCloudService amazonCloudService, FileService fileService, PersonRepository personRepository
+			, PostRepository postRepository) {
 		this.imageService = imageService;
 		this.amazonCloudService = amazonCloudService;
 		this.fileService = fileService;
+		this.personRepository = personRepository;
+		this.postRepository = postRepository;
 	}
 
 	private static class ImageUpload {
@@ -102,6 +111,65 @@ public class ImagesResource extends AbstractResource implements ImagesApi {
 		}
 
 		hash = hashes.get(size);
+
+		if(StringUtils.isEmpty(hash))
+			return Response.status(Response.Status.NO_CONTENT).build();
+
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control", "max-age=2592000");
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.add(Calendar.DATE, 30);
+		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
+		response.setHeader("Expires", o);
+
+		response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
+		return Response.ok().build();
+	}
+
+	@Override
+	public Response getPersonImage(Integer id, String size, String type) throws IOException {
+
+		Person person = personRepository.findOne(id);
+
+		String hash = null;
+
+		if(person != null && type != null && type.toUpperCase().equals(Image.Type.PROFILE_PICTURE.toString()) && person
+				.getImage() != null)
+			hash = person.getImage().getHashs().get(size);
+		else if(person != null && type != null && type.toUpperCase().equals(Image.Type.COVER.toString()) &&
+				person.getCover() != null)
+			hash = person.getCover().getHashs().get(size);
+		else
+			return Response.status(404).build();
+
+		if(StringUtils.isEmpty(hash))
+			return Response.status(Response.Status.NO_CONTENT).build();
+
+		response.setHeader("Pragma", "public");
+		response.setHeader("Cache-Control", "max-age=2592000");
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.add(Calendar.DATE, 30);
+		String o = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss zzz").format(c.getTime());
+		response.setHeader("Expires", o);
+
+		response.sendRedirect(amazonCloudService.getPublicImageURL(hash));
+		return Response.ok().build();
+	}
+
+	@Override
+	public Response getPostImage(Integer id, String size) throws IOException {
+		Post post = postRepository.findOne(id);
+
+		String hash = null;
+
+		if(post != null &&  post.getFeaturedImage() != null)
+			hash = post.getFeaturedImage().getHashs().get(size);
+		else
+			return Response.status(404).build();
 
 		if(StringUtils.isEmpty(hash))
 			return Response.status(Response.Status.NO_CONTENT).build();

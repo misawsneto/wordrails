@@ -2321,10 +2321,10 @@ var trix = angular.module('trix', [])
 
 
 
-  	    if (this.getPersonImage) {
-  	    	console.log("getPersonImage");
+  	    if (this.getImagesPerson) {
+  	    	console.log("getImagesPerson");
   	    }
-  	    this.getPersonImage = function(id, projection) {
+  	    this.getImagesPerson = function(id, projection) {
   	        var config = {};
   	        config.params = {};
   	        config.params["projection"] = projection;

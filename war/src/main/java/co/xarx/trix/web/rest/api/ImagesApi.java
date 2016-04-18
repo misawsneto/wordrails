@@ -18,4 +18,15 @@ public interface ImagesApi {
 	@GET
 	@Path("/get/{hash}")
 	Response getImage(@PathParam("hash") String hash, @QueryParam("size") String size) throws IOException;
+
+	@GET
+	@Path("/persons/{id}")
+	Response getPersonImage(@PathParam("id") Integer id, @QueryParam("size") String size, @QueryParam("type") String
+			type)
+			throws IOException;
+
+	@GET
+	@Path("/posts/{id}")
+	Response getPostImage(@PathParam("id") Integer id, @QueryParam("size") String size)
+			throws IOException;
 }

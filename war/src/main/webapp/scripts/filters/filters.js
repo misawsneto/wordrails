@@ -130,15 +130,6 @@ angular.module('app')
   }
 })
 
-.filter('bgImageLink2', function pvimageLink(TRIX) {
-  return function(featuredImage, size) {
-    if(featuredImage)
-      return {"background-image": "url(" + TRIX.baseUrl + "/api/images/get/"+ ((featuredImage.originalHash) ? featuredImage.originalHash : featuredImage)  + "?size=" + size + ")", "background-position": "50% 20%"};
-    else
-      return {};
-  }
-})
-
 .filter('imageLink', function imageLink(TRIX) {
   return function(post, size) {
     if(post && (post.featuredImage || post.featuredImageHash || post.imageHash)){
@@ -146,6 +137,22 @@ angular.module('app')
       return TRIX.baseUrl + "/api/images/get/"+ hash + "?size=" +size;
     }else
       return "";
+  }
+})
+
+.filter('getImagesPerson', function getImagesPerson(TRIX, trix) {
+  return function(id, size, type, bg) {
+    if(bg)
+      return {'background-image': 'url( '+ trix.getImagesPerson(id, size, type) + ')'};
+    return trix.getImagesPerson(id, size, type);
+  }
+})
+
+.filter('getPostsImage', function getPostsImage(TRIX, trix) {
+  return function(id, size, bg) {
+    if(bg)
+      return {'background-image': 'url( '+ trix.getImagesPost(id, size, type) + ')'};
+    return trix.getImagesPost(id, size);
   }
 })
 

@@ -8508,14 +8508,9 @@ button,
 .md-accent-hue-1,
 .md-background-hue-1,
 .md-warn-default {
-  -webkit-transition: background-color 333ms linear;
-  -webkit-transition: color 333ms linear;
-     -moz-transition: background-color 333ms linear;
-     -moz-transition: color 333ms linear;
-      -ms-transition: background-color 333ms linear;
-      -ms-transition: color 333ms linear;
-       -o-transition: background-color 333ms linear;
-       -o-transition: color 333ms linear;
-          transition: background-color 333ms linear;
-  transition: color 333ms linear;
+  -webkit-transition: background-color 300ms linear, color 300ms linear;
+     -moz-transition: background-color 300ms linear, color 300ms linear;
+      -ms-transition: background-color 300ms linear, color 300ms linear;
+       -o-transition: background-color 300ms linear, color 300ms linear;
+          transition: background-color 300ms linear, color 300ms linear;
 }
